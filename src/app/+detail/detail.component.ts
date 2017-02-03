@@ -11,7 +11,7 @@ import {
 console.log('`Detail` component loaded asynchronously');
 
 @Component({
-  selector: 'detail',
+  selector: 'mfp-detail',
   template: `
     <h1>Hello from Detail</h1>
     <span>

@@ -1,23 +1,15 @@
-/**
- * @author: @AngularClass
- */
-
 const helpers = require('./helpers');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
+const webpackMerge = require('webpack-merge'); /** Used to merge webpack configs. */
 const webpackMergeDll = webpackMerge.strategy({plugins: 'replace'});
-const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const commonConfig = require('./webpack.common.js'); /** The settings that are common to prod and dev. */
 
-/**
- * Webpack Plugins
- */
+/** Webpack Plugins */
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
-/**
- * Webpack Constants
- */
+/** Webpack Constants */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
@@ -78,7 +70,8 @@ module.exports = function (options) {
        */
       sourceMapFilename: '[file].map',
 
-      /** The filename of non-entry chunks as relative path
+      /** 
+       * The filename of non-entry chunks as relative path
        * inside the output.path directory.
        *
        * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
@@ -93,7 +86,7 @@ module.exports = function (options) {
 
       rules: [
 
-        /*
+        /**
          * css loader support for *.css files (styles directory only)
          * Loads external css styles into the DOM, supports HMR
          *
@@ -104,7 +97,7 @@ module.exports = function (options) {
           include: [helpers.root('src', 'styles')]
         },
 
-        /*
+        /**
          * sass loader support for *.scss files (styles directory only)
          * Loads external sass styles into the DOM, supports HMR
          *
@@ -129,8 +122,8 @@ module.exports = function (options) {
        * Environment helpers
        *
        * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
+       * NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
        */
-      // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
@@ -226,7 +219,7 @@ module.exports = function (options) {
       }
     },
 
-    /*
+    /**
      * Include polyfills or mocks for various node stuff
      * Description: Node configuration
      *

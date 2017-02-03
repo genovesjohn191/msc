@@ -15,7 +15,7 @@ import { XLargeDirective } from './x-large.directive';
 describe('x-large directive', () => {
   // Create a test component to test directives
   @Component({
-    template: '<div x-large>Content</div>'
+    template: '<div mfpXLarge>Content</div>'
   })
   class TestComponent { }
 

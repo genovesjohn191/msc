@@ -1,15 +1,16 @@
 {
-  "name": "angular2-webpack-starter",
-  "version": "5.4.1",
-  "description": "An Angular 2 Webpack Starter kit featuring Angular 2 (Router, Http, Forms, Services, Tests, E2E, Coverage), Karma, Protractor, Jasmine, Istanbul, TypeScript, and Webpack by AngularClass",
+  "name": "macquarie-fusion-angular-portal",
+  "version": "0.0.1",
+  "description": "Centralized service portal for Macquarie Cloud Services customers to provide a simple, consolidated user experience",
   "keywords": [
     "angular2",
     "webpack",
-    "typescript"
+    "typescript",
+    "fusion",
+    "macquarie"
   ],
-  "author": "Patrick Stapleton <patrick@angularclass.com>",
-  "homepage": "https://github.com/angularclass/angular2-webpack-starter",
-  "license": "MIT",
+  "author": "Philip Badilla <pbadilla@macquarietelecom.com>",
+  "license": "private",
   "scripts": {
     "build:aot:prod": "npm run clean:dist && npm run clean:aot && webpack --config config/webpack.prod.js  --progress --profile --bail",
     "build:aot": "npm run build:aot:prod",
@@ -85,7 +86,7 @@
     "ie-shim": "^0.1.0",
     "jasmine-core": "^2.5.2",
     "reflect-metadata": "^0.1.9",
-    "rxjs": "~5.0.2",
+    "rxjs": "~5.1.0",
     "zone.js": "~0.7.4"
   },
   "devDependencies": {
@@ -122,14 +123,14 @@
     "karma-mocha-reporter": "^2.0.0",
     "karma-remap-coverage": "^0.1.4",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "2.0.1",
+    "karma-webpack": "2.0.2",
     "ng-router-loader": "^2.1.0",
-    "ngc-webpack": "1.1.0",
+    "ngc-webpack": "1.2.0",
     "node-sass": "^4.2.0",
     "npm-run-all": "^4.0.0",
     "optimize-js-plugin": "0.0.4",
     "parse5": "^3.0.1",
-    "protractor": "^4.0.14",
+    "protractor": "^5.1.0",
     "raw-loader": "0.5.1",
     "rimraf": "~2.5.4",
     "sass-loader": "^4.1.1",
@@ -144,7 +145,7 @@
     "typedoc": "^0.5.3",
     "typescript": "~2.1.5",
     "url-loader": "^0.5.7",
-    "webpack": "2.2.0",
+    "webpack": "2.2.1",
     "webpack-dev-middleware": "^1.9.0",
     "webpack-dev-server": "2.2.0",
     "webpack-dll-bundles-plugin": "^1.0.0-beta.5",
@@ -152,10 +153,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/angularclass/angular2-webpack-starter.git"
-  },
-  "bugs": {
-    "url": "https://github.com/angularclass/angular2-webpack-starter/issues"
+    "url": "https://philipbadilla@bitbucket.org/macquariecloudservices/macquarie-fusion-angular-portal.git"
   },
   "engines": {
     "node": ">= 4.2.1",

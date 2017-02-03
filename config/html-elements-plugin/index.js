@@ -33,7 +33,7 @@ const RE_ENDS_WITH_BS = /\/$/;
  *
  * Example:
  * createTag('link', { rel: "manifest", href: "/assets/manifest.json" })
- * // <link rel="manifest" href="/assets/manifest.json">
+ * <link rel="manifest" href="/assets/manifest.json">
  * @param tagName The name of the tag
  * @param attrMap A Map of attribute names (keys) and their values.
  * @param publicPath a path to add to eh start of static asset url
@@ -42,7 +42,7 @@ const RE_ENDS_WITH_BS = /\/$/;
 function createTag(tagName, attrMap, publicPath) {
   publicPath = publicPath || '';
 
-  // add trailing slash if we have a publicPath and it doesn't have one.
+  /** Add trailing slash if we have a publicPath and it doesn't have one.*/
   if (publicPath && !RE_ENDS_WITH_BS.test(publicPath)) {
     publicPath += '/';
   }
@@ -53,12 +53,14 @@ function createTag(tagName, attrMap, publicPath) {
       var value = attrMap[name];
 
       if (publicPath) {
-        // check if we have explicit instruction, use it if so (e.g: =herf: false)
-        // if no instruction, use public path if it's href attribute.
+        /** 
+         * Check if we have explicit instruction, use it if so (e.g: =herf: false)
+         * if no instruction, use public path if it's href attribute.
+         */
         const usePublicPath = attrMap.hasOwnProperty('=' + name) ? !!attrMap['=' + name] : name === 'href';
 
         if (usePublicPath) {
-          // remove a starting trailing slash if the value has one so we wont have //
+          /** Remove a starting trailing slash if the value has one so we wont have. */
           value = publicPath + (value[0] === '/' ? value.substr(1) : value);
         }
       }
@@ -86,7 +88,7 @@ function createTag(tagName, attrMap, publicPath) {
  *    }
  *
  * getHeadTags(ds);
- * // "<link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">"
+ *    "<link rel="apple-touch-icon" sizes="57x57" href="/assets/icon/apple-icon-57x57.png">"
  *    "<meta name="msapplication-TileColor" content="#00bcd4">"
  *
  * @returns {string}

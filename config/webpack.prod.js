@@ -1,14 +1,8 @@
-/**
- * @author: @AngularClass
- */
-
 const helpers = require('./helpers');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const webpackMerge = require('webpack-merge'); /** Used to merge webpack configs. */
+const commonConfig = require('./webpack.common.js'); /** The settings that are common to prod and dev. */
 
-/**
- * Webpack Plugins
- */
+/** Webpack Plugins */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const IgnorePlugin = require('webpack/lib/IgnorePlugin');
@@ -18,9 +12,7 @@ const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const OptimizeJsPlugin = require('optimize-js-plugin');
 
-/**
- * Webpack Constants
- */
+/** Webpack Constants */
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
@@ -90,9 +82,7 @@ module.exports = function (env) {
 
       rules: [
 
-        /*
-         * Extract CSS files from .src/styles directory to external CSS file
-         */
+        /** Extract CSS files from .src/styles directory to external CSS file */
         {
           test: /\.css$/,
           loader: ExtractTextPlugin.extract({
@@ -102,9 +92,7 @@ module.exports = function (env) {
           include: [helpers.root('src', 'styles')]
         },
 
-        /*
-         * Extract and compile SCSS files from .src/styles directory to external CSS file
-         */
+        /** Extract and compile SCSS files from .src/styles directory to external CSS file */
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
@@ -152,8 +140,8 @@ module.exports = function (env) {
        * Environment helpers
        *
        * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
+       * NOTE: when adding more properties make sure you include them in custom-typings.d.ts
        */
-      // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
@@ -170,31 +158,31 @@ module.exports = function (env) {
        * Loaders are switched into minimizing mode.
        *
        * See: https://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
+       * NOTE: To debug prod builds uncomment debug lines and comment prod lines
        */
-      // NOTE: To debug prod builds uncomment //debug lines and comment //prod lines
       new UglifyJsPlugin({
-        // beautify: true, //debug
-        // mangle: false, //debug
-        // dead_code: false, //debug
-        // unused: false, //debug
-        // deadCode: false, //debug
+        // beautify: true,        /** debug */
+        // mangle: false,         /** debug */
+        // dead_code: false,      /** debug */
+        // unused: false,         /** debug */
+        // deadCode: false,       /** debug */
         // compress: {
         //   screw_ie8: true,
         //   keep_fnames: true,
         //   drop_debugger: false,
         //   dead_code: false,
         //   unused: false
-        // }, // debug
-        // comments: true, //debug
+        // },                     /** debug */
+        // comments: true,        /** debug */
 
 
-        beautify: false, //prod
+        beautify: false,          /** prod */
         output: {
           comments: false
-        }, //prod
+        },                        /** prod */
         mangle: {
           screw_ie8: true
-        }, //prod
+        },                        /** prod */
         compress: {
           screw_ie8: true,
           warnings: false,
@@ -206,7 +194,7 @@ module.exports = function (env) {
           evaluate: true,
           if_return: true,
           join_vars: true,
-          negate_iife: false // we need this for lazy v8
+          negate_iife: false      /** We need this for lazy v8. */
         },
       }),
 
@@ -285,8 +273,8 @@ module.exports = function (env) {
            * Html loader advanced options
            *
            * See: https://github.com/webpack/html-loader#advanced-options
+           * TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
            */
-          // TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
           htmlLoader: {
             minimize: true,
             removeAttributeQuotes: false,
