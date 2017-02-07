@@ -128,6 +128,18 @@ module.exports = function (options) {
         },
 
         /**
+         * Raw loader support for *.scss files
+         * Returns file content as string
+         *
+         * See: https://github.com/webpack/raw-loader
+         */
+        {
+          test: /\.scss$/,
+          loaders: ['raw-loader','sass-loader'],
+          exclude: /node_modules/
+        },
+
+        /**
          * Raw loader support for *.html
          * Returns file content as string
          *

@@ -1,0 +1,24 @@
+@import "../shared/base";
+
+*,
+*:after,
+*:before {
+  @include box-sizing(border-box);
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: $primary-font;
+  color: $default-text-color;
+  background: $default-background-color;
+  @include font-size(get-value($font-size-base-large));
+  @include breakpoint(medium) { 
+    @include font-size(get-value($font-size-base-medium));
+  }
+  @include breakpoint(small) { 
+    @include font-size(get-value($font-size-base-small));
+  }
+}

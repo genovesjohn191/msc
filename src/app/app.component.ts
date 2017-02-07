@@ -15,9 +15,7 @@ import { AppState } from './app.service';
 @Component({
   selector: 'mfp-app',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './app.component.css'
-  ],
+  styles: [ require('./app.component.scss') ],
   template: `
     <nav>
       <a [routerLink]=" ['./'] " routerLinkActive="active">

@@ -48,7 +48,6 @@ describe(`Home`, () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
     comp = fixture.componentInstance;
-
     fixture.detectChanges(); // trigger initial data binding
   });
 

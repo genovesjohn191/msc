@@ -28,9 +28,9 @@ import { HomeComponent } from './home';
 import { AboutComponent } from './about';
 import { NoContentComponent } from './no-content';
 import { XLargeDirective } from './home/x-large';
+import { CoreModule } from './core/core.module';
 
-import '../styles/styles.scss';
-import '../styles/headings.css';
+import '../styles/base.scss';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -44,6 +44,9 @@ type StoreType = {
   disposeOldHosts: () => void
 };
 
+const fusionApiConfig = {
+  host: 'http://localhost:11338/api/v1'
+};
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -60,7 +63,8 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
+    CoreModule.forRoot(fusionApiConfig),
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

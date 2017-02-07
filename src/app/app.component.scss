@@ -1,0 +1,14 @@
+@import "../styles/shared/base";
+
+html, body{
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+
+  @include breakpoint(medium) { 
+    background-color: red;
+  }
+}
+
+a.active {
+  background-color: gray;
+}
