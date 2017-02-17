@@ -93,7 +93,7 @@ After you have installed all dependencies you can now run the app. Run `npm run 
 `npm run build:docker`
 
 # Configuration
-Configuration files live in `config/` we are currently using webpack, karma, and protractor for different stages of your application
+Configuration files live in `config/` we are currently using webpack, karma, and protractor for different stages of the application
 
 # AoT Don'ts
 The following are some things that will make AoT compile fail.
@@ -104,3 +104,16 @@ The following are some things that will make AoT compile fail.
 - Don’t use `control.errors?.someError`, use `control.hasError(‘someError’)`
 - Don’t use functions in your providers, routes or declarations, export a function and then reference that function name
 - @Inputs, @Outputs, View or Content Child(ren), Hostbindings, and any field you use from the template or annotate for Angular should be public
+
+# Updating Dependencies
+Run `npm install -g npm-check-updates` to install CLI-tool.
+
+1. Navigate to the project root directory where `package.json` resides.
+2. Run `ncu` to check for dependencies that are behind latest versions.
+3. Run `ncu -u` to update all dependencies to latest.
+4. Run `npm run clean`
+5. Run `npm install`
+6. Run `npm run clean:shrinkwrap`
+7. Run `npm shrinkwrap`.
+   Now, `npm install` will now use exact versions in `npm-shrinkwrap.json`
+   If you check `npm-shrinkwrap.json` into git, all installs will use the exact same versions.
