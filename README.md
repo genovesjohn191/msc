@@ -117,3 +117,35 @@ Run `npm install -g npm-check-updates` to install CLI-tool.
 7. Run `npm shrinkwrap`.
    Now, `npm install` will now use exact versions in `npm-shrinkwrap.json`
    If you check `npm-shrinkwrap.json` into git, all installs will use the exact same versions.
+
+# Development Notes
+
+Read [Typescript Coding Guidelines](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines) before working on this repository.
+
+## Environment
+
+Suggested IDE: [VS Code](https://code.visualstudio.com/)
+
+Extensions: [TSLint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint), [HTMLHint](https://marketplace.visualstudio.com/items?itemName=mkaufman.HTMLHint)
+
+### Pull Requests Check List
+- Run `npm run lint` (Note: must pass with no errors/warnings)
+- Run `npm test` (Note: all unit test must be passing)
+- Feature branch should follow this format: 
+>
+	{feature/fix}/{JIRA-#}-{Branch-Title}
+e.g.
+>
+	feature/FUSION-99-Added-Custom-Module
+	fix/FUSION-201-Removed-Useless-Buttons
+
+- Commit message should follow this format:
+>
+	{JIRA-#} #comment {message}
+> e.g.
+>
+	FUSION-99 #comment Added Custom module and refactored Custom component
+
+- Before adding reviewers in your Bitbucket PR, run thru the diff and make sure everything is final and ready for code review.
+- Use description area for instructions on set-up, usage, and other non-trivial information about your changes.
+- Dead code and commented code should never be committed.
