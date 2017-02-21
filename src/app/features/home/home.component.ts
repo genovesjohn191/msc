@@ -3,7 +3,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Response } from '@angular/http';
-import { AppState } from '../app.service';
+import { AppState } from '../../app.service';
 import { Title } from './title';
 import { XLargeDirective } from './x-large';
 import { HomeService } from './home.service';

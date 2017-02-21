@@ -1,24 +1,37 @@
 import { ModuleWithProviders,
          NgModule,
          Optional,
-         SkipSelf }                     from '@angular/core';
-import { CommonModule }                 from '@angular/common';
+         SkipSelf } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { FusionApiHttpClientService } from './services/fusion-api-http-client.service';
 
 import { FusionApiConfig } from './services/fusion-api.config';
 
+// Components Declarations
+import { MainNavigationComponent } from './main-navigation/main-navigation.component';
+import { ContentComponent } from './content/content.component';
+import { FooterComponent } from './footer/footer.component';
+
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   declarations: [
+    MainNavigationComponent,
+    ContentComponent,
+    FooterComponent
   ],
   exports: [
+    MainNavigationComponent,
+    ContentComponent,
+    FooterComponent
   ],
   providers: [
     FusionApiHttpClientService,
-  ],
+  ]
 })
 
 export class CoreModule {

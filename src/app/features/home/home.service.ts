@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FusionApiHttpClientService } from '../core/services/fusion-api-http-client.service';
+import { FusionApiHttpClientService } from '../../core/services/fusion-api-http-client.service';
 
 @Injectable()
 export class HomeService {
