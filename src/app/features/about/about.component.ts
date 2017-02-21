@@ -50,7 +50,7 @@ export class AboutComponent implements OnInit {
     // remember that 'es6-promise-loader' is a promise
     setTimeout(() => {
 
-      System.import('../../assets/mock-data/mock-data.json')
+      System.import('../../../assets/mock-data/mock-data.json')
         .then((json) => {
           console.log('async mockData', json);
           this.localState = json;

@@ -1,0 +1,35 @@
+<nav class="main-nav-container" role="navigation">
+  <!--<div class="main-nav-user">
+    <button class="btn btn-primary btn-sm Topbar-toggler" type="button" (click)="OnClickToggle()">
+      <span>☰</span>
+    </button>
+    <div>Dropdown Here</div>
+    <a href="#">Login</a>
+  </div>-->
+
+  <div #mainNavMenu class="main-nav-menu">
+    <ul>
+      <li>
+        <a [routerLink]=" ['./home'] "        routerLinkActive="active">Home</a>
+      </li>
+      <li>
+        <a [routerLink]=" ['./about'] "       routerLinkActive="active">About</a>
+      </li>
+      <li>
+        <a [routerLink]=" ['./dashboard'] "   routerLinkActive="active">Dashboard</a>
+      </li>
+      <li>
+        <a [routerLink]=" ['./servers'] "     routerLinkActive="active">Servers</a>
+      </li>
+      <li>
+        <a [routerLink]=" ['./others'] "      routerLinkActive="active">Others</a>
+      </li>
+      <li>
+        <a [routerLink]=" ['./networking'] "  routerLinkActive="active">Networking</a>
+      </li>
+      <li>
+        <a [routerLink]=" ['./catalog'] "     routerLinkActive="active">Catalog</a>
+      </li>
+    </ul>
+  </div>
+</nav>
