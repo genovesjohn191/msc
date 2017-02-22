@@ -15,6 +15,9 @@ import {
   PreloadAllModules
 } from '@angular/router';
 
+import 'jquery';
+import 'bootstrap-loader';
+
 /*
  * Platform and Environment providers/directives/pipes
  */
