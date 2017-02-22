@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const helpers = require('./helpers');
 
 /** Webpack Plugins */
+const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
@@ -159,6 +160,14 @@ module.exports = function (options) {
           exclude: [helpers.root('src', 'styles')]
         },
 
+        /**
+         * Bootstrap 4 Loader @4.0.0-alpha.6
+         */
+        { 
+          test: /bootstrap\/dist\/js\/umd\//,
+          loader: 'imports?jQuery=jquery'
+        },
+
         /** 
          * Raw loader support for *.html
          * Returns file content as string
@@ -176,7 +185,6 @@ module.exports = function (options) {
           test: /\.(jpg|png|gif)$/,
           use: 'file-loader'
         },
-
       ],
 
     },
@@ -339,8 +347,18 @@ module.exports = function (options) {
         disabled: !AOT,
         tsConfig: helpers.root('tsconfig.webpack.json'),
         resourceOverride: helpers.root('config/resource-override.js')
-      })
+      }),
 
+    /**
+     * Include all loaders with plugins dependencies
+     * Description: Plugins Provider
+     *
+     */
+      new ProvidePlugin({
+        jQuery: 'jquery',
+        $: 'jquery',
+        jquery: 'jquery'
+      })
     ],
 
     /**
