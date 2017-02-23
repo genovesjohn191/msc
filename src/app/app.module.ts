@@ -15,6 +15,8 @@ import {
   PreloadAllModules
 } from '@angular/router';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import 'jquery';
 import 'bootstrap-loader';
 
@@ -71,6 +73,7 @@ import { HomeModule,
     AppComponent
   ],
   imports: [ // import Angular's modules
+    NgbModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpModule,
