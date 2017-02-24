@@ -1,0 +1,66 @@
+.status-box-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  max-width: 300px;
+  margin: 20px;
+  transition: all 0.5s;
+  color: white;
+  background: rgba(black, 0.9);
+  z-index: 1000;
+}
+
+.sb-main {
+  position: relative;
+
+  > .icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    > img {
+      max-width: 50px;
+      max-height: 50px;
+    }
+  }
+
+  > .title {
+    padding-left: 60px;
+    line-height: 30px;
+    font-size: 20px;
+  }
+
+  > .status {
+    padding-left: 60px;
+    line-height: 16px;
+    font-size: 14px;
+  }
+
+  > .user {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 10px;
+    line-height: 11px;
+  }
+}
+
+.sb-description {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.sb-close {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 13px;
+    cursor: pointer;
+  }
+}
