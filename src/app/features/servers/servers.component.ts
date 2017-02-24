@@ -8,9 +8,9 @@ import { Component } from '@angular/core';
 
 export class ServersComponent {
 
-  public   Title: string;      // Component Title
+  public   title: string;      // Component Title
 
   public constructor () {
-    this.Title = 'Servers component';
+    this.title = 'Servers component';
   }
 }

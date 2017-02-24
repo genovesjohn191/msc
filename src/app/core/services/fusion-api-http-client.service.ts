@@ -6,26 +6,44 @@ import { FusionApiConfig } from  './fusion-api.config';
 
 @Injectable()
 export class FusionApiHttpClientService {
-  private host: string;
+  private _host: string;
 
-  constructor(private http: Http, @Optional() config: FusionApiConfig) {
+  constructor(private _http: Http, @Optional() config: FusionApiConfig) {
     if (config) {
-      this.host = config.host;
+      this._host = config.host;
     }
   }
 
   public sayHello(): string {
-    return 'host: ' + this.host;
+    return 'host: ' + this._host;
   }
 
-  public get(endpoint: string, options?: Object): Observable<Response> {
-    return this.http
-      .get(`${this.host + endpoint}`, {headers: this.getHeaders()});
+  public get(endpoint: string): Observable<any> {
+    return this._http
+      .get(`${this._host + endpoint}`, {headers: this.getHeaders()})
+      .map((response) => response.json())
+      ._catch(this.handleError);
   }
 
-  public post(endpoint: string): Observable<Response> {
-    return this.http
-      .post(`${this.host + endpoint}`, {headers: this.getHeaders()});
+  public post(endpoint: string, data: any): Observable<any> {
+    return this._http
+      .post(`${this._host + endpoint}`, JSON.stringify(data), {headers: this.getHeaders()})
+      .map((response) => response.json())
+      ._catch(this.handleError);
+  }
+
+  public put(endpoint: string, data: any): Observable<any> {
+    return this._http
+      .put(`${this._host + endpoint}`, JSON.stringify(data), {headers: this.getHeaders()})
+      .map((response) => response.json())
+      ._catch(this.handleError);
+  }
+
+  public delete(endpoint: string): Observable<any> {
+    return this._http
+      .delete(`${this._host + endpoint}`, {headers: this.getHeaders()})
+      .map((response) => response.json())
+      ._catch(this.handleError);
   }
 
   private getHeaders() {

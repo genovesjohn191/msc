@@ -8,9 +8,9 @@ import { Component } from '@angular/core';
 
 export class MainNavigationComponent {
 
-  public   Title: string;      // Component Title
+  public   title: string;      // Component Title
 
   public constructor () {
-    this.Title = 'Main navigation component';
+    this.title = 'Main navigation component';
   }
 }
