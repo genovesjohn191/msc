@@ -5,7 +5,12 @@ import { ModuleWithProviders,
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+// Services Declarations
 import { FusionApiHttpClientService } from './services/fusion-api-http-client.service';
+
+// Providers Declarations
+import { EnvironmentProvider } from './providers/environment.provider';
+import { TextContentProvider } from './providers/text-content.provider';
 
 import { FusionApiConfig } from './services/fusion-api.config';
 
@@ -31,6 +36,8 @@ import { FooterComponent } from './footer/footer.component';
   ],
   providers: [
     FusionApiHttpClientService,
+    EnvironmentProvider,
+    TextContentProvider
   ]
 })
 

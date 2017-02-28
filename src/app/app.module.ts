@@ -52,7 +52,7 @@ type StoreType = {
 };
 
 const fusionApiConfig = {
-  host: 'http://localhost:11338/api/v1'
+  host: 'http://localhost:11338/api'
 };
 
 // Module Declarations
