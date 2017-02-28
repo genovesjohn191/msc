@@ -62,9 +62,6 @@
       "allow-leading-underscore",
       "ban-keywords",
       "check-format"
-    ],
-    "array-type": [
-      true, "generic"
     ]
   }
 }

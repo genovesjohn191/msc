@@ -1,0 +1,17 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "dashboard": "Dashboard",
+    "servers": "Servers",
+    "others": "Others",
+    "networking": "Networking",
+    "catalog": "Catalog"
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  },
+  "servers": {
+    "title": "Servers"
+  }
+}

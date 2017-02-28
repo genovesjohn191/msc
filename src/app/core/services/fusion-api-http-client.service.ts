@@ -14,10 +14,6 @@ export class FusionApiHttpClientService {
     }
   }
 
-  public sayHello(): string {
-    return 'host: ' + this._host;
-  }
-
   public get(endpoint: string): Observable<any> {
     return this._http
       .get(`${this._host + endpoint}`, {headers: this.getHeaders()})
@@ -50,6 +46,7 @@ export class FusionApiHttpClientService {
     let headers = new Headers();
     headers.append('Accept', 'application/json');
     headers.append('Content-Type', 'application/json');
+    headers.append('Api-Version', '1.0');
     // Appened security parameters
     return headers;
   }
