@@ -3,14 +3,13 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'mfp-others',
   templateUrl: './others.component.html',
-  styles: [ require('./others.component.scss')]
+  styles: [require('./others.component.scss')]
 })
 
 export class OthersComponent {
+  public title: string;
 
-  public   title: string;      // Component Title
-
-  public constructor () {
+  public constructor() {
     this.title = 'Others component';
   }
 }

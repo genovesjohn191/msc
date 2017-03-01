@@ -1,11 +1,9 @@
-import { NgModule }     from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-// Components Declarations
+/** Components */
 import { ServersComponent } from './servers.component';
 import { ChildComponent } from './child/child.component';
-
-// Routing Configurations
+/** Routes */
 import { routes } from './servers.routes';
 
 @NgModule({
@@ -23,4 +21,4 @@ import { routes } from './servers.routes';
   ]
 })
 
-export class ServersModule {}
+export class ServersModule { }

@@ -4,17 +4,13 @@ import { ModuleWithProviders,
          SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
-// Services Declarations
-import { FusionApiHttpClientService } from './services/fusion-api-http-client.service';
-
-// Providers Declarations
+/** Services */
+import { McsPortalApiService } from './services/mcs-portal-api.service';
+import { McsPortalApiConfig } from './services/mcs-potal-api.config';
+/** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
 import { TextContentProvider } from './providers/text-content.provider';
-
-import { FusionApiConfig } from './services/fusion-api.config';
-
-// Components Declarations
+/** Components */
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
@@ -32,21 +28,22 @@ import { FooterComponent } from './footer/footer.component';
   exports: [
     MainNavigationComponent,
     ContentComponent,
-    FooterComponent
+    FooterComponent,
+    CommonModule
   ],
   providers: [
-    FusionApiHttpClientService,
+    McsPortalApiService,
     EnvironmentProvider,
     TextContentProvider
   ]
 })
 
 export class CoreModule {
-  public static forRoot(config: FusionApiConfig): ModuleWithProviders {
+  public static forRoot(config: McsPortalApiConfig): ModuleWithProviders {
     return {
       ngModule: CoreModule,
       providers: [
-        { provide: FusionApiConfig, useValue: config }
+        { provide: McsPortalApiConfig, useValue: config }
       ]
     };
   }

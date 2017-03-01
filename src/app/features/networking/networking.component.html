@@ -1,5 +1,8 @@
 <section class="networking-container">
   <span>{{ title }}</span>
-  <div>{{ environment }}</div>
-  <div>{{ host }}</div>
+
+  <div *ngFor="let item of modelData">
+    <div>{{item.displayName}}</div>
+    <div>{{item.dataType}}</div>
+  </div>
 </section>

@@ -18,8 +18,8 @@ export class FlatDirective implements OnInit {
     this.elRenderer = _renderer;
   }
 
-  public ngOnInit () {
-    this.elRenderer.setElementStyle (this.elReference.nativeElement, 'border-radius', '0');
-    this.elRenderer.setElementStyle (this.elReference.nativeElement, 'color', 'red');
+  public ngOnInit() {
+    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'border-radius', '0');
+    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'color', 'red');
   }
 }

@@ -10,7 +10,7 @@ import {
   transition,
   animate
 } from '@angular/core';
-
+/** Models */
 import {
   StatusBoxAttribute,
   StatusBoxType

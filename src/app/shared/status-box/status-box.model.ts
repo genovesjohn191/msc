@@ -5,7 +5,7 @@ export class StatusBoxAttribute {
   public user: string;
   public dialogState: string;
 
-  constructor () {
+  constructor() {
     this.type = StatusBoxType.None;
     this.title = '';
     this.description = '';

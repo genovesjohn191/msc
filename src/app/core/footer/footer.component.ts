@@ -3,14 +3,17 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'mfp-footer',
   templateUrl: './footer.component.html',
-  styles: [ require('./footer.component.scss')]
+  styles: [require('./footer.component.scss')]
 })
 
 export class FooterComponent {
+  public angularclassLogo: string;
+  public name: string;
+  public url: string;
 
-  public   title: string;      // Component Title
-
-  public constructor () {
-    this.title = 'Footer component';
+  public constructor() {
+    this.angularclassLogo = 'assets/img/angular-logo.png';
+    this.name = 'Angular 2 Webpack Starter';
+    this.url = 'https://twitter.com/AngularClass';
   }
 }

@@ -1,10 +1,8 @@
-import { NgModule }     from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-// Components Declarations
-import { OthersComponent }         from './others.component';
-
-// Routing Configurations
+/** Components */
+import { OthersComponent } from './others.component';
+/** Routes */
 import { routes } from './others.routes';
 
 @NgModule({
@@ -20,4 +18,4 @@ import { routes } from './others.routes';
   ]
 })
 
-export class OthersModule {}
+export class OthersModule { }

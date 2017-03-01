@@ -1,23 +1,21 @@
-import { NgModule }     from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-// Components Declarations
-import { DashboardComponent }         from './dashboard.component';
+/** Components */
+import { DashboardComponent } from './dashboard.component';
 
-// Directives Declarations
+/** Directives */
 import {
   RedDirective,
   FlatDirective
 } from '../../shared';
 
-// Modules Declarations
+/** Modules */
 import { StatusBoxComponent } from '../../shared';
-
-// Routing Configurations
+/** Routes */
 import { routes } from './dashboard.routes';
 
 @NgModule({
@@ -39,4 +37,4 @@ import { routes } from './dashboard.routes';
   ]
 })
 
-export class DashboardModule {}
+export class DashboardModule { }

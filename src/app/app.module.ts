@@ -15,31 +15,55 @@ import {
   PreloadAllModules
 } from '@angular/router';
 
+/**
+ * Bootstrap 4.0 Modules/Loader
+ */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import 'jquery';
 import 'bootstrap-loader';
 
-/*
+/**
  * Platform and Environment providers/directives/pipes
  */
 import { ENV_PROVIDERS } from './environment';
 
-// App is our top level component
+/**
+ * App is our top level component
+ */
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState, InternalStateType } from './app.service';
 
-// Styling SASS
+/**
+ * Styling SASS
+ */
 import '../styles/base.scss';
 
-// Modules
+/**
+ * Modules
+ */
 import { CoreModule } from './core';
 
-// Routing
+/**
+ * Routing
+ */
 import { routes } from './app.routes';
 
-// Application wide providers
+/**
+ * MCS Portal Modules Declaration
+ */
+import {
+  HomeModule,
+  AboutModule,
+  ServersModule,
+  NetworkingModule,
+  CatalogModule,
+  DashboardModule
+} from './features';
+
+/**
+ * Application-Wide Providers
+ */
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
   AppState
@@ -51,33 +75,25 @@ type StoreType = {
   disposeOldHosts: () => void
 };
 
-const fusionApiConfig = {
+// TODO: Must come from ENV variables from server host
+const mcsPortalApiConfig = {
   host: 'http://localhost:11338/api'
 };
-
-// Module Declarations
-import { HomeModule,
-         AboutModule,
-         ServersModule,
-         NetworkingModule,
-         CatalogModule,
-         DashboardModule
-       } from './features';
 
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
 @NgModule({
-  bootstrap: [ AppComponent ],
+  bootstrap: [AppComponent],
   declarations: [
     AppComponent
   ],
-  imports: [ // import Angular's modules
+  imports: [
     NgbModule.forRoot(),
     BrowserModule,
     FormsModule,
     HttpModule,
-    CoreModule.forRoot(fusionApiConfig),
+    CoreModule.forRoot(mcsPortalApiConfig),
     RouterModule.forRoot(routes),
     HomeModule,
     AboutModule,
@@ -86,26 +102,27 @@ import { HomeModule,
     CatalogModule,
     DashboardModule
   ],
-  providers: [ // expose our Services and Providers into Angular's dependency injection
+  providers: [
     ENV_PROVIDERS,
     APP_PROVIDERS
   ]
 })
+
 export class AppModule {
 
   constructor(
     public appRef: ApplicationRef,
     public appState: AppState
-  ) {}
+  ) { }
 
   public hmrOnInit(store: StoreType) {
     if (!store || !store.state) {
       return;
     }
     console.log('HMR store', JSON.stringify(store, null, 2));
-    // set state
+    // Set state
     this.appState._state = store.state;
-    // set input values
+    // Set input values
     if ('restoreInputValues' in store) {
       let restoreInputValues = store.restoreInputValues;
       setTimeout(restoreInputValues);
@@ -118,21 +135,20 @@ export class AppModule {
 
   public hmrOnDestroy(store: StoreType) {
     const cmpLocation = this.appRef.components.map((cmp) => cmp.location.nativeElement);
-    // save state
+    // Save state
     const state = this.appState._state;
     store.state = state;
-    // recreate root elements
+    // Recreate root elements
     store.disposeOldHosts = createNewHosts(cmpLocation);
-    // save input values
-    store.restoreInputValues  = createInputTransfer();
-    // remove styles
+    // Save input values
+    store.restoreInputValues = createInputTransfer();
+    // Remove styles
     removeNgStyles();
   }
 
   public hmrAfterDestroy(store: StoreType) {
-    // display new elements
+    // Display new elements
     store.disposeOldHosts();
     delete store.disposeOldHosts;
   }
-
 }

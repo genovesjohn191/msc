@@ -13,5 +13,8 @@
   },
   "servers": {
     "title": "Servers"
+  },
+  "networking": {
+    "title": "Networking"
   }
 }

@@ -1,9 +1,8 @@
-// Modules Declarations
-export { CoreModule } from './core.module';
-
-// Services Declarations
-export { FusionApiHttpClientService } from './services/fusion-api-http-client.service';
-
-// Providers Declarations
-export { EnvironmentProvider } from './providers/environment.provider';
-export { TextContentProvider } from './providers/text-content.provider';
+/** Modules */
+export * from './core.module';
+/** Services */
+export * from './services/mcs-portal-api.service';
+/** Providers */
+export * from './providers/environment.provider';
+export * from './providers/text-content.provider';
+export * from './services/mcs-potal-api.config';
