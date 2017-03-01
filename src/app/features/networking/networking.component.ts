@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-
-// Services Declarations
+import { Http, Headers, Response } from '@angular/http';
+/** Services */
 import {
-  EnvironmentProvider,
-  FusionApiHttpClientService
+  TextContentProvider,
+  McsPortalApiService
 } from '../../core';
+import { NetworkingService } from './networking.service';
+/** Models */
+import { NetworkingModel } from './networking.model';
 
 @Component({
   selector: 'mfp-networking',
@@ -13,15 +16,24 @@ import {
   styles: [require('./networking.component.scss')]
 })
 
-export class NetworkingComponent {
+export class NetworkingComponent implements OnInit {
+  public title: string;
+  public modelData: NetworkingModel[];
 
-  public title: string;      // Component Title
-  public environment: string;
-  public host: string;
+  public constructor(
+    private _textProvider: TextContentProvider,
+    private _netService: NetworkingService) {
+    this.title = this._textProvider.content.networking.title;
+  }
 
-  public constructor(private _envProvider: EnvironmentProvider) {
-    this.title = 'Networking component';
-    this.environment = _envProvider.environment;
-    this.host = _envProvider.host;
+  public ngOnInit() {
+    this.loadData();
+  }
+
+  private loadData() {
+    this._netService.getLeadDescription()
+      .subscribe((response) => {
+        this.modelData = response;
+      });
   }
 }

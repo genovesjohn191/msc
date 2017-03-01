@@ -1,7 +1,9 @@
-import { Directive,
-         Renderer,
-         ElementRef,
-         OnInit } from '@angular/core';
+import {
+  Directive,
+  Renderer,
+  ElementRef,
+  OnInit
+} from '@angular/core';
 
 @Directive({
   selector: '[mfpRed]'
@@ -16,8 +18,8 @@ export class RedDirective implements OnInit {
     this.elRenderer = _renderer;
   }
 
-  public ngOnInit () {
-    this.elRenderer.setElementStyle (this.elReference.nativeElement, 'backgroundColor', 'red');
-    this.elRenderer.setElementStyle (this.elReference.nativeElement, 'color', 'white');
+  public ngOnInit() {
+    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'backgroundColor', 'red');
+    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'color', 'white');
   }
 }

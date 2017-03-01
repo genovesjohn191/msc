@@ -4,7 +4,8 @@ import { ServersComponent } from './servers.component';
 import { ChildComponent } from './child/child.component';
 
 export const routes: Routes = [
-  { path: 'servers', component: ServersComponent,
+  {
+    path: 'servers', component: ServersComponent,
     children: [
       { path: 'child', component: ChildComponent }
     ]

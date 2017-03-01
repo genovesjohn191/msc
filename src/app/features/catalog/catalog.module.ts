@@ -1,10 +1,8 @@
-import { NgModule }     from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-// Components Declarations
-import { CatalogComponent }         from './catalog.component';
-
-// Routing Configurations
+/** Components */
+import { CatalogComponent } from './catalog.component';
+/** Routes */
 import { routes } from './catalog.routes';
 
 @NgModule({
@@ -20,4 +18,4 @@ import { routes } from './catalog.routes';
   ]
 })
 
-export class CatalogModule {}
+export class CatalogModule { }

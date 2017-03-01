@@ -1,10 +1,11 @@
-import { NgModule }     from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-// Components Declarations
-import { NetworkingComponent }         from './networking.component';
-
-// Routing Configurations
+import { CommonModule } from '@angular/common';
+/** Components */
+import { NetworkingComponent } from './networking.component';
+/** Services */
+import { NetworkingService } from './networking.service';
+/** Routes */
 import { routes } from './networking.routes';
 
 @NgModule({
@@ -12,12 +13,16 @@ import { routes } from './networking.routes';
     NetworkingComponent,
   ],
   imports: [
+    CommonModule,
     RouterModule.forRoot(routes),
   ],
   exports: [
     NetworkingComponent,
     RouterModule
+  ],
+  providers: [
+    NetworkingService
   ]
 })
 
-export class NetworkingModule {}
+export class NetworkingModule { }

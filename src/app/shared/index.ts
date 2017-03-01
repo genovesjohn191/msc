@@ -1,9 +1,7 @@
-// Export Components
-export { StatusBoxComponent } from './status-box/status-box.component';
-
-// Export Directives
-export { RedDirective } from './directives/red.directive';
-export { FlatDirective } from './directives/flat.directive';
-
-// Exports Models
-export { StatusBoxAttribute, StatusBoxType } from './status-box/status-box.model';
+/** Components */
+export * from './status-box/status-box.component';
+/** Directives */
+export * from './directives/red.directive';
+export * from './directives/flat.directive';
+/** Models */
+export * from './status-box/status-box.model';

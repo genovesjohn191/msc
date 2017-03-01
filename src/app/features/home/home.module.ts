@@ -1,6 +1,7 @@
 import { NgModule }     from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 // Components Declarations
 import { HomeComponent }         from './home.component';
@@ -13,6 +14,7 @@ import { routes } from './home.routes';
     HomeComponent,
   ],
   imports: [
+    FormsModule,
     CommonModule,
     RouterModule.forChild(routes)
   ],
