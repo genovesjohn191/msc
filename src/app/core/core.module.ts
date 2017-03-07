@@ -1,12 +1,15 @@
-import { ModuleWithProviders,
-         NgModule,
-         Optional,
-         SkipSelf } from '@angular/core';
+import {
+  ModuleWithProviders,
+  NgModule,
+  Optional,
+  SkipSelf
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 /** Services */
 import { McsPortalApiService } from './services/mcs-portal-api.service';
 import { McsPortalApiConfig } from './services/mcs-potal-api.config';
+import { McsPortalAuthService } from './services/mcs-portal-auth.service';
 /** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
 import { TextContentProvider } from './providers/text-content.provider';
@@ -33,6 +36,7 @@ import { FooterComponent } from './footer/footer.component';
   ],
   providers: [
     McsPortalApiService,
+    McsPortalAuthService,
     EnvironmentProvider,
     TextContentProvider
   ]
@@ -48,7 +52,7 @@ export class CoreModule {
     };
   }
 
-  constructor (@Optional() @SkipSelf() parentModule: CoreModule) {
+  constructor( @Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
       throw new Error(
         'CoreModule is already loaded. Import it in the AppModule only');

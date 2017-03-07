@@ -5,7 +5,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'mfp-about',
+  selector: 'mcs-about',
   styles: [`
   `],
   template: `

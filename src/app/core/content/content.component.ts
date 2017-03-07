@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'mfp-content',
+  selector: 'mcs-content',
   templateUrl: './content.component.html',
   styles: [require('./content.component.scss')]
 })

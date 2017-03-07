@@ -51,9 +51,10 @@ module.exports = function (options) {
     entry: {
 
       'polyfills': './src/polyfills.browser.ts',
-      'main':      AOT ? './src/main.browser.aot.ts' :
-                  './src/main.browser.ts'
-
+      'bootstrap': 'bootstrap',
+      'twbs': 'bootstrap-loader',
+      'main': AOT ? './src/main.browser.aot.ts' :
+        './src/main.browser.ts'
     },
 
     /**
@@ -163,7 +164,7 @@ module.exports = function (options) {
         /**
          * Bootstrap 4 Loader @4.0.0-alpha.6
          */
-        { 
+        {
           test: /bootstrap\/dist\/js\/umd\//,
           loader: 'imports?jQuery=jquery'
         },
@@ -257,7 +258,7 @@ module.exports = function (options) {
        */
       new CopyWebpackPlugin([
         { from: 'src/assets', to: 'assets' },
-        { from: 'src/meta'}
+        { from: 'src/meta' }
       ]),
 
 
@@ -349,15 +350,18 @@ module.exports = function (options) {
         resourceOverride: helpers.root('config/resource-override.js')
       }),
 
-    /**
-     * Include all loaders with plugins dependencies
-     * Description: Plugins Provider
-     *
-     */
-      new ProvidePlugin({
+      /**
+       * Include all loaders with plugins dependencies
+       * Description: Plugins Provider
+       *
+       */
+      new webpack.ProvidePlugin({
         jQuery: 'jquery',
         $: 'jquery',
-        jquery: 'jquery'
+        jquery: 'jquery',
+        "window.moment": "moment",
+        'Tether': 'tether',
+        'window.Tether': 'tether'
       })
     ],
 

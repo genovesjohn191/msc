@@ -6,20 +6,17 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[mfpFlat]'
+  selector: '[mcsFlat]'
 })
 
 export class FlatDirective implements OnInit {
-  private elReference: ElementRef;
-  private elRenderer: Renderer;
-
-  constructor(_renderer: Renderer, _reference: ElementRef) {
-    this.elReference = _reference;
-    this.elRenderer = _renderer;
+  constructor(
+    private _renderer: Renderer,
+    private _element: ElementRef) {
   }
 
   public ngOnInit() {
-    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'border-radius', '0');
-    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'color', 'red');
+    this._renderer.setElementStyle(this._element.nativeElement, 'border-radius', '0');
+    this._renderer.setElementStyle(this._element.nativeElement, 'color', 'red');
   }
 }

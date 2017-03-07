@@ -1,37 +1,20 @@
-.main-nav-container {
-  position: relative;
-  padding: 0.5rem 1rem;
-  min-width: 250px;
-  border-bottom: 1px solid #e6e6e6;
+@import "../../../styles/shared/base";
 
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
+.main-navigation {
+  background-color: $primary-color;
+  color: $black;
+  padding: 0;
 
-.main-nav-menu {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-
-  > ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
+  .navbar-nav {
     > li {
-      line-height: inherit;
-      padding: 0.5rem;
-      > a {
-        &:hover,
-        &.active {
-          background-color: #eee;
-        }
+      &:hover,
+      &:focus,
+      &.active {
+        background-color: $white;
       }
+    }
+    a {
+      font-weight: bold;
     }
   }
 }

@@ -11,7 +11,7 @@ import { NetworkingService } from './networking.service';
 import { NetworkingModel } from './networking.model';
 
 @Component({
-  selector: 'mfp-networking',
+  selector: 'mcs-networking',
   templateUrl: './networking.component.html',
   styles: [require('./networking.component.scss')]
 })
