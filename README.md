@@ -126,7 +126,7 @@ Read [Typescript Coding Guidelines](https://github.com/Microsoft/TypeScript/wiki
 
 Suggested IDE: [VS Code](https://code.visualstudio.com/)
 
-Extensions: [TSLint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint), [HTMLHint](https://marketplace.visualstudio.com/items?itemName=mkaufman.HTMLHint), [DebuggerForChrome] (https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome), [HTMLScssSupport] (https://marketplace.visualstudio.com/items?itemName=P-de-Jong.vscode-html-scss)
+Extensions: [TSLint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint), [HTMLHint](https://marketplace.visualstudio.com/items?itemName=mkaufman.HTMLHint), [DebuggerForChrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome), [HTMLScssSupport](https://marketplace.visualstudio.com/items?itemName=P-de-Jong.vscode-html-scss)
 
 ### Pull Requests Check List
 - Run `npm run lint` (Note: must pass with no errors/warnings)
