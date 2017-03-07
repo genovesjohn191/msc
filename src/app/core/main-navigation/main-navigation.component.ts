@@ -1,20 +1,37 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 /** Providers */
 import { TextContentProvider } from '../providers/text-content.provider';
 
+/** Services */
+import {
+  McsPortalAuthService,
+  UserTypeEnum
+} from '../services/mcs-portal-auth.service';
+
 @Component({
-  selector: 'mfp-main-navigation',
+  selector: 'mcs-main-navigation',
   templateUrl: './main-navigation.component.html',
   styles: [require('./main-navigation.component.scss')]
 })
 
 export class MainNavigationComponent {
-  public title: string;
   public textContent: any;
 
-  public constructor(textProvider: TextContentProvider) {
-    this.title = 'Main navigation component';
-    this.textContent = textProvider.content.navigation;
+  public constructor(
+    private _textProvider: TextContentProvider,
+    private _authService: McsPortalAuthService,
+    private _titleService: Title) {
+
+    this.textContent = this._textProvider.content;
+  }
+
+  public isUser(): boolean {
+    return this._authService.userType === UserTypeEnum.User;
+  }
+
+  public setTitle(title: string) {
+    this._titleService.setTitle(title);
   }
 }

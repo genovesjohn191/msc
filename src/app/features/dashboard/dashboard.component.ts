@@ -4,7 +4,7 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { StatusBoxAttribute, StatusBoxType } from '../../shared';
 
 @Component({
-  selector: 'mfp-dashboard',
+  selector: 'mcs-dashboard',
   templateUrl: './dashboard.component.html',
   styles: [require('./dashboard.component.scss')]
 })

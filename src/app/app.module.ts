@@ -19,8 +19,6 @@ import {
  * Bootstrap 4.0 Modules/Loader
  */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import 'jquery';
-import 'bootstrap-loader';
 
 /**
  * Platform and Environment providers/directives/pipes

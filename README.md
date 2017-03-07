@@ -10,7 +10,7 @@
 
 > Make sure you have Node version >= 5.0 and NPM >= 3
 
-1.  Clone repo `git@bitbucket.org:macquariecloudservices/macquarie-fusion-angular-portal.git`
+1.  Clone repo `git@bitbucket.org:macquariecloudservices/mcs.portal.angular.git`
 
 2. Change directory to your cloned repo
 
@@ -126,7 +126,7 @@ Read [Typescript Coding Guidelines](https://github.com/Microsoft/TypeScript/wiki
 
 Suggested IDE: [VS Code](https://code.visualstudio.com/)
 
-Extensions: [TSLint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint), [HTMLHint](https://marketplace.visualstudio.com/items?itemName=mkaufman.HTMLHint)
+Extensions: [TSLint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint), [HTMLHint](https://marketplace.visualstudio.com/items?itemName=mkaufman.HTMLHint), [DebuggerForChrome] (https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome), [HTMLScssSupport] (https://marketplace.visualstudio.com/items?itemName=P-de-Jong.vscode-html-scss)
 
 ### Pull Requests Check List
 - Run `npm run lint` (Note: must pass with no errors/warnings)

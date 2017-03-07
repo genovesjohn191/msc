@@ -6,20 +6,17 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[mfpRed]'
+  selector: '[mcsRed]'
 })
 
 export class RedDirective implements OnInit {
-  private elReference: ElementRef;
-  private elRenderer: Renderer;
-
-  constructor(_renderer: Renderer, _reference: ElementRef) {
-    this.elReference = _reference;
-    this.elRenderer = _renderer;
+  constructor(
+    private _renderer: Renderer,
+    private _element: ElementRef) {
   }
 
   public ngOnInit() {
-    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'backgroundColor', 'red');
-    this.elRenderer.setElementStyle(this.elReference.nativeElement, 'color', 'white');
+    this._renderer.setElementStyle(this._element.nativeElement, 'backgroundColor', 'red');
+    this._renderer.setElementStyle(this._element.nativeElement, 'color', 'white');
   }
 }

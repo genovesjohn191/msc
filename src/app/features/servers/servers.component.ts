@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'mfp-servers',
+  selector: 'mcs-servers',
   templateUrl: './servers.component.html',
   styles: [require('./servers.component.scss')]
 })

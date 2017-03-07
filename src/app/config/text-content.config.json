@@ -9,12 +9,18 @@
     "catalog": "Catalog"
   },
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Macquarie Portal - Dashboard"
   },
   "servers": {
-    "title": "Servers"
+    "title": "Macquarie Portal - Servers"
   },
   "networking": {
-    "title": "Networking"
+    "title": "Macquarie Portal - Networking"
+  },
+  "catalog": {
+    "title": "Macquarie Portal - Catalog"
+  },
+  "others": {
+    "title": "Macquarie Portal - Others"
   }
 }

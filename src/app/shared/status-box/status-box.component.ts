@@ -17,7 +17,7 @@ import {
 } from './status-box.model';
 
 @Component({
-  selector: 'mfp-status-box',
+  selector: 'mcs-status-box',
   templateUrl: './status-box.component.html',
   styles: [require('./status-box.component.scss')],
   animations: [

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'mfp-child',
+  selector: 'mcs-child',
   templateUrl: './child.component.html',
   styles: [require('./child.component.scss')]
 })

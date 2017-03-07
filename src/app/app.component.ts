@@ -13,7 +13,7 @@ import { AppState } from './app.service';
  * Top Level Component
  */
 @Component({
-  selector: 'mfp-app',
+  selector: 'mcs-app',
   encapsulation: ViewEncapsulation.None,
   styles: [require('./app.component.scss')],
   templateUrl: './app.component.html'
