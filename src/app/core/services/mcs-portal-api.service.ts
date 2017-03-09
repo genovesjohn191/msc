@@ -10,7 +10,10 @@ import { McsPortalApiConfig } from './mcs-potal-api.config';
  */
 @Injectable()
 export class McsPortalApiService {
-  constructor(private _http: Http, @Optional() private _config: McsPortalApiConfig) { }
+  constructor(
+    private _http: Http,
+    @Optional() private _config: McsPortalApiConfig
+  ) { }
 
   /**
    * GET Http Request
@@ -20,8 +23,8 @@ export class McsPortalApiService {
   public get(endpoint: string, optHeaders?: Headers): Observable<Response> {
     return this._http.get(
       `${this._config.host + endpoint}`,
-      { headers: this.getHeaders(optHeaders) })
-      .catch(this.handleError);
+      { headers: this._getHeaders(optHeaders) })
+      .catch(this._handleError);
   }
 
   /**
@@ -34,8 +37,8 @@ export class McsPortalApiService {
     return this._http.post(
       `${this._config.host + endpoint}`,
       data,
-      { headers: this.getHeaders(optHeaders) })
-      .catch(this.handleError);
+      { headers: this._getHeaders(optHeaders) })
+      .catch(this._handleError);
   }
 
   /**
@@ -48,8 +51,8 @@ export class McsPortalApiService {
     return this._http.put(
       `${this._config.host + endpoint}`,
       data,
-      { headers: this.getHeaders(optHeaders) })
-      .catch(this.handleError);
+      { headers: this._getHeaders(optHeaders) })
+      .catch(this._handleError);
   }
 
   /**
@@ -60,20 +63,20 @@ export class McsPortalApiService {
   public delete(endpoint: string, optHeaders?: Headers): Observable<Response> {
     return this._http.delete(
       `${this._config.host + endpoint}`,
-      { headers: this.getHeaders(optHeaders) })
-      .catch(this.handleError);
+      { headers: this._getHeaders(optHeaders) })
+      .catch(this._handleError);
   }
 
   /**
    * Get Headers Value
    * @param {Headers} optHeaders Optional Header
    */
-  private getHeaders(optHeaders?: Headers) {
+  private _getHeaders(optHeaders?: Headers) {
     let headers = new Headers();
 
-    this.setDefaultHeaders(headers);
-    this.setAuthorizationHeaders(headers);
-    this.setOptionalHeaders(headers, optHeaders);
+    this._setDefaultHeaders(headers);
+    this._setAuthorizationHeaders(headers);
+    this._setOptionalHeaders(headers, optHeaders);
 
     return headers;
   }
@@ -82,7 +85,7 @@ export class McsPortalApiService {
    * Set Default Headers
    * @param {Headers} headers Header Instance
    */
-  private setDefaultHeaders(headers: Headers) {
+  private _setDefaultHeaders(headers: Headers) {
     headers.set('Accept', 'application/json');
     headers.set('Content-Type', 'application/json');
     headers.set('Api-Version', '1.0');
@@ -92,7 +95,7 @@ export class McsPortalApiService {
    * Set setAuthorizationHeaders
    * @param {Headers} headers Header Instance
    */
-  private setAuthorizationHeaders(headers: Headers) {
+  private _setAuthorizationHeaders(headers: Headers) {
     // TODO: Implement when authorization is under
   }
 
@@ -101,7 +104,7 @@ export class McsPortalApiService {
    * @param {Headers} headers Header Instance
    * @param {Headers} optHeaders Optional Header
    */
-  private setOptionalHeaders(headers: Headers, optHeaders: Headers) {
+  private _setOptionalHeaders(headers: Headers, optHeaders: Headers) {
     if (!optHeaders) { return; };
 
     optHeaders.forEach((_values, _name, _headers) => {
@@ -113,7 +116,7 @@ export class McsPortalApiService {
    * Handle Error Exception
    * @param {any} error Error Response
    */
-  private handleError(error: Response | any) {
+  private _handleError(error: Response | any) {
     // TODO: Refactor error handling
     // In a real world app, we might use a remote logging infrastructure
     console.error('Error thrown from fusion api client service.');

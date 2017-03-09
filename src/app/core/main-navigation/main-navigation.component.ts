@@ -22,8 +22,8 @@ export class MainNavigationComponent {
   public constructor(
     private _textProvider: TextContentProvider,
     private _authService: McsPortalAuthService,
-    private _titleService: Title) {
-
+    private _titleService: Title
+  ) {
     this.textContent = this._textProvider.content;
   }
 
