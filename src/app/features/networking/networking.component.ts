@@ -22,7 +22,8 @@ export class NetworkingComponent implements OnInit {
 
   public constructor(
     private _textProvider: TextContentProvider,
-    private _netService: NetworkingService) {
+    private _netService: NetworkingService
+  ) {
     this.title = this._textProvider.content.networking.title;
   }
 

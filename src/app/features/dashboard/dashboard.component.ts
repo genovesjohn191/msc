@@ -11,35 +11,35 @@ import { StatusBoxAttribute, StatusBoxType } from '../../shared';
 
 export class DashboardComponent implements OnInit {
   public title: string;
-  public statusBoxAttr: StatusBoxAttribute;
+  public statusBoxAttribute: StatusBoxAttribute;
   public model: NgbDateStruct;
   public date: { year: number, month: number };
-  public curDate: Date;
+  public currentDate: Date;
 
   public constructor() {
     this.title = 'Dashboard component';
-    this.statusBoxAttr = new StatusBoxAttribute();
-    this.curDate = new Date();
+    this.statusBoxAttribute = new StatusBoxAttribute();
+    this.currentDate = new Date();
   }
 
   public ngOnInit() {
-    this.OnDisplayStatusBox();
-    this.statusBoxAttr.dialogState = 'hide';
+    this.onDisplayStatusBox();
+    this.statusBoxAttribute.dialogState = 'hide';
   }
 
-  public OnSelectToday() {
+  public onSelectToday() {
     this.model = {
-      year: this.curDate.getFullYear(),
-      month: this.curDate.getMonth() + 1,
-      day: this.curDate.getDate()
+      year: this.currentDate.getFullYear(),
+      month: this.currentDate.getMonth() + 1,
+      day: this.currentDate.getDate()
     };
   }
 
-  public OnDisplayStatusBox() {
-    this.statusBoxAttr.type = StatusBoxType.Success;
-    this.statusBoxAttr.dialogState = 'show';
-    this.statusBoxAttr.title = 'mongo-db-1';
-    this.statusBoxAttr.user = 'Arrian';
-    this.statusBoxAttr.description = 'The virtual machine successfully started. Check the status';
+  public onDisplayStatusBox() {
+    this.statusBoxAttribute.type = StatusBoxType.Success;
+    this.statusBoxAttribute.dialogState = 'show';
+    this.statusBoxAttribute.title = 'mongo-db-1';
+    this.statusBoxAttribute.user = 'Arrian';
+    this.statusBoxAttribute.description = 'The virtual machine successfully started. Check the status';
   }
 }

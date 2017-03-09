@@ -26,8 +26,8 @@
      <div class="dashboard-container-item">
        <span class="title">Status Notification Implementation Example</span>
        <div class="content">
-         <button class="btn btn-success btn-sm" (click)="OnDisplayStatusBox()">Toggle Notification</button>
-         <mcs-status-box [attribute]="statusBoxAttr"></mcs-status-box>
+         <button class="btn btn-success btn-sm" (click)="onDisplayStatusBox()">Toggle Notification</button>
+         <mcs-status-box [attribute]="statusBoxAttribute"></mcs-status-box>
        </div>
      </div>
 
@@ -52,7 +52,7 @@
       <div class="content">
         <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next"></ngb-datepicker>
         <hr/>
-        <button class="btn btn-sm btn-outline-primary" (click)="OnSelectToday()">Select Today</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="onSelectToday()">Select Today</button>
         <button class="btn btn-sm btn-outline-primary" (click)="dp.navigateTo()">To current month</button>
         <button class="btn btn-sm btn-outline-primary" (click)="dp.navigateTo({year: 2013, month: 2})">To Feb 2013</button>
         <hr/>
