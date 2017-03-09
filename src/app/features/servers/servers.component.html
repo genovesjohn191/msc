@@ -1,5 +1,7 @@
 <section class="servers-container">
-  <span>{{ title }}</span>
+  <span>{{ title }}</span><br>
+  <span>Click <a [routerLink]="['./child']">here</a> to view the child component.</span><br>
+  <span>Click <a [routerLink]="['./others']">here</a> to view the others component.</span>
 </section>
 
 <router-outlet></router-outlet>

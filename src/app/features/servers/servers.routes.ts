@@ -7,7 +7,8 @@ export const routes: Routes = [
   {
     path: 'servers', component: ServersComponent,
     children: [
-      { path: 'child', component: ChildComponent }
+      { path: 'child', component: ChildComponent },
+      { path: 'others', loadChildren: './+others/others.module#OthersModule' }
     ]
   },
   { path: 'others', loadChildren: './+others/others.module#OthersModule' }

@@ -10,7 +10,7 @@ import { routes } from './catalog.routes';
     CatalogComponent,
   ],
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forChild(routes),
   ],
   exports: [
     CatalogComponent,
