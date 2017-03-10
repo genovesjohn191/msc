@@ -14,6 +14,7 @@ import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
 import { TextContentProvider } from './providers/text-content.provider';
+import { IconProvider } from './providers/icon.provider';
 /** Components */
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ContentComponent } from './content/content.component';
@@ -42,7 +43,8 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
     McsPortalApiService,
     McsPortalAuthService,
     EnvironmentProvider,
-    TextContentProvider
+    TextContentProvider,
+    IconProvider
   ]
 })
 
