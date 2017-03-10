@@ -1,0 +1,20 @@
+{
+  "icons": [
+    {
+      "key": "arrow-up",
+      "value": "../../../arrow.png"
+    },
+    {
+      "key": "arrow-right",
+      "value": "../../../arrow.png"
+    },
+    {
+      "key": "arrow-down",
+      "value": "../../../arrow.png"
+    },
+    {
+      "key": "arrow-left",
+      "value": "../../../arrow.png"
+    }
+  ]
+}

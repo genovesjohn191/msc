@@ -6,4 +6,5 @@ export * from './services/mcs-portal-auth.service';
 /** Providers */
 export * from './providers/environment.provider';
 export * from './providers/text-content.provider';
+export * from './providers/icon.provider';
 export * from './services/mcs-potal-api.config';
