@@ -1,18 +1,15 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Title } from '@angular/platform-browser';
 
 import { MainNavigationComponent } from './main-navigation.component';
-
-import { Title } from '@angular/platform-browser';
 import { TextContentProvider } from '../providers/text-content.provider';
 import {
   McsPortalAuthService,
   UserTypeEnum
 } from '../services/mcs-portal-auth.service';
 
-describe('Main Navigation component', () => {
+describe('MainNavigationComponent', () => {
 
   /** Stub Services/Components */
   let component: MainNavigationComponent;
@@ -59,6 +56,7 @@ describe('Main Navigation component', () => {
     });
   }));
 
+  /** Test Implementation */
   describe('setTitle()', () => {
     it('should call setTitle() from titleService 1 time',
       inject([Title], (title: Title) => {

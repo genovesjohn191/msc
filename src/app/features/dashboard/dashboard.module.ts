@@ -28,7 +28,7 @@ import { routes } from './dashboard.routes';
   imports: [
     FormsModule,
     CommonModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forChild(routes),
     NgbModule
   ],
   exports: [

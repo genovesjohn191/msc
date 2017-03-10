@@ -40,6 +40,6 @@ export class DashboardComponent implements OnInit {
     this.statusBoxAttribute.dialogState = 'show';
     this.statusBoxAttribute.title = 'mongo-db-1';
     this.statusBoxAttribute.user = 'Arrian';
-    this.statusBoxAttribute.description = 'The virtual machine successfully started. Check the status';
+    this.statusBoxAttribute.description = 'The virtual machine successfully started. ';
   }
 }

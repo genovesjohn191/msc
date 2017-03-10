@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { McsPortalApiService } from './services/mcs-portal-api.service';
 import { McsPortalApiConfig } from './services/mcs-potal-api.config';
 import { McsPortalAuthService } from './services/mcs-portal-auth.service';
+import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
 import { TextContentProvider } from './providers/text-content.provider';
@@ -17,6 +18,7 @@ import { TextContentProvider } from './providers/text-content.provider';
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 
 @NgModule({
   imports: [
@@ -25,6 +27,7 @@ import { FooterComponent } from './footer/footer.component';
   ],
   declarations: [
     MainNavigationComponent,
+    BreadcrumbsComponent,
     ContentComponent,
     FooterComponent
   ],
@@ -35,6 +38,7 @@ import { FooterComponent } from './footer/footer.component';
     CommonModule
   ],
   providers: [
+    BreadcrumbsService,
     McsPortalApiService,
     McsPortalAuthService,
     EnvironmentProvider,

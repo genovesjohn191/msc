@@ -14,7 +14,7 @@ import { routes } from './networking.routes';
   ],
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forChild(routes),
   ],
   exports: [
     NetworkingComponent,

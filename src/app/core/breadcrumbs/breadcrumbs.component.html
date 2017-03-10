@@ -1,0 +1,7 @@
+<ol class="breadcrumb">
+  <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs">
+    <a *ngIf="breadcrumb.isActive">{{ breadcrumb.name }}</a>
+    <a *ngIf="!breadcrumb.isActive" [routerLink]="[breadcrumb.url]" 
+        (click)="onNavigateTo(breadcrumb.url)">{{ breadcrumb.name }}</a>
+  </li>
+</ol>
