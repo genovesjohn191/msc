@@ -22,5 +22,13 @@
   },
   "others": {
     "title": "Macquarie Portal - Others"
+  },
+  "footer": {
+    "copyright": "Copyright: 2016 Macquarie Telecom Group",
+    "links": {
+      "privacyPolicy": "Privacy Policy",
+      "termsUse": "Terms Use",
+      "licenseAgreement": "License Agreement"
+    }
   }
 }

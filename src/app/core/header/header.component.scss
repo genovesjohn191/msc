@@ -1,0 +1,35 @@
+@import '../../../styles/base';
+
+.header-wrapper {
+  background-color: $black;
+  color: $white;
+}
+
+.header-container {
+  @extend .display-flex-row;
+  align-items: center;
+  padding: 30px 0;
+
+  .logo {
+    margin-right: auto;
+    > img {
+      width: 100%;
+      max-width: 260px;
+    }
+  }
+
+  // TODO: Move to specific folder of user panel component
+  .user-panel {
+    margin-left: auto;
+    text-align: center;
+
+    .link {
+      cursor: pointer;
+      @include font-size($fontsize-dropdown-desktop);
+    }
+
+    .label {
+      @include font-size($fontsize-label-desktop);
+    }
+  }
+}

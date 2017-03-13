@@ -1,0 +1,26 @@
+<div class="container-fluid header-wrapper">
+  <div class="container">
+    <header class="header-container">
+      <div class="logo">
+        <a [routerLink]="['./dashboard']">
+          <img src="{{ mcsLogo }}" alt="image">
+        </a>
+      </div>
+
+      <!--TODO: Create Seperate Component for user-panel -->
+      <div class="user-panel">
+        <div ngbDropdown class="d-inline-block link">
+          <a ngbDropdownToggle id="dropdownId">Arrian Pascual</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownId">
+            <button class="dropdown-item">Account Settings</button>
+            <button class="dropdown-item">Profile</button>
+            <button class="dropdown-item">Logout</button>
+          </div>
+        </div>
+        <div class="label">
+          <span>Macquarie TelecomContoso</span>
+        </div>
+      </div>
+    </header>
+  </div>
+</div>

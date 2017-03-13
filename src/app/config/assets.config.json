@@ -1,0 +1,12 @@
+{
+  "icons": {
+    "arrow-up": "./src/arrow-up.png",
+    "arrow-right": "./src/arrow-right.png",
+    "arrow-down": "./src/arrow-down.png",
+    "arrow-left": "./src/arrow-left.png"
+  },
+  "images": {
+    "header-logo": "cloud-services-header-logo.png",
+    "footer-logo": "cloud-services-footer-logo.png"
+  }
+}
