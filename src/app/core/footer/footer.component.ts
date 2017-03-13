@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
+/** Providers */
+import { AssetsProvider } from '../providers/assets.provider';
+import { TextContentProvider } from '../providers/text-content.provider';
 
 @Component({
   selector: 'mcs-footer',
@@ -6,14 +13,23 @@ import { Component } from '@angular/core';
   styles: [require('./footer.component.scss')]
 })
 
-export class FooterComponent {
-  public angularclassLogo: string;
-  public name: string;
-  public url: string;
+export class FooterComponent implements OnInit {
+  public mcsLogo: string;
+  public copyright: string;
+  public links: string;
 
-  public constructor() {
-    this.angularclassLogo = 'assets/img/cloud-services-footer-logo.png';
-    this.name = 'Angular 2 Webpack Starter';
-    this.url = 'https://twitter.com/AngularClass';
+  public constructor(
+    private _assetsProvider: AssetsProvider,
+    private _textContentProvider: TextContentProvider
+  ) {
+    this.mcsLogo = '';
+    this.copyright = '';
+    this.links = '';
+  }
+
+  public ngOnInit() {
+    this.mcsLogo = this._assetsProvider.getImagePath('footer-logo');
+    this.copyright = this._textContentProvider.content.footer.copyright;
+    this.links = this._textContentProvider.content.footer.links;
   }
 }

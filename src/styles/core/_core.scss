@@ -22,3 +22,19 @@ body {
     @include font-size(get-value($font-size-base-small));
   }
 }
+
+.unstyled-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.display-flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.display-flex-column {
+  display: flex;
+  flex-direction: column;
+}

@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 /** Services */
 import { McsPortalApiService } from './services/mcs-portal-api.service';
 import { McsPortalApiConfig } from './services/mcs-potal-api.config';
@@ -14,29 +15,33 @@ import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
 import { TextContentProvider } from './providers/text-content.provider';
-import { IconProvider } from './providers/icon.provider';
+import { AssetsProvider } from './providers/assets.provider';
 /** Components */
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    NgbModule
   ],
   declarations: [
     MainNavigationComponent,
     BreadcrumbsComponent,
     ContentComponent,
-    FooterComponent
+    FooterComponent,
+    HeaderComponent
   ],
   exports: [
+    CommonModule,
     MainNavigationComponent,
     ContentComponent,
     FooterComponent,
-    CommonModule
+    HeaderComponent
   ],
   providers: [
     BreadcrumbsService,
@@ -44,7 +49,7 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
     McsPortalAuthService,
     EnvironmentProvider,
     TextContentProvider,
-    IconProvider
+    AssetsProvider
   ]
 })
 

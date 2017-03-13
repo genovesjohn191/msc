@@ -1,9 +1,22 @@
-<footer class="footer-container">
-  
-  <span>WebPack Angular 2 Starter by <a [href]="url">@AngularClass</a></span>
-  <div>
-    <a [href]="url">
-      <img [src]="angularclassLogo" width="10%">
-    </a>
+<div class="container-fluid footer-wrapper">
+  <div class="container">
+    <footer class="footer-container">
+      <div class="copyright">
+        <span>{{ copyright }}</span>
+      </div>
+      <div class="links">
+        <ul class="unstyled-list">
+          <li>
+            <a href="#">{{ links.privacyPolicy }}</a>
+          </li>
+          <li>
+            <a href="#">{{ links.termsUse }}</a>
+          </li>
+          <li>
+            <a href="#">{{ links.licenseAgreement }}</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
   </div>
-</footer>
+</div>

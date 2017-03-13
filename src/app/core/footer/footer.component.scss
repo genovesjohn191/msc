@@ -1,6 +1,32 @@
+@import '../../../styles/base';
+
+.footer-wrapper {
+  background-color: $black;
+  color: $white;
+}
+
 .footer-container {
-  position: relative;
-  padding: 0.5rem 1rem;
-  height: 60px;
-  border-top: 1px solid #e6e6e6;
+  @extend .display-flex-column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+
+  .copyright {
+    @include font-size($fontsize-label-desktop);
+  }
+
+  .links {
+    ul {
+     @extend .display-flex-row;
+     li {
+       a {
+         color: $white;
+         @include font-size($fontsize-link-desktop);
+       }
+       &:not(:last-child) {
+         padding-right: 20px;
+       }
+     }
+    }
+  }
 }
