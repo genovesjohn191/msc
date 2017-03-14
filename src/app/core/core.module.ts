@@ -7,9 +7,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+/** Configuration */
+import { CoreConfig } from './core.config';
 /** Services */
 import { McsPortalApiService } from './services/mcs-portal-api.service';
-import { McsPortalApiConfig } from './services/mcs-potal-api.config';
 import { McsPortalAuthService } from './services/mcs-portal-auth.service';
 import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Providers */
@@ -54,11 +55,11 @@ import { HeaderComponent } from './header/header.component';
 })
 
 export class CoreModule {
-  public static forRoot(config: McsPortalApiConfig): ModuleWithProviders {
+  public static forRoot(config: CoreConfig): ModuleWithProviders {
     return {
       ngModule: CoreModule,
       providers: [
-        { provide: McsPortalApiConfig, useValue: config }
+        { provide: CoreConfig, useValue: config }
       ]
     };
   }

@@ -1,8 +1,15 @@
-import { Injectable, Optional } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import {
+  Injectable,
+  Optional
+} from '@angular/core';
+import {
+  Http,
+  Headers,
+  Response
+} from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { McsPortalApiConfig } from './mcs-potal-api.config';
+import { CoreConfig } from '../core.config';
 
 /**
  * Macquarie Portal Api Service class
@@ -12,7 +19,7 @@ import { McsPortalApiConfig } from './mcs-potal-api.config';
 export class McsPortalApiService {
   constructor(
     private _http: Http,
-    @Optional() private _config: McsPortalApiConfig
+    @Optional() private _config: CoreConfig
   ) { }
 
   /**
@@ -22,7 +29,7 @@ export class McsPortalApiService {
    */
   public get(endpoint: string, optHeaders?: Headers): Observable<Response> {
     return this._http.get(
-      `${this._config.host + endpoint}`,
+      `${this._config.apiHost + endpoint}`,
       { headers: this._getHeaders(optHeaders) })
       .catch(this._handleError);
   }
@@ -35,7 +42,7 @@ export class McsPortalApiService {
    */
   public post(endpoint: string, data: any, optHeaders?: Headers): Observable<Response> {
     return this._http.post(
-      `${this._config.host + endpoint}`,
+      `${this._config.apiHost + endpoint}`,
       data,
       { headers: this._getHeaders(optHeaders) })
       .catch(this._handleError);
@@ -49,7 +56,7 @@ export class McsPortalApiService {
    */
   public put(endpoint: string, data: any, optHeaders?: Headers): Observable<Response> {
     return this._http.put(
-      `${this._config.host + endpoint}`,
+      `${this._config.apiHost + endpoint}`,
       data,
       { headers: this._getHeaders(optHeaders) })
       .catch(this._handleError);
@@ -62,7 +69,7 @@ export class McsPortalApiService {
    */
   public delete(endpoint: string, optHeaders?: Headers): Observable<Response> {
     return this._http.delete(
-      `${this._config.host + endpoint}`,
+      `${this._config.apiHost + endpoint}`,
       { headers: this._getHeaders(optHeaders) })
       .catch(this._handleError);
   }

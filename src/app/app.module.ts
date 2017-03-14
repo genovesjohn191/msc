@@ -30,7 +30,10 @@ import { ENV_PROVIDERS } from './environment';
  */
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
-import { AppState, InternalStateType } from './app.service';
+import {
+  AppState,
+  InternalStateType
+} from './app.service';
 
 /**
  * Styling SASS
@@ -38,9 +41,12 @@ import { AppState, InternalStateType } from './app.service';
 import '../styles/base.scss';
 
 /**
- * Modules
+ * Core Modules and Configuration
  */
-import { CoreModule } from './core';
+import {
+  CoreModule,
+  CoreConfig
+} from './core';
 
 /**
  * Routing
@@ -74,9 +80,10 @@ type StoreType = {
 };
 
 // TODO: Must come from ENV variables from server host
-const mcsPortalApiConfig = {
-  host: 'http://localhost:11338/api'
-};
+const mcsCoreConfig = {
+  apiHost: 'http://localhost:11338/api',
+  imageRoot: 'assets/img/'
+} as CoreConfig;
 
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
@@ -91,7 +98,7 @@ const mcsPortalApiConfig = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    CoreModule.forRoot(mcsPortalApiConfig),
+    CoreModule.forRoot(mcsCoreConfig),
     RouterModule.forRoot(routes),
     HomeModule,
     AboutModule,
