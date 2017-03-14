@@ -1,14 +1,18 @@
-import { Injectable } from '@angular/core';
+import {
+  Injectable,
+  Optional
+} from '@angular/core';
+
+/** Core Configuration */
+import { CoreConfig } from '../core.config';
 
 @Injectable()
 export class AssetsProvider {
-  private prefix: string = 'assets/img/'; // TODO: Remove this, and set to actual environment
-
-  private _icons: Map<string, string>;
   private _images: Map<string, string>;
+  private _icons: Map<string, string>;
   private _config: any;
 
-  constructor() {
+  constructor(private _coreConfig: CoreConfig) {
     this._icons = new Map<string, string>();
     this._images = new Map<string, string>();
     this.load();
@@ -49,7 +53,7 @@ export class AssetsProvider {
     }
 
     // Return value (image path)
-    return this.prefix + value;
+    return this._coreConfig.imageRoot + value;
   }
 
   /**
