@@ -42,4 +42,8 @@ export class DashboardComponent implements OnInit {
     this.statusBoxAttribute.user = 'Arrian';
     this.statusBoxAttribute.description = 'The virtual machine successfully started. ';
   }
+
+  public onButtonClicked() {
+    alert('Button Component was clicked!');
+  }
 }

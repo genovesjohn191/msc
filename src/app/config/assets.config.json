@@ -1,9 +1,7 @@
 {
   "icons": {
-    "arrow-up": "./src/arrow-up.png",
-    "arrow-right": "./src/arrow-right.png",
-    "arrow-down": "./src/arrow-down.png",
-    "arrow-left": "./src/arrow-left.png"
+    "arrow-right": "mcs-icon mcs-arrow-right-icon",
+    "credit-card": "fa fa-credit-card"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",
