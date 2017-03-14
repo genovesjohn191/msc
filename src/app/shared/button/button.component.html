@@ -1,0 +1,5 @@
+<button #mcsButton type="button" class="btn mcs-button" (click)="emitEvent($event)">
+  <i *ngIf="iconLeft" class="icon-left" [ngClass]="iconLeftClass"></i>
+  <span><ng-content></ng-content></span>
+  <i *ngIf="iconRight" class="icon-right" [ngClass]="iconRightClass"></i>  
+</button>

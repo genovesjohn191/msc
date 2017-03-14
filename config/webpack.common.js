@@ -53,6 +53,7 @@ module.exports = function (options) {
       'polyfills': './src/polyfills.browser.ts',
       'bootstrap': 'bootstrap',
       'twbs': 'bootstrap-loader',
+      'fa': 'font-awesome-sass-loader!./config/font-awesome.config.js',
       'main': AOT ? './src/main.browser.aot.ts' :
         './src/main.browser.ts'
     },
@@ -186,6 +187,18 @@ module.exports = function (options) {
           test: /\.(jpg|png|gif)$/,
           use: 'file-loader'
         },
+
+        /*
+        * Font loaders, required for font-awesome-sass-loader and bootstrap-loader
+        */
+        {
+          test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          use: "url-loader?limit=10000&mimetype=application/font-woff"
+        },
+        {
+          test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          use: "file-loader"
+        }
       ],
 
     },

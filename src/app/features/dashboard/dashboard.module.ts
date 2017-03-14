@@ -14,7 +14,10 @@ import {
 } from '../../shared';
 
 /** Modules */
-import { StatusBoxComponent } from '../../shared';
+import {
+  StatusBoxComponent,
+  McsUiModule
+} from '../../shared';
 /** Routes */
 import { routes } from './dashboard.routes';
 
@@ -29,7 +32,8 @@ import { routes } from './dashboard.routes';
     FormsModule,
     CommonModule,
     RouterModule.forChild(routes),
-    NgbModule
+    NgbModule,
+    McsUiModule
   ],
   exports: [
     DashboardComponent,

@@ -68,6 +68,19 @@
         <button class="btn btn-primary" mcsFlat mcsRed>Custom Color</button>
       </div>
     </div>
+
+    <!--Button Implementation-->
+    <div class="dashboard-container-item">
+      <span class="title">Button Implementation Example</span>
+      <div class="content">
+        <mcs-button>Regular Default Button</mcs-button> <br/>
+        <mcs-button [size]="'small'">Small Default Button</mcs-button> <br/>
+        <mcs-button [iconRight]="'arrow-right'">Right Arrow Button</mcs-button> <br/>
+        <mcs-button [iconRight]="'arrow-right'" [width]="500">Right Arrow Button with Custom Size</mcs-button> <br/>
+        <mcs-button [iconLeft]="'credit-card'" [iconRight]="'arrow-right'">Right Arrow Button with Icon Label</mcs-button> <br/>
+        <mcs-button [iconRight]="'arrow-right'" (onClick)="onButtonClicked()">Show Alert</mcs-button>
+      </div>
+    </div>
   </div>
 
     <div class="col">

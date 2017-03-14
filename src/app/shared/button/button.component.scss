@@ -1,0 +1,34 @@
+@import "../../../styles/shared/base";
+
+.mcs-button {
+  background-color: $primary-color;
+  color: $white;
+  display: flex;
+  flex-direction: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 15px;
+
+  &.small {
+    font-size: 80%;
+    padding: 5px 10px;
+  }
+    
+  &.has-icon {
+    justify-content: flex-start;
+    padding: 0 15px;
+
+    span {
+      margin-right: 30px;
+    }
+
+    .icon-left {
+      margin-right: 5px;
+    }
+
+    .icon-right {
+      margin-left: auto;
+    }
+  }
+
+}
