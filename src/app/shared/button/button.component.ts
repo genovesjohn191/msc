@@ -39,7 +39,7 @@ export class ButtonComponent implements OnInit, AfterViewInit {
   public onClick: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('mcsButton')
-  private _mcsbutton: ElementRef;
+  private _mcsButton: ElementRef;
 
   public constructor(
     private _assetsProvider: AssetsProvider,
@@ -57,16 +57,16 @@ export class ButtonComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    if (this.iconLeft || this.iconRight) {
-      this._renderer.setElementClass(this._mcsbutton.nativeElement, 'has-icon', true);
+    if (this.iconLeftClass || this.iconRightClass) {
+      this._renderer.setElementClass(this._mcsButton.nativeElement, 'has-icon', true);
     }
 
     if (this.size) {
-      this._renderer.setElementClass(this._mcsbutton.nativeElement, this.size, true);
+      this._renderer.setElementClass(this._mcsButton.nativeElement, this.size, true);
     }
 
     if (this.width) {
-      this._renderer.setElementStyle(this._mcsbutton.nativeElement, 'width', this.width + 'px');
+      this._renderer.setElementStyle(this._mcsButton.nativeElement, 'width', this.width + 'px');
     }
   }
 
