@@ -59,7 +59,6 @@ import { routes } from './app.routes';
 import {
   HomeModule,
   AboutModule,
-  ServersModule,
   NetworkingModule,
   CatalogModule,
   DashboardModule
@@ -81,7 +80,7 @@ type StoreType = {
 
 // TODO: Must come from ENV variables from server host
 const mcsCoreConfig = {
-  apiHost: 'http://localhost:11338/api',
+  apiHost: 'http://localhost:11338',
   imageRoot: 'assets/img/'
 } as CoreConfig;
 
@@ -102,7 +101,6 @@ const mcsCoreConfig = {
     RouterModule.forRoot(routes),
     HomeModule,
     AboutModule,
-    ServersModule,
     NetworkingModule,
     CatalogModule,
     DashboardModule
