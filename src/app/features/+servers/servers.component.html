@@ -1,0 +1,34 @@
+<section class="servers-container">
+  <h1>{{ title }}</h1>
+  <input type="text" name="search" placeholder="Type to filter..."/>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Bell</th>
+        <th>Server</th>
+        <th>State</th>
+        <th>Catalog</th>
+        <th>Intellicentere</th>
+        <th>Server Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let server of servers">
+        <td><img src="#" alt="check"/></td>
+        <td>{{server.managementName}}</td>
+        <td>{{server.powerState}}</td>
+        <td>{{server.guestOS}}</td>
+        <td>{{server.serviceId}}</td>
+        <td>{{server.serviceDescription}}</td>
+        <td><img src="#" alt="gear"/></td>
+      </tr>
+      <div *ngIf="!loadedSuccesfully">
+        Loading...
+      </div>
+    </tbody>
+    <tfoot *ngIf="loadedSuccesfully">
+      <div>More</div>
+    </tfoot>
+  </table>
+</section>
