@@ -4,7 +4,8 @@
   background-color: $primary-color;
   color: $white;
   display: flex;
-  flex-direction: row nowrap;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
   padding: 10px 15px;
@@ -23,7 +24,7 @@
     }
 
     .icon-left {
-      margin-right: 5px;
+      margin-right: 10px;
     }
 
     .icon-right {
