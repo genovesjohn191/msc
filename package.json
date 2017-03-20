@@ -15,7 +15,7 @@
     "build:aot:prod": "npm run clean:dist && npm run clean:aot && webpack --config config/webpack.prod.js  --progress --profile --bail",
     "build:aot": "npm run build:aot:prod",
     "build:dev": "npm run clean:dist && webpack --config config/webpack.dev.js --progress --profile",
-    "build:docker": "npm run build:prod && docker build -t fusion-ngportal:latest .",
+    "build:docker": "npm run build:prod && docker build -t mcs/portal-frontend:latest .",
     "build:prod": "npm run clean:dist && webpack --config config/webpack.prod.js  --progress --profile --bail",
     "build": "npm run build:dev",
     "ci:aot": "npm run lint && npm run test && npm run build:aot && npm run e2e",
@@ -162,7 +162,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://philipbadilla@bitbucket.org/macquariecloudservices/macquarie-fusion-angular-portal.git"
+    "url": "git@bitbucket.org:macquariecloudservices/mcs.portal.frontend.git"
   },
   "engines": {
     "node": ">= 4.2.1",
