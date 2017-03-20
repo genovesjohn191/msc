@@ -10,7 +10,7 @@
 
 > Make sure you have Node version >= 5.0 and NPM >= 3
 
-1.  Clone repo `git@bitbucket.org:macquariecloudservices/mcs.portal.angular.git`
+1.  Clone repo `git@bitbucket.org:macquariecloudservices/mcs.portal.frontend.git`
 
 2. Change directory to your cloned repo
 
