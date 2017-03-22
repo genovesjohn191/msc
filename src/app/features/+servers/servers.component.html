@@ -1,34 +1,36 @@
 <section class="servers-container">
   <h1>{{ title }}</h1>
   <input type="text" name="search" placeholder="Type to filter..."/>
-  <table class="table">
-    <thead>
+  <table class="mcs-table table">
+    <thead class="head">
       <tr>
-        <th>Bell</th>
-        <th>Server</th>
+        <th class="text-center hidden-small"><i class="fa fa-bell-o"></i></th>
         <th>State</th>
-        <th>Catalog</th>
-        <th>Intellicentere</th>
-        <th>Server Type</th>
+        <th>Server</th>
+        <th class="hidden-xsmall">Catalog</th>
+        <th class="hidden-small">Intellicentere</th>
+        <th class="hidden-xsmall">Server Type</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let server of servers">
-        <td><img src="#" alt="check"/></td>
+        <td class="text-center hidden-small"><i class="fa fa-check"></i></td>
+        <td class="text-center"><i class="fa fa-circle-o-notch"></i></td>
         <td>{{server.managementName}}</td>
-        <td>{{server.powerState}}</td>
-        <td>{{server.guestOS}}</td>
-        <td>{{server.serviceId}}</td>
-        <td>{{server.serviceDescription}}</td>
-        <td><img src="#" alt="gear"/></td>
+        <td class="hidden-xsmall">{{server.guestOS}}</td>
+        <td class="text-center hidden-small">{{server.serviceId}}</td>
+        <td class="hidden-xsmall">{{server.serviceDescription}}</td>
+        <td class="text-center"><a href="#" class="fa fa-gear action-button"></a></td>
       </tr>
       <div *ngIf="!loadedSuccesfully">
         Loading...
       </div>
     </tbody>
-    <tfoot *ngIf="loadedSuccesfully">
-      <div>More</div>
+    <tfoot>
     </tfoot>
   </table>
+  <div class="paging text-center">
+    <a href="#">More <i class="fa fa-angle-down"></i></a>
+  </div>
 </section>

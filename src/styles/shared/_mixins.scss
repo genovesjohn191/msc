@@ -7,7 +7,10 @@
     @media screen and (max-width: $tablet-max-width) { @content; }
   }
   @else if $point == small {
-    @media screen and (max-width: $mobile-max-width) { @content; }
+    @media screen and (max-width: $mobile-landscape-max-width) { @content; }
+  }
+  @else if $point == xsmall {
+    @media screen and (max-width: $mobile-portrait-max-width) { @content; }
   }
 }
 
