@@ -1,7 +1,9 @@
 // Typography
+$circular-pro-book: "Circular-Pro-Book";
+$circular-pro-bold: "Circular-Pro-Bold";
 
-$primary-font: Arial, Helvetica, sans-serif;
-$secondary-font: Cambria, Georgia;
+$base-font: $circular-pro-book;
+$base-font-bold: $circular-pro-bold;
 
 $font-size-base-large: 16;
 $font-size-base-medium: 14;
@@ -23,6 +25,10 @@ $h4-large: 18;
 $h4-medium: 16;
 $h4-small: 14;
 
+$icon-size-large: 22;
+$icon-size-medium: 18;
+$icon-size-small: 14;
+
 // Color Palettes
 
 $primary-color-palette-00: blue;
@@ -37,15 +43,20 @@ $default-text-color: #000;
 
 // Responsive Dimension Settings
 
-$desktop-min-width:  970px;
-$tablet-max-width:  969px;
-$mobile-max-width:  719px;
+$desktop-min-width: 970px;
+$tablet-max-width: 969px;
+$mobile-landscape-max-width: 719px;
+$mobile-portrait-max-width: 543px;
 
 $nav-button-color: #00838F;
 
 // Color Definition
 $white: #fff;
 $black: #000;
+$grey-01: #e1e1e1;
+$grey-02: #f4f4f4;
+$green-01: #21b21e;
+$red-01: #f80c27;
 
 $primary-color: #00bed8;
 $secondary-color: #00bed1;
@@ -68,3 +79,8 @@ $fontsize-label-desktop: 14;
 
 // Font Size Dropdowns
 $fontsize-dropdown-desktop: 16;
+
+// Container Sizes
+$container-desktop: 970px;
+$container-tablet: 720px;
+$container-mobile: 100%;

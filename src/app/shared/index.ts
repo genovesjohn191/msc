@@ -1,7 +1,5 @@
 /** Components */
 export * from './status-box/status-box.component';
-/** MCS UI Components */
-export * from './button/button.component';
 /** Directives */
 export * from './directives/red.directive';
 export * from './directives/flat.directive';
