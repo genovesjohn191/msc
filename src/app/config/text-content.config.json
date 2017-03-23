@@ -30,5 +30,8 @@
       "termsUse": "Terms Use",
       "licenseAgreement": "License Agreement"
     }
+  },
+  "filterSelector": {
+    "title": "Always show the following columns."
   }
 }

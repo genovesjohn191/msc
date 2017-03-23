@@ -1,0 +1,31 @@
+@import '../../../styles/base';
+
+.icon-link {
+  cursor: pointer;
+}
+
+ul.filters {
+  @extend .display-flex-column;
+}
+
+:host /deep/ {
+  .popover[style] {
+    margin-left: 60px; // Adjusment to center of parent element
+    width: 200px;      // Maximum width for the filter
+  }
+  .popover.popover-bottom {
+    &:before,
+    &:after {
+      left: 20%;       // Arrow adjustment
+    }
+  }
+  .popover-title {
+    font-weight: 400;
+    background-color: $grey-02;
+    text-align: left;
+  }
+  .popover-content {
+    background-color: $grey-02;
+    text-align: left;
+  }
+}

@@ -5,9 +5,9 @@ import { Title } from '@angular/platform-browser';
 import { MainNavigationComponent } from './main-navigation.component';
 import { TextContentProvider } from '../providers/text-content.provider';
 import {
-  McsPortalAuthService,
+  McsAuthService,
   UserTypeEnum
-} from '../services/mcs-portal-auth.service';
+} from '../services/mcs-auth.service';
 
 describe('MainNavigationComponent', () => {
 
@@ -34,7 +34,7 @@ describe('MainNavigationComponent', () => {
         RouterTestingModule
       ],
       providers: [
-        { provide: McsPortalAuthService, useValue: authService },
+        { provide: McsAuthService, useValue: authService },
         { provide: Title, useValue: titleService },
         { provide: TextContentProvider, useValue: textService }
       ]

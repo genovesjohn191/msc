@@ -1,0 +1,24 @@
+{
+  "columnMainFilter": {
+    "serverName": {
+      "text": "Server Name",
+      "value": true
+    },
+    "networking": {
+      "text": "Networking",
+      "value": true
+    },
+    "catalog": {
+      "text": "Catalog",
+      "value": true
+    },
+    "others": {
+      "text": "Others",
+      "value": false
+    },
+    "dashboard": {
+      "text": "Dashboard",
+      "value": false
+    }
+  }
+}

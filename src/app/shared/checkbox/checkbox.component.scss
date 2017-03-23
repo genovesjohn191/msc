@@ -1,0 +1,23 @@
+@import "../../../styles/shared/base";
+
+label {
+  cursor: pointer;
+  max-width: 90%;
+}
+
+input[type="checkbox"] {
+  display: none;
+
+  + label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f096";
+    letter-spacing: 5px;
+    @include font-size($fontsize-checkbox-desktop);
+  }
+
+  &:checked + label:before {
+    content: "\f14a";
+    color: $primary-color;
+  }
+}
