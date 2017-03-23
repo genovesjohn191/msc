@@ -6,9 +6,9 @@ import { TextContentProvider } from '../providers/text-content.provider';
 
 /** Services */
 import {
-  McsPortalAuthService,
+  McsAuthService,
   UserTypeEnum
-} from '../services/mcs-portal-auth.service';
+} from '../services/mcs-auth.service';
 
 @Component({
   selector: 'mcs-main-navigation',
@@ -21,7 +21,7 @@ export class MainNavigationComponent {
 
   public constructor(
     private _textProvider: TextContentProvider,
-    private _authService: McsPortalAuthService,
+    private _authService: McsAuthService,
     private _titleService: Title
   ) {
     this.textContent = this._textProvider.content;

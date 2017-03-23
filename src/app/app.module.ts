@@ -48,6 +48,8 @@ import {
   CoreConfig
 } from './core';
 
+import { SharedModule } from './shared';
+
 /**
  * Routing
  */
@@ -57,8 +59,6 @@ import { routes } from './app.routes';
  * MCS Portal Modules Declaration
  */
 import {
-  HomeModule,
-  AboutModule,
   NetworkingModule,
   CatalogModule,
   DashboardModule
@@ -93,17 +93,11 @@ const mcsCoreConfig = {
     AppComponent
   ],
   imports: [
-    NgbModule.forRoot(),
     BrowserModule,
-    FormsModule,
     HttpModule,
+    NgbModule.forRoot(),
     CoreModule.forRoot(mcsCoreConfig),
-    RouterModule.forRoot(routes),
-    HomeModule,
-    AboutModule,
-    NetworkingModule,
-    CatalogModule,
-    DashboardModule
+    RouterModule.forRoot(routes)
   ],
   providers: [
     ENV_PROVIDERS,
@@ -116,7 +110,11 @@ export class AppModule {
   constructor(
     public appRef: ApplicationRef,
     public appState: AppState
-  ) { }
+  ) {
+
+    // TODO: Set actual userID here
+    appState.set('userId', 'F500120501');
+  }
 
   public hmrOnInit(store: StoreType) {
     if (!store || !store.state) {

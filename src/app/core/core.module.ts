@@ -10,13 +10,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 /** Configuration */
 import { CoreConfig } from './core.config';
 /** Services */
-import { McsPortalApiService } from './services/mcs-portal-api.service';
-import { McsPortalAuthService } from './services/mcs-portal-auth.service';
+import { McsApiService } from './services/mcs-api.service';
+import { McsAuthService } from './services/mcs-auth.service';
+import { MscStorageService } from './services/mcs-storage.service';
 import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
 import { TextContentProvider } from './providers/text-content.provider';
 import { AssetsProvider } from './providers/assets.provider';
+import { FilterProvider } from './providers/filter.provider';
 /** Components */
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ContentComponent } from './content/content.component';
@@ -46,11 +48,13 @@ import { HeaderComponent } from './header/header.component';
   ],
   providers: [
     BreadcrumbsService,
-    McsPortalApiService,
-    McsPortalAuthService,
+    McsApiService,
+    McsAuthService,
+    MscStorageService,
     EnvironmentProvider,
     TextContentProvider,
-    AssetsProvider
+    AssetsProvider,
+    FilterProvider
   ]
 })
 

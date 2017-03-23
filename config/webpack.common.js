@@ -51,7 +51,6 @@ module.exports = function (options) {
     entry: {
 
       'polyfills': './src/polyfills.browser.ts',
-      'bootstrap': 'bootstrap',
       'twbs': 'bootstrap-loader',
       'fa': 'font-awesome-sass-loader!./config/font-awesome.config.js',
       'main': AOT ? './src/main.browser.aot.ts' :
@@ -167,7 +166,7 @@ module.exports = function (options) {
          */
         {
           test: /bootstrap\/dist\/js\/umd\//,
-          loader: 'imports?jQuery=jquery'
+          use: 'imports-loader?jQuery=jquery'
         },
 
         /** 
@@ -335,6 +334,31 @@ module.exports = function (options) {
        */
       new LoaderOptionsPlugin({}),
 
+      /**
+       * Include all loaders with plugins dependencies
+       * Description: Plugins Provider
+       *
+       */
+      new webpack.ProvidePlugin({
+        jQuery: 'jquery',
+        $: 'jquery',
+        jquery: 'jquery',
+        "window.moment": "moment",
+        'Tether': 'tether',
+        'window.Tether': 'tether',
+        Tooltip: "exports-loader?Tooltip!bootstrap/js/dist/tooltip",
+        Alert: "exports-loader?Alert!bootstrap/js/dist/alert",
+        Button: "exports-loader?Button!bootstrap/js/dist/button",
+        Carousel: "exports-loader?Carousel!bootstrap/js/dist/carousel",
+        Collapse: "exports-loader?Collapse!bootstrap/js/dist/collapse",
+        Dropdown: "exports-loader?Dropdown!bootstrap/js/dist/dropdown",
+        Modal: "exports-loader?Modal!bootstrap/js/dist/modal",
+        Popover: "exports-loader?Popover!bootstrap/js/dist/popover",
+        Scrollspy: "exports-loader?Scrollspy!bootstrap/js/dist/scrollspy",
+        Tab: "exports-loader?Tab!bootstrap/js/dist/tab",
+        Util: "exports-loader?Util!bootstrap/js/dist/util"
+      }),
+
       /** Fix Angular 2 */
       new NormalModuleReplacementPlugin(
         /facade(\\|\/)async/,
@@ -361,20 +385,6 @@ module.exports = function (options) {
         disabled: !AOT,
         tsConfig: helpers.root('tsconfig.webpack.json'),
         resourceOverride: helpers.root('config/resource-override.js')
-      }),
-
-      /**
-       * Include all loaders with plugins dependencies
-       * Description: Plugins Provider
-       *
-       */
-      new webpack.ProvidePlugin({
-        jQuery: 'jquery',
-        $: 'jquery',
-        jquery: 'jquery',
-        "window.moment": "moment",
-        'Tether': 'tether',
-        'window.Tether': 'tether'
       })
     ],
 
