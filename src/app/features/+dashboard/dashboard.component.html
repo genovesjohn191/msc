@@ -103,12 +103,28 @@
     <div class="dashboard-container-item">
       <span class="title">Button Implementation Example</span>
       <div class="content">
-        <mcs-button>Regular Default Button</mcs-button> <br/>
-        <mcs-button [size]="'small'">Small Default Button</mcs-button> <br/>
-        <mcs-button [iconRight]="'arrow-right'">Right Arrow Button</mcs-button> <br/>
-        <mcs-button [iconRight]="'arrow-right'" [width]="500">Right Arrow Button with Custom Size</mcs-button> <br/>
-        <mcs-button [iconLeft]="'credit-card'" [iconRight]="'arrow-right'">Right Arrow Button with Icon Label</mcs-button> <br/>
-        <mcs-button [iconRight]="'arrow-right'" (onClick)="onButtonClicked()">Show Alert</mcs-button>
+        <small><em>Regular Default Button</em></small> <br/>
+        <mcs-button>Add New Server</mcs-button> <br/>
+        <small><em>Regular Default Button w/ Custom Width</em></small> <br/>
+        <mcs-button width="200">Add New Server</mcs-button> <hr/>
+
+        <small><em>Small Default Button</em></small> <br/>
+        <mcs-button size="small">Manage</mcs-button> <br/>
+        <small><em>Small Default Button w/ Custom Width</em></small> <br/>
+        <mcs-button size="small" width="200">Manage</mcs-button> <hr/>
+
+        <small><em>Regular Button w/ Right Icon</em></small> <br/>
+        <mcs-button iconRight="arrow-right">Next</mcs-button> <br/>
+        <small><em>Regular Button w/ Right Icon and Custom Width</em></small> <br/>
+        <mcs-button iconRight="arrow-right" width="200">Next</mcs-button> <hr/>
+
+        <small><em>Regular Button w/ Left & Right Icon</em></small> <br/>
+        <mcs-button iconLeft="credit-card" iconRight="arrow-right">Create New Server</mcs-button> <br/>
+        <small><em>Create New Server</em></small> <br/>
+        <mcs-button iconLeft="credit-card" iconRight="arrow-right" width="500">Create New Server</mcs-button> <hr/>
+
+        <small><em>Regular Button w/ OnClick Event</em></small> <br/>
+        <mcs-button iconRight="arrow-right" (onClick)="onButtonClicked()">Show Alert</mcs-button>
       </div>
     </div>
   </div>

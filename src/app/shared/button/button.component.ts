@@ -66,7 +66,8 @@ export class ButtonComponent implements OnInit, AfterViewInit {
     }
 
     if (this.width) {
-      this._renderer.setElementStyle(this._mcsButton.nativeElement, 'width', this.width + 'px');
+      this._renderer.setElementStyle(this._mcsButton.nativeElement, 'max-width', this.width + 'px');
+      this._renderer.setElementClass(this._mcsButton.nativeElement, 'w-100', true);
     }
   }
 

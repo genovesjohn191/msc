@@ -2,33 +2,60 @@
 
 .mcs-button {
   background-color: $primary-color;
+  font-family: $base-font;
   color: $white;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
   padding: 10px 15px;
+  margin: 5px;
+  position: relative;
+  @include breakpoint(small) {
+    width: 100%;
+  }
 
   &.small {
-    font-size: 80%;
-    padding: 5px 10px;
+    @include font-size($font-size-base-small);
+    padding: 5px 15px;
+    @include breakpoint(small) {
+      width: auto;
+    }
   }
     
   &.has-icon {
-    justify-content: flex-start;
     padding: 0 15px;
+    min-height: 42px;
+    text-align: left;
 
-    span {
-      margin-right: 30px;
-    }
+    div {
+      display: inline-block;
+      vertical-align: middle;
 
-    .icon-left {
-      margin-right: 10px;
-    }
+      &.text {
+        line-height: 40px;
+        @include breakpoint(small) {
+          max-width: 60%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
 
-    .icon-right {
-      margin-left: auto;
+        .icon-left-wrapper {
+          margin-right: 10px;
+
+          .icon-left {
+            line-height: 40px;
+          }
+        }
+      }
+
+      &.icon-right-wrapper {
+        width: 40px;
+        float: right;
+        margin-left: 30px;
+
+        .icon-right {
+          display: block;
+          margin: 0 auto;
+          line-height: 40px;
+        }
+      }
     }
   }
 

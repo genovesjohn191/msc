@@ -1,6 +1,13 @@
 <section class="servers-container">
   <h1>{{ title }}</h1>
-  <input type="text" name="search" placeholder="Type to filter..."/>
+  <div class="row">
+    <div class="col-6">
+      <input type="text" class="search-box" name="search" placeholder="Type to filter..."/>
+    </div>
+    <div class="col-6 text-right">
+      <mcs-button>New Server</mcs-button>
+    </div>
+  </div>
   <table class="mcs-table table">
     <thead class="head">
       <tr>
