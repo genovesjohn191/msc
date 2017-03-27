@@ -5,13 +5,15 @@ import { CommonModule } from '@angular/common';
 import { routes } from './servers.routes';
 import { ServersComponent } from './servers.component';
 import { ServersService } from './servers.service';
+/** Modules */
+import { SharedModule } from '../../shared';
 @NgModule({
   declarations: [
     ServersComponent
   ],
   imports: [
     RouterModule.forChild(routes),
-    CommonModule
+    SharedModule
   ],
   exports: [
     ServersComponent,
