@@ -95,6 +95,14 @@ After you have installed all dependencies you can now run the app. Run `npm run 
 # Configuration
 Configuration files live in `config/` we are currently using webpack, karma, and protractor for different stages of the application
 
+# Environment Variables
+Environment variable setup must be done before the build process (e.g. `npm run build:prod`). 
+
+1. Customize environment variables from the `env.setup` file on the root directory. 
+2. Set the variables by calling `$ source ./env.setup` from the root directory.
+3. Optionally you can confirm if the environment variables are correct using `$ echo $VAR_NAME`
+4. Run your `npm run build` command. 
+
 # AoT Don'ts
 The following are some things that will make AoT compile fail.
 
