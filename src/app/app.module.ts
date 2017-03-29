@@ -78,9 +78,8 @@ type StoreType = {
   disposeOldHosts: () => void
 };
 
-// TODO: Must come from ENV variables from server host
 const mcsCoreConfig = {
-  apiHost: 'http://localhost:11338',
+  apiHost: API_URL,
   imageRoot: 'assets/img/'
 } as CoreConfig;
 
@@ -111,7 +110,6 @@ export class AppModule {
     public appRef: ApplicationRef,
     public appState: AppState
   ) {
-
     // TODO: Set actual userID here
     appState.set('userId', 'F500120501');
   }

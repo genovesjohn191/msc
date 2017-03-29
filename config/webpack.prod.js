@@ -14,6 +14,7 @@ const OptimizeJsPlugin = require('optimize-js-plugin');
 
 /** Webpack Constants */
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const API_URL = process.env.API_URL || 'api';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const METADATA = webpackMerge(commonConfig({
@@ -21,6 +22,7 @@ const METADATA = webpackMerge(commonConfig({
 }).metadata, {
   host: HOST,
   port: PORT,
+  API_URL: API_URL,
   ENV: ENV,
   HMR: false
 });
@@ -144,11 +146,13 @@ module.exports = function (env) {
        */
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
+        'API_URL': JSON.stringify(METADATA.API_URL),
         'HMR': METADATA.HMR,
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
+          'API_URL' : JSON.stringify(METADATA.API_URL),
         }
       }),
 
