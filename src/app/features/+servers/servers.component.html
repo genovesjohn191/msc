@@ -1,43 +1,110 @@
 <section class="servers-container">
-  <h1>{{ title }}</h1>
-  <div class="row">
-    <div class="col-6">
-      <mcs-textbox name="search" placeholder="Type to filter..."></mcs-textbox>
+  <div class="information">
+    <div class="title">
+      <h3><b>Servers</b></h3>
     </div>
-    <div class="col-6 text-right">
+    <div class="server-count">
+      <span>{{ totalServerCount }} Servers</span>
+    </div>
+  </div>
+
+  <div class="filter">
+    <div class="search">
+      <mcs-textbox name="search" [ngModel]="keyword"
+        (ngModelChange)="onSearchEvent($event)"
+        placeholder="Type to filter..."></mcs-textbox>
+
+      <mcs-filter-selector class="hidden-small" key="serverListingFilter" 
+        (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
+    </div>
+    <div class="server-select">
       <mcs-button>New Server</mcs-button>
     </div>
   </div>
+
   <table class="mcs-table table">
     <thead class="head">
       <tr>
-        <th class="text-center hidden-small"><i class="fa fa-bell-o"></i></th>
-        <th>State</th>
-        <th>Server</th>
-        <th class="hidden-xsmall">Catalog</th>
-        <th class="hidden-small">Intellicentere</th>
-        <th class="hidden-xsmall">Server Type</th>
+        <th *ngIf="columnSettings['alerts'].value" class="hidden-small">
+          <i class="fa fa-bell-o"></i></th>
+        <th *ngIf="columnSettings['state'].value">
+          {{ columnSettings['state'].text }}
+        </th>
+        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small">
+          {{ columnSettings['serviceId'].text }}
+        </th>
+        <th *ngIf="columnSettings['name'].value">
+          {{ columnSettings['name'].text }}
+        </th>
+        <th *ngIf="columnSettings['type'].value" class="hidden-xsmall">
+          {{ columnSettings['type'].text }}
+        </th>
+        <th *ngIf="columnSettings['catalog'].value" class="hidden-xsmall">
+          {{ columnSettings['catalog'].text }}
+        </th>
+        <th *ngIf="columnSettings['privateIp'].value" class="hidden-small">
+          {{ columnSettings['privateIp'].text }}
+        </th>
+        <th *ngIf="columnSettings['zone'].value" class="hidden-small">
+          {{ columnSettings['zone'].text }}
+        </th>
+        <th *ngIf="columnSettings['vApp'].value" class="hidden-small">
+          {{ columnSettings['vApp'].text }}
+        </th>
+        <th *ngIf="columnSettings['services'].value" class="hidden-small">
+          {{ columnSettings['services'].text }}
+        </th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let server of servers">
-        <td class="text-center hidden-small"><i class="fa fa-check"></i></td>
-        <td class="text-center"><i class="fa fa-circle-o-notch"></i></td>
-        <td>{{server.managementName}}</td>
-        <td class="hidden-xsmall">{{server.guestOS}}</td>
-        <td class="text-center hidden-small">{{server.serviceId}}</td>
-        <td class="hidden-xsmall">{{server.serviceDescription}}</td>
+        <td *ngIf="columnSettings['alerts'].value" class="text-center hidden-small">
+          <i class="fa fa-check"></i></td>
+        <td *ngIf="columnSettings['state'].value" class="text-center">
+          <i class="fa fa-circle-o-notch"></i>
+        </td>
+        <td *ngIf="columnSettings['serviceId'].value" class="text-center hidden-small">
+          {{ server.serviceId }}
+        </td>
+        <td *ngIf="columnSettings['name'].value" class="text-center">
+          <a href="#"><u>{{ server.managementName }}</u></a>
+        </td>
+        <td *ngIf="columnSettings['type'].value" class="text-center hidden-xsmall">
+          {{ server.serviceDescription }}
+        </td>
+        <td *ngIf="columnSettings['catalog'].value" class="text-center hidden-xsmall">
+          {{ server.guestOS }}
+        </td>
+        <td *ngIf="columnSettings['privateIp'].value" class="text-center hidden-small">
+          {{ server.managementIpAddress }}
+        </td>
+        <td *ngIf="columnSettings['zone'].value" class="text-center hidden-small">
+          {{ server.coreCount }}
+        </td>
+        <td *ngIf="columnSettings['vApp'].value" class="text-center hidden-small">
+          <!--TODO: VM Application Here-->
+          {{ server.hardwareVendor }}
+        </td>
+        <td *ngIf="columnSettings['services'].value" class="text-center hidden-small">
+          <a href="#">{{ server.id }}</a>
+        </td>
         <td class="text-center"><a href="#" class="fa fa-gear action-button"></a></td>
       </tr>
-      <div *ngIf="!loadedSuccesfully">
-        Loading...
+      <div *ngIf="errorMessage">
+        {{ errorMessage }}
       </div>
     </tbody>
     <tfoot>
     </tfoot>
   </table>
+  
   <div class="paging text-center">
-    <a href="#">More <i class="fa fa-angle-down"></i></a>
+    <a *ngIf="(displayServerCount < totalServerCount) && isLoaded" 
+      (click)="onClickMoreEvent()">More 
+      <i class="fa fa-angle-down"></i>
+    </a>
+    <span *ngIf="!isLoaded">Loading...</span>
+    <span *ngIf="totalServerCount === 0 && isLoaded">No server found.</span>
   </div>
 </section>

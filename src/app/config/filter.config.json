@@ -20,5 +20,47 @@
       "text": "Dashboard",
       "value": false
     }
+  },
+  "serverListingFilter": {
+    "alerts": {
+      "text": "Alerts",
+      "value": true
+    },
+    "state": {
+      "text": "State",
+      "value": true
+    },
+    "serviceId": {
+      "text": "Service ID",
+      "value": true
+    },
+    "name": {
+      "text": "Name",
+      "value": true
+    },
+    "type": {
+      "text": "Type",
+      "value": true
+    },
+    "catalog": {
+      "text": "Catalog",
+      "value": true
+    },
+    "privateIp": {
+      "text": "Private IP",
+      "value": true
+    },
+    "zone": {
+      "text": "Zone",
+      "value": true
+    },
+    "vApp": {
+      "text": "vApp",
+      "value": false
+    },
+    "services": {
+      "text": "Services",
+      "value": false
+    }
   }
 }

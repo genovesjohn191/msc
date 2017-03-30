@@ -6,7 +6,7 @@
 }
 
 .footer-container {
-  @extend .display-flex-column;
+  @include display-flex(column);
   align-items: center;
   justify-content: center;
   padding: 20px 0;
@@ -17,7 +17,7 @@
 
   .links {
     ul {
-     @extend .display-flex-row;
+     @include display-flex(row)
      li {
        a {
          color: $white;
