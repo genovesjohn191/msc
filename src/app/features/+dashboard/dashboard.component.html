@@ -130,6 +130,44 @@
   </div>
 
     <div class="col">
+      <!--Textbox Implementation-->
+      <div class="dashboard-container-item">
+        <span class="title">Textbox Implementation Example</span>
+        <div class="content">
+          <form>
+            <label for="textDefault"><strong>Default Textbox</strong></label> <br/>
+            <mcs-textbox name="textDefault" placeholder="Enter text here..."></mcs-textbox>
+            <br/><br/>
+
+            <label for="textIcon"><strong>Textbox w/ Icon</strong></label> <br/>
+            <mcs-textbox name="textIcon" icon="search" placeholder="Type to filter..."></mcs-textbox>
+            <br/><br/>
+
+            <label for="textCustom"><strong>Textbox w/ Icon & Custom Width</strong></label> <br/>
+            <mcs-textbox name="textCustom" icon="search" width="300" placeholder="Type to filter..."></mcs-textbox>
+            <br/><br/>
+
+            <label for="textModel"><strong>Textbox w/ Model Binding</strong></label> <br/>
+            <mcs-textbox name="textModel" icon="search" width="300"
+              [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
+            <pre>Textbox Value : {{ textboxValue }}</pre>
+            <br/>
+
+            <label><strong>Inline Textboxes</strong></label> <br/>
+            <mcs-textbox name="textDefault" placeholder="Enter text here..."></mcs-textbox>
+            <mcs-textbox name="textIcon" icon="search" placeholder="Type to filter..."></mcs-textbox>
+            <br/><br/>
+
+            <label><strong>List of Textboxes</strong></label> <br/>
+            <mcs-textbox name="textDefault" width="500" placeholder="Enter text here..."></mcs-textbox> <br/>
+            <mcs-textbox name="textIcon" icon="search" width="500" placeholder="Type to filter..."></mcs-textbox>
+            <mcs-textbox name="textModel" icon="search" width="500"
+              [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
+
+          </form>
+        </div>
+      </div>
+
       <!--Forms Implementation-->
       <div class="dashboard-container-item">
         <span class="title">Forms Implementation Example</span>
