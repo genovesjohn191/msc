@@ -29,6 +29,7 @@
       vertical-align: middle;
 
       &.text {
+        float: left;
         line-height: 40px;
         @include breakpoint(small) {
           max-width: 60%;

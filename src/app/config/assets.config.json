@@ -2,7 +2,8 @@
   "icons": {
     "arrow-right": "mcs-icon mcs-arrow-right-icon",
     "filter-selector": "mcs-icon mcs-filter-selector-icon",
-    "credit-card": "fa fa-credit-card"
+    "credit-card": "fa fa-credit-card",
+    "search": "fa fa-search"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

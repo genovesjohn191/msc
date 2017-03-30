@@ -8,6 +8,7 @@ import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { StatusBoxComponent } from './status-box/status-box.component';
+import { TextboxComponent } from './textbox/textbox.component';
 /** Directives */
 import { FlatDirective } from './directives/flat.directive';
 import { RedDirective } from './directives/red.directive';
@@ -18,6 +19,7 @@ import { RedDirective } from './directives/red.directive';
     CheckboxComponent,
     FilterSelectorComponent,
     StatusBoxComponent,
+    TextboxComponent,
     FlatDirective,
     RedDirective
   ],
@@ -31,6 +33,7 @@ import { RedDirective } from './directives/red.directive';
     CheckboxComponent,
     FilterSelectorComponent,
     StatusBoxComponent,
+    TextboxComponent,
     FlatDirective,
     RedDirective,
     CommonModule,

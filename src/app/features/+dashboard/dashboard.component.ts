@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
   public currentDate: Date;
   public filterItems: any;
   public dashboards: Dashboard[];
+  public textboxValue: string;
 
   public constructor() {
     this.title = 'Dashboard component';
@@ -38,6 +39,7 @@ export class DashboardComponent implements OnInit {
     this.setDashboards();
     this.onDisplayStatusBox();
     this.statusBoxAttribute.dialogState = 'hide';
+    this.textboxValue = 'Windows Server 2012';
   }
 
   /**
