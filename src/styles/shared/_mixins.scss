@@ -234,3 +234,63 @@
 // .mcs-textbox {
 //   @include set-placeholder-color($black);
 // }
+
+// Set display flex with direction
+@mixin display-flex ($direction) {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  -ms-flex-direction: $direction;
+  flex-direction: $direction;
+}
+
+// Usage
+
+// .mcs-container {
+//   @include display-flex(row);
+// }
+
+// Flex item
+@mixin flex ($values) {
+  -webkit-box-flex: $values;
+  -moz-box-flex:  $values;
+  -webkit-flex:  $values;
+  -ms-flex:  $values;
+  flex:  $values;
+}
+
+// Usage
+
+// .mcs-flex-item {
+//   @include flex(1 1 auto);
+// }
+
+// Flex item order
+@mixin flex-order ($value) {
+  -webkit-box-ordinal-group: $value;
+  -moz-box-ordinal-group: $value;
+  -ms-flex-order: $value;
+  -webkit-order: $value;
+  order: $value;
+}
+
+// Usage
+
+// .mcs-flex-item {
+//   @include flex-order(1);
+// }
+
+// Flex wrap
+@mixin flex-wrap ($wrap) {
+  -ms-flex-wrap: $wrap;
+  flex-wrap: $wrap;
+}
+
+// Usage
+
+// .mcs-flex-item {
+//   @include flex-wrap(nowrap);
+// }

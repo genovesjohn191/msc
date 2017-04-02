@@ -1,4 +1,48 @@
+@import "../../../styles/base";
+
 .servers-container {
   position: relative;
   padding: 0.5rem 0;
+
+  .information {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid $grey-02;
+    color: $black;
+    @include display-flex(row);
+
+    .title {
+      margin-right: auto;
+      b {
+        border-bottom: 5px solid $grey-02;
+      }
+    }
+
+    .servers-count {
+      font-weight: 400;
+      margin-left: auto;
+    }
+  }
+
+  .filter {
+    @include display-flex(row);
+    align-items: center;
+
+    .search {
+      margin-right: auto;
+      @include breakpoint(small) {
+        @include flex(1);
+        margin-right: 30px;
+      }
+    }
+
+    .server-select {
+      margin-left: auto;
+    }
+  }
+}
+
+:host /deep/ { 
+  a.icon-link {
+    margin-left: 20px;
+  }
 }

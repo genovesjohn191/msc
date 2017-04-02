@@ -5,11 +5,13 @@ import {
 import {
   Http,
   Headers,
-  Response
+  Response,
+  URLSearchParams
 } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { CoreConfig } from '../core.config';
+import { isUrlValid } from '../functions/url.function';
 
 /**
  * Macquarie Portal Api Service class
@@ -24,53 +26,74 @@ export class McsApiService {
 
   /**
    * GET Http Request
-   * @param {string} endpoint URL Path endpoint
+   * @param {string} url URL Path or Endpoint
    * @param {Headers} optHeaders Optional Header
+   * @param {URLSearchParams} parameters Optional Parameters
    */
-  public get(endpoint: string, optHeaders?: Headers): Observable<Response> {
+  public get(
+    url: string,
+    optHeaders?: Headers,
+    parameters?: URLSearchParams
+  ): Observable<Response> {
     return this._http.get(
-      `${this._config.apiHost + endpoint}`,
-      { headers: this._getHeaders(optHeaders) })
+      this._getFullUrl(url),
+      {
+        headers: this._getHeaders(optHeaders),
+        search: parameters
+      })
       .catch(this._handleError);
   }
 
   /**
    * POST Http Request
-   * @param {string} endpoint URL Path endpoint
+   * @param {string} url URL Path or Endpoint
    * @param {any} data Object Data (not undefined/null)
    * @param {Headers} optHeaders Optional Header
+   * @param {URLSearchParams} parameters Optional Parameters
    */
-  public post(endpoint: string, data: any, optHeaders?: Headers): Observable<Response> {
+  public post(
+    url: string,
+    data: any,
+    optHeaders?: Headers,
+    parameters?: URLSearchParams
+  ): Observable<Response> {
     return this._http.post(
-      `${this._config.apiHost + endpoint}`,
+      this._getFullUrl(url),
       data,
-      { headers: this._getHeaders(optHeaders) })
+      {
+        headers: this._getHeaders(optHeaders),
+        search: parameters
+      })
       .catch(this._handleError);
   }
 
   /**
    * PUT Http Request
-   * @param {string} endpoint URL Path endpoint
+   * @param {string} url URL Path or Endpoint
    * @param {any} data Object Data (not undefined/null)
    * @param {Headers} optHeaders Optional Header
    */
-  public put(endpoint: string, data: any, optHeaders?: Headers): Observable<Response> {
+  public put(url: string, data: any, optHeaders?: Headers): Observable<Response> {
     return this._http.put(
-      `${this._config.apiHost + endpoint}`,
+      this._getFullUrl(url),
       data,
-      { headers: this._getHeaders(optHeaders) })
+      {
+        headers: this._getHeaders(optHeaders)
+      })
       .catch(this._handleError);
   }
 
   /**
    * DELETE Http Request
-   * @param {string} endpoint URL Path endpoint
+   * @param {string} url URL Path or Endpoint
    * @param {Headers} optHeaders Optional Header
    */
-  public delete(endpoint: string, optHeaders?: Headers): Observable<Response> {
+  public delete(url: string, optHeaders?: Headers): Observable<Response> {
     return this._http.delete(
-      `${this._config.apiHost + endpoint}`,
-      { headers: this._getHeaders(optHeaders) })
+      this._getFullUrl(url),
+      {
+        headers: this._getHeaders(optHeaders)
+      })
       .catch(this._handleError);
   }
 
@@ -124,8 +147,8 @@ export class McsApiService {
    * @param {any} error Error Response
    */
   private _handleError(error: Response | any) {
-    // TODO: Refactor error handling
-    // In a real world app, we might use a remote logging infrastructure
+    // TODO: Log the general Error here
+    // e.g: Console Logs
     console.error('Error thrown from fusion api client service.');
     let errMsg: string;
     if (error instanceof Response) {
@@ -135,8 +158,26 @@ export class McsApiService {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-
     console.error('MFP Errors: ' + errMsg);
-    return Observable.throw(errMsg);
+    return Observable.throw(error);
+  }
+
+  /**
+   * Get full url
+   * @param url Full Url / Endpoint
+   */
+  private _getFullUrl(url: string) {
+    let fullUrl: string;
+    let urlValidFlag: boolean;
+
+    // Check valid URL
+    urlValidFlag = isUrlValid(url);
+    if (urlValidFlag) {
+      fullUrl = url;
+    } else {
+      fullUrl = this._config.apiHost.concat(url);
+    }
+    // Return Full URL
+    return fullUrl;
   }
 }

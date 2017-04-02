@@ -6,6 +6,10 @@
   @include box-sizing(border-box);
 }
 
+a {
+  cursor: pointer;
+}
+
 html {
   overflow-x: hidden;
 
@@ -28,16 +32,6 @@ html {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.display-flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.display-flex-column {
-  display: flex;
-  flex-direction: column;
 }
 
 .hidden-medium {

@@ -1,11 +1,22 @@
 @import '../../../styles/base';
 
+// TODO: Remove override on ICON (this is for demo purposes)
+.mcs-icon {
+  height: 30px !important;
+  width: 30px !important;
+}
+
 .icon-link {
   cursor: pointer;
+  position: relative;
+  margin: 0px 5px;
+  i {
+    vertical-align: middle;
+  }
 }
 
 ul.filters {
-  @extend .display-flex-column;
+  @include display-flex(column);
 }
 
 :host /deep/ {
