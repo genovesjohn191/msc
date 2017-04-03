@@ -6,6 +6,9 @@ import {
   ApplicationRef
 } from '@angular/core';
 import {
+  BrowserAnimationsModule
+} from '@angular/platform-browser/animations';
+import {
   removeNgStyles,
   createNewHosts,
   createInputTransfer
@@ -94,6 +97,7 @@ const mcsCoreConfig = {
   imports: [
     BrowserModule,
     HttpModule,
+    BrowserAnimationsModule,
     NgbModule.forRoot(),
     CoreModule.forRoot(mcsCoreConfig),
     RouterModule.forRoot(routes)
