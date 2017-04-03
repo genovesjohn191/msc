@@ -22,10 +22,6 @@
     }
   },
   "serverListingFilter": {
-    "alerts": {
-      "text": "Alerts",
-      "value": true
-    },
     "state": {
       "text": "State",
       "value": true

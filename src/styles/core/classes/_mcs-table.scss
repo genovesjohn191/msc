@@ -6,6 +6,10 @@ table.mcs-table {
   thead {
     background-color: $black;
     color: $white;
+
+    th {
+      white-space: nowrap;
+    }
   }
 
   tr {

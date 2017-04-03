@@ -25,7 +25,7 @@ import {
 } from '../../core';
 
 // TODO: Set actual count of item to be displayed
-const MAX_ITEMS_PER_PAGE = 2;
+const MAX_ITEMS_PER_PAGE = 10;
 
 @Component({
   selector: 'mcs-servers',

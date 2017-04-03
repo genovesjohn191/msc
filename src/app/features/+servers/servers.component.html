@@ -22,11 +22,10 @@
     </div>
   </div>
 
+  <!--TODO: Under confirmation -->
   <table class="mcs-table table">
     <thead class="head">
       <tr>
-        <th *ngIf="columnSettings['alerts'].value" class="hidden-small">
-          <i class="fa fa-bell-o"></i></th>
         <th *ngIf="columnSettings['state'].value">
           {{ columnSettings['state'].text }}
         </th>
@@ -59,8 +58,6 @@
     </thead>
     <tbody>
       <tr *ngFor="let server of servers">
-        <td *ngIf="columnSettings['alerts'].value" class="text-center hidden-small">
-          <i class="fa fa-check"></i></td>
         <td *ngIf="columnSettings['state'].value" class="text-center">
           <i class="fa fa-circle-o-notch"></i>
         </td>
