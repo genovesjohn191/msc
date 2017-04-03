@@ -3,13 +3,15 @@ import {
   OnInit,
   AfterViewInit,
   Input,
-  Output,
+  Output
+} from '@angular/core';
+import {
+  trigger,
   state,
   style,
-  trigger,
   transition,
   animate
-} from '@angular/core';
+} from '@angular/animations';
 /** Models */
 import {
   StatusBoxAttribute,
