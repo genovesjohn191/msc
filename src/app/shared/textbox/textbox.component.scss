@@ -1,8 +1,8 @@
 @import "../../../styles/shared/base";
 
 .mcs-textbox {
-  @include border-radius(8px);
-  border: 1px solid $grey-01;
+  @include border-radius($input-border-radius); 
+  border: 1px solid $input-border-color;
   display: inline-flex;
   overflow: hidden;
   margin: 3px 0;
@@ -12,33 +12,19 @@
 
   &.active {
     outline: none;
-    border-color: $black;
+    border-color: $color-black;
   }
 
   input {
     border: none;
-    font-family: $base-font;
-    color: $black;
     width: 100%;
-    line-height: normal;
-    padding: 10px 15px;
-    @include set-placeholder-color($black);
 
     &.has-icon {
       padding-right: 0;
-    }
-
-    &:focus {
-      outline: none;
     }
   }
 
   .icon {
     padding: 10px;
   }
-}
-
-label {
-  display: block;
-  margin: 0;
 }

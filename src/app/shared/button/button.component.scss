@@ -1,10 +1,9 @@
 @import "../../../styles/shared/base";
 
 .mcs-button {
-  background-color: $primary-color;
-  font-family: $base-font;
-  color: $white;
-  padding: 10px 15px;
+  background-color: $color-primary-00;
+  color: $color-white;
+  padding: $button-padding;
   margin: 5px;
   position: relative;
   @include breakpoint(small) {
@@ -12,13 +11,13 @@
   }
 
   &.small {
-    @include font-size($font-size-base-small);
-    padding: 5px 15px;
+    @include font-size($button-font-size-small);
+    padding: $button-padding-small;
     @include breakpoint(small) {
       width: auto;
     }
   }
-    
+
   &.has-icon {
     padding: 0 15px;
     min-height: 42px;
@@ -38,7 +37,7 @@
         }
 
         .icon-left-wrapper {
-          margin-right: 10px;
+          margin-right: $space-small;
 
           .icon-left {
             line-height: 40px;
@@ -49,7 +48,7 @@
       &.icon-right-wrapper {
         width: 40px;
         float: right;
-        margin-left: 30px;
+        margin-left: $space-large;
 
         .icon-right {
           display: block;

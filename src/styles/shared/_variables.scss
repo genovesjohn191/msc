@@ -1,93 +1,119 @@
 // Typography
 $circular-pro-book: "Circular-Pro-Book";
 $circular-pro-bold: "Circular-Pro-Bold";
+$fontawesome: FontAwesome;
 
 $base-font: $circular-pro-book;
 $base-font-bold: $circular-pro-bold;
+$font-icon: $fontawesome;
 
-$font-size-base-large: 16;
-$font-size-base-medium: 14;
-$font-size-base-small: 14;
+// Font Settings
+$font-default: $base-font;
+$font-size-default: 15;
+$line-height-default: 22;
+$font-size-small: 13;
+$line-height-small: 18;
 
-$h1-large: 24;
-$h1-medium: 22;
-$h1-small: 20;
+$caption-default-font: $base-font;
+$caption-default-font-size: 13;
+$caption-default-line-height: 15;
+$caption-small-font-size: 12;
+$caption-small-line-height: 15;
 
-$h2-large: 22;
-$h2-medium: 20;
-$h2-small: 18;
+$input-font: $base-font;
+$input-font-size: 16;
+$input-line-height: 20;
 
-$h3-large: 20;
-$h3-medium: 18;
-$h3-small: 16;
+$header-font: $base-font-bold;
+$h1-default-font-size: 50;
+$h1-default-line-height: 55;
+$h2-default-font-size: 34;
+$h2-default-line-height: 36;
+$h3-default-font-size: 24;
+$h3-default-line-height: 30;
+$h4-default-font-size: 20;
+$h4-default-line-height: 25;
 
-$h4-large: 18;
-$h4-medium: 16;
-$h4-small: 14;
+$h1-medium-font-size: 40;
+$h1-medium-line-height: 42;
 
-$icon-size-large: 22;
-$icon-size-medium: 18;
-$icon-size-small: 14;
+$h1-small-font-size: 29;
+$h1-small-line-height: 29;
+$h2-small-font-size: 24;
+$h2-small-line-height: 28;
+$h3-small-font-size: 20;
+$h3-small-line-height: 22;
+$h4-small-font-size: 16;
+$h4-small-line-height: 18;
+
+$link-font:  $base-font-bold;
+$link-default-font-size: 16;
+$link-default-line-height: 24;
+$link-small-font-size: 14;
+$link-small-line-height: 18;
+
+$cta-font: $base-font-bold;
+$cta-default-font-size: 16;
+$cta-default-line-height: 24;
+$cta-small-font-size: 14;
+$cta-small-line-height: 18;
 
 // Color Palettes
-
-$primary-color-palette-00: blue;
-$primary-color-palette-01: royalblue;
-$primary-color-palette-02: skyblue;
-$secondary-color-palette-00: purple;
-$secondary-color-pallete-01: magenta;
-$secondary-color-pallete-02: violet;
-
-$default-background-color: #fff;
-$default-text-color: #000;
+$color-black: #000;
+$color-white: #fff;
+$color-primary-00: #0a97e5;
+$color-primary-01: #00bed8;
+$color-primary-02: #bee6f4;
+$color-grey-00: #333333;
+$color-grey-01: #58595b;
+$color-grey-02: #888888;
+$color-grey-03: #a5a6aa;
+$color-grey-04: #e3e3e3;
+$color-grey-05: #e1e1e1;
+$color-grey-06: #f4f4f4;
+$color-green-00: #21b21e;
+$color-yellow-00: #efc225;
+$color-red-00: #f80c27;
 
 // Responsive Dimension Settings
-
 $desktop-min-width: 970px;
 $tablet-max-width: 969px;
+$tablet-min-width: 720px;
 $mobile-landscape-max-width: 719px;
+$mobile-landscape-min-width: 544px;
 $mobile-portrait-max-width: 543px;
-
-$nav-button-color: #00838F;
-
-// Color Definition
-$white: #fff;
-$black: #000;
-$grey-01: #888888;
-$grey-02: #e1e1e1;
-$grey-03: #f4f4f4;
-$green-01: #21b21e;
-$red-01: #f80c27;
-
-$primary-color: #00bed8;
-$secondary-color: #00bed1;
-
-// Font Size Headers
-$fontsize-h1-mobile: 14;
-$fontsize-h2-mobile: 12;
-
-$fontsize-h1-tablet: 16;
-$fontsize-h2-tablet: 14;
-
-$fontsize-h1-desktop: 18;
-$fontsize-h2-desktop: 16;
-
-// Font Size Links
-$fontsize-link-desktop: 14;
-
-// Font Size Labels
-$fontsize-label-desktop: 14;
-
-// Font Size Dropdowns
-$fontsize-dropdown-desktop: 16;
-
-// Font Size Checkbox
-$fontsize-checkbox-desktop: 18;
+$mobile-portrait-min-width: 320px;
 
 // Container Sizes
-$container-desktop: 970px;
-$container-tablet: 720px;
-$container-mobile: 100%;
+$container-large: $desktop-min-width;
+$container-medium: $tablet-min-width;
+$container-small: 100%;
 
-// z-index
-$z-index-01: 100;
+// Spacer
+$space-large: 30px;
+$space-medium: 20px;
+$space-small: 10px;
+$space-xsmall: 5px;
+
+// Input
+$input-font: $base-font;
+$input-border-color: $color-black;
+$input-text-color: $color-black;
+$input-border-radius: 5px;
+$input-padding: 10px 15px;
+$input-padding-small: 5px 10px;
+
+// Button
+$button-font: $base-font;
+$button-font-size: 18px;
+$button-font-size-small: $caption-default-font-size;
+$button-padding: 10px 15px;
+$button-padding-small: 5px 10px;
+
+
+// Tooltip
+$tooltip-color: $color-grey-06;
+
+// Table
+$table-header-font: $base-font-bold;
+$table-border-radius: 5px;

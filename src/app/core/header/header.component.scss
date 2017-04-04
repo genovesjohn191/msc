@@ -1,8 +1,8 @@
-@import '../../../styles/base';
+@import '../../../styles/shared/base';
 
 .header-wrapper {
-  background-color: $black;
-  color: $white;
+  background-color: $color-black;
+  color: $color-white;
 }
 
 .header-container {
@@ -22,14 +22,5 @@
   .user-panel {
     margin-left: auto;
     text-align: center;
-
-    .link {
-      cursor: pointer;
-      @include font-size($fontsize-dropdown-desktop);
-    }
-
-    .label {
-      @include font-size($fontsize-label-desktop);
-    }
   }
 }

@@ -1,11 +1,11 @@
 @import "../../shared/base";
 
 table.mcs-table {
-  margin: 30px 0;
+  margin: $space-large 0;
 
   thead {
-    background-color: $black;
-    color: $white;
+    background-color: $color-black;
+    color: $color-white;
 
     th {
       white-space: nowrap;
@@ -15,12 +15,12 @@ table.mcs-table {
   tr {
 
     &:nth-of-type(even) {
-      background-color: $grey-03; 
+      background-color: $color-grey-05; 
     }
 
     %border-override {
       border-top: none;
-      border-right: 1px solid $grey-02;
+      border-right: 1px solid $color-grey-05;
 
       &:last-child {
         border-right: none;
@@ -28,28 +28,30 @@ table.mcs-table {
     }
 
     th {
-      font-family: $base-font-bold;
-      padding: 20px;
+      font-family: $table-header-font;
+      padding: $space-medium;
+      white-space: nowrap;
+
       @include breakpoint(medium) {
-        padding: 10px;
+        padding: $space-small;
       }
       @include breakpoint(small) {
-        @include font-size($font-size-base-small);
-        padding: 5px;
+        @include font-size($font-size-small, $line-height-small);
+        padding: $space-xsmall;
       }
       @extend %border-override;
 
       &:first-child {
-        @include border-top-left-radius(5px);
+        @include border-top-left-radius($table-border-radius);
       }
 
       &:last-child {
-        @include border-top-right-radius(5px);
+        @include border-top-right-radius($table-border-radius);
       }
 
       &:nth-child(2) {
         @include breakpoint(small) {
-          @include border-top-left-radius(5px);
+          @include border-top-left-radius($table-border-radius);
         }
       } 
     }
@@ -60,37 +62,21 @@ table.mcs-table {
       position: relative;
       word-break: break-word;
       @include breakpoint(medium) {
-        padding: 10px;
+        padding: $space-small;
       }
       @include breakpoint(small) {
-        @include font-size($font-size-base-small);
-        padding: 5px;
-      }
-
-      .fa-check {
-        color: $green-01;
-      }
-
-      .fa-exclamation {
-        color: $red-01;
+        @include font-size($font-size-small, $line-height-small);
+        padding: $space-xsmall;
       }
 
       .action-button {
-        @include font-size($icon-size-large);
+        @include font-size(22); // TODO: Must be standardized
         @include breakpoint(medium) {
-          @include font-size($icon-size-medium);
+          @include font-size(18); // TODO: Must be standardized
         }
-        color: $black;
+        color: $color-black;
         text-decoration: none;
       }
     }
-  }
-}
-
-.paging {
-
-  a {
-    color: $black;
-    text-decoration: underline;
   }
 }

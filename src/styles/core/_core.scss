@@ -1,4 +1,5 @@
 @import "../shared/base";
+@import "fonts";
 
 *,
 *:after,
@@ -6,23 +7,106 @@
   @include box-sizing(border-box);
 }
 
-a {
-  cursor: pointer;
-}
-
 html {
   overflow-x: hidden;
 
   body {
-    font-family: $base-font;
+    font-family: $font-default;
+    color: $color-black;
+    @include font-size($font-size-default, $line-height-default);
+    @include breakpoint(small) {
+      @include font-size($font-size-small, $line-height-small);
+    }
 
-    .container {
-      width: $container-desktop;
+    h1, h2, h3, h4 {
+      width: 100%;
+      font-family: $header-font;
+    }
+
+    h1 {
+      @include font-size($h1-default-font-size, $h1-default-line-height);
       @include breakpoint(medium) {
-        width: $container-tablet;
+        @include font-size($h1-medium-font-size, $h1-medium-line-height);
       }
       @include breakpoint(small) {
-        width: $container-mobile;
+        @include font-size($h1-small-font-size, $h1-small-line-height);
+      }
+    }
+
+    h2 {
+      @include font-size($h2-default-font-size, $h2-default-line-height);
+      @include breakpoint(small) {
+        @include font-size($h2-small-font-size, $h2-small-line-height);
+      }
+    }
+
+    h3 {
+      @include font-size($h3-default-font-size, $h3-default-line-height);
+      @include breakpoint(small) {
+        @include font-size($h3-small-font-size, $h3-small-line-height);
+      }
+    }
+
+    h4 {
+      @include font-size($h4-default-font-size, $h4-default-line-height);
+      @include breakpoint(small) {
+        @include font-size($h4-small-font-size, $h4-small-line-height);
+      }
+    }
+
+    small {
+      font-family: $caption-default-font;
+      @include font-size($caption-default-font-size, $caption-default-line-height);
+      @include breakpoint(small) {
+        @include font-size($caption-small-font-size, $caption-small-line-height);
+      }
+    }
+
+    a {
+      font-family: $link-font;
+      text-decoration: underline;
+      color: $color-black;
+      @include font-size($link-default-font-size, $link-default-line-height);
+      @include breakpoint(small) {
+        @include font-size($font-size-small, $line-height-small);
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    input,
+    textarea,
+    select,
+    input.form-control,
+    textarea.form-control,
+    select.form-control {
+      font-family: $input-font;
+      @include font-size($input-font-size, $input-line-height);
+      color: $input-text-color;
+      border-color: $input-border-color;
+      padding: $input-padding;
+      @include border-radius($input-border-radius);
+      @include set-placeholder-color($input-text-color);
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    button {
+      font-family: $button-font;
+      font-size: $button-font-size;
+    }
+
+    .container {
+      width: $container-large;
+      @include breakpoint(medium) {
+        width: $container-medium;
+      }
+      @include breakpoint(small) {
+        width: $container-small;
       }
     }
   }
