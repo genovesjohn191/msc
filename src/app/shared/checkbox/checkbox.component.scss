@@ -9,15 +9,15 @@ input[type="checkbox"] {
   display: none;
 
   + label:before {
-    font-family: FontAwesome;
+    font-family: $font-icon;
     display: inline-block;
     content: "\f096";
     letter-spacing: 5px;
-    @include font-size($fontsize-checkbox-desktop);
+    @include font-size($font-size-default);
   }
 
   &:checked + label:before {
     content: "\f14a";
-    color: $primary-color;
+    color: $color-primary-00;
   }
 }

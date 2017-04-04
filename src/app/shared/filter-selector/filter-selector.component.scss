@@ -1,22 +1,24 @@
-@import '../../../styles/base';
+@import '../../../styles/shared/base';
 
-// TODO: Remove override on ICON (this is for demo purposes)
-.mcs-icon {
-  height: 30px !important;
-  width: 30px !important;
-}
-
-.icon-link {
-  cursor: pointer;
-  position: relative;
-  margin: 0px 5px;
-  i {
-    vertical-align: middle;
+.mcs-filter-selector{
+  // TODO: Remove override on ICON (this is for demo purposes)
+  .mcs-icon {
+    height: 30px !important;
+    width: 30px !important;
   }
-}
 
-ul.filters {
-  @include display-flex(column);
+  .icon-link {
+    cursor: pointer;
+    position: relative;
+    margin: 0px 5px;
+    i {
+      vertical-align: middle;
+    }
+  }
+
+  ul.filters {
+    @include display-flex(column);
+  }
 }
 
 :host /deep/ {
@@ -32,11 +34,11 @@ ul.filters {
   }
   .popover-title {
     font-weight: 400;
-    background-color: $grey-03;
+    background-color: $tooltip-color;
     text-align: left;
   }
   .popover-content {
-    background-color: $grey-03;
+    background-color: $tooltip-color;
     text-align: left;
   }
 }

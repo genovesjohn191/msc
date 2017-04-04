@@ -1,14 +1,16 @@
-<a class="icon-link" placement="bottom" [ngbPopover]="filterSelectorContent" 
-  popoverTitle="{{ filterTitle }}" #filterSelectorObj="ngbPopover" 
-  (hidden)="onCloseFilterSelector()">
-  <i [ngClass]="iconClass"></i>
-</a>
+<div class="mcs-filter-selector">
+  <a class="icon-link" placement="bottom" [ngbPopover]="filterSelectorContent" 
+    popoverTitle="{{ filterTitle }}" #filterSelectorObj="ngbPopover" 
+    (hidden)="onCloseFilterSelector()">
+    <i [ngClass]="iconClass"></i>
+  </a>
 
-<template #filterSelectorContent>
-  <ul class="unstyled-list filters">
-    <li *ngFor="let key of filterKeys">
-      <mcs-checkbox [label]="filterItems[key].text"
-        [(ngModel)]="filterItems[key].value"></mcs-checkbox>
-    </li>
-  </ul>
-</template>
+  <ng-template #filterSelectorContent>
+    <ul class="unstyled-list filters">
+      <li *ngFor="let key of filterKeys">
+        <mcs-checkbox [label]="filterItems[key].text"
+          [(ngModel)]="filterItems[key].value"></mcs-checkbox>
+      </li>
+    </ul>
+  </ng-template>
+</div>
