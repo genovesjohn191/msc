@@ -83,7 +83,9 @@ export class ServersComponent implements OnInit, OnDestroy {
         // Switch observable items to server list
         return this._serversService.getServers(
           searchKey.page,
-          searchKey.maxItemPerPage ? searchKey.maxItemPerPage : MAX_ITEMS_PER_PAGE,
+          // TODO: Display all record temporarily since Max item per page is under confirmation
+          // searchKey.maxItemPerPage ? searchKey.maxItemPerPage : MAX_ITEMS_PER_PAGE,
+          undefined,
           searchKey.serverNameKeyword
         ).finally(() => this.isLoaded = true);
       })
@@ -110,6 +112,10 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public onSearchEvent(key: any): void {
     this.searchServers(key);
+  }
+
+  public onEnterSearchEvent(): void {
+    this.searchServers(this.keyword);
   }
 
   public getNextPage(): void {

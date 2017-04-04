@@ -8,11 +8,12 @@
     </div>
   </div>
 
+<!--TODO: Filtering and Column Settings are under confirmation -->
   <div class="filter">
     <div class="search">
-      <mcs-textbox name="search" [ngModel]="keyword"
+      <!--<mcs-textbox name="search" [ngModel]="keyword"
         (ngModelChange)="onSearchEvent($event)"
-        placeholder="Type to filter..."></mcs-textbox>
+        placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>-->
 
       <mcs-filter-selector class="hidden-small" key="serverListingFilter" 
         (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
@@ -22,7 +23,6 @@
     </div>
   </div>
 
-  <!--TODO: Under confirmation -->
   <table class="mcs-table table">
     <thead class="head">
       <tr>
@@ -56,7 +56,7 @@
         <th>Action</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="isLoaded">
       <tr *ngFor="let server of servers">
         <td *ngIf="columnSettings['state'].value" class="text-center">
           <i class="fa fa-circle-o-notch"></i>
@@ -97,10 +97,11 @@
   </table>
   
   <div class="paging text-center">
-    <a *ngIf="(displayServerCount < totalServerCount) && isLoaded" 
+    <!--TODO: Enable more when specs of filtering is okay -->
+    <!--<a *ngIf="(displayServerCount < totalServerCount) && isLoaded" 
       (click)="onClickMoreEvent()">More 
       <i class="fa fa-angle-down"></i>
-    </a>
+    </a>-->
     <span *ngIf="!isLoaded">Loading...</span>
     <span *ngIf="totalServerCount === 0 && isLoaded">No server found.</span>
   </div>
