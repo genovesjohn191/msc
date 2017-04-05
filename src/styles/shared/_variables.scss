@@ -46,17 +46,11 @@ $h3-small-line-height: 22;
 $h4-small-font-size: 16;
 $h4-small-line-height: 18;
 
-$link-font:  $base-font-bold;
+$link-font:  $base-font;
 $link-default-font-size: 16;
 $link-default-line-height: 24;
 $link-small-font-size: 14;
 $link-small-line-height: 18;
-
-$cta-font: $base-font-bold;
-$cta-default-font-size: 16;
-$cta-default-line-height: 24;
-$cta-small-font-size: 14;
-$cta-small-line-height: 18;
 
 // Color Palettes
 $color-black: #000;
@@ -90,6 +84,7 @@ $container-medium: $tablet-min-width;
 $container-small: 100%;
 
 // Spacer
+$space-xlarge: 40px;
 $space-large: 30px;
 $space-medium: 20px;
 $space-small: 10px;
@@ -104,12 +99,13 @@ $input-padding: 10px 15px;
 $input-padding-small: 5px 10px;
 
 // Button
-$button-font: $base-font;
+$button-primary-background-color: $color-primary-01;
+$button-primary-text-color: $color-white;
+$button-font: $base-font-bold;
 $button-font-size: 18px;
 $button-font-size-small: $caption-default-font-size;
 $button-padding: 10px 15px;
 $button-padding-small: 5px 10px;
-
 
 // Tooltip
 $tooltip-color: $color-grey-06;

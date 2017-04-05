@@ -9,7 +9,7 @@
   @include display-flex(column);
   align-items: center;
   justify-content: center;
-  padding: $space-medium 0;
+  padding: $space-large 0 $space-xlarge;
 
   .links {
     ul {
@@ -17,8 +17,11 @@
      li {
        a {
          font-family: $base-font;
-         @include font-size($caption-default-font-size, $caption-default-line-height);
          color: $color-white;
+         @include font-size($caption-default-font-size, $caption-default-line-height);
+         @include breakpoint(small) {
+           @include font-size($caption-small-font-size, $caption-small-line-height);
+         }
        }
        &:not(:last-child) {
          padding-right: $space-medium;

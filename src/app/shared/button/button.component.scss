@@ -1,8 +1,8 @@
 @import "../../../styles/shared/base";
 
 .mcs-button {
-  background-color: $color-primary-00;
-  color: $color-white;
+  background-color: $button-primary-background-color;
+  color: $button-primary-text-color;
   padding: $button-padding;
   margin: 5px;
   position: relative;
@@ -58,5 +58,4 @@
       }
     }
   }
-
 }
