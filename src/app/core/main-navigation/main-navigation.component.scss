@@ -5,6 +5,9 @@
   color: $color-black;
   padding: 0;
 
+  .container {
+    padding: 0;
+  }
   .navbar-nav {
     > li {
       &:hover,
@@ -17,6 +20,7 @@
       font-weight: bold;
       text-decoration: none;
       color: $color-black;
+      padding: 10px 15px;
     }
   }
 }
