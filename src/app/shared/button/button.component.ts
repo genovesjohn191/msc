@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 /** Providers */
-import { AssetsProvider } from '../../core/providers/assets.provider';
+import { AssetsProvider } from '../../core';
 
 @Component({
   selector: 'mcs-button',

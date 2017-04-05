@@ -25,6 +25,7 @@
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",
-    "footer-logo": "cloud-services-footer-logo.png"
+    "footer-logo": "cloud-services-footer-logo.png",
+    "loader": "spinner.gif"
   }
 }

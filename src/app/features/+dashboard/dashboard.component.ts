@@ -99,7 +99,12 @@ export class DashboardComponent implements OnInit {
     this.statusBoxAttribute.description = 'The virtual machine successfully started. ';
   }
 
-  public onButtonClicked() {
-    alert('Button Component was clicked!');
+  public onButtonClicked(loader: any) {
+    loader.showLoader();
+    console.log('start process');
+    setTimeout(() => {
+      console.log('done');
+      loader.hideLoader();
+    }, 3000);
   }
 }
