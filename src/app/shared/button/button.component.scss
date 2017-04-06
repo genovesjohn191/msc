@@ -4,7 +4,7 @@
   background-color: $button-primary-background-color;
   color: $button-primary-text-color;
   padding: $button-padding;
-  margin: 5px;
+  margin: 2px 0;
   position: relative;
   @include breakpoint(small) {
     width: 100%;

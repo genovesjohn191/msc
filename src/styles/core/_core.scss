@@ -11,6 +11,7 @@ html {
   overflow-x: hidden;
 
   body {
+    padding-right: 0 !important; // This is a temporary fix for bootstrap modal glitch
     font-family: $font-default;
     color: $color-black;
     @include font-size($font-size-default, $line-height-default);

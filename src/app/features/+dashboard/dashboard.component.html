@@ -18,13 +18,92 @@
   </div>
   <div class="row">
     <div class="col">
-
-     <!--Filter Selectors Component Implementation-->
-     <div class="dashboard-container-item">
-       <span class="title">Filter Selector Component Implementation Example</span>
-       <div class="content">
-         <mcs-filter-selector key="columnMainFilter"
-         (onGetFilters)="onGetFilterItems($event)"></mcs-filter-selector>
+      <!--Lightbox Demo Implementation-->
+      <div class="dashboard-container-item">
+        <span class="title">Lightbox Implementation Example</span>
+        <div class="content">
+          <small><em>Lightbox with icon, title, subtitle</em></small> <br/>
+          <mcs-button lightboxId="demoLightbox">Lightbox Full</mcs-button><br/>
+          <small><em>Lightbox with close button only</em></small> <br/>
+          <mcs-button lightboxId="demoLightbox2">Lightbox Minimal</mcs-button><br/>
+          <small><em>Lightbox with overflowing content</em></small> <br/>
+          <mcs-button lightboxId="demoLightbox3">Lightbox Long Content</mcs-button>
+          <mcs-lightbox lightboxId="demoLightbox" title="This is a sample title" subtitle="This a sample subtitle." icon="credit-card">
+            <div class="lightbox-body">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+              </p>
+            </div>
+            <div class="lightbox-footer">
+              <mcs-button lightboxDismiss="true">Close</mcs-button>
+              <mcs-button lightboxDismiss="false">Save changes</mcs-button>
+            </div>
+          </mcs-lightbox>
+          <mcs-lightbox lightboxId="demoLightbox2">
+            <div class="lightbox-body">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+              </p>
+            </div>
+          </mcs-lightbox>
+          <mcs-lightbox lightboxId="demoLightbox3" title="I Have Very Long Content">
+            <div class="lightbox-body">
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+              </p>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+              </p>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+              </p>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
+                remaining essentially unchanged. It was popularised in the 1960s with the release of
+                Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+              </p>
+            </div>
+            <div class="lightbox-footer">
+              <mcs-button lightboxDismiss="true">Close</mcs-button>
+              <mcs-button lightboxDismiss="false">Save changes</mcs-button>
+            </div>
+          </mcs-lightbox>
+        </div>
+      </div>
+      <!--Filter Selectors Component Implementation-->
+      <div class="dashboard-container-item">
+        <span class="title">Filter Selector Component Implementation Example</span>
+        <div class="content">
+          <mcs-filter-selector key="columnMainFilter"
+          (onGetFilters)="onGetFilterItems($event)"></mcs-filter-selector>
 
          <table class="mcs-table table">
            <thead class="head">

@@ -10,6 +10,7 @@ import { FilterSelectorComponent } from './filter-selector/filter-selector.compo
 import { StatusBoxComponent } from './status-box/status-box.component';
 import { TextboxComponent } from './textbox/textbox.component';
 import { LoaderComponent } from './loader/loader.component';
+import { LightboxComponent } from './lightbox/lightbox.component';
 /** Directives */
 import { FlatDirective } from './directives/flat.directive';
 import { RedDirective } from './directives/red.directive';
@@ -25,7 +26,8 @@ import { LoaderDirective } from './directives/loader.directive';
     LoaderComponent,
     FlatDirective,
     RedDirective,
-    LoaderDirective
+    LoaderDirective,
+    LightboxComponent
   ],
   imports: [
     CommonModule,
@@ -39,6 +41,7 @@ import { LoaderDirective } from './directives/loader.directive';
     StatusBoxComponent,
     TextboxComponent,
     LoaderComponent,
+    LightboxComponent,
     FlatDirective,
     RedDirective,
     LoaderDirective,
