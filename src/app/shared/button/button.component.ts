@@ -35,6 +35,12 @@ export class ButtonComponent implements OnInit, AfterViewInit {
   @Input()
   public width: number;
 
+  @Input()
+  public lightboxId: string;
+
+  @Input()
+  public lightboxDismiss: string;
+
   @Output()
   public onClick: EventEmitter<any> = new EventEmitter();
 
@@ -68,6 +74,16 @@ export class ButtonComponent implements OnInit, AfterViewInit {
     if (this.width) {
       this._renderer.setElementStyle(this._mcsButton.nativeElement, 'max-width', this.width + 'px');
       this._renderer.setElementClass(this._mcsButton.nativeElement, 'w-100', true);
+    }
+
+    if (this.lightboxId) {
+      this._renderer.setElementAttribute(this._mcsButton.nativeElement, 'data-toggle', 'modal');
+      this._renderer.setElementAttribute(
+        this._mcsButton.nativeElement, 'data-target', '#' + this.lightboxId);
+    }
+
+    if (this.lightboxDismiss === 'true') {
+      this._renderer.setElementAttribute(this._mcsButton.nativeElement, 'data-dismiss', 'modal');
     }
   }
 
