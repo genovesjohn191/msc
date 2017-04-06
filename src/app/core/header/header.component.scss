@@ -1,26 +1,81 @@
 @import '../../../styles/shared/base';
 
-.header-wrapper {
-  background-color: $color-black;
-  color: $color-white;
+header {
+  @include breakpoint(small) {
+    padding-right: 0;
+  }
 }
 
 .header-container {
-  @include display-flex(row);
   align-items: center;
-  padding: 30px 0;
+  padding: $space-large 0;
+  @include breakpoint(medium) {
+    padding: $space-medium 0;
+    border-right: 1px solid $color-grey-01;
+  }
+  @include breakpoint(small) {
+    border-right: none;
+  }
+  @include display-flex(row);
+
+  i {
+    @include breakpoint(small) {
+      @include font-size($icon-small-font-size);
+    }
+  }
 
   .logo {
     margin-right: auto;
-    > img {
-      width: 100%;
-      max-width: 260px;
+    img {
+      width: auto;
+      height: 40px;
+      @include breakpoint(small) {
+        height: 25px;
+      }
     }
   }
 
   // TODO: Move to specific folder of user panel component
+  .notification {
+    padding: 0 $space-large;
+    @include breakpoint(small) {
+      padding: 0 $space-medium;
+    }
+  }
+
+  .exit {
+    padding: 0 $space-medium;
+    border-left: 1px solid $color-grey-01;
+    display: none;
+    @include breakpoint(small) {
+      display: inline-block;
+    }
+  }
+
   .user-panel {
-    margin-left: auto;
+    max-height: 40px;
+    padding: 0 $space-large;
     text-align: center;
+    @include breakpoint(medium) {
+      border-left: 1px solid $color-grey-01;
+    }
+    @include breakpoint(small) {
+      padding: 0 $space-medium;
+      border-left: 1px solid $color-grey-01;
+    }
+    .user-icon {
+      display: none;
+      @include breakpoint(small) {
+        display: inline-block;
+      }
+    }
+    .user-info {
+      display: block;
+      @include breakpoint(small) {
+        display: none;
+      }
+      color:  $color-grey-01;
+      @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
+    }
   }
 }

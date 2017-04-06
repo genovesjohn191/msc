@@ -1,32 +1,39 @@
 @import '../../../styles/shared/base';
 
-.footer-wrapper {
-  background-color: $color-black;
-  color: $color-white;
-}
-
 .footer-container {
   @include display-flex(column);
   align-items: center;
   justify-content: center;
   padding: $space-large 0 $space-xlarge;
+  @include breakpoint(small) {
+    padding-bottom: $space-large;
+  }
+
+  .copyright {
+    span {
+      @include breakpoint(small) {
+        @include font-size($caption-small-font-size, $caption-small-line-height);
+      }
+    }
+  }
 
   .links {
     ul {
-     @include display-flex(row);
-     li {
-       a {
-         font-family: $base-font;
-         color: $color-white;
-         @include font-size($caption-default-font-size, $caption-default-line-height);
-         @include breakpoint(small) {
-           @include font-size($caption-small-font-size, $caption-small-line-height);
-         }
-       }
-       &:not(:last-child) {
-         padding-right: $space-medium;
-       }
-     }
+      @include display-flex(row);
+      li {
+        a {
+          text-decoration: none;
+          font-family: $base-font;
+          @include font-size($caption-small-font-size, $caption-small-line-height);
+          @include breakpoint(small) {
+            @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
+          }
+        }
+        &:not(:last-child) {
+          padding-right: $space-xsmall;
+          margin-right: $space-xsmall;
+        }
+      }
     }
   }
 }
