@@ -12,7 +12,10 @@ import {
   Subject
 } from 'rxjs/Rx';
 /** Services */
-import { TextContentProvider } from '../../core';
+import {
+  TextContentProvider,
+  AssetsProvider
+} from '../../core';
 import { ServersService } from './servers.service';
 /** Models */
 import { Server } from './server';
@@ -39,6 +42,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public keyword: string;
   public isLoaded: boolean;
   public errorMessage: string;
+  public gear: string;
   /** Server Variables */
   public displayServerCount: number;
   public totalServerCount: number;
@@ -51,7 +55,8 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _textProvider: TextContentProvider,
-    private _serversService: ServersService
+    private _serversService: ServersService,
+    private _assetsProvider: AssetsProvider
   ) {
     this.title = _textProvider.content.servers.title;
     this.isLoaded = false;
@@ -63,6 +68,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.getGearClass();
     this.getServers();
   }
 
@@ -70,6 +76,10 @@ export class ServersComponent implements OnInit, OnDestroy {
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
     }
+  }
+
+  public getGearClass() {
+    this.gear = this._assetsProvider.getIcon('gear');
   }
 
   public getServers(): void {
@@ -81,6 +91,7 @@ export class ServersComponent implements OnInit, OnDestroy {
       })
       .switchMap((searchKey) => {
         // Switch observable items to server list
+        this.servers.splice(0);
         return this._serversService.getServers(
           searchKey.page,
           // TODO: Display all record temporarily since Max item per page is under confirmation
@@ -103,6 +114,10 @@ export class ServersComponent implements OnInit, OnDestroy {
         // Get server response
         this.servers = this.servers.concat(mcsApiResponse.content);
         this.totalServerCount = mcsApiResponse.totalCount;
+
+        // TODO: Set displayed server count temporarily
+        // (remove this line when paging is finalized)
+        this.displayServerCount = this.totalServerCount;
       });
   }
 
@@ -128,7 +143,6 @@ export class ServersComponent implements OnInit, OnDestroy {
     this.page = 1;
     this.displayServerCount = MAX_ITEMS_PER_PAGE;
     this.keyword = key;
-    this.servers.splice(0);
     this.updateServers(this.keyword, this.page);
   }
 

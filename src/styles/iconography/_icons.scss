@@ -1,7 +1,20 @@
+%mcs-icon-base {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% auto;
+  display:inline-block;
+}
+
 .mcs-arrow-right-icon {
+  width: 40px;
+  height: 40px;
+  @extend %mcs-icon-base;
   background-image: url($icon-white-right-arrow);
 }
 
 .mcs-filter-selector-icon {
+  width: 25px;
+  height: 25px;
+  @extend %mcs-icon-base;
   background-image: url($icon-filter-selector);
 }

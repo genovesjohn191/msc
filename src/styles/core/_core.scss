@@ -1,5 +1,8 @@
 @import "../shared/base";
 @import "fonts";
+@import "classes/mcs-page-title";
+@import "classes/mcs-search";
+@import "classes/mcs-table";
 
 *,
 *:after,
@@ -113,12 +116,6 @@ html {
   }
 }
 
-.unstyled-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 .hidden-medium {
   @include breakpoint(medium) {
     display: none;
@@ -135,4 +132,10 @@ html {
   @include breakpoint(xsmall) {
     display: none;
   }
+}
+
+.unstyled-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }

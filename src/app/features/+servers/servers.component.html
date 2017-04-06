@@ -1,23 +1,23 @@
 <section class="servers-container">
-  <div class="information">
-    <div class="title">
-      <h3><b>Servers</b></h3>
+  <div class="mcs-page-title bordered-bottom">
+    <div class="main-title">
+      <h2>Servers</h2>
     </div>
     <div class="server-count">
       <span>{{ totalServerCount }} Servers</span>
     </div>
   </div>
 
-<!--TODO: Filtering and Column Settings are under confirmation -->
   <div class="filter">
-    <div class="search">
-      <!--<mcs-textbox name="search" [ngModel]="keyword"
-        (ngModelChange)="onSearchEvent($event)"
-        placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>-->
+    <div class="mcs-search">
+      <mcs-textbox name="search" [ngModel]="keyword"
+        (ngModelChange)="onSearchEvent($event)" width="350"
+        placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
 
       <mcs-filter-selector class="hidden-small" key="serverListingFilter" 
         (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
     </div>
+
     <div class="server-select">
       <mcs-button>New Server</mcs-button>
     </div>
@@ -26,67 +26,69 @@
   <table class="mcs-table table">
     <thead class="head">
       <tr>
-        <th *ngIf="columnSettings['state'].value">
+        <th *ngIf="columnSettings['state'].value" class="text-center">
           {{ columnSettings['state'].text }}
         </th>
-        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small">
+        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small text-center">
           {{ columnSettings['serviceId'].text }}
         </th>
-        <th *ngIf="columnSettings['name'].value">
+        <th *ngIf="columnSettings['name'].value" class="text-center">
           {{ columnSettings['name'].text }}
         </th>
-        <th *ngIf="columnSettings['type'].value" class="hidden-xsmall">
+        <th *ngIf="columnSettings['type'].value" class="hidden-xsmall text-center">
           {{ columnSettings['type'].text }}
         </th>
-        <th *ngIf="columnSettings['catalog'].value" class="hidden-xsmall">
+        <th *ngIf="columnSettings['catalog'].value" class="hidden-xsmall text-center">
           {{ columnSettings['catalog'].text }}
         </th>
-        <th *ngIf="columnSettings['privateIp'].value" class="hidden-small">
+        <th *ngIf="columnSettings['privateIp'].value" class="hidden-small text-center">
           {{ columnSettings['privateIp'].text }}
         </th>
-        <th *ngIf="columnSettings['zone'].value" class="hidden-small">
+        <th *ngIf="columnSettings['zone'].value" class="hidden-small text-center">
           {{ columnSettings['zone'].text }}
         </th>
-        <th *ngIf="columnSettings['vApp'].value" class="hidden-small">
+        <th *ngIf="columnSettings['vApp'].value" class="hidden-small text-center">
           {{ columnSettings['vApp'].text }}
         </th>
-        <th *ngIf="columnSettings['services'].value" class="hidden-small">
+        <th *ngIf="columnSettings['services'].value" class="hidden-small text-center">
           {{ columnSettings['services'].text }}
         </th>
-        <th>Action</th>
+        <th class="text-center">Action</th>
       </tr>
     </thead>
-    <tbody *ngIf="isLoaded">
+    <tbody>
       <tr *ngFor="let server of servers">
-        <td *ngIf="columnSettings['state'].value" class="text-center">
+        <td *ngIf="columnSettings['state'].value" class="text-center align-top">
           <i class="fa fa-circle-o-notch"></i>
         </td>
-        <td *ngIf="columnSettings['serviceId'].value" class="text-center hidden-small">
+        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-top hidden-small">
           {{ server.serviceId }}
         </td>
-        <td *ngIf="columnSettings['name'].value" class="text-center">
+        <td *ngIf="columnSettings['name'].value" class="text-left align-top">
           <a href="#"><u>{{ server.managementName }}</u></a>
         </td>
-        <td *ngIf="columnSettings['type'].value" class="text-center hidden-xsmall">
+        <td *ngIf="columnSettings['type'].value" class="text-left align-top hidden-xsmall">
           {{ server.serviceDescription }}
         </td>
-        <td *ngIf="columnSettings['catalog'].value" class="text-center hidden-xsmall">
+        <td *ngIf="columnSettings['catalog'].value" class="text-left align-top hidden-xsmall">
           {{ server.guestOS }}
         </td>
-        <td *ngIf="columnSettings['privateIp'].value" class="text-center hidden-small">
+        <td *ngIf="columnSettings['privateIp'].value" class="text-center align-top hidden-small">
           {{ server.managementIpAddress }}
         </td>
-        <td *ngIf="columnSettings['zone'].value" class="text-center hidden-small">
+        <td *ngIf="columnSettings['zone'].value" class="text-center align-top hidden-small">
           {{ server.coreCount }}
         </td>
-        <td *ngIf="columnSettings['vApp'].value" class="text-center hidden-small">
+        <td *ngIf="columnSettings['vApp'].value" class="text-left align-top hidden-small">
           <!--TODO: VM Application Here-->
           {{ server.hardwareVendor }}
         </td>
-        <td *ngIf="columnSettings['services'].value" class="text-center hidden-small">
+        <td *ngIf="columnSettings['services'].value" class="text-left align-top hidden-small">
           <a href="#">{{ server.id }}</a>
         </td>
-        <td class="text-center"><a href="#" class="fa fa-gear action-button"></a></td>
+        <td class="text-center align-top">
+          <a [ngClass]="gear"></a>
+        </td>
       </tr>
       <div *ngIf="errorMessage">
         {{ errorMessage }}
@@ -97,11 +99,10 @@
   </table>
   
   <div class="paging text-center">
-    <!--TODO: Enable more when specs of filtering is okay -->
-    <!--<a *ngIf="(displayServerCount < totalServerCount) && isLoaded" 
+    <a *ngIf="(displayServerCount < totalServerCount) && isLoaded" 
       (click)="onClickMoreEvent()">More 
       <i class="fa fa-angle-down"></i>
-    </a>-->
+    </a>
     <span *ngIf="!isLoaded">Loading...</span>
     <span *ngIf="totalServerCount === 0 && isLoaded">No server found.</span>
   </div>

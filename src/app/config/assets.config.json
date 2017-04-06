@@ -1,7 +1,7 @@
 {
   "icons": {
-    "arrow-right": "mcs-icon mcs-arrow-right-icon",
-    "filter-selector": "mcs-icon mcs-filter-selector-icon",
+    "arrow-right": "mcs-arrow-right-icon",
+    "filter-selector": "mcs-filter-selector-icon",
     "credit-card": "fa fa-credit-card",
     "search": "fa fa-search",
     "check": "fa fa-check",
@@ -21,7 +21,8 @@
     "check-box-2": "fa fa-check-square-o",
     "close": "fa fa-close",
     "chevron-down": "fa fa-angle-down",
-    "chevron-up": "fa fa-angle-up"
+    "chevron-up": "fa fa-angle-up",
+    "gear": "fa fa-gear"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

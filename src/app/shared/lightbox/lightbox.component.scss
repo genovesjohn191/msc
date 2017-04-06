@@ -34,8 +34,7 @@
   // Vertical centering
   .modal-dialog {
     min-height: calc(100vh - 60px);
-    display: flex;
-    flex-direction: column;
+    @include display-flex(column);
     justify-content: center;
     overflow: auto;
     @media(max-width: 768px) {
