@@ -10,6 +10,10 @@
   @include box-sizing(border-box);
 }
 
+html, body {
+  height: 100%;
+}
+
 html {
   overflow-x: hidden;
 
@@ -64,6 +68,9 @@ html {
       @include breakpoint(small) {
         @include font-size($caption-small-font-size, $caption-small-line-height);
       }
+      @include breakpoint(xsmall) {
+        @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
+      }
     }
 
     a {
@@ -111,6 +118,27 @@ html {
       }
       @include breakpoint(small) {
         width: $container-small;
+      }
+    }
+
+    header {
+      background-color: $color-black;
+      color: $color-white;
+    }
+
+    footer {
+      &.dark {
+        background-color: $color-black;
+        color: $color-white;
+
+        a {
+          color: $color-white;
+        }
+      }
+
+      &.light {
+        background-color: $color-white;
+        color: $color-black;
       }
     }
   }
