@@ -5,6 +5,7 @@ export * from './core.config';
 export * from './services/mcs-api.service';
 export * from './services/mcs-auth.service';
 export * from './services/mcs-storage.service';
+export * from './services/mcs-component.service';
 /** Providers */
 export * from './providers/environment.provider';
 export * from './providers/text-content.provider';

@@ -1,0 +1,20 @@
+.mcs-page-title {
+  @include display-flex(row);
+  align-items: center;
+  margin-bottom: $space-large;
+  color: $color-black;
+
+  .main-title {
+    margin-right: auto;
+    h2 {
+      margin-bottom: 0px;
+    }
+  }
+
+  &.bordered-bottom {
+    border-bottom: 1px solid $color-grey-04;
+    .main-title h2 {
+      border-bottom: 5px solid $color-grey-04;
+    }
+  }
+}

@@ -1,12 +1,6 @@
 @import '../../../styles/shared/base';
 
 .mcs-filter-selector{
-  // TODO: Remove override on ICON (this is for demo purposes)
-  .mcs-icon {
-    height: 30px !important;
-    width: 30px !important;
-  }
-
   .icon-link {
     cursor: pointer;
     position: relative;
@@ -36,6 +30,7 @@
     font-weight: 400;
     background-color: $tooltip-color;
     text-align: left;
+    font-weight: normal;
   }
   .popover-content {
     background-color: $tooltip-color;

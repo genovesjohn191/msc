@@ -2,44 +2,23 @@
 
 .servers-container {
   position: relative;
-  padding: 0.5rem 0;
 
-  .information {
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid $color-grey-00;
-    color: $color-black;
-    @include display-flex(row);
-
-    .title {
-      margin-right: auto;
-      b {
-        border-bottom: 5px solid $color-grey-00;
-      }
-    }
-
-    .servers-count {
-      font-weight: 400;
-      margin-left: auto;
-    }
+  .servers-count {
+    font-weight: 400;
+    margin-left: auto;
   }
 
   .filter {
     @include display-flex(row);
     align-items: center;
 
-    .search {
-      margin-right: auto;
-      mcs-filter-selector:last-child {
-        margin-left: 20px;
-      }
-      @include breakpoint(small) {
-        @include flex(1);
-        margin-right: 30px;
-      }
-    }
-
     .server-select {
       margin-left: auto;
     }
+  }
+
+  // TODO: temporary set the font-size of gear to 25px
+  .fa-gear {
+    @include font-size($icon-large-font-size);
   }
 }
