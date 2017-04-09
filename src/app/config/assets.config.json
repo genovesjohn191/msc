@@ -16,13 +16,13 @@
     "empty-box": "fa fa-square-o",
     "circle": "fa fa-circle",
     "caret-right": "fa fa-caret-right",
-    "spinner": "fa fa-spinner",
     "play": "fa fa-play",
     "check-box-2": "fa fa-check-square-o",
     "close": "fa fa-close",
     "chevron-down": "fa fa-angle-down",
     "chevron-up": "fa fa-angle-up",
-    "gear": "fa fa-gear"
+    "gear": "fa fa-gear",
+    "text-spinner": "mcs-text-spinner"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

@@ -10,6 +10,10 @@
     width: 100%;
   }
 
+  &:hover:enabled {
+   background-color: $button-hover-background-color;
+  }
+
   &.small {
     @include font-size($button-font-size-small);
     padding: $button-padding-small;
@@ -58,4 +62,13 @@
       }
     }
   }
+
+  &.danger {
+    background-color: $color-red-00;
+  }
+}
+
+.loader {
+  width: 50px;
+  height: 15px;
 }

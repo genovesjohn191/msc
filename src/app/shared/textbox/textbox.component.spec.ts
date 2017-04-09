@@ -3,10 +3,6 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import {
-  Renderer,
-  ElementRef
-} from '@angular/core';
 
 import { TextboxComponent } from './textbox.component';
 import { AssetsProvider } from '../../core/providers/assets.provider';
@@ -18,7 +14,8 @@ describe('TextboxComponent', () => {
   let mockAssetsProvider = {
     getIcon(key: string): string {
       let icons = {
-        search: 'fa fa-search'
+        'search': 'fa fa-search',
+        'text-spinner': 'msc-text-spinner'
       };
 
       return icons[key];
@@ -75,6 +72,28 @@ describe('TextboxComponent', () => {
     it('should pass the value of textbox to text', () => {
       component.writeValue('Textbox Value');
       expect(component.text).toEqual('Textbox Value');
+    });
+  });
+
+  describe('getIconClass()', () => {
+    it('should return the icon class if provided iconKey is valid', () => {
+      component.getIconClass('search');
+      expect(component.getIconClass('search')).toBeDefined();
+    });
+  });
+
+  describe('showLoader()', () => {
+    it('should set the value of iconClass', () => {
+      component.showLoader();
+      expect(component.iconClass).toBeDefined();
+    });
+  });
+
+  describe('hideLoader()', () => {
+    it('should set the value of iconClass', () => {
+      component.icon = 'search';
+      component.hideLoader();
+      expect(component.iconClass).toBeDefined();
     });
   });
 });

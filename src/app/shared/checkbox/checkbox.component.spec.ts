@@ -43,7 +43,7 @@ describe('CheckboxComponent', () => {
   }));
 
   /** Test Implementation */
-  describe('ngOnInit()', () => {
+  describe('onClickEvent()', () => {
     it('should call the emit() of EventEmitter', () => {
       spyOn(component.onClick, 'emit');
       component.onClickEvent(null);

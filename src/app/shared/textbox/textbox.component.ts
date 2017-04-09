@@ -14,6 +14,9 @@ import {
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 
+/** Interface */
+import { Loading } from '../loading.interface';
+
 /** Providers */
 import { AssetsProvider } from '../../core/providers/assets.provider';
 
@@ -30,7 +33,7 @@ import { AssetsProvider } from '../../core/providers/assets.provider';
   ]
 })
 
-export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAccessor {
+export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAccessor, Loading {
   public iconClass: string;
 
   @Input()
@@ -62,13 +65,17 @@ export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAcce
    * Model Binding
    */
   private _text: string;
+
   public get text(): string {
     return this._text;
   }
+
   public set text(value: string) {
     if (value !== this._text) {
       this._text = value;
-      this._onChanged(value);
+      if (this._onChanged) {
+        this._onChanged(value);
+      }
     }
   }
 
@@ -79,7 +86,7 @@ export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAcce
 
   public ngOnInit() {
     if (this.icon) {
-      this.iconClass = this._assetsProvider.getIcon(this.icon);
+      this.iconClass = this.getIconClass(this.icon);
     }
   }
 
@@ -121,6 +128,18 @@ export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAcce
    */
   public registerOnTouched(fn: any) {
     this._onTouched = fn;
+  }
+
+  public showLoader(): void {
+    this.iconClass = this.getIconClass('text-spinner');
+  }
+
+  public hideLoader(): void {
+    this.iconClass = this.getIconClass(this.icon);
+  }
+
+  public getIconClass(iconKey: string): string {
+    return this._assetsProvider.getIcon(iconKey);
   }
 
 }

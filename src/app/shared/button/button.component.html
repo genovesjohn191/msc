@@ -1,3 +1,4 @@
+<img *ngIf="isLoading && loaderImage" class="loader" src="{{ loaderImage }}" />
 <button #mcsButton type="button" class="btn mcs-button" (click)="emitEvent($event)">
   <div class="text">
     <span *ngIf="iconLeft" class="icon-left-wrapper">
