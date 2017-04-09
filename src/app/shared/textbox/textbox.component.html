@@ -1,5 +1,5 @@
 <div #mcsTextbox class="mcs-textbox">
   <input type="text" name="{{ name }}" [ngClass]="{'has-icon': iconClass}" [(ngModel)]="text"
     placeholder="{{ placeholder }}" (focus)="onFocus()" (focusout)="onFocusOut()" />
-  <i *ngIf="iconClass" class="icon" [ngClass]="iconClass"></i>
+  <i *ngIf="iconClass" [ngClass]="iconClass"></i>
 </div>

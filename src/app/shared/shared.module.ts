@@ -9,12 +9,10 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { StatusBoxComponent } from './status-box/status-box.component';
 import { TextboxComponent } from './textbox/textbox.component';
-import { LoaderComponent } from './loader/loader.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
 /** Directives */
 import { FlatDirective } from './directives/flat.directive';
 import { RedDirective } from './directives/red.directive';
-import { LoaderDirective } from './directives/loader.directive';
 
 @NgModule({
   declarations: [
@@ -23,10 +21,8 @@ import { LoaderDirective } from './directives/loader.directive';
     FilterSelectorComponent,
     StatusBoxComponent,
     TextboxComponent,
-    LoaderComponent,
     FlatDirective,
     RedDirective,
-    LoaderDirective,
     LightboxComponent
   ],
   imports: [
@@ -40,16 +36,13 @@ import { LoaderDirective } from './directives/loader.directive';
     FilterSelectorComponent,
     StatusBoxComponent,
     TextboxComponent,
-    LoaderComponent,
     LightboxComponent,
     FlatDirective,
     RedDirective,
-    LoaderDirective,
     CommonModule,
     FormsModule,
     NgbModule
-  ],
-  entryComponents: [LoaderComponent]
+  ]
 })
 
 export class SharedModule { }

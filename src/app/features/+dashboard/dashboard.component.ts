@@ -27,6 +27,7 @@ export class DashboardComponent implements OnInit {
   public filterItems: any;
   public dashboards: Dashboard[];
   public textboxValue: string;
+  public disabled: boolean;
 
   public constructor() {
     this.title = 'Dashboard component';
@@ -40,6 +41,7 @@ export class DashboardComponent implements OnInit {
     this.onDisplayStatusBox();
     this.statusBoxAttribute.dialogState = 'hide';
     this.textboxValue = 'Windows Server 2012';
+    this.disabled = true;
   }
 
   /**
@@ -99,12 +101,21 @@ export class DashboardComponent implements OnInit {
     this.statusBoxAttribute.description = 'The virtual machine successfully started. ';
   }
 
-  public onButtonClicked(loader: any) {
-    loader.showLoader();
+  public onButtonClicked(button: any) {
+    button.showLoader();
     console.log('start process');
     setTimeout(() => {
       console.log('done');
-      loader.hideLoader();
+      button.hideLoader();
     }, 3000);
+  }
+
+  public onSearch(textbox: any) {
+    textbox.showLoader();
+    console.log('start search');
+    setTimeout(() => {
+      console.log('done');
+      textbox.hideLoader();
+    }, 2000);
   }
 }

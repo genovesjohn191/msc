@@ -3,7 +3,10 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import { Renderer } from '@angular/core';
+import {
+  Renderer,
+  ElementRef
+} from '@angular/core';
 
 import { ButtonComponent } from './button.component';
 import { AssetsProvider } from '../../core/providers/assets.provider';
@@ -20,6 +23,13 @@ describe('ButtonComponent', () => {
       };
 
       return icons[key];
+    },
+    getImagePath(key: string): string {
+      let images = {
+        loader: 'spinner.gif'
+      };
+
+      return images[key];
     }
   };
 
@@ -52,6 +62,7 @@ describe('ButtonComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      component.mcsButton = new ElementRef(document.createElement('button'));
     });
   }));
 
@@ -68,6 +79,12 @@ describe('ButtonComponent', () => {
       component.ngOnInit();
       expect(component.iconRightClass).toBeDefined();
     });
+
+    it('should return the image path of the loader if the loaderKey provided is valid', () => {
+      component.loaderKey = 'loader';
+      component.ngOnInit();
+      expect(component.loaderImage).toBeDefined();
+    });
   });
 
   describe('ngAfterViewInit()', () => {
@@ -80,6 +97,28 @@ describe('ButtonComponent', () => {
         expect(renderer.setElementClass).not.toHaveBeenCalled();
       })
     );
+  });
+
+  describe('emitEvent()', () => {
+    it('should call the emit() of EventEmitter', () => {
+      spyOn(component.onClick, 'emit');
+      component.emitEvent(null);
+      expect(component.onClick.emit).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('showLoader()', () => {
+    it('should set the value of isLoading to true', () => {
+      component.showLoader();
+      expect(component.isLoading).toBeTruthy();
+    });
+  });
+
+  describe('hideLoader()', () => {
+    it('should set the value of isLoading to false', () => {
+      component.hideLoader();
+      expect(component.isLoading).toBeFalsy();
+    });
   });
 
 });
