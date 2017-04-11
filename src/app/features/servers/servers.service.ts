@@ -9,7 +9,9 @@ import { Observable } from 'rxjs/Rx';
 /** Services and Models */
 import {
   McsApiService,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsApiErrorResponse,
+  McsApiRequestParameter
 } from '../../core/';
 import { Server } from './server';
 
@@ -37,7 +39,26 @@ export class ServersService {
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
     searchParams.set('server_name', serverName);
 
-    return this._mcsApiService.get('/servers', undefined, searchParams)
-      .map((response) => response.json() as McsApiSuccessResponse<Server[]>);
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers';
+    mcsApiRequestParameter.searchParameters = searchParams;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        return response.json() as McsApiSuccessResponse<Server[]>;
+      })
+      .catch((error: Response | any) => {
+        let mcsApiErrorResponse: McsApiErrorResponse;
+
+        if (error instanceof Response) {
+          mcsApiErrorResponse = new McsApiErrorResponse();
+          mcsApiErrorResponse.message = error.statusText;
+          mcsApiErrorResponse.status = error.status;
+        } else {
+          mcsApiErrorResponse = error;
+        }
+
+        return Observable.throw(mcsApiErrorResponse);
+      });
   }
 }

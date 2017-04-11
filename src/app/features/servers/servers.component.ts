@@ -24,11 +24,8 @@ import {
   McsApiError,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  SharedDefintion
+  CoreDefinition
 } from '../../core';
-
-// TODO: Set actual count of item to be displayed
-const MAX_ITEMS_PER_PAGE = 10;
 
 @Component({
   selector: 'mcs-servers',
@@ -44,7 +41,6 @@ export class ServersComponent implements OnInit, OnDestroy {
   public errorMessage: string;
   public gear: string;
   /** Server Variables */
-  public displayServerCount: number;
   public totalServerCount: number;
   public servers: Server[];
   /** Filter Variables */
@@ -64,7 +60,6 @@ export class ServersComponent implements OnInit, OnDestroy {
     this.searchSubject = new Subject<ServerListSearchKey>();
     this.servers = new Array();
     this.totalServerCount = 0;
-    this.displayServerCount = MAX_ITEMS_PER_PAGE;
   }
 
   public ngOnInit() {
@@ -85,7 +80,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public getServers(): void {
     this.searchSubscription = Observable.of(new ServerListSearchKey())
       .concat(this.searchSubject)
-      .debounceTime(SharedDefintion.SEARCH_TIME)
+      .debounceTime(CoreDefinition.SEARCH_TIME)
       .distinctUntilChanged((previous, next) => {
         return previous.isEqual(next);
       })
@@ -101,23 +96,14 @@ export class ServersComponent implements OnInit, OnDestroy {
         ).finally(() => this.isLoaded = true);
       })
       .retry(3)
-      .catch((error: Response | any) => {
-        let apiErrorResponse: McsApiErrorResponse = error.json();
-        if (apiErrorResponse) {
-          this.errorMessage = apiErrorResponse.message;
-        } else {
-          this.errorMessage = error.statusText;
-        }
+      .catch((error: McsApiErrorResponse) => {
+        this.errorMessage = error.message;
         return Observable.throw(error);
       })
       .subscribe((mcsApiResponse) => {
         // Get server response
         this.servers = this.servers.concat(mcsApiResponse.content);
         this.totalServerCount = mcsApiResponse.totalCount;
-
-        // TODO: Set displayed server count temporarily
-        // (remove this line when paging is finalized)
-        this.displayServerCount = this.totalServerCount;
       });
   }
 
@@ -135,13 +121,15 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public getNextPage(): void {
     this.page += 1;
-    this.displayServerCount += MAX_ITEMS_PER_PAGE;
     this.updateServers(this.keyword, this.page);
+  }
+
+  public getDisplayServerCount(): number {
+    return this.page * CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE;
   }
 
   public searchServers(key: any): void {
     this.page = 1;
-    this.displayServerCount = MAX_ITEMS_PER_PAGE;
     this.keyword = key;
     this.updateServers(this.keyword, this.page);
   }
@@ -149,7 +137,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public updateServers(key?: string, page?: number) {
     let searchKey: ServerListSearchKey = new ServerListSearchKey();
     // Set server search key
-    searchKey.maxItemPerPage = MAX_ITEMS_PER_PAGE;
+    searchKey.maxItemPerPage = CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE;
     searchKey.page = page;
     searchKey.serverNameKeyword = key;
     // Set false to load flag

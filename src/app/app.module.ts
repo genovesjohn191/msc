@@ -61,11 +61,7 @@ import { routes } from './app.routes';
 /**
  * MCS Portal Modules Declaration
  */
-import {
-  NetworkingModule,
-  CatalogModule,
-  DashboardModule
-} from './features';
+import { FeaturesModule } from './features';
 
 /**
  * Application-Wide Providers
@@ -98,6 +94,7 @@ const mcsCoreConfig = {
     BrowserModule,
     HttpModule,
     BrowserAnimationsModule,
+    FeaturesModule,
     NgbModule.forRoot(),
     CoreModule.forRoot(mcsCoreConfig),
     RouterModule.forRoot(routes)
