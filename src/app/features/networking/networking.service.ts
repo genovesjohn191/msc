@@ -7,7 +7,10 @@ import {
 import { Observable } from 'rxjs/Rx';
 
 // Services Declarations
-import { McsApiService } from '../../core/';
+import {
+  McsApiService,
+  McsApiRequestParameter
+} from '../../core/';
 
 // Models
 import { NetworkingModel } from './networking.model';
@@ -21,8 +24,11 @@ export class NetworkingService {
    * Get Lead Description Data
    */
   public getLeadDescription(): Observable<NetworkingModel[]> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/marketo/leads/describe/';
+
     return this._mcsApiService
-      .get('/marketo/leads/describe/')
+      .get(mcsApiRequestParameter)
       .map((response) => response.json().result as NetworkingModel[])
       .catch(this.handleError);
   }

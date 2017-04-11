@@ -99,10 +99,12 @@
   </table>
   
   <div class="paging text-center">
-    <a *ngIf="(displayServerCount < totalServerCount) && isLoaded" 
+    <!--TODO: Remove comment when paging specs is already finalized-->
+
+    <!--<a *ngIf="(getDisplayServerCount() < totalServerCount) && isLoaded" 
       (click)="onClickMoreEvent()">More 
       <i class="fa fa-angle-down"></i>
-    </a>
+    </a>-->
     <span *ngIf="!isLoaded">Loading...</span>
     <span *ngIf="totalServerCount === 0 && isLoaded">No server found.</span>
   </div>
