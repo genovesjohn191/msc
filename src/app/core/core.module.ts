@@ -13,6 +13,7 @@ import { CoreConfig } from './core.config';
 import { McsApiService } from './services/mcs-api.service';
 import { McsAuthService } from './services/mcs-auth.service';
 import { MscStorageService } from './services/mcs-storage.service';
+import { McsBrowserService } from './services/mcs-browser.service';
 import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
@@ -51,6 +52,7 @@ import { HeaderComponent } from './header/header.component';
     McsApiService,
     McsAuthService,
     MscStorageService,
+    McsBrowserService,
     EnvironmentProvider,
     TextContentProvider,
     AssetsProvider,
