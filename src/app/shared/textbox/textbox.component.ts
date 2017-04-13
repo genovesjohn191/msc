@@ -131,7 +131,7 @@ export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAcce
   }
 
   public showLoader(): void {
-    this.iconClass = this.getIconClass('text-spinner');
+    this.iconClass = this.getIconClass('spinner');
   }
 
   public hideLoader(): void {

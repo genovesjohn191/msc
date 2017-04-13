@@ -68,9 +68,10 @@ $color-grey-00: #333333;
 $color-grey-01: #58595b;
 $color-grey-02: #888888;
 $color-grey-03: #a5a6aa;
-$color-grey-04: #e3e3e3;
-$color-grey-05: #e1e1e1;
-$color-grey-06: #f4f4f4;
+$color-grey-04: #d6d6d6;
+$color-grey-05: #e3e3e3;
+$color-grey-06: #e1e1e1;
+$color-grey-07: #f4f4f4;
 $color-green-00: #21b21e;
 $color-yellow-00: #efc225;
 $color-red-00: #f80c27;
@@ -115,8 +116,17 @@ $button-padding: 10px 15px;
 $button-padding-small: 5px 10px;
 
 // Tooltip
-$tooltip-color: $color-grey-06;
+$tooltip-color: $color-grey-07;
 
 // Table
-$table-header-font: $base-font;
+$table-header-font: $base-font-bold;
 $table-border-radius: 5px;
+
+// Z-index
+$header-z-index: 100;
+$main-navigation-z-index: 90;
+
+// Navigation
+$navigation-mobile-offset: 65px;
+$navigation-link-desktop-padding: 10px 15px;
+$navigation-link-mobile-padding: 15px;

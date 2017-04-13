@@ -3,7 +3,6 @@
 @import "classes/mcs-page-title";
 @import "classes/mcs-search";
 @import "classes/mcs-table";
-@import "classes/mcs-spinner";
 
 *,
 *:after,
@@ -25,6 +24,11 @@ html {
     @include font-size($font-size-default, $line-height-default);
     @include breakpoint(small) {
       @include font-size($font-size-small, $line-height-small);
+      padding-top: $navigation-mobile-offset;
+    }
+
+    &.modal-open {
+      height: auto;
     }
 
     h1, h2, h3, h4 {

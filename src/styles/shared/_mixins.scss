@@ -253,6 +253,23 @@
 //   @include display-flex(row);
 // }
 
+// Set display inline-flex with direction
+@mixin display-inline-flex ($direction) {
+  display: -webkit-inline-box;
+  display: -moz-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+
+  -ms-flex-direction: $direction;
+  flex-direction: $direction;
+}
+
+// Usage
+
+// .mcs-container {
+//   @include display-inline-flex(row);
+// }
+
 // Flex item
 @mixin flex ($values) {
   -webkit-box-flex: $values;

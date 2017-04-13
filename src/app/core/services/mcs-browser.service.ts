@@ -7,6 +7,8 @@ import { BehaviorSubject } from 'rxjs/Rx';
 import { McsDeviceType } from '../models/mcs-device-type';
 import { CoreDefinition } from '../core.definition';
 
+export * from '../models/mcs-device-type';
+
 @Injectable()
 export class McsBrowserService {
 
