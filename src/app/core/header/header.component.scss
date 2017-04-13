@@ -2,7 +2,11 @@
 
 header {
   @include breakpoint(small) {
+    position: fixed;
+    top: 0;
+    width: 100%;
     padding-right: 0;
+    z-index: $header-z-index;
   }
 }
 

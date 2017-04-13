@@ -39,12 +39,12 @@ table.mcs-table {
   tr {
 
     &:nth-of-type(even) {
-      background-color: $color-grey-06; 
+      background-color: $color-grey-07; 
     }
 
     %border-override {
       border-top: none;
-      border-right: 1px solid $color-grey-06;
+      border-right: 1px solid $color-grey-07;
 
       &:last-child {
         border-right: none;

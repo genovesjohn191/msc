@@ -19,17 +19,11 @@ describe('ButtonComponent', () => {
     getIcon(key: string): string {
       let icons = {
         'arrow-right': 'mcs-icon mcs-arrow-right-icon',
-        'credit-card': 'fa fa-credit-card'
+        'credit-card': 'fa fa-credit-card',
+        'spinner': 'fa fa-spinner fa-pulse'
       };
 
       return icons[key];
-    },
-    getImagePath(key: string): string {
-      let images = {
-        loader: 'spinner.gif'
-      };
-
-      return images[key];
     }
   };
 
@@ -79,12 +73,6 @@ describe('ButtonComponent', () => {
       component.ngOnInit();
       expect(component.iconRightClass).toBeDefined();
     });
-
-    it('should return the image path of the loader if the loaderKey provided is valid', () => {
-      component.loaderKey = 'loader';
-      component.ngOnInit();
-      expect(component.loaderImage).toBeDefined();
-    });
   });
 
   describe('ngAfterViewInit()', () => {
@@ -108,17 +96,17 @@ describe('ButtonComponent', () => {
   });
 
   describe('showLoader()', () => {
-    it('should set the value of isLoading to true', () => {
+    it('should set the value of iconClass', () => {
       component.showLoader();
-      expect(component.isLoading).toBeTruthy();
+      expect(component.iconRightClass).toBeDefined();
     });
   });
 
   describe('hideLoader()', () => {
-    it('should set the value of isLoading to false', () => {
+    it('should set the value of iconClass', () => {
+      component.iconRight = 'arrow-right';
       component.hideLoader();
-      expect(component.isLoading).toBeFalsy();
+      expect(component.iconRightClass).toBeDefined();
     });
   });
-
 });

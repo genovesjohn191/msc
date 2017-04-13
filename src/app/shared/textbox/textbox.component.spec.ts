@@ -14,8 +14,8 @@ describe('TextboxComponent', () => {
   let mockAssetsProvider = {
     getIcon(key: string): string {
       let icons = {
-        'search': 'fa fa-search',
-        'text-spinner': 'msc-text-spinner'
+        search: 'fa fa-search',
+        spinner: 'fa fa-spinner fa-pulse'
       };
 
       return icons[key];

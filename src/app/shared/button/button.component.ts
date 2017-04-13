@@ -25,9 +25,6 @@ import { AssetsProvider } from '../../core';
 export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   public iconLeftClass: string;
   public iconRightClass: string;
-  public loaderKey: string;
-  public loaderImage: string;
-  public isLoading: boolean;
 
   @Input()
   public type: string;
@@ -62,20 +59,15 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   public constructor(
     private _assetsProvider: AssetsProvider,
     private _renderer: Renderer
-  ) {
-    this.loaderKey = 'loader';
-    this.isLoading = false;
-  }
+  ) {}
 
   public ngOnInit() {
-    this.loaderImage = this._assetsProvider.getImagePath(this.loaderKey);
-
     if (this.iconLeft) {
-      this.iconLeftClass = this._assetsProvider.getIcon(this.iconLeft);
+      this.iconLeftClass = this.getIconClass(this.iconLeft);
     }
 
     if (this.iconRight) {
-      this.iconRightClass = this._assetsProvider.getIcon(this.iconRight);
+      this.iconRightClass = this.getIconClass(this.iconRight);
     }
   }
 
@@ -117,12 +109,14 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   }
 
   public showLoader(): void {
-    this.isLoading = true;
-    this._renderer.setElementClass(this.mcsButton.nativeElement, 'hidden-xl-down', true);
+    this.iconRightClass = this.getIconClass('spinner');
   }
 
   public hideLoader(): void {
-    this.isLoading = false;
-    this._renderer.setElementClass(this.mcsButton.nativeElement, 'hidden-xl-down', false);
+    this.iconRightClass = this.getIconClass(this.iconRight);
+  }
+
+  public getIconClass(iconKey: string): string {
+    return this._assetsProvider.getIcon(iconKey);
   }
 }
