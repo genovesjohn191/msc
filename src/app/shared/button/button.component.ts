@@ -5,7 +5,7 @@ import {
   Input,
   Output,
   EventEmitter,
-  Renderer,
+  Renderer2,
   ElementRef,
   ViewChild
 } from '@angular/core';
@@ -58,7 +58,7 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
 
   public constructor(
     private _assetsProvider: AssetsProvider,
-    private _renderer: Renderer
+    private _renderer: Renderer2
   ) {}
 
   public ngOnInit() {
@@ -73,34 +73,34 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
 
   public ngAfterViewInit() {
     if (this.type) {
-      this._renderer.setElementClass(this.mcsButton.nativeElement, this.type, true);
+      this._renderer.addClass(this.mcsButton.nativeElement, this.type);
     }
 
     if (this.iconLeftClass || this.iconRightClass) {
-      this._renderer.setElementClass(this.mcsButton.nativeElement, 'has-icon', true);
+      this._renderer.addClass(this.mcsButton.nativeElement, 'has-icon');
     }
 
     if (this.size) {
-      this._renderer.setElementClass(this.mcsButton.nativeElement, this.size, true);
+      this._renderer.addClass(this.mcsButton.nativeElement, this.size);
     }
 
     if (this.width) {
-      this._renderer.setElementStyle(this.mcsButton.nativeElement, 'max-width', this.width + 'px');
-      this._renderer.setElementClass(this.mcsButton.nativeElement, 'w-100', true);
+      this._renderer.setStyle(this.mcsButton.nativeElement, 'max-width', this.width + 'px');
+      this._renderer.addClass(this.mcsButton.nativeElement, 'w-100');
     }
 
     if (this.lightboxId) {
-      this._renderer.setElementAttribute(this.mcsButton.nativeElement, 'data-toggle', 'modal');
-      this._renderer.setElementAttribute(
+      this._renderer.setAttribute(this.mcsButton.nativeElement, 'data-toggle', 'modal');
+      this._renderer.setAttribute(
         this.mcsButton.nativeElement, 'data-target', '#' + this.lightboxId);
     }
 
     if (this.lightboxDismiss === 'true') {
-      this._renderer.setElementAttribute(this.mcsButton.nativeElement, 'data-dismiss', 'modal');
+      this._renderer.setAttribute(this.mcsButton.nativeElement, 'data-dismiss', 'modal');
     }
 
     if (this.disabled) {
-      this._renderer.setElementProperty(this.mcsButton.nativeElement, 'disabled', this.disabled);
+      this._renderer.setProperty(this.mcsButton.nativeElement, 'disabled', this.disabled);
     }
   }
 

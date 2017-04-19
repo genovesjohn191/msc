@@ -4,7 +4,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {
-  Renderer,
+  Renderer2,
   ElementRef
 } from '@angular/core';
 
@@ -37,7 +37,7 @@ describe('ButtonComponent', () => {
       ],
       providers: [
         { provide: AssetsProvider, useValue: mockAssetsProvider },
-        Renderer
+        Renderer2
       ]
     });
 
@@ -77,12 +77,12 @@ describe('ButtonComponent', () => {
 
   describe('ngAfterViewInit()', () => {
     it('should use default styling if no icon found',
-      inject([Renderer], (renderer: Renderer) => {
-        spyOn(renderer, 'setElementClass');
+      inject([Renderer2], (renderer: Renderer2) => {
+        spyOn(renderer, 'addClass');
         component.iconLeft = 'arrow-forward';
         component.iconRight = 'angular';
         component.ngAfterViewInit();
-        expect(renderer.setElementClass).not.toHaveBeenCalled();
+        expect(renderer.addClass).not.toHaveBeenCalled();
       })
     );
   });
