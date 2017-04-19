@@ -1,0 +1,82 @@
+<section class="notifications-container">
+  <div class="mcs-page-title bordered-bottom">
+    <div class="main-title">
+      <h2>Notifications</h2>
+    </div>
+    <div class="notifications-count">
+      <span>{{ totalNotificationsCount }} Notifications</span>
+    </div>
+  </div>
+
+  <div class="filter">
+    <div class="mcs-search">
+      <mcs-textbox name="search" width="350" placeholder="Type to filter..."></mcs-textbox>
+    </div>
+  </div>
+
+  <table class="mcs-table table notifications-table">
+    <thead class="head">
+      <tr>
+        <th class="text-center">Status</th>
+        <th>User</th>
+        <th>Notification</th>
+        <th>Start Time</th>
+        <th>Completed</th>
+        <th class="text-center">VDC</th>
+      </tr>
+    </thead>
+    <tbody>
+     <tr>
+       <td class="text-center"><i [ngClass]="spinnerIcon"></i></td>
+       <td>Shaun Domingo</td>
+       <td class="notification">Restoring snapshot for server mongo-db-prod</td>
+       <td>8:14:23am, Thu 8 Dec, 2016</td>
+       <td>In Progress</td>
+       <td>M2VDC27117006</td>
+     </tr>
+
+     <tr>
+       <td class="text-center"><i [ngClass]="spinnerIcon"></i></td>
+       <td>Keshbin Bajracharya</td>
+       <td class="notification">Deploying new VM app-server-prod</td>
+       <td>8:14:23am, Thu 8 Dec, 2016</td>
+       <td>In Progress</td>
+       <td>M2VDC27117006</td>
+     </tr>
+
+     <tr>
+       <td class="text-center"><i [ngClass]="checkIcon"></i></td>
+       <td>Shaun Domingo</td>
+       <td class="notification">Restoring app-server-restored</td>
+       <td>8:14:23am, Thu 8 Dec, 2016</td>
+       <td>8:20:03am, Thu 8 Dec, 2016</td>
+       <td>M2VDC27117006</td>
+     </tr>
+
+     <tr>
+       <td class="text-center"><i [ngClass]="checkIcon"></i></td>
+       <td>Shaun Domingo</td>
+       <td class="notification">Deploying new VM staging-all-in-one</td>
+       <td>8:14:23am, Thu 8 Dec, 2016</td>
+       <td>8:20:03am, Thu 8 Dec, 2016</td>
+       <td>M2VDC27117006</td>
+     </tr>
+
+     <tr>
+       <td class="text-center"><i [ngClass]="checkIcon"></i></td>
+       <td>Shaun Domingo</td>
+       <td class="notification">Removing 3-tier-all-in-one</td>
+       <td>8:14:23am, Thu 8 Dec, 2016</td>
+       <td>8:20:03am, Thu 8 Dec, 2016</td>
+       <td>M2VDC27117006</td>
+     </tr>
+    </tbody>
+    <tfoot>
+    </tfoot>
+  </table>
+  
+  <div class="paging text-center">
+    <!--TODO: Remove comment when paging specs is already finalized-->
+    <a>More <i class="fa fa-angle-down"></i></a>
+  </div>
+</section>

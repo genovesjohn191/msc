@@ -1,0 +1,15 @@
+@import "../../../styles/shared/base";
+
+.notifications-container {
+  position: relative;
+
+  .notifications-table {
+    tr {
+      td {
+        &.notification {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
