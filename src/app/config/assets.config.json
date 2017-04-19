@@ -24,7 +24,8 @@
     "gear": "fa fa-gear",
     "text-spinner": "mcs-text-spinner",
     "spinner": "fa fa-spinner fa-pulse",
-    "sign-out": "fa fa-sign-out"
+    "sign-out": "fa fa-sign-out",
+    "user": "fa fa-user-o"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

@@ -26,6 +26,7 @@ import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { HeaderComponent } from './header/header.component';
+import { UserPanelComponent } from './user-panel/user-panel.component';
 
 @NgModule({
   imports: [
@@ -38,14 +39,16 @@ import { HeaderComponent } from './header/header.component';
     BreadcrumbsComponent,
     ContentComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    UserPanelComponent
   ],
   exports: [
     CommonModule,
     MainNavigationComponent,
     ContentComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    UserPanelComponent
   ],
   providers: [
     BreadcrumbsService,

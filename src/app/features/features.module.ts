@@ -3,13 +3,15 @@ import { ServersModule } from './servers/servers.module';
 import { NetworkingModule } from './networking/networking.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @NgModule({
   imports: [
     DashboardModule,
     ServersModule,
     NetworkingModule,
-    CatalogModule
+    CatalogModule,
+    NotificationsModule
   ]
 })
 

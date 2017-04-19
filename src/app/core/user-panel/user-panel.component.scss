@@ -1,0 +1,68 @@
+@import '../../../styles/shared/base';
+
+.mcs-user-panel {
+  @include display-flex(row);
+  align-items: center;
+
+  .notification {
+    padding: 0 $space-large;
+    cursor: pointer;
+    @include breakpoint(small) {
+      padding: 0 $space-medium;
+    }
+
+    i {
+      position: relative;
+
+      span {
+        background-color: $color-primary-01;
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        top: -12px;
+        right: -10px;
+        @include border-radius(100%);
+        @include font-size($notifications-font-size);
+        font-family: $base-font-bold;
+        text-align: center;
+        color: $color-black;
+      }
+    }
+  }
+
+  .exit {
+    padding: 0 $space-medium;
+    border-left: 1px solid $color-grey-01;
+    display: none;
+    @include breakpoint(small) {
+      display: inline-block;
+    }
+  }
+
+  .user-panel {
+    max-height: 40px;
+    padding: 0 $space-large;
+    text-align: center;
+    @include breakpoint(medium) {
+      border-left: 1px solid $color-grey-01;
+    }
+    @include breakpoint(small) {
+      padding: 0 $space-medium;
+      border-left: 1px solid $color-grey-01;
+    }
+    .user-icon {
+      display: none;
+      @include breakpoint(small) {
+        display: inline-block;
+      }
+    }
+    .user-info {
+      display: block;
+      @include breakpoint(small) {
+        display: none;
+      }
+      color:  $color-grey-01;
+      @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
+    }
+  }
+}
