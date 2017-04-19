@@ -39,7 +39,9 @@ export class McsBrowserService {
     });
 
     // Invoke resize event during initialization to set the device type
-    window.dispatchEvent(new Event('resize'));
+    let event = document.createEvent('Event');
+    event.initEvent('resize', false, true);
+    window.dispatchEvent(event);
   }
 
   /**

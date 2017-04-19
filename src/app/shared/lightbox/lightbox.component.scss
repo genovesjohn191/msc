@@ -29,6 +29,7 @@
   // Hides vertical scroll bar on overflow
   &.modal {
     right: -17px; 
+    overflow-y: scroll;
   }
 
   // Vertical centering
