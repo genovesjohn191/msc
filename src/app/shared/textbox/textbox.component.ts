@@ -4,7 +4,7 @@ import {
   AfterViewInit,
   Input,
   Output,
-  Renderer,
+  Renderer2,
   ElementRef,
   ViewChild,
   forwardRef
@@ -81,7 +81,7 @@ export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAcce
 
   public constructor(
     private _assetsProvider: AssetsProvider,
-    private _renderer: Renderer
+    private _renderer: Renderer2
   ) {}
 
   public ngOnInit() {
@@ -92,18 +92,18 @@ export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAcce
 
   public ngAfterViewInit() {
     if (this.width) {
-      this._renderer.setElementStyle(this.mcsTextbox.nativeElement,
+      this._renderer.setStyle(this.mcsTextbox.nativeElement,
         'max-width', this.width + 'px');
-      this._renderer.setElementClass(this.mcsTextbox.nativeElement, 'w-100', true);
+      this._renderer.addClass(this.mcsTextbox.nativeElement, 'w-100');
     }
   }
 
   public onFocus(event): void {
-    this._renderer.setElementClass(this.mcsTextbox.nativeElement, 'active', true);
+    this._renderer.addClass(this.mcsTextbox.nativeElement, 'active');
   }
 
   public onFocusOut(event): void {
-    this._renderer.setElementClass(this.mcsTextbox.nativeElement, 'active', false);
+    this._renderer.removeClass(this.mcsTextbox.nativeElement, 'active');
   }
 
   /**

@@ -3,7 +3,7 @@ import {
   OnInit,
   AfterViewInit,
   Input,
-  Renderer,
+  Renderer2,
   ElementRef,
   ViewChild
 } from '@angular/core';
@@ -37,7 +37,7 @@ export class LightboxComponent implements OnInit, AfterViewInit {
 
   public constructor(
     private _assetsProvider: AssetsProvider,
-    private _renderer: Renderer
+    private _renderer: Renderer2
   ) {}
 
   public ngOnInit() {
@@ -48,7 +48,7 @@ export class LightboxComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     if (this.lightboxId) {
-      this._renderer.setElementAttribute(this._mcsLightbox.nativeElement, 'id', this.lightboxId);
+      this._renderer.setAttribute(this._mcsLightbox.nativeElement, 'id', this.lightboxId);
     }
   }
 }

@@ -60,7 +60,7 @@
     }
   }
 
-  .navbar-content {
+  .navbar-content-wrapper {
     width: 100%;
     @include breakpoint(small) {
       position: fixed;
@@ -75,103 +75,114 @@
       overflow: auto;
     }
 
-    .navbar-nav {
+    .navbar-content {
       @include breakpoint(small) {
-        flex-direction: column;
-        padding-bottom: $navigation-mobile-offset;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: -17px;
+        overflow: scroll;
       }
 
-      > li {
+      .navbar-nav {
         @include breakpoint(small) {
-          border-bottom: 1px solid $color-white;
+          flex-direction: column;
+          padding-bottom: $navigation-mobile-offset;
         }
 
-        &:hover,
-        &:focus,
-        &.active {
-          background-color: $color-white;
+        > li {
           @include breakpoint(small) {
-            background-color: transparent;
+            border-bottom: 1px solid $color-white;
           }
 
-          a {
+          &:hover,
+          &:focus,
+          &.active {
+            background-color: $color-white;
             @include breakpoint(small) {
-              font-family: $base-font-bold;
-              color: $color-white;
+              background-color: transparent;
             }
-          }
-        }
 
-        &.nav-heading-mobile {
-          display: none;
-          color: $color-white;
-          @include breakpoint(small) {
-            display: block;
-          }
-
-          h3 {
-            width: 90%;
-            padding: 10px 15px;
-            margin-bottom: 0;
-          }
-
-          i {
-            @include font-size($icon-medium-font-size);
-            width: 10%;
-            padding: 5px 0;
-          }
-        }
-
-        &.sign-out {
-          display: none;
-          @include breakpoint(small) {
-            display: list-item;
-          }
-        }
-
-        &.other-links {
-          display: none;
-          border-bottom: none;
-          @include breakpoint(small) {
-            display: block;
-          }
-
-          .sub-menu {
-            padding: $navigation-link-mobile-padding;
-            
-            li {
-              padding: 0 0 $space-xsmall;
-
-              a {
-                font-family: $base-font;
+            a {
+              @include breakpoint(small) {
+                font-family: $base-font-bold;
                 color: $color-white;
-                text-decoration: underline;
-                padding: 0;
               }
             }
           }
-        }
 
-        a {
-          font-family: $base-font-bold;
-          text-decoration: none;
-          color: $color-black;
-          padding: $navigation-link-desktop-padding;
-          @include breakpoint(small) {
-            font-family: $base-font;
-            color: $color-grey-04;
-            padding: $navigation-link-mobile-padding;
-          }
-
-          .nav-item-bullet {
+          &.nav-heading-mobile {
             display: none;
-            margin-right: 5px;
+            color: $color-white;
             @include breakpoint(small) {
-              display: inline-block;
+              display: block;
+            }
+
+            h3 {
+              width: 90%;
+              padding: 10px 15px;
+              margin-bottom: 0;
+            }
+
+            i {
+              @include font-size($icon-medium-font-size);
+              width: 10%;
+              padding: 5px 0;
             }
           }
 
-          @extend %macquarie-view;
+          &.sign-out {
+            display: none;
+            @include breakpoint(small) {
+              display: list-item;
+            }
+          }
+
+          &.other-links {
+            display: none;
+            border-bottom: none;
+            @include breakpoint(small) {
+              display: block;
+            }
+
+            .sub-menu {
+              padding: $navigation-link-mobile-padding;
+              
+              li {
+                padding: 0 0 $space-xsmall;
+
+                a {
+                  font-family: $base-font;
+                  color: $color-white;
+                  text-decoration: underline;
+                  padding: 0;
+                }
+              }
+            }
+          }
+
+          a {
+            font-family: $base-font-bold;
+            text-decoration: none;
+            color: $color-black;
+            padding: $navigation-link-desktop-padding;
+            @include breakpoint(small) {
+              font-family: $base-font;
+              color: $color-grey-04;
+              padding: $navigation-link-mobile-padding;
+            }
+
+            .nav-item-bullet {
+              display: none;
+              margin-right: 5px;
+              @include breakpoint(small) {
+                display: inline-block;
+              }
+            }
+
+            @extend %macquarie-view;
+          }
         }
       }
     }

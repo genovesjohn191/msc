@@ -3,7 +3,7 @@ import {
   EmbeddedViewRef,
   TemplateRef,
   ViewContainerRef,
-  Renderer,
+  Renderer2,
   ComponentRef,
   ComponentFactoryResolver
 } from '@angular/core';
@@ -20,7 +20,7 @@ export class McsComponentService<T> {
     private _componentType: any,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer,
+    private _renderer: Renderer2,
     private _injector: Injector
   ) {
     this._componentFactory = this._componentFactoryResolver

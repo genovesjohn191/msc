@@ -3,7 +3,7 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import { Renderer } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 
 import { LightboxComponent } from './lightbox.component';
 import { AssetsProvider } from '../../core/providers/assets.provider';
@@ -33,7 +33,7 @@ describe('ButtonComponent', () => {
       ],
       providers: [
         { provide: AssetsProvider, useValue: mockAssetsProvider },
-        Renderer
+        Renderer2
       ]
     });
 

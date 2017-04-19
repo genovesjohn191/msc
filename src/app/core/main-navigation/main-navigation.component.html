@@ -17,72 +17,75 @@
       </div>
     </div>
 
-    <div class="navbar-content" id="navbarSupportedContent" [@navToggle]="navState">
-      <ul class="navbar-nav">
-        <li class="nav-item nav-heading-mobile">
-          <h3 class="float-left">Macquarie Cloud Services Portal</h3>
-          <i class="float-right" [ngClass]="navigationCloseButton" (click)="navState='hide'"></i>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./dashboard']"
-          (click)="setTitle(textContent.dashboard.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.dashboard }}</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./servers']"
-          (click)="setTitle(textContent.servers.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.servers }}</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./networking']"
-          (click)="setTitle(textContent.networking.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.networking }}</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./catalog']"
-          (click)="setTitle(textContent.catalog.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.catalog }}</a>
-        </li>
+    <div class="navbar-content-wrapper" id="navbarSupportedContent" [@navToggle]="navState">
+      <div class="navbar-content">
+        <ul class="navbar-nav">
+          <li class="nav-item nav-heading-mobile">
+            <h3 class="float-left">Macquarie Cloud Services Portal</h3>
+            <i class="float-right" [ngClass]="navigationCloseButton" (click)="navState='hide'"></i>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['./dashboard']"
+            (click)="setTitle(textContent.dashboard.title)">
+              <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.dashboard }}</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['./servers']"
+            (click)="setTitle(textContent.servers.title)">
+              <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.servers }}</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['./networking']"
+            (click)="setTitle(textContent.networking.title)">
+              <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.networking }}</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" [routerLink]="['./catalog']"
+            (click)="setTitle(textContent.catalog.title)">
+              <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.catalog }}</a>
+          </li>
 
-        <!-- Example on how to check the available link based on user type (admin/user)-->
-        <li class="nav-item" routerLinkActive="active" *ngIf="!isUser()">
-          <a class="nav-link" [routerLink]="['./others']"
-          (click)="setTitle(textContent.others.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.others }}</a>
-        </li>
+          <!-- Example on how to check the available link based on user type (admin/user)-->
+          <li class="nav-item" routerLinkActive="active" *ngIf="!isUser()">
+            <a class="nav-link" [routerLink]="['./others']"
+            (click)="setTitle(textContent.others.title)">
+              <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ textContent.navigation.others }}</a>
+          </li>
 
-        <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">
-          <a class="nav-link" [routerLink]="['./others']"
-          (click)="setTitle(textContent.others.title)">
-            <i class="nav-item-bullet" [ngClass]="signOutIcon"></i> Sign Out</a>
-        </li>
+          <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">
+            <a class="nav-link" [routerLink]="['./others']"
+            (click)="setTitle(textContent.others.title)">
+              <i class="nav-item-bullet" [ngClass]="signOutIcon"></i> Sign Out</a>
+          </li>
 
-        <li class="nav-item other-links" *ngIf="!isUser()">
-          <ul class="sub-menu">
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">My Account</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">Tickets</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">Monitoring</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">Macquarie View</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">InView</a>
-            </li>
-          </ul>
-        </li>
+          <li class="nav-item other-links" *ngIf="!isUser()">
+            <ul class="sub-menu">
+              <li class="sub-menu-item">
+                <a class="sub-menu-link" href="#">My Account</a>
+              </li>
+              <li class="sub-menu-item">
+                <a class="sub-menu-link" href="#">Tickets</a>
+              </li>
+              <li class="sub-menu-item">
+                <a class="sub-menu-link" href="#">Monitoring</a>
+              </li>
+              <li class="sub-menu-item">
+                <a class="sub-menu-link" href="#">Macquarie View</a>
+              </li>
+              <li class="sub-menu-item">
+                <a class="sub-menu-link" href="#">InView</a>
+              </li>
+            </ul>
+          </li>
 
-        <li class="nav-item hidden-small ml-auto">
-          <a href="https://macquarieview.com/" class="macquarie-view-link ml-auto" target="_blank">
-            <i class="mcs-arrow-up-icon"></i> Macquarie View
-          </a>
-        </li>
-      </ul>
+          <li class="nav-item hidden-small ml-auto">
+            <a href="https://macquarieview.com/" class="macquarie-view-link ml-auto" target="_blank">
+              <i class="mcs-arrow-up-icon"></i> Macquarie View
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
+
   </div>
 </nav>
