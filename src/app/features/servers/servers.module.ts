@@ -2,14 +2,24 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 /** Servers Feature */
 import { routes } from './servers.routes';
-import { ServersComponent } from './servers.component';
-import { ServersService } from './servers.service';
+import {
+  ServersComponent,
+  ServerComponent,
+  ServerManagementComponent,
+  ServerServicesComponent,
+  ServerBackupsComponent,
+  ServersService
+} from './';
 /** Modules */
 import { SharedModule } from '../../shared';
 
 @NgModule({
   declarations: [
-    ServersComponent
+    ServersComponent,
+    ServerComponent,
+    ServerManagementComponent,
+    ServerServicesComponent,
+    ServerBackupsComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -17,6 +27,10 @@ import { SharedModule } from '../../shared';
   ],
   exports: [
     ServersComponent,
+    ServerComponent,
+    ServerManagementComponent,
+    ServerServicesComponent,
+    ServerBackupsComponent,
     RouterModule
   ],
   providers: [

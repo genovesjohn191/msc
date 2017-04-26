@@ -1,0 +1,24 @@
+@import "../../../../../styles/shared/base";
+
+.server-management-container {
+
+  .server-snapshot {
+    margin-bottom: $space-small;
+  }
+
+  .server-details {
+    margin: $space-large 0;
+
+    .row {
+      margin: $space-small -15px;
+
+      .col {
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+      }
+    }
+  }
+
+}

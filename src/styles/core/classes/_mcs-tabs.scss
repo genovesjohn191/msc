@@ -1,0 +1,29 @@
+@import "../../../styles/shared/base";
+
+.mcs-tabs {
+  .nav-tabs {
+    border-bottom: 1px solid $color-grey-07;
+    justify-content: space-between;
+    margin-bottom: $space-medium;
+
+    .nav-item {
+      .nav-link {
+        @include font-size(18);
+        font-family: $base-font-bold;
+        color: $color-grey-02;
+        border: none;
+        border-bottom: 8px solid transparent;
+        text-decoration: none;
+        @include breakpoint(small) {
+          @include font-size($link-small-font-size);
+        }
+
+        &.active {
+          color: $color-black;
+          border-bottom-color: $color-black;
+        }
+      }
+    }
+  }
+
+}

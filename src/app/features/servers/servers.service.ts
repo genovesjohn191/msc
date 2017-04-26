@@ -61,4 +61,28 @@ export class ServersService {
         return Observable.throw(mcsApiErrorResponse);
       });
   }
+
+  public getServer(id): Observable<McsApiSuccessResponse<Server>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers/' + id;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        return response.json() as McsApiSuccessResponse<Server>;
+      })
+      .catch((error: Response | any) => {
+        let mcsApiErrorResponse: McsApiErrorResponse;
+
+        if (error instanceof Response) {
+          mcsApiErrorResponse = new McsApiErrorResponse();
+          mcsApiErrorResponse.message = error.statusText;
+          mcsApiErrorResponse.status = error.status;
+        } else {
+          mcsApiErrorResponse = error;
+        }
+
+        return Observable.throw(mcsApiErrorResponse);
+      });
+  }
 }

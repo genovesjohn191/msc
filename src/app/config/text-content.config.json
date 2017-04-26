@@ -12,7 +12,38 @@
     "title": "Macquarie Portal - Dashboard"
   },
   "servers": {
-    "title": "Macquarie Portal - Servers"
+    "title": "Macquarie Portal - Servers",
+    "server": {
+      "management": {
+        "label" : "Management",
+        "vmProperties": {
+          "title": "VM Properties",
+          "image": "Image",
+          "zone": "Zone",
+          "configuration": "Configuration",
+          "media": "Media"
+        },
+        "networkInformation": {
+          "title": "Network Information",
+          "publicIp": "Public IP"
+        },
+        "storage": {
+          "title": "Storage",
+          "primaryVolume": "Primary Volume",
+          "storagePolicy": "Storage Policy"
+        },
+        "supportIdentifiers": {
+          "title": "Support Identifiers",
+          "vdc": "VDC",
+          "macViewServiceId": "MacView Service ID",
+          "vmWareId": "VMWare ID"
+        },
+        "manageServices": {
+          "title": "Manage Services",
+          "description": "Ensure your server is fully protected. Enable and configure managed services for this server."
+        }
+      }
+    }
   },
   "networking": {
     "title": "Macquarie Portal - Networking"
