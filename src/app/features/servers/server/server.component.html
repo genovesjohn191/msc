@@ -1,0 +1,36 @@
+<section class="server-container">
+  <div class="row">
+    <div class="col-sm-4 hidden-medium">
+
+    </div>
+
+    <div class="col-sm-8 server-features">
+      <div class="mcs-tabs">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab"
+              [routerLink]="['management']" routerLinkActive="active">Management</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab"
+              [routerLink]="['services']" routerLinkActive="active">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab"
+              [routerLink]="['backups']" routerLinkActive="active">Backups</a>
+          </li>
+          <li class="nav-item hidden-medium">
+            <mcs-button><i class="fa fa-cog"></i></mcs-button>
+          </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane active" role="tabpanel">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -181,4 +181,74 @@ describe('ServersService', () => {
         });
     }));
   });
+
+  describe('getServer', () => {
+    let requestOptions = {
+      id: 459,
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 459,
+                    serviceId: 'MXCVM27117039',
+                    serviceDescription: 'Virtual Data Centre VM Instance'
+                  }
+                ],
+                totalCount: 1,
+                status: 200,
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse<Server> when successful', fakeAsync(() => {
+      serversService.getServer(459)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<Server>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].totalCount).toEqual(1);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id).toEqual(459);
+          expect(mcsApiSucessResponse[0].content[0].serviceId).toEqual('MXCVM27117039');
+          expect(mcsApiSucessResponse[0].content[0].serviceDescription)
+            .toEqual('Virtual Data Centre VM Instance');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Get);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.getServer(requestOptions.id)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
 });

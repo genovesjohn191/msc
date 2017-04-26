@@ -65,7 +65,7 @@
           {{ server.serviceId }}
         </td>
         <td *ngIf="columnSettings['name'].value" class="text-left align-top">
-          <a href="#"><u>{{ server.managementName }}</u></a>
+          <a [routerLink]="[server.id]"><u>{{ server.managementName }}</u></a>
         </td>
         <td *ngIf="columnSettings['type'].value" class="text-left align-top hidden-xsmall">
           {{ server.serviceDescription }}
