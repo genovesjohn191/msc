@@ -14,7 +14,7 @@ import { TextContentProvider } from '../../../../core';
 
 export class ServerManagementComponent implements OnInit {
   public server: Server;
-  public serverManagementCopyTexts: any;
+  public serverManagementTextContent: any;
 
   constructor(
     private _route: ActivatedRoute,
@@ -23,7 +23,7 @@ export class ServerManagementComponent implements OnInit {
 
   public ngOnInit() {
     this.server = this._route.parent.snapshot.data.server;
-    this.serverManagementCopyTexts = this._textProvider.content.servers.server.management;
+    this.serverManagementTextContent = this._textProvider.content.servers.server.management;
   }
 
 }
