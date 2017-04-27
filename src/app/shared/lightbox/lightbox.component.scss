@@ -26,12 +26,6 @@
     }
   }
 
-  // Hides vertical scroll bar on overflow
-  &.modal {
-    right: -17px; 
-    overflow-y: scroll;
-  }
-
   // Vertical centering
   .modal-dialog {
     min-height: calc(100vh - 60px);
