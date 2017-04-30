@@ -103,6 +103,7 @@ $space-xsmall: 5px;
 $input-font: $base-font;
 $input-border-color: $color-black;
 $input-text-color: $color-black;
+$input-background-color: $color-white;
 $input-border-radius: 5px;
 $input-padding: 10px 15px;
 $input-padding-small: 5px 10px;
@@ -120,11 +121,26 @@ $button-padding-small: 5px 10px;
 // Tooltip
 $tooltip-color: $color-grey-07;
 
+// Popover
+$popover-max-width: 250px;
+$popover-min-width: 100px;
+$popover-font-family: $base-font-bold;
+$popover-font-size: 16;
+$popover-padding: 25px 30px;
+$popover-arrow-width: 10px;
+$popover-arrow-border-width: $popover-arrow-width + 1;
+$popover-border-radius: 5px;
+
+// Filter Selector
+$filter-selector-title-font-size: 16;
+$filter-selector-content-font-size: 14;
+
 // Table
 $table-header-font: $base-font-bold;
 $table-border-radius: 5px;
 
 // Z-index
+$popover-z-index: 1000;
 $header-z-index: 100;
 $main-navigation-z-index: 90;
 

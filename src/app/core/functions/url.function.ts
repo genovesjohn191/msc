@@ -4,20 +4,16 @@
  * @return TRUE: valid, FALSE: not valid
  */
 export function isUrlValid(url: string): boolean {
-  let urlValidFlag: boolean = false;
-  let urlRegExp: string;
   let regExpResult: any;
 
-  // Set Regex URL Pattern
-  urlRegExp = `(http(s)?:\/\/.)?(www\.)
-    ?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z‌​]{2,6}\b([-a-zA-Z0-9‌​@:%_\+.~#?&=]*)`;
+  // Initialize regular expression
+  let regExpression = new RegExp(
+    /^((https?):\/\/)?([w|W]{3}\.)+[a-zA-Z0-9\-\.]{3,}\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$/
+  );
+
   // Match Regex
-  regExpResult = url.match(urlRegExp);
-  if (regExpResult) {
-    urlValidFlag = true;
-  } else {
-    urlValidFlag = false;
-  }
+  regExpResult = regExpression.test(url);
+
   // Return url valid flag
-  return urlValidFlag;
+  return regExpResult;
 }

@@ -3,9 +3,9 @@ import {
   EmbeddedViewRef,
   TemplateRef,
   ViewContainerRef,
-  Renderer2,
   ComponentRef,
-  ComponentFactoryResolver
+  ComponentFactoryResolver,
+  Renderer2
 } from '@angular/core';
 
 /**
@@ -20,8 +20,8 @@ export class McsComponentService<T> {
     private _componentType: any,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer2,
-    private _injector: Injector
+    private _injector: Injector,
+    private _renderer: Renderer2
   ) {
     this._componentFactory = this._componentFactoryResolver
       .resolveComponentFactory<T>(this._componentType);
@@ -31,10 +31,16 @@ export class McsComponentService<T> {
    * Create the component dynamically
    * @param content Template element to be inserted after the component view implementation
    */
-  public createComponent(content?: TemplateRef<any>): ComponentRef<T> {
+  public createComponent(contents?: Array<TemplateRef<any> | string>): ComponentRef<T> {
     if (!this._componentRef) {
-      this._contentRef = this._createContentView(content);
-      this._componentRef = this._createComponentView();
+      let contentViewNodes: any[] = new Array();
+
+      for (let content of contents) {
+        let contentView = this._createContentView(content);
+        contentViewNodes.push(contentView);
+      }
+
+      this._componentRef = this._createComponentView(contentViewNodes);
     }
     return this._componentRef;
   }
@@ -60,18 +66,32 @@ export class McsComponentService<T> {
    * @param content Template element to be inserted after the component view implementation
    * @param context Context for the template to be attached to (i.e body)
    */
-  private _createContentView(content: TemplateRef<any>, context?: any) {
+  private _createContentView(content: TemplateRef<any> | string, context?: any): any[] {
+    let elementNode: any[];
+
     if (content) {
-      return this._viewContainerRef.createEmbeddedView(<TemplateRef<T>> content, context);
-    } else {
-      return undefined;
+      if (typeof content === 'string') {
+        elementNode = new Array();
+        elementNode.push(this._renderer.createText(content));
+      } else {
+        elementNode = this._viewContainerRef
+          .createEmbeddedView(<TemplateRef<T>> content, context)
+          .rootNodes;
+      }
     }
+
+    return elementNode;
   }
 
   /**
    * Create Component view (Actual component based on type T)
    */
-  private _createComponentView() {
-    return this._viewContainerRef.createComponent<T>(this._componentFactory, 0, this._injector);
+  private _createComponentView(ngContents?: any[]) {
+    return this._viewContainerRef.createComponent<T>(
+      this._componentFactory,
+      0,
+      this._injector,
+      ngContents
+    );
   }
 }

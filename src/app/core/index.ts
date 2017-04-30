@@ -21,3 +21,4 @@ export * from './models/mcs-api-error';
 export * from './models/mcs-device-type';
 /** Functions */
 export * from './functions/url.function';
+export * from './functions/element.function';

@@ -1,39 +1,25 @@
 @import '../../../styles/shared/base';
 
 .mcs-filter-selector{
+  display: inline-block;
   .icon-link {
     cursor: pointer;
     position: relative;
+    display: block;
     margin: 0px 5px;
     i {
       vertical-align: middle;
     }
   }
-
-  ul.filters {
-    @include display-flex(column);
+  .title {
+    display: block;
+    @include font-size($filter-selector-title-font-size);
   }
-}
 
-:host /deep/ {
-  .popover[style] {
-    margin-left: 60px; // Adjusment to center of parent element
-    width: 200px;      // Maximum width for the filter
-  }
-  .popover.popover-bottom {
-    &:before,
-    &:after {
-      left: 20%;       // Arrow adjustment
+  .filters {
+    li {
+      padding-top: $space-small;
+      @include font-size($filter-selector-content-font-size);
     }
-  }
-  .popover-title {
-    font-weight: 400;
-    background-color: $tooltip-color;
-    text-align: left;
-    font-weight: normal;
-  }
-  .popover-content {
-    background-color: $tooltip-color;
-    text-align: left;
   }
 }
