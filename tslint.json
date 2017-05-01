@@ -45,6 +45,8 @@
       true,
       100
     ],
+    "prefer-const": false,
+    "interface-over-type-literal": false,
     "no-string-literal": false,
     "no-use-before-declare": true,
     "object-literal-sort-keys": false,

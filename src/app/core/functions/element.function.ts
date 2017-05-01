@@ -14,7 +14,7 @@ export function getElementStyle(element: HTMLElement, property: string): string 
  * @param element Target element to find the static parent element
  */
 export function getOffsetParent(element: HTMLElement): HTMLElement {
-  let parentElement = <HTMLElement> element.offsetParent || document.documentElement;
+  let parentElement = element.offsetParent as HTMLElement || document.documentElement;
 
   // Checking of static element, It will return true when the element is static else false
   let isParentStatic = (parentElementRef: HTMLElement) => {
@@ -24,7 +24,7 @@ export function getOffsetParent(element: HTMLElement): HTMLElement {
   // Find the nearest static parent element based on the inputted element
   while (parentElement && parentElement !== document.documentElement
     && isParentStatic(parentElement)) {
-    parentElement = <HTMLElement> parentElement.offsetParent;
+    parentElement = parentElement.offsetParent as HTMLElement;
   }
 
   // Return the nearest static element (parent element)

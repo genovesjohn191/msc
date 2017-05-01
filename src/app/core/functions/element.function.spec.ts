@@ -75,7 +75,7 @@ describe('ElementFunction', () => {
   });
 
   describe('getOffsetParent()', () => {
-    it(`should get the nearest ancestor element 
+    it(`should get the nearest ancestor element
       that has a position other than static`, () => {
         let staticElement = createElement(100, 300, 100, 100);
         let absoluteElement = createElement(100, 400, 70, 75);

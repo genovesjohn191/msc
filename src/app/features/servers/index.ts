@@ -9,4 +9,4 @@ export * from './server/server.resolver';
 /** Model */
 export * from './server';
 /** Service */
-export * from './servers.service'
+export * from './servers.service';

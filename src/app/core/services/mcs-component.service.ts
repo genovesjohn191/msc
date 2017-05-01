@@ -75,7 +75,7 @@ export class McsComponentService<T> {
         elementNode.push(this._renderer.createText(content));
       } else {
         elementNode = this._viewContainerRef
-          .createEmbeddedView(<TemplateRef<T>> content, context)
+          .createEmbeddedView(content as TemplateRef<T>, context)
           .rootNodes;
       }
     }

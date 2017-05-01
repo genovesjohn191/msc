@@ -1,3 +1,10 @@
+export enum StatusBoxType {
+  None = 0,
+  Error = 1,
+  OnGoing = 2,
+  Success = 3
+}
+
 export class StatusBoxAttribute {
   public type: StatusBoxType;
   public title: string;
@@ -12,11 +19,4 @@ export class StatusBoxAttribute {
     this.user = '';
     this.dialogState = '';
   }
-}
-
-export enum StatusBoxType {
-  None = 0,
-  Error = 1,
-  OnGoing = 2,
-  Success = 3
 }

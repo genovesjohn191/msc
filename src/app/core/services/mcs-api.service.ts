@@ -161,7 +161,7 @@ export class McsApiService {
    * @param {Headers} optHeaders Optional Header
    */
   private _setOptionalHeaders(headers: Headers, optHeaders: Headers) {
-    if (!optHeaders) { return; };
+    if (!optHeaders) { return; }
 
     optHeaders.forEach((_values, _name, _headers) => {
       headers.set(_name, _values);
