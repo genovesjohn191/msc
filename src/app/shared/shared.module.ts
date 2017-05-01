@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 /** Modules */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PopoverModule } from './popover/popover.module';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -28,6 +29,7 @@ import { RedDirective } from './directives/red.directive';
   imports: [
     CommonModule,
     FormsModule,
+    PopoverModule,
     NgbModule
   ],
   exports: [
@@ -41,6 +43,7 @@ import { RedDirective } from './directives/red.directive';
     RedDirective,
     CommonModule,
     FormsModule,
+    PopoverModule,
     NgbModule
   ]
 })

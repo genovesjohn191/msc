@@ -1,0 +1,10 @@
+<div #popoverElement class="mcs-popover-container">
+  <div #contentElement class="content">
+    <div *ngIf="title" class="title">
+      <ng-content></ng-content>
+    </div>
+    <div class="template">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

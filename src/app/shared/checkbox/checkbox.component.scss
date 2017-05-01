@@ -3,6 +3,7 @@
 label {
   cursor: pointer;
   max-width: 90%;
+  margin: 0;
 }
 
 input[type="checkbox"] {
@@ -13,7 +14,6 @@ input[type="checkbox"] {
     display: inline-block;
     content: "\f096";
     letter-spacing: 5px;
-    @include font-size($font-size-default);
   }
 
   &:checked + label:before {

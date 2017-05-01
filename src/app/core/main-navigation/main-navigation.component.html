@@ -26,29 +26,34 @@
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./dashboard']"
           (click)="setTitle(textContent.dashboard.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ navigationTextContent.dashboard }}</a>
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            {{ textContent.navigation.dashboard }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./servers']"
           (click)="setTitle(textContent.servers.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ navigationTextContent.servers }}</a>
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            {{ textContent.navigation.servers }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./networking']"
           (click)="setTitle(textContent.networking.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ navigationTextContent.networking }}</a>
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            {{ textContent.navigation.networking }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./catalog']"
           (click)="setTitle(textContent.catalog.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ navigationTextContent.catalog }}</a>
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            {{ textContent.navigation.catalog }}</a>
         </li>
 
         <!-- Example on how to check the available link based on user type (admin/user)-->
         <li class="nav-item" routerLinkActive="active" *ngIf="!isUser()">
           <a class="nav-link" [routerLink]="['./others']"
           (click)="setTitle(textContent.others.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> {{ navigationTextContent.others }}</a>
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            {{ textContent.navigation.others }}</a>
         </li>
 
         <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">

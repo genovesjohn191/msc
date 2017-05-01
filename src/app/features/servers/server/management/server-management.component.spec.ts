@@ -74,7 +74,7 @@ describe('ServerManagementComponent', () => {
 
     it('should set the value of serverManagement', () => {
       component.ngOnInit();
-      expect(component.serverManagementCopyTexts).toBeDefined();
+      expect(component.serverManagementTextContent).toBeDefined();
     });
   });
 

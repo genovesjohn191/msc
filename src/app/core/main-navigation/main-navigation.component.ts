@@ -53,7 +53,7 @@ import {
 })
 
 export class MainNavigationComponent implements OnInit {
-  public navigationTextContent: any;
+  public textContent: any;
   public listBullet: string;
   public signOutIcon: string;
   public navigationCloseButton: string;
@@ -69,7 +69,7 @@ export class MainNavigationComponent implements OnInit {
     private _browserService: McsBrowserService,
     private _elementReference: ElementRef
   ) {
-    this.navigationTextContent = this._textProvider.content.navigation;
+    this.textContent = this._textProvider.content;
   }
 
   public ngOnInit() {

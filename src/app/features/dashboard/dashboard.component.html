@@ -17,6 +17,72 @@
     </div>
   </div>
   <div class="row">
+    <ng-template #popoverTitle>
+      <span>Popover Title</span>
+    </ng-template>
+    <ng-template #popoverContent>
+      <mcs-checkbox label="Checkbox" [(ngModel)]="isChecked"></mcs-checkbox>
+      <mcs-textbox name="textIcon" icon="search" placeholder="Type to search..."></mcs-textbox>
+      <mcs-button size="small" width="200">Search</mcs-button>
+    </ng-template>
+
+    <div class="col">
+      <div class="dashboard-container-item">
+        <span class="title">Popover Top and Bottom Implementation Example</span>
+        <div class="content">
+          <small><em>Hover me to display dark Popover</em></small> <br/>
+          <button class="btn btn-primary" mcsPopover
+            theme="dark" trigger="hover"
+            [title]="popoverTitle" [content]="popoverContent" 
+            placement="top" orientation="center">Dark</button><br/>
+
+          <small><em>Hover me to display light Popover</em></small> <br/>
+          <button class="btn btn-primary" mcsPopover
+            theme="light" trigger="hover"
+            [title]="popoverTitle" [content]="popoverContent" 
+            placement="bottom" orientation="center">Light</button><br/>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="dashboard-container-item">
+        <span class="title">Popover Left and Right Implementation Example</span>
+        <div class="content">
+          <small><em>Popover left placement and bottom orientation</em></small> <br/>
+          <button class="btn btn-primary" mcsPopover
+            theme="dark" trigger="manual"
+            [title]="popoverTitle" [content]="popoverContent"
+            placement="left" orientation="bottom">LeftBottom</button><br/>
+
+          <small><em>Popover right placement and top orientation</em></small> <br/>
+          <button class="btn btn-primary" mcsPopover #popoverRight="mcsPopover"
+            [title]="popoverTitle" [content]="popoverContent"
+            placement="right" orientation="top">RightTop</button><br/>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="dashboard-container-item">
+        <span class="title">Popover Top and Bottom Implementation Example</span>
+        <div class="content">
+          <small><em>Popover top placement and left orientation</em></small> <br/>
+          <button class="btn btn-primary" mcsPopover
+            theme="dark" trigger="manual"
+            [title]="popoverTitle" [content]="popoverContent" 
+            placement="top" orientation="left">TopLeft</button><br/>
+
+          <small><em>Popover bottom placement and right orientation</em></small> <br/>
+          <button class="btn btn-primary" mcsPopover 
+            theme="light" trigger="manual"
+            [title]="popoverTitle" [content]="popoverContent" 
+            placement="bottom" orientation="right">BottomRight</button><br/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
     <div class="col">
       <!--Lightbox Demo Implementation-->
       <div class="dashboard-container-item">

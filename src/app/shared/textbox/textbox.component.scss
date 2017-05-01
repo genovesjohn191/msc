@@ -3,6 +3,7 @@
 .mcs-textbox {
   @include border-radius($input-border-radius); 
   border: 1px solid $input-border-color;
+  background-color: $input-background-color;
   display: inline-flex;
   overflow: hidden;
   margin: 3px 0;
@@ -25,5 +26,6 @@
 
   .fa {
     margin: auto 10px;
+    color: $color-black;
   }
 }
