@@ -1,3 +1,5 @@
+import { NotificationConfig } from './models/mcs-notification-config';
+
 export class CoreConfig {
 
   /** API Host */
@@ -16,5 +18,14 @@ export class CoreConfig {
   }
   public set imageRoot(value: string) {
     this._imageRoot = value;
+  }
+
+  /** Notification Configuration */
+  private _notificationConfig: NotificationConfig;
+  public get notification(): NotificationConfig {
+    return this._notificationConfig;
+  }
+  public set notification(value: NotificationConfig) {
+    this._notificationConfig = value;
   }
 }

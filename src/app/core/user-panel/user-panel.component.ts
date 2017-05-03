@@ -5,8 +5,10 @@ import {
 
 import { Router } from '@angular/router';
 
-/** Providers */
+/** Services/Providers */
 import { AssetsProvider } from '../providers/assets.provider';
+import { McsNotification } from '../models/mcs-notification';
+import { McsNotificationContextService } from '../services/mcs-notification-context.service';
 
 @Component({
   selector: 'mcs-user-panel',
@@ -18,19 +20,26 @@ export class UserPanelComponent implements OnInit {
   public bellIcon: string;
   public userIcon: string;
   public caretRightIcon: string;
-  public notifications: number;
+  public notifications: McsNotification[];
 
   public constructor(
     private _assetsProvider: AssetsProvider,
-    private _router: Router
-  ) {}
+    private _router: Router,
+    private _notificationContext: McsNotificationContextService
+  ) {
+    this.notifications = new Array();
+  }
 
   public ngOnInit() {
     this.bellIcon = this._assetsProvider.getIcon('bell');
     this.userIcon = this._assetsProvider.getIcon('user');
     this.caretRightIcon = this._assetsProvider.getIcon('caret-right');
 
-    this.notifications = 2;
+    // Subscribe to notification changes
+    this._notificationContext.notificationsStream
+      .subscribe((updatedNotifications) => {
+        this.notifications = updatedNotifications;
+      });
   }
 
   public viewNotifications() {
