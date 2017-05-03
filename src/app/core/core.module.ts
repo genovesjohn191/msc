@@ -14,6 +14,8 @@ import { McsApiService } from './services/mcs-api.service';
 import { McsAuthService } from './services/mcs-auth.service';
 import { MscStorageService } from './services/mcs-storage.service';
 import { McsBrowserService } from './services/mcs-browser.service';
+import { McsNotificationJobService } from './services/mcs-notification-job.service';
+import { McsNotificationContextService } from './services/mcs-notification-context.service';
 import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Providers */
 import { EnvironmentProvider } from './providers/environment.provider';
@@ -56,6 +58,8 @@ import { UserPanelComponent } from './user-panel/user-panel.component';
     McsAuthService,
     MscStorageService,
     McsBrowserService,
+    McsNotificationJobService,
+    McsNotificationContextService,
     EnvironmentProvider,
     TextContentProvider,
     AssetsProvider,

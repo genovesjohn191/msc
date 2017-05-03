@@ -3,9 +3,12 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
+import { Subject } from 'rxjs/Rx';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserPanelComponent } from './user-panel.component';
-import { AssetsProvider } from '../../core/providers/assets.provider';
+import { McsNotification } from '../models/mcs-notification';
+import { AssetsProvider } from '../providers/assets.provider';
+import { McsNotificationContextService } from '../services/mcs-notification-context.service';
 
 describe('UserPanelComponent', () => {
 
@@ -22,6 +25,9 @@ describe('UserPanelComponent', () => {
       return icons[key];
     }
   };
+  let mockNotificationContext = {
+    notificationsStream: new Subject<McsNotification[]>()
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -33,6 +39,7 @@ describe('UserPanelComponent', () => {
         RouterTestingModule
       ],
       providers: [
+        { provide: McsNotificationContextService, useValue: mockNotificationContext },
         { provide: AssetsProvider, useValue: mockAssetsProvider }
       ]
     });
@@ -58,19 +65,30 @@ describe('UserPanelComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should return the icon class of bell icon if the provided bell icon key is valid', () => {
-      component.ngOnInit();
       expect(component.bellIcon).toBeDefined();
     });
 
     it('should return the icon class of user icon if the provided user icon key is valid', () => {
-      component.ngOnInit();
       expect(component.userIcon).toBeDefined();
     });
 
     it('should return the icon class of caret right icon if the provided icon key is valid', () => {
-      component.ngOnInit();
       expect(component.caretRightIcon).toBeDefined();
     });
   });
 
+  describe('Notifications()', () => {
+    it('should get the notifications from the notification context service',
+      inject([McsNotificationContextService],
+        (notificationContextService: McsNotificationContextService) => {
+
+        let notifications: McsNotification[] = new Array();
+        notifications.push(new McsNotification());
+        notifications.push(new McsNotification());
+
+        notificationContextService.notificationsStream.next(notifications);
+        expect(component.notifications).toBeDefined();
+        expect(component.notifications.length).toBe(2);
+    }));
+  });
 });

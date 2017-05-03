@@ -1,14 +1,32 @@
-<!--TODO: Create Seperate Component for user-panel -->
 <div class="mcs-user-panel">
   <aside class="notification" (click)="viewNotifications()">
     <i [ngClass]="bellIcon">
-      <span *ngIf="notifications">{{ notifications }}</span>
+      <span *ngIf="notifications">{{ notifications.length }}</span>
     </i>
+
+    <!--TODO: Add Popover here-->
+    <!--<a class="icon-link" mcsPopover
+      placement="bottom" orientation="center" theme="light"
+      [content]="notificationsContent">
+      <i [ngClass]="bellIcon">
+        <span *ngIf="notifications">{{ notifications.length }}</span>
+      </i>
+    </a>-->
+
+    <ng-template #notificationsContent>
+      <div class="content">
+        <ul class="unstyled-list">
+          <li *ngFor="let notification of notifications">
+            {{ notification.summaryInformation }}
+          </li>
+        </ul>
+      </div>
+    </ng-template>
   </aside>
   <aside class="user-panel">
     <div class="dropdown d-inline-block link">
       <a class="dropdown-toggle" id="useroptions"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="user-icon" [ngClass]="userIcon"></i>
         <span class="hidden-small">Shaun Domingo</span>
       </a>
