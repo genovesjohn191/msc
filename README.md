@@ -157,3 +157,25 @@ e.g.
 - Before adding reviewers in your Bitbucket PR, run thru the diff and make sure everything is final and ready for code review.
 - Use description area for instructions on set-up, usage, and other non-trivial information about your changes.
 - Dead code and commented code should never be committed.
+
+### CI/CD
+
+This repository contains a Jenkinsfile that defines a Jenkins pipeline for CI/CD of the portal frontend.
+
+The job is dependent on an initial Kubernetes deployment of the portal using the k8s yaml files in the fusion workspace (see fusion-workspace/k8s/mcs.portal.frontend/).
+
+It is also dependent on an env.setup file injected via a configmap.
+
+The env.setup file should look like this:
+
+    export HOST='lab-portal.macquariecloudservices.com'
+    export PORT='80'
+    export API_URL='http://lab-api.macquariecloudservices.com/api'
+
+Then create the configmap like so:
+
+    kubectl create configmap portal-frontend-build-env-setup --from-file=env.setup
+
+Point a new Jenkins pipeline job at the ssh git repository for this project. The Jenkins master must itself be deployed within kubernetes and have the [https://github.com/jenkinsci/kubernetes-plugin/blob/master/README.md](jenkinsci kubernetes)) plugin installed. Follow the instructions in the [https://github.com/jenkinsci/kubernetes-plugin/blob/master/README.md](README.md) for that plugin to get Jenkins to talk to your kubernetes cluster.
+
+The blue ocean container is a nice plugin on top of Jenkins and is highly recommended.
