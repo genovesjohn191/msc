@@ -15,10 +15,10 @@ import { FilterSelectorComponent } from './filter-selector.component';
 import { FilterItem } from './filter-item';
 /** Services */
 import {
-  MscStorageService,
-  TextContentProvider,
-  AssetsProvider,
-  FilterProvider
+  McsStorageService,
+  McsTextContentProvider,
+  McsAssetsProvider,
+  McsFilterProvider
 } from '../../core';
 
 describe('FilterSelectorComponent', () => {
@@ -71,10 +71,10 @@ describe('FilterSelectorComponent', () => {
       ],
       providers: [
         { provide: ElementRef, useValue: elementRefMock },
-        { provide: MscStorageService, useValue: mscStorageServiceMock },
-        { provide: TextContentProvider, useValue: textContentProviderMock },
-        { provide: AssetsProvider, useValue: assetsProviderMock },
-        { provide: FilterProvider, useValue: filterProviderMock }
+        { provide: McsStorageService, useValue: mscStorageServiceMock },
+        { provide: McsTextContentProvider, useValue: textContentProviderMock },
+        { provide: McsAssetsProvider, useValue: assetsProviderMock },
+        { provide: McsFilterProvider, useValue: filterProviderMock }
       ]
     });
 
@@ -102,7 +102,7 @@ describe('FilterSelectorComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should call the getIcon() of AssetsProvider and iConClass is not null',
-      inject([AssetsProvider], (assetProvider: AssetsProvider) => {
+      inject([McsAssetsProvider], (assetProvider: McsAssetsProvider) => {
         spyOn(assetProvider, 'getIcon');
         component.ngOnInit();
         expect(assetProvider.getIcon).toHaveBeenCalledTimes(1);
@@ -115,7 +115,7 @@ describe('FilterSelectorComponent', () => {
     });
 
     it('should call the getItem() of MscStorageService when localStorage is not empty',
-      inject([MscStorageService], (mcsStorageService: MscStorageService) => {
+      inject([McsStorageService], (mcsStorageService: McsStorageService) => {
         spyOn(mcsStorageService, 'getItem');
         component.ngOnInit();
         expect(mcsStorageService.getItem).toHaveBeenCalledTimes(1);
@@ -129,7 +129,7 @@ describe('FilterSelectorComponent', () => {
     });
 
     it('should call getDefaultFilters() of FilterProvider when localStorage is empty',
-      inject([FilterProvider], (filterProvider: FilterProvider) => {
+      inject([McsFilterProvider], (filterProvider: McsFilterProvider) => {
         spyOn(filterProvider, 'getDefaultFilters');
         mockFlag = 1;
         component.ngOnInit();
@@ -153,7 +153,7 @@ describe('FilterSelectorComponent', () => {
 
   describe('onCloseFilterSelector()', () => {
     it('should call the setItem() of MscStorageService 1 time',
-      inject([MscStorageService], (mcsStorageService: MscStorageService) => {
+      inject([McsStorageService], (mcsStorageService: McsStorageService) => {
         spyOn(mcsStorageService, 'setItem');
         component.onCloseFilterSelector();
         expect(mcsStorageService.setItem).toHaveBeenCalledTimes(1);

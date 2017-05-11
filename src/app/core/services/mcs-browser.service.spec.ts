@@ -4,7 +4,7 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { CoreDefinition } from '../core.definition';
-import { McsDeviceType } from '../models/mcs-device-type';
+import { McsDeviceType } from '../enumerations/mcs-device-type.enum';
 import { McsBrowserService } from './mcs-browser.service';
 
 describe('MscBrowserService', () => {

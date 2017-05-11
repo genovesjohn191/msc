@@ -1,5 +1,9 @@
 @import "../../../styles/shared/base";
 
+:host {
+  display: inline-block;
+}
+
 .mcs-button {
   background-color: $button-primary-background-color;
   color: $button-primary-text-color;
@@ -11,7 +15,8 @@
   }
 
   &:hover:enabled {
-   background-color: $button-hover-background-color;
+    cursor: pointer;
+    background-color: $button-hover-background-color;
   }
 
   &.small {

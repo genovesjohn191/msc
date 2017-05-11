@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 /** Providers */
-import { AssetsProvider } from '../../core/providers/assets.provider';
+import { McsAssetsProvider } from '../../core';
 
 @Component({
   selector: 'mcs-lightbox',
@@ -36,7 +36,7 @@ export class LightboxComponent implements OnInit, AfterViewInit {
   private _mcsLightbox: ElementRef;
 
   public constructor(
-    private _assetsProvider: AssetsProvider,
+    private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2
   ) {}
 

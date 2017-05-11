@@ -8,11 +8,11 @@
   font-family: $popover-font-family;
   z-index: $popover-z-index;
   min-width: $popover-min-width;
-  max-width: $popover-max-width;
 }
 
 @mixin popover-container($text-color, $background-color, $border-color: "transparent") {
   position: relative;
+  width: 100%;
   color: $text-color;
   @include font-size($popover-font-size);
   @include display-flex(column);
@@ -56,7 +56,7 @@
       top: $popover-arrow-offset;
       margin-left: -$popover-arrow-width;
       border-bottom-color: $background-color;
-      
+
     }
     &::before {
       top: -($popover-arrow-border-width - 1);
@@ -122,21 +122,19 @@
     }
   }
 
-  .content {
+  .mcs-popover-content {
     position: inherit;
     @include border-radius($popover-border-radius);
     @include display-flex(column);
     border: 1px solid #{$border-color};
     background-color: $background-color;
+    @content;
 
-    .title {
+    &.default-padding {
       padding: $popover-padding;
-      border-bottom: 1px solid #{$border-color};
-      text-align: center;
     }
 
-    .template {
-      padding: $popover-padding;
+    .mcs-popover-template {
       @include font-size($popover-font-size - 2);
       word-wrap: break-word;
     }
@@ -145,10 +143,16 @@
 
 .mcs-popover-container {
   &.light {
-    @include popover-container($color-black, $color-grey-07, $color-grey-04);
+    @include popover-container($color-black, $color-white, $color-grey-04) {
+      box-shadow: 0 5px 10px rgba($color-black,0.2);
+    }
   }
 
   &.dark {
     @include popover-container($color-white, rgba($color-black, 0.8));
+  }
+
+  &.gray {
+    @include popover-container($color-black, $color-grey-07, $color-grey-04);
   }
 }

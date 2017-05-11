@@ -15,22 +15,24 @@ const OptimizeJsPlugin = require('optimize-js-plugin');
 /** Webpack Constants */
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const API_URL = process.env.API_URL || 'api';
+const API_WEBSOCKET_HOST = process.env.API_WEBSOCKET_HOST || 'ws://localhost:15674/ws';
+const API_WEBSOCKET_ROUTE_PREFIX = process.env.API_WEBSOCKET_ROUTE_PREFIX || '';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const METADATA = webpackMerge(commonConfig({
   env: ENV
 }).metadata, {
-  host: HOST,
-  port: PORT,
-  API_URL: API_URL,
-  ENV: ENV,
-  HMR: false
-});
+    host: HOST,
+    port: PORT,
+    API_URL: API_URL,
+    API_WEBSOCKET_HOST: API_WEBSOCKET_HOST,
+    API_WEBSOCKET_ROUTE_PREFIX: API_WEBSOCKET_ROUTE_PREFIX,
+    ENV: ENV,
+    HMR: false
+  });
 
 module.exports = function (env) {
-  return webpackMerge(commonConfig({
-    env: ENV
-  }), {
+  return webpackMerge(commonConfig({ env: ENV }), {
 
     /**
      * Developer tool to enhance debugging
@@ -147,12 +149,16 @@ module.exports = function (env) {
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'API_URL': JSON.stringify(METADATA.API_URL),
+        'API_WEBSOCKET_HOST': JSON.stringify(METADATA.API_WEBSOCKET_HOST),
+        'API_WEBSOCKET_ROUTE_PREFIX': JSON.stringify(METADATA.API_WEBSOCKET_ROUTE_PREFIX),
         'HMR': METADATA.HMR,
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
-          'API_URL' : JSON.stringify(METADATA.API_URL),
+          'API_URL': JSON.stringify(METADATA.API_URL),
+          'API_WEBSOCKET_HOST': JSON.stringify(METADATA.API_WEBSOCKET_HOST),
+          'API_WEBSOCKET_ROUTE_PREFIX': JSON.stringify(METADATA.API_WEBSOCKET_ROUTE_PREFIX)
         }
       }),
 

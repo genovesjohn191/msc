@@ -20,20 +20,15 @@ import {
 
 import { Title } from '@angular/platform-browser';
 
-/** Providers */
-import { TextContentProvider } from '../providers/text-content.provider';
-import { AssetsProvider } from '../providers/assets.provider';
-
-/** Services */
+/** Providers / Services */
 import {
-  McsAuthService,
-  UserTypeEnum
-} from '../services/mcs-auth.service';
-
-import {
+  McsTextContentProvider,
+  McsAssetsProvider,
   McsBrowserService,
-  McsDeviceType
-} from '../services/mcs-browser.service';
+  McsDeviceType,
+  McsAuthService,
+  McsUserType
+} from '../../core';
 
 @Component({
   selector: 'mcs-main-navigation',
@@ -62,8 +57,8 @@ export class MainNavigationComponent implements OnInit {
 
   public constructor(
     private _router: Router,
-    private _textProvider: TextContentProvider,
-    private _assetsProvider: AssetsProvider,
+    private _textProvider: McsTextContentProvider,
+    private _assetsProvider: McsAssetsProvider,
     private _authService: McsAuthService,
     private _titleService: Title,
     private _browserService: McsBrowserService,
@@ -102,7 +97,7 @@ export class MainNavigationComponent implements OnInit {
   }
 
   public isUser(): boolean {
-    return this._authService.userType === UserTypeEnum.User;
+    return this._authService.userType === McsUserType.User;
   }
 
   public setTitle(title: string) {

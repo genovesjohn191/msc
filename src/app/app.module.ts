@@ -19,11 +19,6 @@ import {
 } from '@angular/router';
 
 /**
- * Bootstrap 4.0 Modules/Loader
- */
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-/**
  * Platform and Environment providers/directives/pipes
  */
 import { ENV_PROVIDERS } from './environment';
@@ -44,16 +39,6 @@ import {
 import '../styles/base.scss';
 
 /**
- * Core Modules and Configuration
- */
-import {
-  CoreModule,
-  CoreConfig
-} from './core';
-
-import { SharedModule } from './shared';
-
-/**
  * Routing
  */
 import { routes } from './app.routes';
@@ -61,7 +46,13 @@ import { routes } from './app.routes';
 /**
  * MCS Portal Modules Declaration
  */
+import { SharedModule } from './shared';
 import { FeaturesModule } from './features';
+import {
+  CoreModule,
+  CoreConfig,
+  CoreDefinition
+} from './core';
 
 /**
  * Application-Wide Providers
@@ -81,9 +72,10 @@ const mcsCoreConfig = {
   apiHost: API_URL,
   imageRoot: 'assets/img/',
   notification: {
-    host:'ws://localhost:15674/ws',
-    login: 'guest',
-    passcode: 'guest'
+    host: API_WEBSOCKET_HOST,
+    routePrefix: API_WEBSOCKET_ROUTE_PREFIX,
+    user: 'guest', // TODO: Secure the user name and password (Research the proper implementation)
+    password: 'guest'
   }
 } as CoreConfig;
 
@@ -99,9 +91,9 @@ const mcsCoreConfig = {
     BrowserModule,
     HttpModule,
     BrowserAnimationsModule,
-    FeaturesModule,
-    NgbModule.forRoot(),
     CoreModule.forRoot(mcsCoreConfig),
+    SharedModule,
+    FeaturesModule,
     RouterModule.forRoot(routes)
   ],
   providers: [
@@ -116,8 +108,9 @@ export class AppModule {
     public appRef: ApplicationRef,
     public appState: AppState
   ) {
-    // TODO: Set actual userID here
-    appState.set('userId', 'F500120501');
+    // TODO: Temporary Set UserId and AccountId
+    appState.set(CoreDefinition.APPSTATE_USER_ID, 'F500120501');
+    appState.set(CoreDefinition.APPSTATE_ACCOUNT_ID, 'Development');
   }
 
   public hmrOnInit(store: StoreType) {

@@ -7,7 +7,7 @@ import {
 import { CoreConfig } from '../core.config';
 
 @Injectable()
-export class AssetsProvider {
+export class McsAssetsProvider {
   private _images: Map<string, string>;
   private _icons: Map<string, string>;
   private _config: any;

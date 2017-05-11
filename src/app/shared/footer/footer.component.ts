@@ -4,8 +4,10 @@ import {
 } from '@angular/core';
 
 /** Providers */
-import { AssetsProvider } from '../providers/assets.provider';
-import { TextContentProvider } from '../providers/text-content.provider';
+import {
+  McsTextContentProvider,
+  McsAssetsProvider
+} from '../../core';
 
 @Component({
   selector: 'mcs-footer',
@@ -19,8 +21,8 @@ export class FooterComponent implements OnInit {
   public links: string;
 
   public constructor(
-    private _assetsProvider: AssetsProvider,
-    private _textContentProvider: TextContentProvider
+    private _assetsProvider: McsAssetsProvider,
+    private _textContentProvider: McsTextContentProvider
   ) {
     this.mcsLogo = '';
     this.copyright = '';

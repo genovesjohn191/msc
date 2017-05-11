@@ -4,13 +4,7 @@ import {
 } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 /** Models */
-import {
-  StatusBoxAttribute,
-  StatusBoxType
-} from '../../shared';
 import { Dashboard } from './dashboard';
-/** Services */
-import { FilterProvider } from '../../core';
 
 @Component({
   selector: 'mcs-dashboard',
@@ -20,10 +14,6 @@ import { FilterProvider } from '../../core';
 
 export class DashboardComponent implements OnInit {
   public title: string;
-  public statusBoxAttribute: StatusBoxAttribute;
-  public model: NgbDateStruct;
-  public date: { year: number, month: number };
-  public currentDate: Date;
   public filterItems: any;
   public dashboards: Dashboard[];
   public textboxValue: string;
@@ -31,15 +21,11 @@ export class DashboardComponent implements OnInit {
 
   public constructor() {
     this.title = 'Dashboard component';
-    this.statusBoxAttribute = new StatusBoxAttribute();
-    this.currentDate = new Date();
     this.dashboards = new Array();
   }
 
   public ngOnInit() {
     this.setDashboards();
-    this.onDisplayStatusBox();
-    this.statusBoxAttribute.dialogState = 'hide';
     this.textboxValue = 'Windows Server 2012';
     this.disabled = true;
   }
@@ -83,22 +69,6 @@ export class DashboardComponent implements OnInit {
     if (filters) {
       this.filterItems = filters;
     }
-  }
-
-  public onSelectToday() {
-    this.model = {
-      year: this.currentDate.getFullYear(),
-      month: this.currentDate.getMonth() + 1,
-      day: this.currentDate.getDate()
-    };
-  }
-
-  public onDisplayStatusBox() {
-    this.statusBoxAttribute.type = StatusBoxType.Success;
-    this.statusBoxAttribute.dialogState = 'show';
-    this.statusBoxAttribute.title = 'mongo-db-1';
-    this.statusBoxAttribute.user = 'Arrian';
-    this.statusBoxAttribute.description = 'The virtual machine successfully started. ';
   }
 
   public onButtonClicked(button: any) {

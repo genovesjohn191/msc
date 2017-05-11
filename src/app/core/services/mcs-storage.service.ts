@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AppState } from '../../app.service';
 
 @Injectable()
-export class MscStorageService {
+export class McsStorageService {
   /**
    * User ID
    */

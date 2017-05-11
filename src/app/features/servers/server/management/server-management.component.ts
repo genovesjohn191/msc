@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Server } from '../../';
-import { TextContentProvider } from '../../../../core';
+import { McsTextContentProvider } from '../../../../core';
 
 @Component({
   selector: 'mcs-server-management',
@@ -18,7 +18,7 @@ export class ServerManagementComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
-    private _textProvider: TextContentProvider
+    private _textProvider: McsTextContentProvider
   ) {}
 
   public ngOnInit() {

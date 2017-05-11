@@ -14,7 +14,7 @@ import {
 import { Loading } from '../loading.interface';
 
 /** Providers */
-import { AssetsProvider } from '../../core';
+import { McsAssetsProvider } from '../../core';
 
 @Component({
   selector: 'mcs-button',
@@ -57,7 +57,7 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   public mcsButton: ElementRef;
 
   public constructor(
-    private _assetsProvider: AssetsProvider,
+    private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2
   ) {}
 

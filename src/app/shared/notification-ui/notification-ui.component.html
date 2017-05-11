@@ -1,0 +1,17 @@
+<div class="notification-container" [@fade]="animate">
+  <i class="icon" [ngClass]="iconStatusClass"></i>
+  <div class="information">
+    <div class="status">
+      <span class="description">{{ attribute.description }}</span><br/>
+      <span class="summary-information">{{ attribute.summaryInformation }}</span>
+    </div>
+    <div *ngIf="displayErrorMessage(attribute.status)" class="failure-message">
+      <span>{{ attribute.errorMessage }}</span>
+    </div>
+
+    <div class="owner-info">
+      <span>{{ getStartTime() }}</span>
+      <span class="name">{{ attribute.ownerName }}</span>
+    </div>
+  </div>
+</div>

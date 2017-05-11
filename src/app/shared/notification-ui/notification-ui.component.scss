@@ -1,0 +1,62 @@
+@import '../../../styles/shared/base';
+
+.notification-container {
+  position: relative;
+  min-width: $notification-minimum-width;
+  @include display-flex(row);
+
+  .icon {
+    align-self: flex-start;
+    margin-right: $space-small;
+    margin-top: $space-xsmall;
+    width: $notification-icon-width;
+    text-align: center;
+    @include font-size($icon-large-font-size);
+
+    &.completed {
+      color: $color-green-00;
+    }
+    &.active {
+      color: $color-black;
+    }
+    &.failed {
+      color: $color-red-00;
+    }
+  }
+
+  .information {
+    @include flex(1);
+    @include display-flex(column);
+
+    .status {
+      margin-bottom: $space-xsmall;
+
+      .description {
+        @include font-size($notification-status-font-size);
+        font-family: $base-font-bold;
+      }
+
+      .summary-information {
+        @include font-size($notification-status-font-size);
+        font-family: $base-font;
+      }
+    }
+
+    .failure-message {
+      margin-bottom: $space-xsmall;
+      font-family: $base-font;
+      @include font-size($notification-message-font-size);
+    }
+
+    .owner-info {
+      display: inline-block;
+      color: $color-grey-02;
+      font-family: $base-font;
+      @include font-size($notification-message-font-size);
+
+      .name {
+        margin-left: $space-small;
+      }
+    }
+  }
+}

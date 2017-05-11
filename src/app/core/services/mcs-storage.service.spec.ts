@@ -2,13 +2,13 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { MscStorageService } from './mcs-storage.service';
+import { McsStorageService } from './mcs-storage.service';
 import { AppState } from '../../app.service';
 
-describe('MscStorageService', () => {
+describe('McsStorageService', () => {
 
   /** Declare Service */
-  let mcsStorageService: MscStorageService;
+  let mcsStorageService: McsStorageService;
   let appState: AppState;
   let key: string = 'key_test';
   let userId: string = 'F500120501';
@@ -17,7 +17,7 @@ describe('MscStorageService', () => {
   beforeEach(async(() => {
     appState = new AppState();
     appState.set('userId', userId);
-    mcsStorageService = new MscStorageService(appState);
+    mcsStorageService = new McsStorageService(appState);
   }));
 
   /** Test Implementation */

@@ -27,7 +27,10 @@ export class PopoverComponent implements OnInit {
   public placement: string;
 
   @Input()
-  public theme: 'dark' | 'light';
+  public padding: 'default' | 'none';
+
+  @Input()
+  public theme: 'dark' | 'light' | 'gray';
 
   @Input()
   public trigger: 'manual' | 'hover';
@@ -44,14 +47,19 @@ export class PopoverComponent implements OnInit {
   @HostBinding('attr.role')
   public role;
 
+  @Input()
+  @HostBinding('style.max-width')
+  public maxWidth;
+
   public constructor(private _renderer: Renderer2) {
-    this.role = 'tooltip';
     this.onClickOutsideEvent = new EventEmitter<any>();
   }
 
   public ngOnInit() {
-    this.setArrowDirection();
-    this.setTheme();
+    this.role = 'tooltip';
+    this._setArrowDirection();
+    this._setTheme();
+    this._setPadding();
   }
 
   @HostListener('document:click', ['$event'])
@@ -60,7 +68,7 @@ export class PopoverComponent implements OnInit {
     this.onClickOutsideEvent.emit(event);
   }
 
-  public setArrowDirection() {
+  public _setArrowDirection() {
     switch (this.placement) {
       case 'top':
         this._renderer.setStyle(this.popoverElement.nativeElement,
@@ -84,8 +92,13 @@ export class PopoverComponent implements OnInit {
     }
   }
 
-  public setTheme() {
+  public _setTheme() {
     if (!this.theme) { return; }
     this._renderer.addClass(this.popoverElement.nativeElement, this.theme);
+  }
+
+  public _setPadding() {
+    if (!this.padding || this.padding === 'none') { return; }
+    this._renderer.addClass(this.contentElement.nativeElement, this.padding + '-padding');
   }
 }

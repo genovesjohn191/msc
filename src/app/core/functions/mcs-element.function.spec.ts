@@ -5,9 +5,9 @@ import {
   getElementPositionFromHost,
   getElementStyle,
   getOffsetParent
-} from './element.function';
+} from './mcs-element.function';
 
-describe('ElementFunction', () => {
+describe('McsElementFunction', () => {
 
   // Variable declarations
   let documentMargin = document.documentElement.style.margin;

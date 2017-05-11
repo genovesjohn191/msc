@@ -1,4 +1,4 @@
-import { NotificationConfig } from './models/mcs-notification-config';
+import { McsNotificationConfig } from './models/mcs-notification-config';
 
 export class CoreConfig {
 
@@ -21,11 +21,11 @@ export class CoreConfig {
   }
 
   /** Notification Configuration */
-  private _notificationConfig: NotificationConfig;
-  public get notification(): NotificationConfig {
+  private _notificationConfig: McsNotificationConfig;
+  public get notification(): McsNotificationConfig {
     return this._notificationConfig;
   }
-  public set notification(value: NotificationConfig) {
+  public set notification(value: McsNotificationConfig) {
     this._notificationConfig = value;
   }
 }

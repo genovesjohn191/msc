@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-
-/**
- * User Type Enumeration
- */
-export enum UserTypeEnum {
-  None = 0,
-  User = 1,
-  Admin = 2
-}
+import { McsUserType } from '../enumerations/mcs-user-type.enum';
 
 @Injectable()
 export class McsAuthService {
@@ -23,13 +15,13 @@ export class McsAuthService {
   /**
    * GET: User Type(User, Admin)
    */
-  private _userType: UserTypeEnum;
-  public get userType(): UserTypeEnum {
+  private _userType: McsUserType;
+  public get userType(): McsUserType {
     return this._userType;
   }
 
   constructor() {
     this._userName = 'Arrian';
-    this._userType = UserTypeEnum.Admin;
+    this._userType = McsUserType.Admin;
   }
 }

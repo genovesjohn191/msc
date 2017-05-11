@@ -18,7 +18,7 @@ import {
 import { Loading } from '../loading.interface';
 
 /** Providers */
-import { AssetsProvider } from '../../core/providers/assets.provider';
+import { McsAssetsProvider } from '../../core';
 
 @Component({
   selector: 'mcs-textbox',
@@ -80,7 +80,7 @@ export class TextboxComponent implements OnInit, AfterViewInit, ControlValueAcce
   }
 
   public constructor(
-    private _assetsProvider: AssetsProvider,
+    private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2
   ) {}
 

@@ -9,7 +9,7 @@ import {
   Data
 } from '@angular/router';
 import { Server } from '../../';
-import { TextContentProvider } from '../../../../core';
+import { McsTextContentProvider } from '../../../../core';
 
 describe('ServerManagementComponent', () => {
   /** Stub Services/Components */
@@ -42,7 +42,7 @@ describe('ServerManagementComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: TextContentProvider, useValue: mockTextContentProvider },
+        { provide: McsTextContentProvider, useValue: mockTextContentProvider },
         { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     });

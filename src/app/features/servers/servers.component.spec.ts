@@ -7,8 +7,8 @@ import {
 } from '@angular/core/testing';
 import { Observable } from 'rxjs/Rx';
 import {
-  TextContentProvider,
-  AssetsProvider,
+  McsTextContentProvider,
+  McsAssetsProvider,
   CoreDefinition
 } from '../../core';
 
@@ -60,9 +60,9 @@ describe('ServersComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: TextContentProvider, useValue: textContentProviderMock },
+        { provide: McsTextContentProvider, useValue: textContentProviderMock },
         { provide: ServersService, useValue: serversServiceMock },
-        { provide: AssetsProvider, useValue: assetsProviderMock }
+        { provide: McsAssetsProvider, useValue: assetsProviderMock }
       ]
     });
 

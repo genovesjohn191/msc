@@ -1,5 +1,6 @@
-export class NotificationConfig {
+export class McsNotificationConfig {
   public host: string;
-  public login: string;
-  public passcode: string;
+  public routePrefix: string;
+  public user: string;
+  public password: string;
 }
