@@ -67,6 +67,34 @@ describe('PopoverComponent', () => {
     });
   });
 
+  describe('ngOnInit() when padding is none', () => {
+    beforeEach(async(() => {
+      component.padding = 'none';
+      component.ngOnInit();
+    }));
+
+    it(`should not set any padding class to contentElement`, () => {
+      let defaultPaddingExist: boolean;
+      defaultPaddingExist = component.contentElement.nativeElement
+        .classList.contains('default-padding');
+      expect(defaultPaddingExist).toBeFalsy();
+    });
+  });
+
+  describe('ngOnInit() when padding is default', () => {
+    beforeEach(async(() => {
+      component.padding = 'default';
+      component.ngOnInit();
+    }));
+
+    it(`should set the default-padding class to contentElement`, () => {
+      let defaultPaddingExist: boolean;
+      defaultPaddingExist = component.contentElement.nativeElement
+        .classList.contains('default-padding');
+      expect(defaultPaddingExist).toBeTruthy();
+    });
+  });
+
   describe('ngOnInit() when placement is top', () => {
     beforeEach(async(() => {
       component.placement = 'top';

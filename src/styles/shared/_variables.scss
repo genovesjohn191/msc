@@ -148,3 +148,10 @@ $main-navigation-z-index: 90;
 $navigation-mobile-offset: 65px;
 $navigation-link-desktop-padding: 10px 15px;
 $navigation-link-mobile-padding: 15px;
+
+// Notification
+$notification-minimum-width: 350px;
+$notification-status-font-size: 14;
+$notification-message-font-size: 12;
+$notification-icon-font-size: $icon-large-font-size;
+$notification-icon-width: $notification-icon-font-size + px;

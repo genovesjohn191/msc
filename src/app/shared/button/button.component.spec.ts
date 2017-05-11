@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 
 import { ButtonComponent } from './button.component';
-import { AssetsProvider } from '../../core/providers/assets.provider';
+import { McsAssetsProvider } from '../../core';
 
 describe('ButtonComponent', () => {
 
@@ -36,7 +36,7 @@ describe('ButtonComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: AssetsProvider, useValue: mockAssetsProvider },
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         Renderer2
       ]
     });

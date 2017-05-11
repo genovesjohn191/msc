@@ -30,16 +30,17 @@
         <span class="title">Popover Top and Bottom Implementation Example</span>
         <div class="content">
           <small><em>Hover me to display dark Popover</em></small> <br/>
-          <button class="btn btn-primary" mcsPopover
+          <ng-template #tipContent> Hello guys <br/> this is just a sample tooltip</ng-template>
+          <mcs-button mcsPopover
             theme="dark" trigger="hover"
-            [title]="popoverTitle" [content]="popoverContent"
-            placement="top" orientation="center">Dark</button><br/>
+            maxWidth="200px" [content]="tipContent"
+            placement="top" orientation="center">Dark</mcs-button><br/>
 
           <small><em>Hover me to display light Popover</em></small> <br/>
-          <button class="btn btn-primary" mcsPopover
+          <mcs-button mcsPopover
             theme="light" trigger="hover"
-            [title]="popoverTitle" [content]="popoverContent"
-            placement="bottom" orientation="center">Light</button><br/>
+            maxWidth="200px" [content]="tipContent"
+            placement="bottom" orientation="center">Light</mcs-button><br/>
         </div>
       </div>
     </div>
@@ -49,15 +50,15 @@
         <span class="title">Popover Left and Right Implementation Example</span>
         <div class="content">
           <small><em>Popover left placement and bottom orientation</em></small> <br/>
-          <button class="btn btn-primary" mcsPopover
+          <mcs-button mcsPopover
             theme="dark" trigger="manual"
             [title]="popoverTitle" [content]="popoverContent"
-            placement="left" orientation="bottom">LeftBottom</button><br/>
+            placement="left" orientation="bottom">LeftBottom</mcs-button><br/>
 
           <small><em>Popover right placement and top orientation</em></small> <br/>
-          <button class="btn btn-primary" mcsPopover #popoverRight="mcsPopover"
+          <mcs-button mcsPopover #popoverRight="mcsPopover"
             [title]="popoverTitle" [content]="popoverContent"
-            placement="right" orientation="top">RightTop</button><br/>
+            placement="right" orientation="top">RightTop</mcs-button><br/>
         </div>
       </div>
     </div>
@@ -67,16 +68,16 @@
         <span class="title">Popover Top and Bottom Implementation Example</span>
         <div class="content">
           <small><em>Popover top placement and left orientation</em></small> <br/>
-          <button class="btn btn-primary" mcsPopover
+          <mcs-button mcsPopover
             theme="dark" trigger="manual"
             [title]="popoverTitle" [content]="popoverContent"
-            placement="top" orientation="left">TopLeft</button><br/>
+            placement="top" orientation="left">TopLeft</mcs-button><br/>
 
           <small><em>Popover bottom placement and right orientation</em></small> <br/>
-          <button class="btn btn-primary" mcsPopover
+          <mcs-button mcsPopover
             theme="light" trigger="manual"
             [title]="popoverTitle" [content]="popoverContent"
-            placement="bottom" orientation="right">BottomRight</button><br/>
+            placement="bottom" orientation="right">BottomRight</mcs-button><br/>
         </div>
       </div>
     </div>

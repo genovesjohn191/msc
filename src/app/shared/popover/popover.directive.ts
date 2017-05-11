@@ -8,10 +8,12 @@ import {
   OnInit,
   OnDestroy,
   Input,
+  Output,
   TemplateRef,
   ComponentRef,
   Renderer2,
-  HostListener
+  HostListener,
+  EventEmitter
 } from '@angular/core';
 import {
   McsComponentService,
@@ -36,7 +38,16 @@ export class PopoverDirective implements OnInit, OnDestroy {
   public content: TemplateRef<any> | string;
 
   @Input()
-  public theme: 'dark' | 'light';
+  public maxWidth: string;
+
+  @Input()
+  public elementContainer: 'default' | 'body';
+
+  @Input()
+  public padding: 'default' | 'none';
+
+  @Input()
+  public theme: 'dark' | 'light' | 'gray';
 
   @Input()
   public trigger: 'manual' | 'hover';
@@ -46,6 +57,12 @@ export class PopoverDirective implements OnInit, OnDestroy {
 
   @Input()
   public orientation: 'top' | 'bottom' | 'center' | 'left' | 'right';
+
+  @Output()
+  public onOpen: EventEmitter<any>;
+
+  @Output()
+  public onClose: EventEmitter<any>;
 
   public componentService: McsComponentService<PopoverComponent>;
   public componentRef: ComponentRef<PopoverComponent>;
@@ -62,8 +79,13 @@ export class PopoverDirective implements OnInit, OnDestroy {
     // Set default values for Inputs
     this.placement = 'bottom';
     this.orientation = 'center';
+    this.maxWidth = '250px';
     this.theme = 'light';
     this.trigger = 'manual';
+    this.padding = 'default';
+    this.elementContainer = 'body';
+    this.onOpen = new EventEmitter();
+    this.onClose = new EventEmitter();
   }
 
   public ngOnInit() {
@@ -98,12 +120,22 @@ export class PopoverDirective implements OnInit, OnDestroy {
 
       this.componentRef.instance.title = this.title;
       this.componentRef.instance.placement = this.placement;
+      this.componentRef.instance.maxWidth = this.maxWidth;
       this.componentRef.instance.theme = this.theme;
       this.componentRef.instance.trigger = this.trigger;
+      this.componentRef.instance.padding = this.padding;
       this.componentRef.instance.onClickOutsideEvent.subscribe((event) => {
         this.onClickOutside(event);
       });
+
+      // Attach popover element inside the body
+      if (this.elementContainer === 'body') {
+        window.document.querySelector(this.elementContainer)
+          .appendChild(this.componentRef.location.nativeElement);
+      }
+
       this.componentRef.changeDetectorRef.markForCheck();
+      this.onOpen.emit();
     }
   }
 
@@ -112,6 +144,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
       this.componentService.deleteComponent();
       this.componentRef.destroy();
       this.componentRef = null;
+      this.onClose.emit();
     }
   }
 
@@ -206,7 +239,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
     let targetElementPosition = getElementPositionFromHost(
       this._elementRef.nativeElement,
       this.componentRef.location.nativeElement,
-      this.placement, false);
+      this.placement, this.elementContainer === 'body');
 
     this.componentRef.location
       .nativeElement.style.top = `${targetElementPosition.top}px`;

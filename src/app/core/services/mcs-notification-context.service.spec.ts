@@ -7,13 +7,15 @@ import { Subject } from 'rxjs/Rx';
 import { McsNotification } from '../models/mcs-notification';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
+import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 
 describe('McsNotificationContextService', () => {
 
   /** Stub Services Mock */
   let mcsNotificationContextService: McsNotificationContextService;
-  let mockMcsNotificationService = {
-    notificationStream: new Subject<McsNotification>()
+  let mockMcsNotificationJobService = {
+    notificationStream: new Subject<McsNotification>(),
+    connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
 
   beforeEach(async(() => {
@@ -22,7 +24,7 @@ describe('McsNotificationContextService', () => {
       imports: [
       ],
       providers: [
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationService },
+        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
         McsNotificationContextService
       ]
     });
@@ -34,7 +36,7 @@ describe('McsNotificationContextService', () => {
   }));
 
   /** Test Implementation */
-  describe('NotificationsStream()', () => {
+  describe('NotificationsStream() | _updateNotifications()', () => {
     let initId = '0001';
     let initDescription = 'Server01';
 
@@ -42,7 +44,7 @@ describe('McsNotificationContextService', () => {
       let notification = new McsNotification();
       notification.id = initId;
       notification.description = initDescription;
-      mockMcsNotificationService.notificationStream.next(notification);
+      mockMcsNotificationJobService.notificationStream.next(notification);
     }));
 
     it('should get the omitted value from the notification job stream', () => {
@@ -65,7 +67,7 @@ describe('McsNotificationContextService', () => {
 
         notification.id = initId;
         notification.description = updatedDescription;
-        mockMcsNotificationService.notificationStream.next(notification);
+        mockMcsNotificationJobService.notificationStream.next(notification);
 
         mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
           updatedNotifications = notifications;
@@ -84,7 +86,7 @@ describe('McsNotificationContextService', () => {
         let newDescription = 'Server03';
         notification.id = newId;
         notification.description = newDescription;
-        mockMcsNotificationService.notificationStream.next(notification);
+        mockMcsNotificationJobService.notificationStream.next(notification);
 
         mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
           updatedNotifications = notifications;
@@ -95,6 +97,40 @@ describe('McsNotificationContextService', () => {
         expect(updatedNotifications[0].description).toBe(initDescription);
         expect(updatedNotifications[1].id).toBe(newId);
         expect(updatedNotifications[1].description).toBe(newDescription);
+      });
+  });
+
+  describe('NotificationsStream() | _updateNotifications()', () => {
+    let initId = '0001';
+    let initDescription = 'Server01';
+
+    beforeEach(async(() => {
+      let notification = new McsNotification();
+      notification.id = initId;
+      notification.description = initDescription;
+      mockMcsNotificationJobService.notificationStream.next(notification);
+    }));
+
+    it('should get the omitted value from the notification job stream', () => {
+      let updatedNotifications: McsNotification[];
+      mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
+        updatedNotifications = notifications;
+      });
+
+      expect(updatedNotifications).toBeDefined();
+      expect(updatedNotifications.length).toBe(1);
+      expect(updatedNotifications[0].id).toBe(initId);
+      expect(updatedNotifications[0].description).toBe(initDescription);
+    });
+  });
+
+  describe('connectionStatusStream() | _notifyConnectionStatus()', () => {
+    it(`should get the omitted status of connection from the notification job stream`,
+      () => {
+        mockMcsNotificationJobService.connectionStatusStream.next(McsConnectionStatus.Success);
+        mcsNotificationContextService.connectionStatusStream.subscribe((status) => {
+          expect(status).toBe(McsConnectionStatus.Success);
+        });
       });
   });
 });

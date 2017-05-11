@@ -5,7 +5,7 @@ import {
 } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
-import { AssetsProvider } from '../providers/assets.provider';
+import { McsAssetsProvider } from '../../core';
 
 describe('HeaderComponent', () => {
 
@@ -24,7 +24,7 @@ describe('HeaderComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: AssetsProvider, useValue: mockAssetsProvider }
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
       ]
     });
 
@@ -47,14 +47,14 @@ describe('HeaderComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should call the getImagePath() of AssetsProvider',
-      inject([AssetsProvider], (assetsProvider: AssetsProvider) => {
+      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
         spyOn(assetsProvider, 'getImagePath');
         component.ngOnInit();
         expect(assetsProvider.getImagePath).toHaveBeenCalled();
       }));
 
     it('mcsLogo variable should not be equal to undefined, null, or empty',
-      inject([AssetsProvider], (assetsProvider: AssetsProvider) => {
+      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
         expect(component.mcsLogo).not.toEqual(undefined);
         expect(component.mcsLogo).not.toEqual(null);
         expect(component.mcsLogo).not.toEqual('');

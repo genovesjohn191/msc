@@ -13,8 +13,8 @@ import {
 } from 'rxjs/Rx';
 /** Services */
 import {
-  TextContentProvider,
-  AssetsProvider
+  McsTextContentProvider,
+  McsAssetsProvider
 } from '../../core';
 import { ServersService } from './servers.service';
 /** Models */
@@ -50,9 +50,9 @@ export class ServersComponent implements OnInit, OnDestroy {
   public searchSubject: Subject<ServerListSearchKey>;
 
   public constructor(
-    private _textProvider: TextContentProvider,
+    private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
-    private _assetsProvider: AssetsProvider
+    private _assetsProvider: McsAssetsProvider
   ) {
     this.title = _textProvider.content.servers.title;
     this.isLoaded = false;

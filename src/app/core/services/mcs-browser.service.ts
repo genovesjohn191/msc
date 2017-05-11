@@ -4,10 +4,10 @@ import {
   OnInit
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
-import { McsDeviceType } from '../models/mcs-device-type';
+import { McsDeviceType } from '../enumerations/mcs-device-type.enum';
 import { CoreDefinition } from '../core.definition';
 
-export * from '../models/mcs-device-type';
+export * from '../enumerations/mcs-device-type.enum';
 
 @Injectable()
 export class McsBrowserService {

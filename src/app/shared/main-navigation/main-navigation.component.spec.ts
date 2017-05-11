@@ -6,19 +6,15 @@ import {
 import { ElementRef } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Title } from '@angular/platform-browser';
-
 import { MainNavigationComponent } from './main-navigation.component';
-import { TextContentProvider } from '../providers/text-content.provider';
-import { AssetsProvider } from '../../core/providers/assets.provider';
 import {
+  McsTextContentProvider,
+  McsAssetsProvider,
   McsAuthService,
-  UserTypeEnum
-} from '../services/mcs-auth.service';
-
-import {
+  McsUserType,
   McsBrowserService,
   McsDeviceType
-} from '../services/mcs-browser.service';
+} from '../../core';
 
 describe('MainNavigationComponent', () => {
 
@@ -27,7 +23,7 @@ describe('MainNavigationComponent', () => {
   let mockElementRef = new ElementRef(document.createElement('div'));
   let mockAuthService = {
     userName: 'Arrian',
-    userType: UserTypeEnum.User
+    userType: McsUserType.User
   };
   let mockTitleService = {
     setTitle(title: string): void { return; }
@@ -60,8 +56,8 @@ describe('MainNavigationComponent', () => {
         { provide: ElementRef, useValue: mockElementRef },
         { provide: McsAuthService, useValue: mockAuthService },
         { provide: Title, useValue: mockTitleService },
-        { provide: TextContentProvider, useValue: mockTextService },
-        { provide: AssetsProvider, useValue: mockAssetsProvider },
+        { provide: McsTextContentProvider, useValue: mockTextService },
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         McsBrowserService
       ]
     });

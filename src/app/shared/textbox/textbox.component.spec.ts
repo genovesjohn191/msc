@@ -5,7 +5,7 @@ import {
 } from '@angular/core/testing';
 
 import { TextboxComponent } from './textbox.component';
-import { AssetsProvider } from '../../core/providers/assets.provider';
+import { McsAssetsProvider } from '../../core';
 
 describe('TextboxComponent', () => {
 
@@ -31,7 +31,7 @@ describe('TextboxComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: AssetsProvider, useValue: mockAssetsProvider }
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
       ]
     });
 

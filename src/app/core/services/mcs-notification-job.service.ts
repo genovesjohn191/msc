@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { McsNotification } from '../models/mcs-notification';
 import { CoreConfig } from '../core.config';
+import { CoreDefinition } from '../core.definition';
+import { AppState } from '../../app.service';
+import { reviverParser } from '../functions/mcs-json.function';
+import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 
 /**
  * MCS notification job service
@@ -10,6 +14,7 @@ import { CoreConfig } from '../core.config';
  */
 @Injectable()
 export class McsNotificationJobService {
+  private _websocket: WebSocket;
   private _websocketClient: any;
   private _websocketSubscription: any;
 
@@ -24,8 +29,24 @@ export class McsNotificationJobService {
     this._notificationStream = value;
   }
 
-  constructor(private _coreConfig: CoreConfig) {
+  /**
+   * Subsrcibe to know the connection status in real time
+   */
+  private _connectionStatusStream: BehaviorSubject<McsConnectionStatus>;
+  public get connectionStatusStream(): BehaviorSubject<McsConnectionStatus> {
+    return this._connectionStatusStream;
+  }
+  public set connectionStatusStream(value: BehaviorSubject<McsConnectionStatus>) {
+    this._connectionStatusStream = value;
+  }
+
+  constructor(
+    private _coreConfig: CoreConfig,
+    private _appState: AppState
+  ) {
     this._notificationStream = new BehaviorSubject<McsNotification>(new McsNotification());
+    this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
+      (McsConnectionStatus.Success);
     this._initializeWebsocket();
   }
 
@@ -33,16 +54,48 @@ export class McsNotificationJobService {
    * Destroy all instance of websocket and webstomp including subscription
    */
   public destroy() {
-    if (this._websocketSubscription) {
-      this._websocketSubscription.unsubscribe();
+    if (this._websocketClient) {
+      this._websocketClient.unsubscribe();
     }
   }
 
   private _initializeWebsocket() {
-    let webStomp = require('webstomp-client');
-    let webSocket = new WebSocket(this._coreConfig.notification.host);
+    try {
+      this._websocket = new WebSocket(this._coreConfig.notification.host);
 
-    this._websocketClient = webStomp.over(webSocket);
+      // Register all listeners for websocket to determine the connection status
+      this._websocket.onopen = this._onOpenConnection.bind(this);
+      this._websocket.onerror = this._onErrorConnection.bind(this);
+      this._websocket.onclose = this._onCloseConnection.bind(this);
+
+      // Connect to websocket
+      this._connectToWebsocket();
+    } catch (error) {
+      // notify all subscribers for the error occured
+      this._connectionStatusStream.next(McsConnectionStatus.Fatal);
+    }
+  }
+
+  private _onErrorConnection() {
+    this._connectionStatusStream.next(McsConnectionStatus.Failed);
+    this._websocket.close();
+  }
+
+  private _onCloseConnection(event) {
+    setTimeout(() => {
+      this._initializeWebsocket();
+      this._connectionStatusStream.next(McsConnectionStatus.Retrying);
+    }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
+  }
+
+  private _onOpenConnection() {
+    this._connectionStatusStream.next(McsConnectionStatus.Success);
+  }
+
+  private _connectToWebsocket() {
+    let webStomp = require('webstomp-client');
+
+    this._websocketClient = webStomp.over(this._websocket);
     this._websocketClient.heartbeat.incoming = 0;
     this._websocketClient.heartbeat.outgoing = 0;
     this._websocketClient.connect(
@@ -57,20 +110,30 @@ export class McsNotificationJobService {
       passcode: ''
     };
 
-    headers.login = this._coreConfig.notification.login ?
-      this._coreConfig.notification.login : 'guest';
-    headers.passcode = this._coreConfig.notification.passcode ?
-      this._coreConfig.notification.passcode : 'guest';
+    headers.login = this._coreConfig.notification.user ?
+      this._coreConfig.notification.user : 'guest';
+    headers.passcode = this._coreConfig.notification.password ?
+      this._coreConfig.notification.password : 'guest';
     return headers;
   }
 
   private _getQueue(): string {
-    return '/topic/notifications.jobs.the-quick-brown-123.12345';
+    let queueString: string;
+    let accountId: string;
+
+    accountId = this._appState.get(CoreDefinition.APPSTATE_ACCOUNT_ID);
+
+    // Create queue string based on the route prefix of the notification
+    if (this._coreConfig.notification.routePrefix) {
+      queueString = `${this._coreConfig.notification.routePrefix}.job.${accountId}`;
+    } else {
+      queueString = `job.${accountId}`;
+    }
+    return queueString;
   }
 
   private _onConnect(): void {
-    this._websocketSubscription = this._websocketClient
-      .subscribe(this._getQueue(), this._onMessage.bind(this));
+    this._websocketClient.subscribe(this._getQueue(), this._onMessage.bind(this));
   }
 
   private _onMessage(message) {
@@ -82,7 +145,7 @@ export class McsNotificationJobService {
   private _updateNotification(bodyContent: any) {
     if (bodyContent) {
       let updatedNotification: McsNotification;
-      updatedNotification = JSON.parse(bodyContent) as McsNotification;
+      updatedNotification = JSON.parse(bodyContent, reviverParser) as McsNotification;
       this._notificationStream.next(updatedNotification);
     }
   }

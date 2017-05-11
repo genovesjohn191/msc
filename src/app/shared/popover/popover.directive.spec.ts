@@ -25,7 +25,7 @@ export class TestComponent {
   public popover: PopoverDirective;
 }
 
-describe('PopoverComponent', () => {
+describe('PopoverDirective', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
@@ -56,7 +56,7 @@ describe('PopoverComponent', () => {
         </ng-template>
 
         <button class="btn btn-primary" mcsPopover #popover="mcsPopover"
-          theme="light" trigger="manual"
+          theme="light" trigger="manual" elementContainer="default"
           title="popoverTitle" [content]="popoverContent"
           placement="bottom" orientation="center">Light</button><br/>
         `

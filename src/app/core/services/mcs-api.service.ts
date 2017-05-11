@@ -11,7 +11,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 
 import { CoreConfig } from '../core.config';
-import { isUrlValid } from '../functions/url.function';
+import { isUrlValid } from '../functions/mcs-url.function';
 import { McsApiRequestParameter } from './mcs-api-request-parameter';
 
 /**

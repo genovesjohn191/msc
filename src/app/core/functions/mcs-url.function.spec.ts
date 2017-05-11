@@ -1,4 +1,4 @@
-import { isUrlValid } from './url.function';
+import { isUrlValid } from './mcs-url.function';
 
 describe('Url Functions', () => {
   describe('isUrlValid()', () => {

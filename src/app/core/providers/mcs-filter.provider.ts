@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 @Injectable()
-export class FilterProvider {
+export class McsFilterProvider {
   private _filters: Map<string, any>;
   private _config: any;
 

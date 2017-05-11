@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 /** Services */
-import { AssetsProvider } from '../../core';
+import { McsAssetsProvider } from '../../core';
 
 @Component({
   selector: 'mcs-notifications',
@@ -17,7 +17,7 @@ export class NotificationsComponent implements OnInit {
   public spinnerIcon: string;
   public checkIcon: string;
 
-  public constructor(private _assetsProvider: AssetsProvider) {}
+  public constructor(private _assetsProvider: McsAssetsProvider) {}
 
   public ngOnInit() {
     this.totalNotificationsCount = 134;

@@ -1,14 +1,14 @@
 <div class="mcs-filter-selector">
   <a class="icon-link" mcsPopover #filterSelectorObj="mcsPopover"
-    placement="bottom" orientation="right" theme="light"
+    placement="bottom" orientation="right" theme="gray"
     [content]="filterSelectorContent"
     (hidden)="onCloseFilterSelector()">
     <i [ngClass]="iconClass"></i>
   </a>
 
   <ng-template #filterSelectorContent>
-    <span class="title">{{ filterTitle }}</span>
-    <div class="filters">
+    <span class="mcs-popover-title">{{ filterTitle }}</span>
+    <div class="mcs-popover-filters">
       <ul class="unstyled-list">
         <li *ngFor="let key of filterKeys">
           <mcs-checkbox [label]="filterItems[key].text"

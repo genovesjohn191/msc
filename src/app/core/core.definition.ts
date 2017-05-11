@@ -8,6 +8,23 @@ export class CoreDefinition {
   public static MOBILE_PORTRAIT_MAX_WIDTH = 543;
   public static MOBILE_PORTRAIT_MIN_WIDTH = 320;
 
+  /** Notifications */
+  public static NOTIFICATION_JOB_PENDING = 'Pending';
+  public static NOTIFICATION_JOB_ACTIVE = 'Active';
+  public static NOTIFICATION_JOB_TIMEDOUT = 'TimedOut';
+  public static NOTIFICATION_JOB_FAILED = 'Failed';
+  public static NOTIFICATION_JOB_CANCELLED = 'Cancelled';
+  public static NOTIFICATION_JOB_COMPLETED = 'Completed';
+  public static NOTIFICATION_MAX_DISPLAY = 3;
+  public static NOTIFICATION_ANIMATION_DELAY = 310;
+  public static NOTIFICATION_COMPLETED_TIMEDOUT = 3000;
+  public static NOTIFICATION_FAILED_TIMEDOUT = 5000;
+  public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 5000;
+
+  /** AppState Properties */
+  public static APPSTATE_USER_ID = 'UserId';
+  public static APPSTATE_ACCOUNT_ID = 'AccountId';
+
   /** Others */
   public static SEARCH_TIME = 2000;
   public static SERVER_LIST_MAX_ITEM_PER_PAGE = 10;

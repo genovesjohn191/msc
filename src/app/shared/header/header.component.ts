@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 /** Providers */
-import { AssetsProvider } from '../providers/assets.provider';
+import { McsAssetsProvider } from '../../core';
 
 @Component({
   selector: 'mcs-header',
@@ -15,7 +15,7 @@ import { AssetsProvider } from '../providers/assets.provider';
 export class HeaderComponent implements OnInit {
   public mcsLogo: string;
 
-  public constructor(private _assetsProvider: AssetsProvider) {
+  public constructor(private _assetsProvider: McsAssetsProvider) {
   }
 
   public ngOnInit() {

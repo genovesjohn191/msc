@@ -11,10 +11,10 @@ import {
 
 /** Services */
 import {
-  MscStorageService,
-  TextContentProvider,
-  AssetsProvider,
-  FilterProvider
+  McsStorageService,
+  McsTextContentProvider,
+  McsAssetsProvider,
+  McsFilterProvider
 } from '../../core';
 
 @Component({
@@ -38,11 +38,11 @@ export class FilterSelectorComponent implements OnInit {
   public iconClass: string;
 
   public constructor(
-    private _mcsStorageService: MscStorageService,
+    private _mcsStorageService: McsStorageService,
     private _elementReference: ElementRef,
-    private _textContentProvider: TextContentProvider,
-    private _assetsProvider: AssetsProvider,
-    private _filterProvider: FilterProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _assetsProvider: McsAssetsProvider,
+    private _filterProvider: McsFilterProvider
   ) {
     this.key = '';
     this.filterTitle = '';

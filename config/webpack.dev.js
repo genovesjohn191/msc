@@ -1,6 +1,6 @@
 const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); /** Used to merge webpack configs. */
-const webpackMergeDll = webpackMerge.strategy({plugins: 'replace'});
+const webpackMergeDll = webpackMerge.strategy({ plugins: 'replace' });
 const commonConfig = require('./webpack.common.js'); /** The settings that are common to prod and dev. */
 
 /** Webpack Plugins */
@@ -13,13 +13,17 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 /** Webpack Constants */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const API_URL = process.env.API_URL || 'api';
+const API_WEBSOCKET_HOST = process.env.API_WEBSOCKET_HOST || 'ws://localhost:15674/ws';
+const API_WEBSOCKET_ROUTE_PREFIX = process.env.API_WEBSOCKET_ROUTE_PREFIX || '';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
-const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
+const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   host: HOST,
   port: PORT,
   API_URL: API_URL,
+  API_WEBSOCKET_HOST: API_WEBSOCKET_HOST,
+  API_WEBSOCKET_ROUTE_PREFIX: API_WEBSOCKET_ROUTE_PREFIX,
   ENV: ENV,
   HMR: HMR
 });
@@ -33,7 +37,7 @@ const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
 module.exports = function (options) {
-  return webpackMerge(commonConfig({env: ENV}), {
+  return webpackMerge(commonConfig({ env: ENV }), {
 
     /**
      * Developer tool to enhance debugging
@@ -73,7 +77,7 @@ module.exports = function (options) {
        */
       sourceMapFilename: '[file].map',
 
-      /** 
+      /**
        * The filename of non-entry chunks as relative path
        * inside the output.path directory.
        *
@@ -130,12 +134,16 @@ module.exports = function (options) {
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
         'API_URL': JSON.stringify(METADATA.API_URL),
+        'API_WEBSOCKET_HOST': JSON.stringify(METADATA.API_WEBSOCKET_HOST),
+        'API_WEBSOCKET_ROUTE_PREFIX': JSON.stringify(METADATA.API_WEBSOCKET_ROUTE_PREFIX),
         'HMR': METADATA.HMR,
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
-          'API_URL' : JSON.stringify(METADATA.API_URL),
+          'API_URL': JSON.stringify(METADATA.API_URL),
+          'API_WEBSOCKET_HOST': JSON.stringify(METADATA.API_WEBSOCKET_HOST),
+          'API_WEBSOCKET_ROUTE_PREFIX': JSON.stringify(METADATA.API_WEBSOCKET_ROUTE_PREFIX)
         }
       }),
 
@@ -165,7 +173,7 @@ module.exports = function (options) {
           ]
         },
         dllDir: helpers.root('dll'),
-        webpackConfig: webpackMergeDll(commonConfig({env: ENV}), {
+        webpackConfig: webpackMergeDll(commonConfig({ env: ENV }), {
           devtool: 'cheap-module-source-map',
           plugins: []
         })

@@ -12,18 +12,20 @@ export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
 /** Providers */
-export * from './providers/environment.provider';
-export * from './providers/text-content.provider';
-export * from './providers/assets.provider';
-export * from './providers/filter.provider';
+export * from './providers/mcs-text-content.provider';
+export * from './providers/mcs-assets.provider';
+export * from './providers/mcs-filter.provider';
 /** Models */
 export * from './models/mcs-api-error-response';
 export * from './models/mcs-api-success-response';
 export * from './models/mcs-api-error';
-export * from './models/mcs-device-type';
 export * from './models/mcs-notification';
-export * from './models/mcs-notification-task';
 export * from './models/mcs-notification-config';
 /** Functions */
-export * from './functions/url.function';
-export * from './functions/element.function';
+export * from './functions/mcs-url.function';
+export * from './functions/mcs-element.function';
+export * from './functions/mcs-json.function';
+/** Enumerations */
+export * from './enumerations/mcs-connection-status.enum';
+export * from './enumerations/mcs-user-type.enum';
+export * from './enumerations/mcs-device-type.enum';

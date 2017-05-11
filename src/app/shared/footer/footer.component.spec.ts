@@ -3,10 +3,11 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-
 import { FooterComponent } from './footer.component';
-import { AssetsProvider } from '../providers/assets.provider';
-import { TextContentProvider } from '../providers/text-content.provider';
+import {
+  McsTextContentProvider,
+  McsAssetsProvider
+} from '../../core';
 
 describe('FooterComponent', () => {
 
@@ -33,8 +34,8 @@ describe('FooterComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: AssetsProvider, useValue: mockAssetsProvider },
-        { provide: TextContentProvider, useValue: mockTextContentProvider }
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
+        { provide: McsTextContentProvider, useValue: mockTextContentProvider }
       ]
     });
 
@@ -57,28 +58,28 @@ describe('FooterComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should call the getImagePath() of AssetsProvider',
-      inject([AssetsProvider], (assetsProvider: AssetsProvider) => {
+      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
         spyOn(assetsProvider, 'getImagePath');
         component.ngOnInit();
         expect(assetsProvider.getImagePath).toHaveBeenCalled();
       }));
 
     it('mcsLogo variable should not be equal to undefined, null, or empty',
-      inject([AssetsProvider], (assetsProvider: AssetsProvider) => {
+      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
         expect(component.mcsLogo).not.toEqual(undefined);
         expect(component.mcsLogo).not.toEqual(null);
         expect(component.mcsLogo).not.toEqual('');
       }));
 
     it('title variable should not be equal to undefined, null, or empty',
-      inject([AssetsProvider], (assetsProvider: AssetsProvider) => {
+      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
         expect(component.copyright).not.toEqual(undefined);
         expect(component.copyright).not.toEqual(null);
         expect(component.copyright).not.toEqual('');
       }));
 
     it('links variable should not be equal to undefined, null, or empty',
-      inject([AssetsProvider], (assetsProvider: AssetsProvider) => {
+      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
         expect(component.links).not.toEqual(undefined);
         expect(component.links).not.toEqual(null);
         expect(component.links).not.toEqual('');

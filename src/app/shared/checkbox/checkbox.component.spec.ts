@@ -3,9 +3,7 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import {
-  EventEmitter
-} from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { CheckboxComponent } from './checkbox.component';
 
 describe('CheckboxComponent', () => {
