@@ -25,8 +25,8 @@
           <li *ngFor="let notification of (notifications | mcsNotificationMaxDisplay)">
             <mcs-notification-ui [attribute]="notification"></mcs-notification-ui>
           </li>
-          <li>
-            <a class="icon-link view-all-notifications" (click)="viewNotificationsPage()">
+          <li class="view-all-notifications">
+            <a class="icon-link" (click)="viewNotificationsPage()">
               View all notifications
             </a>
           </li>

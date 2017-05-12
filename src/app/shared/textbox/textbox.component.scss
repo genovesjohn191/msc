@@ -1,10 +1,13 @@
 @import "../../../styles/shared/base";
 
+$textbox-icon-offset: $icon-small-font-size + 20;
+
 .mcs-textbox {
-  @include border-radius($input-border-radius); 
+  @include border-radius($input-border-radius);
   border: 1px solid $input-border-color;
   background-color: $input-background-color;
-  display: inline-flex;
+  @include display-inline-flex(row);
+  align-items: center;
   overflow: hidden;
   margin: 3px 0;
   @include breakpoint(small) {
@@ -17,7 +20,7 @@
 
   input {
     border: none;
-    width: 100%;
+    width: calc(100% - #{$textbox-icon-offset + px});
 
     &.has-icon {
       padding-right: 0;
@@ -25,7 +28,8 @@
   }
 
   .fa {
-    margin: auto 10px;
+    padding: 0 $space-small;
     color: $color-black;
+    @include font-size($icon-small-font-size);
   }
 }

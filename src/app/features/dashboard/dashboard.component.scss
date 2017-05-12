@@ -14,5 +14,10 @@
 
   > .content {
     padding-top: 10px;
+
+    .textbox-content {
+      max-width: 300px;
+      word-wrap: break-word;
+    }
   }
 }

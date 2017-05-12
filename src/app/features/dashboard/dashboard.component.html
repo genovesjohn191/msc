@@ -17,14 +17,6 @@
     </div>
   </div>
   <div class="row">
-    <ng-template #popoverTitle>
-      <span>Popover Title</span>
-    </ng-template>
-    <ng-template #popoverContent>
-      <mcs-textbox name="textIcon" icon="search" placeholder="Type to search..."></mcs-textbox>
-      <mcs-button size="small" width="200">Search</mcs-button>
-    </ng-template>
-
     <div class="col">
       <div class="dashboard-container-item">
         <span class="title">Popover Top and Bottom Implementation Example</span>
@@ -47,17 +39,26 @@
 
     <div class="col">
       <div class="dashboard-container-item">
+        <ng-template #popoverSideTitle>
+          <span>Here is the title</span>
+        </ng-template>
+        <ng-template #popoverSideContent>
+          <mcs-textbox name="textIcon" icon="search" width="200"
+            placeholder="Type to search..."></mcs-textbox><br/>
+        </ng-template>
+
         <span class="title">Popover Left and Right Implementation Example</span>
         <div class="content">
           <small><em>Popover left placement and bottom orientation</em></small> <br/>
           <mcs-button mcsPopover
-            theme="dark" trigger="manual"
-            [title]="popoverTitle" [content]="popoverContent"
+            theme="dark" trigger="manual" maxWidth="300px"
+            [title]="popoverSideTitle" [content]="popoverSideContent"
             placement="left" orientation="bottom">LeftBottom</mcs-button><br/>
 
           <small><em>Popover right placement and top orientation</em></small> <br/>
-          <mcs-button mcsPopover #popoverRight="mcsPopover"
-            [title]="popoverTitle" [content]="popoverContent"
+          <mcs-button mcsPopover
+            theme="light" trigger="manual" maxWidth="300px"
+            [title]="popoverSideTitle" [content]="popoverSideContent"
             placement="right" orientation="top">RightTop</mcs-button><br/>
         </div>
       </div>
@@ -65,17 +66,26 @@
 
     <div class="col">
       <div class="dashboard-container-item">
+        <ng-template #popoverTitle>
+          <span>Popover Title</span>
+        </ng-template>
+        <ng-template #popoverContent>
+          <mcs-textbox name="textIcon" icon="search" width="200"
+          placeholder="Type to search..."></mcs-textbox><br/>
+          <mcs-button size="small" width="200">Search</mcs-button>
+        </ng-template>
+
         <span class="title">Popover Top and Bottom Implementation Example</span>
         <div class="content">
           <small><em>Popover top placement and left orientation</em></small> <br/>
           <mcs-button mcsPopover
-            theme="dark" trigger="manual"
+            theme="dark" trigger="manual" maxWidth="300px"
             [title]="popoverTitle" [content]="popoverContent"
             placement="top" orientation="left">TopLeft</mcs-button><br/>
 
           <small><em>Popover bottom placement and right orientation</em></small> <br/>
           <mcs-button mcsPopover
-            theme="light" trigger="manual"
+            theme="light" trigger="manual" maxWidth="300px"
             [title]="popoverTitle" [content]="popoverContent"
             placement="bottom" orientation="right">BottomRight</mcs-button><br/>
         </div>
@@ -252,7 +262,9 @@
             <label for="textModel"><strong>Textbox w/ Model Binding</strong></label> <br/>
             <mcs-textbox name="textModel" icon="search" width="300"
               [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
-            <pre>Textbox Value : {{ textboxValue }}</pre>
+            <div class="textbox-content">
+                Textbox Value : {{ textboxValue }}
+            </div>
             <br/>
 
             <label for="textSearch"><strong>Textbox w/ Spinner</strong></label> <br/>

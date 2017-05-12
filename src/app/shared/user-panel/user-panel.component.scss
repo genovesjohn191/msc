@@ -83,8 +83,8 @@
     &.no-notifications,
     &.error-connection {
       cursor: default;
+      text-align: center;
       span {
-        margin: auto;
         font-family: $base-font;
         @include font-size($font-size-default);
       }
@@ -93,10 +93,12 @@
       color: $color-red-00;
     }
 
-    .view-all-notifications {
-      margin: auto;
-      font-family: $base-font-bold;
-      @include font-size($font-size-default);
+    &.view-all-notifications {
+      text-align: center;
+      a {
+        font-family: $base-font-bold;
+        @include font-size($font-size-default);
+      }
     }
   }
 }
