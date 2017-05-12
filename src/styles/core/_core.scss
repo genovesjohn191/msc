@@ -107,6 +107,10 @@ html {
       }
     }
 
+    input::-ms-clear{
+      display: none;
+    }
+
     button, button.btn {
       font-family: $button-font;
       font-size: $button-font-size;

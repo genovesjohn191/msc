@@ -30,9 +30,6 @@ export class FilterSelectorComponent implements OnInit {
   @Output()
   public onGetFilters: EventEmitter<any>;
 
-  @ViewChild('filterSelectorObj')
-  public filterSelectorObj: any;
-
   public filterItems: any;
   public filterTitle: string;
   public iconClass: string;
@@ -60,13 +57,6 @@ export class FilterSelectorComponent implements OnInit {
   public onCloseFilterSelector() {
     this._mcsStorageService.setItem(this.key, this.filterItems);
     this.onGetFilters.emit(this.filterItems);
-  }
-
-  @HostListener('document:click', ['$event.target'])
-  public onClickOutside(target): void {
-    if (!this._elementReference.nativeElement.contains(target)) {
-      this.filterSelectorObj.close();
-    }
   }
 
   public get filterKeys(): any {

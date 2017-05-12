@@ -93,9 +93,6 @@ describe('FilterSelectorComponent', () => {
       component = fixture.componentInstance;
       component.key = 'myKey';
       component.onGetFilters = new EventEmitter();
-      component.filterSelectorObj = {
-        close() { return; }
-      };
     });
   }));
 
@@ -164,14 +161,5 @@ describe('FilterSelectorComponent', () => {
       component.onCloseFilterSelector();
       expect(component.onGetFilters.emit).toHaveBeenCalled();
     });
-  });
-
-  describe('onClickOutside()', () => {
-    it('should call the close() of filterSelectorObj 1 time',
-      inject([ElementRef], (elementRef: ElementRef) => {
-        spyOn(component.filterSelectorObj, 'close');
-        component.onClickOutside(null);
-        expect(component.filterSelectorObj.close).toHaveBeenCalledTimes(1);
-      }));
   });
 });
