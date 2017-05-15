@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 /** Services/Providers */
 import {
   McsAssetsProvider,
+  McsTextContentProvider,
   McsNotification,
   McsNotificationContextService,
   CoreDefinition,
@@ -33,10 +34,12 @@ export class UserPanelComponent implements OnInit {
   public notifications: McsNotification[];
   public hasConnectionError: boolean;
   public statusIconClass: string;
+  public notificationTextContent: any;
   private _popoverInstance: any;
 
   public constructor(
     private _assetsProvider: McsAssetsProvider,
+    private _textContent: McsTextContentProvider,
     private _router: Router,
     private _notificationContext: McsNotificationContextService,
     private _browserService: McsBrowserService,
@@ -52,6 +55,7 @@ export class UserPanelComponent implements OnInit {
     this.bellIcon = this._assetsProvider.getIcon('bell');
     this.userIcon = this._assetsProvider.getIcon('user');
     this.caretRightIcon = this._assetsProvider.getIcon('caret-right');
+    this.notificationTextContent = this._textContent.content.header.userPanel.notifications;
 
     // Subscribe to notification changes
     this._notificationContext.notificationsStream
