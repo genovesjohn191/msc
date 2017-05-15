@@ -14,7 +14,8 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const API_URL = process.env.API_URL || 'api';
 const API_WEBSOCKET_HOST = process.env.API_WEBSOCKET_HOST || 'ws://localhost:15674/ws';
-const API_WEBSOCKET_ROUTE_PREFIX = process.env.API_WEBSOCKET_ROUTE_PREFIX || '';
+const API_WEBSOCKET_ROUTE_PREFIX = process.env.API_WEBSOCKET_ROUTE_PREFIX ||
+  'mcs.portal.notification';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');

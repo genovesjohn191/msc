@@ -124,11 +124,7 @@ export class McsNotificationJobService {
     accountId = this._appState.get(CoreDefinition.APPSTATE_ACCOUNT_ID);
 
     // Create queue string based on the route prefix of the notification
-    if (this._coreConfig.notification.routePrefix) {
-      queueString = `${this._coreConfig.notification.routePrefix}.job.${accountId}`;
-    } else {
-      queueString = `job.${accountId}`;
-    }
+    queueString = `/topic/${this._coreConfig.notification.routePrefix}.job.${accountId}`;
     return queueString;
   }
 

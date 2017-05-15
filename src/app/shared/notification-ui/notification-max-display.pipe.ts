@@ -8,7 +8,8 @@ import {
 } from '../../core';
 
 @Pipe({
-  name: 'mcsNotificationMaxDisplay'
+  name: 'mcsNotificationMaxDisplay',
+  pure: false
 })
 
 export class NotificationMaxDisplayPipe implements PipeTransform {

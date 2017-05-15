@@ -13,6 +13,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { UserPanelComponent } from './user-panel.component';
 import {
   McsAssetsProvider,
+  McsTextContentProvider,
   McsNotification,
   McsNotificationContextService,
   McsNotificationJobService,
@@ -54,6 +55,7 @@ describe('UserPanelComponent', () => {
       ],
       providers: [
         McsNotificationContextService,
+        McsTextContentProvider,
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
         { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         { provide: McsBrowserService, useValue: mockMcsBrowserService }

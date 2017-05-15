@@ -110,7 +110,7 @@ export class AppModule {
   ) {
     // TODO: Temporary Set UserId and AccountId
     appState.set(CoreDefinition.APPSTATE_USER_ID, 'F500120501');
-    appState.set(CoreDefinition.APPSTATE_ACCOUNT_ID, 'Development');
+    appState.set(CoreDefinition.APPSTATE_ACCOUNT_ID, 'accountid');
   }
 
   public hmrOnInit(store: StoreType) {

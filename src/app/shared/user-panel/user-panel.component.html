@@ -10,24 +10,24 @@
     </a>
 
     <ng-template #notificationsTitle>
-      <span class="mcs-notification-title">Notifications</span>
+      <span class="mcs-notification-title">{{ notificationTextContent.title }}</span>
     </ng-template>
 
     <ng-template #notificationsContent>
       <div class="mcs-notification-content">
         <ul class="unstyled-list">
           <li class="no-notifications" *ngIf="notifications.length == 0 && !hasConnectionError">
-            <span>Nothing new to report.</span>
+            <span>{{ notificationTextContent.noRecord }}</span>
           </li>
           <li class="error-connection" *ngIf="hasConnectionError">
-            <span>Notification server connection error.</span>
+            <span>{{ notificationTextContent.connectionError }}</span>
           </li>
           <li *ngFor="let notification of (notifications | mcsNotificationMaxDisplay)">
             <mcs-notification-ui [attribute]="notification"></mcs-notification-ui>
           </li>
           <li class="view-all-notifications">
             <a class="icon-link" (click)="viewNotificationsPage()">
-              View all notifications
+              {{ notificationTextContent.viewMore }}
             </a>
           </li>
         </ul>

@@ -54,6 +54,16 @@
   "others": {
     "title": "Macquarie Portal - Others"
   },
+  "header": {
+    "userPanel": {
+      "notifications": {
+        "title": "Notifications",
+        "noRecord": "Nothing new to report",
+        "connectionError": "Notification server connection error",
+        "viewMore": "View More"
+      }
+    }
+  },
   "footer": {
     "copyright": "Copyright 2016 Macquarie Telecom Group",
     "links": {
