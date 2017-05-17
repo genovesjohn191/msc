@@ -28,4 +28,10 @@ export class CoreDefinition {
   /** Others */
   public static SEARCH_TIME = 2000;
   public static SERVER_LIST_MAX_ITEM_PER_PAGE = 10;
+  public static DEFAULT_VIEW_REFRESH_TIME = 50;
+
+  /** Server States */
+  public static SERVER_STATE_STOPPED = 'stopped';
+  public static SERVER_STATE_RUNNING = 'running';
+  public static SERVER_STATE_RESTARTING = 'restarting';
 }

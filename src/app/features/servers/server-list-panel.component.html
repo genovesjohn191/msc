@@ -1,0 +1,23 @@
+<div class="server-list-panel" #serverListPanel>
+  <div class="search-box" #searchBox>
+    <mcs-textbox name="filter" icon="search" placeholder="Search"
+    [ngModel]="keyword" (ngModelChange)="onFilter($event)" width="300"></mcs-textbox>
+  </div>
+  <ul id="serverListTree" class="server-list-tree" role="tablist" aria-multiselectable="true" #serverListTree>
+    <li *ngFor="let vdc of servers; let i = index">
+      <a class="vdc-name" [ngClass]="{'active-vdc': vdc.selected, 'collapsed': !vdc.selected}"
+        data-toggle="collapse" data-parent="#serverListTree" href="#serverList{{ i + 1 }}"
+        [attr.aria-expanded]="vdc.selected" [attr.aria-controls]="'serverList' + (i + 1)">
+        {{ vdc.vdcName }} <i [ngClass]="caretDown"></i>
+      </a>
+      <div id="serverList{{ i + 1 }}" class="collapse servers" role="tabpanel"
+        [ngClass]="{'show': vdc.selected}">
+        <div class="server-name" *ngFor="let server of vdc.servers">
+          <a [ngClass]="{'active-server': server.selected}">
+            <i [ngClass]="serverState"></i> {{ server.managementName }}
+          </a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

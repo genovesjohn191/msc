@@ -1,0 +1,73 @@
+@import "../../../styles/shared/base";
+
+.server-list-panel {
+  position: static;
+  width: 100%;
+  max-height: 100vh;
+
+  &.sticky {
+    position: fixed;
+    top: 0;
+  }
+
+  .search-box {
+    margin-bottom: $space-medium;
+  }
+
+  .server-list-tree {
+    padding-left: 0;
+    list-style: none;
+    overflow: auto;
+    height: 100%;
+
+    li {
+      margin-bottom: 15px;
+
+      .vdc-name {
+        @include display-flex(row);
+        align-items: flex-end;
+        justify-content: space-between;
+        text-decoration: none;
+        padding-left: 15px;
+        padding-right: $space-small;
+        margin-bottom: $space-small;
+        @include font-size($vdc-name-font-size, $vdc-name-line-height);
+
+        &.active-vdc {
+          font-family: $base-font-bold;
+        }
+
+        &.collapsed {
+          i {
+            @include transform(-90);
+          }
+        }
+      }
+
+      .servers {
+        border-left: 1px solid $color-primary-01;
+        padding: 0 15px;
+        margin: 5px 0 10px 25px;
+        
+        .server-name {
+          margin: 0;
+          padding: 5px 0;
+
+          a {
+            @include font-size($link-small-font-size);
+            color: $color-grey-03;
+
+            &:hover {
+              color: $color-primary-00;
+            }
+
+            &.active-server {
+              font-family: $base-font-bold;
+              color: $color-black;
+            }
+          }
+        }
+      }
+    }
+  }
+}
