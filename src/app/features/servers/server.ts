@@ -35,4 +35,5 @@ export class Server {
   public lastUpdate: Date;
   public dateCompleted: Date;
   public dateInstalled: Date;
+  public selected: boolean;
 }

@@ -3,7 +3,7 @@ import {
   OnInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Server } from '../../';
+import { Server } from '../../server';
 import { McsTextContentProvider } from '../../../../core';
 
 @Component({
@@ -22,7 +22,7 @@ export class ServerManagementComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.server = this._route.parent.snapshot.data.server;
+    this.server = this._route.parent.snapshot.data.server.content;
     this.serverManagementTextContent = this._textProvider.content.servers.server.management;
   }
 

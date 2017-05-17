@@ -16,6 +16,7 @@
     "empty-box": "fa fa-square-o",
     "circle": "fa fa-circle",
     "caret-right": "fa fa-caret-right",
+    "caret-down": "fa fa-caret-down",
     "play": "fa fa-play",
     "check-box-2": "fa fa-check-square-o",
     "close": "fa fa-close",
@@ -25,7 +26,8 @@
     "text-spinner": "mcs-text-spinner",
     "spinner": "fa fa-spinner fa-pulse",
     "sign-out": "fa fa-sign-out",
-    "user": "fa fa-user-o"
+    "user": "fa fa-user-o",
+    "server-state": "fa fa-sun-o"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

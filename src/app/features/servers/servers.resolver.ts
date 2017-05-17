@@ -3,14 +3,14 @@ import {
   Resolve,
   ActivatedRouteSnapshot
 } from '@angular/router';
-import { ServersService } from '../servers.service';
+import { ServersService } from './servers.service';
 
 @Injectable()
-export class ServerResolver implements Resolve<any> {
+export class ServersResolver implements Resolve<any> {
 
   constructor(private _serversService: ServersService) {}
 
   public resolve(route: ActivatedRouteSnapshot) {
-    return this._serversService.getServer(route.params['id']);
+    return this._serversService.getServers();
   }
 }

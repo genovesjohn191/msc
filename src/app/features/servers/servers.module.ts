@@ -2,20 +2,22 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 /** Servers Feature */
 import { routes } from './servers.routes';
-import {
-  ServersComponent,
-  ServerComponent,
-  ServerManagementComponent,
-  ServerServicesComponent,
-  ServerBackupsComponent,
-  ServersService
-} from './';
+/** Servers */
+import { ServersComponent } from './servers.component';
+import { ServerListPanelComponent } from './server-list-panel.component';
+import { ServerComponent } from './server/server.component';
+import { ServerManagementComponent } from './server/management/server-management.component';
+import { ServerServicesComponent } from './server/services/server-services.component';
+import { ServerBackupsComponent } from './server/backups/server-backups.component';
+/** Service */
+import { ServersService } from './servers.service';
 /** Modules */
 import { SharedModule } from '../../shared';
 
 @NgModule({
   declarations: [
     ServersComponent,
+    ServerListPanelComponent,
     ServerComponent,
     ServerManagementComponent,
     ServerServicesComponent,
@@ -27,6 +29,7 @@ import { SharedModule } from '../../shared';
   ],
   exports: [
     ServersComponent,
+    ServerListPanelComponent,
     ServerComponent,
     ServerManagementComponent,
     ServerServicesComponent,

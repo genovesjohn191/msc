@@ -8,7 +8,7 @@ import {
   ActivatedRoute,
   Data
 } from '@angular/router';
-import { Server } from '../../';
+import { Server } from '../../server';
 import { McsTextContentProvider } from '../../../../core';
 
 describe('ServerManagementComponent', () => {
@@ -27,7 +27,9 @@ describe('ServerManagementComponent', () => {
     parent: {
       snapshot: {
         data: {
-          server: 'server details'
+          server: {
+            content: 'server details'
+          }
         }
       }
     }
@@ -67,7 +69,7 @@ describe('ServerManagementComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should set the value of server', () => {
+    it('should get the server details from activated route snapshot data', () => {
       component.ngOnInit();
       expect(component.server).toBeDefined();
     });
