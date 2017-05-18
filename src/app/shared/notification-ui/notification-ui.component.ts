@@ -20,7 +20,8 @@ import {
   McsAssetsProvider,
   McsNotification,
   McsNotificationContextService,
-  CoreDefinition
+  CoreDefinition,
+  formatDate
 } from '../../core';
 
 @Component({
@@ -99,8 +100,7 @@ export class NotificationUiComponent implements OnInit, OnChanges {
   public getStartTime(): string {
     let time: string;
     if (this.attribute.startedOn) {
-      time = this.attribute.startedOn.toLocaleTimeString(
-        navigator.language, { hour: '2-digit', minute: '2-digit' });
+      time = formatDate(this.attribute.startedOn, 'LT');
     } else {
       time = '';
     }

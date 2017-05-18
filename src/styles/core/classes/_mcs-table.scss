@@ -39,7 +39,7 @@ table.mcs-table {
   tr {
 
     &:nth-of-type(even) {
-      background-color: $color-grey-07; 
+      background-color: $color-grey-07;
     }
 
     %border-override {
@@ -54,7 +54,6 @@ table.mcs-table {
     td {
       @extend %border-override;
       vertical-align: middle;
-      position: relative;
       word-break: break-word;
       @include breakpoint(medium) {
         padding: $space-small;

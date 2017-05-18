@@ -1,82 +1,78 @@
 <section class="notifications-container">
   <div class="mcs-page-title bordered-bottom">
     <div class="main-title">
-      <h2>Notifications</h2>
+      <h2>{{ notificationsTextContent.header }}</h2>
     </div>
     <div class="notifications-count">
-      <span>{{ totalNotificationsCount }} Notifications</span>
+      <span>{{ totalNotificationsCount }} {{ notificationsTextContent.header }}</span>
     </div>
   </div>
 
-  <div class="filter">
-    <div class="mcs-search">
-      <mcs-textbox name="search" width="350" placeholder="Type to filter..."></mcs-textbox>
-    </div>
-  </div>
+  <span class="notifications-description">
+    {{ notificationsTextContent.description }}
+  </span>
 
-  <table class="mcs-table table notifications-table">
+  <mcs-textbox name="search" [ngModel]="keyword"
+    (ngModelChange)="onSearchEvent($event)" width="350"
+    placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
+
+  <table class="mcs-table table">
     <thead class="head">
       <tr>
-        <th class="text-center">Status</th>
-        <th>User</th>
-        <th>Notification</th>
-        <th>Start Time</th>
-        <th>Completed</th>
-        <th class="text-center">VDC</th>
+        <th class="text-center">{{ notificationsTextContent.tableHeader.status }}</th>
+        <th>{{ notificationsTextContent.tableHeader.user }}</th>
+        <th>{{ notificationsTextContent.tableHeader.notification }}</th>
+        <th>{{ notificationsTextContent.tableHeader.startTime }}</th>
+        <th>{{ notificationsTextContent.tableHeader.completed }}</th>
+        <th class="text-center">{{ notificationsTextContent.tableHeader.vdc }}</th>
       </tr>
     </thead>
     <tbody>
-     <tr>
-       <td class="text-center"><i [ngClass]="spinnerIcon"></i></td>
-       <td>Shaun Domingo</td>
-       <td class="notification">Restoring snapshot for server mongo-db-prod</td>
-       <td>8:14:23am, Thu 8 Dec, 2016</td>
-       <td>In Progress</td>
-       <td>M2VDC27117006</td>
-     </tr>
-
-     <tr>
-       <td class="text-center"><i [ngClass]="spinnerIcon"></i></td>
-       <td>Keshbin Bajracharya</td>
-       <td class="notification">Deploying new VM app-server-prod</td>
-       <td>8:14:23am, Thu 8 Dec, 2016</td>
-       <td>In Progress</td>
-       <td>M2VDC27117006</td>
-     </tr>
-
-     <tr>
-       <td class="text-center"><i [ngClass]="checkIcon"></i></td>
-       <td>Shaun Domingo</td>
-       <td class="notification">Restoring app-server-restored</td>
-       <td>8:14:23am, Thu 8 Dec, 2016</td>
-       <td>8:20:03am, Thu 8 Dec, 2016</td>
-       <td>M2VDC27117006</td>
-     </tr>
-
-     <tr>
-       <td class="text-center"><i [ngClass]="checkIcon"></i></td>
-       <td>Shaun Domingo</td>
-       <td class="notification">Deploying new VM staging-all-in-one</td>
-       <td>8:14:23am, Thu 8 Dec, 2016</td>
-       <td>8:20:03am, Thu 8 Dec, 2016</td>
-       <td>M2VDC27117006</td>
-     </tr>
-
-     <tr>
-       <td class="text-center"><i [ngClass]="checkIcon"></i></td>
-       <td>Shaun Domingo</td>
-       <td class="notification">Removing 3-tier-all-in-one</td>
-       <td>8:14:23am, Thu 8 Dec, 2016</td>
-       <td>8:20:03am, Thu 8 Dec, 2016</td>
-       <td>M2VDC27117006</td>
-     </tr>
+      <tr *ngFor="let notification of notifications">
+        <td class="text-center align-top">
+          <i [ngClass]="getIconClass(notification.status)"></i>
+        </td>
+        <td class="text-left align-top">
+          {{ notification.ownerName }}
+        </td>
+        <td class="text-left align-top">
+          <a href="#">
+            <u>
+              {{ notification.description }}<br/>
+              {{ notification.summaryInformation }}
+            </u>
+          </a>
+        </td>
+        <td class="text-left align-top">
+          {{ convertDateTimeToString(notification.startedOn) }}
+        </td>
+        <td class="text-left align-top">
+          {{ convertDateTimeToString(notification.endedOn) }}
+        </td>
+        <td class="text-left align-top">
+          <!--TODO: Set the actual VDC here:-->
+          M2VDC27117006
+        </td>
+      </tr>
     </tbody>
     <tfoot>
     </tfoot>
   </table>
-  
-  <div class="paging text-center">
-    <!--TODO: Remove comment when paging specs is already finalized-->
-    <a>More <i class="fa fa-angle-down"></i></a>
+
+  <div class="status-information">
+    <div *ngIf="isLoading && !errorMessage">
+      <i [ngClass]="getSpinnerClass()"></i>
+       {{ notificationsTextContent.loading }}
+    </div>
+    <a *ngIf="(getDisplayServerCount() < totalNotificationsCount) && !isLoading"
+      (click)="onClickMoreEvent()">{{ notificationsTextContent.viewMore }}
+      <i class="fa fa-angle-down"></i>
+    </a>
+    <span *ngIf="totalNotificationsCount === 0 && !isLoading && !errorMessage">
+      {{ notificationsTextContent.noRecordFound }}
+    </span>
+    <span *ngIf="errorMessage" class="text-color-error">
+      {{ notificationsTextContent.connectionError }}
+    </span>
   </div>
 </section>

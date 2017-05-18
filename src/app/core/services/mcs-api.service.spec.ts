@@ -21,7 +21,7 @@ import {
 import { ResponseOptions } from '@angular/http';
 import { CoreConfig } from '../core.config';
 import { McsApiService } from './mcs-api.service';
-import { McsApiRequestParameter } from './mcs-api-request-parameter';
+import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
 
 describe('McsApiService', () => {
 

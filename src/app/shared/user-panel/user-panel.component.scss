@@ -95,6 +95,8 @@
 
     &.view-all-notifications {
       text-align: center;
+      cursor: default;
+      display: inline-block;
       a {
         font-family: $base-font-bold;
         @include font-size($font-size-default);

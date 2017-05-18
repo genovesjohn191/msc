@@ -6,41 +6,41 @@ import {
   McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  McsApiRequestParameter
+  McsApiRequestParameter,
+  McsNotification,
+  reviverParser
 } from '../../core/';
-import { Server } from './server';
 
-/**
- * Servers Services Class
- */
 @Injectable()
-export class ServersService {
+export class NotificationsService {
 
   constructor(private _mcsApiService: McsApiService) { }
 
   /**
-   * Get Servers (MCS API Response)
-   * @param page Page Number
-   * @param perPage Count per page
-   * @param serverName Server name filter
+   *
+   * // TODO AP: get the actual notifications
    */
-  public getServers(
+  public getNotifications(
     page?: number,
     perPage?: number,
-    serverName?: string): Observable<McsApiSuccessResponse<Server[]>> {
+    searchKeyword?: string): Observable<McsApiSuccessResponse<McsNotification[]>> {
 
     let searchParams: URLSearchParams = new URLSearchParams();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('server_name', serverName);
+    searchParams.set('search_keyword', searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers';
+    mcsApiRequestParameter.endPoint = '/jobs';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        return response.json() as McsApiSuccessResponse<Server[]>;
+        let notificationsJobResponse: McsApiSuccessResponse<McsNotification[]>;
+        notificationsJobResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsNotification[]>;
+
+        return notificationsJobResponse;
       })
       .catch((error: Response | any) => {
         let mcsApiErrorResponse: McsApiErrorResponse;
@@ -57,14 +57,17 @@ export class ServersService {
       });
   }
 
-  public getServer(id: any): Observable<McsApiSuccessResponse<Server>> {
-
+  public getNotification(id: any): Observable<McsApiSuccessResponse<McsNotification>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/' + id;
+    mcsApiRequestParameter.endPoint = '/job/' + id;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        return response.json() as McsApiSuccessResponse<Server>;
+        let notificationsJobResponse: McsApiSuccessResponse<McsNotification[]>;
+        notificationsJobResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsNotification[]>;
+
+        return notificationsJobResponse;
       })
       .catch((error: Response | any) => {
         let mcsApiErrorResponse: McsApiErrorResponse;

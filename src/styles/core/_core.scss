@@ -172,3 +172,18 @@ html {
   padding: 0;
   list-style: none;
 }
+
+.text-color-success,
+.text-color-completed {
+  color: $color-green-00;
+}
+
+.text-color-error,
+.text-color-failed,
+.text-color-cancelled {
+  color: $color-red-00;
+}
+
+.text-color-active {
+  color: $color-black;
+}
