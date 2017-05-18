@@ -51,6 +51,23 @@
   "catalog": {
     "title": "Macquarie Portal - Catalog"
   },
+  "notifications": {
+    "title": "Macquarie Portal - Notifications",
+    "header": "Notifications",
+    "description": "Notifications play back and track activity within the portal.",
+    "tableHeader": {
+      "status": "Status",
+      "user": "User",
+      "notification": "Notification",
+      "startTime": "Start Time",
+      "completed": "Completed",
+      "vdc": "VDC"
+    },
+    "noRecordFound": "No record found",
+    "connectionError": "Notifications job connection error.",
+    "loading": "Loading...",
+    "viewMore": "More"
+  },
   "others": {
     "title": "Macquarie Portal - Others"
   },

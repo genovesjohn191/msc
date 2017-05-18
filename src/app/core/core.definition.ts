@@ -25,9 +25,14 @@ export class CoreDefinition {
   public static APPSTATE_USER_ID = 'UserId';
   public static APPSTATE_ACCOUNT_ID = 'AccountId';
 
+  /** Server Page */
+  public static SERVER_LIST_MAX_ITEM_PER_PAGE = 10;
+
+  /** Notification Page */
+  public static NOTIFICATION_MAX_ITEM_PER_PAGE = 10;
+
   /** Others */
   public static SEARCH_TIME = 2000;
-  public static SERVER_LIST_MAX_ITEM_PER_PAGE = 10;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
 
   /** Server States */

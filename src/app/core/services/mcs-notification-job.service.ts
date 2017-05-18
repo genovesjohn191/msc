@@ -6,6 +6,9 @@ import { CoreDefinition } from '../core.definition';
 import { AppState } from '../../app.service';
 import { reviverParser } from '../functions/mcs-json.function';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
+import { McsApiService } from './mcs-api.service';
+import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
+import { McsApiSuccessResponse } from '../models/mcs-api-success-response';
 
 /**
  * MCS notification job service
@@ -42,11 +45,17 @@ export class McsNotificationJobService {
 
   constructor(
     private _coreConfig: CoreConfig,
-    private _appState: AppState
+    private _appState: AppState,
+    private _apiService: McsApiService
   ) {
     this._notificationStream = new BehaviorSubject<McsNotification>(new McsNotification());
     this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
       (McsConnectionStatus.Success);
+
+    // Obtain all notifications from API call initially
+    this._getAllNotificationsFromApi();
+
+    // Initialize websocket to connect with the real time update of notifications
     this._initializeWebsocket();
   }
 
@@ -57,6 +66,23 @@ export class McsNotificationJobService {
     if (this._websocketClient) {
       this._websocketClient.unsubscribe();
     }
+  }
+
+  private _getAllNotificationsFromApi() {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/jobs';
+
+    return this._apiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        return response.json() as McsApiSuccessResponse<McsNotification[]>;
+      })
+      .subscribe((notifications) => {
+        if (notifications.content) {
+          for (let notification of notifications.content) {
+            this._updateNotification(JSON.stringify(notification));
+          }
+        }
+      });
   }
 
   private _initializeWebsocket() {

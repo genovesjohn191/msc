@@ -14,7 +14,7 @@
         (ngModelChange)="onSearchEvent($event)" width="350"
         placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
 
-      <mcs-filter-selector class="hidden-small" key="serverListingFilter" 
+      <mcs-filter-selector class="hidden-small" key="serverListingFilter"
         (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
     </div>
 
@@ -90,22 +90,20 @@
           <a [ngClass]="gear"></a>
         </td>
       </tr>
-      <div *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
     </tbody>
     <tfoot>
     </tfoot>
   </table>
-  
+
   <div class="paging text-center">
     <!--TODO: Remove comment when paging specs is already finalized-->
 
-    <!--<a *ngIf="(getDisplayServerCount() < totalServerCount) && isLoaded" 
-      (click)="onClickMoreEvent()">More 
+    <!--<a *ngIf="(getDisplayServerCount() < totalServerCount) && isLoaded"
+      (click)="onClickMoreEvent()">More
       <i class="fa fa-angle-down"></i>
     </a>-->
     <span *ngIf="!isLoaded">Loading...</span>
-    <span *ngIf="totalServerCount === 0 && isLoaded">No server found.</span>
+    <span *ngIf="totalServerCount === 0 && isLoaded && !errorMessage">No server found.</span>
+    <span *ngIf="errorMessage" class="text-color-error">Server connection error.</span>
   </div>
 </section>

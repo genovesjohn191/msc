@@ -6,10 +6,12 @@ import { NotificationsComponent } from './notifications.component';
 import { routes } from './notifications.routes';
 /** Modules */
 import { SharedModule } from '../../shared';
+/** Services */
+import { NotificationsService } from './notifications.service';
 
 @NgModule({
   declarations: [
-    NotificationsComponent,
+    NotificationsComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -18,6 +20,9 @@ import { SharedModule } from '../../shared';
   exports: [
     NotificationsComponent,
     RouterModule
+  ],
+  providers: [
+    NotificationsService
   ]
 })
 

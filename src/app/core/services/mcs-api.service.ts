@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { CoreConfig } from '../core.config';
 import { isUrlValid } from '../functions/mcs-url.function';
-import { McsApiRequestParameter } from './mcs-api-request-parameter';
+import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
 
 /**
  * Macquarie Portal Api Service class

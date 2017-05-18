@@ -1,6 +1,6 @@
 <div class="mcs-user-panel">
   <aside class="notification">
-    <a class="icon-link" mcsPopover #instance="mcsPopover" (click)="setPopoverInstance(instance)"
+    <a class="icon-link" mcsPopover #popoverInstance="mcsPopover"
       (onClose)="onCloseNotificationPanel()" maxWidth="350px" padding="none"
       placement="bottom" orientation="center" theme="light"
       [title]="notificationsTitle" [content]="notificationsContent">
@@ -23,7 +23,8 @@
             <span>{{ notificationTextContent.connectionError }}</span>
           </li>
           <li *ngFor="let notification of (notifications | mcsNotificationMaxDisplay)">
-            <mcs-notification-ui [attribute]="notification"></mcs-notification-ui>
+            <mcs-notification-ui *ngIf="popoverInstance.componentRef"
+              [attribute]="notification"></mcs-notification-ui>
           </li>
           <li class="view-all-notifications">
             <a class="icon-link" (click)="viewNotificationsPage()">

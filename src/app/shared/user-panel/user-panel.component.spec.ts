@@ -37,7 +37,6 @@ describe('UserPanelComponent', () => {
       return icons[key];
     }
   };
-  let mcsNotificationContextService: McsNotificationContextService;
   let mockMcsNotificationJobService = {
     notificationStream: new Subject<McsNotification>(),
     connectionStatusStream: new Subject<McsConnectionStatus>()

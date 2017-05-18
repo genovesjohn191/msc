@@ -2,14 +2,15 @@
 
 .notifications-container {
   position: relative;
+  @include display-flex(column);
 
-  .notifications-table {
-    tr {
-      td {
-        &.notification {
-          text-decoration: underline;
-        }
-      }
-    }
+  .notifications-description {
+    margin-bottom: $space-large;
+  }
+
+  .status-information {
+    display: block;
+    padding-bottom: $space-large;
+    text-align: center;
   }
 }

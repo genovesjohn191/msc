@@ -2,7 +2,6 @@
 
 .notification-container {
   position: relative;
-  min-width: $notification-minimum-width;
   @include display-flex(row);
 
   .icon {

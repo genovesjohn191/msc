@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   ChangeDetectorRef,
-  NgZone
+  NgZone,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 
 import { Router } from '@angular/router';
@@ -35,7 +37,9 @@ export class UserPanelComponent implements OnInit {
   public hasConnectionError: boolean;
   public statusIconClass: string;
   public notificationTextContent: any;
-  private _popoverInstance: any;
+
+  @ViewChild('popoverInstance')
+  public popoverInstance: any;
 
   public constructor(
     private _assetsProvider: McsAssetsProvider,
@@ -79,16 +83,16 @@ export class UserPanelComponent implements OnInit {
 
     // Subscribe to browser service
     this._browserService.resizeWindowStream.subscribe((deviceType: McsDeviceType) => {
-      if (this._popoverInstance) {
+      if (this.popoverInstance) {
         switch (deviceType) {
           case McsDeviceType.MobilePortrait:
           case McsDeviceType.MobileLandscape:
-            this._popoverInstance.orientation = 'left';
+            this.popoverInstance.orientation = 'left';
             break;
 
           case McsDeviceType.Desktop:
           case McsDeviceType.Tablet:
-            this._popoverInstance.orientation = 'center';
+            this.popoverInstance.orientation = 'center';
           default:
             break;
         }
@@ -98,16 +102,12 @@ export class UserPanelComponent implements OnInit {
 
   public viewNotificationsPage(): void {
     this._router.navigate(['./notifications']);
-    if (this._popoverInstance) {
-      this._popoverInstance.close();
+    if (this.popoverInstance) {
+      this.popoverInstance.close();
     }
   }
 
   public onCloseNotificationPanel(): void {
     this._notificationContext.clearNonActiveNotifications();
-  }
-
-  public setPopoverInstance(popoverInstance: any) {
-    this._popoverInstance = popoverInstance;
   }
 }
