@@ -79,7 +79,10 @@ export class McsNotificationJobService {
       .subscribe((notifications) => {
         if (notifications.content) {
           for (let notification of notifications.content) {
-            this._updateNotification(JSON.stringify(notification));
+            if (notification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE ||
+              notification.status === CoreDefinition.NOTIFICATION_JOB_PENDING) {
+              this._updateNotification(JSON.stringify(notification));
+            }
           }
         }
       });
