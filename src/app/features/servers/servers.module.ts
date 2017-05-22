@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { routes } from './servers.routes';
 /** Servers */
 import { ServersComponent } from './servers.component';
-import { ServerListPanelComponent } from './server-list-panel.component';
 import { ServerComponent } from './server/server.component';
+import { ServerListPanelComponent } from './server-list-panel/server-list-panel.component';
 import { ServerManagementComponent } from './server/management/server-management.component';
 import { ServerServicesComponent } from './server/services/server-services.component';
 import { ServerBackupsComponent } from './server/backups/server-backups.component';

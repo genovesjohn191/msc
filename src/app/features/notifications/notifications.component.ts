@@ -107,7 +107,7 @@ export class NotificationsComponent implements OnInit {
     this._searchNotifications(this.keyword);
   }
 
-  public getDisplayServerCount(): number {
+  public getDisplayNotificationsCount(): number {
     return this.page * CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE;
   }
 

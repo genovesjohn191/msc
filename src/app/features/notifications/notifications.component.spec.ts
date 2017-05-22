@@ -119,7 +119,7 @@ describe('NotificationsComponent', () => {
 
     beforeEach(async () => {
       previousPage = component.page;
-      previousDisplayedCount = component.getDisplayServerCount();
+      previousDisplayedCount = component.getDisplayNotificationsCount();
       spyOn(component.searchSubject, 'next');
       component.onClickMoreEvent();
     });
@@ -129,7 +129,7 @@ describe('NotificationsComponent', () => {
     });
 
     it('should increase the displayed items', () => {
-      expect(component.getDisplayServerCount())
+      expect(component.getDisplayNotificationsCount())
         .toEqual(CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE * component.page);
     });
 
@@ -148,7 +148,7 @@ describe('NotificationsComponent', () => {
 
     it('should initialize the page and displayServerCount value to default', () => {
       expect(component.page).toEqual(1);
-      expect(component.getDisplayServerCount())
+      expect(component.getDisplayNotificationsCount())
         .toEqual(CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE);
     });
 

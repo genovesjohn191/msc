@@ -5,13 +5,15 @@
   </div>
   <ul id="serverListTree" class="server-list-tree" role="tablist" aria-multiselectable="true" #serverListTree>
     <li *ngFor="let vdc of servers; let i = index">
-      <a class="vdc-name" [ngClass]="{'active-vdc': vdc.selected, 'collapsed': !vdc.selected}"
+      <a class="vdc-name" [ngClass]="{'active-vdc': isServerSelected(vdc.id),
+      'collapsed': !isServerSelected(vdc.id)}"
         data-toggle="collapse" data-parent="#serverListTree" href="#serverList{{ i + 1 }}"
-        [attr.aria-expanded]="vdc.selected" [attr.aria-controls]="'serverList' + (i + 1)">
+        [attr.aria-expanded]="isServerSelected(vdc.id)"
+        [attr.aria-controls]="'serverList' + (i + 1)">
         {{ vdc.vdcName }} <i [ngClass]="caretDown"></i>
       </a>
       <div id="serverList{{ i + 1 }}" class="collapse servers" role="tabpanel"
-        [ngClass]="{'show': vdc.selected}">
+        [ngClass]="{'show': isServerSelected(vdc.id)}">
         <div class="server-name" *ngFor="let server of vdc.servers">
           <a [ngClass]="{'active-server': server.selected}">
             <i [ngClass]="serverState"></i> {{ server.managementName }}

@@ -8,14 +8,15 @@ import {
   ElementRef,
   HostListener
 } from '@angular/core';
-import { Server } from './server';
+import { Server } from '../server';
 import { ActivatedRoute } from '@angular/router';
 import {
   McsAssetsProvider,
   CoreDefinition,
   getElementOffset
-} from '../../core';
+} from '../../../core';
 import { ServerList } from './server-list';
+import { ServerStatus } from '../server-status.enum';
 
 @Component({
   selector: 'mcs-server-list-panel',
@@ -25,7 +26,7 @@ import { ServerList } from './server-list';
 export class ServerListPanelComponent implements OnInit, AfterViewInit {
   public servers: ServerList[];
   public serverList: ServerList[];
-  public selectedServerId: number;
+  public selectedServerId: string;
   public caretDown: string;
   public serverState: string;
   public keyword: string;
@@ -109,18 +110,18 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
     this.caretDown = this._assetsProvider.getIcon('caret-down');
     this.serverState = this._assetsProvider.getIcon('server-state');
     this._route.params.subscribe((params) => {
-      this.selectedServerId = Number(params['id']);
+      this.selectedServerId = params['id'];
       this.mapServerList(this.serverListData);
     });
+  }
+
+  public isServerSelected(id: any): boolean {
+    return id === this.selectedServerId;
   }
 
   public mapServerList(serverListData: Server[]): void {
     serverListData.forEach((server) => {
       let isExist: boolean = false;
-
-      if (server.id === this.selectedServerId) {
-        server.selected = true;
-      }
 
       for (let serverIndex in this.serverList) {
         if (this.serverList[serverIndex].vdcName.localeCompare(server.serviceDescription) === 0) {
@@ -180,8 +181,9 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
 
       this.serverList.forEach((vdc) => {
         let filteredServers = vdc.servers.filter((server) => {
+          let powerStateValue = ServerStatus[key.toLowerCase() as string];
           return server.managementName.toLowerCase().includes(key.toLowerCase()) ||
-            server.powerState === this.getServerState(key.toLowerCase());
+            server.powerState === powerStateValue;
         });
 
         if (filteredServers.length > 0) {
@@ -200,27 +202,6 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
     } else {
       this.servers = this.serverList;
     }
-  }
-
-  public getServerState(keyword: string): number {
-    let state: number;
-    switch (keyword) {
-      case CoreDefinition.SERVER_STATE_STOPPED: {
-        state = 0;
-        break;
-      }
-
-      case CoreDefinition.SERVER_STATE_RUNNING: {
-        state = 1;
-        break;
-      }
-
-      case CoreDefinition.SERVER_STATE_RESTARTING: {
-        state = 2;
-        break;
-      }
-    }
-    return state;
   }
 
   private _setServersListMaxHeight(offsetHeight: number) {

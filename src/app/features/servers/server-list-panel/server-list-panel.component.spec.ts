@@ -12,13 +12,13 @@ import {
 import { ServerListPanelComponent } from './server-list-panel.component';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Server } from './server';
+import { Server } from '../server';
 import { ServerList } from './server-list';
 import {
   McsAssetsProvider,
   CoreDefinition,
   getElementOffset
-} from '../../core';
+} from '../../../core';
 
 describe('ServerListPanelComponent', () => {
   /** Stub Services/Components */
@@ -163,16 +163,23 @@ describe('ServerListPanelComponent', () => {
     });
   });
 
-  describe('getServerState()', () => {
-    it('should return a value if the keyword exists', () => {
-      component.keyword = 'running';
-      expect(component.getServerState(component.keyword)).toBeGreaterThanOrEqual(0);
+  describe('isServerSelected()', () => {
+    it('should return true when the selectedServerId is the same as server id', () => {
+      let selectedId = '2456';
+      let isSelected: boolean = false;
+
+      component.selectedServerId = selectedId;
+      isSelected = component.isServerSelected(selectedId);
+      expect(isSelected).toBe(true);
     });
 
-    it('should return undefined if the keyword do not exists', () => {
-      component.keyword = 'paused';
-      expect(component.getServerState(component.keyword)).toBeUndefined();
+    it('should return false when the selectedServerId is the not same as server id', () => {
+      let selectedId = '2456';
+      let isSelected: boolean = false;
+
+      component.selectedServerId = selectedId;
+      isSelected = component.isServerSelected('1234');
+      expect(isSelected).toBe(false);
     });
   });
-
 });
