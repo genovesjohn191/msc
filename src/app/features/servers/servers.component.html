@@ -119,20 +119,16 @@
   </table>
 
   <div class="status-information">
-    <!--TODO: Remove comment when paging specs is already finalized-->
-
-    <!--<a *ngIf="(getDisplayServerCount() < totalServerCount) && isLoaded"
-      (click)="onClickMoreEvent()">More
-      <i class="fa fa-angle-down"></i>
-    </a>-->
     <div *ngIf="isLoading && !errorMessage">
       <i [ngClass]="getSpinnerClass()"></i>
        {{ serversTextContent.loading }}
     </div>
-    <a *ngIf="(getDisplayServerCount() < totalServerCount) && !isLoading"
+
+    <!--TODO: Remove comment when paging specs is already finalized-->
+    <!--<a *ngIf="(getDisplayServerCount() < totalServerCount) && !isLoading"
       (click)="onClickMoreEvent()">{{ serversTextContent.viewMore }}
       <i class="fa fa-angle-down"></i>
-    </a>
+    </a>-->
     <span *ngIf="totalServerCount === 0 && !isLoading && !errorMessage">
       {{ serversTextContent.noRecordFound }}
     </span>

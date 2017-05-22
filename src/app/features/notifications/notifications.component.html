@@ -64,10 +64,12 @@
       <i [ngClass]="getSpinnerClass()"></i>
        {{ notificationsTextContent.loading }}
     </div>
-    <a *ngIf="(getDisplayNotificationsCount() < totalNotificationsCount) && !isLoading"
+
+    <!--TODO: Remove comment when paging specs is already finalized-->
+    <!--<a *ngIf="(getDisplayNotificationsCount() < totalNotificationsCount) && !isLoading"
       (click)="onClickMoreEvent()">{{ notificationsTextContent.viewMore }}
       <i class="fa fa-angle-down"></i>
-    </a>
+    </a>-->
     <span *ngIf="totalNotificationsCount === 0 && !isLoading && !errorMessage">
       {{ notificationsTextContent.noRecordFound }}
     </span>
