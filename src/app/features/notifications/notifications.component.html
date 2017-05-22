@@ -64,7 +64,7 @@
       <i [ngClass]="getSpinnerClass()"></i>
        {{ notificationsTextContent.loading }}
     </div>
-    <a *ngIf="(getDisplayServerCount() < totalNotificationsCount) && !isLoading"
+    <a *ngIf="(getDisplayNotificationsCount() < totalNotificationsCount) && !isLoading"
       (click)="onClickMoreEvent()">{{ notificationsTextContent.viewMore }}
       <i class="fa fa-angle-down"></i>
     </a>

@@ -1,11 +1,7 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  Self,
-  ChangeDetectionStrategy
+  OnDestroy
 } from '@angular/core';
 import {
   Observable,
@@ -14,12 +10,12 @@ import {
 /** Services */
 import {
   McsTextContentProvider,
-  McsAssetsProvider
+  McsAssetsProvider,
+  McsApiSearchKey
 } from '../../core';
 import { ServersService } from './servers.service';
 /** Models */
 import { Server } from './server';
-import { ServerListSearchKey } from './sever-list-search-key';
 import {
   McsApiError,
   McsApiSuccessResponse,
@@ -34,10 +30,10 @@ import {
 })
 
 export class ServersComponent implements OnInit, OnDestroy {
-  public title: string;
+  public serversTextContent: string;
   public page: number;
   public keyword: string;
-  public isLoaded: boolean;
+  public isLoading: boolean;
   public errorMessage: string;
   public gear: string;
   /** Server Variables */
@@ -47,22 +43,25 @@ export class ServersComponent implements OnInit, OnDestroy {
   public columnSettings: any;
   /** Search Subscription */
   public searchSubscription: any;
-  public searchSubject: Subject<ServerListSearchKey>;
+  public searchSubject: Subject<McsApiSearchKey>;
+
+  public actionStatusMap: Map<any, string>;
 
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _assetsProvider: McsAssetsProvider
   ) {
-    this.title = _textProvider.content.servers.title;
-    this.isLoaded = false;
+    this.isLoading = true;
     this.page = 1;
-    this.searchSubject = new Subject<ServerListSearchKey>();
+    this.searchSubject = new Subject<McsApiSearchKey>();
     this.servers = new Array();
     this.totalServerCount = 0;
+    this.actionStatusMap = new Map<any, string>();
   }
 
   public ngOnInit() {
+    this.serversTextContent = this._textProvider.content.servers;
     this.getGearClass();
     this.getServers();
   }
@@ -73,12 +72,38 @@ export class ServersComponent implements OnInit, OnDestroy {
     }
   }
 
+  public executeServerCommand(id: any, type: string) {
+    this._serversService.postServerCommand(id, type)
+      .subscribe((response) => {
+        // console.log(response);
+      });
+
+    this.actionStatusMap.set(id, type);
+  }
+
+  public getActionStatus(id: any, type: string): any {
+    let status: any = null;
+    let isExist = this.actionStatusMap.has(id);
+
+    if (isExist) {
+      let currentAction = this.actionStatusMap.get(id);
+      if (currentAction === type) {
+        status = currentAction;
+      }
+    }
+    return status;
+  }
+
   public getGearClass() {
     this.gear = this._assetsProvider.getIcon('gear');
   }
 
+  public getSpinnerClass(): string {
+    return this._assetsProvider.getIcon('spinner');
+  }
+
   public getServers(): void {
-    this.searchSubscription = Observable.of(new ServerListSearchKey())
+    this.searchSubscription = Observable.of(new McsApiSearchKey())
       .concat(this.searchSubject)
       .debounceTime(CoreDefinition.SEARCH_TIME)
       .distinctUntilChanged((previous, next) => {
@@ -92,8 +117,8 @@ export class ServersComponent implements OnInit, OnDestroy {
           // TODO: Display all record temporarily since Max item per page is under confirmation
           // searchKey.maxItemPerPage ? searchKey.maxItemPerPage : MAX_ITEMS_PER_PAGE,
           undefined,
-          searchKey.serverNameKeyword
-        ).finally(() => this.isLoaded = true);
+          searchKey.keyword
+        ).finally(() => this.isLoading = false);
       })
       .retry(3)
       .catch((error: McsApiErrorResponse) => {
@@ -102,8 +127,10 @@ export class ServersComponent implements OnInit, OnDestroy {
       })
       .subscribe((mcsApiResponse) => {
         // Get server response
-        this.servers = this.servers.concat(mcsApiResponse.content);
-        this.totalServerCount = mcsApiResponse.totalCount;
+        if (mcsApiResponse.content) {
+          this.servers = this.servers.concat(mcsApiResponse.content);
+          this.totalServerCount = mcsApiResponse.totalCount;
+        }
       });
   }
 
@@ -135,13 +162,13 @@ export class ServersComponent implements OnInit, OnDestroy {
   }
 
   public updateServers(key?: string, page?: number) {
-    let searchKey: ServerListSearchKey = new ServerListSearchKey();
+    let searchKey: McsApiSearchKey = new McsApiSearchKey();
     // Set server search key
     searchKey.maxItemPerPage = CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE;
     searchKey.page = page;
-    searchKey.serverNameKeyword = key;
-    // Set false to load flag
-    this.isLoaded = false;
+    searchKey.keyword = key;
+    // Set true to loading flag
+    this.isLoading = true;
     this.searchSubject.next(searchKey);
   }
 

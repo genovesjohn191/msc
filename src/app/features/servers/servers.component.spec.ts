@@ -9,11 +9,11 @@ import { Observable } from 'rxjs/Rx';
 import {
   McsTextContentProvider,
   McsAssetsProvider,
-  CoreDefinition
+  CoreDefinition,
+  McsApiSearchKey
 } from '../../core';
 
 import { Server } from './server';
-import { ServerListSearchKey } from './sever-list-search-key';
 import { ServersComponent } from './servers.component';
 import { ServersService } from './servers.service';
 import { McsApiSuccessResponse } from '../../core';
@@ -86,10 +86,6 @@ describe('ServersComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit() | constructor', () => {
-    it('should set the title page', () => {
-      expect(component.title).toEqual(pageTitle);
-    });
-
     it('should acquire the class of font-awesome gear', () => {
       expect(component.gear).toEqual('gear');
     });
@@ -160,12 +156,12 @@ describe('ServersComponent', () => {
   describe('updateServers()', () => {
     let keyword: string = 'mongo';
     let page: number = 1;
-    let searchKey: ServerListSearchKey = new ServerListSearchKey();
+    let searchKey: McsApiSearchKey = new McsApiSearchKey();
 
     beforeEach(async () => {
       searchKey.maxItemPerPage = 10;
       searchKey.page = page;
-      searchKey.serverNameKeyword = keyword;
+      searchKey.keyword = keyword;
 
       spyOn(component.searchSubject, 'next');
       component.updateServers(keyword, page);
@@ -176,8 +172,8 @@ describe('ServersComponent', () => {
       expect(component.searchSubject.next).toHaveBeenCalledWith(searchKey);
     });
 
-    it('should set the isLoaded flag to false', () => {
-      expect(component.isLoaded).toEqual(false);
+    it('should set the isLoading flag to true', () => {
+      expect(component.isLoading).toEqual(true);
     });
   });
 

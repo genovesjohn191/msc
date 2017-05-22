@@ -1,10 +1,10 @@
 <section class="servers-container">
   <div class="mcs-page-title bordered-bottom">
     <div class="main-title">
-      <h2>Servers</h2>
+      <h2>{{ serversTextContent.header }}</h2>
     </div>
     <div class="server-count">
-      <span>{{ totalServerCount }} Servers</span>
+      <span>{{ totalServerCount }} {{ serversTextContent.header }}</span>
     </div>
   </div>
 
@@ -80,14 +80,37 @@
           {{ server.coreCount }}
         </td>
         <td *ngIf="columnSettings['vApp'].value" class="text-left align-top hidden-small">
-          <!--TODO: VM Application Here-->
-          {{ server.hardwareVendor }}
+          {{ server.vAppName }}
         </td>
         <td *ngIf="columnSettings['services'].value" class="text-left align-top hidden-small">
           <a href="#">{{ server.id }}</a>
         </td>
         <td class="text-center align-top">
-          <a [ngClass]="gear"></a>
+          <a class="icon-link" mcsPopover padding="none"
+            placement="bottom" orientation="left" theme="light"
+            [content]="cogContent">
+            <i [ngClass]="gear"></i>
+          </a>
+
+          <ng-template #cogContent>
+           <div class="cog-container">
+              <a class="icon-link"
+                (click)="executeServerCommand(server.id, 'Start')"
+                [attr.disabled]="getActionStatus(server.id, 'Start')">
+                Start
+              </a>
+              <a class="icon-link"
+                (click)="executeServerCommand(server.id, 'Stop')"
+                [attr.disabled]="getActionStatus(server.id, 'Stop')">
+                Stop
+              </a>
+              <a class="icon-link"
+                (click)="executeServerCommand(server.id, 'Restart')"
+                [attr.disabled]="getActionStatus(server.id, 'Restart')">
+                Restart
+              </a>
+            </div>
+          </ng-template>
         </td>
       </tr>
     </tbody>
@@ -95,15 +118,26 @@
     </tfoot>
   </table>
 
-  <div class="paging text-center">
+  <div class="status-information">
     <!--TODO: Remove comment when paging specs is already finalized-->
 
     <!--<a *ngIf="(getDisplayServerCount() < totalServerCount) && isLoaded"
       (click)="onClickMoreEvent()">More
       <i class="fa fa-angle-down"></i>
     </a>-->
-    <span *ngIf="!isLoaded">Loading...</span>
-    <span *ngIf="totalServerCount === 0 && isLoaded && !errorMessage">No server found.</span>
-    <span *ngIf="errorMessage" class="text-color-error">Server connection error.</span>
+    <div *ngIf="isLoading && !errorMessage">
+      <i [ngClass]="getSpinnerClass()"></i>
+       {{ serversTextContent.loading }}
+    </div>
+    <a *ngIf="(getDisplayServerCount() < totalServerCount) && !isLoading"
+      (click)="onClickMoreEvent()">{{ serversTextContent.viewMore }}
+      <i class="fa fa-angle-down"></i>
+    </a>
+    <span *ngIf="totalServerCount === 0 && !isLoading && !errorMessage">
+      {{ serversTextContent.noRecordFound }}
+    </span>
+    <span *ngIf="errorMessage" class="text-color-error">
+      {{ serversTextContent.connectionError }}
+    </span>
   </div>
 </section>

@@ -21,4 +21,23 @@
   .fa-gear {
     @include font-size($icon-large-font-size);
   }
+
+  .status-information {
+    display: block;
+    padding-bottom: $space-large;
+    text-align: center;
+  }
+}
+
+.cog-container {
+  @include display-flex(column);
+  a {
+    padding: 5px;
+
+    &[disabled] {
+      opacity: 0.4;
+      -webkit-touch-callout: none;
+      cursor: not-allowed;
+    }
+  }
 }
