@@ -14,7 +14,7 @@ import { UserPanelComponent } from './user-panel.component';
 import {
   McsAssetsProvider,
   McsTextContentProvider,
-  McsNotification,
+  McsApiJob,
   McsNotificationContextService,
   McsNotificationJobService,
   McsBrowserService,
@@ -38,7 +38,7 @@ describe('UserPanelComponent', () => {
     }
   };
   let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsNotification>(),
+    notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<McsConnectionStatus>()
   } as McsNotificationJobService;
   let mockMcsBrowserService = new McsBrowserService();
@@ -99,9 +99,9 @@ describe('UserPanelComponent', () => {
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
-          let notifications: McsNotification[] = new Array();
-          notifications.push(new McsNotification());
-          notifications.push(new McsNotification());
+          let notifications: McsApiJob[] = new Array();
+          notifications.push(new McsApiJob());
+          notifications.push(new McsApiJob());
 
           notificationContextService.notificationsStream.next(notifications);
           tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);

@@ -3,7 +3,7 @@ import {
   PipeTransform
 } from '@angular/core';
 import {
-  McsNotification,
+  McsApiJob,
   CoreDefinition
 } from '../../core';
 
@@ -13,7 +13,7 @@ import {
 })
 
 export class NotificationMaxDisplayPipe implements PipeTransform {
-  public transform(notifications: McsNotification[]): any {
+  public transform(notifications: McsApiJob[]): any {
     return notifications.slice(0, CoreDefinition.NOTIFICATION_MAX_DISPLAY);
   }
 }

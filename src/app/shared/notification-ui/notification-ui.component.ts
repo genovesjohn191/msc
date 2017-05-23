@@ -18,7 +18,7 @@ import {
 /** Services/Providers */
 import {
   McsAssetsProvider,
-  McsNotification,
+  McsApiJob,
   McsNotificationContextService,
   CoreDefinition,
   formatDate
@@ -48,7 +48,7 @@ import {
 
 export class NotificationUiComponent implements OnInit, OnChanges {
   @Input()
-  public attribute: McsNotification;
+  public attribute: McsApiJob;
 
   @Input()
   public pauseOnHover: boolean;
@@ -67,7 +67,7 @@ export class NotificationUiComponent implements OnInit, OnChanges {
     private _assetsProvider: McsAssetsProvider
   ) {
     this.pauseOnHover = true;
-    this.attribute = new McsNotification();
+    this.attribute = new McsApiJob();
   }
 
   public ngOnInit() {
@@ -118,7 +118,7 @@ export class NotificationUiComponent implements OnInit, OnChanges {
     return isError;
   }
 
-  private _setIconAndTimeOut(notification: McsNotification): void {
+  private _setIconAndTimeOut(notification: McsApiJob): void {
     switch (notification.status) {
       case CoreDefinition.NOTIFICATION_JOB_PENDING:
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:

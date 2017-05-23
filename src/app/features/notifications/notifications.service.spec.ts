@@ -27,7 +27,7 @@ import {
   McsApiErrorResponse,
   CoreConfig,
   CoreDefinition,
-  McsNotification
+  McsApiJob
 } from '../../core/';
 
 describe('NotificationsService', () => {
@@ -127,12 +127,12 @@ describe('NotificationsService', () => {
       });
     }));
 
-    it('should map response to McsApiSuccessResponse<McsNotification[]> when successful',
+    it('should map response to McsApiSuccessResponse<McsApiJob[]> when successful',
       fakeAsync(() => {
         notificationsService.getNotifications(requestOptions.page,
           requestOptions.perPage, requestOptions.searchKeyword)
           .subscribe((response) => {
-            let mcsApiSucessResponse: McsApiSuccessResponse<McsNotification[]>;
+            let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob[]>;
             mcsApiSucessResponse = response[0];
 
             expect(response).toBeDefined();
@@ -215,11 +215,11 @@ describe('NotificationsService', () => {
       });
     });
 
-    it('should map response to McsApiSuccessResponse<McsNotification> when successful',
+    it('should map response to McsApiSuccessResponse<McsApiJob> when successful',
       fakeAsync(() => {
         notificationsService.getNotification(459)
           .subscribe((response) => {
-            let mcsApiSucessResponse: McsApiSuccessResponse<McsNotification>;
+            let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
             mcsApiSucessResponse = response;
 
             expect(response).toBeDefined();

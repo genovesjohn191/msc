@@ -4,7 +4,7 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { Subject } from 'rxjs/Rx';
-import { McsNotification } from '../models/mcs-notification';
+import { McsApiJob } from '../models/mcs-api-job';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
@@ -14,7 +14,7 @@ describe('McsNotificationContextService', () => {
   /** Stub Services Mock */
   let mcsNotificationContextService: McsNotificationContextService;
   let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsNotification>(),
+    notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
 
@@ -41,14 +41,14 @@ describe('McsNotificationContextService', () => {
     let initDescription = 'Server01';
 
     beforeEach(async(() => {
-      let notification = new McsNotification();
+      let notification = new McsApiJob();
       notification.id = initId;
       notification.description = initDescription;
       mockMcsNotificationJobService.notificationStream.next(notification);
     }));
 
     it('should get the omitted value from the notification job stream', () => {
-      let updatedNotifications: McsNotification[];
+      let updatedNotifications: McsApiJob[];
       mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
         updatedNotifications = notifications;
       });
@@ -61,8 +61,8 @@ describe('McsNotificationContextService', () => {
 
     it(`should update the notification data on the list
     when the notification omitted is already exist`, () => {
-        let updatedNotifications: McsNotification[];
-        let notification = new McsNotification();
+        let updatedNotifications: McsApiJob[];
+        let notification = new McsApiJob();
         let updatedDescription = 'Server02';
 
         notification.id = initId;
@@ -80,8 +80,8 @@ describe('McsNotificationContextService', () => {
 
     it(`should add the notification item to the list
     when the notification omitted is not yet exist`, () => {
-        let updatedNotifications: McsNotification[];
-        let notification = new McsNotification();
+        let updatedNotifications: McsApiJob[];
+        let notification = new McsApiJob();
         let newId = '0002';
         let newDescription = 'Server03';
         notification.id = newId;
@@ -105,14 +105,14 @@ describe('McsNotificationContextService', () => {
     let initDescription = 'Server01';
 
     beforeEach(async(() => {
-      let notification = new McsNotification();
+      let notification = new McsApiJob();
       notification.id = initId;
       notification.description = initDescription;
       mockMcsNotificationJobService.notificationStream.next(notification);
     }));
 
     it('should get the omitted value from the notification job stream', () => {
-      let updatedNotifications: McsNotification[];
+      let updatedNotifications: McsApiJob[];
       mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
         updatedNotifications = notifications;
       });

@@ -15,7 +15,7 @@ import {
   McsTextContentProvider,
   McsApiSearchKey,
   CoreDefinition,
-  McsNotification,
+  McsApiJob,
   McsApiErrorResponse,
   McsNotificationContextService,
   formatDate
@@ -34,7 +34,7 @@ export class NotificationsComponent implements OnInit {
   public errorMessage: string;
   public notificationsTextContent: any;
   public totalNotificationsCount: number;
-  public notifications: McsNotification[];
+  public notifications: McsApiJob[];
 
   /** Search Subscription */
   public searchSubscription: any;
