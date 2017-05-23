@@ -20,7 +20,7 @@ export * from './models/mcs-api-error-response';
 export * from './models/mcs-api-success-response';
 export * from './models/mcs-api-error';
 export * from './models/mcs-api-search-key';
-export * from './models/mcs-notification';
+export * from './models/mcs-api-job';
 export * from './models/mcs-notification-config';
 /** Functions */
 export * from './functions/mcs-url.function';

@@ -6,7 +6,7 @@ import {
 import { Component } from '@angular/core';
 import { NotificationMaxDisplayPipe } from './notification-max-display.pipe';
 import {
-  McsNotification,
+  McsApiJob,
   CoreDefinition
 } from '../../core';
 
@@ -15,7 +15,7 @@ import {
   template: ``
 })
 export class TestComponent {
-  public notifications: McsNotification[];
+  public notifications: McsApiJob[];
 
   constructor() {
     this.notifications = new Array();
@@ -23,10 +23,10 @@ export class TestComponent {
   }
 
   public populateNotifications() {
-    this.notifications.push(new McsNotification());
-    this.notifications.push(new McsNotification());
-    this.notifications.push(new McsNotification());
-    this.notifications.push(new McsNotification());
+    this.notifications.push(new McsApiJob());
+    this.notifications.push(new McsApiJob());
+    this.notifications.push(new McsApiJob());
+    this.notifications.push(new McsApiJob());
   }
 }
 

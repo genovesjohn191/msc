@@ -13,15 +13,13 @@ import { Router } from '@angular/router';
 import {
   McsAssetsProvider,
   McsTextContentProvider,
-  McsNotification,
+  McsApiJob,
   McsNotificationContextService,
   CoreDefinition,
   McsBrowserService,
   McsDeviceType,
   McsConnectionStatus
 } from '../../core';
-
-const NOTIFICATION_MAX = 3;
 
 @Component({
   selector: 'mcs-user-panel',
@@ -33,7 +31,7 @@ export class UserPanelComponent implements OnInit {
   public bellIcon: string;
   public userIcon: string;
   public caretRightIcon: string;
-  public notifications: McsNotification[];
+  public notifications: McsApiJob[];
   public hasConnectionError: boolean;
   public statusIconClass: string;
   public notificationTextContent: any;

@@ -14,7 +14,7 @@ import {
   McsAssetsProvider,
   McsApiSearchKey,
   McsApiSuccessResponse,
-  McsNotification,
+  McsApiJob,
   McsNotificationContextService,
   McsNotificationJobService,
   CoreDefinition
@@ -33,17 +33,17 @@ describe('NotificationsComponent', () => {
     getNotifications(
       page?: number,
       perPage?: number,
-      searchKeyword?: string): Observable<McsApiSuccessResponse<McsNotification[]>> {
+      searchKeyword?: string): Observable<McsApiSuccessResponse<McsApiJob[]>> {
 
-      let mcsApiResponseMock = new McsApiSuccessResponse<McsNotification[]>();
+      let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob[]>();
       mcsApiResponseMock.status = 200;
       mcsApiResponseMock.totalCount = 2;
       mcsApiResponseMock.content = new Array();
 
-      let notification = new McsNotification();
+      let notification = new McsApiJob();
       notification.id = '4';
       mcsApiResponseMock.content.push(notification);
-      notification = new McsNotification();
+      notification = new McsApiJob();
       notification.id = '5';
       mcsApiResponseMock.content.push(notification);
 
@@ -63,7 +63,7 @@ describe('NotificationsComponent', () => {
     }
   };
   let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsNotification>(),
+    notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
 
@@ -189,11 +189,11 @@ describe('NotificationsComponent', () => {
     it('should update the notification list',
       fakeAsync(inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
-          let notifications: McsNotification[] = new Array();
-          let notification = new McsNotification();
+          let notifications: McsApiJob[] = new Array();
+          let notification = new McsApiJob();
           notification.id = '6';
           notifications.push(notification);
-          notification = new McsNotification();
+          notification = new McsApiJob();
           notification.id = '7';
           notifications.push(notification);
 

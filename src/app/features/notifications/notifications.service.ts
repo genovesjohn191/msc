@@ -7,7 +7,7 @@ import {
   McsApiSuccessResponse,
   McsApiErrorResponse,
   McsApiRequestParameter,
-  McsNotification,
+  McsApiJob,
   reviverParser
 } from '../../core/';
 
@@ -23,7 +23,7 @@ export class NotificationsService {
   public getNotifications(
     page?: number,
     perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<McsNotification[]>> {
+    searchKeyword?: string): Observable<McsApiSuccessResponse<McsApiJob[]>> {
 
     let searchParams: URLSearchParams = new URLSearchParams();
     searchParams.set('page', page ? page.toString() : undefined);
@@ -36,9 +36,9 @@ export class NotificationsService {
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let notificationsJobResponse: McsApiSuccessResponse<McsNotification[]>;
+        let notificationsJobResponse: McsApiSuccessResponse<McsApiJob[]>;
         notificationsJobResponse = JSON.parse(response.text(),
-          reviverParser) as McsApiSuccessResponse<McsNotification[]>;
+          reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
 
         return notificationsJobResponse;
       })
@@ -57,15 +57,15 @@ export class NotificationsService {
       });
   }
 
-  public getNotification(id: any): Observable<McsApiSuccessResponse<McsNotification>> {
+  public getNotification(id: any): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/job/' + id;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let notificationsJobResponse: McsApiSuccessResponse<McsNotification[]>;
+        let notificationsJobResponse: McsApiSuccessResponse<McsApiJob[]>;
         notificationsJobResponse = JSON.parse(response.text(),
-          reviverParser) as McsApiSuccessResponse<McsNotification[]>;
+          reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
 
         return notificationsJobResponse;
       })

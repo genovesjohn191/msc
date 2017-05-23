@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NotificationUiComponent } from './notification-ui.component';
 import {
   McsAssetsProvider,
-  McsNotification,
+  McsApiJob,
   McsNotificationContextService,
   McsNotificationJobService,
   CoreDefinition
@@ -24,7 +24,7 @@ describe('NotificationUiComponent', () => {
   let mcsNotificationContextService: McsNotificationContextService;
 
   let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsNotification>(),
+    notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
 
@@ -72,13 +72,10 @@ describe('NotificationUiComponent', () => {
 
   // Creation of notification based on id and status
   let createNotification = (notificationId: string, notificationStatus: string) => {
-    let notification: McsNotification = new McsNotification();
+    let notification: McsApiJob = new McsApiJob();
 
     notification.id = notificationId;
-    notification.ownerId = 'Owner' + notificationId;
-    notification.accountId = 'Account' + notificationId;
     notification.errorMessage = notificationStatus;
-    notification.jobDefinitionId = 'Job' + notificationId;
     notification.createdOn = new Date('2017-04-26T01:51:34Z');
     notification.startedOn = new Date('2017-04-26T01:51:34Z');
     notification.updatedOn = new Date('2017-04-26T01:55:12Z');
@@ -94,9 +91,9 @@ describe('NotificationUiComponent', () => {
 
   /** Test Implementation */
   describe('ngOnChanges() when notification is active', () => {
-    let notification: McsNotification;
+    let notification: McsApiJob;
     beforeEach(async(() => {
-      notification = new McsNotification();
+      notification = new McsApiJob();
       notification = createNotification('1', 'Active');
 
       mockMcsNotificationJobService.notificationStream.next(notification);
@@ -123,9 +120,9 @@ describe('NotificationUiComponent', () => {
   });
 
   describe('ngOnChanges() when notification is failed', () => {
-    let notification: McsNotification;
+    let notification: McsApiJob;
     beforeEach(fakeAsync(() => {
-      notification = new McsNotification();
+      notification = new McsApiJob();
       notification = createNotification('1', 'Failed');
 
       mockMcsNotificationJobService.notificationStream.next(notification);
@@ -155,9 +152,9 @@ describe('NotificationUiComponent', () => {
   });
 
   describe('ngOnChanges() when notification is completed', () => {
-    let notification: McsNotification;
+    let notification: McsApiJob;
     beforeEach(fakeAsync(() => {
-      notification = new McsNotification();
+      notification = new McsApiJob();
       notification = createNotification('1', 'Completed');
 
       mockMcsNotificationJobService.notificationStream.next(notification);
@@ -187,9 +184,9 @@ describe('NotificationUiComponent', () => {
   });
 
   describe('getStartTime()', () => {
-    let notification: McsNotification;
+    let notification: McsApiJob;
     beforeEach(fakeAsync(() => {
-      notification = new McsNotification();
+      notification = new McsApiJob();
       notification = createNotification('1', 'Completed');
 
       mockMcsNotificationJobService.notificationStream.next(notification);

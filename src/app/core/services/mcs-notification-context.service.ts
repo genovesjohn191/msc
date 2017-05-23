@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
-import { McsNotification } from '../models/mcs-notification';
+import { McsApiJob } from '../models/mcs-api-job';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { CoreDefinition } from '../core.definition';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
@@ -13,18 +13,18 @@ import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum'
 @Injectable()
 export class McsNotificationContextService {
 
-  private _notifications: McsNotification[];
+  private _notifications: McsApiJob[];
   private _notificationServiceSubscription: any;
   private _connectionStatusSubscription: any;
 
   /**
    * Subscribe to get the updated notifications in real-time
    */
-  private _notificationsStream: BehaviorSubject<McsNotification[]>;
-  public get notificationsStream(): BehaviorSubject<McsNotification[]> {
+  private _notificationsStream: BehaviorSubject<McsApiJob[]>;
+  public get notificationsStream(): BehaviorSubject<McsApiJob[]> {
     return this._notificationsStream;
   }
-  public set notificationsStream(value: BehaviorSubject<McsNotification[]>) {
+  public set notificationsStream(value: BehaviorSubject<McsApiJob[]>) {
     this._notificationsStream = value;
   }
 
@@ -41,7 +41,7 @@ export class McsNotificationContextService {
 
   constructor(private _notificationJobService: McsNotificationJobService) {
     this._notifications = new Array();
-    this._notificationsStream = new BehaviorSubject<McsNotification[]>(new Array());
+    this._notificationsStream = new BehaviorSubject<McsApiJob[]>(new Array());
     this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
       (McsConnectionStatus.Success);
 
@@ -92,7 +92,7 @@ export class McsNotificationContextService {
     }
   }
 
-  private _updateNotifications(updatedNotification: McsNotification) {
+  private _updateNotifications(updatedNotification: McsApiJob) {
     if (updatedNotification && updatedNotification.id) {
       let isExist: boolean = false;
 

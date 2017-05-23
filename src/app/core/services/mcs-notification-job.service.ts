@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
-import { McsNotification } from '../models/mcs-notification';
+import { McsApiJob } from '../models/mcs-api-job';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import { AppState } from '../../app.service';
@@ -24,11 +24,11 @@ export class McsNotificationJobService {
   /**
    * Subscribe to get the updated notification from websocket(RabbitMQ) in real time
    */
-  private _notificationStream: BehaviorSubject<McsNotification>;
-  public get notificationStream(): BehaviorSubject<McsNotification> {
+  private _notificationStream: BehaviorSubject<McsApiJob>;
+  public get notificationStream(): BehaviorSubject<McsApiJob> {
     return this._notificationStream;
   }
-  public set notificationStream(value: BehaviorSubject<McsNotification>) {
+  public set notificationStream(value: BehaviorSubject<McsApiJob>) {
     this._notificationStream = value;
   }
 
@@ -48,7 +48,7 @@ export class McsNotificationJobService {
     private _appState: AppState,
     private _apiService: McsApiService
   ) {
-    this._notificationStream = new BehaviorSubject<McsNotification>(new McsNotification());
+    this._notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
     this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
       (McsConnectionStatus.Success);
 
@@ -74,15 +74,12 @@ export class McsNotificationJobService {
 
     return this._apiService.get(mcsApiRequestParameter)
       .map((response) => {
-        return response.json() as McsApiSuccessResponse<McsNotification[]>;
+        return response.json() as McsApiSuccessResponse<McsApiJob[]>;
       })
       .subscribe((notifications) => {
         if (notifications.content) {
           for (let notification of notifications.content) {
-            if (notification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE ||
-              notification.status === CoreDefinition.NOTIFICATION_JOB_PENDING) {
-              this._updateNotification(JSON.stringify(notification));
-            }
+            this._updateNotification(JSON.stringify(notification));
           }
         }
       });
@@ -169,8 +166,8 @@ export class McsNotificationJobService {
 
   private _updateNotification(bodyContent: any) {
     if (bodyContent) {
-      let updatedNotification: McsNotification;
-      updatedNotification = JSON.parse(bodyContent, reviverParser) as McsNotification;
+      let updatedNotification: McsApiJob;
+      updatedNotification = JSON.parse(bodyContent, reviverParser) as McsApiJob;
       this._notificationStream.next(updatedNotification);
     }
   }
