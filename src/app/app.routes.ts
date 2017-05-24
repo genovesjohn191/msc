@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
+import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-  { path: 'others', loadChildren: './features/+others/others.module#OthersModule' }
+  { path: 'others', loadChildren: './features/+others/others.module#OthersModule' },
+  { path: '**', component: PageNotFoundComponent },
 ];

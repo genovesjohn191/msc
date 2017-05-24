@@ -33,7 +33,7 @@ export class ServersService {
     let searchParams: URLSearchParams = new URLSearchParams();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('server_name', serverName);
+    searchParams.set('search_keyword', serverName);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';

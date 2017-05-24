@@ -9,11 +9,16 @@ import {
   HostListener
 } from '@angular/core';
 import { Server } from '../server';
-import { ActivatedRoute } from '@angular/router';
+import {
+  Router,
+  ActivatedRoute
+} from '@angular/router';
 import {
   McsAssetsProvider,
+  McsTextContentProvider,
   CoreDefinition,
-  getElementOffset
+  getElementOffset,
+  toProperCase
 } from '../../../core';
 import { ServerList } from './server-list';
 import { ServerStatus } from '../server-status.enum';
@@ -30,6 +35,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   public caretDown: string;
   public serverState: string;
   public keyword: string;
+  public errorMessage: string;
 
   @Input()
   public serverListData: Server[];
@@ -58,12 +64,13 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   private _serversListDynamicHeight: number;
 
   constructor(
+      private _router: Router,
       private _route: ActivatedRoute,
+      private _textProvider: McsTextContentProvider,
       private _assetsProvider: McsAssetsProvider,
       private _renderer: Renderer2
     ) {
       this.servers = new Array();
-      this.serverList = new Array();
     }
 
   @HostListener('document:scroll', ['$event'])
@@ -109,10 +116,19 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   public ngOnInit() {
     this.caretDown = this._assetsProvider.getIcon('caret-down');
     this.serverState = this._assetsProvider.getIcon('server-state');
+    this.errorMessage = this._textProvider.content.servers.errorMessage;
     this._route.params.subscribe((params) => {
       this.selectedServerId = params['id'];
-      this.mapServerList(this.serverListData);
+      if (this.serverListData) {
+        this.mapServerList(this.serverListData);
+      } else {
+        this._router.navigate(['/page-not-found']);
+      }
     });
+  }
+
+  public getStateIconClass(state: number): string {
+    return this._assetsProvider.getIcon('state-' + ServerStatus[state].toLowerCase() + '-medium');
   }
 
   public isServerSelected(id: any): boolean {
@@ -120,11 +136,12 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   }
 
   public mapServerList(serverListData: Server[]): void {
+    this.serverList = new Array();
     serverListData.forEach((server) => {
       let isExist: boolean = false;
 
       for (let serverIndex in this.serverList) {
-        if (this.serverList[serverIndex].vdcName.localeCompare(server.serviceDescription) === 0) {
+        if (this.serverList[serverIndex].vdcName === server.vdcName) {
           this.serverList[serverIndex].servers.push(server);
           if (server.id === this.selectedServerId) {
             this.serverList[serverIndex].selected = true;
@@ -139,7 +156,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
         let serverList: ServerList = new ServerList();
 
         serverValues.push(server);
-        serverList.vdcName = server.serviceDescription;
+        serverList.vdcName = server.vdcName;
         serverList.servers = serverValues;
         if (server.id === this.selectedServerId) {
           serverList.selected = true;
@@ -149,7 +166,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.servers = this.serverList.slice();
+    this.servers = this.serverList;
   }
 
   public ngAfterViewInit() {
@@ -181,7 +198,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
 
       this.serverList.forEach((vdc) => {
         let filteredServers = vdc.servers.filter((server) => {
-          let powerStateValue = ServerStatus[key.toLowerCase() as string];
+          let powerStateValue = ServerStatus[toProperCase(key)];
           return server.managementName.toLowerCase().includes(key.toLowerCase()) ||
             server.powerState === powerStateValue;
         });

@@ -27,7 +27,15 @@
     "spinner": "fa fa-spinner fa-pulse",
     "sign-out": "fa fa-sign-out",
     "user": "fa fa-user-o",
-    "server-state": "fa fa-sun-o"
+    "state-running-large": "mcs-state-running-large-icon",
+    "state-restarting-large": "mcs-state-restarting-large-icon",
+    "state-stopped-large": "mcs-state-stopped-large-icon",
+    "state-running-medium": "mcs-state-running-medium-icon",
+    "state-restarting-medium": "mcs-state-restarting-medium-icon",
+    "state-stopped-medium": "mcs-state-stopped-medium-icon",
+    "state-running-small": "mcs-state-running-small-icon",
+    "state-restarting-small": "mcs-state-restarting-small-icon",
+    "state-stopped-small": "mcs-state-stopped-small-icon"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

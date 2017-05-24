@@ -1,4 +1,4 @@
-<section class="server-management-container">
+<section *ngIf="server" class="server-management-container">
   <div class="server-snapshot">
     <img class="w-100" src="assets/img/server-snapshot.png" />
   </div>
@@ -13,16 +13,24 @@
           <li>{{ serverManagementTextContent.vmProperties.zone }}: [Intellicentre 1 (Syd)]</li>
           <li>{{ serverManagementTextContent.vmProperties.configuration }}: 
             {{ server.memoryInMb }} MB / {{ server.cpuCount }} CPU <a href="#">Scale</a></li>
-          <li>{{ serverManagementTextContent.vmProperties.media }}: None <a href="#">Attach</a></li>
+          <li>{{ serverManagementTextContent.vmProperties.media }}:
+            <ul class="server-media" *ngIf="server.media.length < 0; else elseBlock">
+              <li *ngFor="let media of server.media">{{ media.mediaName }}</li>
+            </ul>
+            <ng-template #elseBlock>None</ng-template>
+            <a href="#">Attach</a>
+          </li>
         </ul>
       </div>
 
       <div class="col">
         <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
-        <ul>
+        <ul class="server-interfaces">
           <li>{{ serverManagementTextContent.networkInformation.publicIp }}: {{ server.managementIpAddress }}</li>
-          <li>NIC 0*: [172.23.2.50]</li>
-          <li>NIC 1: [172.21.2.22]</li>
+          <li *ngFor="let interface of server.interfaces; let i = index">
+            {{ serverManagementTextContent.networkInformation.interface }} {{ i }} : 
+            <span>{{ interface.ipAddress.join(', ') }}</span>
+          </li>
         </ul>
       </div>
     </div>
@@ -30,19 +38,21 @@
     <div class="row">
       <div class="col">
         <h3>{{ serverManagementTextContent.storage.title }}</h3>
-        <ul>
-          <li>{{ serverManagementTextContent.storage.primaryVolume }}: [50 GB]</li>
-          <li>Secondary Volumes: [20GB, 1.2TB]</li>
-          <li>{{ serverManagementTextContent.storage.storagePolicy }}: [M2-XIO-PR2-T2000-PVDC03]</li>
+        <ul class="server-storage">
+          <li>{{ serverManagementTextContent.storage.primaryVolume }}: {{ primaryVolume }}</li>
+          <li *ngIf="secondaryVolumes">
+            {{ serverManagementTextContent.storage.secondaryVolumes }}: {{ secondaryVolumes }}
+          </li>
+          <li>{{ serverManagementTextContent.storage.storagePolicy }}: {{ server.storagePolicy }}</li>
         </ul>
       </div>
 
       <div class="col">
         <h3>{{ serverManagementTextContent.supportIdentifiers.title }}</h3>
         <ul>
-          <li>{{ serverManagementTextContent.supportIdentifiers.vdc }}: {{ server.serviceId }}</li>
-          <li>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}: {{ server.companyId }}</li>
-          <li>{{ serverManagementTextContent.supportIdentifiers.vmWareId }}: [123123huh123128123]</li>
+          <li>{{ serverManagementTextContent.supportIdentifiers.vdc }}: {{ server.vdcName }}</li>
+          <li>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}: {{ server.serviceId }}</li>
+          <li>{{ serverManagementTextContent.supportIdentifiers.vmWareId }}: {{ server.instanceId }}</li>
         </ul>
       </div>
     </div>
