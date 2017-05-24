@@ -10,12 +10,16 @@ import {
   ElementRef,
 } from '@angular/core';
 import { ServerListPanelComponent } from './server-list-panel.component';
-import { ActivatedRoute } from '@angular/router';
+import {
+  Router,
+  ActivatedRoute
+} from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Server } from '../server';
 import { ServerList } from './server-list';
 import {
   McsAssetsProvider,
+  McsTextContentProvider,
   CoreDefinition,
   getElementOffset
 } from '../../../core';
@@ -23,6 +27,14 @@ import {
 describe('ServerListPanelComponent', () => {
   /** Stub Services/Components */
   let component: ServerListPanelComponent;
+  let noServersFound: string = 'No Servers Found.';
+  let textContentProviderMock = {
+    content: {
+      servers: {
+        errorMessage: noServersFound
+      }
+    }
+  };
 
   let mockAssetsProvider = {
     getIcon(key: string): string {
@@ -42,23 +54,28 @@ describe('ServerListPanelComponent', () => {
   let mockServerListData = [
       {
         id: 2686,
-        serviceDescription: 'Dedicated Server VM Instance - mtiperf01',
+        vdcName: 'M1VDC27117001',
         managementName: 'mongo-db-prod-2686',
         powerState: 2,
       },
       {
         id: 2687,
-        serviceDescription: 'Dedicated Server VM Instance - mtiperf01',
+        vdcName: 'M1VDC27117001',
         managementName: 'mongo-db-test-2687',
         powerState: 1,
       },
       {
         id: 2688,
-        serviceDescription: 'Dedicated Server VM Instance - mtiperf01',
+        vdcName: 'M1VDC27117001',
         managementName: 'app-server-prod-2689',
         powerState: 0,
       },
   ];
+
+  let mockRouterService = {
+    navigate(): any { return null; },
+    events: Observable.of(new Event('event'))
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -69,9 +86,11 @@ describe('ServerListPanelComponent', () => {
       imports: [
       ],
       providers: [
+        { provide: McsTextContentProvider, useValue: textContentProviderMock },
         { provide: McsAssetsProvider, useValue: mockAssetsProvider },
+        { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        Renderer2,
+        Renderer2
       ]
     });
 
@@ -105,6 +124,10 @@ describe('ServerListPanelComponent', () => {
     beforeEach(async () => {
       spyOn(component, 'mapServerList');
       component.mapServerList(component.serverListData);
+    });
+
+    it('should set the no servers found error message', () => {
+      expect(component.errorMessage).toEqual(noServersFound);
     });
 
     it('should set the value of caretDown', () => {

@@ -1,0 +1,14 @@
+@import '../../../styles/shared/base';
+
+.page-not-found-container {
+  margin: $space-xlarge 0;
+  text-align: center;
+
+  .heading {
+    margin-bottom: $space-large;
+  }
+
+  .link-text {
+    font-family: $base-font-bold;
+  }
+}

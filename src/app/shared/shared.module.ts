@@ -20,6 +20,8 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { HeaderComponent } from './header/header.component';
 import { NotificationUiComponent } from './notification-ui/notification-ui.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
+/** Page Not Found Component */
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 /** Directives */
 import { FlatDirective } from './directives/flat.directive';
 import { RedDirective } from './directives/red.directive';
@@ -33,6 +35,7 @@ import { NotificationMaxDisplayPipe } from './notification-ui/notification-max-d
     ContentComponent,
     FooterComponent,
     HeaderComponent,
+    PageNotFoundComponent,
     NotificationUiComponent,
     UserPanelComponent,
     ButtonComponent,
@@ -55,6 +58,7 @@ import { NotificationMaxDisplayPipe } from './notification-ui/notification-max-d
     ContentComponent,
     FooterComponent,
     HeaderComponent,
+    PageNotFoundComponent,
     NotificationUiComponent,
     UserPanelComponent,
     ButtonComponent,

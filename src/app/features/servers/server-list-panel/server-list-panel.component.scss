@@ -31,6 +31,7 @@
         padding-left: 15px;
         padding-right: $space-small;
         margin-bottom: $space-small;
+        word-break: break-word;
         @include font-size($vdc-name-font-size, $vdc-name-line-height);
 
         &.active-vdc {
@@ -54,6 +55,7 @@
           padding: 5px 0;
 
           a {
+            @include display-flex(row);
             @include font-size($link-small-font-size);
             color: $color-grey-03;
 
@@ -64,6 +66,10 @@
             &.active-server {
               font-family: $base-font-bold;
               color: $color-black;
+            }
+
+            i {
+              margin-right: 5px;
             }
           }
         }

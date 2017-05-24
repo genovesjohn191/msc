@@ -24,6 +24,7 @@ describe('ServersComponent', () => {
   CoreDefinition.SEARCH_TIME = 0; // remove delay time
   let component: ServersComponent;
   let pageTitle: string = 'title';
+  let noServersFound: string = 'No Servers Found.';
   let serversServiceMock = {
     getServers(
       page?: number,
@@ -41,7 +42,7 @@ describe('ServersComponent', () => {
   let textContentProviderMock = {
     content: {
       servers: {
-        title: pageTitle
+        errorMessage: noServersFound
       }
     }
   };
@@ -190,6 +191,32 @@ describe('ServersComponent', () => {
       spyOn(component.searchSubscription, 'unsubscribe');
       component.ngOnDestroy();
       expect(component.searchSubscription.unsubscribe).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('hasFailed()', () => {
+    it('should set to hasFailed to true when done loading and thrown an error', () => {
+      component.isLoading = false;
+      component.hasError = true;
+      expect(component.hasFailed).toBeTruthy();
+    });
+  });
+
+  describe('noServers()', () => {
+    it('should set to noServers to true after loading and no servers to display', () => {
+      component.isLoading = false;
+      component.keyword = '';
+      component.totalServerCount = 0;
+      expect(component.noServers).toBeTruthy();
+    });
+  });
+
+  describe('emptySearchResult()', () => {
+    it('should set to noServersFound to true after loading and no servers found on filter', () => {
+      component.isLoading = false;
+      component.keyword = 'staging';
+      component.totalServerCount = 0;
+      expect(component.emptySearchResult).toBeTruthy();
     });
   });
 });

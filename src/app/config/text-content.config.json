@@ -26,11 +26,13 @@
         },
         "networkInformation": {
           "title": "Network Information",
-          "publicIp": "Public IP"
+          "publicIp": "Public IP",
+          "interface": "NIC"
         },
         "storage": {
           "title": "Storage",
           "primaryVolume": "Primary Volume",
+          "secondaryVolumes": "Secondary Volumes",
           "storagePolicy": "Storage Policy"
         },
         "supportIdentifiers": {
@@ -45,8 +47,9 @@
         }
       }
     },
-    "noRecordFound": "No record found",
-    "connectionError": "Servers obtainment connection error.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
+    "noServers": "No servers to display.",
+    "emptySearchResult": "No servers found.",
     "loading": "Loading...",
     "viewMore": "More"
   },
@@ -75,6 +78,11 @@
   },
   "others": {
     "title": "Macquarie Portal - Others"
+  },
+  "pageNotFound": {
+    "heading": "Page not found",
+    "content": "Yikes. Unfortunately, we couldn't find what you were looking for.",
+    "linkText": "Let's get you back to some real content."
   },
   "header": {
     "userPanel": {

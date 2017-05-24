@@ -111,7 +111,7 @@ describe('ServersService', () => {
       });
     });
 
-    it('should set the parameters(page, per_page, server_name) based on input', fakeAsync(() => {
+    it('should set the parameters(page, per_page, search_keyword) based on input', fakeAsync(() => {
       mockBackend.connections.subscribe((connection) => {
         let parameters = connection.request.url.split('?');
         let urlSearchParams: URLSearchParams;
@@ -119,7 +119,7 @@ describe('ServersService', () => {
 
         expect(urlSearchParams.get('page')).toEqual(requestOptions.page.toString());
         expect(urlSearchParams.get('per_page')).toEqual(requestOptions.perPage.toString());
-        expect(urlSearchParams.get('server_name')).toEqual(requestOptions.serverName);
+        expect(urlSearchParams.get('search_keyword')).toEqual(requestOptions.serverName);
         expect(connection.request.method).toBe(RequestMethod.Get);
       });
     }));
@@ -153,7 +153,7 @@ describe('ServersService', () => {
 
         expect(urlSearchParams.get('page')).toEqual(requestOptions.page.toString());
         expect(urlSearchParams.get('per_page')).toEqual(requestOptions.perPage.toString());
-        expect(urlSearchParams.get('server_name')).toEqual(requestOptions.serverName);
+        expect(urlSearchParams.get('search_keyword')).toEqual(requestOptions.serverName);
         expect(connection.request.method).toBe(RequestMethod.Get);
 
         connection.mockError(new Response(

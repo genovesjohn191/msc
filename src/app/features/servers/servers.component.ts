@@ -22,6 +22,8 @@ import {
   McsApiErrorResponse,
   CoreDefinition
 } from '../../core';
+/** Enum */
+import { ServerStatus } from './server-status.enum';
 
 @Component({
   selector: 'mcs-servers',
@@ -34,7 +36,6 @@ export class ServersComponent implements OnInit, OnDestroy {
   public page: number;
   public keyword: string;
   public isLoading: boolean;
-  public errorMessage: string;
   public gear: string;
   /** Server Variables */
   public totalServerCount: number;
@@ -47,12 +48,29 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public actionStatusMap: Map<any, string>;
 
+  public hasError: boolean;
+  // Done loading and thrown an error
+  public get hasFailed(): boolean {
+    return this.hasError && !this.isLoading;
+  }
+
+  // Done loading and no servers to display
+  public get noServers(): boolean {
+    return this.totalServerCount === 0 && !this.keyword && !this.isLoading;
+  }
+
+  // Done loading and no servers found on filter
+   public get emptySearchResult(): boolean {
+    return this.totalServerCount === 0 && this.keyword && !this.isLoading;
+  }
+
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _assetsProvider: McsAssetsProvider
   ) {
     this.isLoading = true;
+    this.hasError = false;
     this.page = 1;
     this.searchSubject = new Subject<McsApiSearchKey>();
     this.servers = new Array();
@@ -102,6 +120,10 @@ export class ServersComponent implements OnInit, OnDestroy {
     return this._assetsProvider.getIcon('spinner');
   }
 
+  public getStateIconClass(state: number): string {
+    return this._assetsProvider.getIcon('state-' + ServerStatus[state].toLowerCase() + '-large');
+  }
+
   public getServers(): void {
     this.searchSubscription = Observable.of(new McsApiSearchKey())
       .concat(this.searchSubject)
@@ -120,9 +142,8 @@ export class ServersComponent implements OnInit, OnDestroy {
           searchKey.keyword
         ).finally(() => this.isLoading = false);
       })
-      .retry(3)
       .catch((error: McsApiErrorResponse) => {
-        this.errorMessage = error.message;
+        this.hasError = true;
         return Observable.throw(error);
       })
       .subscribe((mcsApiResponse) => {

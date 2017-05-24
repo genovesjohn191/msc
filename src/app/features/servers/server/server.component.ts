@@ -2,7 +2,10 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  Router,
+  ActivatedRoute
+} from '@angular/router';
 import { Server } from '../server';
 
 @Component({
@@ -13,10 +16,17 @@ import { Server } from '../server';
 export class ServerComponent implements OnInit {
   public servers: Server[];
 
-  constructor(private _route: ActivatedRoute) {}
+  constructor(
+    private _router: Router,
+    private _route: ActivatedRoute
+  ) {}
 
   public ngOnInit() {
-    this.servers = this._route.snapshot.data.servers.content;
+    if (this._route.snapshot.data.servers.content) {
+      this.servers = this._route.snapshot.data.servers.content;
+    } else {
+      this._router.navigate(['/page-not-found']);
+    }
   }
 
 }

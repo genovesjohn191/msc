@@ -1,5 +1,5 @@
 export enum ServerStatus {
-  Running,
   Stopped,
+  Running,
   Restarting
 }

@@ -43,6 +43,8 @@ export class Server {
   public vdcName: string;
   public vdcAppName: string;
   public vCloudUrl: string;
+  public serviceType: string;
+  public storagePolicy: string;
   public interfaces: ServerInterface[];
   public fileSystem: ServerFileSystem[];
   public media: ServerMedia[];

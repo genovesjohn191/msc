@@ -5,9 +5,11 @@ import {
 } from '@angular/core/testing';
 import { ServerComponent } from './server.component';
 import {
+  Router,
   ActivatedRoute,
   Data
 } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { Server } from '../server';
 
 describe('ServerComponent', () => {
@@ -22,6 +24,10 @@ describe('ServerComponent', () => {
       }
     }
   };
+  let mockRouterService = {
+    navigate(): any { return null; },
+    events: Observable.of(new Event('event'))
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -32,6 +38,7 @@ describe('ServerComponent', () => {
       imports: [
       ],
       providers: [
+        { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     });

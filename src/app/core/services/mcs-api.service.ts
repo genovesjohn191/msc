@@ -109,8 +109,7 @@ export class McsApiService {
    */
   public handleError(error: Response | any) {
     // TODO: Log the general Error here
-    // e.g: Console Logs
-    console.error('Error thrown from fusion api client service.');
+
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -119,7 +118,7 @@ export class McsApiService {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-    console.error('MFP Errors: ' + errMsg);
+
     return Observable.throw(error);
   }
 

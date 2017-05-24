@@ -27,6 +27,7 @@ export * from './functions/mcs-url.function';
 export * from './functions/mcs-element.function';
 export * from './functions/mcs-json.function';
 export * from './functions/mcs-date.function';
+export * from './functions/mcs-string.function';
 /** Enumerations */
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-user-type.enum';

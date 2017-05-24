@@ -5,9 +5,12 @@ import {
 } from '@angular/core/testing';
 import { ServerManagementComponent } from './server-management.component';
 import {
+  Router,
   ActivatedRoute,
-  Data
+  Data,
+  NavigationEnd
 } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { Server } from '../../server';
 import { McsTextContentProvider } from '../../../../core';
 
@@ -23,12 +26,48 @@ describe('ServerManagementComponent', () => {
       }
     }
   };
+  let mockServerDetails = {
+    id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
+    managementName: 'contoso-lin01',
+    vdcName: 'M1VDC27117001',
+    fileSystem: [
+      {
+      path: '/',
+        capacityInGb: 49,
+        freeSpaceInGb: 48
+      },
+      {
+        path: '/boot',
+        capacityInGb: 1,
+        freeSpaceInGb: 1
+      },
+      {
+        path: '/tmp',
+        capacityInGb: 49,
+        freeSpaceInGb: 48
+      },
+      {
+        path: '/var/tmp',
+        capacityInGb: 49,
+        freeSpaceInGb: 48
+      }
+    ],
+  };
+  let navigationEnd = new NavigationEnd(
+    1, '/servers', '/servers');
+  let mockRouterService = {
+    navigate(): any { return null; },
+    events: new Observable((observer) => {
+      observer.next(navigationEnd);
+      observer.complete();
+    })
+  };
   let mockActivatedRoute = {
     parent: {
       snapshot: {
         data: {
           server: {
-            content: 'server details'
+            content: mockServerDetails
           }
         }
       }
@@ -45,6 +84,7 @@ describe('ServerManagementComponent', () => {
       ],
       providers: [
         { provide: McsTextContentProvider, useValue: mockTextContentProvider },
+        { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     });
@@ -69,10 +109,23 @@ describe('ServerManagementComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should get the server details from activated route snapshot data', () => {
-      component.ngOnInit();
-      expect(component.server).toBeDefined();
-    });
+    it('should get the server details from activated route snapshot data',
+      inject([Router], (routerService: Router) => {
+        component.ngOnInit();
+        expect(component.server).toBeDefined();
+      }));
+
+    it('should set the primaryVolume value',
+      inject([Router], (routerService: Router) => {
+        component.ngOnInit();
+        expect(component.primaryVolume).toBeDefined();
+      }));
+
+    it('should set the secondaryVolume value if the fileSystem is more than one',
+      inject([Router], (routerService: Router) => {
+        component.ngOnInit();
+        expect(component.secondaryVolumes).toBeDefined();
+      }));
 
     it('should set the value of serverManagement', () => {
       component.ngOnInit();
