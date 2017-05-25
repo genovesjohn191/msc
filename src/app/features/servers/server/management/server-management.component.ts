@@ -12,7 +12,9 @@ import { Server } from '../../server';
 import { ServerFileSystem } from '../../server-file-system';
 import {
   McsTextContentProvider,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  CoreDefinition,
+  McsBrowserService
 } from '../../../../core';
 import { Observable } from 'rxjs/Rx';
 
@@ -28,11 +30,20 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public subscription: any;
   public primaryVolume: string;
   public secondaryVolumes: string;
+  public serviceType: string;
+
+  // Check if the current server's serverType is managed
+  public get isManaged(): boolean {
+    if (this.serviceType) {
+      return this.serviceType.toLowerCase() === CoreDefinition.MANAGED_SERVER.toLowerCase();
+    }
+  }
 
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
-    private _textProvider: McsTextContentProvider
+    private _textProvider: McsTextContentProvider,
+    private _browserService: McsBrowserService
   ) {}
 
   public ngOnInit() {
@@ -49,6 +60,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         this.primaryVolume = this.server.fileSystem[0].capacityInGb + ' GB';
         this.secondaryVolumes = (this.server.fileSystem.length > 1) ?
           this.getSecondaryVolumes(this.server.fileSystem) : '';
+        this._browserService.scrollToTop();
       }
     });
   }

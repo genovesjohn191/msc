@@ -81,8 +81,7 @@
   },
   "pageNotFound": {
     "heading": "Page not found",
-    "content": "Yikes. Unfortunately, we couldn't find what you were looking for.",
-    "linkText": "Let's get you back to some real content."
+    "linkText": "Click here to return to the Dashboard."
   },
   "header": {
     "userPanel": {

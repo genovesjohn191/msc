@@ -32,13 +32,13 @@ describe('MscBrowserService', () => {
   describe('Initialize', () => {
     it('should register window.addEventListener event', () => {
       spyOn(window, 'addEventListener');
-      mcsBrowserService.Initialize();
+      mcsBrowserService.initialize();
       expect(window.addEventListener).toHaveBeenCalled();
     });
 
     it('should invoke the window.resize event', () => {
       spyOn(window, 'dispatchEvent');
-      mcsBrowserService.Initialize();
+      mcsBrowserService.initialize();
       expect(window.dispatchEvent).toHaveBeenCalledWith(new Event('resize'));
     });
   });
@@ -52,7 +52,7 @@ describe('MscBrowserService', () => {
       };
 
       spyOn(mcsBrowserService.resizeWindowStream, 'next');
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Desktop);
     });
 
@@ -65,18 +65,18 @@ describe('MscBrowserService', () => {
       spyOn(mcsBrowserService.resizeWindowStream, 'next');
 
       // Minimum
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
 
       // Average
       event.target.innerWidth = (CoreDefinition.TABLET_MIN_WIDTH +
         CoreDefinition.TABLET_MAX_WIDTH) / 2.0;
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
 
       // Maximum
       event.target.innerWidth = CoreDefinition.TABLET_MAX_WIDTH;
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
     });
 
@@ -89,20 +89,20 @@ describe('MscBrowserService', () => {
       spyOn(mcsBrowserService.resizeWindowStream, 'next');
 
       // Minimum
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobileLandscape);
 
       // Average
       event.target.innerWidth = (CoreDefinition.MOBILE_LANDSCAPE_MIN_WIDTH +
         CoreDefinition.MOBILE_LANDSCAPE_MAX_WIDTH) / 2.0;
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobileLandscape);
 
       // Maximum
       event.target.innerWidth = CoreDefinition.MOBILE_LANDSCAPE_MAX_WIDTH;
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobileLandscape);
     });
@@ -116,20 +116,20 @@ describe('MscBrowserService', () => {
       spyOn(mcsBrowserService.resizeWindowStream, 'next');
 
       // Minimum
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobilePortrait);
 
       // Average
       event.target.innerWidth = (CoreDefinition.MOBILE_PORTRAIT_MIN_WIDTH +
         CoreDefinition.MOBILE_PORTRAIT_MAX_WIDTH) / 2.0;
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobilePortrait);
 
       // Maximum
       event.target.innerWidth = CoreDefinition.MOBILE_PORTRAIT_MAX_WIDTH;
-      mcsBrowserService.OnResizeWindow(event);
+      mcsBrowserService.onResizeWindow(event);
       expect(mcsBrowserService.resizeWindowStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobilePortrait);
     });

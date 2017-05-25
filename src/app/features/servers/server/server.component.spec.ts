@@ -20,6 +20,9 @@ describe('ServerComponent', () => {
       data: {
         servers: {
           content: 'servers list'
+        },
+        server: {
+          content: 'server details'
         }
       }
     }

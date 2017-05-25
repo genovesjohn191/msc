@@ -194,11 +194,11 @@ describe('ServersComponent', () => {
     });
   });
 
-  describe('hasFailed()', () => {
-    it('should set to hasFailed to true when done loading and thrown an error', () => {
+  describe('loadedSuccessfully()', () => {
+    it('should set to loadedSuccessfully to true when done loading and thrown an error', () => {
       component.isLoading = false;
       component.hasError = true;
-      expect(component.hasFailed).toBeTruthy();
+      expect(component.loadedSuccessfully).toBeFalsy();
     });
   });
 

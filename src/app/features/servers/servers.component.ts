@@ -50,13 +50,13 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public hasError: boolean;
   // Done loading and thrown an error
-  public get hasFailed(): boolean {
-    return this.hasError && !this.isLoading;
+  public get loadedSuccessfully(): boolean {
+    return !this.hasError && !this.isLoading;
   }
 
   // Done loading and no servers to display
   public get noServers(): boolean {
-    return this.totalServerCount === 0 && !this.keyword && !this.isLoading;
+    return this.totalServerCount === 0 && !this.hasError && !this.keyword && !this.isLoading;
   }
 
   // Done loading and no servers found on filter

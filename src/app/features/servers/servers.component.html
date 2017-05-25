@@ -3,7 +3,7 @@
     <div class="main-title">
       <h2>{{ serversTextContent.header }}</h2>
     </div>
-    <div class="server-count">
+    <div *ngIf="loadedSuccessfully" class="server-count">
       <span>{{ totalServerCount }} {{ serversTextContent.header }}</span>
     </div>
   </div>
@@ -58,34 +58,34 @@
     </thead>
     <tbody>
       <tr *ngFor="let server of servers">
-        <td *ngIf="columnSettings['state'].value" class="text-center align-top">
+        <td *ngIf="columnSettings['state'].value" class="text-center align-middle">
           <i [ngClass]="getStateIconClass(server.powerState)"></i>
         </td>
-        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-top hidden-small">
+        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
           {{ server.serviceId }}
         </td>
-        <td *ngIf="columnSettings['name'].value" class="text-left align-top">
+        <td *ngIf="columnSettings['name'].value" class="text-left align-middle">
           <a [routerLink]="[server.id]"><u>{{ server.managementName }}</u></a>
         </td>
-        <td *ngIf="columnSettings['type'].value" class="text-left align-top hidden-xsmall">
+        <td *ngIf="columnSettings['type'].value" class="text-left align-middle hidden-xsmall">
           {{ server.serviceDescription }}
         </td>
-        <td *ngIf="columnSettings['catalog'].value" class="text-left align-top hidden-xsmall">
+        <td *ngIf="columnSettings['catalog'].value" class="text-left align-middle hidden-xsmall">
           {{ server.guestOS }}
         </td>
-        <td *ngIf="columnSettings['privateIp'].value" class="text-center align-top hidden-small">
+        <td *ngIf="columnSettings['privateIp'].value" class="text-center align-middle hidden-small">
           {{ server.managementIpAddress }}
         </td>
-        <td *ngIf="columnSettings['zone'].value" class="text-center align-top hidden-small">
+        <td *ngIf="columnSettings['zone'].value" class="text-center align-middle hidden-small">
           {{ server.coreCount }}
         </td>
-        <td *ngIf="columnSettings['vApp'].value" class="text-left align-top hidden-small">
+        <td *ngIf="columnSettings['vApp'].value" class="text-left align-middle hidden-small">
           {{ server.vAppName }}
         </td>
-        <td *ngIf="columnSettings['services'].value" class="text-left align-top hidden-small">
+        <td *ngIf="columnSettings['services'].value" class="text-left align-middle hidden-small">
           <a href="#">{{ server.id }}</a>
         </td>
-        <td class="text-center align-top">
+        <td class="text-center align-middle">
           <a class="icon-link" mcsPopover padding="none"
             placement="bottom" orientation="left" theme="light"
             [content]="cogContent">
@@ -129,8 +129,9 @@
       (click)="onClickMoreEvent()">{{ serversTextContent.viewMore }}
       <i class="fa fa-angle-down"></i>
     </a>-->
-    <span *ngIf="hasFailed">
-      {{ serversTextContent.errorMessage }} <a (click)="getServers()">Try again shortly</a>.
+    <span *ngIf="!loadedSuccessfully">
+      {{ serversTextContent.errorMessage }} <br/>
+      <a (click)="getServers()">Try again shortly</a>.
     </span>
 
     <span *ngIf="noServers">{{ serversTextContent.noServers }}</span>

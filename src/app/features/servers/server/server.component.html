@@ -11,11 +11,11 @@
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['management']" routerLinkActive="active">Management</a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isManaged" class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['services']" routerLinkActive="active">Services</a>
           </li>
-          <li class="nav-item">
+          <li *ngIf="isManaged" class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['backups']" routerLinkActive="active">Backups</a>
           </li>

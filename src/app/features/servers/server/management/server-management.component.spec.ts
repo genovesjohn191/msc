@@ -12,7 +12,10 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Server } from '../../server';
-import { McsTextContentProvider } from '../../../../core';
+import {
+  McsTextContentProvider,
+  McsBrowserService
+} from '../../../../core';
 
 describe('ServerManagementComponent', () => {
   /** Stub Services/Components */
@@ -85,7 +88,8 @@ describe('ServerManagementComponent', () => {
       providers: [
         { provide: McsTextContentProvider, useValue: mockTextContentProvider },
         { provide: Router, useValue: mockRouterService },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        McsBrowserService
       ]
     });
 
