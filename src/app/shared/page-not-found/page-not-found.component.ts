@@ -14,7 +14,6 @@ import { McsTextContentProvider } from '../../core';
 
 export class PageNotFoundComponent implements OnInit {
   public heading: string;
-  public content: string;
   public linkText: string;
 
   public constructor(private _textProvider: McsTextContentProvider) {
@@ -22,7 +21,6 @@ export class PageNotFoundComponent implements OnInit {
 
   public ngOnInit() {
     this.heading = this._textProvider.content.pageNotFound.heading;
-    this.content = this._textProvider.content.pageNotFound.content;
     this.linkText = this._textProvider.content.pageNotFound.linkText;
   }
 }

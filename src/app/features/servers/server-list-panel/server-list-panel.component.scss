@@ -56,7 +56,7 @@
 
           a {
             @include display-flex(row);
-            @include font-size($link-small-font-size);
+            @include font-size($link-default-font-size);
             color: $color-grey-03;
 
             &:hover {

@@ -26,16 +26,16 @@ export class McsBrowserService {
 
   constructor() {
     this._resizeWindowStream = new BehaviorSubject<McsDeviceType>(McsDeviceType.Desktop);
-    this.Initialize();
+    this.initialize();
   }
 
   /**
    * Initialize stream and raise for resize event initially
    */
-  public Initialize() {
+  public initialize() {
     // Register the resize event
     window.addEventListener('resize', ($event) => {
-      this.OnResizeWindow($event);
+      this.onResizeWindow($event);
     });
 
     // Invoke resize event during initialization to set the device type
@@ -48,7 +48,7 @@ export class McsBrowserService {
    * This event will invoke when the window/browser size is changed
    * @param event Resize event properties
    */
-  public OnResizeWindow(event: any): void {
+  public onResizeWindow(event: any): void {
     let width: number;
     width = event.target.innerWidth;
 
@@ -65,5 +65,12 @@ export class McsBrowserService {
       this._resizeWindowStream.next(McsDeviceType.MobilePortrait);
 
     }
+  }
+
+  /**
+   * This event for scrolling page back to top
+   */
+  public scrollToTop(): void {
+    return window.scrollTo(0, 0);
   }
 }

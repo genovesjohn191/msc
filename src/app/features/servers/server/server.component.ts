@@ -7,6 +7,7 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import { Server } from '../server';
+import { CoreDefinition } from '../../../core';
 
 @Component({
   selector: 'mcs-server',
@@ -15,6 +16,13 @@ import { Server } from '../server';
 })
 export class ServerComponent implements OnInit {
   public servers: Server[];
+  public serviceType: string;
+
+  // Check if the current server's serverType is managed
+  public get isManaged(): boolean {
+    return this.serviceType && this.serviceType.toLowerCase()
+      === CoreDefinition.MANAGED_SERVER.toLowerCase();
+  }
 
   constructor(
     private _router: Router,
@@ -23,6 +31,7 @@ export class ServerComponent implements OnInit {
 
   public ngOnInit() {
     if (this._route.snapshot.data.servers.content) {
+      this.serviceType = this._route.snapshot.data.server.content.serviceType;
       this.servers = this._route.snapshot.data.servers.content;
     } else {
       this._router.navigate(['/page-not-found']);
