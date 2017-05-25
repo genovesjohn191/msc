@@ -51,7 +51,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public hasError: boolean;
   // Done loading and thrown an error
   public get loadedSuccessfully(): boolean {
-    return !this.hasError && !this.isLoading;
+    return !this.hasError;
   }
 
   // Done loading and no servers to display
@@ -149,6 +149,7 @@ export class ServersComponent implements OnInit, OnDestroy {
       .subscribe((mcsApiResponse) => {
         // Get server response
         if (mcsApiResponse.content) {
+          this.hasError = false;
           this.servers = this.servers.concat(mcsApiResponse.content);
           this.totalServerCount = mcsApiResponse.totalCount;
         }
