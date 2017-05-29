@@ -12,21 +12,27 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { TextboxComponent } from './textbox/textbox.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
+import { SvgIconComponent } from './svg-icon/svg-icon.component';
+/** Multiple Components */
+import {
+  StateChangeNotificationsComponent,
+  StateChangeNotificationComponent
+} from './state-change-notifications';
 /** Layout Components */
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
-import { HeaderComponent } from './header/header.component';
-import { NotificationUiComponent } from './notification-ui/notification-ui.component';
-import { UserPanelComponent } from './user-panel/user-panel.component';
-/** Page Not Found Component */
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {
+  HeaderComponent,
+  UserPanelComponent,
+  RunningNotificationComponent,
+  RunningNotificationMaxDisplayPipe
+} from './header';
 /** Directives */
 import { FlatDirective } from './directives/flat.directive';
 import { RedDirective } from './directives/red.directive';
-/** Pipes */
-import { NotificationMaxDisplayPipe } from './notification-ui/notification-max-display.pipe';
 
 @NgModule({
   declarations: [
@@ -36,16 +42,19 @@ import { NotificationMaxDisplayPipe } from './notification-ui/notification-max-d
     FooterComponent,
     HeaderComponent,
     PageNotFoundComponent,
-    NotificationUiComponent,
+    RunningNotificationComponent,
     UserPanelComponent,
     ButtonComponent,
     CheckboxComponent,
     FilterSelectorComponent,
     TextboxComponent,
     LightboxComponent,
+    StateChangeNotificationComponent,
+    StateChangeNotificationsComponent,
+    SvgIconComponent,
     FlatDirective,
     RedDirective,
-    NotificationMaxDisplayPipe
+    RunningNotificationMaxDisplayPipe
   ],
   imports: [
     CommonModule,
@@ -59,16 +68,19 @@ import { NotificationMaxDisplayPipe } from './notification-ui/notification-max-d
     FooterComponent,
     HeaderComponent,
     PageNotFoundComponent,
-    NotificationUiComponent,
+    RunningNotificationComponent,
     UserPanelComponent,
     ButtonComponent,
     CheckboxComponent,
     FilterSelectorComponent,
     TextboxComponent,
     LightboxComponent,
+    StateChangeNotificationComponent,
+    StateChangeNotificationsComponent,
+    SvgIconComponent,
     FlatDirective,
     RedDirective,
-    NotificationMaxDisplayPipe,
+    RunningNotificationMaxDisplayPipe,
     CommonModule,
     RouterModule,
     FormsModule,

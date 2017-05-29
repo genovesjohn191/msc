@@ -70,7 +70,8 @@ type StoreType = {
 
 const mcsCoreConfig = {
   apiHost: API_URL,
-  imageRoot: 'assets/img/',
+  imageRoot: 'assets/img',
+  iconRoot: 'assets/icon',
   notification: {
     host: API_WEBSOCKET_HOST,
     routePrefix: API_WEBSOCKET_ROUTE_PREFIX,

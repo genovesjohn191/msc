@@ -1,13 +1,28 @@
 import {
   async,
   TestBed,
-  getTestBed
+  getTestBed,
+  fakeAsync,
+  tick
 } from '@angular/core/testing';
 import { Subject } from 'rxjs/Rx';
 import { McsApiJob } from '../models/mcs-api-job';
+import { McsApiService } from './mcs-api.service';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
+import { CoreConfig } from '../core.config';
+import { CoreDefinition } from '../core.definition';
+import {
+  BaseRequestOptions,
+  Http,
+  XHRBackend
+} from '@angular/http';
+import {
+  MockBackend,
+  MockConnection
+} from '@angular/http/testing';
+import { ResponseOptions } from '@angular/http';
 
 describe('McsNotificationContextService', () => {
 
@@ -17,6 +32,18 @@ describe('McsNotificationContextService', () => {
     notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
+  let mockBackend: MockBackend;
+  let mcsApiService: McsApiService;
+  let coreConfig = {
+    apiHost: 'http://localhost:5000',
+    imageRoot: 'assets/img/',
+    notification: {
+      host: 'ws://localhost:15674/ws',
+      routePrefix: 'mcs.portal.notification',
+      user: 'guest',
+      password: 'guest'
+    }
+  } as CoreConfig;
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -25,12 +52,28 @@ describe('McsNotificationContextService', () => {
       ],
       providers: [
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        McsNotificationContextService
+        McsNotificationContextService,
+        McsApiService,
+        MockBackend,
+        BaseRequestOptions,
+        {
+          provide: Http,
+          deps: [MockBackend, BaseRequestOptions],
+          useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => {
+            return new Http(backend, defaultOptions);
+          }
+        },
+        {
+          provide: CoreConfig,
+          useValue: coreConfig
+        }
       ]
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
+      mockBackend = getTestBed().get(MockBackend);
+      mcsApiService = getTestBed().get(McsApiService);
       mcsNotificationContextService = getTestBed().get(McsNotificationContextService);
     });
   }));

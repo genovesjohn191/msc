@@ -5,12 +5,22 @@
   @include display-flex(column);
 
   .notifications-description {
+    display: block;
     margin-bottom: $space-large;
+  }
+
+  .search-keyword {
+    display: block;
   }
 
   .status-information {
     display: block;
     padding-bottom: $space-large;
     text-align: center;
+
+    a {
+      @include font-size($font-size-default);
+      text-decoration: underline;
+    }
   }
 }

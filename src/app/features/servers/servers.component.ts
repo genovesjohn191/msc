@@ -20,7 +20,8 @@ import {
   McsApiError,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  CoreDefinition
+  CoreDefinition,
+  mergeArrays
 } from '../../core';
 /** Enum */
 import { ServerStatus } from './server-status.enum';
@@ -60,7 +61,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   }
 
   // Done loading and no servers found on filter
-   public get emptySearchResult(): boolean {
+  public get emptySearchResult(): boolean {
     return this.totalServerCount === 0 && this.keyword && !this.isLoading;
   }
 
@@ -125,6 +126,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   }
 
   public getServers(): void {
+    this.isLoading = true;
     this.searchSubscription = Observable.of(new McsApiSearchKey())
       .concat(this.searchSubject)
       .debounceTime(CoreDefinition.SEARCH_TIME)
@@ -133,12 +135,10 @@ export class ServersComponent implements OnInit, OnDestroy {
       })
       .switchMap((searchKey) => {
         // Switch observable items to server list
-        this.servers.splice(0);
         return this._serversService.getServers(
           searchKey.page,
-          // TODO: Display all record temporarily since Max item per page is under confirmation
-          // searchKey.maxItemPerPage ? searchKey.maxItemPerPage : MAX_ITEMS_PER_PAGE,
-          undefined,
+          searchKey.maxItemPerPage ?
+            searchKey.maxItemPerPage : CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE,
           searchKey.keyword
         ).finally(() => this.isLoading = false);
       })
@@ -148,9 +148,10 @@ export class ServersComponent implements OnInit, OnDestroy {
       })
       .subscribe((mcsApiResponse) => {
         // Get server response
+        if (this.page === 1) { this.servers.splice(0); }
         if (mcsApiResponse.content) {
           this.hasError = false;
-          this.servers = this.servers.concat(mcsApiResponse.content);
+          this.servers = mergeArrays(this.servers, mcsApiResponse.content);
           this.totalServerCount = mcsApiResponse.totalCount;
         }
       });

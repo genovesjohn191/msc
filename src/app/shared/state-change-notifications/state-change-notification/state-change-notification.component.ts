@@ -22,31 +22,30 @@ import {
   McsNotificationContextService,
   CoreDefinition,
   formatDate
-} from '../../core';
+} from '../../../core';
 
 @Component({
-  selector: 'mcs-notification-ui',
-  templateUrl: './notification-ui.component.html',
-  styles: [require('./notification-ui.component.scss')],
+  selector: 'mcs-state-change-notification',
+  templateUrl: './state-change-notification.component.html',
+  styles: [require('./state-change-notification.component.scss')],
   animations: [
     trigger('fade', [
-      // Fade-in from top
-      state('in', style({ opacity: 1, transform: 'translateY(0)' })),
+      // Enter from left
+      state('in', style({ opacity: 1, transform: 'translateX(0)' })),
       transition('* => in', [
-        style({ opacity: 0, transform: 'translateY(-3%)' }),
-        animate('300ms ease-in-out')
+        style({ opacity: 0, transform: 'translateX(-5%)' }),
+        animate('400ms ease-in-out')
       ]),
-      // Fade-out from bottom
-      state('out', style({ opacity: 0, transform: 'translateY(-3%)' })),
+      state('out', style({ opacity: 0, transform: 'translateX(5%)' })),
       transition('in => out', [
-        style({ opacity: 1, transform: 'translateY(0)' }),
+        style({ opacity: 1, transform: 'translateX(0)' }),
         animate('300ms ease-in-out')
       ]),
     ])
   ]
 })
 
-export class NotificationUiComponent implements OnInit, OnChanges {
+export class StateChangeNotificationComponent implements OnInit, OnChanges {
   @Input()
   public attribute: McsApiJob;
 
@@ -107,6 +106,10 @@ export class NotificationUiComponent implements OnInit, OnChanges {
     return time;
   }
 
+  public onClickCloseBtn(): void {
+    this._removeNotification(0);
+  }
+
   public displayErrorMessage(status: string): boolean {
     let isError: boolean = false;
 
@@ -130,12 +133,12 @@ export class NotificationUiComponent implements OnInit, OnChanges {
       case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
         this.iconStatusClass = this._assetsProvider.getIcon('close');
         this.iconStatusClass += ' failed';
-        this._timeOut = CoreDefinition.NOTIFICATION_FAILED_TIMEDOUT;
+        this._timeOut = CoreDefinition.NOTIFICATION_FAILED_TIMEOUT;
         break;
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
         this.iconStatusClass = this._assetsProvider.getIcon('check');
         this.iconStatusClass += ' completed';
-        this._timeOut = CoreDefinition.NOTIFICATION_COMPLETED_TIMEDOUT;
+        this._timeOut = CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT;
         break;
       default:
         break;

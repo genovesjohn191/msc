@@ -1,4 +1,4 @@
-@import '../../../styles/shared/base';
+@import '../../../../styles/shared/base';
 
 .mcs-user-panel {
   @include display-flex(row);
@@ -10,20 +10,33 @@
       padding: 0 $space-medium;
     }
 
-    i {
+    .icon-link {
+      display: block;
       position: relative;
-      span {
-        background-color: $color-primary-01;
+
+      .caret-down {
         position: absolute;
-        width: 18px;
-        height: 18px;
-        top: -12px;
-        right: -10px;
-        @include border-radius(100%);
-        @include font-size($notifications-font-size);
-        font-family: $base-font-bold;
-        text-align: center;
-        color: $color-black;
+        display: inline-block;
+        top: 0;
+        left: $user-panel-caret-offset;
+      }
+
+      i {
+        position: relative;
+
+        span {
+          background-color: $color-primary-01;
+          position: absolute;
+          width: $user-panel-notification-size;
+          height: $user-panel-notification-size;
+          top: -12px;
+          right: -10px;
+          @include border-radius(100%);
+          @include font-size($notifications-font-size);
+          font-family: $base-font-bold;
+          text-align: center;
+          color: $color-black;
+        }
       }
     }
   }

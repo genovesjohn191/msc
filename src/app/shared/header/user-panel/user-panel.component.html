@@ -7,6 +7,9 @@
       <i [ngClass]="bellIcon">
         <span *ngIf="notifications.length > 0">{{ notifications.length }}</span>
       </i>
+      <div class="caret-down">
+        <i [ngClass]="caretDown"></i>
+      </div>
     </a>
 
     <ng-template #notificationsTitle>
@@ -22,9 +25,9 @@
           <li class="error-connection" *ngIf="hasConnectionError">
             <span>{{ notificationTextContent.connectionError }}</span>
           </li>
-          <li *ngFor="let notification of (notifications | mcsNotificationMaxDisplay)">
-            <mcs-notification-ui *ngIf="popoverInstance.componentRef"
-              [attribute]="notification"></mcs-notification-ui>
+          <li *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplay)">
+            <mcs-running-notification *ngIf="popoverInstance.componentRef"
+              [attribute]="notification"></mcs-running-notification>
           </li>
           <li class="view-all-notifications">
             <a class="icon-link" (click)="viewNotificationsPage()">

@@ -1,0 +1,14 @@
+@import '../../../styles/shared/base';
+
+.state-change-notifications-container {
+  position: fixed;
+  bottom: 20px;
+  width: 600px;
+  z-index: 1000;
+
+  ul {
+    li {
+      margin: $state-change-notifications-interval 0;
+    }
+  }
+}

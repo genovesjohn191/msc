@@ -124,18 +124,17 @@
        {{ serversTextContent.loading }}
     </div>
 
-    <!--TODO: Remove comment when paging specs is already finalized-->
-    <!--<a *ngIf="(getDisplayServerCount() < totalServerCount) && !isLoading"
+    <a *ngIf="(getDisplayServerCount() < totalServerCount) && !isLoading"
       (click)="onClickMoreEvent()">{{ serversTextContent.viewMore }}
       <i class="fa fa-angle-down"></i>
-    </a>-->
-    <span *ngIf="!loadedSuccessfully">
+    </a>
+
+    <span *ngIf="!loadedSuccessfully && !isLoading">
       {{ serversTextContent.errorMessage }} <br/>
       <a (click)="getServers()">Try again shortly</a>.
     </span>
 
     <span *ngIf="noServers">{{ serversTextContent.noServers }}</span>
-
     <span *ngIf="emptySearchResult">{{ serversTextContent.emptySearchResult }}</span>
   </div>
 </section>

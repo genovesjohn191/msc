@@ -17,8 +17,8 @@ export class CoreDefinition {
   public static NOTIFICATION_JOB_COMPLETED = 'Completed';
   public static NOTIFICATION_MAX_DISPLAY = 3;
   public static NOTIFICATION_ANIMATION_DELAY = 310;
-  public static NOTIFICATION_COMPLETED_TIMEDOUT = 3000;
-  public static NOTIFICATION_FAILED_TIMEDOUT = 5000;
+  public static NOTIFICATION_COMPLETED_TIMEOUT = 5000;
+  public static NOTIFICATION_FAILED_TIMEOUT = 10000;
   public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 5000;
 
   /** AppState Properties */
@@ -35,4 +35,9 @@ export class CoreDefinition {
   public static SEARCH_TIME = 2000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
   public static MANAGED_SERVER = 'Managed';
+
+  /** Icons */
+  public static ICON_SIZE_SMALL = '20px';
+  public static ICON_SIZE_MEDIUM = '25px';
+  public static ICON_SIZE_LARGE = '30px';
 }

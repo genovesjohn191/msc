@@ -12,7 +12,7 @@
     {{ notificationsTextContent.description }}
   </span>
 
-  <mcs-textbox name="search" [ngModel]="keyword"
+  <mcs-textbox class="search-keyword" name="search" [ngModel]="keyword"
     (ngModelChange)="onSearchEvent($event)" width="350"
     placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
 
@@ -60,21 +60,22 @@
   </table>
 
   <div class="status-information">
-    <div *ngIf="isLoading && !errorMessage">
+    <div *ngIf="isLoading">
       <i [ngClass]="getSpinnerClass()"></i>
        {{ notificationsTextContent.loading }}
     </div>
 
-    <!--TODO: Remove comment when paging specs is already finalized-->
-    <!--<a *ngIf="(getDisplayNotificationsCount() < totalNotificationsCount) && !isLoading"
+    <a *ngIf="(getDisplayNotificationsCount() < totalNotificationsCount) && !isLoading"
       (click)="onClickMoreEvent()">{{ notificationsTextContent.viewMore }}
       <i class="fa fa-angle-down"></i>
-    </a>-->
-    <span *ngIf="totalNotificationsCount === 0 && !isLoading && !errorMessage">
-      {{ notificationsTextContent.noRecordFound }}
+    </a>
+
+    <span *ngIf="!loadedSuccessfully && !isLoading">
+      {{ notificationsTextContent.errorMessage }} <br/>
+      <a (click)="getNotifications()">Try again shortly</a>.
     </span>
-    <span *ngIf="errorMessage" class="text-color-error">
-      {{ notificationsTextContent.connectionError }}
-    </span>
+
+    <span *ngIf="noNotifications">{{ notificationsTextContent.noNotifications }}</span>
+    <span *ngIf="emptySearchResult">{{ notificationsTextContent.emptySearchResult }}</span>
   </div>
 </section>

@@ -2,12 +2,11 @@ import {
   Component,
   OnInit,
   ChangeDetectorRef,
-  NgZone,
   ViewChild,
   ElementRef
 } from '@angular/core';
-
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 
 /** Services/Providers */
 import {
@@ -19,7 +18,7 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsConnectionStatus
-} from '../../core';
+} from '../../../core';
 
 @Component({
   selector: 'mcs-user-panel',
@@ -30,6 +29,7 @@ import {
 export class UserPanelComponent implements OnInit {
   public bellIcon: string;
   public userIcon: string;
+  public caretDown: string;
   public caretRightIcon: string;
   public notifications: McsApiJob[];
   public hasConnectionError: boolean;
@@ -43,10 +43,9 @@ export class UserPanelComponent implements OnInit {
     private _assetsProvider: McsAssetsProvider,
     private _textContent: McsTextContentProvider,
     private _router: Router,
-    private _notificationContext: McsNotificationContextService,
+    private _notificationContextService: McsNotificationContextService,
     private _browserService: McsBrowserService,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _ngZone: NgZone
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.hasConnectionError = false;
     this.statusIconClass = '';
@@ -56,21 +55,30 @@ export class UserPanelComponent implements OnInit {
   public ngOnInit() {
     this.bellIcon = this._assetsProvider.getIcon('bell');
     this.userIcon = this._assetsProvider.getIcon('user');
+    this.caretDown = this._assetsProvider.getIcon('caret-down');
     this.caretRightIcon = this._assetsProvider.getIcon('caret-right');
     this.notificationTextContent = this._textContent.content.header.userPanel.notifications;
 
     // Subscribe to notification changes
-    this._notificationContext.notificationsStream
+    this._notificationContextService.notificationsStream
       .subscribe((updatedNotifications) => {
-        this.notifications = updatedNotifications;
+
+        this.notifications = updatedNotifications.filter((notification) => {
+          return notification.status === CoreDefinition.NOTIFICATION_JOB_FAILED ||
+            notification.status === CoreDefinition.NOTIFICATION_JOB_CANCELLED ||
+            notification.status === CoreDefinition.NOTIFICATION_JOB_TIMEDOUT ||
+            notification.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+        });
         setTimeout(() => {
+
           this._changeDetectorRef.detectChanges();
         }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
       });
 
-    // Subscribe to connection status stream
-    this._notificationContext.connectionStatusStream
+    // Subscribe to connection status stream to check for possible errors
+    this._notificationContextService.connectionStatusStream
       .subscribe((status) => {
+
         if (status === McsConnectionStatus.Success) {
           this.hasConnectionError = false;
         } else if (status === McsConnectionStatus.Failed ||
@@ -106,6 +114,6 @@ export class UserPanelComponent implements OnInit {
   }
 
   public onCloseNotificationPanel(): void {
-    this._notificationContext.clearNonActiveNotifications();
+    this._notificationContextService.clearNonActiveNotifications();
   }
 }

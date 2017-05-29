@@ -53,7 +53,7 @@ export class McsAssetsProvider {
     }
 
     // Return value (image path)
-    return this._coreConfig.imageRoot + value;
+    return `${this._coreConfig.imageRoot}/${value}`;
   }
 
   /**

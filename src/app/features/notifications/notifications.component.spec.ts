@@ -5,6 +5,7 @@ import {
   tick,
   fakeAsync
 } from '@angular/core/testing';
+import { HttpModule } from '@angular/http';
 import {
   Observable,
   Subject
@@ -13,8 +14,10 @@ import {
   McsTextContentProvider,
   McsAssetsProvider,
   McsApiSearchKey,
+  McsApiRequestParameter,
   McsApiSuccessResponse,
   McsApiJob,
+  McsApiService,
   McsNotificationContextService,
   McsNotificationJobService,
   CoreDefinition
@@ -66,6 +69,11 @@ describe('NotificationsComponent', () => {
     notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
+  let mockMcsApiService = {
+    get(apiRequest: McsApiRequestParameter): Observable<Response> {
+      return Observable.of(new Response());
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -77,6 +85,7 @@ describe('NotificationsComponent', () => {
       ],
       providers: [
         McsNotificationContextService,
+        { provide: McsApiService, useValue: mockMcsApiService },
         { provide: NotificationsService, useValue: notificationsServiceMock },
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
         { provide: McsTextContentProvider, useValue: textContentProviderMock },
@@ -204,11 +213,17 @@ describe('NotificationsComponent', () => {
         })));
   });
 
-  // describe('ngOnDestroy()', () => {
-  //   it('should destroy the subscription of searchSubject', () => {
-  //     spyOn(component.searchSubscription, 'unsubscribe');
-  //     component.ngOnDestroy();
-  //     expect(component.searchSubscription.unsubscribe).toHaveBeenCalledTimes(1);
-  //   });
-  // });
+  describe('ngOnDestroy()', () => {
+    it('should destroy the subscription of searchSubscription', () => {
+      spyOn(component.searchSubscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.searchSubscription.unsubscribe).toHaveBeenCalledTimes(1);
+    });
+
+    it('should destroy the subscription of notificationsSubscription', () => {
+      spyOn(component.notificationsSubscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.notificationsSubscription.unsubscribe).toHaveBeenCalledTimes(1);
+    });
+  });
 });
