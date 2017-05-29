@@ -15,7 +15,8 @@ export class CoreDefinition {
   public static NOTIFICATION_JOB_FAILED = 'Failed';
   public static NOTIFICATION_JOB_CANCELLED = 'Cancelled';
   public static NOTIFICATION_JOB_COMPLETED = 'Completed';
-  public static NOTIFICATION_MAX_DISPLAY = 3;
+  public static NOTIFICATION_RUNNING_MAX_DISPLAY = 3;
+  public static NOTIFICATION_STATE_CHANGE_MAX_DISPLAY = 2;
   public static NOTIFICATION_ANIMATION_DELAY = 310;
   public static NOTIFICATION_COMPLETED_TIMEOUT = 5000;
   public static NOTIFICATION_FAILED_TIMEOUT = 10000;

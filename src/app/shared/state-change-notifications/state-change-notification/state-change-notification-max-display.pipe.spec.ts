@@ -4,7 +4,9 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { Component } from '@angular/core';
-import { RunningNotificationMaxDisplayPipe } from './running-notification-max-display.pipe';
+import {
+  StateChangeNotificationMaxDisplayPipe
+} from './state-change-notification-max-display.pipe';
 import {
   McsApiJob,
   CoreDefinition
@@ -30,7 +32,7 @@ export class TestComponent {
   }
 }
 
-describe('RunningNotificationMaxDisplayPipe', () => {
+describe('StateChangeNotificationMaxDisplayPipe', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
@@ -41,7 +43,7 @@ describe('RunningNotificationMaxDisplayPipe', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        RunningNotificationMaxDisplayPipe
+        StateChangeNotificationMaxDisplayPipe
       ]
     });
 
@@ -50,7 +52,8 @@ describe('RunningNotificationMaxDisplayPipe', () => {
       set: {
         template: `
         <ul>
-          <li *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplayPipe)">
+          <li
+          *ngFor="let notification of (notifications | mcsStateChangeNotificationMaxDisplayPipe)">
             <div>Notification</div>
           </li>
         </ul>
@@ -70,10 +73,10 @@ describe('RunningNotificationMaxDisplayPipe', () => {
 
   /** Test Implementation */
   describe('notifications()', () => {
-    it(`should create/display ${CoreDefinition.NOTIFICATION_RUNNING_MAX_DISPLAY}
-    notifications only`,
+    it(`should create/display ${CoreDefinition.NOTIFICATION_STATE_CHANGE_MAX_DISPLAY}
+       notifications only`,
       () => {
-        expect(divElements.length).toBe(CoreDefinition.NOTIFICATION_RUNNING_MAX_DISPLAY);
+        expect(divElements.length).toBe(CoreDefinition.NOTIFICATION_STATE_CHANGE_MAX_DISPLAY);
       });
   });
 });

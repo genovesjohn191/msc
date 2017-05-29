@@ -8,12 +8,12 @@ import {
 } from '../../../core';
 
 @Pipe({
-  name: 'mcsRunningNotificationMaxDisplay',
+  name: 'mcsRunningNotificationMaxDisplayPipe',
   pure: false
 })
 
 export class RunningNotificationMaxDisplayPipe implements PipeTransform {
   public transform(notifications: McsApiJob[]): any {
-    return notifications.slice(0, CoreDefinition.NOTIFICATION_MAX_DISPLAY);
+    return notifications.slice(0, CoreDefinition.NOTIFICATION_RUNNING_MAX_DISPLAY);
   }
 }

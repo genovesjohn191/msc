@@ -1,7 +1,9 @@
 <div class="mcs-user-panel">
   <aside class="notification">
     <a class="icon-link" mcsPopover #popoverInstance="mcsPopover"
-      (onClose)="onCloseNotificationPanel()" maxWidth="350px" padding="none"
+      (onClose)="onCloseNotificationPanel()"
+      (onOpen)="onOpenNotificationPanel()"
+      maxWidth="350px" padding="none"
       placement="bottom" orientation="center" theme="light"
       [title]="notificationsTitle" [content]="notificationsContent">
       <i [ngClass]="bellIcon">
@@ -13,11 +15,12 @@
     </a>
 
     <ng-template #notificationsTitle>
-      <span class="mcs-notification-title">{{ notificationTextContent.title }}</span>
+      <span *ngIf="popoverInstance.componentRef"
+        class="mcs-notification-title">{{ notificationTextContent.title }}</span>
     </ng-template>
 
     <ng-template #notificationsContent>
-      <div class="mcs-notification-content">
+      <div *ngIf="popoverInstance.componentRef" class="mcs-notification-content">
         <ul class="unstyled-list">
           <li class="no-notifications" *ngIf="notifications.length == 0 && !hasConnectionError">
             <span>{{ notificationTextContent.noRecord }}</span>
@@ -25,9 +28,8 @@
           <li class="error-connection" *ngIf="hasConnectionError">
             <span>{{ notificationTextContent.connectionError }}</span>
           </li>
-          <li *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplay)">
-            <mcs-running-notification *ngIf="popoverInstance.componentRef"
-              [attribute]="notification"></mcs-running-notification>
+          <li *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplayPipe)">
+            <mcs-running-notification [attribute]="notification"></mcs-running-notification>
           </li>
           <li class="view-all-notifications">
             <a class="icon-link" (click)="viewNotificationsPage()">
