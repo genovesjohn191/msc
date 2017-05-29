@@ -35,6 +35,7 @@ export class UserPanelComponent implements OnInit {
   public hasConnectionError: boolean;
   public statusIconClass: string;
   public notificationTextContent: any;
+  public deviceType: McsDeviceType;
 
   @ViewChild('popoverInstance')
   public popoverInstance: any;
@@ -50,6 +51,7 @@ export class UserPanelComponent implements OnInit {
     this.hasConnectionError = false;
     this.statusIconClass = '';
     this.notifications = new Array();
+    this.deviceType = McsDeviceType.Desktop;
   }
 
   public ngOnInit() {
@@ -62,15 +64,8 @@ export class UserPanelComponent implements OnInit {
     // Subscribe to notification changes
     this._notificationContextService.notificationsStream
       .subscribe((updatedNotifications) => {
-
-        this.notifications = updatedNotifications.filter((notification) => {
-          return notification.status === CoreDefinition.NOTIFICATION_JOB_FAILED ||
-            notification.status === CoreDefinition.NOTIFICATION_JOB_CANCELLED ||
-            notification.status === CoreDefinition.NOTIFICATION_JOB_TIMEDOUT ||
-            notification.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        });
+        this.notifications = updatedNotifications;
         setTimeout(() => {
-
           this._changeDetectorRef.detectChanges();
         }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
       });
@@ -89,6 +84,7 @@ export class UserPanelComponent implements OnInit {
 
     // Subscribe to browser service
     this._browserService.resizeWindowStream.subscribe((deviceType: McsDeviceType) => {
+      this.deviceType = deviceType;
       if (this.popoverInstance) {
         switch (deviceType) {
           case McsDeviceType.MobilePortrait:
@@ -107,9 +103,15 @@ export class UserPanelComponent implements OnInit {
   }
 
   public viewNotificationsPage(): void {
-    this._router.navigate(['./notifications']);
-    if (this.popoverInstance) {
-      this.popoverInstance.close();
+    if (this.popoverInstance) { this.popoverInstance.close(); }
+    setTimeout(() => {
+      this._router.navigate(['./notifications']);
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+  }
+
+  public onOpenNotificationPanel(): void {
+    if (this.popoverInstance && this.deviceType !== McsDeviceType.Desktop) {
+      this.viewNotificationsPage();
     }
   }
 

@@ -16,7 +16,8 @@ import { SvgIconComponent } from './svg-icon/svg-icon.component';
 /** Multiple Components */
 import {
   StateChangeNotificationsComponent,
-  StateChangeNotificationComponent
+  StateChangeNotificationComponent,
+  StateChangeNotificationMaxDisplayPipe
 } from './state-change-notifications';
 /** Layout Components */
 import { MainNavigationComponent } from './main-navigation/main-navigation.component';
@@ -54,7 +55,8 @@ import { RedDirective } from './directives/red.directive';
     SvgIconComponent,
     FlatDirective,
     RedDirective,
-    RunningNotificationMaxDisplayPipe
+    RunningNotificationMaxDisplayPipe,
+    StateChangeNotificationMaxDisplayPipe
   ],
   imports: [
     CommonModule,
@@ -81,6 +83,7 @@ import { RedDirective } from './directives/red.directive';
     FlatDirective,
     RedDirective,
     RunningNotificationMaxDisplayPipe,
+    StateChangeNotificationMaxDisplayPipe,
     CommonModule,
     RouterModule,
     FormsModule,

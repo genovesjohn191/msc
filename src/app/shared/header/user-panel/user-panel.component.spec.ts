@@ -106,6 +106,41 @@ describe('UserPanelComponent', () => {
   });
 
   describe('notificationsStream()', () => {
+
+    it('should get the active job notifications from the notification context service',
+      fakeAsync((inject([McsNotificationContextService],
+        (notificationContextService: McsNotificationContextService) => {
+
+          let notifications: McsApiJob[] = new Array();
+
+          let notificationActive = new McsApiJob();
+          notificationActive.id = '5';
+          notificationActive.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+          notifications.push(notificationActive);
+
+          notificationContextService.notificationsStream.next(notifications);
+          tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
+          expect(component.notifications).toBeDefined();
+          expect(component.notifications.length).toBe(1);
+        }))));
+
+    it('should get the pending job notifications from the notification context service',
+      fakeAsync((inject([McsNotificationContextService],
+        (notificationContextService: McsNotificationContextService) => {
+
+          let notifications: McsApiJob[] = new Array();
+
+          let notificationPending = new McsApiJob();
+          notificationPending.id = '5';
+          notificationPending.status = CoreDefinition.NOTIFICATION_JOB_PENDING;
+          notifications.push(notificationPending);
+
+          notificationContextService.notificationsStream.next(notifications);
+          tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
+          expect(component.notifications).toBeDefined();
+          expect(component.notifications.length).toBe(1);
+        }))));
+
     it('should get the failed job notifications from the notification context service',
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
