@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ChangeDetectorRef
 } from '@angular/core';
 import {
@@ -18,7 +19,8 @@ import {
   McsApiJob,
   McsApiErrorResponse,
   McsNotificationContextService,
-  formatDate
+  formatDate,
+  mergeArrays
 } from '../../core';
 
 @Component({
@@ -27,7 +29,7 @@ import {
   styles: [require('./notifications.component.scss')]
 })
 
-export class NotificationsComponent implements OnInit {
+export class NotificationsComponent implements OnInit, OnDestroy {
   public page: number;
   public keyword: string;
   public isLoading: boolean;
@@ -35,11 +37,28 @@ export class NotificationsComponent implements OnInit {
   public notificationsTextContent: any;
   public totalNotificationsCount: number;
   public notifications: McsApiJob[];
+  public notificationsSubscription: any;
 
   /** Search Subscription */
   public searchSubscription: any;
   public searchKeyword: string;
   public searchSubject: Subject<McsApiSearchKey>;
+
+  public hasError: boolean;
+  // Done loading and thrown an error
+  public get loadedSuccessfully(): boolean {
+    return !this.hasError;
+  }
+
+  // Done loading and no servers to display
+  public get noNotifications(): boolean {
+    return this.totalNotificationsCount === 0 && !this.hasError && !this.keyword && !this.isLoading;
+  }
+
+  // Done loading and no servers found on filter
+  public get emptySearchResult(): boolean {
+    return this.totalNotificationsCount === 0 && this.keyword && !this.isLoading;
+  }
 
   public constructor(
     private _assetsProvider: McsAssetsProvider,
@@ -51,6 +70,7 @@ export class NotificationsComponent implements OnInit {
     this.page = 1;
     this.totalNotificationsCount = 0;
     this.isLoading = true;
+    this.hasError = false;
     this.notifications = new Array();
     this.searchSubject = new Subject<McsApiSearchKey>();
   }
@@ -59,10 +79,53 @@ export class NotificationsComponent implements OnInit {
     this.notificationsTextContent = this._textContentProvider.content.notifications;
 
     // obtainment of notifications from the API
-    this._getNotificationJobs();
+    this.getNotifications();
 
     // Add notification update listener
     this._listenToNotificationUpdate();
+  }
+
+  public ngOnDestroy() {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+
+    if (this.notificationsSubscription) {
+      this.notificationsSubscription.unsubscribe();
+    }
+  }
+
+  public getNotifications(): void {
+    this.isLoading = true;
+
+    this.searchSubscription = Observable.of(new McsApiSearchKey())
+      .concat(this.searchSubject)
+      .debounceTime(CoreDefinition.SEARCH_TIME)
+      .distinctUntilChanged((previous, next) => {
+        return previous.isEqual(next);
+      })
+      .switchMap((searchKey) => {
+        // Switch observable items to server list
+        return this._notificationsService.getNotifications(
+          searchKey.page,
+          searchKey.maxItemPerPage ?
+            searchKey.maxItemPerPage : CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE,
+          searchKey.keyword
+        ).finally(() => this.isLoading = false);
+      })
+      .catch((error: McsApiErrorResponse) => {
+        this.hasError = true;
+        return Observable.throw(error);
+      })
+      .subscribe((mcsApiResponse) => {
+        // Get server response
+        if (this.page === 1) { this.notifications.splice(0); }
+        if (mcsApiResponse.content) {
+          this.hasError = false;
+          this.notifications = mergeArrays(this.notifications, mcsApiResponse.content);
+          this.totalNotificationsCount = mcsApiResponse.totalCount;
+        }
+      });
   }
 
   public getIconClass(status: string): string {
@@ -141,40 +204,9 @@ export class NotificationsComponent implements OnInit {
     this.searchSubject.next(searchKey);
   }
 
-  private _getNotificationJobs(): void {
-    this.searchSubscription = Observable.of(new McsApiSearchKey())
-      .concat(this.searchSubject)
-      .debounceTime(CoreDefinition.SEARCH_TIME)
-      .distinctUntilChanged((previous, next) => {
-        return previous.isEqual(next);
-      })
-      .switchMap((searchKey) => {
-        // Switch observable items to server list
-        this.notifications.splice(0);
-        return this._notificationsService.getNotifications(
-          searchKey.page,
-          undefined,
-          // TODO: Display all record temporarily since Max item per page is under confirmation
-          // searchKey.maxItemPerPage ?
-          // searchKey.maxItemPerPage : CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE,
-          searchKey.keyword
-        ).finally(() => this.isLoading = false);
-      })
-      .retry(3)
-      .catch((error: McsApiErrorResponse) => {
-        this.errorMessage = error.message;
-        return Observable.throw(error);
-      })
-      .subscribe((mcsApiResponse) => {
-        // Get server response
-        this.notifications = this.notifications.concat(mcsApiResponse.content);
-        this.totalNotificationsCount = mcsApiResponse.totalCount;
-      });
-  }
-
   private _listenToNotificationUpdate(): void {
     // listener for the notification updates
-    this._notificationContextService.notificationsStream
+    this.notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((updatedNotifications) => {
 
         if (this.isLoading === false) {
@@ -202,7 +234,7 @@ export class NotificationsComponent implements OnInit {
       if (isExist === false) {
         // Insert notification item in the first order
         this.notifications.splice(0, 0, notification);
-        this.totalNotificationsCount += 1;
+        this.totalNotificationsCount = this.notifications.length;
       }
     }
   }

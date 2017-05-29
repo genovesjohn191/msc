@@ -5,22 +5,27 @@ import {
   fakeAsync,
   tick
 } from '@angular/core/testing';
-import { Subject } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NotificationUiComponent } from './notification-ui.component';
+import { StateChangeNotificationComponent } from './state-change-notification.component';
 import {
   McsAssetsProvider,
   McsApiJob,
+  McsApiService,
+  McsApiRequestParameter,
   McsNotificationContextService,
   McsNotificationJobService,
   CoreDefinition
-} from '../../core';
+} from '../../../core';
 
-describe('NotificationUiComponent', () => {
+describe('StateChangeNotificationComponent', () => {
 
   /** Stub Services/Components */
   let fixture: any;
-  let component: NotificationUiComponent;
+  let component: StateChangeNotificationComponent;
   let mcsNotificationContextService: McsNotificationContextService;
 
   let mockMcsNotificationJobService = {
@@ -38,22 +43,28 @@ describe('NotificationUiComponent', () => {
       return icons[key];
     }
   } as McsAssetsProvider;
+  let mockMcsApiService = {
+    get(apiRequest: McsApiRequestParameter): Observable<Response> {
+      return Observable.of(new Response());
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
-        NotificationUiComponent
+        StateChangeNotificationComponent
       ],
       providers: [
         McsNotificationContextService,
+        { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
         { provide: McsAssetsProvider, useValue: mockAssetsProvider }
       ]
     });
 
     /** Testbed Onverriding of Components */
-    TestBed.overrideComponent(NotificationUiComponent, {
+    TestBed.overrideComponent(StateChangeNotificationComponent, {
       set: {
         template: `
           <div>Overridden template here</div>
@@ -63,7 +74,7 @@ describe('NotificationUiComponent', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      fixture = TestBed.createComponent(NotificationUiComponent);
+      fixture = TestBed.createComponent(StateChangeNotificationComponent);
       fixture.detectChanges();
 
       component = fixture.componentInstance;
@@ -128,7 +139,7 @@ describe('NotificationUiComponent', () => {
       mockMcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
       component.ngOnChanges();
-      tick(CoreDefinition.NOTIFICATION_FAILED_TIMEDOUT);
+      tick(CoreDefinition.NOTIFICATION_FAILED_TIMEOUT);
       tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
     }));
 
@@ -160,7 +171,7 @@ describe('NotificationUiComponent', () => {
       mockMcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
       component.ngOnChanges();
-      tick(CoreDefinition.NOTIFICATION_COMPLETED_TIMEDOUT);
+      tick(CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT);
       tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
     }));
 
@@ -192,7 +203,7 @@ describe('NotificationUiComponent', () => {
       mockMcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
       component.ngOnChanges();
-      tick(CoreDefinition.NOTIFICATION_COMPLETED_TIMEDOUT);
+      tick(CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT);
       tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
     }));
 

@@ -1,6 +1,6 @@
-@import '../../../styles/shared/base';
+@import '../../../../styles/shared/base';
 
-.notification-container {
+.running-notification-container {
   position: relative;
   @include display-flex(row);
 

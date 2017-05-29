@@ -71,8 +71,9 @@
       "completed": "Completed",
       "vdc": "VDC"
     },
-    "noRecordFound": "No record found",
-    "connectionError": "Notifications job connection error.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of notifications.",
+    "noNotifications": "No notifications to display.",
+    "emptySearchResult": "No notifications found.",
     "loading": "Loading...",
     "viewMore": "More"
   },

@@ -22,12 +22,15 @@ export * from './models/mcs-api-error';
 export * from './models/mcs-api-search-key';
 export * from './models/mcs-api-job';
 export * from './models/mcs-notification-config';
+
+// TODO: Move all functions to utilities directory
 /** Functions */
 export * from './functions/mcs-url.function';
 export * from './functions/mcs-element.function';
 export * from './functions/mcs-json.function';
 export * from './functions/mcs-date.function';
 export * from './functions/mcs-string.function';
+export * from './functions/mcs-array.function';
 /** Enumerations */
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-user-type.enum';

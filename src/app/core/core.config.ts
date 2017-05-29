@@ -20,6 +20,15 @@ export class CoreConfig {
     this._imageRoot = value;
   }
 
+  /** Icon Root */
+  private _iconRoot: string;
+  public get iconRoot(): string {
+    return this._iconRoot;
+  }
+  public set iconRoot(value: string) {
+    this._iconRoot = value;
+  }
+
   /** Notification Configuration */
   private _notificationConfig: McsNotificationConfig;
   public get notification(): McsNotificationConfig {

@@ -156,6 +156,22 @@ $notification-message-font-size: 12;
 $notification-icon-font-size: $icon-large-font-size;
 $notification-icon-width: $notification-icon-font-size + px;
 
+// State change notifications (Wrapper)
+$state-change-notifications-interval: 10px;
+
+// State change notificaiton UI (Individual)
+$state-change-notification-width: 400px;
+$state-change-notification-padding: 20px 30px;
+$state-change-notification-border: 2px solid $color-grey-02;
+$state-change-notification-status-font-size: 18;
+$state-change-notification-message-font-size: 16;
+$state-change-notification-icon-font-size: 30;
+$state-change-notification-icon-width: $state-change-notification-icon-font-size + px;
+
+// Header User-Panel
+$user-panel-caret-offset: 20px;
+$user-panel-notification-size: 18px;
+
 // VDC List
 $vdc-name-font-size: 16;
 $vdc-name-line-height: 16;

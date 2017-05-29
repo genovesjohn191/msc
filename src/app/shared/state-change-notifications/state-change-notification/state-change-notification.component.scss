@@ -1,0 +1,67 @@
+@import '../../../../styles/shared/base';
+
+.state-change-notification-container {
+  position: relative;
+  width: 100%;
+  padding: $state-change-notification-padding;
+  border: $state-change-notification-border;
+  @include display-flex(row);
+  color: $color-white;
+  background-color: rgba($color-black, 0.87);
+
+  .information {
+    @include flex(1);
+    @include display-flex(column);
+    padding-right: $space-medium;
+    border-right: 1px solid gray;
+
+    .status {
+      margin-bottom: $space-large;
+
+      .icon {
+        float: left;
+        margin-right: $space-medium;
+        margin-top: $space-xsmall;
+        width: $state-change-notification-icon-width;
+        text-align: center;
+        @include font-size($state-change-notification-icon-font-size);
+
+        &.completed {
+          color: $color-green-00;
+        }
+        &.active {
+          color: $color-black;
+        }
+        &.failed {
+          color: $color-red-00;
+        }
+      }
+
+      .description {
+        @include font-size($state-change-notification-status-font-size);
+        font-family: $base-font-bold;
+        vertical-align: top;
+      }
+
+      .summary-information {
+        @include font-size($state-change-notification-message-font-size);
+        font-family: $base-font;
+        vertical-align: top;
+      }
+    }
+
+    .failure-message {
+      clear: both;
+      margin-bottom: $space-xsmall;
+      font-family: $base-font;
+      @include font-size($state-change-notification-message-font-size);
+    }
+  }
+
+  .owner-info {
+    color: $color-grey-02;
+    font-family: $base-font;
+    margin: 0 $space-medium;
+    @include font-size($state-change-notification-message-font-size);
+  }
+}

@@ -8,19 +8,24 @@ import {
 import {
 
 } from '@angular/common/testing';
-import { Subject } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserPanelComponent } from './user-panel.component';
 import {
   McsAssetsProvider,
   McsTextContentProvider,
   McsApiJob,
+  McsApiService,
+  McsApiRequestParameter,
   McsNotificationContextService,
   McsNotificationJobService,
   McsBrowserService,
   CoreDefinition,
   McsConnectionStatus
-} from '../../core';
+} from '../../../core';
 
 describe('UserPanelComponent', () => {
 
@@ -42,6 +47,11 @@ describe('UserPanelComponent', () => {
     connectionStatusStream: new Subject<McsConnectionStatus>()
   } as McsNotificationJobService;
   let mockMcsBrowserService = new McsBrowserService();
+  let mockMcsApiService = {
+    get(apiRequest: McsApiRequestParameter): Observable<Response> {
+      return Observable.of(new Response());
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -55,6 +65,7 @@ describe('UserPanelComponent', () => {
       providers: [
         McsNotificationContextService,
         McsTextContentProvider,
+        { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
         { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         { provide: McsBrowserService, useValue: mockMcsBrowserService }
@@ -95,18 +106,72 @@ describe('UserPanelComponent', () => {
   });
 
   describe('notificationsStream()', () => {
-    it('should get the notifications from the notification context service',
+    it('should get the failed job notifications from the notification context service',
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
           let notifications: McsApiJob[] = new Array();
-          notifications.push(new McsApiJob());
-          notifications.push(new McsApiJob());
+
+          let notificationFailed = new McsApiJob();
+          notificationFailed.id = '5';
+          notificationFailed.status = CoreDefinition.NOTIFICATION_JOB_FAILED;
+          notifications.push(notificationFailed);
 
           notificationContextService.notificationsStream.next(notifications);
           tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
           expect(component.notifications).toBeDefined();
-          expect(component.notifications.length).toBe(2);
+          expect(component.notifications.length).toBe(1);
+        }))));
+
+    it('should get the timedout job notifications from the notification context service',
+      fakeAsync((inject([McsNotificationContextService],
+        (notificationContextService: McsNotificationContextService) => {
+
+          let notifications: McsApiJob[] = new Array();
+
+          let notificationFailed = new McsApiJob();
+          notificationFailed.id = '5';
+          notificationFailed.status = CoreDefinition.NOTIFICATION_JOB_TIMEDOUT;
+          notifications.push(notificationFailed);
+
+          notificationContextService.notificationsStream.next(notifications);
+          tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
+          expect(component.notifications).toBeDefined();
+          expect(component.notifications.length).toBe(1);
+        }))));
+
+    it('should get the cancelled job notifications from the notification context service',
+      fakeAsync((inject([McsNotificationContextService],
+        (notificationContextService: McsNotificationContextService) => {
+
+          let notifications: McsApiJob[] = new Array();
+
+          let notificationFailed = new McsApiJob();
+          notificationFailed.id = '5';
+          notificationFailed.status = CoreDefinition.NOTIFICATION_JOB_CANCELLED;
+          notifications.push(notificationFailed);
+
+          notificationContextService.notificationsStream.next(notifications);
+          tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
+          expect(component.notifications).toBeDefined();
+          expect(component.notifications.length).toBe(1);
+        }))));
+
+    it('should get the completed job notifications from the notification context service',
+      fakeAsync((inject([McsNotificationContextService],
+        (notificationContextService: McsNotificationContextService) => {
+
+          let notifications: McsApiJob[] = new Array();
+
+          let notificationCompleted = new McsApiJob();
+          notificationCompleted.id = '5';
+          notificationCompleted.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+          notifications.push(notificationCompleted);
+
+          notificationContextService.notificationsStream.next(notifications);
+          tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
+          expect(component.notifications).toBeDefined();
+          expect(component.notifications.length).toBe(1);
         }))));
   });
 
@@ -116,20 +181,20 @@ describe('UserPanelComponent', () => {
         (notificationContextService: McsNotificationContextService) => {
           notificationContextService.connectionStatusStream.next(McsConnectionStatus.Failed);
           expect(component.hasConnectionError).toBe(true);
-      }));
+        }));
 
     it('should set the hasConnectionError to true in case of fatal in connection',
       inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
           notificationContextService.connectionStatusStream.next(McsConnectionStatus.Fatal);
           expect(component.hasConnectionError).toBe(true);
-      }));
+        }));
 
     it('should set the hasConnectionError to false in case of success in connection',
       inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
           notificationContextService.connectionStatusStream.next(McsConnectionStatus.Success);
           expect(component.hasConnectionError).toBe(false);
-      }));
+        }));
   });
 });

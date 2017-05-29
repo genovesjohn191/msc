@@ -1,9 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs/Rx';
 import { McsApiJob } from '../models/mcs-api-job';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { CoreDefinition } from '../core.definition';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
+import { McsApiService } from './mcs-api.service';
+import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
+import { McsApiSuccessResponse } from '../models/mcs-api-success-response';
+import { McsApiErrorResponse } from '../models/mcs-api-error-response';
+import { reviverParser } from '../functions/mcs-json.function';
+import { getTimeDifference } from '../functions/mcs-date.function';
+import { updateArrayRecord } from '../functions/mcs-array.function';
+import { convertJsonStringToObject } from '../functions/mcs-json.function';
 
 /**
  * MCS notification context service
@@ -39,17 +50,25 @@ export class McsNotificationContextService {
     this._connectionStatusStream = value;
   }
 
-  constructor(private _notificationJobService: McsNotificationJobService) {
+  constructor(
+    private _notificationJobService: McsNotificationJobService,
+    private _apiService: McsApiService
+  ) {
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsApiJob[]>(new Array());
     this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
       (McsConnectionStatus.Success);
 
+    // Get all previous jobs and filter them those who are In-Progress
+    this.getAllActiveJobs();
+
+    // Subscribe to RabbitMQ for real-time update
     this._notificationServiceSubscription = this._notificationJobService.notificationStream
       .subscribe((updatedNotification) => {
         this._updateNotifications(updatedNotification);
       });
 
+    // Subscribe to RabbitMQ connection status to get the error state
     this._connectionStatusSubscription = this._notificationJobService.connectionStatusStream
       .subscribe((status) => {
         this._notifyForConnectionStatus(status);
@@ -82,6 +101,10 @@ export class McsNotificationContextService {
     }
   }
 
+  /**
+   * Delete notification based on JOB ID
+   * @param id Job ID
+   */
   public deleteNotificationById(id: string) {
     // Delete notification based on id given
     if (id) {
@@ -92,29 +115,82 @@ export class McsNotificationContextService {
     }
   }
 
+  /**
+   * TODO: This must be refactored once more filtering option is available on the API.
+   * We're looking to add filters for status and dates
+   */
+  public getAllActiveJobs() {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/jobs';
+
+    return this._apiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<McsApiJob[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob[]>>(response.text(),
+          reviverParser);
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<McsApiJob[]>();
+      })
+      .catch((error) => {
+        let mcsApiErrorResponse: McsApiErrorResponse;
+
+        if (error instanceof Response) {
+          mcsApiErrorResponse = new McsApiErrorResponse();
+          mcsApiErrorResponse.message = error.statusText;
+          mcsApiErrorResponse.status = error.status;
+        } else {
+          mcsApiErrorResponse = error;
+        }
+
+        return Observable.throw(mcsApiErrorResponse);
+      })
+      .subscribe((mcsApiResponse) => {
+        if (mcsApiResponse.content) {
+          this._notifications = mcsApiResponse.content.filter((notification) => {
+            let jobIncluded = false;
+
+            // Filtered all the notification based on the status type and time duration
+            switch (notification.status) {
+              case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+              case CoreDefinition.NOTIFICATION_JOB_PENDING:
+                jobIncluded = true;
+                break;
+
+              case CoreDefinition.NOTIFICATION_JOB_FAILED:
+              case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
+              case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
+                if (notification.endedOn &&
+                  getTimeDifference(notification.endedOn, new Date()) <
+                  CoreDefinition.NOTIFICATION_FAILED_TIMEOUT) {
+                  jobIncluded = true;
+                }
+                break;
+
+              case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+              default:
+                if (notification.endedOn &&
+                  getTimeDifference(notification.endedOn, new Date()) <
+                  CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT) {
+                  jobIncluded = true;
+                }
+                break;
+            }
+            return jobIncluded;
+          });
+          this._notificationsStream.next(this._notifications);
+        }
+      });
+  }
+
   private _updateNotifications(updatedNotification: McsApiJob) {
     if (updatedNotification && updatedNotification.id) {
       let isExist: boolean = false;
+      let jobsComparer = (firstRecord: McsApiJob, secondRecord: McsApiJob) => {
+        return firstRecord.id === secondRecord.id;
+      };
 
       // Update corresponding notification if it is exist else
       // add it to the list of notifications
-      for (let index = 0; index < this._notifications.length; ++index) {
-        if (this._notifications[index].id.localeCompare(updatedNotification.id) === 0) {
-          this._notifications[index] = updatedNotification;
-          isExist = true;
-          break;
-        }
-      }
-      if (!isExist) {
-        this._notifications.push(updatedNotification);
-      }
-
-      // Sort notifications by created date in ascending order
-      this._notifications.sort((firstRecord, secondRecord) => {
-        let isSort = firstRecord.createdOn < secondRecord.createdOn;
-        if (isSort) { return 1; }
-        return 0;
-      });
+      updateArrayRecord<McsApiJob>(this._notifications, updatedNotification, jobsComparer);
       this._notificationsStream.next(this._notifications);
     }
   }

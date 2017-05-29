@@ -4,11 +4,11 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { Component } from '@angular/core';
-import { NotificationMaxDisplayPipe } from './notification-max-display.pipe';
+import { RunningNotificationMaxDisplayPipe } from './running-notification-max-display.pipe';
 import {
   McsApiJob,
   CoreDefinition
-} from '../../core';
+} from '../../../core';
 
 @Component({
   selector: 'mcs-test',
@@ -30,7 +30,7 @@ export class TestComponent {
   }
 }
 
-describe('NotificationMaxDisplayPipe', () => {
+describe('RunningNotificationMaxDisplayPipe', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
@@ -41,7 +41,7 @@ describe('NotificationMaxDisplayPipe', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        NotificationMaxDisplayPipe
+        RunningNotificationMaxDisplayPipe
       ]
     });
 
@@ -50,7 +50,7 @@ describe('NotificationMaxDisplayPipe', () => {
       set: {
         template: `
         <ul>
-          <li *ngFor="let notification of (notifications | mcsNotificationMaxDisplay)">
+          <li *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplay)">
             <div>Notification</div>
           </li>
         </ul>

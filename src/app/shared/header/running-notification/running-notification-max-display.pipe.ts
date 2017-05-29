@@ -5,14 +5,14 @@ import {
 import {
   McsApiJob,
   CoreDefinition
-} from '../../core';
+} from '../../../core';
 
 @Pipe({
-  name: 'mcsNotificationMaxDisplay',
+  name: 'mcsRunningNotificationMaxDisplay',
   pure: false
 })
 
-export class NotificationMaxDisplayPipe implements PipeTransform {
+export class RunningNotificationMaxDisplayPipe implements PipeTransform {
   public transform(notifications: McsApiJob[]): any {
     return notifications.slice(0, CoreDefinition.NOTIFICATION_MAX_DISPLAY);
   }

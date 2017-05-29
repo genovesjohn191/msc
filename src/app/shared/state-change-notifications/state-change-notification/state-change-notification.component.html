@@ -1,0 +1,21 @@
+<div class="state-change-notification-container" [@fade]="animate">
+  <div class="information">
+    <div class="status">
+      <i class="icon" [ngClass]="iconStatusClass"></i>
+      <span class="description">{{ attribute.description }}</span><br/>
+      <span class="summary-information">{{ attribute.summaryInformation }}</span>
+    </div>
+    <div *ngIf="displayErrorMessage(attribute.status)" class="failure-message">
+      <span>{{ attribute.errorMessage }}</span>
+    </div>
+  </div>
+
+  <div class="owner-info">
+    <span>{{ getStartTime() }}</span><br/>
+    <span>{{ attribute.ownerName }}</span>
+  </div>
+
+  <a class="icon-link" (click)="onClickCloseBtn()">
+    <mcs-svg-icon name="close" size="small" color="white"></mcs-svg-icon>
+  </a>
+</div>
