@@ -1,6 +1,6 @@
 <div #mcsDropdown class="mcs-dropdown">
   <mcs-textbox [name]="name" [icon]="iconClass" width="500" borderColor="black"
-    [(ngModel)]="option" placeholder="{{ placeholder }}" readonly="true"></mcs-textbox>
+    [(ngModel)]="option" [placeholder]="placeholder" readonly="true"></mcs-textbox>
   
   <div *ngIf="!collapsed" class="dropdown-options">
     <ul class="option-group">
