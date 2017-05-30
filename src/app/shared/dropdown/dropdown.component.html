@@ -1,0 +1,18 @@
+<div #mcsDropdown class="mcs-dropdown">
+  <mcs-textbox [name]="name" [icon]="iconClass" width="500" borderColor="black"
+    [(ngModel)]="option" placeholder="{{ placeholder }}" readonly="true"></mcs-textbox>
+  
+  <div *ngIf="!collapsed" class="dropdown-options">
+    <ul class="option-group">
+      <li *ngFor="let groupName of dropdownData.getGroupNames()">
+        <span #mcsDropdownGroupName>{{ groupName }}</span>
+        <ul class="option-item">
+          <li *ngFor="let listItem of dropdownData.getGroup(groupName)"
+            (click)="writeValue(listItem.key)">
+            {{ listItem.value }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

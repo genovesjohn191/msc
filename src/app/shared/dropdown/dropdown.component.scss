@@ -1,0 +1,51 @@
+@import "../../../styles/shared/base";
+
+.mcs-dropdown {
+  background-color: $color-white;
+  position: relative;
+  cursor: pointer;
+
+  .dropdown-options {
+    border: 1px solid $color-grey-02;
+    @include border-radius(5px);
+    padding: 15px 0 20px;
+    margin-top: 10px;
+
+    .option-group {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0;
+
+      > li {
+        font-family: $base-font-bold;
+        color: $color-grey-02;
+        margin-bottom: 30px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        span {
+          display: block;
+          padding: 0 15px;
+        }
+
+        .option-item {
+          list-style: none;
+          padding-left: 0;
+          margin-top: 5px;
+
+          li {
+            font-family: $base-font;
+            color: $color-black;
+            padding: 0 30px;
+
+            &:hover {
+              background-color: $color-grey-07;
+            }
+          }
+        }
+      }
+    }
+  }
+}

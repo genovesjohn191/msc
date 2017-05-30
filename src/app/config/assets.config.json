@@ -27,6 +27,7 @@
     "spinner": "fa fa-spinner fa-pulse",
     "sign-out": "fa fa-sign-out",
     "user": "fa fa-user-o",
+    "sort": "fa fa-sort",
     "state-running-large": "mcs-state-running-large-icon",
     "state-restarting-large": "mcs-state-restarting-large-icon",
     "state-stopped-large": "mcs-state-stopped-large-icon",

@@ -287,6 +287,22 @@
         </div>
       </div>
 
+      <!--Dropdown Implementation-->
+      <div class="dashboard-container-item">
+        <span class="title">Dropdown Implementation Example</span>
+        <div class="content">
+          <form>
+            <label for="textDefault"><strong>Default Dropdown</strong></label> <br/>
+            <mcs-dropdown name="dropdownDefault" [(ngModel)]="dropdownValue"
+              placeholder="Select an option" [dropdownData]="dropdownData"></mcs-dropdown>
+              <div class="dropdown-content">
+                Dropdown Value : {{ dropdownValue }}
+              </div>
+            <br/>
+          </form>
+        </div>
+      </div>
+
       <!--Forms Implementation-->
       <div class="dashboard-container-item">
         <span class="title">Forms Implementation Example</span>

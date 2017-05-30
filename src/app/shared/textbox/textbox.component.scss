@@ -18,12 +18,24 @@ $textbox-icon-offset: $icon-small-font-size + 20;
     border-color: $color-primary-01;
   }
 
+  &.grey {
+    border-color: $color-grey-02;
+  }
+
+  &.black {
+    border-color: $color-black;
+  }
+
   input {
     border: none;
     width: calc(100% - #{$textbox-icon-offset + px});
 
     &.has-icon {
       padding-right: 0;
+    }
+
+    &[readonly] {
+      @include textbox-highlight(none);
     }
   }
 

@@ -13,6 +13,7 @@ import { FilterSelectorComponent } from './filter-selector/filter-selector.compo
 import { TextboxComponent } from './textbox/textbox.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
 import { SvgIconComponent } from './svg-icon/svg-icon.component';
+import { DropdownComponent } from './dropdown/dropdown.component';
 /** Multiple Components */
 import {
   StateChangeNotificationsComponent,
@@ -53,6 +54,7 @@ import { RedDirective } from './directives/red.directive';
     StateChangeNotificationComponent,
     StateChangeNotificationsComponent,
     SvgIconComponent,
+    DropdownComponent,
     FlatDirective,
     RedDirective,
     RunningNotificationMaxDisplayPipe,
@@ -80,6 +82,7 @@ import { RedDirective } from './directives/red.directive';
     StateChangeNotificationComponent,
     StateChangeNotificationsComponent,
     SvgIconComponent,
+    DropdownComponent,
     FlatDirective,
     RedDirective,
     RunningNotificationMaxDisplayPipe,

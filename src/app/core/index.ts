@@ -22,6 +22,8 @@ export * from './models/mcs-api-error';
 export * from './models/mcs-api-search-key';
 export * from './models/mcs-api-job';
 export * from './models/mcs-notification-config';
+export * from './models/mcs-list';
+export * from './models/mcs-list-item';
 
 // TODO: Move all functions to utilities directory
 /** Functions */
