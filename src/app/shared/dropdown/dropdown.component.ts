@@ -108,8 +108,6 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
     } else {
       this.collapsed = true;
     }
-
-    this.iconClass = (this.collapsed) ? 'caret-down' : 'sort';
   }
 
   public ngOnInit() {
@@ -128,7 +126,7 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    this._option = value;
+    this.option = value;
   }
 
   /**

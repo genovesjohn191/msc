@@ -36,6 +36,7 @@ $textbox-icon-offset: $icon-small-font-size + 20;
 
     &[readonly] {
       @include textbox-highlight(none);
+      cursor: pointer;
     }
   }
 
