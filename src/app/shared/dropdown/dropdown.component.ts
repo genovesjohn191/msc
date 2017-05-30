@@ -1,6 +1,6 @@
 import {
   Component,
-  OnChanges,
+  OnInit,
   AfterViewInit,
   Input,
   Output,
@@ -18,27 +18,31 @@ import {
 /** Interface */
 import { Loading } from '../loading.interface';
 
-/** Providers */
-import { McsAssetsProvider } from '../../core';
+/** Core */
+import {
+  McsAssetsProvider,
+  McsList
+} from '../../core';
 
 @Component({
-  selector: 'mcs-textbox',
-  templateUrl: './textbox.component.html',
-  styles: [require('./textbox.component.scss')],
+  selector: 'mcs-dropdown',
+  templateUrl: './dropdown.component.html',
+  styles: [require('./dropdown.component.scss')],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TextboxComponent),
+      useExisting: forwardRef(() => DropdownComponent),
       multi: true
     }
   ]
 })
 
-export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueAccessor, Loading {
+export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   public iconClass: string;
+  public collapsed: boolean;
 
   @Input()
-  public icon: string;
+  public dropdownData: McsList;
 
   @Input()
   public name: string;
@@ -49,14 +53,11 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
   @Input()
   public width: number;
 
-  @Input()
-  public borderColor: string;
+  @ViewChild('mcsDropdown')
+  public mcsDropdown: ElementRef;
 
-  @Input()
-  public readonly: boolean;
-
-  @ViewChild('mcsTextbox')
-  public mcsTextbox: ElementRef;
+  @ViewChild('mcsDropdownGroupName')
+  public mcsDropdownGroupName: ElementRef;
 
   /**
    * On Touched Event Callback
@@ -71,15 +72,15 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
   /**
    * Model Binding
    */
-  private _text: string;
+  private _option: string;
 
-  public get text(): string {
-    return this._text;
+  public get option(): string {
+    return this._option;
   }
 
-  public set text(value: string) {
-    if (value !== this._text) {
-      this._text = value;
+  public set option(value: string) {
+    if (value !== this._option) {
+      this._option = value;
       if (this._onChanged) {
         this._onChanged(value);
       }
@@ -90,35 +91,36 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
     private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2,
     private _elementRef: ElementRef
-  ) {}
-
-  @HostListener('document:click', ['$event.target'])
-  public onClickOutside(target): void {
-    if (!this._elementRef.nativeElement.contains(target)) {
-      this.onFocusOut(event);
-    }
+  ) {
+    this.dropdownData = new McsList();
+    this.option = '';
+    this.collapsed = true;
   }
 
-  public ngOnChanges() {
-    if (this.icon) {
-      this.iconClass = this.getIconClass(this.icon);
+  @HostListener('document:click', ['$event.target'])
+  public onClick(target): void {
+    if (this._elementRef.nativeElement.contains(target)) {
+      if (this.mcsDropdownGroupName && this.mcsDropdownGroupName.nativeElement === target) {
+        this.collapsed = false;
+      } else {
+        this.collapsed = !this.collapsed;
+      }
+    } else {
+      this.collapsed = true;
     }
+
+    this.iconClass = (this.collapsed) ? 'caret-down' : 'sort';
+  }
+
+  public ngOnInit() {
+    this.iconClass = 'caret-down';
   }
 
   public ngAfterViewInit() {
     if (this.width) {
-      this._renderer.setStyle(this.mcsTextbox.nativeElement,
+      this._renderer.setStyle(this.mcsDropdown.nativeElement,
         'max-width', this.width + 'px');
-      this._renderer.addClass(this.mcsTextbox.nativeElement, 'w-100');
     }
-  }
-
-  public onFocus(event): void {
-    this._renderer.addClass(this.mcsTextbox.nativeElement, 'active');
-  }
-
-  public onFocusOut(event): void {
-    this._renderer.removeClass(this.mcsTextbox.nativeElement, 'active');
   }
 
   /**
@@ -126,7 +128,7 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    this._text = value;
+    this._option = value;
   }
 
   /**
@@ -144,17 +146,4 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
   public registerOnTouched(fn: any) {
     this._onTouched = fn;
   }
-
-  public showLoader(): void {
-    this.iconClass = this.getIconClass('spinner');
-  }
-
-  public hideLoader(): void {
-    this.iconClass = this.getIconClass(this.icon);
-  }
-
-  public getIconClass(iconKey: string): string {
-    return this._assetsProvider.getIcon(iconKey);
-  }
-
 }

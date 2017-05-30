@@ -3,8 +3,14 @@ import {
   OnInit
 } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 /** Models */
 import { Dashboard } from './dashboard';
+import { Server } from '../servers/server';
+import {
+  McsList,
+  McsListItem
+ } from '../../core';
 
 @Component({
   selector: 'mcs-dashboard',
@@ -18,16 +24,22 @@ export class DashboardComponent implements OnInit {
   public dashboards: Dashboard[];
   public textboxValue: string;
   public disabled: boolean;
+  public servers: Server[];
+  public dropdownData: McsList;
+  public dropdownValue: string;
 
-  public constructor() {
+  public constructor(private _route: ActivatedRoute) {
     this.title = 'Dashboard component';
     this.dashboards = new Array();
+    this.dropdownValue = '';
   }
 
   public ngOnInit() {
     this.setDashboards();
     this.textboxValue = 'Windows Server 2012';
     this.disabled = true;
+    this.servers = this._route.snapshot.data.servers.content;
+    this.dropdownData = this.mapDropdownData(this.servers);
   }
 
   /**
@@ -87,5 +99,18 @@ export class DashboardComponent implements OnInit {
       console.log('done');
       textbox.hideLoader();
     }, 2000);
+  }
+
+  public mapDropdownData(servers: Server[]): McsList {
+    let dropdownData = new McsList();
+
+    for (let server of servers) {
+      dropdownData.push(
+        server.serviceType,
+        new McsListItem(server.managementName, server.managementName)
+      );
+    }
+
+    return dropdownData;
   }
 }

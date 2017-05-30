@@ -54,16 +54,16 @@ describe('TextboxComponent', () => {
   }));
 
   /** Test Implementation */
-  describe('ngOnInit()', () => {
+  describe('ngOnChanges()', () => {
     it('should return the icon class if the value of icon is valid', () => {
       component.icon = 'search';
-      component.ngOnInit();
+      component.ngOnChanges();
       expect(component.iconClass).toBeDefined();
     });
 
     it('should render default textbox if the value of icon is invalid', () => {
       component.icon = 'arrow';
-      component.ngOnInit();
+      component.ngOnChanges();
       expect(component.iconClass).toBeUndefined();
     });
   });
