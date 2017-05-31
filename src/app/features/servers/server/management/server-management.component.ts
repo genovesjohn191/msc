@@ -60,6 +60,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         this.primaryVolume = this.server.fileSystem[0].capacityInGb + ' GB';
         this.secondaryVolumes = (this.server.fileSystem.length > 1) ?
           this.getSecondaryVolumes(this.server.fileSystem) : '';
+        this.serviceType = this.server.serviceType;
         this._browserService.scrollToTop();
       }
     });

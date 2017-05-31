@@ -10,7 +10,7 @@
         <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
         <ul>
           <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.guestOS }}</li>
-          <li>{{ serverManagementTextContent.vmProperties.zone }}: [Intellicentre 1 (Syd)]</li>
+          <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
           <li>{{ serverManagementTextContent.vmProperties.configuration }}: 
             {{ server.memoryInMb }} MB / {{ server.cpuCount }} CPU <a href="#">Scale</a></li>
           <li>{{ serverManagementTextContent.vmProperties.media }}:
@@ -61,12 +61,10 @@
 
     <div *ngIf="isManaged">
       <hr/>
-
       <h3>{{ serverManagementTextContent.manageServices.title }}</h3>
       <p>{{ serverManagementTextContent.manageServices.description }}</p>
+      <mcs-button iconRight="arrow-right" width="300">Configure Now</mcs-button>
     </div>
-
-    <mcs-button iconRight="arrow-right" width="300">Configure Now</mcs-button>
   </div>
 
 </section>
