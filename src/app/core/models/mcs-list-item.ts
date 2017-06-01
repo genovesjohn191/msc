@@ -1,9 +1,9 @@
 export class McsListItem {
-  public key: string;
+  public key: any;
   public value: any;
 
   constructor(
-    itemKey: string,
+    itemKey: any,
     itemValue: any
   ) {
     this.key = itemKey;

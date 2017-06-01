@@ -38,7 +38,19 @@ export class CoreDefinition {
   public static MANAGED_SERVER = 'Managed';
 
   /** Icons */
+  public static ICON_SIZE_XSMALL = '10px';
   public static ICON_SIZE_SMALL = '20px';
   public static ICON_SIZE_MEDIUM = '25px';
   public static ICON_SIZE_LARGE = '30px';
+
+  /** Assets Provider Key Definitions */
+  public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';
+  public static ASSETS_SVG_CLOSE = 'close';
+  public static ASSETS_SVG_CLOSE_BLUE = 'close-blue';
+  public static ASSETS_SVG_CLOSE_WHITE = 'close-white';
+  public static ASSETS_SVG_RADIO_CHECKED = 'radio-button-checked';
+  public static ASSETS_SVG_RADIO_UNCHECKED = 'radio-button-unchecked';
+  public static ASSETS_SVG_STATE_RESTARTING = 'state-restarting';
+  public static ASSETS_SVG_STATE_RUNNING = 'state-running';
+  public static ASSETS_SVG_STATE_STOPPED = 'state-stopped';
 }

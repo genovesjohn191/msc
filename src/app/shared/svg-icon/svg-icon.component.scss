@@ -1,0 +1,10 @@
+@import "../../../styles/shared/base";
+
+:host {
+  display: inline-block;
+}
+
+.svg-icon {
+  @include display-flex(row);
+  align-items: center;
+}

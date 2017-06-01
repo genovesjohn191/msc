@@ -6,7 +6,8 @@ import { Component } from '@angular/core';
 import { SvgIconComponent } from './svg-icon.component';
 import {
   CoreDefinition,
-  CoreConfig
+  CoreConfig,
+  McsAssetsProvider
 } from '../../core';
 
 describe('SvgIconComponent', () => {
@@ -25,6 +26,17 @@ describe('SvgIconComponent', () => {
       password: 'guest'
     }
   } as CoreConfig;
+  let mockAssetsProvider = {
+    getSvgIconPath(key: string): string {
+      let icons = {
+        'no-icon-available': 'no-icon-available.svg',
+        'close': 'close.svg',
+        'radio-button-checked': 'radio-button-checked.svg',
+        'radio-button-unchecked': 'radio-button-unchecked.svg'
+      };
+      return icons[key];
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -34,6 +46,7 @@ describe('SvgIconComponent', () => {
       ],
       providers: [
         { provide: CoreConfig, useValue: coreConfig },
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
       ]
     });
 
@@ -56,10 +69,20 @@ describe('SvgIconComponent', () => {
   }));
 
   /** Test Implementation */
-  describe('ngOnInit()', () => {
+  describe('ngOnChanges()', () => {
+    it('should set xtra small size to the width and height', () => {
+      component.size = 'xsmall';
+      component.ngOnChanges();
+
+      expect(component.svgIconElement.nativeElement.style.width)
+        .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}`);
+      expect(component.svgIconElement.nativeElement.style.height)
+        .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}`);
+    });
+
     it('should set small size to the width and height', () => {
       component.size = 'small';
-      component.ngOnInit();
+      component.ngOnChanges();
 
       expect(component.svgIconElement.nativeElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_SMALL}`);
@@ -69,7 +92,7 @@ describe('SvgIconComponent', () => {
 
     it('should set medium size to the width and height', () => {
       component.size = 'medium';
-      component.ngOnInit();
+      component.ngOnChanges();
 
       expect(component.svgIconElement.nativeElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM}`);
@@ -79,23 +102,38 @@ describe('SvgIconComponent', () => {
 
     it('should set large size to the width and height', () => {
       component.size = 'large';
-      component.ngOnInit();
+      component.ngOnChanges();
 
       expect(component.svgIconElement.nativeElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE}`);
       expect(component.svgIconElement.nativeElement.style.height)
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE}`);
     });
+
+    it('should set the svg icon file as background-image', () => {
+      component.key = 'close';
+      component.ngOnChanges();
+
+      expect(component.svgIconElement.nativeElement.style.backgroundImage)
+        .toBeDefined();
+    });
   });
 
   describe('getSvgIconPath()', () => {
-    it('should get the SVG icon full path', () => {
-      component.name = 'close';
-      component.color = 'black';
+    it('should get the full path of SVG icon', () => {
+      component.key = 'close';
 
       let svgFullPath = component.getSvgIconPath();
-      expect(svgFullPath)
-        .toBe(`${coreConfig.iconRoot}/${component.color}/svg/${component.name}.svg`);
+      expect(svgFullPath).toBeDefined();
+      expect(svgFullPath).toContain('close.svg');
+    });
+
+    it('should get the full path of no available icon of SVG', () => {
+      component.key = 'open';
+
+      let svgFullPath = component.getSvgIconPath();
+      expect(svgFullPath).toBeDefined();
+      expect(svgFullPath).toContain('no-icon-available.svg');
     });
   });
 });

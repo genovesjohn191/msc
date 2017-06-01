@@ -1,0 +1,39 @@
+@import "../../../styles/shared/base";
+
+.radio-button-group-container {
+
+  &.horizontal {
+    @include display-flex(row);
+    justify-content: space-between;
+  }
+
+  &.vertical {
+    @include display-flex(column);
+    align-items: flex-start;
+  }
+
+  .radio-button-container {
+    display: inline-block;
+    padding: $radio-button-padding;
+
+    label {
+      cursor: pointer;
+      @include font-size($radio-button-font-size);
+      @include display-flex(row);
+      align-items: center;
+      margin: 0;
+
+      mcs-svg-icon {
+        display: inline-block;
+        margin-right: $radio-button-label-offset;
+        cursor: pointer;
+      }
+
+      input[type="radio"] {
+        display: none;
+      }
+    }
+  }
+}
+
+

@@ -13,8 +13,10 @@
       <div id="serverList{{ i + 1 }}" class="collapse servers" role="tabpanel"
         [ngClass]="{'show': vdc.selected}">
         <div class="server-name" *ngFor="let server of vdc.servers">
-          <a [ngClass]="{'active-server': isServerSelected(server.id)}" [routerLink]="['/servers/' + server.id]">
-            <i [ngClass]="getStateIconClass(server.powerState)"></i> {{ server.managementName }}
+          <a [ngClass]="{'active-server': isServerSelected(server.id)}"
+            [routerLink]="['/servers/' + server.id]">
+            <mcs-svg-icon [key]="getStateIconKey(server.powerState)"
+              size="small"></mcs-svg-icon> {{ server.managementName }}
           </a>
         </div>
       </div>

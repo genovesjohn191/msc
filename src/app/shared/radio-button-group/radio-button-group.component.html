@@ -1,0 +1,9 @@
+<div #radioButtonGroupElement class="radio-button-group-container">
+  <div *ngFor="let item of items" class="radio-button-container">
+    <label for="{{ item.key }}" (click)="onClickEvent($event, item)">
+      <mcs-svg-icon [key]="getRadioButtonIconKey(item)" size="medium" color="black"></mcs-svg-icon>
+      <input id="{{ item.key }}" type="radio" [checked]="item.key === activeKeyItem">
+      {{ item.value }}
+    </label>
+  </div>
+</div>

@@ -106,6 +106,10 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
     return time;
   }
 
+  public getCloseIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
+  }
+
   public onClickCloseBtn(): void {
     this._removeNotification(0);
   }

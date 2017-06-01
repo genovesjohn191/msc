@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 /** Modules */
 import { PopoverModule } from './popover/popover.module';
 /** Services */
@@ -9,6 +12,7 @@ import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
+import { RadioButtonGroupComponent } from './radio-button-group/radio-button-group.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { TextboxComponent } from './textbox/textbox.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
@@ -48,6 +52,7 @@ import { RedDirective } from './directives/red.directive';
     UserPanelComponent,
     ButtonComponent,
     CheckboxComponent,
+    RadioButtonGroupComponent,
     FilterSelectorComponent,
     TextboxComponent,
     LightboxComponent,
@@ -64,6 +69,7 @@ import { RedDirective } from './directives/red.directive';
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     PopoverModule
   ],
   exports: [
@@ -76,6 +82,7 @@ import { RedDirective } from './directives/red.directive';
     UserPanelComponent,
     ButtonComponent,
     CheckboxComponent,
+    RadioButtonGroupComponent,
     FilterSelectorComponent,
     TextboxComponent,
     LightboxComponent,

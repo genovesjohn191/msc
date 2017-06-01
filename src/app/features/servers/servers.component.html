@@ -59,7 +59,7 @@
     <tbody>
       <tr *ngFor="let server of servers">
         <td *ngIf="columnSettings['state'].value" class="text-center align-middle">
-          <i [ngClass]="getStateIconClass(server.powerState)"></i>
+          <mcs-svg-icon [key]="getStateIconKey(server.powerState)" size="large"></mcs-svg-icon>
         </td>
         <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
           {{ server.serviceId }}
