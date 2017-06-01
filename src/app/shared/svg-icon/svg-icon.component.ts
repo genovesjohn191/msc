@@ -1,51 +1,68 @@
 import {
   Component,
-  OnInit,
+  OnChanges,
   Input,
-  ChangeDetectionStrategy,
   ElementRef,
   Renderer2,
   ViewChild
 } from '@angular/core';
 import {
   CoreConfig,
-  CoreDefinition
+  CoreDefinition,
+  McsAssetsProvider
 } from '../../core';
 
 @Component({
   selector: 'mcs-svg-icon',
   templateUrl: './svg-icon.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [require('./svg-icon.component.scss')]
 })
 
-export class SvgIconComponent implements OnInit {
+export class SvgIconComponent implements OnChanges {
   @Input()
-  public name: string;
+  public key: string;
 
   @Input()
-  public color: 'black' | 'blue' | 'white';
-
-  @Input()
-  public size: 'small' | 'medium' | 'large';
+  public size: 'xsmall' | 'small' | 'medium' | 'large';
 
   @ViewChild('svgIconElement')
   public svgIconElement: ElementRef;
 
   public constructor(
-    private _renderer: Renderer2,
-    private _coreConfig: CoreConfig
+    private _coreConfig: CoreConfig,
+    private _assetsProvider: McsAssetsProvider,
+    private _renderer: Renderer2
   ) {
-    this.color = 'black';
     this.size = 'medium';
   }
 
-  public ngOnInit() {
+  public ngOnChanges() {
     this._setIconSize();
+    this._setSvgIcon();
   }
 
   public getSvgIconPath() {
-    if (!this.name) { return undefined; }
-    return `${this._coreConfig.iconRoot}/${this.color}/svg/${this.name}.svg`;
+    if (!this.key) { return undefined; }
+
+    // Get svg icon path based on the key, if the svg icon path
+    // is not exist, the no image availabe SVG Icon will be display
+    let svgElementPath = this._assetsProvider.getSvgIconPath(this.key);
+    if (!svgElementPath) {
+      svgElementPath = this._assetsProvider
+        .getSvgIconPath(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
+    }
+
+    return svgElementPath;
+  }
+
+  private _setSvgIcon() {
+    if (this.svgIconElement) {
+      this._renderer.setStyle(
+        this.svgIconElement.nativeElement,
+        'background-image',
+        `url(${this.getSvgIconPath()})`
+      );
+    }
   }
 
   private _setIconSize() {
@@ -61,6 +78,11 @@ export class SvgIconComponent implements OnInit {
       case 'medium':
         width = CoreDefinition.ICON_SIZE_MEDIUM;
         height = CoreDefinition.ICON_SIZE_MEDIUM;
+        break;
+
+      case 'xsmall':
+        width = CoreDefinition.ICON_SIZE_XSMALL;
+        height = CoreDefinition.ICON_SIZE_XSMALL;
         break;
 
       case 'small':

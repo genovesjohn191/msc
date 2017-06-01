@@ -28,10 +28,15 @@ export class DashboardComponent implements OnInit {
   public dropdownData: McsList;
   public dropdownValue: string;
 
+  public radioButtonHorizontal: any;
+  public radioButtonVertical: any;
+
   public constructor(private _route: ActivatedRoute) {
     this.title = 'Dashboard component';
     this.dashboards = new Array();
     this.dropdownValue = '';
+    this.radioButtonHorizontal = 'dhcp';
+    this.radioButtonVertical = 'next';
   }
 
   public ngOnInit() {
@@ -39,7 +44,19 @@ export class DashboardComponent implements OnInit {
     this.textboxValue = 'Windows Server 2012';
     this.disabled = true;
     this.servers = this._route.snapshot.data.servers.content;
-    this.dropdownData = this.mapDropdownData(this.servers);
+    this.dropdownData = this.servers ? this.mapDropdownData(this.servers) : new McsList();
+  }
+
+  /**
+   * TODO: Remove this for official implementation
+   */
+  public getRadioButtonGroup(): McsListItem[] {
+    let items: McsListItem[] = new Array();
+
+    items.push(new McsListItem('dhcp', 'DHCP'));
+    items.push(new McsListItem('next', 'Next in my static pool'));
+    items.push(new McsListItem('fishy', 'Fishy'));
+    return items;
   }
 
   /**

@@ -127,8 +127,24 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public getStateIconClass(state: number): string {
-    return this._assetsProvider.getIcon('state-' + ServerStatus[state].toLowerCase() + '-medium');
+  public getStateIconKey(state: number): string {
+    let stateIconKey: string = '';
+
+    switch (state as ServerStatus) {
+      case ServerStatus.Restarting:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        break;
+
+      case ServerStatus.Running:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+
+      case ServerStatus.Stopped:
+      default:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+    }
+    return stateIconKey;
   }
 
   public isServerSelected(id: any): boolean {

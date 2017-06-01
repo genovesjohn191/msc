@@ -95,7 +95,7 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
   @HostListener('document:click', ['$event.target'])
   public onClickOutside(target): void {
     if (!this._elementRef.nativeElement.contains(target)) {
-      this.onFocusOut(event);
+      this.onFocusOut(target);
     }
   }
 
