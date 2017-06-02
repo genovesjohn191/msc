@@ -8,7 +8,8 @@ import {
   McsListItem,
   McsAssetsProvider,
   CoreConfig,
-  CoreDefinition
+  CoreDefinition,
+  Key
 } from '../../core';
 
 describe('RadioButtonGroupComponent', () => {
@@ -41,7 +42,8 @@ describe('RadioButtonGroupComponent', () => {
     TestBed.overrideComponent(RadioButtonGroupComponent, {
       set: {
         template: `
-        <div #radioButtonGroupElement class="radio-button-group-container">
+        <div #radioButtonGroupElement class="radio-button-group-container"
+          tabindex="0" (keydown)="onKeyDown($event)">
           <div *ngFor="let item of items" class="radio-button-container">
             <label for="{{ item.key }}" (click)="onClickRadioButton(item)">
               <input id="{{ item.key }}" type="radio" [checked]="item.key === activeValue.key">
@@ -114,5 +116,123 @@ describe('RadioButtonGroupComponent', () => {
       component.writeValue('dhcp');
       expect(component.activeKeyItem).toBe('dhcp');
     });
+  });
+
+  describe('onKeyDown() Horizontal mode', () => {
+    beforeEach(async(() => {
+      component.items.push(new McsListItem('Beef', 'beef'));
+      component.items.push(new McsListItem('Fish', 'fish'));
+    }));
+
+    it(`should increase the itemIndex to get the next record
+      when arrow up is pressed while on horizontal mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'horizontal';
+        component.itemIndex = 0;
+        keyDownEvent = {
+          keyCode: Key.UpArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(1);
+      });
+
+    it(`should increase the itemIndex to get the next record
+      when arrow right is pressed while on horizontal mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'horizontal';
+        component.itemIndex = 0;
+        keyDownEvent = {
+          keyCode: Key.RightArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(1);
+      });
+
+    it(`should increase the itemIndex to get the previous record
+      when arrow down is pressed while on horizontal mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'horizontal';
+        component.itemIndex = 1;
+        keyDownEvent = {
+          keyCode: Key.DownArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(0);
+      });
+
+    it(`should increase the itemIndex to get the previous record
+      when arrow left is pressed while on horizontal mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'horizontal';
+        component.itemIndex = 1;
+        keyDownEvent = {
+          keyCode: Key.LeftArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(0);
+      });
+  });
+
+  describe('onKeyDown() Vertical mode', () => {
+    beforeEach(async(() => {
+      component.items.push(new McsListItem('Beef', 'beef'));
+      component.items.push(new McsListItem('Fish', 'fish'));
+    }));
+
+    it(`should increase the itemIndex to get the previous record
+      when arrow up is pressed while on vertical mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'vertical';
+        component.itemIndex = 1;
+        keyDownEvent = {
+          keyCode: Key.UpArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(0);
+      });
+
+    it(`should increase the itemIndex to get the previous record
+      when arrow left is pressed while on vertical mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'vertical';
+        component.itemIndex = 1;
+        keyDownEvent = {
+          keyCode: Key.LeftArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(0);
+      });
+
+    it(`should increase the itemIndex to get the next record
+      when arrow right is pressed while on vertical mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'vertical';
+        component.itemIndex = 0;
+        keyDownEvent = {
+          keyCode: Key.RightArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(1);
+      });
+
+    it(`should increase the itemIndex to get the next record
+      when arrow down is pressed while on vertical mode`, () => {
+        let keyDownEvent: any;
+
+        component.orientation = 'vertical';
+        component.itemIndex = 0;
+        keyDownEvent = {
+          keyCode: Key.DownArrow
+        };
+        component.onKeyDown(keyDownEvent);
+        expect(component.itemIndex).toBe(1);
+      });
   });
 });
