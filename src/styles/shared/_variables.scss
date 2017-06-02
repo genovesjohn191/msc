@@ -140,6 +140,7 @@ $table-header-font: $base-font-bold;
 $table-border-radius: 5px;
 
 // Z-index
+$notifications-z-index: 1100;
 $popover-z-index: 1000;
 $header-z-index: 100;
 $main-navigation-z-index: 90;
@@ -158,6 +159,8 @@ $notification-icon-width: $notification-icon-font-size + px;
 
 // State change notifications (Wrapper)
 $state-change-notifications-interval: 10px;
+$state-change-notifications-width: 550px;
+$state-change-notifications-margin: 20px;
 
 // State change notificaiton UI (Individual)
 $state-change-notification-width: 400px;

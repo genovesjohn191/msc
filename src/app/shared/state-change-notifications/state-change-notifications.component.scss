@@ -2,9 +2,10 @@
 
 .state-change-notifications-container {
   position: fixed;
-  bottom: 20px;
-  width: 600px;
-  z-index: 1000;
+  left: $state-change-notifications-margin;
+  bottom: $state-change-notifications-margin;
+  width: $state-change-notifications-width;
+  z-index: $notifications-z-index;
 
   ul {
     li {

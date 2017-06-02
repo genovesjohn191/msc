@@ -18,11 +18,13 @@ import {
   McsAssetsProvider,
   McsApiJob,
   McsApiService,
+  McsBrowserService,
   McsApiRequestParameter,
   McsNotificationContextService,
   McsNotificationJobService,
   CoreDefinition
 } from '../../core';
+let mockMcsBrowserService = new McsBrowserService();
 
 @Component({
   selector: 'mcs-state-change-notification',
@@ -72,7 +74,8 @@ describe('StateChangeNotificationsComponent', () => {
         McsNotificationContextService,
         { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
+        { provide: McsBrowserService, useValue: mockMcsBrowserService }
       ]
     });
 
@@ -170,5 +173,19 @@ describe('StateChangeNotificationsComponent', () => {
           expect(component.notifications).toBeDefined();
           expect(component.notifications.length).toBe(3);
         }))));
+  });
+
+  describe('ngOnDestroy()', () => {
+    it('should unsubscribe to notificationsSubscription', () => {
+      spyOn(component.notificationsSubscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.notificationsSubscription.unsubscribe).toHaveBeenCalledTimes(1);
+    });
+
+    it('should unsubscribe to browserSubscription', () => {
+      spyOn(component.browserSubscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.browserSubscription.unsubscribe).toHaveBeenCalledTimes(1);
+    });
   });
 });

@@ -1,4 +1,5 @@
-<div #stateChangeNotificationsElement class="state-change-notifications-container">
+<div *ngIf="visible" #stateChangeNotificationsElement
+  class="state-change-notifications-container">
   <ul class="unstyled-list">
     <li *ngFor="let notification of (notifications | mcsStateChangeNotificationMaxDisplayPipe)">
       <mcs-state-change-notification [attribute]="notification">

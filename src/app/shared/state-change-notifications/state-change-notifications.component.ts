@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   Input,
   Renderer2,
   ViewChild,
@@ -10,7 +11,9 @@ import {
 import { Subscription } from 'rxjs/Rx';
 import {
   McsApiJob,
+  McsBrowserService,
   McsNotificationContextService,
+  McsDeviceType,
   CoreDefinition
 } from '../../core';
 
@@ -20,7 +23,7 @@ import {
   styles: [require('./state-change-notifications.component.scss')]
 })
 
-export class StateChangeNotificationsComponent implements OnInit {
+export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   @Input()
   public placement: 'left' | 'right';
 
@@ -28,19 +31,24 @@ export class StateChangeNotificationsComponent implements OnInit {
   public stateChangeNotificationsElement: ElementRef;
 
   public notifications: McsApiJob[];
+  public notificationsSubscription: any;
+  public browserSubscription: any;
+  public visible: boolean;
 
   public constructor(
     private _notificationContext: McsNotificationContextService,
     private _renderer: Renderer2,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _browserService: McsBrowserService
   ) {
     this.placement = 'left';
     this.notifications = new Array();
+    this.visible = true;
   }
 
   public ngOnInit() {
     // Subscribe to notification changes
-    this._notificationContext.notificationsStream
+    this.notificationsSubscription = this._notificationContext.notificationsStream
       .subscribe((updatedNotifications) => {
         // Obtain error notification only
         this.notifications = updatedNotifications.filter((notification) => {
@@ -54,11 +62,30 @@ export class StateChangeNotificationsComponent implements OnInit {
         }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
       });
 
+    // Subscribe to browser service
+    this.browserSubscription = this._browserService.resizeWindowStream
+      .subscribe((deviceType: McsDeviceType) => {
+        if (deviceType !== McsDeviceType.Desktop) {
+          this.visible = false;
+        }
+      });
+
     // Set notifications placement
     this.setPlacement();
   }
 
+  public ngOnDestroy() {
+    if (this.notificationsSubscription) {
+      this.notificationsSubscription.unsubscribe();
+    }
+
+    if (this.browserSubscription) {
+      this.browserSubscription.unsubscribe();
+    }
+  }
+
   public setPlacement() {
+    if (!this.stateChangeNotificationsElement) { return; }
     switch (this.placement) {
       case 'left':
         this._renderer.setStyle(this.stateChangeNotificationsElement.nativeElement,
