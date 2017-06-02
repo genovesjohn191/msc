@@ -37,3 +37,4 @@ export * from './functions/mcs-array.function';
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-user-type.enum';
 export * from './enumerations/mcs-device-type.enum';
+export * from './enumerations/mcs-key.enum';

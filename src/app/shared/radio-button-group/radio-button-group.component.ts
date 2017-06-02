@@ -16,7 +16,8 @@ import {
 import {
   McsAssetsProvider,
   McsListItem,
-  CoreDefinition
+  CoreDefinition,
+  Key
 } from '../../core';
 
 @Component({
@@ -44,6 +45,8 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
 
   @ViewChild('radioButtonGroupElement')
   public radioButtonGroupElement: ElementRef;
+
+  public itemIndex: number;
 
   /**
    * On Touched Event Callback
@@ -73,6 +76,7 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
     private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2
   ) {
+    this.itemIndex = 0;
     this.items = new Array();
     this.orientation = 'vertical';
   }
@@ -82,11 +86,85 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
       this._renderer.addClass(this.radioButtonGroupElement.nativeElement,
         this.orientation);
     }
+
+    // Get item index to get the current selected item in the list
+    for (let index = 0; index < this.items.length; ++index) {
+      if (this.items[index].key === this.activeKeyItem) {
+        this.itemIndex = index;
+        break;
+      }
+    }
   }
 
-  public onClickEvent($event: Event, item: McsListItem) {
+  public onClickEvent(event: Event, item: McsListItem) {
     if (item) { this.activeKeyItem = item.key; }
-    this.onClick.emit($event);
+    this.onClick.emit(event);
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    let keyEnum = event.keyCode as Key;
+
+    // Filter arrow keys only
+    if (keyEnum !== Key.UpArrow &&
+      keyEnum !== Key.DownArrow &&
+      keyEnum !== Key.RightArrow &&
+      keyEnum !== Key.LeftArrow) {
+      return true;
+    }
+    let itemPosition = this.getItemPosition(keyEnum);
+
+    switch (itemPosition) {
+      case 'next':
+
+        if (this.itemIndex === (this.items.length - 1)) {
+          // Set to initial item if the index was greater than the length of the items
+          this.itemIndex = 0;
+        } else {
+          this.itemIndex += 1;
+        }
+        break;
+
+      case 'previous':
+
+        if (this.itemIndex === 0) {
+          // Set to last index of the items when item index is less than zero
+          this.itemIndex = (this.items.length - 1);
+        } else {
+          this.itemIndex -= 1;
+        }
+        break;
+
+      default:
+        return true;
+    }
+
+    // Get the target item based on the index and assign it
+    // to model binding to update the view and model bind
+    this.activeKeyItem = this.items[this.itemIndex].key;
+
+    // Return false to all cases of the arrow to remove the scrolling when
+    // clicking the arrow keys else true
+    return false;
+  }
+
+  public getItemPosition(key: Key): 'next' | 'previous' {
+    let itemPosition: 'next' | 'previous';
+
+    switch (this.orientation) {
+      case 'horizontal':
+        itemPosition = (key === Key.UpArrow ||
+          key === Key.RightArrow) ?
+          itemPosition = 'next' : itemPosition = 'previous';
+        break;
+
+      case 'vertical':
+      default:
+        itemPosition = (key === Key.DownArrow ||
+          key === Key.RightArrow) ?
+          itemPosition = 'next' : itemPosition = 'previous';
+        break;
+    }
+    return itemPosition;
   }
 
   /**

@@ -1,4 +1,5 @@
-<div #radioButtonGroupElement class="radio-button-group-container">
+<div #radioButtonGroupElement class="radio-button-group-container"
+  tabindex="0" (keydown)="onKeyDown($event)">
   <div *ngFor="let item of items" class="radio-button-container">
     <label for="{{ item.key }}" (click)="onClickEvent($event, item)">
       <mcs-svg-icon [key]="getRadioButtonIconKey(item)" size="medium" color="black"></mcs-svg-icon>
