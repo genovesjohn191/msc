@@ -26,11 +26,16 @@ $textbox-icon-offset: $icon-small-font-size + 20;
     border-color: $color-black;
   }
 
+  &.invalid {
+    border-color: $color-red-00;
+  }
+
   input {
     border: none;
-    width: calc(100% - #{$textbox-icon-offset + px});
+    width: 100%;
 
     &.has-icon {
+      width: calc(100% - #{$textbox-icon-offset + px});
       padding-right: 0;
     }
 
@@ -44,5 +49,10 @@ $textbox-icon-offset: $icon-small-font-size + 20;
     padding: 0 $space-small;
     color: $color-black;
     @include font-size($icon-small-font-size);
+  }
+
+  + small {
+    display: block;
+    color: $color-red-00;
   }
 }

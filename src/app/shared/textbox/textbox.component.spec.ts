@@ -5,12 +5,24 @@ import {
 } from '@angular/core/testing';
 
 import { TextboxComponent } from './textbox.component';
-import { McsAssetsProvider } from '../../core';
+import {
+  McsTextContentProvider,
+  McsAssetsProvider,
+  CoreDefinition
+} from '../../core';
 
 describe('TextboxComponent', () => {
 
   /** Stub Services/Components */
   let component: TextboxComponent;
+  let mockEmailErrorMessage = 'Please enter a valid email address.';
+  let mockTextProvider = {
+    content: {
+      validationMessages: {
+        email: mockEmailErrorMessage
+      }
+    }
+  };
   let mockAssetsProvider = {
     getIcon(key: string): string {
       let icons = {
@@ -31,7 +43,8 @@ describe('TextboxComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
+        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
+        { provide: McsTextContentProvider, useValue: mockTextProvider }
       ]
     });
 
@@ -65,6 +78,22 @@ describe('TextboxComponent', () => {
       component.icon = 'arrow';
       component.ngOnChanges();
       expect(component.iconClass).toBeUndefined();
+    });
+  });
+
+  describe('ngOnInit()', () => {
+    it('should set validation message', () => {
+      component.validationType = 'email';
+      component.ngOnInit();
+      expect(component.validationMessage).toEqual(mockEmailErrorMessage);
+    });
+  });
+
+  describe('getValidationPattern()', () => {
+    it('should get validation pattern based on validationType', () => {
+      component.validationType = 'email';
+      let pattern = component.getValidationPattern(component.validationType);
+      expect(pattern).toEqual(CoreDefinition.REGEX_EMAIL_PATTERN);
     });
   });
 

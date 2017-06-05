@@ -10,7 +10,13 @@ import { Server } from '../servers/server';
 import {
   McsList,
   McsListItem
- } from '../../core';
+} from '../../core';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'mcs-dashboard',
@@ -27,6 +33,11 @@ export class DashboardComponent implements OnInit {
   public servers: Server[];
   public dropdownData: McsList;
   public dropdownValue: string;
+  public numberModel: number;
+  public textboxModel: any;
+
+  public textEmail: FormControl;
+  public reactiveForm: FormGroup;
 
   public radioButtonHorizontal: any;
   public radioButtonVertical: any;
@@ -37,6 +48,13 @@ export class DashboardComponent implements OnInit {
     this.dropdownValue = '';
     this.radioButtonHorizontal = 'dhcp';
     this.radioButtonVertical = 'next';
+    this.textboxModel = {
+      email: '',
+      ipAddress: null,
+      alphanumeric: '',
+      numeric: null,
+      pattern: ''
+    };
   }
 
   public ngOnInit() {
@@ -45,6 +63,13 @@ export class DashboardComponent implements OnInit {
     this.disabled = true;
     this.servers = this._route.snapshot.data.servers.content;
     this.dropdownData = this.servers ? this.mapDropdownData(this.servers) : new McsList();
+    this.reactiveForm = new FormGroup({
+      textEmail: new FormControl(null, Validators.required),
+      textIpAddress: new FormControl(null, Validators.required),
+      textAlphanumeric: new FormControl(null, Validators.required),
+      textNumeric: new FormControl(null, Validators.required),
+      textPattern: new FormControl(null, Validators.required)
+    });
   }
 
   /**
@@ -119,6 +144,8 @@ export class DashboardComponent implements OnInit {
   }
 
   public mapDropdownData(servers: Server[]): McsList {
+    if (!servers) { return; }
+
     let dropdownData = new McsList();
 
     for (let server of servers) {
