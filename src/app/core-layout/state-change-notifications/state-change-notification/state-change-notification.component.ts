@@ -20,9 +20,9 @@ import {
   McsAssetsProvider,
   McsApiJob,
   McsNotificationContextService,
-  CoreDefinition,
-  formatDate
+  CoreDefinition
 } from '../../../core';
+import { formatDate } from '../../../utilities';
 
 @Component({
   selector: 'mcs-state-change-notification',

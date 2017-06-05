@@ -4,7 +4,7 @@ import { McsApiJob } from '../models/mcs-api-job';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import { AppState } from '../../app.service';
-import { reviverParser } from '../functions/mcs-json.function';
+import { reviverParser } from '../../utilities';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 
 /**

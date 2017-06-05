@@ -16,10 +16,12 @@ import {
 import {
   McsAssetsProvider,
   McsTextContentProvider,
-  CoreDefinition,
+  CoreDefinition
+} from '../../../core';
+import {
   getElementOffset,
   toProperCase
-} from '../../../core';
+} from '../../../utilities';
 import { ServerList } from './server-list';
 import { ServerStatus } from '../server-status.enum';
 
@@ -64,14 +66,14 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   private _serversListDynamicHeight: number;
 
   constructor(
-      private _router: Router,
-      private _route: ActivatedRoute,
-      private _textProvider: McsTextContentProvider,
-      private _assetsProvider: McsAssetsProvider,
-      private _renderer: Renderer2
-    ) {
-      this.servers = new Array();
-    }
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _textProvider: McsTextContentProvider,
+    private _assetsProvider: McsAssetsProvider,
+    private _renderer: Renderer2
+  ) {
+    this.servers = new Array();
+  }
 
   @HostListener('document:scroll', ['$event'])
   public onScroll(event) {
@@ -242,7 +244,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
       'max-height', 'calc(100vh - ' + offsetHeight + 'px)');
   }
 
-   private _getFooterVisibleHeight(): number {
+  private _getFooterVisibleHeight(): number {
     let scrollTop = window.pageYOffset;
     let scrollBottom = scrollTop + window.innerHeight;
     let visibleTop = this._footerOffset.top < scrollTop ? scrollTop : this._footerOffset.top;

@@ -20,9 +20,9 @@ import {
   McsApiError,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  CoreDefinition,
-  mergeArrays
+  CoreDefinition
 } from '../../core';
+import { mergeArrays } from '../../utilities';
 /** Enum */
 import { ServerStatus } from './server-status.enum';
 
