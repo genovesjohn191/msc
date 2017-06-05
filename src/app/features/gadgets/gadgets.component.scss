@@ -1,0 +1,23 @@
+.gadgets-container {
+  position: relative;
+  padding: 0.5rem 1rem;
+}
+
+.gadgets-container-item {
+  margin: 20px 0px;
+  border-top: 1px dotted red;
+  > .title {
+    font-size: 16px;
+    font-style: italic;
+    line-height: 18px;
+  }
+
+  > .content {
+    padding-top: 10px;
+
+    .textbox-content {
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+  }
+}
