@@ -5,6 +5,7 @@ import {
 
 /** Core Configuration */
 import { CoreConfig } from '../core.config';
+import { CoreDefinition } from '../core.definition';
 
 @Injectable()
 export class McsAssetsProvider {
@@ -51,6 +52,10 @@ export class McsAssetsProvider {
       value = this._svgIcons.get(key);
     } else {
       value = this._config.svgIcons[key];
+
+      if (!value) {
+        value = this._config.svgIcons[CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE];
+      }
       this._svgIcons.set(key, value);
     }
 
