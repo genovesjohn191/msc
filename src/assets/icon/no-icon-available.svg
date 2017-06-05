@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" height="300px" width="300px" version="1.0" viewBox="-300 -300 600 600" xml:space="preserve">
-<circle stroke="#AAA" stroke-width="10" r="280" fill="#FFF"/>
-<text style="letter-spacing:1;text-anchor:middle;text-align:center;stroke-opacity:.5;stroke:#000;stroke-width:2;fill:#444;font-size:360px;font-family:Bitstream Vera Sans,Liberation Sans, Arial, sans-serif;line-height:125%;writing-mode:lr-tb;" transform="scale(.2)">
-<tspan y="-40" x="8">NO IMAGE</tspan>
-<tspan y="400" x="8">AVAILABLE</tspan>
-</text>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#9A9A9A;stroke-width:28.9778;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1_1_">
+</g>
+<g id="Layer_4">
+</g>
+<g id="Layer_3">
+</g>
+<circle class="st0" cx="250" cy="250" r="152.4"/>
+<line class="st0" x1="357.3" y1="142.7" x2="142.3" y2="357.7"/>
 </svg>

@@ -46,13 +46,7 @@ export class SvgIconComponent implements OnChanges {
 
     // Get svg icon path based on the key, if the svg icon path
     // is not exist, the no image availabe SVG Icon will be display
-    let svgElementPath = this._assetsProvider.getSvgIconPath(this.key);
-    if (!svgElementPath) {
-      svgElementPath = this._assetsProvider
-        .getSvgIconPath(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
-    }
-
-    return svgElementPath;
+    return this._assetsProvider.getSvgIconPath(this.key);
   }
 
   private _setSvgIcon() {

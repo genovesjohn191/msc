@@ -46,6 +46,7 @@ import { routes } from './app.routes';
 /**
  * MCS Portal Modules Declaration
  */
+import { CoreLayoutModule } from './core-layout';
 import { SharedModule } from './shared';
 import { FeaturesModule } from './features';
 import {
@@ -93,7 +94,7 @@ const mcsCoreConfig = {
     HttpModule,
     BrowserAnimationsModule,
     CoreModule.forRoot(mcsCoreConfig),
-    SharedModule,
+    CoreLayoutModule,
     FeaturesModule,
     RouterModule.forRoot(routes)
   ],

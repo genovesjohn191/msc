@@ -34,7 +34,12 @@ describe('SvgIconComponent', () => {
         'radio-button-checked': 'radio-button-checked.svg',
         'radio-button-unchecked': 'radio-button-unchecked.svg'
       };
-      return icons[key];
+
+      let iconPath = icons[key];
+      if (!iconPath) {
+        iconPath = icons['no-icon-available'];
+      }
+      return iconPath;
     }
   };
 
