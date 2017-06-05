@@ -9,7 +9,9 @@
     "catalog": "Catalog"
   },
   "dashboard": {
-    "title": "Macquarie Portal - Dashboard"
+    "title": "Macquarie Portal - Dashboard",
+    "header": "Dashboard",
+    "description": "The following graphs roll up information based on the selected Virtual Data Centre."
   },
   "servers": {
     "title": "Macquarie Portal - Servers",
@@ -111,5 +113,5 @@
     "numeric": "Please enter a valid number.",
     "ipAddress": "Please enter a valid IP Address.",
     "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number"
-  } 
+  }
 }

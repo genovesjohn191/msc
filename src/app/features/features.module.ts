@@ -4,6 +4,7 @@ import { NetworkingModule } from './networking/networking.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { GadgetsModule } from './gadgets/gadgets.module';
 
 @NgModule({
   imports: [
@@ -11,9 +12,9 @@ import { NotificationsModule } from './notifications/notifications.module';
     ServersModule,
     NetworkingModule,
     CatalogModule,
-    NotificationsModule
+    NotificationsModule,
+    GadgetsModule
   ]
 })
 
-export class FeaturesModule {
-}
+export class FeaturesModule { }
