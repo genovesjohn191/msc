@@ -282,8 +282,56 @@
             <mcs-textbox name="textModel" icon="search" width="300"
               [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
             <div class="textbox-content">
-                Textbox Value : {{ textboxValue }}
+              Textbox Value : {{ textboxValue }}
             </div>
+            <br/>
+
+            <label for="textStep"><strong>Textbox w/ Min, Max & Step Attributes</strong></label> <br/>
+            <mcs-textbox name="textStep" inputType="number" width="100"
+              min="1" max="10" step="2" placeholder="GB" [(ngModel)]="numberModel"></mcs-textbox>
+            <div class="textbox-content">
+              <small>Min: 1, Max: 10, Step: 2</small>
+            </div>
+            <br/>
+
+            <label for="textValidationReactiveForm">
+              <strong>Textbox w/ Validation Reactive Form</strong>
+            </label> <br/>
+            <form [formGroup]="reactiveForm">
+              <div class="textbox-content">
+                <small>Email Validation</small>
+              </div>
+              <mcs-textbox formControlName="textEmail" width="300" [(ngModel)]="textboxModel.email"
+                validationType="email" placeholder="Enter Email"></mcs-textbox>
+
+              <div class="textbox-content">
+                <small>IP Address Validation</small>
+              </div>
+              <mcs-textbox formControlName="textIpAddress" width="300" [(ngModel)]="textboxModel.ipAddress"
+                validationType="ipAddress" placeholder="Enter IP Address"></mcs-textbox>
+
+              <div class="textbox-content">
+                <small>Alphanumeric Validation</small>
+              </div>
+              <mcs-textbox formControlName="textAlphanumeric" width="300" [(ngModel)]="textboxModel.alphanumeric"
+                validationType="alphanumeric" placeholder="Enter Username"></mcs-textbox>
+
+              <div class="textbox-content">
+                <small>Numeric Validation</small>
+              </div>
+              <mcs-textbox formControlName="textNumeric" inputType="number" width="100"
+                [(ngModel)]="textboxModel.numeric" validationType="numeric" placeholder="GB"></mcs-textbox>
+
+              <div class="textbox-content">
+                <small>Custom Pattern Validation</small> <br/>
+                <small>Minimum eight characters, at least one uppercase letter, one lowercase letter and one number</small>
+              </div>
+              <mcs-textbox formControlName="textPattern" width="300"
+                [(ngModel)]="textboxModel.pattern" validationType="pattern" placeholder="Type here..."
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"></mcs-textbox>
+            </form>
+            <p>form is valid: {{ reactiveForm.valid ? 'true' : 'false' }}</p>
+            <pre>Values:<br/>{{ textboxModel | json }}</pre>
             <br/>
 
             <label for="textSearch"><strong>Textbox w/ Spinner</strong></label> <br/>

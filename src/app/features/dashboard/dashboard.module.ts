@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 /** Components */
 import { DashboardComponent } from './dashboard.component';
 /** Modules */
@@ -15,7 +18,8 @@ import { routes } from './dashboard.routes';
   ],
   imports: [
     RouterModule.forChild(routes),
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ],
   exports: [
     DashboardComponent,

@@ -1,5 +1,6 @@
 import {
   Component,
+  OnInit,
   OnChanges,
   AfterViewInit,
   Input,
@@ -12,14 +13,24 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  NG_VALIDATORS,
+  Validator,
+  FormControl
 } from '@angular/forms';
 
 /** Interface */
 import { Loading } from '../loading.interface';
 
 /** Providers */
-import { McsAssetsProvider } from '../../core';
+import {
+  McsAssetsProvider,
+  McsTextContentProvider,
+  CoreDefinition
+} from '../../core';
+
+/** Enum */
+import { McsTextboxValidationType } from './textbox-type.enum';
 
 @Component({
   selector: 'mcs-textbox',
@@ -30,18 +41,38 @@ import { McsAssetsProvider } from '../../core';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => TextboxComponent),
       multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => TextboxComponent),
+      multi: true
     }
   ]
 })
 
-export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueAccessor, Loading {
+export class TextboxComponent
+  implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor, Validator, Loading {
   public iconClass: string;
+  public isValid: boolean;
+  public validationMessage: string;
+
+  @Input()
+  public inputType: 'text' | 'number' | 'password';
 
   @Input()
   public icon: string;
 
   @Input()
   public name: string;
+
+  @Input()
+  public step: number;
+
+  @Input()
+  public min: number;
+
+  @Input()
+  public max: number;
 
   @Input()
   public placeholder: string;
@@ -54,6 +85,12 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
 
   @Input()
   public readonly: boolean;
+
+  @Input()
+  public validationType: 'email' | 'ipAddress' | 'alphanumeric' | 'numeric' | 'pattern';
+
+  @Input()
+  public pattern: string;
 
   @ViewChild('mcsTextbox')
   public mcsTextbox: ElementRef;
@@ -86,17 +123,22 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
     }
   }
 
+  public get hasError(): boolean {
+    return this.validationType && this.text && !this.isValid;
+  }
+
   public constructor(
     private _assetsProvider: McsAssetsProvider,
+    private _textProvider: McsTextContentProvider,
     private _renderer: Renderer2,
     private _elementRef: ElementRef
-  ) {}
+  ) {
+    this.inputType = 'text';
+    this.isValid = false;
+  }
 
-  @HostListener('document:click', ['$event.target'])
-  public onClickOutside(target): void {
-    if (!this._elementRef.nativeElement.contains(target)) {
-      this.onFocusOut(target);
-    }
+  public ngOnInit() {
+    this.validationMessage = this._textProvider.content.validationMessages[this.validationType];
   }
 
   public ngOnChanges() {
@@ -111,6 +153,10 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
         'max-width', this.width + 'px');
       this._renderer.addClass(this.mcsTextbox.nativeElement, 'w-100');
     }
+
+    if (this.borderColor) {
+      this._renderer.addClass(this.mcsTextbox.nativeElement, this.borderColor);
+    }
   }
 
   public onFocus(event): void {
@@ -119,6 +165,49 @@ export class TextboxComponent implements OnChanges, AfterViewInit, ControlValueA
 
   public onFocusOut(event): void {
     this._renderer.removeClass(this.mcsTextbox.nativeElement, 'active');
+  }
+
+  public getValidationPattern(validationType: string): RegExp {
+    let pattern: RegExp;
+
+    switch (validationType) {
+      case 'email':
+        pattern = CoreDefinition.REGEX_EMAIL_PATTERN;
+        break;
+      case 'ipAddress':
+        pattern = CoreDefinition.REGEX_IP_PATTERN;
+        break;
+      case 'alphanumeric':
+        pattern = CoreDefinition.REGEX_ALPHANUMERIC_PATTERN;
+        break;
+      case 'numeric':
+        pattern = CoreDefinition.REGEX_NUMERIC_PATTERN;
+        break;
+      case 'pattern':
+        pattern = new RegExp(this.pattern);
+        break;
+    }
+
+    return pattern;
+  }
+
+  public validate(control: FormControl) {
+    if (!this.validationType) { return; }
+
+    let result: any;
+    let regex = this.getValidationPattern(this.validationType);
+
+    if (regex.test(control.value)) {
+      this.isValid = true;
+      result = null;
+    } else {
+      this.isValid = false;
+      result = {
+        validation: { valid: false }
+      };
+    }
+
+    return result;
   }
 
   /**

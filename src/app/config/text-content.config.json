@@ -104,5 +104,12 @@
   },
   "filterSelector": {
     "title": "Always show the following columns."
-  }
+  },
+  "validationMessages": {
+    "email": "Please enter a valid email address.",
+    "alphanumeric": "Please enter alphanumeric only.",
+    "numeric": "Please enter a valid number.",
+    "ipAddress": "Please enter a valid IP Address.",
+    "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number"
+  } 
 }
