@@ -20,8 +20,7 @@ import { ServerList } from './server-list';
 import {
   McsAssetsProvider,
   McsTextContentProvider,
-  CoreDefinition,
-  getElementOffset
+  CoreDefinition
 } from '../../../core';
 
 describe('ServerListPanelComponent', () => {
