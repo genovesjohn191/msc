@@ -18,10 +18,12 @@ import {
   CoreDefinition,
   McsApiJob,
   McsApiErrorResponse,
-  McsNotificationContextService,
+  McsNotificationContextService
+} from '../../core';
+import {
   formatDate,
   mergeArrays
-} from '../../core';
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-notifications',

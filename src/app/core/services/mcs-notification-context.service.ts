@@ -11,10 +11,12 @@ import { McsApiService } from './mcs-api.service';
 import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
 import { McsApiSuccessResponse } from '../models/mcs-api-success-response';
 import { McsApiErrorResponse } from '../models/mcs-api-error-response';
-import { reviverParser } from '../functions/mcs-json.function';
-import { getTimeDifference } from '../functions/mcs-date.function';
-import { updateArrayRecord } from '../functions/mcs-array.function';
-import { convertJsonStringToObject } from '../functions/mcs-json.function';
+import {
+  reviverParser,
+  getTimeDifference,
+  updateArrayRecord,
+  convertJsonStringToObject
+} from '../../utilities';
 
 /**
  * MCS notification context service

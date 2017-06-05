@@ -15,11 +15,11 @@ import {
   HostListener,
   EventEmitter
 } from '@angular/core';
+import { McsComponentService } from '../../core';
 import {
-  McsComponentService,
   getElementPositionFromHost,
   getElementPosition
-} from '../../core';
+} from '../../utilities';
 import { PopoverComponent } from './popover.component';
 
 // Offet of the arrow from left/right/top/bottom

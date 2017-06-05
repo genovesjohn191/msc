@@ -8,8 +8,8 @@ import {
   McsApiErrorResponse,
   McsApiRequestParameter,
   McsApiJob,
-  reviverParser
-} from '../../core/';
+} from '../../core';
+import { reviverParser } from '../../utilities';
 
 @Injectable()
 export class NotificationsService {
