@@ -16,6 +16,7 @@ import { TextboxComponent } from './textbox/textbox.component';
 import { LightboxComponent } from './lightbox/lightbox.component';
 import { SvgIconComponent } from './svg-icon/svg-icon.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
+import { SliderComponent } from './slider/slider.component';
 /** Directives */
 import { FlatDirective } from './directives/flat.directive';
 import { RedDirective } from './directives/red.directive';
@@ -30,6 +31,7 @@ import { RedDirective } from './directives/red.directive';
     LightboxComponent,
     SvgIconComponent,
     DropdownComponent,
+    SliderComponent,
     FlatDirective,
     RedDirective
   ],
@@ -49,6 +51,7 @@ import { RedDirective } from './directives/red.directive';
     LightboxComponent,
     SvgIconComponent,
     DropdownComponent,
+    SliderComponent,
     FlatDirective,
     RedDirective,
     CommonModule,

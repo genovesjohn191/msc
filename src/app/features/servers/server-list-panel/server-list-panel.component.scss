@@ -58,6 +58,7 @@
             @include display-flex(row);
             @include font-size($link-default-font-size);
             color: $color-grey-03;
+            align-items: center;
 
             &:hover {
               color: $color-primary-00;
@@ -68,8 +69,8 @@
               color: $color-black;
             }
 
-            i {
-              margin-right: 5px;
+            span {
+              margin-left: 5px;
             }
           }
         }
