@@ -30,7 +30,7 @@ export class ServerComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    if (this._route.snapshot.data.servers.content) {
+    if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
       this.serviceType = this._route.snapshot.data.server.content.serviceType;
       this.servers = this._route.snapshot.data.servers.content;
     } else {

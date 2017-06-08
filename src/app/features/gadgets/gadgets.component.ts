@@ -42,6 +42,8 @@ export class GadgetsComponent implements OnInit {
   public radioButtonHorizontal: any;
   public radioButtonVertical: any;
 
+  public sliderValue: number;
+
   public constructor(private _route: ActivatedRoute) {
     this.title = 'Gadgets component';
     this.gadgets = new Array();
@@ -55,6 +57,7 @@ export class GadgetsComponent implements OnInit {
       numeric: null,
       pattern: ''
     };
+    this.sliderValue = 300;
   }
 
   public ngOnInit() {

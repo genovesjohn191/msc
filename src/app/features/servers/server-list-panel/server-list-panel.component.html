@@ -16,7 +16,7 @@
           <a [ngClass]="{'active-server': isServerSelected(server.id)}"
             [routerLink]="['/servers/' + server.id]">
             <mcs-svg-icon [key]="getStateIconKey(server.powerState)"
-              size="small"></mcs-svg-icon> {{ server.managementName }}
+              size="small"></mcs-svg-icon> <span>{{ server.managementName }}</span>
           </a>
         </div>
       </div>

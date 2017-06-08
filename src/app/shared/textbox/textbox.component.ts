@@ -4,12 +4,10 @@ import {
   OnChanges,
   AfterViewInit,
   Input,
-  Output,
   Renderer2,
   ElementRef,
   ViewChild,
-  forwardRef,
-  HostListener
+  forwardRef
 } from '@angular/core';
 import {
   ControlValueAccessor,

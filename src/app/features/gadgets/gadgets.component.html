@@ -258,6 +258,16 @@
         <mcs-button iconRight="arrow-right" #mcsButton (onClick)="onButtonClicked(mcsButton)">Submit</mcs-button>
       </div>
     </div>
+
+    <!--Slider Implementation-->
+    <div class="gadgets-container-item">
+      <span class="title">Slider Implementation Example</span>
+      <div class="content">
+        <span class="title font-weight-bold">Storage :</span>
+        <mcs-slider name="defaultSlider" min="100" max="500" step="10" [(ngModel)]="sliderValue"></mcs-slider>
+        <p class="text-sm-center font-weight-bold">{{ sliderValue }} GB</p>
+      </div>
+    </div>
   </div>
 
     <div class="col">
