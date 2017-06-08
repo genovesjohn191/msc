@@ -37,6 +37,10 @@ export class UserPanelComponent implements OnInit {
   public notificationTextContent: any;
   public deviceType: McsDeviceType;
 
+  public get hasNotification(): boolean {
+    return this.notifications && this.notifications.length > 0;
+  }
+
   @ViewChild('popoverInstance')
   public popoverInstance: any;
 
@@ -65,6 +69,9 @@ export class UserPanelComponent implements OnInit {
     this._notificationContextService.notificationsStream
       .subscribe((updatedNotifications) => {
         this.notifications = updatedNotifications;
+        if (!this.hasNotification && this.popoverInstance) {
+          this.popoverInstance.close();
+        }
         setTimeout(() => {
           this._changeDetectorRef.detectChanges();
         }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
@@ -110,7 +117,8 @@ export class UserPanelComponent implements OnInit {
   }
 
   public onOpenNotificationPanel(): void {
-    if (this.popoverInstance && this.deviceType !== McsDeviceType.Desktop) {
+    if (this.popoverInstance &&
+      !this.hasNotification || this.deviceType !== McsDeviceType.Desktop) {
       this.viewNotificationsPage();
     }
   }
