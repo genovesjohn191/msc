@@ -7,9 +7,9 @@
       placement="bottom" orientation="center" theme="light"
       [title]="notificationsTitle" [content]="notificationsContent">
       <i [ngClass]="bellIcon">
-        <span *ngIf="notifications.length > 0">{{ notifications.length }}</span>
+        <span *ngIf="hasNotification">{{ notifications.length }}</span>
       </i>
-      <div class="caret-down">
+      <div *ngIf="hasNotification" class="caret-down">
         <i [ngClass]="caretDown"></i>
       </div>
     </a>
@@ -22,7 +22,7 @@
     <ng-template #notificationsContent>
       <div *ngIf="popoverInstance.componentRef" class="mcs-notification-content">
         <ul class="unstyled-list">
-          <li class="no-notifications" *ngIf="notifications.length == 0 && !hasConnectionError">
+          <li class="no-notifications" *ngIf="!hasNotification && !hasConnectionError">
             <span>{{ notificationTextContent.noRecord }}</span>
           </li>
           <li class="error-connection" *ngIf="hasConnectionError">

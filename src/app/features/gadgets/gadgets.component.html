@@ -43,7 +43,7 @@
           <span>Here is the title</span>
         </ng-template>
         <ng-template #popoverSideContent>
-          <mcs-textbox name="textIcon" icon="search" width="200"
+          <mcs-textbox name="textIcon" icon="search" width="200px"
             placeholder="Type to search..."></mcs-textbox><br/>
         </ng-template>
 
@@ -70,7 +70,7 @@
           <span>Popover Title</span>
         </ng-template>
         <ng-template #popoverContent>
-          <mcs-textbox name="textIcon" icon="search" width="200"
+          <mcs-textbox name="textIcon" icon="search" width="200px"
           placeholder="Type to search..."></mcs-textbox><br/>
           <mcs-button size="small" width="200">Search</mcs-button>
         </ng-template>
@@ -285,11 +285,11 @@
             <br/><br/>
 
             <label for="textCustom"><strong>Textbox w/ Icon & Custom Width</strong></label> <br/>
-            <mcs-textbox name="textCustom" icon="search" width="300" placeholder="Type to filter..."></mcs-textbox>
+            <mcs-textbox name="textCustom" icon="search" width="300px" placeholder="Type to filter..."></mcs-textbox>
             <br/><br/>
 
             <label for="textModel"><strong>Textbox w/ Model Binding</strong></label> <br/>
-            <mcs-textbox name="textModel" icon="search" width="300"
+            <mcs-textbox name="textModel" icon="search" width="300px"
               [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
             <div class="textbox-content">
               Textbox Value : {{ textboxValue }}
@@ -297,7 +297,7 @@
             <br/>
 
             <label for="textStep"><strong>Textbox w/ Min, Max & Step Attributes</strong></label> <br/>
-            <mcs-textbox name="textStep" inputType="number" width="100"
+            <mcs-textbox name="textStep" inputType="number" width="100px"
               min="1" max="10" step="2" placeholder="GB" [(ngModel)]="numberModel"></mcs-textbox>
             <div class="textbox-content">
               <small>Min: 1, Max: 10, Step: 2</small>
@@ -311,32 +311,32 @@
               <div class="textbox-content">
                 <small>Email Validation</small>
               </div>
-              <mcs-textbox formControlName="textEmail" width="300" [(ngModel)]="textboxModel.email"
+              <mcs-textbox formControlName="textEmail" width="300px" [(ngModel)]="textboxModel.email"
                 validationType="email" placeholder="Enter Email"></mcs-textbox>
 
               <div class="textbox-content">
                 <small>IP Address Validation</small>
               </div>
-              <mcs-textbox formControlName="textIpAddress" width="300" [(ngModel)]="textboxModel.ipAddress"
+              <mcs-textbox formControlName="textIpAddress" width="300px" [(ngModel)]="textboxModel.ipAddress"
                 validationType="ipAddress" placeholder="Enter IP Address"></mcs-textbox>
 
               <div class="textbox-content">
                 <small>Alphanumeric Validation</small>
               </div>
-              <mcs-textbox formControlName="textAlphanumeric" width="300" [(ngModel)]="textboxModel.alphanumeric"
+              <mcs-textbox formControlName="textAlphanumeric" width="300px" [(ngModel)]="textboxModel.alphanumeric"
                 validationType="alphanumeric" placeholder="Enter Username"></mcs-textbox>
 
               <div class="textbox-content">
                 <small>Numeric Validation</small>
               </div>
-              <mcs-textbox formControlName="textNumeric" inputType="number" width="100"
+              <mcs-textbox formControlName="textNumeric" inputType="number" width="100px"
                 [(ngModel)]="textboxModel.numeric" validationType="numeric" placeholder="GB"></mcs-textbox>
 
               <div class="textbox-content">
                 <small>Custom Pattern Validation</small> <br/>
                 <small>Minimum eight characters, at least one uppercase letter, one lowercase letter and one number</small>
               </div>
-              <mcs-textbox formControlName="textPattern" width="300"
+              <mcs-textbox formControlName="textPattern" width="300px"
                 [(ngModel)]="textboxModel.pattern" validationType="pattern" placeholder="Type here..."
                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"></mcs-textbox>
             </form>
@@ -346,7 +346,7 @@
 
             <label for="textSearch"><strong>Textbox w/ Spinner</strong></label> <br/>
             <mcs-textbox name="textSearch" #mcsTextbox (keyup)="onSearch(mcsTextbox)"
-              width="300" placeholder="Type to filter..."></mcs-textbox>
+              width="300px" placeholder="Type to filter..."></mcs-textbox>
             <br/><br/>
 
             <label><strong>Inline Textboxes</strong></label> <br/>
@@ -355,9 +355,9 @@
             <br/><br/>
 
             <label><strong>List of Textboxes</strong></label> <br/>
-            <mcs-textbox name="textDefault" width="500" placeholder="Enter text here..."></mcs-textbox> <br/>
-            <mcs-textbox name="textIcon" icon="search" width="500" placeholder="Type to filter..."></mcs-textbox>
-            <mcs-textbox name="textModel" icon="search" width="500"
+            <mcs-textbox name="textDefault" width="500px" placeholder="Enter text here..."></mcs-textbox> <br/>
+            <mcs-textbox name="textIcon" icon="search" width="500px" placeholder="Type to filter..."></mcs-textbox>
+            <mcs-textbox name="textModel" icon="search" width="500px"
               [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
 
           </form>

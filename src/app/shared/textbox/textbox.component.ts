@@ -7,7 +7,8 @@ import {
   Renderer2,
   ElementRef,
   ViewChild,
-  forwardRef
+  forwardRef,
+  HostBinding
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -76,7 +77,8 @@ export class TextboxComponent
   public placeholder: string;
 
   @Input()
-  public width: number;
+  @HostBinding('style.max-width')
+  public width: string;
 
   @Input()
   public borderColor: string;
@@ -147,8 +149,6 @@ export class TextboxComponent
 
   public ngAfterViewInit() {
     if (this.width) {
-      this._renderer.setStyle(this.mcsTextbox.nativeElement,
-        'max-width', this.width + 'px');
       this._renderer.addClass(this.mcsTextbox.nativeElement, 'w-100');
     }
 

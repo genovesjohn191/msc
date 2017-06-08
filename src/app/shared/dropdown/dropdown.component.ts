@@ -21,7 +21,8 @@ import { Loading } from '../loading.interface';
 /** Core */
 import {
   McsAssetsProvider,
-  McsList
+  McsList,
+  McsListItem
 } from '../../core';
 
 @Component({
@@ -40,6 +41,7 @@ import {
 export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   public iconClass: string;
   public collapsed: boolean;
+  public selectedItem: McsListItem;
 
   @Input()
   public dropdownData: McsList;
@@ -73,11 +75,9 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
    * Model Binding
    */
   private _option: string;
-
   public get option(): string {
     return this._option;
   }
-
   public set option(value: string) {
     if (value !== this._option) {
       this._option = value;
@@ -95,6 +95,7 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
     this.dropdownData = new McsList();
     this.option = '';
     this.collapsed = true;
+    this.selectedItem = new McsListItem(undefined, undefined);
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -119,6 +120,11 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
       this._renderer.setStyle(this.mcsDropdown.nativeElement,
         'max-width', this.width + 'px');
     }
+  }
+
+  public onClickItem(item: McsListItem) {
+    if (item) { this.option = item.key; }
+    this.selectedItem = item;
   }
 
   /**

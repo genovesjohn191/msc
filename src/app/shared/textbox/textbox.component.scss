@@ -2,6 +2,10 @@
 
 $textbox-icon-offset: $icon-small-font-size + 20;
 
+:host {
+  display: inline-block;
+}
+
 .mcs-textbox {
   @include border-radius($input-border-radius);
   border: 1px solid $input-border-color;

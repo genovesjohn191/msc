@@ -1,7 +1,7 @@
 <div *ngIf="servers" class="server-list-panel" #serverListPanel>
   <div class="search-box" #searchBox>
     <mcs-textbox name="filter" icon="search" placeholder="Search"
-    [ngModel]="keyword" (ngModelChange)="onFilter($event)" width="300"></mcs-textbox>
+    [ngModel]="keyword" (ngModelChange)="onFilter($event)" width="300px"></mcs-textbox>
   </div>
   <ul id="serverListTree" class="server-list-tree" role="tablist" aria-multiselectable="true" #serverListTree>
     <li *ngFor="let vdc of servers; let i = index">
