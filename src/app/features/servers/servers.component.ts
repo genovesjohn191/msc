@@ -7,6 +7,7 @@ import {
   Observable,
   Subject
 } from 'rxjs/Rx';
+import { Router } from '@angular/router';
 /** Services */
 import {
   McsTextContentProvider,
@@ -68,7 +69,8 @@ export class ServersComponent implements OnInit, OnDestroy {
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
-    private _assetsProvider: McsAssetsProvider
+    private _assetsProvider: McsAssetsProvider,
+    private _router: Router
   ) {
     this.isLoading = true;
     this.hasError = false;
@@ -215,5 +217,9 @@ export class ServersComponent implements OnInit, OnDestroy {
     if (columns) {
       this.columnSettings = columns;
     }
+  }
+
+  public onClickNewServerButton(event: any) {
+    this._router.navigate(['./servers/create/new']);
   }
 }

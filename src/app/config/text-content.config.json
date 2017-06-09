@@ -16,6 +16,17 @@
   "servers": {
     "title": "Macquarie Portal - Servers",
     "header": "Servers",
+    "createSelfManagedServer": {
+      "header": "Create a New Server",
+      "contextualHelp": {
+        "enterServerName": "A friendly Server name.",
+        "intellicentre": "Virtual Data Centre to deploy this Server in.",
+        "serverTemplate": "Contextual help here regarding what to choose when adding a Server.",
+        "serverName": "Starting from an existing server's configuration helps you get a new server up and running quicker.",
+        "network": "DHCP mode: You'll get a lease with an IP address on boot. Static Pool mode: this will give you the next available IP in the static pool.",
+        "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed."
+      }
+    },
     "server": {
       "management": {
         "label" : "Management",

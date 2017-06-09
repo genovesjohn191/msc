@@ -1,0 +1,73 @@
+<section class="copy-self-managed-server-container">
+
+  <div class="server-configuration-details">
+    <mcs-dropdown name="Server Name"
+      placeholder="Select server name"
+      [(ngModel)]="serverNameValue" [dropdownData]="serverNameItems"
+      [mcsContextualHelp]="contextualTextContent.serverName"></mcs-dropdown>
+
+    <mcs-dropdown name="Virtual Application"
+      placeholder="Select a vApp"
+      [(ngModel)]="virtualApplicationValue"
+      [dropdownData]="virtualApplicationItems"></mcs-dropdown>
+
+    <mcs-dropdown name="Server Catalog"
+      placeholder="Select the server catalog"
+      [(ngModel)]="serverCatalogValue"
+      [dropdownData]="serverCatalogItems"></mcs-dropdown>
+  </div>
+
+  <div class="computer-details">
+    <div class="computer-information">
+      <span class="label" >Compute: </span>
+      <!--TODO: Custom size should be seperate component-->
+      <span class="custom-size float-right"><u>Enter custom size</u></span>
+      <!--TODO: Add the slider component here-->
+      <mcs-slider min="100" max="500" step="10"
+        [(ngModel)]="computeValue"></mcs-slider>
+      <label for="progress" class="d-block text-center">
+        <b>8GB / 2vCPU</b><br/>
+        (128 GB / 8vCPU available)
+      </label>
+    </div>
+
+    <div class="storage-information">
+      <span class="label">Storage: </span>
+      <!--TODO: Custom size should be seperate component-->
+      <span class="custom-size float-right"><u>Enter custom size</u></span>
+
+      <mcs-dropdown name="Storage Profile"
+        placeholder="Select this server's Primary Disk Storage Profile"
+        [(ngModel)]="storageProfileValue"
+        [dropdownData]="storageProfileItems"></mcs-dropdown>
+      <!--TODO: Add the slider component here-->
+      <mcs-slider min="100" max="500" step="10"
+        [(ngModel)]="storageValue"></mcs-slider>
+      <label for="progress" class="d-block text-center">
+        <b>200GB</b><br/>
+        (1.25 TB Remaining)
+      </label>
+    </div>
+
+  </div>
+
+  <div class="network-details">
+    <span class="label"
+      [mcsContextualHelp]="contextualTextContent.network">Network:</span>
+
+    <mcs-dropdown name="Primary Network"
+      placeholder="Select this server's Primary Network"
+      [(ngModel)]="primaryNetworkValue"
+      [dropdownData]="primaryNetworkItems"></mcs-dropdown>
+
+    <div class="ip-address-details">
+      <span class="label" >IP Address: </span>
+      <!--TODO: Custom size should be seperate component-->
+      <span class="custom-size float-right"><u>Enter custom IP address</u></span>
+
+      <mcs-radio-button-group [items]="getIpAddressGroup()"
+        [(ngModel)]="ipAddressValue"
+        orientation="vertical"></mcs-radio-button-group>
+    </div>
+  </div>
+</section>

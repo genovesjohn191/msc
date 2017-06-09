@@ -37,6 +37,10 @@ export class CoreDefinition {
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
   public static MANAGED_SERVER = 'Managed';
 
+  /** Style */
+  public static BASE_FONT = 'Circular-Pro-Book';
+  public static BASE_FONT_BOLD = 'Circular-Pro-Bold';
+
   /** Icons */
   public static ICON_SIZE_XSMALL = '10px';
   public static ICON_SIZE_SMALL = '20px';
@@ -45,9 +49,12 @@ export class CoreDefinition {
 
   /** Assets Provider Key Definitions */
   public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';
-  public static ASSETS_SVG_CLOSE = 'close';
+  public static ASSETS_SVG_CLOSE_BLACK = 'close-black';
   public static ASSETS_SVG_CLOSE_BLUE = 'close-blue';
   public static ASSETS_SVG_CLOSE_WHITE = 'close-white';
+  public static ASSETS_SVG_ADD_BLACK = 'add-black';
+  public static ASSETS_SVG_ADD_BLUE = 'add-blue';
+  public static ASSETS_SVG_ADD_WHITE = 'add-white';
   public static ASSETS_SVG_RADIO_CHECKED = 'radio-button-checked';
   public static ASSETS_SVG_RADIO_UNCHECKED = 'radio-button-unchecked';
   public static ASSETS_SVG_STATE_RESTARTING = 'state-restarting';

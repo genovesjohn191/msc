@@ -12,6 +12,17 @@ import {
   ServerServicesComponent
 } from './server/';
 
+/** Context Information */
+import { ContextualHelpComponent } from './contextual-help/contextual-help.component';
+import { ContextualHelpDirective } from './contextual-help/contextual-help.directive';
+/** Self Managed Servers */
+import {
+  CreateSelfManagedServerService,
+  CreateSelfManagedServerComponent,
+  NewSelfManagedServerComponent,
+  CopySelfManagedServerComponent,
+  CloneSelfManagedServerComponent
+} from './self-managed-server';
 /** Service */
 import { ServersService } from './servers.service';
 /** Modules */
@@ -24,7 +35,13 @@ import { SharedModule } from '../../shared';
     ServerComponent,
     ServerManagementComponent,
     ServerServicesComponent,
-    ServerBackupsComponent
+    ServerBackupsComponent,
+    ContextualHelpComponent,
+    ContextualHelpDirective,
+    CreateSelfManagedServerComponent,
+    NewSelfManagedServerComponent,
+    CopySelfManagedServerComponent,
+    CloneSelfManagedServerComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -37,10 +54,17 @@ import { SharedModule } from '../../shared';
     ServerManagementComponent,
     ServerServicesComponent,
     ServerBackupsComponent,
+    ContextualHelpComponent,
+    ContextualHelpDirective,
+    CreateSelfManagedServerComponent,
+    NewSelfManagedServerComponent,
+    CopySelfManagedServerComponent,
+    CloneSelfManagedServerComponent,
     RouterModule
   ],
   providers: [
-    ServersService
+    ServersService,
+    CreateSelfManagedServerService
   ]
 })
 

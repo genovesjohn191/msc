@@ -1,0 +1,35 @@
+@import "../../../../styles/shared/base";
+
+.create-self-managed-server-container {
+  position: relative;
+  @include display-flex(row);
+
+  .server-information {
+    @include flex(1 0 60%);
+    @include display-flex(column);
+    @include set-items-interval(10);
+    padding-right: 20px;
+    border-right: 2px solid gray;
+
+    .additional-server {
+      @include display-flex(row);
+      align-items: center;
+      background-color: $color-grey-05;
+      padding: 10px 20px;
+
+      > span {
+        margin-left: 10px;
+        font-family: $base-font-bold;
+      }
+    }
+
+    .deployment {
+      margin-left: auto;
+    }
+  }
+
+  .context-information {
+    @include flex(0 0 20%);
+    margin-left: auto;
+  }
+}

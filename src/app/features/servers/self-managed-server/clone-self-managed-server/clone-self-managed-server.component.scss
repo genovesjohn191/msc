@@ -1,0 +1,26 @@
+@import "../../../../../styles/shared/base";
+
+.clone-self-managed-server-container {
+  width: 100%;
+  @include set-items-interval(20);
+
+  .server-configuration-details {
+    @include display-flex(column);
+    @include set-items-interval(10);
+  }
+
+  .computer-details {
+    @include display-flex(column);
+    @include set-items-interval(20);
+  }
+
+  .network-details {
+    @include display-flex(column);
+    @include set-items-interval(20);
+  }
+
+  .label {
+    font-family: $base-font-bold;
+    @include font-size(20);
+  }
+}

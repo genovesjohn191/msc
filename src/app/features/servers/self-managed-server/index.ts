@@ -1,0 +1,8 @@
+/** Components */
+export * from './create-self-managed-server.component';
+export * from './new-self-managed-server/new-self-managed-server.component';
+export * from './copy-self-managed-server/copy-self-managed-server.component';
+export * from './clone-self-managed-server/clone-self-managed-server.component';
+
+/** Services */
+export * from './create-self-managed-server.service';
