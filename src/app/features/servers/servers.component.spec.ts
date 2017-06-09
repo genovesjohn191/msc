@@ -5,6 +5,7 @@ import {
   fakeAsync,
   discardPeriodicTasks
 } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs/Rx';
 import {
   McsTextContentProvider,
@@ -59,6 +60,7 @@ describe('ServersComponent', () => {
         ServersComponent
       ],
       imports: [
+        RouterTestingModule
       ],
       providers: [
         { provide: McsTextContentProvider, useValue: textContentProviderMock },

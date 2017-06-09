@@ -31,9 +31,12 @@
   },
   "svgIcons":{
     "no-icon-available": "no-icon-available.svg",
-    "close": "close.svg",
+    "close-black": "close-black.svg",
     "close-blue": "close-blue.svg",
     "close-white": "close-white.svg",
+    "add-black": "add-black.svg",
+    "add-blue": "add-blue.svg",
+    "add-white": "add-white.svg",
     "radio-button-checked": "radio-button-checked.svg",
     "radio-button-unchecked": "radio-button-unchecked.svg",
     "state-restarting": "state-restarting.svg",

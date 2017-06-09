@@ -1,0 +1,55 @@
+<section class="create-self-managed-server-container">
+  <div class="server-information">
+    <h3>{{ createServerTextContent.header }}</h3>
+
+    <mcs-textbox name="textDefault" width="100%" placeholder="Enter a server name..."
+      [mcsContextualHelp]="contextualTextContent.enterServerName"></mcs-textbox>
+
+    <mcs-dropdown name="dropdownDefault"
+      [(ngModel)]="intellicentreValue" [dropdownData]="intellicentres"
+      placeholder="Select a Intellicentre"
+      [mcsContextualHelp]="contextualTextContent.intellicentre"></mcs-dropdown>
+
+    <!--TODO: Set the tab link here-->
+    <div class="mcs-tabs">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" role="tab"
+            [routerLink]="['new']" routerLinkActive="active">
+            New server config</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" role="tab"
+            [routerLink]="['copy']" routerLinkActive="active">
+            Start from existing server's config</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" role="tab"
+            [routerLink]="['clone']" routerLinkActive="active">
+            Clone a server</a>
+        </li>
+      </ul>
+
+        <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane active" role="tabpanel">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+
+    <div class="additional-server">
+      <mcs-svg-icon [key]="getAddIconKey()" size="large"></mcs-svg-icon>
+      <span>Add another server</span>
+    </div>
+
+    <div class="deployment">
+      <mcs-button iconRight="arrow-right">Deploy</mcs-button>
+    </div>
+  </div>
+
+  <div class="context-information">
+    <mcs-contextual-help
+      [contextualInformations]="getAllContextualInformations()"></mcs-contextual-help>
+  </div>
+</section>

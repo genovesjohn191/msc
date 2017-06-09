@@ -1,0 +1,7 @@
+@import "../../../../styles/shared/base";
+
+.contextual-help-container {
+  position: relative;
+  padding-left: $contextual-padding-left;
+  width: $contextual-help-width;
+}

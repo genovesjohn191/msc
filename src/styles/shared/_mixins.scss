@@ -69,7 +69,7 @@
 }
 
 // Usage
-// This mixin generates the font-size and line-height in px and rem. 
+// This mixin generates the font-size and line-height in px and rem.
 // Parameter needs to be passed in px equivalent without unit suffix.
 
 // // Using a variable (Requires the get-value function)
@@ -77,7 +77,7 @@
 //   @include font-size(get-value($default-font-size));
 // }
 
-// // Using a static value 
+// // Using a static value
 // body {
 //   @include font-size(12);
 // }
@@ -326,4 +326,20 @@
 
 // .mcs-textbox {
 //   @include textbox-highlight(none);
+// }
+
+// Set interval to all child(items)
+@mixin set-items-interval($value) {
+  > * {
+    margin-top: $value + px;
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
+}
+
+// Usage
+
+// .mcs-textbox {
+//   @include set-items-interval(20);
 // }

@@ -1,0 +1,9 @@
+<section class="clone-self-managed-server-container">
+
+  <div class="server-configuration-details">
+    <mcs-dropdown name="Clone this server"
+      placeholder="Select the server catalog"
+      [(ngModel)]="serverCatalogValue" [dropdownData]="serverCatalogItems"
+      [mcsContextualHelp]="contextualTextContent.cloneServer"></mcs-dropdown>
+  </div>
+</section>
