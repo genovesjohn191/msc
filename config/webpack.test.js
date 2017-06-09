@@ -90,9 +90,9 @@ module.exports = function (options) {
                 inlineSourceMap: true,
                 compilerOptions: {
 
-                  /** 
+                  /**
                    * Remove TypeScript helpers to be injected
-                   * below by DefinePlugin 
+                   * below by DefinePlugin
                    */
                   removeComments: true
 
@@ -186,7 +186,7 @@ module.exports = function (options) {
        * Environment helpers
        *
        * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-       * 
+       *
        * NOTE: when adding more properties make sure you include them in custom-typings.d.ts
        */
       new DefinePlugin({
@@ -208,7 +208,7 @@ module.exports = function (options) {
        */
       new ContextReplacementPlugin(
         /** The (\\|\/) piece accounts for path separators in *nix and Windows */
-        /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
+        /angular(\\|\/)core(\\|\/)@angular/,
       helpers.root('src'), /** Location of your src */
         {
           /** Your Angular Async Route paths relative to this root directory. */

@@ -169,7 +169,7 @@ module.exports = function (options) {
           use: 'imports-loader?jQuery=jquery'
         },
 
-        /** 
+        /**
          * Raw loader support for *.html
          * Returns file content as string
          *
@@ -253,7 +253,7 @@ module.exports = function (options) {
        */
       new ContextReplacementPlugin(
         /** The (\\|\/) piece accounts for path separators in *nix and Windows. */
-        /angular(\\|\/)core(\\|\/)src(\\|\/)linker/,
+        /angular(\\|\/)core(\\|\/)@angular/,
         helpers.root('src'), /** location of your src */
         {
           /** Your Angular Async Route paths relative to this root directory. */
