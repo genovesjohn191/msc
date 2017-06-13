@@ -205,6 +205,16 @@
        </div>
      </div>
 
+     <!--Progress bar implementation-->
+      <div class="gadgets-container-item">
+        <span class="title">Progress Bar Implementation Example</span>
+        <div class="content">
+          <mcs-textbox [(ngModel)]="progressValue" inputType="number"></mcs-textbox>
+          <span>Update model value to move the progress bar</span>
+          <mcs-progress-bar [(ngModel)]="progressValue" maxValue="100"></mcs-progress-bar>
+       </div>
+     </div>
+
      <!--Radio button implementation-->
       <div class="gadgets-container-item">
         <span class="title">Filter Selector Component Implementation Example</span>

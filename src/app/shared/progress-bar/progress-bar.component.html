@@ -1,0 +1,6 @@
+<div class="progress-bar-container">
+  <div class="progress-container" [ngStyle]="{width: getPercentage()}"></div>
+</div>
+<div class="percentage" [ngStyle]="getStyle()">
+  <span>{{ getPercentage() }}</span>
+</div>

@@ -186,8 +186,8 @@
 //   @include text-truncate;
 // }
 
-// Transform
-@mixin transform($value) {
+// Rotate
+@mixin rotate($value) {
   -webkit-transform: rotate($value + deg);
       -ms-transform: rotate($value + deg);
           transform: rotate($value + deg);
@@ -196,7 +196,21 @@
 // Usage
 
 // .label {
-//   @include transform(7deg);
+//   @include rotate(7);
+// }
+
+
+// Translate
+@mixin translate($xValue, $yValue) {
+  -webkit-transform: translate($Xvalue, $Yvalue);
+      -ms-transform: translate($Xvalue, $Yvalue);
+          transform: translate($Xvalue, $Yvalue);
+}
+
+// Usage
+
+// .div {
+//   @include translate(15px, 30px);
 // }
 
 // Box Shadow
@@ -342,4 +356,19 @@
 
 // .mcs-textbox {
 //   @include set-items-interval(20);
+// }
+
+// Transition
+@mixin transition($transition...) {
+  @if length($transition) == 0 {
+    transition: $transition-base;
+  } @else {
+    transition: $transition;
+  }
+}
+
+// Usage
+
+// .mcs-textbox {
+//   @include transition(.4s linear);
 // }

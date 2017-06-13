@@ -78,6 +78,11 @@ $color-green-00: #21b21e;
 $color-yellow-00: #efc225;
 $color-red-00: #f80c27;
 
+// Transition Settings
+$transition-base: all .2s ease-in-out !default;
+$transition-fade: opacity .15s linear !default;
+$transition-collapse: height .35s ease !default;
+
 // Responsive Dimension Settings
 $desktop-min-width: 970px;
 $tablet-max-width: 969px;
@@ -187,3 +192,10 @@ $radio-button-label-offset: 12px;
 // Server Contextual Help
 $contextual-help-width: 250px;
 $contextual-padding-left: 20px;
+
+// Progress Bar
+$progress-bar-height: 20px;
+$progress-bar-font-size: 16;
+$progress-bar-border-radius: 10px;
+$progress-bar-bg-color: $color-primary-02;
+$progress-bg-color: $color-primary-01;

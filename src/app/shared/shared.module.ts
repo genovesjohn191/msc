@@ -17,6 +17,7 @@ import { LightboxComponent } from './lightbox/lightbox.component';
 import { SvgIconComponent } from './svg-icon/svg-icon.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { SliderComponent } from './slider/slider.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 /** Directives */
 import { FlatDirective } from './directives/flat.directive';
 import { RedDirective } from './directives/red.directive';
@@ -32,6 +33,7 @@ import { RedDirective } from './directives/red.directive';
     SvgIconComponent,
     DropdownComponent,
     SliderComponent,
+    ProgressBarComponent,
     FlatDirective,
     RedDirective
   ],
@@ -52,6 +54,7 @@ import { RedDirective } from './directives/red.directive';
     SvgIconComponent,
     DropdownComponent,
     SliderComponent,
+    ProgressBarComponent,
     FlatDirective,
     RedDirective,
     CommonModule,
