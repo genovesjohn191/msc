@@ -1,0 +1,69 @@
+@import "../../../styles/shared/base";
+
+.mcs-alert {
+  @include display-flex(row);
+  align-items: center;
+  border: 1px solid transparent;
+  @include border-radius(5px);
+  padding: $alert-container-padding;
+
+  .alert-icon {
+    @include display-flex(row);
+    align-items: center;
+    margin-right: $space-medium;
+    @include border-radius(100%);
+    width: $alert-icon-container-size;
+    height: $alert-icon-container-size;
+
+    i {
+      @include font-size($icon-medium-font-size);
+      color: $color-white;
+      margin: 0 auto;
+    }
+  }
+
+  .alert-content {
+    .title {
+      font-family: $base-font-bold;
+      color: $color-black;
+      @include font-size($alert-title-font-size);
+      margin-bottom: 0;
+    }
+  }
+
+  &.success {
+    @include background-opacity($color-green-00, $alert-background-opacity);
+    border-color: $color-green-00;
+
+    .alert-icon {
+      background-color: $color-green-00;
+    }
+  }
+
+  &.failed {
+    @include background-opacity($color-red-00, $alert-background-opacity);
+    border-color: $color-red-00;
+
+    .alert-icon {
+      background-color: $color-red-00;
+    }
+  }
+
+  &.warning {
+    @include background-opacity($color-yellow-00, $alert-background-opacity);
+    border-color: $color-yellow-00;
+
+    .alert-icon {
+      background-color: $color-yellow-00;
+    }
+  }
+
+  &.info {
+    @include background-opacity($color-primary-01, $alert-background-opacity);
+    border-color: $color-primary-01;
+
+    .alert-icon {
+      background-color: $color-primary-01;
+    }
+  }
+}

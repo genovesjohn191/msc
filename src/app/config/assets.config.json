@@ -27,7 +27,7 @@
     "spinner": "fa fa-spinner fa-pulse",
     "sign-out": "fa fa-sign-out",
     "user": "fa fa-user-o",
-    "sort": "fa fa-sort"
+    "info-2": "fa fa-info"
   },
   "svgIcons":{
     "no-icon-available": "no-icon-available.svg",

@@ -372,3 +372,14 @@
 // .mcs-textbox {
 //   @include transition(.4s linear);
 // }
+
+// Set background-opacrity
+@mixin background-opacity($color, $opacity) {
+  background: rgba($color, $opacity);
+}
+
+// Usage
+
+// .mcs-alert {
+//   @include background-opacity(#000, 0.5);
+// }
