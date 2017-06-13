@@ -40,7 +40,7 @@
 
         &.collapsed {
           i {
-            @include transform(-90);
+            @include rotate(-90);
           }
         }
       }

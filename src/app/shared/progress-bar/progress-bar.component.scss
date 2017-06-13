@@ -1,0 +1,26 @@
+@import "../../../styles/shared/base";
+
+:host {
+  display: block;
+}
+
+.progress-bar-container {
+  height: $progress-bar-height;
+  background-color: $progress-bar-bg-color;
+  border-radius: $progress-bar-border-radius;
+
+  .progress-container {
+    border-radius: inherit;
+    background-color: $progress-bg-color;
+    overflow: hidden;
+    height: inherit;
+    @include transition(.4s linear);
+  }
+}
+
+.percentage {
+  @include transition(.4s linear);
+  span {
+    @include font-size($progress-bar-font-size);
+  }
+}

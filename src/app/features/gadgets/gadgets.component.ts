@@ -36,6 +36,8 @@ export class GadgetsComponent implements OnInit {
   public numberModel: number;
   public textboxModel: any;
 
+  public progressValue: number = 10;
+
   public textEmail: FormControl;
   public reactiveForm: FormGroup;
 
