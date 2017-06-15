@@ -1,7 +1,8 @@
 import {
   formatDate,
   getTimeDifference,
-  getDayDifference
+  getDayDifference,
+  compareDates
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -49,6 +50,32 @@ describe('DATE Functions', () => {
       let dayDifference = getDayDifference(firstDate, secondDate);
       expect(dayDifference).not.toBe(5);
       expect(dayDifference).toEqual(4);
+    });
+  });
+
+  describe('compareDates()', () => {
+    it(`should return 1 when the first date is newer than second date`, () => {
+      let firstDate = new Date('2017-04-27 01:10:45');
+      let secondDate = new Date('2017-04-26 01:10:45');
+
+      let compareValue = compareDates(firstDate, secondDate);
+      expect(compareValue).toEqual(1);
+    });
+
+    it(`should return 0 when the second date and first date are the same`, () => {
+      let firstDate = new Date('2017-04-27 01:10:45');
+      let secondDate = new Date('2017-04-27 01:10:45');
+
+      let compareValue = compareDates(firstDate, secondDate);
+      expect(compareValue).toEqual(0);
+    });
+
+    it(`should return -1 when the second date is newer than first date`, () => {
+      let firstDate = new Date('2017-04-26 01:10:45');
+      let secondDate = new Date('2017-04-27 01:10:45');
+
+      let compareValue = compareDates(firstDate, secondDate);
+      expect(compareValue).toEqual(-1);
     });
   });
 });

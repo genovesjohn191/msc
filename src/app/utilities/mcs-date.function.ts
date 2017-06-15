@@ -36,3 +36,30 @@ export function getDayDifference(firstDate: Date, secondDate: Date): number {
   // Calculate time difference using milliseconds, hours, minutes, seconds
   return (Math.ceil(getTimeDifference(firstDate, secondDate) / (1000 * 24 * 60 * 60)));
 }
+
+/**
+ * Compare 2 dates and return the corresponding comparison value
+ * 1 = First date is newer than second date
+ * 0 = Both dates are the same
+ * -1 = First date is older than second date
+ * @param firstDate First date to be compare
+ * @param secondDate Second date to be serve as basis
+ */
+export function compareDates(firstDate: Date, secondDate: Date): number {
+  // Initialize for undefined/null input variables
+  if (!firstDate) { firstDate = new Date(); }
+  if (!secondDate) { secondDate = new Date(); }
+
+  let compareValues: number = 0;
+  let firstTime = firstDate.getTime();
+  let secondTime = secondDate.getTime();
+
+  if (firstTime < secondTime) {
+    compareValues = -1;
+  } else if (firstTime > secondTime) {
+    compareValues = 1;
+  } else {
+    compareValues = 0;
+  }
+  return compareValues;
+}

@@ -19,7 +19,8 @@ import {
 } from '../../../core';
 import {
   formatDate,
-  mergeArrays
+  mergeArrays,
+  compareDates
 } from '../../../utilities';
 import { ProvisioningNotificationsService } from './provisioning-notifications.service';
 
@@ -60,9 +61,6 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    // TODO:Set notifications data temporarily
-    this._populateNotifications();
-
     // obtainment of notifications from the API
     this.getNotifications();
 
@@ -118,75 +116,6 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     return this.provisioningNotificationsTextContent.contextualHelp.deploy;
   }
 
-  // TODO: remove this method in official release
-  private _populateNotifications() {
-    let notification = new McsApiJob();
-
-    // Record 1
-    {
-      notification.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-      notification.id = '0001';
-      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 1 (Syd)';
-      notification.tasks = new Array();
-      notification.ectInSeconds = 30;
-
-      {
-        let task = new McsApiTask();
-        task.id = '000A';
-        task.description = 'Initializing the new Server';
-        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        notification.tasks.push(task);
-      }
-
-      {
-        let task = new McsApiTask();
-        task.id = '000B';
-        task.description = 'Deploying mongo-db-prod: 50GB, 8GB / 2vCPU';
-        task.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-        notification.tasks.push(task);
-      }
-      this.notifications.push(notification);
-    }
-
-    // Record 2
-    {
-      notification = new McsApiJob();
-      notification.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-      notification.id = '0002';
-      notification.endedOn = new Date('2017-04-26 01:10:45');
-      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 1 (Syd)';
-      notification.ectInSeconds = 100;
-      this.notifications.push(notification);
-    }
-
-    // Record 3
-    {
-      notification = new McsApiJob();
-      notification.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-      notification.id = '0003';
-      notification.description = 'Restoring snapshots for "mongo-db"';
-      notification.tasks = new Array();
-      notification.ectInSeconds = 100;
-
-      {
-        let task = new McsApiTask();
-        task.id = '000A';
-        task.description = 'Initializing stack snapshot restoration';
-        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        notification.tasks.push(task);
-      }
-
-      {
-        let task = new McsApiTask();
-        task.id = '000B';
-        task.description = 'Rolling back to saved snapshot 3:15am, 30 November, 2016';
-        task.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-        notification.tasks.push(task);
-      }
-      this.notifications.push(notification);
-    }
-  }
-
   private _listenToNotificationUpdate(): void {
     // listener for the notification updates
     this.notificationsSubscription = this._notificationContextService.notificationsStream
@@ -208,22 +137,13 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   private _onChangeNotification(updatedNotifications: any): void {
     // Update all existing notifications based on the notification context
     // and Add the non-exist notifications
-    for (let notification of updatedNotifications) {
-      let isExist: boolean = false;
+    this.notifications = mergeArrays(this.notifications, updatedNotifications);
+    this.totalNotificationsCount = this.notifications.length;
 
-      for (let index = 0; index < this.notifications.length; ++index) {
-        if (this.notifications[index].id.localeCompare(notification.id) === 0) {
-          this.notifications[index] = notification;
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist === false) {
-        // Insert notification item in the first order
-        this.notifications.splice(0, 0, notification);
-        this.totalNotificationsCount = this.notifications.length;
-      }
-    }
+    // Sort notification jobs by date
+    this.notifications.sort((first: McsApiJob, second: McsApiJob) => {
+      return compareDates(second.createdOn, first.createdOn);
+    });
   }
 
   private _filterProvisioningNotifications(job: McsApiJob): boolean {
