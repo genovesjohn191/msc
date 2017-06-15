@@ -22,7 +22,8 @@ import {
 } from '../../core';
 import {
   formatDate,
-  mergeArrays
+  mergeArrays,
+  compareDates
 } from '../../utilities';
 
 @Component({
@@ -223,21 +224,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   private _onChangeNotification(updatedNotifications: any): void {
     // Update all existing notifications based on the notification context
     // and Add the non-exist notifications
-    for (let notification of updatedNotifications) {
-      let isExist: boolean = false;
+    this.notifications = mergeArrays(this.notifications, updatedNotifications);
+    this.totalNotificationsCount = this.notifications.length;
 
-      for (let index = 0; index < this.notifications.length; ++index) {
-        if (this.notifications[index].id.localeCompare(notification.id) === 0) {
-          this.notifications[index] = notification;
-          isExist = true;
-          break;
-        }
-      }
-      if (isExist === false) {
-        // Insert notification item in the first order
-        this.notifications.splice(0, 0, notification);
-        this.totalNotificationsCount = this.notifications.length;
-      }
-    }
+    // Sort notification jobs by date
+    this.notifications.sort((first: McsApiJob, second: McsApiJob) => {
+      return compareDates(second.createdOn, first.createdOn);
+    });
   }
 }
