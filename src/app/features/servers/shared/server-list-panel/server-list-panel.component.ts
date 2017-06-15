@@ -8,7 +8,7 @@ import {
   ElementRef,
   HostListener
 } from '@angular/core';
-import { Server } from '../server';
+import { Server } from '../../server';
 import {
   Router,
   ActivatedRoute
@@ -17,13 +17,13 @@ import {
   McsAssetsProvider,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../core';
+} from '../../../../core';
 import {
   getElementOffset,
   toProperCase
-} from '../../../utilities';
+} from '../../../../utilities';
 import { ServerList } from './server-list';
-import { ServerStatus } from '../server-status.enum';
+import { ServerStatus } from '../../server-status.enum';
 
 @Component({
   selector: 'mcs-server-list-panel',

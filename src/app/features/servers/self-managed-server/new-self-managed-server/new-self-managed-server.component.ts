@@ -8,10 +8,11 @@ import {
 import {
   McsList,
   McsListItem,
-  McsTextContentProvider
+  McsTextContentProvider,
+  CoreDefinition
 } from '../../../../core';
 import { CreateSelfManagedServerService } from '../create-self-managed-server.service';
-import { ContextualHelpDirective } from '../../contextual-help/contextual-help.directive';
+import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
 import { BaseSelfManagedServer } from '../base-self-managed-server';
 
 @Component({
@@ -59,16 +60,16 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    if (this.contextualHelpDirectives) {
-      let contextInformations: ContextualHelpDirective[];
-
-      contextInformations = this.contextualHelpDirectives
-        .map((description) => {
-          return description;
-        });
-
-      this._managedServerService.contextualHelpStream.next(contextInformations);
-    }
+    setTimeout(() => {
+      if (this.contextualHelpDirectives) {
+        let contextInformations: ContextualHelpDirective[];
+        contextInformations = this.contextualHelpDirectives
+          .map((description) => {
+            return description;
+          });
+        this._managedServerService.contextualHelpStream.next(contextInformations);
+      }
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   public getVirtualApplications(): McsList {

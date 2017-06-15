@@ -2,19 +2,21 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 /** Servers Feature */
 import { routes } from './servers.routes';
+/** Shared */
+import {
+  JobProgressComponent,
+  ServerListPanelComponent,
+  ContextualHelpComponent,
+  ContextualHelpDirective
+} from './shared';
 /** Servers */
 import { ServersComponent } from './servers.component';
-import { ServerListPanelComponent } from './server-list-panel/server-list-panel.component';
 import {
   ServerComponent,
   ServerManagementComponent,
   ServerBackupsComponent,
   ServerServicesComponent
 } from './server/';
-
-/** Context Information */
-import { ContextualHelpComponent } from './contextual-help/contextual-help.component';
-import { ContextualHelpDirective } from './contextual-help/contextual-help.directive';
 /** Self Managed Servers */
 import {
   CreateSelfManagedServerService,
@@ -23,6 +25,11 @@ import {
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent
 } from './self-managed-server';
+/** Provisioning Notifications */
+import {
+  ProvisioningNotificationsService,
+  ProvisioningNotificationsComponent
+} from './provisioning-notifications';
 /** Service */
 import { ServersService } from './servers.service';
 /** Modules */
@@ -31,24 +38,7 @@ import { SharedModule } from '../../shared';
 @NgModule({
   declarations: [
     ServersComponent,
-    ServerListPanelComponent,
-    ServerComponent,
-    ServerManagementComponent,
-    ServerServicesComponent,
-    ServerBackupsComponent,
-    ContextualHelpComponent,
-    ContextualHelpDirective,
-    CreateSelfManagedServerComponent,
-    NewSelfManagedServerComponent,
-    CopySelfManagedServerComponent,
-    CloneSelfManagedServerComponent
-  ],
-  imports: [
-    RouterModule.forChild(routes),
-    SharedModule
-  ],
-  exports: [
-    ServersComponent,
+    JobProgressComponent,
     ServerListPanelComponent,
     ServerComponent,
     ServerManagementComponent,
@@ -60,11 +50,33 @@ import { SharedModule } from '../../shared';
     NewSelfManagedServerComponent,
     CopySelfManagedServerComponent,
     CloneSelfManagedServerComponent,
+    ProvisioningNotificationsComponent
+  ],
+  imports: [
+    RouterModule.forChild(routes),
+    SharedModule
+  ],
+  exports: [
+    ServersComponent,
+    JobProgressComponent,
+    ServerListPanelComponent,
+    ServerComponent,
+    ServerManagementComponent,
+    ServerServicesComponent,
+    ServerBackupsComponent,
+    ContextualHelpComponent,
+    ContextualHelpDirective,
+    CreateSelfManagedServerComponent,
+    NewSelfManagedServerComponent,
+    CopySelfManagedServerComponent,
+    CloneSelfManagedServerComponent,
+    ProvisioningNotificationsComponent,
     RouterModule
   ],
   providers: [
     ServersService,
-    CreateSelfManagedServerService
+    CreateSelfManagedServerService,
+    ProvisioningNotificationsService
   ]
 })
 

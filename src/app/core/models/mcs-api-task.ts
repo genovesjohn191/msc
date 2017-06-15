@@ -1,16 +1,10 @@
-import { McsApiTask } from './mcs-api-task';
-
-export class McsApiJob {
+export class McsApiTask {
   public id: string;
-  public type: number;
-  public ownerName: string;
   public description: string;
   public summaryInformation: string;
   public errorMessage: string;
-  public durationInSeconds: number;
-  public ectInSeconds: number;
-  public tasks: McsApiTask[];
   public status: string;
+  public durationInSeconds: number;
   public createdOn: Date;
   public updatedOn: Date;
   public startedOn: Date;

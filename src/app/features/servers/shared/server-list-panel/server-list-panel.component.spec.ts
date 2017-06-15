@@ -15,13 +15,13 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Server } from '../server';
+import { Server } from '../../server';
 import { ServerList } from './server-list';
 import {
   McsAssetsProvider,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../core';
+} from '../../../../core';
 
 describe('ServerListPanelComponent', () => {
   /** Stub Services/Components */

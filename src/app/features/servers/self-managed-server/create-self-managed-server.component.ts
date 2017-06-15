@@ -14,7 +14,7 @@ import {
   McsTextContentProvider
 } from '../../../core';
 import { mergeArrays } from '../../../utilities';
-import { ContextualHelpDirective } from '../contextual-help/contextual-help.directive';
+import { ContextualHelpDirective } from '../shared/contextual-help/contextual-help.directive';
 import { CreateSelfManagedServerService } from './create-self-managed-server.service';
 
 @Component({
@@ -54,19 +54,21 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    if (this.contextualHelpDirectives) {
-      this._mainContextInformations = this.contextualHelpDirectives
-        .map((description) => {
-          return description;
-        });
-    }
+    setTimeout(() => {
+      if (this.contextualHelpDirectives) {
+        this._mainContextInformations = this.contextualHelpDirectives
+          .map((description) => {
+            return description;
+          });
+      }
 
-    this._managedServerService.contextualHelpStream
-      .subscribe((routedContextInformations) => {
-        if (routedContextInformations) {
-          this._subContextInformations = routedContextInformations;
-        }
-      });
+      this._managedServerService.contextualHelpStream
+        .subscribe((routedContextInformations) => {
+          if (routedContextInformations) {
+            this._subContextInformations = routedContextInformations;
+          }
+        });
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   public getAllContextualInformations() {
@@ -92,5 +94,9 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public getAddIconKey() {
     return CoreDefinition.ASSETS_SVG_ADD_BLACK;
+  }
+
+  public onDeployClick(event: any) {
+    this._router.navigate(['./servers/provisioning']);
   }
 }

@@ -90,7 +90,7 @@ export class ProgressBarComponent implements ControlValueAccessor {
   public getPercentage(): string {
     // Return the percentage of the current value based on the maximum value inputted
     let percentNumber = 100 * this.getValueInRange() / this.maxValue;
-    return percentNumber.toString() + '%';
+    return percentNumber.toFixed().toString() + '%';
   }
 
   public getStyle() {
