@@ -23,28 +23,30 @@
           <h3 class="float-left">Macquarie Cloud Services Portal</h3>
           <i class="float-right" [ngClass]="navigationCloseButton" (click)="navState='hide'"></i>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+
+        <!--TODO: Temporarily removed dashboard for phase 1.0 -->
+        <!--<li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./dashboard']"
           (click)="setTitle(textContent.dashboard.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
             {{ textContent.navigation.dashboard }}</a>
-        </li>
+        </li>-->
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./servers']"
           (click)="setTitle(textContent.servers.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
             {{ textContent.navigation.servers }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./networking']"
           (click)="setTitle(textContent.networking.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
             {{ textContent.navigation.networking }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./catalog']"
           (click)="setTitle(textContent.catalog.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
             {{ textContent.navigation.catalog }}</a>
         </li>
 
@@ -52,7 +54,7 @@
         <li class="nav-item" routerLinkActive="active" *ngIf="!isUser()">
           <a class="nav-link" [routerLink]="['./others']"
           (click)="setTitle(textContent.others.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i> 
+            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
             {{ textContent.navigation.others }}</a>
         </li>
 
