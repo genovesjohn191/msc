@@ -24,7 +24,6 @@ import {
   McsNotificationJobService,
   CoreDefinition
 } from '../../core';
-let mockMcsBrowserService = new McsBrowserService();
 
 @Component({
   selector: 'mcs-state-change-notification',
@@ -40,6 +39,7 @@ describe('StateChangeNotificationsComponent', () => {
   /** Stub Services/Components */
   let fixture: any;
   let component: StateChangeNotificationsComponent;
+  let mockMcsBrowserService = new McsBrowserService();
   let mcsNotificationContextService: McsNotificationContextService;
 
   let mockMcsNotificationJobService = {

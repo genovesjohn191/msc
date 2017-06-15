@@ -16,6 +16,13 @@
   "servers": {
     "title": "Macquarie Portal - Servers",
     "header": "Servers",
+    "provisioningNotifications": {
+      "header": "Server Provisioning Notifications",
+      "contextualHelp": {
+        "deploy": "We're currently deploying your stack. Your servers will soon be provisioned and ready.<br/><br/>You can watch the state of provisioning as each step evolves.",
+        "restore": "We're currently deploying your stack. Your servers will soon be provisioned and ready.<br/><br/>You can watch the state of provisioning as each step evolves."
+      }
+    },
     "createSelfManagedServer": {
       "header": "Create a New Server",
       "contextualHelp": {
@@ -29,7 +36,7 @@
     },
     "server": {
       "management": {
-        "label" : "Management",
+        "label": "Management",
         "vmProperties": {
           "title": "VM Properties",
           "image": "Image",

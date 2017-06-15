@@ -1,0 +1,37 @@
+<section class="job-progress-container">
+  <div class="job-information">
+    <div class="description">
+      <i [ngClass]="getCircleClass()"></i>
+      <h3>{{ job.description }}</h3>
+    </div>
+
+    <div class="job-process" [mcsContextualHelp]="contextualHelp">
+
+      <div *ngIf="isJobActive()" class="job-active">
+        <mcs-progress-bar [(ngModel)]="progressValue" [maxValue]="progressMax"></mcs-progress-bar>
+
+        <div *ngIf="job.tasks" class="job-tasks">
+          <div *ngFor="let task of job.tasks" class="task-item">
+            <i [ngClass]="getStatusIconClass(task.status)"></i>
+            <span>{{ task.description }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!isJobActive()" class="job-ended">
+        <mcs-alert type="success" title="All Done">
+          <a href="#"> View your server.</a>
+        </mcs-alert>
+      </div>
+
+      <mcs-button iconRight="arrow-right" (click)="navigateToServerHome()">
+        Servers Home
+      </mcs-button>
+    </div>
+  </div>
+
+  <div class="context-information hidden-medium">
+    <mcs-contextual-help
+      [contextualInformations]="getContextualInformations()"></mcs-contextual-help>
+  </div>
+</section>

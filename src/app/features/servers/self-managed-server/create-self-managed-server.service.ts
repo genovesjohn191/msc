@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   ContextualHelpDirective
-} from '../contextual-help/contextual-help.directive';
+} from '../shared/contextual-help/contextual-help.directive';
 import { BehaviorSubject } from 'rxjs/Rx';
 
 @Injectable()

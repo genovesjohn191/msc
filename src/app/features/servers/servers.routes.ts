@@ -12,6 +12,10 @@ import {
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent
 } from './self-managed-server';
+/** Server Provisioning Notifications */
+import {
+  ProvisioningNotificationsComponent
+} from './provisioning-notifications/provisioning-notifications.component';
 /** Resolvers */
 import { ServersResolver } from './servers.resolver';
 import { ServerResolver } from './server/server.resolver';
@@ -27,6 +31,9 @@ export const routes: Routes = [
       { path: 'copy', component: CopySelfManagedServerComponent },
       { path: 'clone', component: CloneSelfManagedServerComponent }
     ]
+  },
+  {
+    path: 'servers/provisioning', component: ProvisioningNotificationsComponent,
   },
   {
     path: 'servers/:id',

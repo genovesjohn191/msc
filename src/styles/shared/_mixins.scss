@@ -342,12 +342,21 @@
 //   @include textbox-highlight(none);
 // }
 
-// Set interval to all child(items)
-@mixin set-items-interval($value) {
-  > * {
-    margin-top: $value + px;
-    &:first-child {
-      margin-top: 0px;
+// Set interval to all child(items) vertical or horizontal
+@mixin set-items-interval($value, $orientation: vertical) {
+  @if $orientation == vertical {
+    > * {
+      margin-top: $value + px;
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+  } @else {
+    > * {
+      margin-left: $value + px;
+      &:first-child {
+        margin-left: 0px;
+      }
     }
   }
 }

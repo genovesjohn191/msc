@@ -6,7 +6,7 @@ import {
 import { ElementRef } from '@angular/core';
 import { ContextualHelpComponent } from './contextual-help.component';
 import { ContextualHelpDirective } from './contextual-help.directive';
-import { CoreDefinition } from '../../../core';
+import { CoreDefinition } from '../../../../core';
 
 describe('ContextualHelpComponent', () => {
 

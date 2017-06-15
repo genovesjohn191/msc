@@ -145,6 +145,7 @@ $table-header-font: $base-font-bold;
 $table-border-radius: 5px;
 
 // Z-index
+$dropdown-z-index: 900;
 $notifications-z-index: 1100;
 $popover-z-index: 1000;
 $header-z-index: 100;
@@ -191,7 +192,7 @@ $radio-button-label-offset: 12px;
 
 // Server Contextual Help
 $contextual-help-width: 250px;
-$contextual-padding-left: 20px;
+$contextual-padding-left: $space-xlarge;
 
 // Progress Bar
 $progress-bar-height: 20px;

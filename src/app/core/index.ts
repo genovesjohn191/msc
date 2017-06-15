@@ -21,6 +21,7 @@ export * from './models/mcs-api-success-response';
 export * from './models/mcs-api-error';
 export * from './models/mcs-api-search-key';
 export * from './models/mcs-api-job';
+export * from './models/mcs-api-task';
 export * from './models/mcs-notification-config';
 export * from './models/mcs-list';
 export * from './models/mcs-list-item';

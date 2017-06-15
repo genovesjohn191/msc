@@ -1,7 +1,7 @@
 <section class="contextual-help-container">
   <div *ngFor="let context of contextualInformations">
-    <span #textElement [ngStyle]="getTextStyle(textElement, context)">
-      {{ context.getContextualHelp() }}
+    <span #textElement [ngStyle]="getTextStyle(textElement, context)"
+      [innerHTML]="context.getContextualHelp()">
     </span>
   </div>
 </section>

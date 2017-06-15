@@ -4,8 +4,8 @@ import {
   ElementRef,
   Input
 } from '@angular/core';
-import { CoreDefinition } from '../../../core';
-import { getElementPositionFromHost } from '../../../utilities';
+import { CoreDefinition } from '../../../../core';
+import { getElementPositionFromHost } from '../../../../utilities';
 import { ContextualHelpDirective } from './contextual-help.directive';
 
 @Component({
