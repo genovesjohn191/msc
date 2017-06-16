@@ -216,7 +216,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
       let searchBoxStyles = window.getComputedStyle(this.searchBox.nativeElement);
       let marginBottom = parseFloat(searchBoxStyles.marginBottom);
       this._searchBoxHeight = this._searchBoxOffset.height + marginBottom;
-    });
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   public onFilter(key: any): void {

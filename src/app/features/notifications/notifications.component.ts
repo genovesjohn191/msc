@@ -217,7 +217,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           this._onChangeNotification(updatedNotifications);
           refreshView(() => {
             this._changeDetectorRef.detectChanges();
-          });
+          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         }
       });
   }

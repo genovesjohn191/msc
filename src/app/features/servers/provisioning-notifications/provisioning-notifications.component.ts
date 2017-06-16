@@ -130,7 +130,7 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
           this._onChangeNotification(provisioningNotifications);
           refreshView(() => {
             this._changeDetectorRef.detectChanges();
-          });
+          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         }
       });
   }

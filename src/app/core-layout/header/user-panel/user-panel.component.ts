@@ -114,7 +114,7 @@ export class UserPanelComponent implements OnInit {
     if (this.popoverInstance) { this.popoverInstance.close(); }
     refreshView(() => {
       this._router.navigate(['./notifications']);
-    });
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   public onOpenNotificationPanel(): void {

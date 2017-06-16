@@ -127,8 +127,6 @@ export class ServersComponent implements OnInit, OnDestroy {
   public getStateIconKey(state: number): string {
     let stateIconKey: string = '';
 
-    console.log(state);
-
     switch (state as ServerPowerState) {
       case ServerPowerState.Unresolved:   // Red
       case ServerPowerState.Deployed:
