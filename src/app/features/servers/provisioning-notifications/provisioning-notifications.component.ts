@@ -20,7 +20,8 @@ import {
 import {
   formatDate,
   mergeArrays,
-  compareDates
+  compareDates,
+  refreshView
 } from '../../../utilities';
 import { ProvisioningNotificationsService } from './provisioning-notifications.service';
 
@@ -127,9 +128,9 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
             .filter(this._filterProvisioningNotifications.bind(this));
 
           this._onChangeNotification(provisioningNotifications);
-          setTimeout(() => {
+          refreshView(() => {
             this._changeDetectorRef.detectChanges();
-          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+          });
         }
       });
   }

@@ -13,7 +13,10 @@ import {
   CoreDefinition,
   McsTextContentProvider
 } from '../../../core';
-import { mergeArrays } from '../../../utilities';
+import {
+  mergeArrays,
+  refreshView
+} from '../../../utilities';
 import { ContextualHelpDirective } from '../shared/contextual-help/contextual-help.directive';
 import { CreateSelfManagedServerService } from './create-self-managed-server.service';
 
@@ -54,7 +57,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    setTimeout(() => {
+    refreshView(() => {
       if (this.contextualHelpDirectives) {
         this._mainContextInformations = this.contextualHelpDirectives
           .map((description) => {
@@ -68,7 +71,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
             this._subContextInformations = routedContextInformations;
           }
         });
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+    });
   }
 
   public getAllContextualInformations() {

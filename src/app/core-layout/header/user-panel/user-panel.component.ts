@@ -19,6 +19,7 @@ import {
   McsDeviceType,
   McsConnectionStatus
 } from '../../../core';
+import { refreshView } from '../../../utilities';
 
 @Component({
   selector: 'mcs-user-panel',
@@ -72,7 +73,7 @@ export class UserPanelComponent implements OnInit {
         if (!this.hasNotification && this.popoverInstance) {
           this.popoverInstance.close();
         }
-        setTimeout(() => {
+        refreshView(() => {
           this._changeDetectorRef.detectChanges();
         }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
       });
@@ -111,9 +112,9 @@ export class UserPanelComponent implements OnInit {
 
   public viewNotificationsPage(): void {
     if (this.popoverInstance) { this.popoverInstance.close(); }
-    setTimeout(() => {
+    refreshView(() => {
       this._router.navigate(['./notifications']);
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+    });
   }
 
   public onOpenNotificationPanel(): void {
