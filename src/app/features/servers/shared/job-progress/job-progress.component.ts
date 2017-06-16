@@ -61,7 +61,7 @@ export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
             return description;
           });
       }
-    });
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   public ngOnDestroy() {
