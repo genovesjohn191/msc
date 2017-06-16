@@ -138,7 +138,13 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   private _onChangeNotification(updatedNotifications: any): void {
     // Update all existing notifications based on the notification context
     // and Add the non-exist notifications
-    this.notifications = mergeArrays(this.notifications, updatedNotifications);
+    this.notifications = mergeArrays(
+      this.notifications,
+      updatedNotifications,
+      (_first, _second) => {
+        return (_first.id === _second.id);
+      }
+    );
     this.totalNotificationsCount = this.notifications.length;
 
     // Sort notification jobs by date

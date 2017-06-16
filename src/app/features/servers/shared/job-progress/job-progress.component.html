@@ -19,7 +19,7 @@
       </div>
 
       <div *ngIf="!isJobActive()" class="job-ended">
-        <mcs-alert type="success" title="All Done">
+        <mcs-alert [type]="getAlertIconType(job.status)" title="All Done">
           <a href="#"> View your server.</a>
         </mcs-alert>
       </div>
