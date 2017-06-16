@@ -56,6 +56,11 @@ import {
 } from './core';
 
 /**
+ * MCS Portal Utilities
+ */
+import { refreshView } from './utilities';
+
+/**
  * Application-Wide Providers
  */
 const APP_PROVIDERS = [
@@ -125,7 +130,7 @@ export class AppModule {
     // Set input values
     if ('restoreInputValues' in store) {
       let restoreInputValues = store.restoreInputValues;
-      setTimeout(restoreInputValues);
+      refreshView(restoreInputValues);
     }
 
     this.appRef.tick();

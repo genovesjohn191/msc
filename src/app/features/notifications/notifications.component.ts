@@ -23,7 +23,8 @@ import {
 import {
   formatDate,
   mergeArrays,
-  compareDates
+  compareDates,
+  refreshView
 } from '../../utilities';
 
 @Component({
@@ -214,9 +215,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
         if (this.isLoading === false) {
           this._onChangeNotification(updatedNotifications);
-          setTimeout(() => {
+          refreshView(() => {
             this._changeDetectorRef.detectChanges();
-          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+          });
         }
       });
   }

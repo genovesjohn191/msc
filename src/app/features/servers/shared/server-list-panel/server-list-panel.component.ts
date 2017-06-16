@@ -20,7 +20,8 @@ import {
 } from '../../../../core';
 import {
   getElementOffset,
-  toProperCase
+  toProperCase,
+  refreshView
 } from '../../../../utilities';
 import { ServerList } from './server-list';
 import { ServerStatus } from '../../server-status.enum';
@@ -188,7 +189,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    setTimeout(() => {
+    refreshView(() => {
       this._serverListPanelElement = this.serverListPanel.nativeElement;
       this.footer = document.getElementsByTagName('footer')[0];
       this.getElementOffset();
@@ -205,7 +206,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
       let searchBoxStyles = window.getComputedStyle(this.searchBox.nativeElement);
       let marginBottom = parseFloat(searchBoxStyles.marginBottom);
       this._searchBoxHeight = this._searchBoxOffset.height + marginBottom;
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+    });
   }
 
   public onFilter(key: any): void {

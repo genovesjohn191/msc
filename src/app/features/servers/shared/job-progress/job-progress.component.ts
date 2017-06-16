@@ -14,6 +14,7 @@ import {
   CoreDefinition,
   McsApiJob
 } from '../../../../core';
+import { refreshView } from '../../../../utilities';
 import { ContextualHelpDirective } from '../contextual-help/contextual-help.directive';
 
 @Component({
@@ -53,14 +54,14 @@ export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngAfterViewInit() {
-    setTimeout(() => {
+    refreshView(() => {
       if (this.contextualHelpDirectives) {
         this._contextualInformations = this.contextualHelpDirectives
           .map((description) => {
             return description;
           });
       }
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+    });
   }
 
   public ngOnDestroy() {

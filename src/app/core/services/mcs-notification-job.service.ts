@@ -4,7 +4,10 @@ import { McsApiJob } from '../models/mcs-api-job';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import { AppState } from '../../app.service';
-import { reviverParser } from '../../utilities';
+import {
+  reviverParser,
+  refreshView
+} from '../../utilities';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 
 /**
@@ -84,7 +87,7 @@ export class McsNotificationJobService {
   }
 
   private _onCloseConnection(event) {
-    setTimeout(() => {
+    refreshView(() => {
       this._initializeWebsocket();
       this._connectionStatusStream.next(McsConnectionStatus.Retrying);
     }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
@@ -97,7 +100,7 @@ export class McsNotificationJobService {
   private _connectToWebsocket() {
     let webStomp = require('webstomp-client');
 
-    this._websocketClient = webStomp.over(this._websocket);
+    this._websocketClient = webStomp.over(this._websocket, { debug: false });
     this._websocketClient.heartbeat.incoming = 0;
     this._websocketClient.heartbeat.outgoing = 0;
     this._websocketClient.connect(

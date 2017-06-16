@@ -11,6 +11,7 @@ import {
   McsList,
   McsListItem
 } from '../../core';
+import { refreshView } from '../../utilities';
 import {
   FormGroup,
   FormBuilder,
@@ -133,7 +134,7 @@ export class GadgetsComponent implements OnInit {
   public onButtonClicked(button: any) {
     button.showLoader();
     console.log('start process');
-    setTimeout(() => {
+    refreshView(() => {
       console.log('done');
       button.hideLoader();
     }, 3000);
@@ -142,7 +143,7 @@ export class GadgetsComponent implements OnInit {
   public onSearch(textbox: any) {
     textbox.showLoader();
     console.log('start search');
-    setTimeout(() => {
+    refreshView(() => {
       console.log('done');
       textbox.hideLoader();
     }, 2000);

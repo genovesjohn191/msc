@@ -22,7 +22,10 @@ import {
   McsNotificationContextService,
   CoreDefinition
 } from '../../../core';
-import { formatDate } from '../../../utilities';
+import {
+  formatDate,
+  refreshView
+} from '../../../utilities';
 
 @Component({
   selector: 'mcs-state-change-notification',
@@ -170,11 +173,11 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
     this._timeStart = new Date().getTime();
 
     // Remove notification from the list when fade out animation is finished
-    this._timer = setTimeout(() => {
+    this._timer = refreshView(() => {
       this.animate = 'out';
 
       this._ngZone.runOutsideAngular(() => {
-        setTimeout(() => {
+        refreshView(() => {
           this._notificationContextService
             .deleteNotificationById(this.attribute.id);
         }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
