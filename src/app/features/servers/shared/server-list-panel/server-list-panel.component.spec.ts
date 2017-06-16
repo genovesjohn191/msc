@@ -15,7 +15,7 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Server } from '../../server';
+import { Server } from '../../shared';
 import { ServerList } from './server-list';
 import {
   McsAssetsProvider,

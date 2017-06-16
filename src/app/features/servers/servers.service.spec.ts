@@ -20,7 +20,7 @@ import {
 } from '@angular/http/testing';
 import { ResponseOptions } from '@angular/http';
 /** Services and Models */
-import { Server } from './server';
+import { Server } from './shared';
 import { ServersService } from './servers.service';
 import {
   McsApiService,

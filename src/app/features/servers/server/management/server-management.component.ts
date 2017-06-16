@@ -8,8 +8,10 @@ import {
   NavigationEnd,
   ActivatedRoute
 } from '@angular/router';
-import { Server } from '../../server';
-import { ServerFileSystem } from '../../server-file-system';
+import {
+  Server,
+  ServerFileSystem
+} from '../../shared';
 import {
   McsTextContentProvider,
   McsApiSuccessResponse,
@@ -44,7 +46,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
     private _browserService: McsBrowserService
-  ) {}
+  ) { }
 
   public ngOnInit() {
     if (this._route.parent.snapshot.data.server.content) {

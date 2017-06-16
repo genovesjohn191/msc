@@ -8,8 +8,10 @@ import {
   McsApiErrorResponse,
   McsApiRequestParameter
 } from '../../core/';
-import { Server } from './server';
-import { ServerStatus } from './server-status.enum';
+import {
+  Server,
+  ServerPowerState
+} from './shared';
 
 /**
  * Servers Services Class
@@ -74,10 +76,10 @@ export class ServersService {
    * @param id Server identification
    * @param command Command type (Start, Stop, Restart)
    */
-  public postServerCommand(id: any, command: string) {
+  public postServerCommand(id: any, action: string) {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/' + id + '/command';
-    mcsApiRequestParameter.recordData = JSON.stringify({ type: command });
+    mcsApiRequestParameter.recordData = JSON.stringify({ command: action });
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
@@ -107,7 +109,7 @@ export class ServersService {
   private _convertProperty(key, value): any {
     // Convert powerState to enumeration
     if (key === 'powerState') {
-      value = ServerStatus[value];
+      value = ServerPowerState[value];
     }
 
     return value;
