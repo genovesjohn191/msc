@@ -103,8 +103,26 @@ export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
       default:
         break;
     }
-
     return statusIconClass;
+  }
+
+  public getAlertIconType(status: string): string {
+    let alertIconType: string = '';
+    // TODO: Temporary set the error to failed alert
+    switch (status) {
+      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
+      case CoreDefinition.NOTIFICATION_JOB_FAILED:
+      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
+        alertIconType = 'failed';
+        break;
+      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+        alertIconType = 'success';
+        break;
+      default:
+        alertIconType = 'info';
+        break;
+    }
+    return alertIconType;
   }
 
   public getCircleClass(): string {
