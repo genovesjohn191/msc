@@ -7,7 +7,7 @@
 
   .dropdown-options {
     position: absolute;
-    z-index: $dropdown-z-index;
+    z-index: $zindex-dropdown;
     background-color: $color-white;
     width: 100%;
     top: 0;

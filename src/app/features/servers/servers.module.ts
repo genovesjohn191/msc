@@ -56,23 +56,6 @@ import { SharedModule } from '../../shared';
     RouterModule.forChild(routes),
     SharedModule
   ],
-  exports: [
-    ServersComponent,
-    JobProgressComponent,
-    ServerListPanelComponent,
-    ServerComponent,
-    ServerManagementComponent,
-    ServerServicesComponent,
-    ServerBackupsComponent,
-    ContextualHelpComponent,
-    ContextualHelpDirective,
-    CreateSelfManagedServerComponent,
-    NewSelfManagedServerComponent,
-    CopySelfManagedServerComponent,
-    CloneSelfManagedServerComponent,
-    ProvisioningNotificationsComponent,
-    RouterModule
-  ],
   providers: [
     ServersService,
     CreateSelfManagedServerService,

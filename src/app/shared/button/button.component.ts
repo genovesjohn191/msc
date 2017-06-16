@@ -7,7 +7,8 @@ import {
   EventEmitter,
   Renderer2,
   ElementRef,
-  ViewChild
+  ViewChild,
+  HostBinding
 } from '@angular/core';
 
 /** Interface */
@@ -39,7 +40,8 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   public size: string;
 
   @Input()
-  public width: number;
+  @HostBinding('style.max-width')
+  public width: string;
 
   @Input()
   public lightboxId: string;
@@ -85,7 +87,6 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
     }
 
     if (this.width) {
-      this._renderer.setStyle(this.mcsButton.nativeElement, 'max-width', this.width + 'px');
       this._renderer.addClass(this.mcsButton.nativeElement, 'w-100');
     }
 

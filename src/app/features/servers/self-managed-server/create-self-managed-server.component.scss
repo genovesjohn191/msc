@@ -31,7 +31,12 @@
       }
 
      .deployment {
-        margin-left: auto;
+        text-align: right;
+        @include breakpoint(medium) {
+          mcs-button {
+            max-width: 100% !important;
+          }
+        }
       }
     }
 

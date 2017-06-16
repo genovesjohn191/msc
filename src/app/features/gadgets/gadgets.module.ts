@@ -20,10 +20,6 @@ import { routes } from './gadgets.routes';
     RouterModule.forChild(routes),
     SharedModule,
     ReactiveFormsModule
-  ],
-  exports: [
-    GadgetsComponent,
-    RouterModule
   ]
 })
 

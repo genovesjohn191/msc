@@ -11,10 +11,6 @@ import { routes } from './catalog.routes';
   ],
   imports: [
     RouterModule.forChild(routes),
-  ],
-  exports: [
-    CatalogComponent,
-    RouterModule
   ]
 })
 

@@ -5,7 +5,7 @@
   left: $state-change-notifications-margin;
   bottom: $state-change-notifications-margin;
   width: $state-change-notifications-width;
-  z-index: $notifications-z-index;
+  z-index: $zindex-notifications;
 
   ul {
     li {
