@@ -1,7 +1,7 @@
 import { ServerMedia } from './server-media';
 import { ServerFileSystem } from './server-file-system';
 import { ServerInterface } from './server-interface';
-import { ServerStatus } from './server-status.enum';
+import { ServerPowerState } from './server-power-state.enum';
 
 export class Server {
   public id: any;
@@ -30,7 +30,7 @@ export class Server {
   public guestOS: string;
   public diskCount: number;
   public networkInterfaceCount: number;
-  public powerState: ServerStatus;
+  public powerState: ServerPowerState;
   public isTempalte: boolean;
   public companyId: string;
   public macBillId: string;

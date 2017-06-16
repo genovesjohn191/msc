@@ -6,7 +6,7 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 /** Models */
 import { Gadgets } from './gadgets';
-import { Server } from '../servers/server';
+import { Server } from '../servers/shared';
 import {
   McsList,
   McsListItem

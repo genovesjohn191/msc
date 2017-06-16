@@ -8,7 +8,10 @@ import {
   ElementRef,
   HostListener
 } from '@angular/core';
-import { Server } from '../../server';
+import {
+  Server,
+  ServerPowerState
+} from '../../shared';
 import {
   Router,
   ActivatedRoute
@@ -24,7 +27,6 @@ import {
   refreshView
 } from '../../../../utilities';
 import { ServerList } from './server-list';
-import { ServerStatus } from '../../server-status.enum';
 
 @Component({
   selector: 'mcs-server-list-panel',
@@ -133,18 +135,26 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   public getStateIconKey(state: number): string {
     let stateIconKey: string = '';
 
-    switch (state as ServerStatus) {
-      case ServerStatus.Restarting:
+    switch (state as ServerPowerState) {
+      case ServerPowerState.Unresolved:   // Red
+      case ServerPowerState.Deployed:
+      case ServerPowerState.Suspended:
+      case ServerPowerState.Unknown:
+      case ServerPowerState.Unrecognised:
+      case ServerPowerState.PoweredOff:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case ServerPowerState.Resolved:   // Amber
+      case ServerPowerState.WaitingForInput:
+      case ServerPowerState.InconsistentState:
+      case ServerPowerState.Mixed:
         stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
-      case ServerStatus.Running:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-      case ServerStatus.Stopped:
+      case ServerPowerState.PoweredOn:  // Green
       default:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
     }
     return stateIconKey;
@@ -217,7 +227,7 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
 
       this.serverList.forEach((vdc) => {
         let filteredServers = vdc.servers.filter((server) => {
-          let powerStateValue = ServerStatus[toProperCase(key)];
+          let powerStateValue = ServerPowerState[toProperCase(key)];
           return server.managementName.toLowerCase().includes(key.toLowerCase()) ||
             server.powerState === powerStateValue;
         });

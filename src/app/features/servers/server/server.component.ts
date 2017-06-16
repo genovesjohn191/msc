@@ -6,7 +6,7 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { Server } from '../server';
+import { Server } from '../shared';
 import { CoreDefinition } from '../../../core';
 
 @Component({

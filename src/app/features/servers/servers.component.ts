@@ -16,7 +16,10 @@ import {
 } from '../../core';
 import { ServersService } from './servers.service';
 /** Models */
-import { Server } from './server';
+import {
+  Server,
+  ServerPowerState
+} from './shared';
 import {
   McsApiError,
   McsApiSuccessResponse,
@@ -24,8 +27,6 @@ import {
   CoreDefinition
 } from '../../core';
 import { mergeArrays } from '../../utilities';
-/** Enum */
-import { ServerStatus } from './server-status.enum';
 
 @Component({
   selector: 'mcs-servers',
@@ -93,13 +94,13 @@ export class ServersComponent implements OnInit, OnDestroy {
     }
   }
 
-  public executeServerCommand(id: any, type: string) {
-    this._serversService.postServerCommand(id, type)
+  public executeServerCommand(id: any, action: string) {
+    this._serversService.postServerCommand(id, action)
       .subscribe((response) => {
         // console.log(response);
       });
 
-    this.actionStatusMap.set(id, type);
+    this.actionStatusMap.set(id, action);
   }
 
   public getActionStatus(id: any, type: string): any {
@@ -126,18 +127,28 @@ export class ServersComponent implements OnInit, OnDestroy {
   public getStateIconKey(state: number): string {
     let stateIconKey: string = '';
 
-    switch (state as ServerStatus) {
-      case ServerStatus.Restarting:
+    console.log(state);
+
+    switch (state as ServerPowerState) {
+      case ServerPowerState.Unresolved:   // Red
+      case ServerPowerState.Deployed:
+      case ServerPowerState.Suspended:
+      case ServerPowerState.Unknown:
+      case ServerPowerState.Unrecognised:
+      case ServerPowerState.PoweredOff:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case ServerPowerState.Resolved:   // Amber
+      case ServerPowerState.WaitingForInput:
+      case ServerPowerState.InconsistentState:
+      case ServerPowerState.Mixed:
         stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
-      case ServerStatus.Running:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-      case ServerStatus.Stopped:
+      case ServerPowerState.PoweredOn:  // Green
       default:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
     }
     return stateIconKey;

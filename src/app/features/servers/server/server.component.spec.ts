@@ -10,7 +10,7 @@ import {
   Data
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Server } from '../server';
+import { Server } from '../shared';
 
 describe('ServerComponent', () => {
   /** Stub Services/Components */
