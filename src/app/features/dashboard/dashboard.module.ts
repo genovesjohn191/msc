@@ -20,10 +20,6 @@ import { routes } from './dashboard.routes';
     RouterModule.forChild(routes),
     SharedModule,
     ReactiveFormsModule
-  ],
-  exports: [
-    DashboardComponent,
-    RouterModule
   ]
 })
 

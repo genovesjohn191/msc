@@ -12,8 +12,28 @@
     @include display-flex(row);
     align-items: center;
 
+    @include breakpoint(medium) {
+      @include display-flex(column);
+      align-items: stretch;
+    }
+
+    .mcs-search {
+      @include breakpoint(medium) {
+        margin: 0;
+        mcs-textbox {
+          max-width: 100% !important;
+        }
+      }
+    }
+
     .server-select {
       margin-left: auto;
+      @include breakpoint(medium) {
+        margin: 0;
+        mcs-button {
+          max-width: 100% !important;
+        }
+      }
     }
   }
 

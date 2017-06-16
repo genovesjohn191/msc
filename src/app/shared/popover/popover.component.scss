@@ -6,7 +6,7 @@
   left: 0;
   display: block;
   font-family: $popover-font-family;
-  z-index: $popover-z-index;
+  z-index: $zindex-popover;
   min-width: $popover-min-width;
 }
 

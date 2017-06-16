@@ -17,10 +17,6 @@ import { NotificationsService } from './notifications.service';
     RouterModule.forChild(routes),
     SharedModule
   ],
-  exports: [
-    NotificationsComponent,
-    RouterModule
-  ],
   providers: [
     NotificationsService
   ]

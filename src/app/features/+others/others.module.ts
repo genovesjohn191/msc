@@ -11,10 +11,6 @@ import { routes } from './others.routes';
   ],
   imports: [
     RouterModule.forChild(routes),
-  ],
-  exports: [
-    OthersComponent,
-    RouterModule
   ]
 })
 
