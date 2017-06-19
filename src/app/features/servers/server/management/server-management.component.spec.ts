@@ -11,7 +11,7 @@ import {
   NavigationEnd
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Server } from '../../shared';
+import { Server } from '../../models';
 import {
   McsTextContentProvider,
   McsBrowserService

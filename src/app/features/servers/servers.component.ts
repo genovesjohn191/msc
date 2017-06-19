@@ -19,7 +19,7 @@ import { ServersService } from './servers.service';
 import {
   Server,
   ServerPowerState
-} from './shared';
+} from './models';
 import {
   McsApiError,
   McsApiSuccessResponse,
