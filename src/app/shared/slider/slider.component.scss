@@ -1,5 +1,9 @@
 @import "../../../styles/shared/base";
 
+:host {
+  display: block;
+}
+
 .mcs-slider {
   width: 100%;
 

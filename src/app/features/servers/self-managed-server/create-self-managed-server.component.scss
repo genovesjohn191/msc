@@ -11,11 +11,15 @@
       position: relative;
       @include flex(1);
       @include display-flex(column);
-      @include set-items-interval(10);
+      @include set-items-interval(20);
 
       @include breakpoint(large) {
         padding-right: 55px;
         border-right: 1px solid $color-black;
+      }
+
+      .mcs-tabs {
+        margin-top: $space-large;
       }
 
      .additional-server {
