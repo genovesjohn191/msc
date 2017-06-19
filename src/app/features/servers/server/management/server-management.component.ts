@@ -11,7 +11,7 @@ import {
 import {
   Server,
   ServerFileSystem
-} from '../../shared';
+} from '../../models';
 import {
   McsTextContentProvider,
   McsApiSuccessResponse,

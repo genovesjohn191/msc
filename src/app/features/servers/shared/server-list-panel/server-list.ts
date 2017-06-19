@@ -1,4 +1,4 @@
-import { Server } from '../../shared';
+import { Server } from '../../models';
 
 export class ServerList {
   public vdcName: string;

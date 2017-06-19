@@ -14,7 +14,7 @@ import {
   McsApiSearchKey
 } from '../../core';
 
-import { Server } from './shared';
+import { Server } from './models';
 import { ServersComponent } from './servers.component';
 import { ServersService } from './servers.service';
 import { McsApiSuccessResponse } from '../../core';

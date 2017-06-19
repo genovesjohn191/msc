@@ -11,7 +11,7 @@ import {
 import {
   Server,
   ServerPowerState
-} from './shared';
+} from './models';
 
 /**
  * Servers Services Class
