@@ -73,9 +73,9 @@ describe('FooterComponent', () => {
 
     it('title variable should not be equal to undefined, null, or empty',
       inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
-        expect(component.copyright).not.toEqual(undefined);
-        expect(component.copyright).not.toEqual(null);
-        expect(component.copyright).not.toEqual('');
+        expect(component.footerTextContent).not.toEqual(undefined);
+        expect(component.footerTextContent).not.toEqual(null);
+        expect(component.footerTextContent).not.toEqual('');
       }));
 
     it('links variable should not be equal to undefined, null, or empty',

@@ -117,3 +117,15 @@
     }
   }
 }
+
+.user-settings-container {
+  @include display-flex(column);
+  padding: $space-small 0;
+  a {
+    padding: $space-xsmall $space-medium;
+    &:hover,
+    &:focus {
+      background-color: $color-grey-05;
+    }
+  }
+}
