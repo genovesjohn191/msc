@@ -115,7 +115,8 @@
     }
   },
   "footer": {
-    "copyright": "Copyright 2016 Macquarie Telecom Group",
+    "copyright": "Copyright",
+    "company": "Macquarie Telecom Group",
     "links": {
       "privacyPolicy": "Privacy Policy",
       "termsOfUse": "Terms Of Use",

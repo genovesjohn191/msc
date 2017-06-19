@@ -41,18 +41,27 @@
     </ng-template>
   </aside>
   <aside class="user-panel">
-    <div class="dropdown d-inline-block link">
-      <a class="dropdown-toggle" id="useroptions"
-      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="user-icon" [ngClass]="userIcon"></i>
-        <span class="hidden-small">Shaun Domingo</span>
-      </a>
-      <div class="dropdown-menu" aria-labelledby="useroptions">
-        <button class="dropdown-item">Account Settings</button>
-        <button class="dropdown-item">Profile</button>
-        <button class="dropdown-item">Logout</button>
+    <a class="icon-link" mcsPopover padding="none"
+      placement="bottom" orientation="center" theme="light"
+      [content]="userSettings">
+      <i class="user-icon" [ngClass]="userIcon"></i>
+      <span class="hidden-small">Shaun Domingo</span>
+      <i class="hidden-small" [ngClass]="caretDown"></i>
+    </a>
+
+    <ng-template #userSettings>
+     <div class="user-settings-container">
+        <a class="icon-link">
+          Account Settings
+        </a>
+        <a class="icon-link">
+          Profile
+        </a>
+        <a class="icon-link">
+          Logout
+        </a>
       </div>
-    </div>
+    </ng-template>
     <small class="user-info">Macquarie Telecom Contoso</small>
   </aside>
   <aside class="exit">

@@ -1,7 +1,9 @@
 <footer class="dark">
   <div class="container footer-container">
     <div class="copyright">
-      <span>&copy; {{ copyright }}</span>
+      <span>&copy; {{ footerTextContent.copyright }}</span>
+      <span>{{ this.currentDate.getFullYear() }}</span>
+      <span>{{ footerTextContent.company }}</span>
     </div>
     <div class="links">
       <ul class="unstyled-list">
