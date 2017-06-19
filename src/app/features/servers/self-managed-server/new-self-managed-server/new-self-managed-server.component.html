@@ -14,9 +14,13 @@
 
   <div class="computer-details">
     <div class="computer-information">
-      <span class="label" >Compute: </span>
+
       <!--TODO: Custom size should be seperate component-->
-      <span class="custom-size float-right"><u>Enter custom size</u></span>
+      <div class="custom-size">
+        <span class="label" >Compute: </span>
+        <span class="custom-size float-right"><u>Enter custom size</u></span>
+      </div>
+
       <!--TODO: Add the slider component here-->
       <mcs-slider min="100" max="500" step="10"
         [(ngModel)]="computeValue"></mcs-slider>
@@ -27,9 +31,12 @@
     </div>
 
     <div class="storage-information">
-      <span class="label">Storage: </span>
+
       <!--TODO: Custom size should be seperate component-->
-      <span class="custom-size float-right"><u>Enter custom size</u></span>
+      <div class="custom-size">
+        <span class="label">Storage: </span>
+        <span class="custom-size float-right"><u>Enter custom size</u></span>
+      </div>
 
       <mcs-dropdown name="Storage Profile"
         placeholder="Select this server's Primary Disk Storage Profile"
@@ -42,7 +49,6 @@
         (1.25 TB Remaining)
       </label>
     </div>
-
   </div>
 
   <div class="network-details">

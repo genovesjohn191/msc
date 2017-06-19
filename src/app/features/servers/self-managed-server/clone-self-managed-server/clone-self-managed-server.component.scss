@@ -12,6 +12,14 @@
   .computer-details {
     @include display-flex(column);
     @include set-items-interval(20);
+
+    .computer-information {
+      @include set-items-interval(10);
+    }
+
+    .storage-information {
+      @include set-items-interval(10);
+    }
   }
 
   .network-details {

@@ -7,13 +7,13 @@
 
   <div class="self-managed-items">
     <div class="server-information">
-      <mcs-textbox name="textDefault" width="100%" placeholder="Enter a server name..."
-        [mcsContextualHelp]="contextualTextContent.enterServerName"></mcs-textbox>
-
       <mcs-dropdown name="dropdownDefault"
         [(ngModel)]="intellicentreValue" [dropdownData]="intellicentres"
-        placeholder="Select a Intellicentre"
+        placeholder="Intellicentre 2 (Syd) - Managed VDC 27111006"
         [mcsContextualHelp]="contextualTextContent.intellicentre"></mcs-dropdown>
+
+      <mcs-textbox name="textDefault" width="100%" placeholder="Enter a server name..."
+        [mcsContextualHelp]="contextualTextContent.enterServerName"></mcs-textbox>
 
       <!--TODO: Set the tab link here-->
       <div class="mcs-tabs">
@@ -21,17 +21,17 @@
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['new']" routerLinkActive="active">
-              New server config</a>
+              {{ createServerTextContent.newServer }}</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['copy']" routerLinkActive="active">
-              Start from existing server's config</a>
+              {{ createServerTextContent.copyServer }}</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['clone']" routerLinkActive="active">
-              Clone a server</a>
+              {{ createServerTextContent.cloneServer }}</a>
           </li>
         </ul>
 
