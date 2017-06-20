@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   Observable,
@@ -12,7 +13,8 @@ import { Router } from '@angular/router';
 import {
   McsTextContentProvider,
   McsAssetsProvider,
-  McsApiSearchKey
+  McsApiSearchKey,
+  McsApiJob
 } from '../../core';
 import { ServersService } from './servers.service';
 /** Models */
@@ -24,9 +26,14 @@ import {
   McsApiError,
   McsApiSuccessResponse,
   McsApiErrorResponse,
+  McsNotificationContextService,
   CoreDefinition
 } from '../../core';
-import { mergeArrays } from '../../utilities';
+import {
+  mergeArrays,
+  refreshView,
+  updateArrayRecord
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-servers',
@@ -50,6 +57,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public searchSubject: Subject<McsApiSearchKey>;
 
   public actionStatusMap: Map<any, string>;
+  public notificationsSubscription: any;
 
   public hasError: boolean;
   // Done loading and thrown an error
@@ -71,7 +79,9 @@ export class ServersComponent implements OnInit, OnDestroy {
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _assetsProvider: McsAssetsProvider,
-    private _router: Router
+    private _router: Router,
+    private _notificationContextService: McsNotificationContextService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.isLoading = true;
     this.hasError = false;
@@ -86,21 +96,34 @@ export class ServersComponent implements OnInit, OnDestroy {
     this.serversTextContent = this._textProvider.content.servers;
     this.getGearClass();
     this.getServers();
+    this._listenToNotificationUpdate();
   }
 
   public ngOnDestroy() {
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
     }
+
+    if (this.notificationsSubscription) {
+      this.notificationsSubscription.unsubscribe();
+    }
   }
 
-  public executeServerCommand(id: any, action: string) {
-    this._serversService.postServerCommand(id, action)
+  public executeServerCommand(server: Server, action: string) {
+    this._serversService.postServerCommand(
+      server.id,
+      action,
+      {
+        serverId: server.id,
+        powerState: server.powerState,
+        actionState: action
+      }
+    )
       .subscribe((response) => {
         // console.log(response);
       });
 
-    this.actionStatusMap.set(id, action);
+    this.actionStatusMap.set(server.id, action);
   }
 
   public getActionStatus(id: any, type: string): any {
@@ -230,5 +253,59 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public onClickNewServerButton(event: any) {
     this._router.navigate(['./servers/create/new']);
+  }
+
+  private _listenToNotificationUpdate(): void {
+    // listener for the notification updates
+    this.notificationsSubscription = this._notificationContextService.notificationsStream
+      .subscribe((updatedNotifications) => {
+
+        updatedNotifications.forEach((notification) => {
+          // Filter only those who have client reference object only
+          if (notification.clientReferenceObject) {
+            refreshView(() => {
+              this._changeServerStatus(notification);
+              this._changeDetectorRef.detectChanges();
+            }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+          }
+        });
+
+      });
+  }
+
+  private _changeServerStatus(notification: McsApiJob) {
+    // TODO: get the serverid and obtain again the server information from the API
+    // to get the actual result (realtime)
+
+    // Get the server from the API
+    let updatedServer: Server;
+    // TODO: This must be API call
+    updatedServer = this.servers.find((server) => {
+      return server.id === notification.clientReferenceObject.serverId;
+    });
+    if (!updatedServer) { return; }
+    // Ignore power status in case of error
+    switch (notification.status) {
+      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+        updatedServer.powerState = notification.clientReferenceObject.actionState === 'Start' ?
+          ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
+        break;
+      case CoreDefinition.NOTIFICATION_JOB_FAILED:
+        updatedServer.powerState = notification.clientReferenceObject.powerState;
+        break;
+      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+      default:
+        updatedServer.powerState = undefined;
+        break;
+    }
+
+    // Update the server record according to API record
+    updateArrayRecord(
+      this.servers,
+      updatedServer,
+      (_first, _second) => {
+        return _first.id === _second.id;
+      }
+    );
   }
 }
