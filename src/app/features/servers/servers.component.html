@@ -96,31 +96,8 @@
           <a href="#">{{ server.id }}</a>
         </td>
         <td class="text-center align-middle">
-          <a class="icon-link" mcsPopover padding="none"
-            placement="bottom" orientation="left" theme="light"
-            [content]="cogContent">
-            <i [ngClass]="gear"></i>
-          </a>
-
-          <ng-template #cogContent>
-           <div class="cog-container">
-              <a class="icon-link"
-                (click)="executeServerCommand(server, 'Start')"
-                [attr.disabled]="getActionStatus(server.id, 'Start')">
-                Start
-              </a>
-              <a class="icon-link"
-                (click)="executeServerCommand(server, 'Stop')"
-                [attr.disabled]="getActionStatus(server.id, 'Stop')">
-                Stop
-              </a>
-              <a class="icon-link"
-                (click)="executeServerCommand(server, 'Restart')"
-                [attr.disabled]="getActionStatus(server.id, 'Restart')">
-                Restart
-              </a>
-            </div>
-          </ng-template>
+          <mcs-server-command [command]="getActionStatus(server)"
+            (onClick)="executeServerCommand(server, $event)"></mcs-server-command>
         </td>
       </tr>
     </tbody>

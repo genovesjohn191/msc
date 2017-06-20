@@ -6,8 +6,9 @@ import { routes } from './servers.routes';
 import {
   JobProgressComponent,
   ServerListPanelComponent,
+  ServerCommandComponent,
   ContextualHelpComponent,
-  ContextualHelpDirective
+  ContextualHelpDirective,
 } from './shared';
 /** Servers */
 import { ServersComponent } from './servers.component';
@@ -40,6 +41,7 @@ import { SharedModule } from '../../shared';
     ServersComponent,
     JobProgressComponent,
     ServerListPanelComponent,
+    ServerCommandComponent,
     ServerComponent,
     ServerManagementComponent,
     ServerServicesComponent,

@@ -1,0 +1,25 @@
+<a class="icon-link" mcsPopover #popoverActionElement="mcsPopover" padding="none"
+  placement="bottom" orientation="left" theme="light"
+  [content]="cogContent">
+  <i [ngClass]="gear"></i>
+</a>
+
+<ng-template #cogContent>
+<div class="cog-container">
+    <a class="icon-link"
+      (click)="onExecuteCommand('Start')"
+      [attr.disabled]="getStartStatus()">
+      Start
+    </a>
+    <a class="icon-link"
+      (click)="onExecuteCommand('Stop')"
+      [attr.disabled]="getStopStatus()">
+      Stop
+    </a>
+    <a class="icon-link"
+      (click)="onExecuteCommand('Restart')"
+      [attr.disabled]="getRestartStatus()">
+      Restart
+    </a>
+  </div>
+</ng-template>
