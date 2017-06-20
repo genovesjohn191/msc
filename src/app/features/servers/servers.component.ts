@@ -1,8 +1,7 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  ChangeDetectorRef
+  OnDestroy
 } from '@angular/core';
 import {
   Observable,
@@ -20,6 +19,7 @@ import { ServersService } from './servers.service';
 /** Models */
 import {
   Server,
+  ServerClientObject,
   ServerPowerState,
   ServerCommand
 } from './models';
@@ -27,7 +27,6 @@ import {
   McsApiError,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  McsNotificationContextService,
   CoreDefinition
 } from '../../core';
 import {
@@ -51,14 +50,14 @@ export class ServersComponent implements OnInit, OnDestroy {
   /** Server Variables */
   public totalServerCount: number;
   public servers: Server[];
+  public activeServers: ServerClientObject[];
   /** Filter Variables */
   public columnSettings: any;
   /** Search Subscription */
   public searchSubscription: any;
   public searchSubject: Subject<McsApiSearchKey>;
 
-  public actionStatusMap: Map<any, string>;
-  public notificationsSubscription: any;
+  public activeServersSubscription: any;
 
   public hasError: boolean;
   // Done loading and thrown an error
@@ -80,22 +79,21 @@ export class ServersComponent implements OnInit, OnDestroy {
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _assetsProvider: McsAssetsProvider,
-    private _router: Router,
-    private _notificationContextService: McsNotificationContextService,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _router: Router
   ) {
     this.isLoading = true;
     this.hasError = false;
     this.page = 1;
     this.searchSubject = new Subject<McsApiSearchKey>();
     this.servers = new Array();
+    this.activeServers = new Array();
     this.totalServerCount = 0;
   }
 
   public ngOnInit() {
     this.serversTextContent = this._textProvider.content.servers;
     this.getServers();
-    this._listenToNotificationUpdate();
+    this._listenToActiveServers();
   }
 
   public ngOnDestroy() {
@@ -103,8 +101,8 @@ export class ServersComponent implements OnInit, OnDestroy {
       this.searchSubscription.unsubscribe();
     }
 
-    if (this.notificationsSubscription) {
-      this.notificationsSubscription.unsubscribe();
+    if (this.activeServersSubscription) {
+      this.activeServersSubscription.unsubscribe();
     }
   }
 
@@ -115,9 +113,8 @@ export class ServersComponent implements OnInit, OnDestroy {
       {
         serverId: server.id,
         powerState: server.powerState,
-        actionState: action
-      }
-    )
+        commandAction: ServerCommand[action]
+      } as ServerClientObject)
       .subscribe((response) => {
         // console.log(response);
       });
@@ -259,25 +256,34 @@ export class ServersComponent implements OnInit, OnDestroy {
     this._router.navigate(['./servers/create/new']);
   }
 
-  private _listenToNotificationUpdate(): void {
-    // listener for the notification updates
-    this.notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((updatedNotifications) => {
+  public getActiveServerInformation(serverId: any) {
+    let commandInformation: string = '';
+    let activeServer = this.activeServers.find((severInformations) => {
+      return severInformations.serverId === serverId;
+    });
 
-        updatedNotifications.forEach((notification) => {
-          // Filter only those who have client reference object only
-          if (notification.clientReferenceObject) {
-            refreshView(() => {
-              this._changeServerStatus(notification);
-              this._changeDetectorRef.detectChanges();
-            }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-          }
+    if (activeServer) {
+      return activeServer.tooltipInformation;
+    } else {
+      return 'This instance is being processed';
+    }
+  }
+
+  private _listenToActiveServers(): void {
+    // TODO: No Implemented Unit test yet,
+    // Unit test must be added when the functionality is official
+
+    // Listen to active servers and update the corresponding server
+    this.activeServersSubscription = this._serversService.activeServersStream
+      .subscribe((updatedActiveServers) => {
+        this.activeServers = updatedActiveServers;
+        updatedActiveServers.forEach((activeServer) => {
+          this._updateServerPowerState(activeServer);
         });
-
       });
   }
 
-  private _changeServerStatus(notification: McsApiJob) {
+  private _updateServerPowerState(activeServer: ServerClientObject) {
     // TODO: get the serverid and obtain again the server information from the API
     // to get the actual result (realtime)
 
@@ -285,17 +291,17 @@ export class ServersComponent implements OnInit, OnDestroy {
     let updatedServer: Server;
     // TODO: This must be API call
     updatedServer = this.servers.find((server) => {
-      return server.id === notification.clientReferenceObject.serverId;
+      return server.id === activeServer.serverId;
     });
     if (!updatedServer) { return; }
     // Ignore power status in case of error
-    switch (notification.status) {
+    switch (activeServer.notificationStatus) {
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        updatedServer.powerState = notification.clientReferenceObject.actionState === 'Start' ?
+        updatedServer.powerState = activeServer.commandAction === ServerCommand.Start ?
           ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
         break;
       case CoreDefinition.NOTIFICATION_JOB_FAILED:
-        updatedServer.powerState = notification.clientReferenceObject.powerState;
+        updatedServer.powerState = activeServer.powerState;
         break;
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
       default:

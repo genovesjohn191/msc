@@ -1,16 +1,21 @@
 import {
   Component,
   OnInit,
+  Output,
+  OnDestroy,
   AfterViewInit,
   Input,
   ViewChild,
   Renderer2,
   ElementRef,
-  HostListener
+  HostListener,
+  EventEmitter
 } from '@angular/core';
 import {
   Server,
-  ServerPowerState
+  ServerClientObject,
+  ServerPowerState,
+  ServerCommand
 } from '../../models';
 import {
   Router,
@@ -26,6 +31,7 @@ import {
   toProperCase,
   refreshView
 } from '../../../../utilities';
+import { ServersService } from '../../servers.service';
 import { ServerList } from './server-list';
 
 @Component({
@@ -33,7 +39,7 @@ import { ServerList } from './server-list';
   styles: [require('./server-list-panel.component.scss')],
   templateUrl: './server-list-panel.component.html'
 })
-export class ServerListPanelComponent implements OnInit, AfterViewInit {
+export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   public servers: ServerList[];
   public serverList: ServerList[];
   public selectedServerId: string;
@@ -41,9 +47,14 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
   public serverState: string;
   public keyword: string;
   public errorMessage: string;
+  public activeServers: ServerClientObject[];
+  public activeServersSubscription: any;
 
   @Input()
   public serverListData: Server[];
+
+  @Output()
+  public serverSelect: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('serverListPanel')
   public serverListPanel: ElementRef;
@@ -73,9 +84,11 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
     private _assetsProvider: McsAssetsProvider,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _serversService: ServersService
   ) {
     this.servers = new Array();
+    this.activeServers = new Array();
   }
 
   @HostListener('document:scroll', ['$event'])
@@ -130,6 +143,21 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
         this._router.navigate(['/page-not-found']);
       }
     });
+    this._listenToActiveServers();
+  }
+
+  public ngOnDestroy() {
+    if (this.activeServersSubscription) {
+      this.activeServersSubscription.unsubscribe();
+    }
+  }
+
+  public onClickServer(server: Server) {
+    this.serverSelect.next(server);
+  }
+
+  public getSpinnerClass(): string {
+    return this._assetsProvider.getIcon('spinner');
   }
 
   public getStateIconKey(state: number): string {
@@ -250,6 +278,19 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public getActiveServerInformation(serverId: any) {
+    let commandInformation: string = '';
+    let activeServer = this.activeServers.find((severInformations) => {
+      return severInformations.serverId === serverId;
+    });
+
+    if (activeServer) {
+      return activeServer.tooltipInformation;
+    } else {
+      return 'This instance is being processed';
+    }
+  }
+
   private _setServersListMaxHeight(offsetHeight: number) {
     this._renderer.setStyle(this.serverListTree.nativeElement,
       'max-height', 'calc(100vh - ' + offsetHeight + 'px)');
@@ -264,4 +305,48 @@ export class ServerListPanelComponent implements OnInit, AfterViewInit {
     return (visibleBottom - visibleTop);
   }
 
+  private _listenToActiveServers(): void {
+    // TODO: No Implemented Unit test yet,
+    // Unit test must be added when the functionality is official
+
+    // Listen to active servers and update the corresponding server
+    this.activeServersSubscription = this._serversService.activeServersStream
+      .subscribe((updatedActiveServers) => {
+        this.activeServers = updatedActiveServers;
+        updatedActiveServers.forEach((activeServer) => {
+          this._updateServerPowerState(activeServer);
+        });
+      });
+  }
+
+  private _updateServerPowerState(activeServer: ServerClientObject) {
+    // TODO: get the serverid and obtain again the server information from the API
+    // to get the actual result (realtime)
+
+    for (let serverInfo of this.servers) {
+      if (serverInfo.selected === false) { continue; }
+
+      // Get the server from the API
+      let updatedServer: Server;
+      // TODO: This must be API call
+      updatedServer = serverInfo.servers.find((server) => {
+        return server.id === activeServer.serverId;
+      });
+      if (!updatedServer) { return; }
+      // Ignore power status in case of error
+      switch (activeServer.notificationStatus) {
+        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+          updatedServer.powerState = activeServer.commandAction === ServerCommand.Start ?
+            ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
+          break;
+        case CoreDefinition.NOTIFICATION_JOB_FAILED:
+          updatedServer.powerState = activeServer.powerState;
+          break;
+        case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+        default:
+          updatedServer.powerState = undefined;
+          break;
+      }
+    }
+  }
 }

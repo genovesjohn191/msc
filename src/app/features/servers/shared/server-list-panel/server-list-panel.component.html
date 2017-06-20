@@ -14,9 +14,21 @@
         [ngClass]="{'show': vdc.selected}">
         <div class="server-name" *ngFor="let server of vdc.servers">
           <a [ngClass]="{'active-server': isServerSelected(server.id)}"
-            [routerLink]="['/servers/' + server.id]">
-            <mcs-svg-icon [key]="getStateIconKey(server.powerState)"
-              size="small"></mcs-svg-icon> <span>{{ server.managementName }}</span>
+            [routerLink]="['/servers/' + server.id]" (click)="onClickServer(server)">
+
+            <mcs-svg-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"
+              size="small"></mcs-svg-icon>
+            <i *ngIf="!server.powerState" class="power-state-spinner"
+              [ngClass]="getSpinnerClass()"
+              mcsPopover trigger="hover" maxWidth="250px" padding="none"
+              [content]="loadingContent"></i>
+            <ng-template #loadingContent>
+              <span class="loading-content-popover">
+                {{ getActiveServerInformation(server.id) }}
+              </span>
+            </ng-template>
+
+            <span>{{ server.managementName }}</span>
           </a>
         </div>
       </div>

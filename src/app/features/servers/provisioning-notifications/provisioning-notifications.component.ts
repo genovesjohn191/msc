@@ -198,29 +198,5 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
       notification.ectInSeconds = 100;
       this.notifications.push(notification);
     }
-    // Record 3
-    {
-      notification = new McsApiJob();
-      notification.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-      notification.id = '0003';
-      notification.description = 'Restoring snapshots for "mongo-db"';
-      notification.tasks = new Array();
-      notification.ectInSeconds = 100;
-      {
-        let task = new McsApiTask();
-        task.id = '000A';
-        task.description = 'Initializing stack snapshot restoration';
-        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        notification.tasks.push(task);
-      }
-      {
-        let task = new McsApiTask();
-        task.id = '000B';
-        task.description = 'Rolling back to saved snapshot 3:15am, 30 November, 2016';
-        task.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-        notification.tasks.push(task);
-      }
-      this.notifications.push(notification);
-    }
   }
 }

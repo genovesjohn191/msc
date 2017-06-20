@@ -67,7 +67,7 @@
             [content]="loadingContent"></i>
           <ng-template #loadingContent>
             <span class="loading-content-popover">
-              This instance is being processed
+              {{ getActiveServerInformation(server.id) }}
             </span>
           </ng-template>
         </td>

@@ -1,7 +1,8 @@
 <section class="server-container">
   <div class="row">
     <div class="col-sm-4 hidden-medium">
-      <mcs-server-list-panel [serverListData]="servers"></mcs-server-list-panel>
+      <mcs-server-list-panel [serverListData]="servers"
+        (serverSelect)="onServerSelect($event)"></mcs-server-list-panel>
     </div>
 
     <div class="col-sm-8 server-features">
@@ -21,7 +22,7 @@
           </li>
           <li class="nav-item hidden-medium">
             <mcs-server-command [command]="getActionStatus(server)"
-              (onClick)="executeServerCommand(this.server, $event)"></mcs-server-command>
+              (onClick)="executeServerCommand(server, $event)"></mcs-server-command>
           </li>
         </ul>
 

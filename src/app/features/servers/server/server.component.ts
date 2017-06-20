@@ -10,6 +10,7 @@ import {
 } from '@angular/router';
 import {
   Server,
+  ServerClientObject,
   ServerPowerState,
   ServerCommand
 } from '../models';
@@ -47,6 +48,10 @@ export class ServerComponent implements OnInit, OnDestroy {
     }
   }
 
+  public onServerSelect(event: any) {
+    if (event) { this.server = event; }
+  }
+
   public executeServerCommand(server: Server, action: string) {
     this._serversService.postServerCommand(
       server.id,
@@ -54,9 +59,8 @@ export class ServerComponent implements OnInit, OnDestroy {
       {
         serverId: server.id,
         powerState: server.powerState,
-        actionState: action
-      }
-    )
+        commandAction: ServerCommand[action]
+      } as ServerClientObject)
       .subscribe((response) => {
         // console.log(response);
       });
@@ -87,5 +91,4 @@ export class ServerComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
-
 }

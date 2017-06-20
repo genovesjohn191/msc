@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs/Rx';
 /** Services and Models */
 import {
   McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  McsApiRequestParameter
+  McsApiRequestParameter,
+  McsNotificationContextService,
+  McsApiJob
 } from '../../core/';
 import {
   Server,
+  ServerClientObject,
   ServerPowerState
 } from './models';
 
@@ -19,7 +25,25 @@ import {
 @Injectable()
 export class ServersService {
 
-  constructor(private _mcsApiService: McsApiService) { }
+  /**
+   * Subscribe in this stream to get all the active servers on the given notification stream
+   * based on the COG command action triggered
+   */
+  private _activeServersStream: BehaviorSubject<ServerClientObject[]>;
+  public get activeServersStream(): BehaviorSubject<ServerClientObject[]> {
+    return this._activeServersStream;
+  }
+  public set activeServersStream(value: BehaviorSubject<ServerClientObject[]>) {
+    this._activeServersStream = value;
+  }
+
+  constructor(
+    private _mcsApiService: McsApiService,
+    private _notificationContextService: McsNotificationContextService
+  ) {
+    this._activeServersStream = new BehaviorSubject<ServerClientObject[]>(new Array());
+    this._listenToNotificationUpdate();
+  }
 
   /**
    * Get Servers (MCS API Response)
@@ -94,6 +118,34 @@ export class ServersService {
         return serverResponse;
       })
       .catch(this._handleServerError);
+  }
+
+  private _listenToNotificationUpdate(): void {
+    // listener for the notification updates
+    this._notificationContextService.notificationsStream
+      .subscribe((updatedNotifications) => {
+        let activeServers: ServerClientObject[] = new Array();
+
+        // Filter only those who have client reference object on notification jobs
+        updatedNotifications.forEach((notification) => {
+          if (notification.clientReferenceObject) {
+
+            activeServers.push({
+              serverId: notification.clientReferenceObject.serverId,
+              powerState: notification.clientReferenceObject.powerState,
+              commandAction: notification.clientReferenceObject.commandAction,
+              notificationStatus: notification.status,
+              tooltipInformation: notification.summaryInformation
+
+            } as ServerClientObject);
+          }
+        });
+
+        // Notify active servers listener/subscriber
+        if (activeServers) {
+          this._activeServersStream.next(activeServers);
+        }
+      });
   }
 
   private _handleServerError(error: Response | any) {
