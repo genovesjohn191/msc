@@ -108,10 +108,6 @@ describe('ServersComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit() | constructor', () => {
-    it('should acquire the class of font-awesome gear', () => {
-      expect(component.gear).toEqual('gear');
-    });
-
     it('should create a searchSubject instance as a keyword listener', () => {
       expect(component.searchSubject).toBeDefined();
     });

@@ -1,0 +1,19 @@
+@import "../../../../../styles/shared/base";
+
+// TODO: temporary set the font-size of gear to 25px
+.fa-gear {
+  @include font-size($icon-large-font-size);
+}
+
+.cog-container {
+  @include display-flex(column);
+  a {
+    padding: 5px;
+
+    &[disabled] {
+      opacity: 0.4;
+      -webkit-touch-callout: none;
+      cursor: not-allowed;
+    }
+  }
+}

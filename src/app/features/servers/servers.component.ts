@@ -20,7 +20,8 @@ import { ServersService } from './servers.service';
 /** Models */
 import {
   Server,
-  ServerPowerState
+  ServerPowerState,
+  ServerCommand
 } from './models';
 import {
   McsApiError,
@@ -89,12 +90,10 @@ export class ServersComponent implements OnInit, OnDestroy {
     this.searchSubject = new Subject<McsApiSearchKey>();
     this.servers = new Array();
     this.totalServerCount = 0;
-    this.actionStatusMap = new Map<any, string>();
   }
 
   public ngOnInit() {
     this.serversTextContent = this._textProvider.content.servers;
-    this.getGearClass();
     this.getServers();
     this._listenToNotificationUpdate();
   }
@@ -122,20 +121,25 @@ export class ServersComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         // console.log(response);
       });
-
-    this.actionStatusMap.set(server.id, action);
   }
 
-  public getActionStatus(id: any, type: string): any {
-    let status: any = null;
-    let isExist = this.actionStatusMap.has(id);
+  public getActionStatus(server: Server): any {
+    let status: ServerCommand;
 
-    if (isExist) {
-      let currentAction = this.actionStatusMap.get(id);
-      if (currentAction === type) {
-        status = currentAction;
-      }
+    switch (server.powerState) {
+      case ServerPowerState.PoweredOn:
+        status = ServerCommand.Start;
+        break;
+
+      case ServerPowerState.PoweredOff:
+        status = ServerCommand.Stop;
+        break;
+
+      default:
+        status = ServerCommand.None;
+        break;
     }
+
     return status;
   }
 

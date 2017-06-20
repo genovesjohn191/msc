@@ -11,6 +11,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Server } from '../models';
+import { ServersService } from '../servers.service';
 
 describe('ServerComponent', () => {
   /** Stub Services/Components */
@@ -32,6 +33,12 @@ describe('ServerComponent', () => {
     events: Observable.of(new Event('event'))
   };
 
+  let serversServiceMock = {
+    postServerCommand(id: any, action: string) {
+      return true;
+    }
+  };
+
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
@@ -42,7 +49,8 @@ describe('ServerComponent', () => {
       ],
       providers: [
         { provide: Router, useValue: mockRouterService },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: ServersService, useValue: serversServiceMock }
       ]
     });
 

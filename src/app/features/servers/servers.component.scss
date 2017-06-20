@@ -60,18 +60,6 @@
   }
 }
 
-.cog-container {
-  @include display-flex(column);
-  a {
-    padding: 5px;
-
-    &[disabled] {
-      opacity: 0.4;
-      -webkit-touch-callout: none;
-      cursor: not-allowed;
-    }
-  }
-}
 
 .loading-content-popover {
   display: block;

@@ -46,9 +46,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
     private _browserService: McsBrowserService
-  ) { }
-
-  public ngOnInit() {
+  ) {
     if (this._route.parent.snapshot.data.server.content) {
       this.serverManagementTextContent = this._textProvider.content.servers.server.management;
     } else {
@@ -68,6 +66,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         this._browserService.scrollToTop();
       }
     });
+  }
+
+  public ngOnInit() {
+    // OnInit
   }
 
   public getSecondaryVolumes(serverfileSystem: ServerFileSystem[]) {

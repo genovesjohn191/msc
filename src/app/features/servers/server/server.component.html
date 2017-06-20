@@ -20,7 +20,8 @@
               [routerLink]="['backups']" routerLinkActive="active">Backups</a>
           </li>
           <li class="nav-item hidden-medium">
-            <mcs-button><i class="fa fa-cog"></i></mcs-button>
+            <mcs-server-command [command]="getActionStatus(server)"
+              (onClick)="executeServerCommand(this.server, $event)"></mcs-server-command>
           </li>
         </ul>
 
