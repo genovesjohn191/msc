@@ -10,6 +10,7 @@ export class McsApiJob {
   public durationInSeconds: number;
   public ectInSeconds: number;
   public tasks: McsApiTask[];
+  public clientReferenceObject: any;
   public status: string;
   public createdOn: Date;
   public updatedOn: Date;

@@ -38,6 +38,7 @@
         text-align: right;
         @include breakpoint(medium) {
           mcs-button {
+            display: block;
             max-width: 100% !important;
           }
         }

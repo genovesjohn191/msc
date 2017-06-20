@@ -75,11 +75,15 @@ export class ServersService {
    * Post server command/action to process the server
    * @param id Server identification
    * @param command Command type (Start, Stop, Restart)
+   * @param referenceObject Reference object of the server client to determine the status of job
    */
-  public postServerCommand(id: any, action: string) {
+  public postServerCommand(id: any, action: string, referenceObject: any) {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/' + id + '/command';
-    mcsApiRequestParameter.recordData = JSON.stringify({ command: action });
+    mcsApiRequestParameter.recordData = JSON.stringify({
+      command: action,
+      clientReferenceObject: referenceObject
+    });
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {

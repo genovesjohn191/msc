@@ -6,12 +6,19 @@ import {
   discardPeriodicTasks
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import {
   McsTextContentProvider,
   McsAssetsProvider,
   CoreDefinition,
-  McsApiSearchKey
+  McsApiSearchKey,
+  McsNotificationJobService,
+  McsNotificationContextService,
+  McsApiService,
+  McsApiRequestParameter
 } from '../../core';
 
 import { Server } from './models';
@@ -52,6 +59,15 @@ describe('ServersComponent', () => {
       return iconClass;
     }
   };
+  let mockMcsNotificationJobService = {
+    notificationStream: new Subject<any>(),
+    connectionStatusStream: new Subject<any>()
+  } as McsNotificationJobService;
+  let mockMcsApiService = {
+    get(apiRequest: McsApiRequestParameter): Observable<Response> {
+      return Observable.of(new Response());
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -63,9 +79,12 @@ describe('ServersComponent', () => {
         RouterTestingModule
       ],
       providers: [
+        { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsTextContentProvider, useValue: textContentProviderMock },
         { provide: ServersService, useValue: serversServiceMock },
-        { provide: McsAssetsProvider, useValue: assetsProviderMock }
+        { provide: McsAssetsProvider, useValue: assetsProviderMock },
+        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
+        McsNotificationContextService
       ]
     });
 

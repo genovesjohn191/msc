@@ -59,7 +59,17 @@
     <tbody>
       <tr *ngFor="let server of servers">
         <td *ngIf="columnSettings['state'].value" class="text-center align-middle">
-          <mcs-svg-icon [key]="getStateIconKey(server.powerState)" size="large"></mcs-svg-icon>
+          <mcs-svg-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"
+            size="large"></mcs-svg-icon>
+          <i *ngIf="!server.powerState" class="power-state-spinner"
+            [ngClass]="getSpinnerClass()"
+            mcsPopover trigger="hover" maxWidth="250px" padding="none"
+            [content]="loadingContent"></i>
+          <ng-template #loadingContent>
+            <span class="loading-content-popover">
+              This instance is being processed
+            </span>
+          </ng-template>
         </td>
         <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
           {{ server.serviceId }}
@@ -95,17 +105,17 @@
           <ng-template #cogContent>
            <div class="cog-container">
               <a class="icon-link"
-                (click)="executeServerCommand(server.id, 'Start')"
+                (click)="executeServerCommand(server, 'Start')"
                 [attr.disabled]="getActionStatus(server.id, 'Start')">
                 Start
               </a>
               <a class="icon-link"
-                (click)="executeServerCommand(server.id, 'Stop')"
+                (click)="executeServerCommand(server, 'Stop')"
                 [attr.disabled]="getActionStatus(server.id, 'Stop')">
                 Stop
               </a>
               <a class="icon-link"
-                (click)="executeServerCommand(server.id, 'Restart')"
+                (click)="executeServerCommand(server, 'Restart')"
                 [attr.disabled]="getActionStatus(server.id, 'Restart')">
                 Restart
               </a>
