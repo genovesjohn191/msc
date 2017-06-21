@@ -15,8 +15,6 @@ import {
   McsAssetsProvider,
   CoreDefinition,
   McsApiSearchKey,
-  McsNotificationJobService,
-  McsNotificationContextService,
   McsApiService,
   McsApiRequestParameter
 } from '../../core';
@@ -34,6 +32,7 @@ describe('ServersComponent', () => {
   let pageTitle: string = 'title';
   let noServersFound: string = 'No Servers Found.';
   let serversServiceMock = {
+    activeServersStream: new Subject<any>(),
     getServers(
       page?: number,
       perPage?: number,
@@ -59,10 +58,6 @@ describe('ServersComponent', () => {
       return iconClass;
     }
   };
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<any>(),
-    connectionStatusStream: new Subject<any>()
-  } as McsNotificationJobService;
   let mockMcsApiService = {
     get(apiRequest: McsApiRequestParameter): Observable<Response> {
       return Observable.of(new Response());
@@ -82,9 +77,7 @@ describe('ServersComponent', () => {
         { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsTextContentProvider, useValue: textContentProviderMock },
         { provide: ServersService, useValue: serversServiceMock },
-        { provide: McsAssetsProvider, useValue: assetsProviderMock },
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        McsNotificationContextService
+        { provide: McsAssetsProvider, useValue: assetsProviderMock }
       ]
     });
 

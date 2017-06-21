@@ -26,11 +26,14 @@ import {
   McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
+  McsNotificationJobService,
+  McsNotificationContextService,
   CoreConfig,
   CoreDefinition
 } from '../../core/';
 import {
-  Observable
+  Observable,
+  Subject
 } from 'rxjs/Rx';
 
 describe('ServersService', () => {
@@ -43,6 +46,10 @@ describe('ServersService', () => {
     apiHost: 'http://localhost:5000/api',
     imageRoot: 'assets/img/'
   } as CoreConfig;
+  let mockMcsNotificationJobService = {
+    notificationStream: new Subject<any>(),
+    connectionStatusStream: new Subject<any>()
+  } as McsNotificationJobService;
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -65,7 +72,12 @@ describe('ServersService', () => {
         {
           provide: CoreConfig,
           useValue: coreConfig
-        }
+        },
+        {
+          provide: McsNotificationJobService,
+          useValue: mockMcsNotificationJobService
+        },
+        McsNotificationContextService
       ]
     });
 

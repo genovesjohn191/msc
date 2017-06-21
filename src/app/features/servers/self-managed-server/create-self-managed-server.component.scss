@@ -20,6 +20,9 @@
 
       .mcs-tabs {
         margin-top: $space-large;
+        .nav-tabs {
+          justify-content: flex-start;
+        }
       }
 
      .additional-server {

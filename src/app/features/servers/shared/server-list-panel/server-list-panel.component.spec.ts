@@ -14,6 +14,7 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
+import { Subject } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { Server } from '../../models';
 import { ServerList } from './server-list';
@@ -22,6 +23,7 @@ import {
   McsTextContentProvider,
   CoreDefinition
 } from '../../../../core';
+import { ServersService } from '../../servers.service';
 
 describe('ServerListPanelComponent', () => {
   /** Stub Services/Components */
@@ -33,6 +35,9 @@ describe('ServerListPanelComponent', () => {
         errorMessage: noServersFound
       }
     }
+  };
+  let serversServiceMock = {
+    activeServersStream: new Subject<any>(),
   };
 
   let mockAssetsProvider = {
@@ -47,28 +52,28 @@ describe('ServerListPanelComponent', () => {
   };
 
   let mockActivatedRoute = {
-    params: Observable.of({id: 123})
+    params: Observable.of({ id: 123 })
   };
 
   let mockServerListData = [
-      {
-        id: 2686,
-        vdcName: 'M1VDC27117001',
-        managementName: 'mongo-db-prod-2686',
-        powerState: 2,
-      },
-      {
-        id: 2687,
-        vdcName: 'M1VDC27117001',
-        managementName: 'mongo-db-test-2687',
-        powerState: 1,
-      },
-      {
-        id: 2688,
-        vdcName: 'M1VDC27117001',
-        managementName: 'app-server-prod-2689',
-        powerState: 0,
-      },
+    {
+      id: 2686,
+      vdcName: 'M1VDC27117001',
+      managementName: 'mongo-db-prod-2686',
+      powerState: 2,
+    },
+    {
+      id: 2687,
+      vdcName: 'M1VDC27117001',
+      managementName: 'mongo-db-test-2687',
+      powerState: 1,
+    },
+    {
+      id: 2688,
+      vdcName: 'M1VDC27117001',
+      managementName: 'app-server-prod-2689',
+      powerState: 0,
+    },
   ];
 
   let mockRouterService = {
@@ -89,6 +94,7 @@ describe('ServerListPanelComponent', () => {
         { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: ServersService, useValue: serversServiceMock },
         Renderer2
       ]
     });

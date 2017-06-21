@@ -59,6 +59,7 @@
             @include font-size($link-default-font-size);
             color: $color-grey-03;
             align-items: center;
+            text-decoration: none;
 
             &:hover {
               color: $color-primary-00;
@@ -71,10 +72,21 @@
 
             span {
               margin-left: 5px;
+              text-decoration: underline;
+            }
+
+            i.power-state-spinner {
+              display: inline-block;
+              @include font-size($icon-medium-font-size);
             }
           }
         }
       }
     }
   }
+}
+
+.loading-content-popover {
+  display: block;
+  padding: $space-small;
 }
