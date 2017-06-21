@@ -14,7 +14,8 @@ import {
   McsStorageService,
   McsTextContentProvider,
   McsAssetsProvider,
-  McsFilterProvider
+  McsFilterProvider,
+  CoreDefinition
 } from '../../core';
 
 @Component({
@@ -61,6 +62,10 @@ export class FilterSelectorComponent implements OnInit {
 
   public get filterKeys(): any {
     return Object.keys(this.filterItems);
+  }
+
+  public getColumnsIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
   }
 
   private _getFilterItems(): void {

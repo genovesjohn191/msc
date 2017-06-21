@@ -5,13 +5,14 @@
       <div class="row">
         <div class="col-5">
           <button class="navbar-toggle" type="button" (click)="navState='show'">
-            <span class="mcs-toggle-nav-icon"></span>
+            <mcs-svg-icon [key]="getToggleIconKey()" size="medium"></mcs-svg-icon>
           </button>
         </div>
 
         <div class="col-7 text-right">
           <a href="https://macquarieview.com/" target="_blank" class="macquarie-view-link">
-            <i class="mcs-arrow-up-icon"></i> Macquarie View
+            <mcs-svg-icon [key]="getArrowUpIconKey()" size="medium"></mcs-svg-icon>
+            <span>Macquarie View</span>
           </a>
         </div>
       </div>
@@ -86,7 +87,8 @@
 
         <li class="nav-item hidden-small ml-auto">
           <a href="https://macquarieview.com/" class="macquarie-view-link ml-auto" target="_blank">
-            <i class="mcs-arrow-up-icon"></i> Macquarie View
+            <mcs-svg-icon [key]="getArrowUpIconKey()" size="medium"></mcs-svg-icon>
+            <span>Macquarie View</span>
           </a>
         </li>
       </ul>

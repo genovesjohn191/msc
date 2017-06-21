@@ -27,7 +27,8 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsAuthService,
-  McsUserType
+  McsUserType,
+  CoreDefinition
 } from '../../core';
 
 @Component({
@@ -102,5 +103,13 @@ export class MainNavigationComponent implements OnInit {
 
   public setTitle(title: string) {
     this._titleService.setTitle(title);
+  }
+
+  public getToggleIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
+  }
+
+  public getArrowUpIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
   }
 }

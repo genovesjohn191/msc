@@ -3,7 +3,7 @@
     placement="bottom" orientation="right" theme="gray"
     [content]="filterSelectorContent"
     (hidden)="onCloseFilterSelector()">
-    <i [ngClass]="iconClass"></i>
+    <mcs-svg-icon [key]="getColumnsIconKey()" size="large"></mcs-svg-icon>
   </a>
 
   <ng-template #filterSelectorContent>

@@ -5,37 +5,9 @@
   display:inline-block;
 }
 
-.mcs-toggle-nav-icon {
-  width: 17px;
-  height: 14px;
-  @extend %mcs-icon-base;
-  background-image: url($icon-toggle-nav);
-}
-
 .mcs-arrow-right-icon {
   width: 40px;
   height: 40px;
   @extend %mcs-icon-base;
   background-image: url($icon-arrow-right);
-}
-
-.mcs-arrow-up-icon {
-  width: 11px;
-  height: 19px;
-  @extend %mcs-icon-base;
-  background-image: url($icon-arrow-up);
-}
-
-.mcs-filter-selector-icon {
-  width: 25px;
-  height: 25px;
-  @extend %mcs-icon-base;
-  background-image: url($icon-filter-selector);
-}
-
-.mcs-toggle-nav-icon {
-  width: 17px;
-  height: 14px;
-  @extend %mcs-icon-base;
-  background-image: url($icon-toggle-nav);
 }

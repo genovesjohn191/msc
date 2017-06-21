@@ -1,7 +1,6 @@
 {
   "icons": {
     "arrow-right": "mcs-arrow-right-icon",
-    "filter-selector": "mcs-filter-selector-icon",
     "credit-card": "fa fa-credit-card",
     "search": "fa fa-search",
     "check": "fa fa-check",
@@ -41,7 +40,11 @@
     "radio-button-unchecked": "radio-button-unchecked.svg",
     "state-restarting": "state-restarting.svg",
     "state-running": "state-running.svg",
-    "state-stopped": "state-stopped.svg"
+    "state-stopped": "state-stopped.svg",
+    "columns-black": "columns-black.svg",
+    "arrow-right-white": "arrow-right-white.svg",
+    "arrow-up-white": "arrow-up-white.svg",
+    "toggle-nav": "toggle-nav.svg"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

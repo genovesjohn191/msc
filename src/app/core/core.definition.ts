@@ -60,6 +60,10 @@ export class CoreDefinition {
   public static ASSETS_SVG_STATE_RESTARTING = 'state-restarting';
   public static ASSETS_SVG_STATE_RUNNING = 'state-running';
   public static ASSETS_SVG_STATE_STOPPED = 'state-stopped';
+  public static ASSETS_SVG_COLUMNS_BLACK = 'columns-black';
+  public static ASSETS_SVG_ARROW_RIGHT_WHITE = 'arrow-right-white';
+  public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';
+  public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
