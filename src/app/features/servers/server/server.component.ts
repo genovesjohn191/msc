@@ -37,12 +37,39 @@ export class ServerComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _serversService: ServersService,
-  ) {}
+  ) { }
 
   public ngOnInit() {
     if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
       this.servers = this._route.snapshot.data.servers.content;
       this.server = this._route.snapshot.data.server.content;
+
+      // TODO: Temporarily get the updated server information from stream,
+      // This must be removed when the powerstate of server is OK
+      this._serversService.activeServersStream
+        .subscribe((activeServers) => {
+          if (activeServers) {
+            let activeServer = activeServers.find((_activeServer) => {
+              return _activeServer.serverId === this.server.id;
+            });
+
+            if (activeServer) {
+              switch (activeServer.notificationStatus) {
+                case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+                  this.server.powerState = activeServer.commandAction === ServerCommand.Start ?
+                    ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
+                  break;
+                case CoreDefinition.NOTIFICATION_JOB_FAILED:
+                  this.server.powerState = activeServer.powerState;
+                  break;
+                case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+                default:
+                  this.server.powerState = undefined;
+                  break;
+              }
+            }
+          }
+        });
     } else {
       this._router.navigate(['/page-not-found']);
     }
