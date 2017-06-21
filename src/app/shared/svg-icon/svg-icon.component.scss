@@ -7,4 +7,5 @@
 .svg-icon {
   @include display-flex(row);
   align-items: center;
+  background-repeat: no-repeat;
 }
