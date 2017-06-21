@@ -9,7 +9,10 @@ import {
   ActivatedRoute,
   Data
 } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import { Server } from '../models';
 import { ServersService } from '../servers.service';
 
@@ -34,6 +37,7 @@ describe('ServerComponent', () => {
   };
 
   let serversServiceMock = {
+    activeServersStream: new Subject<any>(),
     postServerCommand(id: any, action: string) {
       return true;
     }
