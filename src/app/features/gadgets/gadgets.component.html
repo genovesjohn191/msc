@@ -240,7 +240,7 @@
         <small><em>Regular Default Button</em></small> <br/>
         <mcs-button>Add New Server</mcs-button> <br/>
         <small><em>Regular Default Button w/ Custom Width</em></small> <br/>
-        <mcs-button width="200">Add New Server</mcs-button> <br/>
+        <mcs-button width="200px">Add New Server</mcs-button> <br/>
         <small><em>Disabled Regular Default Button</em></small> <br/>
         <mcs-button [disabled]="disabled">Add New Server</mcs-button> <hr/>
 
@@ -252,20 +252,17 @@
         <small><em>Small Default Button</em></small> <br/>
         <mcs-button size="small">Manage</mcs-button> <br/>
         <small><em>Small Default Button w/ Custom Width</em></small> <br/>
-        <mcs-button size="small" width="200">Manage</mcs-button> <hr/>
+        <mcs-button size="small" width="200px">Manage</mcs-button> <hr/>
 
-        <small><em>Regular Button w/ Right Icon</em></small> <br/>
-        <mcs-button iconRight="arrow-right">Next</mcs-button> <br/>
-        <small><em>Regular Button w/ Right Icon and Custom Width</em></small> <br/>
-        <mcs-button iconRight="arrow-right" width="200">Next</mcs-button> <hr/>
-
-        <small><em>Regular Button w/ Left & Right Icon</em></small> <br/>
-        <mcs-button iconLeft="credit-card" iconRight="arrow-right">Create New Server</mcs-button> <br/>
-        <small><em>Create New Server</em></small> <br/>
-        <mcs-button iconLeft="credit-card" iconRight="arrow-right" width="500">Create New Server</mcs-button> <hr/>
+        <small><em>Regular Button w/ Icon</em></small> <br/>
+        <mcs-button icon="arrow">Create New Server</mcs-button> <br/>
+        <mcs-button icon="calendar">Create New Server</mcs-button> <br/>
+        <small><em>Regular Button w/ Icon and Custom Width</em></small> <br/>
+        <mcs-button icon="arrow" width="300px">Create New Server</mcs-button> <hr/>
 
         <small><em>Regular Button w/ OnClick Event</em></small> <br/>
-        <mcs-button iconRight="arrow-right" #mcsButton (onClick)="onButtonClicked(mcsButton)">Submit</mcs-button>
+        <mcs-button icon="arrow" width="100%" #mcsButton
+          (onClick)="onButtonClicked(mcsButton)">Submit</mcs-button>
       </div>
     </div>
 

@@ -1,10 +1,8 @@
 @import "../../../styles/shared/base";
 
-:host {
-  display: inline-block;
-}
-
 .mcs-button {
+  @include display-inline-flex(row);
+  align-items: center;
   background-color: $button-primary-background-color;
   color: $button-primary-text-color;
   padding: $button-padding;
@@ -27,51 +25,52 @@
     }
   }
 
+  &.normal {
+    justify-content: center;
+  }
+
   &.has-icon {
     padding: 0 15px;
     min-height: 42px;
-    text-align: left;
+    justify-content: space-between;
 
-    div {
-      display: inline-block;
-      vertical-align: middle;
-
-      &.text {
-        float: left;
-        line-height: 40px;
-        @include breakpoint(small) {
-          max-width: 60%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .icon-left-wrapper {
-          margin-right: $space-small;
-
-          .icon-left {
-            line-height: 40px;
-          }
-        }
+    .text {
+      @include breakpoint(small) {
+        max-width: 60%;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
+    }
 
-      &.icon-right-wrapper {
-        width: 40px;
-        float: right;
-        margin-left: $space-large;
+    .icon-right-wrapper {
+      @include display-flex(row);
+      margin-left: $space-medium;
 
-        .icon-right {
-          display: block;
-          margin: 0 auto;
-          line-height: 40px;
-          float: right;
-          font-size: $icon-medium-font-size;
-        }
+      .icon-right {
+        display: block;
+        margin: 0 auto;
       }
     }
   }
 
+  &.primary {
+    background-color: $button-primary-background-color;
+  }
+
+  &.secondary {
+    background-color: $button-secondary-background-color;
+  }
+
+  &.success {
+    background-color: $button-success-background-color;
+  }
+
+  &.warning {
+    background-color: $button-warning-background-color;
+  }
+
   &.danger {
-    background-color: $color-red-00;
+    background-color: $button-danger-background-color;
   }
 }
 

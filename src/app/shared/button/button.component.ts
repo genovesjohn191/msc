@@ -15,7 +15,15 @@ import {
 import { Loading } from '../loading.interface';
 
 /** Providers */
-import { McsAssetsProvider } from '../../core';
+import {
+  McsAssetsProvider,
+  CoreDefinition
+} from '../../core';
+
+enum IconType {
+  Svg = 0,
+  FontAwesome = 1
+}
 
 @Component({
   selector: 'mcs-button',
@@ -24,23 +32,22 @@ import { McsAssetsProvider } from '../../core';
 })
 
 export class ButtonComponent implements OnInit, AfterViewInit, Loading {
-  public iconLeftClass: string;
-  public iconRightClass: string;
+  public iconType: IconType;
+  public iconTypeEnum = IconType;
+  public svgIcon: string;
+  public fontAwesomeIcon: string;
+  public spinnerIcon: string;
 
   @Input()
-  public type: string;
+  public type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 
   @Input()
-  public iconLeft: string;
+  public icon: 'normal' | 'arrow' | 'calendar';
 
   @Input()
-  public iconRight: string;
+  public size: 'default' | 'small';
 
   @Input()
-  public size: string;
-
-  @Input()
-  @HostBinding('style.max-width')
   public width: string;
 
   @Input()
@@ -58,19 +65,23 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   @ViewChild('mcsButton')
   public mcsButton: ElementRef;
 
+  @ViewChild('mcsButtonIcon')
+  public mcsButtonIcon: ElementRef;
+
   public constructor(
     private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2
-  ) {}
+  ) {
+    this.type = 'primary';
+    this.icon = 'normal';
+    this.size = 'default';
+    this.iconType = IconType.Svg;
+  }
 
   public ngOnInit() {
-    if (this.iconLeft) {
-      this.iconLeftClass = this.getIconClass(this.iconLeft);
-    }
-
-    if (this.iconRight) {
-      this.iconRightClass = this.getIconClass(this.iconRight);
-    }
+    this._setIconType(this.icon);
+    this.svgIcon = CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE;
+    this.fontAwesomeIcon = this._assetsProvider.getIcon('calendar');
   }
 
   public ngAfterViewInit() {
@@ -78,7 +89,9 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
       this._renderer.addClass(this.mcsButton.nativeElement, this.type);
     }
 
-    if (this.iconLeftClass || this.iconRightClass) {
+    if (this.icon === 'normal') {
+      this._renderer.addClass(this.mcsButton.nativeElement, 'normal');
+    } else {
       this._renderer.addClass(this.mcsButton.nativeElement, 'has-icon');
     }
 
@@ -87,7 +100,8 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
     }
 
     if (this.width) {
-      this._renderer.addClass(this.mcsButton.nativeElement, 'w-100');
+      this._renderer.setStyle(this.mcsButton.nativeElement, 'width', '100%');
+      this._renderer.setStyle(this.mcsButton.nativeElement, 'max-width', this.width);
     }
 
     if (this.lightboxId) {
@@ -110,14 +124,26 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   }
 
   public showLoader(): void {
-    this.iconRightClass = this.getIconClass('spinner');
+    this.spinnerIcon = this._assetsProvider.getIcon('spinner');
   }
 
   public hideLoader(): void {
-    this.iconRightClass = this.getIconClass(this.iconRight);
+    this.spinnerIcon = undefined;
   }
 
-  public getIconClass(iconKey: string): string {
-    return this._assetsProvider.getIcon(iconKey);
+  private _setIconType(icon: string): void {
+    switch (icon) {
+      case 'arrow':
+        this.iconType = IconType.Svg;
+        break;
+      case 'calendar':
+        this.iconType = IconType.FontAwesome;
+        break;
+      case 'normal':
+      default:
+        this.iconType = undefined;
+        break;
+    }
   }
+
 }
