@@ -9,7 +9,10 @@ import {
 } from '@angular/core';
 
 import { ButtonComponent } from './button.component';
-import { McsAssetsProvider } from '../../core';
+import {
+  McsAssetsProvider,
+  CoreDefinition
+} from '../../core';
 
 describe('ButtonComponent', () => {
 
@@ -20,7 +23,8 @@ describe('ButtonComponent', () => {
       let icons = {
         'arrow-right': 'mcs-icon mcs-arrow-right-icon',
         'credit-card': 'fa fa-credit-card',
-        'spinner': 'fa fa-spinner fa-pulse'
+        'spinner': 'fa fa-spinner fa-pulse',
+        'calendar': 'fa fa-calendar'
       };
 
       return icons[key];
@@ -45,7 +49,7 @@ describe('ButtonComponent', () => {
     TestBed.overrideComponent(ButtonComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div #mcsButton>Overridden template here</div>
         `
       }
     });
@@ -56,22 +60,15 @@ describe('ButtonComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.mcsButton = new ElementRef(document.createElement('button'));
     });
   }));
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should return the icon class if the value of iconLeft is valid', () => {
-      component.iconLeft = 'credit-card';
+    it('should return the icon class if the value of icon is valid', () => {
+      component.icon = 'calendar';
       component.ngOnInit();
-      expect(component.iconLeftClass).toBeDefined();
-    });
-
-    it('should return the icon class if the value of iconRight is valid', () => {
-      component.iconRight = 'arrow-right';
-      component.ngOnInit();
-      expect(component.iconRightClass).toBeDefined();
+      expect(component.fontAwesomeIcon).toBeDefined();
     });
   });
 
@@ -79,8 +76,7 @@ describe('ButtonComponent', () => {
     it('should use default styling if no icon found',
       inject([Renderer2], (renderer: Renderer2) => {
         spyOn(renderer, 'addClass');
-        component.iconLeft = 'arrow-forward';
-        component.iconRight = 'angular';
+        component.icon = 'normal';
         component.ngAfterViewInit();
         expect(renderer.addClass).not.toHaveBeenCalled();
       })
@@ -96,17 +92,16 @@ describe('ButtonComponent', () => {
   });
 
   describe('showLoader()', () => {
-    it('should set the value of iconClass', () => {
+    it('should set the value of spinnerIcon', () => {
       component.showLoader();
-      expect(component.iconRightClass).toBeDefined();
+      expect(component.spinnerIcon).toBeDefined();
     });
   });
 
   describe('hideLoader()', () => {
-    it('should set the value of iconClass', () => {
-      component.iconRight = 'arrow-right';
+    it('should set the value of spinnerIcon to undefined', () => {
       component.hideLoader();
-      expect(component.iconRightClass).toBeDefined();
+      expect(component.spinnerIcon).toBeUndefined();
     });
   });
 });

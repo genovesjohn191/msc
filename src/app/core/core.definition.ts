@@ -46,6 +46,7 @@ export class CoreDefinition {
   public static ICON_SIZE_SMALL = '20px';
   public static ICON_SIZE_MEDIUM = '25px';
   public static ICON_SIZE_LARGE = '30px';
+  public static ICON_SIZE_XLARGE = '40px';
 
   /** Assets Provider Key Definitions */
   public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';
@@ -64,6 +65,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_ARROW_RIGHT_WHITE = 'arrow-right-white';
   public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
+  public static ASSETS_SVG_SPINNER = 'spinner';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

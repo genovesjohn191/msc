@@ -115,6 +115,16 @@ describe('SvgIconComponent', () => {
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE}`);
     });
 
+    it('should set xlarge size to the width and height', () => {
+      component.size = 'xlarge';
+      component.ngOnChanges();
+
+      expect(component.svgIconElement.nativeElement.style.width)
+        .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}`);
+      expect(component.svgIconElement.nativeElement.style.height)
+        .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}`);
+    });
+
     it('should set the svg icon file as background-image', () => {
       component.key = 'close';
       component.ngOnChanges();

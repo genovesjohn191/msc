@@ -23,7 +23,7 @@ export class SvgIconComponent implements OnChanges {
   public key: string;
 
   @Input()
-  public size: 'xsmall' | 'small' | 'medium' | 'large';
+  public size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
 
   @ViewChild('svgIconElement')
   public svgIconElement: ElementRef;
@@ -64,6 +64,11 @@ export class SvgIconComponent implements OnChanges {
     let height: string;
 
     switch (this.size) {
+      case 'xlarge':
+        width = CoreDefinition.ICON_SIZE_XLARGE;
+        height = CoreDefinition.ICON_SIZE_XLARGE;
+        break;
+
       case 'large':
         width = CoreDefinition.ICON_SIZE_LARGE;
         height = CoreDefinition.ICON_SIZE_LARGE;
