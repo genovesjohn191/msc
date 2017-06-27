@@ -35,9 +35,11 @@ export class McsComponentService<T> {
     if (!this._componentRef) {
       let contentViewNodes: any[] = new Array();
 
-      for (let content of contents) {
-        let contentView = this._createContentView(content);
-        contentViewNodes.push(contentView);
+      if (contents) {
+        for (let content of contents) {
+          let contentView = this._createContentView(content);
+          contentViewNodes.push(contentView);
+        }
       }
 
       this._componentRef = this._createComponentView(contentViewNodes);
