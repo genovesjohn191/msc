@@ -53,7 +53,7 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
   public placeholder: string;
 
   @Input()
-  public width: number;
+  public width: string;
 
   @ViewChild('mcsDropdown')
   public mcsDropdown: ElementRef;
@@ -118,7 +118,7 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
   public ngAfterViewInit() {
     if (this.width) {
       this._renderer.setStyle(this.mcsDropdown.nativeElement,
-        'max-width', this.width + 'px');
+        'max-width', this.width);
     }
   }
 

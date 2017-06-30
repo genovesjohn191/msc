@@ -9,6 +9,7 @@ import {
   ServerCommandComponent,
   ContextualHelpComponent,
   ContextualHelpDirective,
+  ServerPerformanceScaleComponent
 } from './shared';
 /** Servers */
 import { ServersComponent } from './servers.component';
@@ -16,7 +17,8 @@ import {
   ServerComponent,
   ServerManagementComponent,
   ServerBackupsComponent,
-  ServerServicesComponent
+  ServerServicesComponent,
+  ServerService
 } from './server/';
 /** Self Managed Servers */
 import {
@@ -48,6 +50,7 @@ import { SharedModule } from '../../shared';
     ServerBackupsComponent,
     ContextualHelpComponent,
     ContextualHelpDirective,
+    ServerPerformanceScaleComponent,
     CreateSelfManagedServerComponent,
     NewSelfManagedServerComponent,
     CopySelfManagedServerComponent,
@@ -59,6 +62,7 @@ import { SharedModule } from '../../shared';
     SharedModule
   ],
   providers: [
+    ServerService,
     ServersService,
     CreateSelfManagedServerService,
     ProvisioningNotificationsService

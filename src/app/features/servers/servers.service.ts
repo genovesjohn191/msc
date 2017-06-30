@@ -11,8 +11,10 @@ import {
   McsApiErrorResponse,
   McsApiRequestParameter,
   McsNotificationContextService,
-  McsApiJob
+  McsApiJob,
+  McsApiRequestServerUpdate
 } from '../../core/';
+import { reviverParser } from '../../utilities';
 import {
   Server,
   ServerClientObject,
@@ -97,6 +99,7 @@ export class ServersService {
 
   /**
    * Post server command/action to process the server
+   * *Note: This will send a job (notification)
    * @param id Server identification
    * @param command Command type (Start, Stop, Restart)
    * @param referenceObject Reference object of the server client to determine the status of job
@@ -111,9 +114,31 @@ export class ServersService {
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
-        let serverResponse: McsApiSuccessResponse<Server>;
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
-          this._convertProperty) as McsApiSuccessResponse<Server>;
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Patch server data to process the scaling updates
+   * *Note: This will send a job (notification)
+   * @param id Server identification
+   * @param serverData Server data for the patch update
+   */
+  public patchServer(id: any, serverData: McsApiRequestServerUpdate) {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers/' + id;
+    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
+
+    return this._mcsApiService.patch(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })

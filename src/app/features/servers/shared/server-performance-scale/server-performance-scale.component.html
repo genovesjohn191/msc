@@ -1,0 +1,37 @@
+<div class="server-performance-scale-informations">
+  <div class="description">
+    <ng-content select="[server-performance-scale-title]"></ng-content>
+    <ng-content select="[server-performance-scale-details]"></ng-content>
+  </div>
+
+  <!--TODO: It must be component-->
+  <div class="custom-size">
+    <a class="text-underline" *ngIf="scaleType == scaleTypeEnum.Slider"
+      (click)="onChangeScaleType(scaleTypeEnum.Custom)">Enter custom size</a>
+  </div>
+
+  <div *ngIf="scaleType == scaleTypeEnum.Custom">
+    <div [@fadeInOut] class="custom-size-content">
+      <mcs-dropdown width="150px"
+        [ngModel]="customMemoryInGbValue" (ngModelChange)="onMemoryChanged($event)"
+        [dropdownData]="customMemoryInGbTable"></mcs-dropdown>
+      <mcs-dropdown width="150px"
+        [ngModel]="customCpuCountValue" (ngModelChange)="onCpuCountChanged($event)"
+        [dropdownData]="customCpuCountTable"></mcs-dropdown>
+      <a (click)="onChangeScaleType(scaleTypeEnum.Slider)">Cancel</a>
+    </div>
+  </div>
+
+  <div *ngIf="scaleType == scaleTypeEnum.Slider">
+    <div class="scale">
+      <mcs-slider [@fadeInOut] [min]="minimum" [max]="maximum"
+        [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>
+      <span class="scale-label">
+        {{ currentServerScale.memoryInGb }}GB / {{ currentServerScale.cpuCount }}CPU
+      </span>
+      <span class="available-label">
+        ({{ getMemoryInGb(availableMemoryInMb) }}GB / {{ availableCpuCount }}CPU available)
+      </span>
+    </div>
+  </div>
+</div>

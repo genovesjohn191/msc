@@ -3,14 +3,14 @@ import {
   Observable,
   BehaviorSubject
 } from 'rxjs/Rx';
-import { McsApiJob } from '../models/mcs-api-job';
+import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { CoreDefinition } from '../core.definition';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiService } from './mcs-api.service';
-import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
-import { McsApiSuccessResponse } from '../models/mcs-api-success-response';
-import { McsApiErrorResponse } from '../models/mcs-api-error-response';
+import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
+import { McsApiErrorResponse } from '../models/response/mcs-api-error-response';
 import {
   reviverParser,
   getTimeDifference,

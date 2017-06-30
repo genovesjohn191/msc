@@ -10,7 +10,8 @@ import {
 } from '@angular/router';
 import {
   Server,
-  ServerFileSystem
+  ServerFileSystem,
+  ServerPerformanceScale
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -19,6 +20,7 @@ import {
   McsBrowserService
 } from '../../../../core';
 import { Observable } from 'rxjs/Rx';
+import { ServerService } from '../server.service';
 
 @Component({
   selector: 'mcs-server-management',
@@ -34,6 +36,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public secondaryVolumes: string;
   public serviceType: string;
 
+  private _serverCpuSizeScale: ServerPerformanceScale;
+
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
     if (this.serviceType) {
@@ -45,7 +49,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
-    private _browserService: McsBrowserService
+    private _browserService: McsBrowserService,
+    private _serverService: ServerService
   ) {
     if (this._route.parent.snapshot.data.server.content) {
       this.serverManagementTextContent = this._textProvider.content.servers.server.management;
@@ -88,4 +93,22 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  public getWarningIconKey(): string {
+    // TODO: Return the core definition here
+    return 'warning';
+  }
+
+  public onScaleChanged(scale: ServerPerformanceScale) {
+    this._serverCpuSizeScale = scale;
+  }
+
+  public onClickScale(scaleModal: any): void {
+    // Close Modal
+    if (scaleModal) { scaleModal.close(); }
+    if (!this._serverCpuSizeScale) { return; }
+
+    // TODO: Check for dirty/prestine to prevent sending of API request if no data was changed
+    // Update the Server CPU size scale
+    this._serverService.setCpuSizeScale(this.server.id, this._serverCpuSizeScale);
+  }
 }

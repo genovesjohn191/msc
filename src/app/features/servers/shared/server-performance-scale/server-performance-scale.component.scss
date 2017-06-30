@@ -1,0 +1,57 @@
+@import "../../../../../styles/shared/base";
+
+:host {
+  display: block;
+}
+
+.server-performance-scale-informations {
+  @include display-flex(row);
+  @include flex-wrap(wrap);
+  @include set-items-interval(10, vertical);
+  @include font-size(16);
+
+  * {
+    @include flex(1 1 100%);
+  }
+
+  .custom-size {
+    margin: 0;
+    text-align: right;
+    @include flex(0 1 50%);
+  }
+
+  .description {
+    @include flex(0 1 50%);
+    @include display-flex(column);
+  }
+
+  .custom-size-content {
+    min-height: 100px;
+    margin-top: $space-medium;
+    @include set-items-interval(20, horizontal);
+    * {
+      display: inline-block;
+    }
+
+    @include breakpoint(small) {
+      @include display-flex(column);
+      * {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .scale {
+    min-height: 100px;
+    margin-top: $space-medium;
+    > .scale-label,
+    > .available-label {
+      display: block;
+      text-align: center;
+    }
+
+    > .scale-label {
+      font-family: $base-font-bold;
+    }
+  }
+}

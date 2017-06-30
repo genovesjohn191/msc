@@ -11,14 +11,49 @@
         <ul>
           <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.guestOS }}</li>
           <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
-          <li>{{ serverManagementTextContent.vmProperties.configuration }}: 
-            {{ server.memoryInMb }} MB / {{ server.cpuCount }} CPU <a href="#">Scale</a></li>
+          <li>{{ serverManagementTextContent.vmProperties.configuration }}:
+            {{ server.memoryInMb }} MB / {{ server.cpuCount }} CPU
+            <a [mcsModal]="scaleContent" #scaleModal="mcsModal">Scale</a>
+            <ng-template #scaleContent>
+              <div modal-title>
+                <span>Server {{ server.managementName }}</span>
+              </div>
+              <div modal-body>
+                  <div class="server-performance-scale-container">
+                    <mcs-server-performance-scale
+                      [memoryInMb]="server.memoryInMb" [cpuCount]="server.cpuCount"
+                      availableMemoryInMb="4096" availableCpuCount="8"
+                      (scaleChanged)="onScaleChanged($event)">
+
+                      <!--Performance scale container-->
+                      <div server-performance-scale-details>
+                        <span>
+                          {{ serverManagementTextContent.performanceScale.sliderGuidance }}
+                        </span>
+                      </div>
+                    </mcs-server-performance-scale>
+
+                    <div class="note">
+                      <!--TODO: Set the mcs-icon here when it is already created-->
+                      <!--<i [ngClass]="getWarningIconKey()"></i>-->
+                      <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
+                    </div>
+
+                    <div class="scaling">
+                      <a class="text-underline" (click)="scaleModal.close()">Cancel</a>
+                      <mcs-button size="small" class="scale"
+                        (click)="onClickScale(scaleModal)">Scale</mcs-button>
+                    </div>
+                  </div>
+              </div>
+            </ng-template>
+          </li>
           <li>{{ serverManagementTextContent.vmProperties.media }}:
             <ul class="server-media" *ngIf="server.media.length < 0; else elseBlock">
               <li *ngFor="let media of server.media">{{ media.mediaName }}</li>
             </ul>
             <ng-template #elseBlock>None</ng-template>
-            <a href="#">Attach</a>
+            <a>Attach</a>
           </li>
         </ul>
       </div>
@@ -28,7 +63,7 @@
         <ul class="server-interfaces">
           <li>{{ serverManagementTextContent.networkInformation.publicIp }}: {{ server.managementIpAddress }}</li>
           <li *ngFor="let interface of server.interfaces; let i = index">
-            {{ serverManagementTextContent.networkInformation.interface }} {{ i }} : 
+            {{ serverManagementTextContent.networkInformation.interface }} {{ i }} :
             <span>{{ interface.ipAddress.join(', ') }}</span>
           </li>
         </ul>

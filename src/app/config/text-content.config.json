@@ -67,6 +67,11 @@
         "manageServices": {
           "title": "Manage Services",
           "description": "Ensure your server is fully protected. Enable and configure managed services for this server."
+        },
+        "performanceScale": {
+          "sliderGuidance": "Move the slider to select the new compute size for this VM.",
+          "customGuidance": "Enter the custom size for this VM.",
+          "warning": "Scaling the Server will require a restart."
         }
       }
     },

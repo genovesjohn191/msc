@@ -6,7 +6,7 @@ import {
   tick
 } from '@angular/core/testing';
 import { Subject } from 'rxjs/Rx';
-import { McsApiJob } from '../models/mcs-api-job';
+import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsApiService } from './mcs-api.service';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
