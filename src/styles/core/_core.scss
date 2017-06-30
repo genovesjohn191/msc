@@ -86,6 +86,21 @@ html {
       &:hover {
         cursor: pointer;
       }
+
+      // Override bootstrap no underline for non-href
+      &:not([href]):not([tabindex]) {
+        text-decoration: underline;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      &:not([tabindex]) {
+        text-decoration: none;
+        &:hover {
+          text-decoration: none;
+        }
+      }
     }
 
     input,

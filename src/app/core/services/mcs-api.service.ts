@@ -5,14 +5,12 @@ import {
 import {
   Http,
   Headers,
-  Response,
-  URLSearchParams
+  Response
 } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
 import { CoreConfig } from '../core.config';
-import { isUrlValid } from '../../utilities/mcs-url.function';
-import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
+import { isUrlValid } from '../../utilities';
+import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 
 /**
  * Macquarie Portal Api Service class
@@ -26,7 +24,7 @@ export class McsApiService {
   ) { }
 
   /**
-   * GET Http Request
+   * This method will get the record based on the given id or endpoint
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
@@ -41,7 +39,7 @@ export class McsApiService {
   }
 
   /**
-   * POST Http Request
+   * This method will insert a new record based on the given data
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
@@ -57,7 +55,24 @@ export class McsApiService {
   }
 
   /**
-   * PUT Http Request
+   * This method will update some of the fields of an existing record
+   * based on the given data
+   * @param {McsApiRequestParameter} apiRequest
+   * MCS Api request consist of endpoint/url, data, headers, params, etc...
+   */
+  public patch(apiRequest: McsApiRequestParameter): Observable<Response> {
+    return this._http.patch(
+      this.getFullUrl(apiRequest.endPoint),
+      apiRequest.recordData,
+      {
+        headers: this._getHeaders(apiRequest.optionalHeaders),
+        search: apiRequest.searchParameters
+      })
+      .catch(this.handleError);
+  }
+
+  /**
+   * This method will replace the existing record based on the given data
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
@@ -72,7 +87,7 @@ export class McsApiService {
   }
 
   /**
-   * DELETE Http Request
+   * The method will delete the corresponding record based on the give ID
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */

@@ -21,7 +21,7 @@ import {
 import { ResponseOptions } from '@angular/http';
 import { CoreConfig } from '../core.config';
 import { McsApiService } from './mcs-api.service';
-import { McsApiRequestParameter } from '../models/mcs-api-request-parameter';
+import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 
 describe('McsApiService', () => {
 
@@ -162,6 +162,52 @@ describe('McsApiService', () => {
 
       spyOn(mcsApiService, 'handleError');
       mcsApiService.post(mcsApiRequestParameter)
+        .finally(() => {
+          expect(mcsApiService.handleError).toHaveBeenCalled();
+        });
+    }));
+  });
+
+  describe('patch', () => {
+    it('should update some fields of the existing entry', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Patch);
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            status: 201,
+            statusText: 'success'
+          }
+          )));
+      });
+
+      let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+      mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.recordData = 'title: server';
+
+      mcsApiService.patch(mcsApiRequestParameter)
+        .subscribe((response) => {
+          expect(response).toBeDefined();
+        });
+    }));
+
+    it('should call handleError method when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Patch);
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+      mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.recordData = 'title: server';
+
+      spyOn(mcsApiService, 'handleError');
+      mcsApiService.patch(mcsApiRequestParameter)
         .finally(() => {
           expect(mcsApiService.handleError).toHaveBeenCalled();
         });

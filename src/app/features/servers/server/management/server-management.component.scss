@@ -20,5 +20,21 @@
       }
     }
   }
+}
 
+.server-performance-scale-container {
+   @include set-items-interval(10, vertical);
+
+  .note {
+    display: block;
+    text-align: center;
+    @include font-size(16);
+    @include set-items-interval(5, horizontal);
+  }
+
+  .scaling {
+    @include display-flex(row);
+    justify-content: space-between;
+    align-items: center;
+  }
 }

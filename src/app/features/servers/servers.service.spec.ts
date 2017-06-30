@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed,
   getTestBed,
   fakeAsync
@@ -23,6 +22,8 @@ import { ResponseOptions } from '@angular/http';
 import { Server } from './models';
 import { ServersService } from './servers.service';
 import {
+  McsApiJob,
+  McsApiRequestServerUpdate,
   McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
@@ -90,7 +91,7 @@ describe('ServersService', () => {
   }));
 
   /** Test Implementation */
-  describe('getServers', () => {
+  describe('getServers()', () => {
     let requestOptions = {
       page: 1,
       perPage: CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE,
@@ -194,7 +195,7 @@ describe('ServersService', () => {
     }));
   });
 
-  describe('getServer', () => {
+  describe('getServer()', () => {
     let requestOptions = {
       id: 459,
     };
@@ -252,6 +253,153 @@ describe('ServersService', () => {
       });
 
       serversService.getServer(requestOptions.id)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('postServerCommand()', () => {
+    let requestOptions = {
+      id: 500,
+      action: 'Start',
+      referenceObject: { command: 1, clientReferenceObject: undefined }
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: 0,
+                    summaryInformation: 'Server Posting'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse<Server> when successful', fakeAsync(() => {
+      serversService.postServerCommand(
+        requestOptions.id,
+        requestOptions.action,
+        requestOptions.referenceObject
+      )
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id).toEqual(500);
+          expect(mcsApiSucessResponse[0].content[0].type).toEqual(0);
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Posting');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Post);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.postServerCommand(
+        requestOptions.id,
+        requestOptions.action,
+        requestOptions.referenceObject
+      )
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('patchServer()', () => {
+    let requestOptions = {
+      id: 500,
+      serverUpdate: new McsApiRequestServerUpdate()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: 0,
+                    summaryInformation: 'Server Patching'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse<Server> when successful', fakeAsync(() => {
+      serversService.patchServer(requestOptions.id, requestOptions.serverUpdate)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id).toEqual(500);
+          expect(mcsApiSucessResponse[0].content[0].type).toEqual(0);
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Patching');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Patch);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.patchServer(requestOptions.id, requestOptions.serverUpdate)
         .catch((error: McsApiErrorResponse) => {
           expect(error).toBeDefined();
           expect(error.status).toEqual(404);

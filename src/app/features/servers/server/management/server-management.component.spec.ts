@@ -1,7 +1,8 @@
 import {
   async,
   inject,
-  TestBed
+  TestBed,
+  getTestBed
 } from '@angular/core/testing';
 import { ServerManagementComponent } from './server-management.component';
 import {
@@ -11,15 +12,20 @@ import {
   NavigationEnd
 } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Server } from '../../models';
+import {
+  Server,
+  ServerPerformanceScale
+} from '../../models';
 import {
   McsTextContentProvider,
   McsBrowserService
 } from '../../../../core';
+import { ServerService } from '../server.service';
 
 describe('ServerManagementComponent', () => {
   /** Stub Services/Components */
   let component: ServerManagementComponent;
+  let serverService: ServerService;
   let mockTextContentProvider = {
     content: {
       servers: {
@@ -35,7 +41,7 @@ describe('ServerManagementComponent', () => {
     vdcName: 'M1VDC27117001',
     fileSystem: [
       {
-      path: '/',
+        path: '/',
         capacityInGb: 49,
         freeSpaceInGb: 48
       },
@@ -76,6 +82,9 @@ describe('ServerManagementComponent', () => {
       }
     }
   };
+  let mockServerService = {
+    setCpuSizeScale(serverId: any, cpuSizeScale: any) { return; }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -89,7 +98,8 @@ describe('ServerManagementComponent', () => {
         { provide: McsTextContentProvider, useValue: mockTextContentProvider },
         { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        McsBrowserService
+        McsBrowserService,
+        { provide: ServerService, useValue: mockServerService }
       ]
     });
 
@@ -108,6 +118,7 @@ describe('ServerManagementComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      serverService = getTestBed().get(ServerService);
     });
   }));
 
@@ -137,4 +148,15 @@ describe('ServerManagementComponent', () => {
     });
   });
 
+  describe('onClickScale()', () => {
+    beforeEach(async(() => {
+      component.onScaleChanged(new ServerPerformanceScale());
+    }));
+
+    it('should call the setCpuSizeScale of the serverService 1 time', () => {
+      spyOn(serverService, 'setCpuSizeScale');
+      component.onClickScale(undefined);
+      expect(serverService.setCpuSizeScale).toHaveBeenCalledTimes(1);
+    });
+  });
 });
