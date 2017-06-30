@@ -109,6 +109,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
     // TODO: Check for dirty/prestine to prevent sending of API request if no data was changed
     // Update the Server CPU size scale
-    this._serverService.setCpuSizeScale(this.server.id, this._serverCpuSizeScale);
+    this._serverService.setPerformanceScale(this.server.id, this._serverCpuSizeScale);
   }
 }

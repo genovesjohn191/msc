@@ -83,7 +83,7 @@ describe('ServerManagementComponent', () => {
     }
   };
   let mockServerService = {
-    setCpuSizeScale(serverId: any, cpuSizeScale: any) { return; }
+    setPerformanceScale(serverId: any, cpuSizeScale: any) { return; }
   };
 
   beforeEach(async(() => {
@@ -153,10 +153,10 @@ describe('ServerManagementComponent', () => {
       component.onScaleChanged(new ServerPerformanceScale());
     }));
 
-    it('should call the setCpuSizeScale of the serverService 1 time', () => {
-      spyOn(serverService, 'setCpuSizeScale');
+    it('should call the setPerformanceScale of the serverService 1 time', () => {
+      spyOn(serverService, 'setPerformanceScale');
       component.onClickScale(undefined);
-      expect(serverService.setCpuSizeScale).toHaveBeenCalledTimes(1);
+      expect(serverService.setPerformanceScale).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -15,7 +15,7 @@ export class ServerService {
    * @param serverId Server ID
    * @param cpuSizeScale CPU Size Scale of the server to be updated
    */
-  public setCpuSizeScale(serverId: any, cpuSizeScale: ServerPerformanceScale) {
+  public setPerformanceScale(serverId: any, cpuSizeScale: ServerPerformanceScale) {
     if (!cpuSizeScale) { return; }
 
     // Update scaling of server based on cpu size scale
