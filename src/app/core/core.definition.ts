@@ -34,6 +34,7 @@ export class CoreDefinition {
 
   /** Others */
   public static SEARCH_TIME = 2000;
+  public static INPUT_TIME = 1000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
   public static MANAGED_SERVER = 'Managed';
   public static GB_TO_MB_MULTIPLIER = 1024;

@@ -4,7 +4,7 @@
   display: block;
 }
 
-.server-performance-scale-container {
+.server-manage-storage-container {
   @include display-flex(row);
   @include flex-wrap(wrap);
   @include set-items-interval(10, vertical);
@@ -14,15 +14,19 @@
     @include flex(1 1 100%);
   }
 
+  .description {
+    @include flex(0 1 50%);
+    @include display-flex(column);
+  }
+
   .custom-size {
     margin: 0;
     text-align: right;
     @include flex(0 1 50%);
   }
 
-  .description {
-    @include flex(0 1 50%);
-    @include display-flex(column);
+  .storage-profile-content {
+    display: block;
   }
 
   .custom-size-content {
@@ -33,6 +37,14 @@
       display: inline-block;
     }
 
+    .custom-size-input-error {
+      display: block;
+      margin-left: 0;
+      > span {
+        text-align: center;
+      }
+    }
+
     @include breakpoint(small) {
       @include display-flex(column);
       * {
@@ -41,16 +53,16 @@
     }
   }
 
-  .scale {
+  .slider-content {
     min-height: 100px;
     margin-top: $space-medium;
-    > .scale-label,
+    > .storage-label,
     > .available-label {
       display: block;
       text-align: center;
     }
 
-    > .scale-label {
+    > .storage-label {
       font-family: $base-font-bold;
     }
   }

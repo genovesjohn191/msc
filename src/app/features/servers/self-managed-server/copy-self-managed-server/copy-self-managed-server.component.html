@@ -19,43 +19,27 @@
 
   <div class="computer-details">
     <div class="computer-information">
-
-      <!--TODO: Custom size should be seperate component-->
-      <div class="custom-size">
-        <span class="label" >Compute: </span>
-        <span class="custom-size float-right"><u>Enter custom size</u></span>
-      </div>
-
-      <!--TODO: Add the slider component here-->
-      <mcs-slider min="100" max="500" step="10"
-        [(ngModel)]="computeValue"></mcs-slider>
-      <label for="progress" class="d-block text-center">
-        <b>8GB / 2vCPU</b><br/>
-        (128 GB / 8vCPU available)
-      </label>
+      <mcs-server-performance-scale
+        [memoryInMb]="memoryInMb" [cpuCount]="cpuCount"
+        availableMemoryInMb="32768" availableCpuCount="8"
+        (scaleChanged)="onScaleChanged($event)">
+        <!--Performance scale contents on the left hand side (description)-->
+        <div title>
+          <span class="label">Compute Size: </span>
+        </div>
+      </mcs-server-performance-scale>
     </div>
 
     <div class="storage-information">
-
-      <!--TODO: Custom size should be seperate component-->
-      <div class="custom-size">
-        <span class="label">Storage: </span>
-        <span class="custom-size float-right"><u>Enter custom size</u></span>
-      </div>
-
-      <mcs-dropdown name="Storage Profile"
-        placeholder="Multiple Availability - XIO Array - PR2 T2000 Tier - PVDCAA01"
-        [(ngModel)]="storageProfileValue"
-        [dropdownData]="storageProfileItems"></mcs-dropdown>
-      <!--TODO: Add the slider component here-->
-      <mcs-slider min="100" max="500" step="10"
-        [(ngModel)]="storageValue"></mcs-slider>
-      <label for="progress" class="d-block text-center">
-        <b>200GB</b><br/>
-        (1.25 TB Remaining)
-      </label>
+      <mcs-server-manage-storage
+        [memoryInGb]="storageMemoryInGb" [remainingMemoryInGb]="storageAvailableMemoryInGb"
+        [storageProfiles]="storageProfileItems" (storageChanged)="onStorageChanged($event)">
+        <!--Server manage storage contents on the left hand side (description)-->
+        <div title>
+          <span class="label">Storage: </span>
+        </div>
+      </mcs-server-manage-storage>
     </div>
-
   </div>
 
   <div class="network-details">

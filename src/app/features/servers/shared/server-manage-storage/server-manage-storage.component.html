@@ -1,0 +1,50 @@
+<div class="server-manage-storage-container">
+  <div class="description">
+    <ng-content select="[title]"></ng-content>
+    <ng-content select="[details]"></ng-content>
+  </div>
+
+  <div class="custom-size">
+    <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
+      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">Enter custom size</a>
+  </div>
+
+  <!--Storage profile content element (dropdown)-->
+  <div *ngIf="storageProfiles">
+    <div [@fadeInOut] class="storage-profile-content">
+      <mcs-dropdown [ngModel]="storageProfileValue"
+        (ngModelChange)="onStorageProfileChanged($event)"
+        placeholder="Select the storage profile"
+        [dropdownData]="storageProfiles"></mcs-dropdown>
+    </div>
+  </div>
+
+  <!--Custom size content element-->
+  <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
+    <div [@fadeInOut] class="custom-size-content">
+      <mcs-textbox width="150px" type="number" placeholder="GB"
+        [ngModel]="customStorageValue"
+        (ngModelChange)="onCustomStorageChanged($event)"></mcs-textbox>
+      <a (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">Cancel</a>
+      <div *ngIf="!validCustomInput && customFinalStorageValue" class="custom-size-input-error">
+        <span class="text-color-error">
+          Custom storage volume should be within the remaining size
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!--Slider content element-->
+  <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
+    <div class="slider-content">
+      <mcs-slider [@fadeInOut] [min]="minimum" [max]="maximum"
+        [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>
+      <span class="storage-label">
+        {{ currentMemory }}GB
+      </span>
+      <span class="available-label">
+        ({{ remainingMemoryInGb }}GB Remaining)
+      </span>
+    </div>
+  </div>
+</div>
