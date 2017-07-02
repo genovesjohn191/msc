@@ -18,13 +18,11 @@ import {
   McsList,
   McsListItem
 } from '../../../../core';
-import { ServerPerformanceScale } from '../../models';
+import {
+  ServerPerformanceScale,
+  ServerInputManageType
+} from '../../models';
 import { refreshView } from '../../../../utilities';
-
-export enum ScaleType {
-  Slider = 0,
-  Custom = 1
-}
 
 @Component({
   selector: 'mcs-server-performance-scale',
@@ -41,8 +39,8 @@ export enum ScaleType {
 export class ServerPerformanceScaleComponent implements OnInit {
   public minimum: number;
   public maximum: number;
-  public scaleType: ScaleType;
-  public scaleTypeEnum = ScaleType;
+  public inputManageType: ServerInputManageType;
+  public inputManageTypeEnum = ServerInputManageType;
 
   public sliderValue: number;
   public sliderTable: ServerPerformanceScale[];
@@ -52,12 +50,6 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   public customCpuCountValue: any;
   public customCpuCountTable: McsList;
-
-  @Input()
-  public title: string;
-
-  @Input()
-  public subtitle: string;
 
   @Input()
   public memoryInMb: number;
@@ -87,7 +79,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this.availableMemoryInMb = 0;
     this.availableCpuCount = 0;
     this.sliderTable = new Array();
-    this.scaleType = ScaleType.Slider;
+    this.inputManageType = ServerInputManageType.Slider;
     this.scaleChanged = new EventEmitter();
     this.customMemoryInGbTable = new McsList();
     this.customCpuCountTable = new McsList();
@@ -128,8 +120,8 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this._notifyCpuSizeScale(this.customMemoryInGbValue, this.customCpuCountValue);
   }
 
-  public onChangeScaleType(scaleType: ScaleType) {
-    refreshView(() => { this.scaleType = scaleType; });
+  public onChangeInputManageType(inputManageType: ServerInputManageType) {
+    refreshView(() => { this.inputManageType = inputManageType; });
   }
 
   private _setMinMaxValue(): void {
@@ -157,16 +149,16 @@ export class ServerPerformanceScaleComponent implements OnInit {
     let actualMemory = this.memoryInMb / CoreDefinition.GB_TO_MB_MULTIPLIER;
     if (this.getMemoryInGb(this.memoryInMb) !== actualMemory) {
       this.sliderValue = 0;
-      this.scaleType = ScaleType.Custom;
+      this.inputManageType = ServerInputManageType.Custom;
       return;
     }
 
     // Check if the value of Memory and Core are in the table list
     if (this.sliderValue === -1) {
       this.sliderValue = 0;
-      this.scaleType = ScaleType.Custom;
+      this.inputManageType = ServerInputManageType.Custom;
     } else {
-      this.scaleType = ScaleType.Slider;
+      this.inputManageType = ServerInputManageType.Slider;
     }
   }
 
@@ -199,10 +191,10 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   private _notifyCpuSizeScale(memoryInGb: number, cpuCount: number) {
-    let customServerScale: ServerPerformanceScale = new ServerPerformanceScale();
+    let performanceScale: ServerPerformanceScale = new ServerPerformanceScale();
 
-    customServerScale.cpuCount = memoryInGb;
-    customServerScale.memoryInGb = cpuCount;
-    this.scaleChanged.next(customServerScale);
+    performanceScale.cpuCount = memoryInGb;
+    performanceScale.memoryInGb = cpuCount;
+    this.scaleChanged.next(performanceScale);
   }
 }

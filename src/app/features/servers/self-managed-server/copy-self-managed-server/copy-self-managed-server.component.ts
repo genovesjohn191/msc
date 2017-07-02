@@ -42,6 +42,12 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public contextualTextContent: any;
 
+  public memoryInMb: number;
+  public cpuCount: number;
+
+  public storageMemoryInGb: number;
+  public storageAvailableMemoryInGb: number;
+
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
@@ -49,6 +55,11 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     private _managedServerService: CreateSelfManagedServerService,
     private _textContentProvider: McsTextContentProvider
   ) {
+    // TODO: Temporary set the value for demo purpose
+    this.memoryInMb = 4096;
+    this.cpuCount = 2;
+    this.storageMemoryInGb = 200;
+    this.storageAvailableMemoryInGb = 900;
   }
 
   public ngOnInit() {

@@ -1,16 +1,16 @@
-<div class="server-performance-scale-informations">
+<div class="server-performance-scale-container">
   <div class="description">
-    <ng-content select="[server-performance-scale-title]"></ng-content>
-    <ng-content select="[server-performance-scale-details]"></ng-content>
+    <ng-content select="[title]"></ng-content>
+    <ng-content select="[details]"></ng-content>
   </div>
 
-  <!--TODO: It must be component-->
   <div class="custom-size">
-    <a class="text-underline" *ngIf="scaleType == scaleTypeEnum.Slider"
-      (click)="onChangeScaleType(scaleTypeEnum.Custom)">Enter custom size</a>
+    <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
+      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">Enter custom size</a>
   </div>
 
-  <div *ngIf="scaleType == scaleTypeEnum.Custom">
+  <!--Custom size content element-->
+  <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
     <div [@fadeInOut] class="custom-size-content">
       <mcs-dropdown width="150px"
         [ngModel]="customMemoryInGbValue" (ngModelChange)="onMemoryChanged($event)"
@@ -18,11 +18,12 @@
       <mcs-dropdown width="150px"
         [ngModel]="customCpuCountValue" (ngModelChange)="onCpuCountChanged($event)"
         [dropdownData]="customCpuCountTable"></mcs-dropdown>
-      <a (click)="onChangeScaleType(scaleTypeEnum.Slider)">Cancel</a>
+      <a (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">Cancel</a>
     </div>
   </div>
 
-  <div *ngIf="scaleType == scaleTypeEnum.Slider">
+  <!--Slider content element-->
+  <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
     <div class="scale">
       <mcs-slider [@fadeInOut] [min]="minimum" [max]="maximum"
         [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>

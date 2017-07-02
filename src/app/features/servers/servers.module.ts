@@ -9,7 +9,8 @@ import {
   ServerCommandComponent,
   ContextualHelpComponent,
   ContextualHelpDirective,
-  ServerPerformanceScaleComponent
+  ServerPerformanceScaleComponent,
+  ServerManageStorageComponent
 } from './shared';
 /** Servers */
 import { ServersComponent } from './servers.component';
@@ -51,6 +52,7 @@ import { SharedModule } from '../../shared';
     ContextualHelpComponent,
     ContextualHelpDirective,
     ServerPerformanceScaleComponent,
+    ServerManageStorageComponent,
     CreateSelfManagedServerComponent,
     NewSelfManagedServerComponent,
     CopySelfManagedServerComponent,

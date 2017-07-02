@@ -15,6 +15,10 @@ import { refreshView } from '../../../../utilities';
 import { CreateSelfManagedServerService } from '../create-self-managed-server.service';
 import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
 import { BaseSelfManagedServer } from '../base-self-managed-server';
+import {
+  ServerManageStorage,
+  ServerPerformanceScale
+} from '../../models';
 
 @Component({
   selector: 'mcs-new-self-managed-server',
@@ -40,6 +44,12 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
   public ipAddressValue: string;
   public contextualTextContent: any;
 
+  public memoryInMb: number;
+  public cpuCount: number;
+
+  public storageMemoryInGb: number;
+  public storageAvailableMemoryInGb: number;
+
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
@@ -47,6 +57,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
     private _managedServerService: CreateSelfManagedServerService,
     private _textContentProvider: McsTextContentProvider
   ) {
+    // TODO: Temporary set the value for demo purpose
+    this.memoryInMb = 4096;
+    this.cpuCount = 2;
+    this.storageMemoryInGb = 200;
+    this.storageAvailableMemoryInGb = 900;
   }
 
   public ngOnInit() {
@@ -97,9 +112,9 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
     // TODO: Set the actual obtainment of real data to be displayed here
     let itemList: McsList = new McsList();
 
-    itemList.push('storageProfile', new McsListItem('storageProfile1', 'Storage 1'));
-    itemList.push('storageProfile', new McsListItem('storageProfile2', 'Storage 2'));
-    itemList.push('storageProfile', new McsListItem('storageProfile3', 'Storage 3'));
+    itemList.push('Storage Profiles', new McsListItem('storageProfile1', 'Storage 1'));
+    itemList.push('Storage Profiles', new McsListItem('storageProfile2', 'Storage 2'));
+    itemList.push('Storage Profiles', new McsListItem('storageProfile3', 'Storage 3'));
     return itemList;
   }
 
@@ -120,5 +135,13 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
     itemList.push(new McsListItem('dhcp', 'DHCP'));
     itemList.push(new McsListItem('next', 'Next in my static pool'));
     return itemList;
+  }
+
+  public onStorageChanged(serverStorage: ServerManageStorage) {
+    // TODO: Set the serverStorage in the official variable
+  }
+
+  public onScaleChanged(serverScale: ServerPerformanceScale) {
+    // TODO: Set the serverScale in the official variable
   }
 }

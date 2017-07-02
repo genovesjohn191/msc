@@ -4,10 +4,8 @@ import {
   fakeAsync,
   tick
 } from '@angular/core/testing';
-import {
-  ScaleType,
-  ServerPerformanceScaleComponent
-} from './server-performance-scale.component';
+import { ServerPerformanceScaleComponent } from './server-performance-scale.component';
+import { ServerInputManageType } from '../../models';
 
 describe('ServerPerformanceScaleComponent', () => {
 
@@ -38,8 +36,6 @@ describe('ServerPerformanceScaleComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.title = 'title';
-      component.subtitle = 'subtitle';
       component.availableMemoryInMb = 8192;
       component.availableCpuCount = 4;
     });
@@ -67,7 +63,7 @@ describe('ServerPerformanceScaleComponent', () => {
     });
 
     it(`should set the scale type to Slider`, () => {
-      expect(component.scaleType).toBe(ScaleType.Slider);
+      expect(component.inputManageType).toBe(ServerInputManageType.Slider);
     });
   });
 
@@ -93,67 +89,67 @@ describe('ServerPerformanceScaleComponent', () => {
       });
 
       it(`should set the scale type to Custom`, () => {
-        expect(component.scaleType).toBe(ScaleType.Custom);
+        expect(component.inputManageType).toBe(ServerInputManageType.Custom);
       });
     });
 
   describe('getMemoryInGb()', () => {
     it(`should calculate the memory in GB with exact values
     when the memory in MB is not exact`, () => {
-      let memoryInMb = 1025;
-      let memoryInGb = component.getMemoryInGb(memoryInMb);
-      expect(memoryInGb).toBe(1);
-    });
+        let memoryInMb = 1025;
+        let memoryInGb = component.getMemoryInGb(memoryInMb);
+        expect(memoryInGb).toBe(1);
+      });
 
     it(`should calculate the memory in GB with exact values
     when the memory in MB is not exact`, () => {
-      let memoryInMb = 1024;
-      let memoryInGb = component.getMemoryInGb(memoryInMb);
-      expect(memoryInGb).toBe(1);
-    });
+        let memoryInMb = 1024;
+        let memoryInGb = component.getMemoryInGb(memoryInMb);
+        expect(memoryInGb).toBe(1);
+      });
   });
 
   describe('onSliderChanged()', () => {
     it(`should change the slider value based on the inputted index
     and notify the output parameter`, () => {
-      spyOn(component.scaleChanged, 'next');
-      component.onSliderChanged(1);
-      expect(component.sliderValue).toBe(1);
-      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-    });
+        spyOn(component.scaleChanged, 'next');
+        component.onSliderChanged(1);
+        expect(component.sliderValue).toBe(1);
+        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+      });
   });
 
   describe('onMemoryChanged()', () => {
     it(`should change the custom memory in GB based on the inputted index
     and notify the output parameter`, () => {
-      spyOn(component.scaleChanged, 'next');
-      component.onMemoryChanged(2);
-      expect(component.customMemoryInGbValue).toBe(2);
-      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-    });
+        spyOn(component.scaleChanged, 'next');
+        component.onMemoryChanged(2);
+        expect(component.customMemoryInGbValue).toBe(2);
+        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+      });
   });
 
   describe('onCpuCountChanged()', () => {
     it(`should change the custom CPU count based on the inputted index
     and notify the output parameter`, () => {
-      spyOn(component.scaleChanged, 'next');
-      component.onCpuCountChanged(3);
-      expect(component.customCpuCountValue).toBe(3);
-      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-    });
+        spyOn(component.scaleChanged, 'next');
+        component.onCpuCountChanged(3);
+        expect(component.customCpuCountValue).toBe(3);
+        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+      });
   });
 
-  describe('onChangeScaleType()', () => {
-    it(`should change the scale type to Custom`, fakeAsync(() => {
-      component.onChangeScaleType(ScaleType.Custom);
+  describe('onChangeInputManageType()', () => {
+    it(`should change the input manage type to Custom`, fakeAsync(() => {
+      component.onChangeInputManageType(ServerInputManageType.Custom);
       tick();
-      expect(component.scaleType).toBe(ScaleType.Custom);
+      expect(component.inputManageType).toBe(ServerInputManageType.Custom);
     }));
 
-    it(`should change the scale type to Slider`, fakeAsync(() => {
-      component.onChangeScaleType(ScaleType.Slider);
+    it(`should change the input manage type to Slider`, fakeAsync(() => {
+      component.onChangeInputManageType(ServerInputManageType.Slider);
       tick();
-      expect(component.scaleType).toBe(ScaleType.Slider);
+      expect(component.inputManageType).toBe(ServerInputManageType.Slider);
     }));
   });
 });
