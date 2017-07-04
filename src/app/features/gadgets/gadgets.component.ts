@@ -161,6 +161,9 @@ export class GadgetsComponent implements OnInit {
       );
     }
 
+    let groupName = dropdownData.getGroupNames()[0];
+    this.dropdownValue = dropdownData.getGroup(groupName)[0].key;
+
     return dropdownData;
   }
 }

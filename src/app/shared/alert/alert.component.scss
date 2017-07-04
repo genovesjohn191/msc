@@ -14,6 +14,7 @@
     @include border-radius(100%);
     width: $alert-icon-container-size;
     height: $alert-icon-container-size;
+    flex-shrink: 0;
 
     i {
       @include font-size($icon-medium-font-size);

@@ -4,6 +4,7 @@ import { ServersComponent } from './servers.component';
 import { ServerComponent } from './server/server.component';
 import { ServerManagementComponent } from './server/management/server-management.component';
 import { ServerServicesComponent } from './server/services/server-services.component';
+import { ServerStorageComponent } from './server/storage/server-storage.component';
 import { ServerBackupsComponent } from './server/backups/server-backups.component';
 /** Managed Server */
 import {
@@ -46,6 +47,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'management', pathMatch: 'full' },
       { path: 'management', component: ServerManagementComponent },
       { path: 'services', component: ServerServicesComponent },
+      { path: 'storage', component: ServerStorageComponent },
       { path: 'backups', component: ServerBackupsComponent }
     ]
   }

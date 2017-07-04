@@ -44,7 +44,8 @@
     "columns-black": "columns-black.svg",
     "arrow-right-white": "arrow-right-white.svg",
     "arrow-up-white": "arrow-up-white.svg",
-    "toggle-nav": "toggle-nav.svg"
+    "toggle-nav": "toggle-nav.svg",
+    "storage": "storage.svg"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

@@ -95,7 +95,7 @@ html {
         }
       }
 
-      &:not([tabindex]) {
+      &:not([href]) {
         text-decoration: none;
         &:hover {
           text-decoration: none;
@@ -201,4 +201,12 @@ html {
 
 .text-color-active {
   color: $color-black;
+}
+
+.font-normal {
+  font-family: $base-font;
+}
+
+.font-bold {
+  font-family: $base-font-bold;
 }

@@ -59,7 +59,7 @@ export class ModalComponent implements OnInit, AfterViewInit, OnDestroy {
   public iconKey: string;
 
   @Input()
-  public size: 'small' | 'large';
+  public size: 'small' | 'medium' | 'large';
 
   @Output()
   public onClickOutsideEvent: EventEmitter<any>;
@@ -145,6 +145,10 @@ export class ModalComponent implements OnInit, AfterViewInit, OnDestroy {
     switch (this.size) {
       case 'small':
         this._renderer.addClass(this.modalElement.nativeElement, 'modal-sm');
+        break;
+
+      case 'medium':
+        this._renderer.addClass(this.modalElement.nativeElement, 'modal-md');
         break;
 
       case 'large':

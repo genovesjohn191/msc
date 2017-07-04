@@ -56,7 +56,8 @@
           "title": "Storage",
           "primaryVolume": "Primary Volume",
           "secondaryVolumes": "Secondary Volumes",
-          "storagePolicy": "Storage Policy"
+          "storagePolicy": "Storage Policy",
+          "manageStorage": "Manage Storage"
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
@@ -73,6 +74,19 @@
           "customGuidance": "Enter the custom size for this VM.",
           "warning": "Scaling the Server will require a restart."
         }
+      },
+      "storage":{
+        "label": "Storage",
+        "title": "Manage Storage",
+        "primary": "Primary",
+        "other": "Other",
+        "increaseStorage": "Increase",
+        "deleteStorage": "Delete",
+        "deleteStorageAlertMessage": "The data on volume {{volume_name}} will be lost forever.",
+        "deleteStorageConfirmation": "Are you sure you want to delete this volume?",
+        "addStorage": "Add New Storage Volume.",
+        "resizeStorage": "Resize Volume : ",
+        "unit": "GB"
       }
     },
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",

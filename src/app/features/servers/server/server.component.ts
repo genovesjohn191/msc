@@ -14,7 +14,10 @@ import {
   ServerPowerState,
   ServerCommand
 } from '../models';
-import { CoreDefinition } from '../../../core';
+import {
+  CoreDefinition,
+  McsTextContentProvider
+} from '../../../core';
 import { ServersService } from '../servers.service';
 
 @Component({
@@ -26,6 +29,7 @@ export class ServerComponent implements OnInit, OnDestroy {
   public servers: Server[];
   public server: Server;
   public subscription: any;
+  public serverTextContent: any;
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
@@ -37,12 +41,14 @@ export class ServerComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _serversService: ServersService,
+    private _textContentProvider: McsTextContentProvider
   ) { }
 
   public ngOnInit() {
     if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
       this.servers = this._route.snapshot.data.servers.content;
       this.server = this._route.snapshot.data.server.content;
+      this.serverTextContent = this._textContentProvider.content.servers.server;
 
       // TODO: Temporarily get the updated server information from stream,
       // This must be removed when the powerstate of server is OK

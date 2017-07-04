@@ -91,6 +91,11 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
 
     // Add subsrciption to input in case of custom to add delay checking
     this._setCustomStorageInputDelay();
+
+    if (this.storageProfiles) {
+      let groupName = this.storageProfiles.getGroupNames()[0];
+      this.storageProfileValue = this.storageProfiles.getGroup(groupName)[0].key;
+    }
   }
 
   public ngOnDestroy() {
