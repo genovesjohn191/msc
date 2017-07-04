@@ -27,7 +27,7 @@ export class ModalDirective implements OnInit, OnDestroy {
   public mcsModal: TemplateRef<any> | string;
 
   @Input()
-  public modalSize: 'small' | 'large';
+  public modalSize: 'small' | 'medium' | 'large';
 
   public componentService: McsComponentService<ModalComponent>;
   public componentRef: ComponentRef<ModalComponent>;

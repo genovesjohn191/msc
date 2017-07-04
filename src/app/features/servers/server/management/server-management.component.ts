@@ -17,7 +17,9 @@ import {
   McsTextContentProvider,
   McsApiSuccessResponse,
   CoreDefinition,
-  McsBrowserService
+  McsBrowserService,
+  McsList,
+  McsListItem
 } from '../../../../core';
 import { Observable } from 'rxjs/Rx';
 import { ServerService } from '../server.service';
@@ -25,7 +27,7 @@ import { ServerService } from '../server.service';
 @Component({
   selector: 'mcs-server-management',
   styles: [require('./server-management.component.scss')],
-  templateUrl: './server-management.component.html'
+  templateUrl: './server-management.component.html',
 })
 
 export class ServerManagementComponent implements OnInit, OnDestroy {
@@ -34,7 +36,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public subscription: any;
   public primaryVolume: string;
   public secondaryVolumes: string;
+  public otherStorage: ServerFileSystem[];
   public serviceType: string;
+  public serverStorageProfile: any;
+  public serverStorageCapacity: any;
 
   private _serverCpuSizeScale: ServerPerformanceScale;
 
@@ -43,6 +48,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     if (this.serviceType) {
       return this.serviceType.toLowerCase() === CoreDefinition.MANAGED_SERVER.toLowerCase();
     }
+  }
+
+  public get storageIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_STORAGE;
   }
 
   constructor(
@@ -64,8 +73,11 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         this.server = this._route.parent.snapshot.data.server.content;
         if (this.server.fileSystem.length > 0) {
           this.primaryVolume = this.server.fileSystem[0].capacityInGb + ' GB';
-          this.secondaryVolumes = (this.server.fileSystem.length > 1) ?
-            this.getSecondaryVolumes(this.server.fileSystem) : '';
+
+          if (this.server.fileSystem.length > 1) {
+            this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
+            this.otherStorage = this.server.fileSystem.slice(1);
+          }
         }
         this.serviceType = this.server.serviceType;
         this._browserService.scrollToTop();
@@ -74,7 +86,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    // OnInit
+    this.serverStorageProfile = this.getServerStorageProfile();
+    this.serverStorageCapacity = this.getServerStorageCapacity();
   }
 
   public getSecondaryVolumes(serverfileSystem: ServerFileSystem[]) {
@@ -85,6 +98,26 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
 
     return storage.join(', ');
+  }
+
+  public getServerStorageProfile() {
+    let list: McsList = new McsList();
+
+    list.push('', new McsListItem('disk-storage-profile', 'Disk Storage Profile'));
+
+    return list;
+  }
+
+  public getServerStorageCapacity() {
+    let list: McsList = new McsList();
+
+    list.push('', new McsListItem('100GB', '100 GB'));
+    list.push('', new McsListItem('150GB', '150 GB'));
+    list.push('', new McsListItem('200GB', '200 GB'));
+    list.push('', new McsListItem('500GB', '500 GB'));
+    list.push('', new McsListItem('1TB', '1 TB'));
+
+    return list;
   }
 
   public ngOnDestroy() {

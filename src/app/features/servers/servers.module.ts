@@ -18,6 +18,7 @@ import {
   ServerComponent,
   ServerManagementComponent,
   ServerBackupsComponent,
+  ServerStorageComponent,
   ServerServicesComponent,
   ServerService
 } from './server/';
@@ -48,6 +49,7 @@ import { SharedModule } from '../../shared';
     ServerComponent,
     ServerManagementComponent,
     ServerServicesComponent,
+    ServerStorageComponent,
     ServerBackupsComponent,
     ContextualHelpComponent,
     ContextualHelpDirective,

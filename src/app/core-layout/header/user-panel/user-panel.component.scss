@@ -75,6 +75,9 @@
       color:  $color-grey-01;
       @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
     }
+    a {
+      text-decoration: none;
+    }
   }
 }
 
@@ -122,9 +125,11 @@
   @include display-flex(column);
   padding: $space-small 0;
   a {
+    text-decoration: none;
     padding: $space-xsmall $space-medium;
     &:hover,
     &:focus {
+      text-decoration: none;
       background-color: $color-grey-05;
     }
   }

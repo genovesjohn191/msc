@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col">
         <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
-        <ul>
+        <ul class="unstyled-list">
           <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.guestOS }}</li>
           <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
           <li>{{ serverManagementTextContent.vmProperties.configuration }}:
@@ -49,7 +49,7 @@
             </ng-template>
           </li>
           <li>{{ serverManagementTextContent.vmProperties.media }}:
-            <ul class="server-media" *ngIf="server.media.length < 0; else elseBlock">
+            <ul class="unstyled-list server-media" *ngIf="server.media.length < 0; else elseBlock">
               <li *ngFor="let media of server.media">{{ media.mediaName }}</li>
             </ul>
             <ng-template #elseBlock>None</ng-template>
@@ -60,7 +60,7 @@
 
       <div class="col">
         <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
-        <ul class="server-interfaces">
+        <ul class="unstyled-list server-interfaces">
           <li>{{ serverManagementTextContent.networkInformation.publicIp }}: {{ server.managementIpAddress }}</li>
           <li *ngFor="let interface of server.interfaces; let i = index">
             {{ serverManagementTextContent.networkInformation.interface }} {{ i }} :
@@ -72,8 +72,8 @@
 
     <div class="row">
       <div class="col">
-        <h3>{{ serverManagementTextContent.storage.title }}</h3>
-        <ul class="server-storage">
+        <h4>{{ serverManagementTextContent.storage.title }} <a [routerLink]="['../storage']">Manage</a></h4>
+        <ul class="unstyled-list server-storage">
           <li>{{ serverManagementTextContent.storage.primaryVolume }}: {{ primaryVolume }}</li>
           <li *ngIf="secondaryVolumes">
             {{ serverManagementTextContent.storage.secondaryVolumes }}: {{ secondaryVolumes }}
@@ -86,7 +86,7 @@
 
       <div class="col">
         <h3>{{ serverManagementTextContent.supportIdentifiers.title }}</h3>
-        <ul>
+        <ul class="unstyled-list">
           <li>{{ serverManagementTextContent.supportIdentifiers.vdc }}: {{ server.vdcName }}</li>
           <li>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}: {{ server.serviceId }}</li>
           <li>{{ serverManagementTextContent.supportIdentifiers.vmWareId }}: {{ server.instanceId }}</li>

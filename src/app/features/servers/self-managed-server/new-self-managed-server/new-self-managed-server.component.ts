@@ -67,6 +67,9 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
   public ngOnInit() {
     this.contextualTextContent = this._textContentProvider.content
       .servers.createSelfManagedServer.contextualHelp;
+
+    this.virtualApplicationValue = 'vApp2';
+    this.virtualTemplateValue = 'vTemplate2';
     this.ipAddressValue = 'dhcp';
 
     this.virtualApplicationItems = this.getVirtualApplications();

@@ -1,0 +1,82 @@
+@import "../../../../../styles/shared/base";
+
+.mcs-server-storage {
+  .heading {
+    margin-bottom: $space-medium;
+  }
+
+  .primary {
+    @include display-flex(row);
+    align-items: center;
+
+    .title {
+      @include font-size($h4-default-font-size);
+      font-family: $base-font-bold;
+    }
+
+    > * {
+      @include flex(1);
+
+      &.increase {
+        @include flex(3);
+      }
+    }
+  }
+
+  .other-storage {
+    li {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: flex-end;
+
+      > * {
+        @include flex(1);
+      }
+
+      .path {
+        @include display-flex(row);
+
+        span {
+          margin-left: $space-small;
+        }
+      }
+
+      .delete {
+        @include flex(2);
+        text-align: right;
+      }
+    }
+  }
+
+  .add-new-storage {
+    border: 1px solid $color-grey-00;
+    @include border-radius($input-border-radius);
+    padding: $space-medium;
+    margin-top: $space-large;
+
+    .attach {
+      text-align: right;
+    }
+  }
+
+  .increase-storage {
+    .update {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+
+.delete-storage-alert-container {
+  .confirm {
+    @include display-flex(row);
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: $space-small;
+
+    mcs-button {
+      margin-left: $space-small;
+    }
+  }
+}

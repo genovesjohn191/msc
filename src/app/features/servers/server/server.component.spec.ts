@@ -15,6 +15,10 @@ import {
 } from 'rxjs/Rx';
 import { Server } from '../models';
 import { ServersService } from '../servers.service';
+import {
+  CoreDefinition,
+  McsTextContentProvider
+} from '../../../core';
 
 describe('ServerComponent', () => {
   /** Stub Services/Components */
@@ -31,11 +35,17 @@ describe('ServerComponent', () => {
       }
     }
   };
+  let textContentProviderMock = {
+    content: {
+      servers: {
+        server: 'Server Details'
+      }
+    }
+  };
   let mockRouterService = {
     navigate(): any { return null; },
     events: Observable.of(new Event('event'))
   };
-
   let serversServiceMock = {
     activeServersStream: new Subject<any>(),
     postServerCommand(id: any, action: string) {
@@ -54,7 +64,8 @@ describe('ServerComponent', () => {
       providers: [
         { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: ServersService, useValue: serversServiceMock }
+        { provide: ServersService, useValue: serversServiceMock },
+        { provide: McsTextContentProvider, useValue: textContentProviderMock }
       ]
     });
 

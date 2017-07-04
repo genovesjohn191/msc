@@ -68,6 +68,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
   public static ASSETS_SVG_SPINNER = 'spinner';
+  public static ASSETS_SVG_STORAGE = 'storage';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

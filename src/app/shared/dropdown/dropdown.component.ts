@@ -1,6 +1,6 @@
 import {
   Component,
-  OnInit,
+  OnChanges,
   AfterViewInit,
   Input,
   Output,
@@ -38,7 +38,7 @@ import {
   ]
 })
 
-export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAccessor {
+export class DropdownComponent implements OnChanges, AfterViewInit, ControlValueAccessor {
   public iconClass: string;
   public collapsed: boolean;
   public selectedItem: McsListItem;
@@ -72,18 +72,16 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
   private _onChanged: (_: any) => {};
 
   /**
-   * Model Binding
+   * Active Item (model binding)
    */
-  private _option: string;
-  public get option(): string {
+  private _option: any;
+  public get option(): any {
     return this._option;
   }
-  public set option(value: string) {
+  public set option(value: any) {
     if (value !== this._option) {
       this._option = value;
-      if (this._onChanged) {
-        this._onChanged(value);
-      }
+      this._onChanged(value);
     }
   }
 
@@ -93,7 +91,6 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
     private _elementRef: ElementRef
   ) {
     this.dropdownData = new McsList();
-    this.option = '';
     this.collapsed = true;
     this.selectedItem = new McsListItem(undefined, undefined);
   }
@@ -111,8 +108,9 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
     }
   }
 
-  public ngOnInit() {
+  public ngOnChanges() {
     this.iconClass = 'caret-down';
+    this.getSelectedItem(this.option);
   }
 
   public ngAfterViewInit() {
@@ -127,12 +125,29 @@ export class DropdownComponent implements OnInit, AfterViewInit, ControlValueAcc
     this.selectedItem = item;
   }
 
+  public getSelectedItem(option: string) {
+    if (option) {
+      let groups = this.dropdownData.getGroupNames();
+      for (let groupName of groups) {
+        for (let item of this.dropdownData.getGroup(groupName)) {
+          if (item.key === this.option) {
+            this.selectedItem = item;
+            break;
+          }
+        }
+      }
+    }
+  }
+
   /**
    * Write value implementation of ControlValueAccessor
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    this.option = value;
+    if (value !== this._option) {
+      this._option = value;
+      this.getSelectedItem(this.option);
+    }
   }
 
   /**

@@ -12,11 +12,8 @@
     .row {
       margin: $space-small -15px;
 
-      .col {
-        ul {
-          list-style: none;
-          padding-left: 0;
-        }
+      a {
+        color: $color-black;
       }
     }
   }
