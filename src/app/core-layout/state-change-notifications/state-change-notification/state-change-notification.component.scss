@@ -16,14 +16,13 @@
     border-right: 1px solid gray;
 
     .status {
+      @include set-items-interval(20, horizontal);
+      @include display-flex(row);
+      align-items: center;
       margin-bottom: $space-large;
 
       .icon {
-        float: left;
-        margin-right: $space-medium;
-        margin-top: $space-xsmall;
         width: $state-change-notification-icon-width;
-        text-align: center;
         @include font-size($state-change-notification-icon-font-size);
 
         &.completed {
@@ -37,16 +36,18 @@
         }
       }
 
-      .description {
-        @include font-size($state-change-notification-status-font-size);
-        font-family: $base-font-bold;
-        vertical-align: top;
-      }
-
-      .summary-information {
-        @include font-size($state-change-notification-message-font-size);
-        font-family: $base-font;
-        vertical-align: top;
+      .description-container {
+        @include set-items-interval(5, vertical);
+        .main {
+          @include font-size($state-change-notification-status-font-size);
+          font-family: $base-font-bold;
+          vertical-align: top;
+        }
+        .sub {
+          @include font-size($state-change-notification-message-font-size);
+          font-family: $base-font;
+          vertical-align: top;
+        }
       }
     }
 

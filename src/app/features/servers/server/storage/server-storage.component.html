@@ -13,7 +13,8 @@
       <ul class="unstyled-list other-storage">
         <li *ngFor="let storage of otherStorage">
           <span class="path">
-            <mcs-svg-icon [key]="storageIconKey" size="small"></mcs-svg-icon> <span>{{ storage.path }}</span>
+            <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
+            <span>{{ storage.path }}</span>
           </span>
           <span class="capacity">{{ storage.capacityInGb + serverStorageText.unit }}</span>
           <span class="increase">

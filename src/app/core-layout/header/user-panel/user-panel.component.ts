@@ -28,10 +28,6 @@ import { refreshView } from '../../../utilities';
 })
 
 export class UserPanelComponent implements OnInit {
-  public bellIcon: string;
-  public userIcon: string;
-  public caretDown: string;
-  public caretRightIcon: string;
   public notifications: McsApiJob[];
   public hasConnectionError: boolean;
   public statusIconClass: string;
@@ -42,11 +38,26 @@ export class UserPanelComponent implements OnInit {
     return this.notifications && this.notifications.length > 0;
   }
 
+  public get bellIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_BELL;
+  }
+
+  public get userIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_USER;
+  }
+
+  public get caretDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CARET_DOWN;
+  }
+
+  public get caretRightIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+  }
+
   @ViewChild('popoverInstance')
   public popoverInstance: any;
 
   public constructor(
-    private _assetsProvider: McsAssetsProvider,
     private _textContent: McsTextContentProvider,
     private _router: Router,
     private _notificationContextService: McsNotificationContextService,
@@ -60,10 +71,6 @@ export class UserPanelComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.bellIcon = this._assetsProvider.getIcon('bell');
-    this.userIcon = this._assetsProvider.getIcon('user');
-    this.caretDown = this._assetsProvider.getIcon('caret-down');
-    this.caretRightIcon = this._assetsProvider.getIcon('caret-right');
     this.notificationTextContent = this._textContent.content.header.userPanel.notifications;
 
     // Subscribe to notification changes

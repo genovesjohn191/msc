@@ -3,10 +3,16 @@
     <ng-content></ng-content>
   </div>
   <div *ngIf="icon !== 'normal'" class="icon-right-wrapper">
-    <mcs-svg-icon *ngIf="iconType === iconTypeEnum.Svg && !spinnerIcon"
-      [key]="svgIcon" size="xlarge"></mcs-svg-icon>
-    <i *ngIf="iconType === iconTypeEnum.FontAwesome && !spinnerIcon"
-      class="icon-right" [ngClass]="fontAwesomeIcon"></i>
-    <i *ngIf="spinnerIcon" [ngClass]="spinnerIcon"></i>
+    <!--SVG Type of Icons-->
+    <mcs-icon *ngIf="iconType === iconTypeEnum.Svg && !showSpinner"
+      [key]="iconKey" size="xlarge" class="icon-right" color="white"></mcs-icon>
+
+    <!--Font Type of Icons-->
+    <mcs-icon *ngIf="iconType === iconTypeEnum.FontAwesome && !showSpinner"
+      [key]="iconKey" size="medium" class="icon-right" color="white"></mcs-icon>
+
+    <!--Spinner Icon-->
+    <mcs-icon *ngIf="showSpinner" [key]="spinnerIconKey"
+      size="medium" color="white"></mcs-icon>
   </div>
 </button>

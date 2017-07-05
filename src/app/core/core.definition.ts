@@ -44,13 +44,14 @@ export class CoreDefinition {
   public static BASE_FONT_BOLD = 'Circular-Pro-Bold';
 
   /** Icons */
-  public static ICON_SIZE_XSMALL = '10px';
-  public static ICON_SIZE_SMALL = '20px';
-  public static ICON_SIZE_MEDIUM = '25px';
-  public static ICON_SIZE_LARGE = '30px';
-  public static ICON_SIZE_XLARGE = '40px';
+  public static ICON_SIZE_XSMALL = 10;
+  public static ICON_SIZE_SMALL = 15;
+  public static ICON_SIZE_MEDIUM = 20;
+  public static ICON_SIZE_LARGE = 25;
+  public static ICON_SIZE_XLARGE = 30;
 
   /** Assets Provider Key Definitions */
+  // SVG Icons
   public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';
   public static ASSETS_SVG_CLOSE_BLACK = 'close-black';
   public static ASSETS_SVG_CLOSE_BLUE = 'close-blue';
@@ -69,6 +70,35 @@ export class CoreDefinition {
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
   public static ASSETS_SVG_SPINNER = 'spinner';
   public static ASSETS_SVG_STORAGE = 'storage';
+
+  // Font Awesome Icons
+  public static ASSETS_FONT_ARROW_RIGHT = 'arrow-right'; // Make it SVG
+  public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
+  public static ASSETS_FONT_SEARCH = 'search';
+  public static ASSETS_FONT_CHECK = 'check';
+  public static ASSETS_FONT_WARNING = 'warning';
+  public static ASSETS_FONT_CALENDAR = 'calendar';
+  public static ASSETS_FONT_INFORMATION = 'info';
+  public static ASSETS_FONT_BELL = 'bell';
+  public static ASSETS_FONT_CHECKBOX = 'check-box';
+  public static ASSETS_FONT_EXCLAMATION = 'exclamation';
+  public static ASSETS_FONT_MINUS = 'minus';
+  public static ASSETS_FONT_PLUS = 'plus';
+  public static ASSETS_FONT_EMPTY_BOX = 'empty-box';
+  public static ASSETS_FONT_CIRCLE = 'circle';
+  public static ASSETS_FONT_CARET_RIGHT = 'caret-right';
+  public static ASSETS_FONT_CARET_DOWN = 'caret-down';
+  public static ASSETS_FONT_PLAY = 'play';
+  public static ASSETS_FONT_CHECKBOX_2 = 'check-box-2';
+  public static ASSETS_FONT_CLOSE = 'close';
+  public static ASSETS_FONT_CHEVRON_DOWN = 'chevron-down';
+  public static ASSETS_FONT_CHEVRON_UP = 'chevron-up';
+  public static ASSETS_FONT_GEAR = 'gear';
+  public static ASSETS_FONT_TEXT_SPINNER = 'text-spinner'; // Make it SVG
+  public static ASSETS_FONT_SPINNER = 'spinner';
+  public static ASSETS_FONT_SIGN_OUT = 'sign-out';
+  public static ASSETS_FONT_USER = 'user';
+  public static ASSETS_FONT_INFORMATION_2 = 'info-2';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

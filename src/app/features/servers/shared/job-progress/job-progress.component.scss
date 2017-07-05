@@ -35,6 +35,7 @@ $job-context-interval: 55px;
 
       .job-active {
         @include display-flex(column);
+        margin-bottom: $space-small;
 
         .job-tasks {
           .task-item {
@@ -61,8 +62,8 @@ $job-context-interval: 55px;
         }
       }
 
-      mcs-button {
-        margin-top: $space-medium;
+      .job-ended {
+        margin-bottom: $space-small;
       }
     }
   }

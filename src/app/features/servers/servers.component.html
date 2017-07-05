@@ -59,12 +59,14 @@
     <tbody>
       <tr *ngFor="let server of servers">
         <td *ngIf="columnSettings['state'].value" class="text-center align-middle">
-          <mcs-svg-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"
-            size="large"></mcs-svg-icon>
-          <i *ngIf="!server.powerState" class="power-state-spinner"
-            [ngClass]="getSpinnerClass()"
-            mcsPopover trigger="hover" maxWidth="250px" padding="none"
-            [content]="loadingContent"></i>
+          <div *ngIf="server.powerState">
+            <mcs-icon [key]="getStateIconKey(server.powerState)" size="large"></mcs-icon>
+          </div>
+          <div *ngIf="!server.powerState" class="power-state-spinner">
+            <mcs-icon [key]="spinnerIconKey" size="large"
+              mcsPopover trigger="hover" maxWidth="250px" padding="none"
+              [content]="loadingContent"></mcs-icon>
+          </div>
           <ng-template #loadingContent>
             <span class="loading-content-popover">
               {{ getActiveServerInformation(server.id) }}
@@ -107,13 +109,13 @@
 
   <div class="status-information">
     <div *ngIf="isLoading">
-      <i [ngClass]="getSpinnerClass()"></i>
+      <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
        {{ serversTextContent.loading }}
     </div>
 
     <a *ngIf="(getDisplayServerCount() < totalServerCount) && !isLoading"
       (click)="onClickMoreEvent()">{{ serversTextContent.viewMore }}
-      <i class="fa fa-angle-down"></i>
+      <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
     </a>
 
     <span *ngIf="!loadedSuccessfully && !isLoading">

@@ -8,19 +8,7 @@
     align-self: flex-start;
     margin-right: $space-small;
     margin-top: $space-xsmall;
-    width: $notification-icon-width;
     text-align: center;
-    @include font-size($icon-large-font-size);
-
-    &.completed {
-      color: $color-green-00;
-    }
-    &.active {
-      color: $color-black;
-    }
-    &.failed {
-      color: $color-red-00;
-    }
   }
 
   .information {

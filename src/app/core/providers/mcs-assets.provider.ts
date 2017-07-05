@@ -10,30 +10,31 @@ import { CoreDefinition } from '../core.definition';
 @Injectable()
 export class McsAssetsProvider {
   private _images: Map<string, string>;
-  private _icons: Map<string, string>;
+  private _fontIcons: Map<string, string>;
   private _svgIcons: Map<string, string>;
   private _config: any;
 
   constructor(private _coreConfig: CoreConfig) {
-    this._icons = new Map<string, string>();
+    this._fontIcons = new Map<string, string>();
     this._svgIcons = new Map<string, string>();
     this._images = new Map<string, string>();
     this.load();
   }
 
   /**
-   * Get Icon Path from the given key
+   * This will get the font awesome icon class on the map list
+   * based on the key provided
    * @param key Icon Key
    */
-  public getIcon(key: string): string {
+  public getFontAwesomeIconClass(key: string): string {
     let value: string = null;
 
     // Get icon path
-    if (this._icons.has(key)) {
-      value = this._icons.get(key);
+    if (this._fontIcons.has(key)) {
+      value = this._fontIcons.get(key);
     } else {
       value = this._config.icons[key];
-      this._icons.set(key, value);
+      this._fontIcons.set(key, value);
     }
 
     // Return value (icon path)
@@ -52,10 +53,6 @@ export class McsAssetsProvider {
       value = this._svgIcons.get(key);
     } else {
       value = this._config.svgIcons[key];
-
-      if (!value) {
-        value = this._config.svgIcons[CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE];
-      }
       this._svgIcons.set(key, value);
     }
 

@@ -12,7 +12,6 @@ import {
 } from 'rxjs/Rx';
 import {
   McsTextContentProvider,
-  McsAssetsProvider,
   McsApiSearchKey,
   McsApiRequestParameter,
   McsApiSuccessResponse,
@@ -60,11 +59,6 @@ describe('NotificationsComponent', () => {
       }
     }
   };
-  let assetsProviderMock = {
-    getIcon(iconClass: string) {
-      return iconClass;
-    }
-  };
   let mockMcsNotificationJobService = {
     notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<any>()
@@ -88,8 +82,7 @@ describe('NotificationsComponent', () => {
         { provide: McsApiService, useValue: mockMcsApiService },
         { provide: NotificationsService, useValue: notificationsServiceMock },
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsTextContentProvider, useValue: textContentProviderMock },
-        { provide: McsAssetsProvider, useValue: assetsProviderMock }
+        { provide: McsTextContentProvider, useValue: textContentProviderMock }
       ]
     });
 
@@ -119,6 +112,14 @@ describe('NotificationsComponent', () => {
 
     it('should set the initial page to 1', () => {
       expect(component.page).toEqual(1);
+    });
+
+    it('should get the spinner icon key definition', () => {
+      expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+    });
+
+    it('should get the arrow down icon key definition', () => {
+      expect(component.arrowDownIconKey).toBe(CoreDefinition.ASSETS_FONT_CHEVRON_DOWN);
     });
   });
 

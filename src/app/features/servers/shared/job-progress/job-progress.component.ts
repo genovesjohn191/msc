@@ -10,7 +10,6 @@ import {
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import {
-  McsAssetsProvider,
   CoreDefinition,
   McsApiJob
 } from '../../../../core';
@@ -39,10 +38,11 @@ export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
   private _timerSubscription: any;
   private _contextualInformations: ContextualHelpDirective[];
 
-  public constructor(
-    private _assetsProvider: McsAssetsProvider,
-    private _router: Router
-  ) {
+  public get circleIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CIRCLE;
+  }
+
+  public constructor(private _router: Router) {
     this.progressValue = 80;
     this.progressMax = 100;
     this.job = new McsApiJob();
@@ -81,29 +81,34 @@ export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
       this.job.status === CoreDefinition.NOTIFICATION_JOB_PENDING;
   }
 
-  public getStatusIconClass(status: string): string {
-    let statusIconClass: string = '';
+  public getStatusIcon(status: string): { key, color, class } {
+    let iconKey: string;
+    let iconColor: string;
+    let iconClass: string;
 
     switch (status) {
       case CoreDefinition.NOTIFICATION_JOB_PENDING:
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        statusIconClass = this._assetsProvider.getIcon('spinner');
-        statusIconClass += ' active';
+        iconKey = CoreDefinition.ASSETS_FONT_SPINNER;
+        iconColor = 'black';
+        iconClass = 'active';
         break;
       case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
       case CoreDefinition.NOTIFICATION_JOB_FAILED:
       case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
-        statusIconClass = this._assetsProvider.getIcon('close');
-        statusIconClass += ' failed';
+        iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
+        iconColor = 'red';
+        iconClass = 'failed';
         break;
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        statusIconClass = this._assetsProvider.getIcon('check');
-        statusIconClass += ' completed';
+        iconKey = CoreDefinition.ASSETS_FONT_CHECK;
+        iconColor = 'green';
+        iconClass = 'completed';
         break;
       default:
         break;
     }
-    return statusIconClass;
+    return { key: iconKey, color: iconColor, class: iconClass };
   }
 
   public getAlertIconType(status: string): string {
@@ -123,10 +128,6 @@ export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
     return alertIconType;
-  }
-
-  public getCircleClass(): string {
-    return this._assetsProvider.getIcon('circle');
   }
 
   public navigateToServerHome(): void {

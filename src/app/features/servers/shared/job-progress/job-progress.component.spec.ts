@@ -8,10 +8,9 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { JobProgressComponent } from './job-progress.component';
 import {
-  McsAssetsProvider,
   McsApiJob,
   McsNotificationContextService,
-  CoreDefinition,
+  CoreDefinition
 } from '../../../../core';
 import { ContextualHelpDirective } from '../contextual-help/contextual-help.directive';
 
@@ -20,17 +19,7 @@ describe('JobProgressComponent', () => {
   /** Stub Services/Components */
   let fixture: any;
   let component: JobProgressComponent;
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        spinner: 'fa fa-spinner',
-        close: 'fa fa-close',
-        check: 'fa fa-check',
-        circle: 'fa fa-circle'
-      };
-      return icons[key];
-    }
-  } as McsAssetsProvider;
+
   // Creation of notification based on id and status
   let createNotification = (notificationId: string, notificationStatus: string) => {
     let notification: McsApiJob = new McsApiJob();
@@ -62,8 +51,7 @@ describe('JobProgressComponent', () => {
         RouterTestingModule
       ],
       providers: [
-        McsNotificationContextService,
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
+        McsNotificationContextService
       ]
     });
 
@@ -119,81 +107,111 @@ describe('JobProgressComponent', () => {
     });
   });
 
-  describe('getStatusIconClass() when status is Active', () => {
+  describe('getStatusIcon() when status is Active', () => {
     it('should return active class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_ACTIVE))
-        .toContain('active');
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_ACTIVE).class)
+        .toBe('active');
     });
 
-    it('should return fa-spinner class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_ACTIVE))
-        .toContain('fa-spinner');
+    it('should return spinner icon key definition', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_ACTIVE).key)
+        .toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+    });
+
+    it('should return the color', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_ACTIVE).color)
+        .toBe('black');
     });
   });
 
-  describe('getStatusIconClass() when status is Pending', () => {
+  describe('getStatusIcon() when status is Pending', () => {
     it('should return active class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_PENDING))
-        .toContain('active');
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_PENDING).class)
+        .toBe('active');
     });
 
-    it('should return fa-spinner class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_PENDING))
-        .toContain('fa-spinner');
+    it('should return spinner icon key definition', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_PENDING).key)
+        .toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+    });
+
+    it('should return the color', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_PENDING).color)
+        .toBe('black');
     });
   });
 
-  describe('getStatusIconClass() when status is Timedout', () => {
+  describe('getStatusIcon() when status is Timedout', () => {
     it('should return failed class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT))
-        .toContain('failed');
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT).class)
+        .toBe('failed');
     });
 
-    it('should return fa-close class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT))
-        .toContain('fa-close');
+    it('should return close icon key definition', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT).key)
+        .toBe(CoreDefinition.ASSETS_FONT_CLOSE);
+    });
+
+    it('should return the color', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT).color)
+        .toBe('red');
     });
   });
 
-  describe('getStatusIconClass() when status is Failed', () => {
+  describe('getStatusIcon() when status is Failed', () => {
     it('should return failed class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_FAILED))
-        .toContain('failed');
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_FAILED).class)
+        .toBe('failed');
     });
 
-    it('should return fa-close class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_FAILED))
-        .toContain('fa-close');
+    it('should return close icon key definition', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_FAILED).key)
+        .toBe(CoreDefinition.ASSETS_FONT_CLOSE);
+    });
+
+    it('should return the color', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_FAILED).color)
+        .toBe('red');
     });
   });
 
-  describe('getStatusIconClass() when status is Cancelled', () => {
+  describe('getStatusIcon() when status is Cancelled', () => {
     it('should return failed class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_CANCELLED))
-        .toContain('failed');
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_CANCELLED).class)
+        .toBe('failed');
     });
 
-    it('should return fa-close class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_CANCELLED))
-        .toContain('fa-close');
+    it('should return close icon key definition', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_CANCELLED).key)
+        .toBe(CoreDefinition.ASSETS_FONT_CLOSE);
+    });
+
+    it('should return the color', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_CANCELLED).color)
+        .toBe('red');
     });
   });
 
-  describe('getStatusIconClass() when status is Completed', () => {
+  describe('getStatusIcon() when status is Completed', () => {
     it('should return completed class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_COMPLETED))
-        .toContain('completed');
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_COMPLETED).class)
+        .toBe('completed');
     });
 
-    it('should return fa-check class', () => {
-      expect(component.getStatusIconClass(CoreDefinition.NOTIFICATION_JOB_COMPLETED))
-        .toContain('fa-check');
+    it('should return check icon key definition', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_COMPLETED).key)
+        .toBe(CoreDefinition.ASSETS_FONT_CHECK);
+    });
+
+    it('should return the color', () => {
+      expect(component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_COMPLETED).color)
+        .toBe('green');
     });
   });
 
-  describe('getCircleClass()', () => {
-    it('should return circle class', () => {
-      expect(component.getCircleClass()).toContain('fa-circle');
+  describe('IconKey() | Properties', () => {
+    it('should get the circle icon key definition', () => {
+      expect(component.circleIconKey).toBe(CoreDefinition.ASSETS_FONT_CIRCLE);
     });
   });
 });

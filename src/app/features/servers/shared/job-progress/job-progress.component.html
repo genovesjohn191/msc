@@ -1,7 +1,7 @@
 <section class="job-progress-container">
   <div class="job-information">
     <div class="description">
-      <i [ngClass]="getCircleClass()"></i>
+      <mcs-icon [key]="circleIconKey" size="medium"></mcs-icon>
       <h3>{{ job.description }}</h3>
     </div>
 
@@ -12,7 +12,11 @@
 
         <div *ngIf="job.tasks" class="job-tasks">
           <div *ngFor="let task of job.tasks" class="task-item">
-            <i [ngClass]="getStatusIconClass(task.status)"></i>
+            <mcs-icon [ngClass]="getStatusIcon(task.status).class"
+              [key]="getStatusIcon(task.status).key"
+              [color]="getStatusIcon(task.status).color"
+              size="small"></mcs-icon>
+
             <span>{{ task.description }}</span>
           </div>
         </div>

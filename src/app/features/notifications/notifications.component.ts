@@ -64,8 +64,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     return this.totalNotificationsCount === 0 && this.keyword && !this.isLoading;
   }
 
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SPINNER;
+  }
+
+  public get arrowDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+  }
+
   public constructor(
-    private _assetsProvider: McsAssetsProvider,
     private _textContentProvider: McsTextContentProvider,
     private _notificationsService: NotificationsService,
     private _notificationContextService: McsNotificationContextService,
@@ -132,34 +139,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       });
   }
 
-  public getIconClass(status: string): string {
-    let iconClass: string;
-
-    switch (status) {
-      case CoreDefinition.NOTIFICATION_JOB_PENDING:
-      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        iconClass = this._assetsProvider.getIcon('spinner');
-        iconClass += ' text-color-active';
-        break;
-      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
-      case CoreDefinition.NOTIFICATION_JOB_FAILED:
-      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
-        iconClass = this._assetsProvider.getIcon('close');
-        iconClass += ' text-color-failed';
-        break;
-      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        iconClass = this._assetsProvider.getIcon('check');
-        iconClass += ' text-color-completed';
-        break;
-      default:
-        break;
-    }
-
-    return iconClass;
+  public getStatusIconKey(status: string): string {
+    return this._getStatusIcon(status).key;
   }
 
-  public getSpinnerClass(): string {
-    return this._assetsProvider.getIcon('spinner');
+  public getStatusIconColor(status: string): string {
+    return this._getStatusIcon(status).color;
   }
 
   public onClickMoreEvent(): void {
@@ -238,5 +223,32 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.notifications.sort((first: McsApiJob, second: McsApiJob) => {
       return compareDates(second.createdOn, first.createdOn);
     });
+  }
+
+  private _getStatusIcon(status: string): { key, color } {
+    let iconKey: string;
+    let iconColor: string;
+
+    switch (status) {
+      case CoreDefinition.NOTIFICATION_JOB_PENDING:
+      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+        iconKey = CoreDefinition.ASSETS_FONT_SPINNER;
+        iconColor = 'black';
+        break;
+      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
+      case CoreDefinition.NOTIFICATION_JOB_FAILED:
+      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
+        iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
+        iconColor = 'red';
+        break;
+      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+        iconKey = CoreDefinition.ASSETS_FONT_CHECK;
+        iconColor = 'green';
+        break;
+      default:
+        break;
+    }
+
+    return { key: iconKey, color: iconColor };
   }
 }

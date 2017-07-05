@@ -35,21 +35,22 @@ export class FilterSelectorComponent implements OnInit {
   public filterTitle: string;
   public iconClass: string;
 
+  public get columnsIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
+  }
+
   public constructor(
     private _mcsStorageService: McsStorageService,
     private _elementReference: ElementRef,
     private _textContentProvider: McsTextContentProvider,
-    private _assetsProvider: McsAssetsProvider,
     private _filterProvider: McsFilterProvider
   ) {
     this.key = '';
     this.filterTitle = '';
-    this.iconClass = '';
     this.onGetFilters = new EventEmitter();
   }
 
   public ngOnInit() {
-    this.iconClass = this._assetsProvider.getIcon('filter-selector');
     this.filterTitle = this._textContentProvider.content.filterSelector.title;
     this._getFilterItems();
     this.onGetFilters.emit(this.filterItems);
@@ -62,10 +63,6 @@ export class FilterSelectorComponent implements OnInit {
 
   public get filterKeys(): any {
     return Object.keys(this.filterItems);
-  }
-
-  public getColumnsIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
   }
 
   private _getFilterItems(): void {

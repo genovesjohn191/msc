@@ -22,7 +22,6 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import {
-  McsAssetsProvider,
   McsTextContentProvider,
   CoreDefinition
 } from '../../../../core';
@@ -43,8 +42,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   public servers: ServerList[];
   public serverList: ServerList[];
   public selectedServerId: string;
-  public caretDown: string;
-  public serverState: string;
   public keyword: string;
   public errorMessage: string;
   public activeServers: ServerClientObject[];
@@ -79,11 +76,18 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   private _serversListHeight: number;
   private _serversListDynamicHeight: number;
 
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SPINNER;
+  }
+
+  public get caretDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CARET_DOWN;
+  }
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
-    private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2,
     private _serversService: ServersService
   ) {
@@ -132,8 +136,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   public ngOnInit() {
-    this.caretDown = this._assetsProvider.getIcon('caret-down');
-    this.serverState = this._assetsProvider.getIcon('server-state');
     this.errorMessage = this._textProvider.content.servers.errorMessage;
     this._route.params.subscribe((params) => {
       this.selectedServerId = params['id'];
@@ -154,10 +156,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
 
   public onClickServer(server: Server) {
     this.serverSelect.next(server);
-  }
-
-  public getSpinnerClass(): string {
-    return this._assetsProvider.getIcon('spinner');
   }
 
   public getStateIconKey(state: number): string {

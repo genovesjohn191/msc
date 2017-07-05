@@ -3,7 +3,13 @@
 .server-features {
   min-height: 100%;
   @include breakpoint(medium) {
-     @include flex(0 0 100%);
+    @include flex(0 0 100%);
     max-width: 100%;
+  }
+
+  .mcs-tabs {
+    .nav-tabs {
+      align-items: center;
+    }
   }
 }

@@ -21,22 +21,22 @@
         left: $user-panel-caret-offset;
       }
 
-      i {
+      mcs-icon {
         position: relative;
+      }
 
-        span {
-          background-color: $color-primary-01;
-          position: absolute;
-          width: $user-panel-notification-size;
-          height: $user-panel-notification-size;
-          top: -12px;
-          right: -10px;
-          @include border-radius(100%);
-          @include font-size($notifications-font-size);
-          font-family: $base-font-bold;
-          text-align: center;
-          color: $color-black;
-        }
+      span {
+        background-color: $color-primary-01;
+        position: absolute;
+        width: $user-panel-notification-size;
+        height: $user-panel-notification-size;
+        top: -10px;
+        right: -10px;
+        @include border-radius(100%);
+        @include font-size($notifications-font-size);
+        font-family: $base-font-bold;
+        text-align: center;
+        color: $color-black;
       }
     }
   }
@@ -127,6 +127,7 @@
   a {
     text-decoration: none;
     padding: $space-xsmall $space-medium;
+    text-decoration: none;
     &:hover,
     &:focus {
       text-decoration: none;

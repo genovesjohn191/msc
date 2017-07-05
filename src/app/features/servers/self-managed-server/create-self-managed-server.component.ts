@@ -38,6 +38,10 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   private _mainContextInformations: ContextualHelpDirective[];
   private _subContextInformations: ContextualHelpDirective[];
 
+  public get addIconKey() {
+    return CoreDefinition.ASSETS_SVG_ADD_BLACK;
+  }
+
   public constructor(
     private _managedServerService: CreateSelfManagedServerService,
     private _router: Router,
@@ -93,10 +97,6 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public navigateToNewServer() {
     this._router.navigate(['./servers/create/new']);
-  }
-
-  public getAddIconKey() {
-    return CoreDefinition.ASSETS_SVG_ADD_BLACK;
   }
 
   public onDeployClick(event: any) {

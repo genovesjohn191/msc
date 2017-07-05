@@ -7,7 +7,6 @@ import {
 import { TextboxComponent } from './textbox.component';
 import {
   McsTextContentProvider,
-  McsAssetsProvider,
   CoreDefinition
 } from '../../core';
 
@@ -23,16 +22,6 @@ describe('TextboxComponent', () => {
       }
     }
   };
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        search: 'fa fa-search',
-        spinner: 'fa fa-spinner fa-pulse'
-      };
-
-      return icons[key];
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -43,7 +32,6 @@ describe('TextboxComponent', () => {
       imports: [
       ],
       providers: [
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         { provide: McsTextContentProvider, useValue: mockTextProvider }
       ]
     });
@@ -68,16 +56,10 @@ describe('TextboxComponent', () => {
 
   /** Test Implementation */
   describe('ngOnChanges()', () => {
-    it('should return the icon class if the value of icon is valid', () => {
+    it('should set the iconKey to inputted icon', () => {
       component.icon = 'search';
       component.ngOnChanges();
-      expect(component.iconClass).toBeDefined();
-    });
-
-    it('should render default textbox if the value of icon is invalid', () => {
-      component.icon = 'arrow';
-      component.ngOnChanges();
-      expect(component.iconClass).toBeUndefined();
+      expect(component.iconKey).toBe(component.icon);
     });
   });
 
@@ -104,25 +86,18 @@ describe('TextboxComponent', () => {
     });
   });
 
-  describe('getIconClass()', () => {
-    it('should return the icon class if provided iconKey is valid', () => {
-      component.getIconClass('search');
-      expect(component.getIconClass('search')).toBeDefined();
-    });
-  });
-
   describe('showLoader()', () => {
-    it('should set the value of iconClass', () => {
+    it('should set the spinner icon key definition as the iconKey', () => {
       component.showLoader();
-      expect(component.iconClass).toBeDefined();
+      expect(component.iconKey).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
     });
   });
 
   describe('hideLoader()', () => {
-    it('should set the value of iconClass', () => {
+    it('should set the value of iconKey based on the inputted icon', () => {
       component.icon = 'search';
       component.hideLoader();
-      expect(component.iconClass).toBeDefined();
+      expect(component.iconKey).toBe(component.icon);
     });
   });
 });

@@ -16,9 +16,8 @@
     height: $alert-icon-container-size;
     flex-shrink: 0;
 
-    i {
+    mcs-icon {
       @include font-size($icon-medium-font-size);
-      color: $color-white;
       margin: 0 auto;
     }
   }

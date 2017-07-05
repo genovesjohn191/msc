@@ -3,6 +3,7 @@
     [attr.type]="inputType" [attr.name]="name" [attr.placeholder]="placeholder"
       [attr.min]="min" [attr.max]="max" [attr.step]="step" [attr.readonly]="readonly"
         (focus)="onFocus($event)" (focusout)="onFocusOut($event)" />
-  <i *ngIf="iconClass" [ngClass]="iconClass" (click)="onFocus()"></i>
+  <mcs-icon *ngIf="iconKey" [key]="iconKey"
+    size="small" (click)="onFocus()"></mcs-icon>
 </div>
 <small *ngIf="hasError">{{ validationMessage }}</small>
