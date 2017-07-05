@@ -33,7 +33,7 @@ export class McsAssetsProvider {
     if (this._fontIcons.has(key)) {
       value = this._fontIcons.get(key);
     } else {
-      value = this._config.icons[key];
+      value = this._config.fontIcons[key];
       this._fontIcons.set(key, value);
     }
 
