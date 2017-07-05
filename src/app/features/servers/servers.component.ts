@@ -8,13 +8,6 @@ import {
   Subject
 } from 'rxjs/Rx';
 import { Router } from '@angular/router';
-/** Services */
-import {
-  McsTextContentProvider,
-  McsAssetsProvider,
-  McsApiSearchKey,
-  McsApiJob
-} from '../../core';
 import { ServersService } from './servers.service';
 /** Models */
 import {
@@ -23,15 +16,16 @@ import {
   ServerPowerState,
   ServerCommand
 } from './models';
+/** Core */
 import {
   McsApiError,
-  McsApiSuccessResponse,
   McsApiErrorResponse,
+  McsTextContentProvider,
+  McsApiSearchKey,
   CoreDefinition
 } from '../../core';
 import {
   mergeArrays,
-  refreshView,
   updateArrayRecord
 } from '../../utilities';
 
@@ -75,10 +69,21 @@ export class ServersComponent implements OnInit, OnDestroy {
     return this.totalServerCount === 0 && this.keyword && !this.isLoading;
   }
 
+  public get gearIconKey() {
+    return CoreDefinition.ASSETS_FONT_GEAR;
+  }
+
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SPINNER;
+  }
+
+  public get arrowDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+  }
+
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
-    private _assetsProvider: McsAssetsProvider,
     private _router: Router
   ) {
     this.isLoading = true;
@@ -138,14 +143,6 @@ export class ServersComponent implements OnInit, OnDestroy {
     }
 
     return status;
-  }
-
-  public getGearClass() {
-    this.gear = this._assetsProvider.getIcon('gear');
-  }
-
-  public getSpinnerClass(): string {
-    return this._assetsProvider.getIcon('spinner');
   }
 
   public getStateIconKey(state: number): string {

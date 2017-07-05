@@ -135,20 +135,22 @@ describe('ServerListPanelComponent', () => {
       expect(component.errorMessage).toEqual(noServersFound);
     });
 
-    it('should set the value of caretDown', () => {
-      expect(component.caretDown).toBeDefined();
-    });
-
-    it('should set the value of serverState', () => {
-      expect(component.serverState).toBeDefined();
-    });
-
     it('should set the value of selectedServerId', () => {
       expect(component.selectedServerId).toBeDefined();
     });
 
     it('should call mapServerList()', () => {
       expect(component.mapServerList).toHaveBeenCalled();
+    });
+  });
+
+  describe('IconKey() | Properties', () => {
+    it('should get the spinner icon key definition', () => {
+      expect(component.spinnerIconKey).toBeDefined();
+    });
+
+    it('should get the caret down icon key definition', () => {
+      expect(component.caretDownIconKey).toBeDefined();
     });
   });
 

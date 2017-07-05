@@ -3,33 +3,15 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import {
-  Renderer2,
-  ElementRef
-} from '@angular/core';
+import { Renderer2 } from '@angular/core';
 
 import { ButtonComponent } from './button.component';
-import {
-  McsAssetsProvider,
-  CoreDefinition
-} from '../../core';
+import { CoreDefinition } from '../../core';
 
 describe('ButtonComponent', () => {
 
   /** Stub Services/Components */
   let component: ButtonComponent;
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        'arrow-right': 'mcs-icon mcs-arrow-right-icon',
-        'credit-card': 'fa fa-credit-card',
-        'spinner': 'fa fa-spinner fa-pulse',
-        'calendar': 'fa fa-calendar'
-      };
-
-      return icons[key];
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -37,10 +19,7 @@ describe('ButtonComponent', () => {
       declarations: [
         ButtonComponent
       ],
-      imports: [
-      ],
       providers: [
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         Renderer2
       ]
     });
@@ -65,11 +44,24 @@ describe('ButtonComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should return the icon class if the value of icon is valid', () => {
+    it('should set the calendar icon key definition in the iconKey variable', () => {
       component.icon = 'calendar';
       component.ngOnInit();
-      expect(component.fontAwesomeIcon).toBeDefined();
+      expect(component.iconKey).toBe(CoreDefinition.ASSETS_FONT_CALENDAR);
     });
+
+    it('should set the arrow right icon key definition in the iconKey variable', () => {
+      component.icon = 'arrow';
+      component.ngOnInit();
+      expect(component.iconKey).toBe(CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE);
+    });
+
+    it(`should set the iconKey variable to undefined in case the
+      inputted icon is normal or none`, () => {
+        component.icon = 'normal';
+        component.ngOnInit();
+        expect(component.iconKey).toBeUndefined();
+      });
   });
 
   describe('ngAfterViewInit()', () => {
@@ -92,16 +84,16 @@ describe('ButtonComponent', () => {
   });
 
   describe('showLoader()', () => {
-    it('should set the value of spinnerIcon', () => {
+    it('should set to true the value of showSpinner', () => {
       component.showLoader();
-      expect(component.spinnerIcon).toBeDefined();
+      expect(component.showSpinner).toBeTruthy();
     });
   });
 
   describe('hideLoader()', () => {
-    it('should set the value of spinnerIcon to undefined', () => {
+    it('should set to false the value of showSpinner', () => {
       component.hideLoader();
-      expect(component.spinnerIcon).toBeUndefined();
+      expect(component.showSpinner).toBeFalsy();
     });
   });
 });

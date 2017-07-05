@@ -8,7 +8,7 @@
       <a class="vdc-name" [ngClass]="{'active-vdc': vdc.selected, 'collapsed': !vdc.selected}"
         data-toggle="collapse" data-parent="#serverListTree" href="#serverList{{ i + 1 }}"
         [attr.aria-expanded]="vdc.selected" [attr.aria-controls]="'serverList' + (i + 1)">
-        {{ vdc.vdcName }} <i [ngClass]="caretDown"></i>
+        {{ vdc.vdcName }} <mcs-icon [key]="caretDownIconKey" size="small"></mcs-icon>
       </a>
       <div id="serverList{{ i + 1 }}" class="collapse servers" role="tabpanel"
         [ngClass]="{'show': vdc.selected}">
@@ -16,12 +16,14 @@
           <a [ngClass]="{'active-server': isServerSelected(server.id)}"
             [routerLink]="['/servers/' + server.id]" (click)="onClickServer(server)">
 
-            <mcs-svg-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"
-              size="small"></mcs-svg-icon>
-            <i *ngIf="!server.powerState" class="power-state-spinner"
-              [ngClass]="getSpinnerClass()"
-              mcsPopover trigger="hover" maxWidth="250px" padding="none"
-              [content]="loadingContent"></i>
+            <div *ngIf="server.powerState">
+              <mcs-icon [key]="getStateIconKey(server.powerState)" size="medium"></mcs-icon>
+            </div>
+            <div *ngIf="!server.powerState" class="power-state-spinner">
+              <mcs-icon [key]="spinnerIconKey" size="medium"
+                mcsPopover trigger="hover" maxWidth="250px" padding="none"
+                [content]="loadingContent"></mcs-icon>
+            </div>
             <ng-template #loadingContent>
               <span class="loading-content-popover">
                 {{ getActiveServerInformation(server.id) }}

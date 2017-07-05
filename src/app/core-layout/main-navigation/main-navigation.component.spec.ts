@@ -9,11 +9,11 @@ import { Title } from '@angular/platform-browser';
 import { MainNavigationComponent } from './main-navigation.component';
 import {
   McsTextContentProvider,
-  McsAssetsProvider,
   McsAuthService,
   McsUserType,
   McsBrowserService,
-  McsDeviceType
+  McsDeviceType,
+  CoreDefinition
 } from '../../core';
 
 describe('MainNavigationComponent', () => {
@@ -31,17 +31,6 @@ describe('MainNavigationComponent', () => {
   let mockTextService = {
     content: 'dummy'
   };
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        'caret-right': 'fa fa-caret-right',
-        'close': 'fa fa-close',
-        'sign-out': 'fa fa-sign-out'
-      };
-
-      return icons[key];
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -57,7 +46,6 @@ describe('MainNavigationComponent', () => {
         { provide: McsAuthService, useValue: mockAuthService },
         { provide: Title, useValue: mockTitleService },
         { provide: McsTextContentProvider, useValue: mockTextService },
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         McsBrowserService
       ]
     });
@@ -88,19 +76,24 @@ describe('MainNavigationComponent', () => {
       })
     );
 
-    it('should set the value of listBullet if the provided icon key is valid', () => {
-      component.ngOnInit();
-      expect(component.listBullet).toBeDefined();
+    it('should get the toggle icon key definition', () => {
+      expect(component.toggleIconKey).toBe(CoreDefinition.ASSETS_SVG_TOGGLE_NAV);
     });
 
-    it('should set the value of navigationCloseButton if the provided icon key is valid', () => {
-      component.ngOnInit();
-      expect(component.navigationCloseButton).toBeDefined();
+    it('should get the arrow up icon key definition', () => {
+      expect(component.arrowUpIconKey).toBe(CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE);
     });
 
-    it('should set the value of signOutIcon if the provided icon key is valid', () => {
-      component.ngOnInit();
-      expect(component.signOutIcon).toBeDefined();
+    it('should get the caret right icon key definition', () => {
+      expect(component.caretRightIconKey).toBe(CoreDefinition.ASSETS_FONT_CARET_RIGHT);
+    });
+
+    it('should get the close icon key definition', () => {
+      expect(component.closeIconKey).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
+    });
+
+    it('should get the sign out icon key definition', () => {
+      expect(component.signOutIconKey).toBe(CoreDefinition.ASSETS_FONT_SIGN_OUT);
     });
   });
 

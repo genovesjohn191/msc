@@ -1,0 +1,28 @@
+@import "../../../styles/shared/base";
+
+:host {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon-container {
+  @include display-flex(row);
+  align-items: center;
+  background-repeat: no-repeat;
+
+  &.green {
+    color: $color-green-00;
+  }
+
+  &.red {
+    color: $color-red-00;
+  }
+
+  &.black {
+    color: $color-black;
+  }
+
+  &.white {
+    color: $color-white;
+  }
+}

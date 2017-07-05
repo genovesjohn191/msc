@@ -23,8 +23,9 @@
    @include set-items-interval(10, vertical);
 
   .note {
-    display: block;
-    text-align: center;
+    @include display-flex(row);
+    align-items: center;
+    justify-content: center;
     @include font-size(16);
     @include set-items-interval(5, horizontal);
   }

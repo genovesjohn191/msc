@@ -4,7 +4,7 @@ import {
   Input
 } from '@angular/core';
 
-import { McsAssetsProvider } from '../../core';
+import { CoreDefinition } from '../../core';
 
 @Component({
   selector: 'mcs-alert',
@@ -12,42 +12,35 @@ import { McsAssetsProvider } from '../../core';
   styles: [require('./alert.component.scss')],
 })
 
-export class AlertComponent implements OnInit {
-  public icon: string;
-
+export class AlertComponent {
   @Input()
   public type: 'success' | 'failed' | 'warning' | 'info';
 
   @Input()
   public title: string;
 
-  public constructor(private _assetsProvider: McsAssetsProvider) {
+  public constructor() {
     this.type = 'success';
   }
 
-  public ngOnInit() {
-    this.icon = this.getAlertIcon(this.type);
-  }
+  public getAlertIconKey(): string {
+    let iconKey: string;
 
-  public getAlertIcon(alert: string): string {
-    let key: string;
-
-    switch (alert) {
+    switch (this.type) {
       case 'failed':
-        key = 'close';
+        iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
         break;
       case 'warning':
-        key = 'warning';
+        iconKey = CoreDefinition.ASSETS_FONT_WARNING;
         break;
       case 'info':
-        key = 'info-2';
+        iconKey = CoreDefinition.ASSETS_FONT_INFORMATION_2;
         break;
       case 'success':
       default:
-        key = 'check';
+        iconKey = CoreDefinition.ASSETS_FONT_CHECK;
         break;
     }
-
-    return this._assetsProvider.getIcon(key);
+    return iconKey;
   }
 }

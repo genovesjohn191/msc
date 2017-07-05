@@ -1,6 +1,7 @@
 <div class="mcs-alert" [ngClass]="type">
   <div class="alert-icon">
-    <i [ngClass]="icon"></i>
+    <mcs-icon [key]="getAlertIconKey()"
+      size="xlarge" color="white"></mcs-icon>
   </div>
   <div class="alert-content">
     <h4 *ngIf="title" class="title">{{ title }}</h4>

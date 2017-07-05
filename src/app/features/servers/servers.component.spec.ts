@@ -12,7 +12,6 @@ import {
 } from 'rxjs/Rx';
 import {
   McsTextContentProvider,
-  McsAssetsProvider,
   CoreDefinition,
   McsApiSearchKey,
   McsApiService,
@@ -53,11 +52,6 @@ describe('ServersComponent', () => {
       }
     }
   };
-  let assetsProviderMock = {
-    getIcon(iconClass: string) {
-      return iconClass;
-    }
-  };
   let mockMcsApiService = {
     get(apiRequest: McsApiRequestParameter): Observable<Response> {
       return Observable.of(new Response());
@@ -76,8 +70,7 @@ describe('ServersComponent', () => {
       providers: [
         { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsTextContentProvider, useValue: textContentProviderMock },
-        { provide: ServersService, useValue: serversServiceMock },
-        { provide: McsAssetsProvider, useValue: assetsProviderMock }
+        { provide: ServersService, useValue: serversServiceMock }
       ]
     });
 
@@ -112,6 +105,20 @@ describe('ServersComponent', () => {
 
     it('should set the total count value', () => {
       expect(component.totalServerCount).toEqual(2);
+    });
+  });
+
+  describe('IconKey() Properties', () => {
+    it('should get the gear icon key definition', () => {
+      expect(component.gearIconKey).toBe(CoreDefinition.ASSETS_FONT_GEAR);
+    });
+
+    it('shouldget the spinner icon key definition', () => {
+      expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+    });
+
+    it('shouldget the arrow down icon key definition', () => {
+      expect(component.arrowDownIconKey).toBe(CoreDefinition.ASSETS_FONT_CHEVRON_DOWN);
     });
   });
 

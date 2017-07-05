@@ -33,16 +33,6 @@ describe('StateChangeNotificationComponent', () => {
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
 
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        spinner: 'fa fa-spinner',
-        close: 'fa fa-close',
-        check: 'fa fa-check'
-      };
-      return icons[key];
-    }
-  } as McsAssetsProvider;
   let mockMcsApiService = {
     get(apiRequest: McsApiRequestParameter): Observable<Response> {
       return Observable.of(new Response());
@@ -58,8 +48,7 @@ describe('StateChangeNotificationComponent', () => {
       providers: [
         McsNotificationContextService,
         { provide: McsApiService, useValue: mockMcsApiService },
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
+        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService }
       ]
     });
 
@@ -112,12 +101,12 @@ describe('StateChangeNotificationComponent', () => {
       component.ngOnChanges();
     }));
 
-    it('should set the active class to iconStatusClass', () => {
-      expect(component.iconStatusClass).toContain('active');
+    it('should set the iconStatusColor to black', () => {
+      expect(component.iconStatusColor).toBe('black');
     });
 
-    it('should set the fa-spinner class to iconStatusClass', () => {
-      expect(component.iconStatusClass).toContain('fa-spinner');
+    it('should set the font-spinner definition to iconStatusClass', () => {
+      expect(component.iconStatusKey).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
     });
 
     it('should not remove the notification',
@@ -143,12 +132,12 @@ describe('StateChangeNotificationComponent', () => {
       tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
     }));
 
-    it('should set the failed class to iconStatusClass', () => {
-      expect(component.iconStatusClass).toContain('failed');
+    it('should set the iconStatusColor to red', () => {
+      expect(component.iconStatusColor).toContain('red');
     });
 
-    it('should set the fa-close class to iconStatusClass', () => {
-      expect(component.iconStatusClass).toContain('fa-close');
+    it('should set the font-close definition to iconStatusClass', () => {
+      expect(component.iconStatusKey).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
     });
 
     it('should remove the failed notifications',
@@ -175,12 +164,12 @@ describe('StateChangeNotificationComponent', () => {
       tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
     }));
 
-    it('should set the failed class to iconStatusClass', () => {
-      expect(component.iconStatusClass).toContain('completed');
+    it('should set the iconStatusColor to green', () => {
+      expect(component.iconStatusColor).toContain('green');
     });
 
-    it('should set the fa-check class to iconStatusClass', () => {
-      expect(component.iconStatusClass).toContain('fa-check');
+    it('should set the font-check definition to iconStatusClass', () => {
+      expect(component.iconStatusKey).toBe(CoreDefinition.ASSETS_FONT_CHECK);
     });
 
     it('should remove the completed notifications',

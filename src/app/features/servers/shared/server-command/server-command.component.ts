@@ -8,7 +8,7 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { McsAssetsProvider } from '../../../../core';
+import { CoreDefinition } from '../../../../core';
 import {
   ServerPowerState,
   ServerCommand
@@ -19,9 +19,7 @@ import {
   styles: [require('./server-command.component.scss')],
   templateUrl: './server-command.component.html'
 })
-export class ServerCommandComponent implements OnInit {
-  public gear: string;
-
+export class ServerCommandComponent {
   @Input()
   public command: ServerCommand;
 
@@ -31,14 +29,12 @@ export class ServerCommandComponent implements OnInit {
   @ViewChild('popoverActionElement')
   public popoverActionElement: any;
 
-  constructor(
-    private _assetsProvider: McsAssetsProvider
-  ) {
-    this.command = ServerCommand.Start;
+  public get gearIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_GEAR;
   }
 
-  public ngOnInit() {
-    this.gear = this._assetsProvider.getIcon('gear');
+  constructor() {
+    this.command = ServerCommand.Start;
   }
 
   public getStartStatus(): any {

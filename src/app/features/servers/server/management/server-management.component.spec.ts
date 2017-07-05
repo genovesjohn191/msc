@@ -18,7 +18,8 @@ import {
 } from '../../models';
 import {
   McsTextContentProvider,
-  McsBrowserService
+  McsBrowserService,
+  CoreDefinition
 } from '../../../../core';
 import { ServerService } from '../server.service';
 
@@ -145,6 +146,12 @@ describe('ServerManagementComponent', () => {
     it('should set the value of serverManagement', () => {
       component.ngOnInit();
       expect(component.serverManagementTextContent).toBeDefined();
+    });
+  });
+
+  describe('IconKey() | Properties', () => {
+    it('should get the warning icon key definition', () => {
+      expect(component.warningIconKey).toBe(CoreDefinition.ASSETS_FONT_WARNING);
     });
   });
 

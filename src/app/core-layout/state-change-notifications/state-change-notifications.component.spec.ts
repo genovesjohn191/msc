@@ -15,7 +15,6 @@ import {
 } from 'rxjs/Rx';
 import { StateChangeNotificationsComponent } from './state-change-notifications.component';
 import {
-  McsAssetsProvider,
   McsApiJob,
   McsApiService,
   McsBrowserService,
@@ -47,16 +46,6 @@ describe('StateChangeNotificationsComponent', () => {
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
 
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        spinner: 'fa fa-spinner',
-        close: 'fa fa-close',
-        check: 'fa fa-check'
-      };
-      return icons[key];
-    }
-  } as McsAssetsProvider;
   let mockMcsApiService = {
     get(apiRequest: McsApiRequestParameter): Observable<Response> {
       return Observable.of(new Response());
@@ -74,7 +63,6 @@ describe('StateChangeNotificationsComponent', () => {
         McsNotificationContextService,
         { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         { provide: McsBrowserService, useValue: mockMcsBrowserService }
       ]
     });

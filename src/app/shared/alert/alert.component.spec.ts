@@ -4,34 +4,18 @@ import {
 } from '@angular/core/testing';
 
 import { AlertComponent } from './alert.component';
-import { McsAssetsProvider } from '../../core';
+import { CoreDefinition } from '../../core';
 
 describe('AlertComponent', () => {
 
   /** Stub Services/Components */
   let component: AlertComponent;
-  let mockIcons = {
-    close: 'fa fa-close',
-    check: 'fa fa-check',
-    exclamation: 'fa fa-exclamation'
-  };
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = mockIcons;
-      return icons[key];
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
         AlertComponent
-      ],
-      imports: [
-      ],
-      providers: [
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
       ]
     });
 
@@ -55,18 +39,25 @@ describe('AlertComponent', () => {
     });
   }));
 
-  describe('ngOnInit()', () => {
-    it('should set the icon based on alert type', () => {
-      component.type = 'success';
-      component.ngOnInit();
-      expect(component.icon).toEqual(mockIcons.check);
-    });
-  });
-
-  describe('getAlertIcon()', () => {
-    it('should return the icon based on alert type', () => {
+  describe('getAlertIconKey()', () => {
+    it('should return the close icon key definition in case of failed', () => {
       component.type = 'failed';
-      expect(component.getAlertIcon(component.type)).toEqual(mockIcons.close);
+      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
+    });
+
+    it('should return the warning icon key definition in case of warning', () => {
+      component.type = 'warning';
+      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_WARNING);
+    });
+
+    it('should return the information-2 icon key definition in case of info', () => {
+      component.type = 'info';
+      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_INFORMATION_2);
+    });
+
+    it('should return the check icon key definition in case of success', () => {
+      component.type = 'success';
+      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_CHECK);
     });
   });
 });

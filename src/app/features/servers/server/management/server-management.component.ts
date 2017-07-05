@@ -50,8 +50,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  public get storageIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_STORAGE;
+  public get warningIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_WARNING;
   }
 
   constructor(
@@ -124,11 +124,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
-
-  public getWarningIconKey(): string {
-    // TODO: Return the core definition here
-    return 'warning';
   }
 
   public onScaleChanged(scale: ServerPerformanceScale) {

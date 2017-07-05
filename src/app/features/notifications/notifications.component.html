@@ -30,7 +30,8 @@
     <tbody>
       <tr *ngFor="let notification of notifications">
         <td class="text-center align-top">
-          <i [ngClass]="getIconClass(notification.status)"></i>
+          <mcs-icon [key]="getStatusIconKey(notification.status)"
+            [color]="getStatusIconColor(notification.status)" size="small"></mcs-icon>
         </td>
         <td class="text-left align-top">
           {{ notification.ownerName }}
@@ -61,13 +62,13 @@
 
   <div class="status-information">
     <div *ngIf="isLoading">
-      <i [ngClass]="getSpinnerClass()"></i>
+      <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
        {{ notificationsTextContent.loading }}
     </div>
 
     <a *ngIf="(getDisplayNotificationsCount() < totalNotificationsCount) && !isLoading"
       (click)="onClickMoreEvent()">{{ notificationsTextContent.viewMore }}
-      <i class="fa fa-angle-down"></i>
+      <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
     </a>
 
     <span *ngIf="!loadedSuccessfully && !isLoading">

@@ -4,8 +4,9 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { ServerCommandComponent } from './server-command.component';
-import { McsAssetsProvider } from '../../../../core';
+import { CoreDefinition } from '../../../../core';
 import { ServersService } from '../../servers.service';
+import { ServerCommand } from '../../models';
 
 describe('ServerCommandComponent', () => {
   /** Stub Services/Components */
@@ -21,11 +22,6 @@ describe('ServerCommandComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ServerCommandComponent
-      ],
-      imports: [
-      ],
-      providers: [
-        { provide: McsAssetsProvider, useValue: assetsProviderMock },
       ]
     });
 
@@ -47,10 +43,60 @@ describe('ServerCommandComponent', () => {
   }));
 
   /** Test Implementation */
-  describe('ngOnInit()', () => {
-    it('should set the gear icon', () => {
-      component.ngOnInit();
-      expect(component.gear).toBeDefined();
+  describe('IconKey() | Property', () => {
+    it('should get the gear icon key definition', () => {
+      expect(component.gearIconKey).toBe(CoreDefinition.ASSETS_FONT_GEAR);
+    });
+  });
+
+  describe('getStartStatus()', () => {
+    it('should return true when the command is Start', () => {
+      component.command = ServerCommand.Start;
+      expect(component.getStartStatus()).toBeTruthy();
+    });
+
+    it('should return true when the command is Restart', () => {
+      component.command = ServerCommand.Restart;
+      expect(component.getStartStatus()).toBeTruthy();
+    });
+
+    it('should return undefined when the command is Stop', () => {
+      component.command = ServerCommand.Stop;
+      expect(component.getStartStatus()).toBeUndefined();
+    });
+  });
+
+  describe('getStopStatus()', () => {
+    it('should return undefined when the command is Start', () => {
+      component.command = ServerCommand.Start;
+      expect(component.getStopStatus()).toBeUndefined();
+    });
+
+    it('should return undefined when the command is Restart', () => {
+      component.command = ServerCommand.Restart;
+      expect(component.getStopStatus()).toBeUndefined();
+    });
+
+    it('should return true when the command is Stop', () => {
+      component.command = ServerCommand.Stop;
+      expect(component.getStopStatus()).toBeTruthy();
+    });
+  });
+
+  describe('getRestartStatus()', () => {
+    it('should return undefined when the command is Start', () => {
+      component.command = ServerCommand.Start;
+      expect(component.getRestartStatus()).toBeUndefined();
+    });
+
+    it('should return true when the command is Restart', () => {
+      component.command = ServerCommand.Restart;
+      expect(component.getRestartStatus()).toBeTruthy();
+    });
+
+    it('should return undefined when the command is Stop', () => {
+      component.command = ServerCommand.Stop;
+      expect(component.getRestartStatus()).toBeTruthy();
     });
   });
 });

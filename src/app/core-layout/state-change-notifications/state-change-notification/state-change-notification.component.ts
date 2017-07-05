@@ -55,7 +55,8 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
   @Input()
   public pauseOnHover: boolean;
 
-  public iconStatusClass: string;
+  public iconStatusKey: string;
+  public iconStatusColor: any;
   public animate: string;
 
   private _timer: any;
@@ -65,8 +66,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
 
   public constructor(
     private _ngZone: NgZone,
-    private _notificationContextService: McsNotificationContextService,
-    private _assetsProvider: McsAssetsProvider
+    private _notificationContextService: McsNotificationContextService
   ) {
     this.pauseOnHover = true;
     this.attribute = new McsApiJob();
@@ -109,7 +109,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
     return time;
   }
 
-  public getCloseIconKey(): string {
+  public get closeIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
   }
 
@@ -132,19 +132,19 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
     switch (notification.status) {
       case CoreDefinition.NOTIFICATION_JOB_PENDING:
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        this.iconStatusClass = this._assetsProvider.getIcon('spinner');
-        this.iconStatusClass += ' active';
+        this.iconStatusKey = CoreDefinition.ASSETS_FONT_SPINNER;
+        this.iconStatusColor = 'black';
         break;
       case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
       case CoreDefinition.NOTIFICATION_JOB_FAILED:
       case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
-        this.iconStatusClass = this._assetsProvider.getIcon('close');
-        this.iconStatusClass += ' failed';
+        this.iconStatusKey = CoreDefinition.ASSETS_FONT_CLOSE;
+        this.iconStatusColor = 'red';
         this._timeOut = CoreDefinition.NOTIFICATION_FAILED_TIMEOUT;
         break;
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        this.iconStatusClass = this._assetsProvider.getIcon('check');
-        this.iconStatusClass += ' completed';
+        this.iconStatusKey = CoreDefinition.ASSETS_FONT_CHECK;
+        this.iconStatusColor = 'green';
         this._timeOut = CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT;
         break;
       default:

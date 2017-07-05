@@ -50,16 +50,32 @@ import {
 
 export class MainNavigationComponent implements OnInit {
   public textContent: any;
-  public listBullet: string;
-  public signOutIcon: string;
-  public navigationCloseButton: string;
   public navState: string;
   public isMobile: boolean;
+
+  public get toggleIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
+  }
+
+  public get arrowUpIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
+  }
+
+  public get caretRightIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+  }
+
+  public get closeIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CLOSE;
+  }
+
+  public get signOutIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SIGN_OUT;
+  }
 
   public constructor(
     private _router: Router,
     private _textProvider: McsTextContentProvider,
-    private _assetsProvider: McsAssetsProvider,
     private _authService: McsAuthService,
     private _titleService: Title,
     private _browserService: McsBrowserService,
@@ -82,10 +98,6 @@ export class MainNavigationComponent implements OnInit {
           this.navState = 'hide';
         }
       });
-
-    this.listBullet = this._assetsProvider.getIcon('caret-right');
-    this.navigationCloseButton = this._assetsProvider.getIcon('close');
-    this.signOutIcon = this._assetsProvider.getIcon('sign-out');
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -103,13 +115,5 @@ export class MainNavigationComponent implements OnInit {
 
   public setTitle(title: string) {
     this._titleService.setTitle(title);
-  }
-
-  public getToggleIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
-  }
-
-  public getArrowUpIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
   }
 }

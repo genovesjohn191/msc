@@ -5,13 +5,13 @@
       <div class="row">
         <div class="col-5">
           <button class="navbar-toggle" type="button" (click)="navState='show'">
-            <mcs-svg-icon [key]="getToggleIconKey()" size="medium"></mcs-svg-icon>
+            <mcs-icon [key]="toggleIconKey" size="large"></mcs-icon>
           </button>
         </div>
 
         <div class="col-7 text-right">
           <a href="https://macquarieview.com/" target="_blank" class="macquarie-view-link">
-            <mcs-svg-icon [key]="getArrowUpIconKey()" size="medium"></mcs-svg-icon>
+            <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
             <span>Macquarie View</span>
           </a>
         </div>
@@ -29,25 +29,29 @@
         <!--<li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./dashboard']"
           (click)="setTitle(textContent.dashboard.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
+            <mcs-icon class="nav-item-bullet" [key]="getCaretRightIconKey()"
+              size="small" color="white"></mcs-icon>
             {{ textContent.navigation.dashboard }}</a>
         </li>-->
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./servers']"
           (click)="setTitle(textContent.servers.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
+            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
+              size="small" color="white"></mcs-icon>
             {{ textContent.navigation.servers }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./networking']"
           (click)="setTitle(textContent.networking.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
+            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
+              size="small" color="white"></mcs-icon>
             {{ textContent.navigation.networking }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['./catalog']"
           (click)="setTitle(textContent.catalog.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
+            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
+              size="small" color="white"></mcs-icon>
             {{ textContent.navigation.catalog }}</a>
         </li>
 
@@ -55,14 +59,17 @@
         <li class="nav-item" routerLinkActive="active" *ngIf="!isUser()">
           <a class="nav-link" [routerLink]="['./others']"
           (click)="setTitle(textContent.others.title)">
-            <i class="nav-item-bullet" [ngClass]="listBullet"></i>
+            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
+              size="small" color="white"></mcs-icon>
             {{ textContent.navigation.others }}</a>
         </li>
 
         <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">
           <a class="nav-link" [routerLink]="['./others']"
           (click)="setTitle(textContent.others.title)">
-            <i class="nav-item-bullet" [ngClass]="signOutIcon"></i> Sign Out</a>
+            <mcs-icon class="nav-item-bullet" [key]="signOutIconKey"
+              size="small" color="white"></mcs-icon>
+            Sign Out</a>
         </li>
 
         <li class="nav-item other-links" *ngIf="!isUser()">
@@ -87,7 +94,7 @@
 
         <li class="nav-item hidden-small ml-auto">
           <a href="https://macquarieview.com/" class="macquarie-view-link ml-auto" target="_blank">
-            <mcs-svg-icon [key]="getArrowUpIconKey()" size="medium"></mcs-svg-icon>
+            <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
             <span>Macquarie View</span>
           </a>
         </li>

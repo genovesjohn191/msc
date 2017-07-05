@@ -1,5 +1,7 @@
 <div class="running-notification-container" [@fade]="animate">
-  <i class="icon" [ngClass]="iconStatusClass"></i>
+  <mcs-icon [key]="iconStatusKey" [color]="iconStatusColor"
+    size="large" class="icon"></mcs-icon>
+
   <div class="information">
     <div class="status">
       <span class="description">{{ attribute.description }}</span><br/>

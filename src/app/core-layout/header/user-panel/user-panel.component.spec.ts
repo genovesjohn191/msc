@@ -15,7 +15,6 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserPanelComponent } from './user-panel.component';
 import {
-  McsAssetsProvider,
   McsTextContentProvider,
   McsApiJob,
   McsApiService,
@@ -31,17 +30,6 @@ describe('UserPanelComponent', () => {
 
   /** Stub Services/Components */
   let component: UserPanelComponent;
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        'bell': 'fa fa-bell-o',
-        'user': 'fa fa-user-o',
-        'caret-right': 'fa fa-caret-right'
-      };
-
-      return icons[key];
-    }
-  };
   let mockMcsNotificationJobService = {
     notificationStream: new Subject<McsApiJob>(),
     connectionStatusStream: new Subject<McsConnectionStatus>()
@@ -67,7 +55,6 @@ describe('UserPanelComponent', () => {
         McsTextContentProvider,
         { provide: McsApiService, useValue: mockMcsApiService },
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
         { provide: McsBrowserService, useValue: mockMcsBrowserService }
       ]
     });
@@ -92,16 +79,20 @@ describe('UserPanelComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should return the icon class of bell icon if the provided bell icon key is valid', () => {
-      expect(component.bellIcon).toBeDefined();
+    it('should return the bell icon definition key', () => {
+      expect(component.bellIconKey).toBe(CoreDefinition.ASSETS_FONT_BELL);
     });
 
-    it('should return the icon class of user icon if the provided user icon key is valid', () => {
-      expect(component.userIcon).toBeDefined();
+    it('should return the user icon definition key', () => {
+      expect(component.userIconKey).toBe(CoreDefinition.ASSETS_FONT_USER);
     });
 
-    it('should return the icon class of caret right icon if the provided icon key is valid', () => {
-      expect(component.caretRightIcon).toBeDefined();
+    it('should return the caret down icon definition key', () => {
+      expect(component.caretDownIconKey).toBe(CoreDefinition.ASSETS_FONT_CARET_DOWN);
+    });
+
+    it('should return the caret right icon definition key', () => {
+      expect(component.caretRightIconKey).toBe(CoreDefinition.ASSETS_FONT_CARET_RIGHT);
     });
   });
 

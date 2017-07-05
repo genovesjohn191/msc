@@ -7,18 +7,14 @@ import {
   EventEmitter,
   Renderer2,
   ElementRef,
-  ViewChild,
-  HostBinding
+  ViewChild
 } from '@angular/core';
 
 /** Interface */
 import { Loading } from '../loading.interface';
 
 /** Providers */
-import {
-  McsAssetsProvider,
-  CoreDefinition
-} from '../../core';
+import { CoreDefinition } from '../../core';
 
 enum IconType {
   Svg = 0,
@@ -34,9 +30,8 @@ enum IconType {
 export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   public iconType: IconType;
   public iconTypeEnum = IconType;
-  public svgIcon: string;
-  public fontAwesomeIcon: string;
-  public spinnerIcon: string;
+  public showSpinner: boolean;
+  public iconKey: string;
 
   @Input()
   public type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
@@ -51,12 +46,6 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   public width: string;
 
   @Input()
-  public lightboxId: string;
-
-  @Input()
-  public lightboxDismiss: string;
-
-  @Input()
   public disabled: boolean;
 
   @Output()
@@ -68,10 +57,11 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   @ViewChild('mcsButtonIcon')
   public mcsButtonIcon: ElementRef;
 
-  public constructor(
-    private _assetsProvider: McsAssetsProvider,
-    private _renderer: Renderer2
-  ) {
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SPINNER;
+  }
+
+  public constructor(private _renderer: Renderer2) {
     this.type = 'primary';
     this.icon = 'normal';
     this.size = 'default';
@@ -79,9 +69,7 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   }
 
   public ngOnInit() {
-    this._setIconType(this.icon);
-    this.svgIcon = CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE;
-    this.fontAwesomeIcon = this._assetsProvider.getIcon('calendar');
+    this._setIconKeyAndType(this.icon);
   }
 
   public ngAfterViewInit() {
@@ -104,16 +92,6 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
       this._renderer.setStyle(this.mcsButton.nativeElement, 'max-width', this.width);
     }
 
-    if (this.lightboxId) {
-      this._renderer.setAttribute(this.mcsButton.nativeElement, 'data-toggle', 'modal');
-      this._renderer.setAttribute(
-        this.mcsButton.nativeElement, 'data-target', '#' + this.lightboxId);
-    }
-
-    if (this.lightboxDismiss === 'true') {
-      this._renderer.setAttribute(this.mcsButton.nativeElement, 'data-dismiss', 'modal');
-    }
-
     if (this.disabled) {
       this._renderer.setProperty(this.mcsButton.nativeElement, 'disabled', this.disabled);
     }
@@ -124,26 +102,29 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
   }
 
   public showLoader(): void {
-    this.spinnerIcon = this._assetsProvider.getIcon('spinner');
+    this.showSpinner = true;
   }
 
   public hideLoader(): void {
-    this.spinnerIcon = undefined;
+    this.showSpinner = false;
   }
 
-  private _setIconType(icon: string): void {
+  private _setIconKeyAndType(icon: string): void {
+    // Set icon type if it is SVG or font-awesome
     switch (icon) {
       case 'arrow':
         this.iconType = IconType.Svg;
+        this.iconKey = CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE;
         break;
       case 'calendar':
         this.iconType = IconType.FontAwesome;
+        this.iconKey = CoreDefinition.ASSETS_FONT_CALENDAR;
         break;
       case 'normal':
       default:
         this.iconType = undefined;
+        this.iconKey = undefined;
         break;
     }
   }
-
 }

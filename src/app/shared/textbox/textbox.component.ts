@@ -23,7 +23,6 @@ import { Loading } from '../loading.interface';
 
 /** Providers */
 import {
-  McsAssetsProvider,
   McsTextContentProvider,
   CoreDefinition
 } from '../../core';
@@ -51,7 +50,7 @@ import { McsTextboxValidationType } from './textbox-type.enum';
 
 export class TextboxComponent
   implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor, Validator, Loading {
-  public iconClass: string;
+  public iconKey: string;
   public isValid: boolean;
   public validationMessage: string;
 
@@ -59,7 +58,7 @@ export class TextboxComponent
   public inputType: 'text' | 'number' | 'password';
 
   @Input()
-  public icon: string;
+  public icon: 'normal' | 'search';
 
   @Input()
   public name: string;
@@ -128,7 +127,6 @@ export class TextboxComponent
   }
 
   public constructor(
-    private _assetsProvider: McsAssetsProvider,
     private _textProvider: McsTextContentProvider,
     private _renderer: Renderer2,
     private _elementRef: ElementRef
@@ -142,9 +140,7 @@ export class TextboxComponent
   }
 
   public ngOnChanges() {
-    if (this.icon) {
-      this.iconClass = this.getIconClass(this.icon);
-    }
+    this._setIconKeyAndType(this.icon);
   }
 
   public ngAfterViewInit() {
@@ -233,15 +229,23 @@ export class TextboxComponent
   }
 
   public showLoader(): void {
-    this.iconClass = this.getIconClass('spinner');
+    this.iconKey = CoreDefinition.ASSETS_FONT_SPINNER;
   }
 
   public hideLoader(): void {
-    this.iconClass = this.getIconClass(this.icon);
+    this.iconKey = this.icon;
   }
 
-  public getIconClass(iconKey: string): string {
-    return this._assetsProvider.getIcon(iconKey);
+  private _setIconKeyAndType(icon: string): void {
+    // Set icon type if it is SVG or font-awesome
+    switch (icon) {
+      case 'search':
+        this.iconKey = CoreDefinition.ASSETS_FONT_SEARCH;
+        break;
+      case 'normal':
+      default:
+        this.iconKey = undefined;
+        break;
+    }
   }
-
 }

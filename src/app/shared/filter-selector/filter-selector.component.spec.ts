@@ -17,8 +17,8 @@ import { FilterItem } from './filter-item';
 import {
   McsStorageService,
   McsTextContentProvider,
-  McsAssetsProvider,
-  McsFilterProvider
+  McsFilterProvider,
+  CoreDefinition
 } from '../../core';
 
 describe('FilterSelectorComponent', () => {
@@ -50,11 +50,6 @@ describe('FilterSelectorComponent', () => {
       }
     }
   };
-  let assetsProviderMock = {
-    getIcon() {
-      return 'iconclass';
-    }
-  };
   let filterProviderMock = {
     getDefaultFilters(key: string): any {
       return filterItems;
@@ -73,7 +68,6 @@ describe('FilterSelectorComponent', () => {
         { provide: ElementRef, useValue: elementRefMock },
         { provide: McsStorageService, useValue: mscStorageServiceMock },
         { provide: McsTextContentProvider, useValue: textContentProviderMock },
-        { provide: McsAssetsProvider, useValue: assetsProviderMock },
         { provide: McsFilterProvider, useValue: filterProviderMock }
       ]
     });
@@ -98,13 +92,6 @@ describe('FilterSelectorComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should call the getIcon() of AssetsProvider and iConClass is not null',
-      inject([McsAssetsProvider], (assetProvider: McsAssetsProvider) => {
-        spyOn(assetProvider, 'getIcon');
-        component.ngOnInit();
-        expect(assetProvider.getIcon).toHaveBeenCalledTimes(1);
-      }));
-
     it('should set the iconClass and filterTitle values', () => {
       component.ngOnInit();
       expect(component.iconClass).not.toEqual(undefined || null || '');
@@ -145,6 +132,12 @@ describe('FilterSelectorComponent', () => {
       spyOn(component.onGetFilters, 'emit');
       component.ngOnInit();
       expect(component.onGetFilters.emit).toHaveBeenCalled();
+    });
+  });
+
+  describe('IconKey() | Property', () => {
+    it('should get the columns icon key definition', () => {
+      expect(component.columnsIconKey).toBe(CoreDefinition.ASSETS_SVG_COLUMNS_BLACK);
     });
   });
 
