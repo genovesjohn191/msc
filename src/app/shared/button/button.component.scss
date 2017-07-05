@@ -30,8 +30,7 @@
   }
 
   &.has-icon {
-    padding: 0 15px;
-    min-height: 42px;
+    padding: $space-xsmall 15px;
     justify-content: space-between;
 
     .text {
@@ -72,9 +71,4 @@
   &.danger {
     background-color: $button-danger-background-color;
   }
-}
-
-.loader {
-  width: 50px;
-  height: 15px;
 }
