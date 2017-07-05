@@ -1,6 +1,5 @@
 {
-  "icons": {
-    "arrow-right": "mcs-arrow-right-icon",
+  "fontIcons": {
     "credit-card": "fa fa-credit-card",
     "search": "fa fa-search",
     "check": "fa fa-check",

@@ -3,7 +3,6 @@
  */
 import {
   Component,
-  OnInit,
   ViewEncapsulation
 } from '@angular/core';
 import { AppState } from './app.service';
@@ -18,12 +17,7 @@ import { AppState } from './app.service';
   styles: [require('./app.component.scss')],
   templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit {
-  public name = 'Fusion Portal';
+export class AppComponent {
 
   constructor(public appState: AppState) { }
-
-  public ngOnInit() {
-    console.log('Initial App State', this.appState.state);
-  }
 }

@@ -9,12 +9,12 @@
     "catalog": "Catalog"
   },
   "dashboard": {
-    "title": "Macquarie Portal - Dashboard",
+    "title": "Macquarie Cloud Services: Dashboard",
     "header": "Dashboard",
     "description": "The following graphs roll up information based on the selected Virtual Data Centre."
   },
   "servers": {
-    "title": "Macquarie Portal - Servers",
+    "title": "Macquarie Cloud Services: Servers",
     "header": "Servers",
     "provisioningNotifications": {
       "header": "Server Provisioning Notifications",
@@ -96,13 +96,13 @@
     "viewMore": "More"
   },
   "networking": {
-    "title": "Macquarie Portal - Networking"
+    "title": "Macquarie Cloud Services: Networking"
   },
   "catalog": {
-    "title": "Macquarie Portal - Catalog"
+    "title": "Macquarie Cloud Services: Catalog"
   },
   "notifications": {
-    "title": "Macquarie Portal - Notifications",
+    "title": "Macquarie Cloud Services: Notifications",
     "header": "Notifications",
     "description": "Notifications play back and track activity within the portal.",
     "tableHeader": {
@@ -120,7 +120,7 @@
     "viewMore": "More"
   },
   "others": {
-    "title": "Macquarie Portal - Others"
+    "title": "Macquarie Cloud Services: Others"
   },
   "pageNotFound": {
     "heading": "Page not found",

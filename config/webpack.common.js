@@ -19,7 +19,7 @@ const ngcWebpack = require('ngc-webpack');
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
-  title: 'Macquarie Cloud Services - Portal',
+  title: 'Macquarie Cloud Services: Portal',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };

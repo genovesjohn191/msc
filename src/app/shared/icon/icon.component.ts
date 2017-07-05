@@ -57,6 +57,12 @@ export class IconComponent implements OnChanges {
   private _setIconContent(): void {
     this.icon = {} as any;
     this.icon = this._iconService.getIcon(this.key);
+
+    // In case of no icon found.::.
+    // Display the no-image availabe icon
+    if (!this.icon) {
+      this.icon = this._iconService.getIcon(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
+    }
   }
 
   private _setActualSize() {
