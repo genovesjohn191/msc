@@ -11,7 +11,7 @@
 
   <!--Custom size content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
-    <div [@fadeInOut] class="custom-size-content">
+    <div [@animate]="'fadeIn'" class="custom-size-content">
       <mcs-dropdown width="150px"
         [ngModel]="customMemoryInGbValue" (ngModelChange)="onMemoryChanged($event)"
         [dropdownData]="customMemoryInGbTable"></mcs-dropdown>
@@ -25,7 +25,7 @@
   <!--Slider content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
     <div class="scale">
-      <mcs-slider [@fadeInOut] [min]="minimum" [max]="maximum"
+      <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum"
         [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>
       <span class="scale-label">
         {{ currentServerScale.memoryInGb }}GB / {{ currentServerScale.cpuCount }}CPU

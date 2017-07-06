@@ -24,7 +24,8 @@ import {
 } from '../../../core';
 import {
   formatDate,
-  refreshView
+  refreshView,
+  animateFactory
 } from '../../../utilities';
 
 @Component({
@@ -32,19 +33,7 @@ import {
   templateUrl: './state-change-notification.component.html',
   styles: [require('./state-change-notification.component.scss')],
   animations: [
-    trigger('fade', [
-      // Enter from left
-      state('in', style({ opacity: 1, transform: 'translateX(0)' })),
-      transition('* => in', [
-        style({ opacity: 0, transform: 'translateX(-5%)' }),
-        animate('400ms ease-in-out')
-      ]),
-      state('out', style({ opacity: 0, transform: 'translateX(5%)' })),
-      transition('in => out', [
-        style({ opacity: 1, transform: 'translateX(0)' }),
-        animate('300ms ease-in-out')
-      ]),
-    ])
+    animateFactory({ duration: '300ms', easing: 'ease-in-out' })
   ]
 })
 
@@ -73,7 +62,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit() {
-    this.animate = 'in';
+    this.animate = 'slideInLeft';
   }
 
   public ngOnChanges() {
@@ -174,7 +163,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
 
     // Remove notification from the list when fade out animation is finished
     this._timer = refreshView(() => {
-      this.animate = 'out';
+      this.animate = 'slideOutLeft';
 
       this._ngZone.runOutsideAngular(() => {
         refreshView(() => {
