@@ -22,20 +22,20 @@ import {
   ServerPerformanceScale,
   ServerInputManageType
 } from '../../models';
-import { refreshView } from '../../../../utilities';
+import {
+  refreshView,
+  animateFactory
+} from '../../../../utilities';
 
 @Component({
   selector: 'mcs-server-performance-scale',
   styles: [require('./server-performance-scale.component.scss')],
   templateUrl: './server-performance-scale.component.html',
   animations: [
-    trigger('fadeInOut', [
-      state('*', style({ opacity: 1 })),
-      state('void', style({ opacity: 0 })),
-      transition('void <=> *', animate('500ms'))
-    ])
+    animateFactory({ duration: '500ms' })
   ]
 })
+
 export class ServerPerformanceScaleComponent implements OnInit {
   public minimum: number;
   public maximum: number;

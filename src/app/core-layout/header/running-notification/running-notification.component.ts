@@ -23,7 +23,8 @@ import {
 } from '../../../core';
 import {
   formatDate,
-  refreshView
+  refreshView,
+  animateFactory
 } from '../../../utilities';
 
 @Component({
@@ -31,20 +32,7 @@ import {
   templateUrl: './running-notification.component.html',
   styles: [require('./running-notification.component.scss')],
   animations: [
-    trigger('fade', [
-      // Fade-in from top
-      state('in', style({ opacity: 1, transform: 'translateY(0)' })),
-      transition('* => in', [
-        style({ opacity: 0, transform: 'translateY(-3%)' }),
-        animate('300ms ease-in-out')
-      ]),
-      // Fade-out from bottom
-      state('out', style({ opacity: 0, transform: 'translateY(-3%)' })),
-      transition('in => out', [
-        style({ opacity: 1, transform: 'translateY(0)' }),
-        animate('300ms ease-in-out')
-      ]),
-    ])
+    animateFactory({ duration: '300ms', easing: 'ease-in-out' })
   ]
 })
 
@@ -57,7 +45,7 @@ export class RunningNotificationComponent implements OnInit, OnChanges {
 
   public iconStatusKey: string;
   public iconStatusColor: any;
-  public animate: string;
+  public fade: string;
 
   private _timer: any;
   private _timeStart: any;
@@ -73,7 +61,7 @@ export class RunningNotificationComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit() {
-    this.animate = 'in';
+    this.fade = 'fadeIn';
   }
 
   public ngOnChanges() {
@@ -166,7 +154,7 @@ export class RunningNotificationComponent implements OnInit, OnChanges {
 
     // Remove notification from the list when fade out animation is finished
     this._timer = refreshView(() => {
-      this.animate = 'out';
+      this.fade = 'fadeOut';
 
       this._ngZone.runOutsideAngular(() => {
         refreshView(() => {

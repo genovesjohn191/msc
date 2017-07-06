@@ -11,7 +11,7 @@
 
   <!--Storage profile content element (dropdown)-->
   <div *ngIf="storageProfiles">
-    <div [@fadeInOut] class="storage-profile-content">
+    <div [@animate]="'fadeIn'" class="storage-profile-content">
       <mcs-dropdown [ngModel]="storageProfileValue"
         (ngModelChange)="onStorageProfileChanged($event)"
         placeholder="Select the storage profile"
@@ -21,7 +21,7 @@
 
   <!--Custom size content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
-    <div [@fadeInOut] class="custom-size-content">
+    <div [@animate]="'fadeIn'" class="custom-size-content">
       <mcs-textbox width="150px" type="number" placeholder="GB"
         [ngModel]="customStorageValue"
         (ngModelChange)="onCustomStorageChanged($event)"></mcs-textbox>
@@ -37,7 +37,7 @@
   <!--Slider content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
     <div class="slider-content">
-      <mcs-slider [@fadeInOut] [min]="minimum" [max]="maximum"
+      <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum"
         [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>
       <span class="storage-label">
         {{ currentMemory }}GB
