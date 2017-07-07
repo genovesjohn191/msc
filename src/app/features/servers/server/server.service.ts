@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ServersService } from '../servers.service';
-import { ServerPerformanceScale } from '../models';
+import {
+  ServerPerformanceScale,
+  ServerThumbnail
+} from '../models';
 import { McsApiRequestServerUpdate } from '../../../core';
 
 @Injectable()
@@ -20,8 +23,18 @@ export class ServerService {
 
     // Update scaling of server based on cpu size scale
     this._seversService.patchServer(serverId,
-    {
-      memorySizeInMb: cpuSizeScale.memoryInGb, cpuCount: cpuSizeScale.cpuCount
-    } as McsApiRequestServerUpdate);
+      {
+        memorySizeInMb: cpuSizeScale.memoryInGb,
+        cpuCount: cpuSizeScale.cpuCount
+      } as McsApiRequestServerUpdate);
+  }
+
+  /**
+   * This will get the server thumbnail data from the respective server
+   * @param serverId Server ID
+   */
+  public getServerThumbnail(serverId: any) {
+    // Return the observable of thumbnails
+    return this._seversService.getServerThumbnail(serverId);
   }
 }

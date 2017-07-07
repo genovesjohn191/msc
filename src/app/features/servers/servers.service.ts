@@ -18,7 +18,9 @@ import { reviverParser } from '../../utilities';
 import {
   Server,
   ServerClientObject,
-  ServerPowerState
+  ServerPowerState,
+  ServerThumbnail,
+  ServerConsole
 } from './models';
 
 /**
@@ -104,7 +106,11 @@ export class ServersService {
    * @param command Command type (Start, Stop, Restart)
    * @param referenceObject Reference object of the server client to determine the status of job
    */
-  public postServerCommand(id: any, action: string, referenceObject: any) {
+  public postServerCommand(
+    id: any,
+    action: string,
+    referenceObject: any
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/' + id + '/command';
     mcsApiRequestParameter.recordData = JSON.stringify({
@@ -129,7 +135,10 @@ export class ServersService {
    * @param id Server identification
    * @param serverData Server data for the patch update
    */
-  public patchServer(id: any, serverData: McsApiRequestServerUpdate) {
+  public patchServer(
+    id: any,
+    serverData: McsApiRequestServerUpdate
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/' + id;
     mcsApiRequestParameter.recordData = JSON.stringify(serverData);
@@ -139,6 +148,44 @@ export class ServersService {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Get the server thumbnail for the image of the console
+   * * Note: This will return the thumbnail for display
+   * @param id Server identification
+   */
+  public getServerThumbnail(id: any): Observable<McsApiSuccessResponse<ServerThumbnail>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/thumbnail`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<ServerThumbnail>;
+        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<ServerThumbnail>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Get the server console for the commands to be executed
+   * * Note: This will return the url of the console
+   * @param id Server identification
+   */
+  public getServerConsole(id: any): Observable<McsApiSuccessResponse<ServerConsole>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/console`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<ServerConsole>;
+        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<ServerConsole>;
 
         return serverResponse;
       })
