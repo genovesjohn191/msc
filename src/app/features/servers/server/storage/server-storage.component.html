@@ -47,7 +47,7 @@
     </div>
     <div class="add-new-storage">
       <mcs-server-manage-storage
-        [memoryInGb]="storageMemoryInGb" [remainingMemoryInGb]="storageAvailableMemoryInGb"
+        [memoryGB]="storageMemoryInGb" [remainingMemoryGB]="storageAvailableMemoryInGb"
           [storageProfiles]="storageProfileItems" (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (description)-->
         <div title>
@@ -62,8 +62,9 @@
 
   <div *ngIf="increaseStorage" class="increase-storage">
     <mcs-server-manage-storage
-      [memoryInGb]="selectedStorage.capacityInGb" [remainingMemoryInGb]="selectedStorage.freeSpaceInGb"
-        (storageChanged)="onStorageChanged($event)">
+      [memoryGB]="selectedStorage.capacityInGb"
+      [remainingMemoryGB]="selectedStorage.freeSpaceInGb"
+      (storageChanged)="onStorageChanged($event)">
       <!--Server manage storage contents on the left hand side (description)-->
       <div title>
         <h4>{{ serverStorageText.resizeStorage }}</h4>

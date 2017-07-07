@@ -54,10 +54,10 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
   public customStorageSubscription: any;
 
   @Input()
-  public memoryInGb: number;
+  public memoryGB: number;
 
   @Input()
-  public remainingMemoryInGb: number;
+  public remainingMemoryGB: number;
 
   @Input()
   public storageProfiles: McsList;
@@ -70,8 +70,8 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
   }
 
   public get validCustomInput(): boolean {
-    return this.customFinalStorageValue >= this.memoryInGb &&
-      this.customFinalStorageValue <= this.remainingMemoryInGb;
+    return this.customFinalStorageValue >= this.memoryGB &&
+      this.customFinalStorageValue <= this.remainingMemoryGB;
   }
 
   public constructor() {
@@ -146,8 +146,8 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
 
   private _setSliderValue(): void {
     this.minimum = 0;
-    this.sliderValue = this.memoryInGb;
-    this.maximum = this.remainingMemoryInGb;
+    this.sliderValue = this.memoryGB;
+    this.maximum = this.remainingMemoryGB;
   }
 
   private _setCustomStorageInputDelay(): void {
@@ -162,7 +162,7 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
   private _notifyStorageChanged(memoryInGb: number, storageProfile: any) {
     let serverStorage: ServerManageStorage = new ServerManageStorage();
 
-    serverStorage.memoryInGb = memoryInGb;
+    serverStorage.memoryGB = memoryInGb;
     serverStorage.storageProfile = storageProfile;
     this.storageChanged.next(serverStorage);
   }

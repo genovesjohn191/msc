@@ -1,5 +1,6 @@
 /** Models */
 export * from './server';
+export * from './server-update';
 export * from './server-file-system';
 export * from './server-interface';
 export * from './server-media';

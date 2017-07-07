@@ -42,8 +42,8 @@ describe('ServerManageStorageComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.memoryInGb = 200;
-      component.remainingMemoryInGb = 900;
+      component.memoryGB = 200;
+      component.remainingMemoryGB = 900;
       component.storageProfiles = new McsList();
 
       component.storageProfiles.push('Storage Profiles',
@@ -64,11 +64,11 @@ describe('ServerManageStorageComponent', () => {
     });
 
     it(`should set the progressbar maximum value to 900`, () => {
-      expect(component.maximum).toBe(component.remainingMemoryInGb);
+      expect(component.maximum).toBe(component.remainingMemoryGB);
     });
 
     it(`should set the slider value to 200`, () => {
-      expect(component.sliderValue).toBe(component.memoryInGb);
+      expect(component.sliderValue).toBe(component.memoryGB);
     });
   });
 

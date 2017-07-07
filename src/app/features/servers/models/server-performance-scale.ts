@@ -1,4 +1,4 @@
 export class ServerPerformanceScale {
-  public memoryInGb: number;
+  public memoryGB: number;
   public cpuCount: number;
 }

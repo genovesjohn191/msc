@@ -11,8 +11,7 @@ import {
   McsApiErrorResponse,
   McsApiRequestParameter,
   McsNotificationContextService,
-  McsApiJob,
-  McsApiRequestServerUpdate
+  McsApiJob
 } from '../../core/';
 import { reviverParser } from '../../utilities';
 import {
@@ -20,7 +19,8 @@ import {
   ServerClientObject,
   ServerPowerState,
   ServerThumbnail,
-  ServerConsole
+  ServerConsole,
+  ServerUpdate
 } from './models';
 
 /**
@@ -137,7 +137,7 @@ export class ServersService {
    */
   public patchServer(
     id: any,
-    serverData: McsApiRequestServerUpdate
+    serverData: ServerUpdate
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/' + id;

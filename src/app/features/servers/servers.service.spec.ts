@@ -22,12 +22,12 @@ import { ResponseOptions } from '@angular/http';
 import {
   Server,
   ServerThumbnail,
-  ServerConsole
+  ServerConsole,
+  ServerUpdate
 } from './models';
 import { ServersService } from './servers.service';
 import {
   McsApiJob,
-  McsApiRequestServerUpdate,
   McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
@@ -350,7 +350,7 @@ describe('ServersService', () => {
   describe('patchServer()', () => {
     let requestOptions = {
       id: 500,
-      serverUpdate: new McsApiRequestServerUpdate()
+      serverUpdate: new ServerUpdate()
     };
 
     beforeEach(async () => {

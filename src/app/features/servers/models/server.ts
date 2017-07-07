@@ -13,7 +13,7 @@ export class Server {
   public deviceType: string;
   public cpuCount: number;
   public coreCount: number;
-  public memoryInMb: number;
+  public memoryMb: number;
   public osType: string;
   public hostName: string;
   public osVendor: string;

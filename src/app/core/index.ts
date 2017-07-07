@@ -17,7 +17,6 @@ export * from './providers/mcs-filter.provider';
 /** Models */
 export * from './models/request/mcs-api-search-key';
 export * from './models/request/mcs-api-request-parameter';
-export * from './models/request/mcs-api-request-server-update';
 export * from './models/response/mcs-api-error-response';
 export * from './models/response/mcs-api-success-response';
 export * from './models/response/mcs-api-error';

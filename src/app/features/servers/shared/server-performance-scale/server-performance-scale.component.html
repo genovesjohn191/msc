@@ -13,8 +13,8 @@
   <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
     <div [@animate]="'fadeIn'" class="custom-size-content">
       <mcs-dropdown width="150px"
-        [ngModel]="customMemoryInGbValue" (ngModelChange)="onMemoryChanged($event)"
-        [dropdownData]="customMemoryInGbTable"></mcs-dropdown>
+        [ngModel]="customMemoryGBValue" (ngModelChange)="onMemoryChanged($event)"
+        [dropdownData]="customMemoryGBTable"></mcs-dropdown>
       <mcs-dropdown width="150px"
         [ngModel]="customCpuCountValue" (ngModelChange)="onCpuCountChanged($event)"
         [dropdownData]="customCpuCountTable"></mcs-dropdown>
@@ -28,10 +28,10 @@
       <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum"
         [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>
       <span class="scale-label">
-        {{ currentServerScale.memoryInGb }}GB / {{ currentServerScale.cpuCount }}CPU
+        {{ currentServerScale.memoryGB }}GB / {{ currentServerScale.cpuCount }}CPU
       </span>
       <span class="available-label">
-        ({{ getMemoryInGb(availableMemoryInMb) }}GB / {{ availableCpuCount }}CPU available)
+        ({{ getMemoryInGb(availableMemoryMB) }}GB / {{ availableCpuCount }}CPU available)
       </span>
     </div>
   </div>

@@ -36,7 +36,7 @@ describe('ServerPerformanceScaleComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.availableMemoryInMb = 8192;
+      component.availableMemoryMB = 8192;
       component.availableCpuCount = 4;
     });
   }));
@@ -44,7 +44,7 @@ describe('ServerPerformanceScaleComponent', () => {
   /** Test Implementation */
   describe('ngOnInit() when the inputted RAM and CPU Count exist in the definition list', () => {
     beforeEach(async(() => {
-      component.memoryInMb = 4096;
+      component.memoryMB = 4096;
       component.cpuCount = 2;
       component.sliderValue = -1;
       component.ngOnInit();
@@ -70,7 +70,7 @@ describe('ServerPerformanceScaleComponent', () => {
   describe(`ngOnInit() when the inputted RAM and CPU Count not exist in the definition list`,
     () => {
       beforeEach(async(() => {
-        component.memoryInMb = 4096;
+        component.memoryMB = 4096;
         component.cpuCount = 3;
         component.sliderValue = -1;
         component.ngOnInit();
@@ -124,7 +124,7 @@ describe('ServerPerformanceScaleComponent', () => {
     and notify the output parameter`, () => {
         spyOn(component.scaleChanged, 'next');
         component.onMemoryChanged(2);
-        expect(component.customMemoryInGbValue).toBe(2);
+        expect(component.customMemoryGBValue).toBe(2);
         expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
       });
   });

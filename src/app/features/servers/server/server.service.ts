@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { ServersService } from '../servers.service';
 import {
   ServerPerformanceScale,
-  ServerThumbnail
+  ServerThumbnail,
+  ServerUpdate
 } from '../models';
-import { McsApiRequestServerUpdate } from '../../../core';
 
 @Injectable()
 export class ServerService {
@@ -24,9 +24,9 @@ export class ServerService {
     // Update scaling of server based on cpu size scale
     this._seversService.patchServer(serverId,
       {
-        memorySizeInMb: cpuSizeScale.memoryInGb,
+        memoryMB: cpuSizeScale.memoryGB,
         cpuCount: cpuSizeScale.cpuCount
-      } as McsApiRequestServerUpdate);
+      } as ServerUpdate);
   }
 
   /**
