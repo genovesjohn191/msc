@@ -12,6 +12,10 @@
     padding: 5px;
     text-decoration: none;
 
+    &:hover {
+      text-decoration: none;
+    }
+
     &[disabled] {
       opacity: 0.4;
       -webkit-touch-callout: none;

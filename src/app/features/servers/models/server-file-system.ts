@@ -1,5 +1,5 @@
 export class ServerFileSystem {
   public path: string;
-  public capacityInGb: number;
-  public freeSpaceInGb: number;
+  public capacityGB: number;
+  public freeSpaceGB: number;
 }

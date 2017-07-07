@@ -2,7 +2,9 @@
   <div class="row">
     <div class="col-sm-4 hidden-medium">
       <mcs-server-list-panel [serverListData]="servers"
-        (serverSelect)="onServerSelect($event)"></mcs-server-list-panel>
+        [selectedServerId]="server.id"
+          (serverSelectChange)="onServerSelect($event)">
+      </mcs-server-list-panel>
     </div>
 
     <div class="col-sm-8 server-features">
@@ -32,7 +34,6 @@
           </li>
         </ul>
 
-        <!-- Tab panes -->
         <div class="tab-content">
           <div class="tab-pane active" role="tabpanel">
             <router-outlet></router-outlet>

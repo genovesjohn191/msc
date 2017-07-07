@@ -1,9 +1,8 @@
 import {
   Component,
   OnInit,
-  Input
+  OnDestroy
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   Server,
   ServerFileSystem,
@@ -15,6 +14,7 @@ import {
   McsList,
   McsListItem
 } from '../../../../core';
+import { ServerService } from '../server.service';
 
 @Component({
   selector: 'mcs-server-storage',
@@ -22,11 +22,10 @@ import {
   templateUrl: './server-storage.component.html'
 })
 
-export class ServerStorageComponent implements OnInit {
+export class ServerStorageComponent implements OnInit, OnDestroy {
   public server: Server;
   public primaryStorage: any;
   public otherStorage: ServerFileSystem[];
-  public storageIconKey: string;
   public serverStorageText: any;
   public increaseStorage: boolean;
   public deleteStorageAlertMessage: string;
@@ -37,13 +36,23 @@ export class ServerStorageComponent implements OnInit {
 
   public selectedStorage: ServerFileSystem;
 
+  public subscription: any;
+
+  public get storageIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_STORAGE;
+  }
+
+  public get hasStorage(): boolean {
+    return this.server.fileSystems && this.server.fileSystems.length > 0;
+  }
+
   public get hasOtherStorage(): boolean {
     return this.otherStorage.length > 0;
   }
 
   constructor(
-    private _route: ActivatedRoute,
-    private _textProvider: McsTextContentProvider
+    private _textProvider: McsTextContentProvider,
+    private _serverService: ServerService
   ) {
     // Constructor
     this.otherStorage = new Array<ServerFileSystem>();
@@ -53,14 +62,18 @@ export class ServerStorageComponent implements OnInit {
 
   public ngOnInit() {
     // OnInit
-    this.server = this._route.parent.snapshot.data.server.content;
-    this.primaryStorage = this.server.fileSystem[0];
-    this.otherStorage = this.server.fileSystem.slice(1);
-    this.storageIconKey = CoreDefinition.ASSETS_SVG_STORAGE;
+    this.subscription = this._serverService.selectedServerStream.subscribe((server) => {
+      this.server = server;
+      if (this.hasStorage) {
+        this.primaryStorage = this.server.fileSystems[0];
+        this.otherStorage = this.server.fileSystems.slice(1);
+        this.storageAvailableMemoryInGb = this.getTotalStorageFreeSpace();
+      }
+    });
+
     this.serverStorageText = this._textProvider.content.servers.server.storage;
     this.deleteStorageAlertMessage = this.serverStorageText.deleteStorageAlertMessage;
     this.storageMemoryInGb = 200;
-    this.storageAvailableMemoryInGb = this.getTotalStorageFreeSpace();
     this.storageProfileItems = this.getStorageProfiles();
   }
 
@@ -71,8 +84,8 @@ export class ServerStorageComponent implements OnInit {
   public getTotalStorageFreeSpace(): number {
     let total: number;
 
-    for (let storage of this.server.fileSystem) {
-      total += storage.freeSpaceInGb;
+    for (let storage of this.server.fileSystems) {
+      total += storage.freeSpaceGB;
     }
 
     return total;
@@ -100,5 +113,11 @@ export class ServerStorageComponent implements OnInit {
   public closeIncreaseStorageBox() {
     this.selectedStorage = new ServerFileSystem();
     this.increaseStorage = false;
+  }
+
+  public ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

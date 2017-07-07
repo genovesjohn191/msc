@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ServersService } from '../servers.service';
 import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs/Rx';
+import {
+  Server,
   ServerPerformanceScale,
   ServerThumbnail,
   ServerUpdate
@@ -9,8 +14,18 @@ import {
 @Injectable()
 export class ServerService {
 
-  constructor(private _seversService: ServersService) {
-    // TODO: add method for snapshot listener here
+  private _selectedServerStream: BehaviorSubject<Server>;
+  public get selectedServerStream(): BehaviorSubject<Server> {
+    return this._selectedServerStream;
+  }
+  public set selectedServerStream(value: BehaviorSubject<Server>) {
+    this._selectedServerStream = value;
+  }
+
+  constructor(
+    private _seversService: ServersService
+  ) {
+    this._selectedServerStream = new BehaviorSubject<Server>(undefined);
   }
 
   /**
@@ -36,5 +51,12 @@ export class ServerService {
   public getServerThumbnail(serverId: any) {
     // Return the observable of thumbnails
     return this._seversService.getServerThumbnail(serverId);
+  }
+
+  public setSelectedServer(serverId: string): void {
+    this._seversService.getServer(serverId)
+      .subscribe((response) => {
+        this._selectedServerStream.next(response.content);
+      });
   }
 }

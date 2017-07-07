@@ -23,7 +23,8 @@ import {
 } from '@angular/router';
 import {
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  McsBrowserService
 } from '../../../../core';
 import {
   getElementOffset,
@@ -41,7 +42,8 @@ import { ServerList } from './server-list';
 export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   public servers: ServerList[];
   public serverList: ServerList[];
-  public selectedServerId: string;
+  public caretDown: string;
+  public serverState: string;
   public keyword: string;
   public errorMessage: string;
   public activeServers: ServerClientObject[];
@@ -50,8 +52,11 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   @Input()
   public serverListData: Server[];
 
+  @Input()
+  public selectedServerId: string;
+
   @Output()
-  public serverSelect: EventEmitter<any> = new EventEmitter();
+  public serverSelectChange: EventEmitter<any> = new EventEmitter();
 
   @ViewChild('serverListPanel')
   public serverListPanel: ElementRef;
@@ -89,6 +94,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
     private _renderer: Renderer2,
+    private _browserService: McsBrowserService,
     private _serversService: ServersService
   ) {
     this.servers = new Array();
@@ -138,11 +144,9 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   public ngOnInit() {
     this.errorMessage = this._textProvider.content.servers.errorMessage;
     this._route.params.subscribe((params) => {
-      this.selectedServerId = params['id'];
       if (this.serverListData) {
         this.mapServerList(this.serverListData);
-      } else {
-        this._router.navigate(['/page-not-found']);
+        this.onClickServer(this.selectedServerId);
       }
     });
     this._listenToActiveServers();
@@ -154,8 +158,10 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  public onClickServer(server: Server) {
-    this.serverSelect.next(server);
+  public onClickServer(serverId: string) {
+    this._browserService.scrollToTop();
+    this.selectedServerId = serverId;
+    this.serverSelectChange.next(serverId);
   }
 
   public getStateIconKey(state: number): string {

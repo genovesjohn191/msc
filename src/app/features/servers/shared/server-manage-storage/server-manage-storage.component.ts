@@ -162,7 +162,7 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
   private _notifyStorageChanged(memoryInGb: number, storageProfile: any) {
     let serverStorage: ServerManageStorage = new ServerManageStorage();
 
-    serverStorage.memoryGB = memoryInGb;
+    serverStorage.storageGB = memoryInGb;
     serverStorage.storageProfile = storageProfile;
     this.storageChanged.next(serverStorage);
   }

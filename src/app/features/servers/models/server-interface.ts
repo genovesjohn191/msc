@@ -1,10 +1,10 @@
 export class ServerInterface {
-  public interfaceName: string;
+  public name: string;
   public ipAddress: string[];
   public adminStatus: string;
   public operationStatus: string;
   public maxSpeed: string;
-  public maximumTransmissionUnit: number;
+  public mtu: number;
   public macAddress: string;
   public isSubInterface: boolean;
   public vLanId: number;

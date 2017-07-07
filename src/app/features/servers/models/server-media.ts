@@ -1,3 +1,3 @@
 export class ServerMedia {
-  public mediaName: string;
+  public name: string;
 }

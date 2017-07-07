@@ -21,7 +21,8 @@ import { ServerList } from './server-list';
 import {
   McsAssetsProvider,
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  McsBrowserService
 } from '../../../../core';
 import { ServersService } from '../../servers.service';
 
@@ -76,6 +77,10 @@ describe('ServerListPanelComponent', () => {
     },
   ];
 
+  let mockServerDetails = {
+    id: '52381b70-ed47-4ab5-8f6f-0365d4f76148'
+  };
+
   let mockRouterService = {
     navigate(): any { return null; },
     events: Observable.of(new Event('event'))
@@ -95,6 +100,7 @@ describe('ServerListPanelComponent', () => {
         { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: ServersService, useValue: serversServiceMock },
+        McsBrowserService,
         Renderer2
       ]
     });
@@ -136,7 +142,8 @@ describe('ServerListPanelComponent', () => {
     });
 
     it('should set the value of selectedServerId', () => {
-      expect(component.selectedServerId).toBeDefined();
+      component.selectedServerId = mockServerDetails.id;
+      expect(component.selectedServerId).toEqual(mockServerDetails.id);
     });
 
     it('should call mapServerList()', () => {
