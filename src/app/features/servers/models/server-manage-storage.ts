@@ -1,4 +1,4 @@
 export class ServerManageStorage {
-  public memoryInGb: number;
+  public memoryGB: number;
   public storageProfile: any;
 }

@@ -20,8 +20,8 @@
   <div class="computer-details">
     <div class="computer-information">
       <mcs-server-performance-scale
-        [memoryInMb]="memoryInMb" [cpuCount]="cpuCount"
-        availableMemoryInMb="32768" availableCpuCount="8"
+        [memoryMB]="memoryInMb" [cpuCount]="cpuCount"
+        availableMemoryMB="32768" availableCpuCount="8"
         (scaleChanged)="onScaleChanged($event)">
         <!--Performance scale contents on the left hand side (description)-->
         <div title>
@@ -32,7 +32,7 @@
 
     <div class="storage-information">
       <mcs-server-manage-storage
-        [memoryInGb]="storageMemoryInGb" [remainingMemoryInGb]="storageAvailableMemoryInGb"
+        [memoryGB]="storageMemoryInGb" [remainingMemoryGB]="storageAvailableMemoryInGb"
         [storageProfiles]="storageProfileItems" (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (description)-->
         <div title>

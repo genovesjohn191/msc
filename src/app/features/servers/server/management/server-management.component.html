@@ -22,8 +22,8 @@
               <div modal-body>
                   <div class="server-performance-scale-container">
                     <mcs-server-performance-scale
-                      [memoryInMb]="server.memoryInMb" [cpuCount]="server.cpuCount"
-                      availableMemoryInMb="4096" availableCpuCount="8"
+                      [memoryMB]="server.memoryInMb" [cpuCount]="server.cpuCount"
+                      availableMemoryMB="4096" availableCpuCount="8"
                       (scaleChanged)="onScaleChanged($event)">
 
                       <!--Performance scale container-->
