@@ -5,8 +5,7 @@ import {
 } from '@angular/core';
 import {
   Router,
-  ActivatedRoute,
-  NavigationEnd
+  ActivatedRoute
 } from '@angular/router';
 import {
   Server,
@@ -19,6 +18,7 @@ import {
   McsTextContentProvider
 } from '../../../core';
 import { ServersService } from '../servers.service';
+import { ServerService } from '../server/server.service';
 
 @Component({
   selector: 'mcs-server',
@@ -41,10 +41,15 @@ export class ServerComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _serversService: ServersService,
+    private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider
   ) { }
 
   public ngOnInit() {
+    this.subscription = this._serverService.selectedServerStream.subscribe((server) => {
+      this.server = server;
+    });
+
     if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
       this.servers = this._route.snapshot.data.servers.content;
       this.server = this._route.snapshot.data.server.content;
@@ -82,7 +87,9 @@ export class ServerComponent implements OnInit, OnDestroy {
   }
 
   public onServerSelect(event: any) {
-    if (event) { this.server = event; }
+    if (event) {
+      this._serverService.setSelectedServer(event);
+    }
   }
 
   public executeServerCommand(server: Server, action: string) {

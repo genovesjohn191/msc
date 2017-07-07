@@ -5,25 +5,25 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { ServerManagementComponent } from './server-management.component';
-import {
-  Router,
-  ActivatedRoute,
-  Data,
-  NavigationEnd
-} from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 import {
   Server,
+  ServerFileSystem,
   ServerPerformanceScale,
   ServerThumbnail
 } from '../../models';
 import {
   McsTextContentProvider,
-  McsBrowserService,
-  CoreDefinition
+  CoreDefinition,
+  McsList,
+  McsListItem
 } from '../../../../core';
 import { getEncodedUrl } from '../../../../utilities';
 import { ServerService } from '../server.service';
+import {
+  Subject,
+  Observable
+} from 'rxjs/Rx';
 
 describe('ServerManagementComponent', () => {
   /** Stub Services/Components */
@@ -42,37 +42,32 @@ describe('ServerManagementComponent', () => {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
     vdcName: 'M1VDC27117001',
-    fileSystem: [
+    serviceType: 'Managed',
+    fileSystems: [
       {
         path: '/',
-        capacityInGb: 49,
-        freeSpaceInGb: 48
+        capacityGB: 49,
+        freeSpaceGB: 48
       },
       {
         path: '/boot',
-        capacityInGb: 1,
-        freeSpaceInGb: 1
+        capacityGB: 1,
+        freeSpaceGB: 1
       },
       {
         path: '/tmp',
-        capacityInGb: 49,
-        freeSpaceInGb: 48
+        capacityGB: 49,
+        freeSpaceGB: 48
       },
       {
         path: '/var/tmp',
-        capacityInGb: 49,
-        freeSpaceInGb: 48
+        capacityGB: 49,
+        freeSpaceGB: 48
       }
     ],
   };
-  let navigationEnd = new NavigationEnd(
-    1, '/servers', '/servers');
   let mockRouterService = {
     navigate(): any { return null; },
-    events: new Observable((observer) => {
-      observer.next(navigationEnd);
-      observer.complete();
-    })
   };
   let mockActivatedRoute = {
     parent: {
@@ -86,6 +81,7 @@ describe('ServerManagementComponent', () => {
     }
   };
   let mockServerService = {
+    selectedServerStream: new Subject<any>(),
     setPerformanceScale(serverId: any, cpuSizeScale: any) { return; },
     getServerThumbnail(serverId: any) {
       return Observable.of({
@@ -109,8 +105,6 @@ describe('ServerManagementComponent', () => {
       providers: [
         { provide: McsTextContentProvider, useValue: mockTextContentProvider },
         { provide: Router, useValue: mockRouterService },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        McsBrowserService,
         { provide: ServerService, useValue: mockServerService }
       ]
     });
@@ -137,23 +131,23 @@ describe('ServerManagementComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should get the server details from activated route snapshot data', () => {
+    it('should set the text content values to serverManagementTextContent', () => {
+      expect(component.serverManagementTextContent)
+        .toEqual(mockTextContentProvider.content.servers.server.management);
+    });
+
+    it('should set the value of server', () => {
+      serverService.selectedServerStream.next(mockServerDetails as Server);
       expect(component.server).toBeDefined();
     });
 
-    it('should set the primaryVolume value', () => {
-      expect(component.primaryVolume).toBeDefined();
-    });
-
-    it('should set the secondaryVolume value if the fileSystem is more than one', () => {
-      expect(component.secondaryVolumes).toBeDefined();
-    });
-
-    it('should set the value of serverManagement', () => {
-      expect(component.serverManagementTextContent).toBeDefined();
+    it('should set the value of serviceType', () => {
+      serverService.selectedServerStream.next(mockServerDetails as Server);
+      expect(component.serviceType).toBeDefined();
     });
 
     it('should set the serverThumbnail value', () => {
+      serverService.selectedServerStream.next(mockServerDetails as Server);
       expect(component.serverThumbnail).toBeDefined();
     });
 
@@ -175,8 +169,17 @@ describe('ServerManagementComponent', () => {
 
     it('should call the setPerformanceScale of the serverService 1 time', () => {
       spyOn(serverService, 'setPerformanceScale');
+      component.server = mockServerDetails as Server;
       component.onClickScale(undefined);
       expect(serverService.setPerformanceScale).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('ngOnDestroy()', () => {
+    it('should unsubscribe from the subscription', () => {
+      spyOn(component.subscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.subscription.unsubscribe).toHaveBeenCalled();
     });
   });
 });

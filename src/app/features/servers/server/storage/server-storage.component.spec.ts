@@ -5,8 +5,6 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { ServerStorageComponent } from './server-storage.component';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import {
   Server,
   ServerFileSystem,
@@ -18,10 +16,13 @@ import {
   McsList,
   McsListItem
 } from '../../../../core';
+import { ServerService } from '../server.service';
+import { Subject } from 'rxjs/Rx';
 
 describe('ServerStorageComponent', () => {
   /** Stub Services/Components */
   let component: ServerStorageComponent;
+  let serverService: ServerService;
   let mockTextContentProvider = {
     content: {
       servers: {
@@ -48,39 +49,32 @@ describe('ServerStorageComponent', () => {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
     vdcName: 'M1VDC27117001',
-    fileSystem: [
+    fileSystems: [
       {
         path: '/',
-        capacityInGb: 49,
-        freeSpaceInGb: 48
+        capacityGB: 49,
+        freeSpaceGB: 48
       },
       {
         path: '/boot',
-        capacityInGb: 1,
-        freeSpaceInGb: 1
+        capacityGB: 1,
+        freeSpaceGB: 1
       },
       {
         path: '/tmp',
-        capacityInGb: 49,
-        freeSpaceInGb: 48
+        capacityGB: 49,
+        freeSpaceGB: 48
       },
       {
         path: '/var/tmp',
-        capacityInGb: 49,
-        freeSpaceInGb: 48
+        capacityGB: 49,
+        freeSpaceGB: 48
       }
     ],
   };
-  let mockActivatedRoute = {
-    parent: {
-      snapshot: {
-        data: {
-          server: {
-            content: mockServerDetails
-          }
-        }
-      }
-    }
+  let mockServerService = {
+    selectedServerStream: new Subject<any>(),
+    setPerformanceScale(serverId: any, cpuSizeScale: any) { return; }
   };
 
   beforeEach(async(() => {
@@ -93,7 +87,7 @@ describe('ServerStorageComponent', () => {
       ],
       providers: [
         { provide: McsTextContentProvider, useValue: mockTextContentProvider },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ServerService, useValue: mockServerService }
       ]
     });
 
@@ -112,45 +106,51 @@ describe('ServerStorageComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      serverService = getTestBed().get(ServerService);
     });
   }));
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should get the server details from activated route snapshot data', () => {
-      component.ngOnInit();
+    it('should get the server details from ServerService selectedServerStream', () => {
+      serverService.selectedServerStream.next(mockServerDetails as Server);
       expect(component.server).toBeDefined();
     });
 
     it('should get the server\'s primary storage', () => {
-      component.ngOnInit();
-      expect(component.primaryStorage).toEqual(mockServerDetails.fileSystem[0]);
+      serverService.selectedServerStream.next(mockServerDetails as Server);
+      expect(component.primaryStorage).toEqual(mockServerDetails.fileSystems[0]);
     });
 
     it('should get the server\'s other storage', () => {
-      component.ngOnInit();
-      expect(component.otherStorage).toEqual(mockServerDetails.fileSystem.slice(1));
+      serverService.selectedServerStream.next(mockServerDetails as Server);
+      expect(component.otherStorage).toEqual(mockServerDetails.fileSystems.slice(1));
+    });
+
+    it('should get the server\'s storage total free space', () => {
+      serverService.selectedServerStream.next(mockServerDetails as Server);
+      expect(component.storageAvailableMemoryInGb).toBeDefined();
     });
 
     it('should set the storage icon key', () => {
-      component.ngOnInit();
       expect(component.storageIconKey).toEqual(CoreDefinition.ASSETS_SVG_STORAGE);
     });
 
     it('should set the value of serverStorageText', () => {
-      component.ngOnInit();
       expect(component.serverStorageText)
         .toEqual(mockTextContentProvider.content.servers.server.storage);
     });
 
-    it('should get the server\'s storage total free space', () => {
-      component.ngOnInit();
-      expect(component.storageAvailableMemoryInGb).toBeDefined();
-    });
-
     it('should get the server\'s storage profiles', () => {
-      component.ngOnInit();
       expect(component.storageProfileItems).toBeDefined();
+    });
+  });
+
+  describe('ngOnDestroy()', () => {
+    it('should unsubscribe from the subscription', () => {
+      spyOn(component.subscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.subscription.unsubscribe).toHaveBeenCalled();
     });
   });
 });

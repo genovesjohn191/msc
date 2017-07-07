@@ -6,11 +6,7 @@ import {
   ElementRef,
   Renderer2
 } from '@angular/core';
-import {
-  Router,
-  NavigationEnd,
-  ActivatedRoute
-} from '@angular/router';
+import { Router } from '@angular/router';
 import {
   Server,
   ServerFileSystem,
@@ -19,9 +15,7 @@ import {
 } from '../../models';
 import {
   McsTextContentProvider,
-  McsApiSuccessResponse,
   CoreDefinition,
-  McsBrowserService,
   McsList,
   McsListItem
 } from '../../../../core';
@@ -45,19 +39,18 @@ const THUMBNAIL_ANIMATION_FADE = 100;
 export class ServerManagementComponent implements OnInit, OnDestroy {
   public server: Server;
   public serverManagementTextContent: any;
-  public subscription: any;
   public primaryVolume: string;
   public secondaryVolumes: string;
   public otherStorage: ServerFileSystem[];
   public serviceType: string;
-  public serverStorageProfile: any;
-  public serverStorageCapacity: any;
 
   public thumbnailFadeIn: string;
   public thumbnailVisible: boolean;
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
+
+  public subscription: any;
 
   @ViewChild('thumbnailElement')
   public thumbnailElement: ElementRef;
@@ -79,49 +72,35 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_SPINNER;
   }
 
+  public get hasMedia(): boolean {
+    return this.server.media && this.server.media.length < 0;
+  }
+
   constructor(
     private _router: Router,
-    private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
-    private _browserService: McsBrowserService,
     private _serverService: ServerService,
     private _renderer: Renderer2
-  ) {
-    if (this._route.parent.snapshot.data.server.content) {
-      this.serverManagementTextContent = this._textProvider.content.servers.server.management;
-    } else {
-      this._router.navigate(['/page-not-found']);
-      return;
-    }
+  ) {}
 
-    this.subscription = this._router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.server = this._route.parent.snapshot.data.server.content;
-        if (this.server.fileSystem.length > 0) {
-          this.primaryVolume = this.server.fileSystem[0].capacityInGb + ' GB';
+  public ngOnInit() {
+    // OnInit
+    this.serverManagementTextContent = this._textProvider.content.servers.server.management;
 
-          if (this.server.fileSystem.length > 1) {
-            this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
-            this.otherStorage = this.server.fileSystem.slice(1);
-          }
-        }
+    this.subscription = this._serverService.selectedServerStream.subscribe((server) => {
+      if (server) {
+        this.server = server;
         this.serviceType = this.server.serviceType;
-        this._browserService.scrollToTop();
         this._getServerThumbnail();
       }
     });
   }
 
-  public ngOnInit() {
-    this.serverStorageProfile = this.getServerStorageProfile();
-    this.serverStorageCapacity = this.getServerStorageCapacity();
-  }
-
-  public getSecondaryVolumes(serverfileSystem: ServerFileSystem[]) {
+  public getSecondaryVolumes(serverfileSystems: ServerFileSystem[]) {
     let storage = new Array();
 
-    for (let fileSystem of serverfileSystem.slice(1)) {
-      storage.push(fileSystem.capacityInGb + 'GB');
+    for (let fileSystems of serverfileSystems.slice(1)) {
+      storage.push(fileSystems.capacityGB + 'GB');
     }
 
     return storage.join(', ');
@@ -147,12 +126,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return list;
   }
 
-  public ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
   public onScaleChanged(scale: ServerPerformanceScale) {
     this._serverCpuSizeScale = scale;
   }
@@ -165,6 +138,12 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     // TODO: Check for dirty/prestine to prevent sending of API request if no data was changed
     // Update the Server CPU size scale
     this._serverService.setPerformanceScale(this.server.id, this._serverCpuSizeScale);
+  }
+
+  public ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   private _getServerThumbnail() {

@@ -10,10 +10,10 @@
       <div class="col">
         <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
         <ul class="unstyled-list">
-          <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.guestOS }}</li>
+          <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.guestOs }}</li>
           <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
           <li>{{ serverManagementTextContent.vmProperties.configuration }}:
-            {{ server.memoryInMb }} MB / {{ server.cpuCount }} CPU
+            {{ server.memoryMB }} MB / {{ server.cpuCount }} CPU
             <a [mcsModal]="scaleContent" #scaleModal="mcsModal">Scale</a>
             <ng-template #scaleContent>
               <div modal-title>
@@ -22,7 +22,7 @@
               <div modal-body>
                   <div class="server-performance-scale-container">
                     <mcs-server-performance-scale
-                      [memoryMB]="server.memoryInMb" [cpuCount]="server.cpuCount"
+                      [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
                       availableMemoryMB="4096" availableCpuCount="8"
                       (scaleChanged)="onScaleChanged($event)">
 
@@ -49,7 +49,7 @@
             </ng-template>
           </li>
           <li>{{ serverManagementTextContent.vmProperties.media }}:
-            <ul class="unstyled-list server-media" *ngIf="server.media.length < 0; else elseBlock">
+            <ul class="unstyled-list server-media" *ngIf="hasMedia; else elseBlock">
               <li *ngFor="let media of server.media">{{ media.mediaName }}</li>
             </ul>
             <ng-template #elseBlock>None</ng-template>

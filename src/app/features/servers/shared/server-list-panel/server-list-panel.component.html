@@ -14,7 +14,7 @@
         [ngClass]="{'show': vdc.selected}">
         <div class="server-name" *ngFor="let server of vdc.servers">
           <a [ngClass]="{'active-server': isServerSelected(server.id)}"
-            [routerLink]="['/servers/' + server.id]" (click)="onClickServer(server)">
+            [routerLink]="['/servers/' + server.id]" (click)="onClickServer(server.id)">
 
             <div *ngIf="server.powerState">
               <mcs-icon [key]="getStateIconKey(server.powerState)" size="medium"></mcs-icon>
