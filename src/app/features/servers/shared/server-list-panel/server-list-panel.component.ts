@@ -27,7 +27,7 @@ import {
 } from '../../../../core';
 import {
   getElementOffset,
-  toProperCase,
+  getProperCase,
   refreshView
 } from '../../../../utilities';
 import { ServersService } from '../../servers.service';
@@ -253,7 +253,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
 
       this.serverList.forEach((vdc) => {
         let filteredServers = vdc.servers.filter((server) => {
-          let powerStateValue = ServerPowerState[toProperCase(key)];
+          let powerStateValue = ServerPowerState[getProperCase(key)];
           return server.managementName.toLowerCase().includes(key.toLowerCase()) ||
             server.powerState === powerStateValue;
         });

@@ -14,13 +14,15 @@ import {
 import { Observable } from 'rxjs/Observable';
 import {
   Server,
-  ServerPerformanceScale
+  ServerPerformanceScale,
+  ServerThumbnail
 } from '../../models';
 import {
   McsTextContentProvider,
   McsBrowserService,
   CoreDefinition
 } from '../../../../core';
+import { getEncodedUrl } from '../../../../utilities';
 import { ServerService } from '../server.service';
 
 describe('ServerManagementComponent', () => {
@@ -84,7 +86,16 @@ describe('ServerManagementComponent', () => {
     }
   };
   let mockServerService = {
-    setPerformanceScale(serverId: any, cpuSizeScale: any) { return; }
+    setPerformanceScale(serverId: any, cpuSizeScale: any) { return; },
+    getServerThumbnail(serverId: any) {
+      return Observable.of({
+        content: {
+          file: 'aaaBBBcccDDD',
+          fileType: 'image/png',
+          encoding: 'base64'
+        } as ServerThumbnail
+      });
+    }
   };
 
   beforeEach(async(() => {
@@ -109,6 +120,7 @@ describe('ServerManagementComponent', () => {
       set: {
         template: `
           <div>Overridden template here</div>
+          <img #thumbnailElement/>
         `
       }
     });
@@ -125,27 +137,28 @@ describe('ServerManagementComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should get the server details from activated route snapshot data',
-      inject([Router], (routerService: Router) => {
-        component.ngOnInit();
-        expect(component.server).toBeDefined();
-      }));
+    it('should get the server details from activated route snapshot data', () => {
+      expect(component.server).toBeDefined();
+    });
 
-    it('should set the primaryVolume value',
-      inject([Router], (routerService: Router) => {
-        component.ngOnInit();
-        expect(component.primaryVolume).toBeDefined();
-      }));
+    it('should set the primaryVolume value', () => {
+      expect(component.primaryVolume).toBeDefined();
+    });
 
-    it('should set the secondaryVolume value if the fileSystem is more than one',
-      inject([Router], (routerService: Router) => {
-        component.ngOnInit();
-        expect(component.secondaryVolumes).toBeDefined();
-      }));
+    it('should set the secondaryVolume value if the fileSystem is more than one', () => {
+      expect(component.secondaryVolumes).toBeDefined();
+    });
 
     it('should set the value of serverManagement', () => {
-      component.ngOnInit();
       expect(component.serverManagementTextContent).toBeDefined();
+    });
+
+    it('should set the serverThumbnail value', () => {
+      expect(component.serverThumbnail).toBeDefined();
+    });
+
+    it('should set the thumbnailElement value', () => {
+      expect(component.thumbnailElement).toBeDefined();
     });
   });
 

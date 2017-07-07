@@ -1,7 +1,10 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  Renderer2
 } from '@angular/core';
 import {
   Router,
@@ -11,7 +14,8 @@ import {
 import {
   Server,
   ServerFileSystem,
-  ServerPerformanceScale
+  ServerPerformanceScale,
+  ServerThumbnail
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -21,13 +25,21 @@ import {
   McsList,
   McsListItem
 } from '../../../../core';
+import {
+  getEncodedUrl,
+  animateFactory,
+  refreshView
+} from '../../../../utilities';
 import { Observable } from 'rxjs/Rx';
 import { ServerService } from '../server.service';
+
+const THUMBNAIL_ANIMATION_FADE = 100;
 
 @Component({
   selector: 'mcs-server-management',
   styles: [require('./server-management.component.scss')],
   templateUrl: './server-management.component.html',
+  animations: [animateFactory({ duration: THUMBNAIL_ANIMATION_FADE })]
 })
 
 export class ServerManagementComponent implements OnInit, OnDestroy {
@@ -40,6 +52,15 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public serviceType: string;
   public serverStorageProfile: any;
   public serverStorageCapacity: any;
+
+  public thumbnailFadeIn: string;
+  public thumbnailVisible: boolean;
+
+  public serverThumbnail: ServerThumbnail;
+  public serverThumbnailEncoding: string;
+
+  @ViewChild('thumbnailElement')
+  public thumbnailElement: ElementRef;
 
   private _serverCpuSizeScale: ServerPerformanceScale;
 
@@ -54,12 +75,17 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_WARNING;
   }
 
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SPINNER;
+  }
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
     private _browserService: McsBrowserService,
-    private _serverService: ServerService
+    private _serverService: ServerService,
+    private _renderer: Renderer2
   ) {
     if (this._route.parent.snapshot.data.server.content) {
       this.serverManagementTextContent = this._textProvider.content.servers.server.management;
@@ -81,6 +107,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         }
         this.serviceType = this.server.serviceType;
         this._browserService.scrollToTop();
+        this._getServerThumbnail();
       }
     });
   }
@@ -138,5 +165,46 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     // TODO: Check for dirty/prestine to prevent sending of API request if no data was changed
     // Update the Server CPU size scale
     this._serverService.setPerformanceScale(this.server.id, this._serverCpuSizeScale);
+  }
+
+  private _getServerThumbnail() {
+    if (!this.server) { return; }
+
+    // Hide thumbnail if it is already dispayed in initial routing
+    this._hideThumbnail();
+
+    // Get the server thumbnail to be encoded and display in the image
+    this._serverService.getServerThumbnail(this.server.id)
+      .subscribe((response) => {
+        this.serverThumbnail = response.content;
+
+        if (this.serverThumbnail && this.thumbnailElement) {
+          this.serverThumbnailEncoding = getEncodedUrl(
+            this.serverThumbnail.file,
+            this.serverThumbnail.fileType,
+            this.serverThumbnail.encoding
+          );
+          this._showThumbnail();
+        }
+      });
+  }
+
+  private _showThumbnail() {
+    if (!this.thumbnailElement) { return; }
+
+    this.thumbnailVisible = true;
+    this.thumbnailFadeIn = 'fadeIn';
+    this._renderer.setAttribute(this.thumbnailElement.nativeElement,
+      'src', this.serverThumbnailEncoding);
+  }
+
+  private _hideThumbnail() {
+    if (!this.thumbnailElement) { return; }
+
+    this.thumbnailFadeIn = 'fadeOut';
+    refreshView(() => {
+      this.thumbnailVisible = false;
+      this._renderer.removeAttribute(this.thumbnailElement.nativeElement, 'src');
+    }, THUMBNAIL_ANIMATION_FADE + 50);
   }
 }

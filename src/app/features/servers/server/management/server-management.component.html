@@ -1,6 +1,7 @@
 <section *ngIf="server" class="server-management-container">
-  <div class="server-snapshot">
-    <img class="w-100" src="assets/img/server-snapshot.png" />
+  <div class="server-thumbnail">
+    <mcs-icon *ngIf="!thumbnailVisible" [key]="spinnerIconKey" size="xlarge"></mcs-icon>
+    <img #thumbnailElement [@animate]="thumbnailFadeIn" class="w-100 thumbnail"/>
   </div>
   <a href="#">View Console</a>
   <!-- TODO: Waiting for mapping of api response properties to view properties -->
