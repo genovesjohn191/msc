@@ -52,6 +52,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   public subscription: any;
 
+  public isServerScale: boolean;
+
   @ViewChild('thumbnailElement')
   public thumbnailElement: ElementRef;
 
@@ -81,7 +83,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
     private _renderer: Renderer2
-  ) {}
+  ) {
+    this.isServerScale = false;
+  }
 
   public ngOnInit() {
     // OnInit

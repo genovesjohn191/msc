@@ -6,6 +6,7 @@ import {
 } from '@angular/core/testing';
 import { ServerPerformanceScaleComponent } from './server-performance-scale.component';
 import { ServerInputManageType } from '../../models';
+import { McsTextContentProvider } from '../../../../core';
 
 describe('ServerPerformanceScaleComponent', () => {
 
@@ -18,6 +19,9 @@ describe('ServerPerformanceScaleComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ServerPerformanceScaleComponent
+      ],
+      providers: [
+        McsTextContentProvider
       ]
     });
 
