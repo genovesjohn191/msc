@@ -1,4 +1,4 @@
-<section *ngIf="server" class="server-management-container">
+<section *ngIf="server && !isServerScale" class="server-management-container">
   <div class="server-thumbnail">
     <mcs-icon *ngIf="!thumbnailVisible" [key]="spinnerIconKey" size="xlarge"></mcs-icon>
     <img #thumbnailElement [@animate]="thumbnailFadeIn" class="w-100 thumbnail"/>
@@ -14,39 +14,8 @@
           <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
           <li>{{ serverManagementTextContent.vmProperties.configuration }}:
             {{ server.memoryMB }} MB / {{ server.cpuCount }} CPU
-            <a [mcsModal]="scaleContent" #scaleModal="mcsModal">Scale</a>
-            <ng-template #scaleContent>
-              <div modal-title>
-                <span>Server {{ server.managementName }}</span>
-              </div>
-              <div modal-body>
-                  <div class="server-performance-scale-container">
-                    <mcs-server-performance-scale
-                      [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
-                      availableMemoryMB="4096" availableCpuCount="8"
-                      (scaleChanged)="onScaleChanged($event)">
-
-                      <!--Performance scale container-->
-                      <div details>
-                        <span>
-                          {{ serverManagementTextContent.performanceScale.sliderGuidance }}
-                        </span>
-                      </div>
-                    </mcs-server-performance-scale>
-
-                    <div class="note">
-                      <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
-                      <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
-                    </div>
-
-                    <div class="scaling">
-                      <a class="text-underline" (click)="scaleModal.close()">Cancel</a>
-                      <mcs-button size="small" class="scale"
-                        (click)="onClickScale(scaleModal)">Scale</mcs-button>
-                    </div>
-                  </div>
-              </div>
-            </ng-template>
+            <a (click)="isServerScale = true">
+              {{ serverManagementTextContent.performanceScale.scale }}</a>
           </li>
           <li>{{ serverManagementTextContent.vmProperties.media }}:
             <ul class="unstyled-list server-media" *ngIf="hasMedia; else elseBlock">
@@ -102,4 +71,34 @@
     </div>
   </div>
 
+</section>
+
+<section *ngIf="server && isServerScale" class="server-performance-scale-container">
+  <h3>Server {{ server.managementName }}</h3>
+  <mcs-server-performance-scale
+    [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
+    availableMemoryMB="4096" availableCpuCount="8"
+    (scaleChanged)="onScaleChanged($event)">
+
+    <!--Performance scale container-->
+    <span slider-details>
+      {{ serverManagementTextContent.performanceScale.sliderGuidance }}
+    </span>
+    <span custom-details>
+      {{ serverManagementTextContent.performanceScale.customGuidance }}
+    </span>
+  </mcs-server-performance-scale>
+
+  <div class="note">
+    <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
+    <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
+  </div>
+
+  <div class="scaling">
+    <a class="text-underline" (click)="isServerScale = false">
+      {{ serverManagementTextContent.performanceScale.cancel }}</a>
+    <mcs-button size="small" class="scale"
+      (click)="onClickScale(scaleModal)">
+        {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
+  </div>
 </section>

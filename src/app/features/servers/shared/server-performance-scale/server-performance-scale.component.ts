@@ -13,7 +13,7 @@ import {
   animate
 } from '@angular/animations';
 import {
-  McsAssetsProvider,
+  McsTextContentProvider,
   CoreDefinition,
   McsList,
   McsListItem
@@ -41,6 +41,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public maximum: number;
   public inputManageType: ServerInputManageType;
   public inputManageTypeEnum = ServerInputManageType;
+  public serverScalePerformanceTextContent: any;
 
   public sliderValue: number;
   public sliderTable: ServerPerformanceScale[];
@@ -70,7 +71,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     return this.sliderValue < 0 ? undefined : this.sliderTable[this.sliderValue];
   }
 
-  public constructor() {
+  public constructor(private _textProvider: McsTextContentProvider) {
     this.minimum = 0;
     this.maximum = 0;
     this.sliderValue = -1;
@@ -86,6 +87,8 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.serverScalePerformanceTextContent
+      = this._textProvider.content.servers.server.management.performanceScale;
     // Set default table values
     this._setDefaultSliderTable();
     this._setDefaultCustomSizeTable();
@@ -144,6 +147,11 @@ export class ServerPerformanceScaleComponent implements OnInit {
     }
   }
 
+  private _setCustomSizeValue(): void {
+    this.customMemoryGBValue = this.memoryMB / CoreDefinition.GB_TO_MB_MULTIPLIER;
+    this.customCpuCountValue = this.cpuCount;
+  }
+
   private _setScaleType(): void {
     // Memory comparison if its not exact value on GB
     let actualMemory = this.memoryMB / CoreDefinition.GB_TO_MB_MULTIPLIER;
@@ -157,6 +165,8 @@ export class ServerPerformanceScaleComponent implements OnInit {
     if (this.sliderValue === -1) {
       this.sliderValue = 0;
       this.inputManageType = ServerInputManageType.Custom;
+      // Set inital value for custom sizes
+      this._setCustomSizeValue();
     } else {
       this.inputManageType = ServerInputManageType.Slider;
     }
@@ -164,17 +174,17 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   private _setDefaultCustomSizeTable(): void {
     // Populate memory in gigabytes default table
-    this.customMemoryGBTable.push('RAM', new McsListItem('2', '2'));
-    this.customMemoryGBTable.push('RAM', new McsListItem('4', '4'));
-    this.customMemoryGBTable.push('RAM', new McsListItem('8', '8'));
-    this.customMemoryGBTable.push('RAM', new McsListItem('16', '16'));
-    this.customMemoryGBTable.push('RAM', new McsListItem('32', '32'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(2, '2'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(4, '4'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(8, '8'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(16, '16'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(32, '32'));
 
     // Populate cpu count default table
-    this.customCpuCountTable.push('CPU Count', new McsListItem('1', '1'));
-    this.customCpuCountTable.push('CPU Count', new McsListItem('2', '2'));
-    this.customCpuCountTable.push('CPU Count', new McsListItem('4', '4'));
-    this.customCpuCountTable.push('CPU Count', new McsListItem('8', '8'));
+    this.customCpuCountTable.push('CPU Count', new McsListItem(1, '1'));
+    this.customCpuCountTable.push('CPU Count', new McsListItem(2, '2'));
+    this.customCpuCountTable.push('CPU Count', new McsListItem(4, '4'));
+    this.customCpuCountTable.push('CPU Count', new McsListItem(8, '8'));
   }
 
   private _setDefaultSliderTable(): void {

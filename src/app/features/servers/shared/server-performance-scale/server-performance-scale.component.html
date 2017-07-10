@@ -1,24 +1,32 @@
 <div class="server-performance-scale-container">
   <div class="description">
     <ng-content select="[title]"></ng-content>
-    <ng-content select="[details]"></ng-content>
+    <ng-content *ngIf="inputManageType == inputManageTypeEnum.Slider" select="[slider-details]"></ng-content>
+    <ng-content *ngIf="inputManageType == inputManageTypeEnum.Custom" select="[custom-details]"></ng-content>
   </div>
 
   <div class="custom-size">
     <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
-      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">Enter custom size</a>
+      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+        {{ serverScalePerformanceTextContent.customSwitch }}</a>
+    <a *ngIf="inputManageType == inputManageTypeEnum.Custom"
+      (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
+        {{ serverScalePerformanceTextContent.sliderSwitch }}</a>
   </div>
 
   <!--Custom size content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
     <div [@animate]="'fadeIn'" class="custom-size-content">
-      <mcs-dropdown width="150px"
-        [ngModel]="customMemoryGBValue" (ngModelChange)="onMemoryChanged($event)"
-        [dropdownData]="customMemoryGBTable"></mcs-dropdown>
-      <mcs-dropdown width="150px"
-        [ngModel]="customCpuCountValue" (ngModelChange)="onCpuCountChanged($event)"
-        [dropdownData]="customCpuCountTable"></mcs-dropdown>
-      <a (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">Cancel</a>
+      <mcs-textbox width="150px"
+        placeholder="RAM"
+        [ngModel]="customMemoryGBValue"
+        (ngModelChange)="onMemoryChanged($event)">
+      </mcs-textbox>
+      <mcs-textbox width="150px"
+        placeholder="CPUs"
+        [ngModel]="customCpuCountValue"
+        (ngModelChange)="onCpuCountChanged($event)">
+      </mcs-textbox>
     </div>
   </div>
 

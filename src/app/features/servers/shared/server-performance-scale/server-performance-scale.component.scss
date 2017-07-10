@@ -17,11 +17,11 @@
   .custom-size {
     margin: 0;
     text-align: right;
-    @include flex(0 1 50%);
+    @include flex(0 1 25%);
   }
 
   .description {
-    @include flex(0 1 50%);
+    @include flex(0 1 75%);
     @include display-flex(column);
   }
 

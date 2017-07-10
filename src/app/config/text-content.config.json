@@ -72,7 +72,11 @@
         "performanceScale": {
           "sliderGuidance": "Move the slider to select the new compute size for this VM.",
           "customGuidance": "Enter the custom size for this VM.",
-          "warning": "Scaling the Server will require a restart."
+          "warning": "Scaling the Server will require a restart.",
+          "sliderSwitch": "Select from slider",
+          "customSwitch": "Enter custom size",
+          "scale": "Scale",
+          "cancel": "Cancel"
         }
       },
       "storage":{
