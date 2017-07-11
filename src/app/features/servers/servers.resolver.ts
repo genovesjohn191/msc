@@ -13,10 +13,10 @@ export class ServersResolver implements Resolve<any> {
   constructor(
     private _router: Router,
     private _serversService: ServersService
-  ) {}
+  ) { }
 
   public resolve(route: ActivatedRouteSnapshot) {
     return this._serversService.getServers()
-      .catch((error) => Observable.of({error}));
+      .catch((error) => Observable.of({ error }));
   }
 }

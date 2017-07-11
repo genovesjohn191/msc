@@ -5,7 +5,7 @@ import { DashboardComponent } from './dashboard.component';
 /** Resolvers */
 import { ServersResolver } from '../servers/servers.resolver';
 
-export const routes: Routes = [
+export const dashboardRoutes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,

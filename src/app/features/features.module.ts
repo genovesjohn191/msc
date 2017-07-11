@@ -5,6 +5,7 @@ import { CatalogModule } from './catalog/catalog.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
+import { PageNotFoundModule } from './page-not-found/page-not-found.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { GadgetsModule } from './gadgets/gadgets.module';
     NetworkingModule,
     CatalogModule,
     NotificationsModule,
-    GadgetsModule
+    GadgetsModule,
+    PageNotFoundModule
   ]
 })
 

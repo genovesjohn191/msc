@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-/** Servers Feature */
-import { routes } from './servers.routes';
+/** Servers */
+import { ServersComponent } from './servers.component';
+import { ServersResolver } from './servers.resolver';
 /** Shared */
 import {
   JobProgressComponent,
@@ -12,15 +13,15 @@ import {
   ServerPerformanceScaleComponent,
   ServerManageStorageComponent
 } from './shared';
-/** Servers */
-import { ServersComponent } from './servers.component';
+/** Server */
 import {
   ServerComponent,
   ServerManagementComponent,
   ServerBackupsComponent,
   ServerStorageComponent,
   ServerServicesComponent,
-  ServerService
+  ServerService,
+  ServerResolver
 } from './server/';
 /** Self Managed Servers */
 import {
@@ -62,14 +63,15 @@ import { SharedModule } from '../../shared';
     ProvisioningNotificationsComponent
   ],
   imports: [
-    RouterModule.forChild(routes),
     SharedModule
   ],
   providers: [
-    ServerService,
     ServersService,
+    ServerService,
     CreateSelfManagedServerService,
-    ProvisioningNotificationsService
+    ProvisioningNotificationsService,
+    ServersResolver,
+    ServerResolver
   ]
 })
 
