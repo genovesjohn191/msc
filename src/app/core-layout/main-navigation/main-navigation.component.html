@@ -27,28 +27,28 @@
 
         <!--TODO: Temporarily removed dashboard for phase 1.0 -->
         <!--<li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./dashboard']"
+          <a class="nav-link" [routerLink]="['/dashboard']"
           (click)="setTitle(textContent.dashboard.title)">
             <mcs-icon class="nav-item-bullet" [key]="getCaretRightIconKey()"
               size="small" color="white"></mcs-icon>
             {{ textContent.navigation.dashboard }}</a>
         </li>-->
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./servers']"
+          <a class="nav-link" [routerLink]="['/servers']"
           (click)="setTitle(textContent.servers.title)">
             <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
               size="small" color="white"></mcs-icon>
             {{ textContent.navigation.servers }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./networking']"
+          <a class="nav-link" [routerLink]="['/networking']"
           (click)="setTitle(textContent.networking.title)">
             <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
               size="small" color="white"></mcs-icon>
             {{ textContent.navigation.networking }}</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['./catalog']"
+          <a class="nav-link" [routerLink]="['/catalog']"
           (click)="setTitle(textContent.catalog.title)">
             <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
               size="small" color="white"></mcs-icon>
@@ -57,7 +57,7 @@
 
         <!-- Example on how to check the available link based on user type (admin/user)-->
         <li class="nav-item" routerLinkActive="active" *ngIf="!isUser()">
-          <a class="nav-link" [routerLink]="['./others']"
+          <a class="nav-link" [routerLink]="['/others']"
           (click)="setTitle(textContent.others.title)">
             <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
               size="small" color="white"></mcs-icon>
@@ -65,7 +65,7 @@
         </li>
 
         <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">
-          <a class="nav-link" [routerLink]="['./others']"
+          <a class="nav-link" [routerLink]="['/others']"
           (click)="setTitle(textContent.others.title)">
             <mcs-icon class="nav-item-bullet" [key]="signOutIconKey"
               size="small" color="white"></mcs-icon>

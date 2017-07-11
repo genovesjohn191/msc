@@ -5,7 +5,7 @@ import { GadgetsComponent } from './gadgets.component';
 /** Resolvers */
 import { ServersResolver } from '../servers/servers.resolver';
 
-export const routes: Routes = [
+export const gadgetsRoutes: Routes = [
   {
     path: 'gadgets',
     component: GadgetsComponent,

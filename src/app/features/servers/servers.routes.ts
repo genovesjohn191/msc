@@ -1,11 +1,14 @@
 import { Routes } from '@angular/router';
 /** Servers */
 import { ServersComponent } from './servers.component';
-import { ServerComponent } from './server/server.component';
-import { ServerManagementComponent } from './server/management/server-management.component';
-import { ServerServicesComponent } from './server/services/server-services.component';
-import { ServerStorageComponent } from './server/storage/server-storage.component';
-import { ServerBackupsComponent } from './server/backups/server-backups.component';
+/** Server */
+import {
+  ServerBackupsComponent,
+  ServerComponent,
+  ServerManagementComponent,
+  ServerServicesComponent,
+  ServerStorageComponent
+} from './server';
 /** Managed Server */
 import {
   CreateSelfManagedServerComponent,
@@ -21,7 +24,7 @@ import {
 import { ServersResolver } from './servers.resolver';
 import { ServerResolver } from './server/server.resolver';
 
-export const routes: Routes = [
+export const serversRoutes: Routes = [
   {
     path: 'servers', component: ServersComponent
   },
@@ -40,8 +43,8 @@ export const routes: Routes = [
     path: 'servers/:id',
     component: ServerComponent,
     resolve: {
-      server: ServerResolver,
-      servers: ServersResolver
+      servers: ServersResolver,
+      server: ServerResolver
     },
     children: [
       { path: '', redirectTo: 'management', pathMatch: 'full' },

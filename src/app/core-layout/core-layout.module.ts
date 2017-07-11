@@ -17,7 +17,6 @@ import { MainNavigationComponent } from './main-navigation/main-navigation.compo
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import {
   HeaderComponent,
   UserPanelComponent,
@@ -32,7 +31,6 @@ import {
     ContentComponent,
     FooterComponent,
     HeaderComponent,
-    PageNotFoundComponent,
     RunningNotificationComponent,
     UserPanelComponent,
     StateChangeNotificationComponent,
@@ -51,7 +49,6 @@ import {
     ContentComponent,
     FooterComponent,
     HeaderComponent,
-    PageNotFoundComponent,
     RunningNotificationComponent,
     UserPanelComponent,
     StateChangeNotificationComponent,
