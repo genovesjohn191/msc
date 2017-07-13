@@ -8,7 +8,7 @@
     </div>
 
     <div class="col-sm-8 server-features">
-      <h2>{{ server.managementName }}</h2>
+      <h2 class="server-name">{{ server.managementName }}</h2>
       <div class="mcs-tabs">
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item">
@@ -29,7 +29,7 @@
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['backups']" routerLinkActive="active">Backups</a>
           </li>
-          <li class="nav-item hidden-medium">
+          <li class="nav-item hidden-medium server-cog">
             <mcs-server-command [command]="getActionStatus(server)"
               (onClick)="executeServerCommand(server, $event)"></mcs-server-command>
           </li>

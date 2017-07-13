@@ -193,10 +193,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   private _setThumbnailSize(): void {
     refreshView(() => {
-      let height = getElementStyle(this.thumbnailElement.nativeElement, 'height');
       let width = getElementStyle(this.thumbnailElement.nativeElement, 'width');
-
-      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'height', `calc(${height} * 2)`);
       this._renderer.setStyle(this.thumbnailElement.nativeElement, 'width', `calc(${width} * 2)`);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }

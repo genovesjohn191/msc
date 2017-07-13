@@ -18,10 +18,11 @@ $server-thumbnail-min-size: 80px;
     }
 
     .view-console {
-      @include display-flex(column);
+      @include display-inline-flex(column);
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       cursor: pointer;
+      @include set-items-interval(5, vertical);
 
       .thumbnail {
         display: block;
@@ -33,7 +34,7 @@ $server-thumbnail-min-size: 80px;
   .server-details {
     color: $color-black;
     margin: $space-large 0;
-    @include set-items-interval(30, vertical);
+    @include set-items-interval(50, vertical);
   }
 }
 
