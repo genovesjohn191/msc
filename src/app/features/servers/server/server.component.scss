@@ -1,5 +1,7 @@
 @import "../../../../styles/shared/base";
 
+$server-name-margin-top: 3px;
+
 .server-features {
   min-height: 100%;
   @include breakpoint(medium) {
@@ -7,9 +9,20 @@
     max-width: 100%;
   }
 
+  .server-name {
+    margin-top: $server-name-margin-top;
+    margin-bottom: $space-medium;
+  }
+
   .mcs-tabs {
     .nav-tabs {
       align-items: center;
+
+      .server-cog {
+        margin-left: auto;
+        margin-right: $space-xsmall;
+        padding-bottom: $space-xsmall;
+      }
     }
   }
 }

@@ -1,10 +1,11 @@
 @import "../../../styles/shared/base";
 
+$navlink-padding: 9px 0;
+
 .mcs-tabs {
   .nav-tabs {
     border-bottom: 1px solid $color-grey-07;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: $space-medium;
 
     .nav-item {
@@ -15,6 +16,8 @@
         border: none;
         border-bottom: 8px solid transparent;
         text-decoration: none;
+        padding: $navlink-padding;
+        margin-right: $space-xlarge;
         @include breakpoint(small) {
           @include font-size($link-small-font-size);
         }
