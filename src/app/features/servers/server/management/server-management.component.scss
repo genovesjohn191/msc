@@ -1,32 +1,39 @@
 @import "../../../../../styles/shared/base";
 
-$server-thumbnail-height: 200px;
+$server-thumbnail-min-size: 80px;
 
 .server-management-container {
 
   .server-thumbnail {
-    height: $server-thumbnail-height;
     margin-bottom: $space-small;
-    @include display-flex(column);
+    @include display-inline-flex(column);
     justify-content: center;
-    align-items: center;
 
-    .thumbnail {
-      display: block;
-      background: black;
+    .loading-icon {
+      min-height: $server-thumbnail-min-size;
+      min-width: $server-thumbnail-min-size;
+      @include display-flex(row);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .view-console {
+      @include display-flex(column);
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      .thumbnail {
+        display: block;
+        background: black;
+      }
     }
   }
 
   .server-details {
+    color: $color-black;
     margin: $space-large 0;
-
-    .row {
-      margin: $space-small -15px;
-
-      a {
-        color: $color-black;
-      }
-    }
+    @include set-items-interval(30, vertical);
   }
 }
 

@@ -47,6 +47,10 @@
           "configuration": "Configuration",
           "media": "Media"
         },
+        "vmConsole": {
+          "title": "VM Console",
+          "link": "View console"
+        },
         "networkInformation": {
           "title": "Network Information",
           "publicIp": "Public IP",
