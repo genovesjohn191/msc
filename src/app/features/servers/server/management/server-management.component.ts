@@ -22,7 +22,8 @@ import {
 import {
   getEncodedUrl,
   animateFactory,
-  refreshView
+  refreshView,
+  getElementStyle
 } from '../../../../utilities';
 import { Observable } from 'rxjs/Rx';
 import { ServerService } from '../server.service';
@@ -177,8 +178,27 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
     this.thumbnailVisible = true;
     this.thumbnailFadeIn = 'fadeIn';
+
+    // Clear thumbnail size
+    this._renderer.removeStyle(this.thumbnailElement.nativeElement, 'height');
+    this._renderer.removeStyle(this.thumbnailElement.nativeElement, 'width');
+
+    // Add thumbnail source
     this._renderer.setAttribute(this.thumbnailElement.nativeElement,
       'src', this.serverThumbnailEncoding);
+
+    // Adjust size of the thumbnail
+    this._setThumbnailSize();
+  }
+
+  private _setThumbnailSize(): void {
+    refreshView(() => {
+      let height = getElementStyle(this.thumbnailElement.nativeElement, 'height');
+      let width = getElementStyle(this.thumbnailElement.nativeElement, 'width');
+
+      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'height', `calc(${height} * 2)`);
+      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'width', `calc(${width} * 2)`);
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   private _hideThumbnail() {
