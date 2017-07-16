@@ -47,6 +47,6 @@ export class Server {
   public storagePolicy: string;
   public availabilityZone: string;
   public interfaces: ServerInterface[];
-  public fileSystems: ServerFileSystem[];
+  public fileSystem: ServerFileSystem[];
   public media: ServerMedia[];
 }

@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnChanges,
   AfterViewInit,
   Input,
   Output,
@@ -27,7 +28,7 @@ enum IconType {
   styles: [require('./button.component.scss')]
 })
 
-export class ButtonComponent implements OnInit, AfterViewInit, Loading {
+export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, Loading {
   public iconType: IconType;
   public iconTypeEnum = IconType;
   public showSpinner: boolean;
@@ -91,9 +92,13 @@ export class ButtonComponent implements OnInit, AfterViewInit, Loading {
       this._renderer.setStyle(this.mcsButton.nativeElement, 'width', '100%');
       this._renderer.setStyle(this.mcsButton.nativeElement, 'max-width', this.width);
     }
+  }
 
+  public ngOnChanges() {
     if (this.disabled) {
       this._renderer.setProperty(this.mcsButton.nativeElement, 'disabled', this.disabled);
+    } else {
+      this._renderer.removeAttribute(this.mcsButton.nativeElement, 'disabled');
     }
   }
 

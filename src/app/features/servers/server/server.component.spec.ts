@@ -56,7 +56,7 @@ describe('ServerComponent', () => {
     vdcName: 'M1VDC27117001',
     serviceType: 'Managed',
     powerState: ServerPowerState.PoweredOn,
-    fileSystems: [
+    fileSystem: [
       {
         path: '/',
         capacityGB: 49,

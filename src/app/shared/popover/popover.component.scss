@@ -131,7 +131,11 @@
     @content;
 
     &.default-padding {
-      padding: $popover-padding;
+      padding: $popover-default-padding;
+    }
+
+    &.narrow-padding {
+      padding: $popover-narrow-padding;
     }
 
     .mcs-popover-template {

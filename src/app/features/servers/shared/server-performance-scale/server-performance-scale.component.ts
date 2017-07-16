@@ -13,6 +13,10 @@ import {
   animate
 } from '@angular/animations';
 import {
+  FormGroup,
+  FormControl
+} from '@angular/forms';
+import {
   McsTextContentProvider,
   CoreDefinition,
   McsList,
@@ -46,11 +50,16 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public sliderValue: number;
   public sliderTable: ServerPerformanceScale[];
 
-  public customMemoryGBValue: any;
+  public customMemoryGBValue: number;
   public customMemoryGBTable: McsList;
 
-  public customCpuCountValue: any;
+  public customCpuCountValue: number;
   public customCpuCountTable: McsList;
+
+  public serverScaleForm: FormGroup;
+  public serverScaleSlider: FormControl;
+  public serverScaleCustomRam: FormControl;
+  public serverScaleCustomCpu: FormControl;
 
   @Input()
   public memoryMB: number;
@@ -66,6 +75,9 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   @Output()
   public scaleChanged: EventEmitter<ServerPerformanceScale>;
+
+  @Output()
+  public validateScale: EventEmitter<any>;
 
   public get currentServerScale(): ServerPerformanceScale {
     return this.sliderValue < 0 ? undefined : this.sliderTable[this.sliderValue];
@@ -84,11 +96,19 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this.scaleChanged = new EventEmitter();
     this.customMemoryGBTable = new McsList();
     this.customCpuCountTable = new McsList();
+    this.validateScale = new EventEmitter();
   }
 
   public ngOnInit() {
     this.serverScalePerformanceTextContent
       = this._textProvider.content.servers.server.management.performanceScale;
+
+    this.serverScaleForm = new FormGroup({
+      serverScaleSlider: new FormControl(),
+      serverScaleCustomRam: new FormControl(),
+      serverScaleCustomCpu: new FormControl()
+    });
+
     // Set default table values
     this._setDefaultSliderTable();
     this._setDefaultCustomSizeTable();
@@ -110,7 +130,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public onSliderChanged(index: number) {
     // Get Slider index value
     this.sliderValue = index;
-    this._notifyCpuSizeScale(this.sliderTable[index].memoryGB, this.sliderTable[index].cpuCount);
+    this._notifyCpuSizeScale(this.sliderTable[index].memoryMB, this.sliderTable[index].cpuCount);
   }
 
   public onMemoryChanged(value: number) {
@@ -135,12 +155,12 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   private _setSliderValue(): void {
-    let actualMemory = this.memoryMB / CoreDefinition.GB_TO_MB_MULTIPLIER;
+    let actualMemory = this.memoryMB;
 
     // Get slider current value based on table preferences
     for (let index = 0; index < this.sliderTable.length; ++index) {
       if (this.sliderTable[index].cpuCount === this.cpuCount &&
-        this.sliderTable[index].memoryGB === actualMemory) {
+        this.sliderTable[index].memoryMB === actualMemory) {
         this.sliderValue = index;
         break;
       }
@@ -148,19 +168,11 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   private _setCustomSizeValue(): void {
-    this.customMemoryGBValue = this.memoryMB / CoreDefinition.GB_TO_MB_MULTIPLIER;
+    this.customMemoryGBValue = this.memoryMB;
     this.customCpuCountValue = this.cpuCount;
   }
 
   private _setScaleType(): void {
-    // Memory comparison if its not exact value on GB
-    let actualMemory = this.memoryMB / CoreDefinition.GB_TO_MB_MULTIPLIER;
-    if (this.getMemoryInGb(this.memoryMB) !== actualMemory) {
-      this.sliderValue = 0;
-      this.inputManageType = ServerInputManageType.Custom;
-      return;
-    }
-
     // Check if the value of Memory and Core are in the table list
     if (this.sliderValue === -1) {
       this.sliderValue = 0;
@@ -174,11 +186,11 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   private _setDefaultCustomSizeTable(): void {
     // Populate memory in gigabytes default table
-    this.customMemoryGBTable.push('RAM', new McsListItem(2, '2'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(4, '4'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(8, '8'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(16, '16'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(32, '32'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(2048, '2048'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(4096, '4096'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(8192, '8192'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(16384, '16384'));
+    this.customMemoryGBTable.push('RAM', new McsListItem(32768, '32768'));
 
     // Populate cpu count default table
     this.customCpuCountTable.push('CPU Count', new McsListItem(1, '1'));
@@ -189,22 +201,25 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   private _setDefaultSliderTable(): void {
     // Add the table definition
-    this.sliderTable.push({ memoryGB: 2, cpuCount: 1 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 4, cpuCount: 2 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 8, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 16, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 24, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 32, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 16, cpuCount: 8 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 24, cpuCount: 8 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryGB: 32, cpuCount: 8 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 2048, cpuCount: 1 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 4096, cpuCount: 2 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 8192, cpuCount: 4 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 16384, cpuCount: 4 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 24576, cpuCount: 4 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 32768, cpuCount: 4 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 16384, cpuCount: 8 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 24576, cpuCount: 8 } as ServerPerformanceScale);
+    this.sliderTable.push({ memoryMB: 32768, cpuCount: 8 } as ServerPerformanceScale);
   }
 
-  private _notifyCpuSizeScale(memoryGB: number, cpuCount: number) {
+  private _notifyCpuSizeScale(memoryMB: number, cpuCount: number) {
     let performanceScale: ServerPerformanceScale = new ServerPerformanceScale();
 
-    performanceScale.memoryGB = memoryGB;
-    performanceScale.cpuCount = cpuCount;
-    this.scaleChanged.next(performanceScale);
+    performanceScale.memoryMB = Number(memoryMB);
+    performanceScale.cpuCount = Number(cpuCount);
+    refreshView(() => {
+      this.scaleChanged.next(performanceScale);
+      this.validateScale.next(this.serverScaleForm.valid);
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 }

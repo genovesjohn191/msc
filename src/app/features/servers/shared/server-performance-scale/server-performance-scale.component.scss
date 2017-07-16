@@ -27,10 +27,27 @@
 
   .custom-size-content {
     min-height: 100px;
-    margin-top: $space-medium;
-    @include set-items-interval(20, horizontal);
-    * {
-      display: inline-block;
+    margin: $space-medium 0;
+
+    .custom-size-inputs {
+      @include set-items-interval(10, vertical);
+
+      li {
+        @include display-flex(row);
+        align-items: center;
+
+        .label {
+          @include flex(0 1 15%);
+        }
+
+        .input {
+          @include flex(0 1 30%);
+        }
+
+        .unit {
+          @include flex(0 1 55%);
+        }
+      }
     }
 
     @include breakpoint(small) {

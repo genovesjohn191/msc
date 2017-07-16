@@ -14,33 +14,56 @@
         {{ serverScalePerformanceTextContent.sliderSwitch }}</a>
   </div>
 
-  <!--Custom size content element-->
-  <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
-    <div [@animate]="'fadeIn'" class="custom-size-content">
-      <mcs-textbox width="150px"
-        placeholder="RAM"
-        [ngModel]="customMemoryGBValue"
-        (ngModelChange)="onMemoryChanged($event)">
-      </mcs-textbox>
-      <mcs-textbox width="150px"
-        placeholder="CPUs"
-        [ngModel]="customCpuCountValue"
-        (ngModelChange)="onCpuCountChanged($event)">
-      </mcs-textbox>
+  <form [formGroup]="serverScaleForm">
+    <!--Custom size content element-->
+    <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
+      <div [@animate]="'fadeIn'" class="custom-size-content">
+        <ul class="custom-size-inputs unstyled-list">
+          <li>
+            <span class="label">{{ serverScalePerformanceTextContent.ramLabel }} : </span>
+            <span class="input">
+              <mcs-textbox width="150px"
+                placeholder="RAM"
+                formControlName="serverScaleCustomRam"
+                [ngModel]="customMemoryGBValue"
+                (ngModelChange)="onMemoryChanged($event)"
+                validationType="numeric">
+              </mcs-textbox>
+            </span>
+            <span class="unit">{{ serverScalePerformanceTextContent.ramUnit }}</span>
+          </li>
+          <li>
+            <span class="label">{{ serverScalePerformanceTextContent.cpuLabel }} : </span>
+            <span class="input">
+              <mcs-textbox width="150px"
+                placeholder="CPUs"
+                formControlName="serverScaleCustomCpu"
+                [ngModel]="customCpuCountValue"
+                (ngModelChange)="onCpuCountChanged($event)"
+                validationType="numeric">
+              </mcs-textbox>
+            </span>
+            <span class="unit">{{ serverScalePerformanceTextContent.cpuUnit }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
 
-  <!--Slider content element-->
-  <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
-    <div class="scale">
-      <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum"
-        [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>
-      <span class="scale-label">
-        {{ currentServerScale.memoryGB }}GB / {{ currentServerScale.cpuCount }}CPU
-      </span>
-      <span class="available-label">
-        ({{ getMemoryInGb(availableMemoryMB) }}GB / {{ availableCpuCount }}CPU available)
-      </span>
+    <!--Slider content element-->
+    <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
+      <div class="scale">
+        <mcs-slider [@animate]="'fadeIn'"
+          [min]="minimum" [max]="maximum"
+          formControlName="serverScaleSlider"
+          [ngModel]="sliderValue"
+          (ngModelChange)="onSliderChanged($event)"></mcs-slider>
+        <span class="scale-label">
+          {{ currentServerScale.memoryMB }} {{ serverScalePerformanceTextContent.ramLabel }} / {{ currentServerScale.cpuCount }} {{ serverScalePerformanceTextContent.cpuUnit }}
+        </span>
+        <span class="available-label">
+          ({{ availableMemoryMB }} {{ serverScalePerformanceTextContent.ramUnit }} / {{ availableCpuCount }} {{ serverScalePerformanceTextContent.cpuUnit }} available)
+        </span>
+      </div>
     </div>
-  </div>
+  </form>
 </div>

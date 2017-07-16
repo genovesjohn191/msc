@@ -27,7 +27,7 @@ export class PopoverComponent implements OnInit {
   public placement: string;
 
   @Input()
-  public padding: 'default' | 'none';
+  public padding: 'default' | 'narrow' | 'none';
 
   @Input()
   public theme: 'dark' | 'light' | 'gray';
@@ -99,6 +99,15 @@ export class PopoverComponent implements OnInit {
 
   public _setPadding() {
     if (!this.padding || this.padding === 'none') { return; }
-    this._renderer.addClass(this.contentElement.nativeElement, this.padding + '-padding');
+
+    switch (this.padding) {
+      case 'narrow':
+        this._renderer.addClass(this.contentElement.nativeElement, 'narrow-padding');
+        break;
+      case 'default':
+      default:
+        this._renderer.addClass(this.contentElement.nativeElement, 'default-padding');
+        break;
+    }
   }
 }

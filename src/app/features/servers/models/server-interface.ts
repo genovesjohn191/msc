@@ -9,5 +9,5 @@ export class ServerInterface {
   public isSubInterface: boolean;
   public vLanId: number;
   public vCenter: string;
-  public portGroup: string;
+  public portgroup: string;
 }
