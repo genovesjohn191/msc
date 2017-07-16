@@ -8,10 +8,21 @@
         <ul class="unstyled-list">
           <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.guestOs }}</li>
           <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
-          <li>{{ serverManagementTextContent.vmProperties.configuration }}:
-            {{ server.memoryMB }} MB / {{ server.cpuCount }} CPU
-            <a (click)="isServerScale = true">
-              {{ serverManagementTextContent.performanceScale.scale }}</a>
+          <li>
+            <div class="server-configuration">
+              <span>{{ serverManagementTextContent.vmProperties.configuration }}:</span>
+              <span>{{ server.memoryMB }} MB / {{ server.cpuCount }} CPU</span>
+              <a *ngIf="!isScaling" (click)="isServerScale = true">
+                {{ serverManagementTextContent.performanceScale.scale }}</a>
+              <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
+                mcsPopover trigger="hover" maxWidth="250px"
+                padding="narrow" [content]="scalingContent"></mcs-icon>
+              <ng-template #scalingContent>
+                <span class="scaling-content-popover">
+                  {{ serverManagementTextContent.performanceScale.scaling }}
+                </span>
+              </ng-template>
+            </div>
           </li>
           <li>{{ serverManagementTextContent.vmProperties.media }}:
             <ul class="unstyled-list server-media" *ngIf="hasMedia; else elseBlock">
@@ -87,7 +98,8 @@
   <mcs-server-performance-scale
     [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
     availableMemoryMB="4096" availableCpuCount="8"
-    (scaleChanged)="onScaleChanged($event)">
+    (scaleChanged)="onScaleChanged($event)"
+    (validateScale)="onValidateScaleChanged($event)">
 
     <!--Performance scale container-->
     <span slider-details>
@@ -104,10 +116,10 @@
   </div>
 
   <div class="scaling">
-    <a class="text-underline" (click)="isServerScale = false">
+    <a class="text-underline" (click)="cancelScale()">
       {{ serverManagementTextContent.performanceScale.cancel }}</a>
     <mcs-button size="small" class="scale"
-      (click)="onClickScale(scaleModal)">
+      [disabled]="!hasUpdate" (click)="onClickScale()">
         {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
   </div>
 </section>

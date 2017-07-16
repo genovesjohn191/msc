@@ -43,7 +43,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public get hasStorage(): boolean {
-    return this.server.fileSystems && this.server.fileSystems.length > 0;
+    return this.server.fileSystem && this.server.fileSystem.length > 0;
   }
 
   public get hasOtherStorage(): boolean {
@@ -65,8 +65,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.subscription = this._serverService.selectedServerStream.subscribe((server) => {
       this.server = server;
       if (this.hasStorage) {
-        this.primaryStorage = this.server.fileSystems[0];
-        this.otherStorage = this.server.fileSystems.slice(1);
+        this.primaryStorage = this.server.fileSystem[0];
+        this.otherStorage = this.server.fileSystem.slice(1);
         this.storageAvailableMemoryInGb = this.getTotalStorageFreeSpace();
       }
     });
@@ -84,7 +84,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public getTotalStorageFreeSpace(): number {
     let total: number;
 
-    for (let storage of this.server.fileSystems) {
+    for (let storage of this.server.fileSystem) {
       total += storage.freeSpaceGB;
     }
 

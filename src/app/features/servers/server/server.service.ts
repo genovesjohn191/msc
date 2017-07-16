@@ -10,6 +10,11 @@ import {
   ServerThumbnail,
   ServerUpdate
 } from '../models';
+import {
+  McsApiSuccessResponse,
+  McsApiJob,
+  CoreDefinition
+} from '../../../core/';
 
 @Injectable()
 export class ServerService {
@@ -33,15 +38,20 @@ export class ServerService {
    * @param serverId Server ID
    * @param cpuSizeScale CPU Size Scale of the server to be updated
    */
-  public setPerformanceScale(serverId: any, cpuSizeScale: ServerPerformanceScale) {
+  public setPerformanceScale(
+    serverId: any,
+    cpuSizeScale: ServerPerformanceScale
+  ) {
     if (!cpuSizeScale) { return; }
 
     // Update scaling of server based on cpu size scale
-    this._seversService.patchServer(serverId,
+    return this._seversService.patchServer(
+      serverId,
       {
-        memoryMB: cpuSizeScale.memoryGB,
+        memoryMB: cpuSizeScale.memoryMB,
         cpuCount: cpuSizeScale.cpuCount
-      } as ServerUpdate);
+      } as ServerUpdate
+    );
   }
 
   /**

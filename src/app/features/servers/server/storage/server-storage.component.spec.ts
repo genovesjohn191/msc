@@ -49,7 +49,7 @@ describe('ServerStorageComponent', () => {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
     vdcName: 'M1VDC27117001',
-    fileSystems: [
+    fileSystem: [
       {
         path: '/',
         capacityGB: 49,
@@ -119,12 +119,12 @@ describe('ServerStorageComponent', () => {
 
     it('should get the server\'s primary storage', () => {
       serverService.selectedServerStream.next(mockServerDetails as Server);
-      expect(component.primaryStorage).toEqual(mockServerDetails.fileSystems[0]);
+      expect(component.primaryStorage).toEqual(mockServerDetails.fileSystem[0]);
     });
 
     it('should get the server\'s other storage', () => {
       serverService.selectedServerStream.next(mockServerDetails as Server);
-      expect(component.otherStorage).toEqual(mockServerDetails.fileSystems.slice(1));
+      expect(component.otherStorage).toEqual(mockServerDetails.fileSystem.slice(1));
     });
 
     it('should get the server\'s storage total free space', () => {

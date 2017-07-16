@@ -6,7 +6,10 @@ import {
 } from '@angular/core/testing';
 import { ServerPerformanceScaleComponent } from './server-performance-scale.component';
 import { ServerInputManageType } from '../../models';
-import { McsTextContentProvider } from '../../../../core';
+import {
+  CoreDefinition,
+  McsTextContentProvider
+} from '../../../../core';
 
 describe('ServerPerformanceScaleComponent', () => {
 
@@ -115,32 +118,35 @@ describe('ServerPerformanceScaleComponent', () => {
 
   describe('onSliderChanged()', () => {
     it(`should change the slider value based on the inputted index
-    and notify the output parameter`, () => {
-        spyOn(component.scaleChanged, 'next');
-        component.onSliderChanged(1);
-        expect(component.sliderValue).toBe(1);
-        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-      });
+    and notify the output parameter`, fakeAsync(() => {
+      spyOn(component.scaleChanged, 'next');
+      component.onSliderChanged(1);
+      expect(component.sliderValue).toBe(1);
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+    }));
   });
 
   describe('onMemoryChanged()', () => {
     it(`should change the custom memory in GB based on the inputted index
-    and notify the output parameter`, () => {
-        spyOn(component.scaleChanged, 'next');
-        component.onMemoryChanged(2);
-        expect(component.customMemoryGBValue).toBe(2);
-        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-      });
+    and notify the output parameter`, fakeAsync(() => {
+      spyOn(component.scaleChanged, 'next');
+      component.onMemoryChanged(2);
+      expect(component.customMemoryGBValue).toBe(2);
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+    }));
   });
 
   describe('onCpuCountChanged()', () => {
     it(`should change the custom CPU count based on the inputted index
-    and notify the output parameter`, () => {
-        spyOn(component.scaleChanged, 'next');
-        component.onCpuCountChanged(3);
-        expect(component.customCpuCountValue).toBe(3);
-        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-      });
+    and notify the output parameter`, fakeAsync(() => {
+      spyOn(component.scaleChanged, 'next');
+      component.onCpuCountChanged(3);
+      expect(component.customCpuCountValue).toBe(3);
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+    }));
   });
 
   describe('onChangeInputManageType()', () => {

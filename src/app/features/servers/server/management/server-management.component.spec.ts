@@ -5,7 +5,6 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { ServerManagementComponent } from './server-management.component';
-import { Router } from '@angular/router';
 import {
   Server,
   ServerFileSystem,
@@ -16,7 +15,14 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsList,
-  McsListItem
+  McsListItem,
+  McsNotificationContextService,
+  McsNotificationJobService,
+  McsApiSuccessResponse,
+  McsApiJob,
+  McsConnectionStatus,
+  McsApiRequestParameter,
+  McsApiService
 } from '../../../../core';
 import { getEncodedUrl } from '../../../../utilities';
 import { ServerService } from '../server.service';
@@ -29,6 +35,7 @@ describe('ServerManagementComponent', () => {
   /** Stub Services/Components */
   let component: ServerManagementComponent;
   let serverService: ServerService;
+  let notificationContextService: McsNotificationContextService;
   let mockTextContentProvider = {
     content: {
       servers: {
@@ -43,7 +50,7 @@ describe('ServerManagementComponent', () => {
     managementName: 'contoso-lin01',
     vdcName: 'M1VDC27117001',
     serviceType: 'Managed',
-    fileSystems: [
+    fileSystem: [
       {
         path: '/',
         capacityGB: 49,
@@ -66,9 +73,6 @@ describe('ServerManagementComponent', () => {
       }
     ],
   };
-  let mockRouterService = {
-    navigate(): any { return null; },
-  };
   let mockActivatedRoute = {
     parent: {
       snapshot: {
@@ -82,7 +86,17 @@ describe('ServerManagementComponent', () => {
   };
   let mockServerService = {
     selectedServerStream: new Subject<any>(),
-    setPerformanceScale(serverId: any, cpuSizeScale: any) { return; },
+    setPerformanceScale(
+      serverId: any,
+      cpuSizeScale: any): Observable<McsApiSuccessResponse<McsApiJob>> {
+
+      let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+      mcsApiResponseMock.status = 200;
+      mcsApiResponseMock.totalCount = 2;
+      mcsApiResponseMock.content = new McsApiJob();
+
+      return Observable.of(mcsApiResponseMock);
+    },
     getServerThumbnail(serverId: any) {
       return Observable.of({
         content: {
@@ -91,6 +105,15 @@ describe('ServerManagementComponent', () => {
           encoding: 'base64'
         } as ServerThumbnail
       });
+    }
+  };
+  let mockMcsNotificationJobService = {
+    notificationStream: new Subject<McsApiJob>(),
+    connectionStatusStream: new Subject<McsConnectionStatus>()
+  } as McsNotificationJobService;
+  let mockMcsApiService = {
+    get(apiRequest: McsApiRequestParameter): Observable<Response> {
+      return Observable.of(new Response());
     }
   };
 
@@ -104,8 +127,10 @@ describe('ServerManagementComponent', () => {
       ],
       providers: [
         { provide: McsTextContentProvider, useValue: mockTextContentProvider },
-        { provide: Router, useValue: mockRouterService },
-        { provide: ServerService, useValue: mockServerService }
+        { provide: ServerService, useValue: mockServerService },
+        { provide: McsApiService, useValue: mockMcsApiService },
+        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
+        McsNotificationContextService
       ]
     });
 
@@ -126,11 +151,21 @@ describe('ServerManagementComponent', () => {
 
       component = fixture.componentInstance;
       serverService = getTestBed().get(ServerService);
+      notificationContextService = getTestBed().get(McsNotificationContextService);
     });
   }));
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
+    beforeEach(async(() => {
+      let notifications: McsApiJob[] = new Array();
+      let notificationActive = new McsApiJob();
+      notificationActive.id = '5';
+      notificationActive.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+      notifications.push(notificationActive);
+      notificationContextService.notificationsStream.next(notifications);
+    }));
+
     it('should set the text content values to serverManagementTextContent', () => {
       expect(component.serverManagementTextContent)
         .toEqual(mockTextContentProvider.content.servers.server.management);
@@ -162,24 +197,14 @@ describe('ServerManagementComponent', () => {
     });
   });
 
-  describe('onClickScale()', () => {
-    beforeEach(async(() => {
-      component.onScaleChanged(new ServerPerformanceScale());
-    }));
-
-    it('should call the setPerformanceScale of the serverService 1 time', () => {
-      spyOn(serverService, 'setPerformanceScale');
-      component.server = mockServerDetails as Server;
-      component.onClickScale(undefined);
-      expect(serverService.setPerformanceScale).toHaveBeenCalledTimes(1);
-    });
-  });
-
   describe('ngOnDestroy()', () => {
     it('should unsubscribe from the subscription', () => {
-      spyOn(component.subscription, 'unsubscribe');
+
+      spyOn(component.serverSubscription, 'unsubscribe');
+      spyOn(component.notificationsSubscription, 'unsubscribe');
       component.ngOnDestroy();
-      expect(component.subscription.unsubscribe).toHaveBeenCalled();
+      expect(component.serverSubscription.unsubscribe).toHaveBeenCalled();
+      expect(component.notificationsSubscription.unsubscribe).toHaveBeenCalled();
     });
   });
 });

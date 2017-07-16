@@ -79,8 +79,13 @@
           "warning": "Scaling the Server will require a restart.",
           "sliderSwitch": "Select from slider",
           "customSwitch": "Enter custom size",
+          "ramLabel": "RAM",
+          "ramUnit": "MB",
+          "cpuLabel": "CPUs",
+          "cpuUnit": "vCPU",
           "scale": "Scale",
-          "cancel": "Cancel"
+          "cancel": "Cancel",
+          "scaling": "Scaling in Progress"
         }
       },
       "storage":{

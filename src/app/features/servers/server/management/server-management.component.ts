@@ -6,7 +6,6 @@ import {
   ElementRef,
   Renderer2
 } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   Server,
   ServerFileSystem,
@@ -17,7 +16,10 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsList,
-  McsListItem
+  McsListItem,
+  McsApiSuccessResponse,
+  McsApiJob,
+  McsNotificationContextService
 } from '../../../../core';
 import {
   getEncodedUrl,
@@ -27,6 +29,11 @@ import {
 } from '../../../../utilities';
 import { Observable } from 'rxjs/Rx';
 import { ServerService } from '../server.service';
+import {
+  FormGroup,
+  FormControl,
+  Validators
+} from '@angular/forms';
 
 const THUMBNAIL_ANIMATION_FADE = 100;
 
@@ -51,9 +58,17 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
 
-  public subscription: any;
+  public serverSubscription: any;
+  public scalingSubscription: any;
+  public notificationsSubscription: any;
+  public activeNotifications: any;
 
   public isServerScale: boolean;
+  public isValidScale: boolean;
+  public isScaling: boolean;
+  public scalingResponse: McsApiSuccessResponse<McsApiJob>;
+
+  public initialServerPerformanceScaleValue: ServerPerformanceScale;
 
   @ViewChild('thumbnailElement')
   public thumbnailElement: ElementRef;
@@ -79,33 +94,55 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return this.server.media && this.server.media.length < 0;
   }
 
+  public get hasUpdate(): boolean {
+    return this.initialServerPerformanceScaleValue &&
+      this._serverCpuSizeScale && this.isValidScale &&
+        (this.initialServerPerformanceScaleValue.memoryMB < this._serverCpuSizeScale.memoryMB ||
+          this.initialServerPerformanceScaleValue.cpuCount < this._serverCpuSizeScale.cpuCount);
+  }
+
   constructor(
-    private _router: Router,
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _notificationContextService: McsNotificationContextService
   ) {
-    this.isServerScale = false;
+    this.initialServerPerformanceScaleValue = new ServerPerformanceScale();
+    this._serverCpuSizeScale = new ServerPerformanceScale();
   }
 
   public ngOnInit() {
     // OnInit
     this.serverManagementTextContent = this._textProvider.content.servers.server.management;
 
-    this.subscription = this._serverService.selectedServerStream.subscribe((server) => {
-      if (server) {
-        this.server = server;
-        this.serviceType = this.server.serviceType;
-        this._getServerThumbnail();
-      }
-    });
+    this.serverSubscription = this._serverService.selectedServerStream
+      .subscribe((server) => {
+        if (server) {
+          this.server = server;
+          this.serviceType = this.server.serviceType;
+          this.primaryVolume = this.server.fileSystem[0].capacityGB + 'GB';
+          this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
+          this._getServerThumbnail();
+          this._initializeServerPerformanceScaleValue();
+          this.isServerScale = false;
+          this.isValidScale = false;
+          this.isScaling = false;
+        }
+      });
+
+    // Listen to the active notifications
+    this.notificationsSubscription = this._notificationContextService.notificationsStream
+      .subscribe((updatedNotifications) => {
+        this.activeNotifications = updatedNotifications;
+        this._getScalingNotificationStatus();
+      });
   }
 
-  public getSecondaryVolumes(serverfileSystems: ServerFileSystem[]) {
+  public getSecondaryVolumes(serverfileSystem: ServerFileSystem[]) {
     let storage = new Array();
 
-    for (let fileSystems of serverfileSystems.slice(1)) {
-      storage.push(fileSystems.capacityGB + 'GB');
+    for (let fileSystem of serverfileSystem.slice(1)) {
+      storage.push(fileSystem.capacityGB + 'GB');
     }
 
     return storage.join(', ');
@@ -135,20 +172,61 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this._serverCpuSizeScale = scale;
   }
 
-  public onClickScale(scaleModal: any): void {
-    // Close Modal
-    if (scaleModal) { scaleModal.close(); }
-    if (!this._serverCpuSizeScale) { return; }
+  public onValidateScaleChanged(event) {
+    this.isValidScale = event;
+  }
 
-    // TODO: Check for dirty/prestine to prevent sending of API request if no data was changed
+  public onClickScale(): void {
+    if (!this._serverCpuSizeScale || !this.hasUpdate) { return; }
+
+    this.isServerScale = false;
+    this.isScaling = true;
+
     // Update the Server CPU size scale
-    this._serverService.setPerformanceScale(this.server.id, this._serverCpuSizeScale);
+    this.scalingSubscription =
+      this._serverService.setPerformanceScale(this.server.id, this._serverCpuSizeScale)
+        .subscribe((response) => {
+          this.scalingResponse = response;
+        });
+  }
+
+  public cancelScale(): void {
+    this.isServerScale = false;
+    this._serverCpuSizeScale = undefined;
   }
 
   public ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.serverSubscription) {
+      this.serverSubscription.unsubscribe();
     }
+
+    if (this.scalingSubscription) {
+      this.scalingSubscription.unsubscribe();
+    }
+
+    if (this.notificationsSubscription) {
+      this.notificationsSubscription.unsubscribe();
+    }
+
+    if (this._serverCpuSizeScale) {
+      this._serverCpuSizeScale = undefined;
+    }
+  }
+
+  private _getScalingNotificationStatus() {
+    if (this.activeNotifications.length > 0 && this.scalingResponse) {
+      let serverScalingNotification = this.activeNotifications.find((notification) => {
+        return notification.id === this.scalingResponse.content.id;
+      });
+
+      this.isScaling = !(serverScalingNotification.status ===
+        CoreDefinition.NOTIFICATION_JOB_COMPLETED);
+    }
+  }
+
+  private _initializeServerPerformanceScaleValue() {
+    this.initialServerPerformanceScaleValue.memoryMB = this.server.memoryMB;
+    this.initialServerPerformanceScaleValue.cpuCount = this.server.cpuCount;
   }
 
   private _getServerThumbnail() {

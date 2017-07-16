@@ -56,6 +56,7 @@ import { ModalBackdropComponent } from './modal/modal-backdrop/modal-backdrop.co
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     PopoverModule,
     ModalModule,
     IconModule
