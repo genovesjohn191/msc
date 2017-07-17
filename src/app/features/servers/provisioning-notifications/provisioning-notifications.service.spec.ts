@@ -23,6 +23,7 @@ import { Observable } from 'rxjs/Rx';
 import { ProvisioningNotificationsService } from './provisioning-notifications.service';
 import {
   McsApiService,
+  McsAuthService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
   CoreConfig,
@@ -46,6 +47,12 @@ describe('ProvisioningNotificationsService', () => {
       password: 'guest'
     }
   } as CoreConfig;
+  let mockAuthService = {
+    authToken: '',
+    navigateToLoginPage(): void {
+      // Do something
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -56,6 +63,7 @@ describe('ProvisioningNotificationsService', () => {
       providers: [
         ProvisioningNotificationsService,
         McsApiService,
+        { provide: McsAuthService, useValue: mockAuthService },
         MockBackend,
         BaseRequestOptions,
         {

@@ -13,6 +13,7 @@ import { McsStorageService } from './services/mcs-storage.service';
 import { McsBrowserService } from './services/mcs-browser.service';
 import { McsNotificationJobService } from './services/mcs-notification-job.service';
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
+import { RedirectService } from './services/redirect.service';
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
@@ -20,12 +21,13 @@ import { McsFilterProvider } from './providers/mcs-filter.provider';
 
 @NgModule({
   providers: [
-    McsApiService,
     McsAuthService,
+    McsApiService,
     McsStorageService,
     McsBrowserService,
     McsNotificationJobService,
     McsNotificationContextService,
+    RedirectService,
     McsTextContentProvider,
     McsAssetsProvider,
     McsFilterProvider

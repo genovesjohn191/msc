@@ -11,6 +11,7 @@ import { Observable } from 'rxjs/Rx';
 import { CoreConfig } from '../core.config';
 import { isUrlValid } from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { McsAuthService } from './mcs-auth.service';
 
 /**
  * Macquarie Portal Api Service class
@@ -20,6 +21,7 @@ import { McsApiRequestParameter } from '../models/request/mcs-api-request-parame
 export class McsApiService {
   constructor(
     private _http: Http,
+    private _authService: McsAuthService,
     @Optional() private _config: CoreConfig
   ) { }
 
@@ -35,7 +37,7 @@ export class McsApiService {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         search: apiRequest.searchParameters
       })
-      .catch(this.handleError);
+      .catch(error => { return this.handleError(error)});
   }
 
   /**
@@ -51,7 +53,7 @@ export class McsApiService {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         search: apiRequest.searchParameters
       })
-      .catch(this.handleError);
+      .catch(error => { return this.handleError(error)});
   }
 
   /**
@@ -68,7 +70,7 @@ export class McsApiService {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         search: apiRequest.searchParameters
       })
-      .catch(this.handleError);
+      .catch(error => { return this.handleError(error)});
   }
 
   /**
@@ -83,7 +85,7 @@ export class McsApiService {
       {
         headers: this._getHeaders(apiRequest.optionalHeaders)
       })
-      .catch(this.handleError);
+      .catch(error => { return this.handleError(error)});
   }
 
   /**
@@ -97,7 +99,7 @@ export class McsApiService {
       {
         headers: this._getHeaders(apiRequest.optionalHeaders)
       })
-      .catch(this.handleError);
+      .catch(error => { return this.handleError(error)});
   }
 
   /**
@@ -124,7 +126,11 @@ export class McsApiService {
    */
   public handleError(error: Response | any) {
     // TODO: Log the general Error here
-
+    // Navigate to login page when unauthorized
+    if (error.status === 401 ) {
+      this._authService.navigateToLoginPage();
+      return;
+    }
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -145,7 +151,7 @@ export class McsApiService {
     let headers = new Headers();
 
     this._setDefaultHeaders(headers);
-    this._setAuthorizationHeaders(headers);
+    this._setAuthorizationHeader(headers);
     this._setOptionalHeaders(headers, optHeaders);
 
     return headers;
@@ -165,8 +171,11 @@ export class McsApiService {
    * Set setAuthorizationHeaders
    * @param {Headers} headers Header Instance
    */
-  private _setAuthorizationHeaders(headers: Headers) {
-    // TODO: Implement when authorization is under
+  private _setAuthorizationHeader(headers: Headers) {
+    let authToken = this._authService.authToken;
+    if (authToken) {
+      headers.set('Authorization', 'Bearer ' + authToken);
+    }
   }
 
   /**

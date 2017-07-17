@@ -17,6 +17,7 @@ import {
   RouterModule,
   PreloadAllModules
 } from '@angular/router';
+import { CookieModule } from 'ngx-cookie';
 
 /**
  * Platform and Environment providers/directives/pipes
@@ -96,7 +97,8 @@ const mcsCoreConfig = {
     HttpModule,
     BrowserAnimationsModule,
     CoreModule.forRoot(mcsCoreConfig),
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    CookieModule.forRoot(),
   ],
   providers: [
     ENV_PROVIDERS,

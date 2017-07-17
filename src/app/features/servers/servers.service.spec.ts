@@ -28,6 +28,7 @@ import { ServersService } from './servers.service';
 import {
   McsApiJob,
   McsApiService,
+  McsAuthService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
   McsNotificationJobService,
@@ -54,6 +55,12 @@ describe('ServersService', () => {
     notificationStream: new Subject<any>(),
     connectionStatusStream: new Subject<any>()
   } as McsNotificationJobService;
+  let mockAuthService = {
+    authToken: '',
+    navigateToLoginPage(): void {
+      // Do something
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -64,6 +71,7 @@ describe('ServersService', () => {
       providers: [
         ServersService,
         McsApiService,
+        { provide: McsAuthService, useValue: mockAuthService },
         MockBackend,
         BaseRequestOptions,
         {

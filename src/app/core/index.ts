@@ -10,6 +10,7 @@ export * from './services/mcs-component.service';
 export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
+export * from './services/redirect.service';
 /** Providers */
 export * from './providers/mcs-text-content.provider';
 export * from './providers/mcs-assets.provider';
