@@ -140,6 +140,14 @@ module.exports = function (options) {
         },
 
         /**
+         * Javascript file loader
+         */
+        {
+          test: /\.exec\.js$/,
+          use: ['script-loader']
+        },
+
+        /**
          * to string and css loader support for *.css files (from Angular components)
          * Returns file content as string
          *
@@ -340,23 +348,8 @@ module.exports = function (options) {
        *
        */
       new webpack.ProvidePlugin({
-        jQuery: 'jquery',
-        $: 'jquery',
-        jquery: 'jquery',
-        "window.moment": "moment",
-        'Tether': 'tether',
-        'window.Tether': 'tether',
-        Tooltip: "exports-loader?Tooltip!bootstrap/js/dist/tooltip",
-        Alert: "exports-loader?Alert!bootstrap/js/dist/alert",
-        Button: "exports-loader?Button!bootstrap/js/dist/button",
-        Carousel: "exports-loader?Carousel!bootstrap/js/dist/carousel",
-        Collapse: "exports-loader?Collapse!bootstrap/js/dist/collapse",
-        Dropdown: "exports-loader?Dropdown!bootstrap/js/dist/dropdown",
-        Modal: "exports-loader?Modal!bootstrap/js/dist/modal",
-        Popover: "exports-loader?Popover!bootstrap/js/dist/popover",
-        Scrollspy: "exports-loader?Scrollspy!bootstrap/js/dist/scrollspy",
-        Tab: "exports-loader?Tab!bootstrap/js/dist/tab",
-        Util: "exports-loader?Util!bootstrap/js/dist/util"
+        // Add all the packages that is global across the projects
+        // i.e jQuery: 'packageName'
       }),
 
       /** Fix Angular 2 */
@@ -402,6 +395,5 @@ module.exports = function (options) {
       clearImmediate: false,
       setImmediate: false
     }
-
   };
 }

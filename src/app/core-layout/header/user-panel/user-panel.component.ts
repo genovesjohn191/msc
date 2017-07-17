@@ -98,7 +98,7 @@ export class UserPanelComponent implements OnInit {
       });
 
     // Subscribe to browser service
-    this._browserService.resizeWindowStream.subscribe((deviceType: McsDeviceType) => {
+    this._browserService.deviceTypeStream.subscribe((deviceType: McsDeviceType) => {
       this.deviceType = deviceType;
       if (this.popoverInstance) {
         switch (deviceType) {

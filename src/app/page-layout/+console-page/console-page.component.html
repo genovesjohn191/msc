@@ -1,4 +1,43 @@
-<section class="console-page-container">
-  <!--TODO: Call the console app here-->
-  Console App implementation
-</section>
+<div *ngIf="!consoleVisible" class="console-page-loading">
+  <mcs-icon [key]="loadingIconKey" size="medium"></mcs-icon>
+  <span>{{ consolePageTextContent.loading }}</span>
+</div>
+
+<div #consoleDialogElement class="console-page-dialog">
+  <div *ngIf="consoleVisible" class="menu-header">
+    <div>
+      <mcs-icon (click)="onClickPowerOn()" [key]="keyboardIconKey" size="medium"
+        mcsPopover trigger="hover" maxWidth="200px"
+        [content]="sendCtrlAltDelTooltip" orientation="right" padding="none"></mcs-icon>
+      <ng-template #sendCtrlAltDelTooltip>
+        {{ consolePageTextContent.sendCtrlAltDelete }}
+      </ng-template>
+    </div>
+    <div>
+      <mcs-icon (click)="onClickPowerOn()" [key]="playIconKey" size="medium"
+        mcsPopover trigger="hover" maxWidth="200px"
+        [content]="powerOnTooltip" orientation="right" padding="none"></mcs-icon>
+      <ng-template #powerOnTooltip>
+        {{ consolePageTextContent.sendPowerOn }}
+      </ng-template>
+    </div>
+    <div>
+      <mcs-icon (click)="onClickRestart()" [key]="restartIconKey" size="medium"
+        mcsPopover trigger="hover" maxWidth="200px"
+        [content]="restartTooltip" orientation="right" padding="none"></mcs-icon>
+      <ng-template #restartTooltip>
+        {{ consolePageTextContent.sendPowerOff }}
+      </ng-template>
+    </div>
+    <div>
+      <mcs-icon (click)="onClickPowerOff()" [key]="stopIconKey" size="medium"
+        mcsPopover trigger="hover" maxWidth="200px"
+        [content]="powerOffTooltip" orientation="right" padding="none"></mcs-icon>
+      <ng-template #powerOffTooltip>
+        {{ consolePageTextContent.sendRestart }}
+      </ng-template>
+    </div>
+  </div>
+
+  <div id="wmksContainer" #consoleUiElement class="console-ui"></div>
+</div>

@@ -64,7 +64,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
       });
 
     // Subscribe to browser service
-    this.browserSubscription = this._browserService.resizeWindowStream
+    this.browserSubscription = this._browserService.deviceTypeStream
       .subscribe((deviceType: McsDeviceType) => {
         if (deviceType !== McsDeviceType.Desktop) {
           this.visible = false;

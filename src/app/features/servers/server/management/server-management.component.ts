@@ -112,7 +112,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    // OnInit
     this.serverManagementTextContent = this._textProvider.content.servers.server.management;
 
     this.serverSubscription = this._serverService.selectedServerStream
@@ -146,6 +145,15 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
 
     return storage.join(', ');
+  }
+
+  public onClickViewConsole() {
+    let windowFeatures = `directories=yes,titlebar=no,toolbar=no,
+    status=no,menubar=no,resizable=yes,scrollbars=yes,
+    width=${CoreDefinition.CONSOLE_DEFAULT_WIDTH},
+    height=${CoreDefinition.CONSOLE_DEFAULT_HEIGHT}`;
+
+    window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
   }
 
   public getServerStorageProfile() {

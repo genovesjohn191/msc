@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'console',
+    path: 'console/:id',
     loadChildren: './page-layout/+console-page/console-page.module#ConsolePageModule'
   },
   {

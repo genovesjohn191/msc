@@ -19,7 +19,6 @@ import {
   ServerClientObject,
   ServerPowerState,
   ServerThumbnail,
-  ServerConsole,
   ServerUpdate
 } from './models';
 
@@ -167,25 +166,6 @@ export class ServersService {
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<ServerThumbnail>;
         serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<ServerThumbnail>;
-
-        return serverResponse;
-      })
-      .catch(this._handleServerError);
-  }
-
-  /**
-   * Get the server console for the commands to be executed
-   * * Note: This will return the url of the console
-   * @param id Server identification
-   */
-  public getServerConsole(id: any): Observable<McsApiSuccessResponse<ServerConsole>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/console`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .map((response) => {
-        let serverResponse: McsApiSuccessResponse<ServerConsole>;
-        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<ServerConsole>;
 
         return serverResponse;
       })

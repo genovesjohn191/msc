@@ -19,8 +19,6 @@ import { DropdownComponent } from './dropdown/dropdown.component';
 import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
-import { ModalComponent } from './modal/modal.component';
-import { ModalBackdropComponent } from './modal/modal-backdrop/modal-backdrop.component';
 
 @NgModule({
   declarations: [

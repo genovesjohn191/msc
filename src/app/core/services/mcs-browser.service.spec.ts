@@ -44,6 +44,19 @@ describe('MscBrowserService', () => {
   });
 
   describe('OnResizeWindow', () => {
+    it('should notify the subscriber of window size', () => {
+      let event = {
+        target: {
+          innerWidth: CoreDefinition.DESKTOP_MIN_WIDTH,
+          innerHeight: CoreDefinition.DESKTOP_MIN_WIDTH
+        }
+      };
+
+      spyOn(mcsBrowserService.windowSizeStream, 'next');
+      mcsBrowserService.onResizeWindow(event);
+      expect(mcsBrowserService.windowSizeStream.next).toHaveBeenCalled();
+    });
+
     it('should return McsDeviceType.Desktop as Device type', () => {
       let event = {
         target: {
@@ -51,9 +64,9 @@ describe('MscBrowserService', () => {
         }
       };
 
-      spyOn(mcsBrowserService.resizeWindowStream, 'next');
+      spyOn(mcsBrowserService.deviceTypeStream, 'next');
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Desktop);
+      expect(mcsBrowserService.deviceTypeStream.next).toHaveBeenCalledWith(McsDeviceType.Desktop);
     });
 
     it('should return McsDeviceType.Tablet as Device type', () => {
@@ -62,22 +75,22 @@ describe('MscBrowserService', () => {
           innerWidth: CoreDefinition.TABLET_MIN_WIDTH
         }
       };
-      spyOn(mcsBrowserService.resizeWindowStream, 'next');
+      spyOn(mcsBrowserService.deviceTypeStream, 'next');
 
       // Minimum
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
+      expect(mcsBrowserService.deviceTypeStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
 
       // Average
       event.target.innerWidth = (CoreDefinition.TABLET_MIN_WIDTH +
         CoreDefinition.TABLET_MAX_WIDTH) / 2.0;
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
+      expect(mcsBrowserService.deviceTypeStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
 
       // Maximum
       event.target.innerWidth = CoreDefinition.TABLET_MAX_WIDTH;
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
+      expect(mcsBrowserService.deviceTypeStream.next).toHaveBeenCalledWith(McsDeviceType.Tablet);
     });
 
     it('should return McsDeviceType.MobileLandscape as Device type', () => {
@@ -86,24 +99,24 @@ describe('MscBrowserService', () => {
           innerWidth: CoreDefinition.MOBILE_LANDSCAPE_MIN_WIDTH
         }
       };
-      spyOn(mcsBrowserService.resizeWindowStream, 'next');
+      spyOn(mcsBrowserService.deviceTypeStream, 'next');
 
       // Minimum
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next)
+      expect(mcsBrowserService.deviceTypeStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobileLandscape);
 
       // Average
       event.target.innerWidth = (CoreDefinition.MOBILE_LANDSCAPE_MIN_WIDTH +
         CoreDefinition.MOBILE_LANDSCAPE_MAX_WIDTH) / 2.0;
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next)
+      expect(mcsBrowserService.deviceTypeStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobileLandscape);
 
       // Maximum
       event.target.innerWidth = CoreDefinition.MOBILE_LANDSCAPE_MAX_WIDTH;
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next)
+      expect(mcsBrowserService.deviceTypeStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobileLandscape);
     });
 
@@ -113,24 +126,24 @@ describe('MscBrowserService', () => {
           innerWidth: CoreDefinition.MOBILE_PORTRAIT_MIN_WIDTH
         }
       };
-      spyOn(mcsBrowserService.resizeWindowStream, 'next');
+      spyOn(mcsBrowserService.deviceTypeStream, 'next');
 
       // Minimum
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next)
+      expect(mcsBrowserService.deviceTypeStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobilePortrait);
 
       // Average
       event.target.innerWidth = (CoreDefinition.MOBILE_PORTRAIT_MIN_WIDTH +
         CoreDefinition.MOBILE_PORTRAIT_MAX_WIDTH) / 2.0;
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next)
+      expect(mcsBrowserService.deviceTypeStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobilePortrait);
 
       // Maximum
       event.target.innerWidth = CoreDefinition.MOBILE_PORTRAIT_MAX_WIDTH;
       mcsBrowserService.onResizeWindow(event);
-      expect(mcsBrowserService.resizeWindowStream.next)
+      expect(mcsBrowserService.deviceTypeStream.next)
         .toHaveBeenCalledWith(McsDeviceType.MobilePortrait);
     });
   });

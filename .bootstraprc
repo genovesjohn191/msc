@@ -97,16 +97,4 @@ styles:
   # Utility classes
   utilities: true
 
-### Bootstrap scripts
-scripts:
-  alert: true
-  button: true
-  carousel: true
-  collapse: true
-  dropdown: true
-  modal: true
-  popover: true
-  scrollspy: true
-  tab: true
-  tooltip: true
-  util: true
+### Bootstrap scripts, include all the component that uses jquery

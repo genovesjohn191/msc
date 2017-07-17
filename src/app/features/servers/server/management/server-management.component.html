@@ -1,5 +1,4 @@
 <section *ngIf="server && !isServerScale" class="server-management-container">
-
   <!-- TODO: Waiting for mapping of api response properties to view properties -->
   <div class="server-details">
     <div class="row">
@@ -41,7 +40,7 @@
             <mcs-icon [key]="spinnerIconKey" size="xlarge"></mcs-icon>
           </div>
 
-           <div class="view-console">
+           <div (click)="onClickViewConsole()" class="view-console">
             <img #thumbnailElement [@animate]="thumbnailFadeIn" class="thumbnail"/>
             <a *ngIf="thumbnailVisible" href="#">
               {{ serverManagementTextContent.vmConsole.link }}

@@ -1,5 +1,63 @@
 @import "../../../styles/shared/base";
 
-.console-page-container {
-  position: relative;
+$console-menu-bar-height: 40px;
+$console-menu-bar-offset: 20px;
+
+:host {
+  overflow: hidden;
+}
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.console-page-loading {
+  @include display-flex(row);
+  align-items: center;
+  justify-content: center;
+  background-color: $color-white;
+  border-bottom: 1px solid $color-grey-06;
+  @include set-items-interval(10, horizontal);
+}
+
+.console-page-dialog {
+  .menu-header {
+    background-color: $color-white;
+    border: 1px solid $color-grey-06;
+    @include display-flex(row);
+    @include set-items-interval(20, horizontal);
+    min-height: $console-menu-bar-height;
+
+    div {
+      cursor: pointer;
+      margin-top: 8px;
+      border-bottom: 2px solid transparent;
+      @include display-flex(row);
+      align-items: center;
+
+      &:hover {
+        border-bottom-color: $color-primary-00;
+      }
+
+      &:first-child {
+        margin-left: $console-menu-bar-offset;
+      }
+    }
+  }
+
+  .console-ui {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Remove the overlay in jquery dialog.
+// This is not necessary in console page since
+// we dont use the dialog to display
+.ui-widget-overlay {
+  display: none;
+  height: 0 !important;
+  width: 0 !important;
 }
