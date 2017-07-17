@@ -37,7 +37,7 @@ export class McsApiService {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         search: apiRequest.searchParameters
       })
-      .catch(error => { return this.handleError(error)});
+      .catch((error) => this.handleError(error));
   }
 
   /**
@@ -53,7 +53,7 @@ export class McsApiService {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         search: apiRequest.searchParameters
       })
-      .catch(error => { return this.handleError(error)});
+      .catch((error) => this.handleError(error));
   }
 
   /**
@@ -70,7 +70,7 @@ export class McsApiService {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         search: apiRequest.searchParameters
       })
-      .catch(error => { return this.handleError(error)});
+      .catch((error) => this.handleError(error));
   }
 
   /**
@@ -85,7 +85,7 @@ export class McsApiService {
       {
         headers: this._getHeaders(apiRequest.optionalHeaders)
       })
-      .catch(error => { return this.handleError(error)});
+      .catch((error) => this.handleError(error));
   }
 
   /**
@@ -99,7 +99,7 @@ export class McsApiService {
       {
         headers: this._getHeaders(apiRequest.optionalHeaders)
       })
-      .catch(error => { return this.handleError(error)});
+      .catch((error) => this.handleError(error));
   }
 
   /**
