@@ -5,36 +5,32 @@
 
 <div #consoleDialogElement class="console-page-dialog">
   <div *ngIf="consoleVisible" class="menu-header">
-    <div>
-      <mcs-icon (click)="onClickPowerOn()" [key]="keyboardIconKey" size="medium"
-        mcsPopover trigger="hover" maxWidth="200px"
-        [content]="sendCtrlAltDelTooltip" orientation="right" padding="none"></mcs-icon>
+    <div mcsPopover trigger="hover" maxWidth="200px"
+        [content]="sendCtrlAltDelTooltip" orientation="right" padding="narrow">
+      <mcs-icon (click)="onClickPowerOn()" [key]="keyboardIconKey" size="medium"></mcs-icon>
       <ng-template #sendCtrlAltDelTooltip>
         {{ consolePageTextContent.sendCtrlAltDelete }}
       </ng-template>
     </div>
-    <div>
-      <mcs-icon (click)="onClickPowerOn()" [key]="playIconKey" size="medium"
-        mcsPopover trigger="hover" maxWidth="200px"
-        [content]="powerOnTooltip" orientation="right" padding="none"></mcs-icon>
+    <div mcsPopover trigger="hover" maxWidth="200px"
+        [content]="powerOnTooltip" orientation="right" padding="narrow">
+      <mcs-icon (click)="onClickPowerOn()" [key]="playIconKey" size="medium"></mcs-icon>
       <ng-template #powerOnTooltip>
         {{ consolePageTextContent.sendPowerOn }}
       </ng-template>
     </div>
-    <div>
-      <mcs-icon (click)="onClickRestart()" [key]="restartIconKey" size="medium"
-        mcsPopover trigger="hover" maxWidth="200px"
-        [content]="restartTooltip" orientation="right" padding="none"></mcs-icon>
+    <div mcsPopover trigger="hover" maxWidth="200px"
+        [content]="restartTooltip" orientation="right" padding="narrow">
+      <mcs-icon (click)="onClickRestart()" [key]="restartIconKey" size="medium"></mcs-icon>
       <ng-template #restartTooltip>
-        {{ consolePageTextContent.sendPowerOff }}
+        {{ consolePageTextContent.sendRestart }}
       </ng-template>
     </div>
-    <div>
-      <mcs-icon (click)="onClickPowerOff()" [key]="stopIconKey" size="medium"
-        mcsPopover trigger="hover" maxWidth="200px"
-        [content]="powerOffTooltip" orientation="right" padding="none"></mcs-icon>
+    <div mcsPopover trigger="hover" maxWidth="200px"
+        [content]="powerOffTooltip" orientation="right" padding="narrow">
+      <mcs-icon (click)="onClickPowerOff()" [key]="stopIconKey" size="medium"></mcs-icon>
       <ng-template #powerOffTooltip>
-        {{ consolePageTextContent.sendRestart }}
+        {{ consolePageTextContent.sendPowerOff }}
       </ng-template>
     </div>
   </div>
