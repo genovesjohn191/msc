@@ -22,6 +22,8 @@ import { ResponseOptions } from '@angular/http';
 import { CoreConfig } from '../core.config';
 import { McsApiService } from './mcs-api.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { AppState } from '../../app.service';
+import { McsAuthService } from './mcs-auth.service';
 
 describe('McsApiService', () => {
 
@@ -32,6 +34,12 @@ describe('McsApiService', () => {
     apiHost: 'http://localhost:5000/api',
     imageRoot: 'assets/img/'
   } as CoreConfig;
+  let mockAuthService = {
+    authToken: '',
+    navigateToLoginPage(): void {
+      // Do something
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -40,7 +48,9 @@ describe('McsApiService', () => {
         HttpModule
       ],
       providers: [
+        AppState,
         McsApiService,
+        { provide: McsAuthService, useValue: mockAuthService },
         MockBackend,
         BaseRequestOptions,
         {

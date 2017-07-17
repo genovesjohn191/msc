@@ -23,8 +23,15 @@ export class CoreDefinition {
   public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 5000;
 
   /** AppState Properties */
+  public static APPSTATE_AUTH_TOKEN = 'AuthToken';
   public static APPSTATE_USER_ID = 'UserId';
   public static APPSTATE_ACCOUNT_ID = 'AccountId';
+
+  /** Cookie Names */
+  public static COOKIE_AUTH_TOKEN  = 'MCSPAT';
+
+  /** Query Parameters */
+  public static QUERY_PARAM_BEARER  = 'bearer';
 
   /** Server Page */
   public static SERVER_LIST_MAX_ITEM_PER_PAGE = 10;

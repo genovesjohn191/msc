@@ -22,6 +22,7 @@ import { ResponseOptions } from '@angular/http';
 import { ConsoleService } from './console-page.service';
 import {
   McsApiService,
+  McsAuthService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
   McsApiConsole,
@@ -42,6 +43,12 @@ describe('ConsoleService', () => {
     apiHost: 'http://localhost:5000/api',
     imageRoot: 'assets/img/'
   } as CoreConfig;
+  let mockAuthService = {
+    authToken: '',
+    navigateToLoginPage(): void {
+      // Do something
+    }
+  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -53,6 +60,7 @@ describe('ConsoleService', () => {
         ConsoleService,
         McsApiService,
         MockBackend,
+        { provide: McsAuthService, useValue: mockAuthService },
         BaseRequestOptions,
         {
           provide: Http,
