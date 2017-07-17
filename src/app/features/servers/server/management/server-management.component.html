@@ -36,15 +36,11 @@
       <div class="col">
         <div class="server-thumbnail">
           <h3 class="thumbnail-title">{{ serverManagementTextContent.vmConsole.title }}</h3>
-           <div *ngIf="!thumbnailVisible" class="loading-icon">
-            <mcs-icon [key]="spinnerIconKey" size="xlarge"></mcs-icon>
-          </div>
-
            <div (click)="onClickViewConsole()" class="view-console">
-            <img #thumbnailElement [@animate]="thumbnailFadeIn" class="thumbnail"/>
-            <a *ngIf="thumbnailVisible" href="#">
-              {{ serverManagementTextContent.vmConsole.link }}
-            </a>
+             <div class="thumbnail-container">
+               <img #thumbnailElement class="thumbnail"/>
+             </div>
+            <a>{{ serverManagementTextContent.vmConsole.link }}</a>
           </div>
         </div>
       </div>

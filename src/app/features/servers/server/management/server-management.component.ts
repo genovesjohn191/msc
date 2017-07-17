@@ -35,13 +35,10 @@ import {
   Validators
 } from '@angular/forms';
 
-const THUMBNAIL_ANIMATION_FADE = 100;
-
 @Component({
   selector: 'mcs-server-management',
   styles: [require('./server-management.component.scss')],
-  templateUrl: './server-management.component.html',
-  animations: [animateFactory({ duration: THUMBNAIL_ANIMATION_FADE })]
+  templateUrl: './server-management.component.html'
 })
 
 export class ServerManagementComponent implements OnInit, OnDestroy {
@@ -51,9 +48,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public secondaryVolumes: string;
   public otherStorage: ServerFileSystem[];
   public serviceType: string;
-
-  public thumbnailFadeIn: string;
-  public thumbnailVisible: boolean;
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
@@ -97,8 +91,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public get hasUpdate(): boolean {
     return this.initialServerPerformanceScaleValue &&
       this._serverCpuSizeScale && this.isValidScale &&
-        (this.initialServerPerformanceScaleValue.memoryMB < this._serverCpuSizeScale.memoryMB ||
-          this.initialServerPerformanceScaleValue.cpuCount < this._serverCpuSizeScale.cpuCount);
+      (this.initialServerPerformanceScaleValue.memoryMB < this._serverCpuSizeScale.memoryMB ||
+        this.initialServerPerformanceScaleValue.cpuCount < this._serverCpuSizeScale.cpuCount);
   }
 
   constructor(
@@ -240,7 +234,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _getServerThumbnail() {
     if (!this.server) { return; }
 
-    // Hide thumbnail if it is already dispayed in initial routing
+    // Hide thumbnail if it is already displayed in initial routing
     this._hideThumbnail();
 
     // Get the server thumbnail to be encoded and display in the image
@@ -262,9 +256,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _showThumbnail() {
     if (!this.thumbnailElement) { return; }
 
-    this.thumbnailVisible = true;
-    this.thumbnailFadeIn = 'fadeIn';
-
     // Clear thumbnail size
     this._renderer.removeStyle(this.thumbnailElement.nativeElement, 'height');
     this._renderer.removeStyle(this.thumbnailElement.nativeElement, 'width');
@@ -280,17 +271,18 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _setThumbnailSize(): void {
     refreshView(() => {
       let width = getElementStyle(this.thumbnailElement.nativeElement, 'width');
-      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'width', `calc(${width} * 2)`);
+      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'width',
+        `calc(${width} * 2)`);
+      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'block');
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   private _hideThumbnail() {
     if (!this.thumbnailElement) { return; }
 
-    this.thumbnailFadeIn = 'fadeOut';
     refreshView(() => {
-      this.thumbnailVisible = false;
+      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'none');
       this._renderer.removeAttribute(this.thumbnailElement.nativeElement, 'src');
-    }, THUMBNAIL_ANIMATION_FADE + 50);
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 }

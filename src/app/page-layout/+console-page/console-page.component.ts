@@ -28,7 +28,7 @@ declare var $: any;
 declare var WMKS: any;
 
 // JQeuryUI dialog
-const DIALOG_LEFT_OFFSET = 17;
+const DIALOG_HEADER_SIZE = 35;
 
 @Component({
   selector: 'mcs-console-page',
@@ -179,23 +179,22 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _displayConsole(): void {
     // Display console dialog and set the visibility flag to true
-    this._vmConsoleDialog.dialog('open');
     this.consoleVisible = true;
+    this._vmConsoleDialog.dialog('open');
   }
 
   private _resizeConsoleScreen(height: number, width: number) {
     let mainCanvasElement = document.getElementById('mainCanvas');
     if (!mainCanvasElement) { return; }
 
-    mainCanvasElement.style.height = height + 'px';
-    mainCanvasElement.style.width = (width - DIALOG_LEFT_OFFSET) + 'px';
+    mainCanvasElement.style.height = (height - DIALOG_HEADER_SIZE) + 'px';
+    mainCanvasElement.style.width = width + 'px';
   }
 
   private _createDialog(): void {
     this._vmConsoleDialog = $(this.consoleDialogElement.nativeElement)
       .dialog({
         autoOpen: false,
-        height: CoreDefinition.CONSOLE_DEFAULT_HEIGHT,
         width: 'auto',
         modal: true,
         closeText: '',
