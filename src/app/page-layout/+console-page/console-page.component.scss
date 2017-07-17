@@ -10,6 +10,7 @@ $console-menu-bar-offset: 20px;
 body {
   margin: 0 !important;
   padding: 0 !important;
+  background-color: $color-black;
 }
 
 .console-page-loading {
@@ -49,9 +50,6 @@ body {
   .console-ui {
     position: absolute;
     display: block;
-    #mainCanvas {
-      background-color: $color-black;
-    }
   }
 }
 
