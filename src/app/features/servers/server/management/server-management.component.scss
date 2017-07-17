@@ -1,6 +1,7 @@
 @import "../../../../../styles/shared/base";
 
-$server-thumbnail-min-size: 80px;
+$server-thumbnail-min-height: 96px;
+$server-thumbnail-min-width: 128px;
 
 .server-management-container {
 
@@ -9,14 +10,6 @@ $server-thumbnail-min-size: 80px;
     @include display-inline-flex(column);
     justify-content: center;
 
-    .loading-icon {
-      min-height: $server-thumbnail-min-size;
-      min-width: $server-thumbnail-min-size;
-      @include display-flex(row);
-      justify-content: center;
-      align-items: center;
-    }
-
     .view-console {
       @include display-inline-flex(column);
       justify-content: center;
@@ -24,9 +17,10 @@ $server-thumbnail-min-size: 80px;
       cursor: pointer;
       @include set-items-interval(5, vertical);
 
-      .thumbnail {
-        display: block;
-        background: black;
+      .thumbnail-container {
+        min-height: $server-thumbnail-min-height;
+        min-width: $server-thumbnail-min-width;
+        background: $color-black;
       }
     }
   }
