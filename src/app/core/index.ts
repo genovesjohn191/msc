@@ -22,9 +22,11 @@ export * from './models/response/mcs-api-success-response';
 export * from './models/response/mcs-api-error';
 export * from './models/response/mcs-api-job';
 export * from './models/response/mcs-api-task';
+export * from './models/response/mcs-api-console';
 export * from './models/mcs-notification-config';
 export * from './models/mcs-list';
 export * from './models/mcs-list-item';
+export * from './models/mcs-size';
 /** Enumerations */
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-user-type.enum';

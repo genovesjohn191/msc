@@ -70,6 +70,10 @@ export class CoreDefinition {
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
   public static ASSETS_SVG_SPINNER = 'spinner';
   public static ASSETS_SVG_STORAGE = 'storage';
+  public static ASSETS_SVG_KEYBOARD = 'keyboard';
+  public static ASSETS_SVG_PLAY = 'play';
+  public static ASSETS_SVG_RESTART = 'restart';
+  public static ASSETS_SVG_STOP = 'stop';
 
   // Font Awesome Icons
   public static ASSETS_FONT_ARROW_RIGHT = 'arrow-right'; // Make it SVG
@@ -109,4 +113,8 @@ export class CoreDefinition {
   /** Job Types */
   public static JOB_TYPE_SERVER_START = 100001;
   public static JOB_TYPE_SERVER_END = 102500;
+
+  /** Console Size */
+  public static CONSOLE_DEFAULT_WIDTH = 800;
+  public static CONSOLE_DEFAULT_HEIGHT = 600;
 }

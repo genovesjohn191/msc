@@ -85,7 +85,7 @@ export class MainNavigationComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this._browserService.resizeWindowStream
+    this._browserService.deviceTypeStream
       .subscribe((deviceType) => {
         this.isMobile = (deviceType === McsDeviceType.MobileLandscape)
           || (deviceType === McsDeviceType.MobilePortrait);

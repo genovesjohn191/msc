@@ -53,7 +53,7 @@ module.exports = {
     /** <link> tags for a Web App Manifest (for android) **/
     {
       rel: 'manifest',
-       href: '/assets/manifest.json'
+      href: '/assets/manifest.json'
     }
   ],
   meta: [

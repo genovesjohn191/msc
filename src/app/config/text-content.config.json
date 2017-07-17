@@ -1,4 +1,11 @@
 {
+  "consolePage": {
+    "loading": "Loading VM Console...",
+    "sendCtrlAltDelete": "Send ctrl+alt+del",
+    "sendPowerOn": "Send PowerOn",
+    "sendPowerOff": "Send PowerOff",
+    "sendRestart": "Send Restart"
+  },
   "navigation": {
     "home": "Home",
     "about": "About",

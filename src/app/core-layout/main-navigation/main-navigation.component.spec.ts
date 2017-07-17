@@ -70,9 +70,9 @@ describe('MainNavigationComponent', () => {
   describe('ngOnInit()', () => {
     it('should call subscribe from browserService.resizeWindowStream',
       inject([McsBrowserService], (mcsBrowserService: McsBrowserService) => {
-        spyOn(mcsBrowserService.resizeWindowStream, 'subscribe');
+        spyOn(mcsBrowserService.deviceTypeStream, 'subscribe');
         component.ngOnInit();
-        expect(mcsBrowserService.resizeWindowStream.subscribe).toHaveBeenCalled();
+        expect(mcsBrowserService.deviceTypeStream.subscribe).toHaveBeenCalled();
       })
     );
 
