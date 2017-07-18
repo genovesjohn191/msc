@@ -56,7 +56,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public serverSubscription: any;
   public scalingSubscription: any;
   public notificationsSubscription: any;
-  public activeNotifications: any;
+  public activeNotifications: McsApiJob[];
 
   public isServerScale: boolean;
   public isValidScale: boolean;
@@ -108,6 +108,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   ) {
     this.initialServerPerformanceScaleValue = new ServerPerformanceScale();
     this._serverCpuSizeScale = new ServerPerformanceScale();
+    this.activeNotifications = new Array();
   }
 
   public ngOnInit() {
@@ -225,7 +226,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   private _getScalingNotificationStatus() {
-    if (this.activeNotifications.length && this.server) {
+    if (this.activeNotifications.length > 0 && this.server) {
       let serverScalingNotification: McsApiJob = this.activeNotifications.find((notification) => {
         let isFound: boolean = false;
         if (notification.clientReferenceObject) {
