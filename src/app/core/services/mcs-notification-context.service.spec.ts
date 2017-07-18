@@ -8,7 +8,7 @@ import {
 import { Subject } from 'rxjs/Rx';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsApiService } from './mcs-api.service';
-import { McsAuthService } from './mcs-auth.service';
+import { AppState } from '../../app.service';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
@@ -61,7 +61,7 @@ describe('McsNotificationContextService', () => {
         { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
         McsNotificationContextService,
         McsApiService,
-        { provide: McsAuthService, useValue: mockAuthService },
+        AppState,
         MockBackend,
         BaseRequestOptions,
         {

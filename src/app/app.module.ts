@@ -96,9 +96,9 @@ const mcsCoreConfig = {
     BrowserModule,
     HttpModule,
     BrowserAnimationsModule,
-    CoreModule.forRoot(mcsCoreConfig),
-    RouterModule.forRoot(routes),
     CookieModule.forRoot(),
+    CoreModule.forRoot(mcsCoreConfig),
+    RouterModule.forRoot(routes)
   ],
   providers: [
     ENV_PROVIDERS,

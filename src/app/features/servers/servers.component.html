@@ -80,10 +80,10 @@
           <a [routerLink]="[server.id]"><u>{{ server.managementName }}</u></a>
         </td>
         <td *ngIf="columnSettings['type'].value" class="text-left align-middle hidden-xsmall">
-          {{ server.serviceDescription }}
+          {{ server.serviceType }}
         </td>
         <td *ngIf="columnSettings['catalog'].value" class="text-left align-middle hidden-xsmall">
-          {{ server.guestOS }}
+          {{ server.guestOs }}
         </td>
         <td *ngIf="columnSettings['privateIp'].value" class="text-center align-middle hidden-small">
           {{ server.managementIpAddress }}

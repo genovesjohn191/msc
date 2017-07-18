@@ -18,20 +18,20 @@ import {
   MockConnection
 } from '@angular/http/testing';
 import { ResponseOptions } from '@angular/http';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 /** Services and Models */
 import { ConsoleService } from './console-page.service';
 import {
   McsApiService,
-  McsAuthService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
   McsApiConsole,
   CoreConfig
 } from '../../core';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
+import { AppState } from '../../app.service';
 
 describe('ConsoleService', () => {
 
@@ -57,10 +57,10 @@ describe('ConsoleService', () => {
         HttpModule
       ],
       providers: [
+        AppState,
         ConsoleService,
         McsApiService,
         MockBackend,
-        { provide: McsAuthService, useValue: mockAuthService },
         BaseRequestOptions,
         {
           provide: Http,

@@ -18,6 +18,10 @@ import {
   MockConnection
 } from '@angular/http/testing';
 import { ResponseOptions } from '@angular/http';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 /** Services and Models */
 import {
   Server,
@@ -28,7 +32,6 @@ import { ServersService } from './servers.service';
 import {
   McsApiJob,
   McsApiService,
-  McsAuthService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
   McsNotificationJobService,
@@ -36,10 +39,7 @@ import {
   CoreConfig,
   CoreDefinition
 } from '../../core/';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
+import { AppState } from '../../app.service';
 
 describe('ServersService', () => {
 
@@ -69,9 +69,9 @@ describe('ServersService', () => {
         HttpModule
       ],
       providers: [
+        AppState,
         ServersService,
         McsApiService,
-        { provide: McsAuthService, useValue: mockAuthService },
         MockBackend,
         BaseRequestOptions,
         {
