@@ -49,7 +49,10 @@ export class ServerService {
       serverId,
       {
         memoryMB: cpuSizeScale.memoryMB,
-        cpuCount: cpuSizeScale.cpuCount
+        cpuCount: cpuSizeScale.cpuCount,
+        clientReferenceObject: {
+          activeServerId: serverId
+        }
       } as ServerUpdate
     );
   }

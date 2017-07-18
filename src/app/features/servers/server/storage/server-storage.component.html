@@ -5,7 +5,7 @@
     <div *ngIf="!increaseStorage" class="details">
       <div class="primary">
         <span class="title">{{ serverStorageText.primary }} : </span>
-        <span class="font-normal">{{ primaryStorage.capacityGB + serverStorageText.unit }}</span>
+        <span class="font-normal">{{ primaryStorage.capacityGB + ' ' + serverStorageText.unit }}</span>
         <span class="increase">
           <a (click)="onIncreaseStorage(primaryStorage)">{{ serverStorageText.increaseStorage }}</a>
         </span>
@@ -18,7 +18,7 @@
               <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
               <span>{{ storage.path }}</span>
             </span>
-            <span class="capacity">{{ storage.capacityGB + serverStorageText.unit }}</span>
+            <span class="capacity">{{ storage.capacityGB + ' ' + serverStorageText.unit }}</span>
             <span class="increase">
               <a (click)="onIncreaseStorage(storage)">{{ serverStorageText.increaseStorage }}</a>
             </span>
@@ -57,15 +57,15 @@
           </div>
         </mcs-server-manage-storage>
         <div class="attach">
-          <mcs-button size="small">Attach</mcs-button>
+          <mcs-button icon="arrow">Attach</mcs-button>
         </div>
       </div>
     </div>
 
     <div *ngIf="increaseStorage" class="increase-storage">
       <mcs-server-manage-storage
-        [memoryGB]="selectedStorage.capacityInGb"
-        [remainingMemoryGB]="selectedStorage.freeSpaceInGb"
+        [memoryGB]="selectedStorage.capacityGB"
+        [remainingMemoryGB]="selectedStorage.freeSpaceGB"
         (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (description)-->
         <div title>
@@ -75,12 +75,13 @@
         <div details>
           <p><strong>Name : </strong> {{ selectedStorage.path }}</p>
           <p><strong>Storage Profile : </strong> </p>
-          <p><strong>Current Size : </strong> {{ selectedStorage.capacityGB }}</p>
+          <p><strong>Current Size : </strong>
+            {{ selectedStorage.capacityGB + ' ' + serverStorageText.unit }}</p>
         </div>
       </mcs-server-manage-storage>
       <div class="update">
         <span><a (click)="closeIncreaseStorageBox()">Cancel</a></span>
-        <mcs-button size="small" (click)="closeIncreaseStorageBox()">Update</mcs-button>
+        <mcs-button icon="arrow" (click)="closeIncreaseStorageBox()">Update</mcs-button>
       </div>
     </div>
   </div>

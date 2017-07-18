@@ -4,6 +4,6 @@
   position: relative;
 
   .jobs-progress {
-    @include set-items-interval(100);
+    @include set-items-interval(100px);
   }
 }

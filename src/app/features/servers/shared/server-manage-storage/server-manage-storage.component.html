@@ -6,7 +6,11 @@
 
   <div class="custom-size">
     <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
-      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">Enter custom size</a>
+      (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+        {{ storageTextContent.customSwitch }}</a>
+    <a *ngIf="inputManageType == inputManageTypeEnum.Custom"
+      (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
+        {{ storageTextContent.sliderSwitch }}</a>
   </div>
 
   <!--Storage profile content element (dropdown)-->
@@ -22,10 +26,14 @@
   <!--Custom size content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
     <div [@animate]="'fadeIn'" class="custom-size-content">
-      <mcs-textbox width="150px" type="number" placeholder="GB"
-        [ngModel]="customStorageValue"
-        (ngModelChange)="onCustomStorageChanged($event)"></mcs-textbox>
-      <a (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">Cancel</a>
+      <div class="custom-size-input">
+        <span class="label">{{ storageTextContent.label }} : </span>
+        <mcs-textbox width="150px" inputType="number" placeholder="GB"
+          [min]="minimum" [max]="maximum"
+          [ngModel]="customStorageValue"
+          (ngModelChange)="onCustomStorageChanged($event)"></mcs-textbox>
+        <span class="unit">{{ storageTextContent.unit }}</span>
+      </div>
       <div *ngIf="!validCustomInput && customFinalStorageValue" class="custom-size-input-error">
         <span class="text-color-error">
           Custom storage volume should be within the remaining size
@@ -40,10 +48,10 @@
       <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum"
         [ngModel]="sliderValue" (ngModelChange)="onSliderChanged($event)"></mcs-slider>
       <span class="storage-label">
-        {{ currentMemory }}GB
+        {{ currentMemory + ' ' + storageTextContent.unit }}
       </span>
       <span class="available-label">
-        ({{ remainingMemoryGB }}GB Remaining)
+        ({{ (maximum - currentMemory) + ' ' + storageTextContent.unit }} Remaining)
       </span>
     </div>
   </div>

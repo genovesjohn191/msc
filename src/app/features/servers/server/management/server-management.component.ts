@@ -10,7 +10,8 @@ import {
   Server,
   ServerFileSystem,
   ServerPerformanceScale,
-  ServerThumbnail
+  ServerThumbnail,
+  ServerPowerState
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -95,6 +96,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         this.initialServerPerformanceScaleValue.cpuCount < this._serverCpuSizeScale.cpuCount);
   }
 
+  public get isPoweredOn(): boolean {
+    return this.server.powerState === ServerPowerState.PoweredOn;
+  }
+
   constructor(
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
@@ -111,19 +116,23 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.serverSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
         if (server) {
+          // Get server data
           this.server = server;
           this.serviceType = this.server.serviceType;
           this.primaryVolume = this.server.fileSystem[0].capacityGB + 'GB';
           this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
           this._getServerThumbnail();
+
+          // Initialize values
           this._initializeServerPerformanceScaleValue();
           this.isServerScale = false;
           this.isValidScale = false;
           this.isScaling = false;
+          this._getScalingNotificationStatus();
         }
       });
 
-    // Listen to the active notifications
+    // Listen to notifications stream
     this.notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((updatedNotifications) => {
         this.activeNotifications = updatedNotifications;
@@ -216,13 +225,13 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   private _getScalingNotificationStatus() {
-    if (this.activeNotifications.length > 0 && this.scalingResponse) {
-      let serverScalingNotification = this.activeNotifications.find((notification) => {
-        return notification.id === this.scalingResponse.content.id;
+    if (this.activeNotifications.length && this.server) {
+      let serverScalingNotification: McsApiJob = this.activeNotifications.find((notification) => {
+        return notification.clientReferenceObject.activeServerId === this.server.id;
       });
 
-      this.isScaling = !(serverScalingNotification.status ===
-        CoreDefinition.NOTIFICATION_JOB_COMPLETED);
+      this.isScaling = serverScalingNotification &&
+        !(serverScalingNotification.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED);
     }
   }
 

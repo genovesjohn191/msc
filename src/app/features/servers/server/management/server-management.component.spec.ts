@@ -162,8 +162,13 @@ describe('ServerManagementComponent', () => {
       let notificationActive = new McsApiJob();
       notificationActive.id = '5';
       notificationActive.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+      notificationActive.clientReferenceObject = {
+        activeServerId: mockServerDetails.id
+      };
       notifications.push(notificationActive);
       notificationContextService.notificationsStream.next(notifications);
+
+      serverService.selectedServerStream.next(mockServerDetails as Server);
     }));
 
     it('should set the text content values to serverManagementTextContent', () => {
@@ -172,17 +177,14 @@ describe('ServerManagementComponent', () => {
     });
 
     it('should set the value of server', () => {
-      serverService.selectedServerStream.next(mockServerDetails as Server);
       expect(component.server).toBeDefined();
     });
 
     it('should set the value of serviceType', () => {
-      serverService.selectedServerStream.next(mockServerDetails as Server);
       expect(component.serviceType).toBeDefined();
     });
 
     it('should set the serverThumbnail value', () => {
-      serverService.selectedServerStream.next(mockServerDetails as Server);
       expect(component.serverThumbnail).toBeDefined();
     });
 

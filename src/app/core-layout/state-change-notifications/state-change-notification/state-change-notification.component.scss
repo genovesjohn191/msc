@@ -16,7 +16,7 @@
     border-right: 1px solid gray;
 
     .status {
-      @include set-items-interval(20, horizontal);
+      @include set-items-interval(20px, horizontal);
       @include display-flex(row);
       align-items: center;
       margin-bottom: $space-large;
@@ -37,7 +37,7 @@
       }
 
       .description-container {
-        @include set-items-interval(5, vertical);
+        @include set-items-interval(5px, vertical);
         .main {
           @include font-size($state-change-notification-status-font-size);
           font-family: $base-font-bold;

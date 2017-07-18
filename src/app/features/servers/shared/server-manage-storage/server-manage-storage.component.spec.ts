@@ -9,7 +9,8 @@ import { ServerInputManageType } from '../../models';
 import {
   CoreDefinition,
   McsList,
-  McsListItem
+  McsListItem,
+  McsTextContentProvider
 } from '../../../../core';
 
 describe('ServerManageStorageComponent', () => {
@@ -24,6 +25,9 @@ describe('ServerManageStorageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ServerManageStorageComponent
+      ],
+      providers: [
+        McsTextContentProvider
       ]
     });
 
@@ -59,16 +63,17 @@ describe('ServerManageStorageComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it(`should set the progressbar minimum value to 0`, () => {
-      expect(component.minimum).toBe(0);
+    it(`should set the progressbar minimum value to memoryGB + 1`, () => {
+      expect(component.minimum).toBe(component.memoryGB + 1);
     });
 
-    it(`should set the progressbar maximum value to 900`, () => {
-      expect(component.maximum).toBe(component.remainingMemoryGB);
-    });
+    it(`should set the progressbar maximum value to
+      component.memoryGB + component.remainingMemoryGB`, () => {
+        expect(component.maximum).toBe(component.memoryGB + component.remainingMemoryGB);
+      });
 
-    it(`should set the slider value to 200`, () => {
-      expect(component.sliderValue).toBe(component.memoryGB);
+    it(`should set the slider value to memoryGB + 1`, () => {
+      expect(component.sliderValue).toBe(component.memoryGB + 1);
     });
   });
 

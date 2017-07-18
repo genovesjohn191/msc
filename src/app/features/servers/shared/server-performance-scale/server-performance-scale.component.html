@@ -58,10 +58,16 @@
           [ngModel]="sliderValue"
           (ngModelChange)="onSliderChanged($event)"></mcs-slider>
         <span class="scale-label">
-          {{ currentServerScale.memoryMB }} {{ serverScalePerformanceTextContent.ramLabel }} / {{ currentServerScale.cpuCount }} {{ serverScalePerformanceTextContent.cpuUnit }}
+          {{ currentServerScale.memoryMB + ' ' +
+            serverScalePerformanceTextContent.ramUnit + ' ' +
+              serverScalePerformanceTextContent.ramLabel }} / 
+          {{ currentServerScale.cpuCount + ' ' + serverScalePerformanceTextContent.cpuUnit }}
         </span>
         <span class="available-label">
-          ({{ availableMemoryMB }} {{ serverScalePerformanceTextContent.ramUnit }} / {{ availableCpuCount }} {{ serverScalePerformanceTextContent.cpuUnit }} available)
+          ({{ availableMemoryMB + ' ' +
+            serverScalePerformanceTextContent.ramUnit + ' ' +
+              serverScalePerformanceTextContent.ramLabel }} /
+                {{ availableCpuCount + ' ' + serverScalePerformanceTextContent.cpuUnit }} available)
         </span>
       </div>
     </div>

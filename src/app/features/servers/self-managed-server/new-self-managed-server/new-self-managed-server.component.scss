@@ -2,29 +2,29 @@
 
 .new-self-managed-server-container {
   width: 100%;
-  @include set-items-interval(20);
+  @include set-items-interval(20px);
 
   .server-details {
     @include display-flex(column);
-    @include set-items-interval(20);
+    @include set-items-interval(20px);
   }
 
   .computer-details {
     @include display-flex(column);
-    @include set-items-interval(20);
+    @include set-items-interval(20px);
 
     .computer-information {
-      @include set-items-interval(10);
+      @include set-items-interval(10px);
     }
 
     .storage-information {
-      @include set-items-interval(10);
+      @include set-items-interval(10px);
     }
   }
 
   .network-details {
     @include display-flex(column);
-    @include set-items-interval(20);
+    @include set-items-interval(20px);
   }
 
   .label {

@@ -89,10 +89,10 @@
 </section>
 
 <section *ngIf="server && isServerScale" class="server-performance-scale-container">
-  <h3>Server {{ server.managementName }}</h3>
+  <h3>Scaling {{ server.managementName }}</h3>
   <mcs-server-performance-scale
     [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
-    availableMemoryMB="4096" availableCpuCount="8"
+    availableMemoryMB="24576" availableCpuCount="8"
     (scaleChanged)="onScaleChanged($event)"
     (validateScale)="onValidateScaleChanged($event)">
 
@@ -105,7 +105,7 @@
     </span>
   </mcs-server-performance-scale>
 
-  <div class="note">
+  <div *ngIf="isPoweredOn" class="note">
     <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
     <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
   </div>
@@ -113,7 +113,7 @@
   <div class="scaling">
     <a class="text-underline" (click)="cancelScale()">
       {{ serverManagementTextContent.performanceScale.cancel }}</a>
-    <mcs-button size="small" class="scale"
+    <mcs-button icon="arrow" class="scale"
       [disabled]="!hasUpdate" (click)="onClickScale()">
         {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
   </div>
