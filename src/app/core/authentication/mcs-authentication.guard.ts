@@ -20,7 +20,7 @@ export class McsAuthenticationGuard implements CanActivate {
     activatedRoute: ActivatedRouteSnapshot,
     routerState: RouterStateSnapshot
   ) {
-    let authToken: string = '';
+    let authToken: string;
     let isAuthenticated: boolean = false;
 
     // Get tokens from cookie / appstate
