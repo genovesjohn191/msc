@@ -1,7 +1,7 @@
 @import "../../../../../styles/shared/base";
 
-$server-thumbnail-min-height: 96px;
-$server-thumbnail-min-width: 128px;
+$server-thumbnail-height: 96px;
+$server-thumbnail-width: 128px;
 
 .server-management-container {
 
@@ -18,9 +18,14 @@ $server-thumbnail-min-width: 128px;
       @include set-items-interval(5px, vertical);
 
       .thumbnail-container {
-        min-height: $server-thumbnail-min-height;
-        min-width: $server-thumbnail-min-width;
+        min-height: $server-thumbnail-height;
+        min-width: $server-thumbnail-width;
         background: $color-black;
+
+        .thumbnail {
+          max-height: $server-thumbnail-height;
+          min-width: $server-thumbnail-width;
+        }
       }
     }
   }
