@@ -7,7 +7,7 @@
 .server-manage-storage-container {
   @include display-flex(row);
   @include flex-wrap(wrap);
-  @include set-items-interval(10, vertical);
+  @include set-items-interval(10px, vertical);
   @include font-size(16);
 
   * {
@@ -32,9 +32,13 @@
   .custom-size-content {
     min-height: 100px;
     margin-top: $space-medium;
-    @include set-items-interval(20, horizontal);
+    @include set-items-interval(20px, horizontal);
     * {
       display: inline-block;
+    }
+
+    .custom-size-input {
+      @include set-items-interval(20px, horizontal);
     }
 
     .custom-size-input-error {

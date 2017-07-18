@@ -43,7 +43,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public get hasStorage(): boolean {
-    return this.server.fileSystem && this.server.fileSystem.length > 0;
+    return this.server && this.server.fileSystem && this.server.fileSystem.length > 0;
   }
 
   public get hasOtherStorage(): boolean {
@@ -73,7 +73,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
     this.serverStorageText = this._textProvider.content.servers.server.storage;
     this.deleteStorageAlertMessage = this.serverStorageText.deleteStorageAlertMessage;
-    this.storageMemoryInGb = 200;
+    this.storageMemoryInGb = 0;
     this.storageProfileItems = this.getStorageProfiles();
   }
 
@@ -82,12 +82,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public getTotalStorageFreeSpace(): number {
-    let total: number;
-
+    let total: number = 0;
     for (let storage of this.server.fileSystem) {
       total += storage.freeSpaceGB;
     }
-
     return total;
   }
 

@@ -346,14 +346,14 @@
 @mixin set-items-interval($value, $orientation: vertical) {
   @if $orientation == vertical {
     > * {
-      margin-top: $value + px;
+      margin-top: $value;
       &:first-child {
         margin-top: 0px;
       }
     }
   } @else {
     > * {
-      margin-left: $value + px;
+      margin-left: $value;
       &:first-child {
         margin-left: 0px;
       }

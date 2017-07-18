@@ -11,7 +11,7 @@ $job-context-interval: 55px;
   .job-information {
     @include flex(1);
     @include display-flex(column);
-    @include set-items-interval(10);
+    @include set-items-interval(10px);
 
     @include breakpoint(large) {
       padding-right: $job-context-interval;
@@ -23,7 +23,7 @@ $job-context-interval: 55px;
       align-items: center;
       border-bottom: 1px solid $color-grey-05;
       padding-bottom: $job-description-padding;
-      @include set-items-interval(10, horizontal);
+      @include set-items-interval(10px, horizontal);
 
       h3 {
         margin-bottom: 0;
@@ -41,7 +41,7 @@ $job-context-interval: 55px;
           .task-item {
             font-family: $circular-pro-book;
             @include font-size(16);
-            @include set-items-interval(10, horizontal);
+            @include set-items-interval(10px, horizontal);
             margin: $space-xsmall 0;
 
             .active {

@@ -19,6 +19,7 @@ import {
 } from 'rxjs/Rx';
 import {
   CoreDefinition,
+  McsTextContentProvider,
   McsList
 } from '../../../../core';
 import {
@@ -40,11 +41,12 @@ import {
 })
 
 export class ServerManageStorageComponent implements OnInit, OnDestroy {
-  public minimum: number;
-  public maximum: number;
   public inputManageType: ServerInputManageType;
   public inputManageTypeEnum = ServerInputManageType;
+  public storageTextContent: any;
 
+  public minimum: number;
+  public maximum: number;
   public sliderValue: number;
   public storageProfileValue: any;
 
@@ -74,7 +76,7 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
       this.customFinalStorageValue <= this.remainingMemoryGB;
   }
 
-  public constructor() {
+  public constructor(private _textProvider: McsTextContentProvider) {
     this.minimum = 0;
     this.maximum = 0;
     this.sliderValue = 0;
@@ -84,9 +86,10 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.storageTextContent = this._textProvider.content.servers.server.storage;
     // Set the minimum and maximum value of the progressbar based on the inputted data
     // and the slider value based on the memory in GB
-    this._setSliderValue();
+    this._initializeValues();
 
     // Add subsrciption to input in case of custom to add delay checking
     this._setCustomStorageInputDelay();
@@ -138,16 +141,19 @@ export class ServerManageStorageComponent implements OnInit, OnDestroy {
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
     refreshView(() => {
-      this.customStorageValue = undefined;
-      this.customFinalStorageValue = undefined;
+      if (inputManageType === ServerInputManageType.Slider) {
+        this.customStorageValue = undefined;
+        this.customFinalStorageValue = undefined;
+      }
       this.inputManageType = inputManageType;
     });
   }
 
-  private _setSliderValue(): void {
-    this.minimum = 0;
-    this.sliderValue = this.memoryGB;
-    this.maximum = this.remainingMemoryGB;
+  private _initializeValues(): void {
+    this.sliderValue = this.memoryGB + 1;
+    this.minimum = this.memoryGB + 1;
+    this.maximum = this.memoryGB + this.remainingMemoryGB;
+    this.customStorageValue = this.memoryGB + 1;
   }
 
   private _setCustomStorageInputDelay(): void {

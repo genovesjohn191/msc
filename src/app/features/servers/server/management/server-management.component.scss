@@ -15,7 +15,7 @@ $server-thumbnail-min-width: 128px;
       justify-content: center;
       align-items: flex-start;
       cursor: pointer;
-      @include set-items-interval(5, vertical);
+      @include set-items-interval(5px, vertical);
 
       .thumbnail-container {
         min-height: $server-thumbnail-min-height;
@@ -28,19 +28,21 @@ $server-thumbnail-min-width: 128px;
   .server-details {
     color: $color-black;
     margin: $space-large 0;
-    @include set-items-interval(50, vertical);
+    @include set-items-interval(50px, vertical);
   }
 }
 
 .server-performance-scale-container {
-   @include set-items-interval(10, vertical);
+   @include set-items-interval(10px, vertical);
+   margin: $space-large 0;
 
   .note {
     @include display-flex(row);
     align-items: center;
     justify-content: center;
     @include font-size(16);
-    @include set-items-interval(5, horizontal);
+    @include set-items-interval(5px, horizontal);
+    margin-bottom: $space-large;
   }
 
   .scaling {

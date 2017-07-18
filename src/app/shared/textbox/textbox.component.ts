@@ -58,7 +58,7 @@ export class TextboxComponent
   public inputType: 'text' | 'number' | 'password';
 
   @Input()
-  public icon: 'normal' | 'search';
+  public icon: 'normal' | 'search' | 'caret-down';
 
   @Input()
   public name: string;
@@ -241,6 +241,9 @@ export class TextboxComponent
     switch (icon) {
       case 'search':
         this.iconKey = CoreDefinition.ASSETS_FONT_SEARCH;
+        break;
+      case 'caret-down':
+        this.iconKey = CoreDefinition.ASSETS_FONT_CARET_DOWN;
         break;
       case 'normal':
       default:
