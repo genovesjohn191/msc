@@ -29,7 +29,7 @@ export class McsAuthService {
     if (authToken) {
       return authToken;
     } else {
-      this.authenticate();
+      return this._getAuthentication();
     }
   }
 
@@ -39,19 +39,6 @@ export class McsAuthService {
 
     // Update app state
     this.appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, authToken);
-  }
-
-  public authenticate() {
-    // Try to get auth token from browser cookie
-    let authToken = this._cookieService.get(CoreDefinition.COOKIE_AUTH_TOKEN);
-
-    // Update auth token in app state
-    if (authToken) {
-      this.appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, authToken);
-    } else {
-      // No auth token found in browser cookie, lets navigate to login page
-      this.navigateToLoginPage();
-    }
   }
 
   public navigateToLoginPage() {
@@ -74,5 +61,20 @@ export class McsAuthService {
    */
   public get userType(): McsUserType {
     return this._userType;
+  }
+
+  private _getAuthentication() {
+    // Try to get auth token from browser cookie
+    let authToken = this._cookieService.get(CoreDefinition.COOKIE_AUTH_TOKEN);
+
+    // Update auth token in app state
+    if (authToken) {
+      this.appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, authToken);
+
+      return authToken;
+    } else {
+      // No auth token found in browser cookie, lets navigate to login page
+      this.navigateToLoginPage();
+    }
   }
 }

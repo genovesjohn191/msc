@@ -127,9 +127,8 @@ export class McsApiService {
   public handleError(error: Response | any) {
     // TODO: Log the general Error here
     // Navigate to login page when unauthorized
-    if (error.status === 401 ) {
+    if (error.status === 401) {
       this._authService.navigateToLoginPage();
-      return;
     }
     let errMsg: string;
     if (error instanceof Response) {
