@@ -7,7 +7,10 @@ import {
   Headers,
   Response
 } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import { isUrlValid } from '../../utilities';
@@ -20,11 +23,26 @@ import { AppState } from '../../app.service';
  */
 @Injectable()
 export class McsApiService {
+
+  /**
+   * Subscribe to this stream to get the
+   * error response in case of unexpected error
+   */
+  private _errorResponseStream: Subject<Response | any>;
+  public get errorResponseStream(): Subject<Response | any> {
+    return this._errorResponseStream;
+  }
+  public set errorResponseStream(value: Subject<Response | any>) {
+    this._errorResponseStream = value;
+  }
+
   constructor(
     private _http: Http,
     private _appState: AppState,
     @Optional() private _config: CoreConfig
-  ) { }
+  ) {
+    this._errorResponseStream = new Subject<Response | any>();
+  }
 
   /**
    * This method will get the record based on the given id or endpoint
@@ -126,6 +144,9 @@ export class McsApiService {
    * @param {any} error Error Response
    */
   public handleError(error: Response | any) {
+    // Notify all the subscribers for the error
+    this._errorResponseStream.next(error);
+
     // TODO: Log the general Error here
     let errMsg: string;
     if (error instanceof Response) {
