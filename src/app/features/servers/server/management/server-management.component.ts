@@ -227,7 +227,11 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _getScalingNotificationStatus() {
     if (this.activeNotifications.length && this.server) {
       let serverScalingNotification: McsApiJob = this.activeNotifications.find((notification) => {
-        return notification.clientReferenceObject.activeServerId === this.server.id;
+        let isFound: boolean = false;
+        if (notification.clientReferenceObject) {
+          isFound = notification.clientReferenceObject.activeServerId === this.server.id;
+        }
+        return isFound;
       });
 
       this.isScaling = serverScalingNotification &&
@@ -265,10 +269,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _showThumbnail() {
     if (!this.thumbnailElement) { return; }
 
-    // Clear thumbnail size
-    this._renderer.removeStyle(this.thumbnailElement.nativeElement, 'height');
-    this._renderer.removeStyle(this.thumbnailElement.nativeElement, 'width');
-
     // Add thumbnail source
     this._renderer.setAttribute(this.thumbnailElement.nativeElement,
       'src', this.serverThumbnailEncoding);
@@ -279,9 +279,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   private _setThumbnailSize(): void {
     refreshView(() => {
-      let width = getElementStyle(this.thumbnailElement.nativeElement, 'width');
-      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'width',
-        `calc(${width} * 2)`);
       this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'block');
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }

@@ -19,7 +19,7 @@ body {
   justify-content: center;
   background-color: $color-white;
   border-bottom: 1px solid $color-grey-06;
-  @include set-items-interval(10, horizontal);
+  @include set-items-interval($space-small, horizontal);
 }
 
 .console-page-dialog {
@@ -27,7 +27,7 @@ body {
     background-color: $color-white;
     border: 1px solid $color-grey-06;
     @include display-flex(row);
-    @include set-items-interval(20, horizontal);
+    @include set-items-interval($space-medium, horizontal);
     min-height: $console-menu-bar-height;
 
     div {
