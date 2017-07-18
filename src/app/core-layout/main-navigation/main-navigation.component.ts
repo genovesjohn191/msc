@@ -26,7 +26,6 @@ import {
   McsAssetsProvider,
   McsBrowserService,
   McsDeviceType,
-  McsAuthService,
   McsUserType,
   CoreDefinition
 } from '../../core';
@@ -76,7 +75,6 @@ export class MainNavigationComponent implements OnInit {
   public constructor(
     private _router: Router,
     private _textProvider: McsTextContentProvider,
-    private _authService: McsAuthService,
     private _titleService: Title,
     private _browserService: McsBrowserService,
     private _elementReference: ElementRef
@@ -110,7 +108,9 @@ export class MainNavigationComponent implements OnInit {
   }
 
   public isUser(): boolean {
-    return this._authService.userType === McsUserType.User;
+    // TODO: Set User Type here
+    // return this._authService.userType === McsUserType.User;
+    return true;
   }
 
   public setTitle(title: string) {

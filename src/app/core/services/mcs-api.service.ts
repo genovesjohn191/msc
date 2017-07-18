@@ -9,9 +9,10 @@ import {
 } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { CoreConfig } from '../core.config';
+import { CoreDefinition } from '../core.definition';
 import { isUrlValid } from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
-import { McsAuthService } from './mcs-auth.service';
+import { AppState } from '../../app.service';
 
 /**
  * Macquarie Portal Api Service class
@@ -21,7 +22,7 @@ import { McsAuthService } from './mcs-auth.service';
 export class McsApiService {
   constructor(
     private _http: Http,
-    private _authService: McsAuthService,
+    private _appState: AppState,
     @Optional() private _config: CoreConfig
   ) { }
 
@@ -126,10 +127,6 @@ export class McsApiService {
    */
   public handleError(error: Response | any) {
     // TODO: Log the general Error here
-    // Navigate to login page when unauthorized
-    if (error.status === 401) {
-      this._authService.navigateToLoginPage();
-    }
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -171,7 +168,7 @@ export class McsApiService {
    * @param {Headers} headers Header Instance
    */
   private _setAuthorizationHeader(headers: Headers) {
-    let authToken = this._authService.authToken;
+    let authToken = this._appState.get(CoreDefinition.APPSTATE_AUTH_TOKEN);
     if (authToken) {
       headers.set('Authorization', 'Bearer ' + authToken);
     }

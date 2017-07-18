@@ -9,12 +9,12 @@ import { Title } from '@angular/platform-browser';
 import { MainNavigationComponent } from './main-navigation.component';
 import {
   McsTextContentProvider,
-  McsAuthService,
   McsUserType,
   McsBrowserService,
   McsDeviceType,
   CoreDefinition
 } from '../../core';
+import { AppState } from '../../app.service';
 
 describe('MainNavigationComponent', () => {
 
@@ -42,8 +42,8 @@ describe('MainNavigationComponent', () => {
         RouterTestingModule
       ],
       providers: [
+        AppState,
         { provide: ElementRef, useValue: mockElementRef },
-        { provide: McsAuthService, useValue: mockAuthService },
         { provide: Title, useValue: mockTitleService },
         { provide: McsTextContentProvider, useValue: mockTextService },
         McsBrowserService

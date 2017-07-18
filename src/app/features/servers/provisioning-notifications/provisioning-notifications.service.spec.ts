@@ -23,13 +23,13 @@ import { Observable } from 'rxjs/Rx';
 import { ProvisioningNotificationsService } from './provisioning-notifications.service';
 import {
   McsApiService,
-  McsAuthService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
   CoreConfig,
   CoreDefinition,
   McsApiJob
 } from '../../../core';
+import { AppState } from '../../../app.service';
 
 describe('ProvisioningNotificationsService', () => {
 
@@ -61,9 +61,9 @@ describe('ProvisioningNotificationsService', () => {
         HttpModule
       ],
       providers: [
+        AppState,
         ProvisioningNotificationsService,
         McsApiService,
-        { provide: McsAuthService, useValue: mockAuthService },
         MockBackend,
         BaseRequestOptions,
         {

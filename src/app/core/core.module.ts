@@ -8,29 +8,30 @@ import {
 import { CoreConfig } from './core.config';
 /** Services */
 import { McsApiService } from './services/mcs-api.service';
-import { McsAuthService } from './services/mcs-auth.service';
 import { McsStorageService } from './services/mcs-storage.service';
 import { McsBrowserService } from './services/mcs-browser.service';
 import { McsNotificationJobService } from './services/mcs-notification-job.service';
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
-import { RedirectService } from './services/redirect.service';
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
 import { McsFilterProvider } from './providers/mcs-filter.provider';
+/** Authentication */
+import { McsAuthenticationService } from './authentication/mcs-authentication.service';
+import { McsAuthenticationGuard } from './authentication/mcs-authentication.guard';
 
 @NgModule({
   providers: [
-    McsAuthService,
     McsApiService,
     McsStorageService,
     McsBrowserService,
     McsNotificationJobService,
     McsNotificationContextService,
-    RedirectService,
     McsTextContentProvider,
     McsAssetsProvider,
-    McsFilterProvider
+    McsFilterProvider,
+    McsAuthenticationService,
+    McsAuthenticationGuard
   ]
 })
 
