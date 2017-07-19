@@ -59,10 +59,11 @@
     <tbody>
       <tr *ngFor="let server of servers">
         <td *ngIf="columnSettings['state'].value" class="text-center align-middle">
-          <div *ngIf="server.powerState">
-            <mcs-icon [key]="getStateIconKey(server.powerState)" size="large"></mcs-icon>
+          <div *ngIf="getServerPowerState(server)">
+            <mcs-icon [key]="getStateIconKey(getServerPowerState(server))"
+              size="large"></mcs-icon>
           </div>
-          <div *ngIf="!server.powerState" class="power-state-spinner">
+          <div *ngIf="!getServerPowerState(server)" class="power-state-spinner">
             <mcs-icon [key]="spinnerIconKey" size="large"
               mcsPopover trigger="hover" maxWidth="250px" padding="none"
               [content]="loadingContent"></mcs-icon>

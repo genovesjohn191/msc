@@ -11,7 +11,8 @@ import {
   McsApiErrorResponse,
   McsApiRequestParameter,
   McsNotificationContextService,
-  McsApiJob
+  McsApiJob,
+  CoreDefinition
 } from '../../core/';
 import { reviverParser } from '../../utilities';
 import {
@@ -19,7 +20,8 @@ import {
   ServerClientObject,
   ServerPowerState,
   ServerThumbnail,
-  ServerUpdate
+  ServerUpdate,
+  ServerCommand
 } from './models';
 
 /**
@@ -29,22 +31,22 @@ import {
 export class ServersService {
 
   /**
-   * Subscribe in this stream to get all the active servers on the given notification stream
+   * Get all the active servers on the given notification stream
    * based on the COG command action triggered
    */
-  private _activeServersStream: BehaviorSubject<ServerClientObject[]>;
-  public get activeServersStream(): BehaviorSubject<ServerClientObject[]> {
-    return this._activeServersStream;
+  private _activeServers: ServerClientObject[];
+  public get activeServers(): ServerClientObject[] {
+    return this._activeServers;
   }
-  public set activeServersStream(value: BehaviorSubject<ServerClientObject[]>) {
-    this._activeServersStream = value;
+  public set activeServers(value: ServerClientObject[]) {
+    this._activeServers = value;
   }
 
   constructor(
     private _mcsApiService: McsApiService,
     private _notificationContextService: McsNotificationContextService
   ) {
-    this._activeServersStream = new BehaviorSubject<ServerClientObject[]>(new Array());
+    this._activeServers = new Array();
     this._listenToNotificationUpdate();
   }
 
@@ -172,6 +174,41 @@ export class ServersService {
       .catch(this._handleServerError);
   }
 
+  /**
+   * Get the active server power state based on job status
+   * @param server Corresponding server to be checked
+   */
+  public getActiveServerPowerState(server: Server): number {
+    let serverPowerstate: number = 0;
+
+    // Check server if it is included in the list of active
+    let activeServer = this._activeServers
+      .find((pendingServer) => {
+        return pendingServer.serverId === server.id;
+      });
+
+    // Get actual server status
+    if (activeServer) {
+      switch (activeServer.notificationStatus) {
+        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+          serverPowerstate = activeServer.commandAction === ServerCommand.Start ?
+            ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
+          break;
+        case CoreDefinition.NOTIFICATION_JOB_FAILED:
+          serverPowerstate = activeServer.powerState;
+          break;
+        case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+        case CoreDefinition.NOTIFICATION_JOB_PENDING:
+        default:
+          serverPowerstate = undefined;
+          break;
+      }
+    } else {
+      serverPowerstate = server.powerState;
+    }
+    return serverPowerstate;
+  }
+
   private _listenToNotificationUpdate(): void {
     // listener for the notification updates
     this._notificationContextService.notificationsStream
@@ -193,10 +230,8 @@ export class ServersService {
           }
         });
 
-        // Notify active servers listener/subscriber
-        if (activeServers) {
-          this._activeServersStream.next(activeServers);
-        }
+        // Set active servers to property
+        this._activeServers = activeServers;
       });
   }
 

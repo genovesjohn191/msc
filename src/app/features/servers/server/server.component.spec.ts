@@ -168,9 +168,9 @@ describe('ServerComponent', () => {
 
   describe('ngOnDestroy()', () => {
     it('should unsubscribe from the subscription', () => {
-      spyOn(component.subscription, 'unsubscribe');
+      spyOn(component.selectedServerSubscription, 'unsubscribe');
       component.ngOnDestroy();
-      expect(component.subscription.unsubscribe).toHaveBeenCalled();
+      expect(component.selectedServerSubscription.unsubscribe).toHaveBeenCalled();
     });
   });
 

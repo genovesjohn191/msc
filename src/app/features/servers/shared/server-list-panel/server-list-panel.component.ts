@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import {
   Server,
-  ServerClientObject,
   ServerPowerState,
   ServerCommand
 } from '../../models';
@@ -46,8 +45,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   public serverState: string;
   public keyword: string;
   public errorMessage: string;
-  public activeServers: ServerClientObject[];
-  public activeServersSubscription: any;
 
   @Input()
   public serverListData: Server[];
@@ -98,7 +95,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     private _serversService: ServersService
   ) {
     this.servers = new Array();
-    this.activeServers = new Array();
   }
 
   @HostListener('document:scroll', ['$event'])
@@ -149,19 +145,21 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
         this.onClickServer(this.selectedServerId);
       }
     });
-    this._listenToActiveServers();
   }
 
   public ngOnDestroy() {
-    if (this.activeServersSubscription) {
-      this.activeServersSubscription.unsubscribe();
-    }
+    this.servers = null;
+    this.serverList = null;
   }
 
   public onClickServer(serverId: string) {
     this._browserService.scrollToTop();
     this.selectedServerId = serverId;
     this.serverSelectChange.next(serverId);
+  }
+
+  public getServerPowerState(server: Server): number {
+    return this._serversService.getActiveServerPowerState(server);
   }
 
   public getStateIconKey(state: number): string {
@@ -284,9 +282,10 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
 
   public getActiveServerInformation(serverId: any) {
     let commandInformation: string = '';
-    let activeServer = this.activeServers.find((severInformations) => {
-      return severInformations.serverId === serverId;
-    });
+    let activeServer = this._serversService.activeServers
+      .find((severInformations) => {
+        return severInformations.serverId === serverId;
+      });
 
     if (activeServer) {
       return activeServer.tooltipInformation;
@@ -307,50 +306,5 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     let visibleBottom = this._footerOffset.bottom > scrollBottom ?
       scrollBottom : this._footerOffset.bottom;
     return (visibleBottom - visibleTop);
-  }
-
-  private _listenToActiveServers(): void {
-    // TODO: No Implemented Unit test yet,
-    // Unit test must be added when the functionality is official
-
-    // Listen to active servers and update the corresponding server
-    this.activeServersSubscription = this._serversService.activeServersStream
-      .subscribe((updatedActiveServers) => {
-        this.activeServers = updatedActiveServers;
-        updatedActiveServers.forEach((activeServer) => {
-          this._updateServerPowerState(activeServer);
-        });
-      });
-  }
-
-  private _updateServerPowerState(activeServer: ServerClientObject) {
-    // TODO: get the serverid and obtain again the server information from the API
-    // to get the actual result (realtime)
-
-    for (let serverInfo of this.servers) {
-      if (serverInfo.selected === false) { continue; }
-
-      // Get the server from the API
-      let updatedServer: Server;
-      // TODO: This must be API call
-      updatedServer = serverInfo.servers.find((server) => {
-        return server.id === activeServer.serverId;
-      });
-      if (!updatedServer) { return; }
-      // Ignore power status in case of error
-      switch (activeServer.notificationStatus) {
-        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-          updatedServer.powerState = activeServer.commandAction === ServerCommand.Start ?
-            ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
-          break;
-        case CoreDefinition.NOTIFICATION_JOB_FAILED:
-          updatedServer.powerState = activeServer.powerState;
-          break;
-        case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        default:
-          updatedServer.powerState = undefined;
-          break;
-      }
-    }
   }
 }

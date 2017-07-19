@@ -77,9 +77,9 @@ describe('IconComponent', () => {
       component.size = 'xsmall';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.width)
+      expect(component.iconElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}px`);
-      expect(component.iconElement.nativeElement.style.height)
+      expect(component.iconElement.style.height)
         .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}px`);
     });
 
@@ -87,9 +87,9 @@ describe('IconComponent', () => {
       component.size = 'small';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.width)
+      expect(component.iconElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_SMALL}px`);
-      expect(component.iconElement.nativeElement.style.height)
+      expect(component.iconElement.style.height)
         .toBe(`${CoreDefinition.ICON_SIZE_SMALL}px`);
     });
 
@@ -97,9 +97,9 @@ describe('IconComponent', () => {
       component.size = 'medium';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.width)
+      expect(component.iconElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM}px`);
-      expect(component.iconElement.nativeElement.style.height)
+      expect(component.iconElement.style.height)
         .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM}px`);
     });
 
@@ -107,9 +107,9 @@ describe('IconComponent', () => {
       component.size = 'large';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.width)
+      expect(component.iconElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE}px`);
-      expect(component.iconElement.nativeElement.style.height)
+      expect(component.iconElement.style.height)
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE}px`);
     });
 
@@ -117,9 +117,9 @@ describe('IconComponent', () => {
       component.size = 'xlarge';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.width)
+      expect(component.iconElement.style.width)
         .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}px`);
-      expect(component.iconElement.nativeElement.style.height)
+      expect(component.iconElement.style.height)
         .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}px`);
     });
 
@@ -127,7 +127,7 @@ describe('IconComponent', () => {
       component.color = 'white';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -136,7 +136,7 @@ describe('IconComponent', () => {
       component.color = 'black';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -145,7 +145,7 @@ describe('IconComponent', () => {
       component.color = 'green';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -154,7 +154,7 @@ describe('IconComponent', () => {
       component.color = 'red';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -163,7 +163,7 @@ describe('IconComponent', () => {
       component.key = 'close';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.backgroundImage)
+      expect(component.iconElement.style.backgroundImage)
         .toBeDefined();
     });
   });
@@ -178,9 +178,9 @@ describe('IconComponent', () => {
       component.size = 'xsmall';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.fontSize)
+      expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}px`);
-      expect(component.iconElement.nativeElement.style.lineHeight)
+      expect(component.iconElement.style.lineHeight)
         .toBe(`${CoreDefinition.ICON_SIZE_XSMALL * 1.5}px`);
     });
 
@@ -188,9 +188,9 @@ describe('IconComponent', () => {
       component.size = 'small';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.fontSize)
+      expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_SMALL}px`);
-      expect(component.iconElement.nativeElement.style.lineHeight)
+      expect(component.iconElement.style.lineHeight)
         .toBe(`${CoreDefinition.ICON_SIZE_SMALL * 1.5}px`);
     });
 
@@ -198,9 +198,9 @@ describe('IconComponent', () => {
       component.size = 'medium';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.fontSize)
+      expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM}px`);
-      expect(component.iconElement.nativeElement.style.lineHeight)
+      expect(component.iconElement.style.lineHeight)
         .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM * 1.5}px`);
     });
 
@@ -208,9 +208,9 @@ describe('IconComponent', () => {
       component.size = 'large';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.fontSize)
+      expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE}px`);
-      expect(component.iconElement.nativeElement.style.lineHeight)
+      expect(component.iconElement.style.lineHeight)
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE * 1.5}px`);
     });
 
@@ -218,9 +218,9 @@ describe('IconComponent', () => {
       component.size = 'xlarge';
       component.ngOnChanges();
 
-      expect(component.iconElement.nativeElement.style.fontSize)
+      expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}px`);
-      expect(component.iconElement.nativeElement.style.lineHeight)
+      expect(component.iconElement.style.lineHeight)
         .toBe(`${CoreDefinition.ICON_SIZE_XLARGE * 1.5}px`);
     });
 
@@ -228,7 +228,7 @@ describe('IconComponent', () => {
       component.color = 'white';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -237,7 +237,7 @@ describe('IconComponent', () => {
       component.color = 'black';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -246,7 +246,7 @@ describe('IconComponent', () => {
       component.color = 'green';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -255,7 +255,7 @@ describe('IconComponent', () => {
       component.color = 'red';
       component.ngOnChanges();
 
-      let colorClassExist = component.iconElement.nativeElement
+      let colorClassExist = component.iconElement
         .classList.contains(component.color);
       expect(colorClassExist).toBeTruthy();
     });
@@ -264,7 +264,7 @@ describe('IconComponent', () => {
       component.key = 'exclamation';
       component.ngOnChanges();
 
-      let fontClassExist = component.iconElement.nativeElement
+      let fontClassExist = component.iconElement
         .classList.contains('fa-warning');
       expect(fontClassExist).toBeTruthy();
     });
