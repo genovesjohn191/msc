@@ -31,7 +31,6 @@ describe('ServersComponent', () => {
   let pageTitle: string = 'title';
   let noServersFound: string = 'No Servers Found.';
   let serversServiceMock = {
-    activeServersStream: new Subject<any>(),
     getServers(
       page?: number,
       perPage?: number,

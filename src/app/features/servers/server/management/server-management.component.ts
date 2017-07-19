@@ -68,6 +68,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   @ViewChild('thumbnailElement')
   public thumbnailElement: ElementRef;
 
+  @ViewChild('viewConsoleLinkElement')
+  public viewConsoleLinkElement: ElementRef;
+
   private _serverCpuSizeScale: ServerPerformanceScale;
 
   // Check if the current server's serverType is managed
@@ -75,6 +78,11 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     if (this.serviceType) {
       return this.serviceType.toLowerCase() === CoreDefinition.MANAGED_SERVER.toLowerCase();
     }
+  }
+
+  public get consoleEnabled(): boolean {
+    return this.server.powerState !== undefined &&
+    this.server.powerState !== ServerPowerState.PoweredOff;
   }
 
   public get warningIconKey(): string {
@@ -130,6 +138,15 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
           this.isValidScale = false;
           this.isScaling = false;
           this._getScalingNotificationStatus();
+
+          refreshView(() => {
+            if (this.viewConsoleLinkElement) {
+              if (!this.consoleEnabled) {
+                this._renderer
+                  .setAttribute(this.viewConsoleLinkElement.nativeElement, 'disabled', 'true');
+              }
+            }
+          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         }
       });
 
@@ -157,7 +174,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     width=${CoreDefinition.CONSOLE_DEFAULT_WIDTH},
     height=${CoreDefinition.CONSOLE_DEFAULT_HEIGHT}`;
 
-    window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
+    if (this.consoleEnabled) {
+      window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
+    }
   }
 
   public getServerStorageProfile() {

@@ -17,6 +17,14 @@ $server-thumbnail-width: 128px;
       cursor: pointer;
       @include set-items-interval(5px, vertical);
 
+      &[disabled="true"] {
+        cursor: not-allowed;
+        * {
+          cursor: not-allowed;
+          color: $color-grey-02;
+        }
+      }
+
       .thumbnail-container {
         min-height: $server-thumbnail-height;
         min-width: $server-thumbnail-width;

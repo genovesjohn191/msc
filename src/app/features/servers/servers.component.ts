@@ -24,10 +24,7 @@ import {
   McsApiSearchKey,
   CoreDefinition
 } from '../../core';
-import {
-  mergeArrays,
-  updateArrayRecord
-} from '../../utilities';
+import { mergeArrays } from '../../utilities';
 
 @Component({
   selector: 'mcs-servers',
@@ -44,14 +41,11 @@ export class ServersComponent implements OnInit, OnDestroy {
   /** Server Variables */
   public totalServerCount: number;
   public servers: Server[];
-  public activeServers: ServerClientObject[];
   /** Filter Variables */
   public columnSettings: any;
   /** Search Subscription */
   public searchSubscription: any;
   public searchSubject: Subject<McsApiSearchKey>;
-
-  public activeServersSubscription: any;
 
   public hasError: boolean;
   // Done loading and thrown an error
@@ -91,23 +85,17 @@ export class ServersComponent implements OnInit, OnDestroy {
     this.page = 1;
     this.searchSubject = new Subject<McsApiSearchKey>();
     this.servers = new Array();
-    this.activeServers = new Array();
     this.totalServerCount = 0;
   }
 
   public ngOnInit() {
     this.serversTextContent = this._textProvider.content.servers;
     this.getServers();
-    this._listenToActiveServers();
   }
 
   public ngOnDestroy() {
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
-    }
-
-    if (this.activeServersSubscription) {
-      this.activeServersSubscription.unsubscribe();
     }
   }
 
@@ -143,6 +131,10 @@ export class ServersComponent implements OnInit, OnDestroy {
     }
 
     return status;
+  }
+
+  public getServerPowerState(server: Server): number {
+    return this._serversService.getActiveServerPowerState(server);
   }
 
   public getStateIconKey(state: number): string {
@@ -255,64 +247,15 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public getActiveServerInformation(serverId: any) {
     let commandInformation: string = '';
-    let activeServer = this.activeServers.find((severInformations) => {
-      return severInformations.serverId === serverId;
-    });
+    let activeServer = this._serversService.activeServers
+      .find((severInformations) => {
+        return severInformations.serverId === serverId;
+      });
 
     if (activeServer) {
       return activeServer.tooltipInformation;
     } else {
       return 'This instance is being processed';
     }
-  }
-
-  private _listenToActiveServers(): void {
-    // TODO: No Implemented Unit test yet,
-    // Unit test must be added when the functionality is official
-
-    // Listen to active servers and update the corresponding server
-    this.activeServersSubscription = this._serversService.activeServersStream
-      .subscribe((updatedActiveServers) => {
-        this.activeServers = updatedActiveServers;
-        updatedActiveServers.forEach((activeServer) => {
-          this._updateServerPowerState(activeServer);
-        });
-      });
-  }
-
-  private _updateServerPowerState(activeServer: ServerClientObject) {
-    // TODO: get the serverid and obtain again the server information from the API
-    // to get the actual result (realtime)
-
-    // Get the server from the API
-    let updatedServer: Server;
-    // TODO: This must be API call
-    updatedServer = this.servers.find((server) => {
-      return server.id === activeServer.serverId;
-    });
-    if (!updatedServer) { return; }
-    // Ignore power status in case of error
-    switch (activeServer.notificationStatus) {
-      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        updatedServer.powerState = activeServer.commandAction === ServerCommand.Start ?
-          ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
-        break;
-      case CoreDefinition.NOTIFICATION_JOB_FAILED:
-        updatedServer.powerState = activeServer.powerState;
-        break;
-      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-      default:
-        updatedServer.powerState = undefined;
-        break;
-    }
-
-    // Update the server record according to API record
-    updateArrayRecord(
-      this.servers,
-      updatedServer,
-      (_first, _second) => {
-        return _first.id === _second.id;
-      }
-    );
   }
 }

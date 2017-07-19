@@ -36,7 +36,7 @@
       <div class="col">
         <div class="server-thumbnail">
           <h3 class="thumbnail-title">{{ serverManagementTextContent.vmConsole.title }}</h3>
-           <div (click)="onClickViewConsole()" class="view-console">
+           <div #viewConsoleLinkElement (click)="onClickViewConsole()" class="view-console">
              <div class="thumbnail-container">
                <img #thumbnailElement class="thumbnail"/>
              </div>

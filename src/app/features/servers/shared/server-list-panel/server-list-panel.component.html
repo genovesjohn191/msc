@@ -16,10 +16,11 @@
           <a [ngClass]="{'active-server': isServerSelected(server.id)}"
             [routerLink]="['/servers/' + server.id]" (click)="onClickServer(server.id)">
 
-            <div *ngIf="server.powerState">
-              <mcs-icon [key]="getStateIconKey(server.powerState)" size="medium"></mcs-icon>
+            <div *ngIf="getServerPowerState(server)">
+              <mcs-icon [key]="getStateIconKey(getServerPowerState(server))"
+                size="medium"></mcs-icon>
             </div>
-            <div *ngIf="!server.powerState" class="power-state-spinner">
+            <div *ngIf="!getServerPowerState(server)" class="power-state-spinner">
               <mcs-icon [key]="spinnerIconKey" size="medium"
                 mcsPopover trigger="hover" maxWidth="250px" padding="none"
                 [content]="loadingContent"></mcs-icon>

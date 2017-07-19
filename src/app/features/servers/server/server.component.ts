@@ -28,7 +28,7 @@ import { ServerService } from '../server/server.service';
 export class ServerComponent implements OnInit, OnDestroy {
   public servers: Server[];
   public server: Server;
-  public subscription: any;
+  public selectedServerSubscription: any;
   public serverTextContent: any;
 
   // Check if the current server's serverType is managed
@@ -46,41 +46,18 @@ export class ServerComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit() {
-    this.subscription = this._serverService.selectedServerStream.subscribe((server) => {
-      this.server = server;
-    });
+    this.selectedServerSubscription = this._serverService.selectedServerStream
+      .subscribe((server) => {
+        this.server = server;
+        if (this.server) {
+          this.server.powerState = this._serversService.getActiveServerPowerState(this.server);
+        }
+      });
 
     if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
       this.servers = this._route.snapshot.data.servers.content;
       this.server = this._route.snapshot.data.server.content;
       this.serverTextContent = this._textContentProvider.content.servers.server;
-
-      // TODO: Temporarily get the updated server information from stream,
-      // This must be removed when the powerstate of server is OK
-      this._serversService.activeServersStream
-        .subscribe((activeServers) => {
-          if (activeServers) {
-            let activeServer = activeServers.find((_activeServer) => {
-              return _activeServer.serverId === this.server.id;
-            });
-
-            if (activeServer) {
-              switch (activeServer.notificationStatus) {
-                case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-                  this.server.powerState = activeServer.commandAction === ServerCommand.Start ?
-                    ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
-                  break;
-                case CoreDefinition.NOTIFICATION_JOB_FAILED:
-                  this.server.powerState = activeServer.powerState;
-                  break;
-                case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-                default:
-                  this.server.powerState = undefined;
-                  break;
-              }
-            }
-          }
-        });
     } else {
       this._router.navigate(['/page-not-found']);
     }
@@ -127,8 +104,8 @@ export class ServerComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.selectedServerSubscription) {
+      this.selectedServerSubscription.unsubscribe();
     }
   }
 }

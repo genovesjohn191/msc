@@ -24,6 +24,7 @@ import {
 
 export class IconComponent implements OnChanges {
   public icon: Icon;
+  public iconElement: any;
 
   @Input()
   public key: string;
@@ -34,14 +35,12 @@ export class IconComponent implements OnChanges {
   @Input()
   public color: 'white' | 'black' | 'green' | 'red';
 
-  @ViewChild('iconElement')
-  public iconElement: ElementRef;
-
   private _iconActualSize: number;
 
   public constructor(
     private _iconService: IconService,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _elementRef: ElementRef
   ) {
     // Size of icons by default is medium and the type is SVG
     this.size = 'medium';
@@ -49,8 +48,14 @@ export class IconComponent implements OnChanges {
   }
 
   public ngOnChanges() {
+    // Recreate Icon if it is already exist
+    this._recreateIcon();
+
+    // Set Icon content and actual size
     this._setIconContent();
     this._setActualSize();
+
+    // Add Icon Styling
     this._setIconStyles();
   }
 
@@ -100,37 +105,46 @@ export class IconComponent implements OnChanges {
         // Add class for the font awesome icons
         let fontClasses: string[] = this.icon.value.split(' ');
         fontClasses.forEach((fontClass) => {
-          this._renderer.addClass(this.iconElement.nativeElement, fontClass);
+          this._renderer.addClass(this.iconElement, fontClass);
         });
 
         // Set the sie of the Font Awesome icon based on the font-size
-        this._renderer.setStyle(this.iconElement.nativeElement, 'font-size',
+        this._renderer.setStyle(this.iconElement, 'font-size',
           `${this._iconActualSize}px`);
-        this._renderer.setStyle(this.iconElement.nativeElement, 'line-height',
+        this._renderer.setStyle(this.iconElement, 'line-height',
           `${this._iconActualSize * 1.5}px`);
-
-        // Set the color of the Font Awesome icon based on the color inputted
-        this._renderer.addClass(this.iconElement.nativeElement, this.color);
         break;
 
       case IconType.Svg:
       default:
         // Set the style to populate the background image of the SVG
         this._renderer.setStyle(
-          this.iconElement.nativeElement,
+          this.iconElement,
           'background-image',
           `url(${this.icon.value})`
         );
 
         // Set the size of the SVG element based on the height and width
-        this._renderer.setStyle(this.iconElement.nativeElement, 'width',
+        this._renderer.setStyle(this.iconElement, 'width',
           `${this._iconActualSize}px`);
-        this._renderer.setStyle(this.iconElement.nativeElement, 'height',
+        this._renderer.setStyle(this.iconElement, 'height',
           `${this._iconActualSize}px`);
-
-        // Set the color of the Font Awesome icon based on the color inputted
-        this._renderer.addClass(this.iconElement.nativeElement, this.color);
         break;
     }
+
+    this._renderer.addClass(this.iconElement, this.color);
+    this._renderer.addClass(this.iconElement, 'icon-container');
+  }
+
+  private _recreateIcon(): void {
+    // Remove icon if it is already exist
+    if (this.iconElement) {
+      this._renderer.removeChild(this._elementRef.nativeElement, this.iconElement);
+    }
+
+    // Create icon
+    this.iconElement = this._renderer.createElement('i');
+    this._renderer.appendChild(this._elementRef.nativeElement,
+      this.iconElement);
   }
 }
