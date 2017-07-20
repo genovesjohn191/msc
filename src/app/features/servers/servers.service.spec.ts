@@ -5,11 +5,7 @@ import {
   fakeAsync
 } from '@angular/core/testing';
 import {
-  BaseRequestOptions,
   Response,
-  HttpModule,
-  Http,
-  XHRBackend,
   RequestMethod,
   URLSearchParams
 } from '@angular/http';
@@ -18,10 +14,7 @@ import {
   MockConnection
 } from '@angular/http/testing';
 import { ResponseOptions } from '@angular/http';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 /** Services and Models */
 import {
   Server,
@@ -31,72 +24,29 @@ import {
 import { ServersService } from './servers.service';
 import {
   McsApiJob,
-  McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  McsNotificationJobService,
-  McsNotificationContextService,
-  CoreConfig,
   CoreDefinition
-} from '../../core/';
-import { AppState } from '../../app.service';
+} from '../../core';
+import { ServersTestingModule } from './testing';
 
 describe('ServersService', () => {
 
   /** Stub Services Mock */
   let mockBackend: MockBackend;
-  let mcsApiService: McsApiService;
   let serversService: ServersService;
-  let coreConfig = {
-    apiHost: 'http://localhost:5000/api',
-    imageRoot: 'assets/img/'
-  } as CoreConfig;
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<any>(),
-    connectionStatusStream: new Subject<any>()
-  } as McsNotificationJobService;
-  let mockAuthService = {
-    authToken: '',
-    navigateToLoginPage(): void {
-      // Do something
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-        HttpModule
-      ],
-      providers: [
-        AppState,
-        ServersService,
-        McsApiService,
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Http,
-          deps: [MockBackend, BaseRequestOptions],
-          useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          }
-        },
-        {
-          provide: CoreConfig,
-          useValue: coreConfig
-        },
-        {
-          provide: McsNotificationJobService,
-          useValue: mockMcsNotificationJobService
-        },
-        McsNotificationContextService
+        ServersTestingModule
       ]
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
       mockBackend = getTestBed().get(MockBackend);
-      mcsApiService = getTestBed().get(McsApiService);
       serversService = getTestBed().get(ServersService);
     });
   }));

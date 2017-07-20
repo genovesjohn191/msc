@@ -19,10 +19,6 @@ describe('ContextualHelpComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ContextualHelpComponent
-      ],
-      imports: [
-      ],
-      providers: [
       ]
     });
 

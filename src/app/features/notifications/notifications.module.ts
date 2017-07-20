@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { NotificationsComponent } from './notifications.component';
 /** Modules */
 import { SharedModule } from '../../shared';
-/** Services */
-import { NotificationsService } from './notifications.service';
+/** Providers List */
+import { notificationsProviders } from './notifications.constants';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { NotificationsService } from './notifications.service';
     SharedModule
   ],
   providers: [
-    NotificationsService
+    ...notificationsProviders
   ]
 })
 

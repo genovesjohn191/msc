@@ -9,20 +9,13 @@ import {
   Component,
   Input
 } from '@angular/core';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
 import { StateChangeNotificationsComponent } from './state-change-notifications.component';
 import {
   McsApiJob,
-  McsApiService,
-  McsBrowserService,
-  McsApiRequestParameter,
   McsNotificationContextService,
-  McsNotificationJobService,
   CoreDefinition
 } from '../../core';
+import { CoreLayoutTestingModule } from '../testing';
 
 @Component({
   selector: 'mcs-state-change-notification',
@@ -38,19 +31,6 @@ describe('StateChangeNotificationsComponent', () => {
   /** Stub Services/Components */
   let fixture: any;
   let component: StateChangeNotificationsComponent;
-  let mockMcsBrowserService = new McsBrowserService();
-  let mcsNotificationContextService: McsNotificationContextService;
-
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsApiJob>(),
-    connectionStatusStream: new Subject<any>()
-  } as McsNotificationJobService;
-
-  let mockMcsApiService = {
-    get(apiRequest: McsApiRequestParameter): Observable<Response> {
-      return Observable.of(new Response());
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -59,11 +39,8 @@ describe('StateChangeNotificationsComponent', () => {
         StateChangeNotificationsComponent,
         TestComponent
       ],
-      providers: [
-        McsNotificationContextService,
-        { provide: McsApiService, useValue: mockMcsApiService },
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsBrowserService, useValue: mockMcsBrowserService }
+      imports: [
+        CoreLayoutTestingModule
       ]
     });
 
@@ -71,6 +48,7 @@ describe('StateChangeNotificationsComponent', () => {
     TestBed.overrideComponent(StateChangeNotificationsComponent, {
       set: {
         template: `
+        <div>StateChangeNotificationsComponent Template</div>
         <div #stateChangeNotificationsElement class="state-change-notifications-container">
           <ul class="unstyled-list">
             <li *ngFor="let notification of notifications">

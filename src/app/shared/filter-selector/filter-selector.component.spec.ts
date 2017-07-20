@@ -3,23 +3,16 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import {
-  Router,
-  NavigationEnd
-} from '@angular/router';
-import {
-  ElementRef,
-  EventEmitter
-} from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { FilterSelectorComponent } from './filter-selector.component';
 import { FilterItem } from './filter-item';
 /** Services */
 import {
   McsStorageService,
-  McsTextContentProvider,
   McsFilterProvider,
   CoreDefinition
 } from '../../core';
+import { CoreTestingModule } from '../../core/testing';
 
 describe('FilterSelectorComponent', () => {
   let mockFlag = 0;
@@ -28,7 +21,6 @@ describe('FilterSelectorComponent', () => {
 
   /** Stub Services/Components */
   let component: FilterSelectorComponent;
-  let elementRefMock = new ElementRef(document.createElement('p'));
   let mscStorageServiceMock = {
     getItem<T>(key: string): any {
       let filters: any;
@@ -41,13 +33,6 @@ describe('FilterSelectorComponent', () => {
     },
     setItem() {
       return;
-    }
-  };
-  let textContentProviderMock = {
-    content: {
-      filterSelector: {
-        title: 'titleSelector'
-      }
     }
   };
   let filterProviderMock = {
@@ -63,14 +48,13 @@ describe('FilterSelectorComponent', () => {
         FilterSelectorComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: ElementRef, useValue: elementRefMock },
-        { provide: McsStorageService, useValue: mscStorageServiceMock },
-        { provide: McsTextContentProvider, useValue: textContentProviderMock },
-        { provide: McsFilterProvider, useValue: filterProviderMock }
+        CoreTestingModule
       ]
     });
+
+    /** Testbed Onverriding of Provider */
+    TestBed.overrideProvider(McsStorageService, { useValue: mscStorageServiceMock });
+    TestBed.overrideProvider(McsFilterProvider, { useValue: filterProviderMock });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(FilterSelectorComponent, {

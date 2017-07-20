@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
@@ -12,7 +11,6 @@ import {
 } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-import { PopoverComponent } from './popover.component';
 import { PopoverDirective } from './popover.directive';
 import { PopoverModule } from './popover.module';
 
@@ -44,10 +42,11 @@ describe('PopoverDirective', () => {
       ]
     });
 
-    /** Testbed Onverriding of Components */
+    /** Testbed Overriding of Components */
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
+        <div>PopoverDirective Template</div>
         <ng-template #popoverTitle>
           <span>Popover Title</span>
         </ng-template>

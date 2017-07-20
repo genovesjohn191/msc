@@ -5,82 +5,43 @@ import {
   fakeAsync
 } from '@angular/core/testing';
 import {
-  BaseRequestOptions,
   Response,
-  HttpModule,
   Http,
-  XHRBackend,
-  RequestMethod,
-  URLSearchParams
+  RequestMethod
 } from '@angular/http';
 import {
   MockBackend,
   MockConnection
 } from '@angular/http/testing';
 import { ResponseOptions } from '@angular/http';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 /** Services and Models */
-import { ConsoleService } from './console-page.service';
+import { ConsolePageService } from './console-page.service';
 import {
-  McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  McsApiConsole,
-  CoreConfig
+  McsApiConsole
 } from '../../core';
-import { AppState } from '../../app.service';
+import { ConsolePageTestingModule } from './testing';
 
 describe('ConsoleService', () => {
 
   /** Stub Services Mock */
   let mockBackend: MockBackend;
-  let mcsApiService: McsApiService;
-  let consoleService: ConsoleService;
-  let coreConfig = {
-    apiHost: 'http://localhost:5000/api',
-    imageRoot: 'assets/img/'
-  } as CoreConfig;
-  let mockAuthService = {
-    authToken: '',
-    navigateToLoginPage(): void {
-      // Do something
-    }
-  };
+  let consoleService: ConsolePageService;
 
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-        HttpModule
-      ],
-      providers: [
-        AppState,
-        ConsoleService,
-        McsApiService,
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Http,
-          deps: [MockBackend, BaseRequestOptions],
-          useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          }
-        },
-        {
-          provide: CoreConfig,
-          useValue: coreConfig
-        }
+        ConsolePageTestingModule
       ]
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
       mockBackend = getTestBed().get(MockBackend);
-      mcsApiService = getTestBed().get(McsApiService);
-      consoleService = getTestBed().get(ConsoleService);
+      consoleService = getTestBed().get(ConsolePageService);
     });
   }));
 

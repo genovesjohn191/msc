@@ -28,7 +28,7 @@ describe('ButtonComponent', () => {
     TestBed.overrideComponent(ButtonComponent, {
       set: {
         template: `
-          <div #mcsButton>Overridden template here</div>
+          <div #mcsButton>ButtonComponent Template</div>
         `
       }
     });

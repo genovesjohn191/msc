@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
-
+/** Components */
 import { ConsolePageComponent } from './console-page.component';
 
-export const routes: Routes = [
+/**
+ * List of routes for the main module
+ */
+export const consolePageRoutes: Routes = [
   {
     path: '',
     component: ConsolePageComponent

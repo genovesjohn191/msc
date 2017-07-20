@@ -5,41 +5,19 @@ import {
   fakeAsync,
   tick
 } from '@angular/core/testing';
-import {
-
-} from '@angular/common/testing';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
-import { RouterTestingModule } from '@angular/router/testing';
 import { UserPanelComponent } from './user-panel.component';
 import {
-  McsTextContentProvider,
   McsApiJob,
-  McsApiService,
-  McsApiRequestParameter,
   McsNotificationContextService,
-  McsNotificationJobService,
-  McsBrowserService,
   CoreDefinition,
   McsConnectionStatus
 } from '../../../core';
+import { CoreLayoutTestingModule } from '../../testing';
 
 describe('UserPanelComponent', () => {
 
   /** Stub Services/Components */
   let component: UserPanelComponent;
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsApiJob>(),
-    connectionStatusStream: new Subject<McsConnectionStatus>()
-  } as McsNotificationJobService;
-  let mockMcsBrowserService = new McsBrowserService();
-  let mockMcsApiService = {
-    get(apiRequest: McsApiRequestParameter): Observable<Response> {
-      return Observable.of(new Response());
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -48,14 +26,7 @@ describe('UserPanelComponent', () => {
         UserPanelComponent
       ],
       imports: [
-        RouterTestingModule
-      ],
-      providers: [
-        McsNotificationContextService,
-        McsTextContentProvider,
-        { provide: McsApiService, useValue: mockMcsApiService },
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsBrowserService, useValue: mockMcsBrowserService }
+        CoreLayoutTestingModule
       ]
     });
 
@@ -63,12 +34,12 @@ describe('UserPanelComponent', () => {
     TestBed.overrideComponent(UserPanelComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>UserPanelComponent Template</div>
         `
       }
     });
 
-    /** Tesbed Component Compilation and Creation */
+    /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(UserPanelComponent);
       fixture.detectChanges();

@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 
@@ -19,10 +18,11 @@ describe('PopoverComponent', () => {
       ]
     });
 
-    /** Testbed Onverriding of Components */
+    /** Testbed Overriding of Components */
     TestBed.overrideComponent(PopoverComponent, {
       set: {
         template: `
+          <div>PopoverComponent Template</div>
           <div #popoverElement>Overridden template here</div>
           <div #contentElement>Overridden template here</div>
         `

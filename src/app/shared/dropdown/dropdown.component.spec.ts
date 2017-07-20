@@ -1,27 +1,15 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 
 import { DropdownComponent } from './dropdown.component';
-import { McsAssetsProvider } from '../../core';
+import { CoreTestingModule } from '../../core/testing';
 
 describe('DropdownComponent', () => {
 
   /** Stub Services/Components */
   let component: DropdownComponent;
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        'search': 'fa fa-search',
-        'spinner': 'fa fa-spinner fa-pulse',
-        'caret-down': 'fa fa-caret-down'
-      };
-
-      return icons[key];
-    }
-  };
   let mockCollapsed: boolean;
 
   beforeEach(async(() => {
@@ -31,9 +19,7 @@ describe('DropdownComponent', () => {
         DropdownComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
+        CoreTestingModule
       ]
     });
 
@@ -41,9 +27,8 @@ describe('DropdownComponent', () => {
     TestBed.overrideComponent(DropdownComponent, {
       set: {
         template: `
-          <div #mcsDropdown>
+          <div #mcsDropdown>DropdownComponent Template
             <span #mcsDropdownGroupName>Group Name</span>
-            Overridden template here
           </div>
         `
       }

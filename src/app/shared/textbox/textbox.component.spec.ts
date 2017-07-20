@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 
@@ -29,8 +28,6 @@ describe('TextboxComponent', () => {
       declarations: [
         TextboxComponent
       ],
-      imports: [
-      ],
       providers: [
         { provide: McsTextContentProvider, useValue: mockTextProvider }
       ]
@@ -40,7 +37,7 @@ describe('TextboxComponent', () => {
     TestBed.overrideComponent(TextboxComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>TextboxComponent Template</div>
         `
       }
     });

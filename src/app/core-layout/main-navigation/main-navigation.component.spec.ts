@@ -3,34 +3,18 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-import { ElementRef } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
 import { Title } from '@angular/platform-browser';
 import { MainNavigationComponent } from './main-navigation.component';
 import {
-  McsTextContentProvider,
-  McsUserType,
   McsBrowserService,
-  McsDeviceType,
   CoreDefinition
 } from '../../core';
-import { AppState } from '../../app.service';
+import { CoreLayoutTestingModule } from '../testing';
 
 describe('MainNavigationComponent', () => {
 
   /** Stub Services/Components */
   let component: MainNavigationComponent;
-  let mockElementRef = new ElementRef(document.createElement('div'));
-  let mockAuthService = {
-    userName: 'Arrian',
-    userType: McsUserType.User
-  };
-  let mockTitleService = {
-    setTitle(title: string): void { return; }
-  };
-  let mockTextService = {
-    content: 'dummy'
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -39,21 +23,14 @@ describe('MainNavigationComponent', () => {
         MainNavigationComponent
       ],
       imports: [
-        RouterTestingModule
-      ],
-      providers: [
-        AppState,
-        { provide: ElementRef, useValue: mockElementRef },
-        { provide: Title, useValue: mockTitleService },
-        { provide: McsTextContentProvider, useValue: mockTextService },
-        McsBrowserService
+        CoreLayoutTestingModule
       ]
     });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(MainNavigationComponent, {
       set: {
-        template: `<div>Overridden template here</div>`
+        template: `<div>MainNavigationComponent Template</div>`
       }
     });
 
@@ -115,12 +92,11 @@ describe('MainNavigationComponent', () => {
   });
 
   describe('onClickOutside()', () => {
-    it('should set the value of navState to hide',
-      inject([ElementRef], (elementRef: ElementRef) => {
-        component.isMobile = true;
-        component.navState = 'show';
-        component.onClickOutside(null);
-        expect(component.navState).toBe('hide');
-      }));
+    it('should set the value of navState to hide', () => {
+      component.isMobile = true;
+      component.navState = 'show';
+      component.onClickOutside(null);
+      expect(component.navState).toBe('hide');
+    });
   });
 });

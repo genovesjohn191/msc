@@ -1,11 +1,11 @@
 /** Modules */
 export * from './features.module';
 
-/** Routes */
-export * from './servers/servers.routes';
-export * from './notifications/notifications.routes';
-export * from './networking/networking.routes';
-export * from './gadgets/gadgets.routes';
-export * from './dashboard/dashboard.routes';
-export * from './catalog/catalog.routes';
-export * from './page-not-found/page-not-found.routes';
+/** Contants */
+export * from './servers/servers.constants';
+export * from './notifications/notifications.constants';
+export * from './networking/networking.constants';
+export * from './gadgets/gadgets.constants';
+export * from './dashboard/dashboard.constants';
+export * from './catalog/catalog.constants';
+export * from './page-not-found/page-not-found.constants';

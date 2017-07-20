@@ -1,9 +1,11 @@
 import {
   async,
-  TestBed
+  TestBed,
+  getTestBed
 } from '@angular/core/testing';
 import { McsStorageService } from './mcs-storage.service';
 import { AppState } from '../../app.service';
+import { CoreTestingModule } from '../testing';
 
 describe('McsStorageService', () => {
 
@@ -17,7 +19,23 @@ describe('McsStorageService', () => {
   beforeEach(async(() => {
     appState = new AppState();
     appState.set('userId', userId);
-    mcsStorageService = new McsStorageService(appState);
+  }));
+
+  beforeEach(async(() => {
+    /** Testbed Configuration */
+    TestBed.configureTestingModule({
+      imports: [
+        CoreTestingModule
+      ]
+    });
+
+    /** Testbed Override Provider */
+    TestBed.overrideProvider(McsStorageService, { useValue: new McsStorageService(appState) });
+
+    /** Testbed Component Compilation and Creation */
+    TestBed.compileComponents().then(() => {
+      mcsStorageService = getTestBed().get(McsStorageService);
+    });
   }));
 
   /** Test Implementation */

@@ -87,7 +87,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   constructor(
-    private _router: Router,
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
     private _renderer: Renderer2,

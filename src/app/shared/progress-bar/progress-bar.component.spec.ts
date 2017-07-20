@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 import { EventEmitter } from '@angular/core';
@@ -20,17 +19,13 @@ describe('ProgressBarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ProgressBarComponent
-      ],
-      imports: [
-      ],
-      providers: [
       ]
     });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(ProgressBarComponent, {
       set: {
-        template: `<div>Overridden template here</div>`
+        template: `<div>ProgressBarComponent Template</div>`
       }
     });
 

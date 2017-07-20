@@ -35,7 +35,7 @@ describe('ServerManageStorageComponent', () => {
     TestBed.overrideComponent(ServerManageStorageComponent, {
       set: {
         template: `
-        <div> ServerManageStorageComponent Template </div>
+        <div>ServerManageStorageComponent Template </div>
         `
       }
     });

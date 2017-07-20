@@ -3,17 +3,14 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
-
 import { HeaderComponent } from './header.component';
 import { McsAssetsProvider } from '../../core';
+import { CoreLayoutTestingModule } from '../testing';
 
 describe('HeaderComponent', () => {
 
   /** Stub Services/Components */
   let component: HeaderComponent;
-  let mockAssetsProvider = {
-    getImagePath(key: string): string { return 'header.png'; }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -22,16 +19,14 @@ describe('HeaderComponent', () => {
         HeaderComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
+        CoreLayoutTestingModule
       ]
     });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(HeaderComponent, {
       set: {
-        template: `<div>Overridden template here</div>`
+        template: `<div>HeaderComponent Template</div>`
       }
     });
 

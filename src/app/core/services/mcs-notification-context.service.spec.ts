@@ -1,80 +1,29 @@
 import {
   async,
   TestBed,
-  getTestBed,
-  fakeAsync,
-  tick
+  getTestBed
 } from '@angular/core/testing';
-import { Subject } from 'rxjs/Rx';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsApiService } from './mcs-api.service';
-import { AppState } from '../../app.service';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
-import { CoreConfig } from '../core.config';
-import { CoreDefinition } from '../core.definition';
-import {
-  BaseRequestOptions,
-  Http,
-  XHRBackend
-} from '@angular/http';
-import {
-  MockBackend,
-  MockConnection
-} from '@angular/http/testing';
-import { ResponseOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
+import { CoreTestingModule } from '../testing';
 
 describe('McsNotificationContextService', () => {
 
   /** Stub Services Mock */
-  let mcsNotificationContextService: McsNotificationContextService;
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsApiJob>(),
-    connectionStatusStream: new Subject<any>()
-  } as McsNotificationJobService;
-  let mockBackend: MockBackend;
   let mcsApiService: McsApiService;
-  let coreConfig = {
-    apiHost: 'http://localhost:5000',
-    imageRoot: 'assets/img/',
-    notification: {
-      host: 'ws://localhost:15674/ws',
-      routePrefix: 'mcs.portal.notification',
-      user: 'guest',
-      password: 'guest'
-    }
-  } as CoreConfig;
-  let mockAuthService = {
-    authToken: '',
-    navigateToLoginPage(): void {
-      // Do something
-    }
-  };
+  let mcsNotificationContextService: McsNotificationContextService;
+  let mcsNotifcationsJobService: McsNotificationJobService;
+  let mockBackend: MockBackend;
 
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-      ],
-      providers: [
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        McsNotificationContextService,
-        McsApiService,
-        AppState,
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Http,
-          deps: [MockBackend, BaseRequestOptions],
-          useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          }
-        },
-        {
-          provide: CoreConfig,
-          useValue: coreConfig
-        }
+        CoreTestingModule
       ]
     });
 
@@ -83,6 +32,7 @@ describe('McsNotificationContextService', () => {
       mockBackend = getTestBed().get(MockBackend);
       mcsApiService = getTestBed().get(McsApiService);
       mcsNotificationContextService = getTestBed().get(McsNotificationContextService);
+      mcsNotifcationsJobService = getTestBed().get(McsNotificationJobService);
     });
   }));
 
@@ -95,7 +45,7 @@ describe('McsNotificationContextService', () => {
       let notification = new McsApiJob();
       notification.id = initId;
       notification.description = initDescription;
-      mockMcsNotificationJobService.notificationStream.next(notification);
+      mcsNotifcationsJobService.notificationStream.next(notification);
     }));
 
     it('should get the omitted value from the notification job stream', () => {
@@ -118,7 +68,7 @@ describe('McsNotificationContextService', () => {
 
         notification.id = initId;
         notification.description = updatedDescription;
-        mockMcsNotificationJobService.notificationStream.next(notification);
+        mcsNotifcationsJobService.notificationStream.next(notification);
 
         mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
           updatedNotifications = notifications;
@@ -137,7 +87,7 @@ describe('McsNotificationContextService', () => {
         let newDescription = 'Server03';
         notification.id = newId;
         notification.description = newDescription;
-        mockMcsNotificationJobService.notificationStream.next(notification);
+        mcsNotifcationsJobService.notificationStream.next(notification);
 
         mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
           updatedNotifications = notifications;
@@ -159,7 +109,7 @@ describe('McsNotificationContextService', () => {
       let notification = new McsApiJob();
       notification.id = initId;
       notification.description = initDescription;
-      mockMcsNotificationJobService.notificationStream.next(notification);
+      mcsNotifcationsJobService.notificationStream.next(notification);
     }));
 
     it('should get the omitted value from the notification job stream', () => {
@@ -178,7 +128,7 @@ describe('McsNotificationContextService', () => {
   describe('connectionStatusStream() | _notifyConnectionStatus()', () => {
     it(`should get the omitted status of connection from the notification job stream`,
       () => {
-        mockMcsNotificationJobService.connectionStatusStream.next(McsConnectionStatus.Success);
+        mcsNotifcationsJobService.connectionStatusStream.next(McsConnectionStatus.Success);
         mcsNotificationContextService.connectionStatusStream.subscribe((status) => {
           expect(status).toBe(McsConnectionStatus.Success);
         });

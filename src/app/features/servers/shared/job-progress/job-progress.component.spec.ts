@@ -9,7 +9,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { JobProgressComponent } from './job-progress.component';
 import {
   McsApiJob,
-  McsNotificationContextService,
   CoreDefinition
 } from '../../../../core';
 import { ContextualHelpDirective } from '../contextual-help/contextual-help.directive';
@@ -49,9 +48,6 @@ describe('JobProgressComponent', () => {
       ],
       imports: [
         RouterTestingModule
-      ],
-      providers: [
-        McsNotificationContextService
       ]
     });
 
