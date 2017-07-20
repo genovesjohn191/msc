@@ -132,7 +132,7 @@ describe('RunningNotificationComponent', () => {
             .subscribe((notifications) => {
               expect(notifications.length).toBe(0);
             });
-          subscription.unsubscribe();
+          if (subscription) { subscription.unsubscribe(); }
         }));
   });
 
@@ -164,7 +164,7 @@ describe('RunningNotificationComponent', () => {
             .subscribe((notifications) => {
               expect(notifications.length).toBe(0);
             });
-          subscription.unsubscribe();
+          if (subscription) { subscription.unsubscribe(); }
         }));
   });
 

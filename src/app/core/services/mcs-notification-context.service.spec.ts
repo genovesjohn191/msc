@@ -53,14 +53,17 @@ describe('McsNotificationContextService', () => {
 
     it('should get the omitted value from the notification job stream', () => {
       let updatedNotifications: McsApiJob[];
-      mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
-        updatedNotifications = notifications;
-      });
+      let subscriber = mcsNotificationContextService.notificationsStream
+        .subscribe((notifications) => {
+          updatedNotifications = notifications;
+        });
 
       expect(updatedNotifications).toBeDefined();
       expect(updatedNotifications.length).toBe(1);
       expect(updatedNotifications[0].id).toBe(initId);
       expect(updatedNotifications[0].description).toBe(initDescription);
+
+      if (subscriber) { subscriber.unsubscribe(); }
     });
 
     it(`should update the notification data on the list
@@ -73,13 +76,16 @@ describe('McsNotificationContextService', () => {
         notification.description = updatedDescription;
         mcsNotifcationsJobService.notificationStream.next(notification);
 
-        mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
-          updatedNotifications = notifications;
-        });
+        let subscriber = mcsNotificationContextService.notificationsStream
+          .subscribe((notifications) => {
+            updatedNotifications = notifications;
+          });
 
         expect(updatedNotifications.length).toBe(1);
         expect(updatedNotifications[0].id).toBe(initId);
         expect(updatedNotifications[0].description).toBe(updatedDescription);
+
+        if (subscriber) { subscriber.unsubscribe(); }
       });
 
     it(`should add the notification item to the list
@@ -92,15 +98,18 @@ describe('McsNotificationContextService', () => {
         notification.description = newDescription;
         mcsNotifcationsJobService.notificationStream.next(notification);
 
-        mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
-          updatedNotifications = notifications;
-        });
+        let subscriber = mcsNotificationContextService.notificationsStream
+          .subscribe((notifications) => {
+            updatedNotifications = notifications;
+          });
 
         expect(updatedNotifications.length).toBe(2);
         expect(updatedNotifications[0].id).toBe(initId);
         expect(updatedNotifications[0].description).toBe(initDescription);
         expect(updatedNotifications[1].id).toBe(newId);
         expect(updatedNotifications[1].description).toBe(newDescription);
+
+        if (subscriber) { subscriber.unsubscribe(); }
       });
   });
 
@@ -117,14 +126,17 @@ describe('McsNotificationContextService', () => {
 
     it('should get the omitted value from the notification job stream', () => {
       let updatedNotifications: McsApiJob[];
-      mcsNotificationContextService.notificationsStream.subscribe((notifications) => {
-        updatedNotifications = notifications;
-      });
+      let subscriber = mcsNotificationContextService.notificationsStream
+        .subscribe((notifications) => {
+          updatedNotifications = notifications;
+        });
 
       expect(updatedNotifications).toBeDefined();
       expect(updatedNotifications.length).toBe(1);
       expect(updatedNotifications[0].id).toBe(initId);
       expect(updatedNotifications[0].description).toBe(initDescription);
+
+      if (subscriber) { subscriber.unsubscribe(); }
     });
   });
 
@@ -132,9 +144,12 @@ describe('McsNotificationContextService', () => {
     it(`should get the omitted status of connection from the notification job stream`,
       () => {
         mcsNotifcationsJobService.connectionStatusStream.next(McsConnectionStatus.Success);
-        mcsNotificationContextService.connectionStatusStream.subscribe((status) => {
-          expect(status).toBe(McsConnectionStatus.Success);
-        });
+        let subscriber = mcsNotificationContextService.connectionStatusStream
+          .subscribe((status) => {
+            expect(status).toBe(McsConnectionStatus.Success);
+          });
+
+        if (subscriber) { subscriber.unsubscribe(); }
       });
   });
 });
