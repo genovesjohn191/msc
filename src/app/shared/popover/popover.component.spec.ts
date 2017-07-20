@@ -11,6 +11,9 @@ describe('PopoverComponent', () => {
   let component: PopoverComponent;
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [

@@ -21,6 +21,9 @@ describe('ServerManageStorageComponent', () => {
   let component: ServerManageStorageComponent;
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [

@@ -55,6 +55,9 @@ describe('ServerManagementComponent', () => {
   };
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [

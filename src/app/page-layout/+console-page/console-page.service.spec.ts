@@ -31,6 +31,9 @@ describe('ConsoleService', () => {
   let consoleService: ConsolePageService;
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [

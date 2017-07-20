@@ -14,6 +14,9 @@ describe('BreadcrumbsService', () => {
 
   /** Initialize Service */
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [

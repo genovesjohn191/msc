@@ -12,6 +12,9 @@ describe('AlertComponent', () => {
   let component: AlertComponent;
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [

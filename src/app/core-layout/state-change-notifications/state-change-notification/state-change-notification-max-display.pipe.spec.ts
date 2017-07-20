@@ -39,6 +39,9 @@ describe('StateChangeNotificationMaxDisplayPipe', () => {
   let divElements: any;
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
