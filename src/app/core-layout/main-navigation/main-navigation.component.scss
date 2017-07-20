@@ -4,9 +4,6 @@
   background-color: $color-primary-01;
   color: $color-black;
   padding: 0;
-  @include breakpoint(small) {
-    z-index: $zindex-navigation;
-  }
 
   .container {
     padding: 0;
@@ -74,6 +71,7 @@
       min-height: 100vh;
       padding-left: 0;
       overflow: auto;
+      z-index: $zindex-navigation;
     }
 
     .navbar-nav {

@@ -12,6 +12,9 @@
     .title {
       @include font-size($h4-default-font-size);
       font-family: $base-font-bold;
+      @include breakpoint(medium) {
+        @include flex(2)
+      }
     }
 
     > * {
@@ -35,6 +38,9 @@
 
       .path {
         @include display-flex(row);
+        @include breakpoint(medium) {
+          @include flex(2)
+        }
 
         span {
           margin-left: $space-small;

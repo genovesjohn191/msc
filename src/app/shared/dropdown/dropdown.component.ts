@@ -95,6 +95,8 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
     this.selectedItem = new McsListItem(undefined, undefined);
   }
 
+  // TODO: For testing in actual mobile devices
+  @HostListener('document:touchenter', ['$event.target'])
   @HostListener('document:click', ['$event.target'])
   public onClick(target): void {
     if (this._elementRef.nativeElement.contains(target)) {
