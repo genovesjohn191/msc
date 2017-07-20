@@ -27,6 +27,9 @@ describe('McsApiService', () => {
   let coreConfig: CoreConfig;
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [

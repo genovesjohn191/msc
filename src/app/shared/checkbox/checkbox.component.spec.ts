@@ -12,6 +12,9 @@ describe('CheckboxComponent', () => {
   let component: CheckboxComponent;
 
   beforeEach(async(() => {
+    /** Testbed Reset Module */
+    TestBed.resetTestingModule();
+
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
