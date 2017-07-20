@@ -23,9 +23,7 @@ describe('AlertComponent', () => {
     TestBed.overrideComponent(AlertComponent, {
       set: {
         template: `
-          <div>
-            Overridden template here
-          </div>
+          <div>AlertComponent Template</div>
         `
       }
     });

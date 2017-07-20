@@ -1,61 +1,20 @@
 import {
   async,
-  inject,
   TestBed,
   fakeAsync,
   tick
 } from '@angular/core/testing';
-import {
-  Renderer2,
-  ElementRef,
-} from '@angular/core';
 import { ServerListPanelComponent } from './server-list-panel.component';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
-import { Subject } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { Server } from '../../models';
 import { ServerList } from './server-list';
-import {
-  McsAssetsProvider,
-  McsTextContentProvider,
-  CoreDefinition,
-  McsBrowserService
-} from '../../../../core';
-import { ServersService } from '../../servers.service';
+import { CoreDefinition } from '../../../../core';
+import { ServersTestingModule } from '../../testing';
 
 describe('ServerListPanelComponent', () => {
+
   /** Stub Services/Components */
   let component: ServerListPanelComponent;
-  let noServersFound: string = 'No Servers Found.';
-  let textContentProviderMock = {
-    content: {
-      servers: {
-        errorMessage: noServersFound
-      }
-    }
-  };
-  let serversServiceMock = {
-    activeServersStream: new Subject<any>(),
-  };
-
-  let mockAssetsProvider = {
-    getIcon(key: string): string {
-      let icons = {
-        'caret-down': 'fa fa-caret-down',
-        'server-state': 'fa fa-sun-o'
-      };
-
-      return icons[key];
-    }
-  };
-
-  let mockActivatedRoute = {
-    params: Observable.of({ id: 123 })
-  };
-
   let mockServerListData = [
     {
       id: 2686,
@@ -81,11 +40,6 @@ describe('ServerListPanelComponent', () => {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148'
   };
 
-  let mockRouterService = {
-    navigate(): any { return null; },
-    events: Observable.of(new Event('event'))
-  };
-
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
@@ -93,15 +47,7 @@ describe('ServerListPanelComponent', () => {
         ServerListPanelComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: McsTextContentProvider, useValue: textContentProviderMock },
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
-        { provide: Router, useValue: mockRouterService },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: ServersService, useValue: serversServiceMock },
-        McsBrowserService,
-        Renderer2
+        ServersTestingModule
       ]
     });
 
@@ -137,8 +83,8 @@ describe('ServerListPanelComponent', () => {
       component.mapServerList(component.serverListData);
     });
 
-    it('should set the no servers found error message', () => {
-      expect(component.errorMessage).toEqual(noServersFound);
+    it('should define the error message', () => {
+      expect(component.errorMessage).toBeDefined();
     });
 
     it('should set the value of selectedServerId', () => {

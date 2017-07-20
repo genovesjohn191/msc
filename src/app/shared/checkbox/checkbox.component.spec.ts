@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 import { EventEmitter } from '@angular/core';
@@ -17,17 +16,13 @@ describe('CheckboxComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         CheckboxComponent
-      ],
-      imports: [
-      ],
-      providers: [
       ]
     });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(CheckboxComponent, {
       set: {
-        template: `<div>Overridden template here</div>`
+        template: `<div>CheckboxComponent Template</div>`
       }
     });
 

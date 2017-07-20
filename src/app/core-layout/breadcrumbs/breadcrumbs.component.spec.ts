@@ -11,16 +11,12 @@ import { Observable } from 'rxjs/Observable';
 
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsService } from './breadcrumbs.service';
+import { CoreLayoutTestingModule } from '../testing';
 
 describe('BreadcrumbsComponent', () => {
 
   /** Stub Services/Components */
   let component: BreadcrumbsComponent;
-  let mockBreadcrumbsService = new BreadcrumbsService();
-  let mockRouterService = {
-    navigateByUrl(): any { return null; },
-    events: Observable.of(new Event('event'))
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -29,17 +25,14 @@ describe('BreadcrumbsComponent', () => {
         BreadcrumbsComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: BreadcrumbsService, useValue: mockBreadcrumbsService },
-        { provide: Router, useValue: mockRouterService }
+        CoreLayoutTestingModule
       ]
     });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(BreadcrumbsComponent, {
       set: {
-        template: `<div>Overridden template here</div>`
+        template: `<div>BreadcrumbsComponent Template</div>`
       }
     });
 

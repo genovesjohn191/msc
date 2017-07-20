@@ -10,7 +10,7 @@ import {
 } from '../../core';
 
 @Injectable()
-export class ConsoleService {
+export class ConsolePageService {
 
   constructor(private _apiService: McsApiService) {
     // Get User ID from AppState

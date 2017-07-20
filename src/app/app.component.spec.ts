@@ -1,5 +1,3 @@
-/*
-TODO: COMMENTING TEMPORARILY TO MAKE TIME FOR DEMO
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   inject,
@@ -12,31 +10,48 @@ import {
 import { AppComponent } from './app.component';
 import { AppState } from './app.service';
 
-describe(`App`, () => {
-  let comp: AppComponent;
+describe(`AppComponent`, () => {
+  let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
-  // async beforeEach
   beforeEach(async(() => {
+
+    /** Testbed Configuration */
     TestBed.configureTestingModule({
-      declarations: [ AppComponent ],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [AppState]
-    })
-    .compileComponents(); // compile template and css
+      declarations: [
+        AppComponent
+      ],
+      providers: [
+        AppState
+      ],
+      schemas: [
+        NO_ERRORS_SCHEMA
+      ]
+    });
+
+    /** Testbed Onverriding of Components */
+    TestBed.overrideComponent(AppComponent, {
+      set: {
+        template: `
+          <div>AppComponent Template</div>
+        `
+      }
+    });
+
+    /** Tesbed Component Compilation and Creation */
+    TestBed.compileComponents().then(() => {
+      fixture = TestBed.createComponent(AppComponent);
+      fixture.detectChanges();
+
+      component = fixture.componentInstance;
+    });
   }));
 
-  // synchronous beforeEach
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AppComponent);
-    comp    = fixture.componentInstance;
-
-    fixture.detectChanges(); // trigger initial data binding
-  });
-
-  it(`should be readly initialized`, () => {
-    expect(fixture).toBeDefined();
-    expect(comp).toBeDefined();
+  /** Test Implementation */
+  describe('constructor', () => {
+    it(`should be readly initialized`, () => {
+      expect(fixture).toBeDefined();
+      expect(component).toBeDefined();
+    });
   });
 });
-*/

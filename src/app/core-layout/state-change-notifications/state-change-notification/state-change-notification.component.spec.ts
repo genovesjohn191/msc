@@ -3,12 +3,9 @@ import {
   inject,
   TestBed,
   fakeAsync,
-  tick
+  tick,
+  getTestBed
 } from '@angular/core/testing';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StateChangeNotificationComponent } from './state-change-notification.component';
 import {
@@ -20,24 +17,14 @@ import {
   McsNotificationJobService,
   CoreDefinition
 } from '../../../core';
+import { CoreLayoutTestingModule } from '../../testing';
 
 describe('StateChangeNotificationComponent', () => {
 
   /** Stub Services/Components */
   let fixture: any;
   let component: StateChangeNotificationComponent;
-  let mcsNotificationContextService: McsNotificationContextService;
-
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsApiJob>(),
-    connectionStatusStream: new Subject<any>()
-  } as McsNotificationJobService;
-
-  let mockMcsApiService = {
-    get(apiRequest: McsApiRequestParameter): Observable<Response> {
-      return Observable.of(new Response());
-    }
-  };
+  let mcsNotificationJobService: McsNotificationJobService;
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -45,10 +32,8 @@ describe('StateChangeNotificationComponent', () => {
       declarations: [
         StateChangeNotificationComponent
       ],
-      providers: [
-        McsNotificationContextService,
-        { provide: McsApiService, useValue: mockMcsApiService },
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService }
+      imports: [
+        CoreLayoutTestingModule
       ]
     });
 
@@ -56,7 +41,7 @@ describe('StateChangeNotificationComponent', () => {
     TestBed.overrideComponent(StateChangeNotificationComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>StateChangeNotificationComponent Template</div>
         `
       }
     });
@@ -67,6 +52,7 @@ describe('StateChangeNotificationComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      mcsNotificationJobService = getTestBed().get(McsNotificationJobService);
     });
   }));
 
@@ -96,7 +82,7 @@ describe('StateChangeNotificationComponent', () => {
       notification = new McsApiJob();
       notification = createNotification('1', 'Active');
 
-      mockMcsNotificationJobService.notificationStream.next(notification);
+      mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
       component.ngOnChanges();
     }));
@@ -125,7 +111,7 @@ describe('StateChangeNotificationComponent', () => {
       notification = new McsApiJob();
       notification = createNotification('1', 'Failed');
 
-      mockMcsNotificationJobService.notificationStream.next(notification);
+      mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
       component.ngOnChanges();
       tick(CoreDefinition.NOTIFICATION_FAILED_TIMEOUT);
@@ -157,7 +143,7 @@ describe('StateChangeNotificationComponent', () => {
       notification = new McsApiJob();
       notification = createNotification('1', 'Completed');
 
-      mockMcsNotificationJobService.notificationStream.next(notification);
+      mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
       component.ngOnChanges();
       tick(CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT);
@@ -189,7 +175,7 @@ describe('StateChangeNotificationComponent', () => {
       notification = new McsApiJob();
       notification = createNotification('1', 'Completed');
 
-      mockMcsNotificationJobService.notificationStream.next(notification);
+      mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
       component.ngOnChanges();
       tick(CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT);

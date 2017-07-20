@@ -4,26 +4,13 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { FooterComponent } from './footer.component';
-import {
-  McsTextContentProvider,
-  McsAssetsProvider
-} from '../../core';
+import { McsAssetsProvider } from '../../core';
+import { CoreLayoutTestingModule } from '../testing';
 
 describe('FooterComponent', () => {
 
   /** Stub Services/Components */
   let component: FooterComponent;
-  let mockAssetsProvider = {
-    getImagePath(key: string): string { return 'footer.png'; }
-  };
-  let mockTextContentProvider = {
-    content: {
-      footer: {
-        copyright: 'sample',
-        links: 'hello'
-      }
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -32,17 +19,14 @@ describe('FooterComponent', () => {
         FooterComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider },
-        { provide: McsTextContentProvider, useValue: mockTextContentProvider }
+        CoreLayoutTestingModule
       ]
     });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(FooterComponent, {
       set: {
-        template: `<div>Overridden template here</div>`
+        template: `<div>FooterComponent Template</div>`
       }
     });
 

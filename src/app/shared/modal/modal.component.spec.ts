@@ -22,6 +22,7 @@ describe('ModalComponent', () => {
     TestBed.overrideComponent(ModalComponent, {
       set: {
         template: `
+          <div>ModalComponent Template</div>
           <div #modalElement>Modal Element</div>
           <div #modalIconElement>Icon Element</div>
           <div #modalTitleElement>Title Element</div>

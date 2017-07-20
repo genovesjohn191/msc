@@ -16,10 +16,7 @@ describe('SliderComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         SliderComponent
-      ],
-      imports: [
-      ],
-      providers: []
+      ]
     });
 
     /** Testbed Onverriding of Components */
@@ -27,7 +24,7 @@ describe('SliderComponent', () => {
       set: {
         template: `
           <div>
-            Overridden template here
+            SliderComponent Template
             <input type="range" />
           </div>
         `

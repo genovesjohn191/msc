@@ -6,6 +6,7 @@ import {
 import { CoreDefinition } from '../core.definition';
 import { McsDeviceType } from '../enumerations/mcs-device-type.enum';
 import { McsBrowserService } from './mcs-browser.service';
+import { CoreTestingModule } from '../testing';
 
 describe('MscBrowserService', () => {
 
@@ -16,9 +17,7 @@ describe('MscBrowserService', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-      ],
-      providers: [
-        McsBrowserService
+        CoreTestingModule
       ]
     });
 

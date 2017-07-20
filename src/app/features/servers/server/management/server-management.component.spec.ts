@@ -1,50 +1,30 @@
 import {
   async,
-  inject,
   TestBed,
   getTestBed
 } from '@angular/core/testing';
 import { ServerManagementComponent } from './server-management.component';
 import {
   Server,
-  ServerFileSystem,
-  ServerPerformanceScale,
   ServerThumbnail
 } from '../../models';
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsList,
-  McsListItem,
   McsNotificationContextService,
-  McsNotificationJobService,
-  McsApiSuccessResponse,
-  McsApiJob,
-  McsConnectionStatus,
-  McsApiRequestParameter,
-  McsApiService
+  McsApiJob
 } from '../../../../core';
-import { getEncodedUrl } from '../../../../utilities';
 import { ServerService } from '../server.service';
 import {
-  Subject,
-  Observable
-} from 'rxjs/Rx';
+  mockServerService,
+  ServersTestingModule
+} from '../../testing';
 
 describe('ServerManagementComponent', () => {
   /** Stub Services/Components */
   let component: ServerManagementComponent;
   let serverService: ServerService;
   let notificationContextService: McsNotificationContextService;
-  let mockTextContentProvider = {
-    content: {
-      servers: {
-        server: {
-          management: 'server management'
-        }
-      }
-    }
-  };
   let mockServerDetails = {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
@@ -73,49 +53,6 @@ describe('ServerManagementComponent', () => {
       }
     ],
   };
-  let mockActivatedRoute = {
-    parent: {
-      snapshot: {
-        data: {
-          server: {
-            content: mockServerDetails
-          }
-        }
-      }
-    }
-  };
-  let mockServerService = {
-    selectedServerStream: new Subject<any>(),
-    setPerformanceScale(
-      serverId: any,
-      cpuSizeScale: any): Observable<McsApiSuccessResponse<McsApiJob>> {
-
-      let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
-      mcsApiResponseMock.status = 200;
-      mcsApiResponseMock.totalCount = 2;
-      mcsApiResponseMock.content = new McsApiJob();
-
-      return Observable.of(mcsApiResponseMock);
-    },
-    getServerThumbnail(serverId: any) {
-      return Observable.of({
-        content: {
-          file: 'aaaBBBcccDDD',
-          fileType: 'image/png',
-          encoding: 'base64'
-        } as ServerThumbnail
-      });
-    }
-  };
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsApiJob>(),
-    connectionStatusStream: new Subject<McsConnectionStatus>()
-  } as McsNotificationJobService;
-  let mockMcsApiService = {
-    get(apiRequest: McsApiRequestParameter): Observable<Response> {
-      return Observable.of(new Response());
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -124,21 +61,18 @@ describe('ServerManagementComponent', () => {
         ServerManagementComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: McsTextContentProvider, useValue: mockTextContentProvider },
-        { provide: ServerService, useValue: mockServerService },
-        { provide: McsApiService, useValue: mockMcsApiService },
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        McsNotificationContextService
+        ServersTestingModule
       ]
     });
+
+    /** Testbed Onverriding of Providers */
+    TestBed.overrideProvider(ServerService, { useValue: mockServerService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(ServerManagementComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>Server Management Component Template</div>
           <img #thumbnailElement/>
         `
       }
@@ -171,9 +105,8 @@ describe('ServerManagementComponent', () => {
       serverService.selectedServerStream.next(mockServerDetails as Server);
     }));
 
-    it('should set the text content values to serverManagementTextContent', () => {
-      expect(component.serverManagementTextContent)
-        .toEqual(mockTextContentProvider.content.servers.server.management);
+    it('should define the text content values to serverManagementTextContent', () => {
+      expect(component.serverManagementTextContent).toBeDefined();
     });
 
     it('should set the value of server', () => {

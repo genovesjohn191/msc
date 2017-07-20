@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-import { ModalComponent } from './modal.component';
 import { ModalDirective } from './modal.directive';
 import { ModalModule } from './modal.module';
 
@@ -48,6 +47,7 @@ describe('ModalDirective', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
+        <div>ModalDirective Template</div>
         <ng-template #modalContent>
           <span>Modal Content</span>
         </ng-template>

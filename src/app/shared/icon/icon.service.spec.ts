@@ -11,6 +11,7 @@ import {
   CoreDefinition,
   McsAssetsProvider
 } from '../../core';
+import { CoreTestingModule } from '../../core/testing';
 
 describe('IconService', () => {
 
@@ -37,12 +38,15 @@ describe('IconService', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
+        CoreTestingModule
       ],
       providers: [
-        IconService,
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
+        IconService
       ]
     });
+
+    /** Testbed Onverriding of Provider */
+    TestBed.overrideProvider(McsAssetsProvider, { useValue: mockAssetsProvider });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {

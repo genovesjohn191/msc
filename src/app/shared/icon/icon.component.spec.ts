@@ -12,6 +12,7 @@ import {
   CoreDefinition,
   McsAssetsProvider
 } from '../../core';
+import { CoreTestingModule } from '../../core/testing';
 
 describe('IconComponent', () => {
 
@@ -41,11 +42,16 @@ describe('IconComponent', () => {
       declarations: [
         IconComponent
       ],
+      imports: [
+        CoreTestingModule
+      ],
       providers: [
-        IconService,
-        { provide: McsAssetsProvider, useValue: mockAssetsProvider }
+        IconService
       ]
     });
+
+    /** Testbed Onverriding of Provider */
+    TestBed.overrideProvider(McsAssetsProvider, { useValue: mockAssetsProvider });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(IconComponent, {

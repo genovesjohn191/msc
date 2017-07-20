@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed,
   getTestBed
 } from '@angular/core/testing';
@@ -9,27 +8,17 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
+import { ServersTestingModule } from '../testing';
 import {
   Server,
-  ServerClientObject,
   ServerPowerState,
   ServerCommand
 } from '../models';
-import {
-  CoreDefinition,
-  McsTextContentProvider
-} from '../../../core';
-import { ServersService } from '../servers.service';
 import { ServerService } from '../server/server.service';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
 
 describe('ServerComponent', () => {
   /** Stub Services/Components */
   let component: ServerComponent;
-  let serversService: ServersService;
   let serverService: ServerService;
   let mockActivatedRoute = {
     snapshot: {
@@ -40,13 +29,6 @@ describe('ServerComponent', () => {
         server: {
           content: 'server details'
         }
-      }
-    }
-  };
-  let textContentProviderMock = {
-    content: {
-      servers: {
-        server: 'Server Details'
       }
     }
   };
@@ -79,21 +61,6 @@ describe('ServerComponent', () => {
       }
     ],
   };
-  let mockRouterService = {
-    navigate(): any { return null; }
-  };
-  let serversServiceMock = {
-    activeServersStream: new Subject<any>(),
-    postServerCommand(id: any, action: string): Observable<Response> {
-      return Observable.of(new Response());
-    }
-  };
-  let mockServerService = {
-    selectedServerStream: new Subject<any>(),
-    setSelectedServer(serverId: string) {
-      return serverId;
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -102,13 +69,10 @@ describe('ServerComponent', () => {
         ServerComponent
       ],
       imports: [
+        ServersTestingModule
       ],
       providers: [
-        { provide: Router, useValue: mockRouterService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: ServersService, useValue: serversServiceMock },
-        { provide: McsTextContentProvider, useValue: textContentProviderMock },
-        { provide: ServerService, useValue: mockServerService }
       ]
     });
 
@@ -116,7 +80,7 @@ describe('ServerComponent', () => {
     TestBed.overrideComponent(ServerComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>Server Component Template</div>
         `
       }
     });
@@ -125,16 +89,16 @@ describe('ServerComponent', () => {
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(ServerComponent);
       fixture.detectChanges();
+
       component = fixture.componentInstance;
-      serversService = getTestBed().get(ServersService);
       serverService = getTestBed().get(ServerService);
     });
   }));
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should set the text content values to serverManagementTextContent', () => {
-      expect(component.serverTextContent).toEqual(textContentProviderMock.content.servers.server);
+    it('should define the text content value to serverManagementTextContent', () => {
+      expect(component.serverTextContent).toBeDefined();
     });
 
     it('should call the subscribe() of ServerService selectedServiceStream', () => {
@@ -173,5 +137,4 @@ describe('ServerComponent', () => {
       expect(component.selectedServerSubscription.unsubscribe).toHaveBeenCalled();
     });
   });
-
 });

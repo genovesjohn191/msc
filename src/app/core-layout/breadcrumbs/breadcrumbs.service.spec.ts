@@ -1,9 +1,11 @@
 import {
   async,
-  TestBed
+  TestBed,
+  getTestBed
 } from '@angular/core/testing';
 import { BreadcrumbsService } from './breadcrumbs.service';
 import { Breadcrumb } from './breadcrumb';
+import { CoreLayoutTestingModule } from '../testing';
 
 describe('BreadcrumbsService', () => {
 
@@ -12,7 +14,17 @@ describe('BreadcrumbsService', () => {
 
   /** Initialize Service */
   beforeEach(async(() => {
-    breadcrumbsService = new BreadcrumbsService();
+    /** Testbed Configuration */
+    TestBed.configureTestingModule({
+      imports: [
+        CoreLayoutTestingModule
+      ]
+    });
+
+    /** Testbed Component Compilation and Creation */
+    TestBed.compileComponents().then(() => {
+      breadcrumbsService = getTestBed().get(BreadcrumbsService);
+    });
   }));
 
   /** Test Implementation */

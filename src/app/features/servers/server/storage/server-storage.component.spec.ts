@@ -5,46 +5,18 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { ServerStorageComponent } from './server-storage.component';
-import {
-  Server,
-  ServerFileSystem,
-  ServerManageStorage
-} from '../../models';
+import { Server } from '../../models';
 import {
   CoreDefinition,
-  McsTextContentProvider,
-  McsList,
-  McsListItem
+  McsList
 } from '../../../../core';
 import { ServerService } from '../server.service';
-import { Subject } from 'rxjs/Rx';
+import { ServersTestingModule } from '../../testing';
 
 describe('ServerStorageComponent', () => {
   /** Stub Services/Components */
   let component: ServerStorageComponent;
   let serverService: ServerService;
-  let mockTextContentProvider = {
-    content: {
-      servers: {
-        server: {
-          management: 'server management',
-          storage:{
-            label: 'Storage',
-            title: 'Manage Storage',
-            primary: 'Primary',
-            other: 'Other',
-            increaseStorage: 'Increase',
-            deleteStorage: 'Delete',
-            deleteStorageAlertMessage: 'The data on volume {volume_name} will be lost forever.',
-            deleteStorageConfirmation: 'Are you sure you want to delete this volume?',
-            addStorage: 'Add New Storage Volume.',
-            resizeStorage: 'Resize Volume : ',
-            unit: 'GB'
-          }
-        }
-      }
-    }
-  };
   let mockServerDetails = {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
@@ -72,10 +44,6 @@ describe('ServerStorageComponent', () => {
       }
     ],
   };
-  let mockServerService = {
-    selectedServerStream: new Subject<any>(),
-    setPerformanceScale(serverId: any, cpuSizeScale: any) { return; }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -84,10 +52,7 @@ describe('ServerStorageComponent', () => {
         ServerStorageComponent
       ],
       imports: [
-      ],
-      providers: [
-        { provide: McsTextContentProvider, useValue: mockTextContentProvider },
-        { provide: ServerService, useValue: mockServerService }
+        ServersTestingModule
       ]
     });
 
@@ -95,7 +60,7 @@ describe('ServerStorageComponent', () => {
     TestBed.overrideComponent(ServerStorageComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>Server Storage Component Template</div>
         `
       }
     });
@@ -136,9 +101,8 @@ describe('ServerStorageComponent', () => {
       expect(component.storageIconKey).toEqual(CoreDefinition.ASSETS_SVG_STORAGE);
     });
 
-    it('should set the value of serverStorageText', () => {
-      expect(component.serverStorageText)
-        .toEqual(mockTextContentProvider.content.servers.server.storage);
+    it('should define the value of serverStorageText', () => {
+      expect(component.serverStorageText).toBeDefined();
     });
 
     it('should get the server\'s storage profiles', () => {

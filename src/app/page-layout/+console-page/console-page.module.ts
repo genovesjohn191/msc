@@ -4,10 +4,9 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared';
 /** Components */
 import { ConsolePageComponent } from './console-page.component';
-/** Services */
-import { ConsoleService } from './console-page.service';
-/** Routes */
-import { routes } from './console-page.routes';
+import { ConsolePageService } from './console-page.service';
+/** Constants */
+import { consolePageRoutes } from './console-page.constants';
 
 @NgModule({
   declarations: [
@@ -15,10 +14,10 @@ import { routes } from './console-page.routes';
   ],
   imports: [
     SharedModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(consolePageRoutes)
   ],
   providers: [
-    ConsoleService
+    ConsolePageService
   ]
 })
 

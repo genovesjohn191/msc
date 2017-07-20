@@ -29,7 +29,7 @@ describe('ServerCommandComponent', () => {
     TestBed.overrideComponent(ServerCommandComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>ServerCommandComponent Template</div>
         `
       }
     });

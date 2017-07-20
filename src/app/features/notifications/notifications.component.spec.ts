@@ -21,6 +21,10 @@ import {
   McsNotificationJobService,
   CoreDefinition
 } from '../../core';
+import {
+  NotificationsTestingModule,
+  mockNotificationsService
+} from './testing';
 
 import { NotificationsComponent } from './notifications.component';
 import { NotificationsService } from './notifications.service';
@@ -30,44 +34,6 @@ describe('NotificationsComponent', () => {
   /** Stub Services/Components */
   CoreDefinition.SEARCH_TIME = 0;
   let component: NotificationsComponent;
-  let pageTitle: string = 'title';
-  let notificationsServiceMock = {
-    getNotifications(
-      page?: number,
-      perPage?: number,
-      searchKeyword?: string): Observable<McsApiSuccessResponse<McsApiJob[]>> {
-
-      let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob[]>();
-      mcsApiResponseMock.status = 200;
-      mcsApiResponseMock.totalCount = 2;
-      mcsApiResponseMock.content = new Array();
-
-      let notification = new McsApiJob();
-      notification.id = '4';
-      mcsApiResponseMock.content.push(notification);
-      notification = new McsApiJob();
-      notification.id = '5';
-      mcsApiResponseMock.content.push(notification);
-
-      return Observable.of(mcsApiResponseMock);
-    }
-  };
-  let textContentProviderMock = {
-    content: {
-      notifications: {
-        title: pageTitle
-      }
-    }
-  };
-  let mockMcsNotificationJobService = {
-    notificationStream: new Subject<McsApiJob>(),
-    connectionStatusStream: new Subject<any>()
-  } as McsNotificationJobService;
-  let mockMcsApiService = {
-    get(apiRequest: McsApiRequestParameter): Observable<Response> {
-      return Observable.of(new Response());
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -76,21 +42,18 @@ describe('NotificationsComponent', () => {
         NotificationsComponent
       ],
       imports: [
-      ],
-      providers: [
-        McsNotificationContextService,
-        { provide: McsApiService, useValue: mockMcsApiService },
-        { provide: NotificationsService, useValue: notificationsServiceMock },
-        { provide: McsNotificationJobService, useValue: mockMcsNotificationJobService },
-        { provide: McsTextContentProvider, useValue: textContentProviderMock }
+        NotificationsTestingModule
       ]
     });
+
+    /** Testbed Onverriding of Providers */
+    TestBed.overrideProvider(NotificationsService, { useValue: mockNotificationsService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(NotificationsComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>NotificationsComponent Template</div>
         `
       }
     });

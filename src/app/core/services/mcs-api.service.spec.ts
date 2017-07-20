@@ -1,17 +1,12 @@
 import {
   async,
-  inject,
   TestBed,
   getTestBed,
   fakeAsync
 } from '@angular/core/testing';
 import {
-  Headers,
-  BaseRequestOptions,
   Response,
-  HttpModule,
   Http,
-  XHRBackend,
   RequestMethod
 } from '@angular/http';
 import {
@@ -22,40 +17,20 @@ import { ResponseOptions } from '@angular/http';
 import { CoreConfig } from '../core.config';
 import { McsApiService } from './mcs-api.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
-import { AppState } from '../../app.service';
+import { CoreTestingModule } from '../testing';
 
 describe('McsApiService', () => {
 
   /** Stub Services Mock */
   let mockBackend: MockBackend;
   let mcsApiService: McsApiService;
-  let coreConfig = {
-    apiHost: 'http://localhost:5000/api',
-    imageRoot: 'assets/img/'
-  } as CoreConfig;
+  let coreConfig: CoreConfig;
 
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-        HttpModule
-      ],
-      providers: [
-        AppState,
-        McsApiService,
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Http,
-          deps: [MockBackend, BaseRequestOptions],
-          useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          }
-        },
-        {
-          provide: CoreConfig,
-          useValue: coreConfig
-        }
+        CoreTestingModule
       ]
     });
 
@@ -63,6 +38,7 @@ describe('McsApiService', () => {
     TestBed.compileComponents().then(() => {
       mockBackend = getTestBed().get(MockBackend);
       mcsApiService = getTestBed().get(McsApiService);
+      coreConfig = getTestBed().get(CoreConfig);
     });
   }));
 

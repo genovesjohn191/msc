@@ -1,61 +1,29 @@
 import {
   async,
-  inject,
-  TestBed,
-  fakeAsync,
-  discardPeriodicTasks
+  TestBed
 } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import {
   Observable,
   Subject
 } from 'rxjs/Rx';
 import {
-  McsTextContentProvider,
   CoreDefinition,
-  McsApiSearchKey,
-  McsApiService,
-  McsApiRequestParameter
+  McsApiSearchKey
 } from '../../core';
 
 import { Server } from './models';
 import { ServersComponent } from './servers.component';
 import { ServersService } from './servers.service';
-import { McsApiSuccessResponse } from '../../core';
+import {
+  ServersTestingModule,
+  mockServersService
+} from './testing';
 
 describe('ServersComponent', () => {
 
   /** Stub Services/Components */
   CoreDefinition.SEARCH_TIME = 0; // remove delay time
   let component: ServersComponent;
-  let pageTitle: string = 'title';
-  let noServersFound: string = 'No Servers Found.';
-  let serversServiceMock = {
-    getServers(
-      page?: number,
-      perPage?: number,
-      serverName?: string): Observable<McsApiSuccessResponse<Server[]>> {
-
-      let mcsApiResponseMock = new McsApiSuccessResponse<Server[]>();
-      mcsApiResponseMock.status = 200;
-      mcsApiResponseMock.totalCount = 2;
-      mcsApiResponseMock.content = new Array(new Server(), new Server());
-
-      return Observable.of(mcsApiResponseMock);
-    }
-  };
-  let textContentProviderMock = {
-    content: {
-      servers: {
-        errorMessage: noServersFound
-      }
-    }
-  };
-  let mockMcsApiService = {
-    get(apiRequest: McsApiRequestParameter): Observable<Response> {
-      return Observable.of(new Response());
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
@@ -64,20 +32,18 @@ describe('ServersComponent', () => {
         ServersComponent
       ],
       imports: [
-        RouterTestingModule
-      ],
-      providers: [
-        { provide: McsApiService, useValue: mockMcsApiService },
-        { provide: McsTextContentProvider, useValue: textContentProviderMock },
-        { provide: ServersService, useValue: serversServiceMock }
+        ServersTestingModule
       ]
     });
+
+    /** Testbed Onverriding of Providers */
+    TestBed.overrideProvider(ServersService, { useValue: mockServersService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(ServersComponent, {
       set: {
         template: `
-          <div>Overridden template here</div>
+          <div>Servers Component Template</div>
         `
       }
     });

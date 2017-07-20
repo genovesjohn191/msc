@@ -5,11 +5,8 @@ import {
   fakeAsync
 } from '@angular/core/testing';
 import {
-  BaseRequestOptions,
   Response,
-  HttpModule,
   Http,
-  XHRBackend,
   RequestMethod,
   URLSearchParams
 } from '@angular/http';
@@ -22,68 +19,30 @@ import { Observable } from 'rxjs/Rx';
 /** Services and Models */
 import { NotificationsService } from './notifications.service';
 import {
-  McsApiService,
   McsApiSuccessResponse,
   McsApiErrorResponse,
-  CoreConfig,
   CoreDefinition,
   McsApiJob
 } from '../../core/';
-import { AppState } from '../../app.service';
+import { NotificationsTestingModule } from './testing';
 
 describe('NotificationsService', () => {
 
   /** Stub Services Mock */
   let mockBackend: MockBackend;
-  let mcsApiService: McsApiService;
   let notificationsService: NotificationsService;
-  let coreConfig = {
-    apiHost: 'http://localhost:5000',
-    imageRoot: 'assets/img/',
-    notification: {
-      host: 'ws://localhost:15674/ws',
-      routePrefix: 'mcs.portal.notification',
-      user: 'guest',
-      password: 'guest'
-    }
-  } as CoreConfig;
-  let mockAuthService = {
-    authToken: '',
-    navigateToLoginPage(): void {
-      // Do something
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-        HttpModule
-      ],
-      providers: [
-        AppState,
-        NotificationsService,
-        McsApiService,
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Http,
-          deps: [MockBackend, BaseRequestOptions],
-          useFactory: (backend: XHRBackend, defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          }
-        },
-        {
-          provide: CoreConfig,
-          useValue: coreConfig
-        }
+        NotificationsTestingModule
       ]
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
       mockBackend = getTestBed().get(MockBackend);
-      mcsApiService = getTestBed().get(McsApiService);
       notificationsService = getTestBed().get(NotificationsService);
     });
   }));

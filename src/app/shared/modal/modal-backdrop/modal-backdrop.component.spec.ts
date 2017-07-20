@@ -22,7 +22,7 @@ describe('ModalBackdropComponent', () => {
     TestBed.overrideComponent(ModalBackdropComponent, {
       set: {
         template: `
-          <div>Override Template</div>
+          <div>ModalBackdropComponent Template</div>
         `
       }
     });

@@ -18,7 +18,7 @@ import {
   Key,
   McsSize
 } from '../../core';
-import { ConsoleService } from './console-page.service';
+import { ConsolePageService } from './console-page.service';
 
 // JQuery script implementation
 require('script-loader!../../../assets/scripts/jquery/jquery-1.7.2.min.js');
@@ -79,7 +79,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private _windowSize: McsSize;
 
   public constructor(
-    private _consoleService: ConsoleService,
+    private _consoleService: ConsolePageService,
     private _textContentProvider: McsTextContentProvider,
     private _browserService: McsBrowserService,
     private _elementRef: ElementRef,

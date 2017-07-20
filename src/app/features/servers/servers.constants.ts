@@ -1,7 +1,15 @@
 import { Routes } from '@angular/router';
-/** Servers */
+/** Services and Resolvers */
+import { ServersResolver } from './servers.resolver';
+import {
+  ServerService,
+  ServerResolver
+} from './server/';
+import { CreateSelfManagedServerService } from './self-managed-server';
+import { ProvisioningNotificationsService } from './provisioning-notifications';
+import { ServersService } from './servers.service';
+/** Components */
 import { ServersComponent } from './servers.component';
-/** Server */
 import {
   ServerBackupsComponent,
   ServerComponent,
@@ -9,21 +17,31 @@ import {
   ServerServicesComponent,
   ServerStorageComponent
 } from './server';
-/** Managed Server */
 import {
   CreateSelfManagedServerComponent,
   NewSelfManagedServerComponent,
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent
 } from './self-managed-server';
-/** Server Provisioning Notifications */
 import {
   ProvisioningNotificationsComponent
 } from './provisioning-notifications/provisioning-notifications.component';
-/** Resolvers */
-import { ServersResolver } from './servers.resolver';
-import { ServerResolver } from './server/server.resolver';
 
+/**
+ * List of services for the main module
+ */
+export const serversProviders: any[] = [
+  ServersService,
+  ServerService,
+  CreateSelfManagedServerService,
+  ProvisioningNotificationsService,
+  ServersResolver,
+  ServerResolver
+];
+
+/**
+ * List of routes for the main module
+ */
 export const serversRoutes: Routes = [
   {
     path: 'servers', component: ServersComponent

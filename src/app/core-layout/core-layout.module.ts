@@ -4,8 +4,6 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 /** Shared Modules */
 import { SharedModule } from '../shared';
-/** Services */
-import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
 /** Multiple Components */
 import {
   StateChangeNotificationsComponent,
@@ -23,6 +21,8 @@ import {
   RunningNotificationComponent,
   RunningNotificationMaxDisplayPipe
 } from './header';
+/** Constants */
+import { coreLayoutProviders } from './core-layout.constants';
 
 @NgModule({
   declarations: [
@@ -60,7 +60,7 @@ import {
     FormsModule
   ],
   providers: [
-    BreadcrumbsService
+    ...coreLayoutProviders
   ]
 })
 

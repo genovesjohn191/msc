@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 /** Servers */
 import { ServersComponent } from './servers.component';
-import { ServersResolver } from './servers.resolver';
 /** Shared */
 import {
   JobProgressComponent,
@@ -19,25 +18,19 @@ import {
   ServerManagementComponent,
   ServerBackupsComponent,
   ServerStorageComponent,
-  ServerServicesComponent,
-  ServerService,
-  ServerResolver
+  ServerServicesComponent
 } from './server/';
 /** Self Managed Servers */
 import {
-  CreateSelfManagedServerService,
   CreateSelfManagedServerComponent,
   NewSelfManagedServerComponent,
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent
 } from './self-managed-server';
 /** Provisioning Notifications */
-import {
-  ProvisioningNotificationsService,
-  ProvisioningNotificationsComponent
-} from './provisioning-notifications';
-/** Service */
-import { ServersService } from './servers.service';
+import { ProvisioningNotificationsComponent } from './provisioning-notifications';
+/** Services and Resolvers */
+import { serversProviders } from './servers.constants';
 /** Modules */
 import { SharedModule } from '../../shared';
 
@@ -66,12 +59,7 @@ import { SharedModule } from '../../shared';
     SharedModule
   ],
   providers: [
-    ServersService,
-    ServerService,
-    CreateSelfManagedServerService,
-    ProvisioningNotificationsService,
-    ServersResolver,
-    ServerResolver
+    ...serversProviders
   ]
 })
 
