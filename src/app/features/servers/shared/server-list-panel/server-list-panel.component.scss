@@ -83,6 +83,10 @@
       }
     }
   }
+
+  > span {
+    padding: 0 $space-medium;
+  }
 }
 
 .loading-content-popover {

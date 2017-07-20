@@ -12,7 +12,7 @@
     @include display-flex(row);
     align-items: center;
 
-    @include breakpoint(medium) {
+    @include breakpoint(small) {
       @include display-flex(column);
       align-items: stretch;
     }
@@ -28,7 +28,7 @@
 
     .server-select {
       margin-left: auto;
-      @include breakpoint(medium) {
+      @include breakpoint(small) {
         margin: 0;
         mcs-button {
           display: block;
@@ -64,4 +64,10 @@
 .loading-content-popover {
   display: block;
   padding: $space-small;
+}
+
+mcs-popover {
+  @include breakpoint(medium) {
+    display: none;
+  }
 }

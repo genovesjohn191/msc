@@ -45,6 +45,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   public serverState: string;
   public keyword: string;
   public errorMessage: string;
+  public noServerFoundMessage: string;
 
   @Input()
   public serverListData: Server[];
@@ -86,6 +87,10 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     return CoreDefinition.ASSETS_FONT_CARET_DOWN;
   }
 
+  public get hasServers(): boolean {
+    return this.servers.length > 0;
+  }
+
   constructor(
     private _route: ActivatedRoute,
     private _textProvider: McsTextContentProvider,
@@ -94,6 +99,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     private _serversService: ServersService
   ) {
     this.servers = new Array();
+    this.noServerFoundMessage = '';
   }
 
   @HostListener('document:scroll', ['$event'])
@@ -138,6 +144,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
 
   public ngOnInit() {
     this.errorMessage = this._textProvider.content.servers.errorMessage;
+    this.noServerFoundMessage = this._textProvider.content.servers.noServers;
     this._route.params.subscribe((params) => {
       if (this.serverListData) {
         this.mapServerList(this.serverListData);
