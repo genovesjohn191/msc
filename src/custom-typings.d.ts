@@ -61,8 +61,6 @@ declare module '*';
 declare var ENV: string;
 declare var HMR: boolean;
 declare var API_URL: string;
-declare var API_WEBSOCKET_HOST: string;
-declare var API_WEBSOCKET_ROUTE_PREFIX: string;
 declare var System: SystemJS;
 
 interface SystemJS {
@@ -73,8 +71,6 @@ interface GlobalEnvironment {
   ENV: string;
   HMR: boolean;
   API_URL: string;
-  API_WEBSOCKET_HOST: string;
-  API_WEBSOCKET_ROUTE_PREFIX: string;
   SystemJS: SystemJS;
   System: SystemJS;
 }
