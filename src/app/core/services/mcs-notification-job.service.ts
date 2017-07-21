@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { McsApiJob } from '../models/response/mcs-api-job';
-import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
-import { AppState } from '../../app.service';
 import {
   reviverParser,
   refreshView
 } from '../../utilities';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
+import { McsApiService } from './mcs-api.service';
+import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
+import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 
 /**
  * MCS notification job service
@@ -43,10 +45,12 @@ export class McsNotificationJobService {
     this._connectionStatusStream = value;
   }
 
-  constructor(
-    private _coreConfig: CoreConfig,
-    private _appState: AppState
-  ) {
+  private _jobConnectStream: BehaviorSubject<McsApiJobConnection>;
+  private _apiSubscription: any;
+  private _jobConnection: McsApiJobConnection;
+
+  constructor(private _apiService: McsApiService) {
+    this._jobConnectStream = new BehaviorSubject<McsApiJobConnection>(undefined);
     this._notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
     this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
       (McsConnectionStatus.Success);
@@ -62,19 +66,32 @@ export class McsNotificationJobService {
     if (this._websocketClient) {
       this._websocketClient.unsubscribe();
     }
+    if (this._apiSubscription) {
+      this._apiSubscription.unsubscribe();
+    }
   }
 
   private _initializeWebsocket() {
     try {
-      this._websocket = new WebSocket(this._coreConfig.notification.host);
+      // Listen for job connection to get the identity details
+      this._jobConnectStream.subscribe((jobConnection) => {
+        if (jobConnection) {
+          this._jobConnection = jobConnection;
 
-      // Register all listeners for websocket to determine the connection status
-      this._websocket.onopen = this._onOpenConnection.bind(this);
-      this._websocket.onerror = this._onErrorConnection.bind(this);
-      this._websocket.onclose = this._onCloseConnection.bind(this);
+          // Register all listeners for websocket to determine the connection status
+          this._websocket = new WebSocket(this._jobConnection.host);
+          this._websocket.onopen = this._onOpenConnection.bind(this);
+          this._websocket.onerror = this._onErrorConnection.bind(this);
+          this._websocket.onclose = this._onCloseConnection.bind(this);
 
-      // Connect to websocket
-      this._connectToWebsocket();
+          // Connect to websocket
+          this._connectToWebsocket();
+        }
+      });
+
+      // Get Connection details from API
+      this._getConnectionsDetails();
+
     } catch (error) {
       // notify all subscribers for the error occured
       this._connectionStatusStream.next(McsConnectionStatus.Fatal);
@@ -100,9 +117,11 @@ export class McsNotificationJobService {
   private _connectToWebsocket() {
     let webStomp = require('webstomp-client');
 
+    // Setup websocker client
     this._websocketClient = webStomp.over(this._websocket, { debug: false });
     this._websocketClient.heartbeat.incoming = 0;
     this._websocketClient.heartbeat.outgoing = 0;
+
     this._websocketClient.connect(
       this._getHeaders(),
       this._onConnect.bind(this)
@@ -110,31 +129,16 @@ export class McsNotificationJobService {
   }
 
   private _getHeaders(): any {
-    let headers = {
-      login: '',
-      passcode: ''
-    };
-
-    headers.login = this._coreConfig.notification.user ?
-      this._coreConfig.notification.user : 'guest';
-    headers.passcode = this._coreConfig.notification.password ?
-      this._coreConfig.notification.password : 'guest';
+    let headers = { login: '', passcode: ''};
+    let credentials = this._decodeString(this._jobConnection.destinationKey);
+    headers.login = credentials.username;
+    headers.passcode = credentials.password;
     return headers;
   }
 
-  private _getQueue(): string {
-    let queueString: string;
-    let accountId: string;
-
-    accountId = this._appState.get(CoreDefinition.APPSTATE_ACCOUNT_ID);
-
-    // Create queue string based on the route prefix of the notification
-    queueString = `/topic/${this._coreConfig.notification.routePrefix}.job.${accountId}`;
-    return queueString;
-  }
-
   private _onConnect(): void {
-    this._websocketClient.subscribe(this._getQueue(), this._onMessage.bind(this));
+    this._websocketClient.subscribe(this._jobConnection.destinationRoute,
+      this._onMessage.bind(this));
   }
 
   private _onMessage(message) {
@@ -149,5 +153,37 @@ export class McsNotificationJobService {
       updatedNotification = JSON.parse(bodyContent, reviverParser) as McsApiJob;
       this._notificationStream.next(updatedNotification);
     }
+  }
+
+  private _getConnectionsDetails(): void {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/jobs/connection';
+
+    this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let jobConnection: McsApiSuccessResponse<McsApiJobConnection>;
+        jobConnection = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJobConnection>;
+
+        return jobConnection;
+      })
+      .subscribe((details) => {
+        this._jobConnectStream.next(details.content);
+      });
+  }
+
+  private _decodeString(hexInput: string): { username: string, password: string } {
+    let decodedHex: string = '';
+    let credentials: string[];
+    let hexvalue = hexInput.match(/.{1,2}/g) || [];
+
+    // Decode hexadecimal
+    hexvalue.forEach((hex) => {
+      decodedHex += String.fromCharCode(parseInt(hex, 16));
+    });
+
+    // Split decoded value
+    credentials = decodedHex.split('.');
+    return { username: credentials[0], password: credentials[1] };
   }
 }

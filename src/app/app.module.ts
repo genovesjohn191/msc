@@ -75,13 +75,7 @@ type StoreType = {
 const mcsCoreConfig = {
   apiHost: API_URL,
   imageRoot: 'assets/img',
-  iconRoot: 'assets/icon',
-  notification: {
-    host: API_WEBSOCKET_HOST,
-    routePrefix: API_WEBSOCKET_ROUTE_PREFIX,
-    user: 'guest', // TODO: Secure the user name and password (Research the proper implementation)
-    password: 'guest'
-  }
+  iconRoot: 'assets/icon'
 } as CoreConfig;
 
 /**

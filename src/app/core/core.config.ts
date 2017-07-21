@@ -1,5 +1,3 @@
-import { McsNotificationConfig } from './models/mcs-notification-config';
-
 export class CoreConfig {
 
   /** API Host */
@@ -27,14 +25,5 @@ export class CoreConfig {
   }
   public set iconRoot(value: string) {
     this._iconRoot = value;
-  }
-
-  /** Notification Configuration */
-  private _notificationConfig: McsNotificationConfig;
-  public get notification(): McsNotificationConfig {
-    return this._notificationConfig;
-  }
-  public set notification(value: McsNotificationConfig) {
-    this._notificationConfig = value;
   }
 }
