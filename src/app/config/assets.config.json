@@ -48,7 +48,9 @@
     "keyboard": "keyboard.svg",
     "play": "play.svg",
     "restart": "restart.svg",
-    "stop": "stop.svg"
+    "stop": "stop.svg",
+    "user-white": "user-white.svg",
+    "logout-white": "logout-white.svg"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

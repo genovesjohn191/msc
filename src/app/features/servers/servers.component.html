@@ -19,21 +19,21 @@
     </div>
 
     <div class="server-select">
-      <mcs-button (onClick)="onClickNewServerButton($event)">New Server</mcs-button>
+      <mcs-button (onClick)="onClickNewServerButton($event)">{{ serversTextContent.newServer }}</mcs-button>
     </div>
   </div>
 
   <table class="mcs-table table">
     <thead class="head">
       <tr>
-        <th *ngIf="columnSettings['state'].value" class="text-center">
-          {{ columnSettings['state'].text }}
+        <th class="text-center">
+          {{ serversTextContent.columnHeaders.state }}
         </th>
         <th *ngIf="columnSettings['serviceId'].value" class="hidden-small text-center">
           {{ columnSettings['serviceId'].text }}
         </th>
-        <th *ngIf="columnSettings['name'].value" class="text-center">
-          {{ columnSettings['name'].text }}
+        <th class="text-center">
+          {{ serversTextContent.columnHeaders.name }}
         </th>
         <th *ngIf="columnSettings['type'].value" class="hidden-xsmall text-center">
           {{ columnSettings['type'].text }}
@@ -53,12 +53,14 @@
         <th *ngIf="columnSettings['services'].value" class="hidden-small text-center">
           {{ columnSettings['services'].text }}
         </th>
-        <th class="text-center">Action</th>
+        <th class="text-center">
+          {{ serversTextContent.columnHeaders.action }}
+        </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let server of servers">
-        <td *ngIf="columnSettings['state'].value" class="text-center align-middle">
+        <td class="text-center align-middle">
           <div *ngIf="getServerPowerState(server)">
             <mcs-icon [key]="getStateIconKey(getServerPowerState(server))"
               size="large"></mcs-icon>
@@ -77,7 +79,7 @@
         <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
           {{ server.serviceId }}
         </td>
-        <td *ngIf="columnSettings['name'].value" class="text-left align-middle">
+        <td class="text-left align-middle">
           <a [routerLink]="[server.id]"><u>{{ server.managementName }}</u></a>
         </td>
         <td *ngIf="columnSettings['type'].value" class="text-left align-middle hidden-xsmall">

@@ -43,15 +43,15 @@ export class UserPanelComponent implements OnInit {
   }
 
   public get userIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_USER;
+    return CoreDefinition.ASSETS_SVG_USER_WHITE;
   }
 
   public get caretDownIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CARET_DOWN;
   }
 
-  public get caretRightIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+  public get logoutIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_LOGOUT_WHITE;
   }
 
   @ViewChild('popoverInstance')

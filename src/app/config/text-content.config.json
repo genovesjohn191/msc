@@ -23,6 +23,17 @@
   "servers": {
     "title": "Macquarie Cloud Services: Servers",
     "header": "Servers",
+    "columnHeaders": {
+      "state": "State",
+      "name": "Name",
+      "action": "Action"
+    },
+    "newServer": "New Server",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
+    "noServers": "No servers to display.",
+    "emptySearchResult": "No servers found.",
+    "loading": "Loading...",
+    "viewMore": "More",
     "provisioningNotifications": {
       "header": "Server Provisioning Notifications",
       "contextualHelp": {
@@ -110,12 +121,7 @@
         "sliderSwitch": "Select from slider",
         "customSwitch": "Enter custom size"
       }
-    },
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
-    "noServers": "No servers to display.",
-    "emptySearchResult": "No servers found.",
-    "loading": "Loading...",
-    "viewMore": "More"
+    }
   },
   "networking": {
     "title": "Macquarie Cloud Services: Networking"

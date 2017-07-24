@@ -33,6 +33,11 @@ footer {
             @include breakpoint(small) {
               @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
             }
+
+            &:hover {
+              text-decoration: underline;
+              color: $color-primary-01;
+            }
           }
           &:not(:last-child) {
             padding-right: $space-xsmall;

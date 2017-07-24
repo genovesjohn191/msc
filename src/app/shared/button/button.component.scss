@@ -1,5 +1,19 @@
 @import "../../../styles/shared/base";
 
+$button-primary-background-color: $color-primary-01;
+$button-primary-background-color-disabled: $color-grey-01;
+$button-hover-background-color: $color-primary-00;
+$button-secondary-background-color: $color-primary-02;
+$button-success-background-color: $color-green-00;
+$button-warning-background-color: $color-yellow-00;
+$button-danger-background-color: $color-red-00;
+$button-primary-text-color: $color-white;
+$button-font: $base-font-bold;
+$button-font-size: 18px;
+$button-font-size-small: $caption-default-font-size;
+$button-padding: 10px 15px;
+$button-padding-small: 5px 10px;
+
 .mcs-button {
   @include display-inline-flex(row);
   align-items: center;
@@ -54,6 +68,9 @@
 
   &.primary {
     background-color: $button-primary-background-color;
+    &:disabled {
+      background-color: $button-primary-background-color-disabled;
+    }
   }
 
   &.secondary {

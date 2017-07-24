@@ -125,9 +125,9 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
     // TODO: Set the actual obtainment of real data to be displayed here
     let itemList: McsList = new McsList();
 
-    itemList.push('primaryNetwork', new McsListItem('primaryNetwork1', 'Primary Network 1'));
-    itemList.push('primaryNetwork', new McsListItem('primaryNetwork2', 'Primary Network 2'));
-    itemList.push('primaryNetwork', new McsListItem('primaryNetwork3', 'Primary Network 3'));
+    itemList.push('Primary Network', new McsListItem('primaryNetwork1', 'Primary Network 1'));
+    itemList.push('Primary Network', new McsListItem('primaryNetwork2', 'Primary Network 2'));
+    itemList.push('Primary Network', new McsListItem('primaryNetwork3', 'Primary Network 3'));
     return itemList;
   }
 

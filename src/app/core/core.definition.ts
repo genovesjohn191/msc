@@ -81,6 +81,8 @@ export class CoreDefinition {
   public static ASSETS_SVG_PLAY = 'play';
   public static ASSETS_SVG_RESTART = 'restart';
   public static ASSETS_SVG_STOP = 'stop';
+  public static ASSETS_SVG_LOGOUT_WHITE = 'logout-white';
+  public static ASSETS_SVG_USER_WHITE = 'user-white';
 
   // Font Awesome Icons
   public static ASSETS_FONT_ARROW_RIGHT = 'arrow-right'; // Make it SVG

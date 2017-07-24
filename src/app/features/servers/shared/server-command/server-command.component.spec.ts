@@ -55,51 +55,51 @@ describe('ServerCommandComponent', () => {
   describe('getStartStatus()', () => {
     it('should return true when the command is Start', () => {
       component.command = ServerCommand.Start;
-      expect(component.getStartStatus()).toBeTruthy();
+      expect(component.startStatus).toBeTruthy();
     });
 
     it('should return true when the command is Restart', () => {
       component.command = ServerCommand.Restart;
-      expect(component.getStartStatus()).toBeTruthy();
+      expect(component.startStatus).toBeTruthy();
     });
 
     it('should return undefined when the command is Stop', () => {
       component.command = ServerCommand.Stop;
-      expect(component.getStartStatus()).toBeUndefined();
+      expect(component.startStatus).toBeUndefined();
     });
   });
 
   describe('getStopStatus()', () => {
     it('should return undefined when the command is Start', () => {
       component.command = ServerCommand.Start;
-      expect(component.getStopStatus()).toBeUndefined();
+      expect(component.stopStatus).toBeUndefined();
     });
 
     it('should return undefined when the command is Restart', () => {
       component.command = ServerCommand.Restart;
-      expect(component.getStopStatus()).toBeUndefined();
+      expect(component.stopStatus).toBeUndefined();
     });
 
     it('should return true when the command is Stop', () => {
       component.command = ServerCommand.Stop;
-      expect(component.getStopStatus()).toBeTruthy();
+      expect(component.stopStatus).toBeTruthy();
     });
   });
 
   describe('getRestartStatus()', () => {
     it('should return undefined when the command is Start', () => {
       component.command = ServerCommand.Start;
-      expect(component.getRestartStatus()).toBeUndefined();
+      expect(component.restartStatus).toBeUndefined();
     });
 
     it('should return true when the command is Restart', () => {
       component.command = ServerCommand.Restart;
-      expect(component.getRestartStatus()).toBeTruthy();
+      expect(component.restartStatus).toBeTruthy();
     });
 
     it('should return undefined when the command is Stop', () => {
       component.command = ServerCommand.Stop;
-      expect(component.getRestartStatus()).toBeTruthy();
+      expect(component.restartStatus).toBeTruthy();
     });
   });
 });
