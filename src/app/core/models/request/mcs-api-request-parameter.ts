@@ -48,4 +48,10 @@ export class McsApiRequestParameter {
     this._searchParameters = value;
   }
 
+  constructor() {
+    this._endPoint = '';
+    this._recordData = undefined;
+    this._optionalHeaders = new Headers();
+    this._searchParameters = new URLSearchParams();
+  }
 }

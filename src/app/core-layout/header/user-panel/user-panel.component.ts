@@ -17,7 +17,8 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsDeviceType,
-  McsConnectionStatus
+  McsConnectionStatus,
+  McsAuthenticationIdentity
 } from '../../../core';
 import { refreshView } from '../../../utilities';
 
@@ -54,6 +55,14 @@ export class UserPanelComponent implements OnInit {
     return CoreDefinition.ASSETS_SVG_LOGOUT_WHITE;
   }
 
+  public get firstName(): string {
+    return this._authenticationIdentity.firstName;
+  }
+
+  public get lastName(): string {
+    return this._authenticationIdentity.lastName;
+  }
+
   @ViewChild('popoverInstance')
   public popoverInstance: any;
 
@@ -62,7 +71,8 @@ export class UserPanelComponent implements OnInit {
     private _router: Router,
     private _notificationContextService: McsNotificationContextService,
     private _browserService: McsBrowserService,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _authenticationIdentity: McsAuthenticationIdentity
   ) {
     this.hasConnectionError = false;
     this.statusIconClass = '';
