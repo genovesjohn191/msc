@@ -158,6 +158,12 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       });
   }
 
+  public mergeIpAddresses(ipAddresses: string[]): string {
+    if (!ipAddresses || ipAddresses.length === 0) { return ''; }
+
+    return ipAddresses.join(', ');
+  }
+
   public getSecondaryVolumes(serverfileSystem: ServerFileSystem[]) {
     let storage = new Array();
 

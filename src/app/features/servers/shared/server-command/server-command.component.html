@@ -6,16 +6,16 @@
 
 <ng-template #cogContent>
 <div class="cog-container">
-    <a (click)="onExecuteCommand('Start')"
-      [attr.disabled]="getStartStatus()">
+    <a #startButton (click)="onExecuteCommand('Start', startButton)"
+      [attr.disabled]="startStatus">
       Start
     </a>
-    <a (click)="onExecuteCommand('Stop')"
-      [attr.disabled]="getStopStatus()">
+    <a #stopButton (click)="onExecuteCommand('Stop', stopButton)"
+      [attr.disabled]="stopStatus">
       Stop
     </a>
-    <a (click)="onExecuteCommand('Restart')"
-      [attr.disabled]="getRestartStatus()">
+    <a #restartButton (click)="onExecuteCommand('Restart', restartButton)"
+      [attr.disabled]="restartStatus">
       Restart
     </a>
   </div>

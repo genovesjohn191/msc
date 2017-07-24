@@ -68,7 +68,7 @@
           <li>{{ serverManagementTextContent.networkInformation.publicIp }}: {{ server.managementIpAddress }}</li>
           <li *ngFor="let interface of server.interfaces; let i = index">
             {{ serverManagementTextContent.networkInformation.interface }} {{ i }} :
-            <span>{{ interface.ipAddress.join(', ') }}</span>
+            <span>{{ mergeIpAddresses(interface.ipAddress) }}</span>
           </li>
         </ul>
       </div>

@@ -22,16 +22,8 @@
     }
   },
   "serverListingFilter": {
-    "state": {
-      "text": "State",
-      "value": true
-    },
     "serviceId": {
       "text": "Service ID",
-      "value": true
-    },
-    "name": {
-      "text": "Name",
       "value": true
     },
     "type": {

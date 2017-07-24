@@ -58,7 +58,7 @@ describe('UserPanelComponent', () => {
     });
 
     it('should return the user icon definition key', () => {
-      expect(component.userIconKey).toBe(CoreDefinition.ASSETS_FONT_USER);
+      expect(component.userIconKey).toBe(CoreDefinition.ASSETS_SVG_USER_WHITE);
     });
 
     it('should return the caret down icon definition key', () => {
@@ -66,7 +66,7 @@ describe('UserPanelComponent', () => {
     });
 
     it('should return the caret right icon definition key', () => {
-      expect(component.caretRightIconKey).toBe(CoreDefinition.ASSETS_FONT_CARET_RIGHT);
+      expect(component.logoutIconKey).toBe(CoreDefinition.ASSETS_SVG_LOGOUT_WHITE);
     });
   });
 

@@ -54,7 +54,7 @@ table.mcs-table {
     td {
       @extend %border-override;
       vertical-align: middle;
-      word-break: break-word;
+      word-break: break-all;
       @include breakpoint(medium) {
         padding: $space-small;
       }

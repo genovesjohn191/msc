@@ -33,25 +33,27 @@ export class ServerCommandComponent {
     return CoreDefinition.ASSETS_FONT_GEAR;
   }
 
-  constructor() {
-    this.command = ServerCommand.Start;
-  }
-
-  public getStartStatus(): any {
+  public get startStatus(): any {
     return (this.command === ServerCommand.Stop) ? undefined : true;
   }
 
-  public getStopStatus(): any {
+  public get stopStatus(): any {
     return (this.command === ServerCommand.Start ||
       this.command === ServerCommand.Restart) ?
       undefined : true;
   }
 
-  public getRestartStatus(): any {
+  public get restartStatus(): any {
     return (this.command === ServerCommand.Start) ? undefined : true;
   }
 
-  public onExecuteCommand(commandType: string) {
+  constructor() {
+    this.command = ServerCommand.Start;
+  }
+
+  public onExecuteCommand(commandType: string, element: HTMLElement) {
+    if (element.hasAttribute('disabled')) { return; }
+
     this.command = ServerCommand.None;
     this.popoverActionElement.close();
     this.onClick.emit(commandType);

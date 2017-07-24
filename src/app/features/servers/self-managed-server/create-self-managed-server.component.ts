@@ -86,11 +86,11 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     // TODO: Set the actual obtainment of real data to be displayed here
     let itemList: McsList = new McsList();
 
-    itemList.push('intellicentres',
+    itemList.push('Intellicentres',
       new McsListItem('intellicentre1', 'Intellicentre 1 (Syd) - VC 27117006'));
-    itemList.push('intellicentres',
+    itemList.push('Intellicentres',
       new McsListItem('intellicentre2', 'Intellicentre 2 (Syd) - VC 27117007'));
-    itemList.push('intellicentres',
+    itemList.push('Intellicentres',
       new McsListItem('intellicentre3', 'Intellicentre 3 (Syd) - VC 27117008'));
     return itemList;
   }

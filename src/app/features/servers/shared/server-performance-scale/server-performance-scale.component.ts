@@ -144,7 +144,12 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
-    refreshView(() => { this.inputManageType = inputManageType; });
+    refreshView(() => {
+      if (inputManageType === ServerInputManageType.Slider) {
+        this._setCustomSizeValue();
+      }
+      this.inputManageType = inputManageType;
+    });
   }
 
   private _setMinMaxValue(): void {
