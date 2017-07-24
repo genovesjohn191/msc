@@ -19,6 +19,10 @@ import { DropdownComponent } from './dropdown/dropdown.component';
 import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
+/** Directives */
+import {
+  AuthenticationRolesDirective
+} from './authentication-roles/authentication-roles.directive';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,8 @@ import { AlertComponent } from './alert/alert.component';
     DropdownComponent,
     SliderComponent,
     ProgressBarComponent,
-    AlertComponent
+    AlertComponent,
+    AuthenticationRolesDirective
   ],
   imports: [
     CommonModule,

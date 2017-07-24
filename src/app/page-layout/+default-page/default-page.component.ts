@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Location } from '@angular/common';
+import { CoreDefinition } from '../../core';
 
 @Component({
   selector: 'mcs-default-page',
@@ -8,7 +10,15 @@ import { Component } from '@angular/core';
 
 export class DefaultPageComponent {
 
-  public constructor() {
-    // TODO: Add implementation of model binding here
+  public constructor(private _ngLocation: Location) {
+    this._removeTokenFromDefaultUrl();
+  }
+
+  /**
+   * Remove the return URL Token from the given URL of default page
+   */
+  private _removeTokenFromDefaultUrl(): void {
+    this._ngLocation.replaceState(this._ngLocation
+      .normalize(CoreDefinition.DEFAULT_INITIAL_PAGE));
   }
 }

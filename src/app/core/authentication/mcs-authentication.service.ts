@@ -8,8 +8,13 @@ import { Observable } from 'rxjs/Rx';
 import { CookieService } from 'ngx-cookie';
 import { CoreDefinition } from '../core.definition';
 import { McsApiService } from '../services/mcs-api.service';
+import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
+import { McsApiIdentity } from '../models/response/mcs-api-identity';
+import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { AppState } from '../../app.service';
+import { reviverParser } from '../../utilities';
 
 @Injectable()
 export class McsAuthenticationService {
@@ -17,7 +22,8 @@ export class McsAuthenticationService {
   constructor(
     private _appState: AppState,
     private _cookieService: CookieService,
-    private _apiService: McsApiService
+    private _apiService: McsApiService,
+    private _authenticationIdentity: McsAuthenticationIdentity
   ) {
     // Listen for the error in API Response
     this._listenForErrorApiResponse();
@@ -29,9 +35,9 @@ export class McsAuthenticationService {
    * the sign in is incorrect or token expired
    */
   public navigateToLoginPage(): boolean {
-    // TODO: Login reirection must be pass an encoded callback url
+    // TODO: Login redirection must be pass an encoded callback url
     //       auth url must also be in envvars
-    let returnUrl = '/servers';
+    let returnUrl = CoreDefinition.DEFAULT_INITIAL_PAGE;
     let authUrl = 'https://auth.macquariecloudservices.com?redirecturl=';
     window.location.href = (authUrl + returnUrl);
     return false;
@@ -47,15 +53,15 @@ export class McsAuthenticationService {
   public getAuthToken(routeParams: Params): string {
     let authToken: string;
 
-    // Return the token from the app state
-    authToken = this._appState.get(CoreDefinition.APPSTATE_AUTH_TOKEN);
-    if (authToken) { return authToken; }
-
     // Return token from the bearer snapshots
     if (routeParams) {
       authToken = routeParams[CoreDefinition.QUERY_PARAM_BEARER];
       if (authToken) { return authToken; }
     }
+
+    // Return the token from the app state
+    authToken = this._appState.get(CoreDefinition.APPSTATE_AUTH_TOKEN);
+    if (authToken) { return authToken; }
 
     // Return the token from the cookie
     authToken = this._cookieService.get(CoreDefinition.COOKIE_AUTH_TOKEN);
@@ -67,9 +73,9 @@ export class McsAuthenticationService {
    * @param authToken Valid Authentication Token
    */
   public setAuthToken(authToken: string): void {
-    // Update cookie and appstate
-    this._cookieService.put(CoreDefinition.COOKIE_AUTH_TOKEN, authToken);
+    // Update cookie, appstate, and request for identity
     this._appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, authToken);
+    this._requestForIdentity(authToken);
   }
 
   /**
@@ -81,20 +87,58 @@ export class McsAuthenticationService {
     this._appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, undefined);
   }
 
-  private _requestForTokenDetails(): void {
-    // TODO: Request for token details in API
-    // and set the expiration date to cookie
-    let authToken: string;
-    authToken = this._appState.get(CoreDefinition.APPSTATE_AUTH_TOKEN);
-    this._cookieService.put(CoreDefinition.COOKIE_AUTH_TOKEN, authToken,
-      { expires: new Date() });
+  private _requestForIdentity(authToken: string): void {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/identity';
+    mcsApiRequestParameter.optionalHeaders.append(
+      CoreDefinition.HEADERS_AUTHORIZATION,
+      `${CoreDefinition.HEADERS_BEARER} ${authToken}`
+    );
+
+    this._apiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let identityResponse: McsApiSuccessResponse<McsApiIdentity>;
+        identityResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiIdentity>;
+
+        return identityResponse;
+      })
+      .subscribe((identity) => {
+        if (identity && identity.content) {
+          this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity.content);
+          this._authenticationIdentity.applyIdentity();
+          this._setCookie(authToken, this._authenticationIdentity.expiry);
+        }
+      });
+  }
+
+  private _setCookie(authentication: string, expiration: Date): void {
+    if (!expiration && !authentication) { return; }
+
+    // Set cookie with expiration date
+    this._cookieService.put(
+      CoreDefinition.COOKIE_AUTH_TOKEN,
+      authentication,
+      { expires: expiration }
+    );
   }
 
   private _listenForErrorApiResponse(): void {
     this._apiService.errorResponseStream.subscribe((error) => {
-      if (error && error.status === 401) {
-        this.deleteAuthToken();
-        this.navigateToLoginPage();
+      if (!error) { return; }
+
+      switch (error) {
+        case McsHttpStatusCode.Unauthorized:
+          this.deleteAuthToken();
+          this.navigateToLoginPage();
+          break;
+
+        case McsHttpStatusCode.Forbidden:
+          // TODO: Confirm if modal here or alert should be displayed
+          break;
+
+        default:
+          break;
       }
     });
   }

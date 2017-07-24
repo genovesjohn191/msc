@@ -9,6 +9,7 @@ import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
 import { McsFilterProvider } from './providers/mcs-filter.provider';
 /** Authentication */
+import { McsAuthenticationIdentity } from './authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from './authentication/mcs-authentication.service';
 import { McsAuthenticationGuard } from './authentication/mcs-authentication.guard';
 
@@ -24,6 +25,7 @@ export const coreProviders: any[] = [
   McsTextContentProvider,
   McsAssetsProvider,
   McsFilterProvider,
+  McsAuthenticationIdentity,
   McsAuthenticationService,
   McsAuthenticationGuard
 ];

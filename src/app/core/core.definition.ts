@@ -22,10 +22,13 @@ export class CoreDefinition {
   public static NOTIFICATION_FAILED_TIMEOUT = 10000;
   public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 5000;
 
+  /** Headers */
+  public static HEADERS_AUTHORIZATION = 'Authorization';
+  public static HEADERS_BEARER = 'Bearer';
+
   /** AppState Properties */
   public static APPSTATE_AUTH_TOKEN = 'AuthToken';
-  public static APPSTATE_USER_ID = 'UserId';
-  public static APPSTATE_ACCOUNT_ID = 'AccountId';
+  public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
 
   /** Cookie Names */
   public static COOKIE_AUTH_TOKEN  = 'MCSPAT';
@@ -43,6 +46,7 @@ export class CoreDefinition {
   public static SEARCH_TIME = 2000;
   public static INPUT_TIME = 1000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
+  public static DEFAULT_INITIAL_PAGE = 'servers';
   public static MANAGED_SERVER = 'Managed';
   public static GB_TO_MB_MULTIPLIER = 1024;
 

@@ -7,6 +7,7 @@ import {
   Params
 } from '@angular/router';
 import { McsAuthenticationService } from './mcs-authentication.service';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class McsAuthenticationGuard implements CanActivate {
@@ -37,6 +38,6 @@ export class McsAuthenticationGuard implements CanActivate {
     }
 
     // Return the authenticated flag
-    return isAuthenticated;
+    return Observable.of(isAuthenticated);
   }
 }
