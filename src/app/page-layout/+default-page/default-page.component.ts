@@ -11,7 +11,8 @@ import { CoreDefinition } from '../../core';
 export class DefaultPageComponent {
 
   public constructor(private _ngLocation: Location) {
-    this._removeTokenFromDefaultUrl();
+    // TODO: Set the actural return URL here instead of server
+    // this._removeTokenFromDefaultUrl();
   }
 
   /**
