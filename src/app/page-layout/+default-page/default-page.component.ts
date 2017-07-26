@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { CoreDefinition } from '../../core';
+import { McsAuthenticationService } from '../../core';
 
 @Component({
   selector: 'mcs-default-page',
@@ -10,16 +10,8 @@ import { CoreDefinition } from '../../core';
 
 export class DefaultPageComponent {
 
-  public constructor(private _ngLocation: Location) {
-    // TODO: Set the actural return URL here instead of server
-    // this._removeTokenFromDefaultUrl();
-  }
-
-  /**
-   * Remove the return URL Token from the given URL of default page
-   */
-  private _removeTokenFromDefaultUrl(): void {
-    this._ngLocation.replaceState(this._ngLocation
-      .normalize(CoreDefinition.DEFAULT_INITIAL_PAGE));
+  public constructor(private _authenticationService: McsAuthenticationService) {
+    // This will normalize the url and will remove the token from the url
+    this._authenticationService.normalizeUrl();
   }
 }

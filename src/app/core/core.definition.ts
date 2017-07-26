@@ -130,4 +130,8 @@ export class CoreDefinition {
   /** Console Size */
   public static CONSOLE_DEFAULT_WIDTH = 800;
   public static CONSOLE_DEFAULT_HEIGHT = 600;
+
+  /** URL */
+  // TODO: This should be set in environment variables
+  public static URL_LOGIN = 'https://auth.macquariecloudservices.com/?returnurl=';
 }
