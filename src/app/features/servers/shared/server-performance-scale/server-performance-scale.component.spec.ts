@@ -120,6 +120,10 @@ describe('ServerPerformanceScaleComponent', () => {
   });
 
   describe('onSliderChanged()', () => {
+    beforeEach(async(() => {
+      component.ngOnInit();
+    }));
+
     it(`should change the slider value based on the inputted index
     and notify the output parameter`, fakeAsync(() => {
       spyOn(component.scaleChanged, 'next');

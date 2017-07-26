@@ -11,7 +11,9 @@ import {
   ServerFileSystem,
   ServerPerformanceScale,
   ServerThumbnail,
-  ServerPowerState
+  ServerPowerState,
+  ServerPlatform,
+  ServerResource
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -28,7 +30,8 @@ import {
   getEncodedUrl,
   animateFactory,
   refreshView,
-  getElementStyle
+  getElementStyle,
+  appendUnitSuffix
 } from '../../../../utilities';
 import { Observable } from 'rxjs/Rx';
 import { ServerService } from '../server.service';
@@ -60,6 +63,16 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public notificationsSubscription: any;
   public deviceTypeSubscription: any;
   public activeNotifications: McsApiJob[];
+
+  public platformData: ServerPlatform;
+  public platformDataSubscription: any;
+  public resources: ServerResource[];
+
+  public serverMemoryValue: string;
+  public serverCpuValue: string;
+
+  public remainingMemory: number;
+  public remainingCpu: number;
 
   public isServerScale: boolean;
   public isValidScale: boolean;
@@ -93,6 +106,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_SPINNER;
   }
 
+  public get hasStorage(): boolean {
+    return this.server.fileSystem && this.server.fileSystem.length > 0;
+  }
+
   public get hasMedia(): boolean {
     return this.server.media && this.server.media.length < 0;
   }
@@ -118,6 +135,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.initialServerPerformanceScaleValue = new ServerPerformanceScale();
     this._serverCpuSizeScale = new ServerPerformanceScale();
     this.activeNotifications = new Array();
+    this.platformData = new ServerPlatform();
+    this.resources = new Array<ServerResource>();
   }
 
   public ngOnInit() {
@@ -129,15 +148,17 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
           // Get server data
           this.server = server;
           this.serviceType = this.server.serviceType;
-          if (this.server.fileSystem && this.server.fileSystem.length > 0) {
-            // TODO: Create common function for unit types
-            this.primaryVolume = this.server.fileSystem[0].capacityGB + 'GB';
+
+          this.serverMemoryValue = appendUnitSuffix(server.memoryMB, 'megabyte');
+          this.serverCpuValue = appendUnitSuffix(server.cpuCount, 'cpu');
+
+          if (this.hasStorage) {
+            this.primaryVolume = appendUnitSuffix(this.server.fileSystem[0].capacityGB, 'gigabyte');
             this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
           }
           this._getServerThumbnail();
 
           // Initialize values
-          this._initializeServerPerformanceScaleValue();
           this.isServerScale = false;
           this.isValidScale = false;
           this.isScaling = false;
@@ -176,7 +197,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     let secondaryVolumes = serverfileSystem.slice(1);
 
     for (let fileSystem of secondaryVolumes) {
-      storage.push(fileSystem.capacityGB + 'GB');
+      storage.push(appendUnitSuffix(fileSystem.capacityGB, 'gigabyte'));
     }
 
     return storage.join(', ');
@@ -211,6 +232,20 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     list.push('', new McsListItem('1TB', '1 TB'));
 
     return list;
+  }
+
+  public scaleServer() {
+    if (this.platformDataSubscription) {
+      this.platformDataSubscription.unsubscribe();
+    }
+
+    this.platformDataSubscription = this._serverService.getPlatformData()
+      .subscribe((data) => {
+        this.platformData = data.content;
+        this.resources = this._getResourcesByVdc(this.server.vdcName);
+        this._initializeServerPerformanceScaleValue();
+        this.isServerScale = true;
+      });
   }
 
   public onScaleChanged(scale: ServerPerformanceScale) {
@@ -255,11 +290,34 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
     if (this.deviceTypeSubscription) {
       this.deviceTypeSubscription.unsubscribe();
+
+    }
+
+    if (this.platformDataSubscription) {
+      this.platformDataSubscription.unsubscribe();
     }
 
     if (this._serverCpuSizeScale) {
       this._serverCpuSizeScale = undefined;
     }
+  }
+
+  private _getResourcesByVdc(vdcName: string): ServerResource[] {
+    if (!this.platformData.environments) { return; }
+
+    let resources = new Array<ServerResource>();
+
+    for (let environment of this.platformData.environments) {
+      let resource = environment.resources.find((result) => {
+        return result.name === vdcName;
+      });
+
+      if (resource) {
+        resources.push(resource);
+      }
+    }
+
+    return resources;
   }
 
   private _getScalingNotificationStatus() {
@@ -278,8 +336,20 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   private _initializeServerPerformanceScaleValue() {
-    this.initialServerPerformanceScaleValue.memoryMB = this.server.memoryMB;
-    this.initialServerPerformanceScaleValue.cpuCount = this.server.cpuCount;
+    if (this.server) {
+      this.initialServerPerformanceScaleValue.memoryMB = this.server.memoryMB;
+      this.initialServerPerformanceScaleValue.cpuCount = this.server.cpuCount;
+    }
+
+    if (this.resources.length > 0) {
+      for (let resource of this.resources) {
+        if (resource.memoryAllocationMB && resource.cpuAllocation) {
+          this.remainingMemory = resource.memoryAllocationMB - resource.memoryReservationMB;
+          this.remainingCpu = resource.cpuAllocation - resource.cpuReservation;
+          break;
+        }
+      }
+    }
   }
 
   private _getServerThumbnail() {

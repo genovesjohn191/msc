@@ -40,16 +40,6 @@ describe('ServerManagementComponent', () => {
         path: '/boot',
         capacityGB: 1,
         freeSpaceGB: 1
-      },
-      {
-        path: '/tmp',
-        capacityGB: 49,
-        freeSpaceGB: 48
-      },
-      {
-        path: '/var/tmp',
-        capacityGB: 49,
-        freeSpaceGB: 48
       }
     ],
   };

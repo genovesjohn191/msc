@@ -14,14 +14,18 @@ import {
   McsApiJob,
   CoreDefinition
 } from '../../core/';
-import { reviverParser } from '../../utilities';
+import {
+  reviverParser,
+  convertJsonStringToObject
+} from '../../utilities';
 import {
   Server,
   ServerClientObject,
   ServerPowerState,
   ServerThumbnail,
   ServerUpdate,
-  ServerCommand
+  ServerCommand,
+  ServerPlatform
 } from './models';
 
 /**
@@ -233,6 +237,22 @@ export class ServersService {
     } else {
       return 'This instance is being processed';
     }
+  }
+
+  public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers/platform';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<ServerPlatform>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerPlatform>>(
+          response.text(),
+          reviverParser
+        );
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerPlatform>();
+      })
+      .catch(this._handleServerError);
   }
 
   private _listenToNotificationUpdate(): void {

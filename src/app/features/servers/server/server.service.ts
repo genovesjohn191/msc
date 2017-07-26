@@ -38,6 +38,10 @@ export class ServerService {
     this._listenToActiveServers();
   }
 
+  public getPlatformData() {
+    return this._serversService.getPlatformData();
+  }
+
   /**
    * This method will set the CPU Size Scale based on the given date
    * @param serverId Server ID
