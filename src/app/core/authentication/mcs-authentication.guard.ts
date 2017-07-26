@@ -24,6 +24,9 @@ export class McsAuthenticationGuard implements CanActivate {
     let authToken: string;
     let isAuthenticated: boolean = false;
 
+    // Set Return URL always
+    this._authenticationService.setReturnUrl(routerState.url, activatedRoute.queryParams);
+
     // Get tokens from cookie / appstate
     authToken = this._authenticationService.getAuthToken(activatedRoute.queryParams);
     if (authToken) {

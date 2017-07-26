@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Location } from '@angular/common';
 import {
   Router,
-  Params,
-  ActivatedRoute
+  Params
 } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
 import { CookieService } from 'ngx-cookie';
 import { CoreDefinition } from '../core.definition';
 import { McsApiService } from '../services/mcs-api.service';
@@ -19,11 +18,14 @@ import { reviverParser } from '../../utilities';
 @Injectable()
 export class McsAuthenticationService {
 
+  private _returnUrl: string; // Return url to be set privately
+
   constructor(
     private _appState: AppState,
     private _cookieService: CookieService,
     private _apiService: McsApiService,
-    private _authenticationIdentity: McsAuthenticationIdentity
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _locationService: Location
   ) {
     // Listen for the error in API Response
     this._listenForErrorApiResponse();
@@ -32,14 +34,11 @@ export class McsAuthenticationService {
   /**
    * This will navigate to login page in case
    * the sign in is incorrect or token expired
-   * the sign in is incorrect or token expired
    */
   public navigateToLoginPage(): boolean {
-    // TODO: Login redirection must be pass an encoded callback url
-    //       auth url must also be in envvars
-    let returnUrl = CoreDefinition.DEFAULT_INITIAL_PAGE;
-    let authUrl = 'https://auth.macquariecloudservices.com?redirecturl=';
-    window.location.href = (authUrl + returnUrl);
+    // Set login url 'https://auth.macquariecloudservices.com/?returnurl='
+    let authUrl = CoreDefinition.URL_LOGIN;
+    window.location.href = (authUrl + this._returnUrl);
     return false;
   }
 
@@ -87,6 +86,41 @@ export class McsAuthenticationService {
     this._appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, undefined);
   }
 
+  /**
+   * This will set the return URL to be use when token is expired or null
+   *
+   * `@Note`This will remove also the bearer in case of existence
+   * @param returnUrl Return url to be redirected
+   */
+  public setReturnUrl(returnUrl: string, queryParams: Params): void {
+    this._returnUrl = this._removeBearer(returnUrl, queryParams);
+  }
+
+  /**
+   * This will normalize the url and set the return url from the login page
+   *
+   * `@Note:`The return url should be set in the guard and this will
+   * remove the bearer that was appended in the url
+   */
+  public normalizeUrl(): void {
+    this._locationService.replaceState(this._locationService
+      .normalize(this._returnUrl));
+  }
+
+  private _removeBearer(url: string, queryParams: Params): string {
+    let modifiedUrl: string;
+    let token = queryParams[CoreDefinition.QUERY_PARAM_BEARER];
+
+    if (token) {
+      modifiedUrl = url.replace(`${token}`, '');
+      modifiedUrl = modifiedUrl.replace(`?${CoreDefinition.QUERY_PARAM_BEARER}=`, '');
+      modifiedUrl = modifiedUrl.replace(`&${CoreDefinition.QUERY_PARAM_BEARER}=`, '');
+    } else {
+      modifiedUrl = url;
+    }
+    return modifiedUrl;
+  }
+
   private _requestForIdentity(authToken: string): void {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/identity';
@@ -124,10 +158,10 @@ export class McsAuthenticationService {
   }
 
   private _listenForErrorApiResponse(): void {
-    this._apiService.errorResponseStream.subscribe((error) => {
-      if (!error) { return; }
+    this._apiService.errorResponseStream.subscribe((errorResponse) => {
+      if (!errorResponse) { return; }
 
-      switch (error.status) {
+      switch (errorResponse.status) {
         case McsHttpStatusCode.Unauthorized:
           this.deleteAuthToken();
           this.navigateToLoginPage();
