@@ -47,6 +47,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   public searchSubscription: any;
   public searchSubject: Subject<McsApiSearchKey>;
 
+  public activeServerSubscription: any;
   public hasError: boolean;
   // Done loading and thrown an error
   public get loadedSuccessfully(): boolean {
@@ -97,6 +98,9 @@ export class ServersComponent implements OnInit, OnDestroy {
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
     }
+    if (this.activeServerSubscription) {
+      this.activeServerSubscription.unsubscribe();
+    }
   }
 
   public executeServerCommand(server: Server, action: string) {
@@ -131,10 +135,6 @@ export class ServersComponent implements OnInit, OnDestroy {
     }
 
     return status;
-  }
-
-  public getServerPowerState(server: Server): number {
-    return this._serversService.getActiveServerPowerState(server);
   }
 
   public getStateIconKey(state: number): string {
@@ -193,6 +193,7 @@ export class ServersComponent implements OnInit, OnDestroy {
           this.hasError = false;
           this.servers = mergeArrays(this.servers, mcsApiResponse.content);
           this.totalServerCount = mcsApiResponse.totalCount;
+          this._listenToActiveServers();
         }
       });
   }
@@ -245,17 +246,35 @@ export class ServersComponent implements OnInit, OnDestroy {
     this._router.navigate(['./servers/create/new']);
   }
 
-  public getActiveServerInformation(serverId: any) {
-    let commandInformation: string = '';
-    let activeServer = this._serversService.activeServers
-      .find((severInformations) => {
-        return severInformations.serverId === serverId;
-      });
+  public getActiveServerTooltip(serverId: any) {
+    return this._serversService.getActiveServerInformation(serverId);
+  }
 
-    if (activeServer) {
-      return activeServer.tooltipInformation;
-    } else {
-      return 'This instance is being processed';
-    }
+  /**
+   * Listener to all the active servers for real time update of status
+   *
+   * `@Note`: This should be listen to the servers service since their powerstate
+   * status should be synchronise
+   */
+  private _listenToActiveServers(): void {
+    // Listener for the active servers
+    this.activeServerSubscription = this._serversService.activeServersStream
+      .subscribe((activeServers) => {
+        this._updateServerBasedOnActive(activeServers);
+      });
+  }
+
+  private _updateServerBasedOnActive(activeServers: ServerClientObject[]): void {
+    if (!activeServers) { return; }
+
+    // This will update the server list based on the active servers
+    activeServers.forEach((activeServer) => {
+      for (let server of this.servers) {
+        if (server.id === activeServer.serverId) {
+          server.powerState = this._serversService.getActiveServerPowerState(activeServer);
+          break;
+        }
+      }
+    });
   }
 }

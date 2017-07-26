@@ -127,7 +127,7 @@ export class McsAuthenticationService {
     this._apiService.errorResponseStream.subscribe((error) => {
       if (!error) { return; }
 
-      switch (error) {
+      switch (error.status) {
         case McsHttpStatusCode.Unauthorized:
           this.deleteAuthToken();
           this.navigateToLoginPage();

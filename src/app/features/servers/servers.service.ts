@@ -42,11 +42,23 @@ export class ServersService {
     this._activeServers = value;
   }
 
+  /**
+   * Subscribe to get notify when their is active server
+   */
+  private _activeServersStream: BehaviorSubject<ServerClientObject[]>;
+  public get activeServersStream(): BehaviorSubject<ServerClientObject[]> {
+    return this._activeServersStream;
+  }
+  public set activeServersStream(value: BehaviorSubject<ServerClientObject[]>) {
+    this._activeServersStream = value;
+  }
+
   constructor(
     private _mcsApiService: McsApiService,
     private _notificationContextService: McsNotificationContextService
   ) {
     this._activeServers = new Array();
+    this._activeServersStream = new BehaviorSubject(undefined);
     this._listenToNotificationUpdate();
   }
 
@@ -178,35 +190,49 @@ export class ServersService {
    * Get the active server power state based on job status
    * @param server Corresponding server to be checked
    */
-  public getActiveServerPowerState(server: Server): number {
+  public getActiveServerPowerState(activeServer: ServerClientObject): number {
     let serverPowerstate: number = 0;
 
-    // Check server if it is included in the list of active
-    let activeServer = this._activeServers
-      .find((pendingServer) => {
-        return pendingServer.serverId === server.id;
-      });
-
     // Get actual server status
-    if (activeServer) {
-      switch (activeServer.notificationStatus) {
-        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-          serverPowerstate = activeServer.commandAction === ServerCommand.Start ?
-            ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
-          break;
-        case CoreDefinition.NOTIFICATION_JOB_FAILED:
-          serverPowerstate = activeServer.powerState;
-          break;
-        case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        case CoreDefinition.NOTIFICATION_JOB_PENDING:
-        default:
-          serverPowerstate = undefined;
-          break;
-      }
-    } else {
-      serverPowerstate = server.powerState;
+    switch (activeServer.notificationStatus) {
+      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+        serverPowerstate = activeServer.commandAction === ServerCommand.Start ?
+          ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
+        break;
+
+      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+      case CoreDefinition.NOTIFICATION_JOB_PENDING:
+        serverPowerstate = undefined;
+        break;
+
+      case CoreDefinition.NOTIFICATION_JOB_FAILED:
+      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
+      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
+        serverPowerstate = activeServer.powerState;
+      default:
+        break;
     }
     return serverPowerstate;
+  }
+
+  /**
+   * Get the active server information based on job status
+   *
+   * `@Note` This will be use in tooltip to display the on-going process information
+   * @param serverId Server ID to be display
+   */
+  public getActiveServerInformation(serverId: any): string {
+    let commandInformation: string = '';
+    let activeServer = this._activeServers
+      .find((severInformations) => {
+        return severInformations.serverId === serverId;
+      });
+
+    if (activeServer) {
+      return activeServer.tooltipInformation;
+    } else {
+      return 'This instance is being processed';
+    }
   }
 
   private _listenToNotificationUpdate(): void {
@@ -232,6 +258,7 @@ export class ServersService {
 
         // Set active servers to property
         this._activeServers = activeServers;
+        this._activeServersStream.next(activeServers);
       });
   }
 

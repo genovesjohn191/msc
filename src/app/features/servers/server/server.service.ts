@@ -19,6 +19,12 @@ import {
 @Injectable()
 export class ServerService {
 
+  public activeServerSubscription: any;
+
+  /**
+   * This will notify the subscriber everytime the server is selected or
+   * everytime there are new data from the selected server
+   */
   private _selectedServerStream: BehaviorSubject<Server>;
   public get selectedServerStream(): BehaviorSubject<Server> {
     return this._selectedServerStream;
@@ -27,10 +33,9 @@ export class ServerService {
     this._selectedServerStream = value;
   }
 
-  constructor(
-    private _seversService: ServersService
-  ) {
+  constructor(private _serversService: ServersService) {
     this._selectedServerStream = new BehaviorSubject<Server>(undefined);
+    this._listenToActiveServers();
   }
 
   /**
@@ -45,7 +50,7 @@ export class ServerService {
     if (!cpuSizeScale) { return; }
 
     // Update scaling of server based on cpu size scale
-    return this._seversService.patchServer(
+    return this._serversService.patchServer(
       serverId,
       {
         memoryMB: cpuSizeScale.memoryMB,
@@ -63,13 +68,57 @@ export class ServerService {
    */
   public getServerThumbnail(serverId: any) {
     // Return the observable of thumbnails
-    return this._seversService.getServerThumbnail(serverId);
+    return this._serversService.getServerThumbnail(serverId);
   }
 
+  /**
+   * Set the selected server instance
+   * @param serverId Server ID to be selected
+   */
   public setSelectedServer(serverId: string): void {
-    this._seversService.getServer(serverId)
+    this._serversService.getServer(serverId)
       .subscribe((response) => {
-        this._selectedServerStream.next(response.content);
+        let server: Server = response.content;
+
+        if (server) {
+          let activeServer = this._serversService.activeServers
+            .find((active) => {
+              return active.serverId === server.id;
+            });
+
+          if (activeServer) {
+            server.powerState = this._serversService.getActiveServerPowerState(activeServer);
+          }
+          this._selectedServerStream.next(server);
+        }
+      });
+  }
+
+  /**
+   * Listener for the active server of the servers services
+   *
+   * `@Note`: This should be included since we want to make sure that any changes
+   * on the server data should notify the selectedServer subscribers
+   */
+  private _listenToActiveServers(): void {
+    // Listener for the active servers
+    this.activeServerSubscription = this._serversService.activeServersStream
+      .subscribe((activeServers) => {
+        if (activeServers) {
+          let selectedServer: Server;
+
+          selectedServer = this.selectedServerStream.getValue();
+          if (selectedServer) {
+            for (let activeServer of activeServers) {
+
+              if (selectedServer.id === activeServer.serverId) {
+                selectedServer.powerState = this._serversService
+                  .getActiveServerPowerState(activeServer);
+                this._selectedServerStream.next(selectedServer);
+              }
+            }
+          }
+        }
       });
   }
 }

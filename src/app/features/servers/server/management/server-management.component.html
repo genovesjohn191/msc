@@ -36,7 +36,8 @@
       <div class="col">
         <div class="server-thumbnail">
           <h3 class="thumbnail-title">{{ serverManagementTextContent.vmConsole.title }}</h3>
-           <div #viewConsoleLinkElement (click)="onClickViewConsole()" class="view-console">
+           <div (click)="onClickViewConsole()" class="view-console"
+              [ngClass]="{'enabled': consoleEnabled, 'disabled': !consoleEnabled }">
              <div class="thumbnail-container">
                <img #thumbnailElement class="thumbnail"/>
              </div>

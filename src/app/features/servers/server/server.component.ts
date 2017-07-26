@@ -28,6 +28,7 @@ import { ServerService } from '../server/server.service';
 export class ServerComponent implements OnInit, OnDestroy {
   public servers: Server[];
   public server: Server;
+  public activeServerSubscription: any;
   public selectedServerSubscription: any;
   public serverTextContent: any;
 
@@ -49,9 +50,6 @@ export class ServerComponent implements OnInit, OnDestroy {
     this.selectedServerSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
         this.server = server;
-        if (this.server) {
-          this.server.powerState = this._serversService.getActiveServerPowerState(this.server);
-        }
       });
 
     if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
@@ -61,11 +59,13 @@ export class ServerComponent implements OnInit, OnDestroy {
     } else {
       this._router.navigate(['/page-not-found']);
     }
+
+    this._listenToActiveServers();
   }
 
-  public onServerSelect(event: any) {
-    if (event) {
-      this._serverService.setSelectedServer(event);
+  public onServerSelect(serverId: any) {
+    if (serverId) {
+      this._serverService.setSelectedServer(serverId);
     }
   }
 
@@ -84,6 +84,7 @@ export class ServerComponent implements OnInit, OnDestroy {
   }
 
   public getActionStatus(server: Server): any {
+    if (!server) { return undefined; }
     let status: ServerCommand;
 
     switch (server.powerState) {
@@ -107,5 +108,36 @@ export class ServerComponent implements OnInit, OnDestroy {
     if (this.selectedServerSubscription) {
       this.selectedServerSubscription.unsubscribe();
     }
+    if (this.activeServerSubscription) {
+      this.activeServerSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Listener to all the active servers for real time update of status
+   *
+   * `@Note`: This should be listen to the servers service since their powerstate
+   * status should be synchronise
+   */
+  private _listenToActiveServers(): void {
+    this.activeServerSubscription = this._serversService.activeServersStream
+      .subscribe((activeServers) => {
+        this._updateServerBasedOnActive(activeServers);
+      });
+  }
+
+  private _updateServerBasedOnActive(activeServers: ServerClientObject[]): void {
+    if (!activeServers || !this.servers) { return; }
+
+    // This will update the server list based on the active servers
+    activeServers.forEach((activeServer) => {
+      // Update server list
+      for (let server of this.servers) {
+        if (server.id === activeServer.serverId) {
+          server.powerState = this._serversService.getActiveServerPowerState(activeServer);
+          break;
+        }
+      }
+    });
   }
 }

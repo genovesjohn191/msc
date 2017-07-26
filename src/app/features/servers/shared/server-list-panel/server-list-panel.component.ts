@@ -145,6 +145,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   public ngOnInit() {
     this.errorMessage = this._textProvider.content.servers.errorMessage;
     this.noServerFoundMessage = this._textProvider.content.servers.noServers;
+
     this._route.params.subscribe((params) => {
       if (this.serverListData) {
         this.mapServerList(this.serverListData);
@@ -162,10 +163,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     this._browserService.scrollToTop();
     this.selectedServerId = serverId;
     this.serverSelectChange.next(serverId);
-  }
-
-  public getServerPowerState(server: Server): number {
-    return this._serversService.getActiveServerPowerState(server);
   }
 
   public getStateIconKey(state: number): string {
@@ -286,18 +283,8 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  public getActiveServerInformation(serverId: any) {
-    let commandInformation: string = '';
-    let activeServer = this._serversService.activeServers
-      .find((severInformations) => {
-        return severInformations.serverId === serverId;
-      });
-
-    if (activeServer) {
-      return activeServer.tooltipInformation;
-    } else {
-      return 'This instance is being processed';
-    }
+  public getActiveServerTooltip(serverId: any) {
+    return this._serversService.getActiveServerInformation(serverId);
   }
 
   private _setServersListMaxHeight(offsetHeight: number) {
