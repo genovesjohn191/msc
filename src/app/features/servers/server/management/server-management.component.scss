@@ -2,6 +2,10 @@
 
 $server-thumbnail-height: 96px;
 $server-thumbnail-width: 128px;
+$server-thumbnail-bg-color: $color-black;
+$server-text-color: $color-black;
+$server-vm-console-enabled-color: $server-text-color;
+$server-vm-console-disabled-color: $color-grey-02;
 
 .server-management-container {
 
@@ -17,18 +21,26 @@ $server-thumbnail-width: 128px;
       cursor: pointer;
       @include set-items-interval(5px, vertical);
 
-      &[disabled="true"] {
+      &.enabled {
+        cursor: pointer;
+        * {
+          cursor: pointer;
+          color: $server-vm-console-enabled-color;
+        }
+      }
+
+      &.disabled {
         cursor: not-allowed;
         * {
           cursor: not-allowed;
-          color: $color-grey-02;
+          color: $server-vm-console-disabled-color;
         }
       }
 
       .thumbnail-container {
         min-height: $server-thumbnail-height;
         min-width: $server-thumbnail-width;
-        background: $color-black;
+        background: $server-thumbnail-bg-color;
 
         .thumbnail {
           max-height: $server-thumbnail-height;
@@ -39,7 +51,7 @@ $server-thumbnail-width: 128px;
   }
 
   .server-details {
-    color: $color-black;
+    color: $server-text-color;
     margin: $space-large 0;
     @include set-items-interval(50px, vertical);
   }

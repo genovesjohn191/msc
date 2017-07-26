@@ -61,18 +61,18 @@
     <tbody>
       <tr *ngFor="let server of servers">
         <td class="text-center align-middle">
-          <div *ngIf="getServerPowerState(server)">
-            <mcs-icon [key]="getStateIconKey(getServerPowerState(server))"
+          <div *ngIf="server.powerState">
+            <mcs-icon [key]="getStateIconKey(server.powerState)"
               size="large"></mcs-icon>
           </div>
-          <div *ngIf="!getServerPowerState(server)" class="power-state-spinner">
+          <div *ngIf="!server.powerState" class="power-state-spinner">
             <mcs-icon [key]="spinnerIconKey" size="large"
               mcsPopover trigger="hover" maxWidth="250px" padding="none"
               [content]="loadingContent"></mcs-icon>
           </div>
           <ng-template #loadingContent>
             <span class="loading-content-popover">
-              {{ getActiveServerInformation(server.id) }}
+              {{ getActiveServerTooltip(server.id) }}
             </span>
           </ng-template>
         </td>

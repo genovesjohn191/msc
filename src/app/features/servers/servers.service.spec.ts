@@ -19,7 +19,10 @@ import { Observable } from 'rxjs/Rx';
 import {
   Server,
   ServerThumbnail,
-  ServerUpdate
+  ServerUpdate,
+  ServerClientObject,
+  ServerCommand,
+  ServerPowerState
 } from './models';
 import { ServersService } from './servers.service';
 import {
@@ -446,5 +449,101 @@ describe('ServersService', () => {
           // dummy subscribe to invoke exception
         });
     }));
+  });
+
+  describe('getActiveServerPowerState()', () => {
+
+    it('should return PoweredOn when the command action is Start and Job is completed', () => {
+      let serverClient = new ServerClientObject();
+
+      serverClient.commandAction = ServerCommand.Start;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBe(ServerPowerState.PoweredOn);
+    });
+
+    it('should return PoweredOff when the command action is Stop and Job is completed', () => {
+      let serverClient = new ServerClientObject();
+
+      serverClient.commandAction = ServerCommand.Stop;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBe(ServerPowerState.PoweredOff);
+    });
+
+    it('should return undefined when Job is Active', () => {
+      let serverClient = new ServerClientObject();
+
+      serverClient.commandAction = ServerCommand.Stop;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBeUndefined();
+    });
+
+    it('should return undefined when Job is Pending', () => {
+      let serverClient = new ServerClientObject();
+
+      serverClient.commandAction = ServerCommand.Stop;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_PENDING;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBeUndefined();
+    });
+
+    it('should return the previous power state of the server when Job is Failed', () => {
+      let serverClient = new ServerClientObject();
+      let previousPowerState = ServerPowerState.PoweredOn;
+
+      serverClient.commandAction = ServerCommand.Stop;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_FAILED;
+      serverClient.powerState = previousPowerState;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBe(previousPowerState);
+    });
+
+    it('should return the previous power state of the server when Job is Timedout', () => {
+      let serverClient = new ServerClientObject();
+      let previousPowerState = ServerPowerState.PoweredOn;
+
+      serverClient.commandAction = ServerCommand.Stop;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_TIMEDOUT;
+      serverClient.powerState = previousPowerState;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBe(previousPowerState);
+    });
+
+    it('should return the previous power state of the server when Job is Cancelled', () => {
+      let serverClient = new ServerClientObject();
+      let previousPowerState = ServerPowerState.PoweredOn;
+
+      serverClient.commandAction = ServerCommand.Stop;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_CANCELLED;
+      serverClient.powerState = previousPowerState;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBe(previousPowerState);
+    });
+  });
+
+  describe('getActiveServerInformation()', () => {
+
+    it('should return the tooltip information of the active server', () => {
+      let serverClient = new ServerClientObject();
+
+      serverClient.commandAction = ServerCommand.Start;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+      serverClient.tooltipInformation = 'Sample';
+      serverClient.serverId = '12345';
+
+      serversService.activeServers.push(serverClient);
+      let serverInformation = serversService.getActiveServerInformation('12345');
+
+      expect(serverInformation).toBe('Sample');
+    });
   });
 });

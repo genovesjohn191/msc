@@ -126,7 +126,8 @@ podTemplate(
             stage('Run tests & build docker image') {
                 sh "cp ${env_setup_location}/${env_setup_file} ."
                 sh "npm install"
-                sh "CHROME_BIN=/usr/bin/google-chrome npm run test" // Requires headless browser in the jnlp-slave container
+                sh "npm run lint"
+                sh "CHROME_BIN=/usr/bin/google-chrome karma start" // Requires headless browser in the jnlp-slave container
                 sh ". ./env.setup && npm run build:prod"
                 sh "docker build -t ${image_name}:${image_version} ."
             }

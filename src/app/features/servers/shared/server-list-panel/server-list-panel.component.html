@@ -17,18 +17,18 @@
           <a [ngClass]="{'active-server': isServerSelected(server.id)}"
             [routerLink]="['/servers/' + server.id]" (click)="onClickServer(server.id)">
 
-            <div *ngIf="getServerPowerState(server)">
-              <mcs-icon [key]="getStateIconKey(getServerPowerState(server))"
+            <div *ngIf="server.powerState">
+              <mcs-icon [key]="getStateIconKey(server.powerState)"
                 size="medium"></mcs-icon>
             </div>
-            <div *ngIf="!getServerPowerState(server)" class="power-state-spinner">
+            <div *ngIf="!server.powerState" class="power-state-spinner">
               <mcs-icon [key]="spinnerIconKey" size="medium"
                 mcsPopover trigger="hover" maxWidth="250px" padding="none"
                 [content]="loadingContent"></mcs-icon>
             </div>
             <ng-template #loadingContent>
               <span class="loading-content-popover">
-                {{ getActiveServerInformation(server.id) }}
+                {{ getActiveServerTooltip(server.id) }}
               </span>
             </ng-template>
 

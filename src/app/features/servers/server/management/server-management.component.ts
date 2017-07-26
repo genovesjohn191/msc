@@ -20,7 +20,9 @@ import {
   McsListItem,
   McsApiSuccessResponse,
   McsApiJob,
-  McsNotificationContextService
+  McsNotificationContextService,
+  McsBrowserService,
+  McsDeviceType
 } from '../../../../core';
 import {
   getEncodedUrl,
@@ -56,6 +58,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public serverSubscription: any;
   public scalingSubscription: any;
   public notificationsSubscription: any;
+  public deviceTypeSubscription: any;
   public activeNotifications: McsApiJob[];
 
   public isServerScale: boolean;
@@ -68,10 +71,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   @ViewChild('thumbnailElement')
   public thumbnailElement: ElementRef;
 
-  @ViewChild('viewConsoleLinkElement')
-  public viewConsoleLinkElement: ElementRef;
-
   private _serverCpuSizeScale: ServerPerformanceScale;
+  private _deviceType: McsDeviceType;
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
@@ -81,8 +82,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public get consoleEnabled(): boolean {
-    return this.server.powerState !== undefined &&
-    this.server.powerState !== ServerPowerState.PoweredOff;
+    return this.isPoweredOn && this._deviceType === McsDeviceType.Desktop;
   }
 
   public get warningIconKey(): string {
@@ -112,7 +112,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
     private _renderer: Renderer2,
-    private _notificationContextService: McsNotificationContextService
+    private _notificationContextService: McsNotificationContextService,
+    private _browserService: McsBrowserService
   ) {
     this.initialServerPerformanceScaleValue = new ServerPerformanceScale();
     this._serverCpuSizeScale = new ServerPerformanceScale();
@@ -128,8 +129,11 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
           // Get server data
           this.server = server;
           this.serviceType = this.server.serviceType;
-          this.primaryVolume = this.server.fileSystem[0].capacityGB + 'GB';
-          this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
+          if (this.server.fileSystem && this.server.fileSystem.length > 0) {
+            // TODO: Create common function for unit types
+            this.primaryVolume = this.server.fileSystem[0].capacityGB + 'GB';
+            this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
+          }
           this._getServerThumbnail();
 
           // Initialize values
@@ -140,11 +144,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
           this._getScalingNotificationStatus();
 
           refreshView(() => {
-            if (this.viewConsoleLinkElement) {
-              if (!this.consoleEnabled) {
-                this._renderer
-                  .setAttribute(this.viewConsoleLinkElement.nativeElement, 'disabled', 'true');
-              }
+            if (!this.consoleEnabled) {
+              this._hideThumbnail();
             }
           }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         }
@@ -156,6 +157,12 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         this.activeNotifications = updatedNotifications;
         this._getScalingNotificationStatus();
       });
+
+    // Listen to device change
+    this.deviceTypeSubscription = this._browserService.deviceTypeStream
+      .subscribe((deviceType) => {
+        this._deviceType = deviceType;
+      });
   }
 
   public mergeIpAddresses(ipAddresses: string[]): string {
@@ -166,8 +173,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   public getSecondaryVolumes(serverfileSystem: ServerFileSystem[]) {
     let storage = new Array();
+    let secondaryVolumes = serverfileSystem.slice(1);
 
-    for (let fileSystem of serverfileSystem.slice(1)) {
+    for (let fileSystem of secondaryVolumes) {
       storage.push(fileSystem.capacityGB + 'GB');
     }
 
@@ -175,14 +183,14 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public onClickViewConsole() {
+    if (!this.consoleEnabled) { return; }
+
     let windowFeatures = `directories=yes,titlebar=no,toolbar=no,
     status=no,menubar=no,resizable=yes,scrollbars=yes,
     width=${CoreDefinition.CONSOLE_DEFAULT_WIDTH},
     height=${CoreDefinition.CONSOLE_DEFAULT_HEIGHT}`;
 
-    if (this.consoleEnabled) {
-      window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
-    }
+    window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
   }
 
   public getServerStorageProfile() {
@@ -245,6 +253,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       this.notificationsSubscription.unsubscribe();
     }
 
+    if (this.deviceTypeSubscription) {
+      this.deviceTypeSubscription.unsubscribe();
+    }
+
     if (this._serverCpuSizeScale) {
       this._serverCpuSizeScale = undefined;
     }
@@ -271,7 +283,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   private _getServerThumbnail() {
-    if (!this.server) { return; }
+    if (!this.server || !this.consoleEnabled) { return; }
 
     // Hide thumbnail if it is already displayed in initial routing
     this._hideThumbnail();
