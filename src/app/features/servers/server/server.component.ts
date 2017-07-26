@@ -11,7 +11,8 @@ import {
   Server,
   ServerClientObject,
   ServerPowerState,
-  ServerCommand
+  ServerCommand,
+  ServerPlatform
 } from '../models';
 import {
   CoreDefinition,
@@ -44,7 +45,10 @@ export class ServerComponent implements OnInit, OnDestroy {
     private _serversService: ServersService,
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider
-  ) { }
+  ) {
+    this.servers = new Array<Server>();
+    this.server = new Server();
+  }
 
   public ngOnInit() {
     this.selectedServerSubscription = this._serverService.selectedServerStream

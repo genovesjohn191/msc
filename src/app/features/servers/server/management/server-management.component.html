@@ -10,8 +10,8 @@
           <li>
             <div class="server-configuration">
               <span>{{ serverManagementTextContent.vmProperties.configuration }}:</span>
-              <span>{{ server.memoryMB }} MB / {{ server.cpuCount }} CPU</span>
-              <a *ngIf="!isScaling" (click)="isServerScale = true">
+              <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
+              <a *ngIf="!isScaling" (click)="scaleServer()">
                 {{ serverManagementTextContent.performanceScale.scale }}</a>
               <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
                 mcsPopover trigger="hover" maxWidth="250px"
@@ -93,7 +93,7 @@
   <h3>Scaling {{ server.managementName }}</h3>
   <mcs-server-performance-scale
     [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
-    availableMemoryMB="24576" availableCpuCount="8"
+    [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
     (scaleChanged)="onScaleChanged($event)"
     (validateScale)="onValidateScaleChanged($event)">
 

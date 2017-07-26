@@ -144,12 +144,8 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
-    refreshView(() => {
-      if (inputManageType === ServerInputManageType.Slider) {
-        this._setCustomSizeValue();
-      }
-      this.inputManageType = inputManageType;
-    });
+    this._setCustomSizeValue();
+    refreshView(() => { this.inputManageType = inputManageType; });
   }
 
   private _setMinMaxValue(): void {
@@ -206,15 +202,22 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   private _setDefaultSliderTable(): void {
     // Add the table definition
-    this.sliderTable.push({ memoryMB: 2048, cpuCount: 1 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 4096, cpuCount: 2 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 8192, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 16384, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 24576, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 32768, cpuCount: 4 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 16384, cpuCount: 8 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 24576, cpuCount: 8 } as ServerPerformanceScale);
-    this.sliderTable.push({ memoryMB: 32768, cpuCount: 8 } as ServerPerformanceScale);
+    let table = new Array<ServerPerformanceScale>();
+    table.push({ memoryMB: 2048, cpuCount: 1 } as ServerPerformanceScale);
+    table.push({ memoryMB: 4096, cpuCount: 2 } as ServerPerformanceScale);
+    table.push({ memoryMB: 8192, cpuCount: 4 } as ServerPerformanceScale);
+    table.push({ memoryMB: 16384, cpuCount: 4 } as ServerPerformanceScale);
+    table.push({ memoryMB: 24576, cpuCount: 4 } as ServerPerformanceScale);
+    table.push({ memoryMB: 32768, cpuCount: 4 } as ServerPerformanceScale);
+    table.push({ memoryMB: 16384, cpuCount: 8 } as ServerPerformanceScale);
+    table.push({ memoryMB: 24576, cpuCount: 8 } as ServerPerformanceScale);
+    table.push({ memoryMB: 32768, cpuCount: 8 } as ServerPerformanceScale);
+
+    table.forEach((scale) => {
+      if (scale.memoryMB <= this.availableMemoryMB && scale.cpuCount <= this.availableCpuCount) {
+        this.sliderTable.push(scale);
+      }
+    });
   }
 
   private _notifyCpuSizeScale(memoryMB: number, cpuCount: number) {
