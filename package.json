@@ -55,6 +55,7 @@
     "start:hmr": "npm run server:dev:hmr",
     "start": "npm run server:dev",
     "test": "npm run lint && karma start",
+    "test:prod": "karma start",
     "tslint": "tslint --type-check --project ./tsconfig.json ",
     "typedoc": "typedoc",
     "version": "npm run build",
