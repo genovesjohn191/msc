@@ -10,7 +10,7 @@ describe('DropdownComponent', () => {
 
   /** Stub Services/Components */
   let component: DropdownComponent;
-  let mockCollapsed: boolean;
+  let mockIsOpen: boolean;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -43,25 +43,34 @@ describe('DropdownComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      mockCollapsed = component.collapsed;
+      mockIsOpen = component.isOpen;
     });
   }));
 
   /** Test Implementation */
-  describe('onClick()', () => {
-    it('should change the value of collapsed when dropdown component was clicked', () => {
-      component.mcsDropdown.nativeElement.click();
-      expect(component.collapsed).not.toEqual(mockCollapsed);
-    });
-
-    it('should set collapsed to true when clicked outside the component', () => {
+  describe('onClickOutside()', () => {
+    it('should set isOpen to false when clicked outside the component', () => {
       document.body.click();
-      expect(component.collapsed).toBeTruthy();
+      expect(component.isOpen).toBeFalsy();
+    });
+  });
+
+  describe('toggleDropdown()', () => {
+    it('should change the value of isOpen when dropdown component was clicked', () => {
+      let event = {
+        target: component.mcsDropdown.nativeElement
+      };
+      component.toggleDropdown(event);
+      expect(component.isOpen).not.toEqual(mockIsOpen);
     });
 
-    it('should set collapsed to false when groupName was clicked', () => {
-      component.mcsDropdownGroupName.nativeElement.click();
-      expect(component.collapsed).toBeFalsy();
+    it('should remain the value of isOpen to true when groupName was clicked', () => {
+      component.isOpen = true;
+      let event = {
+        target: component.mcsDropdownGroupName.nativeElement
+      };
+      component.toggleDropdown(event);
+      expect(component.isOpen).toBeTruthy();
     });
   });
 

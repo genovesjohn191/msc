@@ -22,7 +22,8 @@ import { Loading } from '../loading.interface';
 import {
   McsAssetsProvider,
   McsList,
-  McsListItem
+  McsListItem,
+  CoreDefinition
 } from '../../core';
 
 @Component({
@@ -40,7 +41,7 @@ import {
 
 export class DropdownComponent implements OnChanges, AfterViewInit, ControlValueAccessor {
   public iconClass: string;
-  public collapsed: boolean;
+  public isOpen: boolean;
   public selectedItem: McsListItem;
 
   @Input()
@@ -88,25 +89,19 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   public constructor(
     private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
   ) {
     this.dropdownData = new McsList();
-    this.collapsed = true;
+    this.isOpen = false;
     this.selectedItem = new McsListItem(undefined, undefined);
   }
 
   // TODO: For testing in actual mobile devices
-  @HostListener('document:touchenter', ['$event.target'])
+  @HostListener('document:touchstart', ['$event.target'])
   @HostListener('document:click', ['$event.target'])
-  public onClick(target): void {
-    if (this._elementRef.nativeElement.contains(target)) {
-      if (this.mcsDropdownGroupName && this.mcsDropdownGroupName.nativeElement === target) {
-        this.collapsed = false;
-      } else {
-        this.collapsed = !this.collapsed;
-      }
-    } else {
-      this.collapsed = true;
+  public onClickOutside(target): void {
+    if (!this._elementRef.nativeElement.contains(target)) {
+      this.isOpen = false;
     }
   }
 
@@ -119,6 +114,14 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
     if (this.width) {
       this._renderer.setStyle(this.mcsDropdown.nativeElement,
         'max-width', this.width);
+    }
+  }
+
+  public toggleDropdown(event) {
+    if (this.mcsDropdownGroupName && this.mcsDropdownGroupName.nativeElement === event.target) {
+      this.isOpen = true;
+    } else {
+      this.isOpen = !this.isOpen;
     }
   }
 

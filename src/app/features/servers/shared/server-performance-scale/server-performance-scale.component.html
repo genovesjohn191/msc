@@ -20,32 +20,50 @@
       <div [@animate]="'fadeIn'" class="custom-size-content">
         <ul class="custom-size-inputs unstyled-list">
           <li>
-            <span class="label">{{ serverScalePerformanceTextContent.ramLabel }} : </span>
-            <span class="input">
-              <mcs-textbox width="150px"
-                placeholder="RAM"
-                formControlName="serverScaleCustomRam"
-                [ngModel]="customMemoryGBValue"
-                (ngModelChange)="onMemoryChanged($event)"
-                validationType="numeric">
-              </mcs-textbox>
-            </span>
-            <span class="unit">{{ serverScalePerformanceTextContent.ramUnit }}</span>
+            <div class="input-group">
+              <span class="label">{{ serverScalePerformanceTextContent.ramLabel }} : </span>
+              <span class="input">
+                <mcs-textbox width="150px"
+                  placeholder="RAM"
+                  formControlName="serverScaleCustomRam"
+                  [ngModel]="customMemoryGBValue"
+                  (ngModelChange)="onMemoryChanged($event)"
+                  validationType="numeric"
+                  [displayError]="false">
+                </mcs-textbox>
+              </span>
+              <span class="unit">{{ serverScalePerformanceTextContent.ramUnit }}</span>
+            </div>
+            <div *ngIf="!isValidCustomMemoryValue" class="custom-size-input-error">
+              <span class="text-color-error">
+                {{ invalidCustomMemoryMessage }}
+              </span>
+            </div>
           </li>
           <li>
-            <span class="label">{{ serverScalePerformanceTextContent.cpuLabel }} : </span>
-            <span class="input">
-              <mcs-textbox width="150px"
-                placeholder="CPUs"
-                formControlName="serverScaleCustomCpu"
-                [ngModel]="customCpuCountValue"
-                (ngModelChange)="onCpuCountChanged($event)"
-                validationType="numeric">
-              </mcs-textbox>
-            </span>
-            <span class="unit">{{ serverScalePerformanceTextContent.cpuUnit }}</span>
+            <div class="input-group">
+              <span class="label">{{ serverScalePerformanceTextContent.cpuLabel }} : </span>
+              <span class="input">
+                <mcs-textbox width="150px"
+                  placeholder="CPUs"
+                  formControlName="serverScaleCustomCpu"
+                  [ngModel]="customCpuCountValue"
+                  (ngModelChange)="onCpuCountChanged($event)"
+                  validationType="numeric"
+                  [displayError]="false">
+                </mcs-textbox>
+              </span>
+              <span class="unit">{{ serverScalePerformanceTextContent.cpuUnit }}</span>
+            </div>
+
+            <div *ngIf="!isValidCustomCpuValue" class="custom-size-input-error">
+              <span class="text-color-error">
+                {{ invalidCustomCpuMessage }}
+              </span>
+            </div>
           </li>
         </ul>
+
       </div>
     </div>
 

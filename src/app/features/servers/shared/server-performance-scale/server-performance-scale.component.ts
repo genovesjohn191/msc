@@ -28,7 +28,8 @@ import {
 } from '../../models';
 import {
   refreshView,
-  animateFactory
+  animateFactory,
+  appendUnitSuffix
 } from '../../../../utilities';
 
 @Component({
@@ -61,6 +62,9 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public serverScaleCustomRam: FormControl;
   public serverScaleCustomCpu: FormControl;
 
+  public invalidCustomMemoryMessage: string;
+  public invalidCustomCpuMessage: string;
+
   @Input()
   public memoryMB: number;
 
@@ -83,6 +87,16 @@ export class ServerPerformanceScaleComponent implements OnInit {
     return this.sliderValue < 0 ? undefined : this.sliderTable[this.sliderValue];
   }
 
+  public get isValidCustomMemoryValue(): boolean {
+    return this.inputManageType === ServerInputManageType.Custom
+      && this.customMemoryGBValue <= this.availableMemoryMB;
+  }
+
+  public get isValidCustomCpuValue(): boolean {
+    return this.inputManageType === ServerInputManageType.Custom
+      && this.customCpuCountValue <= this.availableCpuCount;
+  }
+
   public constructor(private _textProvider: McsTextContentProvider) {
     this.minimum = 0;
     this.maximum = 0;
@@ -102,6 +116,18 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public ngOnInit() {
     this.serverScalePerformanceTextContent
       = this._textProvider.content.servers.server.management.performanceScale;
+
+    this.invalidCustomMemoryMessage = this._fillValidationMessagePlaceholder(
+      this.serverScalePerformanceTextContent.validationError.memory,
+      'available_memory',
+      appendUnitSuffix(this.availableMemoryMB, 'megabyte')
+    );
+
+    this.invalidCustomCpuMessage = this._fillValidationMessagePlaceholder(
+      this.serverScalePerformanceTextContent.validationError.cpu,
+      'available_cpu',
+      appendUnitSuffix(this.availableCpuCount, 'cpu')
+    );
 
     this.serverScaleForm = new FormGroup({
       serverScaleSlider: new FormControl(),
@@ -227,7 +253,21 @@ export class ServerPerformanceScaleComponent implements OnInit {
     performanceScale.cpuCount = Number(cpuCount);
     refreshView(() => {
       this.scaleChanged.next(performanceScale);
-      this.validateScale.next(this.serverScaleForm.valid);
+
+      if (!this.isValidCustomMemoryValue || !this.isValidCustomCpuValue) {
+        this.validateScale.next(false);
+      } else {
+        this.validateScale.next(this.serverScaleForm.valid);
+      }
+
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+  }
+
+  private _fillValidationMessagePlaceholder(
+    message: string,
+    placeholder: string,
+    value: string
+  ): string {
+    return message.replace(`{{${placeholder}}}`, value);
   }
 }

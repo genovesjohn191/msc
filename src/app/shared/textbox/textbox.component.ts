@@ -89,6 +89,9 @@ export class TextboxComponent
   public validationType: 'email' | 'ipAddress' | 'alphanumeric' | 'numeric' | 'pattern';
 
   @Input()
+  public displayError: boolean;
+
+  @Input()
   public pattern: string;
 
   @ViewChild('mcsTextbox')
@@ -133,6 +136,7 @@ export class TextboxComponent
   ) {
     this.inputType = 'text';
     this.isValid = false;
+    this.displayError = true;
   }
 
   public ngOnInit() {

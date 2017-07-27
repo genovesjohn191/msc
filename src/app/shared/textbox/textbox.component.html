@@ -6,4 +6,4 @@
   <mcs-icon *ngIf="iconKey" [key]="iconKey"
     size="small" (click)="onFocus()"></mcs-icon>
 </div>
-<small *ngIf="hasError">{{ validationMessage }}</small>
+<small *ngIf="displayError && hasError">{{ validationMessage }}</small>

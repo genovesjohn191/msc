@@ -36,30 +36,40 @@
     margin: $space-medium 0;
 
     .custom-size-inputs {
-      @include set-items-interval(10px, vertical);
+      @include set-items-interval($space-medium, vertical);
 
       li {
-        @include display-flex(row);
-        align-items: center;
+        .input-group {
+          @include display-flex(row);
+          align-items: center;
 
-        .label {
-          @include flex(0 1 15%);
-          @include breakpoint(small) {
-            @include flex(0 1 20%);
+          .label {
+            @include flex(0 1 15%);
+            @include breakpoint(small) {
+              @include flex(0 1 20%);
+            }
           }
-        }
 
-        .input {
-          @include flex(0 1 30%);
-          @include breakpoint(small) {
-            @include flex(0 1 50%);
-          }
-        }
-
-        .unit {
-          @include flex(0 1 55%);
-          @include breakpoint(small) {
+          .input {
             @include flex(0 1 30%);
+            @include breakpoint(small) {
+              @include flex(0 1 50%);
+            }
+          }
+
+          .unit {
+            @include flex(0 1 55%);
+            @include breakpoint(small) {
+              @include flex(0 1 30%);
+            }
+          }
+        }
+
+        .custom-size-input-error {
+          display: block;
+          margin-left: 0;
+          > span {
+            text-align: center;
           }
         }
       }
