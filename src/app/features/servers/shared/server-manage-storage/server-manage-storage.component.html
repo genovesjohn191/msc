@@ -36,7 +36,7 @@
       </div>
       <div *ngIf="!validCustomInput && customFinalStorageValue" class="custom-size-input-error">
         <span class="text-color-error">
-          Custom storage volume should be within the remaining size
+          {{ storageTextContent.validationError }}
         </span>
       </div>
     </div>

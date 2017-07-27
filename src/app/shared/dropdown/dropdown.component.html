@@ -1,8 +1,8 @@
-<div #mcsDropdown class="mcs-dropdown">
+<div #mcsDropdown class="mcs-dropdown" (click)="toggleDropdown($event)">
   <mcs-textbox [name]="name" [icon]="iconClass" width="100%" borderColor="black"
     [(ngModel)]="selectedItem.value" [placeholder]="placeholder" readonly="true"></mcs-textbox>
 
-  <div *ngIf="!collapsed" class="dropdown-options">
+  <div *ngIf="isOpen" class="dropdown-options">
     <ul class="option-group">
       <li *ngFor="let groupName of dropdownData.getGroupNames()">
         <span #mcsDropdownGroupName>{{ groupName }}</span>

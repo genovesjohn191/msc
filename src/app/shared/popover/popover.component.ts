@@ -62,6 +62,8 @@ export class PopoverComponent implements OnInit {
     this._setPadding();
   }
 
+  // TODO: For testing in actual mobile devices
+  @HostListener('document:touchstart', ['$event'])
   @HostListener('document:click', ['$event'])
   public onClickOutside(event: any): void {
     if (this.trigger !== 'manual') { return; }

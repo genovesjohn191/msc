@@ -103,7 +103,11 @@
           "cpuUnit": "vCPU",
           "scale": "Scale",
           "cancel": "Cancel",
-          "scaling": "Scaling in Progress"
+          "scaling": "Scaling in Progress",
+          "validationError": {
+            "memory": "Memory should not exceed {{available_memory}}",
+            "cpu": "Number of CPU should not exceed {{available_cpu}}"
+          }
         }
       },
       "storage":{
@@ -119,7 +123,8 @@
         "resizeStorage": "Resize Volume : ",
         "unit": "GB",
         "sliderSwitch": "Select from slider",
-        "customSwitch": "Enter custom size"
+        "customSwitch": "Enter custom size",
+        "validationError": "Storage size should not exceed {{available_storage}}"
       }
     }
   },
