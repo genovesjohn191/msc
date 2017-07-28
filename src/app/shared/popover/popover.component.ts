@@ -62,12 +62,12 @@ export class PopoverComponent implements OnInit {
     this._setPadding();
   }
 
-  // TODO: For testing in actual mobile devices
-  @HostListener('document:touchstart', ['$event'])
-  @HostListener('document:click', ['$event'])
-  public onClickOutside(event: any): void {
-    this.onClickOutsideEvent.emit(event);
-  }
+  // TODO: Temporarily removed for IOS bug fixing / testing
+  // @HostListener('document:touchstart', ['$event'])
+  // @HostListener('document:click', ['$event'])
+  // public onClickOutside(event: any): void {
+  //   this.onClickOutsideEvent.emit(event);
+  // }
 
   public _setArrowDirection() {
     switch (this.placement) {

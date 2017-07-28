@@ -21,6 +21,12 @@ $button-primary-text-color: $color-white;
     width: 100%;
   }
 
+  .label {
+    @include display-inline-flex(row);
+    align-items: center;
+    width: 100%;
+  }
+
   &:hover:enabled {
     cursor: pointer;
     background-color: $button-hover-background-color;
@@ -35,28 +41,33 @@ $button-primary-text-color: $color-white;
   }
 
   &.normal {
-    justify-content: center;
+    .label {
+      justify-content: center;
+    }
   }
 
   &.has-icon {
     padding: $space-xsmall 15px;
-    justify-content: space-between;
 
-    .text {
-      @include breakpoint(small) {
-        max-width: 60%;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .label {
+      justify-content: space-between;
+
+      .text {
+        @include breakpoint(small) {
+          max-width: 60%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
-    }
 
-    .icon-right-wrapper {
-      @include display-flex(row);
-      margin-left: $space-medium;
+      .icon-right-wrapper {
+        @include display-flex(row);
+        margin-left: $space-medium;
 
-      .icon-right {
-        display: block;
-        margin: 0 auto;
+        .icon-right {
+          display: block;
+          margin: 0 auto;
+        }
       }
     }
   }
