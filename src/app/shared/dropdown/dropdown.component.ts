@@ -96,14 +96,13 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
     this.selectedItem = new McsListItem(undefined, undefined);
   }
 
-  // TODO: Temporarily removed for IOS bug fixing / testing
-  // @HostListener('document:touchstart', ['$event.target'])
-  // @HostListener('document:click', ['$event.target'])
-  // public onClickOutside(target): void {
-  //   if (!this._elementRef.nativeElement.contains(target)) {
-  //     this.isOpen = false;
-  //   }
-  // }
+  @HostListener('document:touchstart', ['$event.target'])
+  @HostListener('document:click', ['$event.target'])
+  public onClickOutside(target): void {
+    if (!this._elementRef.nativeElement.contains(target)) {
+      this.isOpen = false;
+    }
+  }
 
   public ngOnChanges() {
     this.iconClass = 'caret-down';
