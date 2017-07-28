@@ -1,18 +1,20 @@
 <button #mcsButton type="button" class="btn mcs-button" (click)="emitEvent($event)">
-  <span class="text">
-    <ng-content></ng-content>
-  </span>
-  <span *ngIf="icon !== 'normal'" class="icon-right-wrapper">
-    <!--SVG Type of Icons-->
-    <mcs-icon *ngIf="iconType === iconTypeEnum.Svg && !showSpinner"
-      [key]="iconKey" size="xlarge" class="icon-right" color="white"></mcs-icon>
+  <div class="label">
+    <span class="text">
+      <ng-content></ng-content>
+    </span>
+    <span *ngIf="icon !== 'normal'" class="icon-right-wrapper">
+      <!--SVG Type of Icons-->
+      <mcs-icon *ngIf="iconType === iconTypeEnum.Svg && !showSpinner"
+        [key]="iconKey" size="xlarge" class="icon-right" color="white"></mcs-icon>
 
-    <!--Font Type of Icons-->
-    <mcs-icon *ngIf="iconType === iconTypeEnum.FontAwesome && !showSpinner"
-      [key]="iconKey" size="medium" class="icon-right" color="white"></mcs-icon>
+      <!--Font Type of Icons-->
+      <mcs-icon *ngIf="iconType === iconTypeEnum.FontAwesome && !showSpinner"
+        [key]="iconKey" size="medium" class="icon-right" color="white"></mcs-icon>
 
-    <!--Spinner Icon-->
-    <mcs-icon *ngIf="showSpinner" [key]="spinnerIconKey"
-      size="medium" color="white"></mcs-icon>
-  </span>
+      <!--Spinner Icon-->
+      <mcs-icon *ngIf="showSpinner" [key]="spinnerIconKey"
+        size="medium" color="white"></mcs-icon>
+    </span>
+  </div>
 </button>
