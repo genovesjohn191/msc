@@ -88,13 +88,11 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   public get isValidCustomMemoryValue(): boolean {
-    return this.inputManageType === ServerInputManageType.Custom
-      && this.customMemoryGBValue <= this.availableMemoryMB;
+    return this.customMemoryGBValue <= this.availableMemoryMB;
   }
 
   public get isValidCustomCpuValue(): boolean {
-    return this.inputManageType === ServerInputManageType.Custom
-      && this.customCpuCountValue <= this.availableCpuCount;
+    return this.customCpuCountValue <= this.availableCpuCount;
   }
 
   public constructor(private _textProvider: McsTextContentProvider) {
@@ -254,8 +252,8 @@ export class ServerPerformanceScaleComponent implements OnInit {
     refreshView(() => {
       this.scaleChanged.next(performanceScale);
 
-      if (!this.isValidCustomMemoryValue || !this.isValidCustomCpuValue) {
-        this.validateScale.next(false);
+      if (this.inputManageType === ServerInputManageType.Custom) {
+        this.validateScale.next(this.isValidCustomMemoryValue || !this.isValidCustomCpuValue);
       } else {
         this.validateScale.next(this.serverScaleForm.valid);
       }
