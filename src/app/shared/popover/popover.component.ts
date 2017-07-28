@@ -66,7 +66,6 @@ export class PopoverComponent implements OnInit {
   @HostListener('document:touchstart', ['$event'])
   @HostListener('document:click', ['$event'])
   public onClickOutside(event: any): void {
-    if (this.trigger !== 'manual') { return; }
     this.onClickOutsideEvent.emit(event);
   }
 
