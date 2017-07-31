@@ -36,11 +36,16 @@ export class GadgetsComponent implements OnInit {
   public dropdownValue: string;
   public numberModel: number;
   public textboxModel: any;
+  public wizardModel: any;
 
   public progressValue: number = 10;
 
   public textEmail: FormControl;
+  // public textFirstName: FormControl;
+
   public reactiveForm: FormGroup;
+  public formName: FormGroup;
+  public formDetails: FormGroup;
 
   public radioButtonHorizontal: any;
   public radioButtonVertical: any;
@@ -55,7 +60,10 @@ export class GadgetsComponent implements OnInit {
   // All Icons Variables
   public icons: string[];
 
-  public constructor(private _route: ActivatedRoute) {
+  public constructor(
+    private _route: ActivatedRoute,
+    private _formBuilder: FormBuilder
+  ) {
     this.title = 'Gadgets component';
     this.gadgets = new Array();
     this.dropdownValue = '';
@@ -71,6 +79,14 @@ export class GadgetsComponent implements OnInit {
       alphanumeric: '',
       numeric: null,
       pattern: ''
+    };
+    this.wizardModel = {
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      age: '',
+      emailAddress: '',
+      contact: ''
     };
     this.sliderValue = 300;
   }
@@ -88,6 +104,18 @@ export class GadgetsComponent implements OnInit {
       textAlphanumeric: new FormControl(null, Validators.required),
       textNumeric: new FormControl(null, Validators.required),
       textPattern: new FormControl(null, Validators.required)
+    });
+
+    this.formName = this._formBuilder.group({
+      textFirstName: ['', [Validators.required, Validators.minLength(2)]],
+      textMiddleName: ['', [Validators.required, Validators.minLength(2)]],
+      textLastName: ['', [Validators.required, Validators.minLength(2)]],
+      textAge: ['', [Validators.required, Validators.minLength(1)]]
+    });
+
+    this.formDetails = this._formBuilder.group({
+      textEmailAddress: ['', [Validators.required, Validators.minLength(2)]],
+      textContactNo: ['', [Validators.required, Validators.minLength(2)]]
     });
   }
 
