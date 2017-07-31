@@ -1,58 +1,30 @@
 <section class="gadgets-container">
   <div class="row">
     <div class="col">
-      <!-- Generic Wizard -->
-      <mcs-wizard (onCancel)="onCancelCreation()" cancelText="Return" completedText="Done">
-        <!-- Step 1  -->
-        <mcs-wizard-step title="1. Icons">
-          <h3>List of Macquarie Cloud Services Icons:</h3>
-          <div class="all-icons">
-            <mcs-icon *ngFor="let icon of icons"
-              size="large" [key]="icon"></mcs-icon>
-          </div>
-        </mcs-wizard-step>
-
-        <!-- Step 2  -->
-        <mcs-wizard-step title="2. Headers">
-          <h1>The quick brown fox jumps over the lazy dog. - H1</h1>
-          <h2>The quick brown fox jumps over the lazy dog. - H2</h2>
-          <h3>The quick brown fox jumps over the lazy dog. - H3</h3>
-          <h4>The quick brown fox jumps over the lazy dog. - H4</h4>
-          <a href="#">The quick brown fox jumps over the lazy dog.</a>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-            when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with the release of
-            Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-          </p>
-        </mcs-wizard-step>
-
-        <!-- Step 3  -->
-        <mcs-wizard-step title="3. Steps"
-          [showPrevious]="showPreviousStep" [showNext]="showNextStep">
-
-          <mcs-checkbox label="Show Secret Step"
-            [(ngModel)]="showSecretStep"></mcs-checkbox><br/>
-
-          <mcs-checkbox label="Show Previous Button"
-            [(ngModel)]="showPreviousStep"></mcs-checkbox><br/>
-
-          <mcs-checkbox label="Show Next Button"
-            [(ngModel)]="showNextStep"></mcs-checkbox>
-        </mcs-wizard-step>
-
-        <!-- Step 3.1  -->
-        <mcs-wizard-step title="3.1 Secret" [hidden]="!showSecretStep">
-          <h3>You shouldn't seeing this step! What happen?!</h3>
-        </mcs-wizard-step>
-
-        <!-- Step 4  -->
-        <mcs-wizard-step title="4. Final Steps">
-          <h3>This is the final process.</h3>
-        </mcs-wizard-step>
-      </mcs-wizard>
+      <h3>List of Macquarie Cloud Services Icons:</h3>
+      <div class="all-icons">
+        <mcs-icon *ngFor="let icon of icons"
+          size="large" [key]="icon"></mcs-icon>
+      </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col">
+      <h1>The quick brown fox jumps over the lazy dog. - H1</h1>
+      <h2>The quick brown fox jumps over the lazy dog. - H2</h2>
+      <h3>The quick brown fox jumps over the lazy dog. - H3</h3>
+      <h4>The quick brown fox jumps over the lazy dog. - H4</h4>
+      <a href="#">The quick brown fox jumps over the lazy dog.</a>
+      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has <span>Sample Span</span> only five centuries, <a href="#">Sample Link</a> but also the leap into electronic typesetting,
+        remaining essentially unchanged. It was popularised in the 1960s with the release of
+        Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+      </p>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col">
       <div class="gadgets-container-item">
@@ -515,6 +487,79 @@
           </form>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+
+      <!-- Generic Wizard implementation -->
+      <mcs-wizard (onCancel)="onCancelCreation()" cancelText="Return" completedText="Done">
+        <!-- Step 1  -->
+        <mcs-wizard-step title="1. Name" [valid]="formName.valid">
+          <h3>Cutomer name details</h3>
+
+          <form [formGroup]="formName">
+
+            <div class="row">
+              <div class="col">
+                <label>First Name: </label>
+                <mcs-textbox width="300px"
+                  formControlName="textFirstName"
+                  [(ngModel)]="wizardModel.firstName"></mcs-textbox>
+
+                <label>Middle Name: </label>
+                <mcs-textbox width="300px"
+                  formControlName="textMiddleName"
+                  [(ngModel)]="wizardModel.middleName"></mcs-textbox>
+
+                <label>Last Name: </label>
+                <mcs-textbox width="300px"
+                  formControlName="textLastName"
+                  [(ngModel)]="wizardModel.lastName"></mcs-textbox>
+              </div>
+
+              <div class="col">
+                <label>Age: </label>
+                <mcs-textbox width="150px"
+                  formControlName="textAge"
+                  [(ngModel)]="wizardModel.age"></mcs-textbox>
+              </div>
+            </div>
+          </form>
+        </mcs-wizard-step>
+
+        <!-- Step 2  -->
+        <mcs-wizard-step title="2. Contact Details">
+          <h3>Contact Information</h3>
+
+          <form [formGroup]="formDetails">
+            <label>Email Address: </label>
+            <mcs-textbox width="300px"
+              formControlName="textEmailAddress"
+              [(ngModel)]="wizardModel.emailAddress"></mcs-textbox>
+
+            <label>Contact Number: </label>
+            <mcs-textbox width="300px"
+              formControlName="textContactNo"
+              [(ngModel)]="wizardModel.contact"></mcs-textbox>
+          </form>
+        </mcs-wizard-step>
+
+        <!-- Step 3  -->
+        <mcs-wizard-step title="3. Summary">
+          <h3>Summary: </h3>
+
+          <h5>Full Name: </h5>
+          <span>{{ wizardModel.firstName }}
+            {{ wizardModel.middleName }}
+            {{ wizardModel.lastName }}</span><br/><br/>
+
+          <h5>Contacts: </h5>
+          <span><b>       Mobile:</b> {{ wizardModel.contact }}</span><br/>
+          <span><b>Email Address:</b> {{ wizardModel.emailAddress }}</span>
+        </mcs-wizard-step>
+      </mcs-wizard>
     </div>
   </div>
 </section>
