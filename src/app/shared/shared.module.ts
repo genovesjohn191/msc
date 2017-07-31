@@ -19,6 +19,8 @@ import { DropdownComponent } from './dropdown/dropdown.component';
 import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
+import { WizardComponent } from './wizard/wizard.component';
+import { WizardStepComponent } from './wizard/wizard-step/wizard-step.component';
 /** Directives */
 import {
   AuthenticationRolesDirective
@@ -35,6 +37,8 @@ import {
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,
+    WizardStepComponent,
+    WizardComponent,
     AuthenticationRolesDirective
   ],
   imports: [
@@ -56,6 +60,8 @@ import {
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,
+    WizardStepComponent,
+    WizardComponent,
     CommonModule,
     RouterModule,
     FormsModule,

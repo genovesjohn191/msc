@@ -22,13 +22,13 @@ export class ContextualHelpComponent {
     this.contextualInformations = new Array();
   }
 
-  public getTextStyle(elementRef: any, contextInformation: ContextualHelpDirective) {
+  public getTextStyle(targetElementRef: any, contextInformation: ContextualHelpDirective) {
     if (!contextInformation) { return; }
 
     // Get the right top coordinates and set to top of description
     let targetElementPosition = getElementPositionFromHost(
-      contextInformation.getElementReference(),
-      elementRef, 'right-top', false);
+      contextInformation.getHostElement(),
+      targetElementRef, 'right-top', false);
 
     return {
       'top': `${targetElementPosition.top}px`,

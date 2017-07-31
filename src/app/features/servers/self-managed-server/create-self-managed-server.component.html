@@ -7,51 +7,71 @@
 
   <div class="self-managed-items">
     <div class="server-information">
-      <mcs-dropdown name="dropdownDefault"
-        [(ngModel)]="intellicentreValue" [dropdownData]="intellicentres"
-        placeholder="Intellicentre 2 (Syd) - Managed VDC 27111006"
-        [mcsContextualHelp]="contextualTextContent.intellicentre"></mcs-dropdown>
 
-      <mcs-textbox name="textDefault" width="100%" placeholder="Enter a server name..."
-        [mcsContextualHelp]="contextualTextContent.enterServerName"></mcs-textbox>
+      <!-- Generic Wizard -->
+      <mcs-wizard (onCancel)="onCancelCreation()">
 
-      <!--TODO: Set the tab link here-->
-      <div class="mcs-tabs">
-        <ul class="nav nav-tabs" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab"
-              [routerLink]="['new']" routerLinkActive="active">
-              {{ createServerTextContent.newServer }}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab"
-              [routerLink]="['copy']" routerLinkActive="active">
-              {{ createServerTextContent.copyServer }}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab"
-              [routerLink]="['clone']" routerLinkActive="active">
-              {{ createServerTextContent.cloneServer }}</a>
-          </li>
-        </ul>
+        <!-- Step 1 -->
+        <mcs-wizard-step title="1. Server Details">
+          <section class="server-details">
+            <mcs-dropdown name="dropdownDefault"
+              [(ngModel)]="intellicentreValue" [dropdownData]="intellicentres"
+              placeholder="Intellicentre 2 (Syd) - Managed VDC 27111006"
+              [mcsContextualHelp]="contextualTextContent.intellicentre"></mcs-dropdown>
 
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <div class="tab-pane active" role="tabpanel">
-            <router-outlet></router-outlet>
-          </div>
-        </div>
-      </div>
+            <mcs-textbox name="textDefault" width="100%" placeholder="Enter a server name..."
+              [mcsContextualHelp]="contextualTextContent.enterServerName"></mcs-textbox>
 
-      <div class="additional-server">
-        <mcs-icon [key]="addIconKey" size="large"></mcs-icon>
-        <span>Add another server</span>
-      </div>
+            <!--Tab Links-->
+            <div class="mcs-tabs">
+              <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" role="tab"
+                    [routerLink]="['new']" routerLinkActive="active">
+                    {{ createServerTextContent.newServer }}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" role="tab"
+                    [routerLink]="['copy']" routerLinkActive="active">
+                    {{ createServerTextContent.copyServer }}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" role="tab"
+                    [routerLink]="['clone']" routerLinkActive="active">
+                    {{ createServerTextContent.cloneServer }}</a>
+                </li>
+              </ul>
 
-      <div class="deployment">
-        <mcs-button iconRight="arrow-right"
-          (onClick)="onDeployClick($event)">Deploy</mcs-button>
-      </div>
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div class="tab-pane active" role="tabpanel">
+                  <router-outlet></router-outlet>
+                </div>
+              </div>
+            </div>
+
+            <div class="additional-server">
+              <mcs-icon [key]="addIconKey" size="large"></mcs-icon>
+              <span>Add another server</span>
+            </div>
+
+            <!-- <div class="deployment">
+              <mcs-button iconRight="arrow-right"
+                (onClick)="onDeployClick($event)">Deploy</mcs-button>
+            </div> -->
+          </section>
+        </mcs-wizard-step>
+
+        <!-- Step 2  -->
+        <mcs-wizard-step title="2. Go!">
+          <section class="jobs-progress">
+            <div *ngFor="let notification of notifications">
+              <mcs-job-progress [job]="notification"></mcs-job-progress>
+            </div>
+          </section>
+        </mcs-wizard-step>
+      </mcs-wizard>
+
     </div>
 
     <div class="context-information hidden-medium">

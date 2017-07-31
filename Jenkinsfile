@@ -52,7 +52,7 @@ def service_creds_file = "service-acct-creds.json"
 def env_setup_location = "/etc/build-config"
 def env_setup_file = "env.setup"
 def kube_deployment = "portal"
-def slack_notify_on_success = false
+def slack_notify_on_success = true
 def label = "buildpod"
 
 echo "Building with the following configuration:"

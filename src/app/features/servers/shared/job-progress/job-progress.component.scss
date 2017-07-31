@@ -2,7 +2,6 @@
 
 $job-process-padding: 10px 25px;
 $job-description-padding: 10px;
-$job-context-interval: 55px;
 
 .job-progress-container {
   position: relative;
@@ -12,11 +11,6 @@ $job-context-interval: 55px;
     @include flex(1);
     @include display-flex(column);
     @include set-items-interval(10px);
-
-    @include breakpoint(large) {
-      padding-right: $job-context-interval;
-      border-right: 1px solid $color-black;
-    }
 
     .description {
       @include display-flex(row);
@@ -66,9 +60,5 @@ $job-context-interval: 55px;
         margin-bottom: $space-small;
       }
     }
-  }
-
-  .context-information {
-    margin-left: auto;
   }
 }

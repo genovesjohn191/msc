@@ -1,6 +1,6 @@
 @import "../../../styles/shared/base";
 
-$navlink-padding: 9px 0;
+$navlink-padding: 9px;
 
 .mcs-tabs {
   .nav-tabs {
@@ -26,6 +26,9 @@ $navlink-padding: 9px 0;
         &.active {
           color: $color-black;
           border-bottom-color: $color-black;
+        }
+        &.enabled {
+          color: $color-black;
         }
       }
     }

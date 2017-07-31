@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
   OnDestroy,
   Input,
   ViewChildren,
@@ -14,7 +13,6 @@ import {
   McsApiJob
 } from '../../../../core';
 import { refreshView } from '../../../../utilities';
-import { ContextualHelpDirective } from '../contextual-help/contextual-help.directive';
 
 @Component({
   selector: 'mcs-job-progress',
@@ -22,21 +20,14 @@ import { ContextualHelpDirective } from '../contextual-help/contextual-help.dire
   styles: [require('./job-progress.component.scss')]
 })
 
-export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
+export class JobProgressComponent implements OnInit, OnDestroy {
   @Input()
   public job: McsApiJob;
-
-  @Input()
-  public contextualHelp: string;
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
   public progressValue: number;
   public progressMax: number;
 
   private _timerSubscription: any;
-  private _contextualInformations: ContextualHelpDirective[];
 
   public get circleIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CIRCLE;
@@ -46,32 +37,16 @@ export class JobProgressComponent implements OnInit, AfterViewInit, OnDestroy {
     this.progressValue = 80;
     this.progressMax = 100;
     this.job = new McsApiJob();
-    this.contextualHelp = '';
   }
 
   public ngOnInit() {
     this._updateProgressbar();
   }
 
-  public ngAfterViewInit() {
-    refreshView(() => {
-      if (this.contextualHelpDirectives) {
-        this._contextualInformations = this.contextualHelpDirectives
-          .map((description) => {
-            return description;
-          });
-      }
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-  }
-
   public ngOnDestroy() {
     if (this._timerSubscription) {
       this._timerSubscription.unsubscribe();
     }
-  }
-
-  public getContextualInformations(): ContextualHelpDirective[] {
-    return this._contextualInformations;
   }
 
   public isJobActive(): boolean {

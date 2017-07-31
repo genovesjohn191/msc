@@ -47,12 +47,24 @@ export class GadgetsComponent implements OnInit {
 
   public sliderValue: number;
 
+  // Wizard variables
+  public showSecretStep: boolean;
+  public showPreviousStep: boolean;
+  public showNextStep: boolean;
+
+  // All Icons Variables
+  public icons: string[];
+
   public constructor(private _route: ActivatedRoute) {
     this.title = 'Gadgets component';
     this.gadgets = new Array();
     this.dropdownValue = '';
     this.radioButtonHorizontal = 'dhcp';
     this.radioButtonVertical = 'next';
+    this.showPreviousStep = true;
+    this.showNextStep = true;
+    this.showSecretStep = false;
+    this.icons = new Array();
     this.textboxModel = {
       email: '',
       ipAddress: null,
@@ -65,6 +77,7 @@ export class GadgetsComponent implements OnInit {
 
   public ngOnInit() {
     this.setGadgets();
+    this.getAllIcons();
     this.textboxValue = 'Windows Server 2012';
     this.disabled = true;
     this.servers = this._route.snapshot.data.servers.content;
@@ -76,6 +89,24 @@ export class GadgetsComponent implements OnInit {
       textNumeric: new FormControl(null, Validators.required),
       textPattern: new FormControl(null, Validators.required)
     });
+  }
+
+  public getAllIcons(): void {
+    let config = require('../../config/assets.config.json');
+    let svgIcons = config['svgIcons'];
+    let fontIcons = config['fontIcons'];
+    let svgKeys = Object.keys(svgIcons);
+    let fontKeys = Object.keys(fontIcons);
+
+    // Add SVG Icons
+    for (let key of Object.keys(svgKeys)) {
+      this.icons.push(svgKeys[key]);
+    }
+
+    // Add Font Icons
+    for (let key of Object.keys(fontKeys)) {
+      this.icons.push(fontKeys[key]);
+    }
   }
 
   /**

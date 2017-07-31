@@ -72,7 +72,6 @@ describe('JobProgressComponent', () => {
 
       component = fixture.componentInstance;
       component.job = createNotification('0001', 'Completed');
-      component.contextualHelp = 'Context';
     });
   }));
 
@@ -82,15 +81,6 @@ describe('JobProgressComponent', () => {
       component.ngOnInit();
       discardPeriodicTasks();
       expect(component.progressMax).toBe(10);
-    }));
-  });
-
-  describe('ngAfterViewInit() | getContextualInformations()', () => {
-    it('should get all the contextual help within the component', fakeAsync(() => {
-      component.ngAfterViewInit();
-      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-      expect(component.contextualHelpDirectives.length).toBe(1);
-      expect(component.getContextualInformations().length).toBe(1);
     }));
   });
 
