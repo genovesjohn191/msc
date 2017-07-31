@@ -187,5 +187,13 @@
     "numeric": "Please enter a valid number.",
     "ipAddress": "Please enter a valid IP Address.",
     "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number"
+  },
+  "sharedComponents": {
+    "wizard": {
+      "previous": "Back",
+      "next": "Next",
+      "cancel": "Cancel",
+      "completed": "Go"
+    }
   }
 }

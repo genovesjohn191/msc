@@ -10,46 +10,54 @@
     .server-information {
       position: relative;
       @include flex(1);
-      @include display-flex(column);
-      @include set-items-interval(20px);
 
       @include breakpoint(large) {
         padding-right: 55px;
         border-right: 1px solid $color-black;
       }
 
-      .mcs-tabs {
-        margin-top: $space-large;
-        .nav-tabs {
-          justify-content: flex-start;
-        }
-      }
+      .server-details {
+        @include display-flex(column);
+        @include set-items-interval(20px);
 
-     .additional-server {
-       @include display-flex(row);
-       align-items: center;
-       background-color: $color-grey-05;
-       padding: 10px 20px;
-
-        > span {
-          margin-left: 10px;
-          font-family: $base-font-bold;
-        }
-      }
-
-     .deployment {
-        text-align: right;
-        @include breakpoint(medium) {
-          mcs-button {
-            display: block;
-            max-width: 100% !important;
+        .mcs-tabs {
+          margin-top: $space-large;
+          .nav-tabs {
+            justify-content: flex-start;
           }
         }
+
+       .additional-server {
+         @include display-flex(row);
+         align-items: center;
+         background-color: $color-grey-05;
+         padding: 10px 20px;
+
+          > span {
+            margin-left: 10px;
+            font-family: $base-font-bold;
+          }
+        }
+
+        .deployment {
+          text-align: right;
+          @include breakpoint(medium) {
+            mcs-button {
+              display: block;
+              max-width: 100% !important;
+            }
+          }
+        }
+      }
+
+      .jobs-progress {
+        @include set-items-interval(100px);
       }
     }
 
     .context-information {
       margin-left: auto;
+      position: relative;
     }
   }
 }

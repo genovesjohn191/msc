@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  McsApiJob,
+  McsApiTask,
   McsList,
   McsListItem,
   CoreDefinition,
@@ -31,9 +33,10 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   public createServerTextContent: any;
   public intellicentreValue: any;
   public intellicentres: any;
+  public notifications: McsApiJob[];
 
   @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
+  public contextualHelpDirectives;
 
   private _mainContextInformations: ContextualHelpDirective[];
   private _subContextInformations: ContextualHelpDirective[];
@@ -48,6 +51,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider
   ) {
+    this.notifications = new Array();
   }
 
   public ngOnInit() {
@@ -58,6 +62,9 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     this.intellicentres = this.getIntellicentres();
     // TODO: Navigate to create/new
     // this.navigateToNewServer();
+
+    // TODO: Set the notifications temporarily
+    this._populateNotifications();
   }
 
   public ngAfterViewInit() {
@@ -101,5 +108,47 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public onDeployClick(event: any) {
     this._router.navigate(['./servers/provisioning']);
+  }
+
+  public onCancelCreation() {
+    this._router.navigate(['/servers']);
+  }
+
+  // TODO: remove this method in official release
+  private _populateNotifications() {
+    let notification = new McsApiJob();
+    // Record 1
+    {
+      notification.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+      notification.id = '0001';
+      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 1 (Syd)';
+      notification.tasks = new Array();
+      notification.ectInSeconds = 30;
+      {
+        let task = new McsApiTask();
+        task.id = '000A';
+        task.description = 'Initializing the new Server';
+        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+        notification.tasks.push(task);
+      }
+      {
+        let task = new McsApiTask();
+        task.id = '000B';
+        task.description = 'Deploying mongo-db-prod: 50GB, 8GB / 2vCPU';
+        task.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+        notification.tasks.push(task);
+      }
+      this.notifications.push(notification);
+    }
+    // Record 2
+    {
+      notification = new McsApiJob();
+      notification.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+      notification.id = '0002';
+      notification.endedOn = new Date('2017-04-26 01:10:45');
+      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 1 (Syd)';
+      notification.ectInSeconds = 100;
+      this.notifications.push(notification);
+    }
   }
 }

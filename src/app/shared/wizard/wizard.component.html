@@ -1,0 +1,44 @@
+<div class="mcs-tabs">
+
+  <!-- Title and tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" *ngFor="let step of displayedSteps" [hidden]="step.hidden">
+
+      <a class="nav-link" data-toggle="tab" role="tab"
+        [ngClass]="{
+          'active': step.isActive,
+          'enabled': step.enabled,
+          'disabled': !step.enabled,
+          'completed': isCompleted
+        }"
+        (click)="goToStep(step)">
+
+        <mcs-icon *ngIf="step.completed" [key]="checkIconKey"
+          size="small" color="blue"></mcs-icon>
+        <span> {{ step.title }} </span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- Wizard Setup Content here -->
+  <div class="tab-content">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Button to enable other wizard step -->
+  <div class="tab-footer">
+    <a class="cancel" (click)="onClickCancel()"
+      [hidden]="!enableCancel">{{ cancelTextContent }}</a>
+
+    <a class="previous" (click)="onClickPrevious()"
+      [hidden]="!hasPreviousStep">{{ wizardTextContent.previous }}</a>
+
+    <mcs-button icon="arrow" (onClick)="onClickNext()"
+      [hidden]="!hasNextStep" [disabled]="!activeStep.valid">
+      {{ wizardTextContent.next }}</mcs-button>
+
+    <mcs-button icon="arrow" (onClick)="onClickCompleted()"
+      [hidden]="!enableCompletedStep" [disabled]="!activeStep.valid">
+      {{ completedTextContent }}</mcs-button>
+  </div>
+</div>

@@ -33,7 +33,7 @@ export class IconComponent implements OnChanges {
   public size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
 
   @Input()
-  public color: 'white' | 'black' | 'green' | 'red';
+  public color: 'white' | 'black' | 'green' | 'red' | 'blue';
 
   private _iconActualSize: number;
 

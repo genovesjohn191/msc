@@ -1,0 +1,42 @@
+@import "../../../styles/shared/base";
+
+:host {
+  display: block;
+  position: relative;
+}
+
+.wizard-container {
+  position: relative;
+}
+
+.mcs-tabs {
+  @include set-items-interval($space-xlarge);
+
+  .nav-item {
+    .nav-link {
+    @include display-flex(row);
+    align-items: center;
+    justify-content: center;
+    @include set-items-interval($space-xsmall, horizontal);
+
+      &.disabled,
+      &.completed {
+        cursor: default;
+      }
+    }
+  }
+
+  .tab-footer {
+    @include display-flex(row);
+    align-items: center;
+
+    a {
+      align-self: flex-end;
+      margin-right: auto;
+    }
+
+    mcs-button {
+      margin-left: auto;
+    }
+  }
+}

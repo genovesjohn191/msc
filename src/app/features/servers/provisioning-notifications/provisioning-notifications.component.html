@@ -7,8 +7,7 @@
 
   <div *ngIf="notifications" class="jobs-progress">
     <div *ngFor="let notification of notifications">
-      <mcs-job-progress [job]="notification"
-        [contextualHelp]="getContextInformation(notification)"></mcs-job-progress>
+       <mcs-job-progress [job]="notification"></mcs-job-progress>
     </div>
   </div>
 </section>
