@@ -27,12 +27,6 @@ table.mcs-table {
       &:last-child {
         @include border-top-right-radius($table-border-radius);
       }
-
-      &:nth-child(2) {
-        @include breakpoint(small) {
-          @include border-top-left-radius($table-border-radius);
-        }
-      }
     }
   }
 

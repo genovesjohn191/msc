@@ -43,6 +43,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   public notifications: McsApiJob[];
   public notificationsSubscription: any;
 
+  /** Filter Variables */
+  public columnSettings: any;
+
   /** Search Subscription */
   public searchSubscription: any;
   public searchKeyword: string;
@@ -137,6 +140,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           this.totalNotificationsCount = mcsApiResponse.totalCount;
         }
       });
+  }
+
+  public onUpdateColumnSettings(columns: any): void {
+    if (columns) {
+      this.columnSettings = columns;
+    }
   }
 
   public getStatusIconKey(status: string): string {

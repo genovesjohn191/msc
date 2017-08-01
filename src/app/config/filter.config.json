@@ -50,5 +50,19 @@
       "text": "Services",
       "value": false
     }
+  },
+  "notificationListingFilter": {
+    "startTime": {
+      "text": "Start Time",
+      "value": true
+    },
+    "completed": {
+      "text": "Completed",
+      "value": true
+    },
+    "vdc": {
+      "text": "VDC",
+      "value": true
+    }
   }
 }
