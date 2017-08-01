@@ -12,13 +12,13 @@ import {
   TemplateRef,
   ComponentRef,
   Renderer2,
-  HostListener,
   EventEmitter
 } from '@angular/core';
 import { McsComponentService } from '../../core';
 import {
   getElementPositionFromHost,
-  getElementPosition
+  getElementPosition,
+  registerEvent
 } from '../../utilities';
 import { PopoverComponent } from './popover.component';
 
@@ -98,6 +98,9 @@ export class PopoverDirective implements OnInit, OnDestroy {
       this._renderer
     );
 
+    // Register all events listener
+    this._registerEvents();
+
     // Move popover element position when angular view is stable
     this.zoneSubscription = this._ngZone.onStable.subscribe(() => {
       if (this.componentRef) {
@@ -164,21 +167,16 @@ export class PopoverDirective implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('click')
   public onClick(): void {
     if (this.trigger !== 'manual') { return; }
     this.toggle();
   }
 
-  @HostListener('focusin')
-  @HostListener('mouseenter')
   public openOnMouseHover(): void {
     if (this.trigger !== 'hover') { return; }
     this.open();
   }
 
-  @HostListener('focusout')
-  @HostListener('mouseleave')
   public closeOnMouseLeave(): void {
     if (this.trigger !== 'hover') { return; }
     this.close();
@@ -246,5 +244,24 @@ export class PopoverDirective implements OnInit, OnDestroy {
 
     this.componentRef.location
       .nativeElement.style.left = `${targetElementPosition.left}px`;
+  }
+
+  private _registerEvents(): void {
+    switch (this.trigger) {
+      case 'hover':
+        // Register both for mouse in and mouse out
+        registerEvent(this._renderer, this._elementRef.nativeElement,
+          'mouseenter', this.openOnMouseHover.bind(this));
+        registerEvent(this._renderer, this._elementRef.nativeElement,
+          'mouseleave', this.closeOnMouseLeave.bind(this));
+        break;
+
+      case 'manual':
+      default:
+        // Register for mouse click
+        registerEvent(this._renderer, this._elementRef.nativeElement,
+          'click', this.onClick.bind(this));
+        break;
+    }
   }
 }

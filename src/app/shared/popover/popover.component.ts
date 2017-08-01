@@ -8,9 +8,9 @@ import {
   ChangeDetectionStrategy,
   HostBinding,
   Renderer2,
-  HostListener,
   EventEmitter
 } from '@angular/core';
+import { registerEvent } from '../../utilities';
 
 @Component({
   selector: 'mcs-popover',
@@ -60,10 +60,9 @@ export class PopoverComponent implements OnInit {
     this._setArrowDirection();
     this._setTheme();
     this._setPadding();
+    this._registerEvents();
   }
 
-  @HostListener('document:touchstart', ['$event'])
-  @HostListener('document:click', ['$event'])
   public onClickOutside(event: any): void {
     this.onClickOutsideEvent.emit(event);
   }
@@ -109,5 +108,11 @@ export class PopoverComponent implements OnInit {
         this._renderer.addClass(this.contentElement.nativeElement, 'default-padding');
         break;
     }
+  }
+
+  private _registerEvents(): void {
+    // Register for mouse click
+    registerEvent(this._renderer, document,
+      'click', this.onClickOutside.bind(this));
   }
 }
