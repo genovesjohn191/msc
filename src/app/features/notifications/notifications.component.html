@@ -12,9 +12,14 @@
     {{ notificationsTextContent.description }}
   </span>
 
-  <mcs-textbox class="search-keyword" name="search" [ngModel]="keyword"
-    (ngModelChange)="onSearchEvent($event)" width="350px"
-    placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
+  <div class="notifications-search">
+    <mcs-textbox class="search-keyword" name="search" [ngModel]="keyword"
+      (ngModelChange)="onSearchEvent($event)" width="350px"
+      placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
+
+    <mcs-filter-selector class="hidden-small" key="notificationListingFilter"
+      (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
+  </div>
 
   <table class="mcs-table table">
     <thead class="head">
@@ -22,9 +27,15 @@
         <th class="text-center">{{ notificationsTextContent.tableHeader.status }}</th>
         <th>{{ notificationsTextContent.tableHeader.user }}</th>
         <th>{{ notificationsTextContent.tableHeader.notification }}</th>
-        <th>{{ notificationsTextContent.tableHeader.startTime }}</th>
-        <th>{{ notificationsTextContent.tableHeader.completed }}</th>
-        <th class="text-center">{{ notificationsTextContent.tableHeader.vdc }}</th>
+        <th *ngIf="columnSettings['startTime'].value" class="hidden-small">
+          {{ columnSettings['startTime'].text }}
+        </th>
+        <th *ngIf="columnSettings['completed'].value" class="hidden-small">
+          {{ columnSettings['completed'].text }}
+        </th>
+        <th *ngIf="columnSettings['vdc'].value" class="hidden-small">
+          {{ columnSettings['vdc'].text }}
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -44,13 +55,13 @@
             </u>
           </a>
         </td>
-        <td class="text-left align-top">
+        <td *ngIf="columnSettings['startTime'].value" class="text-left align-top hidden-small">
           {{ convertDateTimeToString(notification.startedOn) }}
         </td>
-        <td class="text-left align-top">
+        <td *ngIf="columnSettings['completed'].value" class="text-left align-top hidden-small">
           {{ convertDateTimeToString(notification.endedOn) }}
         </td>
-        <td class="text-left align-top">
+        <td *ngIf="columnSettings['vdc'].value" class="text-left align-top hidden-small">
           <!--TODO: Set the actual VDC here:-->
           M2VDC27117006
         </td>

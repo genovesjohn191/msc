@@ -9,8 +9,21 @@
     margin-bottom: $space-large;
   }
 
-  .search-keyword {
-    display: block;
+  .notifications-search {
+    @include display-flex(row);
+    align-items: center;
+
+    mcs-textbox {
+      width: 100% !important;
+      margin-right: $space-medium;
+      @include breakpoint(medium) {
+        margin-right: 0;
+      }
+    }
+
+    .search-keyword {
+      display: block;
+    }
   }
 
   .status-information {

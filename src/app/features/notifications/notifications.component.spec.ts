@@ -180,6 +180,14 @@ describe('NotificationsComponent', () => {
         })));
   });
 
+  describe('onUpdateColumnSettings()', () => {
+    it('should update the columnSettings', () => {
+      let columnSettings = new Array<string>('mongo');
+      component.onUpdateColumnSettings(columnSettings);
+      expect(component.columnSettings).toEqual(columnSettings);
+    });
+  });
+
   describe('ngOnDestroy()', () => {
     it('should destroy the subscription of searchSubscription', () => {
       spyOn(component.searchSubscription, 'unsubscribe');
