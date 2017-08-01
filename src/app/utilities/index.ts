@@ -8,3 +8,4 @@ export * from './mcs-array.function';
 export * from './mcs-angular.function';
 export * from './mcs-animation.function';
 export * from './mcs-size.function';
+export * from './mcs-events.function';

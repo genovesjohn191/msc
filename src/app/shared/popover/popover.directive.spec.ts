@@ -97,6 +97,7 @@ describe('PopoverDirective', () => {
   describe('mouseenter:mouseleave() Event', () => {
     beforeEach(async(() => {
       component.popover.trigger = 'hover';
+      component.popover.ngOnInit();
       directiveElement.triggerEventHandler('mouseenter', {});
     }));
 
@@ -107,24 +108,6 @@ describe('PopoverDirective', () => {
 
     it(`should close/delete the popover when 'mouseleave' is invoked`, () => {
       directiveElement.triggerEventHandler('mouseleave', {});
-      let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
-      expect(mcsPopoverExist).toBe(null);
-    });
-  });
-
-  describe('focusin:focusout() Event', () => {
-    beforeEach(async(() => {
-      component.popover.trigger = 'hover';
-      directiveElement.triggerEventHandler('focusin', {});
-    }));
-
-    it(`should open/create the popover when 'focusin' event is invoked`, () => {
-      let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
-      expect(mcsPopoverExist).not.toBe(null);
-    });
-
-    it(`should close/delete the popover when 'focusout' event is invoked`, () => {
-      directiveElement.triggerEventHandler('focusout', {});
       let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
       expect(mcsPopoverExist).toBe(null);
     });
