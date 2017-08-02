@@ -4,13 +4,13 @@ import { RouterModule } from '@angular/router';
 import { ServersComponent } from './servers.component';
 /** Shared */
 import {
-  JobProgressComponent,
   ServerListPanelComponent,
   ServerCommandComponent,
   ContextualHelpComponent,
   ContextualHelpDirective,
   ServerPerformanceScaleComponent,
-  ServerManageStorageComponent
+  ServerManageStorageComponent,
+  ProvisioningNotificationsComponent
 } from './shared';
 /** Server */
 import {
@@ -27,8 +27,6 @@ import {
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent
 } from './self-managed-server';
-/** Provisioning Notifications */
-import { ProvisioningNotificationsComponent } from './provisioning-notifications';
 /** Services and Resolvers */
 import { serversProviders } from './servers.constants';
 /** Modules */
@@ -37,7 +35,6 @@ import { SharedModule } from '../../shared';
 @NgModule({
   declarations: [
     ServersComponent,
-    JobProgressComponent,
     ServerListPanelComponent,
     ServerCommandComponent,
     ServerComponent,

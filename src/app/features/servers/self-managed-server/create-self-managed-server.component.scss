@@ -1,5 +1,7 @@
 @import "../../../../styles/shared/base";
 
+$server-home-link-font-size: $link-default-font-size;
+
 .create-self-managed-server-container {
   position: relative;
   @include display-flex(column);
@@ -51,7 +53,12 @@
       }
 
       .jobs-progress {
-        @include set-items-interval(100px);
+        @include set-items-interval($space-large, vertical);
+
+        .link-home {
+          display: block;
+          @include font-size($server-home-link-font-size);
+        }
       }
     }
 

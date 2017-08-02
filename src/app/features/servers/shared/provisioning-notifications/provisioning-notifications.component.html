@@ -1,0 +1,38 @@
+<section class="provisioning-notifications-container">
+  <!-- Progress Information -->
+  <div class="progress-container">
+    <h3 class="title">{{ getTitle() }}</h3>
+    <mcs-progress-bar [(ngModel)]="progressValue" [maxValue]="progressMax"></mcs-progress-bar>
+  </div>
+
+  <!-- Job Details -->
+  <div class="jobs-container">
+    <div *ngFor="let job of jobs">
+      <h3 *ngIf="isMultiJobs">{{ job.description }}</h3>
+
+      <!-- Tasks content -->
+      <div class="task-content" *ngIf="job.tasks">
+        <div *ngFor="let task of job.tasks" class="status-details">
+
+          <mcs-icon [ngClass]="getStatusIcon(task.status).class"
+            [key]="getStatusIcon(task.status).key"
+            [color]="getStatusIcon(task.status).color"
+            size="small"></mcs-icon>
+          <span>{{ task.description }}</span>
+        </div>
+      </div>
+
+      <!-- Job completed -->
+      <div *ngIf="isJobCompleted(job)" class="job-completed">
+        <div class="status-details">
+          <mcs-icon [ngClass]="getStatusIcon('Completed').class"
+            [key]="getStatusIcon('Completed').key"
+            [color]="getStatusIcon('Completed').color"
+            size="small"></mcs-icon>
+          <span class="bold">{{ textContent.deploymentCompleted }}</span>
+        </div>
+        <a (click)="onViewServerPage()" class="link">{{ textContent.viewServerLink }}</a>
+      </div>
+    </div>
+  </div>
+</section>

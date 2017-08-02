@@ -9,10 +9,10 @@
     <div class="server-information">
 
       <!-- Generic Wizard -->
-      <mcs-wizard (onCancel)="onCancelCreation()">
+      <mcs-wizard (onCancel)="onNavigateToServerPage()">
 
         <!-- Step 1 -->
-        <mcs-wizard-step title="1. Server Details">
+        <mcs-wizard-step stepTitle="1. Server Details">
           <section class="server-details">
             <mcs-dropdown name="dropdownDefault"
               [(ngModel)]="intellicentreValue" [dropdownData]="intellicentres"
@@ -63,11 +63,12 @@
         </mcs-wizard-step>
 
         <!-- Step 2  -->
-        <mcs-wizard-step title="2. Go!">
+        <mcs-wizard-step stepTitle="2. Go!">
           <section class="jobs-progress">
-            <div *ngFor="let notification of notifications">
-              <mcs-job-progress [job]="notification"></mcs-job-progress>
-            </div>
+            <mcs-provisioning-notifications [jobs]="notifications"
+              [mcsContextualHelp]="contextualTextContent.provisioningNotifications">
+            </mcs-provisioning-notifications>
+            <a class="link-home" (click)="onNavigateToServerPage()">Servers home</a>
           </section>
         </mcs-wizard-step>
       </mcs-wizard>

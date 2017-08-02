@@ -42,11 +42,11 @@ describe('WizardStepComponent', () => {
   /** Test Implementation */
   describe('constructor()', () => {
     it(`should set the tite to empty`, () => {
-      expect(component.title).toBe('');
+      expect(component.stepTitle).toBe('');
     });
 
     it(`should set the hidden to false`, () => {
-      expect(component.title).toBeFalsy();
+      expect(component.stepTitle).toBeFalsy();
     });
 
     it(`should set the showNext to true`, () => {

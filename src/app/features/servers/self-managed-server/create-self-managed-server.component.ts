@@ -110,7 +110,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     this._router.navigate(['./servers/provisioning']);
   }
 
-  public onCancelCreation() {
+  public onNavigateToServerPage() {
     this._router.navigate(['/servers']);
   }
 
@@ -134,6 +134,13 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
       {
         let task = new McsApiTask();
         task.id = '000B';
+        task.description = 'Preparing the server for deployment.';
+        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+        notification.tasks.push(task);
+      }
+      {
+        let task = new McsApiTask();
+        task.id = '000C';
         task.description = 'Deploying mongo-db-prod: 50GB, 8GB / 2vCPU';
         task.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
         notification.tasks.push(task);
@@ -143,11 +150,26 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     // Record 2
     {
       notification = new McsApiJob();
+      notification.tasks = new Array();
       notification.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
       notification.id = '0002';
       notification.endedOn = new Date('2017-04-26 01:10:45');
-      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 1 (Syd)';
+      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 2 (Syd)';
       notification.ectInSeconds = 100;
+      {
+        let task = new McsApiTask();
+        task.id = '000A';
+        task.description = 'Initializing the new Server';
+        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+        notification.tasks.push(task);
+      }
+      {
+        let task = new McsApiTask();
+        task.id = '000B';
+        task.description = 'Deploying web-app-prod: 50GB, 8GB / 2vCPU';
+        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+        notification.tasks.push(task);
+      }
       this.notifications.push(notification);
     }
   }
