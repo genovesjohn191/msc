@@ -23,7 +23,7 @@ describe('WizardComponent', () => {
     step.isActive = false;
     step.showNext = true;
     step.showPrevious = true;
-    step.title = title;
+    step.stepTitle = title;
     step.hidden = hiddenFlag;
 
     return step;

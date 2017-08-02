@@ -472,7 +472,7 @@
       <!-- Generic Wizard implementation -->
       <mcs-wizard (onCancel)="onCancelCreation()" cancelText="Return" completedText="Done">
         <!-- Step 1  -->
-        <mcs-wizard-step title="1. Name" [valid]="formName.valid">
+        <mcs-wizard-step stepTitle="1. Name" [valid]="formName.valid">
           <h3>Cutomer name details</h3>
 
           <form [formGroup]="formName">
@@ -506,7 +506,7 @@
         </mcs-wizard-step>
 
         <!-- Step 2  -->
-        <mcs-wizard-step title="2. Contact Details">
+        <mcs-wizard-step stepTitle="2. Contact Details">
           <h3>Contact Information</h3>
 
           <form [formGroup]="formDetails">
@@ -523,7 +523,7 @@
         </mcs-wizard-step>
 
         <!-- Step 3  -->
-        <mcs-wizard-step title="3. Summary">
+        <mcs-wizard-step stepTitle="3. Summary">
           <h3>Summary: </h3>
 
           <h5>Full Name: </h5>

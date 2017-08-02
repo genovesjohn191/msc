@@ -6,7 +6,6 @@ import {
   ServerResolver
 } from './server/';
 import { CreateSelfManagedServerService } from './self-managed-server';
-import { ProvisioningNotificationsService } from './provisioning-notifications';
 import { ServersService } from './servers.service';
 /** Components */
 import { ServersComponent } from './servers.component';
@@ -34,7 +33,6 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   CreateSelfManagedServerService,
-  ProvisioningNotificationsService,
   ServersResolver,
   ServerResolver
 ];
@@ -53,9 +51,6 @@ export const serversRoutes: Routes = [
       { path: 'copy', component: CopySelfManagedServerComponent },
       { path: 'clone', component: CloneSelfManagedServerComponent }
     ]
-  },
-  {
-    path: 'servers/provisioning', component: ProvisioningNotificationsComponent,
   },
   {
     path: 'servers/:id',

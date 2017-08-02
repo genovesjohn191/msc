@@ -1,0 +1,62 @@
+@import "../../../../../styles/shared/base";
+
+// Font attributes
+$provisioning-details-font-size: 18;
+$provisioning-details-font: $circular-pro-book;
+$provisioning-details-font-bold: $circular-pro-bold;
+
+// Colors
+$job-active-color: $color-grey-02;
+$job-failed-color: $color-red-00;
+$job-completed-color: $color-primary-01;
+
+.provisioning-notifications-container {
+  @include display-flex(column);
+  @include set-items-interval($space-xlarge);
+
+  .progress-container {
+    @include set-items-interval($space-medium);
+  }
+
+  .jobs-container {
+    @include display-flex(column);
+    @include set-items-interval($space-xlarge);
+
+    .job-completed {
+      font-family: $provisioning-details-font-bold;
+      @include font-size($provisioning-details-font-size);
+      @include display-flex(column);
+      align-items: flex-start;
+
+      .link {
+        display: inline-block;
+        text-decoration: underline;
+        margin-left: $space-xlarge;
+      }
+    }
+  }
+
+  .status-details {
+    margin: $space-xsmall 0;
+    font-family: $provisioning-details-font;
+    @include font-size($provisioning-details-font-size);
+    @include set-items-interval($space-medium, horizontal);
+
+    .active {
+      color: $job-active-color;
+      + span {
+        color: $job-active-color;
+      }
+    }
+    .failed {
+      color: $job-failed-color;
+    }
+    .completed {
+      color: $job-completed-color;
+    }
+
+    .bold {
+      font-family: $provisioning-details-font-bold;
+    }
+  }
+}

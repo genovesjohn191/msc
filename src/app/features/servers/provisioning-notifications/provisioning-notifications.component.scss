@@ -1,9 +1,0 @@
-@import "../../../../styles/shared/base";
-
-.provisioning-notifications-container {
-  position: relative;
-
-  .jobs-progress {
-    @include set-items-interval(100px);
-  }
-}

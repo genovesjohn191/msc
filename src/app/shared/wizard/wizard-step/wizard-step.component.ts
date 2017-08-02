@@ -11,7 +11,7 @@ import {
 
 export class WizardStepComponent {
   @Input()
-  public title: string;
+  public stepTitle: string;
 
   @Input()
   public hidden: boolean;
@@ -30,7 +30,7 @@ export class WizardStepComponent {
   public completed: boolean;
 
   public constructor() {
-    this.title = '';
+    this.stepTitle = '';
     this.hidden = false;
     this.showNext = true;
     this.showPrevious = true;
