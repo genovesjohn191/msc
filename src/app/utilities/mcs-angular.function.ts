@@ -12,3 +12,10 @@ export function refreshView(predicate: () => void, refreshTime?: number) {
   // the change detection will triggered
   setTimeout(() => { predicate(); }, refreshTime);
 }
+
+export function DecorateRefreshView(flag: boolean) {
+  console.log(flag);
+  return (target): any => {
+    refreshView(() => { target(); }, 50);
+  };
+}

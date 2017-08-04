@@ -75,7 +75,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public remainingCpu: number;
 
   public isServerScale: boolean;
-  public isValidScale: boolean;
   public isScaling: boolean;
   public scalingResponse: McsApiSuccessResponse<McsApiJob>;
 
@@ -116,7 +115,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   public get hasUpdate(): boolean {
     return this.initialServerPerformanceScaleValue &&
-      this._serverCpuSizeScale && this.isValidScale &&
+      this._serverCpuSizeScale && this._serverCpuSizeScale.valid &&
       (this.initialServerPerformanceScaleValue.memoryMB < this._serverCpuSizeScale.memoryMB ||
         this.initialServerPerformanceScaleValue.cpuCount < this._serverCpuSizeScale.cpuCount);
   }
@@ -160,7 +159,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
           // Initialize values
           this.isServerScale = false;
-          this.isValidScale = false;
           this.isScaling = false;
           this._getScalingNotificationStatus();
 
@@ -250,10 +248,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   public onScaleChanged(scale: ServerPerformanceScale) {
     this._serverCpuSizeScale = scale;
-  }
-
-  public onValidateScaleChanged(event) {
-    this.isValidScale = event;
   }
 
   public onClickScale(): void {

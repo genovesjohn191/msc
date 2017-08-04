@@ -110,7 +110,7 @@ export class WizardComponent implements AfterContentInit {
     }
 
     // Set text content
-    this.wizardTextContent = this._textContentProvider.content.sharedComponents.wizard;
+    this.wizardTextContent = this._textContentProvider.content.shared.wizard;
   }
 
   public onClickCancel(): void {
