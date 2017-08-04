@@ -32,6 +32,15 @@ testing.TestBed.initTestEnvironment(
 );
 
 /**
+ * Added this implementation to remove each of the asynchronous process
+ */
+beforeEach(function(done) {
+  window.setTimeout(function() {
+    done();
+  }, 0);
+});
+
+/**
  * We can use the context method on
  * require that webpack created in order to tell webpack
  * what files we actually want to require or import.
