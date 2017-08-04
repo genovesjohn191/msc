@@ -9,6 +9,7 @@ import {
 import { PopoverModule } from './popover/popover.module';
 import { ModalModule } from './modal/modal.module';
 import { IconModule } from './icon/icon.module';
+import { ValidationMessageModule } from './validation-message/validation-message.module';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -48,7 +49,8 @@ import {
     ReactiveFormsModule,
     PopoverModule,
     ModalModule,
-    IconModule
+    IconModule,
+    ValidationMessageModule
   ],
   exports: [
     ButtonComponent,
@@ -68,7 +70,8 @@ import {
     ReactiveFormsModule,
     PopoverModule,
     ModalModule,
-    IconModule
+    IconModule,
+    ValidationMessageModule
   ]
 })
 
