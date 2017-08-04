@@ -39,20 +39,16 @@ import { McsTextboxValidationType } from './textbox-type.enum';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => TextboxComponent),
       multi: true
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => TextboxComponent),
-      multi: true
     }
   ]
 })
 
 export class TextboxComponent
-  implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor, Validator, Loading {
+  implements OnInit, AfterViewInit, ControlValueAccessor, Loading {
   public iconKey: string;
-  public isValid: boolean;
-  public validationMessage: string;
+
+  @Input()
+  public valid: boolean;
 
   @Input()
   public inputType: 'text' | 'number' | 'password';
@@ -76,46 +72,25 @@ export class TextboxComponent
   public placeholder: string;
 
   @Input()
-  @HostBinding('style.max-width')
-  public width: string;
-
-  @Input()
   public borderColor: string;
 
   @Input()
   public readonly: boolean;
 
   @Input()
-  public validationType: 'email' | 'ipAddress' | 'alphanumeric' | 'numeric' | 'pattern';
-
-  @Input()
-  public displayError: boolean;
-
-  @Input()
-  public pattern: string;
+  @HostBinding('style.max-width')
+  public width: string;
 
   @ViewChild('mcsTextbox')
   public mcsTextbox: ElementRef;
 
   /**
-   * On Touched Event Callback
-   */
-  private _onTouched: () => {};
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: (_: any) => {};
-
-  /**
-   * Model Binding
+   * Model Binding Property
    */
   private _text: string;
-
   public get text(): string {
     return this._text;
   }
-
   public set text(value: string) {
     if (value !== this._text) {
       this._text = value;
@@ -125,25 +100,16 @@ export class TextboxComponent
     }
   }
 
-  public get hasError(): boolean {
-    return this.validationType && this.text && !this.isValid;
-  }
-
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _renderer: Renderer2,
     private _elementRef: ElementRef
   ) {
     this.inputType = 'text';
-    this.isValid = false;
-    this.displayError = true;
+    this.valid = true;
   }
 
   public ngOnInit() {
-    this.validationMessage = this._textProvider.content.validationMessages[this.validationType];
-  }
-
-  public ngOnChanges() {
     this._setIconKeyAndType(this.icon);
   }
 
@@ -163,49 +129,6 @@ export class TextboxComponent
 
   public onFocusOut(event): void {
     this._renderer.removeClass(this.mcsTextbox.nativeElement, 'active');
-  }
-
-  public getValidationPattern(validationType: string): RegExp {
-    let pattern: RegExp;
-
-    switch (validationType) {
-      case 'email':
-        pattern = CoreDefinition.REGEX_EMAIL_PATTERN;
-        break;
-      case 'ipAddress':
-        pattern = CoreDefinition.REGEX_IP_PATTERN;
-        break;
-      case 'alphanumeric':
-        pattern = CoreDefinition.REGEX_ALPHANUMERIC_PATTERN;
-        break;
-      case 'numeric':
-        pattern = CoreDefinition.REGEX_NUMERIC_PATTERN;
-        break;
-      case 'pattern':
-        pattern = new RegExp(this.pattern);
-        break;
-    }
-
-    return pattern;
-  }
-
-  public validate(control: FormControl) {
-    if (!this.validationType) { return; }
-
-    let result: any;
-    let regex = this.getValidationPattern(this.validationType);
-
-    if (regex.test(control.value)) {
-      this.isValid = true;
-      result = null;
-    } else {
-      this.isValid = false;
-      result = {
-        validation: { valid: false }
-      };
-    }
-
-    return result;
   }
 
   /**
@@ -232,6 +155,14 @@ export class TextboxComponent
     this._onTouched = fn;
   }
 
+  /**
+   * Event for the blur of the textbox itself to reflect the
+   * status of _touched in the input property
+   */
+  public onTouched() {
+    this._onTouched(null);
+  }
+
   public showLoader(): void {
     this.iconKey = CoreDefinition.ASSETS_FONT_SPINNER;
   }
@@ -254,5 +185,21 @@ export class TextboxComponent
         this.iconKey = undefined;
         break;
     }
+  }
+
+  /**
+   * On Touched Event Callback
+   */
+  private _onTouched: any = () => {
+    // This is for reference only
+    // it will populate during model binding
+  }
+
+  /**
+   * On Changed Event Callback
+   */
+  private _onChanged: any = (_: any) => {
+    // This is for reference only
+    // it will populate during model binding
   }
 }
