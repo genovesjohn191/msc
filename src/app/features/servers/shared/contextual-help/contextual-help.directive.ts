@@ -1,15 +1,28 @@
 import {
+  OnInit,
+  OnDestroy,
   Directive,
   Input,
   ElementRef,
-  HostListener
+  Renderer2
 } from '@angular/core';
+
+import {
+  McsBrowserService,
+  McsDeviceType
+} from '../../../../core';
+import {
+  registerEvent,
+  unregisterEvent
+} from '../../../../utilities';
 
 @Directive({
   selector: '[mcsContextualHelp]'
 })
 
-export class ContextualHelpDirective {
+export class ContextualHelpDirective implements OnInit, OnDestroy {
+  public browserStreamSubscription: any;
+
   @Input()
   public mcsContextualHelp: string;
 
@@ -25,8 +38,23 @@ export class ContextualHelpDirective {
     this._hasFocus = value;
   }
 
-  constructor(private _elementRef: ElementRef) {
+  constructor(
+    private _elementRef: ElementRef,
+    private _renderer: Renderer2,
+    private _browserService: McsBrowserService
+  ) {
     this.mcsContextualHelp = '';
+  }
+
+  public ngOnInit() {
+    this.browserStreamSubscription = this._browserService.deviceTypeStream
+      .subscribe((device) => {
+        if (device === McsDeviceType.Desktop) {
+          this._registerEvents();
+        } else {
+          this._unregisterEvents();
+        }
+      });
   }
 
   /**
@@ -47,6 +75,12 @@ export class ContextualHelpDirective {
     return this.mcsContextualHelp;
   }
 
+  public ngOnDestroy() {
+    if (this.browserStreamSubscription) {
+      this.browserStreamSubscription.unsubscribe();
+    }
+  }
+
   /**
    * Visibility flag to check if the context should be dispayed or not
    * according with its parent element, if the parent element is not display
@@ -56,15 +90,27 @@ export class ContextualHelpDirective {
     return this._elementRef.nativeElement.offsetParent !== null;
   }
 
-  @HostListener('focusin')
-  @HostListener('mouseenter')
   private _onMouseEnter(): void {
     this._hasFocus = true;
   }
 
-  @HostListener('focusout')
-  @HostListener('mouseleave')
   private _onMouseLeave(): void {
     this._hasFocus = false;
+  }
+
+  private _registerEvents(): void {
+    // Register both for mouse in and mouse out
+    registerEvent(this._renderer, this._elementRef.nativeElement,
+      'mouseenter', this._onMouseEnter.bind(this));
+    registerEvent(this._renderer, this._elementRef.nativeElement,
+      'mouseleave', this._onMouseLeave.bind(this));
+  }
+
+  private _unregisterEvents(): void {
+    // Unregister both for mouse in and mouse out
+    unregisterEvent(this._elementRef.nativeElement,
+      'mouseenter', this._onMouseEnter.bind(this));
+    unregisterEvent(this._elementRef.nativeElement,
+      'mouseleave', this._onMouseLeave.bind(this));
   }
 }

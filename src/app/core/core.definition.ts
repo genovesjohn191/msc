@@ -49,6 +49,7 @@ export class CoreDefinition {
   public static DEFAULT_INITIAL_PAGE = 'servers';
   public static MANAGED_SERVER = 'Managed';
   public static GB_TO_MB_MULTIPLIER = 1024;
+  public static DEFAULT_DROPDOWN_PLACEHOLDER = 'Select Option';
 
   /** Style */
   public static BASE_FONT = 'Circular-Pro-Book';

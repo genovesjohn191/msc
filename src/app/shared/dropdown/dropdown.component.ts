@@ -26,6 +26,8 @@ import {
   CoreDefinition
 } from '../../core';
 
+import { registerEvent } from '../../utilities';
+
 @Component({
   selector: 'mcs-dropdown',
   templateUrl: './dropdown.component.html',
@@ -40,7 +42,6 @@ import {
 })
 
 export class DropdownComponent implements OnChanges, AfterViewInit, ControlValueAccessor {
-  public iconClass: string;
   public isOpen: boolean;
   public selectedItem: McsListItem;
 
@@ -86,6 +87,10 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
     }
   }
 
+  public get caretDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CARET_DOWN;
+  }
+
   public constructor(
     private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2,
@@ -93,20 +98,12 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   ) {
     this.dropdownData = new McsList();
     this.isOpen = false;
-    this.selectedItem = new McsListItem(undefined, undefined);
-  }
-
-  @HostListener('document:touchstart', ['$event.target'])
-  @HostListener('document:click', ['$event.target'])
-  public onClickOutside(target): void {
-    if (!this._elementRef.nativeElement.contains(target)) {
-      this.isOpen = false;
-    }
+    this.placeholder = CoreDefinition.DEFAULT_DROPDOWN_PLACEHOLDER;
   }
 
   public ngOnChanges() {
-    this.iconClass = 'caret-down';
     this.getSelectedItem(this.option);
+    this._registerEvents();
   }
 
   public ngAfterViewInit() {
@@ -140,6 +137,8 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
           }
         }
       }
+    } else {
+      this.selectedItem = new McsListItem('', this.placeholder);
     }
   }
 
@@ -168,5 +167,21 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
    */
   public registerOnTouched(fn: any) {
     this._onTouched = fn;
+  }
+
+  public onClickOutside(event: any): void {
+    if (!this._elementRef.nativeElement.contains(event.target)) {
+      this.isOpen = false;
+    }
+  }
+
+  private _registerEvents(): void {
+    // Register for mouse click
+    registerEvent(this._renderer, document,
+      'click', this.onClickOutside.bind(this));
+
+    // Register touch event for IOS
+    registerEvent(this._renderer, document,
+      'touchstart', this.onClickOutside.bind(this));
   }
 }

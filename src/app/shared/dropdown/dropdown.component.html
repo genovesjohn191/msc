@@ -1,15 +1,17 @@
 <div #mcsDropdown class="mcs-dropdown" (click)="toggleDropdown($event)">
-  <mcs-textbox [name]="name" [icon]="iconClass" width="100%" borderColor="black"
-    [(ngModel)]="selectedItem.value" [placeholder]="placeholder" readonly="true"></mcs-textbox>
+  <div class="dropdown-value">
+    <span>{{ selectedItem.value }}</span>
+    <mcs-icon [key]="caretDownIconKey" size="small"></mcs-icon>
+  </div>
 
   <div *ngIf="isOpen" class="dropdown-options">
     <ul class="option-group">
       <li *ngFor="let groupName of dropdownData.getGroupNames()">
-        <span #mcsDropdownGroupName>{{ groupName }}</span>
+        <span class="group-name" #mcsDropdownGroupName>{{ groupName }}</span>
         <ul class="option-item">
           <li *ngFor="let listItem of dropdownData.getGroup(groupName)"
             (click)="onClickItem(listItem)">
-            {{ listItem.value }}
+            <span class="item-value">{{ listItem.value }}</span>
           </li>
         </ul>
       </li>
