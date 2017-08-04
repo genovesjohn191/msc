@@ -102,7 +102,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeTravisCi: {
         base: 'Chrome',
-        flags: ['--no-sandbox', '--disable-web-security']
+        flags: ['--no-sandbox']
       }
     },
 
