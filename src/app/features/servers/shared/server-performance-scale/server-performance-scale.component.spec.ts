@@ -103,22 +103,6 @@ describe('ServerPerformanceScaleComponent', () => {
       });
     });
 
-  describe('getMemoryInGb()', () => {
-    it(`should calculate the memory in GB with exact values
-    when the memory in MB is not exact`, () => {
-        let memoryInMb = 1025;
-        let memoryInGb = component.getMemoryInGb(memoryInMb);
-        expect(memoryInGb).toBe(1);
-      });
-
-    it(`should calculate the memory in GB with exact values
-    when the memory in MB is not exact`, () => {
-        let memoryInMb = 1024;
-        let memoryInGb = component.getMemoryInGb(memoryInMb);
-        expect(memoryInGb).toBe(1);
-      });
-  });
-
   describe('onSliderChanged()', () => {
     beforeEach(async(() => {
       component.ngOnInit();

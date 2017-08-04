@@ -2,6 +2,7 @@
 export * from './core.module';
 export * from './core.config';
 export * from './core.definition';
+export * from './core.validators';
 /** Services */
 export * from './services/mcs-api.service';
 export * from './services/mcs-storage.service';

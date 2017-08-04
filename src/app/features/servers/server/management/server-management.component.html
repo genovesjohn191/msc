@@ -93,8 +93,7 @@
   <mcs-server-performance-scale
     [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
     [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
-    (scaleChanged)="onScaleChanged($event)"
-    (validateScale)="onValidateScaleChanged($event)">
+    (scaleChanged)="onScaleChanged($event)">
 
     <!--Performance scale container-->
     <span slider-details>
