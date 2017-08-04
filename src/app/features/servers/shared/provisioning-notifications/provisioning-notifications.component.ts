@@ -52,8 +52,7 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content
-      .servers.shared.provisioningNotifications;
+    this.textContent = this._textContentProvider.content.servers.provisioningNotifications;
     this._updateProgressbar();
   }
 

@@ -34,6 +34,10 @@
       "name": "Name",
       "action": "Action"
     },
+    "provisioningNotifications": {
+      "deploymentCompleted": "Deployment Completed",
+      "viewServerLink": "View your servers"
+    },
     "createSelfManagedServer": {
       "header": "Create a New Server",
       "contextualHelp": {
@@ -120,12 +124,6 @@
         "customSwitch": "Enter custom size",
         "validationError": "Storage size should not exceed {{available_storage}}"
       }
-    },
-    "shared": {
-      "provisioningNotifications": {
-        "deploymentCompleted": "Deployment Completed",
-        "viewServerLink": "View your servers"
-      }
     }
   },
   "networking": {
@@ -181,19 +179,14 @@
   "filterSelector": {
     "title": "Always show the following columns."
   },
-  "shared": {
-    "validationMessage": {
-      "ipAddress": "Please enter a valid IP Address.",
-      "numeric": "Please enter a valid number.",
-      "alphaNumeric": "Please enter alphanumeric only.",
-      "required": "This field is required",
-      "email": "Please enter a valid email address.",
-      "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and   one number",
-      "minlength": "Minimum length {{min_length}}",
-      "maxlength": "Maximum length {{max_length}}",
-      "min": "Minimum value can be entered is only {{min_value}}",
-      "max": "Maximum value can be entered is upto {{max_value}}"
-    },
+  "validationMessages": {
+    "email": "Please enter a valid email address.",
+    "alphanumeric": "Please enter alphanumeric only.",
+    "numeric": "Please enter a valid number.",
+    "ipAddress": "Please enter a valid IP Address.",
+    "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number"
+  },
+  "sharedComponents": {
     "wizard": {
       "previous": "Back",
       "next": "Next",

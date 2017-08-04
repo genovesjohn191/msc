@@ -19,19 +19,3 @@ export function getEncodedUrl(file: string, fileType: string, encoding: string):
   // Return the encoding value
   return `data:${fileType};${encoding},${file}`;
 }
-
-/**
- * This will return the full string content and replace the
- * placeholder using the actual value
- * @param fullString Full string content with placeholder
- * @param placeholderName Placeholder name to be find in the fullstring
- * @param placeholderValue Placeholder value to set in the replacement
- */
-export function replacePlaceholder(
-  fullString: string,
-  placeholderName: string,
-  placeholderValue: string
-): string {
-  if (!fullString) { return undefined; }
-  return fullString.replace(`{{${placeholderName}}}`, placeholderValue);
-}
