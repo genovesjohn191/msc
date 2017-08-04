@@ -82,7 +82,7 @@ module.exports = function (config) {
 
     /**
      * Level of Logging
-     * 
+     *
      * Possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
      */
     logLevel: config.LOG_WARN,
@@ -92,7 +92,7 @@ module.exports = function (config) {
 
     /**
      * Start These Browsers
-     * 
+     *
      * Available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
     browsers: [
@@ -102,13 +102,13 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeTravisCi: {
         base: 'Chrome',
-        flags: ['--no-sandbox']
+        flags: ['--no-sandbox', '--disable-web-security']
       }
     },
 
     /**
      * Continuous Integration Mode
-     * 
+     *
      * if true, Karma captures browsers, runs the tests and exits
      */
     singleRun: true
