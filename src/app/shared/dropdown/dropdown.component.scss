@@ -1,53 +1,73 @@
 @import "../../../styles/shared/base";
 
+$dropdown-background: $color-white;
+$dropdown-border-color: $color-black;
+$dropdown-border-radius: 5px;
+$dropdown-padding: 10px 15px;
+$dropdown-value-font-size: $input-font-size;
+$dropdown-options-border-color: $color-grey-02;
+$dropdown-options-padding: 15px 0 20px;
+$dropdown-options-box-shadow: 0px 1px 3px 0px $color-grey-02;
+$dropdown-option-group-name-font: $base-font-bold;
+$dropdown-option-group-name-color: $color-grey-02;
+$dropdown-option-item-background-hover: $color-grey-07;
+
 .mcs-dropdown {
-  background-color: $color-white;
+  background-color: $dropdown-background;
   position: relative;
   cursor: pointer;
+
+  .dropdown-value {
+    @include display-flex(row);
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid $dropdown-border-color;
+    @include border-radius($dropdown-border-radius);
+    padding: $dropdown-padding;
+
+    span {
+      @include font-size($dropdown-value-font-size);
+    }
+  }
 
   .dropdown-options {
     position: absolute;
     z-index: $zindex-dropdown;
-    background-color: $color-white;
+    background-color: $dropdown-background;
     width: 100%;
     top: 0;
-    border: 1px solid $color-grey-02;
-    @include border-radius(5px);
-    padding: 15px 0 20px;
-    @include box-shadow(0px 1px 3px 0px $color-grey-02);
+    border: 1px solid $dropdown-options-border-color;
+    @include border-radius($dropdown-border-radius);
+    padding: $dropdown-options-padding;
+    @include box-shadow($dropdown-options-box-shadow);
 
     .option-group {
       list-style: none;
       padding-left: 0;
       margin-bottom: 0;
 
-      > li {
-        font-family: $base-font-bold;
-        color: $color-grey-02;
+      > li:not(:last-child) {
         margin-bottom: 30px;
+      }
 
-        &:last-child {
-          margin-bottom: 0;
-        }
+      .group-name {
+        display: block;
+        font-family: $dropdown-option-group-name-font;
+        color: $dropdown-option-group-name-color;
+        padding: 0 15px;
+      }
 
-        span {
+      .option-item {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 5px;
+
+        .item-value {
           display: block;
-          padding: 0 15px;
-        }
+          padding: 0 30px;
 
-        .option-item {
-          list-style: none;
-          padding-left: 0;
-          margin-top: 5px;
-
-          li {
-            font-family: $base-font;
-            color: $color-black;
-            padding: 0 30px;
-
-            &:hover {
-              background-color: $color-grey-07;
-            }
+          &:hover {
+            background-color: $dropdown-option-item-background-hover;
           }
         }
       }

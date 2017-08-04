@@ -1,7 +1,8 @@
 import {
   async,
   inject,
-  TestBed
+  TestBed,
+  getTestBed
 } from '@angular/core/testing';
 import {
   Component,
@@ -10,6 +11,8 @@ import {
 } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ContextualHelpDirective } from './contextual-help.directive';
+import { ServersTestingModule } from '../../testing';
+import { McsBrowserService } from '../../../../core';
 
 @Component({
   selector: 'mcs-test',
@@ -25,6 +28,7 @@ describe('ContextualHelpDirective', () => {
   /** Stub Services/Components */
   let component: TestComponent;
   let directiveElement: DebugElement;
+  let browserService: McsBrowserService;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -35,6 +39,9 @@ describe('ContextualHelpDirective', () => {
       declarations: [
         TestComponent,
         ContextualHelpDirective
+      ],
+      imports: [
+        ServersTestingModule
       ]
     });
 
@@ -54,36 +61,35 @@ describe('ContextualHelpDirective', () => {
 
       component = fixtureInstance.componentInstance;
       directiveElement = fixtureInstance.debugElement.query(By.directive(ContextualHelpDirective));
+      browserService = getTestBed().get(McsBrowserService);
     });
   }));
 
   /** Test Implementation */
+  describe('ngOnInit()', () => {
+    it(`should call the subscribe of deviceTypeStream from McsBrowserService`, () => {
+      spyOn(browserService.deviceTypeStream, 'subscribe');
+      component.contextualHelp.ngOnInit();
+      expect(browserService.deviceTypeStream.subscribe).toHaveBeenCalled();
+    });
+  });
+
   describe('ContextualHelpDirective()', () => {
     it(`should set the contextual help message`, () => {
       expect(component.contextualHelp.mcsContextualHelp).toBe('Hi');
     });
   });
 
-  describe('mouseenter() | focusin()', () => {
+  describe('mouseenter()', () => {
     it(`should set has focus flag to true when mouseenter is triggered`, () => {
       directiveElement.triggerEventHandler('mouseenter', {});
       expect(component.contextualHelp.hasFocus).toBeTruthy();
     });
-
-    it(`should set has focus flag to true when focusin is triggered`, () => {
-      directiveElement.triggerEventHandler('focusin', {});
-      expect(component.contextualHelp.hasFocus).toBeTruthy();
-    });
   });
 
-  describe('mouseleave() | focusout()', () => {
+  describe('mouseleave()', () => {
     it(`should set has focus false to true when mouseleave is triggered`, () => {
       directiveElement.triggerEventHandler('mouseleave', {});
-      expect(component.contextualHelp.hasFocus).toBeFalsy();
-    });
-
-    it(`should set has focus flag to false when focusout is triggered`, () => {
-      directiveElement.triggerEventHandler('focusout', {});
       expect(component.contextualHelp.hasFocus).toBeFalsy();
     });
   });

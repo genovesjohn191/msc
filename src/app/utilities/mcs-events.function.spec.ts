@@ -1,4 +1,7 @@
-import { registerEvent } from './mcs-events.function';
+import {
+  registerEvent,
+  unregisterEvent
+} from './mcs-events.function';
 
 describe('EVENTS Utility Functions', () => {
   describe('registerEvent()', () => {
@@ -11,6 +14,19 @@ describe('EVENTS Utility Functions', () => {
       spyOn(mockRenderer, 'listen');
       registerEvent(mockRenderer, document.createElement('div'), 'click', mockCallback);
       expect(mockRenderer.listen).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('unregisterEvent()', () => {
+    it(`should unregister the event and call the removeEventListener`, () => {
+      let mockElement = { removeEventListener(event: any, callback: any) { return; } };
+      let mockCallback = () => {
+        return undefined;
+      };
+
+      spyOn(mockElement, 'removeEventListener');
+      unregisterEvent(mockElement, 'click', mockCallback);
+      expect(mockElement.removeEventListener).toHaveBeenCalledTimes(1);
     });
   });
 });
