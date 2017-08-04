@@ -19,7 +19,6 @@ import {
 import {
   McsTextContentProvider,
   CoreDefinition,
-  CoreValidators,
   McsList,
   McsListItem
 } from '../../../../core';
@@ -29,7 +28,6 @@ import {
 } from '../../models';
 import {
   refreshView,
-  replacePlaceholder,
   animateFactory,
   appendUnitSuffix
 } from '../../../../utilities';
@@ -55,14 +53,17 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   public customMemoryGBValue: number;
   public customMemoryGBTable: McsList;
+
   public customCpuCountValue: number;
   public customCpuCountTable: McsList;
-  public invalidCustomMemoryMessage: string;
-  public invalidCustomCpuMessage: string;
 
   public serverScaleForm: FormGroup;
+  public serverScaleSlider: FormControl;
   public serverScaleCustomRam: FormControl;
   public serverScaleCustomCpu: FormControl;
+
+  public invalidCustomMemoryMessage: string;
+  public invalidCustomCpuMessage: string;
 
   @Input()
   public memoryMB: number;
@@ -79,8 +80,19 @@ export class ServerPerformanceScaleComponent implements OnInit {
   @Output()
   public scaleChanged: EventEmitter<ServerPerformanceScale>;
 
+  @Output()
+  public validateScale: EventEmitter<any>;
+
   public get currentServerScale(): ServerPerformanceScale {
     return this.sliderValue < 0 ? undefined : this.sliderTable[this.sliderValue];
+  }
+
+  public get isValidCustomMemoryValue(): boolean {
+    return this.customMemoryGBValue <= this.availableMemoryMB;
+  }
+
+  public get isValidCustomCpuValue(): boolean {
+    return this.customCpuCountValue <= this.availableCpuCount;
   }
 
   public constructor(private _textProvider: McsTextContentProvider) {
@@ -93,20 +105,33 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this.availableCpuCount = 0;
     this.sliderTable = new Array();
     this.inputManageType = ServerInputManageType.Slider;
+    this.scaleChanged = new EventEmitter();
     this.customMemoryGBTable = new McsList();
     this.customCpuCountTable = new McsList();
-    this.scaleChanged = new EventEmitter();
+    this.validateScale = new EventEmitter();
   }
 
   public ngOnInit() {
     this.serverScalePerformanceTextContent
       = this._textProvider.content.servers.server.management.performanceScale;
 
-    // Set Invalid messages
-    this._setInvalidMessages();
+    this.invalidCustomMemoryMessage = this._fillValidationMessagePlaceholder(
+      this.serverScalePerformanceTextContent.validationError.memory,
+      'available_memory',
+      appendUnitSuffix(this.availableMemoryMB, 'megabyte')
+    );
 
-    // Register Form group
-    this._registerFormGroup();
+    this.invalidCustomCpuMessage = this._fillValidationMessagePlaceholder(
+      this.serverScalePerformanceTextContent.validationError.cpu,
+      'available_cpu',
+      appendUnitSuffix(this.availableCpuCount, 'cpu')
+    );
+
+    this.serverScaleForm = new FormGroup({
+      serverScaleSlider: new FormControl(),
+      serverScaleCustomRam: new FormControl(),
+      serverScaleCustomCpu: new FormControl()
+    });
 
     // Set default table values
     this._setDefaultSliderTable();
@@ -122,83 +147,29 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this._setScaleType();
   }
 
+  public getMemoryInGb(memoryInMb: number) {
+    return Math.trunc(memoryInMb / CoreDefinition.GB_TO_MB_MULTIPLIER);
+  }
+
   public onSliderChanged(index: number) {
     // Get Slider index value
     this.sliderValue = index;
     this._notifyCpuSizeScale(this.sliderTable[index].memoryMB, this.sliderTable[index].cpuCount);
   }
 
-  public onMemoryChanged(inputValue: number) {
-    this.customMemoryGBValue = inputValue;
+  public onMemoryChanged(value: number) {
+    this.customMemoryGBValue = value;
     this._notifyCpuSizeScale(this.customMemoryGBValue, this.customCpuCountValue);
   }
 
-  public onCpuCountChanged(inputValue: number) {
-    this.customCpuCountValue = inputValue;
+  public onCpuCountChanged(value: number) {
+    this.customCpuCountValue = value;
     this._notifyCpuSizeScale(this.customMemoryGBValue, this.customCpuCountValue);
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
     this._setCustomSizeValue();
     refreshView(() => { this.inputManageType = inputManageType; });
-  }
-
-  public isControlValid(control: FormControl): boolean {
-    return control ? !(!control.valid && control.touched) : false;
-  }
-
-  private _registerFormGroup(): void {
-    // Create Custom RAM Control and Register the listener
-    this.serverScaleCustomRam = new FormControl('', [
-      CoreValidators.required,
-      CoreValidators.numeric,
-      CoreValidators.custom(
-        this._customRamValidator.bind(this),
-        this.invalidCustomMemoryMessage
-      )
-    ]);
-    this.serverScaleCustomRam.valueChanges
-      .subscribe(this.onMemoryChanged.bind(this));
-
-    // Create Custom CPU Control and Register the listener
-    this.serverScaleCustomCpu = new FormControl('', [
-      CoreValidators.required,
-      CoreValidators.numeric,
-      CoreValidators.custom(
-        this._customCpuValidator.bind(this),
-        this.invalidCustomCpuMessage
-      )
-    ]);
-    this.serverScaleCustomCpu.valueChanges
-      .subscribe(this.onCpuCountChanged.bind(this));
-
-    // Bind server scale form control to the main form
-    this.serverScaleForm = new FormGroup({
-      serverScaleCustomRam: this.serverScaleCustomRam,
-      serverScaleCustomCpu: this.serverScaleCustomCpu
-    });
-  }
-
-  private _customRamValidator(inputValue: any): boolean {
-    return inputValue <= this.availableMemoryMB;
-  }
-
-  private _customCpuValidator(inputValue: any): boolean {
-    return inputValue <= this.availableCpuCount;
-  }
-
-  private _setInvalidMessages(): void {
-    this.invalidCustomMemoryMessage = replacePlaceholder(
-      this.serverScalePerformanceTextContent.validationError.memory,
-      'available_memory',
-      appendUnitSuffix(this.availableMemoryMB, 'megabyte')
-    );
-
-    this.invalidCustomCpuMessage = replacePlaceholder(
-      this.serverScalePerformanceTextContent.validationError.cpu,
-      'available_cpu',
-      appendUnitSuffix(this.availableCpuCount, 'cpu')
-    );
   }
 
   private _setMinMaxValue(): void {
@@ -278,11 +249,15 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
     performanceScale.memoryMB = Number(memoryMB);
     performanceScale.cpuCount = Number(cpuCount);
-    performanceScale.valid = ServerInputManageType.Custom ?
-      this.serverScaleCustomCpu.valid && this.serverScaleCustomRam.valid : true;
-
     refreshView(() => {
       this.scaleChanged.next(performanceScale);
+
+      if (this.inputManageType === ServerInputManageType.Custom) {
+        this.validateScale.next(this.isValidCustomMemoryValue || !this.isValidCustomCpuValue);
+      } else {
+        this.validateScale.next(this.serverScaleForm.valid);
+      }
+
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 

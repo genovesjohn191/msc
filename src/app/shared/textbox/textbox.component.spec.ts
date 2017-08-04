@@ -55,11 +55,27 @@ describe('TextboxComponent', () => {
   }));
 
   /** Test Implementation */
-  describe('ngOnInit()', () => {
+  describe('ngOnChanges()', () => {
     it('should set the iconKey to inputted icon', () => {
       component.icon = 'search';
-      component.ngOnInit();
+      component.ngOnChanges();
       expect(component.iconKey).toBe(component.icon);
+    });
+  });
+
+  describe('ngOnInit()', () => {
+    it('should set validation message', () => {
+      component.validationType = 'email';
+      component.ngOnInit();
+      expect(component.validationMessage).toEqual(mockEmailErrorMessage);
+    });
+  });
+
+  describe('getValidationPattern()', () => {
+    it('should get validation pattern based on validationType', () => {
+      component.validationType = 'email';
+      let pattern = component.getValidationPattern(component.validationType);
+      expect(pattern).toEqual(CoreDefinition.REGEX_EMAIL_PATTERN);
     });
   });
 

@@ -1,7 +1,6 @@
 import {
   getProperCase,
-  getEncodedUrl,
-  replacePlaceholder
+  getEncodedUrl
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -21,14 +20,6 @@ describe('STRING Functions', () => {
 
       let encodedUrl = getEncodedUrl(file, fileType, encoding);
       expect(encodedUrl).toBe(expectedUrl);
-    });
-  });
-
-  describe('replacePlaceholder()', () => {
-    it(`should replace the placeholder based on the given content`, () => {
-      let stringContent = 'hello {{name}}';
-      let replacedString = replacePlaceholder(stringContent, 'name', 'arrian');
-      expect(replacedString).toBe(stringContent.replace('{{name}}', 'arrian'));
     });
   });
 });
