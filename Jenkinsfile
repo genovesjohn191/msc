@@ -47,7 +47,7 @@ if (!params.REGISTRY_LOCATION) {
 def registry_location = params.REGISTRY_LOCATION
 def image_name = "mcs/portal-frontend"
 def build_slave_image_name = "mcs/jnlp-slave-nodejs"
-def jenkins_slave_image_name = "${registry_location}/${build_slave_image_name}" // NB: Image must be built manually before first jenkins run
+def jenkins_slave_image_name = "${registry_location}/${build_slave_image_name}:latest" // NB: Image must be built manually before first jenkins run
 def service_creds_location = "/etc/gcr-service-acct"
 def service_creds_file = "service-acct-creds.json"
 def env_setup_location = "/etc/build-config"
