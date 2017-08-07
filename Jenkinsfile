@@ -72,7 +72,8 @@ podTemplate(
             args: '${computer.jnlpmac} ${computer.name}',
             ttyEnabled: true,
             resourceRequestMemory: '200Mi',
-            resourceLimitMemory: '1.5Gi'
+            resourceLimitMemory: '1.5Gi',
+            alwaysPullImage: true
         )
     ],
     namespace: params.K8S_NAMESPACE,
