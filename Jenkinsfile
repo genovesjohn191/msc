@@ -35,7 +35,8 @@ if (!params.REGISTRY_LOCATION) {
                 string(defaultValue: '/usr/bin/docker', description: 'Location of the docker binary on the host operating system.', name: 'HOST_DOCKER_BIN'),
                 string(defaultValue: '/home/kubernetes/bin/kubectl', description: 'Location of the kubectl binary on the host operating system.', name: 'HOST_KUBECTL_BIN'),
                 booleanParam(defaultValue: true, description: 'Whether to utilise the Google Container Registry as part of this build. If so searches for Google Service credentials mounted as a json file. Otherwise assumes a local insecure registry.', name: 'GOOGLE_CONTAINER_REGISTRY'),
-                string(defaultValue: 'default', description: 'The namespace where kubernetes resources should be found and bound.', name: 'K8S_NAMESPACE')
+                string(defaultValue: 'default', description: 'The namespace where kubernetes resources should be found and bound.', name: 'K8S_NAMESPACE'),
+                booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.')
             ]),
             pipelineTriggers([])
         ]
@@ -54,6 +55,7 @@ def env_setup_file = "env.setup"
 def kube_deployment = "portal"
 def slack_notify_on_success = true
 def label = "buildpod"
+def debug_sleep = params.DEBUG_SLEEP
 
 echo "Building with the following configuration:"
 echo "\tRegistry: ${params.REGISTRY_LOCATION}\n\tDocker Sock: ${params.HOST_DOCKER_SOCK}\n\tDocker Binary: ${params.HOST_DOCKER_BIN}\n\tKubectl Binary: ${params.HOST_KUBECTL_BIN}"
@@ -172,6 +174,12 @@ podTemplate(
                         "> ${e}\n" +
                         "<${env.BUILD_URL}console|Jenkins Link>"
             )
+            if (debug_sleep) {
+                stage('Debug failed build') {
+                    echo "Sleeping 10 minutes. Try kubectl exec -it (podname) bash to see if you can figure out what went wrong."
+                    sh "sleep 600"
+                }
+            }
         }
     }
 }
