@@ -7,6 +7,7 @@ import {
 } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CookieModule } from 'ngx-cookie';
 /** Mocks */
 import { MockCoreConfig } from './core-config.mock';
 /** Core Services and Modules */
@@ -17,7 +18,8 @@ import { coreProviders } from '../core.constants';
 @NgModule({
   imports: [
     RouterTestingModule,
-    HttpModule
+    HttpModule,
+    CookieModule.forRoot()
   ],
   exports: [
     RouterTestingModule

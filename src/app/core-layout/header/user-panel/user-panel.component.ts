@@ -18,7 +18,8 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsConnectionStatus,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsAuthenticationService
 } from '../../../core';
 import { refreshView } from '../../../utilities';
 
@@ -72,7 +73,8 @@ export class UserPanelComponent implements OnInit {
     private _notificationContextService: McsNotificationContextService,
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _authenticationIdentity: McsAuthenticationIdentity
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _authenticationService: McsAuthenticationService
   ) {
     this.hasConnectionError = false;
     this.statusIconClass = '';
@@ -143,5 +145,12 @@ export class UserPanelComponent implements OnInit {
 
   public onCloseNotificationPanel(): void {
     this._notificationContextService.clearNonActiveNotifications();
+  }
+
+  // TODO: Created temporary logout method
+  public logout(event): void {
+    event.preventDefault();
+    this._authenticationService.deleteAuthToken();
+    window.location.href = CoreDefinition.URL_LOGOUT;
   }
 }
