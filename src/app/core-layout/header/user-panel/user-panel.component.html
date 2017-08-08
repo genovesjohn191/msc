@@ -60,7 +60,7 @@
         <a class="icon-link">
           Profile
         </a>
-        <a class="icon-link">
+        <a class="icon-link" (click)="logout($event)">
           Logout
         </a>
       </div>
@@ -68,7 +68,9 @@
     <small class="user-info">Macquarie Telecom</small>
   </aside>
   <aside class="exit">
-    <mcs-icon class="hidden-small" [key]="logoutIconKey"
-      size="medium" color="white"></mcs-icon>
+    <a (click)="logout($event)">
+      <mcs-icon class="hidden-small" [key]="logoutIconKey"
+        size="medium" color="white"></mcs-icon>
+    </a>
   </aside>
 </div>

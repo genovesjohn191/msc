@@ -135,4 +135,5 @@ export class CoreDefinition {
   /** URL */
   // TODO: This should be set in environment variables
   public static URL_LOGIN = 'https://auth.macquariecloudservices.com/?returnurl=';
+  public static URL_LOGOUT = 'https://auth.macquariecloudservices.com/vdesk/hangup.php3';
 }
