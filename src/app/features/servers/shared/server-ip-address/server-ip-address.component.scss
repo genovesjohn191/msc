@@ -1,0 +1,40 @@
+@import "../../../../../styles/shared/base";
+
+$server-ip-address-maximum-height: 80px;
+
+:host {
+  display: block;
+}
+
+.server-ip-address-container {
+  @include display-flex(row);
+  @include flex-wrap(wrap);
+  @include set-items-interval(10px, vertical);
+  @include font-size(16);
+
+  * {
+    @include flex(1 1 100%);
+  }
+
+  .custom-ip-address {
+    margin: 0;
+    text-align: right;
+    @include flex(0 1 40%);
+  }
+
+  .description {
+    @include flex(0 1 60%);
+    @include display-flex(column);
+  }
+
+  .custom-ip-address-content {
+    @include display-flex(column);
+    justify-content: center;
+    margin-top: $space-small;
+    min-height: $server-ip-address-maximum-height;
+  }
+
+  .radio-button-group {
+    min-height: $server-ip-address-maximum-height;
+  }
+}

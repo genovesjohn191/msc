@@ -2,7 +2,7 @@
 
 $server-home-link-font-size: $link-default-font-size;
 
-.create-self-managed-server-container {
+.create-self-managed-servers-container {
   position: relative;
   @include display-flex(column);
 
@@ -20,35 +20,22 @@ $server-home-link-font-size: $link-default-font-size;
 
       .server-details {
         @include display-flex(column);
-        @include set-items-interval(20px);
 
-        .mcs-tabs {
-          margin-top: $space-large;
-          .nav-tabs {
-            justify-content: flex-start;
-          }
-        }
-
-       .additional-server {
-         @include display-flex(row);
-         align-items: center;
+       .additional-server-container {
          background-color: $color-grey-05;
          padding: 10px 20px;
+         margin-top: $space-medium;
 
-          > span {
-            margin-left: 10px;
-            font-family: $base-font-bold;
-          }
-        }
+         .add-server {
+           display: inline-block;
+           cursor: pointer;
 
-        .deployment {
-          text-align: right;
-          @include breakpoint(medium) {
-            mcs-button {
-              display: block;
-              max-width: 100% !important;
-            }
-          }
+           > span {
+             margin-left: 10px;
+             font-family: $base-font-bold;
+             vertical-align: middle;
+           }
+         }
         }
       }
 
