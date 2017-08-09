@@ -1,35 +1,23 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  Input,
-  Output,
-  EventEmitter,
   AfterViewInit,
   ViewChildren,
   QueryList
 } from '@angular/core';
 import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
-import {
   McsList,
   McsListItem,
   McsTextContentProvider,
-  CoreValidators
+  CoreDefinition
 } from '../../../../core';
-import {
-  refreshView,
-  mergeArrays
-} from '../../../../utilities';
-import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
+import { refreshView } from '../../../../utilities';
+import { CreateSelfManagedServerService } from '../create-self-managed-server.service';
 import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
+import { BaseSelfManagedServer } from '../base-self-managed-server';
 import {
   ServerManageStorage,
-  ServerPerformanceScale,
-  ServerIpAddress,
-  ServerCreateSelfManaged
+  ServerPerformanceScale
 } from '../../models';
 
 @Component({
@@ -38,42 +26,35 @@ import {
   styles: [require('./new-self-managed-server.component.scss')]
 })
 
-export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input()
-  public isVisible: boolean;
+export class NewSelfManagedServerComponent implements OnInit, AfterViewInit {
+  public computeValue: any;
+  public storageValue: any;
+  public virtualApplicationValue: any;
+  public virtualApplicationItems: McsList;
 
-  @Output()
-  public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
+  public virtualTemplateValue: any;
+  public virtualTemplateItems: McsList;
+
+  public primaryNetworkValue: any;
+  public primaryNetworkItems: McsList;
+
+  public storageProfileValue: any;
+  public storageProfileItems: McsList;
+
+  public ipAddressValue: string;
+  public contextualTextContent: any;
+
+  public memoryInMb: number;
+  public cpuCount: number;
+
+  public storageMemoryInGb: number;
+  public storageAvailableMemoryInGb: number;
 
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
-  // Form variables
-  public formGroupNewServer: FormGroup;
-  public formControlVApp: FormControl;
-  public formControlVTemplate: FormControl;
-  public formControlNetwork: FormControl;
-  public formControlScale: FormControl;
-  public formControlStorage: FormControl;
-  public formControlIpAddress: FormControl;
-  public formGroupSubscription: any;
-
-  // Scale and Storage
-  public memoryInMb: number;
-  public cpuCount: number;
-  public storageMemoryInGb: number;
-  public storageAvailableMemoryInGb: number;
-
-  // Dropdowns
-  public virtualApplicationItems: McsList;
-  public virtualTemplateItems: McsList;
-  public primaryNetworkItems: McsList;
-  public storageProfileItems: McsList;
-  public ipAddressItems: McsListItem[];
-  public contextualTextContent: any;
-
   public constructor(
-    private _managedServerService: CreateSelfManagedServersService,
+    private _managedServerService: CreateSelfManagedServerService,
     private _textContentProvider: McsTextContentProvider
   ) {
     // TODO: Temporary set the value for demo purpose
@@ -81,22 +62,20 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.cpuCount = 2;
     this.storageMemoryInGb = 200;
     this.storageAvailableMemoryInGb = 900;
-
-    this.isVisible = false;
-    this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
   public ngOnInit() {
     this.contextualTextContent = this._textContentProvider.content
       .servers.createSelfManagedServer.contextualHelp;
 
-    this._registerFormGroup();
+    this.virtualApplicationValue = 'vApp2';
+    this.virtualTemplateValue = 'vTemplate2';
+    this.ipAddressValue = 'dhcp';
 
     this.virtualApplicationItems = this.getVirtualApplications();
     this.virtualTemplateItems = this.getVirtualTemplates();
     this.primaryNetworkItems = this.getPrimaryNetwork();
     this.storageProfileItems = this.getStorageProfiles();
-    this.ipAddressItems = this.getIpAddressGroup();
   }
 
   public ngAfterViewInit() {
@@ -107,16 +86,9 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
           .map((description) => {
             return description;
           });
-        this._managedServerService.subContextualHelp =
-          mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
+        this._managedServerService.contextualHelpStream.next(contextInformations);
       }
     });
-  }
-
-  public ngOnDestroy() {
-    if (this.formGroupSubscription) {
-      this.formGroupSubscription.unsubscribe();
-    }
   }
 
   public getVirtualApplications(): McsList {
@@ -169,84 +141,10 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
-    if (!this.formControlStorage) { return; }
-    if (serverStorage.valid) {
-      this.formControlStorage.setValue(serverStorage);
-    } else {
-      this.formControlStorage.reset();
-    }
+    // TODO: Set the serverStorage in the official variable
   }
 
   public onScaleChanged(serverScale: ServerPerformanceScale) {
-    if (!this.formControlScale) { return; }
-    if (serverScale.valid) {
-      this.formControlScale.setValue(serverScale);
-    } else {
-      this.formControlScale.reset();
-    }
-  }
-
-  public onIpAddressChanged(ipAddress: ServerIpAddress): void {
-    if (!this.formControlIpAddress) { return; }
-    if (ipAddress.valid) {
-      this.formControlIpAddress.setValue(ipAddress);
-    } else {
-      this.formControlIpAddress.reset();
-    }
-  }
-
-  private _registerFormGroup(): void {
-    // Register Form Controls
-    this.formControlVApp = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    this.formControlVTemplate = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    this.formControlNetwork = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    this.formControlScale = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    this.formControlStorage = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    this.formControlIpAddress = new FormControl('', [
-      CoreValidators.required
-    ]);
-
-    // Register Form Groups using binding
-    this.formGroupNewServer = new FormGroup({
-      formControlVapp: this.formControlVApp,
-      formControlVTemplate: this.formControlVTemplate,
-      formControlNetwork: this.formControlNetwork,
-      formControlScale: this.formControlScale,
-      formControlStorage: this.formControlStorage,
-      formControlIpAddress: this.formControlIpAddress
-    });
-    this.formGroupSubscription = this.formGroupNewServer.statusChanges
-      .subscribe((status) => {
-        this._outputServerDetails();
-      });
-  }
-
-  private _outputServerDetails(): void {
-    let newSelfManaged: ServerCreateSelfManaged;
-    newSelfManaged = new ServerCreateSelfManaged();
-
-    // Set the variable based on the form values
-    newSelfManaged.vApp = this.formControlVApp.value;
-    newSelfManaged.vTemplate = this.formControlVTemplate.value;
-    newSelfManaged.network = this.formControlNetwork.value;
-    newSelfManaged.performanceScale = this.formControlScale.value;
-    newSelfManaged.serverManageStorage = this.formControlStorage.value;
-    newSelfManaged.isValid = this.formGroupNewServer.valid;
-    this.onOutputServerDetails.next(newSelfManaged);
+    // TODO: Set the serverScale in the official variable
   }
 }

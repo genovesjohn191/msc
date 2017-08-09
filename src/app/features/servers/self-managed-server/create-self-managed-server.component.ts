@@ -2,13 +2,9 @@ import {
   Component,
   OnInit,
   AfterViewInit,
-  ViewChild,
   ViewChildren,
-  Injector,
-  ComponentFactoryResolver,
-  ViewContainerRef,
-  Renderer2,
-  ElementRef
+  QueryList,
+  ChangeDetectorRef
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -17,63 +13,45 @@ import {
   McsList,
   McsListItem,
   CoreDefinition,
-  McsTextContentProvider,
-  McsComponentService
+  McsTextContentProvider
 } from '../../../core';
 import {
   mergeArrays,
   refreshView
 } from '../../../utilities';
 import { ContextualHelpDirective } from '../shared/contextual-help/contextual-help.directive';
-import { CreateSelfManagedServersService } from './create-self-managed-servers.service';
-import {
-  CreateSelfManagedServerComponent
-} from './create-self-managed-server/create-self-managed-server.component';
+import { CreateSelfManagedServerService } from './create-self-managed-server.service';
 
 @Component({
-  selector: 'mcs-create-self-managed-servers',
-  templateUrl: './create-self-managed-servers.component.html',
-  styles: [require('./create-self-managed-servers.component.scss')]
+  selector: 'mcs-create-self-managed-server',
+  templateUrl: './create-self-managed-server.component.html',
+  styles: [require('./create-self-managed-server.component.scss')]
 })
 
-export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit {
-  @ViewChild('selfManagedServersElement')
-  public selfManagedServersElement: ElementRef;
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives;
-
+export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   public contextualTextContent: any;
   public createServerTextContent: any;
   public intellicentreValue: any;
   public intellicentres: any;
   public notifications: McsApiJob[];
-  public servers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
-  private _mainContextInformations: ContextualHelpDirective[];
 
-  public get addIconKey(): string {
+  @ViewChildren(ContextualHelpDirective)
+  public contextualHelpDirectives;
+
+  private _mainContextInformations: ContextualHelpDirective[];
+  private _subContextInformations: ContextualHelpDirective[];
+
+  public get addIconKey() {
     return CoreDefinition.ASSETS_SVG_ADD_BLACK;
   }
 
-  public get isServersValid(): boolean {
-    let inValidExists = this.servers.find((newServer) => {
-      return !newServer.componentRef.instance.isValid;
-    });
-    return inValidExists ? false : true;
-  }
-
   public constructor(
-    private _managedServerService: CreateSelfManagedServersService,
+    private _managedServerService: CreateSelfManagedServerService,
     private _router: Router,
-    private _textContentProvider: McsTextContentProvider,
-    private _injector: Injector,
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer2
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _textContentProvider: McsTextContentProvider
   ) {
     this.notifications = new Array();
-    this.servers = new Array();
-    this._mainContextInformations = new Array();
   }
 
   public ngOnInit() {
@@ -82,7 +60,8 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit 
     this.contextualTextContent = this.createServerTextContent.contextualHelp;
 
     this.intellicentres = this.getIntellicentres();
-    this.addServer();
+    // TODO: Navigate to create/new
+    // this.navigateToNewServer();
 
     // TODO: Set the notifications temporarily
     this._populateNotifications();
@@ -96,34 +75,18 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit 
             return description;
           });
       }
+
+      this._managedServerService.contextualHelpStream
+        .subscribe((routedContextInformations) => {
+          if (routedContextInformations) {
+            this._subContextInformations = routedContextInformations;
+          }
+        });
     });
   }
 
-  public addServer(): void {
-    if (!this.selfManagedServersElement) { return; }
-
-    // Initialize new instance of component service
-    let componentService: McsComponentService<CreateSelfManagedServerComponent>;
-    componentService = new McsComponentService<CreateSelfManagedServerComponent>(
-      CreateSelfManagedServerComponent,
-      this._componentFactoryResolver,
-      this._viewContainerRef,
-      this._injector,
-      this._renderer
-    );
-    componentService.createComponent();
-
-    // Set Component Input Parameters
-    componentService.componentRef.instance.vdcName = this.intellicentreValue;
-    componentService.appendComponentTo(this.selfManagedServersElement.nativeElement);
-
-    // Add new server to servers list
-    this.servers.push(componentService);
-  }
-
   public getAllContextualInformations() {
-    return mergeArrays(this._mainContextInformations,
-      this._managedServerService.subContextualHelp);
+    return mergeArrays(this._mainContextInformations, this._subContextInformations);
   }
 
   public getIntellicentres(): McsList {
@@ -137,6 +100,14 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit 
     itemList.push('Intellicentres',
       new McsListItem('intellicentre3', 'Intellicentre 3 (Syd) - VC 27117008'));
     return itemList;
+  }
+
+  public navigateToNewServer() {
+    this._router.navigate(['./servers/create/new']);
+  }
+
+  public onDeployClick(event: any) {
+    this._router.navigate(['./servers/provisioning']);
   }
 
   public onNavigateToServerPage() {

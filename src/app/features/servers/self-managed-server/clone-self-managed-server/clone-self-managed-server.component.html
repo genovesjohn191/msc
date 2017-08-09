@@ -1,12 +1,9 @@
-<form [hidden]="!isVisible" [formGroup]="formGroupCloneServer"
-  class="clone-self-managed-server-container">
+<section class="clone-self-managed-server-container">
 
   <div class="server-configuration-details">
     <mcs-dropdown name="Clone this server"
       placeholder="mongo-db-prod"
-      formControlName="formControlTargetServerName"
-      [dropdownData]="serverCatalogItems"
+      [(ngModel)]="serverCatalogValue" [dropdownData]="serverCatalogItems"
       [mcsContextualHelp]="contextualTextContent.cloneServer"></mcs-dropdown>
-    <mcs-validation-message [control]="formControlTargetServerName"></mcs-validation-message>
   </div>
-</form>
+</section>

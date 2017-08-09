@@ -243,7 +243,7 @@ export class ServersComponent implements OnInit, OnDestroy {
   }
 
   public onClickNewServerButton(event: any) {
-    this._router.navigate(['./servers/create']);
+    this._router.navigate(['./servers/create/new']);
   }
 
   public getActiveServerTooltip(serverId: any) {

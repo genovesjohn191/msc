@@ -13,21 +13,8 @@ import {
  */
 export class McsComponentService<T> {
   private _componentFactory: any;
-  private _contentRef: EmbeddedViewRef<any>;
-
-  /**
-   * Component Reference to assign inputs
-   *
-   * `@Note`: The value of this is undefined when the
-   * component is not yet created
-   */
   private _componentRef: ComponentRef<T>;
-  public get componentRef(): ComponentRef<T> {
-    return this._componentRef;
-  }
-  public set componentRef(value: ComponentRef<T>) {
-    this._componentRef = value;
-  }
+  private _contentRef: EmbeddedViewRef<any>;
 
   constructor(
     private _componentType: any,
@@ -74,18 +61,6 @@ export class McsComponentService<T> {
       this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._contentRef));
       this._contentRef = null;
     }
-  }
-
-  /**
-   * Appent the component element to the specified element in the input parameter
-   *
-   * `@Note` Make sure the component is created and the parent element is defined
-   * else it will nothing happen
-   * @param element The element to be append to
-   */
-  public appendComponentTo(element: any) {
-    if (!this._componentRef || !element) { return; }
-    this._renderer.appendChild(element, this.componentRef.location.nativeElement);
   }
 
   /**
