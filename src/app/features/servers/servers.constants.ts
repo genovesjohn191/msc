@@ -5,7 +5,7 @@ import {
   ServerService,
   ServerResolver
 } from './server/';
-import { CreateSelfManagedServersService } from './self-managed-server';
+import { CreateSelfManagedServerService } from './self-managed-server';
 import { ServersService } from './servers.service';
 /** Components */
 import { ServersComponent } from './servers.component';
@@ -16,7 +16,12 @@ import {
   ServerServicesComponent,
   ServerStorageComponent
 } from './server';
-import { CreateSelfManagedServersComponent } from './self-managed-server';
+import {
+  CreateSelfManagedServerComponent,
+  NewSelfManagedServerComponent,
+  CopySelfManagedServerComponent,
+  CloneSelfManagedServerComponent
+} from './self-managed-server';
 import {
   ProvisioningNotificationsComponent
 } from './provisioning-notifications/provisioning-notifications.component';
@@ -27,7 +32,7 @@ import {
 export const serversProviders: any[] = [
   ServersService,
   ServerService,
-  CreateSelfManagedServersService,
+  CreateSelfManagedServerService,
   ServersResolver,
   ServerResolver
 ];
@@ -40,7 +45,12 @@ export const serversRoutes: Routes = [
     path: 'servers', component: ServersComponent
   },
   {
-    path: 'servers/create', component: CreateSelfManagedServersComponent
+    path: 'servers/create', component: CreateSelfManagedServerComponent,
+    children: [
+      { path: 'new', component: NewSelfManagedServerComponent },
+      { path: 'copy', component: CopySelfManagedServerComponent },
+      { path: 'clone', component: CloneSelfManagedServerComponent }
+    ]
   },
   {
     path: 'servers/:id',

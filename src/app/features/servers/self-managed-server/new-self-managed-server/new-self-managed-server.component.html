@@ -1,23 +1,15 @@
-<form [hidden]="!isVisible" [formGroup]="formGroupNewServer"
-  class="new-self-managed-server-container">
+<section class="new-self-managed-server-container">
 
   <div class="server-details">
-    <div class="control-group">
-      <mcs-dropdown name="vApp"
-        placeholder="* Select a vApp"
-        formControlName="formControlVapp"
-        [dropdownData]="virtualApplicationItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVapp"></mcs-validation-message>
-    </div>
+    <mcs-dropdown name="vApp"
+      placeholder="Select a vApp"
+      [(ngModel)]="virtualApplicationValue"
+      [dropdownData]="virtualApplicationItems"></mcs-dropdown>
 
-    <div class="control-group">
-      <mcs-dropdown name="VM Template"
-        placeholder="* Select the VM template"
-        formControlName="formControlVTemplate"
-        [dropdownData]="virtualTemplateItems"
-        [mcsContextualHelp]="contextualTextContent.serverTemplate"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVTemplate"></mcs-validation-message>
-    </div>
+    <mcs-dropdown name="VM Template"
+      placeholder="Select the VM template"
+      [(ngModel)]="virtualTemplateValue" [dropdownData]="virtualTemplateItems"
+      [mcsContextualHelp]="contextualTextContent.serverTemplate"></mcs-dropdown>
   </div>
 
   <div class="computer-details">
@@ -26,9 +18,9 @@
         [memoryMB]="memoryInMb" [cpuCount]="cpuCount"
         availableMemoryMB="32768" availableCpuCount="8"
         (scaleChanged)="onScaleChanged($event)">
-        <!--Performance scale contents on the left hand side (title and description)-->
+        <!--Performance scale contents on the left hand side (description)-->
         <div title>
-          <span class="label">* Compute Size: </span>
+          <span class="label">Compute Size: </span>
         </div>
       </mcs-server-performance-scale>
     </div>
@@ -37,9 +29,9 @@
       <mcs-server-manage-storage
         [memoryGB]="storageMemoryInGb" [remainingMemoryGB]="storageAvailableMemoryInGb"
         [storageProfiles]="storageProfileItems" (storageChanged)="onStorageChanged($event)">
-        <!--Server manage storage contents on the left hand side (title and description)-->
+        <!--Server manage storage contents on the left hand side (description)-->
         <div title>
-          <span class="label">* Storage: </span>
+          <span class="label">Storage: </span>
         </div>
       </mcs-server-manage-storage>
     </div>
@@ -48,20 +40,19 @@
   <div class="network-details">
     <span class="label">Network:</span>
 
-    <div class="control-group">
-      <mcs-dropdown name="Primary Network"
-        placeholder="* Select this server's Primary Network"
-        formControlName="formControlNetwork"
-        [dropdownData]="primaryNetworkItems"
-        [mcsContextualHelp]="contextualTextContent.network"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
-    </div>
+    <mcs-dropdown name="Primary Network"
+      placeholder="Select this server's Primary Network"
+      [(ngModel)]="primaryNetworkValue" [dropdownData]="primaryNetworkItems"
+      [mcsContextualHelp]="contextualTextContent.network"></mcs-dropdown>
 
-    <mcs-server-ip-address (ipAddressChanged)="onIpAddressChanged($event)">
-      <!--Ip address contents on the left hand side (title and description)-->
-      <div title>
-        <span class="label">* IP Address: </span>
-      </div>
-    </mcs-server-ip-address>
+    <div class="ip-address-details">
+      <span class="label" >IP Address: </span>
+      <!--TODO: Custom size should be seperate component-->
+      <span class="custom-size float-right"><u>Enter custom IP address</u></span>
+
+      <mcs-radio-button-group [items]="getIpAddressGroup()"
+        [(ngModel)]="ipAddressValue"
+        orientation="vertical"></mcs-radio-button-group>
+    </div>
   </div>
-</form>
+</section>

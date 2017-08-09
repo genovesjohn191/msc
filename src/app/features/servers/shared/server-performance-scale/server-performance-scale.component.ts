@@ -31,8 +31,7 @@ import {
   refreshView,
   replacePlaceholder,
   animateFactory,
-  appendUnitSuffix,
-  isFormControlValid
+  appendUnitSuffix
 } from '../../../../utilities';
 
 @Component({
@@ -116,43 +115,36 @@ export class ServerPerformanceScaleComponent implements OnInit {
     // Set the minimum and maximum value of the progressbar based on the inputted data
     this._setMinMaxValue();
 
-    // Set the initial slider value
-    // in case there is no corresponding slider value on the table
-    // the size is a custom
-    this._setInitialSliderValue();
+    // Set the slider value based on the table definition list
+    this._setSliderValue();
 
     // Set the scale type based on the slider value and scale type
     this._setScaleType();
-
-    // Set the custom size
-    this._setInitialCustomSizeValue();
   }
 
   public onSliderChanged(index: number) {
     // Get Slider index value
     this.sliderValue = index;
-    this._notifyCpuSizeScale();
+    this._notifyCpuSizeScale(this.sliderTable[index].memoryMB, this.sliderTable[index].cpuCount);
   }
 
   public onMemoryChanged(inputValue: number) {
     this.customMemoryGBValue = inputValue;
-    this._notifyCpuSizeScale();
+    this._notifyCpuSizeScale(this.customMemoryGBValue, this.customCpuCountValue);
   }
 
   public onCpuCountChanged(inputValue: number) {
     this.customCpuCountValue = inputValue;
-    this._notifyCpuSizeScale();
+    this._notifyCpuSizeScale(this.customMemoryGBValue, this.customCpuCountValue);
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
-    refreshView(() => {
-      this.inputManageType = inputManageType;
-      this._notifyCpuSizeScale();
-    });
+    this._setCustomSizeValue();
+    refreshView(() => { this.inputManageType = inputManageType; });
   }
 
   public isControlValid(control: FormControl): boolean {
-    return isFormControlValid(control);
+    return control ? !(!control.valid && control.touched) : false;
   }
 
   private _registerFormGroup(): void {
@@ -216,7 +208,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     }
   }
 
-  private _setInitialSliderValue(): void {
+  private _setSliderValue(): void {
     let actualMemory = this.memoryMB;
 
     // Get slider current value based on table preferences
@@ -227,22 +219,11 @@ export class ServerPerformanceScaleComponent implements OnInit {
         break;
       }
     }
-
-    // Notify subscribers
-    if (this.sliderValue >= 0) {
-      this.onSliderChanged(this.sliderValue);
-    }
   }
 
-  private _setInitialCustomSizeValue(): void {
+  private _setCustomSizeValue(): void {
     this.customMemoryGBValue = this.memoryMB;
     this.customCpuCountValue = this.cpuCount;
-
-    // Notify subscribers
-    if (this.inputManageType === ServerInputManageType.Custom) {
-      this.onMemoryChanged(this.customMemoryGBValue);
-      this.onCpuCountChanged(this.customCpuCountValue);
-    }
   }
 
   private _setScaleType(): void {
@@ -250,6 +231,8 @@ export class ServerPerformanceScaleComponent implements OnInit {
     if (this.sliderValue === -1) {
       this.sliderValue = 0;
       this.inputManageType = ServerInputManageType.Custom;
+      // Set inital value for custom sizes
+      this._setCustomSizeValue();
     } else {
       this.inputManageType = ServerInputManageType.Slider;
     }
@@ -290,24 +273,14 @@ export class ServerPerformanceScaleComponent implements OnInit {
     });
   }
 
-  private _notifyCpuSizeScale() {
+  private _notifyCpuSizeScale(memoryMB: number, cpuCount: number) {
     let performanceScale: ServerPerformanceScale = new ServerPerformanceScale();
 
-    // Set model data based on management type
-    switch (this.inputManageType) {
-      case ServerInputManageType.Custom:
-        performanceScale.memoryMB = this.customMemoryGBValue;
-        performanceScale.cpuCount = this.customCpuCountValue;
-        performanceScale.valid = this.serverScaleCustomCpu.valid && this.serverScaleCustomRam.valid;
-        break;
+    performanceScale.memoryMB = Number(memoryMB);
+    performanceScale.cpuCount = Number(cpuCount);
+    performanceScale.valid = ServerInputManageType.Custom ?
+      this.serverScaleCustomCpu.valid && this.serverScaleCustomRam.valid : true;
 
-      case ServerInputManageType.Slider:
-      default:
-        performanceScale.memoryMB = this.sliderTable[this.sliderValue].memoryMB;
-        performanceScale.cpuCount = this.sliderTable[this.sliderValue].cpuCount;
-        performanceScale.valid = true;
-        break;
-    }
     refreshView(() => {
       this.scaleChanged.next(performanceScale);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
