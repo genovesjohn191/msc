@@ -1,0 +1,57 @@
+<form [formGroup]="formGroupCreateServer" class="create-self-managed-server-container">
+
+  <div class="server-name">
+    <mcs-textbox width="100%" placeholder="* Enter a server name"
+      formControlName="formControlServerName"
+      [mcsContextualHelp]="contextualTextContent.enterServerName"
+      [valid]="isControlValid(formControlServerName)"></mcs-textbox>
+    <mcs-validation-message [control]="formControlServerName"></mcs-validation-message>
+  </div>
+
+  <div class="mcs-tabs">
+    <!--Tab Links-->
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" role="tab"
+          (click)="setCreationType(serverCreateTypeEnum.New)"
+          [ngClass]="{active: serverCreateType === serverCreateTypeEnum.New}">
+          {{ createServerTextContent.newServer }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" role="tab"
+          (click)="setCreationType(serverCreateTypeEnum.Copy)"
+          [ngClass]="{active: serverCreateType === serverCreateTypeEnum.Copy}">
+          {{ createServerTextContent.copyServer }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" role="tab"
+          (click)="setCreationType(serverCreateTypeEnum.Clone)"
+          [ngClass]="{active: serverCreateType === serverCreateTypeEnum.Clone}">
+          {{ createServerTextContent.cloneServer }}</a>
+      </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" role="tabpanel">
+        <!-- New Self-Managed Server  -->
+        <mcs-new-self-managed-server
+          [isVisible]="serverCreateType === serverCreateTypeEnum.New"
+          (onOutputServerDetails)="setServerDetails($event)">
+        </mcs-new-self-managed-server>
+
+        <!-- Copy Self-Managed Server  -->
+        <mcs-copy-self-managed-server
+          [isVisible]="serverCreateType === serverCreateTypeEnum.Copy"
+          (onOutputServerDetails)="setServerDetails($event)">
+        </mcs-copy-self-managed-server>
+
+        <!-- Clone Self-Managed Server  -->
+        <mcs-clone-self-managed-server
+          [isVisible]="serverCreateType === serverCreateTypeEnum.Clone"
+          (onOutputServerDetails)="setServerDetails($event)">
+        </mcs-clone-self-managed-server>
+      </div>
+    </div>
+  </div>
+</form>

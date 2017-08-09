@@ -1,20 +1,31 @@
-<section class="copy-self-managed-server-container">
+<form [hidden]="!isVisible" [formGroup]="formGroupCopyServer"
+  class="copy-self-managed-server-container">
 
   <div class="server-configuration-details">
-    <mcs-dropdown name="Server Name"
-      placeholder="mongo-db-prod"
-      [(ngModel)]="serverNameValue" [dropdownData]="serverNameItems"
-      [mcsContextualHelp]="contextualTextContent.serverName"></mcs-dropdown>
+    <div class="control-group">
+      <mcs-dropdown name="Server Name"
+        placeholder="mongo-db-prod"
+        formControlName="formControlTargetServerName"
+        [dropdownData]="serverNameItems"
+        [mcsContextualHelp]="contextualTextContent.serverName"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlTargetServerName"></mcs-validation-message>
+    </div>
 
-    <mcs-dropdown name="Virtual Application"
-      placeholder="prod-vApp"
-      [(ngModel)]="virtualApplicationValue"
-      [dropdownData]="virtualApplicationItems"></mcs-dropdown>
+    <div class="control-group">
+      <mcs-dropdown name="Virtual Application"
+        placeholder="prod-vApp"
+        formControlName="formControlVApp"
+        [dropdownData]="virtualApplicationItems"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlVApp"></mcs-validation-message>
+    </div>
 
-    <mcs-dropdown name="Server Catalog"
-      placeholder="centos-7"
-      [(ngModel)]="serverCatalogValue"
-      [dropdownData]="serverCatalogItems"></mcs-dropdown>
+    <div class="control-group">
+      <mcs-dropdown name="Server Catalog"
+        placeholder="centos-7"
+        formControlName="formControlCatalog"
+        [dropdownData]="serverCatalogItems"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlCatalog"></mcs-validation-message>
+    </div>
   </div>
 
   <div class="computer-details">
@@ -23,7 +34,7 @@
         [memoryMB]="memoryInMb" [cpuCount]="cpuCount"
         availableMemoryMB="32768" availableCpuCount="8"
         (scaleChanged)="onScaleChanged($event)">
-        <!--Performance scale contents on the left hand side (description)-->
+        <!--Performance scale contents on the left hand side (title and description)-->
         <div title>
           <span class="label">Compute Size: </span>
         </div>
@@ -34,7 +45,7 @@
       <mcs-server-manage-storage
         [memoryGB]="storageMemoryInGb" [remainingMemoryGB]="storageAvailableMemoryInGb"
         [storageProfiles]="storageProfileItems" (storageChanged)="onStorageChanged($event)">
-        <!--Server manage storage contents on the left hand side (description)-->
+        <!--Server manage storage contents on the left hand side (title and description)-->
         <div title>
           <span class="label">Storage: </span>
         </div>
@@ -46,19 +57,19 @@
     <span class="label"
       [mcsContextualHelp]="contextualTextContent.network">Network:</span>
 
-    <mcs-dropdown name="Primary Network"
-      placeholder="VLAN 1501 - MXLN27117001"
-      [(ngModel)]="primaryNetworkValue"
-      [dropdownData]="primaryNetworkItems"></mcs-dropdown>
-
-    <div class="ip-address-details">
-      <span class="label" >IP Address: </span>
-      <!--TODO: Custom size should be seperate component-->
-      <span class="custom-size float-right"><u>Enter custom IP address</u></span>
-
-      <mcs-radio-button-group [items]="getIpAddressGroup()"
-        [(ngModel)]="ipAddressValue"
-        orientation="vertical"></mcs-radio-button-group>
+    <div class="control-group">
+      <mcs-dropdown name="Primary Network"
+        placeholder="VLAN 1501 - MXLN27117001"
+        formControlName="formControlNetwork"
+        [dropdownData]="primaryNetworkItems"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
     </div>
+
+    <mcs-server-ip-address (ipAddressChanged)="onIpAddressChanged($event)">
+      <!--Ip address contents on the left hand side (title and description)-->
+      <div title>
+        <span class="label">* IP Address: </span>
+      </div>
+    </mcs-server-ip-address>
   </div>
-</section>
+</form>
