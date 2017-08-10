@@ -2,33 +2,37 @@
 
 .copy-self-managed-server-container {
   width: 100%;
-  @include set-items-interval(20px);
+  @include set-items-interval($space-medium);
 
   .server-configuration-details {
     @include display-flex(column);
-    @include set-items-interval(20px);
+    @include set-items-interval($space-medium);
   }
 
   .computer-details {
     @include display-flex(column);
-    @include set-items-interval(20px);
+    @include set-items-interval($space-medium);
 
     .computer-information {
-      @include set-items-interval(10px);
+      @include set-items-interval($space-small);
     }
 
     .storage-information {
-      @include set-items-interval(10px);
+      @include set-items-interval($space-small);
     }
   }
 
   .network-details {
     @include display-flex(column);
-    @include set-items-interval(20px);
+    @include set-items-interval($space-medium);
   }
 
   .label {
     font-family: $base-font-bold;
     @include font-size(20);
   }
+}
+
+mcs-validation-message {
+  margin: 0;
 }
