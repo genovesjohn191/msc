@@ -5,7 +5,10 @@ import {
   tick
 } from '@angular/core/testing';
 import { ServerPerformanceScaleComponent } from './server-performance-scale.component';
-import { ServerInputManageType } from '../../models';
+import {
+  ServerInputManageType,
+  ServerPerformanceScale
+} from '../../models';
 import {
   CoreDefinition,
   McsTextContentProvider
@@ -60,21 +63,25 @@ describe('ServerPerformanceScaleComponent', () => {
       component.ngOnInit();
     }));
 
-    it(`should set the progressbar minimum value to 0`, () => {
+    it(`should set the progressbar minimum value to 0`, fakeAsync(() => {
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.minimum).toBe(0);
-    });
+    }));
 
-    it(`should set the progressbar maximum value to 9`, () => {
+    it(`should set the progressbar maximum value to 9`, fakeAsync(() => {
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.maximum).toBe(component.sliderTable.length - 1);
-    });
+    }));
 
-    it(`should set the slider value to 1`, () => {
+    it(`should set the slider value to 1`, fakeAsync(() => {
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.sliderValue).toBe(1);
-    });
+    }));
 
-    it(`should set the scale type to Slider`, () => {
+    it(`should set the scale type to Slider`, fakeAsync(() => {
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.inputManageType).toBe(ServerInputManageType.Slider);
-    });
+    }));
   });
 
   describe(`ngOnInit() when the inputted RAM and CPU Count not exist in the definition list`,
@@ -86,70 +93,72 @@ describe('ServerPerformanceScaleComponent', () => {
         component.ngOnInit();
       }));
 
-      it(`should set the progressbar minimum value to 0`, () => {
+      it(`should set the progressbar minimum value to 0`, fakeAsync(() => {
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.minimum).toBe(0);
-      });
+      }));
 
-      it(`should set the progressbar maximum value to 9`, () => {
+      it(`should set the progressbar maximum value to 9`, fakeAsync(() => {
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.maximum).toBe(component.sliderTable.length - 1);
-      });
+      }));
 
-      it(`should set the slider value to 0`, () => {
+      it(`should set the slider value to 0`, fakeAsync(() => {
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.sliderValue).toBe(0);
-      });
+      }));
 
-      it(`should set the scale type to Custom`, () => {
+      it(`should set the scale type to Custom`, fakeAsync(() => {
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.inputManageType).toBe(ServerInputManageType.Custom);
-      });
+      }));
     });
 
   describe('onSliderChanged()', () => {
-    beforeEach(async(() => {
-      component.ngOnInit();
-    }));
-
     it(`should change the slider value based on the inputted index
     and notify the output parameter`, fakeAsync(() => {
-      spyOn(component.scaleChanged, 'next');
-      component.onSliderChanged(1);
-      expect(component.sliderValue).toBe(1);
-      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-    }));
+        spyOn(component.scaleChanged, 'next');
+        component.onSliderChanged(1);
+        expect(component.sliderValue).toBe(1);
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+      }));
   });
 
   describe('onMemoryChanged()', () => {
     it(`should change the custom memory in GB based on the inputted index
     and notify the output parameter`, fakeAsync(() => {
-      spyOn(component.scaleChanged, 'next');
-      component.onMemoryChanged(2);
-      expect(component.customMemoryGBValue).toBe(2);
-      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-    }));
+        spyOn(component.scaleChanged, 'next');
+        component.onMemoryChanged(2);
+        expect(component.customMemoryGBValue).toBe(2);
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+      }));
   });
 
   describe('onCpuCountChanged()', () => {
     it(`should change the custom CPU count based on the inputted index
     and notify the output parameter`, fakeAsync(() => {
-      spyOn(component.scaleChanged, 'next');
-      component.onCpuCountChanged(3);
-      expect(component.customCpuCountValue).toBe(3);
-      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-      expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
-    }));
+        spyOn(component.scaleChanged, 'next');
+        component.onCpuCountChanged(3);
+        expect(component.customCpuCountValue).toBe(3);
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.scaleChanged.next).toHaveBeenCalledTimes(1);
+      }));
   });
 
   describe('onChangeInputManageType()', () => {
     it(`should change the input manage type to Custom`, fakeAsync(() => {
       component.onChangeInputManageType(ServerInputManageType.Custom);
-      tick();
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.inputManageType).toBe(ServerInputManageType.Custom);
     }));
 
     it(`should change the input manage type to Slider`, fakeAsync(() => {
+      component.sliderTable = new Array();
+      component.sliderTable.push({ memoryMB: 2048, cpuCount: 1 } as ServerPerformanceScale);
       component.onChangeInputManageType(ServerInputManageType.Slider);
-      tick();
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.inputManageType).toBe(ServerInputManageType.Slider);
     }));
   });

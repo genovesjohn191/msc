@@ -10,6 +10,7 @@ import {
   ContextualHelpDirective,
   ServerPerformanceScaleComponent,
   ServerManageStorageComponent,
+  ServerIpAddressComponent,
   ProvisioningNotificationsComponent
 } from './shared';
 /** Server */
@@ -23,6 +24,7 @@ import {
 /** Self Managed Servers */
 import {
   CreateSelfManagedServerComponent,
+  CreateSelfManagedServersComponent,
   NewSelfManagedServerComponent,
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent
@@ -33,6 +35,9 @@ import { serversProviders } from './servers.constants';
 import { SharedModule } from '../../shared';
 
 @NgModule({
+  entryComponents: [
+    CreateSelfManagedServerComponent
+  ],
   declarations: [
     ServersComponent,
     ServerListPanelComponent,
@@ -46,7 +51,9 @@ import { SharedModule } from '../../shared';
     ContextualHelpDirective,
     ServerPerformanceScaleComponent,
     ServerManageStorageComponent,
+    ServerIpAddressComponent,
     CreateSelfManagedServerComponent,
+    CreateSelfManagedServersComponent,
     NewSelfManagedServerComponent,
     CopySelfManagedServerComponent,
     CloneSelfManagedServerComponent,
