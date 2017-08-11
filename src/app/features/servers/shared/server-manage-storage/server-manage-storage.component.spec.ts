@@ -5,18 +5,26 @@ import {
   tick
 } from '@angular/core/testing';
 import { ServerManageStorageComponent } from './server-manage-storage.component';
-import { ServerInputManageType } from '../../models';
 import {
   CoreDefinition,
+  CoreValidators,
+  McsTextContentProvider,
   McsList,
-  McsListItem,
-  McsTextContentProvider
+  McsListItem
 } from '../../../../core';
+import {
+  ServerManageStorage,
+  ServerInputManageType,
+  ServerStorageDevice
+} from '../../models';
+import {
+  FormGroup,
+  FormControl
+} from '@angular/forms';
 
 describe('ServerManageStorageComponent', () => {
 
   /** Stub Services/Components */
-  CoreDefinition.INPUT_TIME = 0;  // Remove delay time
   let fixture: any;
   let component: ServerManageStorageComponent;
 
@@ -49,15 +57,15 @@ describe('ServerManageStorageComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.memoryGB = 200;
-      component.remainingMemoryGB = 900;
-      component.storageProfiles = new McsList();
+      component.memoryMB = 256000;
+      component.availableMemoryMB = 102400;
 
-      component.storageProfiles.push('Storage Profiles',
+      component.storageProfileList = new McsList();
+      component.storageProfileList.push('Storage Profiles',
         new McsListItem('storageProfile1', 'Storage 1'));
-      component.storageProfiles.push('Storage Profiles',
+      component.storageProfileList.push('Storage Profiles',
         new McsListItem('storageProfile2', 'Storage 2'));
-      component.storageProfiles.push('Storage Profiles',
+      component.storageProfileList.push('Storage Profiles',
         new McsListItem('storageProfile3', 'Storage 3'));
 
       component.ngOnInit();
@@ -66,113 +74,85 @@ describe('ServerManageStorageComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it(`should set the progressbar minimum value to memoryGB + 1`, () => {
-      expect(component.minimum).toBe(component.memoryGB + 1);
+    it(`should set the storageProfileValue to the first item of storageProfileList`, () => {
+      expect(component.storageProfileValue)
+        .toBe(component.storageProfileList.getGroup('Storage Profiles')[0].key);
     });
 
-    it(`should set the progressbar maximum value to
-      component.memoryGB + component.remainingMemoryGB`, () => {
-        expect(component.maximum).toBe(component.memoryGB + component.remainingMemoryGB);
-      });
+    it(`should trigger next from storageProfileChanged event emitter`, fakeAsync(() => {
+        spyOn(component.storageProfileChanged, 'next');
+        component.ngOnInit();
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageProfileChanged.next).toHaveBeenCalledTimes(1);
+      }));
 
-    it(`should set the slider value to memoryGB + 1`, () => {
-      expect(component.sliderValue).toBe(component.memoryGB + 1);
-    });
+    it(`should trigger next from storageChanged event emitter`, fakeAsync(() => {
+        spyOn(component.storageChanged, 'next');
+        component.ngOnInit();
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+      }));
   });
 
-  describe('currentMemory()', () => {
-    it(`should get the current memory`, () => {
-      expect(component.currentMemory).toBe(component.sliderValue);
+  describe('ngOnChanges()', () => {
+    it(`should set the value minimum`, () => {
+      component.ngOnChanges();
+      expect(component.minimum).toBe(component.memoryGB);
     });
+
+    it(`should set the value of maximum`, () => {
+      component.ngOnChanges();
+      expect(component.maximum).toBe(Math.floor(component.memoryGB + component.availableMemoryGB));
+    });
+
+    it(`should update the storageValue`, fakeAsync(() => {
+        spyOn(component.storageChanged, 'next');
+        component.ngOnChanges();
+        expect(component.storageValue).toBe(component.memoryGB);
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+      }));
   });
 
-  describe('validCustomInput()', () => {
-    it(`should return false when the final storage value is not
-    in the range of storage memory and available memory`, () => {
-      component.customFinalStorageValue = 199;
-      expect(component.validCustomInput).toBeFalsy();
-    });
+  describe('onStorageProfileChanged()', () => {
+    it(`should set the storageProfileValue based on
+      the selected item from dropdown`, fakeAsync(() => {
+        spyOn(component.storageProfileChanged, 'next');
+        component.onStorageProfileChanged('storageProfile1');
+        expect(component.storageProfileValue).toBe('storageProfile1');
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageProfileChanged.next).toHaveBeenCalledTimes(1);
+      }));
 
-    it(`should return false when the final storage value is
-    in the range of storage memory and available memory`, () => {
-      component.customFinalStorageValue = 500;
-      expect(component.validCustomInput).toBeTruthy();
-    });
+    it(`should trigger next from storageChanged event emitter`, fakeAsync(() => {
+        spyOn(component.storageChanged, 'next');
+        component.onStorageProfileChanged('storageProfile1');
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+      }));
   });
 
-  describe('onSliderChanged()', () => {
-    it(`should changed the slider value based on the inputted index
-    and notify the output parameter`, () => {
-      spyOn(component.storageChanged, 'next');
-      component.onSliderChanged(1);
-      expect(component.sliderValue).toBe(1);
-      expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('onCustomStorageChanged()', () => {
-    it(`should changed the storage value based on the inputted value`, () => {
-      spyOn(component.storageChanged, 'next');
-      component.customFinalStorageValue = 250;
-      component.onCustomStorageChanged(250);
-      expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('onStorageProfileChanged() in case the input manage type is Custom', () => {
-    beforeEach(async(() => {
-      component.inputManageType = ServerInputManageType.Custom;
-    }));
-
-    it(`should changed the storage profile value based on the inputted value`, () => {
-      component.onStorageProfileChanged(2);
-      expect(component.storageProfileValue).toBe(2);
-    });
-
-    it(`should return the custom storage value`, () => {
-      expect(component.onStorageProfileChanged(2))
-        .toBe(component.customStorageValue);
-    });
-
-    it(`should notify the output parameter`, () => {
-      spyOn(component.storageChanged, 'next');
-      component.onStorageProfileChanged(2);
-      expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('onStorageProfileChanged() in case the input manage type is Slider', () => {
-    beforeEach(async(() => {
-      component.inputManageType = ServerInputManageType.Slider;
-    }));
-
-    it(`should changed the storage profile value based on the inputted value`, () => {
-      component.onStorageProfileChanged(2);
-      expect(component.storageProfileValue).toBe(2);
-    });
-
-    it(`should return the slider value`, () => {
-      expect(component.onStorageProfileChanged(2))
-        .toBe(component.sliderValue);
-    });
-
-    it(`should notify the output parameter`, () => {
-      spyOn(component.storageChanged, 'next');
-      component.onStorageProfileChanged(2);
-      expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
-    });
+  describe('onStorageChanged()', () => {
+    it(`should change the storageValue based on the input value
+      from the slider or custom inputs`, fakeAsync(() => {
+        spyOn(component.storageChanged, 'next');
+        component.onStorageChanged(250);
+        expect(component.storageValue).toBe(250);
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+      }));
   });
 
   describe('onChangeInputManageType()', () => {
     it(`should change the input manage type to Custom`, fakeAsync(() => {
       component.onChangeInputManageType(ServerInputManageType.Custom);
-      tick();
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.inputManageType).toBe(ServerInputManageType.Custom);
     }));
 
     it(`should change the input manage type to Slider`, fakeAsync(() => {
       component.onChangeInputManageType(ServerInputManageType.Slider);
-      tick();
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.inputManageType).toBe(ServerInputManageType.Slider);
     }));
   });

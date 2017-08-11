@@ -26,18 +26,33 @@
     }
   }
 
-  .other-storage {
+  .storage {
     li {
       @include display-flex(row);
       align-items: center;
       justify-content: flex-end;
+      @include set-items-interval($space-small, horizontal);
 
-      > * {
-        @include flex(1);
+      &:first-child {
+        margin-bottom: $space-small;
       }
 
-      .path {
+      .storage-device-label {
+        @include flex(0 1 25%);
+      }
+
+      .storage-profile-label {
+        @include flex(0 1 25%);
+      }
+
+      .capacity-label {
+        @include flex(0 1 50%);
+      }
+
+      .name {
+        @include flex(0 1 25%);
         @include display-flex(row);
+        align-items: center;
         @include breakpoint(medium) {
           @include flex(2)
         }
@@ -47,9 +62,29 @@
         }
       }
 
-      .delete {
-        @include flex(2);
-        text-align: right;
+      .storage-profile {
+        @include flex(0 1 25%);
+      }
+
+      .capacity {
+        @include flex(0 1 50%);
+        @include display-flex(row);
+        align-items: center;
+
+        .value {
+          @include flex(2);
+          @include breakpoint(medium) {
+            @include flex(1)
+          }
+        }
+
+        .expand {
+          @include flex(1);
+        }
+
+        .delete {
+          @include flex(1);
+        }
       }
     }
   }

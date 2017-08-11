@@ -1,4 +1,5 @@
 type unitType = 'megabyte' | 'gigabyte' | 'cpu';
+let gbToMbMultiplier = 1024;
 
 /**
  * This will return the size value together with its unit as a string
@@ -7,7 +8,7 @@ type unitType = 'megabyte' | 'gigabyte' | 'cpu';
  */
 export function appendUnitSuffix(value: number, unitType: unitType): string {
 
-  if (!value || !unitType) { return ''; }
+  if (!unitType) { return ''; }
 
   let unitValue: string;
 
@@ -31,4 +32,24 @@ export function appendUnitSuffix(value: number, unitType: unitType): string {
 
   // Return the value with unit
   return `${value} ${unitValue}`;
+}
+
+/**
+ * This will return the value converted from MB to GB
+ * @param value Value in MB
+ */
+export function convertToGb(value: number): number {
+  if (!value) { return 0; }
+
+  return (value / gbToMbMultiplier);
+}
+
+/**
+ * This will return the value converted from GB to MB
+ * @param value Value in GB
+ */
+export function convertToMb(value: number): number {
+  if (!value) { return 0; }
+
+  return (value * gbToMbMultiplier);
 }
