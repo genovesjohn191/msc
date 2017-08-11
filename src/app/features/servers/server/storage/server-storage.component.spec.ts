@@ -21,26 +21,19 @@ describe('ServerStorageComponent', () => {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
     vdcName: 'M1VDC27117001',
-    fileSystem: [
+    storageDevice: [
       {
-        path: '/',
-        capacityGB: 49,
-        freeSpaceGB: 48
-      },
-      {
-        path: '/boot',
-        capacityGB: 1,
-        freeSpaceGB: 1
-      },
-      {
-        path: '/tmp',
-        capacityGB: 49,
-        freeSpaceGB: 48
-      },
-      {
-        path: '/var/tmp',
-        capacityGB: 49,
-        freeSpaceGB: 48
+        name: 'Hard disk 1',
+        sizeMB: 524288.00,
+        storageDeviceType: 'VMDK',
+        storageDeviceInterfaceType: 'SCSI',
+        backingVcenter: 'testvcdvc0301',
+        backingId: 'datastore-64',
+        storageProfile: 'T2000-PVDC0301',
+        wwn: null,
+        vendor: 'VMware',
+        remoteHost: null,
+        remotePath: null
       }
     ],
   };
@@ -85,21 +78,6 @@ describe('ServerStorageComponent', () => {
       expect(component.server).toBeDefined();
     });
 
-    it('should get the server\'s primary storage', () => {
-      serverService.selectedServerStream.next(mockServerDetails as Server);
-      expect(component.primaryStorage).toEqual(mockServerDetails.fileSystem[0]);
-    });
-
-    it('should get the server\'s other storage', () => {
-      serverService.selectedServerStream.next(mockServerDetails as Server);
-      expect(component.otherStorage).toEqual(mockServerDetails.fileSystem.slice(1));
-    });
-
-    it('should get the server\'s storage total free space', () => {
-      serverService.selectedServerStream.next(mockServerDetails as Server);
-      expect(component.storageAvailableMemoryInGb).toBeDefined();
-    });
-
     it('should set the storage icon key', () => {
       expect(component.storageIconKey).toEqual(CoreDefinition.ASSETS_SVG_STORAGE);
     });
@@ -108,16 +86,28 @@ describe('ServerStorageComponent', () => {
       expect(component.serverStorageText).toBeDefined();
     });
 
-    it('should get the server\'s storage profiles', () => {
-      expect(component.storageProfileItems).toBeDefined();
+    it('should define the storageDevices', () => {
+      expect(component.storageDevices).toBeDefined();
+    });
+
+    it('should define the storageProfileList', () => {
+      expect(component.storageProfileList).toBeDefined();
+    });
+
+    it('should define the serverPlatformData', () => {
+      expect(component.storageDevices).toBeDefined();
+    });
+
+    it('should define the serverPlatformStorage', () => {
+      expect(component.storageProfileList).toBeDefined();
     });
   });
 
   describe('ngOnDestroy()', () => {
     it('should unsubscribe from the subscription', () => {
-      spyOn(component.subscription, 'unsubscribe');
+      spyOn(component.serverSubscription, 'unsubscribe');
       component.ngOnDestroy();
-      expect(component.subscription.unsubscribe).toHaveBeenCalled();
+      expect(component.serverSubscription.unsubscribe).toHaveBeenCalled();
     });
   });
 });

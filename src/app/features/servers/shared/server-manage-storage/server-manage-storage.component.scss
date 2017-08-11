@@ -32,13 +32,17 @@
   .custom-size-content {
     min-height: 100px;
     margin-top: $space-medium;
-    @include set-items-interval(20px, horizontal);
-    * {
-      display: inline-block;
-    }
 
     .custom-size-input {
+      width: 100%;
       @include set-items-interval(20px, horizontal);
+      * {
+        display: inline-block;
+      }
+
+      mcs-textbox {
+        width: 100% !important;
+      }
     }
 
     .custom-size-input-error {

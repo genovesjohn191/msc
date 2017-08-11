@@ -66,7 +66,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   public platformData: ServerPlatform;
   public platformDataSubscription: any;
-  public resources: ServerResource[];
+  public resource: ServerResource;
 
   public serverMemoryValue: string;
   public serverCpuValue: string;
@@ -135,7 +135,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this._serverCpuSizeScale = new ServerPerformanceScale();
     this.activeNotifications = new Array();
     this.platformData = new ServerPlatform();
-    this.resources = new Array<ServerResource>();
+    this.resource = new ServerResource();
   }
 
   public ngOnInit() {
@@ -240,7 +240,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.platformDataSubscription = this._serverService.getPlatformData()
       .subscribe((data) => {
         this.platformData = data.content;
-        this.resources = this._getResourcesByVdc(this.server.vdcName);
+        this.resource = this._getResourceByVdc(this.server.vdcName);
         this._initializeServerPerformanceScaleValue();
         this.isServerScale = true;
       });
@@ -296,22 +296,22 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _getResourcesByVdc(vdcName: string): ServerResource[] {
+  private _getResourceByVdc(vdcName: string): ServerResource {
     if (!this.platformData.environments) { return; }
 
-    let resources = new Array<ServerResource>();
+    let serverResource: ServerResource;
 
     for (let environment of this.platformData.environments) {
-      let resource = environment.resources.find((result) => {
+      serverResource = environment.resources.find((result) => {
         return result.name === vdcName;
       });
 
-      if (resource) {
-        resources.push(resource);
+      if (serverResource) {
+        break;
       }
     }
 
-    return resources;
+    return serverResource;
   }
 
   private _getScalingNotificationStatus() {
@@ -335,14 +335,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       this.initialServerPerformanceScaleValue.cpuCount = this.server.cpuCount;
     }
 
-    if (this.resources.length > 0) {
-      for (let resource of this.resources) {
-        if (resource.memoryAllocationMB && resource.cpuAllocation) {
-          this.remainingMemory = resource.memoryAllocationMB - resource.memoryReservationMB;
-          this.remainingCpu = resource.cpuAllocation - resource.cpuReservation;
-          break;
-        }
-      }
+    if (this.resource) {
+      this.remainingMemory = this.resource.memoryAllocationMB - this.resource.memoryReservationMB;
+      this.remainingCpu = this.resource.cpuAllocation - this.resource.cpuReservation;
     }
   }
 

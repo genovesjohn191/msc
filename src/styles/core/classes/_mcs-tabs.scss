@@ -20,7 +20,7 @@ $navlink-padding: 9px;
         margin-right: $space-xlarge;
         @include breakpoint(small) {
           @include font-size($link-small-font-size);
-          margin-right: $space-medium;
+          margin-right: $space-small;
         }
 
         &.active {

@@ -29,7 +29,8 @@ import {
   ServerManageStorage,
   ServerPerformanceScale,
   ServerIpAddress,
-  ServerCreateSelfManaged
+  ServerCreateSelfManaged,
+  ServerStorage
 } from '../../models';
 
 @Component({
@@ -59,16 +60,16 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public formGroupSubscription: any;
 
   // Scale and Storage
-  public memoryInMb: number;
+  public memoryMB: number;
   public cpuCount: number;
-  public storageMemoryInGb: number;
-  public storageAvailableMemoryInGb: number;
+  public storageMemoryMB: number;
+  public storageAvailableMemoryMB: number;
 
   // Dropdowns
   public virtualApplicationItems: McsList;
   public virtualTemplateItems: McsList;
   public primaryNetworkItems: McsList;
-  public storageProfileItems: McsList;
+  public storageProfileList: McsList;
   public ipAddressItems: McsListItem[];
   public contextualTextContent: any;
 
@@ -77,11 +78,10 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     private _textContentProvider: McsTextContentProvider
   ) {
     // TODO: Temporary set the value for demo purpose
-    this.memoryInMb = 4096;
+    this.memoryMB = 4096;
     this.cpuCount = 2;
-    this.storageMemoryInGb = 200;
-    this.storageAvailableMemoryInGb = 900;
-
+    this.storageMemoryMB = 204800;
+    this.storageAvailableMemoryMB = 921600;
     this.isVisible = false;
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
@@ -95,7 +95,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.virtualApplicationItems = this.getVirtualApplications();
     this.virtualTemplateItems = this.getVirtualTemplates();
     this.primaryNetworkItems = this.getPrimaryNetwork();
-    this.storageProfileItems = this.getStorageProfiles();
+    this.storageProfileList = this.getStorageProfiles();
     this.ipAddressItems = this.getIpAddressGroup();
   }
 

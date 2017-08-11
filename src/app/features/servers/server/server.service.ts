@@ -8,7 +8,8 @@ import {
   Server,
   ServerPerformanceScale,
   ServerThumbnail,
-  ServerUpdate
+  ServerUpdate,
+  ServerStorageDeviceUpdate
 } from '../models';
 import {
   McsApiSuccessResponse,
@@ -38,12 +39,15 @@ export class ServerService {
     this._listenToActiveServers();
   }
 
+  /**
+   * Get Platform Data (MCS API Response)
+   */
   public getPlatformData() {
     return this._serversService.getPlatformData();
   }
 
   /**
-   * This method will set the CPU Size Scale based on the given date
+   * This method will set the CPU Size Scale based on the given data
    * @param serverId Server ID
    * @param cpuSizeScale CPU Size Scale of the server to be updated
    */
@@ -64,6 +68,21 @@ export class ServerService {
         }
       } as ServerUpdate
     );
+  }
+
+  /**
+   * This method will set the storage device update based on the given data
+   * @param serverId Server ID
+   * @param storageDeviceUpdate storage device update data
+   */
+  public setStorageDeviceUpdate(
+    serverId: any,
+    storageDeviceUpdate: ServerStorageDeviceUpdate
+  ) {
+    if (!storageDeviceUpdate) { return; }
+
+    // Update scaling of server based on cpu size scale
+    return this._serversService.patchStorageDevice(serverId, storageDeviceUpdate);
   }
 
   /**

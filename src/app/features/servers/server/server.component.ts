@@ -57,9 +57,9 @@ export class ServerComponent implements OnInit, OnDestroy {
       });
 
     if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
+      this.serverTextContent = this._textContentProvider.content.servers.server;
       this.servers = this._route.snapshot.data.servers.content;
       this.server = this._route.snapshot.data.server.content;
-      this.serverTextContent = this._textContentProvider.content.servers.server;
     } else {
       this._router.navigate(['/page-not-found']);
     }

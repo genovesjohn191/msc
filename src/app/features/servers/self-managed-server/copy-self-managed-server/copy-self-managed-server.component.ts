@@ -58,10 +58,10 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
   public formControlIpAddress: FormControl;
 
   // Scale and Storage
-  public memoryInMb: number;
+  public memoryMB: number;
   public cpuCount: number;
-  public storageMemoryInGb: number;
-  public storageAvailableMemoryInGb: number;
+  public storageMemoryMB: number;
+  public storageAvailableMemoryMB: number;
 
   // Dropdowns
   public ipAddressValue: string;
@@ -69,7 +69,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
   public serverNameItems: McsList;
   public virtualApplicationItems: McsList;
   public serverCatalogItems: McsList;
-  public storageProfileItems: McsList;
+  public storageProfileList: McsList;
   public contextualTextContent: any;
 
   public constructor(
@@ -77,10 +77,10 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     private _textContentProvider: McsTextContentProvider
   ) {
     // TODO: Temporary set the value for demo purpose
-    this.memoryInMb = 4096;
+    this.memoryMB = 4096;
     this.cpuCount = 2;
-    this.storageMemoryInGb = 200;
-    this.storageAvailableMemoryInGb = 900;
+    this.storageMemoryMB = 204800;
+    this.storageAvailableMemoryMB = 921600;
 
     this.isVisible = false;
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
@@ -97,7 +97,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     this.serverNameItems = this.getServerNames();
     this.virtualApplicationItems = this.getVirtualApplications();
     this.serverCatalogItems = this.getServerCatalogs();
-    this.storageProfileItems = this.getStorageProfiles();
+    this.storageProfileList = this.getStorageProfiles();
   }
 
   public ngAfterViewInit() {

@@ -25,7 +25,8 @@ import {
   ServerThumbnail,
   ServerUpdate,
   ServerCommand,
-  ServerPlatform
+  ServerPlatform,
+  ServerStorageDeviceUpdate
 } from './models';
 
 /**
@@ -172,6 +173,31 @@ export class ServersService {
   }
 
   /**
+   * Patch storage device data to process the storage device updates
+   * *Note: This will send a job (notification)
+   * @param id Server identification
+   * @param storageDeviceData Server storage data for the patch update
+   */
+  public patchStorageDevice(
+    id: any,
+    storageDeviceData: ServerStorageDeviceUpdate
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers/' + id + '/disks';
+    mcsApiRequestParameter.recordData = JSON.stringify(storageDeviceData);
+
+    return this._mcsApiService.patch(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
    * Get the server thumbnail for the image of the console
    * * Note: This will return the thumbnail for display
    * @param id Server identification
@@ -239,6 +265,9 @@ export class ServersService {
     }
   }
 
+  /**
+   * Get Platform Data (MCS API Response)
+   */
   public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/platform';

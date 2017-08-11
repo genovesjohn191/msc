@@ -22,7 +22,8 @@ import {
   ServerUpdate,
   ServerClientObject,
   ServerCommand,
-  ServerPowerState
+  ServerPowerState,
+  ServerStorageDeviceUpdate
 } from './models';
 import { ServersService } from './servers.service';
 import {
@@ -367,6 +368,75 @@ describe('ServersService', () => {
       });
 
       serversService.patchServer(requestOptions.id, requestOptions.serverUpdate)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('patchStorageDevice()', () => {
+    let requestOptions = {
+      id: 500,
+      serverStorageUpdate: new ServerStorageDeviceUpdate()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: 0,
+                    summaryInformation: 'Server Storage Update'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.patchStorageDevice(requestOptions.id, requestOptions.serverStorageUpdate)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id).toEqual(requestOptions.id);
+          expect(mcsApiSucessResponse[0].content[0].type).toEqual(0);
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Storage Update');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Patch);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.patchStorageDevice(requestOptions.id, requestOptions.serverStorageUpdate)
         .catch((error: McsApiErrorResponse) => {
           expect(error).toBeDefined();
           expect(error.status).toEqual(404);
