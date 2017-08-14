@@ -23,8 +23,8 @@
     </div>
   </div>
 
+  <!--Custom size content element-->
   <form [formGroup]="formGroupServerStorage">
-    <!--Custom size content element-->
     <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
       <div [@animate]="'fadeIn'" class="custom-size-content">
         <div class="custom-size-input">
@@ -32,8 +32,7 @@
           <mcs-textbox width="150px" placeholder="GB"
             formControlName="formControlServerStorageCustom"
             [valid]="isControlValid(formControlServerStorageCustom)"
-            [ngModel]="storageValue"
-            (ngModelChange)="onStorageChanged($event)"></mcs-textbox>
+            [ngModel]="storageValue"></mcs-textbox>
           <span class="unit">{{ storageTextContent.unit }}</span>
         </div>
         <mcs-validation-message [control]="formControlServerStorageCustom"></mcs-validation-message>
@@ -45,7 +44,7 @@
   <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
     <div class="slider-content">
       <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum"
-        [ngModel]="storageValue" (ngModelChange)="onStorageChanged($event)"></mcs-slider>
+        [ngModel]="sliderValue" (ngModelChange)="onStorageChanged($event)"></mcs-slider>
       <span class="storage-label">
         {{ currentMemory }}
       </span>

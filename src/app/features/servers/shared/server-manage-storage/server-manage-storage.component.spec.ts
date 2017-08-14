@@ -78,20 +78,6 @@ describe('ServerManageStorageComponent', () => {
       expect(component.storageProfileValue)
         .toBe(component.storageProfileList.getGroup('Storage Profiles')[0].key);
     });
-
-    it(`should trigger next from storageProfileChanged event emitter`, fakeAsync(() => {
-        spyOn(component.storageProfileChanged, 'next');
-        component.ngOnInit();
-        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageProfileChanged.next).toHaveBeenCalledTimes(1);
-      }));
-
-    it(`should trigger next from storageChanged event emitter`, fakeAsync(() => {
-        spyOn(component.storageChanged, 'next');
-        component.ngOnInit();
-        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
-      }));
   });
 
   describe('ngOnChanges()', () => {
@@ -108,25 +94,7 @@ describe('ServerManageStorageComponent', () => {
     it(`should update the storageValue`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.ngOnChanges();
-        expect(component.storageValue).toBe(component.memoryGB);
-        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
-      }));
-  });
-
-  describe('onStorageProfileChanged()', () => {
-    it(`should set the storageProfileValue based on
-      the selected item from dropdown`, fakeAsync(() => {
-        spyOn(component.storageProfileChanged, 'next');
-        component.onStorageProfileChanged('storageProfile1');
-        expect(component.storageProfileValue).toBe('storageProfile1');
-        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageProfileChanged.next).toHaveBeenCalledTimes(1);
-      }));
-
-    it(`should trigger next from storageChanged event emitter`, fakeAsync(() => {
-        spyOn(component.storageChanged, 'next');
-        component.onStorageProfileChanged('storageProfile1');
+        expect(component.sliderValue).toBe(component.memoryGB);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
       }));
@@ -137,7 +105,7 @@ describe('ServerManageStorageComponent', () => {
       from the slider or custom inputs`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.onStorageChanged(250);
-        expect(component.storageValue).toBe(250);
+        expect(component.sliderValue).toBe(250);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
       }));
@@ -146,6 +114,7 @@ describe('ServerManageStorageComponent', () => {
   describe('onChangeInputManageType()', () => {
     it(`should change the input manage type to Custom`, fakeAsync(() => {
       component.onChangeInputManageType(ServerInputManageType.Custom);
+      component.formControlServerStorageCustom = new FormControl();
       tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.inputManageType).toBe(ServerInputManageType.Custom);
     }));

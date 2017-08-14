@@ -53,9 +53,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public storageProfileList: McsList;
 
   @Output()
-  public storageProfileChanged: EventEmitter<any>;
-
-  @Output()
   public storageChanged: EventEmitter<ServerManageStorage>;
 
   public inputManageType: ServerInputManageType;
@@ -63,7 +60,8 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public storageTextContent: any;
 
   public storageProfileValue: any;
-  public storageValue: number;
+  public sliderValue: number;
+  public customStorageValue: number;
   public minimum: number;
   public maximum: number;
 
@@ -82,20 +80,19 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get currentMemory(): string {
-    return appendUnitSuffix(this.storageValue, 'gigabyte');
+    return appendUnitSuffix(this.sliderValue, 'gigabyte');
   }
 
   public get remainingMemory(): string {
-    return appendUnitSuffix(this.maximum - this.storageValue, 'gigabyte');
+    return appendUnitSuffix(this.maximum - this.sliderValue, 'gigabyte');
   }
 
   public constructor(private _textProvider: McsTextContentProvider) {
     this.storageProfileValue = '';
-    this.storageValue = 0;
+    this.sliderValue = 0;
     this.minimum = 0;
     this.maximum = 0;
     this.inputManageType = ServerInputManageType.Slider;
-    this.storageProfileChanged = new EventEmitter<any>();
     this.storageChanged = new EventEmitter<ServerManageStorage>();
   }
 
@@ -103,7 +100,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     if (this.storageProfileList) {
       let groupName = this.storageProfileList.getGroupNames()[0];
       this.storageProfileValue = this.storageProfileList.getGroup(groupName)[0].key;
-      this.onStorageProfileChanged(this.storageProfileValue);
     }
   }
 
@@ -116,19 +112,25 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
-    refreshView(() => { this.inputManageType = inputManageType; });
+    refreshView(() => {
+      this.inputManageType = inputManageType;
+      this._notifyStorageChanged();
+    });
+  }
+
+  public onCustomStorageChanged(inputValue: number) {
+    this.customStorageValue = inputValue;
+    this._notifyStorageChanged();
   }
 
   public onStorageChanged(value: number) {
-    this.storageValue = value;
+    this.sliderValue = value;
     this._notifyStorageChanged();
   }
 
   public onStorageProfileChanged(value: any): void {
     this.storageProfileValue = value;
-
     this._setCustomControlValidator();
-    this._notifyStorageProfileChanged();
     this._notifyStorageChanged();
   }
 
@@ -147,14 +149,15 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this.maximum = Math.floor(this.memoryGB + this.availableMemoryGB);
 
     this.onStorageChanged(this.memoryGB);
-    this._setCustomControlValidator();
   }
 
   private _registerFormGroup(): void {
     // Create custom storage control and register the listener
-    this.formControlServerStorageCustom = new FormControl();
+    this.formControlServerStorageCustom = new FormControl('', [
+      CoreValidators.required
+    ]);
     this.formControlSubscription = this.formControlServerStorageCustom.valueChanges
-      .subscribe(this.onStorageChanged.bind(this));
+      .subscribe(this.onCustomStorageChanged.bind(this));
 
     // Bind server storage form control to the main form
     this.formGroupServerStorage = new FormGroup({
@@ -186,22 +189,25 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return inputValue <= this.maximum;
   }
 
-  private _validateServerStorage(): boolean {
-    return this.storageValue > this.memoryGB && this._customStorageValidator(this.storageValue);
-  }
-
-  private _notifyStorageProfileChanged() {
-    refreshView(() => {
-      this.storageProfileChanged.next(this.storageProfileValue);
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-  }
-
   private _notifyStorageChanged() {
+    let serverStorage = new ServerManageStorage();
+
+    // Set model data based on management type
+    switch (this.inputManageType) {
+      case ServerInputManageType.Custom:
+        serverStorage.storageMB = convertToMb(this.customStorageValue);
+        serverStorage.storageProfile = this.storageProfileValue;
+        serverStorage.valid = this.formControlServerStorageCustom.valid;
+        break;
+
+      case ServerInputManageType.Slider:
+      default:
+        serverStorage.storageMB = convertToMb(this.sliderValue);
+        serverStorage.storageProfile = this.storageProfileValue;
+        serverStorage.valid = true;
+        break;
+    }
     refreshView(() => {
-      let serverStorage = new ServerManageStorage();
-      serverStorage.storageProfile = this.storageProfileValue;
-      serverStorage.storageMB = convertToMb(this.storageValue);
-      serverStorage.valid = this._validateServerStorage();
       this.storageChanged.next(serverStorage);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
