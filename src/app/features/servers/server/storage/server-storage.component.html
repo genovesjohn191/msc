@@ -42,8 +42,8 @@
                           <span>{{ serverStorageText.deleteStorageConfirmation }}</span>
                       </mcs-alert>
                       <div class="confirm">
-                        <mcs-button size="small" (click)="deleteStorageModal.close()">Yes</mcs-button>
-                        <mcs-button size="small" (click)="deleteStorageModal.close()">No</mcs-button>
+                        <a (click)="deleteStorageModal.close()">Cancel</a>
+                        <mcs-button icon="arrow" (click)="onDeleteStorage(storage)">Yes</mcs-button>
                       </div>
                     </div>
                   </div>
@@ -54,7 +54,7 @@
         </ul>
       </div>
       <div class="add-new-storage">
-         <mcs-server-manage-storage
+         <mcs-server-manage-storage 
           [storageProfileList]="storageProfileList"
           [memoryMB]="newStorageDevice.sizeMB"
           [availableMemoryMB]="getStorageAvailableMemory(newStorageDevice)"

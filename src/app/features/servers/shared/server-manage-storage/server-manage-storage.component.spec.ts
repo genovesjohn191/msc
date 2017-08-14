@@ -92,7 +92,7 @@ describe('ServerManageStorageComponent', () => {
         component.ngOnInit();
         expect(component.sliderValue).toBe(component.memoryGB);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(3);
       }));
   });
 

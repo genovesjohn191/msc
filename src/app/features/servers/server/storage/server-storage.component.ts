@@ -17,7 +17,9 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsList,
-  McsListItem
+  McsListItem,
+  McsNotificationContextService,
+  McsApiJob
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import {
@@ -54,6 +56,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public storageChangedValue: ServerManageStorage;
 
+  public notificationsSubscription: any;
+  public notifications: McsApiJob[];
+
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
   }
@@ -64,7 +69,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   constructor(
     private _textProvider: McsTextContentProvider,
-    private _serverService: ServerService
+    private _serverService: ServerService,
+    private _notificationContextService: McsNotificationContextService
   ) {
     // Constructor
     this.expandStorage = false;
@@ -96,10 +102,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
           this._initializePlatformData();
         }
       });
+
+    // Listen to notifications stream
+    this.notificationsSubscription = this._notificationContextService.notificationsStream
+      .subscribe((notifications) => {
+        this.notifications = notifications;
+      });
   }
 
-  public getDeleteStorageAlertMessage(storage: ServerFileSystem): string {
-    return this.deleteStorageAlertMessage.replace('{{volume_name}}', storage.path);
+  public getDeleteStorageAlertMessage(storageDevice: ServerStorageDevice): string {
+    return this.deleteStorageAlertMessage.replace('{{disk_name}}', storageDevice.name);
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -120,12 +132,17 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public getStorageAvailableMemory(storageDevice: ServerStorageDevice): number {
     if (this.serverPlatformStorage.length === 0) { return; }
 
+    let availableMemoryMB = 0;
     let storage = this.serverPlatformStorage
       .find((result) => {
         return result.name === storageDevice.storageProfile;
       });
 
-    return storage.limitMB - storage.usedMB;
+    if (storage) {
+      availableMemoryMB = storage.limitMB - storage.usedMB;
+    }
+
+    return availableMemoryMB;
   }
 
   public convertStorageInGb(value: number): number {
@@ -159,6 +176,15 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
     this._serverService.setStorageDeviceUpdate(this.server.id, storageDeviceUpdate)
       .subscribe((response) => { this.expandStorage = false; });
+  }
+
+  public onDeleteStorage(storageDevice: ServerStorageDevice): void {
+    let storageDeviceUpdate = new ServerStorageDeviceUpdate();
+    storageDeviceUpdate.name = storageDevice.name;
+    storageDeviceUpdate.clientReferenceObject = { activeServerId: this.server.id };
+
+    this._serverService.setStorageDeviceUpdate(this.server.id, storageDeviceUpdate)
+      .subscribe((response) => { console.log(response); });
   }
 
   public ngOnDestroy() {
