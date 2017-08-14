@@ -99,6 +99,8 @@ module.exports = function (config) {
       'Chrome'
     ],
 
+    browserNoActivityTimeout: 120000,
+
     customLaunchers: {
       ChromeTravisCi: {
         base: 'Chrome',
