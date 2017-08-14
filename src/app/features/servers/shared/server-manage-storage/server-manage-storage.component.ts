@@ -4,6 +4,7 @@ import {
   Output,
   OnInit,
   OnChanges,
+  SimpleChanges,
   OnDestroy,
   EventEmitter
 } from '@angular/core';
@@ -97,18 +98,22 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnInit() {
+    this.storageTextContent = this._textProvider.content.servers.server.storage;
     if (this.storageProfileList) {
       let groupName = this.storageProfileList.getGroupNames()[0];
       this.storageProfileValue = this.storageProfileList.getGroup(groupName)[0].key;
     }
-  }
-
-  public ngOnChanges() {
-    this.storageTextContent = this._textProvider.content.servers.server.storage;
 
     // Register form group for custom storage
     this._registerFormGroup();
     this._initializeValues();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    let availableMemoryMBChanges = changes['availableMemoryMB'];
+    if (availableMemoryMBChanges) {
+      this.maximum = Math.floor(this.memoryGB + this.availableMemoryGB);
+    }
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
