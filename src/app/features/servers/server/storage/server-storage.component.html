@@ -58,13 +58,12 @@
           [storageProfileList]="storageProfileList"
           [memoryMB]="newStorageDevice.sizeMB"
           [availableMemoryMB]="getStorageAvailableMemory(newStorageDevice)"
-          (storageProfileChanged)="onStorageProfileChanged($event)"
-          (storageChanged)="onStorageChanged($event)"> 
+          (storageChanged)="onStorageChanged($event)">
           <!--Server manage storage contents on the left hand side (description)-->
            <div title>
             <h4>{{ serverStorageText.addStorage }}</h4>
           </div>
-        </mcs-server-manage-storage> 
+        </mcs-server-manage-storage>
         <div class="attach">
           <mcs-button icon="arrow" (click)="onClickAttach()"
             [disabled]="!storageChangedValue.valid">Attach</mcs-button>
@@ -76,7 +75,7 @@
        <mcs-server-manage-storage
         [memoryMB]="selectedStorageDevice.sizeMB"
         [availableMemoryMB]="getStorageAvailableMemory(selectedStorageDevice)"
-        (storageChanged)="onStorageChanged($event)"> 
+        (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (description)-->
          <div title>
           <h4>{{ serverStorageText.resizeStorage }}</h4>
@@ -90,10 +89,10 @@
             <span>{{ appendGbUnit(convertStorageInGb(selectedStorageDevice.sizeMB)) }}</span>
           </p>
         </div>
-      </mcs-server-manage-storage> 
+      </mcs-server-manage-storage>
       <div class="update">
         <a (click)="closeExpandStorageBox()">Cancel</a>
-        <mcs-button icon="arrow" (click)="onClickUpdate()" 
+        <mcs-button icon="arrow" (click)="onClickUpdate()"
           [disabled]="!storageChangedValue.valid">Update</mcs-button>
       </div>
     </div>

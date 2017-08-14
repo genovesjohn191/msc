@@ -104,10 +104,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.storageChangedValue = serverStorage;
-  }
-
-  public onStorageProfileChanged(storageProfile: any) {
-    this.newStorageDevice.storageProfile = storageProfile;
+    this.newStorageDevice.storageProfile = serverStorage.storageProfile;
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
