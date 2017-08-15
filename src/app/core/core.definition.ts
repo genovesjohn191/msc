@@ -50,6 +50,7 @@ export class CoreDefinition {
   public static MANAGED_SERVER = 'Managed';
   public static GB_TO_MB_MULTIPLIER = 1024;
   public static DEFAULT_DROPDOWN_PLACEHOLDER = 'Select Option';
+  public static SERVER_MANAGE_STORAGE_SLIDER_STEP = 25;
 
   /** Style */
   public static BASE_FONT = 'Circular-Pro-Book';

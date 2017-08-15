@@ -115,7 +115,7 @@
         "storageName": "Hard Disk",
         "expandStorage": "Expand",
         "deleteStorage": "Delete",
-        "deleteStorageAlertMessage": "The data on volume {{volume_name}} will be lost forever.",
+        "deleteStorageAlertMessage": "The data on {{disk_name}} will be lost forever.",
         "deleteStorageConfirmation": "Are you sure you want to delete this volume?",
         "addStorage": "Add New Storage Volume.",
         "resizeStorage": "Expand Disk : ",

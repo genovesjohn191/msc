@@ -65,6 +65,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public customStorageValue: number;
   public minimum: number;
   public maximum: number;
+  public step: number;
 
   public formGroupServerStorage: FormGroup;
   public formControlServerStorageCustom: FormControl;
@@ -93,6 +94,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this.sliderValue = 0;
     this.minimum = 0;
     this.maximum = 0;
+    this.step = 1;
     this.inputManageType = ServerInputManageType.Slider;
     this.storageChanged = new EventEmitter<ServerManageStorage>();
   }
@@ -113,6 +115,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     let availableMemoryMBChanges = changes['availableMemoryMB'];
     if (availableMemoryMBChanges) {
       this.maximum = Math.floor(this.memoryGB + this.availableMemoryGB);
+      this._setCustomControlValidator();
     }
   }
 
@@ -152,7 +155,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   private _initializeValues(): void {
     this.minimum = this.memoryGB;
     this.maximum = Math.floor(this.memoryGB + this.availableMemoryGB);
-
+    this.step = CoreDefinition.SERVER_MANAGE_STORAGE_SLIDER_STEP;
+    this.onStorageProfileChanged(this.storageProfileValue);
+    this.onCustomStorageChanged(this.memoryGB);
     this.onStorageChanged(this.memoryGB);
   }
 
@@ -196,22 +201,22 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   private _notifyStorageChanged() {
     let serverStorage = new ServerManageStorage();
+    serverStorage.storageProfile = this.storageProfileValue;
 
     // Set model data based on management type
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
         serverStorage.storageMB = convertToMb(this.customStorageValue);
-        serverStorage.storageProfile = this.storageProfileValue;
         serverStorage.valid = this.formControlServerStorageCustom.valid;
         break;
 
       case ServerInputManageType.Slider:
       default:
         serverStorage.storageMB = convertToMb(this.sliderValue);
-        serverStorage.storageProfile = this.storageProfileValue;
-        serverStorage.valid = true;
+        serverStorage.valid = this.sliderValue > this.memoryGB;
         break;
     }
+
     refreshView(() => {
       this.storageChanged.next(serverStorage);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
