@@ -60,12 +60,12 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public inputManageTypeEnum = ServerInputManageType;
   public storageTextContent: any;
 
-  public storageProfileValue: any;
+  public storageSliderValues: number[];
+  public storageProfileValue: string;
   public sliderValue: number;
   public customStorageValue: number;
   public minimum: number;
   public maximum: number;
-  public step: number;
 
   public formGroupServerStorage: FormGroup;
   public formControlServerStorageCustom: FormControl;
@@ -74,27 +74,34 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public invalidCustomStorageMessage: string;
 
   public get memoryGB(): number {
-    return convertToGb(this.memoryMB);
+    return Math.floor(convertToGb(this.memoryMB));
   }
 
   public get availableMemoryGB(): number {
-    return convertToGb(this.availableMemoryMB);
+    return Math.floor(convertToGb(this.availableMemoryMB));
+  }
+
+  public get maximumMemoryGB(): number {
+    return this.memoryGB + this.availableMemoryGB;
   }
 
   public get currentMemory(): string {
-    return appendUnitSuffix(this.sliderValue, 'gigabyte');
+    return appendUnitSuffix(this.storageSliderValues[this.sliderValue], 'gigabyte');
   }
 
   public get remainingMemory(): string {
-    return appendUnitSuffix(this.maximum - this.sliderValue, 'gigabyte');
+    return appendUnitSuffix(
+      this.storageSliderValues[this.maximum] -  this.storageSliderValues[this.sliderValue],
+      'gigabyte'
+    );
   }
 
   public constructor(private _textProvider: McsTextContentProvider) {
     this.storageProfileValue = '';
+    this.storageSliderValues = new Array();
     this.sliderValue = 0;
     this.minimum = 0;
     this.maximum = 0;
-    this.step = 1;
     this.inputManageType = ServerInputManageType.Slider;
     this.storageChanged = new EventEmitter<ServerManageStorage>();
   }
@@ -114,7 +121,8 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public ngOnChanges(changes: SimpleChanges) {
     let availableMemoryMBChanges = changes['availableMemoryMB'];
     if (availableMemoryMBChanges) {
-      this.maximum = Math.floor(this.memoryGB + this.availableMemoryGB);
+      this._initializeSliderValues();
+      this.maximum = this.storageSliderValues.length - 1;
       this._setCustomControlValidator();
     }
   }
@@ -153,12 +161,23 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   private _initializeValues(): void {
-    this.minimum = this.memoryGB;
-    this.maximum = Math.floor(this.memoryGB + this.availableMemoryGB);
-    this.step = CoreDefinition.SERVER_MANAGE_STORAGE_SLIDER_STEP;
     this.onStorageProfileChanged(this.storageProfileValue);
     this.onCustomStorageChanged(this.memoryGB);
-    this.onStorageChanged(this.memoryGB);
+  }
+
+  private _initializeSliderValues(): void {
+    this.storageSliderValues = new Array();
+    this.storageSliderValues.push(this.memoryGB);
+
+    for (let value = this.memoryGB; value < this.maximumMemoryGB;) {
+      if ((value + CoreDefinition.SERVER_MANAGE_STORAGE_SLIDER_STEP) <= this.maximumMemoryGB) {
+        value += CoreDefinition.SERVER_MANAGE_STORAGE_SLIDER_STEP;
+      } else {
+        value = this.maximumMemoryGB;
+      }
+
+      this.storageSliderValues.push(value);
+    }
   }
 
   private _registerFormGroup(): void {
@@ -181,7 +200,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     let validationMessage = replacePlaceholder(
       this.storageTextContent.validationError,
       'available_storage',
-      appendUnitSuffix(this.maximum, 'gigabyte')
+      appendUnitSuffix(this.maximumMemoryGB, 'gigabyte')
     );
 
     this.formControlServerStorageCustom.setValidators([
@@ -212,8 +231,8 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
       case ServerInputManageType.Slider:
       default:
-        serverStorage.storageMB = convertToMb(this.sliderValue);
-        serverStorage.valid = this.sliderValue > this.memoryGB;
+        serverStorage.storageMB = convertToMb(this.storageSliderValues[this.sliderValue]);
+        serverStorage.valid = this.sliderValue > 0;
         break;
     }
 

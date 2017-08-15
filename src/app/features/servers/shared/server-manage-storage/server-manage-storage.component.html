@@ -42,8 +42,8 @@
 
   <!--Slider content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
-    <div class="slider-content">
-      <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum" [step]="step"
+    <div [@animate]="'fadeIn'" class="slider-content">
+      <mcs-slider [min]="minimum" [max]="maximum"
         [ngModel]="sliderValue" (ngModelChange)="onStorageChanged($event)"></mcs-slider>
       <span class="storage-label">
         {{ currentMemory }}
