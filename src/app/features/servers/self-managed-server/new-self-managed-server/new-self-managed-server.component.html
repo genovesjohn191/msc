@@ -36,6 +36,7 @@
     <div class="storage-information">
        <mcs-server-manage-storage
         [memoryMB]="storageMemoryMB"
+        [availableMemoryMB]="storageAvailableMemoryMB"
         [storageProfileList]="storageProfileList"
         (storageChanged)="onStorageChanged($event)"> 
         <!--Server manage storage contents on the left hand side (title and description)-->

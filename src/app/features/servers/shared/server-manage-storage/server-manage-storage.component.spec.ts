@@ -79,20 +79,20 @@ describe('ServerManageStorageComponent', () => {
         .toBe(component.storageProfileList.getGroup('Storage Profiles')[0].key);
     });
 
-    it(`should set the value minimum`, () => {
-      expect(component.minimum).toBe(component.memoryGB);
-    });
-
-    it(`should set the value of maximum`, () => {
-      expect(component.maximum).toBe(Math.floor(component.memoryGB + component.availableMemoryGB));
-    });
-
-    it(`should update the storageValue`, fakeAsync(() => {
+    it(`should initialize the sliderValue`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.ngOnInit();
-        expect(component.sliderValue).toBe(component.memoryGB);
+        expect(component.sliderValue).toBe(0);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageChanged.next).toHaveBeenCalledTimes(3);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(2);
+      }));
+
+    it(`should initialize the customStorageValue`, fakeAsync(() => {
+        spyOn(component.storageChanged, 'next');
+        component.ngOnInit();
+        expect(component.customStorageValue).toBe(component.memoryGB);
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(2);
       }));
   });
 
