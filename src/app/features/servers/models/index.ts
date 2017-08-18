@@ -31,3 +31,4 @@ export * from './enumerations/server-command.enum';
 export * from './enumerations/server-power-state.enum';
 export * from './enumerations/server-input-manage-type.enum';
 export * from './enumerations/server-create-type.enum';
+export * from './enumerations/server-service-type.enum';

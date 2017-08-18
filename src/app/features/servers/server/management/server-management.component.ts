@@ -13,7 +13,8 @@ import {
   ServerThumbnail,
   ServerPowerState,
   ServerPlatform,
-  ServerResource
+  ServerResource,
+  ServerServiceType
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -53,7 +54,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public primaryVolume: string;
   public secondaryVolumes: string;
   public otherStorage: ServerFileSystem[];
-  public serviceType: string;
+  public serviceType: ServerServiceType;
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
@@ -88,9 +89,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
-    if (this.serviceType) {
-      return this.serviceType.toLowerCase() === CoreDefinition.MANAGED_SERVER.toLowerCase();
-    }
+    return this.serviceType === ServerServiceType.Managed;
   }
 
   public get consoleEnabled(): boolean {
@@ -136,6 +135,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.activeNotifications = new Array();
     this.platformData = new ServerPlatform();
     this.resource = new ServerResource();
+    this.serviceType = ServerServiceType.SelfManaged;
   }
 
   public ngOnInit() {

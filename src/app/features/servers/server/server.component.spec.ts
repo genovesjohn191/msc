@@ -12,7 +12,8 @@ import { ServersTestingModule } from '../testing';
 import {
   Server,
   ServerPowerState,
-  ServerCommand
+  ServerCommand,
+  ServerServiceType
 } from '../models';
 import { ServerService } from '../server/server.service';
 
@@ -36,7 +37,7 @@ describe('ServerComponent', () => {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
     vdcName: 'M1VDC27117001',
-    serviceType: 'Managed',
+    serviceType: ServerServiceType.Managed,
     powerState: ServerPowerState.PoweredOn,
     fileSystem: [
       {
