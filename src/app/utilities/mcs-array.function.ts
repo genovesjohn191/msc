@@ -41,6 +41,8 @@ export function mergeArrays<T>(
     // Merge all array without predicate
     mergedArray = firstArray.concat(secondArray);
   }
+
+  // Set merged record array to firstarray instance
   return mergedArray;
 }
 
@@ -50,11 +52,14 @@ export function mergeArrays<T>(
  * the updated element will be appended as the last record of the array
  * @param sourceArray Record list for the updatedElement to be append to
  * @param updatedElement Updated element to check if the record is already exist
+ * @param appendIfNotExist `@Optional` flag if the record should be appended in the array
  * @param predicate Rules of matching the element
  */
+// TODO: Create updateArrayRecord and addUpdateArrayRecord method to separate the process
 export function updateArrayRecord<T>(
   sourceArray: T[],
   updatedElement: T,
+  appendIfNotExist: boolean,
   predicate?: (_pr1: T, _pr2: T) => boolean): T[] {
 
   let isExist: boolean = false;
@@ -72,11 +77,10 @@ export function updateArrayRecord<T>(
         break;
       }
     }
-    if (!isExist) {
+    if (!isExist && appendIfNotExist) {
       sourceArray.push(updatedElement);
     }
-  } else {
-
+  } else if (appendIfNotExist) {
     sourceArray.push(updatedElement);
   }
 

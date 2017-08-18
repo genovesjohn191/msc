@@ -34,6 +34,7 @@ export * from './enumerations/mcs-user-type.enum';
 export * from './enumerations/mcs-device-type.enum';
 export * from './enumerations/mcs-http-status-code.enum';
 export * from './enumerations/mcs-key.enum';
+export * from './enumerations/mcs-job-type.enum';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';

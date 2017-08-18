@@ -22,7 +22,9 @@ import {
   ServerManageStorage,
   ServerPerformanceScale,
   ServerIpAddress,
-  ServerCreateSelfManaged
+  ServerCreateSelfManaged,
+  ServerResource,
+  ServerTemplate
 } from '../../models';
 import {
   refreshView,
@@ -39,7 +41,10 @@ import { ContextualHelpDirective } from '../../shared/contextual-help/contextual
 
 export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
   @Input()
-  public isVisible: boolean;
+  public resource: ServerResource;
+
+  @Input()
+  public template: ServerTemplate;
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -82,7 +87,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     this.storageMemoryMB = 204800;
     this.storageAvailableMemoryMB = 921600;
 
-    this.isVisible = false;
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
@@ -250,7 +254,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     // Set the variable based on the form values
     copySelfManaged.targetServerName = this.formControlTargetServerName.value;
     copySelfManaged.vApp = this.formControlVApp.value;
-    copySelfManaged.network = this.formControlNetwork.value;
+    copySelfManaged.networkName = this.formControlNetwork.value;
     copySelfManaged.catalog = this.formControlCatalog.value;
     copySelfManaged.performanceScale = this.formControlScale.value;
     copySelfManaged.serverManageStorage = this.formControlStorage.value;

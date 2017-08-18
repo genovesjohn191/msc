@@ -55,9 +55,11 @@ export const mockServerService = {
               cpuAllocation: 10,
               cpuReservation: 2,
               cpuLimit: 10,
+              cpuUsed: 0,
               memoryAllocationMB: 32768,
               memoryReservationMB: 6553,
               memoryLimitMB: 32768,
+              memoryUsedMB: 0,
               storage: new Array<ServerStorage>(),
               networks: new Array<ServerNetwork>()
             }

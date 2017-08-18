@@ -12,10 +12,10 @@
   <div class="custom-ip-address">
     <a *ngIf="inputManageType == inputManageTypeEnum.Buttons"
       (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-        Enter custom IP Address</a>
+        {{ ipAddressTextContent.custom }}</a>
     <a *ngIf="inputManageType == inputManageTypeEnum.Custom"
       (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
-        Select from radio buttons</a>
+        {{ ipAddressTextContent.default }}</a>
   </div>
 
   <!--Custom IP Address content element-->

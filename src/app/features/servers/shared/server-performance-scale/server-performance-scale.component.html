@@ -71,10 +71,10 @@
         {{ currentServerScale.cpuCount + ' ' + serverScalePerformanceTextContent.cpuUnit }}
       </span>
       <span class="available-label">
-        ({{ (availableMemoryMB - currentServerScale.memoryMB) + ' ' +
+        ({{ remainingMemoryMB + ' ' +
           serverScalePerformanceTextContent.ramUnit + ' ' +
             serverScalePerformanceTextContent.ramLabel }} /
-              {{ (availableCpuCount - currentServerScale.cpuCount) + ' ' +
+              {{ remainingCpuCount + ' ' +
                 serverScalePerformanceTextContent.cpuUnit }} available)
       </span>
     </div>

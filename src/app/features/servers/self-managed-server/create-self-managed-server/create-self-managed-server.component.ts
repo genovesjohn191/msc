@@ -12,8 +12,11 @@ import {
   FormControl
 } from '@angular/forms';
 import {
+  Server,
   ServerCreateType,
-  ServerCreateSelfManaged
+  ServerCreateSelfManaged,
+  ServerResource,
+  ServerTemplate
 } from '../../models';
 import {
   McsList,
@@ -38,6 +41,15 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   @Input()
   public vdcName: string;
 
+  @Input()
+  public resource: ServerResource;
+
+  @Input()
+  public template: ServerTemplate;
+
+  @Input()
+  public servers: Server[];
+
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
@@ -48,6 +60,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   // Others
   public contextualTextContent: any;
   public createServerTextContent: any;
+  public serverName: string;
   public serverCreateTypeEnum = ServerCreateType;
 
   /**
@@ -75,7 +88,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
    */
   private _isValid: boolean;
   public get isValid(): boolean {
-    return this._isValid;
+    return this._serverInputs.isValid && this.formGroupCreateServer.valid;
   }
 
   public constructor(
@@ -119,7 +132,6 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
 
     this._serverCreateType = this.serverCreateType;
     this._serverInputs = $serverDetails;
-    this._isValid = $serverDetails.isValid && this.formGroupCreateServer.valid;
   }
 
   public isControlValid(control: any): boolean {
@@ -131,6 +143,10 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     this.formControlServerName = new FormControl('', [
       CoreValidators.required
     ]);
+    this.formControlServerName.valueChanges
+      .subscribe((inputValue) => {
+        this.serverName = inputValue;
+      });
 
     // Register Form Groups using binding
     this.formGroupCreateServer = new FormGroup({

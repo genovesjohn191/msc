@@ -39,8 +39,10 @@ $job-completed-color: $color-primary-01;
   .status-details {
     margin: $space-xsmall 0;
     font-family: $provisioning-details-font;
+    @include display-flex(row);
+    align-items: center;
     @include font-size($provisioning-details-font-size);
-    @include set-items-interval($space-medium, horizontal);
+    @include set-items-interval($space-small, horizontal);
 
     .active {
       color: $job-active-color;

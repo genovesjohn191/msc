@@ -25,6 +25,9 @@ import {
   animateFactory
 } from '../../../../utilities';
 
+// Require subnetting javscript class
+const Netmask = require('netmask').Netmask;
+
 @Component({
   selector: 'mcs-server-ip-address',
   styles: [require('./server-ip-address.component.scss')],
@@ -35,11 +38,18 @@ import {
 })
 
 export class ServerIpAddressComponent implements OnInit {
+  @Input()
+  public subnetMask: string;
+
+  @Input()
+  public gateway: string;
+
   @Output()
   public ipAddressChanged: EventEmitter<ServerIpAddress>;
 
   public inputManageTypeEnum = ServerInputManageType;
   public inputManageType: ServerInputManageType;
+  public ipAddressTextContent: any;
 
   public ipAddressValue: any;
   public ipAddressItems: McsListItem[];
@@ -50,6 +60,8 @@ export class ServerIpAddressComponent implements OnInit {
   public formControlRadiobuttons: FormControl;
   public formControlIpdAdrress: FormControl;
 
+  private _netMaskInstance: any;
+
   public constructor(private _textProvider: McsTextContentProvider) {
     this.ipAddressItems = new Array();
     this.ipAddressChanged = new EventEmitter<ServerIpAddress>();
@@ -57,6 +69,9 @@ export class ServerIpAddressComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.ipAddressTextContent = this._textProvider.content
+      .servers.shared.serverIpAddress;
+    this._createNetmaskInstance();
     this._registerFormGroup();
     this._setIpAddressItems();
     this._initializeValues();
@@ -84,15 +99,28 @@ export class ServerIpAddressComponent implements OnInit {
   }
 
   private _initializeValues(): void {
-    this.ipAddressValue = 'dhcp';
+    this.ipAddressValue = 'Dhcp';
     this._notifyIpAddress();
+  }
+
+  private _customIpAddressValidator(inputValue: any) {
+    try {
+      // Catch and return false in case the input is not ip address format
+      // to prevent exception thrown in the Netmask
+      return this._netMaskInstance.contains(inputValue);
+    } catch (error) {
+      return false;
+    }
   }
 
   private _registerFormGroup(): void {
     // Create form controls
     this.formControlIpdAdrress = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.ipAddress
+      CoreValidators.ipAddress,
+      CoreValidators.custom(
+        this._customIpAddressValidator.bind(this),
+        'Ip address is not in range')
     ]);
     this.formControlIpdAdrress.valueChanges
       .subscribe(this.onCustomIpAddressChanged.bind(this));
@@ -103,9 +131,15 @@ export class ServerIpAddressComponent implements OnInit {
     });
   }
 
+  private _createNetmaskInstance(): void {
+    if (!this.gateway) { this.gateway = '192.168.0.1'; }
+    if (!this.subnetMask) { this.subnetMask = '255.255.255.0'; }
+    this._netMaskInstance = new Netmask(`${this.gateway}/${this.subnetMask}`);
+  }
+
   private _setIpAddressItems(): void {
-    this.ipAddressItems.push(new McsListItem('dhcp', 'DHCP'));
-    this.ipAddressItems.push(new McsListItem('next', 'Next in my static pool'));
+    this.ipAddressItems.push(new McsListItem('Dhcp', 'DHCP'));
+    this.ipAddressItems.push(new McsListItem('Pool', 'Next in my static pool'));
   }
 
   private _notifyIpAddress() {
@@ -114,13 +148,15 @@ export class ServerIpAddressComponent implements OnInit {
     // Set model data based on management type
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
-        ipAddressData.ipAddress = this.customIpAdrress;
+        ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : '';
+        ipAddressData.ipAllocationMode = 'Static';
         ipAddressData.valid = this.formControlIpdAdrress.valid;
         break;
 
       case ServerInputManageType.Buttons:
       default:
-        ipAddressData.ipAddress = this.ipAddressValue;
+        ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : '';
+        ipAddressData.ipAllocationMode = this.ipAddressValue;
         ipAddressData.valid = true;
         break;
     }

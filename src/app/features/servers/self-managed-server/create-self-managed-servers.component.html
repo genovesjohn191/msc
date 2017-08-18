@@ -9,18 +9,20 @@
     <div class="server-information">
 
       <!-- Generic Wizard -->
-      <mcs-wizard (onCancel)="onNavigateToServerPage()">
+      <mcs-wizard (onCancel)="onNavigateToServerPage()" (onComplete)="onDeployServer()">
 
         <!-- Step 1 -->
-        <mcs-wizard-step stepTitle="1. Server Details" [valid]="isServersValid">
+        <mcs-wizard-step stepTitle="1. Server Details"
+          [valid]="isServersValid">
           <section class="server-details">
             <mcs-dropdown name="dropdownDefault"
-              [(ngModel)]="intellicentreValue" [dropdownData]="intellicentres"
-              placeholder="Intellicentre 2 (Syd) - Managed VDC 27111006"
+              placeholder="Loading VDC..."
+              [(ngModel)]="vdcValue" [dropdownData]="vdcList"
               [mcsContextualHelp]="contextualTextContent.intellicentre"></mcs-dropdown>
 
-            <div #selfManagedServersElement>
+            <div class="new-servers-container" #selfManagedServersElement>
               <!-- This will dynamically populated during runtime when adding servers -->
+               <mcs-icon *ngIf="isLoading" [key]="spinnerIconKey" size="xlarge"></mcs-icon>
             </div>
 
             <div class="additional-server-container">
@@ -34,11 +36,10 @@
 
         <!-- Step 2  -->
         <mcs-wizard-step stepTitle="2. Go!">
-          <section class="jobs-progress">
+          <section class="jobs-progress" *ngIf="hasNotifications">
             <mcs-provisioning-notifications [jobs]="notifications"
               [mcsContextualHelp]="contextualTextContent.provisioningNotifications">
             </mcs-provisioning-notifications>
-            <a class="link-home" (click)="onNavigateToServerPage()">Servers home</a>
           </section>
         </mcs-wizard-step>
       </mcs-wizard>

@@ -1,5 +1,5 @@
-import { ServerPowerState } from './server-power-state.enum';
-import { ServerCommand } from './server-command.enum';
+import { ServerPowerState } from '../enumerations/server-power-state.enum';
+import { ServerCommand } from '../enumerations/server-command.enum';
 
 export class ServerClientObject {
   public serverId: any;
