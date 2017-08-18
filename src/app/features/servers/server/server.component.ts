@@ -12,7 +12,8 @@ import {
   ServerClientObject,
   ServerPowerState,
   ServerCommand,
-  ServerPlatform
+  ServerPlatform,
+  ServerServiceType
 } from '../models';
 import {
   CoreDefinition,
@@ -35,8 +36,7 @@ export class ServerComponent implements OnInit, OnDestroy {
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
-    return this.server && this.server.serviceType.toLowerCase()
-      === CoreDefinition.MANAGED_SERVER.toLowerCase();
+    return this.server && this.server.serviceType === ServerServiceType.Managed;
   }
 
   constructor(

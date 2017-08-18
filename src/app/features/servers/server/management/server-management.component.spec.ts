@@ -6,7 +6,8 @@ import {
 import { ServerManagementComponent } from './server-management.component';
 import {
   Server,
-  ServerThumbnail
+  ServerThumbnail,
+  ServerServiceType
 } from '../../models';
 import {
   CoreDefinition,
@@ -29,7 +30,7 @@ describe('ServerManagementComponent', () => {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
     vdcName: 'M1VDC27117001',
-    serviceType: 'Managed',
+    serviceType: ServerServiceType.Managed,
     fileSystem: [
       {
         path: '/',

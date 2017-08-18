@@ -12,7 +12,8 @@ import {
   ServerPlatform,
   ServerResource,
   ServerStorage,
-  ServerNetwork
+  ServerNetwork,
+  ServerServiceType
 } from '../models';
 
 export const mockServerService = {
@@ -50,7 +51,7 @@ export const mockServerService = {
           resources: [
             {
               name: 'M1VDC27117001',
-              serviceType: 'Managed',
+              serviceType: ServerServiceType.SelfManaged,
               availabilityZone: 'IC1',
               cpuAllocation: 10,
               cpuReservation: 2,

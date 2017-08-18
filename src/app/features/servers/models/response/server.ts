@@ -3,6 +3,7 @@ import { ServerFileSystem } from './server-file-system';
 import { ServerStorageDevice } from './server-storage-device';
 import { ServerInterface } from './server-interface';
 import { ServerPowerState } from '../enumerations/server-power-state.enum';
+import { ServerServiceType } from '../enumerations/server-service-type.enum';
 
 export class Server {
   public id: any;
@@ -44,7 +45,7 @@ export class Server {
   public vdcName: string;
   public vAppName: string;
   public vCloudUrl: string;
-  public serviceType: string;
+  public serviceType: ServerServiceType;
   public storagePolicy: string;
   public availabilityZone: string;
   public interfaces: ServerInterface[];

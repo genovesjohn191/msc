@@ -28,7 +28,8 @@ import {
   ServerCommand,
   ServerPlatform,
   ServerTemplate,
-  ServerStorageDeviceUpdate
+  ServerStorageDeviceUpdate,
+  ServerServiceType
 } from './models';
 
 /**
@@ -207,7 +208,7 @@ export class ServersService {
         let apiResponse: McsApiSuccessResponse<ServerTemplate[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerTemplate[]>>(
           response.text(),
-          reviverParser
+          this._convertProperty
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerTemplate[]>();
       })
@@ -319,7 +320,7 @@ export class ServersService {
         let apiResponse: McsApiSuccessResponse<ServerPlatform>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerPlatform>>(
           response.text(),
-          reviverParser
+          this._convertProperty
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerPlatform>();
       })
@@ -371,6 +372,9 @@ export class ServersService {
     // Convert powerState to enumeration
     if (key === 'powerState') {
       value = ServerPowerState[value];
+    // Convert serviceType to enumeration
+    } else if (key === 'serviceType') {
+      value = ServerServiceType[value];
     }
 
     return value;

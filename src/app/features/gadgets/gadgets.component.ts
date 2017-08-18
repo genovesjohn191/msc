@@ -215,7 +215,7 @@ export class GadgetsComponent implements OnInit {
 
     for (let server of servers) {
       dropdownData.push(
-        server.serviceType,
+        server.serviceType.toString(),
         new McsListItem(server.managementName, server.managementName)
       );
     }

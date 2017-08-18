@@ -1,9 +1,10 @@
 import { ServerStorage } from './server-storage';
 import { ServerNetwork } from './server-network';
+import { ServerServiceType } from '../enumerations/server-service-type.enum';
 
 export class ServerResource {
   public name: string;
-  public serviceType: string;
+  public serviceType: ServerServiceType;
   public availabilityZone: string;
   public cpuAllocation: number;
   public cpuReservation: number;

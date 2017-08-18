@@ -35,7 +35,8 @@ import {
   ServerResource,
   ServerCreate,
   ServerCreateStorage,
-  ServerCreateNetwork
+  ServerCreateNetwork,
+  ServerServiceType
 } from '../models';
 import { ContextualHelpDirective } from '../shared/contextual-help/contextual-help.directive';
 import { CreateSelfManagedServersService } from './create-self-managed-servers.service';
@@ -338,7 +339,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
       let serverPlatform = response.content as ServerPlatform;
       serverPlatform.environments.forEach((environment) => {
         environment.resources.forEach((resource) => {
-          if (resource.serviceType === CoreDefinition.SERVER_SELF_MANAGED) {
+          if (resource.serviceType === ServerServiceType.SelfManaged) {
             this._serverPlatformMap.set(resource.name, resource);
           }
         });
@@ -358,7 +359,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
       let serverTemplates = response.content as ServerTemplate[];
 
       serverTemplates.forEach((template) => {
-        if (template.serviceType === CoreDefinition.SERVER_SELF_MANAGED) {
+        if (template.serviceType === ServerServiceType.SelfManaged) {
           this._serverTemplate = template;
         }
       });
