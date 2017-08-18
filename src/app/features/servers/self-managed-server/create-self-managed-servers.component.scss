@@ -1,6 +1,7 @@
 @import "../../../../styles/shared/base";
 
 $server-home-link-font-size: $link-default-font-size;
+$main-form-minimum-size: 200px;
 
 .create-self-managed-servers-container {
   position: relative;
@@ -20,6 +21,14 @@ $server-home-link-font-size: $link-default-font-size;
 
       .server-details {
         @include display-flex(column);
+
+        .new-servers-container {
+          @include display-flex(column);
+          min-height: $main-form-minimum-size;
+          mcs-icon {
+            margin: auto;
+          }
+        }
 
        .additional-server-container {
          background-color: $color-grey-05;

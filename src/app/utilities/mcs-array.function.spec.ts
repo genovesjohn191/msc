@@ -49,13 +49,32 @@ describe('ARRAY Functions', () => {
   });
 
   describe('updateArrayRecord()', () => {
-    it(`should append the array record when the predicate is undefined`, () => {
+    it(`should append the array record when the predicate is undefined
+    and appendIfNotExist is true`, () => {
       let arrayRecord: TestStructure[] = new Array();
       let updatedElement: TestStructure = new TestStructure('1', '2');
 
       arrayRecord.push(new TestStructure('1', 'hello1'));
-      let mergedArray = updateArrayRecord(arrayRecord, updatedElement);
+      let mergedArray = updateArrayRecord(arrayRecord, updatedElement, true);
       expect(mergedArray.length).toEqual(2);
+    });
+
+    it(`should append the array record when the appendIfNotExist flag is true`, () => {
+      let arrayRecord: TestStructure[] = new Array();
+      let updatedElement: TestStructure = new TestStructure('1', '2');
+
+      arrayRecord.push(new TestStructure('1', 'hello1'));
+      let mergedArray = updateArrayRecord(arrayRecord, updatedElement, true);
+      expect(mergedArray.length).toEqual(2);
+    });
+
+    it(`should not append the array record when the appendIfNotExist flag is false`, () => {
+      let arrayRecord: TestStructure[] = new Array();
+      let updatedElement: TestStructure = new TestStructure('1', '2');
+
+      arrayRecord.push(new TestStructure('1', 'hello1'));
+      let mergedArray = updateArrayRecord(arrayRecord, updatedElement, false);
+      expect(mergedArray.length).toEqual(1);
     });
 
     it(`should update the array record when the predicate is defined`, () => {
@@ -66,6 +85,7 @@ describe('ARRAY Functions', () => {
       let mergedArray = updateArrayRecord(
         arrayRecord,
         updatedElement,
+        true,
         (first: TestStructure, second: TestStructure) => {
           return first.key === second.key;
         }

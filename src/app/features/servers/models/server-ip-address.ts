@@ -1,4 +1,5 @@
 export class ServerIpAddress {
-  public ipAddress: string;
+  public customIpAddress: string;
+  public ipAllocationMode: 'Static' | 'Dhcp' | 'Pool';
   public valid: boolean;
 }

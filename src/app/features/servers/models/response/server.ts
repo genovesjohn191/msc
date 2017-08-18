@@ -2,7 +2,7 @@ import { ServerMedia } from './server-media';
 import { ServerFileSystem } from './server-file-system';
 import { ServerStorageDevice } from './server-storage-device';
 import { ServerInterface } from './server-interface';
-import { ServerPowerState } from './server-power-state.enum';
+import { ServerPowerState } from '../enumerations/server-power-state.enum';
 
 export class Server {
   public id: any;

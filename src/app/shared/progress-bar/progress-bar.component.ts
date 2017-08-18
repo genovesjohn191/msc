@@ -92,13 +92,4 @@ export class ProgressBarComponent implements ControlValueAccessor {
     let percentNumber = 100 * this.getValueInRange() / this.maxValue;
     return percentNumber.toFixed().toString() + '%';
   }
-
-  public getStyle() {
-    let percentOffset = `${this.getPercentage()}`;
-    return {
-      '-webkit-transform': `translateX(${percentOffset}) translateX(${PERCENTAGE_OFFSET}px)`,
-      '-ms-transform': `translateX(${percentOffset}) translateX(${PERCENTAGE_OFFSET}px)`,
-      'transform': `translateX(${percentOffset}) translateX(${PERCENTAGE_OFFSET}px)`
-    };
-  }
 }

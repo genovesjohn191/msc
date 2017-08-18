@@ -105,7 +105,7 @@ describe('ServerPerformanceScaleComponent', () => {
 
       it(`should set the slider value to 0`, fakeAsync(() => {
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.sliderValue).toBe(0);
+        expect(component.sliderValue).toBe(-1);
       }));
 
       it(`should set the scale type to Custom`, fakeAsync(() => {

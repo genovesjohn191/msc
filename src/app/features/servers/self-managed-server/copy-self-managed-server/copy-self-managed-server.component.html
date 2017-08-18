@@ -1,10 +1,9 @@
-<form [hidden]="!isVisible" [formGroup]="formGroupCopyServer"
+<form [formGroup]="formGroupCopyServer"
   class="copy-self-managed-server-container">
 
   <div class="server-configuration-details">
     <div class="control-group">
       <mcs-dropdown name="Server Name"
-        placeholder="mongo-db-prod"
         formControlName="formControlTargetServerName"
         [dropdownData]="serverNameItems"
         [mcsContextualHelp]="contextualTextContent.serverName"></mcs-dropdown>
@@ -13,7 +12,6 @@
 
     <div class="control-group">
       <mcs-dropdown name="Virtual Application"
-        placeholder="prod-vApp"
         formControlName="formControlVApp"
         [dropdownData]="virtualApplicationItems"></mcs-dropdown>
       <mcs-validation-message [control]="formControlVApp"></mcs-validation-message>
@@ -21,7 +19,6 @@
 
     <div class="control-group">
       <mcs-dropdown name="Server Catalog"
-        placeholder="centos-7"
         formControlName="formControlCatalog"
         [dropdownData]="serverCatalogItems"></mcs-dropdown>
       <mcs-validation-message [control]="formControlCatalog"></mcs-validation-message>
@@ -61,7 +58,6 @@
 
     <div class="control-group">
       <mcs-dropdown name="Primary Network"
-        placeholder="VLAN 1501 - MXLN27117001"
         formControlName="formControlNetwork"
         [dropdownData]="primaryNetworkItems"></mcs-dropdown>
       <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>

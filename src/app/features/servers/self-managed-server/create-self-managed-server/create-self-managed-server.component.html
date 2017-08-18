@@ -36,19 +36,24 @@
       <div class="tab-pane active" role="tabpanel">
         <!-- New Self-Managed Server  -->
         <mcs-new-self-managed-server
-          [isVisible]="serverCreateType === serverCreateTypeEnum.New"
+          *ngIf="serverCreateType === serverCreateTypeEnum.New"
+          [resource]="resource"
+          [template]="template"
           (onOutputServerDetails)="setServerDetails($event)">
         </mcs-new-self-managed-server>
 
         <!-- Copy Self-Managed Server  -->
         <mcs-copy-self-managed-server
-          [isVisible]="serverCreateType === serverCreateTypeEnum.Copy"
+          *ngIf="serverCreateType === serverCreateTypeEnum.Copy"
+          [resource]="resource"
+          [template]="template"
           (onOutputServerDetails)="setServerDetails($event)">
         </mcs-copy-self-managed-server>
 
         <!-- Clone Self-Managed Server  -->
         <mcs-clone-self-managed-server
-          [isVisible]="serverCreateType === serverCreateTypeEnum.Clone"
+          *ngIf="serverCreateType === serverCreateTypeEnum.Clone"
+          [servers]="servers"
           (onOutputServerDetails)="setServerDetails($event)">
         </mcs-clone-self-managed-server>
       </div>

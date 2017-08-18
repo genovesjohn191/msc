@@ -62,20 +62,6 @@ describe('ProgressBarComponent', () => {
     });
   });
 
-  describe('getStyle()', () => {
-    let actualStyle;
-    beforeEach(() => {
-      component.value = 25;
-      component.maxValue = 100;
-      actualStyle = component.getStyle();
-    });
-
-    it('should get the style transform of the percentage label', () => {
-      expect(actualStyle.transform)
-        .toBe(`translateX(${component.getPercentage()}) translateX(${PERCENTAGE_OFFSET}px)`);
-    });
-  });
-
   describe('writeValue()', () => {
     it('should set the inputted value to 100', () => {
       component.writeValue(100);

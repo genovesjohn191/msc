@@ -192,7 +192,7 @@ export class McsNotificationContextService {
 
       // Update corresponding notification if it is exist else
       // add it to the list of notifications
-      updateArrayRecord<McsApiJob>(this._notifications, updatedNotification, jobsComparer);
+      updateArrayRecord<McsApiJob>(this._notifications, updatedNotification, true, jobsComparer);
       this._notificationsStream.next(this._notifications);
     }
   }

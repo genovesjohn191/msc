@@ -1,25 +1,33 @@
-/** Models */
-export * from './server';
-export * from './server-update';
-export * from './server-file-system';
-export * from './server-storage-device';
-export * from './server-storage-device-update';
-export * from './server-interface';
-export * from './server-media';
-export * from './server-client-object';
+/** API Models */
+export * from './request/server-storage-device-update';
+export * from './request/server-update';
+export * from './request/server-create';
+export * from './request/server-create-storage';
+export * from './request/server-create-network';
+export * from './request/server-client-object';
+
+export * from './response/server';
+export * from './response/server-file-system';
+export * from './response/server-storage-device';
+export * from './response/server-interface';
+export * from './response/server-media';
+export * from './response/server-thumbnail';
+export * from './response/server-platform';
+export * from './response/server-environment';
+export * from './response/server-resource';
+export * from './response/server-storage';
+export * from './response/server-network';
+export * from './response/server-template';
+export * from './response/server-guest-os';
+
+/** Other Models that are use inside server component */
 export * from './server-performance-scale';
 export * from './server-manage-storage';
 export * from './server-ip-address';
-export * from './server-thumbnail';
-export * from './server-platform';
-export * from './server-environment';
-export * from './server-resource';
-export * from './server-storage';
-export * from './server-network';
 export * from './server-create-self-managed';
 
 /** Enumerations */
-export * from './server-command.enum';
-export * from './server-power-state.enum';
-export * from './server-input-manage-type.enum';
-export * from './server-create-type.enum';
+export * from './enumerations/server-command.enum';
+export * from './enumerations/server-power-state.enum';
+export * from './enumerations/server-input-manage-type.enum';
+export * from './enumerations/server-create-type.enum';

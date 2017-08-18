@@ -18,7 +18,10 @@ import {
   McsTextContentProvider,
   CoreValidators
 } from '../../../../core';
-import { ServerCreateSelfManaged } from '../../models';
+import {
+  ServerCreateSelfManaged,
+  Server
+} from '../../models';
 import {
   refreshView,
   mergeArrays
@@ -34,7 +37,7 @@ import { ContextualHelpDirective } from '../../shared/contextual-help/contextual
 
 export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   @Input()
-  public isVisible: boolean;
+  public servers: Server[];
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -47,14 +50,14 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   public formControlTargetServerName: FormControl;
 
   // Others
-  public serverCatalogItems: McsList;
+  public serverItems: McsList;
   public contextualTextContent: any;
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
-    this.isVisible = false;
+    this.serverItems = new McsList();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
@@ -63,7 +66,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
       .servers.createSelfManagedServer.contextualHelp;
 
     this._registerFormGroup();
-    this.serverCatalogItems = this.getServerCatalogs();
+    this._setServerItems();
   }
 
   public ngAfterViewInit() {
@@ -80,14 +83,19 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public getServerCatalogs(): McsList {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsList = new McsList();
+  private _setServerItems(): void {
+    if (!this.servers) { return; }
 
-    itemList.push('Server Catalog', new McsListItem('serverCatalog1', 'mongo-db-prod 1'));
-    itemList.push('Server Catalog', new McsListItem('serverCatalog2', 'mongo-db-prod 2'));
-    itemList.push('Server Catalog', new McsListItem('serverCatalog3', 'mongo-db-prod 3'));
-    return itemList;
+    // Populate dropdown list
+    this.servers.forEach((server) => {
+      this.serverItems.push('Servers', new McsListItem(
+        server.managementName, server.managementName));
+    });
+    // Select first element of the dropdown
+    if (this.serverItems) {
+      this.formControlTargetServerName.setValue(this.serverItems.getGroup(
+        this.serverItems.getGroupNames()[0])[0].value);
+    }
   }
 
   private _registerFormGroup(): void {

@@ -1,8 +1,9 @@
 import { McsApiTask } from './mcs-api-task';
+import { McsJobType } from '../../enumerations/mcs-job-type.enum';
 
 export class McsApiJob {
   public id: string;
-  public type: number;
+  public type: McsJobType;
   public ownerName: string;
   public description: string;
   public summaryInformation: string;

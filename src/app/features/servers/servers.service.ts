@@ -23,9 +23,11 @@ import {
   ServerClientObject,
   ServerPowerState,
   ServerThumbnail,
+  ServerCreate,
   ServerUpdate,
   ServerCommand,
   ServerPlatform,
+  ServerTemplate,
   ServerStorageDeviceUpdate
 } from './models';
 
@@ -168,6 +170,46 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * This will create the new server based on the inputted information
+   * @param serverData Server data to be created
+   */
+  public createServer(serverData: ServerCreate):
+    Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers';
+    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * This will get the server templates data from the API
+   */
+  public getServerTemplates(): Observable<McsApiSuccessResponse<ServerTemplate[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers/templates';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<ServerTemplate[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerTemplate[]>>(
+          response.text(),
+          reviverParser
+        );
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerTemplate[]>();
       })
       .catch(this._handleServerError);
   }

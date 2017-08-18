@@ -6,7 +6,8 @@ import {
   Output,
   ViewChildren,
   QueryList,
-  EventEmitter
+  EventEmitter,
+  SimpleChanges
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
@@ -42,7 +43,7 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     private _textContentProvider: McsTextContentProvider
   ) {
     this.progressValue = 0;
-    this.progressMax = 100;
+    this.progressMax = 0;
     this.onFinishedJob = new EventEmitter<McsApiJob>();
     this.jobs = new Array();
   }
@@ -118,15 +119,43 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
 
   private _updateProgressbar(): void {
     if (this.jobs && this.jobs.length > 0) {
+      let progressTolerance: number = 0;
+
       this.jobs.forEach((job) => {
         this.progressMax += job.ectInSeconds;
       });
 
+      // Calculate the 99% of the progreesbar maximum
+      // In case the tolerance is less than 1, set it to 1 instead
+      progressTolerance = this.progressMax - (this.progressMax * 0.99);
+      if (progressTolerance < 1) { progressTolerance = 1; }
+
+      // Set Inifinity Timer
       this._timerSubscription = Observable.timer(0, 1000)
-        .take(this.progressMax + 1)
+        .take(Infinity)
         .subscribe((time) => {
-          this.progressValue = time;
+          let timeExceedsEstimate = (this.progressMax - this.progressValue) <= progressTolerance;
+
+          // Find active jobs (in case there are) and exit timer in case of completion
+          let activeJobExists = this.jobs.find((job) => {
+            return job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE ||
+              job.status === CoreDefinition.NOTIFICATION_JOB_PENDING;
+          });
+          if (!activeJobExists) {
+            this._endTimer();
+          } else if (timeExceedsEstimate) {
+            // Hold progress bar position to wait for other jobs to finished
+          } else if (time <= this.progressMax) {
+            this.progressValue = time;
+          }
         });
+    }
+  }
+
+  private _endTimer(): void {
+    this.progressValue = this.progressMax;
+    if (this._timerSubscription) {
+      this._timerSubscription.unsubscribe();
     }
   }
 }

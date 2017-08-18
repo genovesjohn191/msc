@@ -39,6 +39,10 @@ export class CoreDefinition {
   /** Server Page */
   public static SERVER_LIST_MAX_ITEM_PER_PAGE = 10;
 
+  // TODO: Create Enumeration for Server Type
+  public static SERVER_MANAGED = 'Managed';
+  public static SERVER_SELF_MANAGED = 'Self-Managed';
+
   /** Notification Page */
   public static NOTIFICATION_MAX_ITEM_PER_PAGE = 10;
 

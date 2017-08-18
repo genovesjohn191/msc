@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   ViewChild,
   ViewChildren,
   Injector,
@@ -11,19 +12,31 @@ import {
   ElementRef
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import {
   McsApiJob,
-  McsApiTask,
   McsList,
   McsListItem,
   CoreDefinition,
   McsTextContentProvider,
-  McsComponentService
+  McsComponentService,
+  McsNotificationContextService,
+  McsJobType
 } from '../../../core';
 import {
   mergeArrays,
+  updateArrayRecord,
   refreshView
 } from '../../../utilities';
+import {
+  Server,
+  ServerPlatform,
+  ServerTemplate,
+  ServerResource,
+  ServerCreate,
+  ServerCreateStorage,
+  ServerCreateNetwork
+} from '../models';
 import { ContextualHelpDirective } from '../shared/contextual-help/contextual-help.directive';
 import { CreateSelfManagedServersService } from './create-self-managed-servers.service';
 import {
@@ -36,44 +49,90 @@ import {
   styles: [require('./create-self-managed-servers.component.scss')]
 })
 
-export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit {
+export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('selfManagedServersElement')
   public selfManagedServersElement: ElementRef;
 
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives;
 
+  public vdcValue: any;
+  public vdcList: McsList;
+
   public contextualTextContent: any;
   public createServerTextContent: any;
-  public intellicentreValue: any;
-  public intellicentres: any;
+
   public notifications: McsApiJob[];
-  public servers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
+  public newServers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
+  public isLoading: boolean;
+
+  // Others
+  private _obtainDataSubscription: any;
+  private _notificationsSubscription: any;
   private _mainContextInformations: ContextualHelpDirective[];
+
+  /**
+   * Server platform data mapping
+   */
+  private _serverPlatformMap: Map<string, ServerResource>;
+  public get serverPlatformMap(): Map<string, ServerResource> {
+    return this._serverPlatformMap;
+  }
+
+  /**
+   * Server list data mapping
+   */
+  private _serverListMap: Map<string, Server[]>;
+  public get serverListMap(): Map<string, Server[]> {
+    return this._serverListMap;
+  }
+
+  /**
+   * Server templates list
+   */
+  private _serverTemplate: ServerTemplate;
+  public get serverTemplate(): ServerTemplate {
+    return this._serverTemplate;
+  }
 
   public get addIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ADD_BLACK;
   }
 
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SPINNER;
+  }
+
+  public get hasNotifications(): boolean {
+    return this.notifications && this.notifications.length > 0;
+  }
+
   public get isServersValid(): boolean {
-    let inValidExists = this.servers.find((newServer) => {
+    let inValidExists = this.newServers.find((newServer) => {
       return !newServer.componentRef.instance.isValid;
     });
     return inValidExists ? false : true;
   }
 
   public constructor(
-    private _managedServerService: CreateSelfManagedServersService,
+    private _createSelfManagedServices: CreateSelfManagedServersService,
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
     private _injector: Injector,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _notificationContextService: McsNotificationContextService
   ) {
     this.notifications = new Array();
-    this.servers = new Array();
+    this.newServers = new Array();
+    this.vdcList = new McsList();
+    this.isLoading = true;
+
     this._mainContextInformations = new Array();
+    this._serverTemplate = new ServerTemplate();
+    this._serverListMap = new Map<string, Server[]>();
+    this._serverPlatformMap = new Map<string, ServerResource>();
   }
 
   public ngOnInit() {
@@ -81,11 +140,24 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit 
       .servers.createSelfManagedServer;
     this.contextualTextContent = this.createServerTextContent.contextualHelp;
 
-    this.intellicentres = this.getIntellicentres();
-    this.addServer();
+    // Get all the data from api in parallel
+    this._obtainDataSubscription = Observable.forkJoin([
+      this._createSelfManagedServices.getAllServers(),
+      this._createSelfManagedServices.getPlatformData(),
+      this._createSelfManagedServices.getServerTemplates()
+    ]).subscribe((data) => {
+      this._setAllServers(data[0]);
+      this._setPlatformData(data[1]);
+      this._setServerTemplates(data[2]);
 
-    // TODO: Set the notifications temporarily
-    this._populateNotifications();
+      // Add server
+      this._setVdcItems();
+      this.isLoading = false;
+      this.addServer();
+    });
+
+    // Listen to notifications
+    this._listenToNotifications();
   }
 
   public ngAfterViewInit() {
@@ -97,6 +169,15 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit 
           });
       }
     });
+  }
+
+  public ngOnDestroy() {
+    if (this._obtainDataSubscription) {
+      this._obtainDataSubscription.unsubscribe();
+    }
+    if (this._notificationsSubscription) {
+      this._notificationsSubscription.unsubscribe();
+    }
   }
 
   public addServer(): void {
@@ -114,92 +195,173 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit 
     componentService.createComponent();
 
     // Set Component Input Parameters
-    componentService.componentRef.instance.vdcName = this.intellicentreValue;
+    componentService.componentRef.instance.vdcName = this.vdcValue;
+    componentService.componentRef.instance.resource = this._serverPlatformMap.get(this.vdcValue);
+    componentService.componentRef.instance.servers = this._serverListMap.get(this.vdcValue);
+    componentService.componentRef.instance.template = this._serverTemplate;
     componentService.appendComponentTo(this.selfManagedServersElement.nativeElement);
 
     // Add new server to servers list
-    this.servers.push(componentService);
+    this.newServers.push(componentService);
   }
 
   public getAllContextualInformations() {
     return mergeArrays(this._mainContextInformations,
-      this._managedServerService.subContextualHelp);
-  }
-
-  public getIntellicentres(): McsList {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsList = new McsList();
-
-    itemList.push('Intellicentres',
-      new McsListItem('intellicentre1', 'Intellicentre 1 (Syd) - VC 27117006'));
-    itemList.push('Intellicentres',
-      new McsListItem('intellicentre2', 'Intellicentre 2 (Syd) - VC 27117007'));
-    itemList.push('Intellicentres',
-      new McsListItem('intellicentre3', 'Intellicentre 3 (Syd) - VC 27117008'));
-    return itemList;
+      this._createSelfManagedServices.subContextualHelp);
   }
 
   public onNavigateToServerPage() {
     this._router.navigate(['/servers']);
   }
 
-  // TODO: remove this method in official release
-  private _populateNotifications() {
-    let notification = new McsApiJob();
-    // Record 1
-    {
-      notification.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-      notification.id = '0001';
-      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 1 (Syd)';
-      notification.tasks = new Array();
-      notification.ectInSeconds = 30;
-      {
-        let task = new McsApiTask();
-        task.id = '000A';
-        task.description = 'Initializing the new Server';
-        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        notification.tasks.push(task);
-      }
-      {
-        let task = new McsApiTask();
-        task.id = '000B';
-        task.description = 'Preparing the server for deployment.';
-        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        notification.tasks.push(task);
-      }
-      {
-        let task = new McsApiTask();
-        task.id = '000C';
-        task.description = 'Deploying mongo-db-prod: 50GB, 8GB / 2vCPU';
-        task.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-        notification.tasks.push(task);
-      }
-      this.notifications.push(notification);
+  public onDeployServer() {
+    // Clear notifications
+    this.notifications = new Array();
+
+    // Loop to all new servers
+    this.newServers.forEach((server) => {
+      let serverCreate = new ServerCreate();
+      // Server Data
+      serverCreate.platform = 'vcloud';
+      serverCreate.resource = server.componentRef.instance.vdcName;
+      serverCreate.name = server.componentRef.instance.serverName;
+      serverCreate.guestOs = server.componentRef.instance.serverInputs.vTemplate;
+      serverCreate.serviceId = ''; // This is only empty if the type is Self-Managed
+
+      // Scale
+      serverCreate.cpuCount = server.componentRef.instance
+        .serverInputs.performanceScale.cpuCount;
+      serverCreate.memoryMB = server.componentRef.instance
+        .serverInputs.performanceScale.memoryMB;
+
+      // Storage
+      serverCreate.storage = new ServerCreateStorage();
+      serverCreate.storage.name = server.componentRef.instance
+        .serverInputs.serverManageStorage.storageProfile;
+      serverCreate.storage.storageMB = server.componentRef.instance
+        .serverInputs.serverManageStorage.storageMB;
+
+      // Network
+      serverCreate.network = new ServerCreateNetwork();
+      serverCreate.network.name = server.componentRef.instance
+        .serverInputs.networkName;
+      serverCreate.network.ipAllocationMode = server.componentRef.instance
+        .serverInputs.ipAddress.ipAllocationMode;
+      serverCreate.network.ipAddress = server.componentRef.instance
+        .serverInputs.ipAddress.customIpAddress;
+
+      this._createSelfManagedServices.createServer(serverCreate)
+        .subscribe((response) => {
+          // Subscribe to execute the creation asynchronously
+          // and get the current jobs
+          if (response.content) {
+            this.notifications.push(response.content);
+          }
+        });
+    });
+  }
+
+  private _setVdcItems(): void {
+    if (!this._serverPlatformMap) { return; }
+
+    // Populate vdc list dropdown list
+    this._serverPlatformMap.forEach((value, key) => {
+      this.vdcList.push(this.createServerTextContent.vdcDropdownList.name,
+        new McsListItem(
+          key,
+          this.createServerTextContent.vdcDropdownList.prefix + `${value.name}`
+        ));
+    });
+
+    // Select first element of the VDC
+    if (this.vdcList) {
+      this.vdcValue = this.vdcList.getGroup(
+        this.vdcList.getGroupNames()[0])[0].key;
     }
-    // Record 2
-    {
-      notification = new McsApiJob();
-      notification.tasks = new Array();
-      notification.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-      notification.id = '0002';
-      notification.endedOn = new Date('2017-04-26 01:10:45');
-      notification.description = 'Deploying "mongo-db-prod" in Intellicentre 2 (Syd)';
-      notification.ectInSeconds = 100;
-      {
-        let task = new McsApiTask();
-        task.id = '000A';
-        task.description = 'Initializing the new Server';
-        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        notification.tasks.push(task);
-      }
-      {
-        let task = new McsApiTask();
-        task.id = '000B';
-        task.description = 'Deploying web-app-prod: 50GB, 8GB / 2vCPU';
-        task.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-        notification.tasks.push(task);
-      }
-      this.notifications.push(notification);
+  }
+
+  /**
+   * This will listen to notifications changes in case
+   * the existing notification in the provisioning is created and
+   * need to update
+   */
+  private _listenToNotifications(): void {
+    this._notificationsSubscription = this._notificationContextService
+      .notificationsStream.subscribe((updatedNotifications) => {
+        if (updatedNotifications) {
+          let creationJobs = updatedNotifications.filter((job) => {
+            return job.type === McsJobType.CreateServer;
+          });
+
+          // Update new created servers
+          for (let job of creationJobs) {
+            updateArrayRecord(this.notifications, job, false,
+              (_first: McsApiJob, _second: McsApiJob) => {
+                return _first.id === _second.id;
+              });
+          }
+        }
+      });
+  }
+
+  /**
+   * This will set all the servers to the servers mapping
+   * for easily access across its chidren component
+   *
+   * `@Note` This will execute together with the platform and template obtainment
+   * @param response Api response
+   */
+  private _setAllServers(response: any): void {
+    if (response && response.content) {
+      let servers = response.content as Server[];
+      servers.forEach((server) => {
+        let serversRecord: Server[] = new Array();
+        if (this._serverListMap.has(server.vdcName)) {
+          serversRecord = this._serverListMap.get(server.vdcName);
+        }
+
+        serversRecord.push(server);
+        this._serverListMap.set(server.vdcName, serversRecord);
+      });
+    }
+  }
+
+  /**
+   * This will set the Platform data to platform mapping
+   * for easily access across its chidren component
+   *
+   * `@Note` This will execute together with the servers and template obtainment
+   * @param response Api response
+   */
+  private _setPlatformData(response: any): void {
+    if (response && response.content) {
+      let serverPlatform = response.content as ServerPlatform;
+      serverPlatform.environments.forEach((environment) => {
+        environment.resources.forEach((resource) => {
+          if (resource.serviceType === CoreDefinition.SERVER_SELF_MANAGED) {
+            this._serverPlatformMap.set(resource.name, resource);
+          }
+        });
+      });
+    }
+  }
+
+  /**
+   * This will set the Templates data to template mapping
+   * for easily access across its chidren component
+   *
+   * `@Note` This will execute together with the servers and platform obtainment
+   * @param response Api response
+   */
+  private _setServerTemplates(response: any): void {
+    if (response && response.content) {
+      let serverTemplates = response.content as ServerTemplate[];
+
+      serverTemplates.forEach((template) => {
+        if (template.serviceType === CoreDefinition.SERVER_SELF_MANAGED) {
+          this._serverTemplate = template;
+        }
+      });
     }
   }
 }

@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
+import { ServersService } from '../servers.service';
+import {
+  Server,
+  ServerCreate
+} from '../models';
 import {
   ContextualHelpDirective
 } from '../shared/contextual-help/contextual-help.directive';
-import { BehaviorSubject } from 'rxjs/Rx';
 
 @Injectable()
 export class CreateSelfManagedServersService {
@@ -19,12 +23,36 @@ export class CreateSelfManagedServersService {
     this._subContextualHelp = value;
   }
 
-  constructor() {
+  constructor(private _serversService: ServersService) {
     this._subContextualHelp = new Array();
   }
 
-  public getDeploymentData() {
-    // TODO: Return deployment information here
-    return undefined;
+  /**
+   * This will get the platform data from the servers service
+   */
+  public getPlatformData() {
+    return this._serversService.getPlatformData();
+  }
+
+  /**
+   * This will get all the servers from the servers service
+   */
+  public getAllServers() {
+    return this._serversService.getServers();
+  }
+
+  /**
+   * This will get the server templates data from the API
+   */
+  public getServerTemplates() {
+    return this._serversService.getServerTemplates();
+  }
+
+  /**
+   * This will create the new server based on the inputted information
+   * @param serverData Server data to be created
+   */
+  public createServer(serverData: ServerCreate) {
+    return this._serversService.createServer(serverData);
   }
 }

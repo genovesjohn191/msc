@@ -81,7 +81,17 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public scaleChanged: EventEmitter<ServerPerformanceScale>;
 
   public get currentServerScale(): ServerPerformanceScale {
-    return this.sliderValue < 0 ? undefined : this.sliderTable[this.sliderValue];
+    return this.sliderValue < 0 || !(this.sliderTable.length > 0) ?
+      { memoryMB: 0, cpuCount: 0 } as ServerPerformanceScale :
+      this.sliderTable[this.sliderValue];
+  }
+
+  public get remainingMemoryMB(): number {
+    return this.availableMemoryMB - this.currentServerScale.memoryMB;
+  }
+
+  public get remainingCpuCount(): number {
+    return this.availableCpuCount - this.currentServerScale.cpuCount;
   }
 
   public constructor(private _textProvider: McsTextContentProvider) {
@@ -159,6 +169,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     // Create Custom RAM Control and Register the listener
     this.serverScaleCustomRam = new FormControl('', [
       CoreValidators.required,
+      CoreValidators.min(1),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._customRamValidator.bind(this),
@@ -171,6 +182,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     // Create Custom CPU Control and Register the listener
     this.serverScaleCustomCpu = new FormControl('', [
       CoreValidators.required,
+      CoreValidators.min(1),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._customCpuValidator.bind(this),
@@ -220,11 +232,17 @@ export class ServerPerformanceScaleComponent implements OnInit {
     let actualMemory = this.memoryMB;
 
     // Get slider current value based on table preferences
-    for (let index = 0; index < this.sliderTable.length; ++index) {
-      if (this.sliderTable[index].cpuCount === this.cpuCount &&
-        this.sliderTable[index].memoryMB === actualMemory) {
-        this.sliderValue = index;
-        break;
+    if (this.cpuCount <= 0 && this.memoryMB <= 0) {
+      this.cpuCount = undefined;
+      this.memoryMB = undefined;
+      this.sliderValue = 0;
+    } else {
+      for (let index = 0; index < this.sliderTable.length; ++index) {
+        if (this.sliderTable[index].cpuCount === this.cpuCount &&
+          this.sliderTable[index].memoryMB === actualMemory) {
+          this.sliderValue = index;
+          break;
+        }
       }
     }
 
@@ -247,11 +265,10 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   private _setScaleType(): void {
     // Check if the value of Memory and Core are in the table list
-    if (this.sliderValue === -1) {
-      this.sliderValue = 0;
-      this.inputManageType = ServerInputManageType.Custom;
-    } else {
+    if (!this.cpuCount && !this.memoryMB) {
       this.inputManageType = ServerInputManageType.Slider;
+    } else if (this.sliderValue === -1) {
+      this.inputManageType = ServerInputManageType.Custom;
     }
   }
 
@@ -303,9 +320,13 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
       case ServerInputManageType.Slider:
       default:
-        performanceScale.memoryMB = this.sliderTable[this.sliderValue].memoryMB;
-        performanceScale.cpuCount = this.sliderTable[this.sliderValue].cpuCount;
-        performanceScale.valid = true;
+        if (this.sliderTable && this.sliderTable.length > 0) {
+          performanceScale.memoryMB = this.sliderTable[this.sliderValue].memoryMB;
+          performanceScale.cpuCount = this.sliderTable[this.sliderValue].cpuCount;
+          performanceScale.valid = true;
+        } else {
+          performanceScale.valid = false;
+        }
         break;
     }
     refreshView(() => {

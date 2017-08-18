@@ -11,6 +11,6 @@ export class ServerCreateSelfManaged {
   public catalog: string;
   public performanceScale: ServerPerformanceScale;
   public serverManageStorage: ServerManageStorage;
+  public networkName: string;
   public ipAddress: ServerIpAddress;
-  public network: string;
 }

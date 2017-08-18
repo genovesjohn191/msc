@@ -1,5 +1,7 @@
 @import "../../../styles/shared/base";
 
+$progress-bar-label-color: $color-white;
+
 :host {
   display: block;
 }
@@ -15,12 +17,17 @@
     overflow: hidden;
     height: inherit;
     @include transition(.4s linear);
+    @include display-flex(row);
+    align-items: center;
+    justify-content: flex-end;
+
+    span {
+      @include font-size($progress-bar-font-size);
+      color: $progress-bar-label-color;
+    }
   }
 }
 
 .percentage {
   @include transition(.4s linear);
-  span {
-    @include font-size($progress-bar-font-size);
-  }
 }

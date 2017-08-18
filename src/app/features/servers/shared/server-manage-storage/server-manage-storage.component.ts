@@ -91,7 +91,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public get remainingMemory(): string {
     return appendUnitSuffix(
-      this.storageSliderValues[this.maximum] -  this.storageSliderValues[this.sliderValue],
+      this.storageSliderValues[this.maximum] - this.storageSliderValues[this.sliderValue],
       'gigabyte'
     );
   }
@@ -108,7 +108,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnInit() {
     this.storageTextContent = this._textProvider.content.servers.server.storage;
-    if (this.storageProfileList) {
+    if (this.storageProfileList && this.storageProfileList.getGroupNames().length > 0) {
       let groupName = this.storageProfileList.getGroupNames()[0];
       this.storageProfileValue = this.storageProfileList.getGroup(groupName)[0].key;
     }
@@ -215,7 +215,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   private _customStorageValidator(inputValue: any): boolean {
-    return inputValue <= this.maximum;
+    return inputValue <= this.maximumMemoryGB;
   }
 
   private _notifyStorageChanged() {
@@ -231,8 +231,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
       case ServerInputManageType.Slider:
       default:
-        serverStorage.storageMB = convertToMb(this.storageSliderValues[this.sliderValue]);
-        serverStorage.valid = this.sliderValue > 0;
+        // TODO: Add isArrayChecking to common utilities
+        if (this.storageSliderValues && this.storageSliderValues.length > 0) {
+          serverStorage.storageMB = convertToMb(this.storageSliderValues[this.sliderValue]);
+          serverStorage.valid = true;
+        } else {
+          serverStorage.valid = false;
+        }
         break;
     }
 
