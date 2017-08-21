@@ -89,6 +89,11 @@
     }
   }
 
+  .loading-spinner {
+    margin-top: $space-large;
+    text-align: center;
+  }
+
   .add-new-storage {
     border: 1px solid $color-grey-00;
     @include border-radius($input-border-radius);
@@ -97,6 +102,17 @@
 
     .attach {
       text-align: right;
+    }
+  }
+
+  .storage-limit-warning {
+    @include display-flex(row);
+    align-items: center;
+    justify-content: center;
+
+    h4 {
+      margin-left: $space-small;
+      margin-bottom: 0;
     }
   }
 

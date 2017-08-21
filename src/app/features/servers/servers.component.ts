@@ -14,7 +14,8 @@ import {
   Server,
   ServerClientObject,
   ServerPowerState,
-  ServerCommand
+  ServerCommand,
+  ServerServiceType
 } from './models';
 /** Core */
 import {
@@ -248,6 +249,23 @@ export class ServersComponent implements OnInit, OnDestroy {
 
   public getActiveServerTooltip(serverId: any) {
     return this._serversService.getActiveServerInformation(serverId);
+  }
+
+  public getServiceTypeText(serviceType: ServerServiceType): string {
+    let serviceTypeText = '';
+
+    switch (serviceType) {
+      case ServerServiceType.SelfManaged:
+        serviceTypeText = CoreDefinition.SERVER_SELF_MANAGED;
+        break;
+
+      case ServerServiceType.Managed:
+      default:
+        serviceTypeText = CoreDefinition.SERVER_MANAGED;
+        break;
+    }
+
+    return serviceTypeText;
   }
 
   /**
