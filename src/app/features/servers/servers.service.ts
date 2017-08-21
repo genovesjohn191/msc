@@ -12,6 +12,7 @@ import {
   McsApiRequestParameter,
   McsNotificationContextService,
   McsApiJob,
+  McsJobType,
   CoreDefinition
 } from '../../core/';
 import {
@@ -107,7 +108,7 @@ export class ServersService {
    */
   public getServer(id: any): Observable<McsApiSuccessResponse<Server>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/' + id;
+    mcsApiRequestParameter.endPoint = `/servers/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
@@ -133,7 +134,7 @@ export class ServersService {
     referenceObject: any
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/' + id + '/command';
+    mcsApiRequestParameter.endPoint = `/servers/${id}/command`;
     mcsApiRequestParameter.recordData = JSON.stringify({
       command: action,
       clientReferenceObject: referenceObject
@@ -161,7 +162,7 @@ export class ServersService {
     serverData: ServerUpdate
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/' + id;
+    mcsApiRequestParameter.endPoint = `/servers/${id}`;
     mcsApiRequestParameter.recordData = JSON.stringify(serverData);
 
     return this._mcsApiService.patch(mcsApiRequestParameter)
@@ -216,20 +217,72 @@ export class ServersService {
   }
 
   /**
-   * Patch storage device data to process the storage device updates
+   * Creating server storage
    * *Note: This will send a job (notification)
-   * @param id Server identification
-   * @param storageDeviceData Server storage data for the patch update
+   * @param serverId Server identification
+   * @param storageData Server storage data
    */
-  public patchStorageDevice(
-    id: any,
-    storageDeviceData: ServerStorageDeviceUpdate
+  public createServerStorage(
+    serverId: any,
+    storageData: ServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/' + id + '/disks';
-    mcsApiRequestParameter.recordData = JSON.stringify(storageDeviceData);
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks`;
+    mcsApiRequestParameter.recordData = JSON.stringify(storageData);
 
-    return this._mcsApiService.patch(mcsApiRequestParameter)
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Updating server storage
+   * *Note: This will send a job (notification)
+   * @param serverId Server identification
+   * @param storageId Server storage identification
+   * @param storageData Server storage data
+   */
+  public updateServerStorage(
+    serverId: any,
+    storageId: any,
+    storageData: ServerStorageDeviceUpdate
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
+    mcsApiRequestParameter.recordData = JSON.stringify(storageData);
+
+    return this._mcsApiService.put(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Deleting server storage
+   * *Note: This will send a job (notification)
+   * @param serverId Server identification
+   * @param storageId Server storage identification
+   * @param storageData Server storage data
+   */
+  public deleteServerStorage(
+    serverId: any,
+    storageId: any
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
@@ -335,7 +388,10 @@ export class ServersService {
 
         // Filter only those who have client reference object on notification jobs
         updatedNotifications.forEach((notification) => {
-          if (notification.clientReferenceObject) {
+          // TODO: Temporarily filtering only notification
+          // with ChangeServerPowerState Type. To be confirmed
+          if (notification.type === McsJobType.ChangeServerPowerState
+            && notification.clientReferenceObject) {
 
             activeServers.push({
               serverId: notification.clientReferenceObject.serverId,

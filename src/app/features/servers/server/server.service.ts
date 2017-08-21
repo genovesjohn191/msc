@@ -9,7 +9,8 @@ import {
   ServerPerformanceScale,
   ServerThumbnail,
   ServerUpdate,
-  ServerStorageDeviceUpdate
+  ServerStorageDeviceUpdate,
+  ServerPlatform
 } from '../models';
 import {
   McsApiSuccessResponse,
@@ -42,7 +43,7 @@ export class ServerService {
   /**
    * Get Platform Data (MCS API Response)
    */
-  public getPlatformData() {
+  public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {
     return this._serversService.getPlatformData();
   }
 
@@ -71,18 +72,50 @@ export class ServerService {
   }
 
   /**
-   * This method will set the storage device update based on the given data
+   * This method will create a server storage based on the given data
    * @param serverId Server ID
-   * @param storageDeviceUpdate storage device update data
+   * @param storageData storage Data
    */
-  public setStorageDeviceUpdate(
+  public createServerStorage(
     serverId: any,
-    storageDeviceUpdate: ServerStorageDeviceUpdate
+    storageData: ServerStorageDeviceUpdate
   ) {
-    if (!storageDeviceUpdate) { return; }
+    if (!storageData) { return; }
 
-    // Update scaling of server based on cpu size scale
-    return this._serversService.patchStorageDevice(serverId, storageDeviceUpdate);
+    // Create a server storage
+    return this._serversService.createServerStorage(serverId, storageData);
+  }
+
+  /**
+   * This method will update a server storage based on the given data
+   * @param serverId Server ID
+   * @param storageId Server Storage ID
+   * @param storageData Storage Data
+   */
+  public updateServerStorage(
+    serverId: any,
+    storageId: any,
+    storageData: ServerStorageDeviceUpdate
+  ) {
+    if (!storageData) { return; }
+
+    // Update a server storage
+    return this._serversService.updateServerStorage(serverId, storageId, storageData);
+  }
+
+  /**
+   * This method will delete a server storage based on the given data
+   * @param serverId Server ID
+   * @param storageId Server Storage ID
+   * @param storageData Storage Data
+   */
+  public deleteServerStorage(
+    serverId: any,
+    storageId: any
+  ) {
+
+    // Delete a server storage
+    return this._serversService.deleteServerStorage(serverId, storageId);
   }
 
   /**

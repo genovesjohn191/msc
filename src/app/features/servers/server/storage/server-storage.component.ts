@@ -3,6 +3,7 @@ import {
   OnInit,
   OnDestroy
 } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import {
   Server,
   ServerFileSystem,
@@ -11,7 +12,7 @@ import {
   ServerResource,
   ServerStorage,
   ServerStorageDevice,
-  ServerStorageDeviceUpdate
+  ServerStorageDeviceUpdate,
 } from '../../models';
 import {
   CoreDefinition,
@@ -19,13 +20,15 @@ import {
   McsList,
   McsListItem,
   McsNotificationContextService,
-  McsApiJob
+  McsApiJob,
+  McsJobType
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import {
   appendUnitSuffix,
   convertToGb,
-  animateFactory
+  animateFactory,
+  mergeArrays
 } from '../../../../utilities';
 
 @Component({
@@ -40,14 +43,14 @@ import {
 export class ServerStorageComponent implements OnInit, OnDestroy {
   public serverStorageText: any;
   public expandStorage: boolean;
+  public expandingStorage: boolean;
+  public deletingStorage: boolean;
   public deleteStorageAlertMessage: string;
 
   public serverSubscription: any;
   public server: Server;
   public storageDevices: ServerStorageDevice[];
   public storageProfileList: McsList;
-
-  public newStorageDevice: ServerStorageDevice;
   public selectedStorageDevice: ServerStorageDevice;
 
   public serverPlatformSubscription: any;
@@ -59,12 +62,44 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public notificationsSubscription: any;
   public notifications: McsApiJob[];
 
+  public memoryMB: number;
+  public availableMemoryMB: number;
+
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
   }
 
-  public get hasstorageDevice(): boolean {
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SPINNER;
+  }
+
+  public get warningIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_WARNING;
+  }
+
+  public get hasStorageDevice(): boolean {
     return this.storageDevices.length > 0;
+  }
+
+  public get hasReachedDisksLimit(): boolean {
+    return this.storageDevices.length ===
+      CoreDefinition.SERVER_MANAGE_STORAGE_MAXIMUM_DISKS;
+  }
+
+  public get isValidStorageValues(): boolean {
+    return this._validateStorageChangedValues();
+  }
+
+  public get isLoading(): boolean {
+    return !this.hasStorageDevice || !this.storageProfileList;
+  }
+
+  /**
+   * Server platform data mapping
+   */
+  private _serverPlatformMap: Map<string, ServerResource>;
+  public get serverPlatformMap(): Map<string, ServerResource> {
+    return this._serverPlatformMap;
   }
 
   constructor(
@@ -74,18 +109,19 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   ) {
     // Constructor
     this.expandStorage = false;
+    this.expandingStorage = false;
+    this.deletingStorage = false;
     this.deleteStorageAlertMessage = '';
-    this.server = new Server();
     this.storageDevices = new Array<ServerStorageDevice>();
-    this.storageProfileList = new McsList();
     this.selectedStorageDevice = new ServerStorageDevice();
-    this.newStorageDevice = new ServerStorageDevice();
-    this.newStorageDevice.storageProfile = '';
-    this.newStorageDevice.sizeMB = 0;
+    this.memoryMB = 0;
+    this.availableMemoryMB = 0;
     this.serverPlatformData = new ServerPlatform();
     this.serverPlatformStorage = new Array<ServerStorage>();
     this.storageChangedValue = new ServerManageStorage();
     this.storageChangedValue.valid = false;
+    this.notifications = new Array<McsApiJob>();
+    this._serverPlatformMap = new Map<string, ServerResource>();
   }
 
   public ngOnInit() {
@@ -93,21 +129,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.serverStorageText = this._textProvider.content.servers.server.storage;
     this.deleteStorageAlertMessage = this.serverStorageText.deleteStorageAlertMessage;
 
-    this.serverSubscription = this._serverService.selectedServerStream
-      .subscribe((server) => {
-        if (server) {
-          this.server = server;
-          this.storageDevices = server.storageDevice;
-          this.storageProfileList = this._getStorageProfiles(this.storageDevices);
-          this._initializePlatformData();
-        }
-      });
-
-    // Listen to notifications stream
-    this.notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((notifications) => {
-        this.notifications = notifications;
-      });
+    this._listenToServerPlatformData();
+    this._listenToSelectedServerStream();
+    this._listenToNotificationsStream();
   }
 
   public getDeleteStorageAlertMessage(storageDevice: ServerStorageDevice): string {
@@ -116,7 +140,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.storageChangedValue = serverStorage;
-    this.newStorageDevice.storageProfile = serverStorage.storageProfile;
+    this.availableMemoryMB = this.getStorageAvailableMemory(serverStorage.storageProfile);
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
@@ -129,13 +153,89 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.expandStorage = false;
   }
 
-  public getStorageAvailableMemory(storageDevice: ServerStorageDevice): number {
-    if (this.serverPlatformStorage.length === 0) { return; }
+  public convertStorageInGb(value: number): number {
+    return Math.floor(convertToGb(value));
+  }
 
+  public appendGbUnit(value: number): string {
+    return `${value} ${this.serverStorageText.unit}`;
+  }
+
+  public displayNewDiskName(index: number): string {
+    if (index === undefined) { return ''; }
+
+    return `${this.serverStorageText.diskName} ${index + 1}`;
+  }
+
+  public onClickAttach(attachButton: any): void {
+    if (!this.isValidStorageValues) { return; }
+
+    let storageData = new ServerStorageDeviceUpdate();
+    storageData.storageProfile = this.storageChangedValue.storageProfile;
+    storageData.sizeMB = this.storageChangedValue.storageMB;
+    storageData.clientReferenceObject = {
+      serverId: this.server.id,
+      storageProfile: this.storageChangedValue.storageProfile,
+      sizeMB: this.storageChangedValue.storageMB
+    };
+
+    this.availableMemoryMB -= this.storageChangedValue.storageMB;
+    attachButton.showLoader();
+    this.storageChangedValue = new ServerManageStorage();
+    this._serverService.createServerStorage(this.server.id, storageData)
+      .subscribe(() => {
+        attachButton.hideLoader();
+      });
+  }
+
+  public onClickUpdate(updateButton: any): void {
+    if (!this.storageChangedValue.valid || this.expandingStorage) { return; }
+
+    let storageData = new ServerStorageDeviceUpdate();
+    storageData.name = this.selectedStorageDevice.name;
+    storageData.storageProfile = this.selectedStorageDevice.storageProfile;
+    storageData.sizeMB = this.storageChangedValue.storageMB;
+    storageData.clientReferenceObject = {
+      serverId: this.server.id,
+      diskId: this.selectedStorageDevice.id
+    };
+
+    this.expandingStorage = true;
+    updateButton.showLoader();
+    this._serverService.updateServerStorage(
+      this.server.id,
+      this.selectedStorageDevice.id,
+      storageData
+    ).subscribe(() => {
+      this.expandingStorage = false;
+      this.expandStorage = false;
+      updateButton.hideLoader();
+    });
+  }
+
+  public onDeleteStorage(
+    storage: ServerStorageDevice,
+    mcsModal: any,
+    deleteButton: any
+  ): void {
+    if (this.deletingStorage) { return; }
+
+    this.deletingStorage = true;
+    deleteButton.showLoader();
+    this._serverService.deleteServerStorage(this.server.id, storage.id)
+      .subscribe(() => {
+        this.deletingStorage = false;
+        mcsModal.close();
+        deleteButton.hideLoader();
+      });
+  }
+
+  public getStorageAvailableMemory(storageProfile: string): number {
     let availableMemoryMB = 0;
+
     let storage = this.serverPlatformStorage
       .find((result) => {
-        return result.name === storageDevice.storageProfile;
+        return result.name === storageProfile;
       });
 
     if (storage) {
@@ -145,46 +245,22 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return availableMemoryMB;
   }
 
-  public convertStorageInGb(value: number): number {
-    return Math.floor(convertToGb(value));
-  }
+  public getStorageStatus(diskId: string) {
+    if (this.notifications.length === 0) { return; }
 
-  public appendGbUnit(value: number): string {
-    return `${value} ${this.serverStorageText.unit}`;
-  }
+    let storageStatus = '';
+    let response = new McsApiJob();
 
-  public onClickAttach(): void {
-    if (!this.storageChangedValue.valid) { return; }
+    response = this.notifications.find((notification) => {
+      return (notification.clientReferenceObject &&
+        notification.clientReferenceObject.diskId === diskId);
+    });
 
-    let storageDeviceUpdate = new ServerStorageDeviceUpdate();
-    storageDeviceUpdate.storageProfile = this.storageChangedValue.storageProfile;
-    storageDeviceUpdate.sizeMB = this.storageChangedValue.storageMB;
-    storageDeviceUpdate.clientReferenceObject = { activeServerId: this.server.id };
+    if (response) {
+      storageStatus = response.summaryInformation;
+    }
 
-    this._serverService.setStorageDeviceUpdate(this.server.id, storageDeviceUpdate)
-      .subscribe((response) => { console.log(response); });
-  }
-
-  public onClickUpdate(): void {
-    if (!this.storageChangedValue.valid) { return; }
-
-    let storageDeviceUpdate = new ServerStorageDeviceUpdate();
-    storageDeviceUpdate.name = this.selectedStorageDevice.name;
-    storageDeviceUpdate.storageProfile = this.storageChangedValue.storageProfile;
-    storageDeviceUpdate.sizeMB = this.storageChangedValue.storageMB;
-    storageDeviceUpdate.clientReferenceObject = { activeServerId: this.server.id };
-
-    this._serverService.setStorageDeviceUpdate(this.server.id, storageDeviceUpdate)
-      .subscribe((response) => { this.expandStorage = false; });
-  }
-
-  public onDeleteStorage(storageDevice: ServerStorageDevice): void {
-    let storageDeviceUpdate = new ServerStorageDeviceUpdate();
-    storageDeviceUpdate.name = storageDevice.name;
-    storageDeviceUpdate.clientReferenceObject = { activeServerId: this.server.id };
-
-    this._serverService.setStorageDeviceUpdate(this.server.id, storageDeviceUpdate)
-      .subscribe((response) => { console.log(response); });
+    return storageStatus;
   }
 
   public ngOnDestroy() {
@@ -195,43 +271,126 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     if (this.serverPlatformSubscription) {
       this.serverPlatformSubscription.unsubscribe();
     }
-  }
 
-  private _getStorageProfiles(storageDevice: ServerStorageDevice[]): McsList {
-    if (!storageDevice) { return; }
-
-    let storageProfileList = new McsList();
-
-    for (let storage of storageDevice) {
-      storageProfileList.push('Storage Profiles',
-        new McsListItem(storage.storageProfile, storage.storageProfile));
+    if (this.notificationsSubscription) {
+      this.notificationsSubscription.unsubscribe();
     }
-
-    return storageProfileList;
   }
 
-  private _initializePlatformData(): void {
+  private _listenToServerPlatformData(): void {
     this.serverPlatformSubscription = this._serverService.getPlatformData()
       .subscribe((data) => {
-        this.serverPlatformData = data.content;
-        this.serverPlatformStorage = this._getServerPlatformStorage();
+        this._setPlatformData(data);
+        this._initializeValues();
       });
   }
 
-  private _getServerPlatformStorage(): ServerStorage[] {
-    let serverResource = new ServerResource();
-
-    for (let environment of this.serverPlatformData.environments) {
-      serverResource = environment.resources.find((result) => {
-        return result.serviceType === this.server.serviceType
-          && result.name === this.server.vdcName;
+  private _listenToSelectedServerStream(): void {
+    this.serverSubscription = this._serverService.selectedServerStream
+      .subscribe((server) => {
+        if (server) {
+          this.server = server;
+          this.storageDevices = this.server.storageDevice;
+          this._initializeValues();
+        }
       });
+  }
 
-      if (serverResource) {
-        break;
-      }
+  private _listenToNotificationsStream(): void {
+    this.notificationsSubscription = this._notificationContextService.notificationsStream
+      .subscribe((notifications) => {
+        if (notifications && this.server) {
+          let storageNotifications = notifications.filter((notification) => {
+            return (notification.status === CoreDefinition.NOTIFICATION_JOB_PENDING ||
+              notification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE) &&
+              (notification.clientReferenceObject &&
+              notification.clientReferenceObject.serverId === this.server.id);
+          });
+
+          this.notifications = (storageNotifications) ?
+            storageNotifications : new Array<McsApiJob>();
+
+          this._appendCreatedDisks();
+        }
+      });
+  }
+
+  private _initializeValues(): void {
+    if (!this.server || this._serverPlatformMap.size === 0) { return; }
+    this._setServerPlatformStorage();
+    this._setStorageProfiles();
+  }
+
+  /**
+   * This will set the Platform data to platform mapping
+   * for easily access across its chidren component
+   *
+   * `@Note` This will execute together with the servers and template obtainment
+   * @param response Api response
+   */
+  private _setPlatformData(response: any): void {
+    if (response && response.content) {
+      let serverPlatform = response.content as ServerPlatform;
+      serverPlatform.environments.forEach((environment) => {
+        environment.resources.forEach((resource) => {
+          this._serverPlatformMap.set(resource.name, resource);
+        });
+      });
+    }
+  }
+
+  private _setServerPlatformStorage(): void {
+    let serverPlatformStorage = new Array<ServerStorage>();
+    if (this._serverPlatformMap.has(this.server.vdcName)) {
+      let serverResource = this._serverPlatformMap.get(this.server.vdcName);
+      serverPlatformStorage = serverResource.storage;
     }
 
-    return serverResource.storage;
+    this.serverPlatformStorage = serverPlatformStorage;
+  }
+
+  private _setStorageProfiles(): void {
+    let storageProfileList = new McsList();
+
+    this.serverPlatformStorage.forEach((storage) => {
+      storageProfileList.push('Storage Profiles',
+        new McsListItem(storage.name, storage.name));
+    });
+
+    this.storageProfileList = storageProfileList;
+  }
+
+  private _appendCreatedDisks(): void {
+    if (this.notifications.length === 0) { return; }
+
+    let disks = new Array<ServerStorageDevice>();
+
+    let filteredNotifications = this.notifications.filter((notification) => {
+      return notification.type === McsJobType.CreateServerDisk;
+    });
+
+    if (filteredNotifications) {
+      filteredNotifications.forEach((notification) => {
+        let disk = new ServerStorageDevice();
+        disk.storageProfile = notification.clientReferenceObject.storageProfile;
+        disk.sizeMB = notification.clientReferenceObject.sizeMB;
+
+        disks.push(disk);
+      });
+    }
+
+    this.storageDevices = mergeArrays(this.server.storageDevice, disks);
+  }
+
+  private _validateStorageChangedValues(): boolean {
+    let isValid: boolean = false;
+
+    if (this.expandStorage) {
+      isValid = this.storageChangedValue.storageMB > this.selectedStorageDevice.sizeMB;
+    } else {
+      isValid = this.storageChangedValue.storageMB > this.memoryMB;
+    }
+
+    return isValid;
   }
 }

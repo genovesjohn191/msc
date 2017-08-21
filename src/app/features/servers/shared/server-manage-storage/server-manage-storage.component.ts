@@ -62,7 +62,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public storageSliderValues: number[];
   public storageProfileValue: string;
-  public sliderValue: number;
+  public storageSliderValue: number;
   public customStorageValue: number;
   public minimum: number;
   public maximum: number;
@@ -86,12 +86,12 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get currentMemory(): string {
-    return appendUnitSuffix(this.storageSliderValues[this.sliderValue], 'gigabyte');
+    return appendUnitSuffix(this.storageSliderValues[this.storageSliderValue], 'gigabyte');
   }
 
   public get remainingMemory(): string {
     return appendUnitSuffix(
-      this.storageSliderValues[this.maximum] - this.storageSliderValues[this.sliderValue],
+      this.storageSliderValues[this.maximum] -  this.storageSliderValues[this.storageSliderValue],
       'gigabyte'
     );
   }
@@ -99,7 +99,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public constructor(private _textProvider: McsTextContentProvider) {
     this.storageProfileValue = '';
     this.storageSliderValues = new Array();
-    this.sliderValue = 0;
+    this.storageSliderValue = 0;
     this.minimum = 0;
     this.maximum = 0;
     this.inputManageType = ServerInputManageType.Slider;
@@ -140,12 +140,14 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onStorageChanged(value: number) {
-    this.sliderValue = value;
+    this.storageSliderValue = value;
     this._notifyStorageChanged();
   }
 
   public onStorageProfileChanged(value: any): void {
     this.storageProfileValue = value;
+    this.storageSliderValue = 0;
+    this.customStorageValue = 0;
     this._setCustomControlValidator();
     this._notifyStorageChanged();
   }
@@ -166,8 +168,10 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   private _initializeSliderValues(): void {
+    this.inputManageType = ServerInputManageType.Slider;
     this.storageSliderValues = new Array();
     this.storageSliderValues.push(this.memoryGB);
+    this.storageSliderValue = 0;
 
     for (let value = this.memoryGB; value < this.maximumMemoryGB;) {
       if ((value + CoreDefinition.SERVER_MANAGE_STORAGE_SLIDER_STEP) <= this.maximumMemoryGB) {
@@ -206,7 +210,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this.formControlServerStorageCustom.setValidators([
       CoreValidators.required,
       CoreValidators.numeric,
-      CoreValidators.min(this.minimum + 1),
+      CoreValidators.min(this.memoryGB + 1),
       CoreValidators.custom(
         this._customStorageValidator.bind(this),
         validationMessage
@@ -233,7 +237,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       default:
         // TODO: Add isArrayChecking to common utilities
         if (this.storageSliderValues && this.storageSliderValues.length > 0) {
-          serverStorage.storageMB = convertToMb(this.storageSliderValues[this.sliderValue]);
+          serverStorage.storageMB = convertToMb(this.storageSliderValues[this.storageSliderValue]);
           serverStorage.valid = true;
         } else {
           serverStorage.valid = false;

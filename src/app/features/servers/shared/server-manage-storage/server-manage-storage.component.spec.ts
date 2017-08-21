@@ -82,7 +82,7 @@ describe('ServerManageStorageComponent', () => {
     it(`should initialize the sliderValue`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.ngOnInit();
-        expect(component.sliderValue).toBe(0);
+        expect(component.storageSliderValue).toBe(0);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.storageChanged.next).toHaveBeenCalledTimes(2);
       }));
@@ -101,7 +101,7 @@ describe('ServerManageStorageComponent', () => {
       from the slider or custom inputs`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.onStorageChanged(250);
-        expect(component.sliderValue).toBe(250);
+        expect(component.storageSliderValue).toBe(250);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
       }));

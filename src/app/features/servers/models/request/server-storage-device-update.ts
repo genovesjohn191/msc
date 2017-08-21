@@ -1,6 +1,6 @@
 export class ServerStorageDeviceUpdate {
-  public name: any;
-  public storageProfile: any;
+  public name: string;
+  public storageProfile: string;
   public sizeMB: number;
   public clientReferenceObject: any;
 }

@@ -380,9 +380,79 @@ describe('ServersService', () => {
     }));
   });
 
-  describe('patchStorageDevice()', () => {
+  describe('createServerStorage()', () => {
     let requestOptions = {
       id: 500,
+      serverStorageUpdate: new ServerStorageDeviceUpdate()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: 0,
+                    summaryInformation: 'Server Storage Created'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.createServerStorage(requestOptions.id, requestOptions.serverStorageUpdate)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id).toEqual(requestOptions.id);
+          expect(mcsApiSucessResponse[0].content[0].type).toEqual(0);
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Storage Created');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Post);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.createServerStorage(requestOptions.id, requestOptions.serverStorageUpdate)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('updateServerStorage()', () => {
+    let requestOptions = {
+      id: 500,
+      storageId: '1c0e3634-8232-11e7-bb31-be2e44b06b34',
       serverStorageUpdate: new ServerStorageDeviceUpdate()
     };
 
@@ -407,7 +477,11 @@ describe('ServersService', () => {
     });
 
     it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
-      serversService.patchStorageDevice(requestOptions.id, requestOptions.serverStorageUpdate)
+      serversService.updateServerStorage(
+        requestOptions.id,
+        requestOptions.storageId,
+        requestOptions.serverStorageUpdate
+      )
         .subscribe((response) => {
           let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
           mcsApiSucessResponse = response;
@@ -425,7 +499,7 @@ describe('ServersService', () => {
 
     it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
       mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Patch);
+        expect(connection.request.method).toBe(RequestMethod.Put);
 
         connection.mockError(new Response(
           new ResponseOptions({
@@ -436,7 +510,81 @@ describe('ServersService', () => {
         ) as any as Error);
       });
 
-      serversService.patchStorageDevice(requestOptions.id, requestOptions.serverStorageUpdate)
+      serversService.updateServerStorage(
+        requestOptions.id,
+        requestOptions.storageId,
+        requestOptions.serverStorageUpdate
+      )
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('deleteServerStorage()', () => {
+    let requestOptions = {
+      id: 500,
+      storageId: '1c0e3634-8232-11e7-bb31-be2e44b06b34',
+      serverStorageUpdate: new ServerStorageDeviceUpdate()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: 0,
+                    summaryInformation: 'Server Storage Update'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.deleteServerStorage(requestOptions.id, requestOptions.storageId)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id).toEqual(requestOptions.id);
+          expect(mcsApiSucessResponse[0].content[0].type).toEqual(0);
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Storage Update');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Delete);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.deleteServerStorage(requestOptions.id, requestOptions.storageId)
         .catch((error: McsApiErrorResponse) => {
           expect(error).toBeDefined();
           expect(error.status).toEqual(404);

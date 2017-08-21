@@ -83,7 +83,7 @@
           <a [routerLink]="[server.id]"><u>{{ server.managementName }}</u></a>
         </td>
         <td *ngIf="columnSettings['type'].value" class="text-left align-middle hidden-xsmall">
-          {{ server.serviceType }}
+          {{ getServiceTypeText(server.serviceType) }}
         </td>
         <td *ngIf="columnSettings['catalog'].value" class="text-left align-middle hidden-xsmall">
           {{ server.guestOs }}

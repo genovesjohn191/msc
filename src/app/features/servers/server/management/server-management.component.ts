@@ -25,7 +25,8 @@ import {
   McsApiJob,
   McsNotificationContextService,
   McsBrowserService,
-  McsDeviceType
+  McsDeviceType,
+  McsJobType
 } from '../../../../core';
 import {
   getEncodedUrl,
@@ -325,7 +326,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       });
 
       this.isScaling = serverScalingNotification &&
-        !(serverScalingNotification.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED);
+        serverScalingNotification.type === McsJobType.UpdateServer &&
+        (serverScalingNotification.status === CoreDefinition.NOTIFICATION_JOB_PENDING
+          || serverScalingNotification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
     }
   }
 

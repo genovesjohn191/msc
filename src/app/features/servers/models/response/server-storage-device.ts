@@ -1,4 +1,5 @@
 export class ServerStorageDevice {
+  public id: string;
   public name: string;
   public sizeMB: number;
   public storageDeviceType: string;

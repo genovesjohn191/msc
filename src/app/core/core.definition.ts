@@ -51,10 +51,11 @@ export class CoreDefinition {
   public static INPUT_TIME = 1000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
   public static DEFAULT_INITIAL_PAGE = 'servers';
-  public static MANAGED_SERVER = 'Managed';
   public static GB_TO_MB_MULTIPLIER = 1024;
   public static DEFAULT_DROPDOWN_PLACEHOLDER = 'Select Option';
   public static SERVER_MANAGE_STORAGE_SLIDER_STEP = 25;
+  public static SERVER_MANAGE_STORAGE_UNMOUNTED = 'Unmounted';
+  public static SERVER_MANAGE_STORAGE_MAXIMUM_DISKS = 14;
 
   /** Style */
   public static BASE_FONT = 'Circular-Pro-Book';
