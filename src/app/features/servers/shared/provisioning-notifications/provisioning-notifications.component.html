@@ -24,14 +24,23 @@
 
       <!-- Job completed -->
       <div *ngIf="isJobCompleted(job)" class="job-completed">
-        <div class="status-details">
+        <!-- In case of success -->
+        <div *ngIf="isJobSuccessful(job)" class="status-details">
           <mcs-icon [ngClass]="getStatusIcon('Completed').class"
             [key]="getStatusIcon('Completed').key"
             [color]="getStatusIcon('Completed').color"
             size="small"></mcs-icon>
           <span class="bold">{{ textContent.deploymentCompleted }}</span>
         </div>
-        <a (click)="onViewServerPage()" class="link">{{ textContent.viewServerLink }}</a>
+        <a *ngIf="isJobSuccessful(job)" (click)="onViewServerPage()"
+          class="link">{{ textContent.viewServerLink }}</a>
+
+        <!-- In case of Error -->
+        <div *ngIf="!isJobSuccessful(job)" class="status-details">
+          <mcs-alert type="failed" [title]="textContent.deploymentFailed">
+            <span>{{ job.errorMessage }}</span>
+          </mcs-alert>
+        </div>
       </div>
     </div>
   </div>

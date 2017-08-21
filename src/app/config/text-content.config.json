@@ -135,7 +135,9 @@
     },
     "shared": {
       "provisioningNotifications": {
+        "deployMultiple": "Deploy Servers",
         "deploymentCompleted": "Deployment Completed",
+        "deploymentFailed": "Deployment Failed",
         "viewServerLink": "View your servers"
       },
       "serverIpAddress": {
