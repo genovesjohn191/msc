@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   Input,
   Output,
   EventEmitter,
@@ -24,11 +25,14 @@ import {
   ServerIpAddress,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerTemplate
+  ServerTemplate,
+  ServerNetwork,
+  Server
 } from '../../models';
 import {
   refreshView,
-  mergeArrays
+  mergeArrays,
+  isNullOrEmpty
 } from '../../../../utilities';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
@@ -39,7 +43,13 @@ import { ContextualHelpDirective } from '../../shared/contextual-help/contextual
   styles: [require('./copy-self-managed-server.component.scss')]
 })
 
-export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
+export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input()
+  public visible: boolean;
+
+  @Input()
+  public servers: Server[];
+
   @Input()
   public resource: ServerResource;
 
@@ -56,52 +66,91 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
   public formGroupCopyServer: FormGroup;
   public formControlTargetServerName: FormControl;
   public formControlVApp: FormControl;
-  public formControlCatalog: FormControl;
+  public formControlVTemplate: FormControl;
   public formControlNetwork: FormControl;
   public formControlScale: FormControl;
   public formControlStorage: FormControl;
   public formControlIpAddress: FormControl;
+  public formGroupSubscription: any;
 
   // Scale and Storage
-  public memoryMB: number;
-  public cpuCount: number;
   public storageMemoryMB: number;
-  public storageAvailableMemoryMB: number;
+  public selectedNetwork: ServerNetwork;
+  public selectedServer: Server;
 
   // Dropdowns
-  public ipAddressValue: string;
-  public primaryNetworkItems: McsList;
-  public serverNameItems: McsList;
-  public virtualApplicationItems: McsList;
-  public serverCatalogItems: McsList;
-  public storageProfileList: McsList;
+  public serverItems: McsList;
+  public vAppItems: McsList;
+  public vTemplateItems: McsList;
+  public networkItems: McsList;
+  public storageItems: McsList;
+
+  // Others
   public contextualTextContent: any;
+  public availableMemoryMB: number;
+  public availableCpuCount: number;
+
+  public get memoryMB(): number {
+    return this.selectedServer ? this.selectedServer.memoryMB : 0;
+  }
+
+  public get cpuCount(): number {
+    return this.selectedServer ? this.selectedServer.cpuCount : 0;
+  }
+
+  public get storageAvailableMemoryMB(): number {
+    let availableMemoryMB: number = 0;
+    let serverStorage = this.formControlStorage.value as ServerManageStorage;
+    if (!this.resource) { return 0; }
+
+    if (serverStorage) {
+      let storageProfile = this.resource.storage
+        .find((profile) => {
+          return profile.name === serverStorage.storageProfile;
+        });
+
+      if (storageProfile) {
+        availableMemoryMB = (storageProfile.limitMB - storageProfile.usedMB) -
+          serverStorage.storageMB;
+      }
+    }
+
+    return availableMemoryMB;
+  }
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
-    // TODO: Temporary set the value for demo purpose
-    this.memoryMB = 4096;
-    this.cpuCount = 2;
-    this.storageMemoryMB = 204800;
-    this.storageAvailableMemoryMB = 921600;
+    this.storageMemoryMB = 0;
+    this.availableMemoryMB = 0;
+    this.availableCpuCount = 0;
 
+    this.serverItems = new McsList();
+    this.vAppItems = new McsList();
+    this.vTemplateItems = new McsList();
+    this.networkItems = new McsList();
+    this.storageItems = new McsList();
+    this.selectedNetwork = new ServerNetwork();
+    this.selectedServer = new Server();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
   public ngOnInit() {
     this.contextualTextContent = this._textContentProvider.content
       .servers.createSelfManagedServer.contextualHelp;
-    this.ipAddressValue = 'next';
 
     this._registerFormGroup();
 
-    this.primaryNetworkItems = this.getPrimaryNetwork();
-    this.serverNameItems = this.getServerNames();
-    this.virtualApplicationItems = this.getVirtualApplications();
-    this.serverCatalogItems = this.getServerCatalogs();
-    this.storageProfileList = this.getStorageProfiles();
+    if (this.resource) {
+      this._setServersItems();
+      this._setVAppItems();
+      this._setVTemplateItems();
+      this._setStorageItems();
+      this._setNetworkItems();
+      this._setAvailableMemoryMB();
+      this._setAvailableCpuCount();
+    }
   }
 
   public ngAfterViewInit() {
@@ -118,63 +167,10 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public getServerNames(): McsList {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsList = new McsList();
-
-    itemList.push('Server Name', new McsListItem('serverName1', 'Server Name 1'));
-    itemList.push('Server Name', new McsListItem('serverName2', 'Server Name 2'));
-    itemList.push('Server Name', new McsListItem('serverName3', 'Server Name 3'));
-    return itemList;
-  }
-
-  public getVirtualApplications(): McsList {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsList = new McsList();
-
-    itemList.push('vApp', new McsListItem('vApp1', 'Virtual Application 1'));
-    itemList.push('vApp', new McsListItem('vApp2', 'Virtual Application 2'));
-    itemList.push('vApp', new McsListItem('vApp3', 'Virtual Application 3'));
-    return itemList;
-  }
-
-  public getServerCatalogs(): McsList {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsList = new McsList();
-
-    itemList.push('Server Catalog', new McsListItem('serverCatalog1', 'mongo-db-prod 1'));
-    itemList.push('Server Catalog', new McsListItem('serverCatalog2', 'mongo-db-prod 2'));
-    itemList.push('Server Catalog', new McsListItem('serverCatalog3', 'mongo-db-prod 3'));
-    return itemList;
-  }
-
-  public getStorageProfiles() {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsList = new McsList();
-
-    itemList.push('Storage Profiles', new McsListItem('storageProfiles1', 'Storage Profiles 1'));
-    itemList.push('Storage Profiles', new McsListItem('storageProfiles2', 'Storage Profiles 2'));
-    itemList.push('Storage Profiles', new McsListItem('storageProfiles3', 'Storage Profiles 3'));
-    return itemList;
-  }
-
-  public getPrimaryNetwork() {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsList = new McsList();
-
-    itemList.push('primaryNetwork', new McsListItem('primaryNetwork1', 'Primary Network 1'));
-    itemList.push('primaryNetwork', new McsListItem('primaryNetwork2', 'Primary Network 2'));
-    itemList.push('primaryNetwork', new McsListItem('primaryNetwork3', 'Primary Network 3'));
-    return itemList;
-  }
-
-  public getIpAddressGroup() {
-    // TODO: Set the actual obtainment of real data to be displayed here
-    let itemList: McsListItem[] = new Array();
-
-    itemList.push(new McsListItem('dhcp', 'DHCP'));
-    itemList.push(new McsListItem('next', 'Next in my static pool'));
-    return itemList;
+  public ngOnDestroy() {
+    if (this.formGroupSubscription) {
+      this.formGroupSubscription.unsubscribe();
+    }
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -204,17 +200,100 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _setAvailableMemoryMB(): void {
+    this.availableMemoryMB = this.resource.memoryLimitMB - this.resource.memoryUsedMB;
+  }
+
+  private _setAvailableCpuCount(): void {
+    this.availableCpuCount = this.resource.cpuLimit - this.resource.cpuUsed;
+  }
+
+  private _setServersItems(): void {
+    if (!this.servers) { return; }
+
+    // Populate dropdown list
+    this.servers.forEach((server) => {
+      this.serverItems.push('Servers',
+        new McsListItem(server.id, server.managementName));
+    });
+
+    // Select first element of the dropdown
+    if (!isNullOrEmpty(this.serverItems.getGroupNames())) {
+      this.formControlTargetServerName.setValue(this.servers[0].id);
+      this.selectedServer = this.servers[0];
+    }
+  }
+
+  private _setVAppItems(): void {
+    if (!this.resource) { return; }
+
+    // Populate dropdown list
+    this.resource.storage.forEach((storage) => {
+      this.vAppItems.push('Virtual Applications', new McsListItem(storage.name, storage.name));
+    });
+    // Select first element of the dropdown
+    if (!isNullOrEmpty(this.vAppItems.getGroupNames())) {
+      this.formControlVApp.setValue(this.selectedServer.vAppName);
+    }
+  }
+
+  private _setVTemplateItems(): void {
+    if (!this.template) { return; }
+
+    // Populate dropdown list
+    this.template.guestOs.forEach((guestOs) => {
+      this.vTemplateItems.push('Virtual Templates',
+        new McsListItem(guestOs.name, guestOs.description));
+    });
+    // Select first element of the dropdown
+    if (!isNullOrEmpty(this.vTemplateItems.getGroupNames())) {
+      this.formControlVTemplate.setValue(this.selectedServer.guestOs);
+    }
+  }
+
+  private _setNetworkItems(): void {
+    if (!this.resource) { return; }
+
+    // Populate dropdown list
+    this.resource.networks.forEach((network) => {
+      this.networkItems.push('Networks', new McsListItem(network.name, network.name));
+    });
+    // Select first element of the dropdown
+    if (!isNullOrEmpty(this.networkItems.getGroupNames())) {
+      this.formControlNetwork.setValue(this.selectedServer.hostName);
+    }
+  }
+
+  private _setStorageItems(): void {
+    if (!this.resource) { return; }
+
+    // Populate dropdown list
+    this.resource.storage.forEach((storage) => {
+      this.storageItems.push('Storages', new McsListItem(storage.name, storage.name));
+    });
+    // The selection of element is happened under onStorageChanged method
+  }
+
   private _registerFormGroup(): void {
     // Register Form Controls
     this.formControlTargetServerName = new FormControl('', [
       CoreValidators.required
     ]);
+    this.formControlTargetServerName.valueChanges
+      .subscribe((targetServerId) => {
+        let serverFound = this.servers.find((server) => {
+          return server.id === targetServerId;
+        });
+        if (serverFound) {
+          this.selectedServer = serverFound;
+        }
+      });
 
     this.formControlVApp = new FormControl('', [
       CoreValidators.required
     ]);
 
-    this.formControlCatalog = new FormControl('', [
+    this.formControlVTemplate = new FormControl('', [
       CoreValidators.required
     ]);
 
@@ -237,14 +316,17 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     // Register Form Groups using binding
     this.formGroupCopyServer = new FormGroup({
       formControlTargetServerName: this.formControlTargetServerName,
-      formControlVApp: this.formControlVApp,
-      formControlCatalog: this.formControlCatalog,
+      // formControlVApp: this.formControlVApp,
+      formControlVTemplate: this.formControlVTemplate,
       formControlNetwork: this.formControlNetwork,
+      formControlScale: this.formControlScale,
+      formControlStorage: this.formControlStorage,
       formControlIpAddress: this.formControlIpAddress
     });
-    this.formGroupCopyServer.statusChanges.subscribe((status) => {
-      this._outputServerDetails();
-    });
+    this.formGroupSubscription = this.formGroupCopyServer.statusChanges
+      .subscribe((status) => {
+        this._outputServerDetails();
+      });
   }
 
   private _outputServerDetails(): void {
@@ -254,12 +336,13 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit {
     // Set the variable based on the form values
     copySelfManaged.targetServerName = this.formControlTargetServerName.value;
     copySelfManaged.vApp = this.formControlVApp.value;
+    copySelfManaged.vTemplate = this.formControlVTemplate.value;
     copySelfManaged.networkName = this.formControlNetwork.value;
-    copySelfManaged.catalog = this.formControlCatalog.value;
     copySelfManaged.performanceScale = this.formControlScale.value;
     copySelfManaged.serverManageStorage = this.formControlStorage.value;
     copySelfManaged.ipAddress = this.formControlIpAddress.value;
     copySelfManaged.isValid = this.formGroupCopyServer.valid;
+
     this.onOutputServerDetails.next(copySelfManaged);
   }
 }

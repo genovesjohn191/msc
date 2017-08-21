@@ -24,7 +24,8 @@ import {
 } from '../../models';
 import {
   refreshView,
-  mergeArrays
+  mergeArrays,
+  isNullOrEmpty
 } from '../../../../utilities';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
@@ -36,6 +37,9 @@ import { ContextualHelpDirective } from '../../shared/contextual-help/contextual
 })
 
 export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
+  @Input()
+  public visible: boolean;
+
   @Input()
   public servers: Server[];
 
@@ -52,12 +56,14 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   // Others
   public serverItems: McsList;
   public contextualTextContent: any;
+  public selectedServer: Server;
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
     this.serverItems = new McsList();
+    this.selectedServer = new Server();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
@@ -88,13 +94,14 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
     // Populate dropdown list
     this.servers.forEach((server) => {
-      this.serverItems.push('Servers', new McsListItem(
-        server.managementName, server.managementName));
+      this.serverItems.push('Servers',
+        new McsListItem(server.id, server.managementName));
     });
+
     // Select first element of the dropdown
-    if (this.serverItems) {
-      this.formControlTargetServerName.setValue(this.serverItems.getGroup(
-        this.serverItems.getGroupNames()[0])[0].value);
+    if (!isNullOrEmpty(this.serverItems.getGroupNames())) {
+      this.formControlTargetServerName.setValue(this.servers[0].id);
+      this.selectedServer = this.servers[0];
     }
   }
 

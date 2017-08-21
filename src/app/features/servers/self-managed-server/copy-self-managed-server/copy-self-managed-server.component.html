@@ -1,27 +1,27 @@
-<form [formGroup]="formGroupCopyServer"
+<form [hidden]="!visible" [formGroup]="formGroupCopyServer"
   class="copy-self-managed-server-container">
 
   <div class="server-configuration-details">
     <div class="control-group">
       <mcs-dropdown name="Server Name"
         formControlName="formControlTargetServerName"
-        [dropdownData]="serverNameItems"
+        [dropdownData]="serverItems"
         [mcsContextualHelp]="contextualTextContent.serverName"></mcs-dropdown>
       <mcs-validation-message [control]="formControlTargetServerName"></mcs-validation-message>
     </div>
 
-    <div class="control-group">
-      <mcs-dropdown name="Virtual Application"
-        formControlName="formControlVApp"
-        [dropdownData]="virtualApplicationItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVApp"></mcs-validation-message>
-    </div>
+    <!-- TODO: Temporary removed, it is under discussion -->
+    <!-- <div class="control-group">
+      <mcs-dropdown name="vApp"
+        [dropdownData]="vAppItems"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlVapp"></mcs-validation-message>
+    </div> -->
 
     <div class="control-group">
-      <mcs-dropdown name="Server Catalog"
-        formControlName="formControlCatalog"
-        [dropdownData]="serverCatalogItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlCatalog"></mcs-validation-message>
+      <mcs-dropdown name="VM Template"
+        formControlName="formControlVTemplate"
+        [dropdownData]="vTemplateItems"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlVTemplate"></mcs-validation-message>
     </div>
   </div>
 
@@ -29,7 +29,7 @@
     <div class="computer-information">
       <mcs-server-performance-scale
         [memoryMB]="memoryMB" [cpuCount]="cpuCount"
-        availableMemoryMB="32768" availableCpuCount="8"
+        [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpuCount"
         (scaleChanged)="onScaleChanged($event)">
         <!--Performance scale contents on the left hand side (title and description)-->
         <div title>
@@ -40,10 +40,8 @@
 
     <div class="storage-information">
       <mcs-server-manage-storage
-        [memoryMB]="storageMemoryMB"
-        [availableMemoryMB]="storageAvailableMemoryMB"
-        [storageProfileList]="storageProfileList"
-        (storageChanged)="onStorageChanged($event)">
+        [memoryMB]="storageMemoryMB" [availableMemoryMB]="storageAvailableMemoryMB"
+        [storageProfileList]="storageItems" (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (title and description)-->
         <div title>
           <span class="label">Storage: </span>
@@ -53,20 +51,22 @@
   </div>
 
   <div class="network-details">
-    <span class="label"
-      [mcsContextualHelp]="contextualTextContent.network">Network:</span>
+    <span class="label">Network:</span>
 
     <div class="control-group">
       <mcs-dropdown name="Primary Network"
         formControlName="formControlNetwork"
-        [dropdownData]="primaryNetworkItems"></mcs-dropdown>
+        [dropdownData]="networkItems"
+        [mcsContextualHelp]="contextualTextContent.network"></mcs-dropdown>
       <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
     </div>
 
-    <mcs-server-ip-address (ipAddressChanged)="onIpAddressChanged($event)">
+    <mcs-server-ip-address [gateway]="selectedNetwork.gateway"
+      [subnetMask]="selectedNetwork.netmask"
+      (ipAddressChanged)="onIpAddressChanged($event)">
       <!--Ip address contents on the left hand side (title and description)-->
       <div title>
-        <span class="label">* IP Address: </span>
+        <span class="label">IP Address: </span>
       </div>
     </mcs-server-ip-address>
   </div>

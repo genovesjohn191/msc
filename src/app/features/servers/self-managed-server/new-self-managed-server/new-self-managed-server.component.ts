@@ -22,7 +22,8 @@ import {
 import {
   refreshView,
   mergeArrays,
-  animateFactory
+  animateFactory,
+  isNullOrEmpty
 } from '../../../../utilities';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
@@ -47,6 +48,9 @@ import {
 })
 
 export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input()
+  public visible: boolean;
+
   @Input()
   public resource: ServerResource;
 
@@ -203,7 +207,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       this.vAppItems.push('Virtual Applications', new McsListItem(storage.name, storage.name));
     });
     // Select first element of the dropdown
-    if (this.vAppItems) {
+    if (!isNullOrEmpty(this.vAppItems.getGroupNames())) {
       this.formControlVApp.setValue(this.vAppItems.getGroup(
         this.vAppItems.getGroupNames()[0])[0].value);
     }
@@ -218,7 +222,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
         new McsListItem(guestOs.name, guestOs.description));
     });
     // Select first element of the dropdown
-    if (this.vTemplateItems) {
+    if (!isNullOrEmpty(this.vTemplateItems.getGroupNames())) {
       this.formControlVTemplate.setValue(this.vTemplateItems.getGroup(
         this.vTemplateItems.getGroupNames()[0])[0].value);
     }
@@ -232,7 +236,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       this.networkItems.push('Networks', new McsListItem(network.name, network.name));
     });
     // Select first element of the dropdown
-    if (this.networkItems) {
+    if (!isNullOrEmpty(this.networkItems.getGroupNames())) {
       this.formControlNetwork.setValue(this.networkItems.getGroup(
         this.networkItems.getGroupNames()[0])[0].key);
     }
