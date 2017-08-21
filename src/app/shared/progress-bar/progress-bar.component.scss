@@ -1,6 +1,7 @@
 @import "../../../styles/shared/base";
 
 $progress-bar-label-color: $color-white;
+$progressbar-percentage-offset-height: -($progress-bar-height + 1px);
 
 :host {
   display: block;
@@ -20,11 +21,16 @@ $progress-bar-label-color: $color-white;
     @include display-flex(row);
     align-items: center;
     justify-content: flex-end;
+  }
 
-    span {
-      @include font-size($progress-bar-font-size);
-      color: $progress-bar-label-color;
-    }
+  span {
+    display: block;
+    text-align: right;
+    position: relative;
+    top: $progressbar-percentage-offset-height;
+    @include font-size($progress-bar-font-size);
+    @include transition(.4s linear);
+    color: $progress-bar-label-color;
   }
 }
 

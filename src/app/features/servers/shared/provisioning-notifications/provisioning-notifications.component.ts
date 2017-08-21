@@ -2,22 +2,16 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  Input,
-  Output,
-  ViewChildren,
-  QueryList,
-  EventEmitter,
-  SimpleChanges
+  Input
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsApiJob,
-  McsApiTask
+  McsApiJob
 } from '../../../../core';
-import { refreshView } from '../../../../utilities';
+import { isNullOrEmpty } from '../../../../utilities';
 
 @Component({
   selector: 'mcs-provisioning-notifications',
@@ -28,9 +22,6 @@ import { refreshView } from '../../../../utilities';
 export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   @Input()
   public jobs: McsApiJob[];
-
-  @Output()
-  public onFinishedJob: EventEmitter<McsApiJob>;
 
   public progressValue: number;
   public progressMax: number;
@@ -44,7 +35,6 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   ) {
     this.progressValue = 0;
     this.progressMax = 0;
-    this.onFinishedJob = new EventEmitter<McsApiJob>();
     this.jobs = new Array();
   }
 
@@ -68,14 +58,19 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     let title: string;
 
     if (this.isMultiJobs) {
-      title = 'Deploy Servers';
+      title = this.textContent ? this.textContent.deployMultiple : '';
     } else {
-      title = this.jobs.length > 0 ? this.jobs[0].description : '';
+      title = isNullOrEmpty(this.jobs) ? '' : this.jobs[0].description;
     }
     return title;
   }
 
   public isJobCompleted(job: McsApiJob): boolean {
+    return job.status !== CoreDefinition.NOTIFICATION_JOB_PENDING &&
+      job.status !== CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+  }
+
+  public isJobSuccessful(job: McsApiJob): boolean {
     return job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
   }
 
@@ -109,16 +104,12 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     return { key: iconKey, color: iconColor, class: iconClass };
   }
 
-  public invokeFinishedJobEvent(job: McsApiJob) {
-    this.onFinishedJob.emit(job);
-  }
-
   public onViewServerPage(): void {
     this._router.navigate(['/servers']);
   }
 
   private _updateProgressbar(): void {
-    if (this.jobs && this.jobs.length > 0) {
+    if (!isNullOrEmpty(this.jobs)) {
       let progressTolerance: number = 0;
 
       this.jobs.forEach((job) => {
@@ -142,7 +133,18 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
               job.status === CoreDefinition.NOTIFICATION_JOB_PENDING;
           });
           if (!activeJobExists) {
-            this._endTimer();
+            // Find error jobs and roll back the progressbar
+            let errorJobExists = this.jobs.find((job) => {
+              return job.status === CoreDefinition.NOTIFICATION_JOB_FAILED ||
+                job.status === CoreDefinition.NOTIFICATION_JOB_CANCELLED ||
+                job.status === CoreDefinition.NOTIFICATION_JOB_TIMEDOUT;
+            });
+            if (errorJobExists) {
+              this._endTimer(0);
+            } else {
+              this._endTimer(this.progressMax);
+            }
+
           } else if (timeExceedsEstimate) {
             // Hold progress bar position to wait for other jobs to finished
           } else if (time <= this.progressMax) {
@@ -152,8 +154,8 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _endTimer(): void {
-    this.progressValue = this.progressMax;
+  private _endTimer(progressValue: number): void {
+    this.progressValue = progressValue;
     if (this._timerSubscription) {
       this._timerSubscription.unsubscribe();
     }

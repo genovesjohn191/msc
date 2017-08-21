@@ -10,6 +10,9 @@ $job-active-color: $color-grey-02;
 $job-failed-color: $color-red-00;
 $job-completed-color: $color-primary-01;
 
+// Space
+$job-server-link-left-offset: 25px;
+
 .provisioning-notifications-container {
   @include display-flex(column);
   @include set-items-interval($space-xlarge);
@@ -31,7 +34,7 @@ $job-completed-color: $color-primary-01;
       .link {
         display: inline-block;
         text-decoration: underline;
-        margin-left: $space-xlarge;
+        margin-left: $job-server-link-left-offset;
       }
     }
   }
