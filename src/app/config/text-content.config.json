@@ -142,7 +142,8 @@
       },
       "serverIpAddress": {
         "custom": "Enter a custom IP Address.",
-        "default": "Select from default"
+        "default": "Select from default",
+        "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})"
       }
     }
   },

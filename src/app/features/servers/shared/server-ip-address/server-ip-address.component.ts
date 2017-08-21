@@ -22,7 +22,8 @@ import {
 } from '../../models';
 import {
   refreshView,
-  animateFactory
+  animateFactory,
+  replacePlaceholder
 } from '../../../../utilities';
 
 // Require subnetting javscript class
@@ -120,7 +121,12 @@ export class ServerIpAddressComponent implements OnInit {
       CoreValidators.ipAddress,
       CoreValidators.custom(
         this._customIpAddressValidator.bind(this),
-        'Ip address is not in range')
+        replacePlaceholder(
+          this.ipAddressTextContent.ipAddressRangeError,
+          'ip_range',
+          `${this._netMaskInstance.first} - ${this._netMaskInstance.last}`
+        )
+      )
     ]);
     this.formControlIpdAdrress.valueChanges
       .subscribe(this.onCustomIpAddressChanged.bind(this));
