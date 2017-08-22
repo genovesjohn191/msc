@@ -22,10 +22,6 @@
     }
   },
   "serverListingFilter": {
-    "serviceId": {
-      "text": "Service ID",
-      "value": true
-    },
     "type": {
       "text": "Type",
       "value": true
@@ -42,12 +38,12 @@
       "text": "Zone",
       "value": true
     },
+    "serviceId": {
+      "text": "Service ID",
+      "value": true
+    },
     "vApp": {
       "text": "vApp",
-      "value": false
-    },
-    "services": {
-      "text": "Services",
       "value": false
     }
   },
