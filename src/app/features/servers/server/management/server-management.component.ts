@@ -339,8 +339,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
 
     if (this.resource) {
-      this.remainingMemory = this.resource.memoryAllocationMB - this.resource.memoryReservationMB;
-      this.remainingCpu = this.resource.cpuAllocation - this.resource.cpuReservation;
+      this.remainingMemory = this.resource.memoryLimitMB - this.resource.memoryUsedMB;
+      this.remainingCpu = this.resource.cpuLimit - this.resource.cpuUsed;
     }
   }
 
