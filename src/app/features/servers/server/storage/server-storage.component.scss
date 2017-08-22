@@ -89,11 +89,6 @@
     }
   }
 
-  .loading-spinner {
-    margin-top: $space-large;
-    text-align: center;
-  }
-
   .add-new-storage {
     border: 1px solid $color-grey-00;
     @include border-radius($input-border-radius);
@@ -123,6 +118,11 @@
       align-items: center;
       justify-content: space-between;
     }
+  }
+
+  .loading-spinner {
+    margin-top: $space-large;
+    text-align: center;
   }
 }
 

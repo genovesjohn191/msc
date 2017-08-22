@@ -28,7 +28,8 @@ import {
   appendUnitSuffix,
   convertToGb,
   animateFactory,
-  mergeArrays
+  mergeArrays,
+  isNullOrEmpty
 } from '../../../../utilities';
 
 const STORAGE_SLIDER_STEP_DEFAULT = 25;
@@ -51,6 +52,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public deleteStorageAlertMessage: string;
 
   public serverSubscription: any;
+  public serverStorageSubscription: any;
   public server: Server;
   public storageDevices: ServerStorageDevice[];
 
@@ -72,6 +74,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public selectedStorageDevice: ServerStorageDevice;
   public selectedStorageSliderValues: number[];
 
+  public isLoadingStorage: boolean;
+
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
   }
@@ -85,7 +89,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public get hasStorageDevice(): boolean {
-    return this.storageDevices.length > 0;
+    return !isNullOrEmpty(this.storageDevices);
   }
 
   public get hasReachedDisksLimit(): boolean {
@@ -131,6 +135,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.storageChangedValue.valid = false;
     this.notifications = new Array<McsApiJob>();
     this._serverPlatformMap = new Map<string, ServerResource>();
+    this.isLoadingStorage = true;
   }
 
   public ngOnInit() {
@@ -205,7 +210,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public onClickUpdate(updateButton: any): void {
-    if (!this.storageChangedValue.valid || this.expandingStorage) { return; }
+    if (!this.isValidStorageValues || this.expandingStorage) { return; }
 
     let storageData = new ServerStorageDeviceUpdate();
     storageData.name = this.selectedStorageDevice.name;
@@ -225,7 +230,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.expandingStorage = false;
       this.expandStorage = false;
-      updateButton.hideLoader();
     });
   }
 
@@ -242,7 +246,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.deletingStorage = false;
         mcsModal.close();
-        deleteButton.hideLoader();
       });
   }
 
@@ -291,6 +294,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     if (this.notificationsSubscription) {
       this.notificationsSubscription.unsubscribe();
     }
+
+    if (this.serverStorageSubscription) {
+      this.serverStorageSubscription.unsubscribe();
+    }
   }
 
   private _listenToServerPlatformData(): void {
@@ -306,7 +313,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       .subscribe((server) => {
         if (server) {
           this.server = server;
-          this.storageDevices = this.server.storageDevice;
+          this._setStorageDevices();
           this._initializeValues();
         }
       });
@@ -328,6 +335,17 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
           this._appendCreatedDisks();
         }
+      });
+  }
+
+  private _setStorageDevices(): void {
+    if (isNullOrEmpty(this.server)) { return; }
+
+    this.isLoadingStorage = true;
+    this.serverStorageSubscription = this._serverService.getServerStorage(this.server.id)
+      .subscribe((storage) => {
+        this.storageDevices = storage.content;
+        this.isLoadingStorage = false;
       });
   }
 

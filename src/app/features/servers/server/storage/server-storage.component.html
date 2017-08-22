@@ -1,7 +1,9 @@
 <div class="mcs-server-storage" [@animate]="'fadeIn'">
   <h3 class="heading">{{ serverStorageText.title }}</h3>
-
-  <div *ngIf="hasStorageDevice" [@animate]="'fadeIn'">
+  <div *ngIf="isLoadingStorage" class="loading-spinner">
+    <mcs-icon [key]="spinnerIconKey" size="xlarge"></mcs-icon>
+  </div>
+  <div *ngIf="!isLoadingStorage && hasStorageDevice" [@animate]="'fadeIn'">
      <div *ngIf="!expandStorage" class="details">
       <div class="storage-container">
         <ul class="unstyled-list storage">
@@ -68,30 +70,32 @@
           </li>
         </ul>
       </div>
-      <div *ngIf="isLoading" class="loading-spinner">
+      <div *ngIf="!storageProfileList" class="loading-spinner">
         <mcs-icon [key]="spinnerIconKey" size="xlarge"></mcs-icon>
       </div>
-      <div *ngIf="!hasReachedDisksLimit && storageProfileList" [@animate]="'fadeIn'" class="add-new-storage">
-         <mcs-server-manage-storage 
-          [storageProfileList]="storageProfileList"
-          [memoryMB]="memoryMB"
-          [availableMemoryMB]="availableMemoryMB"
-          [minimumMB]="minimumMB"
-          [storageSliderValues]="newStorageSliderValues"
-          (storageChanged)="onStorageChanged($event)">
-          <!--Server manage storage contents on the left hand side (description)-->
-           <div title>
-            <h4>{{ serverStorageText.addStorageHeading }}</h4>
+      <div *ngIf="storageProfileList" [@animate]="'fadeIn'">
+        <div *ngIf="!hasReachedDisksLimit" class="add-new-storage">
+          <mcs-server-manage-storage 
+            [storageProfileList]="storageProfileList"
+            [memoryMB]="memoryMB"
+            [availableMemoryMB]="availableMemoryMB"
+            [minimumMB]="minimumMB"
+            [storageSliderValues]="newStorageSliderValues"
+            (storageChanged)="onStorageChanged($event)">
+            <!--Server manage storage contents on the left hand side (description)-->
+            <div title>
+              <h4>{{ serverStorageText.addStorageHeading }}</h4>
+            </div>
+          </mcs-server-manage-storage>
+          <div class="attach">
+            <mcs-button icon="arrow" #attachButton (click)="onClickAttach(attachButton)"
+              [disabled]="!isValidStorageValues">Attach</mcs-button>
           </div>
-        </mcs-server-manage-storage>
-        <div class="attach">
-          <mcs-button icon="arrow" #attachButton (click)="onClickAttach(attachButton)"
-            [disabled]="!isValidStorageValues">Attach</mcs-button>
         </div>
-      </div>
-      <div *ngIf="hasReachedDisksLimit && !isLoading" class="storage-limit-warning">
-        <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
-        <h4>{{ serverStorageText.reachedStorageLimit }}</h4>
+        <div *ngIf="hasReachedDisksLimit" class="storage-limit-warning">
+          <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
+          <h4>{{ serverStorageText.reachedStorageLimit }}</h4>
+        </div>
       </div>
     </div>
 
