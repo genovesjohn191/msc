@@ -28,10 +28,13 @@ import {
 import {
   getElementOffset,
   getProperCase,
-  refreshView
+  refreshView,
+  isNullOrEmpty
 } from '../../../../utilities';
 import { ServersService } from '../../servers.service';
 import { ServerList } from './server-list';
+
+const VDC_NAME_OTHERS = 'Others';
 
 @Component({
   selector: 'mcs-server-list-panel',
@@ -158,6 +161,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   public onClickServer(serverId: string) {
     this._browserService.scrollToTop();
     this.selectedServerId = serverId;
+    this._setSelectedServer();
     this.serverSelectChange.next(serverId);
   }
 
@@ -198,25 +202,28 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     serverListData.forEach((server) => {
       let isExist: boolean = false;
 
-      for (let serverIndex in this.serverList) {
-        if (this.serverList[serverIndex].vdcName === server.vdcName) {
-          this.serverList[serverIndex].servers.push(server);
-          if (server.id === this.selectedServerId) {
-            this.serverList[serverIndex].selected = true;
-          }
+      this.serverList.forEach((vdc) => {
+        let serverVdcName = (server.vdcName) ? server.vdcName : VDC_NAME_OTHERS ;
+
+        if (vdc.vdcName === serverVdcName) {
+          vdc.servers.push(server);
+          let isSelected = this.isServerSelected(server.id);
+          vdc.selected = isSelected;
+          vdc.visible = isSelected;
           isExist = true;
-          break;
+          return;
         }
-      }
+      });
 
       if (!isExist) {
         let serverValues = new Array();
         let serverList: ServerList = new ServerList();
 
-        serverValues.push(server);
-        serverList.vdcName = server.vdcName;
+        serverList.vdcName = (server.vdcName) ?
+          server.vdcName : VDC_NAME_OTHERS;
         serverList.servers = serverValues;
-        if (server.id === this.selectedServerId) {
+        serverValues.push(server);
+        if (this.isServerSelected(server.id)) {
           serverList.selected = true;
           serverList.visible = true;
         }
@@ -291,6 +298,18 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   public getCaretIconKey(vdc: ServerList): string {
     return (vdc.visible) ? CoreDefinition.ASSETS_FONT_CARET_DOWN
       : CoreDefinition.ASSETS_FONT_CARET_RIGHT;
+  }
+
+  private _setSelectedServer(): void {
+    this.serverList.forEach((vdc) => {
+      let server = vdc.servers.find((result) => {
+        return result.id === this.selectedServerId;
+      });
+
+      let isSelected = !isNullOrEmpty(server);
+      vdc.selected = isSelected;
+      vdc.visible = isSelected;
+    });
   }
 
   private _setServersListMaxHeight(offsetHeight: number) {
