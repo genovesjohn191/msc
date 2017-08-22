@@ -28,6 +28,8 @@ import {
 
 import { registerEvent } from '../../utilities';
 
+const DEFAULT_DROPDOWN_PLACEHOLDER = 'Select Option';
+
 @Component({
   selector: 'mcs-dropdown',
   templateUrl: './dropdown.component.html',
@@ -98,7 +100,7 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   ) {
     this.dropdownData = new McsList();
     this.isOpen = false;
-    this.placeholder = CoreDefinition.DEFAULT_DROPDOWN_PLACEHOLDER;
+    this.placeholder = DEFAULT_DROPDOWN_PLACEHOLDER;
   }
 
   public ngOnChanges() {

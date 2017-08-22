@@ -6,13 +6,11 @@
   <ul *ngIf="hasServers" id="serverListTree" class="server-list-tree"
     role="tablist" aria-multiselectable="true" #serverListTree>
     <li *ngFor="let vdc of servers; let i = index">
-      <a class="vdc-name" [ngClass]="{'active-vdc': vdc.selected, 'collapsed': !vdc.selected}"
-        data-toggle="collapse" data-parent="#serverListTree" href="#serverList{{ i + 1 }}"
-        [attr.aria-expanded]="vdc.selected" [attr.aria-controls]="'serverList' + (i + 1)">
-        {{ vdc.vdcName }} <mcs-icon [key]="caretDownIconKey" size="small"></mcs-icon>
+      <a class="vdc-name" [ngClass]="{'active-vdc': vdc.selected}"
+        (click)="toggleServerList(vdc)">
+        {{ vdc.vdcName }} <mcs-icon [key]="getCaretIconKey(vdc)" size="small"></mcs-icon>
       </a>
-      <div id="serverList{{ i + 1 }}" class="collapse servers" role="tabpanel"
-        [ngClass]="{'show': vdc.selected}">
+      <div class="servers" [hidden]="!vdc.visible">
         <div class="server-name" *ngFor="let server of vdc.servers">
           <a [ngClass]="{'active-server': isServerSelected(server.id)}"
             [routerLink]="['/servers/' + server.id]" (click)="onClickServer(server.id)">

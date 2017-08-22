@@ -23,6 +23,8 @@ import {
   ServerClientObject,
   ServerCommand,
   ServerPowerState,
+  ServerPlatform,
+  ServerStorageDevice,
   ServerStorageDeviceUpdate
 } from './models';
 import { ServersService } from './servers.service';
@@ -368,6 +370,175 @@ describe('ServersService', () => {
       });
 
       serversService.patchServer(requestOptions.id, requestOptions.serverUpdate)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('getPlatformData()', () => {
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                status: 200,
+                content: {
+                  platform: 'vcloud',
+                  environments: [
+                    {
+                      environment: 'Macquarie_Telecom_Contoso_100320',
+                      resources: [
+                        {
+                          name: 'M1VDC27117001',
+                          serviceType: 'Self-Managed',
+                          availabilityZone: 'IC1',
+                          cpuAllocation: 10,
+                          cpuReservation: 2,
+                          cpuLimit: 10,
+                          cpuUsed: 0,
+                          memoryAllocationMB: 32768,
+                          memoryReservationMB: 6553,
+                          memoryLimitMB: 32768,
+                          memoryUsedMB: 0,
+                          storage: [
+                            {
+                              name: 'T2000-PVDC0301',
+                              enabled: true,
+                              limitMB: 1024000,
+                              usedMB: 359471.22
+                            }
+                          ],
+                          networks: []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse<ServerPlatform> when successful',
+      fakeAsync(() => {
+      serversService.getPlatformData()
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<ServerPlatform>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content.platform).toEqual('vcloud');
+          expect(mcsApiSucessResponse[0].content.environments).toBeDefined();
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Get);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.getPlatformData()
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe((response) => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('getServerStorage()', () => {
+    let requestOptions = {
+      id: 459,
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: '1d6d55d7-0b02-4341-9359-2e4bc783d9b1',
+                    name: 'Hard disk 1',
+                    sizeMB: 51200,
+                    storageDeviceType: 'VMDK',
+                    storageDeviceInterfaceType: 'SCSI',
+                    backingVcenter: 'testvcdvc0301',
+                    backingId: 'datastore-64',
+                    storageProfile: 'T2000-PVDC0301',
+                    wwn: null,
+                    vendor: 'VMware',
+                    remoteHost: null,
+                    remotePath: null
+                  }
+                ],
+                totalCount: 1,
+                status: 200,
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse<Server> when successful', fakeAsync(() => {
+      serversService.getServerStorage(requestOptions.id)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<ServerStorageDevice[]>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].totalCount).toEqual(1);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id)
+            .toEqual('1d6d55d7-0b02-4341-9359-2e4bc783d9b1');
+          expect(mcsApiSucessResponse[0].content[0].name).toEqual('Hard disk 1');
+          expect(mcsApiSucessResponse[0].content[0].sizeMB).toEqual(51200);
+          expect(mcsApiSucessResponse[0].content[0].storageProfile)
+            .toEqual('T2000-PVDC0301');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Get);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.getServerStorage(requestOptions.id)
         .catch((error: McsApiErrorResponse) => {
           expect(error).toBeDefined();
           expect(error.status).toEqual(404);

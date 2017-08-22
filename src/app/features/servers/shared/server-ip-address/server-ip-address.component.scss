@@ -19,11 +19,11 @@ $server-ip-address-maximum-height: 80px;
   .custom-ip-address {
     margin: 0;
     text-align: right;
-    @include flex(0 1 40%);
+    @include flex(0 1 60%);
   }
 
   .description {
-    @include flex(0 1 60%);
+    @include flex(0 1 40%);
     @include display-flex(column);
   }
 

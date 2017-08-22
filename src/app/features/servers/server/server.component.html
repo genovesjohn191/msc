@@ -16,19 +16,21 @@
               [routerLink]="['management']" routerLinkActive="active">
                 {{ serverTextContent.management.label }}</a>
           </li>
-          <li *ngIf="isManaged" class="nav-item">
+          <!-- TODO: Temporarily hidden for phase one -->
+          <!-- <li *ngIf="isManaged" class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['services']" routerLinkActive="active">Services</a>
-          </li>
+          </li> -->
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['storage']" routerLinkActive="active">
                 {{ serverTextContent.storage.label }}</a>
           </li>
-          <li class="nav-item">
+          <!-- TODO: Temporarily hidden for phase one -->
+          <!-- <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['backups']" routerLinkActive="active">Backups</a>
-          </li>
+          </li> -->
           <li class="nav-item hidden-medium server-cog">
             <mcs-server-command [command]="getActionStatus(server)"
               (onClick)="executeServerCommand(server, $event)"></mcs-server-command>

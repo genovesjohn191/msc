@@ -9,6 +9,7 @@ import {
   ServerPerformanceScale,
   ServerThumbnail,
   ServerUpdate,
+  ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerPlatform
 } from '../models';
@@ -45,6 +46,13 @@ export class ServerService {
    */
   public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {
     return this._serversService.getPlatformData();
+  }
+
+  /**
+   * Get Server Storage Data (MCS API Response)
+   */
+  public getServerStorage(serverId: any): Observable<McsApiSuccessResponse<ServerStorageDevice[]>> {
+    return this._serversService.getServerStorage(serverId);
   }
 
   /**

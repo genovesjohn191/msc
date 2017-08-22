@@ -83,10 +83,6 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
     return CoreDefinition.ASSETS_FONT_SPINNER;
   }
 
-  public get caretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_DOWN;
-  }
-
   public get hasServers(): boolean {
     return this.servers.length > 0;
   }
@@ -222,6 +218,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
         serverList.servers = serverValues;
         if (server.id === this.selectedServerId) {
           serverList.selected = true;
+          serverList.visible = true;
         }
 
         this.serverList.push(serverList);
@@ -266,13 +263,13 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
         });
 
         if (filteredServers.length > 0) {
-          let filteredVdc = {
-            vdcName: vdc.vdcName,
-            selected: true,
-            servers: filteredServers
-          };
+          let filteredVdc = new ServerList();
+          filteredVdc.vdcName = vdc.vdcName;
+          filteredVdc.selected = true;
+          filteredVdc.visible = true;
+          filteredVdc.servers = filteredServers;
           filteredResults.push(filteredVdc);
-        } else if (vdc.vdcName.toLowerCase().includes(key.toLowerCase())) {
+        } else if (vdc.vdcName && vdc.vdcName.toLowerCase().includes(key.toLowerCase())) {
           filteredResults.push(vdc);
         }
       });
@@ -285,6 +282,15 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
 
   public getActiveServerTooltip(serverId: any) {
     return this._serversService.getActiveServerInformation(serverId);
+  }
+
+  public toggleServerList(vdc: ServerList): void {
+    vdc.visible = !vdc.visible;
+  }
+
+  public getCaretIconKey(vdc: ServerList): string {
+    return (vdc.visible) ? CoreDefinition.ASSETS_FONT_CARET_DOWN
+      : CoreDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
   private _setServersListMaxHeight(offsetHeight: number) {
