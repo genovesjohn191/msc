@@ -147,10 +147,8 @@ export class UserPanelComponent implements OnInit {
     this._notificationContextService.clearNonActiveNotifications();
   }
 
-  // TODO: Created temporary logout method
   public logout(event): void {
     event.preventDefault();
-    this._authenticationService.deleteAuthToken();
-    window.location.href = CoreDefinition.URL_LOGOUT;
+    this._authenticationService.logOut();
   }
 }

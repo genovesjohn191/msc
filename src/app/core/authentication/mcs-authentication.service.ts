@@ -6,6 +6,7 @@ import {
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 import { CoreDefinition } from '../core.definition';
+import { CoreConfig } from '../core.config';
 import { McsApiService } from '../services/mcs-api.service';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
@@ -25,21 +26,26 @@ export class McsAuthenticationService {
     private _cookieService: CookieService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _locationService: Location
+    private _locationService: Location,
+    private _coreConfig: CoreConfig
   ) {
     // Listen for the error in API Response
     this._listenForErrorApiResponse();
   }
 
   /**
-   * This will navigate to login page in case
-   * the sign in is incorrect or token expired
+   * This will navigate to login page of SSO (IDP)
    */
-  public navigateToLoginPage(): boolean {
-    // Set login url 'https://auth.macquariecloudservices.com/?returnurl='
-    let authUrl = CoreDefinition.URL_LOGIN;
-    window.location.href = (authUrl + this._returnUrl);
-    return false;
+  public logIn(): void {
+    window.location.href = (this._coreConfig.loginUrl + this._returnUrl);
+  }
+
+  /**
+   * This will navigate to logout page of SSO (IDP)
+   */
+  public logOut(): void {
+    this.deleteAuthToken();
+    window.location.href = this._coreConfig.logoutUrl;
   }
 
   /**
@@ -57,10 +63,6 @@ export class McsAuthenticationService {
       authToken = routeParams[CoreDefinition.QUERY_PARAM_BEARER];
       if (authToken) { return authToken; }
     }
-
-    // Return the token from the app state
-    authToken = this._appState.get(CoreDefinition.APPSTATE_AUTH_TOKEN);
-    if (authToken) { return authToken; }
 
     // Return the token from the cookie
     authToken = this._cookieService.get(CoreDefinition.COOKIE_AUTH_TOKEN);
@@ -164,7 +166,7 @@ export class McsAuthenticationService {
       switch (errorResponse.status) {
         case McsHttpStatusCode.Unauthorized:
           this.deleteAuthToken();
-          this.navigateToLoginPage();
+          this.logIn();
           break;
 
         case McsHttpStatusCode.Forbidden:

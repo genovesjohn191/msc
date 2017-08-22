@@ -82,10 +82,15 @@ type StoreType = {
   disposeOldHosts: () => void
 };
 
+/**
+ * Set Core Configuration based on environment variables
+ */
 const mcsCoreConfig = {
   apiHost: API_URL,
-  imageRoot: 'assets/img',
-  iconRoot: 'assets/icon'
+  loginUrl: LOGIN_URL,
+  logoutUrl: LOGOUT_URL,
+  imageRoot: IMAGE_URL,
+  iconRoot: ICON_URL
 } as CoreConfig;
 
 /**
