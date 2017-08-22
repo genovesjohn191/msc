@@ -65,7 +65,6 @@
        <div class="col">
         <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
         <ul class="unstyled-list server-interfaces">
-          <li>{{ serverManagementTextContent.networkInformation.publicIp }}: {{ server.managementIpAddress }}</li>
           <li *ngFor="let interface of server.interfaces; let i = index">
             {{ serverManagementTextContent.networkInformation.interface }} {{ i }} :
             <span>{{ mergeIpAddresses(interface.ipAddress) }}</span>

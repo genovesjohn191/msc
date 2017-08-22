@@ -44,14 +44,11 @@
         <th *ngIf="columnSettings['zone'].value" class="hidden-small text-center">
           {{ columnSettings['zone'].text }}
         </th>
+        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small text-center">
+            {{ columnSettings['serviceId'].text }}
+          </th>
         <th *ngIf="columnSettings['vApp'].value" class="hidden-small text-center">
           {{ columnSettings['vApp'].text }}
-        </th>
-        <th *ngIf="columnSettings['services'].value" class="hidden-small text-center">
-          {{ columnSettings['services'].text }}
-        </th>
-        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small text-center">
-          {{ columnSettings['serviceId'].text }}
         </th>
         <th class="text-center">
           {{ serversTextContent.columnHeaders.action }}
@@ -91,14 +88,11 @@
         <td *ngIf="columnSettings['zone'].value" class="text-center align-middle hidden-small">
           {{ server.availabilityZone }}
         </td>
+        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
+            {{ server.serviceId }}
+          </td>
         <td *ngIf="columnSettings['vApp'].value" class="text-left align-middle hidden-small">
           {{ server.vAppName }}
-        </td>
-        <td *ngIf="columnSettings['services'].value" class="text-left align-middle hidden-small">
-          <a href="#">{{ server.id }}</a>
-        </td>
-        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
-          {{ server.serviceId }}
         </td>
         <td class="text-center align-middle">
           <mcs-server-command [command]="getActionStatus(server)"
