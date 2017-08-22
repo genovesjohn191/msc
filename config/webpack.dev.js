@@ -16,6 +16,10 @@ const API_URL = process.env.API_URL || 'api';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const SENTRY_DSN = process.env.SENTRY_DSN || 'dsn';
+const LOGIN_URL = process.env.LOGIN_URL || 'login';
+const LOGOUT_URL = process.env.LOGOUT_URL || 'logout';
+const IMAGE_URL = process.env.IMAGE_URL || 'assets/img';
+const ICON_URL = process.env.ICON_URL || 'assets/icon';
 const HMR = helpers.hasProcessFlag('hot');
 const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   host: HOST,
@@ -23,7 +27,11 @@ const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   API_URL: API_URL,
   ENV: ENV,
   HMR: HMR,
-  SENTRY_DSN: SENTRY_DSN
+  SENTRY_DSN: SENTRY_DSN,
+  LOGIN_URL: LOGIN_URL,
+  LOGOUT_URL: LOGOUT_URL,
+  IMAGE_URL: IMAGE_URL,
+  ICON_URL: ICON_URL
 });
 
 
@@ -134,12 +142,20 @@ module.exports = function (options) {
         'API_URL': JSON.stringify(METADATA.API_URL),
         'HMR': METADATA.HMR,
         'SENTRY_DSN': JSON.stringify(METADATA.SENTRY_DSN),
+        'LOGIN_URL': JSON.stringify(METADATA.LOGIN_URL),
+        'LOGOUT_URL': JSON.stringify(METADATA.LOGOUT_URL),
+        'IMAGE_URL': JSON.stringify(METADATA.IMAGE_URL),
+        'ICON_URL': JSON.stringify(METADATA.ICON_URL),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
           'API_URL': JSON.stringify(METADATA.API_URL),
-          'SENTRY_DSN': JSON.stringify(METADATA.SENTRY_DSN)
+          'SENTRY_DSN': JSON.stringify(METADATA.SENTRY_DSN),
+          'LOGIN_URL': JSON.stringify(METADATA.LOGIN_URL),
+          'LOGOUT_URL': JSON.stringify(METADATA.LOGOUT_URL),
+          'IMAGE_URL': JSON.stringify(METADATA.IMAGE_URL),
+          'ICON_URL': JSON.stringify(METADATA.ICON_URL)
         }
       }),
 

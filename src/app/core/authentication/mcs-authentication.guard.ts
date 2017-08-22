@@ -35,8 +35,8 @@ export class McsAuthenticationGuard implements CanActivate {
 
     } else {
 
-      // Redirect to login page
-      this._authenticationService.navigateToLoginPage();
+      // Redirect to login page of SSO (IDP)
+      this._authenticationService.logIn();
       isAuthenticated = false;
     }
 

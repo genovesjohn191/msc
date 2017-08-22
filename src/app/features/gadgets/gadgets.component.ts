@@ -190,6 +190,10 @@ export class GadgetsComponent implements OnInit {
     }
   }
 
+  public onThrowError(): void {
+    throw new Error('Sample error in gadgets triggered.');
+  }
+
   public onButtonClicked(button: any) {
     button.showLoader();
     console.log('start process');

@@ -63,6 +63,10 @@ declare var HMR: boolean;
 declare var API_URL: string;
 declare var System: SystemJS;
 declare var SENTRY_DSN: string;
+declare var LOGIN_URL: string;
+declare var LOGOUT_URL: string;
+declare var IMAGE_URL: string;
+declare var ICON_URL: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -75,6 +79,10 @@ interface GlobalEnvironment {
   SystemJS: SystemJS;
   System: SystemJS;
   SENTRY_DSN: string;
+  LOGIN_URL: string;
+  LOGOUT_URL: string;
+  IMAGE_URL: string;
+  ICON_URL: string;
 }
 
 interface Es6PromiseLoader {
