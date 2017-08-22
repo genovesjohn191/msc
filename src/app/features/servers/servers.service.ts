@@ -29,6 +29,7 @@ import {
   ServerCommand,
   ServerPlatform,
   ServerTemplate,
+  ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerServiceType
 } from './models';
@@ -212,6 +213,25 @@ export class ServersService {
           this._convertProperty
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerTemplate[]>();
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * This will get the server storage data from the API
+   */
+  public getServerStorage(serverId: any): Observable<McsApiSuccessResponse<ServerStorageDevice[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<ServerStorageDevice[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerStorageDevice[]>>(
+          response.text(),
+          this._convertProperty
+        );
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerStorageDevice[]>();
       })
       .catch(this._handleServerError);
   }

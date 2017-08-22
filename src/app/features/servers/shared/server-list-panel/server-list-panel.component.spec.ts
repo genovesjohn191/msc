@@ -104,10 +104,6 @@ describe('ServerListPanelComponent', () => {
     it('should get the spinner icon key definition', () => {
       expect(component.spinnerIconKey).toBeDefined();
     });
-
-    it('should get the caret down icon key definition', () => {
-      expect(component.caretDownIconKey).toBeDefined();
-    });
   });
 
   describe('ngAfterViewInit()', () => {

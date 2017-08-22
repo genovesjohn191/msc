@@ -17,13 +17,15 @@ import {
   McsList,
   McsListItem,
   McsTextContentProvider,
-  CoreValidators
+  CoreValidators,
+  CoreDefinition
 } from '../../../../core';
 import {
   refreshView,
   mergeArrays,
   animateFactory,
-  isNullOrEmpty
+  isNullOrEmpty,
+  convertToGb
 } from '../../../../utilities';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
@@ -37,6 +39,9 @@ import {
   ServerNetwork,
   ServerTemplate
 } from '../../models';
+
+const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
+const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MULTIPLIER;
 
 @Component({
   selector: 'mcs-new-self-managed-server',
@@ -78,6 +83,9 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public cpuCount: number;
   public storageMemoryMB: number;
   public selectedNetwork: ServerNetwork;
+  public storageSliderValues: number[];
+  public storageAvailableMemoryMB: number;
+  public selectedStorage: ServerManageStorage;
 
   // Dropdowns
   public vAppItems: McsList;
@@ -90,26 +98,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public availableMemoryMB: number;
   public availableCpuCount: number;
 
-  public get storageAvailableMemoryMB(): number {
-    let availableMemoryMB: number = 0;
-    let serverStorage = this.formControlStorage.value as ServerManageStorage;
-    if (!this.resource) { return 0; }
-
-    if (serverStorage) {
-      let storageProfile = this.resource.storage
-        .find((profile) => {
-          return profile.name === serverStorage.storageProfile;
-        });
-
-      if (storageProfile) {
-        availableMemoryMB = (storageProfile.limitMB - storageProfile.usedMB) -
-          serverStorage.storageMB;
-      }
-    }
-
-    return availableMemoryMB;
-  }
-
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
@@ -119,6 +107,9 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.storageMemoryMB = 0;
     this.availableMemoryMB = 0;
     this.availableCpuCount = 0;
+    this.storageSliderValues = new Array<number>();
+    this.storageAvailableMemoryMB = 0;
+    this.selectedStorage = new ServerManageStorage();
 
     this.vAppItems = new McsList();
     this.vTemplateItems = new McsList();
@@ -131,6 +122,9 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public ngOnInit() {
     this.contextualTextContent = this._textContentProvider.content
       .servers.createSelfManagedServer.contextualHelp;
+
+    // TODO: Temporary value. To be confirmed
+    this.storageMemoryMB = NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB;
 
     this._registerFormGroup();
 
@@ -165,16 +159,22 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
-    if (!this.formControlStorage) { return; }
+    if (isNullOrEmpty(this.formControlStorage)) { return; }
+
     if (serverStorage.valid) {
       this.formControlStorage.setValue(serverStorage);
+      if (this.selectedStorage.storageProfile !== serverStorage.storageProfile) {
+        this.selectedStorage = serverStorage;
+        this._setStorageAvailableMemoryMB();
+        this._setStorageSliderValues();
+      }
     } else {
       this.formControlStorage.reset();
     }
   }
 
   public onScaleChanged(serverScale: ServerPerformanceScale) {
-    if (!this.formControlScale) { return; }
+    if (isNullOrEmpty(this.formControlScale)) { return; }
     if (serverScale.valid) {
       this.formControlScale.setValue(serverScale);
     } else {
@@ -183,7 +183,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public onIpAddressChanged(ipAddress: ServerIpAddress): void {
-    if (!this.formControlIpAddress) { return; }
+    if (isNullOrEmpty(this.formControlIpAddress)) { return; }
     if (ipAddress.valid) {
       this.formControlIpAddress.setValue(ipAddress);
     } else {
@@ -200,7 +200,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setVAppItems(): void {
-    if (!this.resource) { return; }
+    if (isNullOrEmpty(this.resource)) { return; }
 
     // Populate dropdown list
     this.resource.storage.forEach((storage) => {
@@ -214,7 +214,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setVTemplateItems(): void {
-    if (!this.template) { return; }
+    if (isNullOrEmpty(this.template)) { return; }
 
     // Populate dropdown list
     this.template.guestOs.forEach((guestOs) => {
@@ -229,7 +229,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setNetworkItems(): void {
-    if (!this.resource) { return; }
+    if (isNullOrEmpty(this.resource)) { return; }
 
     // Populate dropdown list
     this.resource.networks.forEach((network) => {
@@ -243,12 +243,51 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setStorageItems(): void {
-    if (!this.resource) { return; }
+    if (isNullOrEmpty(this.resource)) { return; }
 
     // Populate dropdown list
     this.resource.storage.forEach((storage) => {
       this.storageItems.push('Storages', new McsListItem(storage.name, storage.name));
     });
+    // The selection of element is happened under onStorageChanged method
+  }
+
+  private _setStorageAvailableMemoryMB(): void {
+    let availableMemoryMB = 0;
+    let serverStorage = this.formControlStorage.value as ServerManageStorage;
+
+    if (serverStorage) {
+      let storageProfile = this.resource.storage
+        .find((profile) => {
+          return profile.name === serverStorage.storageProfile;
+        });
+
+      if (storageProfile) {
+        availableMemoryMB = storageProfile.limitMB - storageProfile.usedMB;
+        if (availableMemoryMB < 0) { availableMemoryMB = 0; }
+      }
+    }
+
+    this.storageAvailableMemoryMB = availableMemoryMB;
+  }
+
+  private _setStorageSliderValues(): void {
+    if (isNullOrEmpty(this.storageAvailableMemoryMB)) { return; }
+
+    let memoryGB = Math.floor(convertToGb(this.storageMemoryMB));
+    let maximumMemoryGB = memoryGB + Math.floor(convertToGb(this.storageAvailableMemoryMB));
+
+    this.storageSliderValues = new Array<number>();
+    this.storageSliderValues.push(memoryGB);
+    for (let value = memoryGB; value < maximumMemoryGB;) {
+      if ((value + NEW_SERVER_STORAGE_SLIDER_STEP) <= maximumMemoryGB) {
+        value += NEW_SERVER_STORAGE_SLIDER_STEP;
+      } else {
+        value = maximumMemoryGB;
+      }
+
+      this.storageSliderValues.push(value);
+    }
   }
 
   private _registerFormGroup(): void {

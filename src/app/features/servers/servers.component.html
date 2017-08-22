@@ -29,9 +29,6 @@
         <th class="text-center">
           {{ serversTextContent.columnHeaders.state }}
         </th>
-        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small text-center">
-          {{ columnSettings['serviceId'].text }}
-        </th>
         <th class="text-center">
           {{ serversTextContent.columnHeaders.name }}
         </th>
@@ -52,6 +49,9 @@
         </th>
         <th *ngIf="columnSettings['services'].value" class="hidden-small text-center">
           {{ columnSettings['services'].text }}
+        </th>
+        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small text-center">
+          {{ columnSettings['serviceId'].text }}
         </th>
         <th class="text-center">
           {{ serversTextContent.columnHeaders.action }}
@@ -76,9 +76,6 @@
             </span>
           </ng-template>
         </td>
-        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
-          {{ server.serviceId }}
-        </td>
         <td class="text-left align-middle">
           <a [routerLink]="[server.id]"><u>{{ server.managementName }}</u></a>
         </td>
@@ -99,6 +96,9 @@
         </td>
         <td *ngIf="columnSettings['services'].value" class="text-left align-middle hidden-small">
           <a href="#">{{ server.id }}</a>
+        </td>
+        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
+          {{ server.serviceId }}
         </td>
         <td class="text-center align-middle">
           <mcs-server-command [command]="getActionStatus(server)"

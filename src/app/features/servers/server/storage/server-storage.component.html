@@ -76,6 +76,8 @@
           [storageProfileList]="storageProfileList"
           [memoryMB]="memoryMB"
           [availableMemoryMB]="availableMemoryMB"
+          [minimumMB]="minimumMB"
+          [storageSliderValues]="newStorageSliderValues"
           (storageChanged)="onStorageChanged($event)">
           <!--Server manage storage contents on the left hand side (description)-->
            <div title>
@@ -87,7 +89,7 @@
             [disabled]="!isValidStorageValues">Attach</mcs-button>
         </div>
       </div>
-      <div *ngIf="hasReachedDisksLimit" class="storage-limit-warning">
+      <div *ngIf="hasReachedDisksLimit && !isLoading" class="storage-limit-warning">
         <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
         <h4>{{ serverStorageText.reachedStorageLimit }}</h4>
       </div>
@@ -97,6 +99,8 @@
        <mcs-server-manage-storage
         [memoryMB]="selectedStorageDevice.sizeMB"
         [availableMemoryMB]="getStorageAvailableMemory(selectedStorageDevice.storageProfile)"
+        [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
+        [storageSliderValues]="selectedStorageSliderValues"
         (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (description)-->
          <div title>

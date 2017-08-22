@@ -31,6 +31,9 @@ import {
   mergeArrays
 } from '../../../../utilities';
 
+const STORAGE_SLIDER_STEP_DEFAULT = 25;
+const STORAGE_MAXIMUM_DISKS = 14;
+
 @Component({
   selector: 'mcs-server-storage',
   styles: [require('./server-storage.component.scss')],
@@ -50,8 +53,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public serverSubscription: any;
   public server: Server;
   public storageDevices: ServerStorageDevice[];
-  public storageProfileList: McsList;
-  public selectedStorageDevice: ServerStorageDevice;
 
   public serverPlatformSubscription: any;
   public serverPlatformData: ServerPlatform;
@@ -62,8 +63,14 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public notificationsSubscription: any;
   public notifications: McsApiJob[];
 
+  public storageProfileList: McsList;
+  public newStorageSliderValues: number[];
   public memoryMB: number;
   public availableMemoryMB: number;
+  public minimumMB: number;
+
+  public selectedStorageDevice: ServerStorageDevice;
+  public selectedStorageSliderValues: number[];
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
@@ -82,8 +89,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public get hasReachedDisksLimit(): boolean {
-    return this.storageDevices.length ===
-      CoreDefinition.SERVER_MANAGE_STORAGE_MAXIMUM_DISKS;
+    return this.storageDevices.length >= STORAGE_MAXIMUM_DISKS;
   }
 
   public get isValidStorageValues(): boolean {
@@ -114,8 +120,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.deleteStorageAlertMessage = '';
     this.storageDevices = new Array<ServerStorageDevice>();
     this.selectedStorageDevice = new ServerStorageDevice();
+    this.newStorageSliderValues = new Array<number>();
     this.memoryMB = 0;
     this.availableMemoryMB = 0;
+    this.minimumMB = 1024;
+    this.selectedStorageSliderValues = new Array<number>();
     this.serverPlatformData = new ServerPlatform();
     this.serverPlatformStorage = new Array<ServerStorage>();
     this.storageChangedValue = new ServerManageStorage();
@@ -141,11 +150,18 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.storageChangedValue = serverStorage;
     this.availableMemoryMB = this.getStorageAvailableMemory(serverStorage.storageProfile);
+    this.newStorageSliderValues = this._getStorageSliderValues(
+      this.memoryMB, this.availableMemoryMB
+    );
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
     this.selectedStorageDevice = storageDevice;
     this.expandStorage = true;
+    this.selectedStorageSliderValues = this._getStorageSliderValues(
+      this.selectedStorageDevice.sizeMB,
+      this.getStorageAvailableMemory(this.selectedStorageDevice.storageProfile)
+    );
   }
 
   public closeExpandStorageBox() {
@@ -340,13 +356,12 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   private _setServerPlatformStorage(): void {
-    let serverPlatformStorage = new Array<ServerStorage>();
+    this.serverPlatformStorage.splice(0);
+
     if (this._serverPlatformMap.has(this.server.vdcName)) {
       let serverResource = this._serverPlatformMap.get(this.server.vdcName);
-      serverPlatformStorage = serverResource.storage;
+      this.serverPlatformStorage = serverResource.storage;
     }
-
-    this.serverPlatformStorage = serverPlatformStorage;
   }
 
   private _setStorageProfiles(): void {
@@ -360,13 +375,31 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.storageProfileList = storageProfileList;
   }
 
-  private _appendCreatedDisks(): void {
-    if (this.notifications.length === 0) { return; }
+  private _getStorageSliderValues(memoryMB: number, availableMemoryMB: number): number[] {
+    let memoryGB = Math.floor(convertToGb(memoryMB));
+    let maximumMemoryGB = memoryGB + Math.floor(convertToGb(availableMemoryMB));
+    let storageSliderValues = new Array<number>();
 
+    storageSliderValues.push(memoryGB);
+    for (let value = memoryGB; value < maximumMemoryGB;) {
+      if ((value + STORAGE_SLIDER_STEP_DEFAULT) <= maximumMemoryGB) {
+        value += STORAGE_SLIDER_STEP_DEFAULT;
+      } else {
+        value = maximumMemoryGB;
+      }
+
+      storageSliderValues.push(value);
+    }
+
+    return storageSliderValues;
+  }
+
+  private _appendCreatedDisks(): void {
     let disks = new Array<ServerStorageDevice>();
 
     let filteredNotifications = this.notifications.filter((notification) => {
-      return notification.type === McsJobType.CreateServerDisk;
+      return notification.type === McsJobType.CreateServerDisk
+        && notification.status !== CoreDefinition.NOTIFICATION_JOB_FAILED;
     });
 
     if (filteredNotifications) {
