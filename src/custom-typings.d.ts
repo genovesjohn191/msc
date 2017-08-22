@@ -62,6 +62,7 @@ declare var ENV: string;
 declare var HMR: boolean;
 declare var API_URL: string;
 declare var System: SystemJS;
+declare var SENTRY_DSN: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -73,6 +74,7 @@ interface GlobalEnvironment {
   API_URL: string;
   SystemJS: SystemJS;
   System: SystemJS;
+  SENTRY_DSN: string;
 }
 
 interface Es6PromiseLoader {

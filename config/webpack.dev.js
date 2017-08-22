@@ -15,13 +15,15 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const API_URL = process.env.API_URL || 'api';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
+const SENTRY_DSN = process.env.SENTRY_DSN || 'dsn';
 const HMR = helpers.hasProcessFlag('hot');
 const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   host: HOST,
   port: PORT,
   API_URL: API_URL,
   ENV: ENV,
-  HMR: HMR
+  HMR: HMR,
+  SENTRY_DSN: SENTRY_DSN
 });
 
 
@@ -131,11 +133,13 @@ module.exports = function (options) {
         'ENV': JSON.stringify(METADATA.ENV),
         'API_URL': JSON.stringify(METADATA.API_URL),
         'HMR': METADATA.HMR,
+        'SENTRY_DSN': JSON.stringify(METADATA.SENTRY_DSN),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
           'HMR': METADATA.HMR,
-          'API_URL': JSON.stringify(METADATA.API_URL)
+          'API_URL': JSON.stringify(METADATA.API_URL),
+          'SENTRY_DSN': JSON.stringify(METADATA.SENTRY_DSN)
         }
       }),
 

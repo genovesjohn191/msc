@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {
   NgModule,
-  ApplicationRef
+  ApplicationRef,
+  ErrorHandler
 } from '@angular/core';
 import {
   BrowserAnimationsModule
@@ -18,6 +19,14 @@ import {
   PreloadAllModules
 } from '@angular/router';
 import { CookieModule } from 'ngx-cookie';
+
+/**
+ * Raven logger
+ */
+import {
+  errorHandlerProvider,
+  setUserIdentity
+} from './app.logger';
 
 /**
  * Platform and Environment providers/directives/pipes
@@ -50,7 +59,8 @@ import { routes } from './app.routes';
 import {
   CoreModule,
   CoreConfig,
-  CoreDefinition
+  CoreDefinition,
+  McsAuthenticationIdentity
 } from './core';
 
 /**
@@ -96,7 +106,8 @@ const mcsCoreConfig = {
   ],
   providers: [
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    { provide: ErrorHandler, useFactory: errorHandlerProvider }
   ]
 })
 
@@ -104,8 +115,27 @@ export class AppModule {
 
   constructor(
     public appRef: ApplicationRef,
-    public appState: AppState
-  ) { }
+    public appState: AppState,
+    public authIdentityService: McsAuthenticationIdentity
+  ) {
+    this.setRavenUserSettings();
+  }
+
+  /**
+   * Set the user settings of RAVEN for each changes of the identity
+   */
+  public setRavenUserSettings(): void {
+    this.authIdentityService.changeIdentityStream
+      .subscribe((isChanged) => {
+        if (isChanged) {
+          setUserIdentity(
+            this.authIdentityService.userId,
+            `${this.authIdentityService.firstName} ${this.authIdentityService.lastName}`,
+            this.authIdentityService.email
+          );
+        }
+      });
+  }
 
   public hmrOnInit(store: StoreType) {
     if (!store || !store.state) {

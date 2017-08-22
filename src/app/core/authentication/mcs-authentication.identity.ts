@@ -2,9 +2,22 @@ import { Injectable } from '@angular/core';
 import { AppState } from '../../app.service';
 import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { CoreDefinition } from '../core.definition';
+import { BehaviorSubject } from 'rxjs/Rx';
 
 @Injectable()
 export class McsAuthenticationIdentity {
+
+  /**
+   * This will notify the subscribers when changes
+   * has been made in the identity
+   */
+  private _changeIdentityStream: BehaviorSubject<boolean>;
+  public get changeIdentityStream(): BehaviorSubject<boolean> {
+    return this._changeIdentityStream;
+  }
+  public set changeIdentityStream(value: BehaviorSubject<boolean>) {
+    this._changeIdentityStream = value;
+  }
 
   private _firstName: string;
   public get firstName(): string {
@@ -46,7 +59,9 @@ export class McsAuthenticationIdentity {
     return this._roles;
   }
 
-  constructor(private _appState: AppState) { }
+  constructor(private _appState: AppState) {
+    this._changeIdentityStream = new BehaviorSubject(false);
+  }
 
   /**
    * Apply the given identity to the service
@@ -63,5 +78,6 @@ export class McsAuthenticationIdentity {
     this._companyName = identity.companyName;
     this._expiry = identity.expiry;
     this._roles = identity.roles;
+    this._changeIdentityStream.next(true);
   }
 }
