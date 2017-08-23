@@ -29,11 +29,13 @@ import {
   convertToGb,
   animateFactory,
   mergeArrays,
+  updateArrayRecord,
   isNullOrEmpty
 } from '../../../../utilities';
 
 const STORAGE_SLIDER_STEP_DEFAULT = 25;
 const STORAGE_MAXIMUM_DISKS = 14;
+const STORAGE_MINIMUM_VALUE = 1024;
 
 @Component({
   selector: 'mcs-server-storage',
@@ -127,7 +129,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.newStorageSliderValues = new Array<number>();
     this.memoryMB = 0;
     this.availableMemoryMB = 0;
-    this.minimumMB = 1024;
+    this.minimumMB = STORAGE_MINIMUM_VALUE;
     this.selectedStorageSliderValues = new Array<number>();
     this.serverPlatformData = new ServerPlatform();
     this.serverPlatformStorage = new Array<ServerStorage>();
@@ -196,6 +198,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     storageData.sizeMB = this.storageChangedValue.storageMB;
     storageData.clientReferenceObject = {
       serverId: this.server.id,
+      name: `${this.serverStorageText.diskName} ${this.storageDevices.length + 1}`,
       storageProfile: this.storageChangedValue.storageProfile,
       sizeMB: this.storageChangedValue.storageMB
     };
@@ -218,7 +221,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     storageData.sizeMB = this.storageChangedValue.storageMB;
     storageData.clientReferenceObject = {
       serverId: this.server.id,
-      diskId: this.selectedStorageDevice.id
+      diskId: this.selectedStorageDevice.id,
+      name: this.selectedStorageDevice.name,
+      storageProfile: this.selectedStorageDevice.storageProfile,
+      sizeMB: this.storageChangedValue.storageMB
     };
 
     this.expandingStorage = true;
@@ -244,8 +250,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     deleteButton.showLoader();
     this._serverService.deleteServerStorage(this.server.id, storage.id)
       .subscribe(() => {
-        this.deletingStorage = false;
         mcsModal.close();
+        this.deletingStorage = false;
       });
   }
 
@@ -272,7 +278,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
     response = this.notifications.find((notification) => {
       return (notification.clientReferenceObject &&
-        notification.clientReferenceObject.diskId === diskId);
+        notification.clientReferenceObject.diskId === diskId &&
+        (notification.status === CoreDefinition.NOTIFICATION_JOB_PENDING
+          || notification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE));
     });
 
     if (response) {
@@ -323,17 +331,62 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((notifications) => {
         if (notifications && this.server) {
-          let storageNotifications = notifications.filter((notification) => {
-            return (notification.status === CoreDefinition.NOTIFICATION_JOB_PENDING ||
-              notification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE) &&
-              (notification.clientReferenceObject &&
-              notification.clientReferenceObject.serverId === this.server.id);
+          let storageJobs = notifications.filter((job) => {
+            return (job.type === McsJobType.CreateServerDisk ||
+              job.type === McsJobType.UpdateServerDisk ||
+              job.type === McsJobType.DeleteServerDisk) &&
+              (job.clientReferenceObject && job.clientReferenceObject.serverId === this.server.id);
           });
 
-          this.notifications = (storageNotifications) ?
-            storageNotifications : new Array<McsApiJob>();
+          if (storageJobs) {
+            this.notifications = mergeArrays(this.notifications, storageJobs,
+              (_first: McsApiJob, _second: McsApiJob) => {
+                return _first.id === _second.id;
+              });
+          }
 
-          this._appendCreatedDisks();
+          this.notifications.forEach((job) => {
+            if (job.status === CoreDefinition.NOTIFICATION_JOB_FAILED) { return; }
+
+            switch (job.type) {
+              case McsJobType.UpdateServerDisk:
+                if (job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { break; }
+              case McsJobType.CreateServerDisk:
+                // Append Create Server Disk / Update Disk Data
+                let disk = new ServerStorageDevice();
+                // TODO: This will be provided by the API
+                if (job.clientReferenceObject.diskId) {
+                  disk.id = job.clientReferenceObject.diskId;
+                }
+                disk.name = job.clientReferenceObject.name;
+                disk.storageProfile = job.clientReferenceObject.storageProfile;
+                disk.sizeMB = job.clientReferenceObject.sizeMB;
+
+                updateArrayRecord(this.storageDevices, disk, true,
+                  (_first: any, _second: any) => {
+                    return _first.id === _second.id;
+                  });
+                break;
+
+              case McsJobType.DeleteServerDisk:
+                // Delete Disk
+                // TODO: Create utility for deleting array record
+                if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+                  let deletedDiskIndex = this.storageDevices.findIndex(
+                    (storage) => storage.id === job.clientReferenceObject.diskId
+                  );
+
+                  if (deletedDiskIndex >= 0) {
+                    this.storageDevices.splice(deletedDiskIndex, 1);
+                  }
+                }
+                break;
+
+              default:
+                // Do nothing
+                break;
+            }
+          });
         }
       });
   }
@@ -410,27 +463,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
 
     return storageSliderValues;
-  }
-
-  private _appendCreatedDisks(): void {
-    let disks = new Array<ServerStorageDevice>();
-
-    let filteredNotifications = this.notifications.filter((notification) => {
-      return notification.type === McsJobType.CreateServerDisk
-        && notification.status !== CoreDefinition.NOTIFICATION_JOB_FAILED;
-    });
-
-    if (filteredNotifications) {
-      filteredNotifications.forEach((notification) => {
-        let disk = new ServerStorageDevice();
-        disk.storageProfile = notification.clientReferenceObject.storageProfile;
-        disk.sizeMB = notification.clientReferenceObject.sizeMB;
-
-        disks.push(disk);
-      });
-    }
-
-    this.storageDevices = mergeArrays(this.server.storageDevice, disks);
   }
 
   private _validateStorageChangedValues(): boolean {
