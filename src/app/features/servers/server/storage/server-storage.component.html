@@ -32,8 +32,7 @@
                   {{ getStorageStatus(storage.id) }}
                 </span>
               </ng-template>
-              <span *ngIf="storage.name">{{ storage.name }}</span>
-              <span *ngIf="!storage.name">{{ displayNewDiskName(i) }}</span>
+              <span>{{ storage.name }}</span>
             </span>
             <span class="storage-profile">{{ storage.storageProfile }}</span>
             <span class="capacity">
