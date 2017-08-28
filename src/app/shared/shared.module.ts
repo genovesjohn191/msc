@@ -10,6 +10,7 @@ import { PopoverModule } from './popover/popover.module';
 import { ModalModule } from './modal/modal.module';
 import { IconModule } from './icon/icon.module';
 import { ValidationMessageModule } from './validation-message/validation-message.module';
+import { TableModule } from './table/table.module';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -22,6 +23,7 @@ import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
 import { WizardComponent } from './wizard/wizard.component';
 import { WizardStepComponent } from './wizard/wizard-step/wizard-step.component';
+import { PaginatorComponent } from './paginator/paginator.component';
 /** Directives */
 import {
   AuthenticationRolesDirective
@@ -40,6 +42,7 @@ import {
     AlertComponent,
     WizardStepComponent,
     WizardComponent,
+    PaginatorComponent,
     AuthenticationRolesDirective
   ],
   imports: [
@@ -50,7 +53,8 @@ import {
     PopoverModule,
     ModalModule,
     IconModule,
-    ValidationMessageModule
+    ValidationMessageModule,
+    TableModule
   ],
   exports: [
     ButtonComponent,
@@ -64,6 +68,7 @@ import {
     AlertComponent,
     WizardStepComponent,
     WizardComponent,
+    PaginatorComponent,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -71,7 +76,8 @@ import {
     PopoverModule,
     ModalModule,
     IconModule,
-    ValidationMessageModule
+    ValidationMessageModule,
+    TableModule
   ]
 })
 

@@ -1,15 +1,24 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 /** Models */
 import { Gadgets } from './gadgets';
+import { GadgetsDatabase } from './gadgets.database';
+import { GadgetsDataSource } from './gadgets.datasource';
 import { Server } from '../servers/models';
 import {
   McsList,
-  McsListItem
+  McsListItem,
+  McsPaginator
 } from '../../core';
 import { refreshView } from '../../utilities';
 import {
@@ -60,6 +69,17 @@ export class GadgetsComponent implements OnInit {
   // All Icons Variables
   public icons: string[];
 
+  // Table variables
+  public displayedColumns = ['userId', 'userName', 'progress', 'color'];
+  public gadgetsDatabase = new GadgetsDatabase();
+  public dataSource: GadgetsDataSource | null;
+  @ViewChild('filterUser')
+  public filterUser: ElementRef;
+
+  // Paginator
+  @ViewChild('paginator')
+  public paginator: McsPaginator;
+
   public constructor(
     private _route: ActivatedRoute,
     private _formBuilder: FormBuilder
@@ -92,6 +112,7 @@ export class GadgetsComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.onInitTable();
     this.setGadgets();
     this.getAllIcons();
     this.textboxValue = 'Windows Server 2012';
@@ -117,6 +138,17 @@ export class GadgetsComponent implements OnInit {
       textEmailAddress: ['', [Validators.required, Validators.minLength(2)]],
       textContactNo: ['', [Validators.required, Validators.minLength(2)]]
     });
+  }
+
+  public onInitTable() {
+    this.dataSource = new GadgetsDataSource(this.gadgetsDatabase, this.paginator);
+    Observable.fromEvent(this.filterUser.nativeElement, 'keyup')
+      .debounceTime(150)
+      .distinctUntilChanged()
+      .subscribe(() => {
+        if (!this.dataSource) { return; }
+        this.dataSource.filter = this.filterUser.nativeElement.value;
+      });
   }
 
   public getAllIcons(): void {

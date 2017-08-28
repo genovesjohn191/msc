@@ -35,6 +35,9 @@ export * from './enumerations/mcs-device-type.enum';
 export * from './enumerations/mcs-http-status-code.enum';
 export * from './enumerations/mcs-key.enum';
 export * from './enumerations/mcs-job-type.enum';
+/** Interfaces */
+export * from './interfaces/mcs-data-source.interface';
+export * from './interfaces/mcs-paginator.interface';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';

@@ -1,0 +1,16 @@
+@import "../../../styles/shared/base";
+
+:host {
+  display: block;
+}
+
+.paginator-container {
+  @include display-flex(row);
+  align-items: center;
+  justify-content: center;
+
+  a {
+    @include font-size($font-size-default);
+    text-decoration: underline;
+  }
+}
