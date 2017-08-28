@@ -12,7 +12,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { ContextualHelpDirective } from './contextual-help.directive';
 import { ServersTestingModule } from '../../testing';
-import { McsBrowserService } from '../../../../core';
+import {
+  McsBrowserService,
+  McsDeviceType
+} from '../../../../core';
 
 @Component({
   selector: 'mcs-test',
@@ -62,6 +65,9 @@ describe('ContextualHelpDirective', () => {
       component = fixtureInstance.componentInstance;
       directiveElement = fixtureInstance.debugElement.query(By.directive(ContextualHelpDirective));
       browserService = getTestBed().get(McsBrowserService);
+
+      // Force the devicestream to set in Desktop mode
+      browserService.deviceTypeStream.next(McsDeviceType.Desktop);
     });
   }));
 

@@ -101,6 +101,56 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="table-container">
+        <!-- Filter -->
+        <input #filterUser placeholder="Filter users">
+
+        <!-- Data source -->
+        <mcs-table [dataSource]="dataSource">
+          <!-- ID Column -->
+          <ng-container mcsColumnDef="userId">
+            <mcs-header-cell *mcsHeaderCellDef> ID </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row"> {{row.id}} </mcs-data-cell>
+          </ng-container>
+
+          <!-- Progress Column -->
+          <ng-container mcsColumnDef="progress">
+            <mcs-header-cell *mcsHeaderCellDef> Progress </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row"> {{row.progress}}% </mcs-data-cell>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container mcsColumnDef="userName">
+            <mcs-header-cell *mcsHeaderCellDef> Name </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row"
+              class="text-center hidden-xsmall"> {{row.name}} </mcs-data-cell>
+          </ng-container>
+
+          <!-- Color Column -->
+          <ng-container mcsColumnDef="color">
+            <mcs-header-cell *mcsHeaderCellDef> Color </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" [style.color]="row.color">
+              {{row.color}}
+            </mcs-data-cell>
+          </ng-container>
+
+          <mcs-header-row *mcsHeaderRowDef="displayedColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: displayedColumns;"></mcs-data-row>
+        </mcs-table>
+
+        <!-- Paginator -->
+        <mcs-paginator #paginator
+          [totalCount]="gadgetsDatabase.data.length"
+          [pageIndex]="0"
+          [pageSize]="5">
+        </mcs-paginator>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col">
       <!--Lightbox Demo Implementation-->

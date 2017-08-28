@@ -79,6 +79,7 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
     if (this.browserStreamSubscription) {
       this.browserStreamSubscription.unsubscribe();
     }
+    this._unregisterEvents();
   }
 
   /**
