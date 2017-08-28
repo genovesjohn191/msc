@@ -143,9 +143,9 @@
 
         <!-- Paginator -->
         <mcs-paginator #paginator
-                       [length]="gadgetsDatabase.data.length"
-                       [pageIndex]="0"
-                       [pageSize]="5">
+          [totalCount]="gadgetsDatabase.data.length"
+          [pageIndex]="0"
+          [pageSize]="5">
         </mcs-paginator>
       </div>
     </div>

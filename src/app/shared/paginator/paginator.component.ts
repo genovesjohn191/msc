@@ -40,12 +40,12 @@ export class PaginatorComponent implements McsPaginator {
   private _pageSize: number;
 
   @Input()
-  public get length(): number { return this._length; }
-  public set length(value: number) {
-    this._length = value;
+  public get totalCount(): number { return this._totalCount; }
+  public set totalCount(value: number) {
+    this._totalCount = value;
     this._changeDetectorRef.markForCheck();
   }
-  private _length: number;
+  private _totalCount: number;
 
   @Input()
   public get loading(): boolean { return this._isLoading; }
@@ -61,7 +61,7 @@ export class PaginatorComponent implements McsPaginator {
   ) {
     this._pageIndex = 0;
     this._pageSize = 0;
-    this._length = 0;
+    this._totalCount = 0;
     this._isLoading = false;
     this.pageStream = new EventEmitter<any>();
     this.textContent = _textContentProvider.content.shared.paginator;
@@ -71,7 +71,7 @@ export class PaginatorComponent implements McsPaginator {
    * Return true if the paginator has next page otherwise false
    */
   public get hasNextPage(): boolean {
-    let numberOfPages = Math.ceil(this.length / this.pageSize) - 1;
+    let numberOfPages = Math.ceil(this.totalCount / this.pageSize) - 1;
     return this.pageIndex < numberOfPages && this.pageSize !== 0;
   }
 
@@ -80,14 +80,6 @@ export class PaginatorComponent implements McsPaginator {
    */
   public get hasPreviousPage(): boolean {
     return this.pageIndex >= 1 && this.pageSize !== 0;
-  }
-
-  /**
-   * Return all the displayed item count in the table
-   */
-  public get displayedItemsCount(): number {
-    let currentDisplayed = (this.pageIndex + 1) * this.pageSize;
-    return currentDisplayed > this.length ? this.length : currentDisplayed;
   }
 
   public get spinnerIconKey(): string {

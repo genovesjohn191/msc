@@ -13,14 +13,9 @@ export interface McsPaginator {
   pageSize: number;
 
   /**
-   * Count of all the items currently displayed
+   * Total record count handled by the paginator
    */
-  displayedItemsCount: number;
-
-  /**
-   * Total record length handled by the paginator
-   */
-  length: number;
+  totalCount: number;
 
   /**
    * Loading flag that show the spinner on the paginator

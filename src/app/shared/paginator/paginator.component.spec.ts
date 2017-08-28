@@ -11,7 +11,7 @@ describe('PaginatorComponent', () => {
   /** Stub Services/Components */
   let component: PaginatorComponent;
   let paginatorData = {
-    length: 100,
+    totalCount: 100,
     pageIndex: 0,
     pageSize: 10,
     loading: false,
@@ -50,7 +50,7 @@ describe('PaginatorComponent', () => {
       /** Populate input parameters */
       component.pageIndex = paginatorData.pageIndex;
       component.pageSize = paginatorData.pageSize;
-      component.length = paginatorData.length;
+      component.totalCount = paginatorData.totalCount;
       component.loading = paginatorData.loading;
     });
   }));
@@ -62,7 +62,7 @@ describe('PaginatorComponent', () => {
     });
 
     it(`should return false when there is no next page`, () => {
-      component.pageIndex = component.length / component.pageSize;
+      component.pageIndex = component.totalCount / component.pageSize;
       expect(component.hasNextPage).toBeFalsy();
     });
   });
@@ -75,18 +75,6 @@ describe('PaginatorComponent', () => {
     it(`should return true when there is previous page`, () => {
       component.pageIndex = 2;
       expect(component.hasPreviousPage).toBeTruthy();
-    });
-  });
-
-  describe('displayedItemsCount()', () => {
-    it(`should return the displayed items based on the current page`, () => {
-      component.pageIndex = 2;
-      expect(component.displayedItemsCount).toBe((component.pageIndex + 1) * component.pageSize);
-    });
-
-    it(`should return all the items when it is in the last page`, () => {
-      component.pageIndex = component.length / component.pageSize;
-      expect(component.displayedItemsCount).toBe(component.length);
     });
   });
 
