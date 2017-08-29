@@ -24,24 +24,23 @@ export class GadgetsDataSource implements McsDataSource<any> {
   public connect(): Observable<UserData[]> {
     const displayDataChanges = [
       this._exampleDatabase.dataChange,
-      this._paginator.pageStream,
+      this._paginator.pageChangedStream,
       this._filterChange,
     ];
 
     return Observable.merge(...displayDataChanges)
       .map(() => {
-      // Get all record by page settings
-      let pageData = this._exampleDatabase.data.slice();
-      let endIndex = (this._paginator.pageIndex + 1) * this._paginator.pageSize;
+        // Get all record by page settings
+        let pageData = this._exampleDatabase.data.slice();
+        let endIndex = (this._paginator.pageIndex + 1) * this._paginator.pageSize;
 
-      this._paginator.loading = true;
-      // Get all record by filter settings and return them
-      let actualData = pageData.splice(0, endIndex);
-      return actualData.slice().filter((item: UserData) => {
-        let searchStr = (item.name + item.color).toLowerCase();
-        return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+        // Get all record by filter settings and return them
+        let actualData = pageData.splice(0, endIndex);
+        return actualData.slice().filter((item: UserData) => {
+          let searchStr = (item.name + item.color).toLowerCase();
+          return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+        });
       });
-    });
   }
 
   public disconnect() {
@@ -51,7 +50,7 @@ export class GadgetsDataSource implements McsDataSource<any> {
   public onCompletion(): void {
     // Add delay to see the loader on the paginator
     setTimeout(() => {
-      this._paginator.loading = false;
+      this._paginator.pageCompleted();
     }, 3000);
   }
 }

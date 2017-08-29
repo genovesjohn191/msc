@@ -10,6 +10,7 @@ import {
   McsTextContentProvider,
   McsPaginator
 } from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 
 @Component({
   selector: 'mcs-paginator',
@@ -20,8 +21,9 @@ import {
 
 export class PaginatorComponent implements McsPaginator {
 
+  public loading: boolean;
   public textContent: any;
-  public pageStream: EventEmitter<any>;
+  public pageChangedStream: EventEmitter<any>;
 
   @Input()
   public get pageIndex(): number { return this._pageIndex; }
@@ -47,14 +49,6 @@ export class PaginatorComponent implements McsPaginator {
   }
   private _totalCount: number;
 
-  @Input()
-  public get loading(): boolean { return this._isLoading; }
-  public set loading(value: boolean) {
-    this._isLoading = value;
-    this._changeDetectorRef.markForCheck();
-  }
-  private _isLoading: boolean;
-
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider
@@ -62,8 +56,8 @@ export class PaginatorComponent implements McsPaginator {
     this._pageIndex = 0;
     this._pageSize = 0;
     this._totalCount = 0;
-    this._isLoading = false;
-    this.pageStream = new EventEmitter<any>();
+    this.loading = false;
+    this.pageChangedStream = new EventEmitter<any>();
     this.textContent = _textContentProvider.content.shared.paginator;
   }
 
@@ -93,16 +87,23 @@ export class PaginatorComponent implements McsPaginator {
   public nextPage() {
     if (!this.hasNextPage) { return; }
     this.pageIndex++;
-    this._emitPageEvent();
+    this._onPageChanged();
   }
 
   public previousPage() {
     if (!this.hasPreviousPage) { return; }
     this.pageIndex--;
-    this._emitPageEvent();
+    this._onPageChanged();
   }
 
-  private _emitPageEvent() {
-    this.pageStream.next(this);
+  public pageCompleted() {
+    this.loading = false;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _onPageChanged() {
+    this.loading = true;
+    this._changeDetectorRef.markForCheck();
+    this.pageChangedStream.next(this);
   }
 }

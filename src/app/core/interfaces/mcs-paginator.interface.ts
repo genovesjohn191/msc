@@ -18,14 +18,12 @@ export interface McsPaginator {
   totalCount: number;
 
   /**
-   * Loading flag that show the spinner on the paginator
-   *
-   * `@Note` Change this flag according to obtainment data
-   */
-  loading: boolean;
-
-  /**
    * Event that emit the changes when page is changed
    */
-  pageStream: EventEmitter<any>;
+  pageChangedStream: EventEmitter<any>;
+
+  /**
+   * Call this method when the paging is completed
+   */
+  pageCompleted(): void;
 }
