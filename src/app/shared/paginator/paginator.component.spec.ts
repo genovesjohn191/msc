@@ -13,8 +13,7 @@ describe('PaginatorComponent', () => {
   let paginatorData = {
     totalCount: 100,
     pageIndex: 0,
-    pageSize: 10,
-    loading: false,
+    pageSize: 10
   } as McsPaginator;
 
   beforeEach(async(() => {
@@ -51,7 +50,6 @@ describe('PaginatorComponent', () => {
       component.pageIndex = paginatorData.pageIndex;
       component.pageSize = paginatorData.pageSize;
       component.totalCount = paginatorData.totalCount;
-      component.loading = paginatorData.loading;
     });
   }));
 
@@ -79,6 +77,11 @@ describe('PaginatorComponent', () => {
   });
 
   describe('nextPage()', () => {
+    it(`should return true to loading flag`, () => {
+      component.nextPage();
+      expect(component.loading).toBeTruthy();
+    });
+
     it(`should increase the pageindex when it is invoke`, () => {
       let previousIndex = component.pageIndex;
       component.nextPage();
@@ -86,13 +89,19 @@ describe('PaginatorComponent', () => {
     });
 
     it(`should notify the page stream`, () => {
-      spyOn(component.pageStream, 'next');
+      spyOn(component.pageChangedStream, 'next');
       component.nextPage();
-      expect(component.pageStream.next).toHaveBeenCalled();
+      expect(component.pageChangedStream.next).toHaveBeenCalled();
     });
   });
 
   describe('previousPage()', () => {
+    it(`should return true to loading flag`, () => {
+      component.pageIndex = 2;
+      component.previousPage();
+      expect(component.loading).toBeTruthy();
+    });
+
     it(`should decrease the pageindex when it is invoke`, () => {
       component.pageIndex = 2;
       let previousIndex = component.pageIndex;
@@ -102,9 +111,17 @@ describe('PaginatorComponent', () => {
 
     it(`should notify the page stream`, () => {
       component.pageIndex = 2;
-      spyOn(component.pageStream, 'next');
+      spyOn(component.pageChangedStream, 'next');
       component.previousPage();
-      expect(component.pageStream.next).toHaveBeenCalled();
+      expect(component.pageChangedStream.next).toHaveBeenCalled();
+    });
+  });
+
+  describe('pageCompleted()', () => {
+    it(`should return false to loading flag`, () => {
+      component.loading = true;
+      component.pageCompleted();
+      expect(component.loading).toBeFalsy();
     });
   });
 });
