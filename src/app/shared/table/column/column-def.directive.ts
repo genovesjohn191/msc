@@ -14,7 +14,7 @@ import { DataCellDefDirective } from '../data';
 export class ColumnDefDirective {
 
   @ContentChild(HeaderCellDefDirective)
-  public headerCellDef: any;
+  public headerCellDef: HeaderCellDefDirective;
 
   @ContentChild(DataCellDefDirective)
   public dataCellDef: DataCellDefDirective;
