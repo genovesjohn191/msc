@@ -1,6 +1,7 @@
 <section class="gadgets-container">
   <div class="row">
     <div class="col">
+
       <h3>List of Macquarie Cloud Services Icons:</h3>
       <div class="all-icons">
         <mcs-icon *ngFor="let icon of icons"
@@ -103,7 +104,26 @@
   </div>
 
   <div class="row">
+      <div class="col">
+        <span class="title"><i>List Panel Implementation Example</i></span>
+        <mcs-list-panel [dataSource]="listingSource">
+          <ng-container mcsListDef>
+            <mcs-list-header *mcsListHeaderDef="let propValue; propertyName: 'color';"
+              [groupName]="propValue">
+              <a >{{ propValue }}</a>
+            </mcs-list-header>
+            <mcs-list-item *mcsListItemDef="let item"
+              [itemId]="item.id" [groupName]="item.color">
+              <mcs-icon key="add-blue"></mcs-icon> {{ item.name }}
+            </mcs-list-item>
+          </ng-container>
+        </mcs-list-panel>
+      </div>
+    </div>
+
+  <div class="row">
     <div class="col">
+      <span class="title"><i> Table Implementation Example</i></span>
       <div class="table-container">
         <!-- Filter -->
         <input #filterUser placeholder="Filter users">

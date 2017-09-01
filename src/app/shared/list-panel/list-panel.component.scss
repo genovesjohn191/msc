@@ -1,0 +1,50 @@
+@import "../../../styles/shared/base";
+
+$list-panel-max-width: 300px;
+
+$list-header-padding: $space-small 0;
+$list-header-font-size: $link-default-font-size;
+
+$list-item-padding: $space-small;
+$list-item-font-size: $link-default-font-size;
+$list-item-font-family-active: $base-font-bold;
+$list-item-border-color: $color-primary-01;
+
+mcs-list-panel {
+  @include display-flex(column);
+  justify-content: center;
+  max-width: $list-panel-max-width;
+
+  mcs-list-header {
+    @include display-flex(column);
+    justify-content: center;
+    cursor: pointer;
+    padding: $list-header-padding;
+    @include font-size($list-header-font-size);
+    margin-left: $space-medium;
+
+    .list-header-container {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &.active {
+      .list-header-container {
+        font-weight: bold;
+      }
+    }
+  }
+
+  mcs-list-item {
+    position: relative;
+    padding: $list-item-padding;
+    @include font-size($list-item-font-size);
+    border-left: 1px solid $list-item-border-color;
+    margin-left: $space-small;
+
+    &.active {
+      font-family: $list-item-font-family-active;
+    }
+  }
+}

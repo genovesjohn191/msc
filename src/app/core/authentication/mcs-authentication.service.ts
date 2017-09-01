@@ -14,7 +14,10 @@ import { McsApiSuccessResponse } from '../models/response/mcs-api-success-respon
 import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { AppState } from '../../app.service';
-import { reviverParser } from '../../utilities';
+import {
+  reviverParser,
+  isNullOrEmpty
+} from '../../utilities';
 
 @Injectable()
 export class McsAuthenticationService {
@@ -37,6 +40,9 @@ export class McsAuthenticationService {
    * This will navigate to login page of SSO (IDP)
    */
   public logIn(): void {
+    if (isNullOrEmpty(this._coreConfig.loginUrl)) {
+      throw new Error(`Invalid login url of ${this._coreConfig.loginUrl}`);
+    }
     window.location.href = (this._coreConfig.loginUrl + this._returnUrl);
   }
 
@@ -44,6 +50,9 @@ export class McsAuthenticationService {
    * This will navigate to logout page of SSO (IDP)
    */
   public logOut(): void {
+    if (isNullOrEmpty(this._coreConfig.logoutUrl)) {
+      throw new Error(`Invalid login url of ${this._coreConfig.logoutUrl}`);
+    }
     this.deleteAuthToken();
     window.location.href = this._coreConfig.logoutUrl;
   }

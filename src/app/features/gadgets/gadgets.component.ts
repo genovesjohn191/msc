@@ -14,6 +14,7 @@ import {
 import { Gadgets } from './gadgets';
 import { GadgetsDatabase } from './gadgets.database';
 import { GadgetsDataSource } from './gadgets.datasource';
+import { GadgetsListSource } from './gadgets.listsource';
 import { Server } from '../servers/models';
 import {
   McsList,
@@ -69,6 +70,9 @@ export class GadgetsComponent implements OnInit {
   // All Icons Variables
   public icons: string[];
 
+  // Listing variables
+  public listingSource: GadgetsListSource | null;
+
   // Table variables
   public displayedColumns = ['userId', 'userName', 'progress', 'color'];
   public gadgetsDatabase = new GadgetsDatabase();
@@ -113,6 +117,7 @@ export class GadgetsComponent implements OnInit {
 
   public ngOnInit() {
     this.onInitTable();
+    this.onInitListing();
     this.setGadgets();
     this.getAllIcons();
     this.textboxValue = 'Windows Server 2012';
@@ -149,6 +154,10 @@ export class GadgetsComponent implements OnInit {
         if (!this.dataSource) { return; }
         this.dataSource.filter = this.filterUser.nativeElement.value;
       });
+  }
+
+  public onInitListing() {
+    this.listingSource = new GadgetsListSource(this.gadgetsDatabase, this.paginator);
   }
 
   public getAllIcons(): void {
