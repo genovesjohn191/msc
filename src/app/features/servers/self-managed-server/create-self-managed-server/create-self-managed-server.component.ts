@@ -20,16 +20,20 @@ import {
 } from '../../models';
 import {
   McsList,
+  CoreDefinition,
   CoreValidators,
   McsTextContentProvider
 } from '../../../../core';
 import {
   mergeArrays,
   refreshView,
-  isFormControlValid
+  isFormControlValid,
+  isNullOrEmpty
 } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
+
+const SERVER_NAME_MAX = 15;
 
 @Component({
   selector: 'mcs-create-self-managed-server',
@@ -141,7 +145,12 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   private _registerFormGroup(): void {
     // Register Form Controls
     this.formControlServerName = new FormControl('', [
-      CoreValidators.required
+      CoreValidators.required,
+      CoreValidators.maxLength(SERVER_NAME_MAX),
+      CoreValidators.custom(
+        this._customServerNameValidator.bind(this),
+        this.createServerTextContent.invalidServerName
+      )
     ]);
     this.formControlServerName.valueChanges
       .subscribe((inputValue) => {
@@ -152,5 +161,9 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     this.formGroupCreateServer = new FormGroup({
       formControlServerName: this.formControlServerName
     });
+  }
+
+  private _customServerNameValidator(inputValue: any): boolean {
+    return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
   }
 }

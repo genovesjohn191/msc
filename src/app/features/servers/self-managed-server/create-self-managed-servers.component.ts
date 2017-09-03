@@ -198,7 +198,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     // Set Component Input Parameters
     componentService.componentRef.instance.vdcName = this.vdcValue;
     componentService.componentRef.instance.resource = this._serverPlatformMap.get(this.vdcValue);
-    componentService.componentRef.instance.servers = this._serverListMap.get('M1VDC27117001');
+    componentService.componentRef.instance.servers = this._serverListMap.get(this.vdcValue);
     componentService.componentRef.instance.template = this._serverTemplate;
     componentService.appendComponentTo(this.selfManagedServersElement.nativeElement);
 

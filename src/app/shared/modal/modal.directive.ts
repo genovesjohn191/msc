@@ -14,7 +14,10 @@ import {
   HostListener
 } from '@angular/core';
 import { ModalComponent } from './modal.component';
-import { McsComponentService } from '../../core';
+import {
+  McsComponentService,
+  McsModal
+} from '../../core';
 import { refreshView } from '../../utilities';
 
 @Directive({
@@ -22,7 +25,7 @@ import { refreshView } from '../../utilities';
   exportAs: 'mcsModal'
 })
 
-export class ModalDirective implements OnInit, OnDestroy {
+export class ModalDirective implements OnInit, OnDestroy, McsModal {
   @Input()
   public mcsModal: TemplateRef<any> | string;
 

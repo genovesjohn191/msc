@@ -32,7 +32,8 @@ import {
   replacePlaceholder,
   animateFactory,
   appendUnitSuffix,
-  isFormControlValid
+  isFormControlValid,
+  isNullOrEmpty
 } from '../../../../utilities';
 
 @Component({
@@ -156,6 +157,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
     refreshView(() => {
+      if (this.sliderValue < 0) { this.sliderValue = 0; }
       this.inputManageType = inputManageType;
       this._notifyCpuSizeScale();
     });
@@ -169,7 +171,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     // Create Custom RAM Control and Register the listener
     this.serverScaleCustomRam = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.min(1),
+      CoreValidators.min(this.memoryMB),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._customRamValidator.bind(this),
@@ -182,7 +184,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     // Create Custom CPU Control and Register the listener
     this.serverScaleCustomCpu = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.min(1),
+      CoreValidators.min(this.cpuCount),
       CoreValidators.numeric,
       CoreValidators.custom(
         this._customCpuValidator.bind(this),
@@ -320,7 +322,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
       case ServerInputManageType.Slider:
       default:
-        if (this.sliderTable && this.sliderTable.length > 0) {
+        if (!isNullOrEmpty(this.sliderTable)) {
           performanceScale.memoryMB = this.sliderTable[this.sliderValue].memoryMB;
           performanceScale.cpuCount = this.sliderTable[this.sliderValue].cpuCount;
           performanceScale.valid = true;

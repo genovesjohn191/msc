@@ -59,6 +59,9 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   @Input()
   public width: string;
 
+  @Input()
+  public disabled: boolean;
+
   @ViewChild('mcsDropdown')
   public mcsDropdown: ElementRef;
 
@@ -101,6 +104,7 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
     this.dropdownData = new McsList();
     this.isOpen = false;
     this.placeholder = DEFAULT_DROPDOWN_PLACEHOLDER;
+    this.disabled = false;
   }
 
   public ngOnChanges() {
@@ -116,6 +120,11 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   }
 
   public toggleDropdown(event) {
+    if (this.disabled) {
+      this.isOpen = false;
+      return;
+    }
+
     if (this.mcsDropdownGroupName && this.mcsDropdownGroupName.nativeElement === event.target) {
       this.isOpen = true;
     } else {

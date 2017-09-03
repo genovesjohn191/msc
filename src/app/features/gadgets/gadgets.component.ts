@@ -19,7 +19,8 @@ import { Server } from '../servers/models';
 import {
   McsList,
   McsListItem,
-  McsPaginator
+  McsPaginator,
+  McsModal
 } from '../../core';
 import { refreshView } from '../../utilities';
 import {
@@ -83,6 +84,9 @@ export class GadgetsComponent implements OnInit {
   // Paginator
   @ViewChild('paginator')
   public paginator: McsPaginator;
+
+  @ViewChild('mcsModal1')
+  public mcsModal1: McsModal;
 
   public constructor(
     private _route: ActivatedRoute,
@@ -269,5 +273,10 @@ export class GadgetsComponent implements OnInit {
     this.dropdownValue = dropdownData.getGroup(groupName)[0].key;
 
     return dropdownData;
+  }
+
+  public closeModal1() {
+    if (!this.mcsModal1) { return; }
+    this.mcsModal1.close();
   }
 }

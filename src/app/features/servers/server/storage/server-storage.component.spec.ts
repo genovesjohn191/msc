@@ -95,7 +95,7 @@ describe('ServerStorageComponent', () => {
   }));
 
   /** Test Implementation */
-  // TODO: Update unit test after the demo
+  // TODO: Update unit test when refactoring story started
   describe('ngOnInit()', () => {
     beforeEach(async(() => {
       let notifications: McsApiJob[] = new Array();

@@ -13,3 +13,5 @@ export * from './server-manage-storage/server-manage-storage.component';
 export * from './server-ip-address/server-ip-address.component';
 /** Provisioning Notifications */
 export * from './provisioning-notifications/provisioning-notifications.component';
+/** Interfaces */
+export * from './mcs-storage.interface';

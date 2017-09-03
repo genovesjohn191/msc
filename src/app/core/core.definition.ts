@@ -125,6 +125,7 @@ export class CoreDefinition {
   public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
   public static REGEX_NUMERIC_PATTERN = /^[\d]+$/;
+  public static REGEX_SERVER_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
 
   /** Job Types */
   public static JOB_TYPE_SERVER_START = 100001;

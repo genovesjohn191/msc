@@ -34,6 +34,11 @@ $textbox-icon-offset: $icon-small-font-size + 20;
     border-color: $color-red-00;
   }
 
+  &.disabled {
+    cursor: not-allowed;
+    opacity: $disabled-opacity;
+  }
+
   input {
     border: none;
     width: 100%;
@@ -46,6 +51,11 @@ $textbox-icon-offset: $icon-small-font-size + 20;
     &[readonly] {
       @include textbox-highlight(none);
       cursor: pointer;
+    }
+
+    &:disabled {
+      background-color: $color-white;
+      cursor: not-allowed;
     }
   }
 

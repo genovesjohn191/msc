@@ -74,6 +74,7 @@ export class SliderComponent {
 
   public constructor() {
     this.sliderValue = 0;
+    this.disabled = false;
   }
 
   /**

@@ -21,7 +21,7 @@ class RavenErrorHandler implements ErrorHandler {
  * environment settings (Production or Development) mode
  */
 export function errorHandlerProvider() {
-  if (ENV !== 'development') {
+  if (ENV.toLowerCase() !== 'development') {
     return new RavenErrorHandler();
   } else {
     return new ErrorHandler();

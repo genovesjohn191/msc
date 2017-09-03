@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {
@@ -21,7 +22,9 @@ import {
   McsListItem,
   McsNotificationContextService,
   McsApiJob,
-  McsJobType
+  McsJobType,
+  McsLoader,
+  McsModal
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import {
@@ -30,12 +33,16 @@ import {
   animateFactory,
   mergeArrays,
   updateArrayRecord,
-  isNullOrEmpty
+  isNullOrEmpty,
+  replacePlaceholder
 } from '../../../../utilities';
+
+import { McsStorage } from '../../shared';
 
 const STORAGE_SLIDER_STEP_DEFAULT = 25;
 const STORAGE_MAXIMUM_DISKS = 14;
 const STORAGE_MINIMUM_VALUE = 1024;
+const PRIMARY_STORAGE_NAME = 'Hard disk 1';
 
 @Component({
   selector: 'mcs-server-storage',
@@ -47,6 +54,18 @@ const STORAGE_MINIMUM_VALUE = 1024;
 })
 
 export class ServerStorageComponent implements OnInit, OnDestroy {
+  @ViewChild('mcsStorage')
+  public mcsStorage: McsStorage;
+
+  @ViewChild('attachButton')
+  public attachButton: McsLoader;
+
+  @ViewChild('updateButton')
+  public updateButton: McsLoader;
+
+  @ViewChild('deleteButton')
+  public deleteButton: McsLoader;
+
   public serverStorageText: any;
   public expandStorage: boolean;
   public expandingStorage: boolean;
@@ -72,11 +91,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public memoryMB: number;
   public availableMemoryMB: number;
   public minimumMB: number;
+  public usedMemoryMB: number;
 
   public selectedStorageDevice: ServerStorageDevice;
   public selectedStorageSliderValues: number[];
 
   public isLoadingStorage: boolean;
+
+  public disabled: boolean;
+
+  public deleteStorageModal: McsModal;
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
@@ -96,6 +120,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public get hasReachedDisksLimit(): boolean {
     return this.storageDevices.length >= STORAGE_MAXIMUM_DISKS;
+  }
+
+  public get hasAvailableStorageSpace(): boolean {
+    return this.convertStorageInGb(this.availableMemoryMB) > 0;
   }
 
   public get isValidStorageValues(): boolean {
@@ -130,6 +158,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.memoryMB = 0;
     this.availableMemoryMB = 0;
     this.minimumMB = STORAGE_MINIMUM_VALUE;
+    this.usedMemoryMB = 0;
     this.selectedStorageSliderValues = new Array<number>();
     this.serverPlatformData = new ServerPlatform();
     this.serverPlatformStorage = new Array<ServerStorage>();
@@ -138,6 +167,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.notifications = new Array<McsApiJob>();
     this._serverPlatformMap = new Map<string, ServerResource>();
     this.isLoadingStorage = true;
+    this.disabled = false;
   }
 
   public ngOnInit() {
@@ -157,23 +187,29 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.storageChangedValue = serverStorage;
     this.availableMemoryMB = this.getStorageAvailableMemory(serverStorage.storageProfile);
-    this.newStorageSliderValues = this._getStorageSliderValues(
-      this.memoryMB, this.availableMemoryMB
-    );
+    this._setNewStorageSliderValues();
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
     this.selectedStorageDevice = storageDevice;
     this.expandStorage = true;
-    this.selectedStorageSliderValues = this._getStorageSliderValues(
-      this.selectedStorageDevice.sizeMB,
-      this.getStorageAvailableMemory(this.selectedStorageDevice.storageProfile)
-    );
+    this._setSelectedStorageSliderValues();
   }
 
   public closeExpandStorageBox() {
+    if (this.disabled) { return; }
     this.selectedStorageDevice = new ServerStorageDevice();
     this.expandStorage = false;
+  }
+
+  public setModalInstance(mcsModal: McsModal): void {
+    if (!mcsModal) { return; }
+    this.deleteStorageModal = mcsModal;
+  }
+
+  public closeDeleteStorageModal(): void {
+    if (this.deletingStorage) { return; }
+    this.deleteStorageModal.close();
   }
 
   public convertStorageInGb(value: number): number {
@@ -190,8 +226,14 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return `${this.serverStorageText.diskName} ${index + 1}`;
   }
 
-  public onClickAttach(attachButton: any): void {
-    if (!this.isValidStorageValues) { return; }
+  public onClickAttach(): void {
+    if (!this.isValidStorageValues || !this.hasAvailableStorageSpace) { return; }
+
+    this.disabled = true;
+    this.mcsStorage.completed();
+    this.attachButton.showLoader();
+
+    this.usedMemoryMB = this.storageChangedValue.storageMB;
 
     let storageData = new ServerStorageDeviceUpdate();
     storageData.storageProfile = this.storageChangedValue.storageProfile;
@@ -203,17 +245,19 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       sizeMB: this.storageChangedValue.storageMB
     };
 
-    this.availableMemoryMB -= this.storageChangedValue.storageMB;
-    attachButton.showLoader();
     this.storageChangedValue = new ServerManageStorage();
-    this._serverService.createServerStorage(this.server.id, storageData)
-      .subscribe(() => {
-        attachButton.hideLoader();
-      });
+    this._serverService.createServerStorage(this.server.id, storageData).subscribe();
   }
 
-  public onClickUpdate(updateButton: any): void {
+  public onClickUpdate(): void {
     if (!this.isValidStorageValues || this.expandingStorage) { return; }
+
+    this.expandingStorage = true;
+    this.disabled = true;
+    this.mcsStorage.completed();
+    this.updateButton.showLoader();
+
+    this.usedMemoryMB = this.storageChangedValue.storageMB - this.selectedStorageDevice.sizeMB;
 
     let storageData = new ServerStorageDeviceUpdate();
     storageData.name = this.selectedStorageDevice.name;
@@ -227,32 +271,21 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       sizeMB: this.storageChangedValue.storageMB
     };
 
-    this.expandingStorage = true;
-    updateButton.showLoader();
     this._serverService.updateServerStorage(
       this.server.id,
       this.selectedStorageDevice.id,
       storageData
-    ).subscribe(() => {
-      this.expandingStorage = false;
-      this.expandStorage = false;
-    });
+    ).subscribe();
   }
 
-  public onDeleteStorage(
-    storage: ServerStorageDevice,
-    mcsModal: any,
-    deleteButton: any
-  ): void {
+  public onDeleteStorage(storage: ServerStorageDevice): void {
     if (this.deletingStorage) { return; }
 
     this.deletingStorage = true;
-    deleteButton.showLoader();
+    this.deleteButton.showLoader();
+
     this._serverService.deleteServerStorage(this.server.id, storage.id)
-      .subscribe(() => {
-        mcsModal.close();
-        this.deletingStorage = false;
-      });
+      .subscribe((response) => { this.disabled = true; });
   }
 
   public getStorageAvailableMemory(storageProfile: string): number {
@@ -265,6 +298,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
     if (storage) {
       availableMemoryMB = storage.limitMB - storage.usedMB;
+      if (availableMemoryMB < 0) { availableMemoryMB = 0; }
     }
 
     return availableMemoryMB;
@@ -288,6 +322,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
 
     return storageStatus;
+  }
+
+  public isPrimaryStorage(storage: ServerStorageDevice): boolean {
+    return storage.name === PRIMARY_STORAGE_NAME;
   }
 
   public ngOnDestroy() {
@@ -338,55 +376,85 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
               (job.clientReferenceObject && job.clientReferenceObject.serverId === this.server.id);
           });
 
-          if (storageJobs) {
+          if (!isNullOrEmpty(storageJobs)) {
+            this._listenToServerPlatformData();
+            this.disabled = true;
             this.notifications = mergeArrays(this.notifications, storageJobs,
               (_first: McsApiJob, _second: McsApiJob) => {
                 return _first.id === _second.id;
               });
-          }
 
-          this.notifications.forEach((job) => {
-            if (job.status === CoreDefinition.NOTIFICATION_JOB_FAILED) { return; }
-
-            switch (job.type) {
-              case McsJobType.UpdateServerDisk:
-                if (job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { break; }
-              case McsJobType.CreateServerDisk:
-                // Append Create Server Disk / Update Disk Data
-                let disk = new ServerStorageDevice();
-                // TODO: This will be provided by the API
-                if (job.clientReferenceObject.diskId) {
-                  disk.id = job.clientReferenceObject.diskId;
-                }
-                disk.name = job.clientReferenceObject.name;
-                disk.storageProfile = job.clientReferenceObject.storageProfile;
-                disk.sizeMB = job.clientReferenceObject.sizeMB;
-
-                updateArrayRecord(this.storageDevices, disk, true,
-                  (_first: any, _second: any) => {
-                    return _first.id === _second.id;
-                  });
+            for (let job of this.notifications) {
+              if (job.status === CoreDefinition.NOTIFICATION_JOB_FAILED) {
+                this.disabled = false;
                 break;
+              }
 
-              case McsJobType.DeleteServerDisk:
-                // Delete Disk
-                // TODO: Create utility for deleting array record
-                if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-                  let deletedDiskIndex = this.storageDevices.findIndex(
-                    (storage) => storage.id === job.clientReferenceObject.diskId
-                  );
-
-                  if (deletedDiskIndex >= 0) {
-                    this.storageDevices.splice(deletedDiskIndex, 1);
+              switch (job.type) {
+                case McsJobType.UpdateServerDisk:
+                  if (this.updateButton) {
+                    this.updateButton.hideLoader();
+                    this.expandingStorage = false;
+                    this.expandStorage = false;
                   }
-                }
-                break;
+                  if (job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { break; }
 
-              default:
-                // Do nothing
-                break;
+                case McsJobType.CreateServerDisk:
+                  if (this.attachButton) { this.attachButton.hideLoader(); }
+
+                  // Update the available memory when completed
+                  if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+                    this.availableMemoryMB -= this.usedMemoryMB;
+                    this._setNewStorageSliderValues();
+                    this._setSelectedStorageSliderValues();
+                    this.usedMemoryMB = 0;
+                    this.disabled = false;
+                  }
+
+                  // Append Create Server Disk / Update Disk Data
+                  let disk = new ServerStorageDevice();
+                  // TODO: This will be provided by the API
+                  if (job.clientReferenceObject.diskId) {
+                    disk.id = job.clientReferenceObject.diskId;
+                  }
+                  disk.name = job.clientReferenceObject.name;
+                  disk.storageProfile = job.clientReferenceObject.storageProfile;
+                  disk.sizeMB = job.clientReferenceObject.sizeMB;
+
+                  updateArrayRecord(this.storageDevices, disk, true,
+                    (_first: any, _second: any) => {
+                      return _first.id === _second.id;
+                    });
+                  break;
+
+                case McsJobType.DeleteServerDisk:
+                  // Delete Disk
+                  if (this.deleteStorageModal) {
+                    this.deletingStorage = false;
+                    this.deleteStorageModal.close();
+                  }
+
+                  // TODO: Create utility for deleting array record
+                  if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+                    let deletedDiskIndex = this.storageDevices.findIndex(
+                      (storage) => storage.id === job.clientReferenceObject.diskId
+                    );
+
+                    if (deletedDiskIndex >= 0) {
+                      this.availableMemoryMB += this.storageDevices[deletedDiskIndex].sizeMB;
+                      this._setNewStorageSliderValues();
+                      this.storageDevices.splice(deletedDiskIndex, 1);
+                      this.disabled = false;
+                    }
+                  }
+                  break;
+
+                default:
+                  // Do nothing
+                  break;
+              }
             }
-          });
+          }
         }
       });
   }
@@ -463,6 +531,20 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
 
     return storageSliderValues;
+  }
+
+  private _setNewStorageSliderValues(): void {
+    if (isNullOrEmpty(this.availableMemoryMB)) { return; }
+    this.newStorageSliderValues = this._getStorageSliderValues(
+      this.memoryMB, this.availableMemoryMB
+    );
+  }
+
+  private _setSelectedStorageSliderValues(): void {
+    if (isNullOrEmpty(this.availableMemoryMB)) { return; }
+    this.selectedStorageSliderValues = this._getStorageSliderValues(
+      this.selectedStorageDevice.sizeMB, this.availableMemoryMB
+    );
   }
 
   private _validateStorageChangedValues(): boolean {

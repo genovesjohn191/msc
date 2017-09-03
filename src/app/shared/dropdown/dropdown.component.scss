@@ -17,6 +17,11 @@ $dropdown-option-item-background-hover: $color-grey-07;
   position: relative;
   cursor: pointer;
 
+  &.disabled {
+    cursor: not-allowed;
+    opacity: $disabled-opacity;
+  }
+
   .dropdown-value {
     @include display-flex(row);
     align-items: center;
