@@ -4,7 +4,7 @@
     <ng-content select="[details]"></ng-content>
   </div>
 
-  <div class="custom-size">
+  <div class="custom-size" *ngIf="hasAvailableStorageSpace" [ngClass]="{'disabled': disabled}">
     <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
       (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
         {{ storageTextContent.customSwitch }}</a>
@@ -14,43 +14,47 @@
   </div>
 
   <!--Storage profile content element (dropdown)-->
-  <div *ngIf="storageProfileList">
-    <div [@animate]="'fadeIn'" class="storage-profile-content">
-      <mcs-dropdown [ngModel]="storageProfileValue"
-        (ngModelChange)="onStorageProfileChanged($event)"
-        placeholder="Select the storage profile"
-        [dropdownData]="storageProfileList"></mcs-dropdown>
-    </div>
+  <div *ngIf="storageProfileList" [@animate]="'fadeIn'" class="storage-profile-content">
+    <mcs-dropdown [ngModel]="storageProfileValue"
+      [disabled]="disabled"
+      (ngModelChange)="onStorageProfileChanged($event)"
+      placeholder="Select the storage profile"
+      [dropdownData]="storageProfileList"></mcs-dropdown>
   </div>
 
   <!--Custom size content element-->
-  <form [formGroup]="formGroupServerStorage">
-    <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
-      <div [@animate]="'fadeIn'" class="custom-size-content">
-        <div class="custom-size-input">
-          <span class="label">{{ storageTextContent.label }} : </span>
-          <mcs-textbox width="150px" placeholder="GB"
-            formControlName="formControlServerStorageCustom"
-            [valid]="isControlValid(formControlServerStorageCustom)"
-            [ngModel]="customStorageValue"></mcs-textbox>
-          <span class="unit">{{ storageTextContent.unit }}</span>
-        </div>
-        <mcs-validation-message [control]="formControlServerStorageCustom"></mcs-validation-message>
-      </div>
+  <form *ngIf="inputManageType == inputManageTypeEnum.Custom && hasAvailableStorageSpace"
+    [formGroup]="formGroupServerStorage" class="custom-size-form">
+
+    <div [@animate]="'fadeIn'" class="custom-size-input">
+      <span class="label">{{ storageTextContent.label }} : </span>
+      <mcs-textbox width="150px" placeholder="GB"
+        formControlName="formControlServerStorageCustom"
+        [valid]="isControlValid(formControlServerStorageCustom)"
+        [ngModel]="customStorageValue"></mcs-textbox>
+      <span class="unit">{{ storageTextContent.unit }}</span>
     </div>
+    <mcs-validation-message [control]="formControlServerStorageCustom"
+      [@animate]="'fadeIn'"></mcs-validation-message>
   </form>
 
   <!--Slider content element-->
-  <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
-    <div [@animate]="'fadeIn'" class="slider-content">
-      <mcs-slider [min]="minimum" [max]="maximum"
-        [ngModel]="storageSliderValue" (ngModelChange)="onStorageChanged($event)"></mcs-slider>
-      <span class="storage-label">
-        {{ currentMemory }}
-      </span>
-      <span class="available-label">
-        ({{ remainingMemory }} Remaining)
-      </span>
-    </div>
+  <div *ngIf="inputManageType == inputManageTypeEnum.Slider
+    && hasAvailableStorageSpace" class="slider-content">
+
+    <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum" [disabled]="disabled"
+      [ngModel]="storageSliderValue" (ngModelChange)="onStorageChanged($event)"></mcs-slider>
+    <span [@animate]="'fadeIn'" class="storage-label">
+      {{ currentMemory }}
+    </span>
+    <span [@animate]="'fadeIn'" class="available-label">
+      ({{ remainingMemory }} Remaining)
+    </span>
+  </div>
+
+  <!-- Insufficient Storage Capacity Warning Message -->
+  <div *ngIf="!hasAvailableStorageSpace" class="storage-full-warning">
+    <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
+    <h4>{{ storageTextContent.fullStorageSpace }}</h4>
   </div>
 </div>

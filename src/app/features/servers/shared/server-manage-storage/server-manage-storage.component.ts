@@ -27,12 +27,15 @@ import {
   convertToMb,
   replacePlaceholder,
   appendUnitSuffix,
-  isFormControlValid
+  isFormControlValid,
+  isNullOrEmpty
 } from '../../../../utilities';
 import {
   FormGroup,
   FormControl
 } from '@angular/forms';
+
+import { McsStorage } from '../mcs-storage.interface';
 
 @Component({
   selector: 'mcs-server-manage-storage',
@@ -43,7 +46,7 @@ import {
   ]
 })
 
-export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy {
+export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy, McsStorage {
   @Input()
   public memoryMB: number;
 
@@ -58,6 +61,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   @Input()
   public storageSliderValues: number[];
+
+  @Input()
+  public disabled: boolean;
 
   @Output()
   public storageChanged: EventEmitter<ServerManageStorage>;
@@ -105,6 +111,14 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     );
   }
 
+  public get hasAvailableStorageSpace(): boolean {
+    return this.availableMemoryGB > 0;
+  }
+
+  public get warningIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_WARNING;
+  }
+
   public constructor(private _textProvider: McsTextContentProvider) {
     this.minimumMB = 1;
     this.storageProfileValue = '';
@@ -114,6 +128,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this.maximum = 0;
     this.inputManageType = ServerInputManageType.Slider;
     this.storageChanged = new EventEmitter<ServerManageStorage>();
+    this.disabled = false;
   }
 
   public ngOnInit() {
@@ -139,6 +154,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
+    if (this.disabled) { return; }
     refreshView(() => {
       this.inputManageType = inputManageType;
       this._notifyStorageChanged();
@@ -167,6 +183,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return isFormControlValid(control);
   }
 
+  public completed(): void {
+    refreshView(() => {
+      this.inputManageType = ServerInputManageType.Slider;
+      this.storageSliderValue = 0;
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+  }
+
   public ngOnDestroy() {
     if (this.formControlSubscription) {
       this.formControlSubscription.unsubscribe();
@@ -180,9 +203,10 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   private _registerFormGroup(): void {
     // Create custom storage control and register the listener
-    this.formControlServerStorageCustom = new FormControl('', [
-      CoreValidators.required
-    ]);
+    this.formControlServerStorageCustom = new FormControl(
+      { disabled: this.disabled },
+      [ CoreValidators.required ]
+    );
     this.formControlSubscription = this.formControlServerStorageCustom.valueChanges
       .subscribe(this.onCustomStorageChanged.bind(this));
 
@@ -230,7 +254,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       case ServerInputManageType.Slider:
       default:
         // TODO: Add isArrayChecking to common utilities
-        if (this.storageSliderValues && this.storageSliderValues.length > 0) {
+        if (!isNullOrEmpty(this.storageSliderValues)) {
           serverStorage.storageMB = convertToMb(this.storageSliderValues[this.storageSliderValue]);
         } else {
           serverStorage.storageMB = 0;

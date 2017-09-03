@@ -11,11 +11,11 @@ import {
   ViewChild
 } from '@angular/core';
 
-/** Interface */
-import { Loading } from '../loading.interface';
-
 /** Providers */
-import { CoreDefinition } from '../../core';
+import {
+  CoreDefinition,
+  McsLoader
+} from '../../core';
 
 enum IconType {
   Svg = 0,
@@ -28,7 +28,7 @@ enum IconType {
   styles: [require('./button.component.scss')]
 })
 
-export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, Loading {
+export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoader {
   public iconType: IconType;
   public iconTypeEnum = IconType;
   public showSpinner: boolean;

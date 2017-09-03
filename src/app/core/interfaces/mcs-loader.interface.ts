@@ -1,4 +1,4 @@
-export interface Loading {
+export interface McsLoader {
   showLoader(): void;
   hideLoader(): void;
 }

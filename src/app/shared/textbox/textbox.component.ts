@@ -18,13 +18,11 @@ import {
   FormControl
 } from '@angular/forms';
 
-/** Interface */
-import { Loading } from '../loading.interface';
-
 /** Providers */
 import {
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  McsLoader
 } from '../../core';
 
 /** Enum */
@@ -44,7 +42,7 @@ import { McsTextboxValidationType } from './textbox-type.enum';
 })
 
 export class TextboxComponent
-  implements OnInit, AfterViewInit, ControlValueAccessor, Loading {
+  implements OnInit, AfterViewInit, ControlValueAccessor, McsLoader {
   public iconKey: string;
 
   @Input()
@@ -78,6 +76,9 @@ export class TextboxComponent
   public readonly: boolean;
 
   @Input()
+  public disabled: boolean;
+
+  @Input()
   @HostBinding('style.max-width')
   public width: string;
 
@@ -107,6 +108,7 @@ export class TextboxComponent
   ) {
     this.inputType = 'text';
     this.valid = true;
+    this.disabled = false;
   }
 
   public ngOnInit() {

@@ -1,4 +1,4 @@
-<div #mcsTextbox class="mcs-textbox" [ngClass]="{'invalid': !valid}">
+<div #mcsTextbox class="mcs-textbox" [ngClass]="{'invalid': !valid, 'disabled': disabled}">
   <input [ngClass]="{'has-icon': iconKey}"
     [(ngModel)]="text"
     [attr.type]="inputType"
@@ -10,7 +10,8 @@
     [attr.readonly]="readonly"
     (focus)="onFocus($event)"
     (focusout)="onFocusOut($event)"
-    (blur)="onTouched($event)"/>
+    (blur)="onTouched($event)"
+    [disabled]="disabled" />
   <mcs-icon *ngIf="iconKey" [key]="iconKey"
     size="small" (click)="onFocus()"></mcs-icon>
 </div>

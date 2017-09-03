@@ -51,7 +51,8 @@
       },
       "newServer": "New server",
       "copyServer": "Copy a server",
-      "cloneServer": "Clone a server"
+      "cloneServer": "Clone a server",
+      "invalidServerName": "Server name can only contain letters, numbers or hypen"
     },
     "server": {
       "management": {
@@ -130,7 +131,8 @@
         "sliderSwitch": "Select from slider",
         "customSwitch": "Enter custom size",
         "validationError": "Storage size should not exceed {{available_storage}}",
-        "reachedStorageLimit": "You've reached the maximum number of disks for this server."
+        "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
+        "fullStorageSpace": "You can’t add additional disks to this server because there is insufficient storage capacity (0 GB remaining)."
       }
     },
     "shared": {
@@ -207,7 +209,7 @@
       "alphaNumeric": "Please enter alphanumeric only.",
       "required": "This field is required",
       "email": "Please enter a valid email address.",
-      "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and   one number",
+      "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number",
       "minlength": "Minimum length {{min_length}}",
       "maxlength": "Maximum length {{max_length}}",
       "min": "Minimum value can be entered is only {{min_value}}",

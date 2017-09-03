@@ -1,5 +1,14 @@
 @import "../../../../../styles/shared/base";
 
+$server-storage-title-font: $base-font-bold;
+$server-storage-title-font-size: $h4-default-font-size;
+$server-storage-form-border-color: $color-grey-00;
+
+%disabled {
+  cursor: not-allowed;
+  opacity: $disabled-opacity;
+}
+
 .mcs-server-storage {
   .heading {
     margin-bottom: $space-medium;
@@ -10,8 +19,8 @@
     align-items: center;
 
     .title {
-      @include font-size($h4-default-font-size);
-      font-family: $base-font-bold;
+      @include font-size($server-storage-title-font-size);
+      font-family: $server-storage-title-font;
       @include breakpoint(medium) {
         @include flex(2)
       }
@@ -90,7 +99,7 @@
   }
 
   .add-new-storage {
-    border: 1px solid $color-grey-00;
+    border: 1px solid $server-storage-form-border-color;
     @include border-radius($input-border-radius);
     padding: $space-medium;
     margin-top: $space-large;
@@ -107,7 +116,7 @@
     margin-top: $space-large;
 
     h4 {
-      margin-left: $space-small;
+      margin-left: $space-medium;
       margin-bottom: 0;
     }
   }
@@ -117,6 +126,10 @@
       @include display-flex(row);
       align-items: center;
       justify-content: space-between;
+
+      .disabled {
+        @extend %disabled;
+      }
     }
   }
 
@@ -135,6 +148,10 @@
 
     mcs-button {
       margin-left: $space-small;
+    }
+
+    .disabled {
+      @extend %disabled;
     }
   }
 }
