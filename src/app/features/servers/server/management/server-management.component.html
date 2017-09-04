@@ -4,14 +4,21 @@
       <div class="col">
         <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
         <ul class="unstyled-list">
+          <!-- Image -->
           <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.guestOs }}</li>
+
+          <!-- Zone -->
           <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
+
+          <!-- Configuration -->
           <li>
             <div class="server-configuration">
               <span>{{ serverManagementTextContent.vmProperties.configuration }}:</span>
               <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
-              <a *ngIf="!isScaling" (click)="scaleServer()">
+              <span *mcsHasPermission="['VmEdit']">
+                <a *ngIf="!isScaling" (click)="scaleServer()">
                 {{ serverManagementTextContent.performanceScale.scale }}</a>
+              </span>
               <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
                 mcsPopover trigger="hover" maxWidth="250px"
                 padding="narrow" [content]="scalingContent"></mcs-icon>
@@ -22,6 +29,8 @@
               </ng-template>
             </div>
           </li>
+
+          <!-- Media -->
           <li>{{ serverManagementTextContent.vmProperties.media }}:
             <ul class="unstyled-list server-media" *ngIf="hasMedia; else elseBlock">
               <li *ngFor="let media of server.media">{{ media.mediaName }}</li>
@@ -33,6 +42,7 @@
         </ul>
       </div>
 
+      <!-- Console -->
       <div class="col">
         <div class="server-thumbnail">
           <h3 class="thumbnail-title">{{ serverManagementTextContent.vmConsole.title }}</h3>
@@ -50,13 +60,18 @@
     <div class="row">
       <div class="col">
         <h3>{{ serverManagementTextContent.storage.title }}
-          <a [routerLink]="['../storage']">Manage</a>
+          <a *mcsHasPermission="['VmEdit']" [routerLink]="['../storage']">Manage</a>
         </h3>
         <ul class="unstyled-list server-storage">
+          <!-- Primary Volume -->
           <li>{{ serverManagementTextContent.storage.primaryVolume }}: {{ primaryVolume }}</li>
+
+          <!-- Secondary Volume -->
           <li *ngIf="secondaryVolumes">
             {{ serverManagementTextContent.storage.secondaryVolumes }}: {{ secondaryVolumes }}
           </li>
+
+          <!-- Storage Policy -->
           <li *ngIf="server.storagePolicy">
             {{ serverManagementTextContent.storage.storagePolicy }}: {{ server.storagePolicy }}
           </li>
@@ -66,6 +81,7 @@
        <div class="col">
         <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
         <ul class="unstyled-list server-interfaces">
+          <!-- Network Interface -->
           <li *ngFor="let interface of server.interfaces; let i = index">
             {{ serverManagementTextContent.networkInformation.interface }} {{ i }} :
             <span>{{ mergeIpAddresses(interface.ipAddress) }}</span>
@@ -78,8 +94,13 @@
       <div class="col">
         <h3>{{ serverManagementTextContent.supportIdentifiers.title }}</h3>
         <ul class="unstyled-list">
+          <!-- VDC -->
           <li>{{ serverManagementTextContent.supportIdentifiers.vdc }}: {{ server.vdcName }}</li>
+
+          <!-- MacView Service ID -->
           <li>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}: {{ server.serviceId }}</li>
+
+          <!-- VMWare ID -->
           <li>{{ serverManagementTextContent.supportIdentifiers.vmWareId }}: {{ server.instanceId }}</li>
         </ul>
       </div>
@@ -112,7 +133,7 @@
   <div class="scaling">
     <a class="text-underline" (click)="cancelScale()">
       {{ serverManagementTextContent.performanceScale.cancel }}</a>
-    <mcs-button icon="arrow" class="scale"
+    <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" class="scale"
       [disabled]="!hasUpdate" (click)="onClickScale()">
         {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
   </div>

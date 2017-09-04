@@ -33,7 +33,7 @@
               size="small" color="white"></mcs-icon>
             {{ textContent.navigation.dashboard }}</a>
         </li>-->
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" routerLinkActive="active" *mcsHasPermission="['VmAccess']">
           <a class="nav-link" [routerLink]="['/servers']"
           (click)="setTitle(textContent.servers.title)">
             <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"

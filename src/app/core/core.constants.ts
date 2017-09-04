@@ -12,6 +12,7 @@ import { McsFilterProvider } from './providers/mcs-filter.provider';
 import { McsAuthenticationIdentity } from './authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from './authentication/mcs-authentication.service';
 import { McsAuthenticationGuard } from './authentication/mcs-authentication.guard';
+import { McsRoutePermissionGuard } from './authentication/mcs-route-permission.guard';
 
 /**
  * Array coverage for the core modules
@@ -27,5 +28,6 @@ export const coreProviders: any[] = [
   McsFilterProvider,
   McsAuthenticationIdentity,
   McsAuthenticationService,
-  McsAuthenticationGuard
+  McsAuthenticationGuard,
+  McsRoutePermissionGuard
 ];

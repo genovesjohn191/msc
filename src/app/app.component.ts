@@ -5,7 +5,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-
+import { McsRoutePermissionGuard } from './core';
 /*
  * App Component
  * Top Level Component
@@ -19,7 +19,7 @@ import {
 
 export class AppComponent {
 
-  constructor() {
+  constructor(private _routePermissionGuard: McsRoutePermissionGuard) {
     // All implementation on the start should be added here
   }
 }

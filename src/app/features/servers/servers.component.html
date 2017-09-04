@@ -50,7 +50,7 @@
         <th *ngIf="columnSettings['vApp'].value" class="hidden-small text-center">
           {{ columnSettings['vApp'].text }}
         </th>
-        <th class="text-center">
+        <th class="text-center" *mcsHasPermission="['VmPowerStateEdit']">
           {{ serversTextContent.columnHeaders.action }}
         </th>
       </tr>
@@ -94,7 +94,7 @@
         <td *ngIf="columnSettings['vApp'].value" class="text-left align-middle hidden-small">
           {{ server.vAppName }}
         </td>
-        <td class="text-center align-middle">
+        <td class="text-center align-middle" *mcsHasPermission="['VmPowerStateEdit']">
           <mcs-server-command [command]="getActionStatus(server)"
             (onClick)="executeServerCommand(server, $event)"></mcs-server-command>
         </td>
