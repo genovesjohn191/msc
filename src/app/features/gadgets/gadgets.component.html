@@ -128,6 +128,8 @@
         <!-- Filter -->
         <input #filterUser placeholder="Filter users">
 
+        <mcs-search #search></mcs-search>
+
         <!-- Data source -->
         <mcs-table [dataSource]="dataSource">
           <!-- ID Column -->
@@ -144,7 +146,7 @@
 
           <!-- Name Column -->
           <ng-container mcsColumnDef="userName">
-            <mcs-header-cell *mcsHeaderCellDef> Name </mcs-header-cell>
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall"> Name </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row"
               class="text-center hidden-xsmall"> {{row.name}} </mcs-data-cell>
           </ng-container>

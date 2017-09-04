@@ -25,6 +25,7 @@ import { AlertComponent } from './alert/alert.component';
 import { WizardComponent } from './wizard/wizard.component';
 import { WizardStepComponent } from './wizard/wizard-step/wizard-step.component';
 import { PaginatorComponent } from './paginator/paginator.component';
+import { SearchComponent } from './search/search.component';
 /** Directives */
 import {
   HasPermissionDirective
@@ -44,7 +45,8 @@ import {
     WizardStepComponent,
     WizardComponent,
     PaginatorComponent,
-    HasPermissionDirective
+    HasPermissionDirective,
+    SearchComponent
   ],
   imports: [
     CommonModule,
@@ -72,6 +74,7 @@ import {
     WizardComponent,
     PaginatorComponent,
     HasPermissionDirective,
+    SearchComponent,
     CommonModule,
     RouterModule,
     FormsModule,
