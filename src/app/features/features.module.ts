@@ -6,6 +6,9 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
 import { PageNotFoundModule } from './page-not-found/page-not-found.module';
+import {
+  AccessDeniedPageModule
+} from './access-denied-page/access-denied-page.module';
 
 @NgModule({
   imports: [
@@ -15,7 +18,8 @@ import { PageNotFoundModule } from './page-not-found/page-not-found.module';
     CatalogModule,
     NotificationsModule,
     GadgetsModule,
-    PageNotFoundModule
+    PageNotFoundModule,
+    AccessDeniedPageModule
   ]
 })
 

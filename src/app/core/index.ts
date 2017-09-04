@@ -45,3 +45,4 @@ export * from './interfaces/mcs-modal.interface';
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';
 export * from './authentication/mcs-authentication.identity';
+export * from './authentication/mcs-route-permission.guard';

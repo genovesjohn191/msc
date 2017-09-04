@@ -8,6 +8,7 @@ import {
   gadgetsRoutes,
   dashboardRoutes,
   catalogRoutes,
+  accessDeniedPageRoutes,
   pageNotFoundRoutes
 } from '../../features';
 
@@ -23,6 +24,9 @@ export const routes: Routes = [
       ...gadgetsRoutes,
       ...dashboardRoutes,
       ...catalogRoutes,
+      ...accessDeniedPageRoutes,
+
+      // New routes must be added on top for pageNotFoundRoutes
       ...pageNotFoundRoutes
     ]
   }

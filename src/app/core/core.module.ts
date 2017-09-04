@@ -4,6 +4,7 @@ import {
   Optional,
   SkipSelf
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 /** Configuration */
 import { CoreConfig } from './core.config';
 /** Services/Providers */
@@ -12,7 +13,9 @@ import { coreProviders } from './core.constants';
 @NgModule({
   providers: [
     ...coreProviders
-  ]
+  ],
+  imports: [ RouterModule ],
+  exports: [ RouterModule ]
 })
 
 export class CoreModule {

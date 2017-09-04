@@ -1,0 +1,17 @@
+@import '../../../styles/shared/base';
+
+// Fonts
+$link-text-font: $base-font-bold;
+
+.access-denied-page-container {
+  margin: $space-xlarge 0;
+  text-align: center;
+
+  .heading {
+    margin-bottom: $space-large;
+  }
+
+  .link-text {
+    font-family: $link-text-font;
+  }
+}

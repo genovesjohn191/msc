@@ -180,6 +180,10 @@
     "heading": "Page not found",
     "linkText": "Click here to return to the Dashboard."
   },
+  "accessDeniedPage": {
+    "heading": "You don't have permission to access this page.",
+    "linkText": "Click here to return to the Dashboard."
+  },
   "header": {
     "userPanel": {
       "notifications": {

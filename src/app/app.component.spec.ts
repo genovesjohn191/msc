@@ -9,6 +9,8 @@ import {
 // Load the implementations that should be tested
 import { AppComponent } from './app.component';
 import { AppState } from './app.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { CoreTestingModule } from './core/testing';
 
 describe(`AppComponent`, () => {
   let component: AppComponent;
@@ -22,7 +24,11 @@ describe(`AppComponent`, () => {
         AppComponent
       ],
       providers: [
-        AppState
+        RouterTestingModule
+      ],
+      imports: [
+        CoreTestingModule,
+        RouterTestingModule
       ],
       schemas: [
         NO_ERRORS_SCHEMA
