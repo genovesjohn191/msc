@@ -27,8 +27,8 @@ import { WizardStepComponent } from './wizard/wizard-step/wizard-step.component'
 import { PaginatorComponent } from './paginator/paginator.component';
 /** Directives */
 import {
-  AuthenticationRolesDirective
-} from './authentication-roles/authentication-roles.directive';
+  HasPermissionDirective
+} from './authentication/has-permission.directive';
 
 @NgModule({
   declarations: [
@@ -44,7 +44,7 @@ import {
     WizardStepComponent,
     WizardComponent,
     PaginatorComponent,
-    AuthenticationRolesDirective
+    HasPermissionDirective
   ],
   imports: [
     CommonModule,
@@ -71,6 +71,7 @@ import {
     WizardStepComponent,
     WizardComponent,
     PaginatorComponent,
+    HasPermissionDirective,
     CommonModule,
     RouterModule,
     FormsModule,
