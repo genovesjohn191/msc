@@ -54,9 +54,9 @@ export class McsAuthenticationIdentity {
     return this._expiry;
   }
 
-  private _roles: string[];
-  public get roles(): string[] {
-    return this._roles;
+  private _permissions: string[];
+  public get permission(): string[] {
+    return this._permissions;
   }
 
   constructor(private _appState: AppState) {
@@ -77,7 +77,7 @@ export class McsAuthenticationIdentity {
     this._companyId = identity.companyId;
     this._companyName = identity.companyName;
     this._expiry = identity.expiry;
-    this._roles = identity.roles;
+    this._permissions = identity.permissions;
     this._changeIdentityStream.next(true);
   }
 }

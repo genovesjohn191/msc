@@ -6,5 +6,5 @@ export class McsApiIdentity {
   public companyId: string;
   public companyName: string;
   public expiry: Date;
-  public roles: string[];
+  public permissions: string[];
 }

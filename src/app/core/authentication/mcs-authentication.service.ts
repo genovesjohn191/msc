@@ -5,6 +5,8 @@ import {
   Params
 } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
+import { Observable } from 'rxjs/Rx';
+
 import { CoreDefinition } from '../core.definition';
 import { CoreConfig } from '../core.config';
 import { McsApiService } from '../services/mcs-api.service';
@@ -82,10 +84,11 @@ export class McsAuthenticationService {
    * This will set the token to Cookie and Appstate
    * @param authToken Valid Authentication Token
    */
-  public setAuthToken(authToken: string): void {
-    // Update cookie, appstate, and request for identity
+  public setAuthToken(authToken: string, expiration: Date): void {
+    // Update cookie
+    this._setCookie(authToken, expiration);
+    // Update app state
     this._appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, authToken);
-    this._requestForIdentity(authToken);
   }
 
   /**
@@ -118,6 +121,68 @@ export class McsAuthenticationService {
       .normalize(this._returnUrl));
   }
 
+  /**
+   * This will check if current user identity has all of the required permission
+   *
+   * Returns true if user has permission, and false if otherwise
+   * @param requiredPermissions list of required permissions
+   */
+  public hasPermission(requiredPermissions: string[]): boolean {
+    let hasPermission: boolean = false;
+    let identity: McsApiIdentity = this._appState.get(CoreDefinition.APPSTATE_AUTH_IDENTITY);
+
+    if (!isNullOrEmpty(identity) && !isNullOrEmpty(identity.permissions)) {
+      let permissions: string[] = identity.permissions;
+      hasPermission = true;
+
+      // Loop thru each required permissions
+      // making sure all of them are existing in the users permissions.
+      for (let value of requiredPermissions) {
+        if (permissions.indexOf(value) === -1) {
+          hasPermission = false;
+          break;
+        }
+      }
+    }
+
+    return hasPermission;
+  }
+
+  /**
+   * Tries to get user identity based on JWT to verify if user is authenticated
+   * Also updates the user identity in the app
+   *
+   * Returns true if user is authenticated, and false if otherwise
+   */
+  public IsAuthenticated(authToken: string): Observable<boolean> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/identity';
+    mcsApiRequestParameter.optionalHeaders.append(
+      CoreDefinition.HEADERS_AUTHORIZATION,
+      `${CoreDefinition.HEADERS_BEARER} ${authToken}`
+    );
+
+    return this._apiService.get(mcsApiRequestParameter)
+    .map((response) => {
+      let identityResponse: McsApiSuccessResponse<McsApiIdentity>;
+      identityResponse = JSON.parse(response.text(),
+        reviverParser) as McsApiSuccessResponse<McsApiIdentity>;
+
+      if (identityResponse && identityResponse.content) {
+        this._setUserIdentity(authToken, identityResponse.content);
+        return true;
+      }
+
+      return false;
+    });
+  }
+
+  private _setUserIdentity(authToken: string, identity: McsApiIdentity) {
+    this.setAuthToken(authToken, identity.expiry);
+    this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
+    this._authenticationIdentity.applyIdentity();
+  }
+
   private _removeBearer(url: string, queryParams: Params): string {
     let modifiedUrl: string;
     let token = queryParams[CoreDefinition.QUERY_PARAM_BEARER];
@@ -130,31 +195,6 @@ export class McsAuthenticationService {
       modifiedUrl = url;
     }
     return modifiedUrl;
-  }
-
-  private _requestForIdentity(authToken: string): void {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/identity';
-    mcsApiRequestParameter.optionalHeaders.append(
-      CoreDefinition.HEADERS_AUTHORIZATION,
-      `${CoreDefinition.HEADERS_BEARER} ${authToken}`
-    );
-
-    this._apiService.get(mcsApiRequestParameter)
-      .map((response) => {
-        let identityResponse: McsApiSuccessResponse<McsApiIdentity>;
-        identityResponse = JSON.parse(response.text(),
-          reviverParser) as McsApiSuccessResponse<McsApiIdentity>;
-
-        return identityResponse;
-      })
-      .subscribe((identity) => {
-        if (identity && identity.content) {
-          this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity.content);
-          this._authenticationIdentity.applyIdentity();
-          this._setCookie(authToken, this._authenticationIdentity.expiry);
-        }
-      });
   }
 
   private _setCookie(authentication: string, expiration: Date): void {

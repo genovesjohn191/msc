@@ -18,7 +18,7 @@
         (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
     </div>
 
-    <div class="server-select">
+    <div class="server-select" *mcsHasPermission="['VmEdit']">
       <mcs-button (onClick)="onClickNewServerButton($event)">{{ serversTextContent.newServer }}</mcs-button>
     </div>
   </div>
