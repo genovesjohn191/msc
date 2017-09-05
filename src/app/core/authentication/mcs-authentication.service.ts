@@ -61,12 +61,11 @@ export class McsAuthenticationService {
 
   /**
    * This will get the tokens from the following:
-   * 1. Tokens from the Appstate
-   * 2. Router Parameters for the bearer
-   * 3. Token from the Cookie
+   * 1. Router Parameters for the bearer (if provided)
+   * 2. Token from the Cookie
    * @param routeParams Router parameters for the bearer
    */
-  public getAuthToken(routeParams: Params): string {
+  public getAuthToken(routeParams?: Params): string {
     let authToken: string;
 
     // Return token from the bearer snapshots

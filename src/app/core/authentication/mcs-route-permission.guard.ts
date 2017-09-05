@@ -14,8 +14,8 @@ export class McsRoutePermissionGuard {
 
   /** This stores the permission required to access a base route. */
   private _routeRequiredPermissions: Map<string, string[]> = new Map([
-      ['/servers', ['VmAccess']]
-    ]);
+    ['/servers', ['VmAccess']]
+  ]);
 
   constructor(
     private _router: Router,
@@ -31,6 +31,23 @@ export class McsRoutePermissionGuard {
   }
 
   public onNavigateEnd(navStart: NavigationEnd) {
+    // This will check the token if its not expired.
+    // If the token is expired it will redirect automatic to login page
+    this._checkAuthToken();
+
+    // Ths will check the permission of the token/identity
+    this._checkPermissions(navStart);
+  }
+
+  private _checkAuthToken(): void {
+    // Get token if exist
+    let authToken = this._authenticationService.getAuthToken();
+    if (isNullOrEmpty(authToken)) {
+      this._authenticationService.logIn();
+    }
+  }
+
+  private _checkPermissions(navStart: NavigationEnd): void {
     // Get required permissions
     let requiredPermissions: string[] = this._getRouteRequiredPermission(navStart.url);
     if (isNullOrEmpty(requiredPermissions)) {
