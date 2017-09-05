@@ -227,6 +227,9 @@
     },
     "paginator": {
       "nextPage": "More"
+    },
+    "search": {
+      "placeholder": "Type to search..."
     }
   }
 }

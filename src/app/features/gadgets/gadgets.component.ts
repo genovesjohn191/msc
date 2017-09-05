@@ -79,8 +79,6 @@ export class GadgetsComponent implements OnInit {
   public displayedColumns = ['userId', 'userName', 'progress', 'color'];
   public gadgetsDatabase = new GadgetsDatabase();
   public dataSource: GadgetsDataSource | null;
-  @ViewChild('filterUser')
-  public filterUser: ElementRef;
 
   // Paginator
   @ViewChild('paginator')
