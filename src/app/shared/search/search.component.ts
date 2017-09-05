@@ -9,12 +9,12 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  Subject,
   BehaviorSubject
 } from 'rxjs/Rx';
 import {
   CoreDefinition,
-  McsSearch
+  McsSearch,
+  McsTextContentProvider
 } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 
@@ -27,26 +27,34 @@ import { isNullOrEmpty } from '../../utilities';
 
 export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
-  /** Search subscription */
-  public searchSubject: BehaviorSubject<string>;
-  public searchSubscription: any;
+  @Input()
+  public delay: number;
+  public textContent: any;
 
   /** Interface implementation */
   public keyword: string;
   public searchChangedStream: EventEmitter<any>;
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  /** Search subscription */
+  private _searchSubject: BehaviorSubject<string>;
+  private _searchSubscription: any;
+
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _textContentProvider: McsTextContentProvider
+  ) {
     this.keyword = '';
-    this.searchSubject = new BehaviorSubject<string>('');
+    this._searchSubject = new BehaviorSubject<string>('');
     this.searchChangedStream = new EventEmitter<any>();
   }
 
   public ngOnInit(): void {
+    this.textContent = this._textContentProvider.content.shared.search;
     // Register stream event for the filtering,
     // This will invoke once the previous keyword and new keyword is not the same
     // @ the given amount of time
-    this.searchSubscription = Observable.concat(this.searchSubject)
-      .debounceTime(CoreDefinition.SEARCH_TIME)
+    this._searchSubscription = Observable.concat(this._searchSubject)
+      .debounceTime(isNullOrEmpty(this.delay) ? CoreDefinition.SEARCH_TIME : this.delay)
       .distinctUntilChanged()
       .subscribe((searchTerm) => {
         this.keyword = searchTerm;
@@ -55,17 +63,18 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   }
 
   public ngOnDestroy(): void {
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe();
+    if (this._searchSubscription) {
+      this._searchSubscription.unsubscribe();
     }
   }
 
   public onChangeKeyEvent(key: any): void {
-    this.searchSubject.next(key);
+    this._searchSubject.next(key);
   }
 
   public onEnterKeyUpEvent(key: any): void {
-    this.searchSubject.next(key);
+    this.keyword = key;
+    this._onSearchChanged();
   }
 
   private _onSearchChanged() {
