@@ -11,12 +11,19 @@ import {
   McsTextContentProvider,
   McsApiJob
 } from '../../../../core';
-import { isNullOrEmpty } from '../../../../utilities';
+import {
+  isNullOrEmpty,
+  animateFactory,
+  refreshView
+} from '../../../../utilities';
 
 @Component({
   selector: 'mcs-provisioning-notifications',
   templateUrl: './provisioning-notifications.component.html',
-  styles: [require('./provisioning-notifications.component.scss')]
+  styles: [require('./provisioning-notifications.component.scss')],
+  animations: [
+    animateFactory({ duration: '500ms' })
+  ]
 })
 
 export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
@@ -25,6 +32,8 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
 
   public progressValue: number;
   public progressMax: number;
+  public progressbarAnimation: string;
+  public progressBarVisibility: boolean;
   public textContent: any;
 
   private _timerSubscription: any;
@@ -36,6 +45,8 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     this.progressValue = 0;
     this.progressMax = 0;
     this.jobs = new Array();
+    this.progressBarVisibility = true;
+    this.progressbarAnimation = 'fadeIn';
   }
 
   public get isMultiJobs(): boolean {
@@ -144,6 +155,8 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
             } else {
               this._endTimer(this.progressMax);
             }
+            // Remove progressbar when all the process are done
+            this._removeProgressbar();
 
           } else if (timeExceedsEstimate) {
             // Hold progress bar position to wait for other jobs to finished
@@ -152,6 +165,14 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  private _removeProgressbar(): void {
+    // Set the animation of the progress bar before removing it to actual DOM
+    this.progressbarAnimation = 'fadeOut';
+    refreshView(() => {
+      this.progressBarVisibility = false;
+    }, 500);
   }
 
   private _endTimer(progressValue: number): void {
