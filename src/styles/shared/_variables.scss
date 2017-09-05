@@ -113,8 +113,12 @@ $zindex-notifications: 1100;
 
 // Input
 $input-font: $base-font;
+$input-border-width: 1px;
+$input-border-style: solid;
 $input-border-color: $color-black;
+$input-border-color-focused: $color-primary-01;
 $input-text-color: $color-black;
+$input-placeholder-text-color: $color-grey-02;
 $input-background-color: $color-white;
 $input-border-radius: 5px;
 $input-padding: 10px 15px;

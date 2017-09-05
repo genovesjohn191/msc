@@ -66,7 +66,7 @@ describe('TextboxComponent', () => {
   describe('writeValue()', () => {
     it('should pass the value of textbox to text', () => {
       component.writeValue('Textbox Value');
-      expect(component.text).toEqual('Textbox Value');
+      expect(component.value).toEqual('Textbox Value');
     });
   });
 

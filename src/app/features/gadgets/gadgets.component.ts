@@ -20,7 +20,8 @@ import {
   McsList,
   McsListItem,
   McsPaginator,
-  McsModal
+  McsModal,
+  McsSearch
 } from '../../core';
 import { refreshView } from '../../utilities';
 import {
@@ -87,6 +88,9 @@ export class GadgetsComponent implements OnInit {
 
   @ViewChild('mcsModal1')
   public mcsModal1: McsModal;
+  // Search
+  @ViewChild('search')
+  public search: McsSearch;
 
   public constructor(
     private _route: ActivatedRoute,
@@ -150,14 +154,11 @@ export class GadgetsComponent implements OnInit {
   }
 
   public onInitTable() {
-    this.dataSource = new GadgetsDataSource(this.gadgetsDatabase, this.paginator);
-    Observable.fromEvent(this.filterUser.nativeElement, 'keyup')
-      .debounceTime(150)
-      .distinctUntilChanged()
-      .subscribe(() => {
-        if (!this.dataSource) { return; }
-        this.dataSource.filter = this.filterUser.nativeElement.value;
-      });
+    this.dataSource = new GadgetsDataSource(
+      this.gadgetsDatabase,
+      this.paginator,
+      this.search
+    );
   }
 
   public onInitListing() {

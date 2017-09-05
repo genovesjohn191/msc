@@ -4,7 +4,10 @@ import {
   Subject,
   BehaviorSubject
 } from 'rxjs/Rx';
-import { McsPaginator } from '../../core';
+import {
+  McsPaginator,
+  McsSearch
+} from '../../core';
 import {
   GadgetsDatabase,
   UserData
@@ -17,7 +20,8 @@ export class GadgetsDataSource implements McsDataSource<any> {
 
   constructor(
     private _exampleDatabase: GadgetsDatabase,
-    private _paginator: McsPaginator
+    private _paginator: McsPaginator,
+    private _search: McsSearch
   ) { }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
@@ -25,7 +29,7 @@ export class GadgetsDataSource implements McsDataSource<any> {
     const displayDataChanges = [
       this._exampleDatabase.dataChange,
       this._paginator.pageChangedStream,
-      this._filterChange,
+      this._search.searchChangedStream,
     ];
 
     return Observable.merge(...displayDataChanges)
@@ -38,7 +42,7 @@ export class GadgetsDataSource implements McsDataSource<any> {
         let actualData = pageData.splice(0, endIndex);
         return actualData.slice().filter((item: UserData) => {
           let searchStr = (item.name + item.color).toLowerCase();
-          return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
+          return searchStr.indexOf(this._search.keyword.toLowerCase()) !== -1;
         });
       });
   }

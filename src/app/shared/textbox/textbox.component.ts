@@ -88,13 +88,13 @@ export class TextboxComponent
   /**
    * Model Binding Property
    */
-  private _text: string;
-  public get text(): string {
-    return this._text;
+  private _value: string;
+  public get value(): string {
+    return this._value;
   }
-  public set text(value: string) {
-    if (value !== this._text) {
-      this._text = value;
+  public set value(value: string) {
+    if (value !== this._value) {
+      this._value = value;
       if (this._onChanged) {
         this._onChanged(value);
       }
@@ -138,7 +138,7 @@ export class TextboxComponent
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    this._text = value;
+    this._value = value;
   }
 
   /**
