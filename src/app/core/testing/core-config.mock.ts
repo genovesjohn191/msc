@@ -8,4 +8,8 @@ export class MockCoreConfig {
   public imageRoot: string = 'assets/img/';
 
   public iconRoot: string = 'assets/icon/';
+
+  public loginUrl: string = '#';
+
+  public logoutUrl: string = '#';
 }
