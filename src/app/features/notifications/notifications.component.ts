@@ -68,7 +68,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_SPINNER;
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public get arrowDownIconKey(): string {
@@ -241,7 +241,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     switch (status) {
       case CoreDefinition.NOTIFICATION_JOB_PENDING:
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        iconKey = CoreDefinition.ASSETS_FONT_SPINNER;
+        iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
         iconColor = 'black';
         break;
       case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:

@@ -62,7 +62,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public get loadingIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_SPINNER;
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public consoleVisible: boolean;

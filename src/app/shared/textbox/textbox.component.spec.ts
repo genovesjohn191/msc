@@ -73,7 +73,7 @@ describe('TextboxComponent', () => {
   describe('showLoader()', () => {
     it('should set the spinner icon key definition as the iconKey', () => {
       component.showLoader();
-      expect(component.iconKey).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+      expect(component.iconKey).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
     });
   });
 

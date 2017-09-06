@@ -83,7 +83,7 @@ export class ServerListPanelComponent implements OnInit, OnDestroy, AfterViewIni
   private _serversListDynamicHeight: number;
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_SPINNER;
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public get hasServers(): boolean {

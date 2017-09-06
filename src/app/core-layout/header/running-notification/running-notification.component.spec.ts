@@ -91,7 +91,7 @@ describe('RunningNotificationComponent', () => {
     });
 
     it('should set the font-spinner definition to iconStatusClass', () => {
-      expect(component.iconStatusKey).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+      expect(component.iconStatusKey).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
     });
 
     it('should not remove the notification',

@@ -70,7 +70,9 @@ export class GadgetsComponent implements OnInit {
   public showNextStep: boolean;
 
   // All Icons Variables
-  public icons: string[];
+  public gifIcons: string[];
+  public svgIcons: string[];
+  public fontIcons: string[];
 
   // Listing variables
   public listingSource: GadgetsListSource | null;
@@ -102,7 +104,9 @@ export class GadgetsComponent implements OnInit {
     this.showPreviousStep = true;
     this.showNextStep = true;
     this.showSecretStep = false;
-    this.icons = new Array();
+    this.gifIcons = new Array();
+    this.svgIcons = new Array();
+    this.fontIcons = new Array();
     this.textboxModel = {
       email: '',
       ipAddress: null,
@@ -165,19 +169,26 @@ export class GadgetsComponent implements OnInit {
 
   public getAllIcons(): void {
     let config = require('../../config/assets.config.json');
+    let gifIcons = config['gifIcons'];
     let svgIcons = config['svgIcons'];
     let fontIcons = config['fontIcons'];
+    let gifKeys = Object.keys(gifIcons);
     let svgKeys = Object.keys(svgIcons);
     let fontKeys = Object.keys(fontIcons);
 
+    // Add GIF Icons
+    for (let key of Object.keys(gifKeys)) {
+      this.gifIcons.push(gifKeys[key]);
+    }
+
     // Add SVG Icons
     for (let key of Object.keys(svgKeys)) {
-      this.icons.push(svgKeys[key]);
+      this.svgIcons.push(svgKeys[key]);
     }
 
     // Add Font Icons
     for (let key of Object.keys(fontKeys)) {
-      this.icons.push(fontKeys[key]);
+      this.fontIcons.push(fontKeys[key]);
     }
   }
 

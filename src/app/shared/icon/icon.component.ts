@@ -3,13 +3,10 @@ import {
   OnChanges,
   Input,
   ElementRef,
-  Renderer2,
-  ViewChild
+  Renderer2
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsAssetsProvider
-} from '../../core';
+import { CoreDefinition } from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 import {
   IconType,
   Icon,
@@ -48,12 +45,12 @@ export class IconComponent implements OnChanges {
   }
 
   public ngOnChanges() {
-    // Recreate Icon if it is already exist
-    this._recreateIcon();
-
     // Set Icon content and actual size
     this._setIconContent();
     this._setActualSize();
+
+    // Recreate Icon if it is already exist
+    this._recreateIcon();
 
     // Add Icon Styling
     this._setIconStyles();
@@ -65,7 +62,7 @@ export class IconComponent implements OnChanges {
 
     // In case of no icon found.::.
     // Display the no-image availabe icon
-    if (!this.icon) {
+    if (isNullOrEmpty(this.icon)) {
       this.icon = this._iconService.getIcon(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
     }
   }
@@ -115,6 +112,16 @@ export class IconComponent implements OnChanges {
           `${this._iconActualSize * 1.5}px`);
         break;
 
+      case IconType.Gif:
+        this._renderer.setAttribute(this.iconElement, 'src', this.icon.value);
+
+        // Set the size of the SVG element based on the height and width
+        this._renderer.setStyle(this.iconElement, 'width',
+          `${this._iconActualSize}px`);
+        this._renderer.setStyle(this.iconElement, 'height',
+          `${this._iconActualSize}px`);
+        break;
+
       case IconType.Svg:
       default:
         // Set the style to populate the background image of the SVG
@@ -143,7 +150,9 @@ export class IconComponent implements OnChanges {
     }
 
     // Create icon
-    this.iconElement = this._renderer.createElement('i');
+    this.iconElement = this.icon.type === IconType.Gif ?
+      this._renderer.createElement('img') :
+      this._renderer.createElement('i');
     this._renderer.appendChild(this._elementRef.nativeElement,
       this.iconElement);
   }

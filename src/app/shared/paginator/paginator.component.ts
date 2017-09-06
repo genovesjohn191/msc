@@ -77,7 +77,7 @@ export class PaginatorComponent implements McsPaginator {
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_SPINNER;
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public get arrowDownIconKey(): string {

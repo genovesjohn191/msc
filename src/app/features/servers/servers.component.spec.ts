@@ -82,7 +82,7 @@ describe('ServersComponent', () => {
     });
 
     it('shouldget the spinner icon key definition', () => {
-      expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+      expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
     });
 
     it('shouldget the arrow down icon key definition', () => {

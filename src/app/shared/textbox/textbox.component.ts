@@ -166,7 +166,7 @@ export class TextboxComponent
   }
 
   public showLoader(): void {
-    this.iconKey = CoreDefinition.ASSETS_FONT_SPINNER;
+    this.iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public hideLoader(): void {
