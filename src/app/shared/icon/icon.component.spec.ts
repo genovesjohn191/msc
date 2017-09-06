@@ -29,8 +29,15 @@ describe('IconComponent', () => {
 
     getSvgIconPath(key: string): string {
       let icons = {
-        'no-icon-available': 'no-icon-available.svg',
-        'close': 'close.svg'
+        'no-icon-available': 'assets/icon/no-icon-available.svg',
+        'close': 'assets/icon/close.svg'
+      };
+      return icons[key];
+    },
+
+    getGifIconPath(key: string): string {
+      let icons = {
+        spinner: 'assets/icon/spinner.gif',
       };
       return icons[key];
     }
@@ -276,6 +283,106 @@ describe('IconComponent', () => {
       let fontClassExist = component.iconElement
         .classList.contains('fa-warning');
       expect(fontClassExist).toBeTruthy();
+    });
+  });
+
+  describe('ngOnChanges() when icon type is GIF', () => {
+    beforeEach(async(() => {
+      component.icon.type = IconType.Gif;
+      component.key = 'spinner';
+    }));
+
+    it('should set xtra small size to the width and height', () => {
+      component.size = 'xsmall';
+      component.ngOnChanges();
+
+      expect(component.iconElement.style.width)
+        .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}px`);
+      expect(component.iconElement.style.height)
+        .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}px`);
+    });
+
+    it('should set small size to the width and height', () => {
+      component.size = 'small';
+      component.ngOnChanges();
+
+      expect(component.iconElement.style.width)
+        .toBe(`${CoreDefinition.ICON_SIZE_SMALL}px`);
+      expect(component.iconElement.style.height)
+        .toBe(`${CoreDefinition.ICON_SIZE_SMALL}px`);
+    });
+
+    it('should set medium size to the width and height', () => {
+      component.size = 'medium';
+      component.ngOnChanges();
+
+      expect(component.iconElement.style.width)
+        .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM}px`);
+      expect(component.iconElement.style.height)
+        .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM}px`);
+    });
+
+    it('should set large size to the width and height', () => {
+      component.size = 'large';
+      component.ngOnChanges();
+
+      expect(component.iconElement.style.width)
+        .toBe(`${CoreDefinition.ICON_SIZE_LARGE}px`);
+      expect(component.iconElement.style.height)
+        .toBe(`${CoreDefinition.ICON_SIZE_LARGE}px`);
+    });
+
+    it('should set xlarge size to the width and height', () => {
+      component.size = 'xlarge';
+      component.ngOnChanges();
+
+      expect(component.iconElement.style.width)
+        .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}px`);
+      expect(component.iconElement.style.height)
+        .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}px`);
+    });
+
+    it('should set the white class as color', () => {
+      component.color = 'white';
+      component.ngOnChanges();
+
+      let colorClassExist = component.iconElement
+        .classList.contains(component.color);
+      expect(colorClassExist).toBeTruthy();
+    });
+
+    it('should set the black class as color', () => {
+      component.color = 'black';
+      component.ngOnChanges();
+
+      let colorClassExist = component.iconElement
+        .classList.contains(component.color);
+      expect(colorClassExist).toBeTruthy();
+    });
+
+    it('should set the green class as color', () => {
+      component.color = 'green';
+      component.ngOnChanges();
+
+      let colorClassExist = component.iconElement
+        .classList.contains(component.color);
+      expect(colorClassExist).toBeTruthy();
+    });
+
+    it('should set the red class as color', () => {
+      component.color = 'red';
+      component.ngOnChanges();
+
+      let colorClassExist = component.iconElement
+        .classList.contains(component.color);
+      expect(colorClassExist).toBeTruthy();
+    });
+
+    it('should set the svg icon file as image source', () => {
+      component.key = 'spinner';
+      component.ngOnChanges();
+
+      expect(component.iconElement.hasAttribute('src')).toBeTruthy();
     });
   });
 });

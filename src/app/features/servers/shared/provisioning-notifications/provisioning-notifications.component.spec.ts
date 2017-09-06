@@ -171,7 +171,7 @@ describe('ProvisioningNotificationsComponent', () => {
     it(`should return the iconKey to spinner, iconColor to black, iconClass to active
     when the job status is active`, () => {
       let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_ACTIVE);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
       expect(jobStatus.color).toBe('black');
       expect(jobStatus.class).toBe('active');
     });
@@ -179,7 +179,7 @@ describe('ProvisioningNotificationsComponent', () => {
     it(`should return the iconKey to spinner, iconColor to black, iconClass to active
     when the job status is pending`, () => {
       let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_PENDING);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_SPINNER);
+      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
       expect(jobStatus.color).toBe('black');
       expect(jobStatus.class).toBe('active');
     });

@@ -21,13 +21,11 @@
     "chevron-down": "fa fa-angle-down",
     "chevron-up": "fa fa-angle-up",
     "gear": "fa fa-gear",
-    "text-spinner": "mcs-text-spinner",
-    "spinner": "fa fa-spinner fa-pulse",
     "sign-out": "fa fa-sign-out",
     "user": "fa fa-user-o",
     "info-2": "fa fa-info"
   },
-  "svgIcons":{
+  "svgIcons": {
     "no-icon-available": "no-icon-available.svg",
     "close-black": "close-black.svg",
     "close-blue": "close-blue.svg",
@@ -51,6 +49,9 @@
     "stop": "stop.svg",
     "user-white": "user-white.svg",
     "logout-white": "logout-white.svg"
+  },
+  "gifIcons": {
+    "spinner": "spinner.gif"
   },
   "images": {
     "header-logo": "cloud-services-header-logo.png",

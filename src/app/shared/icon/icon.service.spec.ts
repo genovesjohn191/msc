@@ -27,8 +27,15 @@ describe('IconService', () => {
 
     getSvgIconPath(key: string): string {
       let icons = {
-        'no-icon-available': 'no-icon-available.svg',
-        'close': 'close.svg'
+        'no-icon-available': 'assets/icon/no-icon-available.svg',
+        'close': 'assets/icon/close.svg'
+      };
+      return icons[key];
+    },
+
+    getGifIconPath(key: string): string {
+      let icons = {
+        spinner: 'assets/icon/spinner.gif',
       };
       return icons[key];
     }
@@ -72,7 +79,15 @@ describe('IconService', () => {
       let icon = iconService.getIcon(iconKey);
 
       expect(icon.type).toBe(IconType.Svg);
-      expect(icon.value).toBe('close.svg');
+      expect(icon.value).toBe('assets/icon/close.svg');
+    });
+
+    it('should get the icon from the gif list', () => {
+      let iconKey = 'spinner';
+      let icon = iconService.getIcon(iconKey);
+
+      expect(icon.type).toBe(IconType.Gif);
+      expect(icon.value).toBe('assets/icon/spinner.gif');
     });
   });
 });

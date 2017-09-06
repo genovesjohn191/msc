@@ -101,7 +101,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_SPINNER;
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public get hasNotifications(): boolean {

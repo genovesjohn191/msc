@@ -59,7 +59,7 @@ export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoa
   public mcsButtonIcon: ElementRef;
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_SPINNER;
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public constructor(private _renderer: Renderer2) {

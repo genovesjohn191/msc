@@ -6,18 +6,21 @@ import {
 /** Core Configuration */
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
+import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()
 export class McsAssetsProvider {
   private _images: Map<string, string>;
   private _fontIcons: Map<string, string>;
   private _svgIcons: Map<string, string>;
+  private _gifIcons: Map<string, string>;
   private _config: any;
 
   constructor(private _coreConfig: CoreConfig) {
     this._fontIcons = new Map<string, string>();
     this._svgIcons = new Map<string, string>();
     this._images = new Map<string, string>();
+    this._gifIcons = new Map<string, string>();
     this.load();
   }
 
@@ -53,11 +56,32 @@ export class McsAssetsProvider {
       value = this._svgIcons.get(key);
     } else {
       value = this._config.svgIcons[key];
+      value = isNullOrEmpty(value) ? value : `${this._coreConfig.iconRoot}/${value}`;
       this._svgIcons.set(key, value);
     }
 
     // Return value (SVG icon path)
-    return `${this._coreConfig.iconRoot}/${value}`;
+    return value;
+  }
+
+  /**
+   * Get GIF Icon Path from the given key
+   * @param key Icon Key
+   */
+  public getGifIconPath(key: string): string {
+    let value: string = null;
+
+    // Get icon path
+    if (this._gifIcons.has(key)) {
+      value = this._gifIcons.get(key);
+    } else {
+      value = this._config.gifIcons[key];
+      value = isNullOrEmpty(value) ? value : `${this._coreConfig.iconRoot}/${value}`;
+      this._gifIcons.set(key, value);
+    }
+
+    // Return value (GIF icon path)
+    return value;
   }
 
   /**

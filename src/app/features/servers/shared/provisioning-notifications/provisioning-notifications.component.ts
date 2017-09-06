@@ -93,7 +93,7 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     switch (status) {
       case CoreDefinition.NOTIFICATION_JOB_PENDING:
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        iconKey = CoreDefinition.ASSETS_FONT_SPINNER;
+        iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
         iconColor = 'black';
         iconClass = 'active';
         break;

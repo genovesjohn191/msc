@@ -65,6 +65,9 @@ export class CoreDefinition {
   public static ICON_SIZE_XLARGE = 30;
 
   /** Assets Provider Key Definitions */
+  // GIF Icons
+  public static ASSETS_GIF_SPINNER = 'spinner';
+
   // SVG Icons
   public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';
   public static ASSETS_SVG_CLOSE_BLACK = 'close-black';
@@ -82,7 +85,6 @@ export class CoreDefinition {
   public static ASSETS_SVG_ARROW_RIGHT_WHITE = 'arrow-right-white';
   public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
-  public static ASSETS_SVG_SPINNER = 'spinner';
   public static ASSETS_SVG_STORAGE = 'storage';
   public static ASSETS_SVG_KEYBOARD = 'keyboard';
   public static ASSETS_SVG_PLAY = 'play';
@@ -92,7 +94,6 @@ export class CoreDefinition {
   public static ASSETS_SVG_USER_WHITE = 'user-white';
 
   // Font Awesome Icons
-  public static ASSETS_FONT_ARROW_RIGHT = 'arrow-right'; // Make it SVG
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
   public static ASSETS_FONT_SEARCH = 'search';
   public static ASSETS_FONT_CHECK = 'check';
@@ -114,8 +115,6 @@ export class CoreDefinition {
   public static ASSETS_FONT_CHEVRON_DOWN = 'chevron-down';
   public static ASSETS_FONT_CHEVRON_UP = 'chevron-up';
   public static ASSETS_FONT_GEAR = 'gear';
-  public static ASSETS_FONT_TEXT_SPINNER = 'text-spinner'; // Make it SVG
-  public static ASSETS_FONT_SPINNER = 'spinner';
   public static ASSETS_FONT_SIGN_OUT = 'sign-out';
   public static ASSETS_FONT_USER = 'user';
   public static ASSETS_FONT_INFORMATION_2 = 'info-2';

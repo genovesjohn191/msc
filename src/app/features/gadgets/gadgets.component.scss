@@ -2,34 +2,26 @@
 
 .gadgets-container {
   position: relative;
-  padding: 0.5rem 1rem;
-}
+  @include set-items-interval($space-large);
 
-.gadgets-container-item {
-  margin: 20px 0px;
-  border-top: 1px dotted red;
-  > .title {
-    font-size: 16px;
-    font-style: italic;
-    line-height: 18px;
-  }
-
-  > .content {
-    padding-top: 10px;
-
-    .textbox-content {
-      max-width: 300px;
-      word-wrap: break-word;
+  .gadgets-container-item {
+    h3.title {
+      color: $color-red-00;
     }
+
+    box-shadow: 0 0 10px 2px rgba($color-black, 0.2);
+    padding: $space-medium;
   }
 }
 
+// Icons
 .all-icons {
   mcs-icon {
     padding: 10px;
   }
 }
 
+// Table
 .table-container {
   @include set-items-interval($space-medium);
 }

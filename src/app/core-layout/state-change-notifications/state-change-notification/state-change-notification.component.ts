@@ -121,7 +121,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
     switch (notification.status) {
       case CoreDefinition.NOTIFICATION_JOB_PENDING:
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        this.iconStatusKey = CoreDefinition.ASSETS_FONT_SPINNER;
+        this.iconStatusKey = CoreDefinition.ASSETS_GIF_SPINNER;
         this.iconStatusColor = 'black';
         break;
       case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:

@@ -6,7 +6,8 @@ import { McsAssetsProvider } from '../../core';
  */
 export enum IconType {
   FontAwesome = 0,
-  Svg = 1
+  Svg = 1,
+  Gif = 2
 }
 
 /**
@@ -38,6 +39,16 @@ export class IconService {
     // Find in the map first for fast searching in cached memory
     if (this._icons.has(key)) {
       icon = this._icons.get(key);
+    }
+
+    // Find the record in GIF
+    if (!icon) {
+      iconValue = this._assetsProvider.getGifIconPath(key);
+      if (iconValue) {
+        icon = {} as any;
+        icon.value = iconValue;
+        icon.type = IconType.Gif;
+      }
     }
 
     // Find the record in Font Awesome
