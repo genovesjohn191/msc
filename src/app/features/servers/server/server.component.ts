@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
 import {
   Router,
@@ -17,10 +18,15 @@ import {
 } from '../models';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsListPanelItem,
+  McsSearch
 } from '../../../core';
 import { ServersService } from '../servers.service';
 import { ServerService } from '../server/server.service';
+import { ServerListSource } from './server.listsource';
+
+const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 @Component({
   selector: 'mcs-server',
@@ -28,15 +34,24 @@ import { ServerService } from '../server/server.service';
   templateUrl: './server.component.html'
 })
 export class ServerComponent implements OnInit, OnDestroy {
+  @ViewChild('search')
+  public search: McsSearch;
+
   public servers: Server[];
   public server: Server;
   public activeServerSubscription: any;
   public selectedServerSubscription: any;
   public serverTextContent: any;
+  public serverListSource: ServerListSource | null;
+  public selectedListItem: McsListPanelItem;
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
     return this.server && this.server.serviceType === ServerServiceType.Managed;
+  }
+
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   constructor(
@@ -48,9 +63,15 @@ export class ServerComponent implements OnInit, OnDestroy {
   ) {
     this.servers = new Array<Server>();
     this.server = new Server();
+    this.selectedListItem = new McsListPanelItem();
   }
 
   public ngOnInit() {
+    this.serverListSource = new ServerListSource(
+      this._serversService,
+      this.search
+    );
+
     this.selectedServerSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
         this.server = server;
@@ -60,15 +81,18 @@ export class ServerComponent implements OnInit, OnDestroy {
       this.serverTextContent = this._textContentProvider.content.servers.server;
       this.servers = this._route.snapshot.data.servers.content;
       this.server = this._route.snapshot.data.server.content;
+      this.onServerSelect(this.server.id);
+      this.selectedListItem.itemId = this.server.id;
+      this.selectedListItem.groupName = (this.server.vdcName) ?
+        this.server.vdcName : SERVER_LIST_GROUP_OTHERS ;
     } else {
       this._router.navigate(['/page-not-found']);
     }
-
-    this._listenToActiveServers();
   }
 
   public onServerSelect(serverId: any) {
     if (serverId) {
+      this._router.navigate(['/servers', serverId]);
       this._serverService.setSelectedServer(serverId);
     }
   }
@@ -108,6 +132,38 @@ export class ServerComponent implements OnInit, OnDestroy {
     return status;
   }
 
+  public getStateIconKey(state: number): string {
+    let stateIconKey: string = '';
+
+    switch (state as ServerPowerState) {
+      case ServerPowerState.Unresolved:   // Red
+      case ServerPowerState.Deployed:
+      case ServerPowerState.Suspended:
+      case ServerPowerState.Unknown:
+      case ServerPowerState.Unrecognised:
+      case ServerPowerState.PoweredOff:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case ServerPowerState.Resolved:   // Amber
+      case ServerPowerState.WaitingForInput:
+      case ServerPowerState.InconsistentState:
+      case ServerPowerState.Mixed:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        break;
+
+      case ServerPowerState.PoweredOn:  // Green
+      default:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+    }
+    return stateIconKey;
+  }
+
+  public getActiveServerTooltip(serverId: any) {
+    return this._serversService.getActiveServerInformation(serverId);
+  }
+
   public ngOnDestroy() {
     if (this.selectedServerSubscription) {
       this.selectedServerSubscription.unsubscribe();
@@ -115,33 +171,5 @@ export class ServerComponent implements OnInit, OnDestroy {
     if (this.activeServerSubscription) {
       this.activeServerSubscription.unsubscribe();
     }
-  }
-
-  /**
-   * Listener to all the active servers for real time update of status
-   *
-   * `@Note`: This should be listen to the servers service since their powerstate
-   * status should be synchronise
-   */
-  private _listenToActiveServers(): void {
-    this.activeServerSubscription = this._serversService.activeServersStream
-      .subscribe((activeServers) => {
-        this._updateServerBasedOnActive(activeServers);
-      });
-  }
-
-  private _updateServerBasedOnActive(activeServers: ServerClientObject[]): void {
-    if (!activeServers || !this.servers) { return; }
-
-    // This will update the server list based on the active servers
-    activeServers.forEach((activeServer) => {
-      // Update server list
-      for (let server of this.servers) {
-        if (server.id === activeServer.serverId) {
-          server.powerState = this._serversService.getActiveServerPowerState(activeServer);
-          break;
-        }
-      }
-    });
   }
 }

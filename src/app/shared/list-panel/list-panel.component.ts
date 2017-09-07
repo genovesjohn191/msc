@@ -19,12 +19,17 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 /** Core / Utilities */
-import { McsDataSource } from '../../core';
+import {
+  McsDataSource,
+  McsListPanelItem
+} from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 /** List panel directives */
 import { ListItemsPlaceholderDirective } from './shared';
 import { ListDefDirective } from './list-definition';
 import { ListItemOutletDirective } from './list-item';
+/** List panel services */
+import { ListPanelService } from './list-panel.service';
 
 @Component({
   selector: 'mcs-list-panel',
@@ -36,6 +41,9 @@ import { ListItemOutletDirective } from './list-item';
 
 export class ListPanelComponent<T> implements OnInit, AfterContentInit,
   AfterContentChecked, OnDestroy {
+
+  @Input()
+  public selectedListItem: McsListPanelItem;
 
   /**
    * Trackby function to use wheater the data has been changed
@@ -80,16 +88,21 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
     private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
     private _elementRef: ElementRef,
-    private _differs: IterableDiffers
+    private _differs: IterableDiffers,
+    private _listPanelService: ListPanelService
   ) {
     this._data = [];
     this._dataMap = new Map<string, T[]>();
+    this.selectedListItem = new McsListPanelItem();
   }
 
   public ngOnInit() {
-    // Set role to grid
-    this._renderer.setAttribute(this._elementRef.nativeElement, 'role', 'grid');
     this._dataDiffer = this._differs.find([]).create(this._trackBy);
+    this._listPanelService.selectedItemChangedStream
+      .next({
+        itemId: this.selectedListItem.itemId,
+        groupName: this.selectedListItem.groupName
+      } as McsListPanelItem);
   }
 
   public ngAfterContentInit() {
@@ -141,6 +154,7 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
     let changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
 
+    this._listItemsPlaceholder.viewContainer.clear();
     this._dataMap.forEach((values: T[], key: string) => {
       this._insertListHeader(key);
       this._insertListItems(values);

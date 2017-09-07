@@ -1,10 +1,34 @@
 <section class="server-container">
   <div class="row">
     <div class="col-sm-4 hidden-medium">
-      <mcs-server-list-panel [serverListData]="servers"
-        [selectedServerId]="server.id"
-        (serverSelectChange)="onServerSelect($event)">
-      </mcs-server-list-panel>
+      <div class="server-list-panel" mcsListSticky>
+        <mcs-search #search mcsListSearchDef></mcs-search>
+        <mcs-list-panel mcsListPanelDef [dataSource]="serverListSource" 
+          [selectedListItem]="selectedListItem">
+          <ng-container mcsListDef>
+            <mcs-list-header *mcsListHeaderDef="let vdc; propertyName: 'vdcName';"
+              [groupName]="vdc">
+              <span>{{ vdc }}</span>
+            </mcs-list-header>
+            <mcs-list-item *mcsListItemDef="let server"
+              [itemId]="server.id" [groupName]="server.vdcName"
+              (click)="onServerSelect(server.id)">
+
+              <mcs-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"></mcs-icon>
+              <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
+                mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
+                [content]="loadingContent"></mcs-icon>
+              <ng-template #loadingContent>
+                <span class="loading-content-popover">
+                  {{ getActiveServerTooltip(server.id) }}
+                </span>
+              </ng-template>
+
+              <a>{{ server.name }}</a>
+            </mcs-list-item>
+          </ng-container>
+        </mcs-list-panel>
+      </div>
     </div>
 
     <div class="col-sm-8 server-features">
