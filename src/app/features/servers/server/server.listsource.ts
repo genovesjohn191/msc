@@ -7,6 +7,7 @@ import {
   McsSearch
 } from '../../../core';
 import {
+  Server,
   ServerList,
   ServerClientObject
 } from '../models';
