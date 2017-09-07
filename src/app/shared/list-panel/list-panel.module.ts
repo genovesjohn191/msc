@@ -2,9 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListPanelComponent } from './list-panel.component';
 import { ListPanelService } from './list-panel.service';
+/** List Sticky */
+import {
+  ListPanelDefDirective,
+  ListSearchDefDirective,
+  ListStickyDirective
+} from './list-sticky';
 /** List Definition */
 import { ListDefDirective } from './list-definition';
-/** List headers */
+/** List Headers */
 import {
   ListHeaderComponent,
   ListHeaderDefDirective
@@ -28,7 +34,10 @@ import { IconModule } from '../icon/icon.module';
     ListItemDefDirective,
     ListItemOutletDirective,
     ListHeaderDefDirective,
-    ListItemsPlaceholderDirective
+    ListItemsPlaceholderDirective,
+    ListPanelDefDirective,
+    ListSearchDefDirective,
+    ListStickyDirective
   ],
   imports: [
     CommonModule,
@@ -42,7 +51,10 @@ import { IconModule } from '../icon/icon.module';
     ListItemDefDirective,
     ListItemOutletDirective,
     ListHeaderDefDirective,
-    ListItemsPlaceholderDirective
+    ListItemsPlaceholderDirective,
+    ListPanelDefDirective,
+    ListSearchDefDirective,
+    ListStickyDirective
   ],
   providers: [
     ListPanelService

@@ -244,26 +244,27 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     let serverStorage = new ServerManageStorage();
     serverStorage.storageProfile = this.storageProfileValue;
 
-    // Set model data based on management type
-    switch (this.inputManageType) {
-      case ServerInputManageType.Custom:
-        serverStorage.storageMB = convertToMb(this.customStorageValue);
-        serverStorage.valid = this.formControlServerStorageCustom.valid;
-        break;
-
-      case ServerInputManageType.Slider:
-      default:
-        // TODO: Add isArrayChecking to common utilities
-        if (!isNullOrEmpty(this.storageSliderValues)) {
-          serverStorage.storageMB = convertToMb(this.storageSliderValues[this.storageSliderValue]);
-        } else {
-          serverStorage.storageMB = 0;
-        }
-        serverStorage.valid = true;
-        break;
-    }
-
     refreshView(() => {
+      // Set model data based on management type
+      switch (this.inputManageType) {
+        case ServerInputManageType.Custom:
+          serverStorage.storageMB = convertToMb(this.customStorageValue);
+          serverStorage.valid = this.formControlServerStorageCustom.valid;
+          break;
+
+        case ServerInputManageType.Slider:
+        default:
+          if (!isNullOrEmpty(this.storageSliderValues)) {
+            serverStorage.storageMB = convertToMb(
+              this.storageSliderValues[this.storageSliderValue]
+            );
+          } else {
+            serverStorage.storageMB = 0;
+          }
+          serverStorage.valid = true;
+          break;
+      }
+
       this.storageChanged.next(serverStorage);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }

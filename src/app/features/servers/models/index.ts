@@ -25,6 +25,7 @@ export * from './server-performance-scale';
 export * from './server-manage-storage';
 export * from './server-ip-address';
 export * from './server-create-self-managed';
+export * from './server-list';
 
 /** Enumerations */
 export * from './enumerations/server-command.enum';

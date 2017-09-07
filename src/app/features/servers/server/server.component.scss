@@ -1,6 +1,11 @@
 @import "../../../../styles/shared/base";
 
 $server-name-margin-top: 3px;
+$server-list-panel-spacing: $space-medium;
+
+.server-list-panel {
+  @include set-items-interval($server-list-panel-spacing, vertical);
+}
 
 .server-features {
   min-height: 100%;

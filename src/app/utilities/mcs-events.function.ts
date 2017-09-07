@@ -1,5 +1,5 @@
 
-type eventType = 'click' | 'mouseenter' | 'mouseleave' | 'touchstart';
+type eventType = 'click' | 'mouseenter' | 'mouseleave' | 'touchstart' | 'scroll';
 
 /**
  * This will register the event of the specific event type

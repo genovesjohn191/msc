@@ -25,7 +25,7 @@ export class TestListPanelComponent {
   }
 }
 
-describe('TableComponent', () => {
+describe('ListPanelComponent', () => {
 
   /** Stub Services/Components */
   let component: TestListPanelComponent;
