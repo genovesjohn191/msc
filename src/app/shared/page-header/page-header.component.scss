@@ -1,0 +1,28 @@
+@import "../../../styles/shared/base";
+
+$page-header-font-size: $font-size-default;
+$page-header-border-color: $color-grey-05;
+
+:host {
+  display: block;
+  @include font-size($page-header-font-size);
+  @include set-items-interval($space-medium);
+}
+
+.header-wrapper {
+  @include display-flex(row);
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $page-header-border-color;
+
+  * {
+    @include flex(0 1 auto);
+  }
+
+  h2 {
+    @include flex(0 1 0);
+    white-space: nowrap;
+    margin-bottom: 0px;
+    border-bottom: 5px solid $page-header-border-color;
+  }
+}

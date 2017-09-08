@@ -2,9 +2,10 @@ import { Observable } from 'rxjs/Rx';
 
 export interface McsDataSource<T> {
   /**
-   * This will invoke when the obtainment of data in the connect method is completed
+   * This will invoke when the obtainment of data in the connect method is completed,
+   * and provide the actual record obtained from the connection
    */
-  onCompletion(): void;
+  onCompletion(data?: T[]): void;
 
   /**
    * Connect the data to get the datasource

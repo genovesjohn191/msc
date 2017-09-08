@@ -56,7 +56,7 @@ export class PaginatorComponent implements McsPaginator {
     this._pageIndex = 0;
     this._pageSize = 0;
     this._totalCount = 0;
-    this.loading = false;
+    this.loading = true;
     this.pageChangedStream = new EventEmitter<any>();
     this.textContent = _textContentProvider.content.shared.paginator;
   }

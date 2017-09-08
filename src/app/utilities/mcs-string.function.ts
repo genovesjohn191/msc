@@ -35,3 +35,20 @@ export function replacePlaceholder(
   if (!fullString) { return undefined; }
   return fullString.replace(`{{${placeholderName}}}`, placeholderValue);
 }
+
+/**
+ * Converts the enumeration value to string equivalent
+ *
+ * `@Important:` Make sure your enumeration index started with 0.
+ * And also different enumeration value is not supported
+ * @param enumRef Reference type of the enumeration
+ * @param enumValue Value to be converted as string
+ */
+export function getEnumString<T>(enumRef: T, enumValue: any): string {
+  // Get the string equivalent of enumeration
+  // First half is the numerical values, while the second half are strings
+  let statusObjects = Object.keys(enumRef);
+  statusObjects = statusObjects.slice(statusObjects.length / 2);
+
+  return statusObjects ? statusObjects[(enumValue) as number] : '';
+}

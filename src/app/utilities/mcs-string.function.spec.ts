@@ -1,7 +1,8 @@
 import {
   getProperCase,
   getEncodedUrl,
-  replacePlaceholder
+  replacePlaceholder,
+  getEnumString
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -29,6 +30,17 @@ describe('STRING Functions', () => {
       let stringContent = 'hello {{name}}';
       let replacedString = replacePlaceholder(stringContent, 'name', 'arrian');
       expect(replacedString).toBe(stringContent.replace('{{name}}', 'arrian'));
+    });
+  });
+
+  describe('getEnumString()', () => {
+    it(`should convert the enumeration value to string`, () => {
+      enum TestEnum {
+        None = 0,
+        Success = 1
+      }
+      let stringEquivalent = getEnumString(TestEnum, TestEnum.Success);
+      expect(stringEquivalent).toBe('Success');
     });
   });
 });

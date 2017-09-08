@@ -1,0 +1,98 @@
+<!-- Page Header with title, subtitle (for total record), and description -->
+<mcs-page-header class="page-header-wrapper">
+  <mcs-page-title *mcsPageTitleDef>
+    {{ textContent.header }}
+  </mcs-page-title>
+  <mcs-page-subtitle *mcsPageSubTitleDef>
+    <span>{{ totalRecordCount }} {{ textContent.header }}</span>
+  </mcs-page-subtitle>
+  <mcs-page-description *mcsPageDescriptionDef>
+    {{ textContent.description }}
+  </mcs-page-description>
+</mcs-page-header>
+
+<!-- Table with filtering and pagination -->
+<div class="tickets-table-wrapper">
+  <!-- Search -->
+  <div class="search-wrapper">
+    <div class="search-filter-wrapper">
+      <mcs-search #search class="search"></mcs-search>
+      <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
+        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    </div>
+    <div class="new-ticket">
+      <mcs-button>
+        {{ textContent.newTicket }}
+      </mcs-button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <mcs-table [dataSource]="dataSource">
+    <ng-container mcsColumnDef="ticketId">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.ticketId.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        <a>{{ row.number }}</a>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="status">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.status.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        {{ getStatusString(row.state) }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- TODO: Set the headline based from the API -->
+    <ng-container mcsColumnDef="headline">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.headline.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+        {{ row.company }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="loggedBy">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.loggedBy.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.requestor }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="lastUpdatedDate">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.lastUpdatedDate.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ convertDateTimeToString(row.updatedOn) }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- TODO: Set the last updated by based from the API -->
+    <ng-container mcsColumnDef="lastUpdatedBy">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.lastUpdatedBy.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.requestor }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+  </mcs-table>
+
+  <!-- Paginator -->
+  <mcs-paginator #paginator
+    [totalCount]="totalRecordCount"
+    [pageIndex]="0"
+    [pageSize]="10">
+  </mcs-paginator>
+</div>

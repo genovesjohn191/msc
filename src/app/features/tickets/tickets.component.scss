@@ -1,0 +1,51 @@
+@import "../../../styles/shared/base";
+
+$tickets-search-min-width: 300px;
+
+.page-header-wrapper {
+  margin-bottom: $space-large;
+}
+
+.tickets-table-wrapper {
+  @include display-flex(column);
+  @include set-items-interval($space-large);
+
+  .search-wrapper {
+    @include display-flex(row);
+    align-items: center;
+
+    @include breakpoint(small) {
+      @include display-flex(column);
+      align-items: stretch;
+    }
+
+    .search-filter-wrapper {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: space-between;
+      @include set-items-interval($space-medium, horizontal);
+
+      @include breakpoint(medium) {
+        margin: 0;
+      }
+
+      .search {
+        min-width: $tickets-search-min-width;
+        @include breakpoint(medium) {
+          min-width: 100%;
+        }
+      }
+    }
+
+    .new-ticket {
+      margin-left: auto;
+      @include breakpoint(small) {
+        margin: 0;
+        mcs-button {
+          display: block;
+          min-width: 100%;
+        }
+      }
+    }
+  }
+}

@@ -12,6 +12,7 @@ import { IconModule } from './icon/icon.module';
 import { ValidationMessageModule } from './validation-message/validation-message.module';
 import { TableModule } from './table/table.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
+import { PageHeaderModule } from './page-header/page-header.module';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -58,7 +59,8 @@ import {
     IconModule,
     ValidationMessageModule,
     TableModule,
-    ListPanelModule
+    ListPanelModule,
+    PageHeaderModule
   ],
   exports: [
     ButtonComponent,
@@ -84,7 +86,8 @@ import {
     IconModule,
     ValidationMessageModule,
     TableModule,
-    ListPanelModule
+    ListPanelModule,
+    PageHeaderModule
   ]
 })
 

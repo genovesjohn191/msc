@@ -2,7 +2,7 @@
   <a class="icon-link" mcsPopover
     placement="bottom" orientation="right" theme="gray"
     [content]="filterSelectorContent"
-    (hidden)="onCloseFilterSelector()">
+    (onClose)="onCloseFilterSelector()">
     <mcs-icon [key]="columnsIconKey" size="xlarge"></mcs-icon>
   </a>
 
@@ -10,9 +10,11 @@
     <span class="mcs-popover-title">{{ filterTitle }}</span>
     <div class="mcs-popover-filters">
       <ul class="unstyled-list">
-        <li *ngFor="let key of filterKeys">
-          <mcs-checkbox [label]="filterItems[key].text"
-            [(ngModel)]="filterItems[key].value"></mcs-checkbox>
+        <li *ngFor="let key of filterKeys" [hidden]="filterItems[key].exclude">
+          <mcs-checkbox
+            [label]="filterItems[key].text"
+            [(ngModel)]="filterItems[key].value"
+            (change)="onNotifyGetFilters()"></mcs-checkbox>
         </li>
       </ul>
     </div>

@@ -1,5 +1,5 @@
 <div class="paginator-container">
-  <mcs-icon *ngIf="loading" [key]="spinnerIconKey" size="small"></mcs-icon>
+  <mcs-icon *ngIf="loading" [key]="spinnerIconKey" size="large"></mcs-icon>
   <a *ngIf="!loading && hasNextPage" (click)="nextPage()"> {{ textContent.nextPage }}
     <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
   </a>

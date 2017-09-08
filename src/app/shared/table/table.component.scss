@@ -35,6 +35,7 @@ mcs-table {
     text-align: center;
     background-color: $table-header-background-color;
     color: $table-header-font-color;
+    white-space: nowrap;
 
     mcs-header-cell {
       @extend %cell-style;
@@ -53,7 +54,7 @@ mcs-table {
 
   mcs-data-row {
     display: table-row;
-    text-align: left;
+    text-align: center;
 
     &:nth-of-type(even) {
       background-color: $table-data-even-background-color;

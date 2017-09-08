@@ -149,6 +149,12 @@
       }
     }
   },
+  "tickets": {
+    "title": "Macquarie Cloud Services: Tickets",
+    "header": "Tickets",
+    "description": "Below is the list of your Macquarie Cloud Services tickets.",
+    "newTicket": "New Ticket"
+  },
   "networking": {
     "title": "Macquarie Cloud Services: Networking"
   },

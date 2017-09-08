@@ -53,11 +53,15 @@ export class FilterSelectorComponent implements OnInit {
   public ngOnInit() {
     this.filterTitle = this._textContentProvider.content.filterSelector.title;
     this._getFilterItems();
-    this.onGetFilters.emit(this.filterItems);
+    this.onNotifyGetFilters();
   }
 
   public onCloseFilterSelector() {
     this._mcsStorageService.setItem(this.key, this.filterItems);
+    this.onNotifyGetFilters();
+  }
+
+  public onNotifyGetFilters(event?: any): void {
     this.onGetFilters.emit(this.filterItems);
   }
 
