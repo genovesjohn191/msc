@@ -5,12 +5,12 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'mcs-header-cell',
+  selector: 'mcs-page-subtitle',
   template: '<ng-content></ng-content>',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class HeaderCellComponent {
+export class PageSubTitleComponent {
 
   public constructor() {
     // Add Implementation here

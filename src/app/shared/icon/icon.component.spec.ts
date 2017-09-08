@@ -30,7 +30,7 @@ describe('IconComponent', () => {
     getSvgIconPath(key: string): string {
       let icons = {
         'no-icon-available': 'assets/icon/no-icon-available.svg',
-        'close': 'assets/icon/close.svg'
+        'close': 'assets/icon/close-black.svg'
       };
       return icons[key];
     },

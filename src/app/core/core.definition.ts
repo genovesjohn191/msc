@@ -119,6 +119,9 @@ export class CoreDefinition {
   public static ASSETS_FONT_USER = 'user';
   public static ASSETS_FONT_INFORMATION_2 = 'info-2';
 
+  /** Filter Selector */
+  public static FILTERSELECTOR_TICKET_LISTING = 'ticketsListingFilter';
+
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;

@@ -301,7 +301,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
       .subscribe((data) => {
         this._data = data;
         this._renderDataRows();
-        this._dataSource.onCompletion();
+        this._dataSource.onCompletion(data);
       });
   }
 }

@@ -60,5 +60,32 @@
       "text": "VDC",
       "value": true
     }
+  },
+  "ticketsListingFilter": {
+    "ticketId": {
+      "text": "ID",
+      "value": true
+    },
+    "status": {
+      "text": "Status",
+      "value": true
+    },
+    "headline": {
+      "text": "Headline",
+      "value": true,
+      "exclude": true
+    },
+    "loggedBy": {
+      "text": "Logged By",
+      "value": true
+    },
+    "lastUpdatedDate": {
+      "text": "Last Updated Date",
+      "value": true
+    },
+    "lastUpdatedBy": {
+      "text": "Last Updated By",
+      "value": true
+    }
   }
 }

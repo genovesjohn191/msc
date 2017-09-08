@@ -3,6 +3,7 @@ export * from './features.module';
 
 /** Contants */
 export * from './servers/servers.constants';
+export * from './tickets/tickets.constants';
 export * from './notifications/notifications.constants';
 export * from './networking/networking.constants';
 export * from './gadgets/gadgets.constants';

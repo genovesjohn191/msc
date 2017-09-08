@@ -119,7 +119,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         return previous.isEqual(next);
       })
       .switchMap((searchKey) => {
-        // Switch observable items to server list
+        // Switch observable items to notifications list
         return this._notificationsService.getNotifications(
           searchKey.page,
           searchKey.maxItemPerPage ?
