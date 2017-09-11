@@ -16,20 +16,30 @@ import {
   TrackByFunction,
   IterableChangeRecord,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  HostBinding
 } from '@angular/core';
 /** Core / Utilities */
 import {
   McsDataSource,
   McsListPanelItem
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  refreshView
+} from '../../utilities';
 /** List panel directives */
 import { ListItemsPlaceholderDirective } from './shared';
 import { ListDefDirective } from './list-definition';
 import { ListItemOutletDirective } from './list-item';
 /** List panel services */
 import { ListPanelService } from './list-panel.service';
+
+const NO_GROUP_ITEMS = 'no_group_items';
+const LIST_PANEL_CLASS = 'list-panel-wrapper';
+const LIST_HEADER_CLASS = 'list-header-wrapper';
+const LIST_ITEM_CLASS = 'list-item-wrapper';
+const LIST_NO_GROUP_CLASS = 'list-no-group-wrapper';
 
 @Component({
   selector: 'mcs-list-panel',
@@ -42,8 +52,39 @@ import { ListPanelService } from './list-panel.service';
 export class ListPanelComponent<T> implements OnInit, AfterContentInit,
   AfterContentChecked, OnDestroy {
 
+  @HostBinding('class')
+  public class = LIST_PANEL_CLASS;
+
+  /**
+   * A search mode flag that triggers when searching from the datasource
+   */
   @Input()
-  public selectedListItem: McsListPanelItem;
+  public get searchMode(): boolean {
+    return this._searchMode;
+  }
+  public set searchMode(value: boolean) {
+    if (this._searchMode !== value) {
+      this._searchMode = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _searchMode: boolean;
+
+  /**
+   * The selected list item from the datasource
+   */
+  @Input()
+  public get selectedListItem(): McsListPanelItem {
+    return this._selectedListItem;
+  }
+  public set selectedListItem(value: McsListPanelItem) {
+    if (this._selectedListItem !== value) {
+      this._selectedListItem = value;
+      this._listPanelService.selectItem(value);
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _selectedListItem: McsListPanelItem;
 
   /**
    * Trackby function to use wheater the data has been changed
@@ -93,16 +134,10 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
   ) {
     this._data = [];
     this._dataMap = new Map<string, T[]>();
-    this.selectedListItem = new McsListPanelItem();
   }
 
   public ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this._trackBy);
-    this._listPanelService.selectedItemChangedStream
-      .next({
-        itemId: this.selectedListItem.itemId,
-        groupName: this.selectedListItem.groupName
-      } as McsListPanelItem);
   }
 
   public ngAfterContentInit() {
@@ -156,21 +191,42 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
 
     this._listItemsPlaceholder.viewContainer.clear();
     this._dataMap.forEach((values: T[], key: string) => {
-      this._insertListHeader(key);
-      this._insertListItems(values);
+      if (key === NO_GROUP_ITEMS) {
+        this._insertListNoGroupItems(values);
+      } else {
+        this._insertListHeader(key);
+        this._insertListItems(values);
+      }
     });
     this._changeDetectorRef.markForCheck();
+
+    refreshView(() => {
+      this._reselectListItem();
+    });
   }
 
+  /**
+   * Insert the list header items in the header definition placeholder in sequence
+   * @param headerName Header name to be inserted
+   */
   private _insertListHeader(headerName: string): void {
     if (isNullOrEmpty(headerName)) { return; }
 
-    // Insert ItemGroup Record including its component
     let itemGroupDef = this._listDefinition.listHeaderDefinition;
     let view = this._listItemsPlaceholder.viewContainer
       .createEmbeddedView(itemGroupDef.template, { $implicit: headerName });
+
+    // Add class
+    if (!isNullOrEmpty(view)) {
+      this._renderer.addClass(view.rootNodes[0], LIST_HEADER_CLASS);
+    }
   }
 
+  /**
+   * Insert the list of items in the most recent outlet of the view
+   * based on the list item definition placeholder
+   * @param items Items to be inserted
+   */
   private _insertListItems(items: T[]): void {
     if (isNullOrEmpty(items)) { return; }
 
@@ -178,9 +234,45 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
     // on the most recent outlet of the view (mcs-list-item)
     let itemDef = this._listDefinition.listItemDefinition;
     items.forEach((context) => {
-      ListItemOutletDirective.mostRecentOutlet.viewContainer
+      let view = ListItemOutletDirective.mostRecentOutlet.viewContainer
         .createEmbeddedView(itemDef.template, { $implicit: context });
+
+      // Add class
+      if (!isNullOrEmpty(view)) {
+        this._renderer.addClass(view.rootNodes[0], LIST_ITEM_CLASS);
+      }
     });
+  }
+
+  /**
+   * Insert the list of no group items in the header placeholder to serve as
+   * main item instead of header
+   * @param items Items to be inserted
+   */
+  private _insertListNoGroupItems(items: T[]): void {
+    if (isNullOrEmpty(items)) { return; }
+
+    let noGroupDef = this._listDefinition.listItemDefinition;
+    items.forEach((context) => {
+      let view = this._listItemsPlaceholder.viewContainer
+        .createEmbeddedView(noGroupDef.template, { $implicit: context });
+
+      // Add class
+      if (!isNullOrEmpty(view)) {
+        this._renderer.addClass(view.rootNodes[0], LIST_NO_GROUP_CLASS);
+      }
+    });
+  }
+
+  /**
+   * This will reselect the list item to cover up the filtering of
+   * element based on the datasource
+   */
+  private _reselectListItem(): void {
+    if (!this.searchMode) {
+      this._listPanelService.selectItem(this._listPanelService.selectedItem);
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   /**
@@ -200,23 +292,38 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
 
   /**
    * This will create the list according to property name inputted in the header
+   *
+   * `@Note:` All unknown/undefined items are included as the last record in the map
    * @param items Items to finalize the data source
    */
   private _createListItemsMap(items: T[]): Map<string, T[]> {
     if (isNullOrEmpty(this._listDefinition)) { return; }
     let propertyName = this._listDefinition.listHeaderDefinition.propertyName;
     let temporaryMapList = new Map<string, T[]>();
+    let undefinedItems = new Array();
 
     items.forEach((item) => {
       // Always get the first index since we only use 1 filter object
       let itemKey = item[propertyName];
       let itemList = new Array();
+
+      // Check for undefined items and add to saved list
+      // to give way of the other items to prioritize
+      if (isNullOrEmpty(itemKey)) {
+        undefinedItems.push(item);
+        return;
+      }
+
       if (temporaryMapList.has(itemKey)) {
         itemList = temporaryMapList.get(itemKey);
       }
       itemList.push(item);
       temporaryMapList.set(itemKey, itemList);
     });
+
+    // Add the undefined items to set them as the last record
+    if (!isNullOrEmpty(items)) { temporaryMapList.set(NO_GROUP_ITEMS, undefinedItems); }
+
     return temporaryMapList;
   }
 }

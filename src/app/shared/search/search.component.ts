@@ -28,7 +28,7 @@ import { isNullOrEmpty } from '../../utilities';
 export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
   @Input()
-  public delay: number;
+  public delayInSeconds: number;
   public textContent: any;
 
   /** Interface implementation */
@@ -54,7 +54,8 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
     // This will invoke once the previous keyword and new keyword is not the same
     // @ the given amount of time
     this._searchSubscription = Observable.concat(this._searchSubject)
-      .debounceTime(isNullOrEmpty(this.delay) ? CoreDefinition.SEARCH_TIME : this.delay)
+      .debounceTime(isNullOrEmpty(this.delayInSeconds) ?
+        CoreDefinition.SEARCH_TIME : (this.delayInSeconds * 1000))
       .distinctUntilChanged()
       .subscribe((searchTerm) => {
         this.keyword = searchTerm;

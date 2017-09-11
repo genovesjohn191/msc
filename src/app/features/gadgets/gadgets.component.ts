@@ -76,6 +76,9 @@ export class GadgetsComponent implements OnInit {
 
   // Listing variables
   public listingSource: GadgetsListSource | null;
+  // Search
+  @ViewChild('listPanelSearch')
+  public listPanelSearch: McsSearch;
 
   // Table variables
   public displayedColumns = ['userId', 'userName', 'progress', 'color'];
@@ -164,7 +167,11 @@ export class GadgetsComponent implements OnInit {
   }
 
   public onInitListing() {
-    this.listingSource = new GadgetsListSource(this.gadgetsDatabase, this.paginator);
+    this.listingSource = new GadgetsListSource(
+      this.gadgetsDatabase,
+      this.paginator,
+      this.listPanelSearch
+    );
   }
 
   public getAllIcons(): void {
