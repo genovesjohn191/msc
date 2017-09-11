@@ -190,15 +190,24 @@
   <!-- List Panel -->
   <div class="gadgets-container-item">
     <h3 class="title">LIST PANEL</h3>
-    <mcs-list-panel [dataSource]="listingSource">
+    <mcs-search #listPanelSearch [delayInSeconds]="0" [style.width]="'300px'"></mcs-search>
+
+    <mcs-list-panel [dataSource]="listingSource"
+      [selectedListItem]="listingSource.selectedElement"
+      [searchMode]="listingSource.filterMode">
+
       <ng-container mcsListDef>
+        <!-- Header List Definition -->
         <mcs-list-header *mcsListHeaderDef="let propValue; propertyName: 'color';"
           [groupName]="propValue">
           <a >{{ propValue }}</a>
         </mcs-list-header>
+
+        <!-- Item List Definition -->
         <mcs-list-item *mcsListItemDef="let item"
           [itemId]="item.id" [groupName]="item.color">
-          <mcs-icon key="add-blue"></mcs-icon> {{ item.name }}
+          <mcs-icon key="add-blue"></mcs-icon>
+          <a>{{ item.name }}</a>
         </mcs-list-item>
       </ng-container>
     </mcs-list-panel>
@@ -208,7 +217,7 @@
   <div class="gadgets-container-item">
     <h3 class="title">TABLE</h3>
     <div class="table-container">
-      <mcs-search #search></mcs-search>
+      <mcs-search #search [style.width]="'300px'"></mcs-search>
 
       <mcs-table [dataSource]="dataSource">
         <ng-container mcsColumnDef="userId">
