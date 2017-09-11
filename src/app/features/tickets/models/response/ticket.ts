@@ -10,10 +10,12 @@ export class Ticket {
   public state: TicketStatus;
   public requestor: string;
   public company: string;
+  public shortDescription: string;
   public impact: string;
   public priority: TicketPriority;
   public slaDue: string;
   public serviceId: string[];
   public createdOn: Date;
+  public updatedBy: string;
   public updatedOn: Date;
 }
