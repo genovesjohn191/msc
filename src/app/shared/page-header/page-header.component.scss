@@ -17,10 +17,12 @@ $page-header-border-color: $color-grey-05;
 
   * {
     @include flex(0 1 auto);
+    white-space: nowrap;
   }
 
   h2 {
-    @include flex(0 1 0);
+    width: auto;
+    @include flex(0 1 auto);
     white-space: nowrap;
     margin-bottom: 0px;
     border-bottom: 5px solid $page-header-border-color;
