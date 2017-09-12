@@ -1,6 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
-  inject,
   async,
   TestBed,
   ComponentFixture
@@ -8,7 +6,6 @@ import {
 
 // Load the implementations that should be tested
 import { AppComponent } from './app.component';
-import { AppState } from './app.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CoreTestingModule } from './core/testing';
 
@@ -23,15 +20,9 @@ describe(`AppComponent`, () => {
       declarations: [
         AppComponent
       ],
-      providers: [
-        RouterTestingModule
-      ],
       imports: [
         CoreTestingModule,
         RouterTestingModule
-      ],
-      schemas: [
-        NO_ERRORS_SCHEMA
       ]
     });
 
@@ -40,6 +31,10 @@ describe(`AppComponent`, () => {
       set: {
         template: `
           <div>AppComponent Template</div>
+          <div id="preloader" #spinnerElement>
+            <!-- This is the content to show the spinner -->
+            <div></div>
+          </div>
         `
       }
     });
@@ -58,6 +53,24 @@ describe(`AppComponent`, () => {
     it(`should be readly initialized`, () => {
       expect(fixture).toBeDefined();
       expect(component).toBeDefined();
+    });
+  });
+
+  describe('ngOnInit()', () => {
+    it(`should defined the router subscription`, () => {
+      expect(component.routerSubscription).toBeDefined();
+    });
+
+    it(`should defined the spinner element`, () => {
+      expect(component.spinnerElement).toBeDefined();
+    });
+  });
+
+  describe('ngOnDestroy()', () => {
+    it(`should unsubscrie to the router subscription`, () => {
+      spyOn(component.routerSubscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.routerSubscription.unsubscribe).toHaveBeenCalledTimes(1);
     });
   });
 });

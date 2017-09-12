@@ -21,12 +21,17 @@
 
 <body>
 
+  <!-- Web Application Components -->
   <mcs-app>
-    Loading...
+    <div id="preloader">
+      <!-- This is the content to show the spinner -->
+      <div></div>
+    </div>
   </mcs-app>
 
+  <!-- TODO: Removed temporarily for CEO purposes -->
   <!-- Google Analytics: change UA-71073175-1 to be your site's ID -->
-  <script>
+  <!-- <script>
     (function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=r;A[l]=A[l]||function(){
     (A[l].q=A[l].q||[]).push(arguments)},A[l].l=1*new Date();a=n.createElement(g),
     r=n.getElementsByTagName(g)[0];a.async=1;a.src=u;r.parentNode.insertBefore(a,r)
@@ -34,7 +39,7 @@
 
     ga('create', 'UA-71073175-1', 'auto');
     ga('send', 'pageview');
-  </script>
+  </script> -->
 
   <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
   <!-- Webpack Dev Server reload -->
