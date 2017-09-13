@@ -18,7 +18,9 @@ import {
   NavigationStart,
   NavigationEnd,
   NavigationCancel,
-  NavigationError
+  NavigationError,
+  RouteConfigLoadStart,
+  RouteConfigLoadEnd
 } from '@angular/router';
 import { McsRoutePermissionGuard } from './core';
 import { animateFactory } from './utilities';
@@ -41,15 +43,30 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('spinnerElement')
   public spinnerElement: ElementRef;
 
-  public animation: string;
   public routerSubscription: any;
+  public isInitialDisplayed: boolean;
+
+  /**
+   * Pre loader animation will be applied then status is changed
+   */
+  private _animation: string;
+  public get animation(): string {
+    return this._animation;
+  }
+  public set animation(value: string) {
+    if (this._animation !== value) {
+      this._animation = value;
+    }
+  }
 
   constructor(
     private _router: Router,
     private _ngZone: NgZone,
     private _renderer: Renderer2,
     private _routePermissionGuard: McsRoutePermissionGuard
-  ) { }
+  ) {
+    this.isInitialDisplayed = true;
+  }
 
   public ngOnInit(): void {
     this._listenToRouterEvents();
@@ -85,6 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * outside angular that is not reflected in the DOM
    */
   private _showLoader(): void {
+    if (!this.isInitialDisplayed) { return; }
     this._ngZone.runOutsideAngular(() => {
       this.animation = 'fadeIn';
     });
@@ -97,6 +115,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * outside angular that is not reflected in the DOM
    */
   private _hideLoader(): void {
+    this.isInitialDisplayed = false;
     this._ngZone.runOutsideAngular(() => {
       this.animation = 'fadeOut';
     });
