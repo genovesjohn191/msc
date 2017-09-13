@@ -42,14 +42,6 @@ module.exports = {
       href: '/assets/icon/icon-normal.png'
     },
 
-    /** <link> tags for favicons **/
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '32x32',
-      href: '/assets/icon/favicon.ico'
-    },
-
     /** <link> tags for a Web App Manifest (for android) **/
     {
       rel: 'manifest',
