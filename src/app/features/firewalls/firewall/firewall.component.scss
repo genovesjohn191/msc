@@ -1,0 +1,33 @@
+@import "../../../../styles/shared/base";
+
+$firewall-name-margin-top: 3px;
+$firewall-list-panel-spacing: $space-medium;
+
+.firewall-list-panel {
+  @include set-items-interval($firewall-list-panel-spacing, vertical);
+}
+
+.firewall-details {
+  min-height: 100%;
+  @include breakpoint(medium) {
+    @include flex(0 0 100%);
+    max-width: 100%;
+  }
+
+  .firewall-name {
+    margin-top: $firewall-name-margin-top;
+    margin-bottom: $space-medium;
+  }
+
+  .mcs-tabs {
+    .nav-tabs {
+      align-items: center;
+
+      .action-cog {
+        margin-left: auto;
+        margin-right: $space-xsmall;
+        padding-bottom: $space-xsmall;
+      }
+    }
+  }
+}

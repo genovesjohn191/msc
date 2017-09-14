@@ -7,9 +7,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
 import { PageNotFoundModule } from './page-not-found/page-not-found.module';
-import {
-  AccessDeniedPageModule
-} from './access-denied-page/access-denied-page.module';
+import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.module';
+import { FirewallsModule } from './firewalls/firewalls.module';
 
 @NgModule({
   imports: [
@@ -21,7 +20,8 @@ import {
     NotificationsModule,
     GadgetsModule,
     PageNotFoundModule,
-    AccessDeniedPageModule
+    AccessDeniedPageModule,
+    FirewallsModule
   ]
 })
 

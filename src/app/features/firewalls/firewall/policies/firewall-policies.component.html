@@ -1,0 +1,200 @@
+<!-- Table with filtering and pagination -->
+<div [hidden]="isViewMode" class="firewall-policies-table-wrapper">
+  <!-- Search -->
+  <div class="search-wrapper">
+    <div class="search-filter-wrapper">
+      <mcs-search #search class="search"></mcs-search>
+      <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
+        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    </div>
+    <div class="total-policies">
+      <span>{{ totalRecordCount }} {{ firewallPoliciesTextContent.label }}</span>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <mcs-table [dataSource]="dataSource">
+    <ng-container mcsColumnDef="sequence">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.sequence.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        <span>{{ row.objectSequence }}</span>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="sourceInterface">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.sourceInterface.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+        <ul class="unstyled-list">
+          <li *ngFor="let sourceInterface of row.sourceInterface">
+            <span>{{ sourceInterface }}</span>
+          </li>
+        </ul>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="destinationInterface">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.destinationInterface.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+        <ul class="unstyled-list">
+          <li *ngFor="let destinationInterface of row.destinationInterfaces">
+            <span>{{ destinationInterface }}</span>
+          </li>
+        </ul>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="source">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.source.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
+        <ul class="unstyled-list">
+          <li *ngFor="let source of row.sourceAddresses">
+            <span>{{ source }}</span>
+          </li>
+        </ul>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="destination">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.destination.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
+        <ul class="unstyled-list">
+          <li *ngFor="let destination of row.destinationAddresses">
+            <span>{{ destination }}</span>
+          </li>
+        </ul>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="schedule">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.schedule.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
+        <ul class="unstyled-list">
+          <li *ngFor="let schedule of row.schedule">
+            <span>{{ schedule }}</span>
+          </li>
+        </ul>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="service">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.service.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
+        <ul class="unstyled-list">
+          <li *ngFor="let service of row.service">
+            <span>{{ service }}</span>
+          </li>
+        </ul>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="action">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.action.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        <span>{{ getActionEnumString(row.action) }}</span>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="details">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.details.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="details hidden-small">
+        <mcs-icon [key]="infoIconKey" size="xlarge" (click)="showFirewallPolicyDetails(row)"></mcs-icon>
+      </mcs-data-cell>
+    </ng-container>
+
+    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+  </mcs-table>
+
+  <!-- Paginator -->
+  <mcs-paginator #paginator
+    [totalCount]="totalRecordCount"
+    [pageIndex]="0"
+    [pageSize]="10">
+  </mcs-paginator>
+</div>
+
+<div [hidden]="!isViewMode" class="firewall-policy-details-wrapper">
+  <div class="details">
+    <div class="heading">
+      <h2>{{ firewallPolicyTitle }}</h2>
+      <div class="close-button">
+        <mcs-icon [key]="closeIconKey" size="large" (click)="hideFirewallPolicyDetails()"></mcs-icon>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col source">
+        <h3>{{ firewallPolicyTextContent.source }}</h3>
+        <div class="source-addresses">
+          <span>{{ firewallPolicyTextContent.address }} : </span>
+          <ul class="unstyled-list details-listing">
+            <li *ngFor="let sourceAddress of selectedFirewallPolicy.sourceAddresses">
+              <span>{{ sourceAddress }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="source-interfaces">
+          <span>{{ firewallPolicyTextContent.interface }} : </span>
+          <ul class="unstyled-list details-listing">
+            <li *ngFor="let sourceInterface of selectedFirewallPolicy.sourceInterface">
+              <span>{{ sourceInterface }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col destination">
+        <h3>{{ firewallPolicyTextContent.destination }}</h3>
+        <div class="destination-addresses">
+          <span>{{ firewallPolicyTextContent.address }} : </span>
+          <ul class="unstyled-list details-listing">
+            <li *ngFor="let destinationAddress of selectedFirewallPolicy.destinationAddresses">
+              <span>{{ destinationAddress }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="destination-interfaces">
+          <span>{{ firewallPolicyTextContent.interface }} : </span>
+          <ul class="unstyled-list details-listing">
+            <li *ngFor="let destinationInterface of selectedFirewallPolicy.destinationInterfaces">
+              <span>{{ destinationInterface }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h3>{{ firewallPolicyTextContent.details }}</h3>
+        <ul class="unstyled-list">
+          <li class="service">
+            <span>{{ firewallPolicyTextContent.service }} : </span>
+            <span>{{ selectedFirewallPolicy.service }}</span>
+          </li>
+          <li class="action">
+            <span>{{ firewallPolicyTextContent.action }} : </span>
+            <span>{{ getActionEnumString(selectedFirewallPolicy.action) }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

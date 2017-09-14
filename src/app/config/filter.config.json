@@ -87,5 +87,48 @@
       "text": "Last Updated By",
       "value": true
     }
-  }
+  },
+  "firewallPoliciesListingFilter": {
+    "sequence": {
+      "text": "Sequence",
+      "value": true,
+      "exclude": true
+    },
+    "sourceInterface": {
+      "text": "Source Interface",
+      "value": true,
+      "exclude": true
+    },
+    "destinationInterface": {
+      "text": "Destination Interface",
+      "value": true,
+      "exclude": true
+    },
+    "source": {
+      "text": "Source",
+      "value": true
+    },
+    "destination": {
+      "text": "Destination",
+      "value": true
+    },
+    "schedule": {
+      "text": "Schedule",
+      "value": true
+    },
+    "service": {
+      "text": "Service",
+      "value": true
+    },
+    "action": {
+      "text": "Action",
+      "value": true,
+      "exclude": true
+    },
+    "details": {
+      "text": "Details",
+      "value": true,
+      "exclude": true
+    }
+  } 
 }

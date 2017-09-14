@@ -4,7 +4,8 @@ import {
 } from 'rxjs/Rx';
 import {
   McsDataSource,
-  McsSearch
+  McsSearch,
+  McsListPanelItem
 } from '../../../core';
 import {
   Server,
@@ -22,6 +23,22 @@ export class ServerListSource implements McsDataSource<ServerList> {
   private _serverListStream: BehaviorSubject<ServerList[]> = new BehaviorSubject<ServerList[]>([]);
   private _serverList: ServerList[];
 
+  private _searchMode: boolean;
+  public get searchMode(): boolean {
+    return this._searchMode;
+  }
+  public set searchMode(value: boolean) {
+    this._searchMode = value;
+  }
+
+  private _selectedElement: McsListPanelItem;
+  public get selectedElement(): McsListPanelItem {
+    return this._selectedElement;
+  }
+  public set selectedElement(value: McsListPanelItem) {
+    this._selectedElement = value;
+  }
+
   constructor(
     private _serversService: ServersService,
     private _search: McsSearch
@@ -33,6 +50,7 @@ export class ServerListSource implements McsDataSource<ServerList> {
       });
 
     this._listenToActiveServers();
+    this._searchMode = false;
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
@@ -45,6 +63,7 @@ export class ServerListSource implements McsDataSource<ServerList> {
     return Observable.merge(...displayDataChanges)
       .map(() => {
         let serverList = new Array<ServerList>();
+        this._searchMode = (this._search.keyword) ? true : false ;
 
         if (!isNullOrEmpty(this._serverList)) {
           serverList = this._serverList.slice().filter((server: ServerList) => {

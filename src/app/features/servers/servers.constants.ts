@@ -17,9 +17,6 @@ import {
   ServerStorageComponent
 } from './server';
 import { CreateSelfManagedServersComponent } from './self-managed-server';
-import {
-  ProvisioningNotificationsComponent
-} from './provisioning-notifications/provisioning-notifications.component';
 
 /**
  * List of services for the main module
