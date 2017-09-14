@@ -37,13 +37,11 @@ export class ServerComponent implements OnInit, OnDestroy {
   @ViewChild('search')
   public search: McsSearch;
 
-  public servers: Server[];
   public server: Server;
   public activeServerSubscription: any;
   public selectedServerSubscription: any;
   public serverTextContent: any;
   public serverListSource: ServerListSource | null;
-  public selectedListItem: McsListPanelItem;
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
@@ -61,9 +59,7 @@ export class ServerComponent implements OnInit, OnDestroy {
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider
   ) {
-    this.servers = new Array<Server>();
     this.server = new Server();
-    this.selectedListItem = new McsListPanelItem();
   }
 
   public ngOnInit() {
@@ -77,13 +73,13 @@ export class ServerComponent implements OnInit, OnDestroy {
         this.server = server;
       });
 
-    if (this._route.snapshot.data.servers.content && this._route.snapshot.data.server.content) {
+    if (this._route.snapshot.data.server.content) {
       this.serverTextContent = this._textContentProvider.content.servers.server;
-      this.servers = this._route.snapshot.data.servers.content;
       this.server = this._route.snapshot.data.server.content;
       this.onServerSelect(this.server.id);
-      this.selectedListItem.itemId = this.server.id;
-      this.selectedListItem.groupName = (this.server.vdcName) ?
+      this.serverListSource.selectedElement = new McsListPanelItem();
+      this.serverListSource.selectedElement.itemId = this.server.id;
+      this.serverListSource.selectedElement.groupName = (this.server.vdcName) ?
         this.server.vdcName : SERVER_LIST_GROUP_OTHERS ;
     } else {
       this._router.navigate(['/page-not-found']);

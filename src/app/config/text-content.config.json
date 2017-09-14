@@ -155,6 +155,44 @@
     "description": "Below is the list of your Macquarie Cloud Services tickets.",
     "newTicket": "New Ticket"
   },
+  "firewalls": {
+    "firewall": {
+      "overview": {
+        "label": "Overview",
+        "properties": {
+          "title": "Firewall Properties",
+          "model": "Model",
+          "mode": "Mode"
+        },
+        "supportIdentifiers": {
+          "title": "Support Identifiers",
+          "service": "Service",
+          "serial": "Serial",
+          "haGroupName": "HA Group Name"
+        },
+        "resources": {
+          "title": "Resources",
+          "cpu": "CPU",
+          "ram": "RAM",
+          "cpuUnit": "CPU",
+          "ramUnit": "GB"
+        }
+      },
+      "policies": {
+        "label": "Policies",
+        "policy": {
+          "title": "Policy: Seq {{sequence}}",
+          "source": "Source",
+          "destination": "Destination",
+          "address": "Address",
+          "interface": "Interface",
+          "details": "Details",
+          "service": "Service",
+          "action": "Action"
+        }
+      }
+    }
+  },
   "networking": {
     "title": "Macquarie Cloud Services: Networking"
   },

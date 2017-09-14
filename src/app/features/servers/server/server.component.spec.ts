@@ -111,10 +111,6 @@ describe('ServerComponent', () => {
       expect(serverService.selectedServerStream.subscribe).toHaveBeenCalled();
     });
 
-    it('should get the servers from activated route snapshot data', () => {
-      expect(component.servers).toBeDefined();
-    });
-
     it('should get the selected server details from activated route snapshot data', () => {
       expect(component.server).toBeDefined();
     });

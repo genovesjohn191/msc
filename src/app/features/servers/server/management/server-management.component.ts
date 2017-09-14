@@ -33,7 +33,8 @@ import {
   animateFactory,
   refreshView,
   getElementStyle,
-  appendUnitSuffix
+  appendUnitSuffix,
+  isNullOrEmpty
 } from '../../../../utilities';
 import { Observable } from 'rxjs/Rx';
 import { ServerService } from '../server.service';
@@ -106,11 +107,11 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public get hasStorage(): boolean {
-    return this.server.fileSystem && this.server.fileSystem.length > 0;
+    return !isNullOrEmpty(this.server.fileSystem);
   }
 
   public get hasMedia(): boolean {
-    return this.server.media && this.server.media.length < 0;
+    return !isNullOrEmpty(this.server.media);
   }
 
   public get hasUpdate(): boolean {
@@ -137,6 +138,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.platformData = new ServerPlatform();
     this.resource = new ServerResource();
     this.serviceType = ServerServiceType.SelfManaged;
+    this.primaryVolume = '';
+    this.secondaryVolumes = '';
   }
 
   public ngOnInit() {
@@ -155,6 +158,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
           if (this.hasStorage) {
             this.primaryVolume = appendUnitSuffix(this.server.fileSystem[0].capacityGB, 'gigabyte');
             this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
+          } else {
+            this.primaryVolume = '';
+            this.secondaryVolumes = '';
           }
           this._getServerThumbnail();
 

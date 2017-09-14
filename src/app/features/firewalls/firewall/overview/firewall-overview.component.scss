@@ -1,0 +1,9 @@
+@import "../../../../../styles/shared/base";
+
+$firewall-details-row-spacing: 50px;
+
+.firewall-overview-container {
+  .overview {
+    @include set-items-interval($firewall-details-row-spacing, vertical);
+  }
+}

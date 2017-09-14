@@ -48,7 +48,8 @@
     "restart": "restart.svg",
     "stop": "stop.svg",
     "user-white": "user-white.svg",
-    "logout-white": "logout-white.svg"
+    "logout-white": "logout-white.svg",
+    "circle-info-black": "circle-info-black.svg"
   },
   "gifIcons": {
     "spinner": "spinner.gif"

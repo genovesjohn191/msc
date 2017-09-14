@@ -1,0 +1,66 @@
+@import "../../../../../styles/shared/base";
+
+.firewall-policies-table-wrapper {
+  @include set-items-interval($space-medium);
+
+  .search-wrapper {
+    @include display-flex(row);
+    align-items: center;
+
+    @include breakpoint(small) {
+      @include display-flex(column);
+      align-items: stretch;
+    }
+
+    .search-filter-wrapper {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: space-between;
+      @include set-items-interval($space-medium, horizontal);
+
+      @include breakpoint(medium) {
+        margin: 0;
+      }
+    }
+
+    .total-policies {
+      margin-left: auto;
+      @include breakpoint(small) {
+        margin: 0;
+      }
+    }
+  }
+
+  .details {
+    mcs-icon {
+      cursor: pointer;
+    }
+  }
+}
+
+.firewall-policy-details-wrapper {
+  .details {
+    @include set-items-interval($space-medium);
+
+    .heading {
+      @include display-flex(row);
+      align-items: center;
+
+      h2 {
+        margin-bottom: 0;
+      }
+
+      .close-button {
+        margin-left: auto;
+        mcs-icon {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .details-listing {
+      padding-left: $space-small;
+      margin-bottom: $space-small;
+    }
+  }
+}

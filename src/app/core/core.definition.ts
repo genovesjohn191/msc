@@ -92,6 +92,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_STOP = 'stop';
   public static ASSETS_SVG_LOGOUT_WHITE = 'logout-white';
   public static ASSETS_SVG_USER_WHITE = 'user-white';
+  public static ASSETS_SVG_CIRCLE_INFO_BLACK = 'circle-info-black';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
@@ -121,6 +122,7 @@ export class CoreDefinition {
 
   /** Filter Selector */
   public static FILTERSELECTOR_TICKET_LISTING = 'ticketsListingFilter';
+  public static FILTERSELECTOR_FIREWALL_POLICIES_LISTING = 'firewallPoliciesListingFilter';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

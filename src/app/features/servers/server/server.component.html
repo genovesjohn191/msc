@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-sm-4 hidden-medium">
       <div class="server-list-panel" mcsListSticky>
-        <mcs-search #search mcsListSearchDef></mcs-search>
+        <mcs-search #search [delayInSeconds]="0" mcsListSearchDef></mcs-search>
         <mcs-list-panel mcsListPanelDef [dataSource]="serverListSource" 
-          [selectedListItem]="selectedListItem">
+          [selectedListItem]="serverListSource.selectedElement" [searchMode]="serverListSource.searchMode">
           <ng-container mcsListDef>
             <mcs-list-header *mcsListHeaderDef="let vdc; propertyName: 'vdcName';"
               [groupName]="vdc">
