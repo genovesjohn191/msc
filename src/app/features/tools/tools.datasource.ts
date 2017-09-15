@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs/Rx';
 import { McsDataSource } from '../../core';
 import { Portal } from './portal';
-import { PortalsService } from './portals.service';
+import { ToolsService } from './tools.service';
 
-export class PortalsDataSource implements McsDataSource<Portal> {
+export class ToolsDataSource implements McsDataSource<Portal> {
   /**
    * It will populate the data when the obtainment is completed
    */
@@ -16,7 +16,7 @@ export class PortalsDataSource implements McsDataSource<Portal> {
   }
 
   constructor(
-    private _portalsService: PortalsService
+    private _toolsService: ToolsService
   ) {
     this._totalRecordCount = 0;
   }
@@ -26,7 +26,7 @@ export class PortalsDataSource implements McsDataSource<Portal> {
    * one stream containing the data to render.
    */
   public connect(): Observable<Portal[]> {
-    return this._portalsService.getPortals()
+    return this._toolsService.getPortals()
     .map((response) => {
       this._totalRecordCount = response.totalCount;
       return response.content;

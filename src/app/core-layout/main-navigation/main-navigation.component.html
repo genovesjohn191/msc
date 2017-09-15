@@ -40,13 +40,13 @@
               size="small" color="white"></mcs-icon>
             {{ textContent.navigation.networking }}</a>
         </li>
-        <!-- Portals -->
+        <!-- Other Tools -->
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/portals']"
-          (click)="setTitle(textContent.portals.title)">
+          <a class="nav-link" [routerLink]="['/tools']"
+          (click)="setTitle(textContent.tools.title)">
             <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
               size="small" color="white"></mcs-icon>
-            {{ textContent.navigation.portals }}</a>
+            {{ textContent.navigation.tools }}</a>
         </li>
         <!-- Signout -->
         <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">

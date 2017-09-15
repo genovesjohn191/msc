@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { ServersModule } from './servers/servers.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { NetworkingModule } from './networking/networking.module';
-import { PortalsModule } from './portals/portals.module';
+import { ToolsModule } from './tools/tools.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
@@ -17,7 +17,7 @@ import { FirewallsModule } from './firewalls/firewalls.module';
     ServersModule,
     TicketsModule,
     NetworkingModule,
-    PortalsModule,
+    ToolsModule,
     CatalogModule,
     NotificationsModule,
     GadgetsModule,

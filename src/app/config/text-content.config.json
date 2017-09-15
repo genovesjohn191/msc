@@ -13,6 +13,7 @@
     "servers": "Servers",
     "others": "Others",
     "networking": "Networking",
+    "tools": "Other Tools",
     "catalog": "Catalog"
   },
   "dashboard": {
@@ -199,7 +200,7 @@
   "catalog": {
     "title": "Macquarie Cloud Services: Catalog"
   },
-  "portals": {
+  "tools": {
     "title": "Macquarie Cloud Services: Other Tools",
     "header": "Other Tools",
     "description": "Macquarie Cloud Services have all the tools you need to manage your compute workloads. Occasionally you may want to do something that's not possible in the Macquarie Cloud Services portal, but available in our partne portals. We make them available here.",
