@@ -24,15 +24,7 @@
           <h3 class="float-left">Macquarie Cloud Services Portal</h3>
           <mcs-icon [key]="closeIconKey" color="white" (click)="navState='hide'"></mcs-icon>
         </li>
-
-        <!--TODO: Temporarily removed dashboard for phase 1.0 -->
-        <!--<li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/dashboard']"
-          (click)="setTitle(textContent.dashboard.title)">
-            <mcs-icon class="nav-item-bullet" [key]="getCaretRightIconKey()"
-              size="small" color="white"></mcs-icon>
-            {{ textContent.navigation.dashboard }}</a>
-        </li>-->
+        <!-- Servers -->
         <li class="nav-item" routerLinkActive="active" *mcsHasPermission="['VmAccess']">
           <a class="nav-link" [routerLink]="['/servers']"
           (click)="setTitle(textContent.servers.title)">
@@ -40,6 +32,7 @@
               size="small" color="white"></mcs-icon>
             {{ textContent.navigation.servers }}</a>
         </li>
+        <!-- Networking -->
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['/networking']"
           (click)="setTitle(textContent.networking.title)">
@@ -47,23 +40,15 @@
               size="small" color="white"></mcs-icon>
             {{ textContent.navigation.networking }}</a>
         </li>
+        <!-- Portals -->
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/catalog']"
-          (click)="setTitle(textContent.catalog.title)">
+          <a class="nav-link" [routerLink]="['/portals']"
+          (click)="setTitle(textContent.portals.title)">
             <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
               size="small" color="white"></mcs-icon>
-            {{ textContent.navigation.catalog }}</a>
+            {{ textContent.navigation.portals }}</a>
         </li>
-
-        <!-- Example on how to check the available link based on user type (admin/user)-->
-        <li class="nav-item" routerLinkActive="active" *ngIf="!isUser()">
-          <a class="nav-link" [routerLink]="['/others']"
-          (click)="setTitle(textContent.others.title)">
-            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
-              size="small" color="white"></mcs-icon>
-            {{ textContent.navigation.others }}</a>
-        </li>
-
+        <!-- Signout -->
         <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">
           <a class="nav-link" [routerLink]="['/others']"
           (click)="setTitle(textContent.others.title)">
@@ -71,27 +56,7 @@
               size="small" color="white"></mcs-icon>
             Sign Out</a>
         </li>
-
-        <li class="nav-item other-links" *ngIf="!isUser()">
-          <ul class="sub-menu">
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">My Account</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">Tickets</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">Monitoring</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">Macquarie View</a>
-            </li>
-            <li class="sub-menu-item">
-              <a class="sub-menu-link" href="#">InView</a>
-            </li>
-          </ul>
-        </li>
-
+        <!-- Macquarie View Link -->
         <li class="nav-item hidden-small ml-auto">
           <a href="https://macquarieview.com/" class="macquarie-view-link ml-auto" target="_blank">
             <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>

@@ -54,11 +54,8 @@
 
     <ng-template #userSettings>
      <div class="user-settings-container">
-        <a class="icon-link">
-          Account Settings
-        </a>
-        <a class="icon-link">
-          Profile
+        <a class="icon-link" [routerLink]="['/tickets']">
+          Tickets
         </a>
         <a class="icon-link" (click)="logout($event)">
           Logout
