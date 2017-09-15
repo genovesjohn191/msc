@@ -199,6 +199,21 @@
   "catalog": {
     "title": "Macquarie Cloud Services: Catalog"
   },
+  "portals": {
+    "title": "Macquarie Cloud Services: Other Tools",
+    "header": "Other Tools",
+    "description": "Macquarie Cloud Services have all the tools you need to manage your compute workloads. Occasionally you may want to do something that's not possible in the Macquarie Cloud Services portal, but available in our partne portals. We make them available here.",
+    "portalTableCaption": "Partner portals you can access.",
+    "otherServicesTableCaption": "Other services we offer.",
+    "table": {
+      "header":{
+        "service": "Service",
+        "description": "Description",
+        "access": "Access",
+        "order": "Get it now"
+      }
+    }
+  },
   "notifications": {
     "title": "Macquarie Cloud Services: Notifications",
     "header": "Notifications",

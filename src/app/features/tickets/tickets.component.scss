@@ -2,10 +2,6 @@
 
 $tickets-search-min-width: 300px;
 
-.page-header-wrapper {
-  margin-bottom: $space-large;
-}
-
 .tickets-table-wrapper {
   @include display-flex(column);
   @include set-items-interval($space-large);
