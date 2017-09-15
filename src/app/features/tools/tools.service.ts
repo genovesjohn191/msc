@@ -15,7 +15,7 @@ import {
 import { Portal } from './portal';
 
 @Injectable()
-export class PortalsService {
+export class ToolsService {
 
   constructor(private _mcsApiService: McsApiService) { }
 

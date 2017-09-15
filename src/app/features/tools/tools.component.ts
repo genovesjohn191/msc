@@ -5,27 +5,27 @@ import {
 import { Observable } from 'rxjs/Rx';
 /** Services */
 import { McsTextContentProvider } from '../../core';
-import { PortalsService } from './portals.service';
-import { PortalsDataSource } from './portals.datasource';
+import { ToolsService } from './tools.service';
+import { ToolsDataSource } from './tools.datasource';
 
 @Component({
-  selector: 'mcs-portals',
-  templateUrl: './portals.component.html',
-  styles: [require('./portals.component.scss')]
+  selector: 'mcs-tools',
+  templateUrl: './tools.component.html',
+  styles: [require('./tools.component.scss')]
 })
 
-export class PortalsComponent implements OnInit {
+export class ToolsComponent implements OnInit {
   public textContent: any;
 
   // Table variables
-  public dataSource: PortalsDataSource;
+  public dataSource: ToolsDataSource;
   public dataColumns: string[];
 
   public constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _portalsService: PortalsService
+    private _toolsService: ToolsService
   ) {
-    this.textContent = this._textContentProvider.content.portals;
+    this.textContent = this._textContentProvider.content.tools;
     this.dataColumns = ['serviceType','description', 'portal'];
   }
 
@@ -38,6 +38,6 @@ export class PortalsComponent implements OnInit {
    */
   private _initiliazeDatasource(): void {
     // Set datasource
-    this.dataSource = new PortalsDataSource(this._portalsService);
+    this.dataSource = new ToolsDataSource(this._toolsService);
   }
 }

@@ -2,20 +2,20 @@ import { NgModule } from '@angular/core';
 /** Modules */
 import { SharedModule } from '../../shared';
 /** Components */
-import { PortalsComponent } from './portals.component';
+import { ToolsComponent } from './tools.component';
 /** Providers List */
-import { portalsProviders } from './portals.constants';
+import { toolsProviders } from './tools.constants';
 
 @NgModule({
   declarations: [
-    PortalsComponent,
+    ToolsComponent,
   ],
   imports: [
     SharedModule
   ],
   providers: [
-    ...portalsProviders
+    ...toolsProviders
   ]
 })
 
-export class PortalsModule { }
+export class ToolsModule { }
