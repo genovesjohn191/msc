@@ -48,4 +48,12 @@ export class ToolsDataSource implements McsDataSource<Portal> {
   public onCompletion(portals?: Portal[]): void {
     // Execute all data from completion
   }
+
+  /**
+   * This will invoke when the data obtainment process encountered error
+   * @param status Status of the error
+   */
+  public onError(status?: number): void {
+    // Display the error template in the UI
+  }
 }

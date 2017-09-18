@@ -21,7 +21,12 @@
       "value": false
     }
   },
-  "serverListingFilter": {
+  "serversListingFilter": {
+    "name": {
+      "text": "Name",
+      "value": true,
+      "exclude": true
+    },
     "type": {
       "text": "Type",
       "value": true
@@ -45,9 +50,29 @@
     "vApp": {
       "text": "vApp",
       "value": false
+    },
+    "action": {
+      "text": "Action",
+      "value": true,
+      "exclude": true
     }
   },
-  "notificationListingFilter": {
+  "notificationsListingFilter": {
+    "status": {
+      "text": "Status",
+      "value": true,
+      "exclude": true
+    },
+    "user": {
+      "text": "User",
+      "value": true,
+      "exclude": true
+    },
+    "notification": {
+      "text": "Notification",
+      "value": true,
+      "exclude": true
+    },
     "startTime": {
       "text": "Start Time",
       "value": true
@@ -130,5 +155,5 @@
       "value": true,
       "exclude": true
     }
-  } 
+  }
 }

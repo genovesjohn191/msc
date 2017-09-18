@@ -28,4 +28,12 @@ export class TableDatasource implements McsDataSource<any> {
   public onCompletion(): void {
     this.loading = false;
   }
+
+  /**
+   * This will invoke when the data obtainment process encountered error
+   * @param status Status of the error
+   */
+  public onError(status?: number): void {
+    // Display the error template in the UI
+  }
 }

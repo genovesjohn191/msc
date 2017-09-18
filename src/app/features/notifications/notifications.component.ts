@@ -2,29 +2,24 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
-
 /** Services */
 import { NotificationsService } from './notifications.service';
+import { NotificationsDataSource } from './notifications.datasource';
 import {
-  McsAssetsProvider,
+  McsNotificationContextService,
   McsTextContentProvider,
-  McsApiSearchKey,
   CoreDefinition,
-  McsApiJob,
-  McsApiErrorResponse,
-  McsNotificationContextService
+  McsSearch,
+  McsPaginator
 } from '../../core';
 import {
   formatDate,
-  mergeArrays,
-  compareDates,
-  refreshView
+  refreshView,
+  isNullOrEmpty
 } from '../../utilities';
 
 @Component({
@@ -33,46 +28,44 @@ import {
   styles: [require('./notifications.component.scss')]
 })
 
-export class NotificationsComponent implements OnInit, OnDestroy {
-  public page: number;
-  public keyword: string;
-  public isLoading: boolean;
-  public errorMessage: string;
-  public notificationsTextContent: any;
-  public totalNotificationsCount: number;
-  public notifications: McsApiJob[];
-  public notificationsSubscription: any;
+export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  /** Filter Variables */
+  public textContent: any;
+
+  // Filter selector variables
   public columnSettings: any;
 
-  /** Search Subscription */
-  public searchSubscription: any;
-  public searchKeyword: string;
-  public searchSubject: Subject<McsApiSearchKey>;
+  // Table variables
+  public dataSource: NotificationsDataSource;
+  public dataColumns: string[];
 
-  public hasError: boolean;
-  // Done loading and thrown an error
-  public get loadedSuccessfully(): boolean {
-    return !this.hasError;
+  @ViewChild('search')
+  public search: McsSearch;
+
+  @ViewChild('paginator')
+  public paginator: McsPaginator;
+
+  private _notificationsSubscription: any;
+
+  public get totalRecordCount(): number {
+    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
   }
 
-  // Done loading and no servers to display
-  public get noNotifications(): boolean {
-    return this.totalNotificationsCount === 0 && !this.hasError && !this.keyword && !this.isLoading;
+  public get successfullyObtained(): boolean {
+    return isNullOrEmpty(this.dataSource) ? false : this.dataSource.successfullyObtained;
   }
 
-  // Done loading and no servers found on filter
-  public get emptySearchResult(): boolean {
-    return this.totalNotificationsCount === 0 && this.keyword && !this.isLoading;
+  public get noNotificationsFound(): boolean {
+    return this.successfullyObtained === true && this.totalRecordCount <= 0;
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+  public get displayErrorMessage(): boolean {
+    return this.dataSource && (this.noNotificationsFound ||
+      this.successfullyObtained) === false;
   }
 
-  public get arrowDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+  public get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
   }
 
   public constructor(
@@ -80,98 +73,70 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     private _notificationsService: NotificationsService,
     private _notificationContextService: McsNotificationContextService,
     private _changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.page = 1;
-    this.totalNotificationsCount = 0;
-    this.isLoading = true;
-    this.hasError = false;
-    this.notifications = new Array();
-    this.searchSubject = new Subject<McsApiSearchKey>();
-  }
+  ) { }
 
   public ngOnInit() {
-    this.notificationsTextContent = this._textContentProvider.content.notifications;
+    this.textContent = this._textContentProvider.content.notifications;
+  }
 
-    // obtainment of notifications from the API
-    this.getNotifications();
-
-    // Add notification update listener
-    this._listenToNotificationUpdate();
+  public ngAfterViewInit() {
+    refreshView(() => {
+      this._initiliazeDatasource();
+    });
   }
 
   public ngOnDestroy() {
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe();
+    if (!isNullOrEmpty(this._notificationsSubscription)) {
+      this._notificationsSubscription.unsubscribe();
     }
-
-    if (this.notificationsSubscription) {
-      this.notificationsSubscription.unsubscribe();
+    if (!isNullOrEmpty(this.dataSource)) {
+      this.dataSource.disconnect();
+    }
+    if (!isNullOrEmpty(this.dataColumns)) {
+      this.dataColumns = [];
+      this.dataColumns = null;
     }
   }
 
-  public getNotifications(): void {
-    this.isLoading = true;
-
-    this.searchSubscription = Observable.of(new McsApiSearchKey())
-      .concat(this.searchSubject)
-      .debounceTime(CoreDefinition.SEARCH_TIME)
-      .distinctUntilChanged((previous, next) => {
-        return previous.isEqual(next);
-      })
-      .switchMap((searchKey) => {
-        // Switch observable items to notifications list
-        return this._notificationsService.getNotifications(
-          searchKey.page,
-          searchKey.maxItemPerPage ?
-            searchKey.maxItemPerPage : CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE,
-          searchKey.keyword
-        ).finally(() => this.isLoading = false);
-      })
-      .catch((error: McsApiErrorResponse) => {
-        this.hasError = true;
-        return Observable.throw(error);
-      })
-      .subscribe((mcsApiResponse) => {
-        // Get server response
-        if (this.page === 1) { this.notifications.splice(0); }
-        if (mcsApiResponse.content) {
-          this.hasError = false;
-          this.notifications = mergeArrays(this.notifications, mcsApiResponse.content);
-          this.totalNotificationsCount = mcsApiResponse.totalCount;
-        }
-      });
-  }
-
-  public onUpdateColumnSettings(columns: any): void {
+  /**
+   * Update the column settings based on filtered selectors
+   * and update the data column of the table together
+   * @param columns New column settings
+   */
+  public updateColumnSettings(columns: any): void {
     if (columns) {
       this.columnSettings = columns;
+      let columnDetails = Object.keys(this.columnSettings);
+
+      this.dataColumns = [];
+      columnDetails.forEach((column) => {
+        if (!this.columnSettings[column].value) { return; }
+        this.dataColumns.push(column);
+      });
     }
   }
 
+  /**
+   * Get the status icon key based on job
+   * @param status Status that serve as the basis
+   */
   public getStatusIconKey(status: string): string {
     return this._getStatusIcon(status).key;
   }
 
+  /**
+   * Get the status icon color based on job
+   * @param status Status that serve as the basis
+   */
   public getStatusIconColor(status: string): string {
     return this._getStatusIcon(status).color;
   }
 
-  public onClickMoreEvent(): void {
-    this._getNextPage();
-  }
-
-  public onSearchEvent(key: any): void {
-    this._searchNotifications(key);
-  }
-
-  public onEnterSearchEvent(): void {
-    this._searchNotifications(this.keyword);
-  }
-
-  public getDisplayNotificationsCount(): number {
-    return this.page * CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE;
-  }
-
+  /**
+   * Converts the date and time to string
+   * based on the given format
+   * @param date Date to be converted
+   */
   public convertDateTimeToString(date: Date): string {
     let convertedString: string = '';
     if (date) {
@@ -180,60 +145,18 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     return convertedString;
   }
 
-  private _getNextPage(): void {
-    this.page += 1;
-    this._updateNotifications(this.keyword, this.page);
+  /**
+   * Retry to obtain the source from API
+   */
+  public retryDatasource(): void {
+    if (isNullOrEmpty(this.dataSource)) { return; }
+    this._initiliazeDatasource();
   }
 
-  private _searchNotifications(key: any): void {
-    this.page = 1;
-    this.keyword = key;
-    this._updateNotifications(this.keyword, this.page);
-  }
-
-  private _updateNotifications(key?: string, page?: number) {
-    let searchKey: McsApiSearchKey = new McsApiSearchKey();
-    // Set server search key
-    searchKey.maxItemPerPage = CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE;
-    searchKey.page = page;
-    searchKey.keyword = key;
-    // Set false to load flag
-    this.isLoading = true;
-    this.searchSubject.next(searchKey);
-  }
-
-  private _listenToNotificationUpdate(): void {
-    // listener for the notification updates
-    this.notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((updatedNotifications) => {
-
-        if (this.isLoading === false) {
-          this._onChangeNotification(updatedNotifications);
-          refreshView(() => {
-            this._changeDetectorRef.detectChanges();
-          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        }
-      });
-  }
-
-  private _onChangeNotification(updatedNotifications: any): void {
-    // Update all existing notifications based on the notification context
-    // and Add the non-exist notifications
-    this.notifications = mergeArrays(
-      this.notifications,
-      updatedNotifications,
-      (_first, _second) => {
-        return (_first.id === _second.id);
-      }
-    );
-    this.totalNotificationsCount = this.notifications.length;
-
-    // Sort notification jobs by date
-    this.notifications.sort((first: McsApiJob, second: McsApiJob) => {
-      return compareDates(second.createdOn, first.createdOn);
-    });
-  }
-
+  /**
+   * Get the status icon key based on the job
+   * @param status Status that serve as the basis
+   */
   private _getStatusIcon(status: string): { key, color } {
     let iconKey: string;
     let iconColor: string;
@@ -259,5 +182,18 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
 
     return { key: iconKey, color: iconColor };
+  }
+
+  /**
+   * Initialize the table datasource according to pagination and search settings
+   */
+  private _initiliazeDatasource(): void {
+    // Set datasource
+    this.dataSource = new NotificationsDataSource(
+      this._notificationContextService,
+      this._notificationsService,
+      this.paginator,
+      this.search
+    );
   }
 }

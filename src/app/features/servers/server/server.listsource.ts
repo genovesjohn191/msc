@@ -91,6 +91,14 @@ export class ServerListSource implements McsDataSource<ServerList> {
     // Do all the completion of pagination, filtering, etc... here
   }
 
+  /**
+   * This will invoke when the data obtainment process encountered error
+   * @param status Status of the error
+   */
+  public onError(status?: number): void {
+    // Display the error template in the UI
+  }
+
   private _mapServerList(servers: Server[]): ServerList[] {
     if (isNullOrEmpty(servers)) { return; }
 

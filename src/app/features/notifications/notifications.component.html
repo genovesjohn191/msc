@@ -1,93 +1,114 @@
-<section class="notifications-container">
-  <div class="mcs-page-title bordered-bottom">
-    <div class="main-title">
-      <h2>{{ notificationsTextContent.header }}</h2>
+<!-- Page Header with title, subtitle (for total record), and description -->
+<mcs-page-header class="page-header-wrapper">
+  <mcs-page-title *mcsPageTitleDef>
+    {{ textContent.header }}
+  </mcs-page-title>
+  <mcs-page-description *mcsPageDescriptionDef>
+    {{ textContent.description }}
+  </mcs-page-description>
+</mcs-page-header>
+
+<!-- Table with filtering and pagination -->
+<div class="notifications-table-wrapper">
+    <!-- Search -->
+    <div class="search-wrapper">
+      <mcs-search #search class="search"></mcs-search>
+
+      <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
+        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+
+      <span class="record-count">{{ totalRecordCount }} {{ textContent.header }}</span>
     </div>
-    <div class="notifications-count">
-      <span>{{ totalNotificationsCount }} {{ notificationsTextContent.header }}</span>
-    </div>
-  </div>
 
-  <span class="notifications-description">
-    {{ notificationsTextContent.description }}
-  </span>
+    <!-- Table -->
+    <mcs-table [dataSource]="dataSource">
 
-  <div class="notifications-search">
-    <mcs-textbox class="search-keyword" name="search" [ngModel]="keyword"
-      (ngModelChange)="onSearchEvent($event)" width="350px"
-      placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
+      <!-- Status Column -->
+      <ng-container mcsColumnDef="status">
+        <mcs-header-cell *mcsHeaderCellDef>
+          {{ columnSettings.status.text }}
+        </mcs-header-cell>
+        <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+          <mcs-icon [key]="getStatusIconKey(row.status)"
+            [color]="getStatusIconColor(row.status)" size="small"></mcs-icon>
+        </mcs-data-cell>
+      </ng-container>
 
-    <mcs-filter-selector class="hidden-small" key="notificationListingFilter"
-      (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
-  </div>
+      <!-- User Column -->
+      <ng-container mcsColumnDef="user">
+        <mcs-header-cell *mcsHeaderCellDef>
+          {{ columnSettings.user.text }}
+        </mcs-header-cell>
+        <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.ownerName }}
+        </mcs-data-cell>
+      </ng-container>
 
-  <table class="mcs-table table">
-    <thead class="head">
-      <tr>
-        <th class="text-center">{{ notificationsTextContent.tableHeader.status }}</th>
-        <th>{{ notificationsTextContent.tableHeader.user }}</th>
-        <th>{{ notificationsTextContent.tableHeader.notification }}</th>
-        <th *ngIf="columnSettings['startTime'].value" class="hidden-small">
-          {{ columnSettings['startTime'].text }}
-        </th>
-        <th *ngIf="columnSettings['completed'].value" class="hidden-small">
-          {{ columnSettings['completed'].text }}
-        </th>
-        <th *ngIf="columnSettings['vdc'].value" class="hidden-small">
-          {{ columnSettings['vdc'].text }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let notification of notifications">
-        <td class="text-center align-top">
-          <mcs-icon [key]="getStatusIconKey(notification.status)"
-            [color]="getStatusIconColor(notification.status)" size="small"></mcs-icon>
-        </td>
-        <td class="text-left align-top">
-          {{ notification.ownerName }}
-        </td>
-        <td class="text-left align-top">
+      <!-- Notification Column -->
+      <ng-container mcsColumnDef="notification">
+        <mcs-header-cell *mcsHeaderCellDef>
+          {{ columnSettings.notification.text }}
+        </mcs-header-cell>
+        <mcs-data-cell *mcsDataCellDef="let row">
           <a href="#">
-            <u>
-              {{ notification.description }}<br/>
-              {{ notification.summaryInformation }}
-            </u>
+            {{ row.description }}<br/>
+            {{ row.summaryInformation }}
           </a>
-        </td>
-        <td *ngIf="columnSettings['startTime'].value" class="text-left align-top hidden-small">
-          {{ convertDateTimeToString(notification.startedOn) }}
-        </td>
-        <td *ngIf="columnSettings['completed'].value" class="text-left align-top hidden-small">
-          {{ convertDateTimeToString(notification.endedOn) }}
-        </td>
-        <td *ngIf="columnSettings['vdc'].value" class="text-left align-top hidden-small">
-          <!--TODO: Set the actual VDC here:-->
-          M2VDC27117006
-        </td>
-      </tr>
-    </tbody>
-    <tfoot>
-    </tfoot>
-  </table>
+        </mcs-data-cell>
+      </ng-container>
 
-  <div class="status-information">
-    <div *ngIf="isLoading">
-      <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
-       {{ notificationsTextContent.loading }}
+      <!-- Start Time Column -->
+      <ng-container mcsColumnDef="startTime">
+        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          {{ columnSettings.startTime.text }}
+        </mcs-header-cell>
+        <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ convertDateTimeToString(row.startedOn) }}
+        </mcs-data-cell>
+      </ng-container>
+
+      <!-- Completed Column -->
+      <ng-container mcsColumnDef="completed">
+        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          {{ columnSettings.completed.text }}
+        </mcs-header-cell>
+        <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ convertDateTimeToString(row.endedOn) }}
+        </mcs-data-cell>
+      </ng-container>
+
+      <!-- VDC Column -->
+      <ng-container mcsColumnDef="vdc">
+        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          {{ columnSettings.vdc.text }}
+        </mcs-header-cell>
+        <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          M2VDC27117006
+        </mcs-data-cell>
+      </ng-container>
+
+      <!-- Header and Data row -->
+      <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+      <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+    </mcs-table>
+
+    <div class="message-wrapper" *ngIf="displayErrorMessage">
+      <!-- Message when error encountered -->
+      <div *ngIf="successfullyObtained === false">
+        <span>{{ textContent.errorMessage }}</span>
+        <a (click)="retryDatasource()">Try again shortly</a>.
+      </div>
+
+      <!-- Message when no notifications found -->
+      <div *ngIf="noNotificationsFound">
+        <span>{{ textContent.noNotifications }}</span>
+      </div>
     </div>
 
-    <a *ngIf="(getDisplayNotificationsCount() < totalNotificationsCount) && !isLoading"
-      (click)="onClickMoreEvent()">{{ notificationsTextContent.viewMore }}
-      <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
-    </a>
-
-    <span *ngIf="!loadedSuccessfully && !isLoading">
-      {{ notificationsTextContent.errorMessage }} <br/>
-      <a (click)="getNotifications()">Try again shortly</a>.
-    </span>
-
-    <span *ngIf="noNotifications">{{ notificationsTextContent.noNotifications }}</span>
-    <span *ngIf="emptySearchResult">{{ notificationsTextContent.emptySearchResult }}</span>
+    <!-- Paginator -->
+    <mcs-paginator #paginator
+      [totalCount]="totalRecordCount"
+      [pageIndex]="0"
+      [pageSize]="25">
+    </mcs-paginator>
   </div>
-</section>

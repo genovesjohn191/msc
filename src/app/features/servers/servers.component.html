@@ -1,126 +1,141 @@
-<section class="servers-container">
-  <div class="mcs-page-title bordered-bottom">
-    <div class="main-title">
-      <h2>{{ serversTextContent.header }}</h2>
-    </div>
-    <div *ngIf="loadedSuccessfully" class="server-count">
-      <span>{{ totalServerCount }} {{ serversTextContent.header }}</span>
-    </div>
+<!-- Table with filtering and pagination -->
+<div class="servers-table-wrapper">
+  <!-- Search -->
+  <div class="search-wrapper">
+    <mcs-search #search class="search"></mcs-search>
+
+    <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
+      (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+
+    <mcs-button (onClick)="onClickNewServerButton($event)" size="small">
+      {{ textContent.newServer }}
+    </mcs-button>
+
+    <span class="record-count">{{ totalRecordCount }} {{ textContent.header }}</span>
   </div>
 
-  <div class="filter">
-    <div class="mcs-search">
-      <mcs-textbox name="search" [ngModel]="keyword"
-        (ngModelChange)="onSearchEvent($event)" width="350px"
-        placeholder="Type to filter..." (keyup.enter)="onEnterSearchEvent()"></mcs-textbox>
+  <!-- Table -->
+  <mcs-table [dataSource]="dataSource">
+    <!-- Name Column -->
+    <ng-container mcsColumnDef="name">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.name.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        <ng-template #loadingContent>
+          <span class="loading-content-popover">
+            {{ getActiveServerTooltip(row.id) }}
+          </span>
+        </ng-template>
 
-      <mcs-filter-selector class="hidden-small" key="serverListingFilter"
-        (onGetFilters)="onUpdateColumnSettings($event)"></mcs-filter-selector>
-    </div>
-
-    <div class="server-select" *mcsHasPermission="['VmEdit']">
-      <mcs-button (onClick)="onClickNewServerButton($event)">{{ serversTextContent.newServer }}</mcs-button>
-    </div>
-  </div>
-
-  <table class="mcs-table table">
-    <thead class="head">
-      <tr>
-        <th class="text-center">
-          {{ serversTextContent.columnHeaders.state }}
-        </th>
-        <th class="text-center">
-          {{ serversTextContent.columnHeaders.name }}
-        </th>
-        <th *ngIf="columnSettings['type'].value" class="hidden-xsmall text-center">
-          {{ columnSettings['type'].text }}
-        </th>
-        <th *ngIf="columnSettings['catalog'].value" class="hidden-xsmall text-center">
-          {{ columnSettings['catalog'].text }}
-        </th>
-        <th *ngIf="columnSettings['privateIp'].value" class="hidden-small text-center">
-          {{ columnSettings['privateIp'].text }}
-        </th>
-        <th *ngIf="columnSettings['zone'].value" class="hidden-small text-center">
-          {{ columnSettings['zone'].text }}
-        </th>
-        <th *ngIf="columnSettings['serviceId'].value" class="hidden-small text-center">
-            {{ columnSettings['serviceId'].text }}
-          </th>
-        <th *ngIf="columnSettings['vApp'].value" class="hidden-small text-center">
-          {{ columnSettings['vApp'].text }}
-        </th>
-        <th class="text-center" *mcsHasPermission="['VmPowerStateEdit']">
-          {{ serversTextContent.columnHeaders.action }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let server of servers">
-        <td class="text-center align-middle">
-          <div *ngIf="server.powerState">
-            <mcs-icon [key]="getStateIconKey(server.powerState)"
-              size="large"></mcs-icon>
+        <div class="server-name">
+          <div *ngIf="getServerPowerstate(row)">
+            <mcs-icon [key]="getStateIconKey(row.powerState)"
+              size="medium"></mcs-icon>
           </div>
-          <div *ngIf="!server.powerState" class="power-state-spinner">
-            <mcs-icon [key]="spinnerIconKey" size="large"
+          <div *ngIf="!getServerPowerstate(row)" class="power-state-spinner">
+            <mcs-icon [key]="spinnerIconKey" size="medium"
               mcsPopover trigger="hover" maxWidth="250px" padding="none"
               [content]="loadingContent"></mcs-icon>
           </div>
-          <ng-template #loadingContent>
-            <span class="loading-content-popover">
-              {{ getActiveServerTooltip(server.id) }}
-            </span>
-          </ng-template>
-        </td>
-        <td class="text-left align-middle">
-          <a [routerLink]="[server.id]"><u>{{ server.managementName }}</u></a>
-        </td>
-        <td *ngIf="columnSettings['type'].value" class="text-left align-middle hidden-xsmall">
-          {{ getServiceTypeText(server.serviceType) }}
-        </td>
-        <td *ngIf="columnSettings['catalog'].value" class="text-left align-middle hidden-xsmall">
-          {{ server.guestOs }}
-        </td>
-        <td *ngIf="columnSettings['privateIp'].value" class="text-center align-middle hidden-small">
-          {{ server.managementIpAddress }}
-        </td>
-        <td *ngIf="columnSettings['zone'].value" class="text-center align-middle hidden-small">
-          {{ server.availabilityZone }}
-        </td>
-        <td *ngIf="columnSettings['serviceId'].value" class="text-center align-middle hidden-small">
-            {{ server.serviceId }}
-          </td>
-        <td *ngIf="columnSettings['vApp'].value" class="text-left align-middle hidden-small">
-          {{ server.vAppName }}
-        </td>
-        <td class="text-center align-middle" *mcsHasPermission="['VmPowerStateEdit']">
-          <mcs-server-command [command]="getActionStatus(server)"
-            (onClick)="executeServerCommand(server, $event)"></mcs-server-command>
-        </td>
-      </tr>
-    </tbody>
-    <tfoot>
-    </tfoot>
-  </table>
+          <a>{{ row.managementName }}</a>
+        </div>
+      </mcs-data-cell>
+    </ng-container>
 
-  <div class="status-information">
-    <div *ngIf="isLoading">
-      <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
-       {{ serversTextContent.loading }}
+    <!-- Type Column -->
+    <ng-container mcsColumnDef="type">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+        {{ columnSettings.type.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+        {{ getServiceTypeText(row.serviceType) }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Catalog Column -->
+    <ng-container mcsColumnDef="catalog">
+      <mcs-header-cell *mcsHeaderCellDef  class="hidden-xsmall">
+        {{ columnSettings.catalog.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+        {{ row.guestOs }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Private IP Column -->
+    <ng-container mcsColumnDef="privateIp">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.privateIp.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.managementIpAddress }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Zone Column -->
+    <ng-container mcsColumnDef="zone">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.zone.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.availabilityZone }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Service ID Column -->
+    <ng-container mcsColumnDef="serviceId">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.serviceId.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.serviceId }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- VApp Column -->
+    <ng-container mcsColumnDef="vApp">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.vApp.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.vAppName }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Action Column TODO: add restriction here VmPowerStateEdit -->
+    <ng-container mcsColumnDef="action">
+      <mcs-header-cell *mcsHeaderCellDef>
+        <!-- {{ columnSettings.action.text }} -->
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+        <mcs-server-command [command]="getActionStatus(row)"
+          (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+  </mcs-table>
+
+  <div class="message-wrapper" *ngIf="displayErrorMessage">
+    <!-- Message when error encountered -->
+    <div *ngIf="successfullyObtained === false">
+      <span>{{ textContent.errorMessage }}</span>
+      <a (click)="retryDatasource()">Try again shortly</a>.
     </div>
 
-    <a *ngIf="(getDisplayServerCount() < totalServerCount) && !isLoading"
-      (click)="onClickMoreEvent()">{{ serversTextContent.viewMore }}
-      <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
-    </a>
-
-    <span *ngIf="!loadedSuccessfully && !isLoading">
-      {{ serversTextContent.errorMessage }} <br/>
-      <a (click)="getServers()">Try again shortly</a>.
-    </span>
-
-    <span *ngIf="noServers">{{ serversTextContent.noServers }}</span>
-    <span *ngIf="emptySearchResult">{{ serversTextContent.emptySearchResult }}</span>
+    <!-- Message when no servers found -->
+    <div *ngIf="noServersFound">
+      <span>{{ textContent.noServers }}</span>
+    </div>
   </div>
-</section>
+
+  <!-- Paginator -->
+  <mcs-paginator #paginator
+    [totalCount]="totalRecordCount"
+    [pageIndex]="0"
+    [pageSize]="25">
+  </mcs-paginator>
+</div>

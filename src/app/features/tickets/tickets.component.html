@@ -3,9 +3,6 @@
   <mcs-page-title *mcsPageTitleDef>
     {{ textContent.header }}
   </mcs-page-title>
-  <mcs-page-subtitle *mcsPageSubTitleDef>
-    <span>{{ totalRecordCount }} {{ textContent.header }}</span>
-  </mcs-page-subtitle>
   <mcs-page-description *mcsPageDescriptionDef>
     {{ textContent.description }}
   </mcs-page-description>
@@ -15,16 +12,16 @@
 <div class="tickets-table-wrapper">
   <!-- Search -->
   <div class="search-wrapper">
-    <div class="search-filter-wrapper">
-      <mcs-search #search class="search"></mcs-search>
-      <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
-        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
-    </div>
-    <div class="new-ticket">
-      <mcs-button>
-        {{ textContent.newTicket }}
-      </mcs-button>
-    </div>
+    <mcs-search #search class="search"></mcs-search>
+
+    <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
+      (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+
+    <mcs-button (onClick)="onClickNewServerButton($event)" size="small">
+      {{ textContent.newTicket }}
+    </mcs-button>
+
+    <span class="record-count">{{ totalRecordCount }} {{ textContent.header }}</span>
   </div>
 
   <!-- Table -->
@@ -98,6 +95,6 @@
   <mcs-paginator #paginator
     [totalCount]="totalRecordCount"
     [pageIndex]="0"
-    [pageSize]="10">
+    [pageSize]="25">
   </mcs-paginator>
 </div>

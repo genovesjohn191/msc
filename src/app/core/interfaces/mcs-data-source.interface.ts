@@ -8,6 +8,11 @@ export interface McsDataSource<T> {
   onCompletion(data?: T[]): void;
 
   /**
+   * This will invoke when the obtainment process detects error
+   */
+  onError(status?: number): void;
+
+  /**
    * Connect the data to get the datasource
    */
   connect(): Observable<T[]>;

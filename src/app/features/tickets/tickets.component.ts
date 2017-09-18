@@ -2,7 +2,8 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
 /** Services */
 import {
@@ -14,7 +15,8 @@ import {
 import {
   formatDate,
   isNullOrEmpty,
-  getEnumString
+  getEnumString,
+  refreshView
 } from '../../utilities';
 import { TicketsService } from './tickets.service';
 import { TicketsDataSource } from './tickets.datasource';
@@ -26,7 +28,7 @@ import { TicketStatus } from './models';
   styles: [require('./tickets.component.scss')]
 })
 
-export class TicketsComponent implements OnInit, OnDestroy {
+export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
 
@@ -60,12 +62,18 @@ export class TicketsComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.tickets;
+  }
 
-    this._initiliazeDatasource();
+  public ngAfterViewInit() {
+    refreshView(() => {
+      this._initiliazeDatasource();
+    });
   }
 
   public ngOnDestroy(): void {
-    this.dataSource.disconnect();
+    if (!isNullOrEmpty(this.dataSource)) {
+      this.dataSource.disconnect();
+    }
     if (!isNullOrEmpty(this.dataColumns)) {
       this.dataColumns = [];
       this.dataColumns = null;

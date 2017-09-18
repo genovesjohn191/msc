@@ -21,6 +21,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import { takeUntil } from 'rxjs/operator/takeUntil';
 /** Core / Utilities */
 import { McsDataSource } from '../../core';
@@ -298,6 +299,10 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    */
   private _getDatasourceData(): void {
     this._dataSourceSubscription = this.dataSource.connect()
+      .catch((error) => {
+        this._dataSource.onError();
+        return Observable.throw(error);
+      })
       .subscribe((data) => {
         this._data = data;
         this._renderDataRows();
