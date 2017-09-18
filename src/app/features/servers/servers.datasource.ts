@@ -4,10 +4,10 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
-import { Ticket } from './models';
-import { TicketsService } from './tickets.service';
+import { Server } from './models';
+import { ServersService } from './servers.service';
 
-export class TicketsDataSource implements McsDataSource<Ticket> {
+export class ServersDataSource implements McsDataSource<Server> {
   /**
    * It will populate the data when the obtainment is completed
    */
@@ -19,8 +19,19 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
     this._totalRecordCount = value;
   }
 
+  /**
+   * Flag if the datasource connect has successfully obtained from API
+   */
+  private _successfullyObtained: boolean;
+  public get successfullyObtained(): boolean {
+    return this._successfullyObtained;
+  }
+  public set successfullyObtained(value: boolean) {
+    this._successfullyObtained = value;
+  }
+
   constructor(
-    private _ticketsService: TicketsService,
+    private _serversService: ServersService,
     private _paginator: McsPaginator,
     private _search: McsSearch
   ) {
@@ -31,8 +42,9 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<Ticket[]> {
+  public connect(): Observable<Server[]> {
     const displayDataChanges = [
+      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
       this._paginator.pageChangedStream,
       this._search.searchChangedStream,
     ];
@@ -41,7 +53,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
       .switchMap(() => {
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
-        return this._ticketsService.getTickets(
+        return this._serversService.getServers(
           this._paginator.pageIndex,
           displayedRecords,
           this._search.keyword
@@ -62,11 +74,12 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
 
   /**
    * This will invoke when the data obtainment is completed
-   * @param tickets Data to be provided when the datasource is connected
+   * @param servers Data to be provided when the datasource is connected
    */
-  public onCompletion(tickets?: Ticket[]): void {
+  public onCompletion(servers?: Server[]): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
+    this._successfullyObtained = true;
   }
 
   /**
@@ -75,5 +88,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
    */
   public onError(status?: number): void {
     // Display the error template in the UI
+    this._paginator.pageCompleted();
+    this._successfullyObtained = false;
   }
 }

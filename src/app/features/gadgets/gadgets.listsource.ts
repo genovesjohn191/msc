@@ -104,4 +104,12 @@ export class GadgetsListSource implements McsDataSource<UserData> {
   public onCompletion(): void {
     // Do all the completion of pagination, filtering, etc... here
   }
+
+  /**
+   * This will invoke when the data obtainment process encountered error
+   * @param status Status of the error
+   */
+  public onError(status?: number): void {
+    // Display the error template in the UI
+  }
 }

@@ -1,60 +1,51 @@
 @import "../../../styles/shared/base";
 
-.servers-container {
-  position: relative;
+$servers-search-min-width: 300px;
 
-  .servers-count {
-    font-weight: 400;
-    margin-left: auto;
-  }
+.servers-table-wrapper {
+  @include display-flex(column);
+  @include set-items-interval($space-large);
 
-  .filter {
+  .search-wrapper {
     @include display-flex(row);
     align-items: center;
+    @include set-items-interval($space-medium, horizontal);
 
     @include breakpoint(small) {
       @include display-flex(column);
       align-items: stretch;
     }
 
-    .mcs-search {
-      @include breakpoint(medium) {
-        margin: 0;
-        mcs-textbox {
-          max-width: 100% !important;
-        }
+    mcs-search {
+      min-width: $servers-search-min-width;
+      @include breakpoint(small) {
+        min-width: 100%;
       }
     }
 
-    .server-select {
-      margin-left: auto;
+    mcs-button {
       @include breakpoint(small) {
         margin: 0;
-        mcs-button {
-          display: block;
-          max-width: 100% !important;
-        }
+        display: block;
+        min-width: 100%;
       }
     }
-  }
 
-  .status-information {
-    display: block;
-    padding-bottom: $space-large;
-    text-align: center;
-
-    a {
-      @include font-size($font-size-default);
-      text-decoration: underline;
+    .record-count {
+      margin-left: auto;
     }
   }
 
-  .power-state-spinner {
-    display: inline-block;
-    @include font-size($icon-large-font-size);
+  .server-name {
+    @include set-items-interval($space-small, horizontal);
+    @include display-flex(row);
+    align-items: center;
+  }
+
+  .message-wrapper {
+    align-self: center;
   }
 }
-
 
 .loading-content-popover {
   display: block;

@@ -54,6 +54,7 @@ describe('TicketsComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      component.ngAfterViewInit();
     });
   }));
 
@@ -130,7 +131,7 @@ describe('TicketsComponent', () => {
         searchChangedStream: new EventEmitter()
       } as McsSearch;
 
-      component.ngOnInit();
+      component.ngAfterViewInit();
     }));
 
     it('should get the data from the connect method', () => {

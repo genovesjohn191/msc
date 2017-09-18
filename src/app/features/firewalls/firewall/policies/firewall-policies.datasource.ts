@@ -74,4 +74,12 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
     // Execute all data from completion
     this._paginator.pageCompleted();
   }
+
+  /**
+   * This will invoke when the data obtainment process encountered error
+   * @param status Status of the error
+   */
+  public onError(status?: number): void {
+    // Display the error template in the UI
+  }
 }

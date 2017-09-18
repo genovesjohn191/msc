@@ -1,14 +1,13 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import { ServersService } from './servers.service';
+import { ServersDataSource } from './servers.datasource';
 /** Models */
 import {
   Server,
@@ -19,13 +18,15 @@ import {
 } from './models';
 /** Core */
 import {
-  McsApiError,
-  McsApiErrorResponse,
   McsTextContentProvider,
-  McsApiSearchKey,
-  CoreDefinition
+  CoreDefinition,
+  McsSearch,
+  McsPaginator
 } from '../../core';
-import { mergeArrays } from '../../utilities';
+import {
+  isNullOrEmpty,
+  refreshView
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-servers',
@@ -33,48 +34,46 @@ import { mergeArrays } from '../../utilities';
   styles: [require('./servers.component.scss')]
 })
 
-export class ServersComponent implements OnInit, OnDestroy {
-  public serversTextContent: string;
-  public page: number;
-  public keyword: string;
-  public isLoading: boolean;
-  public gear: string;
-  /** Server Variables */
-  public totalServerCount: number;
-  public servers: Server[];
-  /** Filter Variables */
+export class ServersComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  public textContent: any;
+
+  // Filter selector variables
   public columnSettings: any;
-  /** Search Subscription */
-  public searchSubscription: any;
-  public searchSubject: Subject<McsApiSearchKey>;
 
-  public activeServerSubscription: any;
-  public hasError: boolean;
-  // Done loading and thrown an error
-  public get loadedSuccessfully(): boolean {
-    return !this.hasError;
+  // Table variables
+  public dataSource: ServersDataSource;
+  public dataColumns: string[];
+
+  @ViewChild('search')
+  public search: McsSearch;
+
+  @ViewChild('paginator')
+  public paginator: McsPaginator;
+
+  public get totalRecordCount(): number {
+    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
   }
 
-  // Done loading and no servers to display
-  public get noServers(): boolean {
-    return this.totalServerCount === 0 && !this.hasError && !this.keyword && !this.isLoading;
+  public get successfullyObtained(): boolean {
+    return isNullOrEmpty(this.dataSource) ? false : this.dataSource.successfullyObtained;
   }
 
-  // Done loading and no servers found on filter
-  public get emptySearchResult(): boolean {
-    return this.totalServerCount === 0 && this.keyword && !this.isLoading;
+  public get noServersFound(): boolean {
+    return this.successfullyObtained === true && this.totalRecordCount <= 0;
   }
 
-  public get gearIconKey() {
-    return CoreDefinition.ASSETS_FONT_GEAR;
+  public get displayErrorMessage(): boolean {
+    return this.dataSource && (this.noServersFound ||
+      this.successfullyObtained) === false;
+  }
+
+  public get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_SERVER_LISTING;
   }
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
-  }
-
-  public get arrowDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   public constructor(
@@ -82,28 +81,33 @@ export class ServersComponent implements OnInit, OnDestroy {
     private _serversService: ServersService,
     private _router: Router
   ) {
-    this.isLoading = true;
-    this.hasError = false;
-    this.page = 1;
-    this.searchSubject = new Subject<McsApiSearchKey>();
-    this.servers = new Array();
-    this.totalServerCount = 0;
   }
 
   public ngOnInit() {
-    this.serversTextContent = this._textProvider.content.servers;
-    this.getServers();
+    this.textContent = this._textProvider.content.servers;
+  }
+
+  public ngAfterViewInit() {
+    refreshView(() => {
+      this._initiliazeDatasource();
+    });
   }
 
   public ngOnDestroy() {
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe();
+    if (!isNullOrEmpty(this.dataSource)) {
+      this.dataSource.disconnect();
     }
-    if (this.activeServerSubscription) {
-      this.activeServerSubscription.unsubscribe();
+    if (!isNullOrEmpty(this.dataColumns)) {
+      this.dataColumns = [];
+      this.dataColumns = null;
     }
   }
 
+  /**
+   * Execute the server command according to inputs
+   * @param server Server to process the action
+   * @param action Action to be execute
+   */
   public executeServerCommand(server: Server, action: string) {
     this._serversService.postServerCommand(
       server.id,
@@ -114,10 +118,14 @@ export class ServersComponent implements OnInit, OnDestroy {
         commandAction: ServerCommand[action]
       } as ServerClientObject)
       .subscribe((response) => {
-        // console.log(response);
+        // This will execute the process
       });
   }
 
+  /**
+   * Return the action status of the server
+   * @param server Server to get the action to
+   */
   public getActionStatus(server: Server): any {
     let status: ServerCommand;
 
@@ -134,10 +142,13 @@ export class ServersComponent implements OnInit, OnDestroy {
         status = ServerCommand.None;
         break;
     }
-
     return status;
   }
 
+  /**
+   * Return the status Icon key based on the status of the server
+   * @param state Server status
+   */
   public getStateIconKey(state: number): string {
     let stateIconKey: string = '';
 
@@ -166,91 +177,44 @@ export class ServersComponent implements OnInit, OnDestroy {
     return stateIconKey;
   }
 
-  public getServers(): void {
-    this.isLoading = true;
-    this.searchSubscription = Observable.of(new McsApiSearchKey())
-      .concat(this.searchSubject)
-      .debounceTime(CoreDefinition.SEARCH_TIME)
-      .distinctUntilChanged((previous, next) => {
-        return previous.isEqual(next);
-      })
-      .switchMap((searchKey) => {
-        // Switch observable items to server list
-        return this._serversService.getServers(
-          searchKey.page,
-          searchKey.maxItemPerPage ?
-            searchKey.maxItemPerPage : CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE,
-          searchKey.keyword
-        ).finally(() => this.isLoading = false);
-      })
-      .catch((error: McsApiErrorResponse) => {
-        this.hasError = true;
-        return Observable.throw(error);
-      })
-      .subscribe((mcsApiResponse) => {
-        // Get server response
-        if (this.page === 1) { this.servers.splice(0); }
-        if (mcsApiResponse.content) {
-          this.hasError = false;
-          this.servers = mergeArrays(this.servers, mcsApiResponse.content);
-          this.totalServerCount = mcsApiResponse.totalCount;
-          this._listenToActiveServers();
-        }
-      });
-  }
-
-  public onClickMoreEvent(): void {
-    this.getNextPage();
-  }
-
-  public onSearchEvent(key: any): void {
-    this.searchServers(key);
-  }
-
-  public onEnterSearchEvent(): void {
-    this.searchServers(this.keyword);
-  }
-
-  public getNextPage(): void {
-    this.page += 1;
-    this.updateServers(this.keyword, this.page);
-  }
-
-  public getDisplayServerCount(): number {
-    return this.page * CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE;
-  }
-
-  public searchServers(key: any): void {
-    this.page = 1;
-    this.keyword = key;
-    this.updateServers(this.keyword, this.page);
-  }
-
-  public updateServers(key?: string, page?: number) {
-    let searchKey: McsApiSearchKey = new McsApiSearchKey();
-    // Set server search key
-    searchKey.maxItemPerPage = CoreDefinition.SERVER_LIST_MAX_ITEM_PER_PAGE;
-    searchKey.page = page;
-    searchKey.keyword = key;
-    // Set true to loading flag
-    this.isLoading = true;
-    this.searchSubject.next(searchKey);
-  }
-
-  public onUpdateColumnSettings(columns: any): void {
+  /**
+   * Update the column settings based on filtered selectors
+   * and update the data column of the table together
+   * @param columns New column settings
+   */
+  public updateColumnSettings(columns: any): void {
     if (columns) {
       this.columnSettings = columns;
+      let columnDetails = Object.keys(this.columnSettings);
+
+      this.dataColumns = [];
+      columnDetails.forEach((column) => {
+        if (!this.columnSettings[column].value) { return; }
+        this.dataColumns.push(column);
+      });
     }
   }
 
+  /**
+   * This will navigate to new server page
+   * @param event Event invoked
+   */
   public onClickNewServerButton(event: any) {
     this._router.navigate(['./servers/create']);
   }
 
+  /**
+   * Return the active server tooltip information
+   * @param serverId Server ID
+   */
   public getActiveServerTooltip(serverId: any) {
     return this._serversService.getActiveServerInformation(serverId);
   }
 
+  /**
+   * Return the server type according to status
+   * @param serviceType Service type of the server
+   */
   public getServiceTypeText(serviceType: ServerServiceType): string {
     let serviceTypeText = '';
 
@@ -269,30 +233,44 @@ export class ServersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listener to all the active servers for real time update of status
-   *
-   * `@Note`: This should be listen to the servers service since their powerstate
-   * status should be synchronise
+   * Return the server powerstate based on the active server status
+   * @param server Server to be check
    */
-  private _listenToActiveServers(): void {
-    // Listener for the active servers
-    this.activeServerSubscription = this._serversService.activeServersStream
-      .subscribe((activeServers) => {
-        this._updateServerBasedOnActive(activeServers);
-      });
-  }
+  public getServerPowerstate(server: Server): number {
+    let serverPowerstate = server.powerState;
 
-  private _updateServerBasedOnActive(activeServers: ServerClientObject[]): void {
-    if (!activeServers) { return; }
-
-    // This will update the server list based on the active servers
-    activeServers.forEach((activeServer) => {
-      for (let server of this.servers) {
-        if (server.id === activeServer.serverId) {
-          server.powerState = this._serversService.getActiveServerPowerState(activeServer);
+    if (isNullOrEmpty(this._serversService.activeServers)) {
+      return serverPowerstate;
+    } else {
+      for (let active of this._serversService.activeServers) {
+        if (active.serverId === server.id) {
+          // Update the powerstate of the corresponding server based on the row
+          serverPowerstate = this._serversService.getActiveServerPowerState(active);
+          server.powerState = serverPowerstate;
           break;
         }
       }
-    });
+      return serverPowerstate;
+    }
+  }
+
+  /**
+   * Retry to obtain the source from API
+   */
+  public retryDatasource(): void {
+    if (isNullOrEmpty(this.dataSource)) { return; }
+    this._initiliazeDatasource();
+  }
+
+  /**
+   * Initialize the table datasource according to pagination and search settings
+   */
+  private _initiliazeDatasource(): void {
+    // Set datasource
+    this.dataSource = new ServersDataSource(
+      this._serversService,
+      this.paginator,
+      this.search
+    );
   }
 }

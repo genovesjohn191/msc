@@ -96,8 +96,12 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     }
   }
 
-  public onCompletion(): void {
+  public onCompletion(data?: any): void {
     // Do all the completion of pagination, filtering, etc... here
+  }
+
+  public onError(status?: number): void {
+    // Do all the error handling error, on what to display in the view
   }
 
   private _setFirewallListData(): void {
