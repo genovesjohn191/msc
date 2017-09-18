@@ -121,7 +121,7 @@ podTemplate(
                         returnStdout: true,
                         script: "git --no-pager show -s --format='%an <%ae>' HEAD"
                     ).trim()
-                image_version = commitSHAShort + "-" + ((System.currentTimeMillis() / 1000L).toInteger().toString())
+                image_version = commitSHAShort + "-" + System.currentTimeMillis()
             }
 
             echo "Building ${image_name} with version ${image_version}."
