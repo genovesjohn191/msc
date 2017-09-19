@@ -73,9 +73,9 @@ describe('ServerPerformanceScaleComponent', () => {
       expect(component.maximum).toBe(component.sliderTable.length - 1);
     }));
 
-    it(`should set the slider value to 1`, fakeAsync(() => {
+    it(`should set the slider value to 0`, fakeAsync(() => {
       tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-      expect(component.sliderValue).toBe(1);
+      expect(component.sliderValue).toBe(0);
     }));
 
     it(`should set the scale type to Slider`, fakeAsync(() => {
