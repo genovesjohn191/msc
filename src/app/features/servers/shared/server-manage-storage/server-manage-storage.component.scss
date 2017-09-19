@@ -41,8 +41,10 @@ $server-manage-storage-font-size: $h4-small-font-size;
     .custom-size-input {
       width: 100%;
       @include set-items-interval(20px, horizontal);
+
       * {
         display: inline-block;
+        vertical-align: middle;
       }
 
       mcs-textbox {

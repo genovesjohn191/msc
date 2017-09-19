@@ -106,5 +106,9 @@
     &:focus::-ms-fill-upper {
       background: $color-primary-02;
     }
+
+    &::-ms-tooltip {
+      display: none;
+    }
   }
 }

@@ -63,12 +63,7 @@ export class FirewallComponent implements OnInit, OnDestroy {
       .subscribe((firewall) => {
         this.firewallName = firewall.managementName;
       });
-
-    this.firewallListSource = new FirewallListSource(
-      this._firewallsService,
-      this._firewallService,
-      this._listSearch
-    );
+    this._initializeListsource();
   }
 
   /**
@@ -88,5 +83,13 @@ export class FirewallComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  private _initializeListsource(): void {
+    this.firewallListSource = new FirewallListSource(
+      this._firewallsService,
+      this._firewallService,
+      this._listSearch
+    );
   }
 }
