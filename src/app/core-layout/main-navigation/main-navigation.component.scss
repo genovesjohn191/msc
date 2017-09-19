@@ -3,11 +3,7 @@
 .main-navigation {
   background-color: $color-primary-01;
   color: $color-black;
-  padding: 0;
-
-  .container {
-    padding: 0;
-  }
+  padding: $main-navigation-padding;
 
   %macquarie-view {
     &.macquarie-view-link {
@@ -31,6 +27,10 @@
         margin-right: 5px;
       }
     }
+  }
+
+  .navigation-wrapper {
+    width: 100%;
   }
 
   .navbar-mobile {

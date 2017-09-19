@@ -3,7 +3,7 @@
 $notifications-search-min-width: 300px;
 
 .notifications-table-wrapper {
-  @include display-flex(column);
+  display: inline-block;
   @include set-items-interval($space-large);
 
   .search-wrapper {
@@ -29,6 +29,6 @@ $notifications-search-min-width: 300px;
   }
 
   .message-wrapper {
-    align-self: center;
+    text-align: center;
   }
 }

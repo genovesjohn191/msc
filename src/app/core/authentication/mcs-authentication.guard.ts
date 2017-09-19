@@ -30,6 +30,7 @@ export class McsAuthenticationGuard implements CanActivate {
     authToken = this._authenticationService.getAuthToken(activatedRoute.queryParams);
 
     if (authToken) {
+      this._authenticationService.setAuthToken(authToken);
       return this._authenticationService.IsAuthenticated(authToken)
         .map((response) => {
           return response;

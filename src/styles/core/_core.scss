@@ -14,18 +14,17 @@
 
 html {
   position: relative;
-  min-height: 100%;
+  height: 100%;
 
   body {
-    padding-right: 0 !important; // This is a temporary fix for bootstrap modal glitch
+    height: 100%;
+    overflow: hidden;
     font-family: $font-default;
     color: $color-black;
-    margin-bottom: 114px;
     @include font-size($font-size-default, $line-height-default);
     @include breakpoint(small) {
       @include font-size($font-size-small, $line-height-small);
       padding-top: $navigation-mobile-offset;
-      margin-bottom: 96px;
     }
 
     h1, h2, h3, h4 {
@@ -133,16 +132,6 @@ html {
     button, button.btn {
       font-family: $button-font;
       font-size: $button-font-size;
-    }
-
-    .container {
-      width: $container-large;
-      @include breakpoint(medium) {
-        width: $container-medium;
-      }
-      @include breakpoint(small) {
-        width: $container-small;
-      }
     }
 
     header {

@@ -12,7 +12,8 @@ header {
 
 .header-container {
   align-items: center;
-  padding: $space-large 0;
+  padding: $header-padding;
+
   @include breakpoint(medium) {
     padding: $space-medium 0;
     border-right: 1px solid $color-grey-01;

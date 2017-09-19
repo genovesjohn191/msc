@@ -111,6 +111,11 @@ $zindex-navigation: 1000;
 $zindex-popover: 1100;
 $zindex-notifications: 1100;
 
+// Core layout
+$header-padding: $space-large;
+$main-navigation-padding: 0 $space-large;
+$content-padding: $space-large;
+
 // Input
 $input-font: $base-font;
 $input-border-width: 1px;
