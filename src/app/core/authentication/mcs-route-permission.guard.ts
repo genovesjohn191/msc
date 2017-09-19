@@ -15,6 +15,7 @@ export class McsRoutePermissionGuard {
   /** This stores the permission required to access a base route. */
   private _routeRequiredPermissions: Map<string, string[]> = new Map([
     ['/servers', ['VmAccess']],
+    ['/tickets', ['TicketView']],
     ['/firewalls', ['FirewallConfigurationView']]
   ]);
 

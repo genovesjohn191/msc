@@ -2,7 +2,7 @@
 
 .gadgets-container {
   position: relative;
-  @include set-items-interval($space-large);
+  @include set-items-interval($space-xlarge);
 
   .gadgets-container-item {
     h3.title {
@@ -10,7 +10,7 @@
     }
 
     box-shadow: 0 0 10px 2px rgba($color-black, 0.2);
-    padding: $space-medium;
+    padding: $space-large;
   }
 }
 
@@ -23,5 +23,5 @@
 
 // Table
 .table-container {
-  @include set-items-interval($space-medium);
+  @include set-items-interval($space-large);
 }

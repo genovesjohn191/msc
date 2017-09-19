@@ -28,9 +28,7 @@ import { WizardStepComponent } from './wizard/wizard-step/wizard-step.component'
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SearchComponent } from './search/search.component';
 /** Directives */
-import {
-  HasPermissionDirective
-} from './authentication/has-permission.directive';
+import { HasPermissionDirective } from './authentication/has-permission.directive';
 
 @NgModule({
   declarations: [

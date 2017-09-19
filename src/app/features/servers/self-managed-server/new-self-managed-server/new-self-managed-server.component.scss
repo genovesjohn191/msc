@@ -2,16 +2,16 @@
 
 .new-self-managed-server-container {
   width: 100%;
-  @include set-items-interval($space-medium);
+  @include set-items-interval($space-large);
 
   .server-details {
     @include display-flex(column);
-    @include set-items-interval($space-medium);
+    @include set-items-interval($space-large);
   }
 
   .computer-details {
     @include display-flex(column);
-    @include set-items-interval($space-medium);
+    @include set-items-interval($space-large);
 
     .computer-information {
       @include set-items-interval($space-small);
@@ -24,7 +24,7 @@
 
   .network-details {
     @include display-flex(column);
-    @include set-items-interval($space-medium);
+    @include set-items-interval($space-large);
   }
 
   .label {

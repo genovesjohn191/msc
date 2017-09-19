@@ -11,7 +11,7 @@ $server-storage-form-border-color: $color-grey-00;
 
 .mcs-server-storage {
   .heading {
-    margin-bottom: $space-medium;
+    margin-bottom: $space-large;
   }
 
   .primary {
@@ -101,8 +101,8 @@ $server-storage-form-border-color: $color-grey-00;
   .add-new-storage {
     border: 1px solid $server-storage-form-border-color;
     @include border-radius($input-border-radius);
-    padding: $space-medium;
-    margin-top: $space-large;
+    padding: $space-large;
+    margin-top: $space-xlarge;
 
     .attach {
       text-align: right;
@@ -113,10 +113,10 @@ $server-storage-form-border-color: $color-grey-00;
     @include display-flex(row);
     align-items: center;
     justify-content: center;
-    margin-top: $space-large;
+    margin-top: $space-xlarge;
 
     h4 {
-      margin-left: $space-medium;
+      margin-left: $space-large;
       margin-bottom: 0;
     }
   }
@@ -134,7 +134,7 @@ $server-storage-form-border-color: $color-grey-00;
   }
 
   .loading-spinner {
-    margin-top: $space-large;
+    margin-top: $space-xlarge;
     text-align: center;
   }
 }

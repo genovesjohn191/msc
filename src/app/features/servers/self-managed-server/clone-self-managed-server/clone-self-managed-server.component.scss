@@ -2,7 +2,7 @@
 
 .clone-self-managed-server-container {
   width: 100%;
-  @include set-items-interval($space-medium);
+  @include set-items-interval($space-large);
 
   .server-configuration-details {
     @include display-flex(column);
@@ -11,7 +11,7 @@
 
   .computer-details {
     @include display-flex(column);
-    @include set-items-interval($space-medium);
+    @include set-items-interval($space-large);
 
     .computer-information {
       @include set-items-interval($space-small);
@@ -24,7 +24,7 @@
 
   .network-details {
     @include display-flex(column);
-    @include set-items-interval($space-medium);
+    @include set-items-interval($space-large);
   }
 
   .label {

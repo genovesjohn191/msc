@@ -9,9 +9,9 @@ footer {
     @include display-flex(column);
     align-items: center;
     justify-content: center;
-    padding: $space-large 0 $space-xlarge;
+    padding: $space-xlarge 0 $space-xxlarge;
     @include breakpoint(small) {
-      padding-bottom: $space-large;
+      padding-bottom: $space-xlarge;
     }
 
     .copyright {
