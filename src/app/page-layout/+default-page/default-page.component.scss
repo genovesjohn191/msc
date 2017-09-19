@@ -1,5 +1,20 @@
 @import "../../../styles/shared/base";
 
-.default-page-container {
+:host {
+  height: 100%;
+  @include display-flex(column);
+}
+
+.header {
+  @include flex(0 0 auto);
+}
+
+.content {
+  @include flex(1 1 auto);
   position: relative;
+  overflow-y: auto;
+}
+
+.footer {
+  @include flex(0 0 auto);
 }

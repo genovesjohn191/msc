@@ -83,7 +83,7 @@ export class McsAuthenticationService {
    * This will set the token to Cookie and Appstate
    * @param authToken Valid Authentication Token
    */
-  public setAuthToken(authToken: string, expiration: Date): void {
+  public setAuthToken(authToken: string, expiration?: Date): void {
     // Update cookie
     this._setCookie(authToken, expiration);
     // Update app state

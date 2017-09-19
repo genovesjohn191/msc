@@ -1,5 +1,8 @@
 @import "../../../styles/shared/base";
 
+// Table
+$table-minimum-width: 800px;
+
 // Table header
 $table-header-background-color: $color-black;
 $table-header-font-color: $color-white;
@@ -27,7 +30,7 @@ $table-cell-divider-opacity: 0.70;
 mcs-table {
   display: table;
   border-collapse: collapse;
-  width: 100%;
+  min-width: $table-minimum-width;
   max-width: 100%;
 
   mcs-header-row {
