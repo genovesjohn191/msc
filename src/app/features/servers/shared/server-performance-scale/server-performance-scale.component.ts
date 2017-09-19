@@ -303,7 +303,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     table.push({ memoryMB: 32768, cpuCount: 8 } as ServerPerformanceScale);
 
     table.forEach((scale) => {
-      if (scale.memoryMB <= this.availableMemoryMB && scale.cpuCount <= this.availableCpuCount) {
+      if (this._validateScaleValues(scale)) {
         this.sliderTable.push(scale);
       }
     });
@@ -342,5 +342,10 @@ export class ServerPerformanceScaleComponent implements OnInit {
     value: string
   ): string {
     return message.replace(`{{${placeholder}}}`, value);
+  }
+
+  private _validateScaleValues(scale: ServerPerformanceScale): boolean {
+    return (scale.memoryMB >= this.memoryMB && scale.memoryMB <= this.availableMemoryMB)
+      && (scale.cpuCount >= this.cpuCount && scale.cpuCount <= this.availableCpuCount);
   }
 }

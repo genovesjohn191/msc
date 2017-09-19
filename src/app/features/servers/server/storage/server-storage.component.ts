@@ -551,9 +551,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     let isValid: boolean = false;
 
     if (this.expandStorage) {
-      isValid = this.storageChangedValue.storageMB > this.selectedStorageDevice.sizeMB;
+      isValid = this.storageChangedValue.storageMB > this.selectedStorageDevice.sizeMB
+        && this.storageChangedValue.valid;
     } else {
-      isValid = this.storageChangedValue.storageMB > this.memoryMB;
+      isValid = this.storageChangedValue.storageMB > this.memoryMB
+        && this.storageChangedValue.valid;
     }
 
     return isValid;

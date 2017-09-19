@@ -65,8 +65,8 @@ export class FirewallService {
       let firewall: Firewall = response.content;
 
       if (firewall) {
-        this._selectedFirewallStream.next(firewall);
         this._selectedFirewall = firewall;
+        this._selectedFirewallStream.next(firewall);
       }
     });
   }

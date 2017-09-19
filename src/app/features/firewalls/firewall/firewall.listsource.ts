@@ -71,15 +71,13 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
           });
         }
 
-        if (this._firewallService.selectedFirewall) {
+        refreshView(() => {
           let selectedFirewall = this._firewallService.selectedFirewall;
-          refreshView(() => {
-            this.selectedElement = {
-              itemId: selectedFirewall.id,
-              groupName: selectedFirewall.haGroupName
-            } as McsListPanelItem;
-          });
-        }
+          this.selectedElement = {
+            itemId: selectedFirewall.id,
+            groupName: selectedFirewall.haGroupName
+          } as McsListPanelItem;
+        });
 
         return firewallList;
       });
