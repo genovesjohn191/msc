@@ -38,7 +38,7 @@
               mcsPopover trigger="hover" maxWidth="250px" padding="none"
               [content]="loadingContent"></mcs-icon>
           </div>
-          <a>{{ row.managementName }}</a>
+          <a [routerLink]="['/servers', row.id]">{{ row.managementName }}</a>
         </div>
       </mcs-data-cell>
     </ng-container>

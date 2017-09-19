@@ -10,7 +10,7 @@
   .alert-icon {
     @include display-flex(row);
     align-items: center;
-    margin-right: $space-medium;
+    margin-right: $space-large;
     @include border-radius(100%);
     width: $alert-icon-container-size;
     height: $alert-icon-container-size;

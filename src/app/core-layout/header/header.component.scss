@@ -15,10 +15,11 @@ header {
   padding: $header-padding;
 
   @include breakpoint(medium) {
-    padding: $space-medium 0;
+    padding: $space-large 0;
     border-right: 1px solid $color-grey-01;
   }
   @include breakpoint(small) {
+    padding: $space-large $space-medium;
     border-right: none;
   }
   @include display-flex(row);
@@ -33,7 +34,7 @@ header {
     margin-right: auto;
     img {
       width: auto;
-      height: 40px;
+      height: 30px;
       @include breakpoint(small) {
         height: 25px;
       }
@@ -42,14 +43,14 @@ header {
 
   // TODO: Move to specific folder of user panel component
   .notification {
-    padding: 0 $space-large;
+    padding: 0 $space-xlarge;
     @include breakpoint(small) {
-      padding: 0 $space-medium;
+      padding: 0 $space-large;
     }
   }
 
   .exit {
-    padding: 0 $space-medium;
+    padding: 0 $space-large;
     border-left: 1px solid $color-grey-01;
     display: none;
     @include breakpoint(small) {
@@ -59,13 +60,13 @@ header {
 
   .user-panel {
     max-height: 40px;
-    padding: 0 $space-large;
+    padding: 0 $space-xlarge;
     text-align: center;
     @include breakpoint(medium) {
       border-left: 1px solid $color-grey-01;
     }
     @include breakpoint(small) {
-      padding: 0 $space-medium;
+      padding: 0 $space-large;
       border-left: 1px solid $color-grey-01;
     }
     .user-icon {

@@ -4,7 +4,7 @@ $tickets-search-min-width: 300px;
 
 .tickets-table-wrapper {
   display: inline-block;
-  @include set-items-interval($space-large);
+  @include set-items-interval($space-xlarge);
 
   .search-wrapper {
     @include display-flex(row);

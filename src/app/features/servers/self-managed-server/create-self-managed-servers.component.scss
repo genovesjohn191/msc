@@ -33,7 +33,7 @@ $main-form-minimum-size: 200px;
        .additional-server-container {
          background-color: $color-grey-05;
          padding: 10px 20px;
-         margin-top: $space-medium;
+         margin-top: $space-large;
 
          .add-server {
            display: inline-block;
@@ -49,7 +49,7 @@ $main-form-minimum-size: 200px;
       }
 
       .jobs-progress {
-        @include set-items-interval($space-large, vertical);
+        @include set-items-interval($space-xlarge, vertical);
 
         .link-home {
           display: block;

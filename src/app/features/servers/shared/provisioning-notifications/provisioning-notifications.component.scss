@@ -15,15 +15,15 @@ $job-server-link-left-offset: 25px;
 
 .provisioning-notifications-container {
   @include display-flex(column);
-  @include set-items-interval($space-xlarge);
+  @include set-items-interval($space-xxlarge);
 
   .progress-container {
-    @include set-items-interval($space-medium);
+    @include set-items-interval($space-large);
   }
 
   .jobs-container {
     @include display-flex(column);
-    @include set-items-interval($space-xlarge);
+    @include set-items-interval($space-xxlarge);
 
     .job-completed {
       font-family: $provisioning-details-font-bold;

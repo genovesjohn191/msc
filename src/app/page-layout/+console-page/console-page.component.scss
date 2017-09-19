@@ -27,7 +27,7 @@ body {
     background-color: $color-white;
     border: 1px solid $color-grey-06;
     @include display-flex(row);
-    @include set-items-interval($space-medium, horizontal);
+    @include set-items-interval($space-large, horizontal);
     min-height: $console-menu-bar-height;
 
     div {

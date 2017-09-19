@@ -12,14 +12,14 @@
   .information {
     @include flex(1);
     @include display-flex(column);
-    padding-right: $space-medium;
+    padding-right: $space-large;
     border-right: 1px solid gray;
 
     .status {
       @include set-items-interval(20px, horizontal);
       @include display-flex(row);
       align-items: center;
-      margin-bottom: $space-large;
+      margin-bottom: $space-xlarge;
 
       .icon {
         width: $state-change-notification-icon-width;
@@ -62,7 +62,7 @@
   .owner-info {
     color: $color-grey-02;
     font-family: $base-font;
-    margin: 0 $space-medium;
+    margin: 0 $space-large;
     @include font-size($state-change-notification-message-font-size);
   }
 }

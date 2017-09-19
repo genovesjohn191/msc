@@ -1,7 +1,7 @@
 @import "../../../../../styles/shared/base";
 
 .firewall-policies-table-wrapper {
-  @include set-items-interval($space-medium);
+  @include set-items-interval($space-large);
 
   .search-wrapper {
     @include display-flex(row);
@@ -16,7 +16,7 @@
       @include display-flex(row);
       align-items: center;
       justify-content: space-between;
-      @include set-items-interval($space-medium, horizontal);
+      @include set-items-interval($space-large, horizontal);
 
       @include breakpoint(medium) {
         margin: 0;
@@ -40,7 +40,7 @@
 
 .firewall-policy-details-wrapper {
   .details {
-    @include set-items-interval($space-medium);
+    @include set-items-interval($space-large);
 
     .heading {
       @include display-flex(row);

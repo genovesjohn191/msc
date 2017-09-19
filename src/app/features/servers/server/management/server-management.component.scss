@@ -52,14 +52,14 @@ $server-vm-console-disabled-color: $color-grey-02;
 
   .server-details {
     color: $server-text-color;
-    margin: $space-large 0;
+    margin: $space-xlarge 0;
     @include set-items-interval(50px, vertical);
   }
 }
 
 .server-performance-scale-container {
    @include set-items-interval(10px, vertical);
-   margin: $space-large 0;
+   margin: $space-xlarge 0;
 
   .note {
     @include display-flex(row);
@@ -67,7 +67,7 @@ $server-vm-console-disabled-color: $color-grey-02;
     justify-content: center;
     @include font-size(16);
     @include set-items-interval(5px, horizontal);
-    margin-bottom: $space-large;
+    margin-bottom: $space-xlarge;
   }
 
   .scaling {

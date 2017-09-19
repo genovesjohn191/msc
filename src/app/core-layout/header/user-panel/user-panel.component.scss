@@ -3,12 +3,9 @@
 .mcs-user-panel {
   @include display-flex(row);
   align-items: center;
+  @include set-items-interval($space-medium, horizontal);
 
   .notification {
-    padding: 0 $space-large;
-    @include breakpoint(small) {
-      padding: 0 $space-medium;
-    }
 
     .icon-link {
       display: block;
@@ -42,7 +39,7 @@
   }
 
   .exit {
-    padding: 0 $space-medium;
+    padding-left: $space-medium;
     border-left: 1px solid $color-grey-01;
     display: none;
     @include breakpoint(small) {
@@ -52,13 +49,13 @@
 
   .user-panel {
     max-height: 40px;
-    padding: 0 $space-large;
+    // padding: 0 $space-small;
     text-align: center;
     @include breakpoint(medium) {
       border-left: 1px solid $color-grey-01;
     }
     @include breakpoint(small) {
-      padding: 0 $space-medium;
+      padding-left: $space-medium;
       border-left: 1px solid $color-grey-01;
     }
     .user-icon {
@@ -126,7 +123,7 @@
   padding: $space-small 0;
   a {
     text-decoration: none;
-    padding: $space-xsmall $space-medium;
+    padding: $space-xsmall $space-large;
     text-decoration: none;
     &:hover,
     &:focus {

@@ -2,18 +2,18 @@
 
 :host {
   display: block;
-  margin-top: $space-large;
+  margin-top: $space-xlarge;
 }
 
 .create-self-managed-server-container {
   @include display-flex(column);
   @include set-items-interval(20px);
   border: 1px solid $color-grey-06;
-  padding: $space-medium;
+  padding: $space-large;
   box-shadow: 0 2px 5px rgba($color-black,0.2);
 
   .mcs-tabs {
-    margin-top: $space-large;
+    margin-top: $space-xlarge;
 
     .nav-tabs {
       justify-content: flex-start;

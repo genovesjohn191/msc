@@ -7,7 +7,7 @@
 .modal-content {
   .modal-header {
     align-items: flex-start;
-    padding: $space-xlarge $space-xlarge 0;
+    padding: $space-xxlarge $space-xxlarge 0;
     border-bottom: none;
 
   i {
@@ -17,15 +17,15 @@
 }
 
 .modal-subtitle{
-  padding-right: $space-xlarge;
-  padding-left: $space-xlarge;
+  padding-right: $space-xxlarge;
+  padding-left: $space-xxlarge;
   p {
     margin-bottom: 0;
   }
 }
 
   .modal-body {
-    padding: $space-small $space-xlarge $space-xlarge;
+    padding: $space-small $space-xxlarge $space-xxlarge;
   }
 }
 

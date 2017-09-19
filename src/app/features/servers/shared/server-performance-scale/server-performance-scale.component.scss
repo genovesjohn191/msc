@@ -33,10 +33,10 @@
 
   .custom-size-content {
     min-height: 100px;
-    margin: $space-medium 0;
+    margin: $space-large 0;
 
     .custom-size-inputs {
-      @include set-items-interval($space-medium, vertical);
+      @include set-items-interval($space-large, vertical);
 
       li {
         .input-group {
@@ -85,7 +85,7 @@
 
   .scale {
     min-height: 100px;
-    margin: $space-xlarge 0 $space-large;
+    margin: $space-xxlarge 0 $space-xlarge;
     > .scale-label,
     > .available-label {
       display: block;

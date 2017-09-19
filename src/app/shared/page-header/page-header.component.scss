@@ -5,9 +5,9 @@ $page-header-border-color: $color-grey-05;
 
 :host {
   display: block;
-  margin-bottom: $space-large;
+  margin-bottom: $space-xlarge;
   @include font-size($page-header-font-size);
-  @include set-items-interval($space-medium);
+  @include set-items-interval($space-large);
 }
 
 .header-wrapper {
