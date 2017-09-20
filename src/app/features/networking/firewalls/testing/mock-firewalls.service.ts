@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Rx';
-import { McsApiSuccessResponse } from '../../../core';
+import { McsApiSuccessResponse } from '../../../../core';
 import { Firewall } from '../models';
 
 export const mockFirewallsService = {

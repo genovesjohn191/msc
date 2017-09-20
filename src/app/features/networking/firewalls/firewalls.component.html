@@ -1,0 +1,114 @@
+<!-- Table with filtering and pagination -->
+<div class="firewalls-table-wrapper">
+  <!-- Search -->
+  <div class="search-wrapper">
+    <mcs-search #search class="search"></mcs-search>
+
+    <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
+      (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+
+    <span class="record-count">{{ totalRecordCount }} {{ firewallsTextContent.header }}</span>
+  </div>
+
+  <!-- Table -->
+  <mcs-table [dataSource]="dataSource">
+    <!-- Firewall Column -->
+    <ng-container mcsColumnDef="firewall">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.firewall.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Serial Number Column -->
+    <ng-container mcsColumnDef="serialNumber" >
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.serialNumber.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.serialNumber }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Firmware Version Column -->
+    <ng-container mcsColumnDef="firmwareVersion">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.firmwareVersion.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.osVendor }} {{ row.osRelease }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- IP Address Column -->
+    <ng-container mcsColumnDef="ipAddress">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.ipAddress.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        {{ row.managementIpAddress }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Role Column -->
+    <ng-container mcsColumnDef="role">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.role.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        {{ row.role }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Service ID Column -->
+    <ng-container mcsColumnDef="serviceId">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ columnSettings.serviceId.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        {{ row.serviceId }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Action Column TODO: add restriction here -->
+    <ng-container mcsColumnDef="action">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small"></mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
+        <mcs-icon class="action" [key]="cogIconKey" size="large"
+          mcsPopover placement="bottom" orientation="left"
+          theme="light" padding="narrow" [content]="actionContent">
+        </mcs-icon>
+        <ng-template #actionContent>
+          <!-- TODO: Update with dynamic value -->
+          <a class="action-item">View in Fortigate Portal</a>
+        </ng-template>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+  </mcs-table>
+
+  <div class="message-wrapper" *ngIf="displayErrorMessage">
+    <!-- Message when error encountered -->
+    <div *ngIf="!successfullyObtained">
+      <span>{{ firewallsTextContent.errorMessage }}</span>
+      <a (click)="retryDatasource()">Try again shortly</a>.
+    </div>
+
+    <!-- Message when no firewalls found -->
+    <div *ngIf="!hasFirewalls">
+      <span>{{ firewallsTextContent.noFirewalls }}</span>
+    </div>
+  </div>
+
+  <!-- Paginator -->
+  <mcs-paginator #paginator
+    [totalCount]="totalRecordCount"
+    [pageIndex]="0"
+    [pageSize]="25">
+  </mcs-paginator>
+</div>

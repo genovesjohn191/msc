@@ -6,7 +6,7 @@ import {
   McsDataSource,
   McsSearch,
   McsListPanelItem
-} from '../../../core';
+} from '../../../../core';
 import {
   Firewall,
   FirewallList
@@ -16,7 +16,7 @@ import { FirewallService } from './firewall.service';
 import {
   isNullOrEmpty,
   refreshView
-} from '../../../utilities';
+} from '../../../../utilities';
 
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
@@ -71,14 +71,6 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
           });
         }
 
-        refreshView(() => {
-          let selectedFirewall = this._firewallService.selectedFirewall;
-          this.selectedElement = {
-            itemId: selectedFirewall.id,
-            groupName: selectedFirewall.haGroupName
-          } as McsListPanelItem;
-        });
-
         return firewallList;
       });
   }
@@ -107,6 +99,14 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
       .subscribe((response) => {
         this._firewallList = this._mapFirewallList(response.content);
         this._firewallListStream.next(this._firewallList);
+
+        refreshView(() => {
+          let selectedFirewall = this._firewallService.selectedFirewall;
+          this.selectedElement = {
+            itemId: selectedFirewall.id,
+            groupName: selectedFirewall.haGroupName
+          } as McsListPanelItem;
+        });
       });
   }
 

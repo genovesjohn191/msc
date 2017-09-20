@@ -12,12 +12,12 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsSearch
-} from '../../../core';
+} from '../../../../core';
 import { Firewall } from '../models';
 import { FirewallsService } from '../firewalls.service';
 import { FirewallService } from './firewall.service';
 import { FirewallListSource } from './firewall.listsource';
-import { isNullOrEmpty } from '../../../utilities';
+import { isNullOrEmpty } from '../../../../utilities';
 
 @Component({
   selector: 'mcs-firewall',
@@ -73,7 +73,7 @@ export class FirewallComponent implements OnInit, OnDestroy {
    */
   public onFirewallSelect(firewallId: any) {
     if (firewallId) {
-      this._router.navigate(['/firewalls', firewallId]);
+      this._router.navigate(['/networking/firewalls', firewallId]);
       this._firewallService.setSelectedFirewall(firewallId);
     }
   }

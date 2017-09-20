@@ -121,13 +121,13 @@
 
   <div class="message-wrapper" *ngIf="displayErrorMessage">
     <!-- Message when error encountered -->
-    <div *ngIf="successfullyObtained === false">
+    <div *ngIf="!successfullyObtained">
       <span>{{ textContent.errorMessage }}</span>
       <a (click)="retryDatasource()">Try again shortly</a>.
     </div>
 
     <!-- Message when no servers found -->
-    <div *ngIf="noServersFound">
+    <div *ngIf="!hasServers">
       <span>{{ textContent.noServers }}</span>
     </div>
   </div>

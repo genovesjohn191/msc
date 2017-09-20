@@ -3,10 +3,10 @@ import {
   OnInit,
   OnDestroy
 } from '@angular/core';
-import { McsTextContentProvider } from '../../../../core';
+import { McsTextContentProvider } from '../../../../../core';
 import { Firewall } from '../../models';
 import { FirewallService } from '../firewall.service';
-import { convertToGb } from '../../../../utilities';
+import { convertToGb } from '../../../../../utilities';
 
 @Component({
   selector: 'mcs-firewall-overview',

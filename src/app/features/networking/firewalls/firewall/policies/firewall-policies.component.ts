@@ -8,7 +8,7 @@ import {
   McsSearch,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../core';
+} from '../../../../../core';
 import {
   FirewallPolicy,
   FirewallPolicyAction
@@ -19,7 +19,7 @@ import {
   isNullOrEmpty,
   getEnumString,
   replacePlaceholder
-} from '../../../../utilities';
+} from '../../../../../utilities';
 
 const FIREWALL_POLICY_SEQUENCE_PLACEHOLDER = 'sequence';
 
@@ -137,6 +137,28 @@ export class FirewallPoliciesComponent implements OnInit {
   public getActionEnumString(value: number): string {
     if (value < 0) { return ''; }
     return FirewallPolicyAction[value];
+  }
+
+  /**
+   * Convert the firewall action enum to string
+   * @param value firewall action value
+   */
+  public getActionIconKey(value: number): string {
+    if (value < 0) { return ''; }
+
+    let iconKey = '';
+    switch (value) {
+      case FirewallPolicyAction.Disabled:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case FirewallPolicyAction.Enabled:
+      default:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+    }
+
+    return iconKey;
   }
 
   private _initializeDatasource(): void {

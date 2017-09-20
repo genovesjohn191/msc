@@ -14,6 +14,22 @@
 
   <!-- Table -->
   <mcs-table [dataSource]="dataSource">
+    <ng-container mcsColumnDef="action">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.action.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small text-center">
+        <mcs-icon [key]="getActionIconKey(row.action)" size="medium"
+          mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
+          [content]="tooltipContent"></mcs-icon>
+        <ng-template #tooltipContent>
+          <span class="tooltip-content">
+            {{ getActionEnumString(row.action) }}
+          </span>
+        </ng-template>
+      </mcs-data-cell>
+    </ng-container>
+
     <ng-container mcsColumnDef="sequence">
       <mcs-header-cell *mcsHeaderCellDef>
         {{ columnSettings.sequence.text }}
@@ -101,20 +117,11 @@
       </mcs-data-cell>
     </ng-container>
 
-    <ng-container mcsColumnDef="action">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.action.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        <span>{{ getActionEnumString(row.action) }}</span>
-      </mcs-data-cell>
-    </ng-container>
-
     <ng-container mcsColumnDef="details">
       <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
         {{ columnSettings.details.text }}
       </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="details hidden-small">
+      <mcs-data-cell *mcsDataCellDef="let row" class="details hidden-small text-center">
         <mcs-icon [key]="infoIconKey" size="xlarge" (click)="showFirewallPolicyDetails(row)"></mcs-icon>
       </mcs-data-cell>
     </ng-container>
