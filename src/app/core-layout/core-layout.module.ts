@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-/** Shared Modules */
+/** Modules */
 import { SharedModule } from '../shared';
+import { MainNavigationModule } from './main-navigation/main-navigation.module';
 /** Multiple Components */
 import {
   StateChangeNotificationsComponent,
@@ -11,7 +12,6 @@ import {
   StateChangeNotificationMaxDisplayPipe
 } from './state-change-notifications';
 /** Layout Components */
-import { MainNavigationComponent } from './main-navigation/main-navigation.component';
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
@@ -26,7 +26,6 @@ import { coreLayoutProviders } from './core-layout.constants';
 
 @NgModule({
   declarations: [
-    MainNavigationComponent,
     BreadcrumbsComponent,
     ContentComponent,
     FooterComponent,
@@ -42,10 +41,10 @@ import { coreLayoutProviders } from './core-layout.constants';
     CommonModule,
     RouterModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    MainNavigationModule
   ],
   exports: [
-    MainNavigationComponent,
     ContentComponent,
     FooterComponent,
     HeaderComponent,
@@ -57,7 +56,8 @@ import { coreLayoutProviders } from './core-layout.constants';
     StateChangeNotificationMaxDisplayPipe,
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    MainNavigationModule
   ],
   providers: [
     ...coreLayoutProviders

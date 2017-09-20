@@ -1,0 +1,25 @@
+<!-- Main navigation for mobile -->
+<div class="navigation-mobile-wrapper">
+  <div class="navigation-mobile-icon">
+    <mcs-icon [key]="toggleIconKey" size="large" (click)="open()"></mcs-icon>
+  </div>
+
+  <!-- Macquarie Link View -->
+  <div class="macquarie-link">
+    <a href="https://macquarieview.com/" target="_blank">
+      <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
+      <span>Macquarie View</span>
+    </a>
+  </div>
+</div>
+
+<!-- Navigation list from template binding -->
+<div class="navigation-mobile-list" [@animate]="showHide">
+  <div class="navigation-mobile-title">
+    <h3>Macquarie Cloud Services Portal</h3>
+    <mcs-icon [key]="closeIconKey" color="white"
+      class="close-icon" (click)="close()"></mcs-icon>
+  </div>
+
+  <ng-content></ng-content>
+</div>

@@ -1,71 +1,42 @@
-<nav class="navbar navbar-toggleable navbar-light main-navigation">
+<nav class="main-navigation-wrapper">
 
-  <!-- TODO: Change the implementation according to flexbox -->
-  <div class="navigation-wrapper">
-    <div class="navbar-mobile">
-      <div class="row">
-        <div class="col-5">
-          <button class="navbar-toggle" type="button" (click)="navState='show'">
-            <mcs-icon [key]="toggleIconKey" size="large"></mcs-icon>
-          </button>
-        </div>
+  <!-- Mobile Mode -->
+  <mcs-navigation-mobile class="navigation-mobile">
+    <ng-container mcsNavigationMobileItems></ng-container>
+  </mcs-navigation-mobile>
 
-        <div class="col-7 text-right">
-          <a href="https://macquarieview.com/" target="_blank" class="macquarie-view-link">
-            <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-            <span>Macquarie View</span>
-          </a>
-        </div>
-      </div>
+  <!-- Desktop Mode -->
+  <mcs-navigation-desktop class="navigation-desktop">
+    <ng-container mcsNavigationDesktopItems></ng-container>
+  </mcs-navigation-desktop>
+
+  <!-- All Routing -->
+  <ng-template #navigationList>
+    <!-- Servers -->
+    <div class="navigation-item" routerLinkActive="active" *mcsHasPermission="['VmAccess']">
+      <mcs-icon [key]="caretRightIconKey" color="white"
+        size="medium" class="navigation-mobile"></mcs-icon>
+      <a [routerLink]="['/servers']" (click)="setTitle(textContent.servers.title)">
+        {{ textContent.navigation.servers }}
+      </a>
     </div>
 
-    <div class="navbar-content" id="navbarSupportedContent" [@navToggle]="navState">
-      <ul class="navbar-nav">
-        <li class="nav-item nav-heading-mobile">
-          <h3 class="float-left">Macquarie Cloud Services Portal</h3>
-          <mcs-icon [key]="closeIconKey" color="white" (click)="navState='hide'"></mcs-icon>
-        </li>
-        <!-- Servers -->
-        <li class="nav-item" routerLinkActive="active" *mcsHasPermission="['VmAccess']">
-          <a class="nav-link" [routerLink]="['/servers']"
-          (click)="setTitle(textContent.servers.title)">
-            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
-              size="small" color="white"></mcs-icon>
-            {{ textContent.navigation.servers }}</a>
-        </li>
-        <!-- Networking -->
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/networking']"
-          (click)="setTitle(textContent.networking.title)">
-            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
-              size="small" color="white"></mcs-icon>
-            {{ textContent.navigation.networking }}</a>
-        </li>
-        <!-- Other Tools -->
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/tools']"
-          (click)="setTitle(textContent.tools.title)">
-            <mcs-icon class="nav-item-bullet" [key]="caretRightIconKey"
-              size="small" color="white"></mcs-icon>
-            {{ textContent.navigation.tools }}</a>
-        </li>
-        <!-- Signout -->
-        <li class="nav-item sign-out" routerLinkActive="active" *ngIf="!isUser()">
-          <a class="nav-link" [routerLink]="['/others']"
-          (click)="setTitle(textContent.others.title)">
-            <mcs-icon class="nav-item-bullet" [key]="signOutIconKey"
-              size="small" color="white"></mcs-icon>
-            Sign Out</a>
-        </li>
-        <!-- Macquarie View Link -->
-        <li class="nav-item hidden-small ml-auto">
-          <a href="https://macquarieview.com/" class="macquarie-view-link ml-auto" target="_blank">
-            <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-            <span>Macquarie View</span>
-          </a>
-        </li>
-      </ul>
+    <!-- Networking -->
+    <div class="navigation-item" routerLinkActive="active">
+      <mcs-icon [key]="caretRightIconKey" color="white"
+        size="medium" class="navigation-mobile"></mcs-icon>
+      <a [routerLink]="['/networking']" (click)="setTitle(textContent.networking.title)">
+        {{ textContent.navigation.networking }}
+      </a>
     </div>
 
-  </div>
+    <!-- Other Tools -->
+    <div class="navigation-item" routerLinkActive="active">
+      <mcs-icon [key]="caretRightIconKey" color="white"
+        size="medium" class="navigation-mobile"></mcs-icon>
+      <a [routerLink]="['/tools']" (click)="setTitle(textContent.tools.title)">
+        {{ textContent.navigation.tools }}
+      </a>
+    </div>
+  </ng-template>
 </nav>

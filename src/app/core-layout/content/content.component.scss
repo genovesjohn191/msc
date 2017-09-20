@@ -1,5 +1,9 @@
 @import '../../../styles/shared/base';
 
 :host {
-  padding: $content-padding;
+  padding: $content-large-padding;
+
+  @include breakpoint(small) {
+    padding: $content-small-padding;
+  }
 }
