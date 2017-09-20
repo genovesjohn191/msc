@@ -27,7 +27,7 @@ import {
   McsApiJob,
   McsApiSuccessResponse,
   McsApiErrorResponse
-} from '../../core';
+} from '../../../core';
 import { FirewallsTestingModule } from './testing';
 
 describe('FirewallsService', () => {

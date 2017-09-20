@@ -1,17 +1,18 @@
 import {
   async,
-  TestBed,
-  getTestBed
+  TestBed
 } from '@angular/core/testing';
 import { FirewallOverviewComponent } from './firewall-overview.component';
-import { FirewallsTestingModule } from '../../testing';
+import {
+  FirewallsTestingModule,
+  mockFirewallService
+} from '../../testing';
 import { Firewall } from '../../models';
 import { FirewallService } from '../firewall.service';
 
 describe('FirewallOverviewComponent', () => {
   /** Stub Services/Components */
   let component: FirewallOverviewComponent;
-  let firewallService: FirewallService;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -27,7 +28,10 @@ describe('FirewallOverviewComponent', () => {
       ]
     });
 
-    /** Testbed Onverriding of Components */
+    /** Testbed Overriding of Providers */
+    TestBed.overrideProvider(FirewallService, { useValue: mockFirewallService });
+
+    /** Testbed Overriding of Components */
     TestBed.overrideComponent(FirewallOverviewComponent, {
       set: {
         template: `
@@ -42,7 +46,6 @@ describe('FirewallOverviewComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      firewallService = getTestBed().get(FirewallService);
     });
   }));
 
@@ -53,9 +56,9 @@ describe('FirewallOverviewComponent', () => {
     });
 
     it('should call the subscribe() of FirewallService selectedFirewallStream', () => {
-      spyOn(firewallService.selectedFirewallStream, 'subscribe');
+      spyOn(mockFirewallService.selectedFirewallStream, 'subscribe');
       component.ngOnInit();
-      expect(firewallService.selectedFirewallStream.subscribe).toHaveBeenCalled();
+      expect(mockFirewallService.selectedFirewallStream.subscribe).toHaveBeenCalled();
     });
   });
 

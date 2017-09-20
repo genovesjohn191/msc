@@ -59,12 +59,12 @@ export class ServersComponent implements OnInit, AfterViewInit, OnDestroy {
     return isNullOrEmpty(this.dataSource) ? false : this.dataSource.successfullyObtained;
   }
 
-  public get noServersFound(): boolean {
-    return this.successfullyObtained === true && this.totalRecordCount <= 0;
+  public get hasServers(): boolean {
+    return this.successfullyObtained === true && this.totalRecordCount > 0;
   }
 
   public get displayErrorMessage(): boolean {
-    return this.dataSource && (this.noServersFound ||
+    return this.dataSource && (!this.hasServers ||
       this.successfullyObtained) === false;
   }
 

@@ -3,7 +3,7 @@ import {
   McsDataSource,
   McsPaginator,
   McsSearch
-} from '../../../../core';
+} from '../../../../../core';
 import {
   FirewallPolicy,
   FirewallPolicyAction,
@@ -49,8 +49,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
         return this._firewallService.getFirewallPolicies(
           firewallId,
           this._paginator.pageIndex,
-          displayedRecords,
-          this._search.keyword
+          displayedRecords
         ).map((response) => {
           this._totalRecordCount = response.totalCount;
           return response.content;

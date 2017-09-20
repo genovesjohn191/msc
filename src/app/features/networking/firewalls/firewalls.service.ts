@@ -8,7 +8,7 @@ import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
   McsApiErrorResponse
-} from '../../core/';
+} from '../../../core/';
 
 // Models
 import {
@@ -26,10 +26,18 @@ export class FirewallsService {
   /**
    * Get Firewalls (MCS API Response)
    */
-  public getFirewalls(): Observable<McsApiSuccessResponse<Firewall[]>> {
+  public getFirewalls(
+    page?: number,
+    perPage?: number,
+    searchKeyword?: string): Observable<McsApiSuccessResponse<Firewall[]>> {
+    let searchParams: URLSearchParams = new URLSearchParams();
+    searchParams.set('page', page ? page.toString() : undefined);
+    searchParams.set('per_page', perPage ? perPage.toString() : undefined);
+    searchParams.set('search_keyword', searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/firewalls';
+    mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
@@ -74,7 +82,7 @@ export class FirewallsService {
     let searchParams: URLSearchParams = new URLSearchParams();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('search_keyword', searchKeyword);
+    searchParams.set('search_keyword', searchKeyword ? searchKeyword : undefined);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/firewalls/${id}/policies`;

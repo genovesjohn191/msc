@@ -2,7 +2,7 @@ import {
   Observable,
   Subject
 } from 'rxjs/Rx';
-import { McsApiSuccessResponse } from '../../../core';
+import { McsApiSuccessResponse } from '../../../../core';
 import {
   Firewall,
   FirewallPolicy

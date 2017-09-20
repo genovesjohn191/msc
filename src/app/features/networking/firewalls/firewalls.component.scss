@@ -1,0 +1,44 @@
+@import "../../../../styles/shared/base";
+
+$firewalls-search-min-width: 300px;
+
+.firewalls-table-wrapper {
+  display: inline-block;
+  @include set-items-interval($space-large);
+
+  .search-wrapper {
+    @include display-flex(row);
+    align-items: center;
+    @include set-items-interval($space-medium, horizontal);
+
+    @include breakpoint(small) {
+      @include display-flex(column);
+      align-items: stretch;
+    }
+
+    mcs-search {
+      min-width: $firewalls-search-min-width;
+      @include breakpoint(small) {
+        min-width: 100%;
+      }
+    }
+
+    .record-count {
+      margin-left: auto;
+    }
+  }
+
+  .message-wrapper {
+    text-align: center;
+  }
+
+  .action {
+    cursor: pointer;
+  }
+}
+
+.mcs-popover-template {
+  .action-item {
+    text-decoration: none;
+  }
+}

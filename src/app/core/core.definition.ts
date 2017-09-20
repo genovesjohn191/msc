@@ -126,6 +126,7 @@ export class CoreDefinition {
   public static FILTERSELECTOR_SERVER_LISTING = 'serversListingFilter';
   public static FILTERSELECTOR_NOTIFICATIONS_LISTING = 'notificationsListingFilter';
   public static FILTERSELECTOR_TICKET_LISTING = 'ticketsListingFilter';
+  public static FILTERSELECTOR_FIREWALLS_LISTING = 'firewallsListingFilter';
   public static FILTERSELECTOR_FIREWALL_POLICIES_LISTING = 'firewallPoliciesListingFilter';
 
   /** RegEx Patterns */

@@ -157,6 +157,9 @@
     "newTicket": "New Ticket"
   },
   "firewalls": {
+    "header": "Firewalls",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
+    "noFirewalls": "No firewalls to display.",
     "firewall": {
       "overview": {
         "label": "Overview",

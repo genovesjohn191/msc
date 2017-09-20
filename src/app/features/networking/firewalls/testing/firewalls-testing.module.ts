@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 /** Provider contants */
 import { firewallsProviders } from '../firewalls.constants';
 /** Modules */
-import { CoreTestingModule } from '../../../core/testing';
+import { CoreTestingModule } from '../../../../core/testing';
 
 @NgModule({
   imports: [

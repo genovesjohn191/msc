@@ -1,19 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** Components */
+import { SharedModule } from '../../shared';
+/** Networking Components/Services */
 import { NetworkingComponent } from './networking.component';
-/** Services */
 import { NetworkingService } from './networking.service';
+/** Firewalls Components/Services */
+import {
+  FirewallsComponent,
+  FirewallComponent,
+  FirewallOverviewComponent,
+  FirewallPoliciesComponent,
+  FirewallsService,
+  FirewallService
+} from './firewalls';
 
 @NgModule({
   declarations: [
     NetworkingComponent,
+    FirewallsComponent,
+    FirewallComponent,
+    FirewallOverviewComponent,
+    FirewallPoliciesComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
   providers: [
-    NetworkingService
+    NetworkingService,
+    FirewallsService,
+    FirewallService
   ]
 })
 
