@@ -16,7 +16,8 @@ import {
   formatDate,
   isNullOrEmpty,
   getEnumString,
-  refreshView
+  refreshView,
+  convertDateToStandardString
 } from '../../utilities';
 import { TicketsService } from './tickets.service';
 import { TicketsDataSource } from './tickets.datasource';
@@ -85,21 +86,15 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param status Enumeration status to be converted
    */
   public getStatusString(status: TicketStatus) {
-    // Get the string equivalent of enumeration
     return getEnumString(TicketStatus, status);
   }
 
   /**
-   * Converts the date and time to string
-   * based on the given format
+   * Converts the date and time to string based on standard format
    * @param date Date to be converted
    */
   public convertDateTimeToString(date: Date): string {
-    let convertedString: string = '';
-    if (date) {
-      convertedString = formatDate(date, 'LTS, ddd DD MMM, YYYY');
-    }
-    return convertedString;
+    return convertDateToStandardString(date);
   }
 
   /**

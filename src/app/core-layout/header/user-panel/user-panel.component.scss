@@ -58,6 +58,11 @@
       padding-left: $space-medium;
       border-left: 1px solid $color-grey-01;
     }
+
+    .icon-link {
+      @include display-flex(row);
+    }
+
     .user-icon {
       display: none;
       @include breakpoint(small) {

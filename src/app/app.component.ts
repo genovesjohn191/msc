@@ -18,9 +18,7 @@ import {
   NavigationStart,
   NavigationEnd,
   NavigationCancel,
-  NavigationError,
-  RouteConfigLoadStart,
-  RouteConfigLoadEnd
+  NavigationError
 } from '@angular/router';
 import { McsRoutePermissionGuard } from './core';
 import { animateFactory } from './utilities';

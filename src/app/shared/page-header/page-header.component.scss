@@ -27,5 +27,6 @@ $page-header-border-color: $color-grey-05;
     white-space: nowrap;
     margin-bottom: 0px;
     border-bottom: 5px solid $page-header-border-color;
+    align-self: flex-end;
   }
 }

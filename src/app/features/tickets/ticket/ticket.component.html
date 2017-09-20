@@ -1,0 +1,79 @@
+<!-- Ticket Header -->
+<div class="ticket-header-wrapper">
+  <mcs-page-header class="page-header-wrapper">
+    <mcs-page-title *mcsPageTitleDef>
+      Trouble Ticket #{{ ticket.crispTicketNumber }}
+    </mcs-page-title>
+    <mcs-page-subtitle *mcsPageSubTitleDef class="hidden-small">
+      <span>{{ getStateString(ticket.state) }} ({{ convertDateToString(ticket.createdOn) }})</span>
+    </mcs-page-subtitle>
+  </mcs-page-header>
+  <span class="status">{{ getStateString(ticket.state) }}
+    ({{ convertDateToString(ticket.createdOn) }})</span>
+</div>
+
+<!-- Ticket Headline -->
+<div class="ticket-headline-wrapper">
+  <h3>{{ ticket.shortDescription }}</h3>
+</div>
+
+<!-- Ticket Details -->
+<div class="ticket-details-wrapper">
+  <p>
+    {{ ticket.description }}
+  </p>
+</div>
+
+<!-- Ticket Services -->
+<div class="ticket-services-wrapper">
+  <div class="service">
+    <ul class="unstyled-list">
+      <li>
+        <span class="label">Type:</span>
+        <span class="item">{{ getSubTypeString(ticket.subType) }}</span>
+      </li>
+      <li>
+        <span class="label">Services:</span>
+        <span class="item">
+          <a class="display-block" *ngFor="let service of ticket.serviceId">
+            {{ service }}
+          </a>
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="information">
+    <ul class="unstyled-list">
+      <li>
+        <span class="label">Logged By:</span>
+        <span class="item">{{ ticket.requestor }}</span>
+      </li>
+      <li>
+        <span class="label">Date Logged:</span>
+        <span class="item">{{ convertDateToString(ticket.createdOn) }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Ticket Attachments (Not available on mobile) -->
+<div class="ticket-attachments-wrapper">
+  <h3 class="ticket-attachments-title">Attachments:</h3>
+  <ul class="unstyled-list">
+    <li *ngFor="let attachment of ticket.attachments">
+      {{ attachment.fileName }}
+    </li>
+  </ul>
+</div>
+
+<!-- Ticket Activities -->
+<div class="ticket-activities-wrapper">
+  <div class="ticket-activities-header">
+    <h3>Activities:</h3>
+    <mcs-button size="small">New Comment/Attachment</mcs-button>
+  </div>
+  <mcs-ticket-activity *ngFor="let activity of activities"
+    [activity]="activity">
+  </mcs-ticket-activity>
+</div>

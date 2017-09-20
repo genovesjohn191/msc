@@ -32,7 +32,7 @@
         {{ columnSettings.ticketId.text }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row">
-        <a>{{ row.number }}</a>
+        <a [routerLink]="['/tickets', row.id]">{{ row.number }}</a>
       </mcs-data-cell>
     </ng-container>
 
@@ -52,7 +52,7 @@
         {{ columnSettings.headline.text }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
-        <a>{{ row.shortDescription }}</a>
+        <a [routerLink]="['/tickets', row.id]">{{ row.shortDescription }}</a>
       </mcs-data-cell>
     </ng-container>
 

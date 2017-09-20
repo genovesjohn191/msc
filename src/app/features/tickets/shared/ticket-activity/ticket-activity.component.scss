@@ -1,0 +1,40 @@
+@import "../../../../../styles/shared/base";
+
+// Ticket Activity Variables
+$ticket-activity-bottom-offset: $space-small;
+$ticket-activity-box-shadow-color: $color-black;
+$ticket-activity-padding: $space-small;
+$ticket-activity-status-label-font: $circular-pro-bold;
+
+:host {
+  display: block;
+  margin-bottom: $ticket-activity-bottom-offset;
+}
+
+.ticket-activity-wrapper {
+  @include display-flex(row);
+  align-items: center;
+  padding: $ticket-activity-padding;
+  @include box-shadow(0 0 5px 1px rgba($ticket-activity-box-shadow-color, 0.2));
+
+  .icon-wrapper {
+    @include flex(0 1 10%);
+    text-align: center;
+  }
+
+  .information-wrapper {
+    @include flex(1 1 90%);
+    @include set-items-interval($space-small);
+    padding: $ticket-activity-padding;
+
+    .header {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .content {
+      display: block;
+    }
+  }
+}
