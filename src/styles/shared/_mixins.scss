@@ -392,3 +392,16 @@
 // .mcs-alert {
 //   @include background-opacity(#000, 0.5);
 // }
+
+// Set column-count
+@mixin column-count($value) {
+  -webkit-column-count: $value;
+  -moz-column-count: $value;
+  column-count: $value;
+}
+
+// Usage
+
+// .mcs-alert {
+//   @include column-count(3);
+// }

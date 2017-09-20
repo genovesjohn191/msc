@@ -63,3 +63,17 @@ export function compareDates(firstDate: Date, secondDate: Date): number {
   }
   return compareValues;
 }
+
+/**
+ * Convert Date to standard string based on FUSION standard
+ *
+ * `@Note:` This conversion is common accross the project
+ * @param date Date to be converted
+ */
+export function convertDateToStandardString(date: Date) {
+  let convertedString: string = '';
+  if (date) {
+    convertedString = formatDate(date, 'LTS, ddd DD MMM, YYYY');
+  }
+  return convertedString;
+}

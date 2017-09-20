@@ -1,0 +1,94 @@
+@import "../../../../styles/shared/base";
+
+$ticket-list-padding: $space-xsmall 0;
+$ticket-label-font: $circular-pro-bold;
+
+:host {
+  @include set-items-interval($space-xlarge);
+}
+
+.ticket-header-wrapper {
+  @include display-flex(column);
+
+  h2 {
+    width: auto;
+  }
+
+  // Display in case of mobile
+  .status {
+    display: none;
+    @include breakpoint(small) {
+      display: block;
+    }
+  }
+}
+
+.ticket-headline-wrapper {
+  display: block;
+  text-align: left;
+}
+
+.ticket-details-wrapper {
+  display: block;
+}
+
+.ticket-services-wrapper {
+  @include display-flex(row);
+  @include flex-wrap(wrap);
+  justify-content: space-between;
+
+  * {
+    @include flex(1 1 0);
+  }
+
+  .unstyled-list {
+    li {
+      @include display-flex(row);
+      justify-content: space-between;
+      padding: $ticket-list-padding;
+
+      .label {
+        @include flex(1 0 40%);
+        font-family: $ticket-label-font;
+      }
+
+      .item {
+        @include flex(1 0 60%);
+        @include display-flex(column);
+        @include set-items-interval($space-small);
+      }
+    }
+  }
+}
+
+.ticket-attachments-wrapper {
+  display: block;
+  @include set-items-interval($space-medium);
+  @include breakpoint(small) {
+    display: none;
+  }
+
+  .unstyled-list {
+    text-decoration: underline;
+    @include column-count(3);
+
+    @include breakpoint(small) {
+      @include column-count(1);
+    }
+
+    li {
+      padding: $ticket-list-padding;
+    }
+  }
+}
+
+.ticket-activities-wrapper {
+  display: block;
+  @include set-items-interval($space-medium);
+
+  .ticket-activities-header {
+    @include display-flex(row);
+    justify-content: space-between;
+    align-items: center;
+  }
+}

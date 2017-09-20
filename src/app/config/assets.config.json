@@ -23,7 +23,9 @@
     "gear": "fa fa-gear",
     "sign-out": "fa fa-sign-out",
     "user": "fa fa-user-o",
-    "info-2": "fa fa-info"
+    "info-2": "fa fa-info",
+    "comment": "fa fa-comment",
+    "attachment": "fa fa-paperclip"
   },
   "svgIcons": {
     "no-icon-available": "no-icon-available.svg",

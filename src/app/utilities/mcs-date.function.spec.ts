@@ -2,7 +2,8 @@ import {
   formatDate,
   getTimeDifference,
   getDayDifference,
-  compareDates
+  compareDates,
+  convertDateToStandardString
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -76,6 +77,15 @@ describe('DATE Functions', () => {
 
       let compareValue = compareDates(firstDate, secondDate);
       expect(compareValue).toEqual(-1);
+    });
+  });
+
+  describe('convertDateToStandardString()', () => {
+    it(`should convert the date to standard format`, () => {
+      let date = new Date('2017-04-26 01:10:45');
+
+      let convertedDate = convertDateToStandardString(date);
+      expect(convertedDate).toBe(formatDate(date, 'LTS, ddd DD MMM, YYYY'));
     });
   });
 });

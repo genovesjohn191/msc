@@ -119,6 +119,8 @@ export class CoreDefinition {
   public static ASSETS_FONT_SIGN_OUT = 'sign-out';
   public static ASSETS_FONT_USER = 'user';
   public static ASSETS_FONT_INFORMATION_2 = 'info-2';
+  public static ASSETS_FONT_COMMENT = 'comment';
+  public static ASSETS_FONT_ATTACHMENT = 'attachment';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serversListingFilter';

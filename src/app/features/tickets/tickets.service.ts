@@ -54,7 +54,7 @@ export class TicketsService {
 
         return apiResponse;
       })
-      .catch(this._handleServerError);
+      .catch(this._handleApiResponseError);
   }
 
   /**
@@ -73,14 +73,14 @@ export class TicketsService {
 
         return notificationsJobResponse;
       })
-      .catch(this._handleServerError);
+      .catch(this._handleApiResponseError);
   }
 
   /**
    * This will handle all error that correspond to HTTP request
    * @param error Error obtained
    */
-  private _handleServerError(error: Response | any) {
+  private _handleApiResponseError(error: Response | any) {
     let mcsApiErrorResponse: McsApiErrorResponse;
 
     if (error instanceof Response) {
