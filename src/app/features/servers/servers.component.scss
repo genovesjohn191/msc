@@ -4,12 +4,16 @@ $servers-search-min-width: 300px;
 
 .servers-table-wrapper {
   display: inline-block;
-  @include set-items-interval($space-large);
+  @include set-items-interval($space-xxlarge);
+
+  @include breakpoint(small) {
+    display: block;
+  }
 
   .search-wrapper {
     @include display-flex(row);
     align-items: center;
-    @include set-items-interval($space-medium, horizontal);
+    @include set-items-interval($space-large, horizontal);
 
     @include breakpoint(small) {
       @include display-flex(column);

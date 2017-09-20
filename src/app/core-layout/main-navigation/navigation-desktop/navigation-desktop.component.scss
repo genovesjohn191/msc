@@ -1,0 +1,49 @@
+@import "../../../../styles/shared/base";
+
+// Items variables
+$navigation-desktop-item-font: $circular-pro-bold;
+$navigation-desktop-item-padding: $space-small $space-medium;
+$navigation-desktop-item-color: $color-black;
+$navigation-desktop-item-active-bg-color: $color-white;
+
+// Macquarie Link variables
+$navigation-desktop-macquarie-link-color: $color-white;
+$navigation-desktop-macquarie-link-bg-color: $color-grey-01;
+
+// Main desktop navigation
+.navigation-desktop-wrapper {
+  @include display-flex(row);
+
+  .navigation-item {
+    cursor: pointer;
+
+    a {
+      display: block;
+      text-decoration: none;
+      font-family: $navigation-desktop-item-font;
+      padding: $navigation-desktop-item-padding;
+    }
+
+    &:hover,
+    &.active {
+      background-color: $navigation-desktop-item-active-bg-color;
+      a {
+        color: $navigation-desktop-item-color;
+      }
+    }
+  }
+
+  .macquarie-link {
+    cursor: pointer;
+    margin-left: auto;
+    background-color: $navigation-desktop-macquarie-link-bg-color;
+
+    a {
+      color: $navigation-desktop-macquarie-link-color;
+      display: block;
+      text-decoration: none;
+      font-family: $navigation-desktop-item-font;
+      padding: $navigation-desktop-item-padding;
+    }
+  }
+}

@@ -12,17 +12,13 @@ header {
 
 .header-container {
   align-items: center;
-  padding: $header-padding;
+  padding: $header-large-padding;
+  @include display-flex(row);
 
-  @include breakpoint(medium) {
-    padding: $space-large 0;
-    border-right: 1px solid $color-grey-01;
-  }
   @include breakpoint(small) {
-    padding: $space-large $space-medium;
+    padding: $header-small-padding;
     border-right: none;
   }
-  @include display-flex(row);
 
   i {
     @include breakpoint(small) {
@@ -62,9 +58,7 @@ header {
     max-height: 40px;
     padding: 0 $space-xlarge;
     text-align: center;
-    @include breakpoint(medium) {
-      border-left: 1px solid $color-grey-01;
-    }
+
     @include breakpoint(small) {
       padding: 0 $space-large;
       border-left: 1px solid $color-grey-01;

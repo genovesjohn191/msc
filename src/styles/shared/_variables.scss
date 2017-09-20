@@ -23,8 +23,8 @@ $caption-xsmall-font-size: 10;
 $caption-xsmall-line-height: 13;
 
 $input-font: $base-font;
-$input-font-size: 16;
-$input-line-height: 20;
+$input-font-size: $font-size-default;
+$input-line-height: $line-height-default;
 
 $header-font: $base-font-bold;
 $h1-default-font-size: 50;
@@ -49,14 +49,14 @@ $h4-small-font-size: 16;
 $h4-small-line-height: 18;
 
 $link-font:  $base-font;
-$link-default-font-size: 16;
-$link-default-line-height: 24;
+$link-default-font-size: $font-size-default;
+$link-default-line-height: $line-height-default;
 $link-small-font-size: 14;
 $link-small-line-height: 18;
 
 $icon-large-font-size: 25;
 $icon-medium-font-size: 20;
-$icon-small-font-size: 15;
+$icon-small-font-size: $font-size-default;
 
 $notifications-font-size: 12;
 
@@ -113,9 +113,17 @@ $zindex-popover: 1100;
 $zindex-notifications: 1100;
 
 // Core layout
-$header-padding: $space-large;
-$main-navigation-padding: 0 $space-large;
-$content-padding: $space-large;
+$header-large-padding: $space-large;
+$header-small-padding: $space-large $space-medium;
+
+$main-navigation-large-padding: 0 $space-large;
+$main-navigation-small-padding: 0 $space-medium;
+$main-navigation-color: $color-black;
+$main-navigation-bg-color: $color-primary-01;
+$main-navigation-box-shadow-color: $color-black;
+
+$content-large-padding: $space-xxlarge $space-large;
+$content-small-padding: $space-xxlarge $space-medium;
 
 // Input
 $input-font: $base-font;
@@ -152,8 +160,8 @@ $popover-arrow-border-width: $popover-arrow-width + 1;
 $popover-border-radius: 5px;
 
 // Filter Selector
-$filter-selector-title-font-size: 16;
-$filter-selector-content-font-size: 14;
+$filter-selector-title-font-size: $font-size-default;
+$filter-selector-content-font-size: $font-size-small;
 
 // Table
 $table-header-font: $base-font-bold;
