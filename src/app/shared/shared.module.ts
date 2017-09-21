@@ -13,6 +13,7 @@ import { ValidationMessageModule } from './validation-message/validation-message
 import { TableModule } from './table/table.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
 import { PageHeaderModule } from './page-header/page-header.module';
+import { LoaderModule } from './loader/loader.module';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -58,7 +59,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ValidationMessageModule,
     TableModule,
     ListPanelModule,
-    PageHeaderModule
+    PageHeaderModule,
+    LoaderModule
   ],
   exports: [
     ButtonComponent,
@@ -85,7 +87,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ValidationMessageModule,
     TableModule,
     ListPanelModule,
-    PageHeaderModule
+    PageHeaderModule,
+    LoaderModule
   ]
 })
 

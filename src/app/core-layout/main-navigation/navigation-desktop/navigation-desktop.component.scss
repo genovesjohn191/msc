@@ -13,6 +13,7 @@ $navigation-desktop-macquarie-link-bg-color: $color-grey-01;
 // Main desktop navigation
 .navigation-desktop-wrapper {
   @include display-flex(row);
+  z-index: $zindex-navigation;
 
   .navigation-item {
     cursor: pointer;

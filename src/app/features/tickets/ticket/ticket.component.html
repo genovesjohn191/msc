@@ -1,5 +1,5 @@
 <!-- Ticket Header -->
-<div class="ticket-header-wrapper">
+<div class="ticket-header-wrapper" [mcsLoader]="ticketSubscription">
   <mcs-page-header class="page-header-wrapper">
     <mcs-page-title *mcsPageTitleDef>
       Trouble Ticket #{{ ticket.crispTicketNumber }}
