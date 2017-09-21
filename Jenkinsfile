@@ -72,7 +72,7 @@ podTemplate(
             args: '${computer.jnlpmac} ${computer.name}',
             ttyEnabled: true,
             resourceRequestMemory: '200Mi',
-            resourceLimitMemory: '1.5Gi',
+            resourceLimitMemory: '2.25Gi',
             alwaysPullImage: true
         )
     ],
