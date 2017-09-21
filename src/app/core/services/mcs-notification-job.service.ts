@@ -119,7 +119,7 @@ export class McsNotificationJobService {
 
     // Setup websocker client
     this._websocketClient = webStomp.over(this._websocket, { debug: false });
-    this._websocketClient.debug = null
+    this._websocketClient.debug = null;
 
     this._websocketClient.connect(
       this._getHeaders(),
