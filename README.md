@@ -96,12 +96,20 @@ After you have installed all dependencies you can now run the app. Run `npm run 
 Configuration files live in `config/` we are currently using webpack, karma, and protractor for different stages of the application
 
 # Environment Variables
-Environment variable setup must be done before the build process (e.g. `npm run build:prod`). 
+Environment variable setup can be done both in the container build process and when running a container
 
+## Development
+- Simply supply your values in `assets/env.config.js`
+
+## Build
 1. Customize environment variables from the `env.setup` file on the root directory. 
 2. Set the variables by calling `$ source ./env.setup` from the root directory.
 3. Optionally you can confirm if the environment variables are correct using `$ echo $VAR_NAME`
-4. Run your `npm run build` command. 
+4. Run your `npm run build` command.
+
+## Container
+- Supply environment variables via `docker run` command 
+    e.g. `docker run -d -p 80:80 --env MCS_API_HOST=https://lab-api.macquariecloudservices.com frontend:latest`
 
 # AoT Don'ts
 The following are some things that will make AoT compile fail.

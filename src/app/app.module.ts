@@ -66,7 +66,10 @@ import {
 /**
  * MCS Portal Utilities
  */
-import { refreshView } from './utilities';
+import {
+  refreshView,
+  resolveEnvVar
+} from './utilities';
 
 /**
  * Application-Wide Providers
@@ -86,11 +89,11 @@ type StoreType = {
  * Set Core Configuration based on environment variables
  */
 const mcsCoreConfig = {
-  apiHost: API_URL,
-  loginUrl: LOGIN_URL,
-  logoutUrl: LOGOUT_URL,
-  imageRoot: IMAGE_URL,
-  iconRoot: ICON_URL
+  apiHost: resolveEnvVar('API_HOST', API_URL),
+  loginUrl: resolveEnvVar('LOGIN_URL', LOGIN_URL),
+  logoutUrl: resolveEnvVar('LOGOUT_URL', LOGOUT_URL),
+  imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
+  iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL)
 } as CoreConfig;
 
 /**
