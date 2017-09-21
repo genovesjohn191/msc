@@ -12,14 +12,14 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 
 /** Webpack Constants */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
-const API_URL = process.env.API_URL || 'api';
-const HOST = process.env.HOST || 'localhost';
-const PORT = process.env.PORT || 3000;
-const SENTRY_DSN = process.env.SENTRY_DSN || 'dsn';
-const LOGIN_URL = process.env.LOGIN_URL || undefined;
-const LOGOUT_URL = process.env.LOGOUT_URL || undefined;
-const IMAGE_URL = process.env.IMAGE_URL || 'assets/img';
-const ICON_URL = process.env.ICON_URL || 'assets/icon';
+const API_URL = process.env.MCS_API_URL || undefined;
+const HOST = process.env.MCS_HOST || undefined;
+const PORT = process.env.MCS_PORT || undefined;
+const SENTRY_DSN = process.env.MCS_SENTRY_DSN || undefined;
+const LOGIN_URL = process.env.MCS_LOGIN_URL || undefined;
+const LOGOUT_URL = process.env.MCS_LOGOUT_URL || undefined;
+const IMAGE_URL = process.env.MCS_IMAGE_URL || undefined;
+const ICON_URL = process.env.MCS_ICON_URL || undefined;
 const HMR = helpers.hasProcessFlag('hot');
 const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   host: HOST,
@@ -33,7 +33,6 @@ const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   IMAGE_URL: IMAGE_URL,
   ICON_URL: ICON_URL
 });
-
 
 const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
 

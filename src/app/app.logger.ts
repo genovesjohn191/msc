@@ -1,9 +1,14 @@
 import { ErrorHandler } from '@angular/core';
 const RAVEN = require('raven-js');
 
+/**
+ * MCS Portal Utilities
+ */
+import { resolveEnvVar } from './utilities';
+
 // Configure Raven Logger
 RAVEN
-  .config(SENTRY_DSN)
+  .config(resolveEnvVar('SENTRY_DSN', SENTRY_DSN))
   .install();
 
 /**
