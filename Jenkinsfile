@@ -7,15 +7,6 @@
  * kubectl create secret generic gcr-service-acct --from-file=./service-acct-creds.json
  *
  * Also see: See https://cloud.google.com/container-registry/docs/advanced-authentication
- *
- * This job also requires an env.setup file to be injected via a configmap.
- *
- * The env.setup file should look like this:
- * export HOST='lab-portal.macquariecloudservices.com'
- * export PORT='80'
- * export API_URL='http://lab-api.macquariecloudservices.com/api'
- *
- * kubectl create configmap portal-frontend-build-env-setup --from-file=env.setup
 **/
 
 // Validate we received values for the following key parameters
@@ -94,10 +85,6 @@ podTemplate(
         secretVolume(
             secretName: 'gcr-service-acct',
             mountPath: service_creds_location
-        ),
-        configMapVolume(
-            configMapName: 'portal-frontend-build-env-setup',
-            mountPath: env_setup_location
         )
     ]
 ) {
@@ -127,11 +114,10 @@ podTemplate(
             echo "Building ${image_name} with version ${image_version}."
 
             stage('Run tests & build docker image') {
-                sh "cp ${env_setup_location}/${env_setup_file} ."
                 sh "npm install"
                 sh "npm run lint"
                 sh "CHROME_BIN=/usr/bin/google-chrome npm run test:prod" // Requires headless browser in the jnlp-slave container
-                sh ". ./env.setup && npm run build:prod"
+                sh "npm run build:prod"
                 sh "docker build -t ${image_name}:${image_version} ."
             }
             stage('Publish the docker image') {
