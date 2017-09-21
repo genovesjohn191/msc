@@ -1,0 +1,15 @@
+@import "../../../styles/shared/base";
+
+$loader-top-offset: $space-medium;
+
+.loader-wrapper {
+  z-index: $zindex-loader;
+  position: absolute;
+  top: $loader-top-offset; // to make way of the box-shadow in navigation
+  left: 0;
+  right: 0;
+  bottom: 0;
+  @include display-flex(row);
+  align-items: center;
+  justify-content: center;
+}

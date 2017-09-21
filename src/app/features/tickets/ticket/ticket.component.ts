@@ -33,6 +33,8 @@ import { TicketsService } from '../tickets.service';
 
 export class TicketComponent implements OnInit, OnDestroy {
 
+  public ticketSubscription: any;
+
   /**
    * An observable ticket data that obtained based on the given id
    */
@@ -42,6 +44,10 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
   public set ticket(value: Ticket) {
     if (this._ticket !== value) {
+      if (this.ticketSubscription) {
+        this.ticketSubscription.unsubscribe();
+      }
+
       this._ticket = value;
       this._setActivities(this._ticket);
     }
@@ -58,8 +64,6 @@ export class TicketComponent implements OnInit, OnDestroy {
     this._activities = value;
   }
 
-  private _ticketSubscription: any;
-
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _ticketsService: TicketsService
@@ -74,8 +78,9 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._ticketSubscription) {
-      this._ticketSubscription.unsubscribe();
+    // We just want to make sure that the subscription is empty
+    if (this.ticketSubscription) {
+      this.ticketSubscription.unsubscribe();
     }
   }
 
@@ -109,7 +114,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   private _getTicketById(): void {
     // TODO: Add error handling in case the ticket ID is incorrect
     // Should display the page-not-found
-    this._ticketSubscription = this._activatedRoute.paramMap
+    this.ticketSubscription = this._activatedRoute.paramMap
       .switchMap((params: ParamMap) => {
         let ticketId = params.get('id');
         return this._ticketsService.getTicket(ticketId);

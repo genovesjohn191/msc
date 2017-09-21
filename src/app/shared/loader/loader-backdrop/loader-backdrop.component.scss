@@ -1,0 +1,14 @@
+@import "../../../../styles/shared/base";
+
+$loader-backdrop-top-offset: $space-medium;
+$loader-backdrop-bg-color: $color-white;
+
+.loader-backdrop-wrapper {
+  position: absolute;
+  top: $loader-backdrop-top-offset;  // to make way of the box-shadow in navigation
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $zindex-loader - 1;
+  background: $loader-backdrop-bg-color;
+}
