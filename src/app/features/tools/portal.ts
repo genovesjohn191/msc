@@ -1,5 +1,5 @@
 export class Portal {
-  public serviceType: string;
+  public name: string;
   public resource: string;
-  public portal: string;
+  public url: string;
 }

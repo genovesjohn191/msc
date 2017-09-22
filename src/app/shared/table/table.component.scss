@@ -1,7 +1,9 @@
 @import "../../../styles/shared/base";
 
 // Table
-$table-desktop-minimum-width: 800px;
+$table-default-minimum-width: 800px;
+$table-medium-minimum-width: 650px;
+$table-small-minimum-width: 100%;
 
 // Table header
 $table-header-background-color: $color-black;
@@ -30,12 +32,16 @@ $table-cell-divider-opacity: 0.70;
 mcs-table {
   display: table;
   border-collapse: collapse;
-  min-width: $table-desktop-minimum-width;
+  min-width: $table-default-minimum-width;
+  @include breakpoint(medium) {
+    min-width: $table-medium-minimum-width;
+  }
+  @include breakpoint(small) {
+    min-width: $table-small-minimum-width;
+  }
   max-width: 100%;
 
-  @include breakpoint(small) {
-    min-width: 100%;
-  }
+  
 
   mcs-header-row {
     display: table-row;
