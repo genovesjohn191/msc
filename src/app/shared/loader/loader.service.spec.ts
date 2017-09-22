@@ -21,7 +21,7 @@ describe('LoaderDirective', () => {
 
     /** Testbed Configuration */
     TestBed.configureTestingModule({
-      providers: [ LoaderService ]
+      providers: [LoaderService]
     });
 
     /** Tesbed Component Compilation and Creation */
@@ -31,7 +31,7 @@ describe('LoaderDirective', () => {
   }));
 
   /** Test Implementation */
-  describe('setSubscriber()', () => {
+  describe('setSubscribers() | isActive() only 1 subscription', () => {
     let subscription: Subscription;
     let subject = new Subject<any>();
 
@@ -39,20 +39,66 @@ describe('LoaderDirective', () => {
       subscription = subject.subscribe((something) => {
         return something;
       });
-      loaderService.setSubscriber(subscription);
+      loaderService.setSubscribers(subscription);
     }));
 
     it(`should set the active flag to true`, () => {
-      expect(loaderService.active).toBeTruthy();
+      expect(loaderService.isActive()).toBeTruthy();
+    });
+
+    it(`should set the animation to undefined to re-display the loader`, () => {
+      expect(loaderService.animate).toBeUndefined();
     });
 
     it(`should set the active flag to false when the subscription is ended`, () => {
       if (subscription) { subscription.unsubscribe(); }
-      expect(loaderService.active).toBeFalsy();
+      expect(loaderService.isActive()).toBeFalsy();
     });
 
     it(`should set the animation to fadeOut when the subscription is ended`, () => {
-      if (subscription) { subscription.unsubscribe(); }
+      if (subscription) {
+        subscription.unsubscribe();
+        loaderService.isActive();
+      }
+      expect(loaderService.animate).toBe('fadeOut');
+    });
+  });
+
+  describe('setSubscriber() | isActive() more than 1 subscription', () => {
+    let subscriptions: Subscription[] = new Array();
+    let subscription1: Subscription;
+    let subscription2: Subscription;
+    let subject = new Subject<any>();
+    let subject2 = new Subject<any>();
+
+    beforeEach(async(() => {
+      subscription1 = subject.subscribe((something) => {
+        return something;
+      });
+      subscription2 = subject2.subscribe((something) => {
+        return something;
+      });
+      loaderService.setSubscribers([subscription1, subscription2]);
+    }));
+
+    it(`should set the active flag to true`, () => {
+      expect(loaderService.isActive()).toBeTruthy();
+    });
+
+    it(`should set the animation to undefined to re-display the loader`, () => {
+      expect(loaderService.animate).toBeUndefined();
+    });
+
+    it(`should set the active flag to false when all of the subscriptions are ended`, () => {
+      if (subscription1) { subscription1.unsubscribe(); }
+      if (subscription2) { subscription2.unsubscribe(); }
+      expect(loaderService.isActive()).toBeFalsy();
+    });
+
+    it(`should set the animation to fadeOut when all of the subscriptions are ended`, () => {
+      if (subscription1) { subscription1.unsubscribe(); }
+      if (subscription2) { subscription2.unsubscribe(); }
+      loaderService.isActive();
       expect(loaderService.animate).toBe('fadeOut');
     });
   });

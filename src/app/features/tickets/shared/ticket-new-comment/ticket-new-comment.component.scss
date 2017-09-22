@@ -1,0 +1,47 @@
+@import "../../../../../styles/shared/base";
+
+:host {
+  display: block;
+}
+
+.ticket-new-comment-wrapper {
+  padding: $space-small;
+  @include display-flex(column);
+  @include set-items-interval($space-small);
+  @include box-shadow(0 0 5px 1px rgba($color-black, 0.2));
+
+  .ticket-comment {
+    textarea {
+      width: 100%;
+    }
+  }
+
+  .ticket-action-wrapper {
+    @include display-flex(row);
+    justify-content: space-between;
+    align-items: center;
+
+    .uploader-wrapper {
+      @include display-flex(row);
+      align-items: center;
+      @include set-items-interval($space-medium, horizontal);
+
+      .dropzone {
+        border: 2px dotted transparent;
+        &.file-hover {
+          border: 2px dotted $color-grey-04;
+        }
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+    }
+
+    .ticket-create-wrapper {
+      @include display-flex(row);
+      justify-content: flex-end;
+      @include set-items-interval($space-medium, horizontal);
+    }
+  }
+}

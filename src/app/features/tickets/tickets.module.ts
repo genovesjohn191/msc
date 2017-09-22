@@ -7,13 +7,17 @@ import { SharedModule } from '../../shared';
 /** Providers List */
 import { ticketsProviders } from './tickets.constants';
 /** Shared Components */
-import { TicketActivityComponent } from './shared';
+import {
+  TicketActivityComponent,
+  TicketNewCommentComponent
+} from './shared';
 
 @NgModule({
   declarations: [
     TicketsComponent,
     TicketComponent,
-    TicketActivityComponent
+    TicketActivityComponent,
+    TicketNewCommentComponent
   ],
   imports: [
     SharedModule

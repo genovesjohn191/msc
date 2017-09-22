@@ -10,13 +10,20 @@ import {
 } from '../../core';
 import {
   reviverParser,
-  convertJsonStringToObject
+  convertJsonStringToObject,
+  getEnumString
 } from '../../utilities';
 import {
   Ticket,
   TicketPriority,
   TicketStatus,
-  TicketSubType
+  TicketSubType,
+  TicketCreateAttachment,
+  TicketCommentCategory,
+  TicketAttachment,
+  TicketCreateComment,
+  TicketCommentType,
+  TicketComment,
 } from './models';
 
 @Injectable()
@@ -49,7 +56,7 @@ export class TicketsService {
         let apiResponse: McsApiSuccessResponse<Ticket[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Ticket[]>>(
           response.text(),
-          this._convertProperty
+          this._responseReviverParser
         );
 
         return apiResponse;
@@ -77,6 +84,50 @@ export class TicketsService {
   }
 
   /**
+   * This will create the new comment based on the inputted information
+   * @param commentData Comment data to be created
+   */
+  public createComment(ticketId: any, commentData: TicketCreateComment):
+    Observable<McsApiSuccessResponse<TicketComment>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/comments`;
+    mcsApiRequestParameter.recordData = JSON.stringify(commentData, this._requestReviverParser);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let commentResponse: McsApiSuccessResponse<TicketComment>;
+        commentResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<TicketComment>;
+
+        return commentResponse;
+      })
+      .catch(this._handleApiResponseError);
+  }
+
+  /**
+   * This will create the new attachment based on the inputted information
+   * @param attachmentData Attachment data to be created
+   */
+  public createAttachment(ticketId: any, attachmentData: TicketCreateAttachment):
+    Observable<McsApiSuccessResponse<TicketAttachment>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments`;
+    mcsApiRequestParameter.recordData = JSON.stringify(attachmentData, this._requestReviverParser);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let attachmentResponse: McsApiSuccessResponse<TicketAttachment>;
+        attachmentResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<TicketAttachment>;
+
+        return attachmentResponse;
+      })
+      .catch(this._handleApiResponseError);
+  }
+
+  /**
    * This will handle all error that correspond to HTTP request
    * @param error Error obtained
    */
@@ -95,12 +146,12 @@ export class TicketsService {
   }
 
   /**
-   * Convert the json object to corresponding object
+   * Convert the json object to corresponding object as response
    * by comparing its key
    * @param key Property name of the object to be change
    * @param value Value of the item
    */
-  private _convertProperty(key, value): any {
+  private _responseReviverParser(key, value): any {
     switch (key) {
       case 'subType':
         value = TicketSubType[value];
@@ -116,6 +167,27 @@ export class TicketsService {
 
       default:
         value = reviverParser(key, value);
+        break;
+    }
+    return value;
+  }
+
+  /**
+   * Convert the json object to corresponding object as request
+   * by comparing its key
+   * @param key Property name of the object to be change
+   * @param value Value of the item
+   */
+  private _requestReviverParser(key, value): any {
+    switch (key) {
+      case 'category':
+        value = getEnumString(TicketCommentCategory, value);
+        break;
+
+      case 'type':
+        value = getEnumString(TicketCommentType, value);
+        break;
+      default:
         break;
     }
     return value;

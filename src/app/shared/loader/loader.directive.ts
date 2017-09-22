@@ -33,16 +33,16 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
    * The observable subscription that represents as the basis of processing
    */
   @Input('mcsLoader')
-  public get subscription(): Subscription {
-    return this._subscription;
+  public get subscriptions(): Subscription | Subscription[] {
+    return this._subscriptions;
   }
-  public set subscription(value: Subscription) {
-    if (this._subscription !== value) {
-      this._subscription = value;
-      this._loaderService.setSubscriber(this.subscription);
+  public set subscriptions(value: Subscription | Subscription[]) {
+    if (this._subscriptions !== value) {
+      this._subscriptions = value;
+      this._loaderService.setSubscribers(this.subscriptions);
     }
   }
-  private _subscription: Subscription;
+  private _subscriptions: Subscription | Subscription[];
 
   constructor(
     private _loaderService: LoaderService,
@@ -50,7 +50,9 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
     private _renderer: Renderer2
-  ) { }
+  ) {
+    this._subscriptions = new Array();
+  }
 
   public ngOnInit() {
     // Initilize component service instance to set the view host attributes
@@ -68,10 +70,10 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
   }
 
   public ngDoCheck() {
-    if (isNullOrEmpty(this.subscription)) { return; }
+    if (isNullOrEmpty(this.subscriptions)) { return; }
 
     // Always check for the active flag for loader component to display
-    if (this._loaderService.active) {
+    if (this._loaderService.isActive()) {
       this.showLoader();
     } else {
       this.hideLoader();
@@ -96,7 +98,6 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
       // Add delay to show the animation first before deleting the component
       refreshView(() => {
         this.componentService.deleteComponent();
-        this.componentRef.destroy();
         this.componentRef = null;
       }, 300);
     }
