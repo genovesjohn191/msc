@@ -215,6 +215,20 @@
         "description": "Description",
         "access": "Access",
         "order": "Get it now"
+      },
+      "descriptions" : {
+        "vCloud" : {
+          "name" : "Vcloud Director",
+          "description" : "Manage your virtual machines and Virtual Data Centers."
+        },
+        "vSphere" : {
+          "name" : "vSphere",
+          "description" : "Manage every detail of your virtual data centres."
+        },
+        "firewall" : {
+          "name" : "FortiManager",
+          "description" : "Manage your network firewall."
+        }
       }
     }
   },

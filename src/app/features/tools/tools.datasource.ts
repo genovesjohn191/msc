@@ -2,6 +2,7 @@ import { Observable } from 'rxjs/Rx';
 import { McsDataSource } from '../../core';
 import { Portal } from './portal';
 import { ToolsService } from './tools.service';
+import { isNullOrEmpty } from '../../utilities';
 
 export class ToolsDataSource implements McsDataSource<Portal> {
   /**
@@ -29,6 +30,15 @@ export class ToolsDataSource implements McsDataSource<Portal> {
     return this._toolsService.getPortals()
     .map((response) => {
       this._totalRecordCount = response.totalCount;
+
+      // Remove all portals without resource
+      for (let portal of response.content) {
+        if (isNullOrEmpty(portal.resource)) {
+          let index = response.content.indexOf(portal, 0);
+          response.content.splice(index, 1);
+        }
+      }
+
       return response.content;
     });
   }

@@ -13,73 +13,32 @@
 <!-- Table -->
 <mcs-table [dataSource]="dataSource">
   <!-- Service Column -->
-  <ng-container mcsColumnDef="serviceType">
+  <ng-container mcsColumnDef="name">
     <mcs-header-cell *mcsHeaderCellDef>
-      Service
+      {{ textContent.table.header.service }}
     </mcs-header-cell>
     <mcs-data-cell *mcsDataCellDef="let row">
-      <a>{{ row.serviceType }}</a>
+      {{ row.name}}
     </mcs-data-cell>
   </ng-container>
 
   <!-- Description Column -->
   <ng-container mcsColumnDef="description">
-    <mcs-header-cell *mcsHeaderCellDef>
-      Description
+    <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+      {{ textContent.table.header.description }}
     </mcs-header-cell>
-    <mcs-data-cell *mcsDataCellDef="let row">
-      Some description...
+    <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+      {{ toolDescription.get(row.name) }}
     </mcs-data-cell>
   </ng-container>
 
   <!-- Access Column -->
-  <ng-container mcsColumnDef="portal">
+  <ng-container mcsColumnDef="url">
     <mcs-header-cell *mcsHeaderCellDef>
-      Access
+      {{ textContent.table.header.access }}
     </mcs-header-cell>
     <mcs-data-cell *mcsDataCellDef="let row">
-      <a [href]="row.portal" target="_blank">{{ row.resource }}</a>
-    </mcs-data-cell>
-  </ng-container>
-
-  <!-- Header and Data row -->
-  <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-  <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-</mcs-table>
-
-<br/><br/>
-
-<h6>{{ textContent.otherServicesTableCaption }}</h6>
-
-<!-- Table -->
-<mcs-table [dataSource]="dataSource">
-  <!-- Service Column -->
-  <ng-container mcsColumnDef="serviceType">
-    <mcs-header-cell *mcsHeaderCellDef>
-      Service
-    </mcs-header-cell>
-    <mcs-data-cell *mcsDataCellDef="let row">
-      <a>{{ row.serviceType }}</a>
-    </mcs-data-cell>
-  </ng-container>
-
-  <!-- Description Column -->
-  <ng-container mcsColumnDef="description">
-    <mcs-header-cell *mcsHeaderCellDef>
-      Desription
-    </mcs-header-cell>
-    <mcs-data-cell *mcsDataCellDef="let row">
-      Some description...
-    </mcs-data-cell>
-  </ng-container>
-
-  <!-- Access Column -->
-  <ng-container mcsColumnDef="portal">
-    <mcs-header-cell *mcsHeaderCellDef>
-      Get it now
-    </mcs-header-cell>
-    <mcs-data-cell *mcsDataCellDef="let row">
-      <a [href]="row.portal" target="_blank">Order</a>
+      <a [href]="row.url" target="_blank">{{ row.resource }} <br />(requires login)</a>
     </mcs-data-cell>
   </ng-container>
 

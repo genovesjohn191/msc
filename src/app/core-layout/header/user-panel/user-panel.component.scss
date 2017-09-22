@@ -50,12 +50,8 @@
   .user-panel {
     max-height: 40px;
     text-align: center;
-    @include breakpoint(medium) {
-      border-left: 1px solid $color-grey-01;
-    }
     @include breakpoint(small) {
       padding-left: $space-medium;
-      border-left: 1px solid $color-grey-01;
     }
 
     .icon-link {
@@ -68,6 +64,11 @@
         display: inline-block;
       }
     }
+
+    .user-caret-down-icon {
+      padding-left: $space-xsmall;
+    }
+
     .user-info {
       display: block;
       @include breakpoint(small) {

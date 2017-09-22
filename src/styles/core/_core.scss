@@ -159,19 +159,19 @@ html {
 
 .hidden-medium {
   @include breakpoint(medium) {
-    display: none;
+    display: none !important;
   }
 }
 
 .hidden-small {
   @include breakpoint(small) {
-    display: none;
+    display: none !important;
   }
 }
 
 .hidden-xsmall {
   @include breakpoint(xsmall) {
-    display: none;
+    display: none !important;
   }
 }
 
