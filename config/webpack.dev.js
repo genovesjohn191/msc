@@ -13,8 +13,8 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 /** Webpack Constants */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const API_URL = process.env.MCS_API_URL || undefined;
-const HOST = process.env.MCS_HOST || undefined;
-const PORT = process.env.MCS_PORT || undefined;
+const HOST = process.env.MCS_HOST || 'localhost';
+const PORT = process.env.MCS_PORT || '3000';
 const SENTRY_DSN = process.env.MCS_SENTRY_DSN || undefined;
 const LOGIN_URL = process.env.MCS_LOGIN_URL || undefined;
 const LOGOUT_URL = process.env.MCS_LOGOUT_URL || undefined;

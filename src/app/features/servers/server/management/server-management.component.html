@@ -62,7 +62,8 @@
         <h3>{{ serverManagementTextContent.storage.title }}
           <a *mcsHasPermission="['VmEdit']" [routerLink]="['../storage']">Manage</a>
         </h3>
-        <ul class="unstyled-list server-storage">
+        <span *ngIf="!hasStorageInformation" class="missing-data-info">{{ serverManagementTextContent.storage.noContentMessage }}</span>
+        <ul class="unstyled-list server-storage" *ngIf="hasStorageInformation">
           <!-- Primary Volume -->
           <li>{{ serverManagementTextContent.storage.primaryVolume }}: {{ primaryVolume }}</li>
 
@@ -80,6 +81,7 @@
 
        <div class="col">
         <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
+        <span *ngIf="!hasNetworkInformation" class="missing-data-info">{{ serverManagementTextContent.networkInformation.noContentMessage }}</span>
         <ul class="unstyled-list server-interfaces">
           <!-- Network Interface -->
           <li *ngFor="let interface of server.interfaces; let i = index">

@@ -125,6 +125,16 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return this.server.powerState === ServerPowerState.PoweredOn;
   }
 
+  public get hasNetworkInformation(): boolean {
+    return !isNullOrEmpty(this.server.interfaces);
+  }
+
+  public get hasStorageInformation(): boolean {
+    return !isNullOrEmpty(this.primaryVolume)
+      || !isNullOrEmpty(this.secondaryVolumes)
+      || !isNullOrEmpty(this.server.storagePolicy);
+  }
+
   constructor(
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
