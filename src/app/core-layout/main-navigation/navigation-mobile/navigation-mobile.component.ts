@@ -97,10 +97,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public open(): void {
-    this._showHide = 'slideInLeft';
+    this.showHide = 'slideInLeft';
   }
 
   public close(): void {
-    this._showHide = 'slideOutLeft';
+    this.showHide = 'slideOutLeft';
   }
 }

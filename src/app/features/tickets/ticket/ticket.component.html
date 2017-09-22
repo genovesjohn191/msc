@@ -78,7 +78,9 @@
     </div>
   </div>
   <ng-container *ngIf="showCommentBox">
-    <mcs-ticket-new-comment (onCancelComment)="cancelComment($event)" (onCreateComment)="createComment($event)">
+    <mcs-ticket-new-comment
+      (onCancelComment)="cancelComment($event)"
+      (onCreateComment)="createComment($event)">
     </mcs-ticket-new-comment>
   </ng-container>
 

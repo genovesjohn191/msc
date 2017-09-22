@@ -156,7 +156,13 @@
     "title": "Macquarie Cloud Services: Tickets",
     "header": "Tickets",
     "description": "Below is the list of your Macquarie Cloud Services tickets.",
-    "newTicket": "New Ticket"
+    "newTicket": "New Ticket",
+    "shared": {
+      "ticketNewComment": {
+        "selectFile": "File attachments (select or drag & drop)",
+        "dragDropZone": "Choose File"
+      }
+    }
   },
   "firewalls": {
     "header": "Firewalls",

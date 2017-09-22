@@ -70,6 +70,9 @@ export class TicketComponent implements OnInit, OnDestroy {
     this._activities = value;
   }
 
+  /**
+   * Comment box flag
+   */
   private _showCommentBox: boolean;
   public get showCommentBox(): boolean {
     return this._showCommentBox;

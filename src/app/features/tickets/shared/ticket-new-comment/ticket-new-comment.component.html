@@ -10,19 +10,20 @@
     <div class="uploader-wrapper">
       <mcs-button size="small" (onClick)="chooFileElement.click()">
         <input #chooFileElement type="file" ng2FileSelect [uploader]="fileUploader" />
-        Choose File
+        {{ textContent.dragDropZone }}
       </mcs-button>
 
       <div class="dropzone" ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
         (fileOver)="onFileOver($event)"
         [uploader]="fileUploader">
 
-        <span *ngIf="hasAttachment">
-          {{ attachmentFile?.file.name }}
-        </span>
-        <span *ngIf="!hasAttachment">
-          Icon + File attacments (select or drag & drop)
-        </span>
+        <mcs-icon [key]="attachmentIconKey"></mcs-icon>
+        <ng-container *ngIf="hasAttachment">
+          <span>{{ attachmentFile?.file.name }}</span>
+        </ng-container>
+        <ng-container *ngIf="!hasAttachment">
+          <span>{{ textContent.selectFile }}</span>
+        </ng-container>
       </div>
     </div>
 
