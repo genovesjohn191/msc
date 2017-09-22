@@ -5,9 +5,9 @@ import {
 } from '@angular/core/testing';
 import { FirewallPoliciesComponent } from './firewall-policies.component';
 import {
-  FirewallsTestingModule,
+  NetworkingTestingModule,
   mockFirewallService
-} from '../../testing';
+} from '../../../testing';
 import {
   FirewallPolicy,
   FirewallPolicyAction,
@@ -29,7 +29,7 @@ describe('FirewallOverviewComponent', () => {
         FirewallPoliciesComponent
       ],
       imports: [
-        FirewallsTestingModule
+        NetworkingTestingModule
       ]
     });
 

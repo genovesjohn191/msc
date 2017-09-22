@@ -4,9 +4,9 @@ import {
 } from '@angular/core/testing';
 import { FirewallOverviewComponent } from './firewall-overview.component';
 import {
-  FirewallsTestingModule,
+  NetworkingTestingModule,
   mockFirewallService
-} from '../../testing';
+} from '../../../testing';
 import { Firewall } from '../../models';
 import { FirewallService } from '../firewall.service';
 
@@ -24,7 +24,7 @@ describe('FirewallOverviewComponent', () => {
         FirewallOverviewComponent
       ],
       imports: [
-        FirewallsTestingModule
+        NetworkingTestingModule
       ]
     });
 

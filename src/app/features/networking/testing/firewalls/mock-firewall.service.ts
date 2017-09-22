@@ -6,7 +6,7 @@ import { McsApiSuccessResponse } from '../../../../core';
 import {
   Firewall,
   FirewallPolicy
-} from '../models';
+} from '../../firewalls';
 
 export const mockFirewallService = {
 

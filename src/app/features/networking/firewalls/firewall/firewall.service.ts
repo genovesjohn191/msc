@@ -18,8 +18,8 @@ import {
 export class FirewallService {
 
   /**
-   * This will notify the subscriber everytime the firewall is selected or
-   * everytime there are new data from the firewall server
+   * This will notify the subscriber everytime the server is selected or
+   * everytime there are new data from the selected server
    */
   private _selectedFirewallStream: BehaviorSubject<Firewall>;
   public get selectedFirewallStream(): BehaviorSubject<Firewall> {
@@ -32,8 +32,6 @@ export class FirewallService {
   /**
    * This contains the selected firewall and this will be accessible
    * for those component that are using this service.
-   * The purpose of this one is to get the selected firewall
-   * without subscribing to the stream
    */
   private _selectedFirewall: Firewall;
   public get selectedFirewall(): Firewall {
@@ -44,7 +42,6 @@ export class FirewallService {
   }
 
   constructor(private _firewallsService: FirewallsService) {
-    this._selectedFirewallStream = new BehaviorSubject<Firewall>(new Firewall());
     this._selectedFirewall = new Firewall();
   }
 
@@ -60,15 +57,9 @@ export class FirewallService {
    * Set firewall data to the stream (MCS API response)
    * @param id Firewall identification
    */
-  public setSelectedFirewall(id: any): void {
-    this.getFirewall(id).subscribe((response) => {
-      let firewall: Firewall = response.content;
-
-      if (firewall) {
-        this._selectedFirewall = firewall;
-        this._selectedFirewallStream.next(firewall);
-      }
-    });
+  public setSelectedFirewall(firewall: Firewall): void {
+    this.selectedFirewallStream.next(firewall);
+    this.selectedFirewall = firewall;
   }
 
   /**

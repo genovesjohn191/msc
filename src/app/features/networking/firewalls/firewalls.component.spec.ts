@@ -15,9 +15,9 @@ import { Firewall } from './models';
 import { FirewallsComponent } from './firewalls.component';
 import { FirewallsService } from './firewalls.service';
 import {
-  FirewallsTestingModule,
+  NetworkingTestingModule,
   mockFirewallsService
-} from './testing';
+} from '../testing';
 
 describe('FirewallsComponent', () => {
 
@@ -35,7 +35,7 @@ describe('FirewallsComponent', () => {
         FirewallsComponent
       ],
       imports: [
-        FirewallsTestingModule
+        NetworkingTestingModule
       ]
     });
 

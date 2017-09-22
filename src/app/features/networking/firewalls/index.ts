@@ -1,3 +1,5 @@
+/** Models */
+export * from './models';
 /** Firewalls */
 export * from './firewalls.service';
 export * from './firewalls.component';

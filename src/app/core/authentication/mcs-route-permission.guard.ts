@@ -16,7 +16,7 @@ export class McsRoutePermissionGuard {
   private _routeRequiredPermissions: Map<string, string[]> = new Map([
     ['/servers', ['VmAccess']],
     ['/tickets', ['TicketView']],
-    ['/firewalls', ['FirewallConfigurationView']]
+    ['/networking/firewalls', ['FirewallConfigurationView']]
   ]);
 
   constructor(

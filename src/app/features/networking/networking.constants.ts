@@ -1,18 +1,27 @@
 import { Routes } from '@angular/router';
-/** Components */
+/** Components/Services */
 import { NetworkingComponent } from './networking.component';
 import {
   FirewallsComponent,
   FirewallComponent,
   FirewallOverviewComponent,
-  FirewallPoliciesComponent
+  FirewallPoliciesComponent,
+  FirewallsService,
+  FirewallService
 } from './firewalls';
+
+/**
+ * List of services for the main module
+ */
+export const networkingProviders: any[] = [
+  FirewallsService,
+  FirewallService
+];
 
 /**
  * List of routes for the main module
  */
 export const networkingRoutes: Routes = [
-  // { path: 'networking', component: NetworkingComponent },
   {
     path: 'networking',
     children: [
