@@ -72,14 +72,16 @@
         "networkInformation": {
           "title": "Network Information",
           "publicIp": "Public IP",
-          "interface": "NIC"
+          "interface": "NIC",
+          "noContentMessage": "Network information is unavailable."
         },
         "storage": {
           "title": "Storage",
           "primaryVolume": "Primary Volume",
           "secondaryVolumes": "Secondary Volumes",
           "storagePolicy": "Storage Policy",
-          "manageStorage": "Manage Storage"
+          "manageStorage": "Manage Storage",
+          "noContentMessage": "Storage information is unavailable."
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
@@ -211,7 +213,7 @@
     "otherServicesTableCaption": "Other services we offer.",
     "table": {
       "header":{
-        "service": "Service",
+        "name": "Portal",
         "description": "Description",
         "access": "Access",
         "order": "Get it now"
