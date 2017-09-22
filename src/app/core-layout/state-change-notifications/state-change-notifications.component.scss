@@ -1,15 +1,23 @@
 @import '../../../styles/shared/base';
 
+// State change notifications (Wrapper)
+$state-change-large-notifications-width: 400px;
+$state-change-small-notifications-width: 90%;
+$state-change-notifications-margin: 20px;
+
 .state-change-notifications-container {
   position: fixed;
   left: $state-change-notifications-margin;
   bottom: $state-change-notifications-margin;
-  width: $state-change-notifications-width;
+  width: $state-change-large-notifications-width;
+  @include breakpoint(small) {
+    width: $state-change-small-notifications-width;
+  }
   z-index: $zindex-notifications;
 
   ul {
     li {
-      margin: $state-change-notifications-interval 0;
+      margin: 10px 0;
     }
   }
 }

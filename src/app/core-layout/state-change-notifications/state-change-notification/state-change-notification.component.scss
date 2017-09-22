@@ -1,5 +1,14 @@
 @import '../../../../styles/shared/base';
 
+// State change notificaiton UI (Individual)
+$state-change-notification-width: 450px;
+$state-change-notification-padding: 10px 20px;
+$state-change-notification-border: 2px solid $color-grey-02;
+$state-change-notification-status-font-size: 14;
+$state-change-notification-message-font-size: 12;
+$state-change-notification-icon-font-size: 30;
+$state-change-notification-icon-width: $state-change-notification-icon-font-size + px;
+
 .state-change-notification-container {
   position: relative;
   width: 100%;
@@ -14,12 +23,14 @@
     @include display-flex(column);
     padding-right: $space-large;
     border-right: 1px solid gray;
-
+    @include breakpoint(medium) {
+      border-right: none;
+    }
     .status {
       @include set-items-interval(20px, horizontal);
       @include display-flex(row);
       align-items: center;
-      margin-bottom: $space-xlarge;
+      margin-bottom: $space-small;
 
       .icon {
         width: $state-change-notification-icon-width;
@@ -60,6 +71,9 @@
   }
 
   .owner-info {
+    @include breakpoint(medium) {
+      display: none;
+    }
     color: $color-grey-02;
     font-family: $base-font;
     margin: 0 $space-large;
