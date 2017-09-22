@@ -4,20 +4,6 @@ import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()
 export class LoaderService {
-
-  /**
-   * Flag to determine whether the subscription is active
-   */
-  private _active: boolean;
-  public get active(): boolean {
-    return this._active;
-  }
-  public set active(value: boolean) {
-    if (this._active !== value) {
-      this._active = value;
-    }
-  }
-
   /**
    * Animation strategy for the loader and backdrop component
    */
@@ -31,8 +17,13 @@ export class LoaderService {
     }
   }
 
+  /**
+   * List of subscription to monitor by the loader
+   */
+  private _subscriptions: Subscription[];
+
   constructor() {
-    this._active = false;
+    this._subscriptions = new Array();
   }
 
   /**
@@ -42,13 +33,44 @@ export class LoaderService {
    * subscription is ended, so make sure you unsubscribe or else the loader will remain
    * @param subscription Observable subscription to track
    */
-  public setSubscriber(subscription: Subscription) {
-    if (isNullOrEmpty(subscription)) { return; }
+  public setSubscribers(subscriptions: Subscription | Subscription[]) {
+    if (isNullOrEmpty(subscriptions)) { return; }
 
-    this.active = true;
-    subscription.add(() => {
-      this.animate = 'fadeOut';
-      this.active = false;
+    // Filter subscribtions
+    if (Array.isArray(subscriptions)) {
+      this._subscriptions = subscriptions.filter((subscription) => {
+        return !isNullOrEmpty(subscription);
+      });
+    } else {
+      this._subscriptions.push(subscriptions);
+    }
+
+    // Add subscribers to all subscriptions
+    this._subscriptions.forEach((item) => {
+      item.add(() => this._onCompletion(item));
     });
+  }
+
+  /**
+   * Determine whether the loader/subscriptions are still ongoing
+   */
+  public isActive(): boolean {
+    if (isNullOrEmpty(this._subscriptions)) {
+      this._animate = 'fadeOut';
+      return false;
+    }
+    this._animate = undefined;
+    return true;
+  }
+
+  /**
+   * This method will get notified when the subscription is finished
+   * @param subscription Subscription to monitor the process
+   */
+  private _onCompletion(subscription: Subscription) {
+    let subsIndex = this._subscriptions.indexOf(subscription);
+    if (subsIndex === -1) { return; }
+
+    this._subscriptions.splice(subsIndex, 1);
   }
 }

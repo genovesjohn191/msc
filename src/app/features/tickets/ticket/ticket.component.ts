@@ -21,7 +21,11 @@ import {
   TicketAttachment,
   TicketComment,
   TicketActivity,
-  TicketActivityType
+  TicketNewComment,
+  TicketCommentCategory,
+  TicketCommentType,
+  TicketCreateComment,
+  TicketCreateAttachment
 } from '../models';
 import { TicketsService } from '../tickets.service';
 
@@ -34,6 +38,8 @@ import { TicketsService } from '../tickets.service';
 export class TicketComponent implements OnInit, OnDestroy {
 
   public ticketSubscription: any;
+  public createCommentSubscription: any;
+  public createAttachmentSubscription: any;
 
   /**
    * An observable ticket data that obtained based on the given id
@@ -62,6 +68,11 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
   public set activities(value: TicketActivity[]) {
     this._activities = value;
+  }
+
+  private _showCommentBox: boolean;
+  public get showCommentBox(): boolean {
+    return this._showCommentBox;
   }
 
   public constructor(
@@ -108,6 +119,78 @@ export class TicketComponent implements OnInit, OnDestroy {
     return convertDateToStandardString(date);
   }
 
+  public newComment() {
+    this._showCommentBox = true;
+  }
+
+  public cancelComment(event: any) {
+    this._showCommentBox = false;
+  }
+
+  public createComment(event: TicketNewComment) {
+    if (isNullOrEmpty(event)) { return; }
+
+    // Create comment
+    this._createCommentContent(event.comment);
+
+    // Create attachment
+    this._createAttachment(event.attachedFile);
+
+    // Close create new attachment box
+    this._showCommentBox = false;
+  }
+
+  private _createCommentContent(content: string) {
+    if (isNullOrEmpty(content)) { return; }
+
+    // Create comment
+    let newComment = new TicketCreateComment();
+    newComment.category = TicketCommentCategory.Task;
+    newComment.type = TicketCommentType.Comments;
+    newComment.value = content;
+
+    this.createCommentSubscription = this._ticketsService
+      .createComment(this.ticket.id, newComment)
+      .subscribe((response) => {
+        // Add the new comment in the activity list
+        if (!isNullOrEmpty(response)) {
+          let activity = new TicketActivity();
+          activity.setBasedOnComment(response.content);
+          this.activities.push(activity);
+          // Sort activities by date
+          this.activities.sort((_first: TicketActivity, _second: TicketActivity) => {
+            return compareDates(_second.date, _first.date);
+          });
+        }
+      });
+  }
+
+  private _createAttachment(attachedFile: any) {
+    if (isNullOrEmpty(attachedFile)) { return; }
+
+    // Create attachment
+    let fileReader = new FileReader();
+    let newAttachment = new TicketCreateAttachment();
+
+    fileReader.readAsBinaryString(attachedFile._file);
+    fileReader.onload = () => {
+      newAttachment.fileName = attachedFile.file.name;
+      newAttachment.contents = btoa(fileReader.result);
+
+      this.createAttachmentSubscription = this._ticketsService
+        .createAttachment(this.ticket.id, newAttachment)
+        .subscribe((response) => {
+          // Add the new attachment in the activity list and the attachments
+          if (!isNullOrEmpty(response)) {
+            let activity = new TicketActivity();
+            activity.setBasedOnAttachment(response.content);
+            this.activities.push(activity);
+            this.ticket.attachments.push(response.content);
+          }
+        });
+    };
+  }
+
   /**
    * Get Ticket based on the given ID in the provided parameter
    */
@@ -138,10 +221,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     this.ticket.attachments.forEach((ticketAttachment) => {
       let activity = new TicketActivity();
 
-      activity.header = ticketAttachment.createdBy;
-      activity.content = ticketAttachment.fileName;
-      activity.date = ticketAttachment.createdOn;
-      activity.type = TicketActivityType.Attachment;
+      activity.setBasedOnAttachment(ticketAttachment);
       ticketActivities.push(activity);
     });
 
@@ -149,10 +229,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     this.ticket.comments.forEach((ticketItem) => {
       let activity = new TicketActivity();
 
-      activity.header = ticketItem.name;
-      activity.content = ticketItem.value;
-      activity.date = ticketItem.createdOn;
-      activity.type = TicketActivityType.Comment;
+      activity.setBasedOnComment(ticketItem);
       ticketActivities.push(activity);
     });
 

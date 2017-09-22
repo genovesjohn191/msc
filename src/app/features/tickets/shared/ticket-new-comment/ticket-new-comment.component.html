@@ -1,0 +1,35 @@
+<div class="ticket-new-comment-wrapper">
+
+  <!-- Comment text area -->
+  <div class="ticket-comment">
+    <textarea [(ngModel)]="comment" rows="3"></textarea>
+  </div>
+
+  <div class="ticket-action-wrapper">
+    <!-- Uploader of attachment wrapper -->
+    <div class="uploader-wrapper">
+      <mcs-button size="small" (onClick)="chooFileElement.click()">
+        <input #chooFileElement type="file" ng2FileSelect [uploader]="fileUploader" />
+        Choose File
+      </mcs-button>
+
+      <div class="dropzone" ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
+        (fileOver)="onFileOver($event)"
+        [uploader]="fileUploader">
+
+        <span *ngIf="hasAttachment">
+          {{ attachmentFile?.file.name }}
+        </span>
+        <span *ngIf="!hasAttachment">
+          Icon + File attacments (select or drag & drop)
+        </span>
+      </div>
+    </div>
+
+    <!-- Ticket comment/attachment creation -->
+    <div class="ticket-create-wrapper">
+      <mcs-button size="small" (onClick)="cancelComment()">Cancel</mcs-button>
+      <mcs-button size="small" (onClick)="createComment()">Add</mcs-button>
+    </div>
+  </div>
+</div>

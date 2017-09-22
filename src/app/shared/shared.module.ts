@@ -5,6 +5,8 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
+/** External modules */
+import { FileUploadModule } from 'ng2-file-upload';
 /** Modules */
 import { PopoverModule } from './popover/popover.module';
 import { ModalModule } from './modal/modal.module';
@@ -49,6 +51,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     SearchComponent
   ],
   imports: [
+    FileUploadModule,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -77,6 +80,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     PaginatorComponent,
     HasPermissionDirective,
     SearchComponent,
+    FileUploadModule,
     CommonModule,
     RouterModule,
     FormsModule,
