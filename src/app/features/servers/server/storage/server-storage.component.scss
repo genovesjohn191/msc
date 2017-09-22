@@ -62,9 +62,6 @@ $server-storage-form-border-color: $color-grey-00;
         @include flex(0 1 25%);
         @include display-flex(row);
         align-items: center;
-        @include breakpoint(medium) {
-          @include flex(2)
-        }
 
         span {
           margin-left: $space-small;

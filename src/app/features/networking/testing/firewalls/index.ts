@@ -1,6 +1,3 @@
-/** Modules */
-export * from './firewalls-testing.module';
-
-/** Mocks */
+/** Services */
 export * from './mock-firewalls.service';
 export * from './mock-firewall.service';

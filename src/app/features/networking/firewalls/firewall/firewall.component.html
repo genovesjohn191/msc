@@ -1,10 +1,10 @@
 <section class="firewall-container">
   <div class="row">
     <div class="col-sm-4 hidden-medium">
-      <div class="firewall-list-panel">
+      <div class="firewall-list-panel" [mcsLoader]="firewallListSource.firewallsSubscription">
         <mcs-search #listSearch [delayInSeconds]="0" mcsListSearchDef></mcs-search>
         <mcs-list-panel mcsListPanelDef [dataSource]="firewallListSource" 
-          [selectedListItem]="firewallListSource.selectedElement" [searchMode]="firewallListSource.searchMode">
+          [selectedListItem]="selectedItem" [searchMode]="firewallListSource.searchMode">
           <ng-container mcsListDef>
             <mcs-list-header *mcsListHeaderDef="let haGroup; propertyName: 'haGroupName';"
               [groupName]="haGroup">
@@ -22,8 +22,8 @@
     </div>
 
     <div class="col-sm-8 firewall-details">
-      <div *ngIf="hasFirewallData">
-        <h2 class="firewall-name">{{ firewallName }}</h2>
+      <div *ngIf="hasFirewallData" [mcsLoader]="subscription">
+        <h2 class="firewall-name">{{ firewall.managementName }}</h2>
         <div class="mcs-tabs">
           <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">

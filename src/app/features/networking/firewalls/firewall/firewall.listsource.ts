@@ -34,12 +34,8 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     this._searchMode = value;
   }
 
-  private _selectedElement: McsListPanelItem;
-  public get selectedElement(): McsListPanelItem {
-    return this._selectedElement;
-  }
-  public set selectedElement(value: McsListPanelItem) {
-    this._selectedElement = value;
+  public get firewallsSubscription(): any {
+    return this._firewallsSubscription;
   }
 
   constructor(
@@ -99,14 +95,6 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
       .subscribe((response) => {
         this._firewallList = this._mapFirewallList(response.content);
         this._firewallListStream.next(this._firewallList);
-
-        refreshView(() => {
-          let selectedFirewall = this._firewallService.selectedFirewall;
-          this.selectedElement = {
-            itemId: selectedFirewall.id,
-            groupName: selectedFirewall.haGroupName
-          } as McsListPanelItem;
-        });
       });
   }
 

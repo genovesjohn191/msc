@@ -28,7 +28,7 @@ import {
   McsApiSuccessResponse,
   McsApiErrorResponse
 } from '../../../core';
-import { FirewallsTestingModule } from './testing';
+import { NetworkingTestingModule } from '../testing';
 
 describe('FirewallsService', () => {
 
@@ -43,7 +43,7 @@ describe('FirewallsService', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       imports: [
-        FirewallsTestingModule
+        NetworkingTestingModule
       ]
     });
 

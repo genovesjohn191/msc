@@ -6,12 +6,14 @@ import {
 } from '@angular/core';
 import {
   Router,
-  ActivatedRoute
+  ActivatedRoute,
+  ParamMap
 } from '@angular/router';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsSearch
+  McsSearch,
+  McsListPanelItem
 } from '../../../../core';
 import { Firewall } from '../models';
 import { FirewallsService } from '../firewalls.service';
@@ -29,7 +31,6 @@ export class FirewallComponent implements OnInit, OnDestroy {
   public _listSearch: McsSearch;
 
   public firewallTextContent: any;
-  public firewallName: string;
   public subscription: any;
   public firewallListSource: FirewallListSource | null;
 
@@ -42,7 +43,29 @@ export class FirewallComponent implements OnInit, OnDestroy {
   }
 
   public get hasFirewallData(): boolean {
-    return !isNullOrEmpty(this.firewallName);
+    return !isNullOrEmpty(this.firewall);
+  }
+
+  private _firewall: Firewall;
+  public get firewall(): Firewall {
+    return this._firewall;
+  }
+  public set firewall(value: Firewall) {
+    if (this._firewall !== value) {
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+      }
+
+      this._firewall = value;
+    }
+  }
+
+  private _selectedItem: McsListPanelItem;
+  public get selectedItem(): McsListPanelItem {
+    return this._selectedItem;
+  }
+  public set selectedItem(value: McsListPanelItem) {
+    this._selectedItem = value;
   }
 
   constructor(
@@ -50,20 +73,16 @@ export class FirewallComponent implements OnInit, OnDestroy {
     private _firewallsService: FirewallsService,
     private _firewallService: FirewallService,
     private _router: Router,
-    private _route: ActivatedRoute
+    private _activatedRoute: ActivatedRoute
   ) {
-    this.firewallName = '';
+    this.firewall = new Firewall();
   }
 
   public ngOnInit() {
     // OnInit
     this.firewallTextContent = this._textContentProvider.content.firewalls.firewall;
-    this._firewallService.setSelectedFirewall(this._route.snapshot.paramMap.get('id'));
-    this.subscription = this._firewallService.selectedFirewallStream
-      .subscribe((firewall) => {
-        this.firewallName = firewall.managementName;
-      });
     this._initializeListsource();
+    this._getFirewallById();
   }
 
   /**
@@ -71,11 +90,13 @@ export class FirewallComponent implements OnInit, OnDestroy {
    * set the selected firewall to update selectedFirewallStream
    * @param firewallId
    */
-  public onFirewallSelect(firewallId: any) {
-    if (firewallId) {
-      this._router.navigate(['/networking/firewalls', firewallId]);
-      this._firewallService.setSelectedFirewall(firewallId);
-    }
+  public onFirewallSelect(firewallId: any): void {
+    if (isNullOrEmpty(firewallId)) { return; }
+
+    this._router.navigate(
+      ['/networking/firewalls', firewallId],
+      { relativeTo: this._activatedRoute }
+    );
   }
 
   public ngOnDestroy() {
@@ -91,5 +112,23 @@ export class FirewallComponent implements OnInit, OnDestroy {
       this._firewallService,
       this._listSearch
     );
+  }
+
+  private _getFirewallById(): void {
+    this.subscription = this._activatedRoute.paramMap
+      .switchMap((params: ParamMap) => {
+        let firewallId = params.get('id');
+        return this._firewallService.getFirewall(firewallId);
+      })
+      .subscribe((response) => {
+        if (!isNullOrEmpty(response)) {
+          this.firewall = response.content;
+          this.selectedItem = {
+            itemId: this.firewall.id,
+            groupName: this.firewall.haGroupName
+          } as McsListPanelItem;
+          this._firewallService.setSelectedFirewall(this.firewall);
+        }
+      });
   }
 }

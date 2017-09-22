@@ -54,11 +54,11 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public get hasFirewalls(): boolean {
-    return this.successfullyObtained === true && this.totalRecordCount > 0;
+    return this.successfullyObtained && this.totalRecordCount > 0;
   }
 
   public get displayErrorMessage(): boolean {
-    return this.dataSource && (!this.hasFirewalls ||
+    return this.dataSource && (this.hasFirewalls ||
       this.successfullyObtained) === false;
   }
 

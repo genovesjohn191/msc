@@ -8,8 +8,7 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { FirewallsTestingModule } from '../testing';
+import { NetworkingTestingModule } from '../../testing';
 import { FirewallsService } from '../firewalls.service';
 import { FirewallService } from './firewall.service';
 
@@ -19,15 +18,6 @@ describe('FirewallComponent', () => {
   let router: Router;
   let firewallsService: FirewallsService;
   let firewallService: FirewallService;
-  let mockActivatedRoute = {
-    snapshot: {
-      paramMap: {
-        get(key: any): string {
-          return 'b88892a1-9332-48da-a49c-10edbc8f807b';
-        }
-      }
-    }
-  };
   let mockFirewallDetails = {
     id: 'b88892a1-9332-48da-a49c-10edbc8f807b',
     serviceId: 'M1VFW27117001',
@@ -44,12 +34,7 @@ describe('FirewallComponent', () => {
         FirewallComponent
       ],
       imports: [
-        FirewallsTestingModule,
-        RouterTestingModule
-      ],
-      providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        RouterTestingModule
+        NetworkingTestingModule
       ]
     });
 
@@ -80,30 +65,12 @@ describe('FirewallComponent', () => {
       expect(component.firewallTextContent).toBeDefined();
     });
 
-    it('should set the selected firewall', () => {
-      spyOn(firewallService, 'setSelectedFirewall');
-      component.ngOnInit();
-      expect(firewallService.setSelectedFirewall).toHaveBeenCalled();
-    });
-
-    it('should call the subscribe() of FirewallService selectedFirewallStream', () => {
-      spyOn(firewallService.selectedFirewallStream, 'subscribe');
-      component.ngOnInit();
-      expect(firewallService.selectedFirewallStream.subscribe).toHaveBeenCalled();
-    });
-
     it('should set the firewall listsource', () => {
       expect(component.firewallListSource).toBeDefined();
     });
   });
 
   describe('onFirewallSelect()', () => {
-    it('should call the setSelectedFirewall() of FirewallService', () => {
-      spyOn(firewallService, 'setSelectedFirewall');
-      component.onFirewallSelect(mockFirewallDetails.id);
-      expect(firewallService.setSelectedFirewall).toHaveBeenCalled();
-    });
-
     it('should navigate to the selected firewall overview page', () => {
       spyOn(router, 'navigate');
       component.onFirewallSelect(mockFirewallDetails.id);
