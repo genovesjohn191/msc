@@ -1,5 +1,8 @@
 @import "../../../../../styles/shared/base";
 
+$ticket-new-comment-box-shadow-color: $color-black;
+$ticket-new-comment-file-hover-color: $color-grey-04;
+
 :host {
   display: block;
 }
@@ -8,7 +11,7 @@
   padding: $space-small;
   @include display-flex(column);
   @include set-items-interval($space-small);
-  @include box-shadow(0 0 5px 1px rgba($color-black, 0.2));
+  @include box-shadow(0 0 5px 1px rgba($ticket-new-comment-box-shadow-color, 0.2));
 
   .ticket-comment {
     textarea {
@@ -28,8 +31,10 @@
 
       .dropzone {
         border: 2px dotted transparent;
+        @include set-items-interval($space-xsmall, horizontal);
+
         &.file-hover {
-          border: 2px dotted $color-grey-04;
+          border: 2px dotted $ticket-new-comment-file-hover-color;
         }
       }
 

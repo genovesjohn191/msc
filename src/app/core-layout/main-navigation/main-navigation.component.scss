@@ -1,13 +1,13 @@
 @import "../../../styles/shared/base";
 
-// Main navigation variables are declared in the shared
+:host {
+  z-index: $zindex-navigation;
+}
 
 .main-navigation-wrapper {
   background-color: $main-navigation-bg-color;
   color: $main-navigation-color;
   padding: $main-navigation-large-padding;
-  z-index: $zindex-navigation;
-  position: relative;
 
   @include box-shadow((
     0 3px 4px 0 rgba($main-navigation-box-shadow-color, 0.14),

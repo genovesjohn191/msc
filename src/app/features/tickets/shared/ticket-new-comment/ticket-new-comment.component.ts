@@ -2,14 +2,19 @@ import {
   Component,
   Input,
   Output,
+  OnInit,
   EventEmitter,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  ViewContainerRef
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { convertDateToStandardString } from '../../../../utilities';
-import { CoreDefinition } from '../../../../core';
-import { FileUploader, FileItem } from 'ng2-file-upload';
+import {
+  CoreDefinition,
+  McsTextContentProvider
+} from '../../../../core';
+import {
+  FileUploader,
+  FileItem
+} from 'ng2-file-upload';
 import {
   TicketActivity,
   TicketActivityType,
@@ -23,8 +28,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class TicketNewCommentComponent {
+export class TicketNewCommentComponent implements OnInit {
 
+  public textContent: any;
   public fileUploader: FileUploader;
   public hasDropZone: boolean;
 
@@ -45,16 +51,21 @@ export class TicketNewCommentComponent {
     this._comment = value;
   }
 
-  public constructor(
-    private _viewContainerRef: ViewContainerRef,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) {
+  public get attachmentIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_ATTACHMENT;
+  }
+
+  public constructor(private _textContentProvider: McsTextContentProvider) {
     this.onCreateComment = new EventEmitter<any>();
     this.onCancelComment = new EventEmitter<any>();
     // Set uploader configuration
     this.fileUploader = new FileUploader({
       autoUpload: false
     });
+  }
+
+  public ngOnInit() {
+    this.textContent = this._textContentProvider.content.tickets.shared.ticketNewComment;
   }
 
   public get hasAttachment(): boolean {
