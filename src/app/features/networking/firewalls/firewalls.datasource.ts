@@ -1,13 +1,22 @@
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import {
   McsDataSource,
   McsPaginator,
-  McsSearch
+  McsSearch,
+  McsDataStatus
 } from '../../../core';
 import { Firewall } from './models';
 import { FirewallsService } from './firewalls.service';
 
 export class FirewallsDataSource implements McsDataSource<Firewall> {
+  /**
+   * This will notify the subscribers of the datasource that the obtainment is InProgress
+   */
+  public dataLoadingStream: Subject<McsDataStatus>;
+
   /**
    * It will populate the data when the obtainment is completed
    */
@@ -76,19 +85,14 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
    * This will invoke when the data obtainment is completed
    * @param firewalls Data to be provided when the datasource is connected
    */
-  public onCompletion(firewalls?: Firewall[]): void {
+  public onCompletion(status: McsDataStatus, firewalls?: Firewall[]): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
-    this._successfullyObtained = true;
-  }
 
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
-    this._paginator.pageCompleted();
-    this._successfullyObtained = false;
+    if (status === McsDataStatus.Success) {
+      this._successfullyObtained = true;
+    } else {
+      this._successfullyObtained = false;
+    }
   }
 }

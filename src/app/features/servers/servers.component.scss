@@ -46,8 +46,8 @@ $servers-search-min-width: 300px;
     align-items: center;
   }
 
-  .message-wrapper {
-    text-align: center;
+  .data-error {
+    @include set-items-interval($space-small, horizontal);
   }
 }
 

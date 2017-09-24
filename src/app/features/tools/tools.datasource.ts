@@ -1,10 +1,21 @@
-import { Observable } from 'rxjs/Rx';
-import { McsDataSource } from '../../core';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
+import {
+  McsDataSource,
+  McsDataStatus
+} from '../../core';
 import { Portal } from './portal';
 import { ToolsService } from './tools.service';
 import { isNullOrEmpty } from '../../utilities';
 
 export class ToolsDataSource implements McsDataSource<Portal> {
+  /**
+   * This will notify the subscribers of the datasource that the obtainment is InProgress
+   */
+  public dataLoadingStream: Subject<McsDataStatus>;
+
   /**
    * It will populate the data when the obtainment is completed
    */
@@ -28,19 +39,19 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    */
   public connect(): Observable<Portal[]> {
     return this._toolsService.getPortals()
-    .map((response) => {
-      this._totalRecordCount = response.totalCount;
+      .map((response) => {
+        this._totalRecordCount = response.totalCount;
 
-      // Remove all portals without resource
-      for (let portal of response.content) {
-        if (isNullOrEmpty(portal.resource)) {
-          let index = response.content.indexOf(portal, 0);
-          response.content.splice(index, 1);
+        // Remove all portals without resource
+        for (let portal of response.content) {
+          if (isNullOrEmpty(portal.resource)) {
+            let index = response.content.indexOf(portal, 0);
+            response.content.splice(index, 1);
+          }
         }
-      }
 
-      return response.content;
-    });
+        return response.content;
+      });
   }
 
   /**
@@ -55,15 +66,7 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    * This will invoke when the data obtainment is completed
    * @param portals Data to be provided when the datasource is connected
    */
-  public onCompletion(portals?: Portal[]): void {
+  public onCompletion(status: McsDataStatus, portals?: Portal[]): void {
     // Execute all data from completion
-  }
-
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
   }
 }

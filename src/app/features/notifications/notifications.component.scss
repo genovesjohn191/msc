@@ -32,7 +32,7 @@ $notifications-search-min-width: 300px;
     }
   }
 
-  .message-wrapper {
-    text-align: center;
+  .data-error {
+    @include set-items-interval($space-small, horizontal);
   }
 }

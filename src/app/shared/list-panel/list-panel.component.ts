@@ -19,9 +19,11 @@ import {
   ViewEncapsulation,
   HostBinding
 } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 /** Core / Utilities */
 import {
   McsDataSource,
+  McsDataStatus,
   McsListPanelItem
 } from '../../core';
 import {
@@ -114,6 +116,19 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
   private _data: NgIterable<T>;
   private _dataDiffer: IterableDiffer<T>;
   private _dataMap: Map<string, T[]>;
+
+  /**
+   * Get/Set the data obtainment status based on observables
+   */
+  private _dataStatus: McsDataStatus;
+  public get dataStatus(): McsDataStatus {
+    return this._dataStatus;
+  }
+  public set dataStatus(value: McsDataStatus) {
+    if (this._dataStatus !== value) {
+      this._dataStatus = value;
+    }
+  }
 
   /**
    * Placeholders within the table template where the header and rows data will be inserted
@@ -282,11 +297,20 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
    */
   private _getDatasource(): void {
     this._dataSourceSubscription = this.dataSource.connect()
+      .catch((error) => {
+        this.dataStatus = McsDataStatus.Error;
+        this._dataSource.onCompletion(this.dataStatus, undefined);
+        return Observable.throw(error);
+      })
       .subscribe((data) => {
         this._data = data;
         this._dataMap = this._createListItemsMap(data);
         this._renderItemGroups();
-        this._dataSource.onCompletion();
+
+        this.dataStatus = isNullOrEmpty(data) ?
+          McsDataStatus.Empty :
+          McsDataStatus.Success;
+        this._dataSource.onCompletion(this.dataStatus, data);
       });
   }
 

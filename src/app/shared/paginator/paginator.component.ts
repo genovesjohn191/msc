@@ -56,7 +56,7 @@ export class PaginatorComponent implements McsPaginator {
     this._pageIndex = 0;
     this._pageSize = 0;
     this._totalCount = 0;
-    this.loading = true;
+    this.loading = false;
     this.pageChangedStream = new EventEmitter<any>();
     this.textContent = _textContentProvider.content.shared.paginator;
   }
@@ -74,10 +74,6 @@ export class PaginatorComponent implements McsPaginator {
    */
   public get hasPreviousPage(): boolean {
     return this.pageIndex >= 1 && this.pageSize !== 0;
-  }
-
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public get arrowDownIconKey(): string {

@@ -5,6 +5,7 @@ import {
 import {
   McsNotificationContextService,
   McsDataSource,
+  McsDataStatus,
   McsPaginator,
   McsSearch,
   McsApiJob
@@ -18,6 +19,11 @@ import { NotificationsService } from './notifications.service';
 
 export class NotificationsDataSource implements McsDataSource<McsApiJob> {
   /**
+   * This will notify the subscribers of the datasource that the obtainment is InProgress
+   */
+  public dataLoadingStream: Subject<McsDataStatus>;
+
+  /**
    * It will populate the data when the obtainment is completed
    */
   private _totalRecordCount: number;
@@ -26,17 +32,6 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
   }
   public set totalRecordCount(value: number) {
     this._totalRecordCount = value;
-  }
-
-  /**
-   * Flag if the datasource connect has successfully obtained from API
-   */
-  private _successfullyObtained: boolean;
-  public get successfullyObtained(): boolean {
-    return this._successfullyObtained;
-  }
-  public set successfullyObtained(value: boolean) {
-    this._successfullyObtained = value;
   }
 
   /**
@@ -65,6 +60,7 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
   }
 
   private _notificationsSubscription: any;
+  private _hasError: boolean;
 
   constructor(
     private _notificationContextService: McsNotificationContextService,
@@ -74,6 +70,7 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
   ) {
     this._totalRecordCount = 0;
     this._notificationsStream = new Subject<McsApiJob[]>();
+    this.dataLoadingStream = new Subject<McsDataStatus>();
 
     // Listen to all notifications changes and get the notifications job
     this._getNotifications();
@@ -90,6 +87,9 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
     ];
 
     return Observable.merge(...displayDataChanges)
+      .catch((error) => {
+        return Observable.throw(error);
+      })
       .map(() => {
         return this.notifications;
       });
@@ -110,20 +110,9 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
    * This will invoke when the data obtainment is completed
    * @param notifications Data to be provided when the datasource is connected
    */
-  public onCompletion(notifications?: McsApiJob[]): void {
+  public onCompletion(status: McsDataStatus, notifications?: McsApiJob[]): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
-    this._successfullyObtained = true;
-  }
-
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
-    this._paginator.pageCompleted();
-    this._successfullyObtained = false;
   }
 
   /**
@@ -138,6 +127,7 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
 
     Observable.merge(...displayDataChanges)
       .switchMap(() => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
         return this._notificationsService.getNotifications(
@@ -149,7 +139,15 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
           return response.content;
         });
       })
+      .catch((error) => {
+        this._hasError = true;
+        this.dataLoadingStream.next(McsDataStatus.Error);
+        return Observable.throw(error);
+      })
       .subscribe((jobs) => {
+        if (isNullOrEmpty(jobs) && !this._hasError) {
+          this.dataLoadingStream.next(McsDataStatus.Empty);
+        }
         this.notifications = jobs;
       });
   }

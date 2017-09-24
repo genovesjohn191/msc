@@ -1,4 +1,3 @@
-import { McsDataSource } from '../../core';
 import {
   Observable,
   Subject,
@@ -6,7 +5,9 @@ import {
 } from 'rxjs/Rx';
 import {
   McsPaginator,
-  McsSearch
+  McsSearch,
+  McsDataStatus,
+  McsDataSource
 } from '../../core';
 import {
   GadgetsDatabase,
@@ -14,6 +15,9 @@ import {
 } from './gadgets.database';
 
 export class GadgetsDataSource implements McsDataSource<any> {
+
+  public dataLoadingStream: Subject<McsDataStatus>;
+
   private _filterChange = new BehaviorSubject('');
   get filter(): string { return this._filterChange.value; }
   set filter(filter: string) { this._filterChange.next(filter); }
@@ -51,18 +55,10 @@ export class GadgetsDataSource implements McsDataSource<any> {
     // Disconnect all resources
   }
 
-  public onCompletion(): void {
+  public onCompletion(status: McsDataStatus): void {
     // Add delay to see the loader on the paginator
     setTimeout(() => {
       this._paginator.pageCompleted();
     }, 3000);
-  }
-
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
   }
 }

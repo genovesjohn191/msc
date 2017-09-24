@@ -1,9 +1,18 @@
-
-import { Observable } from 'rxjs/Rx';
-import { McsDataSource } from '../../../core';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
+import {
+  McsDataSource,
+  McsDataStatus
+} from '../../../core';
 import { TableUserData } from './table-userdata';
 
 export class TableDatasource implements McsDataSource<any> {
+  /**
+   * This will notify the subscribers of the datasource that the obtainment is InProgress
+   */
+  public dataLoadingStream: Subject<McsDataStatus>;
   public loading: boolean;
 
   constructor() {
@@ -27,13 +36,5 @@ export class TableDatasource implements McsDataSource<any> {
 
   public onCompletion(): void {
     this.loading = false;
-  }
-
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
   }
 }

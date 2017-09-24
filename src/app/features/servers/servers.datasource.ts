@@ -1,6 +1,10 @@
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import {
   McsDataSource,
+  McsDataStatus,
   McsPaginator,
   McsSearch
 } from '../../core';
@@ -8,6 +12,11 @@ import { Server } from './models';
 import { ServersService } from './servers.service';
 
 export class ServersDataSource implements McsDataSource<Server> {
+  /**
+   * This will notify the subscribers of the datasource that the obtainment is InProgress
+   */
+  public dataLoadingStream: Subject<McsDataStatus>;
+
   /**
    * It will populate the data when the obtainment is completed
    */
@@ -19,23 +28,13 @@ export class ServersDataSource implements McsDataSource<Server> {
     this._totalRecordCount = value;
   }
 
-  /**
-   * Flag if the datasource connect has successfully obtained from API
-   */
-  private _successfullyObtained: boolean;
-  public get successfullyObtained(): boolean {
-    return this._successfullyObtained;
-  }
-  public set successfullyObtained(value: boolean) {
-    this._successfullyObtained = value;
-  }
-
   constructor(
     private _serversService: ServersService,
     private _paginator: McsPaginator,
     private _search: McsSearch
   ) {
     this._totalRecordCount = 0;
+    this.dataLoadingStream = new Subject<McsDataStatus>();
   }
 
   /**
@@ -51,6 +50,7 @@ export class ServersDataSource implements McsDataSource<Server> {
 
     return Observable.merge(...displayDataChanges)
       .switchMap(() => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
         return this._serversService.getServers(
@@ -76,19 +76,8 @@ export class ServersDataSource implements McsDataSource<Server> {
    * This will invoke when the data obtainment is completed
    * @param servers Data to be provided when the datasource is connected
    */
-  public onCompletion(servers?: Server[]): void {
+  public onCompletion(status: McsDataStatus, servers?: Server[]): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
-    this._successfullyObtained = true;
-  }
-
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
-    this._paginator.pageCompleted();
-    this._successfullyObtained = false;
   }
 }

@@ -116,6 +116,14 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Retry to obtain the source from API
+   */
+  public retryDatasource(): void {
+    if (isNullOrEmpty(this.dataSource)) { return; }
+    this._initiliazeDatasource();
+  }
+
+  /**
    * Initialize the table datasource according to pagination and search settings
    */
   private _initiliazeDatasource(): void {

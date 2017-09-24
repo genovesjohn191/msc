@@ -1,16 +1,21 @@
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
+import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 
 export interface McsDataSource<T> {
   /**
-   * This will invoke when the obtainment of data in the connect method is completed,
-   * and provide the actual record obtained from the connection
+   * Invoke this method when data is undergo process on the datasource itself
+   * to notify the subscribers if the data is on-going.
    */
-  onCompletion(data?: T[]): void;
+  dataLoadingStream: Subject<McsDataStatus>;
 
   /**
-   * This will invoke when the obtainment process detects error
+   * This will invoke when the obtainment of data in the connect method is completed,
+   * and provide the actual record obtained from the connection if success
    */
-  onError(status?: number): void;
+  onCompletion(status: McsDataStatus, data?: T[]): void;
 
   /**
    * Connect the data to get the datasource

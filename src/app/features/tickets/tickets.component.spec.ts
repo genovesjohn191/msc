@@ -7,7 +7,8 @@ import {
 import {
   CoreDefinition,
   McsPaginator,
-  McsSearch
+  McsSearch,
+  McsDataStatus
 } from '../../core';
 import {
   TicketsTestingModule,
@@ -146,7 +147,7 @@ describe('TicketsComponent', () => {
 
     it('should set the paginator completed when onCompleted method is called', () => {
       spyOn(component.paginator, 'pageCompleted');
-      component.dataSource.onCompletion();
+      component.dataSource.onCompletion(McsDataStatus.Success);
       expect(component.paginator.pageCompleted).toHaveBeenCalledTimes(1);
     });
 

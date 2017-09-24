@@ -21,16 +21,24 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 import { takeUntil } from 'rxjs/operator/takeUntil';
 /** Core / Utilities */
-import { McsDataSource } from '../../core';
+import {
+  McsDataSource,
+  McsDataStatus,
+  CoreDefinition
+} from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 /** Shared Directives */
 import {
   CellOutletDirective,
-  DataPlaceholderDirective,
   HeaderPlaceholderDirective,
+  DataPlaceholderDirective,
+  DataStatusPlaceholderDirective,
   CellOutletContext
 } from './shared';
 /** Column */
@@ -42,6 +50,8 @@ import {
   DataCellDefDirective,
   DataRowDefDirective
 } from './data';
+/** Datastatus */
+import { DataStatusDefDirective } from './data-status';
 
 @Component({
   selector: 'mcs-table',
@@ -71,14 +81,31 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
   public set dataSource(value: McsDataSource<T>) {
     if (this._dataSource !== value) {
+      this._listenToDataLoading(value);
       this._switchDataSource(value);
       this._dataSource = value;
     }
   }
   private _dataSource: McsDataSource<T>;
   private _dataSourceSubscription: any;
+  private _dataLoadingSubscription: any;
   private _data: NgIterable<T>;
   private _dataDiffer: IterableDiffer<T>;
+
+  /**
+   * Get/Set the data obtainment status based on observables
+   */
+  private _dataStatus: McsDataStatus;
+  public get dataStatus(): McsDataStatus {
+    return this._dataStatus;
+  }
+  public set dataStatus(value: McsDataStatus) {
+    if (this._dataStatus !== value) {
+      this._dataStatus = value;
+      this._switchDataStatus(value);
+      this._changeDetectorRef.markForCheck();
+    }
+  }
 
   /**
    * Placeholders within the table template where the header and rows data will be inserted
@@ -88,6 +115,9 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
   @ViewChild(DataPlaceholderDirective)
   private _dataPlaceholder: DataPlaceholderDirective;
+
+  @ViewChild(DataStatusPlaceholderDirective)
+  private _dataStatusPlaceholder: DataStatusPlaceholderDirective;
 
   /** Columns */
   @ContentChildren(ColumnDefDirective)
@@ -102,6 +132,10 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   @ContentChildren(DataRowDefDirective)
   private _dataRowDefinitions: QueryList<DataRowDefDirective>;
 
+  /** Template of the data status directives */
+  @ContentChild(DataStatusDefDirective)
+  private _dataStatusDefinition: DataStatusDefDirective;
+
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
@@ -110,6 +144,14 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   ) {
     this._data = [];
     this._columnDefinitionsMap = new Map<string, ColumnDefDirective>();
+  }
+
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
+  public get dataStatusEnum(): any {
+    return McsDataStatus;
   }
 
   public ngOnInit() {
@@ -172,6 +214,48 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   /**
+   * Switch the data status based on the new data status
+   * `@Note:` This will remove the previous status in the DOM
+   * @param newDataStatus New datastatus to be set
+   */
+  private _switchDataStatus(newDataStatus: McsDataStatus) {
+    if (isNullOrEmpty(this._dataStatusDefinition)) { return; }
+    this._dataStatusPlaceholder.viewContainer.clear();
+
+    switch (newDataStatus) {
+      case McsDataStatus.Empty:
+        if (isNullOrEmpty(this._dataStatusDefinition.dataEmptyDef)) { break; }
+        this._dataStatusPlaceholder.viewContainer
+          .createEmbeddedView(this._dataStatusDefinition.dataEmptyDef.template);
+        break;
+
+      case McsDataStatus.Error:
+        if (isNullOrEmpty(this._dataStatusDefinition.dataErrorDef)) { break; }
+        this._dataStatusPlaceholder.viewContainer
+          .createEmbeddedView(this._dataStatusDefinition.dataErrorDef.template);
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Listener when data is loading from the datasource
+   * @param newDatasource New datasource to listen
+   */
+  private _listenToDataLoading(newDatasource: McsDataSource<T>) {
+    if (!isNullOrEmpty(this._dataLoadingSubscription)) {
+      this._dataLoadingSubscription.unsubscribe();
+    }
+
+    // Subscribe to data loading process
+    if (isNullOrEmpty(newDatasource.dataLoadingStream)) {
+      newDatasource.dataLoadingStream = new Subject<any>();
+    }
+    this._dataLoadingSubscription = newDatasource.dataLoadingStream
+      .subscribe((status) => this.dataStatus = status);
+  }
+
+  /**
    * This will update the table data including the header row
    * based on the new header
    */
@@ -195,7 +279,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * This will render the header rows including each header cells
    */
   private _renderHeaderRows(): void {
-    if (!this._headerRowDefinition) { return; }
+    if (isNullOrEmpty(this._headerRowDefinition)) { return; }
 
     // Get all header cells within the container
     let headerCells = this._headerRowDefinition.columns
@@ -224,7 +308,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * the data object on the HTML directly
    */
   private _renderDataRows(): void {
-    if (!this._dataRowDefinitions) { return; }
+    if (isNullOrEmpty(this._dataRowDefinitions)) { return; }
     let changes = this._dataDiffer.diff(this._data);
     if (!changes) { return; }
 
@@ -300,13 +384,18 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   private _getDatasourceData(): void {
     this._dataSourceSubscription = this.dataSource.connect()
       .catch((error) => {
-        this._dataSource.onError();
+        this.dataStatus = McsDataStatus.Error;
+        this._dataSource.onCompletion(this.dataStatus, undefined);
         return Observable.throw(error);
       })
       .subscribe((data) => {
         this._data = data;
         this._renderDataRows();
-        this._dataSource.onCompletion(data);
+
+        this.dataStatus = isNullOrEmpty(data) ?
+          McsDataStatus.Empty :
+          McsDataStatus.Success;
+        this._dataSource.onCompletion(this.dataStatus, data);
       });
   }
 }
