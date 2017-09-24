@@ -114,23 +114,23 @@
       </mcs-data-cell>
     </ng-container>
 
+    <!-- Data Status Integration -->
+    <ng-container mcsDataStatusDef>
+      <mcs-data-empty *mcsDataEmptyDef>
+        <span>{{ textContent.noServers }}</span>
+      </mcs-data-empty>
+      <mcs-data-error *mcsDataErrorDef>
+        <div class="data-error">
+          <span>{{ textContent.errorMessage }}</span>
+          <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+        </div>
+      </mcs-data-error>
+    </ng-container>
+
     <!-- Header and Data row -->
     <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
     <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
   </mcs-table>
-
-  <div class="message-wrapper" *ngIf="displayErrorMessage">
-    <!-- Message when error encountered -->
-    <div *ngIf="!successfullyObtained">
-      <span>{{ textContent.errorMessage }}</span>
-      <a (click)="retryDatasource()">Try again shortly</a>.
-    </div>
-
-    <!-- Message when no servers found -->
-    <div *ngIf="!hasServers">
-      <span>{{ textContent.noServers }}</span>
-    </div>
-  </div>
 
   <!-- Paginator -->
   <mcs-paginator #paginator

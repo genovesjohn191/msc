@@ -29,7 +29,13 @@ $table-cell-divider-opacity: 0.70;
   }
 }
 
+// Host Component Element
 mcs-table {
+  display: block;
+  @include set-items-interval($space-large);
+}
+
+.mcs-table-wrapper {
   display: table;
   border-collapse: collapse;
   min-width: $table-default-minimum-width;
@@ -40,8 +46,6 @@ mcs-table {
     min-width: $table-small-minimum-width;
   }
   max-width: 100%;
-
-  
 
   mcs-header-row {
     display: table-row;
@@ -80,5 +84,17 @@ mcs-table {
       font-family: $circular-pro-book;
       padding: $table-data-cell-padding;
     }
+  }
+}
+
+.mcs-table-footer-wrapper {
+
+  mcs-data-empty,
+  mcs-data-error,
+  .mcs-data-loading, {
+    @include display-flex(row);
+    align-items: center;
+    justify-content: center;
+    min-height: $space-xlarge;
   }
 }

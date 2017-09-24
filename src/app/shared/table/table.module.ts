@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from './table.component';
+import { IconModule } from '../icon/icon.module';
 /** Header */
 import {
   HeaderCellComponent,
@@ -8,7 +9,6 @@ import {
   HeaderCellDefDirective,
   HeaderRowDefDirective
 } from './header';
-
 /** Data */
 import {
   DataCellComponent,
@@ -16,15 +16,22 @@ import {
   DataCellDefDirective,
   DataRowDefDirective
 } from './data';
-
+/** Data status */
+import {
+  DataEmptyComponent,
+  DataErrorComponent,
+  DataEmptyDefDirective,
+  DataErrorDefDirective,
+  DataStatusDefDirective
+} from './data-status';
 /** Column */
 import { ColumnDefDirective } from './column';
-
 /** Shared */
 import {
   CellOutletDirective,
+  HeaderPlaceholderDirective,
   DataPlaceholderDirective,
-  HeaderPlaceholderDirective
+  DataStatusPlaceholderDirective,
 } from './shared';
 
 @NgModule({
@@ -40,11 +47,18 @@ import {
     DataRowDefDirective,
     CellOutletDirective,
     ColumnDefDirective,
+    DataEmptyComponent,
+    DataErrorComponent,
+    DataEmptyDefDirective,
+    DataErrorDefDirective,
+    DataStatusDefDirective,
+    HeaderPlaceholderDirective,
     DataPlaceholderDirective,
-    HeaderPlaceholderDirective
+    DataStatusPlaceholderDirective
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    IconModule
   ],
   exports: [
     TableComponent,
@@ -58,8 +72,14 @@ import {
     DataRowDefDirective,
     CellOutletDirective,
     ColumnDefDirective,
+    DataEmptyComponent,
+    DataErrorComponent,
+    DataEmptyDefDirective,
+    DataErrorDefDirective,
+    DataStatusDefDirective,
+    HeaderPlaceholderDirective,
     DataPlaceholderDirective,
-    HeaderPlaceholderDirective
+    DataStatusPlaceholderDirective
   ]
 })
 

@@ -1,12 +1,14 @@
 import { McsDataSource } from '../../core';
 import {
   Observable,
+  Subject,
   BehaviorSubject
 } from 'rxjs/Rx';
 import {
   McsPaginator,
   McsSearch,
-  McsListPanelItem
+  McsListPanelItem,
+  McsDataStatus
 } from '../../core';
 import { refreshView } from '../../utilities';
 import {
@@ -15,6 +17,9 @@ import {
 } from './gadgets.database';
 
 export class GadgetsListSource implements McsDataSource<UserData> {
+
+  public dataLoadingStream: Subject<McsDataStatus>;
+
   private _filterChange = new BehaviorSubject('');
   get filter(): string { return this._filterChange.value; }
   set filter(filter: string) { this._filterChange.next(filter); }
@@ -101,15 +106,7 @@ export class GadgetsListSource implements McsDataSource<UserData> {
     // Disconnect all resources
   }
 
-  public onCompletion(): void {
+  public onCompletion(status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
-  }
-
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
   }
 }

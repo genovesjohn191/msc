@@ -1,9 +1,11 @@
 import {
   Observable,
+  Subject,
   BehaviorSubject
 } from 'rxjs/Rx';
 import {
   McsDataSource,
+  McsDataStatus,
   McsSearch,
   McsListPanelItem
 } from '../../../core';
@@ -18,6 +20,11 @@ import { isNullOrEmpty } from '../../../utilities';
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 export class ServerListSource implements McsDataSource<ServerList> {
+  /**
+   * This will notify the subscribers of the datasource that the obtainment is InProgress
+   */
+  public dataLoadingStream: Subject<McsDataStatus>;
+
   private _activeServerSubscription: any;
   private _serversSubscription: any;
   private _serverListStream: BehaviorSubject<ServerList[]> = new BehaviorSubject<ServerList[]>([]);
@@ -87,16 +94,8 @@ export class ServerListSource implements McsDataSource<ServerList> {
     }
   }
 
-  public onCompletion(): void {
+  public onCompletion(status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
-  }
-
-  /**
-   * This will invoke when the data obtainment process encountered error
-   * @param status Status of the error
-   */
-  public onError(status?: number): void {
-    // Display the error template in the UI
   }
 
   private _mapServerList(servers: Server[]): ServerList[] {

@@ -27,9 +27,7 @@
     "newServer": "New Server",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
     "noServers": "No servers to display.",
-    "emptySearchResult": "No servers found.",
-    "loading": "Loading...",
-    "viewMore": "More",
+    "retry": "Try again shortly",
     "columnHeaders": {
       "state": "State",
       "name": "Name",
@@ -157,6 +155,9 @@
     "header": "Tickets",
     "description": "Below is the list of your Macquarie Cloud Services tickets.",
     "newTicket": "New Ticket",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tickets.",
+    "noTickets": "No tickets to display.",
+    "retry": "Try again shortly",
     "shared": {
       "ticketNewComment": {
         "selectFile": "File attachments (select or drag & drop)",
@@ -254,9 +255,7 @@
     },
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of notifications.",
     "noNotifications": "No notifications to display.",
-    "emptySearchResult": "No notifications found.",
-    "loading": "Loading...",
-    "viewMore": "More"
+    "retry": "Try again shortly"
   },
   "others": {
     "title": "Macquarie Cloud Services: Others"

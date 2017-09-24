@@ -1,9 +1,11 @@
 import {
   Observable,
+  Subject,
   BehaviorSubject
 } from 'rxjs/Rx';
 import {
   McsDataSource,
+  McsDataStatus,
   McsSearch,
   McsListPanelItem
 } from '../../../../core';
@@ -21,6 +23,11 @@ import {
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 export class FirewallListSource implements McsDataSource<FirewallList> {
+  /**
+   * This will notify the subscribers of the datasource that the obtainment is InProgress
+   */
+  public dataLoadingStream: Subject<McsDataStatus>;
+
   private _activeFirewallSubscription: any;
   private _firewallsSubscription: any;
   private _firewallListStream: BehaviorSubject<FirewallList[]>;
@@ -82,12 +89,8 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     }
   }
 
-  public onCompletion(data?: any): void {
+  public onCompletion(status: McsDataStatus, data?: any): void {
     // Do all the completion of pagination, filtering, etc... here
-  }
-
-  public onError(status?: number): void {
-    // Do all the error handling error, on what to display in the view
   }
 
   private _setFirewallListData(): void {

@@ -51,19 +51,6 @@ export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy 
     return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
   }
 
-  public get successfullyObtained(): boolean {
-    return isNullOrEmpty(this.dataSource) ? false : this.dataSource.successfullyObtained;
-  }
-
-  public get noNotificationsFound(): boolean {
-    return this.successfullyObtained === true && this.totalRecordCount <= 0;
-  }
-
-  public get displayErrorMessage(): boolean {
-    return this.dataSource && (this.noNotificationsFound ||
-      this.successfullyObtained) === false;
-  }
-
   public get columnSettingsKey(): string {
     return CoreDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
   }
