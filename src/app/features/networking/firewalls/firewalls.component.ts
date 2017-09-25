@@ -52,19 +52,6 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
     return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
   }
 
-  public get successfullyObtained(): boolean {
-    return isNullOrEmpty(this.dataSource) ? false : this.dataSource.successfullyObtained;
-  }
-
-  public get hasFirewalls(): boolean {
-    return this.successfullyObtained && this.totalRecordCount > 0;
-  }
-
-  public get displayErrorMessage(): boolean {
-    return this.dataSource && (this.hasFirewalls ||
-      this.successfullyObtained) === false;
-  }
-
   public get columnSettingsKey(): string {
     return CoreDefinition.FILTERSELECTOR_FIREWALLS_LISTING;
   }

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  BehaviorSubject
+  Subject
 } from 'rxjs/Rx';
 import {
   CoreDefinition,
@@ -36,7 +36,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   public searchChangedStream: EventEmitter<any>;
 
   /** Search subscription */
-  private _searchSubject: BehaviorSubject<string>;
+  private _searchSubject: Subject<string>;
   private _searchSubscription: any;
 
   public constructor(
@@ -44,7 +44,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
     private _textContentProvider: McsTextContentProvider
   ) {
     this.keyword = '';
-    this._searchSubject = new BehaviorSubject<string>('');
+    this._searchSubject = new Subject<string>();
     this.searchChangedStream = new EventEmitter<any>();
   }
 

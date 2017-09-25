@@ -54,7 +54,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
         return this._ticketsService.getTickets(
-          this._paginator.pageIndex,
+          undefined,
           displayedRecords,
           this._search.keyword
         ).map((response) => {

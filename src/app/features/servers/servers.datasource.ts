@@ -45,7 +45,7 @@ export class ServersDataSource implements McsDataSource<Server> {
     const displayDataChanges = [
       Observable.of(undefined), // Add undefined observable to make way of retry when error occured
       this._paginator.pageChangedStream,
-      this._search.searchChangedStream,
+      this._search.searchChangedStream
     ];
 
     return Observable.merge(...displayDataChanges)
