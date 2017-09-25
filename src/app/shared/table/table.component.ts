@@ -144,6 +144,9 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   ) {
     this._data = [];
     this._columnDefinitionsMap = new Map<string, ColumnDefDirective>();
+
+    // Add loader while table is initializing
+    this.dataStatus = McsDataStatus.InProgress;
   }
 
   public get spinnerIconKey(): string {

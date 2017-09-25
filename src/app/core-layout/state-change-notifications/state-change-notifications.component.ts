@@ -33,7 +33,6 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
 
   public notifications: McsApiJob[];
   public notificationsSubscription: any;
-  public browserSubscription: any;
   public visible: boolean;
 
   public constructor(

@@ -150,11 +150,5 @@ describe('StateChangeNotificationsComponent', () => {
       component.ngOnDestroy();
       expect(component.notificationsSubscription.unsubscribe).toHaveBeenCalledTimes(1);
     });
-
-    it('should unsubscribe to browserSubscription', () => {
-      spyOn(component.browserSubscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.browserSubscription.unsubscribe).toHaveBeenCalledTimes(1);
-    });
   });
 });

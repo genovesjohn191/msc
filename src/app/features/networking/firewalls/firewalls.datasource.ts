@@ -28,17 +28,6 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
     this._totalRecordCount = value;
   }
 
-  /**
-   * Flag if the datasource connect has successfully obtained from API
-   */
-  private _successfullyObtained: boolean;
-  public get successfullyObtained(): boolean {
-    return this._successfullyObtained;
-  }
-  public set successfullyObtained(value: boolean) {
-    this._successfullyObtained = value;
-  }
-
   constructor(
     private _firewallsService: FirewallsService,
     private _paginator: McsPaginator,
@@ -56,7 +45,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
     const displayDataChanges = [
       Observable.of(undefined), // Add undefined observable to make way of retry when error occured
       this._paginator.pageChangedStream,
-      this._search.searchChangedStream,
+      this._search.searchChangedStream
     ];
 
     return Observable.merge(...displayDataChanges)
@@ -90,11 +79,5 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
   public onCompletion(status: McsDataStatus, firewalls?: Firewall[]): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
-
-    if (status === McsDataStatus.Success) {
-      this._successfullyObtained = true;
-    } else {
-      this._successfullyObtained = false;
-    }
   }
 }
