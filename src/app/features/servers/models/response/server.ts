@@ -29,7 +29,7 @@ export class Server {
   public vpxId: number;
   public vmwareParentVpxId: number;
   public vmWareDescription: string;
-  public guestOs: string;
+  public os: string;
   public diskCount: number;
   public networkInterfaceCount: number;
   public powerState: ServerPowerState;

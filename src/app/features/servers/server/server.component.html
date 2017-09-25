@@ -1,10 +1,9 @@
 <section class="server-container">
-  <div class="row">
-    <div class="col-sm-4 hidden-medium">
-      <div class="server-list-panel">
+  <div class="server-list-panel-wrapper hidden-medium">
+    <div class="server-list-panel" [mcsLoader]="serverListSource.serverListSubscription">
         <mcs-search #search [delayInSeconds]="0" mcsListSearchDef></mcs-search>
         <mcs-list-panel mcsListPanelDef [dataSource]="serverListSource" 
-          [selectedListItem]="serverListSource.selectedElement" [searchMode]="serverListSource.searchMode">
+          [selectedListItem]="selectedItem" [searchMode]="serverListSource.searchMode">
           <ng-container mcsListDef>
             <mcs-list-header *mcsListHeaderDef="let vdc; propertyName: 'vdcName';"
               [groupName]="vdc">
@@ -29,9 +28,10 @@
           </ng-container>
         </mcs-list-panel>
       </div>
-    </div>
+  </div>
 
-    <div class="col-sm-8 server-features">
+  <div class="server-features-wrapper">
+    <div class="server-features" [mcsLoader]="serverSubscription">
       <h2 class="server-name">{{ server.managementName }}</h2>
       <div class="mcs-tabs">
         <ul class="nav nav-tabs" role="tablist">

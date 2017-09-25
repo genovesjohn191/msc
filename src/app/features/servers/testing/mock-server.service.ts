@@ -8,9 +8,11 @@ import {
   McsApiSuccessResponse,
   McsApiJob,
   McsApiRequestParameter,
-  McsJobType
+  McsJobType,
 } from '../../../core';
 import {
+  Server,
+  ServerPowerState,
   ServerThumbnail,
   ServerPlatform,
   ServerResource,
@@ -24,6 +26,21 @@ import { reviverParser } from '../../../utilities';
 export const mockServerService = {
 
   selectedServerStream: new Subject<any>(),
+  getServer(id: any): Observable<McsApiSuccessResponse<Server>> {
+
+    let mcsApiResponseMock = new McsApiSuccessResponse<Server>();
+    mcsApiResponseMock.status = 200;
+    mcsApiResponseMock.totalCount = 1;
+    mcsApiResponseMock.content = {
+      id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
+      managementName: 'contoso-lin01',
+      vdcName: 'M1VDC27117001',
+      serviceType: ServerServiceType.Managed,
+      powerState: ServerPowerState.PoweredOn,
+    } as Server;
+
+    return Observable.of(mcsApiResponseMock);
+  },
   setPerformanceScale(
     serverId: any,
     cpuSizeScale: any): Observable<McsApiSuccessResponse<McsApiJob>> {
