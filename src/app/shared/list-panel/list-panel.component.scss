@@ -16,11 +16,7 @@ $list-item-border-color: $color-primary-01;
   width: 100%;
   height: 100%;
 
-  .list-header-wrapper,
-  .list-no-group-wrapper {
-
-    @include display-flex(column);
-    justify-content: center;
+  %list-header-styling {
     cursor: pointer;
     @include font-size($list-header-font-size);
     padding: 0 $list-header-padding-right 0 $list-header-padding-left;
@@ -42,16 +38,22 @@ $list-item-border-color: $color-primary-01;
     }
   }
 
-  // Remove the icon of no-group items
+  .list-header-wrapper {
+    @include display-flex(column);
+    justify-content: center;
+    @extend %list-header-styling;
+  }
+
   .list-no-group-wrapper {
+    @include display-flex(row);
+    align-items: center;
+    @extend %list-header-styling;
+    @include set-items-interval($space-xsmall, horizontal);
+
     &.active {
       :not(.icon-container) {
         font-family: $list-item-font-family-active;
       }
-    }
-
-    .icon-container {
-      display: none;
     }
   }
 

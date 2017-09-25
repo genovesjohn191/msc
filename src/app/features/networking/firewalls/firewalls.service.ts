@@ -13,6 +13,10 @@ import {
 // Models
 import {
   Firewall,
+  FirewallDeviceStatus,
+  FirewallConfigurationStatus,
+  FirewallConnectionStatus,
+  FirewallHaMode,
   FirewallPolicy,
   FirewallPolicyAction,
   FirewallPolicyNat
@@ -42,7 +46,8 @@ export class FirewallsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let firewallsResponse: McsApiSuccessResponse<Firewall[]>;
-        firewallsResponse = JSON.parse(response.text()) as McsApiSuccessResponse<Firewall[]>;
+        firewallsResponse = JSON.parse(response.text(),
+          this._convertProperty) as McsApiSuccessResponse<Firewall[]>;
 
         return firewallsResponse;
       })
@@ -60,7 +65,8 @@ export class FirewallsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let firewallResponse: McsApiSuccessResponse<Firewall>;
-        firewallResponse = JSON.parse(response.text()) as McsApiSuccessResponse<Firewall>;
+        firewallResponse = JSON.parse(response.text(),
+          this._convertProperty) as McsApiSuccessResponse<Firewall>;
 
         return firewallResponse;
       })
@@ -120,11 +126,32 @@ export class FirewallsService {
   private _convertProperty(key, value): any {
 
     switch (key) {
-      // Convert action to enumeration
+      // Convert firewall deviceStatus to enumeration
+      case 'deviceStatus':
+        value = FirewallDeviceStatus[value];
+        break;
+
+      // Convert firewall configurationStatus to enumeration
+      case 'configurationStatus':
+        value = FirewallConfigurationStatus[value];
+        break;
+
+      // Convert firewall policy action to enumeration
+      case 'connectionStatus':
+        value = FirewallConnectionStatus[value];
+        break;
+
+      // Convert firewall policy action to enumeration
+      case 'haMode':
+        value = FirewallDeviceStatus[value];
+        break;
+
+      // Convert firewall policy action to enumeration
       case 'action':
         value = FirewallPolicyAction[value];
         break;
 
+      // Convert firewall policy nat to enumeration
       case 'nat':
         value = FirewallPolicyNat[value];
         break;

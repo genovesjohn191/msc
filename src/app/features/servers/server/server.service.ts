@@ -145,25 +145,10 @@ export class ServerService {
 
   /**
    * Set the selected server instance
-   * @param serverId Server ID to be selected
+   * @param server Server to be selected
    */
-  public setSelectedServer(serverId: string): void {
-    this._serversService.getServer(serverId)
-      .subscribe((response) => {
-        let server: Server = response.content;
-
-        if (server) {
-          let activeServer = this._serversService.activeServers
-            .find((active) => {
-              return active.serverId === server.id;
-            });
-
-          if (activeServer) {
-            server.powerState = this._serversService.getActiveServerPowerState(activeServer);
-          }
-          this._selectedServerStream.next(server);
-        }
-      });
+  public setSelectedServer(server: Server): void {
+    this.selectedServerStream.next(server);
   }
 
   /**

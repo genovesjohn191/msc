@@ -54,7 +54,7 @@
 
     <ng-template #userSettings>
      <div class="user-settings-container">
-        <a class="icon-link" [routerLink]="['/tickets']">
+        <a class="icon-link" [routerLink]="['/tickets']" *mcsHasPermission="['TicketView']">
           Tickets
         </a>
         <a class="icon-link" (click)="logout($event)">

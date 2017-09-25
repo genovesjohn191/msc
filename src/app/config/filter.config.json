@@ -114,6 +114,11 @@
     }
   },
   "firewallsListingFilter": {
+    "status": {
+      "text": "Status",
+      "value": true,
+      "exclude": true
+    },
     "firewall": {
       "text": "Firewall",
       "value": true,

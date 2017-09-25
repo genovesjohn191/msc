@@ -41,6 +41,9 @@ export const mockServerService = {
 
     return Observable.of(mcsApiResponseMock);
   },
+  setSelectedServer(server: Server) {
+    this.selectedServerStream.next(server);
+  },
   setPerformanceScale(
     serverId: any,
     cpuSizeScale: any): Observable<McsApiSuccessResponse<McsApiJob>> {

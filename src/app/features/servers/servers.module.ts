@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { ServersComponent } from './servers.component';
 /** Shared */
 import {
-  ServerListPanelComponent,
   ServerCommandComponent,
   ContextualHelpComponent,
   ContextualHelpDirective,
@@ -40,7 +39,6 @@ import { SharedModule } from '../../shared';
   ],
   declarations: [
     ServersComponent,
-    ServerListPanelComponent,
     ServerCommandComponent,
     ServerComponent,
     ServerManagementComponent,

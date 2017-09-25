@@ -13,6 +13,7 @@
     "servers": "Servers",
     "others": "Others",
     "networking": "Networking",
+    "firewalls": "Firewalls",
     "tools": "Other Tools",
     "catalog": "Catalog"
   },
@@ -166,16 +167,22 @@
     }
   },
   "firewalls": {
+    "title": "Macquarie Cloud Services: Networking",
     "header": "Firewalls",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
     "noFirewalls": "No firewalls to display.",
+    "retry": "Try again shortly",
     "firewall": {
       "overview": {
         "label": "Overview",
         "properties": {
           "title": "Firewall Properties",
+          "firewall": "Firewall",
           "model": "Model",
-          "mode": "Mode"
+          "role": "Role",
+          "connectionStatus": "Connection Status",
+          "configurationStatus": "Config Status",
+          "deviceStatus": "Device Status"
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
@@ -189,6 +196,15 @@
           "ram": "RAM",
           "cpuUnit": "CPU",
           "ramUnit": "GB"
+        },
+        "utmServices": {
+          "title": "UTM Services",
+          "antivirus": "Antivirus",
+          "webFiltering": "Web Filtering",
+          "emailFiltering": "Email Filtering",
+          "licensed": "Licensed",
+          "invalidLicense": "Invalid License",
+          "expires": "Expires"
         }
       },
       "policies": {

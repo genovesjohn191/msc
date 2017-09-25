@@ -12,6 +12,16 @@
 
   <!-- Table -->
   <mcs-table [dataSource]="dataSource">
+    <!-- Status Column -->
+    <ng-container mcsColumnDef="status">
+      <mcs-header-cell *mcsHeaderCellDef class="text-center">
+        {{ columnSettings.status.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+        <mcs-icon [key]="getStatusIconKey(row.connectionStatus)"></mcs-icon>
+      </mcs-data-cell>
+    </ng-container>
+
     <!-- Firewall Column -->
     <ng-container mcsColumnDef="firewall">
       <mcs-header-cell *mcsHeaderCellDef>
@@ -58,7 +68,7 @@
         {{ columnSettings.role.text }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row">
-        {{ row.role }}
+        {{ row.haRole }}
       </mcs-data-cell>
     </ng-container>
 
@@ -87,23 +97,23 @@
       </mcs-data-cell>
     </ng-container>
 
+    <!-- Data Status Integration -->
+    <ng-container mcsDataStatusDef>
+      <mcs-data-empty *mcsDataEmptyDef>
+        <span>{{ firewallsTextContent.noFirewalls }}</span>
+      </mcs-data-empty>
+      <mcs-data-error *mcsDataErrorDef>
+        <div class="data-error">
+          <span>{{ firewallsTextContent.errorMessage }}</span>
+          <a (click)="retryDatasource()">{{ firewallsTextContent.retry }}</a>.
+        </div>
+      </mcs-data-error>
+    </ng-container>
+
     <!-- Header and Data row -->
     <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
     <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
   </mcs-table>
-
-  <div class="message-wrapper" *ngIf="displayErrorMessage">
-    <!-- Message when error encountered -->
-    <div *ngIf="!successfullyObtained">
-      <span>{{ firewallsTextContent.errorMessage }}</span>
-      <a (click)="retryDatasource()">Try again shortly</a>.
-    </div>
-
-    <!-- Message when no firewalls found -->
-    <div *ngIf="!hasFirewalls">
-      <span>{{ firewallsTextContent.noFirewalls }}</span>
-    </div>
-  </div>
 
   <!-- Paginator -->
   <mcs-paginator #paginator
