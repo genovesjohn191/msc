@@ -852,6 +852,16 @@ describe('ServersService', () => {
       expect(serverState).toBe(ServerPowerState.PoweredOn);
     });
 
+    it('should return PoweredOn when the command action is Restart and Job is completed', () => {
+      let serverClient = new ServerClientObject();
+
+      serverClient.commandAction = ServerCommand.Restart;
+      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+      let serverState = serversService.getActiveServerPowerState(serverClient);
+
+      expect(serverState).toBe(ServerPowerState.PoweredOn);
+    });
+
     it('should return PoweredOff when the command action is Stop and Job is completed', () => {
       let serverClient = new ServerClientObject();
 
