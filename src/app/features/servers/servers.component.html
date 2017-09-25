@@ -1,5 +1,5 @@
 <!-- Table with filtering and pagination -->
-<div class="servers-table-wrapper">
+<div class="mcs-table-wrapper">
   <!-- Search -->
   <div class="search-wrapper">
     <mcs-search #search class="search"></mcs-search>
@@ -8,7 +8,7 @@
       (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
 
     <mcs-button (onClick)="onClickNewServerButton($event)" size="small">
-      {{ textContent.newServer }}
+      New Server
     </mcs-button>
 
     <span class="record-count">{{ totalRecordCount }} {{ textContent.header }}</span>
@@ -28,7 +28,7 @@
           </span>
         </ng-template>
 
-        <div class="server-name">
+        <div class="emphasize">
           <div *ngIf="getServerPowerstate(row)">
             <mcs-icon [key]="getStateIconKey(row.powerState)"
               size="medium"></mcs-icon>

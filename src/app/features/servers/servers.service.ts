@@ -342,7 +342,8 @@ export class ServersService {
     // Get actual server status
     switch (activeServer.notificationStatus) {
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        serverPowerstate = activeServer.commandAction === ServerCommand.Start ?
+        serverPowerstate = activeServer.commandAction ===
+        ServerCommand.Start || ServerCommand.Restart ?
           ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
         break;
 
@@ -408,8 +409,6 @@ export class ServersService {
 
         // Filter only those who have client reference object on notification jobs
         updatedNotifications.forEach((notification) => {
-          // TODO: Temporarily filtering only notification
-          // with ChangeServerPowerState Type. To be confirmed
           if (notification.type === McsJobType.ChangeServerPowerState
             && notification.clientReferenceObject) {
 
