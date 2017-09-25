@@ -38,6 +38,7 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    * one stream containing the data to render.
    */
   public connect(): Observable<Portal[]> {
+    this.dataLoadingStream.next(McsDataStatus.InProgress);
     return this._toolsService.getPortals()
       .map((response) => {
         this._totalRecordCount = response.totalCount;

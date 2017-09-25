@@ -1,2 +1,9 @@
-// TODO: Some work might be needed depending on the UI review,
-// but this file can be removed if no component specific styling is needed
+@import "../../../styles/shared/base";
+
+.mcs-table-wrapper {
+  display: inline-block;
+
+  @include breakpoint(small) {
+    display: block;
+  }
+}

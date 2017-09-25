@@ -9,7 +9,7 @@
 </mcs-page-header>
 
 <!-- Table with filtering and pagination -->
-<div class="tickets-table-wrapper">
+<div class="mcs-table-wrapper">
   <!-- Search -->
   <div class="search-wrapper">
     <mcs-search #search class="search"></mcs-search>
@@ -89,7 +89,7 @@
     <!-- Data Status Integration -->
     <ng-container mcsDataStatusDef>
       <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ textContent.noTickets }}</span>
+        <span>{{ textContent.noRecordsFoundMessage }}</span>
       </mcs-data-empty>
       <mcs-data-error *mcsDataErrorDef>
         <div class="data-error">

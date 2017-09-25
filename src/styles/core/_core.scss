@@ -206,3 +206,12 @@ html {
 .missing-data-info {
   color: $color-grey-02;
 }
+
+.mcs-table-wrapper {
+  display: inline-block;
+  @include set-items-interval($space-xxlarge);
+
+  @include breakpoint(small) {
+    display: block;
+  }
+}
