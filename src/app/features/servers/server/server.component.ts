@@ -193,7 +193,7 @@ export class ServerComponent implements OnInit, OnDestroy {
           groupName: (this.server.vdcName) ? this.server.vdcName : SERVER_LIST_GROUP_OTHERS
         } as McsListPanelItem;
 
-        this._serverService.selectedServerStream.next(this.server);
+        this._serverService.setSelectedServer(this.server);
       });
   }
 }

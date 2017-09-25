@@ -29,10 +29,6 @@ export class FirewallService {
     this._selectedFirewallStream = value;
   }
 
-  /**
-   * This contains the selected firewall and this will be accessible
-   * for those component that are using this service.
-   */
   private _selectedFirewall: Firewall;
   public get selectedFirewall(): Firewall {
     return this._selectedFirewall;
@@ -42,7 +38,7 @@ export class FirewallService {
   }
 
   constructor(private _firewallsService: FirewallsService) {
-    this._selectedFirewall = new Firewall();
+    this._selectedFirewallStream = new BehaviorSubject<Firewall>(new Firewall());
   }
 
   /**

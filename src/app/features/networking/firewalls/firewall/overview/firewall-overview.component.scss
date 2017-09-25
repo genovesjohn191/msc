@@ -5,5 +5,19 @@ $firewall-details-row-spacing: 50px;
 .firewall-overview-container {
   .overview {
     @include set-items-interval($firewall-details-row-spacing, vertical);
+
+    ul {
+      @include set-items-interval($space-xsmall, vertical);
+    }
+
+    .utm-services {
+      ul {
+        li {
+          @include display-flex(row);
+          align-items: center;
+          @include set-items-interval($space-xsmall, horizontal);
+        }
+      }
+    }
   }
 }

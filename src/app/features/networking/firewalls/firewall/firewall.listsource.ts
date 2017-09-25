@@ -110,6 +110,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
       firewallListItem.id = firewall.id;
       firewallListItem.name = firewall.managementName;
       firewallListItem.haGroupName = firewall.haGroupName;
+      firewallListItem.connectionStatus = firewall.connectionStatus;
 
       firewallList.push(firewallListItem);
     });

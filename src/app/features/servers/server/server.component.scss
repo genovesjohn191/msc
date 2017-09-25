@@ -6,11 +6,10 @@ $server-list-panel-spacing: $space-medium;
 .server-container {
   @include display-flex(row);
   align-items: flex-start;
-  @include set-items-interval($space-xlarge, horizontal);
 
   .server-list-panel-wrapper {
     position: relative;
-    @include flex(0 1 30%);
+    @include flex(0 0 30%);
 
     .server-list-panel {
       @include set-items-interval($server-list-panel-spacing, vertical);
@@ -20,7 +19,8 @@ $server-list-panel-spacing: $space-medium;
 
   .server-features-wrapper {
     position: relative;
-    @include flex(0 1 70%);
+    @include flex(0 0 70%);
+    padding-left: $space-xlarge;
 
     .server-features {
       min-height: 100%;

@@ -45,6 +45,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
     private _search: McsSearch
   ) {
     this._totalRecordCount = 0;
+    this.dataLoadingStream = new Subject<McsDataStatus>();
   }
 
   /**
@@ -60,10 +61,11 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
 
     return Observable.merge(...displayDataChanges)
       .switchMap(() => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
         return this._firewallsService.getFirewalls(
-          this._paginator.pageIndex,
+          undefined,
           displayedRecords,
           this._search.keyword
         ).map((response) => {

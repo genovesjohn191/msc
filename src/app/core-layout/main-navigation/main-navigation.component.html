@@ -22,11 +22,12 @@
     </div>
 
     <!-- Networking -->
-    <div class="navigation-item" routerLinkActive="active">
+    <!-- TODO: Replaced texts to Firwalls and added temporary firewall restriction for Phase 1 -->
+    <div class="navigation-item" routerLinkActive="active" *mcsHasPermission="['FirewallConfigurationView']">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/networking']" (click)="setTitle(textContent.networking.title)">
-        {{ textContent.navigation.networking }}
+      <a [routerLink]="['/networking']" (click)="setTitle(textContent.firewalls.title)">
+        {{ textContent.navigation.firewalls }}
       </a>
     </div>
 

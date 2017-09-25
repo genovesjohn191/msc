@@ -54,7 +54,7 @@ export class ServersDataSource implements McsDataSource<Server> {
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
         return this._serversService.getServers(
-          this._paginator.pageIndex,
+          undefined,
           displayedRecords,
           this._search.keyword
         ).map((response) => {

@@ -3,10 +3,24 @@ import {
   OnInit,
   OnDestroy
 } from '@angular/core';
-import { McsTextContentProvider } from '../../../../../core';
-import { Firewall } from '../../models';
+import {
+  McsTextContentProvider,
+  CoreDefinition
+} from '../../../../../core';
+import {
+  Firewall,
+  FirewallDeviceStatus,
+  FirewallConnectionStatus,
+  FirewallConfigurationStatus,
+  FirewallUtm
+} from '../../models';
 import { FirewallService } from '../firewall.service';
-import { convertToGb } from '../../../../../utilities';
+import {
+  convertToGb,
+  reviverParser,
+  formatDate,
+  compareDates
+} from '../../../../../utilities';
 
 @Component({
   selector: 'mcs-firewall-overview',
@@ -20,6 +34,18 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   public subscription: any;
   public firewallCpu: string;
   public firewallMemory: string;
+
+  public get deviceStatus()  {
+    return FirewallDeviceStatus;
+  }
+
+  public get connectionStatus() {
+    return FirewallConnectionStatus;
+  }
+
+  public get configurationStatus() {
+    return FirewallConfigurationStatus;
+  }
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
@@ -38,6 +64,28 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     this._initializeFirewallData();
   }
 
+  public getLicenseDetails(expiry: string): string {
+    let convertedDate = reviverParser('expiry', expiry);
+
+    let license = this._validateLicense(convertedDate) ?
+      this.firewallOverviewTextContent.utmServices.licensed :
+      this.firewallOverviewTextContent.utmServices.invalidLicense;
+
+    let expires = this.firewallOverviewTextContent.utmServices.expires;
+
+    let expiryDate = formatDate(convertedDate, 'YYYY-MM-DD');
+
+    return `${license} (${expires} ${expiryDate})`;
+  }
+
+  public getLicenseStatusIconKey(expiry: string): string {
+    let convertedDate = reviverParser('expiry', expiry);
+
+    return this._validateLicense(convertedDate) ?
+      CoreDefinition.ASSETS_SVG_STATE_RUNNING :
+      CoreDefinition.ASSETS_SVG_STATE_STOPPED ;
+  }
+
   public ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -54,5 +102,9 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
         this.firewallCpu = `${firewall.cpuCount} ${cpuUnit}`;
         this.firewallMemory = `${convertToGb(firewall.memoryMB)} ${ramUnit}`;
       });
+  }
+
+  private _validateLicense(expiry: Date): boolean {
+    return compareDates(expiry, new Date()) >= 0;
   }
 }
