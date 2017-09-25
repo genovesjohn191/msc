@@ -63,14 +63,6 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
         }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
       });
 
-    // Subscribe to browser service
-    this.browserSubscription = this._browserService.deviceTypeStream
-      .subscribe((deviceType: McsDeviceType) => {
-        if (deviceType !== McsDeviceType.Desktop) {
-          this.visible = false;
-        }
-      });
-
     // Set notifications placement
     this.setPlacement();
   }
@@ -78,10 +70,6 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   public ngOnDestroy() {
     if (this.notificationsSubscription) {
       this.notificationsSubscription.unsubscribe();
-    }
-
-    if (this.browserSubscription) {
-      this.browserSubscription.unsubscribe();
     }
   }
 
