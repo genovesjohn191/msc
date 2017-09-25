@@ -156,7 +156,7 @@
     "description": "Below is the list of your Macquarie Cloud Services tickets.",
     "newTicket": "New Ticket",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tickets.",
-    "noTickets": "No tickets to display.",
+    "noRecordsFoundMessage": "No tickets to display.",
     "retry": "Try again shortly",
     "shared": {
       "ticketNewComment": {
@@ -238,7 +238,9 @@
           "name" : "FortiManager",
           "description" : "Manage your network firewall."
         }
-      }
+      },
+      "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of other tools.",
+      "noRecordsFoundMessage": "No other tools found."
     }
   },
   "notifications": {

@@ -2,45 +2,36 @@
 
 $tickets-search-min-width: 300px;
 
-.tickets-table-wrapper {
-  display: inline-block;
-  @include set-items-interval($space-xxlarge);
+.search-wrapper {
+  @include display-flex(row);
+  align-items: center;
+  @include set-items-interval($space-large, horizontal);
 
   @include breakpoint(small) {
-    display: block;
+    @include display-flex(column);
+    align-items: stretch;
   }
 
-  .search-wrapper {
-    @include display-flex(row);
-    align-items: center;
-    @include set-items-interval($space-large, horizontal);
-
+  mcs-search {
+    min-width: $tickets-search-min-width;
     @include breakpoint(small) {
-      @include display-flex(column);
-      align-items: stretch;
-    }
-
-    mcs-search {
-      min-width: $tickets-search-min-width;
-      @include breakpoint(small) {
-        min-width: 100%;
-      }
-    }
-
-    mcs-button {
-      @include breakpoint(small) {
-        margin: 0;
-        display: block;
-        min-width: 100%;
-      }
-    }
-
-    .record-count {
-      margin-left: auto;
+      min-width: 100%;
     }
   }
 
-  .data-error {
-    @include set-items-interval($space-small, horizontal);
+  mcs-button {
+    @include breakpoint(small) {
+      margin: 0;
+      display: block;
+      min-width: 100%;
+    }
   }
+
+  .record-count {
+    margin-left: auto;
+  }
+}
+
+.data-error {
+  @include set-items-interval($space-small, horizontal);
 }
