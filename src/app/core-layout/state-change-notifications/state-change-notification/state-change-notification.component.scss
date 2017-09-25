@@ -71,9 +71,6 @@ $state-change-notification-icon-width: $state-change-notification-icon-font-size
   }
 
   .owner-info {
-    @include breakpoint(medium) {
-      display: none;
-    }
     color: $color-grey-02;
     font-family: $base-font;
     margin: 0 $space-large;
