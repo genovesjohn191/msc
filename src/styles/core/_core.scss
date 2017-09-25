@@ -2,7 +2,6 @@
 @import "fonts";
 @import "classes/mcs-page-title";
 @import "classes/mcs-search";
-@import "classes/mcs-table";
 @import "classes/mcs-tabs";
 @import "classes/mcs-pre-loader";
 
@@ -24,7 +23,7 @@ html {
     @include font-size($font-size-default, $line-height-default);
     @include breakpoint(small) {
       @include font-size($font-size-small, $line-height-small);
-      padding-top: $navigation-mobile-offset;
+      padding-top: 65px;
     }
 
     h1, h2, h3, h4 {

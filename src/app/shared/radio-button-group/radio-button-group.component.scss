@@ -1,5 +1,10 @@
 @import "../../../styles/shared/base";
 
+// Radio button
+$radio-button-font-size: 18;
+$radio-button-padding: 5px 0;
+$radio-button-label-offset: 12px;
+
 .radio-button-group-container {
 
   &.horizontal {

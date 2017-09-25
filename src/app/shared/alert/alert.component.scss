@@ -1,5 +1,11 @@
 @import "../../../styles/shared/base";
 
+// Alerts
+$alert-container-padding: 20px 25px;
+$alert-icon-container-size: 50px;
+$alert-title-font-size: 18;
+$alert-background-opacity: 0.09;
+
 .mcs-alert {
   @include display-flex(row);
   align-items: center;

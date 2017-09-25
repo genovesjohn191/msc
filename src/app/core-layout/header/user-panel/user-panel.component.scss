@@ -1,5 +1,10 @@
 @import '../../../../styles/shared/base';
 
+// Header User-Panel
+$user-panel-caret-offset: 18px;
+$user-panel-notification-size: 18px;
+$notification-minimum-width: 350px;
+
 .mcs-user-panel {
   @include display-flex(row);
   align-items: center;
