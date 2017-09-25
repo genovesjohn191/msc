@@ -1,5 +1,11 @@
 @import "../../../styles/shared/base";
 
+// Progress Bar
+$progress-bar-height: 20px;
+$progress-bar-font-size: 16;
+$progress-bar-border-radius: 10px;
+$progress-bar-bg-color: $color-primary-02;
+$progress-bg-color: $color-primary-01;
 $progress-bar-label-color: $color-white;
 $progressbar-percentage-offset-height: -($progress-bar-height + 1px);
 

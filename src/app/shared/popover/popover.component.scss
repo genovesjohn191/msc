@@ -1,5 +1,15 @@
 @import '../../../styles/shared/base';
 
+$popover-max-width: 250px;
+$popover-min-width: 100px;
+$popover-font-family: $base-font-bold;
+$popover-font-size: 16;
+$popover-default-padding: 25px 30px;
+$popover-narrow-padding: 10px;
+$popover-arrow-width: 10px;
+$popover-arrow-border-width: $popover-arrow-width + 1;
+$popover-border-radius: 5px;
+
 :host {
   position: absolute;
   top: 0;

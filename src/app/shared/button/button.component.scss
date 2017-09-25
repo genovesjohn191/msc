@@ -1,5 +1,8 @@
 @import "../../../styles/shared/base";
 
+$button-font-size-small: $caption-default-font-size;
+$button-padding: 10px 15px;
+$button-padding-small: 5px 10px;
 $button-primary-background-color: $color-primary-01;
 $button-primary-background-color-disabled: $color-grey-01;
 $button-hover-background-color: $color-primary-00;

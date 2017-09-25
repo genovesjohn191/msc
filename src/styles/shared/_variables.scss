@@ -139,76 +139,9 @@ $input-border-radius: 5px;
 $input-padding: 10px 15px;
 $input-padding-small: 5px 10px;
 
-// Tooltip
-$tooltip-color: $color-grey-07;
-
 // Button
 $button-font: $base-font-bold;
 $button-font-size: 18px;
-$button-font-size-small: $caption-default-font-size;
-$button-padding: 10px 15px;
-$button-padding-small: 5px 10px;
-
-// Popover
-$popover-max-width: 250px;
-$popover-min-width: 100px;
-$popover-font-family: $base-font-bold;
-$popover-font-size: 16;
-$popover-default-padding: 25px 30px;
-$popover-narrow-padding: 10px;
-$popover-arrow-width: 10px;
-$popover-arrow-border-width: $popover-arrow-width + 1;
-$popover-border-radius: 5px;
-
-// Filter Selector
-$filter-selector-title-font-size: $font-size-default;
-$filter-selector-content-font-size: $font-size-small;
-
-// Table
-$table-header-font: $base-font-bold;
-$table-border-radius: 5px;
-
-// Navigation
-$navigation-mobile-offset: 65px;
-$navigation-link-desktop-padding: 10px 15px;
-$navigation-link-mobile-padding: 15px;
-
-// Notification
-$notification-minimum-width: 350px;
-$notification-status-font-size: 14;
-$notification-message-font-size: 12;
-$notification-icon-font-size: $icon-large-font-size;
-$notification-icon-width: $notification-icon-font-size + px;
-
-// Header User-Panel
-$user-panel-caret-offset: 18px;
-$user-panel-notification-size: 18px;
-
-// VDC List
-$vdc-name-font-size: 16;
-$vdc-name-line-height: 16;
-
-// Radio button
-$radio-button-font-size: 18;
-$radio-button-padding: 5px 0;
-$radio-button-label-offset: 12px;
-
-// Server Contextual Help
-$contextual-help-width: 250px;
-$contextual-padding-left: $space-xlarge;
-
-// Progress Bar
-$progress-bar-height: 20px;
-$progress-bar-font-size: 16;
-$progress-bar-border-radius: 10px;
-$progress-bar-bg-color: $color-primary-02;
-$progress-bg-color: $color-primary-01;
-
-// Alerts
-$alert-container-padding: 20px 25px;
-$alert-icon-container-size: 50px;
-$alert-title-font-size: 18;
-$alert-background-opacity: 0.09;
 
 // Opacity
 $disabled-opacity: 0.65;
