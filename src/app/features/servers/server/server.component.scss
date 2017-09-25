@@ -3,30 +3,47 @@
 $server-name-margin-top: 3px;
 $server-list-panel-spacing: $space-medium;
 
-.server-list-panel {
-  @include set-items-interval($server-list-panel-spacing, vertical);
-}
+.server-container {
+  @include display-flex(row);
+  align-items: flex-start;
+  @include set-items-interval($space-xlarge, horizontal);
 
-.server-features {
-  min-height: 100%;
-  @include breakpoint(medium) {
-    @include flex(0 0 100%);
-    max-width: 100%;
+  .server-list-panel-wrapper {
+    position: relative;
+    @include flex(0 1 30%);
+
+    .server-list-panel {
+      @include set-items-interval($server-list-panel-spacing, vertical);
+      min-height: 100%;
+    }
   }
 
-  .server-name {
-    margin-top: $server-name-margin-top;
-    margin-bottom: $space-medium;
-  }
+  .server-features-wrapper {
+    position: relative;
+    @include flex(0 1 70%);
 
-  .mcs-tabs {
-    .nav-tabs {
-      align-items: center;
-
-      .server-cog {
-        margin-left: auto;
-        margin-right: $space-xsmall;
-        padding-bottom: $space-xsmall;
+    .server-features {
+      min-height: 100%;
+      @include breakpoint(medium) {
+        @include flex(0 0 100%);
+        max-width: 100%;
+      }
+    
+      .server-name {
+        margin-top: $server-name-margin-top;
+        margin-bottom: $space-medium;
+      }
+    
+      .mcs-tabs {
+        .nav-tabs {
+          align-items: center;
+    
+          .server-cog {
+            margin-left: auto;
+            margin-right: $space-xsmall;
+            padding-bottom: $space-xsmall;
+          }
+        }
       }
     }
   }

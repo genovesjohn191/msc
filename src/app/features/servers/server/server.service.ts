@@ -42,6 +42,14 @@ export class ServerService {
   }
 
   /**
+   * Get Server Data (MCS API Response)
+   * @param id Server Identification
+   */
+  public getServer(id: any): Observable<McsApiSuccessResponse<Server>> {
+    return this._serversService.getServer(id);
+  }
+
+  /**
    * Get Platform Data (MCS API Response)
    */
   public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {

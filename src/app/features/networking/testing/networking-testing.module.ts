@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
 /** Modules */
 import { CoreTestingModule } from '../../../core/testing';
 /** Constants */

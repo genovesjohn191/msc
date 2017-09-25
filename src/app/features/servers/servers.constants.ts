@@ -42,10 +42,6 @@ export const serversRoutes: Routes = [
   {
     path: 'servers/:id',
     component: ServerComponent,
-    resolve: {
-      servers: ServersResolver,
-      server: ServerResolver
-    },
     children: [
       { path: '', redirectTo: 'management', pathMatch: 'full' },
       { path: 'management', component: ServerManagementComponent },

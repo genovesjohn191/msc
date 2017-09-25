@@ -247,7 +247,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     });
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.vTemplateItems.getGroupNames())) {
-      this.formControlVTemplate.setValue(this.selectedServer.guestOs);
+      this.formControlVTemplate.setValue(this.selectedServer.os);
     }
   }
 

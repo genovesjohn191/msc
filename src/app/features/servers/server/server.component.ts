@@ -22,6 +22,7 @@ import {
   McsListPanelItem,
   McsSearch
 } from '../../../core';
+import { isNullOrEmpty } from '../../../utilities';
 import { ServersService } from '../servers.service';
 import { ServerService } from '../server/server.service';
 import { ServerListSource } from './server.listsource';
@@ -43,6 +44,8 @@ export class ServerComponent implements OnInit, OnDestroy {
   public serverTextContent: any;
   public serverListSource: ServerListSource | null;
 
+  private _serverId: any;
+
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
     return this.server && this.server.serviceType === ServerServiceType.Managed;
@@ -52,9 +55,25 @@ export class ServerComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
+  private _serverSubscription: any;
+  public get serverSubscription(): any {
+    return this._serverSubscription;
+  }
+  public set serverSubscription(value: any) {
+    this._serverSubscription = value;
+  }
+
+  private _selectedItem: McsListPanelItem;
+  public get selectedItem(): McsListPanelItem {
+    return this._selectedItem;
+  }
+  public set selectedItem(value: McsListPanelItem) {
+    this._selectedItem = value;
+  }
+
   constructor(
     private _router: Router,
-    private _route: ActivatedRoute,
+    private _activatedRoute: ActivatedRoute,
     private _serversService: ServersService,
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider
@@ -63,34 +82,23 @@ export class ServerComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.serverListSource = new ServerListSource(
-      this._serversService,
-      this.search
-    );
+    this.serverTextContent = this._textContentProvider.content.servers.server;
+    this._serverId = this._activatedRoute.snapshot.paramMap.get('id');
 
-    this.selectedServerSubscription = this._serverService.selectedServerStream
-      .subscribe((server) => {
-        this.server = server;
-      });
-
-    if (this._route.snapshot.data.server.content) {
-      this.serverTextContent = this._textContentProvider.content.servers.server;
-      this.server = this._route.snapshot.data.server.content;
-      this.onServerSelect(this.server.id);
-      this.serverListSource.selectedElement = new McsListPanelItem();
-      this.serverListSource.selectedElement.itemId = this.server.id;
-      this.serverListSource.selectedElement.groupName = (this.server.vdcName) ?
-        this.server.vdcName : SERVER_LIST_GROUP_OTHERS ;
-    } else {
-      this._router.navigate(['/page-not-found']);
-    }
+    this._initializeListsource();
+    this._getServerById();
   }
 
   public onServerSelect(serverId: any) {
-    if (serverId) {
-      this._router.navigate(['/servers', serverId]);
-      this._serverService.setSelectedServer(serverId);
-    }
+    if (isNullOrEmpty(serverId)) { return; }
+
+    this._serverId = serverId;
+    this._getServerById();
+
+    this._router.navigate(
+      ['/servers', serverId],
+      { relativeTo: this._activatedRoute }
+    );
   }
 
   public executeServerCommand(server: Server, action: string) {
@@ -167,5 +175,25 @@ export class ServerComponent implements OnInit, OnDestroy {
     if (this.activeServerSubscription) {
       this.activeServerSubscription.unsubscribe();
     }
+  }
+
+  private _initializeListsource(): void {
+    this.serverListSource = new ServerListSource(
+      this._serversService,
+      this.search
+    );
+  }
+
+  private _getServerById(): void {
+    this.serverSubscription = this._serverService.getServer(this._serverId)
+      .subscribe((response) => {
+        this.server = response.content;
+        this.selectedItem = {
+          itemId: this.server.id,
+          groupName: (this.server.vdcName) ? this.server.vdcName : SERVER_LIST_GROUP_OTHERS
+        } as McsListPanelItem;
+
+        this._serverService.selectedServerStream.next(this.server);
+      });
   }
 }

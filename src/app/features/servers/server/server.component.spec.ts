@@ -8,7 +8,10 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { ServersTestingModule } from '../testing';
+import {
+  ServersTestingModule,
+  mockServerService
+} from '../testing';
 import {
   Server,
   ServerPowerState,
@@ -21,14 +24,12 @@ describe('ServerComponent', () => {
   /** Stub Services/Components */
   let component: ServerComponent;
   let serverService: ServerService;
+  let router: Router;
   let mockActivatedRoute = {
     snapshot: {
-      data: {
-        servers: {
-          content: 'servers list'
-        },
-        server: {
-          content: 'server details'
+      paramMap: {
+        get(property: any) {
+          return true;
         }
       }
     }
@@ -39,29 +40,7 @@ describe('ServerComponent', () => {
     vdcName: 'M1VDC27117001',
     serviceType: ServerServiceType.Managed,
     powerState: ServerPowerState.PoweredOn,
-    fileSystem: [
-      {
-        path: '/',
-        capacityGB: 49,
-        freeSpaceGB: 48
-      },
-      {
-        path: '/boot',
-        capacityGB: 1,
-        freeSpaceGB: 1
-      },
-      {
-        path: '/tmp',
-        capacityGB: 49,
-        freeSpaceGB: 48
-      },
-      {
-        path: '/var/tmp',
-        capacityGB: 49,
-        freeSpaceGB: 48
-      }
-    ],
-  };
+  } as Server;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -89,13 +68,16 @@ describe('ServerComponent', () => {
       }
     });
 
+    /** Testbed Onverriding of Providers */
+    TestBed.overrideProvider(ServerService, { useValue: mockServerService });
+
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(ServerComponent);
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      serverService = getTestBed().get(ServerService);
+      router = getTestBed().get(Router);
     });
   }));
 
@@ -105,36 +87,31 @@ describe('ServerComponent', () => {
       expect(component.serverTextContent).toBeDefined();
     });
 
-    it('should call the subscribe() of ServerService selectedServiceStream', () => {
-      spyOn(serverService.selectedServerStream, 'subscribe');
-      component.ngOnInit();
-      expect(serverService.selectedServerStream.subscribe).toHaveBeenCalled();
+    it('should set the value of server', () => {
+      expect(component.server.id).toEqual(mockServerDetails.id);
     });
 
-    it('should get the selected server details from activated route snapshot data', () => {
-      expect(component.server).toBeDefined();
+    it('should define the selectedItem for serverListPanel', () => {
+      expect(component.selectedItem).toBeDefined();
     });
   });
 
   describe('onServerSelect()', () => {
-    it('should call the setSelectedServer() of ServerService', () => {
-      spyOn(serverService, 'setSelectedServer');
+    it('should set the value of server from the selected server', () => {
       component.onServerSelect(mockServerDetails.id);
-      expect(serverService.setSelectedServer).toHaveBeenCalled();
+      expect(component.server.id).toEqual(mockServerDetails.id);
+    });
+
+    it('should navigate to the selected server management page', () => {
+      spyOn(router, 'navigate');
+      component.onServerSelect(mockServerDetails.id);
+      expect(router.navigate).toHaveBeenCalled();
     });
   });
 
   describe('getActionStatus()', () => {
     it('should return the server action status', () => {
-      expect(component.getActionStatus(mockServerDetails as Server)).toEqual(ServerCommand.Start);
-    });
-  });
-
-  describe('ngOnDestroy()', () => {
-    it('should unsubscribe from the subscription', () => {
-      spyOn(component.selectedServerSubscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.selectedServerSubscription.unsubscribe).toHaveBeenCalled();
+      expect(component.getActionStatus(mockServerDetails)).toEqual(ServerCommand.Start);
     });
   });
 });

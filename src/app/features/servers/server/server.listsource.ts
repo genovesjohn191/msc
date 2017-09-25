@@ -26,7 +26,6 @@ export class ServerListSource implements McsDataSource<ServerList> {
   public dataLoadingStream: Subject<McsDataStatus>;
 
   private _activeServerSubscription: any;
-  private _serversSubscription: any;
   private _serverListStream: BehaviorSubject<ServerList[]> = new BehaviorSubject<ServerList[]>([]);
   private _serverList: ServerList[];
 
@@ -38,24 +37,19 @@ export class ServerListSource implements McsDataSource<ServerList> {
     this._searchMode = value;
   }
 
-  private _selectedElement: McsListPanelItem;
-  public get selectedElement(): McsListPanelItem {
-    return this._selectedElement;
+  private _serverListSubscription: any;
+  public get serverListSubscription(): any {
+    return this._serverListSubscription;
   }
-  public set selectedElement(value: McsListPanelItem) {
-    this._selectedElement = value;
+  public set serverListSubscription(value: any) {
+    this._serverListSubscription = value;
   }
 
   constructor(
     private _serversService: ServersService,
     private _search: McsSearch
   ) {
-    this._serversSubscription = this._serversService.getServers()
-      .subscribe((response) => {
-        this._serverList = this._mapServerList(response.content);
-        this._serverListStream.next(this._serverList);
-      });
-
+    this._getServers();
     this._listenToActiveServers();
     this._searchMode = false;
   }
@@ -85,8 +79,8 @@ export class ServerListSource implements McsDataSource<ServerList> {
 
   public disconnect() {
     // Disconnect all resources
-    if (this._serversSubscription) {
-      this._serversSubscription.unsubscribe();
+    if (this.serverListSubscription) {
+      this.serverListSubscription.unsubscribe();
     }
 
     if (this._activeServerSubscription) {
@@ -114,6 +108,14 @@ export class ServerListSource implements McsDataSource<ServerList> {
     });
 
     return serverList;
+  }
+
+  private _getServers(): void {
+    this.serverListSubscription = this._serversService.getServers()
+      .subscribe((response) => {
+        this._serverList = this._mapServerList(response.content);
+        this._serverListStream.next(this._serverList);
+      });
   }
 
   /**
