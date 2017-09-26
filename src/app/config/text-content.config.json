@@ -161,6 +161,8 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tickets.",
     "noRecordsFoundMessage": "No tickets to display.",
     "retry": "Try again shortly",
+    "dataSingular": "Ticket",
+    "dataPlural": "Tickets",
     "createTicket": {
       "header": "We all need help from time to time.",
       "description": "Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView",
