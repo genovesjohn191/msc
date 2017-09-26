@@ -41,9 +41,21 @@ $firewall-list-panel-spacing: $space-large;
             margin-left: auto;
             margin-right: $space-xsmall;
             padding-bottom: $space-xsmall;
+
+            mcs-icon {
+              cursor: pointer;
+            }
           }
         }
       }
     }
+  }
+}
+
+.action-container {
+  width: 100px;
+  
+  a {
+    display: block;
   }
 }

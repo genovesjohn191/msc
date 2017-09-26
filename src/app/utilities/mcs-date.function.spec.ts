@@ -3,7 +3,8 @@ import {
   getTimeDifference,
   getDayDifference,
   compareDates,
-  convertDateToStandardString
+  convertDateToStandardString,
+  getExpiryLabel
 } from './mcs-date.function';
 
 describe('DATE Functions', () => {
@@ -86,6 +87,20 @@ describe('DATE Functions', () => {
 
       let convertedDate = convertDateToStandardString(date);
       expect(convertedDate).toBe(formatDate(date, 'LTS, ddd DD MMM, YYYY'));
+    });
+  });
+
+  describe('getExpiryLabel()', () => {
+    it(`should return Expires if the date is not yet expired`, () => {
+      let expiry = new Date('2017-12-26 01:10:45');
+      let expiresLabel = getExpiryLabel(expiry);
+      expect(expiresLabel).toBe(getExpiryLabel(expiry));
+    });
+
+    it(`should return Expired if the date is already expired`, () => {
+      let expiry = new Date('2017-04-26 01:10:45');
+      let expiredLabel = getExpiryLabel(expiry);
+      expect(expiredLabel).toBe(getExpiryLabel(expiry));
     });
   });
 });

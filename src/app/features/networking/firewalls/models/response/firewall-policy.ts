@@ -9,9 +9,10 @@ export class FirewallPolicy {
   public nat: FirewallPolicyNat;
   public natIpAddresses: string[];
   public sourceAddresses: string[];
-  public sourceInterface: string[];
+  public sourceInterfaces: string[];
   public destinationAddresses: string[];
   public destinationInterfaces: string[];
+  public label: string;
   public service: string[];
   public schedule: string[];
 }

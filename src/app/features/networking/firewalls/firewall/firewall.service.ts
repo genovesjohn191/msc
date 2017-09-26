@@ -38,7 +38,8 @@ export class FirewallService {
   }
 
   constructor(private _firewallsService: FirewallsService) {
-    this._selectedFirewallStream = new BehaviorSubject<Firewall>(new Firewall());
+    this.selectedFirewallStream = new BehaviorSubject<Firewall>(undefined);
+    this._selectedFirewall = new Firewall();
   }
 
   /**
@@ -54,8 +55,8 @@ export class FirewallService {
    * @param id Firewall identification
    */
   public setSelectedFirewall(firewall: Firewall): void {
-    this.selectedFirewallStream.next(firewall);
     this.selectedFirewall = firewall;
+    this.selectedFirewallStream.next(firewall);
   }
 
   /**

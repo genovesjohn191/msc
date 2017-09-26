@@ -1,8 +1,11 @@
 import {
   Component,
   OnInit,
+  AfterViewInit,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   McsPaginator,
   McsSearch,
@@ -16,6 +19,7 @@ import {
 import { FirewallService } from '../firewall.service';
 import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
 import {
+  refreshView,
   isNullOrEmpty,
   getEnumString,
   replacePlaceholder
@@ -29,7 +33,7 @@ const FIREWALL_POLICY_SEQUENCE_PLACEHOLDER = 'sequence';
   templateUrl: './firewall-policies.component.html'
 })
 
-export class FirewallPoliciesComponent implements OnInit {
+export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
   public search: McsSearch;
@@ -80,6 +84,7 @@ export class FirewallPoliciesComponent implements OnInit {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
+    private _activatedRoute: ActivatedRoute,
     private _firewallService: FirewallService
   ) {
     this.dataColumns = new Array();
@@ -91,8 +96,18 @@ export class FirewallPoliciesComponent implements OnInit {
     this.firewallPoliciesTextContent
       = this._textContentProvider.content.firewalls.firewall.policies;
     this.firewallPolicyTextContent = this.firewallPoliciesTextContent.policy;
+  }
 
-    this._initializeDatasource();
+  public ngAfterViewInit() {
+    refreshView(() => {
+      this._initializeDatasource();
+    });
+  }
+
+  public ngOnDestroy() {
+    if (!isNullOrEmpty(this.dataSource)) {
+      this.dataSource.disconnect();
+    }
   }
 
   /**
@@ -159,6 +174,14 @@ export class FirewallPoliciesComponent implements OnInit {
     }
 
     return iconKey;
+  }
+
+  /**
+   * Retry to obtain the source from API
+   */
+  public retryDatasource(): void {
+    if (isNullOrEmpty(this.dataSource)) { return; }
+    this._initializeDatasource();
   }
 
   private _initializeDatasource(): void {

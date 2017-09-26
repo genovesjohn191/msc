@@ -21,7 +21,7 @@
   </div>
 
   <div class="firewall-details-wrapper">
-    <div [mcsLoader]="subscription">
+    <div class="firewall-details" [mcsLoader]="subscription">
         <h2 class="firewall-name">{{ firewall.managementName }} ({{ firewall.haRole }})</h2>
         <div class="mcs-tabs">
           <ul class="nav nav-tabs" role="tablist">
@@ -35,8 +35,17 @@
                 [routerLink]="['policies']" routerLinkActive="active">
                 {{ firewallTextContent.policies.label }}</a>
             </li>
-            <!-- TODO: Temporarily hidden for phase one -->
-            <!-- <li class="nav-itema action-cog"></li> -->
+            <li class="nav-item action-cog">
+              <mcs-icon class="action" [key]="cogIconKey" size="large"
+                mcsPopover placement="bottom" orientation="left"
+                theme="light" padding="narrow" [content]="actionContent">
+              </mcs-icon>
+              <ng-template #actionContent>
+                <div class="action-container">
+                  <a class="action-item" [href]="firewall.url" target="_blank">View in Portal</a>
+                </div>
+              </ng-template>
+            </li>
           </ul>
   
           <div class="tab-content">

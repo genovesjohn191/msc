@@ -77,3 +77,17 @@ export function convertDateToStandardString(date: Date) {
   }
   return convertedString;
 }
+
+/**
+ * Return expiration label based on the provided expiry date
+ * Expires = if not yet expired
+ * Expired = if expired
+ * @param expiry Expiry date
+ */
+export function getExpiryLabel(expiry: Date) {
+  let label: string = '';
+  if (expiry) {
+    label = (compareDates(expiry, new Date()) >= 0) ? 'Expires' : 'Expired' ;
+  }
+  return label;
+}

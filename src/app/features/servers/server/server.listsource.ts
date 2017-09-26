@@ -26,8 +26,8 @@ export class ServerListSource implements McsDataSource<ServerList> {
   public dataLoadingStream: Subject<McsDataStatus>;
 
   private _activeServerSubscription: any;
-  private _serverListStream: BehaviorSubject<ServerList[]> = new BehaviorSubject<ServerList[]>([]);
   private _serverList: ServerList[];
+  private _serverListStream: BehaviorSubject<ServerList[]>;
 
   private _searchMode: boolean;
   public get searchMode(): boolean {
@@ -49,6 +49,8 @@ export class ServerListSource implements McsDataSource<ServerList> {
     private _serversService: ServersService,
     private _search: McsSearch
   ) {
+    this._serverList = new Array<ServerList>();
+    this._serverListStream = new BehaviorSubject<ServerList[]>(this._serverList);
     this._getServers();
     this._listenToActiveServers();
     this._searchMode = false;

@@ -39,22 +39,22 @@
       </mcs-data-cell>
     </ng-container>
 
-    <ng-container mcsColumnDef="sourceInterface">
+    <ng-container mcsColumnDef="sourceInterfaces">
       <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.sourceInterface.text }}
+        {{ columnSettings.sourceInterfaces.text }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
         <ul class="unstyled-list">
-          <li *ngFor="let sourceInterface of row.sourceInterface">
-            <span>{{ sourceInterface }}</span>
+          <li *ngFor="let sourceInterfaces of row.sourceInterfaces">
+            <span>{{ sourceInterfaces }}</span>
           </li>
         </ul>
       </mcs-data-cell>
     </ng-container>
 
-    <ng-container mcsColumnDef="destinationInterface">
+    <ng-container mcsColumnDef="destinationInterfaces">
       <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.destinationInterface.text }}
+        {{ columnSettings.destinationInterfaces.text }}
       </mcs-header-cell>
       <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
         <ul class="unstyled-list">
@@ -88,6 +88,15 @@
             <span>{{ destination }}</span>
           </li>
         </ul>
+      </mcs-data-cell>
+    </ng-container>
+
+    <ng-container mcsColumnDef="label">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ columnSettings.label.text }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
+        <span>{{ row.label }}</span>
       </mcs-data-cell>
     </ng-container>
 
@@ -126,6 +135,19 @@
       </mcs-data-cell>
     </ng-container>
 
+    <!-- Data Status Integration -->
+    <ng-container mcsDataStatusDef>
+      <mcs-data-empty *mcsDataEmptyDef>
+        <span>{{ firewallPoliciesTextContent.noPolicies }}</span>
+      </mcs-data-empty>
+      <mcs-data-error *mcsDataErrorDef>
+        <div class="data-error">
+          <span>{{ firewallPoliciesTextContent.errorMessage }}</span>
+          <a (click)="retryDatasource()">{{ firewallPoliciesTextContent.retry }}</a>.
+        </div>
+      </mcs-data-error>
+    </ng-container>
+
     <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
     <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
   </mcs-table>
@@ -160,8 +182,8 @@
         <div class="source-interfaces">
           <span>{{ firewallPolicyTextContent.interface }} : </span>
           <ul class="unstyled-list details-listing">
-            <li *ngFor="let sourceInterface of selectedFirewallPolicy.sourceInterface">
-              <span>{{ sourceInterface }}</span>
+            <li *ngFor="let sourceInterfaces of selectedFirewallPolicy.sourceInterfaces">
+              <span>{{ sourceInterfaces }}</span>
             </li>
           </ul>
         </div>
