@@ -18,7 +18,8 @@ import {
   isNullOrEmpty,
   getEnumString,
   refreshView,
-  convertDateToStandardString
+  convertDateToStandardString,
+  getRecordCountLabel
 } from '../../utilities';
 import { TicketsService } from './tickets.service';
 import { TicketsDataSource } from './tickets.datasource';
@@ -46,6 +47,13 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('paginator')
   public paginator: McsPaginator;
+
+  public get recordsFoundLabel(): string {
+    return getRecordCountLabel(
+      this.totalRecordCount,
+      this.textContent.dataSingular,
+      this.textContent.dataPlural);
+  }
 
   public get totalRecordCount(): number {
     return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
