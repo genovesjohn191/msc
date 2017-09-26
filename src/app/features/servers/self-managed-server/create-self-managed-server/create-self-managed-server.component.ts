@@ -16,7 +16,7 @@ import {
   ServerCreateType,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerTemplate
+  ServerOs
 } from '../../models';
 import {
   McsList,
@@ -49,7 +49,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   public resource: ServerResource;
 
   @Input()
-  public template: ServerTemplate;
+  public serversOs: ServerOs[];
 
   @Input()
   public servers: Server[];

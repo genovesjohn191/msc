@@ -32,7 +32,7 @@ import { ContextualHelpDirective } from '../../../shared';
 import {
   Server,
   ServerPlatform,
-  ServerTemplate,
+  ServerOs,
   ServerResource,
   ServerCreate,
   ServerCreateStorage,
@@ -89,11 +89,11 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   }
 
   /**
-   * Server templates list
+   * Server OS list
    */
-  private _serverTemplate: ServerTemplate;
-  public get serverTemplate(): ServerTemplate {
-    return this._serverTemplate;
+  private _serversOs: ServerOs[];
+  public get serversOs(): ServerOs[] {
+    return this._serversOs;
   }
 
   public get addIconKey(): string {
@@ -131,7 +131,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     this.isLoading = true;
 
     this._mainContextInformations = new Array();
-    this._serverTemplate = new ServerTemplate();
+    this._serversOs = new Array();
     this._serverListMap = new Map<string, Server[]>();
     this._serverPlatformMap = new Map<string, ServerResource>();
   }
@@ -145,11 +145,11 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     this._obtainDataSubscription = Observable.forkJoin([
       this._createSelfManagedServices.getAllServers(),
       this._createSelfManagedServices.getPlatformData(),
-      this._createSelfManagedServices.getServerTemplates()
+      this._createSelfManagedServices.getServersOs()
     ]).subscribe((data) => {
       this._setAllServers(data[0]);
       this._setPlatformData(data[1]);
-      this._setServerTemplates(data[2]);
+      this._setServerOs(data[2]);
 
       // Add server
       this._setVdcItems();
@@ -199,7 +199,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     componentService.componentRef.instance.vdcName = this.vdcValue;
     componentService.componentRef.instance.resource = this._serverPlatformMap.get(this.vdcValue);
     componentService.componentRef.instance.servers = this._serverListMap.get(this.vdcValue);
-    componentService.componentRef.instance.template = this._serverTemplate;
+    componentService.componentRef.instance.serversOs = this.serversOs;
     componentService.appendComponentTo(this.selfManagedServersElement.nativeElement);
 
     // Add new server to servers list
@@ -309,7 +309,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
    * This will set all the servers to the servers mapping
    * for easily access across its chidren component
    *
-   * `@Note` This will execute together with the platform and template obtainment
+   * `@Note` This will execute together with the platform and os obtainment
    * @param response Api response
    */
   private _setAllServers(response: any): void {
@@ -332,7 +332,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
    * This will set the Platform data to platform mapping
    * for easily access across its chidren component
    *
-   * `@Note` This will execute together with the servers and template obtainment
+   * `@Note` This will execute together with the servers and os obtainment
    * @param response Api response
    */
   private _setPlatformData(response: any): void {
@@ -349,19 +349,19 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   }
 
   /**
-   * This will set the Templates data to template mapping
+   * This will set the OS data to OS mapping
    * for easily access across its chidren component
    *
    * `@Note` This will execute together with the servers and platform obtainment
    * @param response Api response
    */
-  private _setServerTemplates(response: any): void {
+  private _setServerOs(response: any): void {
     if (response && response.content) {
-      let serverTemplates = response.content as ServerTemplate[];
+      let serverOs = response.content as ServerOs[];
 
-      serverTemplates.forEach((template) => {
-        if (template.serviceType === ServerServiceType.SelfManaged) {
-          this._serverTemplate = template;
+      serverOs.forEach((os) => {
+        if (os.serviceType === ServerServiceType.SelfManaged) {
+          this._serversOs.push(os);
         }
       });
     }

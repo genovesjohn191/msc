@@ -37,7 +37,7 @@ import {
   ServerResource,
   ServerStorage,
   ServerNetwork,
-  ServerTemplate
+  ServerOs
 } from '../../models';
 
 const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
@@ -60,7 +60,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public resource: ServerResource;
 
   @Input()
-  public template: ServerTemplate;
+  public serversOs: ServerOs[];
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -214,12 +214,12 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setVTemplateItems(): void {
-    if (isNullOrEmpty(this.template)) { return; }
+    if (isNullOrEmpty(this.serversOs)) { return; }
 
     // Populate dropdown list
-    this.template.guestOs.forEach((guestOs) => {
+    this.serversOs.forEach((serverOs) => {
       this.vTemplateItems.push('Virtual Templates',
-        new McsListItem(guestOs.name, guestOs.description));
+        new McsListItem(serverOs.name, serverOs.name));
     });
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.vTemplateItems.getGroupNames())) {

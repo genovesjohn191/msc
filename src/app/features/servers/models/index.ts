@@ -17,7 +17,7 @@ export * from './response/server-environment';
 export * from './response/server-resource';
 export * from './response/server-storage';
 export * from './response/server-network';
-export * from './response/server-template';
+export * from './response/server-os';
 export * from './response/server-guest-os';
 
 /** Other Models that are use inside server component */

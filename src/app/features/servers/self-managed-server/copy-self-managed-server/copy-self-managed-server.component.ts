@@ -25,7 +25,7 @@ import {
   ServerIpAddress,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerTemplate,
+  ServerOs,
   ServerNetwork,
   Server
 } from '../../models';
@@ -54,7 +54,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public resource: ServerResource;
 
   @Input()
-  public template: ServerTemplate;
+  public serversOs: ServerOs[];
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -238,12 +238,12 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   private _setVTemplateItems(): void {
-    if (!this.template) { return; }
+    if (!this.serversOs) { return; }
 
     // Populate dropdown list
-    this.template.guestOs.forEach((guestOs) => {
+    this.serversOs.forEach((serverOs) => {
       this.vTemplateItems.push('Virtual Templates',
-        new McsListItem(guestOs.name, guestOs.description));
+        new McsListItem(serverOs.name, serverOs.name));
     });
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.vTemplateItems.getGroupNames())) {

@@ -28,7 +28,7 @@ import {
   ServerUpdate,
   ServerCommand,
   ServerPlatform,
-  ServerTemplate,
+  ServerOs,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerServiceType
@@ -199,20 +199,20 @@ export class ServersService {
   }
 
   /**
-   * This will get the server templates data from the API
+   * This will get the server os data from the API
    */
-  public getServerTemplates(): Observable<McsApiSuccessResponse<ServerTemplate[]>> {
+  public getServerOs(): Observable<McsApiSuccessResponse<ServerOs[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/templates';
+    mcsApiRequestParameter.endPoint = '/servers/os';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerTemplate[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerTemplate[]>>(
+        let apiResponse: McsApiSuccessResponse<ServerOs[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerOs[]>>(
           response.text(),
           this._convertProperty
         );
-        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerTemplate[]>();
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerOs[]>();
       })
       .catch(this._handleServerError);
   }
