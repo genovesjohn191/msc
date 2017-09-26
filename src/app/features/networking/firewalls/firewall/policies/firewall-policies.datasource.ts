@@ -63,7 +63,8 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
         return this._firewallService.getFirewallPolicies(
           firewallId,
           undefined,
-          displayedRecords
+          displayedRecords,
+          this._search.keyword
         ).map((response) => {
           this._totalRecordCount = response.totalCount;
           return response.content;
