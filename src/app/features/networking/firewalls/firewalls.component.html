@@ -7,7 +7,7 @@
     <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
       (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
 
-    <span class="record-count">{{ totalRecordCount }} {{ firewallsTextContent.header }}</span>
+    <span class="record-count">{{ recordsFoundLabel }}</span>
   </div>
 
   <!-- Table -->

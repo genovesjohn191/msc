@@ -29,6 +29,8 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
     "noServers": "No servers to display.",
     "retry": "Try again shortly",
+    "dataSingular": "Server",
+    "dataPlural": "Servers",
     "columnHeaders": {
       "state": "State",
       "name": "Name",
@@ -194,6 +196,8 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
     "noFirewalls": "No firewalls to display.",
     "retry": "Try again shortly",
+    "dataSingular": "Firewall",
+    "dataPlural": "Firewalls",
     "firewall": {
       "overview": {
         "label": "Overview",

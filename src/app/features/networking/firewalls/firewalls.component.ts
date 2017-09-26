@@ -22,7 +22,8 @@ import {
 } from '../../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  getRecordCountLabel
 } from '../../../utilities';
 
 @Component({
@@ -47,6 +48,13 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('paginator')
   public paginator: McsPaginator;
+
+  public get recordsFoundLabel(): string {
+    return getRecordCountLabel(
+      this.totalRecordCount,
+      this.firewallsTextContent.dataSingular,
+      this.firewallsTextContent.dataPlural);
+  }
 
   public get totalRecordCount(): number {
     return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
