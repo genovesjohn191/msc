@@ -52,3 +52,23 @@ export function getEnumString<T>(enumRef: T, enumValue: any): string {
 
   return statusObjects ? statusObjects[(enumValue) as number] : '';
 }
+
+/**
+ * This will return the record count label for tables
+ *
+ * @param count number of records
+ * @param singularSuffix Suffix to use if count is 1
+ * @param pluralSuffix Suffix to use if count is greater than 11
+ */
+export function getRecordCountLabel(count: number, singularSuffix: string, pluralSuffix: string) {
+  let recordCountLabel: string = '';
+  if (count > 0) {
+    let prefix = count.toString();
+    let suffix: string = count === 1
+      ? singularSuffix
+      : pluralSuffix;
+    recordCountLabel = prefix + ' ' + suffix;
+  }
+
+  return recordCountLabel;
+}

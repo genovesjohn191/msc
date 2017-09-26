@@ -2,7 +2,8 @@ import {
   getProperCase,
   getEncodedUrl,
   replacePlaceholder,
-  getEnumString
+  getEnumString,
+  getRecordCountLabel
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -41,6 +42,23 @@ describe('STRING Functions', () => {
       }
       let stringEquivalent = getEnumString(TestEnum, TestEnum.Success);
       expect(stringEquivalent).toBe('Success');
+    });
+  });
+
+  describe('getRecordCountLabel()', () => {
+    it(`return empty string if count is 0`, () => {
+      let recordCountLabel = getRecordCountLabel(0, 'Singular', 'Plural');
+      expect(recordCountLabel).toBe('');
+    });
+
+    it(`return singular suffix if count is 1`, () => {
+      let recordCountLabel = getRecordCountLabel(1, 'Singular', 'Plural');
+      expect(recordCountLabel).toBe('1 Singular');
+    });
+
+    it(`return plural if count is greater than 1`, () => {
+      let recordCountLabel = getRecordCountLabel(5, 'Singular', 'Plural');
+      expect(recordCountLabel).toBe('5 Plural');
     });
   });
 });
