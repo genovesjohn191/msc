@@ -1,0 +1,94 @@
+<div class="ticket-create-wrapper">
+  <!-- Create ticket details -->
+  <div class="ticket-create-information">
+    <div class="ticket-create-header">
+      <h3>{{ textContent.header }}</h3>
+      <p [innerHTML]="textContent.description"></p>
+    </div>
+
+    <form [formGroup]="fgCreateTicket" class="create-ticket-form">
+
+      <!-- Ticket Type -->
+      <div class="ticket-type">
+        <label class="label" for="type">*{{ textContent.type }}</label>
+        <div class="item">
+          <mcs-dropdown id="type"
+            formControlName="fcType"
+            [dropdownData]="ticketTypeList"
+            [mcsContextualHelp]="contextualContent.type"></mcs-dropdown>
+          <mcs-validation-message [control]="fcType"></mcs-validation-message>
+        </div>
+      </div>
+
+      <!-- Headline -->
+      <div class="ticket-headline">
+        <label class="label" for="headline">*{{ convertHeadlineText(textContent.headline) }}</label>
+        <div class="item">
+          <mcs-textbox id="headline" width="100%" placeholder="Enter headline"
+            formControlName="fcHeadline"
+            [mcsContextualHelp]="contextualContent.headline"
+            [valid]="isControlValid(fcHeadline)"></mcs-textbox>
+            <mcs-validation-message [control]="fcHeadline"></mcs-validation-message>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="ticket-details">
+        <label class="label" for="details">*{{ convertDetailsText(textContent.details) }}</label>
+        <div class="item">
+          <textarea id="details" rows="3" placeholder="Enter details"
+            formControlName="fcDetails"
+            [mcsContextualHelp]="contextualContent.details"></textarea>
+          <mcs-validation-message [control]="fcDetails"></mcs-validation-message>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div class="ticket-services">
+
+        <label class="label" for="services">{{ textContent.services }}</label>
+        <div class="item">
+          <div class="service-item">
+            <mcs-textbox id="services" width="100%"
+              formControlName="fcService"
+              [mcsContextualHelp]="contextualContent.services"
+              [valid]="isControlValid(fcService)"></mcs-textbox>
+            <div class="service-icon">
+              <mcs-icon [key]="servicesIconKey" size="large"
+                [mcsLoader]="servicesSubscription"
+                (click)="openServices()"></mcs-icon>
+            </div>
+          </div>
+
+          <ng-container *ngIf="isServicesOpen">
+            <mcs-ticket-service [services]="services"
+              (selectionChanged)="serviceItemSelectionChanged($event)"></mcs-ticket-service>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Attachments -->
+      <div class="ticket-attachments">
+        <h4>{{ textContent.attachments }}</h4>
+        <mcs-ticket-attachment attachedType="multiple"
+          (attachedFilesChanged)="onChangedAttachments($event)"
+          [mcsContextualHelp]="contextualContent.attachments">
+        </mcs-ticket-attachment>
+      </div>
+    </form>
+
+    <!-- Ticket Action -->
+    <div class="ticket-action-wrapper">
+      <mcs-button (onClick)="onCancelTicket()" size="small">{{ textContent.cancel }}</mcs-button>
+      <mcs-button icon="arrow" (onClick)="onLogTicket()" size="small"
+        [disabled]="!fgCreateTicket.valid" [mcsLoader]="createTicketSubscription">
+        {{ textContent.newTicket }}</mcs-button>
+    </div>
+  </div>
+
+  <!-- Create ticket contextual help -->
+  <div class="context-information hidden-medium">
+    <mcs-contextual-help
+      [contextualInformations]="contextualHelp"></mcs-contextual-help>
+  </div>
+</div>

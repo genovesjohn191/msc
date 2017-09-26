@@ -7,25 +7,9 @@
 
   <div class="ticket-action-wrapper">
     <!-- Uploader of attachment wrapper -->
-    <div class="uploader-wrapper">
-      <mcs-button size="small" (onClick)="chooFileElement.click()">
-        <input #chooFileElement type="file" ng2FileSelect [uploader]="fileUploader" />
-        {{ textContent.dragDropZone }}
-      </mcs-button>
-
-      <div class="dropzone" ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
-        (fileOver)="onFileOver($event)"
-        [uploader]="fileUploader">
-
-        <mcs-icon [key]="attachmentIconKey"></mcs-icon>
-        <ng-container *ngIf="hasAttachment">
-          <span>{{ attachmentFile?.file.name }}</span>
-        </ng-container>
-        <ng-container *ngIf="!hasAttachment">
-          <span>{{ textContent.selectFile }}</span>
-        </ng-container>
-      </div>
-    </div>
+    <mcs-ticket-attachment attachedType="single"
+      (attachedFilesChanged)="onChangedAttachments($event)">
+    </mcs-ticket-attachment>
 
     <!-- Ticket comment/attachment creation -->
     <div class="ticket-create-wrapper">

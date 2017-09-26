@@ -1,6 +1,6 @@
-<section class="contextual-help-container">
+<section class="contextual-help-wrapper">
   <div *ngFor="let context of contextualInformations">
-    <span #textElement *ngIf="context.isVisible"
+    <span #textElement *ngIf="context.isVisible()"
       [ngStyle]="getTextStyle(textElement, context)"
       [innerHTML]="context.getContextualHelp()">
     </span>

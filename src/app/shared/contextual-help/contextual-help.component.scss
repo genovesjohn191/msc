@@ -1,9 +1,9 @@
-@import "../../../../../styles/shared/base";
+@import "../../../styles/shared/base";
 
 $contextual-help-width: 250px;
 $contextual-padding-left: $space-xlarge;
 
-.contextual-help-container {
+.contextual-help-wrapper {
   position: relative;
   padding-left: $contextual-padding-left;
   width: $contextual-help-width;

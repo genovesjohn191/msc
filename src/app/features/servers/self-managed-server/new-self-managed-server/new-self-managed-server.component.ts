@@ -27,8 +27,8 @@ import {
   isNullOrEmpty,
   convertToGb
 } from '../../../../utilities';
+import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
-import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
 import {
   ServerManageStorage,
   ServerPerformanceScale,

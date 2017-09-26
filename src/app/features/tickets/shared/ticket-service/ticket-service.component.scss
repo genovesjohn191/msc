@@ -1,0 +1,62 @@
+@import "../../../../../styles/shared/base";
+
+// Ticket service component
+$ticket-service-max-heigth: 300px;
+// Ticket service name
+$ticket-service-name-active-font: $circular-pro-bold;
+$ticket-service-name-padding: $space-small;
+// Ticket service items
+$ticket-service-items-padding: $space-xsmall 0;
+
+:host {
+  display: block;
+}
+
+.ticket-server-wrapper {
+  @include display-flex(row);
+  @include set-items-interval($space-large, horizontal);
+  max-height: $ticket-service-max-heigth;
+
+  .services-name-wrapper {
+    @include flex(1 1 auto);
+
+    .service-item {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: space-between;
+
+      &.active {
+        a {
+          font-family: $ticket-service-name-active-font;
+        }
+      }
+
+      a {
+        width: 100%;
+        text-decoration: none;
+        padding: $ticket-service-name-padding;
+      }
+    }
+  }
+
+  .services-items-wrapper {
+    @include flex(1 1 auto);
+    @include display-flex(column);
+    @include set-items-interval($space-medium);
+
+    .search {
+      @include flex(0 0 auto);
+    }
+
+    .services {
+      overflow: auto;
+      @include flex(1 1 auto);
+      @include display-flex(column);
+      @include set-items-interval($space-small, horizontal);
+
+      li {
+        padding: $ticket-service-items-padding;
+      }
+    }
+  }
+}

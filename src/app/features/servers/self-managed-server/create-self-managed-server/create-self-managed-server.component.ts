@@ -30,7 +30,7 @@ import {
   isFormControlValid,
   isNullOrEmpty
 } from '../../../../utilities';
-import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
+import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 
 const SERVER_NAME_MAX = 15;

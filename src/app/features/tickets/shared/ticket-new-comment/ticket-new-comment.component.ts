@@ -1,44 +1,29 @@
 import {
   Component,
-  Input,
   Output,
-  OnInit,
-  EventEmitter,
-  ChangeDetectionStrategy
+  EventEmitter
 } from '@angular/core';
-import { convertDateToStandardString } from '../../../../utilities';
+import { isNullOrEmpty } from '../../../../utilities';
 import {
-  CoreDefinition,
-  McsTextContentProvider
-} from '../../../../core';
-import {
-  FileUploader,
-  FileItem
-} from 'ng2-file-upload';
-import {
-  TicketActivity,
-  TicketActivityType,
-  TicketNewComment
+  TicketNewComment,
+  TicketFileInfo
 } from '../../models';
 
 @Component({
   selector: 'mcs-ticket-new-comment',
   templateUrl: './ticket-new-comment.component.html',
-  styles: [require('./ticket-new-comment.component.scss')],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [require('./ticket-new-comment.component.scss')]
 })
 
-export class TicketNewCommentComponent implements OnInit {
-
-  public textContent: any;
-  public fileUploader: FileUploader;
-  public hasDropZone: boolean;
+export class TicketNewCommentComponent {
 
   @Output()
   public onCreateComment: EventEmitter<any>;
 
   @Output()
   public onCancelComment: EventEmitter<any>;
+
+  private _attachedFile: TicketFileInfo;
 
   /**
    * Comment of the text area
@@ -51,46 +36,35 @@ export class TicketNewCommentComponent implements OnInit {
     this._comment = value;
   }
 
-  public get attachmentIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_ATTACHMENT;
-  }
-
-  public constructor(private _textContentProvider: McsTextContentProvider) {
+  public constructor() {
     this.onCreateComment = new EventEmitter<any>();
     this.onCancelComment = new EventEmitter<any>();
-    // Set uploader configuration
-    this.fileUploader = new FileUploader({
-      autoUpload: false
-    });
   }
 
-  public ngOnInit() {
-    this.textContent = this._textContentProvider.content.tickets.shared.ticketNewComment;
-  }
-
-  public get hasAttachment(): boolean {
-    return this.fileUploader && this.fileUploader.queue.length > 0;
-  }
-
-  public get attachmentFile(): FileItem {
-    return this.fileUploader.queue ?
-      this.fileUploader.queue[this.fileUploader.queue.length - 1] :
-      undefined;
-  }
-
-  public onFileOver(event: any) {
-    this.hasDropZone = event;
-  }
-
+  /**
+   * Cancel the comment data information
+   */
   public cancelComment() {
     this.onCancelComment.emit(true);
   }
 
+  /**
+   * Notify when there are changes on the attachment
+   * @param attachments Attachment to be part of the comment
+   */
+  public onChangedAttachments(attachments: TicketFileInfo[]): void {
+    if (isNullOrEmpty(attachments)) { return; }
+    this._attachedFile = attachments[0];
+  }
+
+  /**
+   * Create comment based on the details and attachment
+   */
   public createComment() {
     let details = new TicketNewComment();
 
     details.comment = this.comment;
-    details.attachedFile = this.attachmentFile;
+    details.attachedFile = this._attachedFile;
     this.onCreateComment.emit(details);
   }
 }

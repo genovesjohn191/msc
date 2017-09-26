@@ -1,0 +1,77 @@
+@import "../../../../styles/shared/base";
+
+$ticket-create-border-color: $color-black;
+$ticket-create-services-padding: $space-medium 0;
+$ticket-create-label-font: $circular-pro-bold;
+
+:host {
+  display: block;
+}
+
+.ticket-create-wrapper {
+  @include display-flex(row);
+
+  .ticket-create-information {
+    position: relative;
+    @include flex(1 1 auto);
+    @include display-flex(column);
+    @include set-items-interval($space-large);
+
+    @include breakpoint(large) {
+      padding-right: 55px;
+      border-right: 1px solid $ticket-create-border-color;
+    }
+
+    .ticket-create-header {
+      @include display-flex(column);
+      @include set-items-interval($space-medium);
+    }
+
+    .ticket-type,
+    .ticket-headline,
+    .ticket-details,
+    .ticket-services {
+      @include display-flex(row);
+      justify-content: space-between;
+      padding: $ticket-create-services-padding;
+
+      .label {
+        @include flex(1 0 30%);
+        font-family: $ticket-create-label-font;
+      }
+
+      .item {
+        @include flex(1 0 70%);
+        @include display-flex(column);
+        @include set-items-interval($space-small);
+
+        .service-item {
+          @include display-flex(row);
+          align-items: center;
+          @include set-items-interval($space-large, horizontal);
+
+          mcs-textbox {
+            @include flex(1 1 auto);
+          }
+
+          .service-icon {
+            @include flex(0 0 auto);
+            position: relative;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  .ticket-action-wrapper {
+    @include display-flex(row);
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .context-information {
+    position: relative;
+    margin-left: auto;
+  }
+}

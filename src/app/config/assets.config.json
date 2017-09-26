@@ -25,7 +25,8 @@
     "user": "fa fa-user-o",
     "info-2": "fa fa-info",
     "comment": "fa fa-comment",
-    "attachment": "fa fa-paperclip"
+    "attachment": "fa fa-paperclip",
+    "navbar": "fa fa-bars"
   },
   "svgIcons": {
     "no-icon-available": "no-icon-available.svg",

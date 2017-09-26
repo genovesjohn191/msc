@@ -5,8 +5,6 @@ import { ServersComponent } from './servers.component';
 /** Shared */
 import {
   ServerCommandComponent,
-  ContextualHelpComponent,
-  ContextualHelpDirective,
   ServerPerformanceScaleComponent,
   ServerManageStorageComponent,
   ServerIpAddressComponent,
@@ -45,8 +43,6 @@ import { SharedModule } from '../../shared';
     ServerServicesComponent,
     ServerStorageComponent,
     ServerBackupsComponent,
-    ContextualHelpComponent,
-    ContextualHelpDirective,
     ServerPerformanceScaleComponent,
     ServerManageStorageComponent,
     ServerIpAddressComponent,

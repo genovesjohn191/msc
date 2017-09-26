@@ -6,15 +6,14 @@ import {
   ElementRef,
   Renderer2
 } from '@angular/core';
-
 import {
   McsBrowserService,
   McsDeviceType
-} from '../../../../core';
+} from '../../core';
 import {
   registerEvent,
   unregisterEvent
-} from '../../../../utilities';
+} from '../../utilities';
 
 @Directive({
   selector: '[mcsContextualHelp]'
@@ -57,6 +56,13 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
       });
   }
 
+  public ngOnDestroy() {
+    if (this.browserStreamSubscription) {
+      this.browserStreamSubscription.unsubscribe();
+    }
+    this._unregisterEvents();
+  }
+
   /**
    * Get the host element reference which serves as the
    * attachment of the contextual help
@@ -75,19 +81,12 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
     return this.mcsContextualHelp;
   }
 
-  public ngOnDestroy() {
-    if (this.browserStreamSubscription) {
-      this.browserStreamSubscription.unsubscribe();
-    }
-    this._unregisterEvents();
-  }
-
   /**
    * Visibility flag to check if the context should be dispayed or not
    * according with its parent element, if the parent element is not display
    * then the contextual help should not be display also
    */
-  public get isVisible(): boolean {
+  public isVisible(): boolean {
     return this._elementRef.nativeElement.offsetParent !== null;
   }
 
