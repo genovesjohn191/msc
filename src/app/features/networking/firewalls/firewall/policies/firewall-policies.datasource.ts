@@ -8,11 +8,8 @@ import {
   McsPaginator,
   McsSearch
 } from '../../../../../core';
-import {
-  FirewallPolicy,
-  FirewallPolicyAction,
-  FirewallPolicyNat
-} from '../../models';
+import { isNullOrEmpty } from '../../../../../utilities';
+import { FirewallPolicy } from '../../models';
 import { FirewallService } from '../firewall.service';
 
 export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy> {
@@ -38,6 +35,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
     private _search: McsSearch
   ) {
     this._totalRecordCount = 0;
+    this.dataLoadingStream = new Subject<McsDataStatus>();
   }
 
   /**
@@ -46,18 +44,25 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
    */
   public connect(): Observable<FirewallPolicy[]> {
     const displayDataChanges = [
+      this._firewallService.selectedFirewallStream,
       this._paginator.pageChangedStream,
-      this._search.searchChangedStream,
+      this._search.searchChangedStream
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap(() => {
+      .switchMap((firewall) => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
+
         let firewallId = this._firewallService.selectedFirewall.id;
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
+        if (isNullOrEmpty(firewall)) {
+          return Observable.of(undefined);
+        }
+
         return this._firewallService.getFirewallPolicies(
           firewallId,
-          this._paginator.pageIndex,
+          undefined,
           displayedRecords
         ).map((response) => {
           this._totalRecordCount = response.totalCount;
@@ -76,9 +81,9 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
 
   /**
    * This will invoke when the data obtainment is completed
-   * @param tickets Data to be provided when the datasource is connected
+   * @param policies Data to be provided when the datasource is connected
    */
-  public onCompletion(status: McsDataStatus, tickets?: FirewallPolicy[]): void {
+  public onCompletion(status: McsDataStatus, policies?: FirewallPolicy[]): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
   }

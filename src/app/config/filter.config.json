@@ -162,13 +162,13 @@
       "value": true,
       "exclude": true
     },
-    "sourceInterface": {
-      "text": "Source Interface",
+    "sourceInterfaces": {
+      "text": "Source Interfaces",
       "value": true,
       "exclude": true
     },
-    "destinationInterface": {
-      "text": "Destination Interface",
+    "destinationInterfaces": {
+      "text": "Destination Interfaces",
       "value": true,
       "exclude": true
     },
@@ -178,6 +178,10 @@
     },
     "destination": {
       "text": "Destination",
+      "value": true
+    },
+    "label": {
+      "text": "Label",
       "value": true
     },
     "schedule": {

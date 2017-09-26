@@ -41,8 +41,8 @@ export class FirewallComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public get firewallIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_ADD_BLUE;
+  public get cogIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_GEAR;
   }
 
   public get hasFirewallData(): boolean {

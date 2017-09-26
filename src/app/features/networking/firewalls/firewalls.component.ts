@@ -85,7 +85,7 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this._initiliazeDatasource();
+      this._initializeDatasource();
     });
   }
 
@@ -142,13 +142,13 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   public retryDatasource(): void {
     if (isNullOrEmpty(this.dataSource)) { return; }
-    this._initiliazeDatasource();
+    this._initializeDatasource();
   }
 
   /**
    * Initialize the table datasource according to pagination and search settings
    */
-  private _initiliazeDatasource(): void {
+  private _initializeDatasource(): void {
     // Set datasource
     this.dataSource = new FirewallsDataSource(
       this._firewallsService,

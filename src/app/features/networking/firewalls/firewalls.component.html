@@ -91,8 +91,7 @@
           theme="light" padding="narrow" [content]="actionContent">
         </mcs-icon>
         <ng-template #actionContent>
-          <!-- TODO: Update with dynamic value -->
-          <a class="action-item">View in Fortigate Portal</a>
+          <a class="action-item" [href]="row.url" target="_blank">View in Portal</a>
         </ng-template>
       </mcs-data-cell>
     </ng-container>

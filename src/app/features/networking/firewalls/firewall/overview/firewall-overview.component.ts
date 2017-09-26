@@ -16,10 +16,12 @@ import {
 } from '../../models';
 import { FirewallService } from '../firewall.service';
 import {
+  isNullOrEmpty,
   convertToGb,
   reviverParser,
   formatDate,
-  compareDates
+  compareDates,
+  getExpiryLabel
 } from '../../../../../utilities';
 
 @Component({
@@ -70,9 +72,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     let license = this._validateLicense(convertedDate) ?
       this.firewallOverviewTextContent.utmServices.licensed :
       this.firewallOverviewTextContent.utmServices.invalidLicense;
-
-    let expires = this.firewallOverviewTextContent.utmServices.expires;
-
+    let expires = getExpiryLabel(convertedDate);
     let expiryDate = formatDate(convertedDate, 'YYYY-MM-DD');
 
     return `${license} (${expires} ${expiryDate})`;
@@ -98,6 +98,8 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
 
     this.subscription = this._firewallService.selectedFirewallStream
       .subscribe((firewall) => {
+        if (isNullOrEmpty(firewall)) { return; }
+
         this.firewall = firewall;
         this.firewallCpu = `${firewall.cpuCount} ${cpuUnit}`;
         this.firewallMemory = `${convertToGb(firewall.memoryMB)} ${ramUnit}`;

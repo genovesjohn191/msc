@@ -5,27 +5,27 @@
         <h3>{{ firewallOverviewTextContent.properties.title }}</h3>
         <ul class="unstyled-list">
           <li>
-            <span>{{ firewallOverviewTextContent.properties.firewall }} : </span>
+            <span>{{ firewallOverviewTextContent.properties.firewall }}:</span>
             <span>{{ firewall.managementName }}</span>
           </li>
           <li>
-            <span>{{ firewallOverviewTextContent.properties.model }} : </span>
+            <span>{{ firewallOverviewTextContent.properties.model }}:</span>
             <span>{{ firewall.model }}</span>
           </li>
           <li *ngIf="firewall.haRole">
-            <span>{{ firewallOverviewTextContent.properties.role }} : </span>
+            <span>{{ firewallOverviewTextContent.properties.role }}:</span>
             <span>{{ firewall.haRole }}</span>
           </li>
           <li>
-            <span>{{ firewallOverviewTextContent.properties.connectionStatus }} : </span>
+            <span>{{ firewallOverviewTextContent.properties.connectionStatus }}:</span>
             <span>{{ connectionStatus[firewall.connectionStatus] }}</span>
           </li>
           <li>
-            <span>{{ firewallOverviewTextContent.properties.configurationStatus }} : </span>
+            <span>{{ firewallOverviewTextContent.properties.configurationStatus }}:</span>
             <span>{{ configurationStatus[firewall.configurationStatus] }}</span>
           </li>
           <li>
-            <span>{{ firewallOverviewTextContent.properties.deviceStatus }} : </span>
+            <span>{{ firewallOverviewTextContent.properties.deviceStatus }}:</span>
             <span>{{ deviceStatus[firewall.deviceStatus] }}</span>
           </li>
         </ul>
@@ -35,15 +35,15 @@
         <h3>{{ firewallOverviewTextContent.supportIdentifiers.title }}</h3>
         <ul class="unstyled-list">
           <li>
-            <span>{{ firewallOverviewTextContent.supportIdentifiers.service }} : </span>
+            <span>{{ firewallOverviewTextContent.supportIdentifiers.service }}:</span>
             <span>{{ firewall.serviceId }}</span>
           </li>
           <li>
-            <span>{{ firewallOverviewTextContent.supportIdentifiers.serial }} : </span>
+            <span>{{ firewallOverviewTextContent.supportIdentifiers.serial }}:</span>
             <span>{{ firewall.serialNumber }}</span>
           </li>
           <li *ngIf="firewall.haGroupName">
-            <span>{{ firewallOverviewTextContent.supportIdentifiers.haGroupName }} : </span>
+            <span>{{ firewallOverviewTextContent.supportIdentifiers.haGroupName }}:</span>
             <span>{{ firewall.haGroupName }}</span>
           </li>
         </ul>
@@ -55,11 +55,11 @@
         <h3>{{ firewallOverviewTextContent.resources.title }}</h3>
         <ul class="unstyled-list">
           <li>
-            <span>{{ firewallOverviewTextContent.resources.cpu }} : </span>
+            <span>{{ firewallOverviewTextContent.resources.cpu }}:</span>
             <span>{{ firewallCpu }}</span>
           </li>
           <li>
-            <span>{{ firewallOverviewTextContent.resources.ram }} : </span>
+            <span>{{ firewallOverviewTextContent.resources.ram }}:</span>
             <span>{{ firewallMemory }}</span>
           </li>
         </ul>
@@ -70,17 +70,17 @@
           <ul class="unstyled-list">
             <li *ngIf="firewall.utm.avExpiryDate">
               <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.avExpiryDate)"></mcs-icon>
-              <span>{{ firewallOverviewTextContent.utmServices.antivirus }} :</span>
+              <span>{{ firewallOverviewTextContent.utmServices.antivirus }}:</span>
               <span>{{ getLicenseDetails(firewall.utm.avExpiryDate) }}</span>
             </li>
             <li *ngIf="firewall.utm.webExpiryDate">
               <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.webExpiryDate)"></mcs-icon>
-              <span>{{ firewallOverviewTextContent.utmServices.webFiltering }} :</span>
+              <span>{{ firewallOverviewTextContent.utmServices.webFiltering }}:</span>
               <span>{{ getLicenseDetails(firewall.utm.webExpiryDate) }}</span>
             </li>
             <li *ngIf="firewall.utm.emailExpiryDate">
               <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.emailExpiryDate)"></mcs-icon>
-              <span>{{ firewallOverviewTextContent.utmServices.emailFiltering }} :</span>
+              <span>{{ firewallOverviewTextContent.utmServices.emailFiltering }}:</span>
               <span>{{ getLicenseDetails(firewall.utm.emailExpiryDate) }}</span>
             </li>
           </ul>

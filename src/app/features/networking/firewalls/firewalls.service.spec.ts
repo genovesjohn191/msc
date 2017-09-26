@@ -235,7 +235,7 @@ describe('FirewallsService', () => {
                       '10.135.0.17 - NSX Service Node2',
                       '10.135.0.18 - NSX Service Node3'
                     ],
-                    sourceInterface: [
+                    sourceInterfaces: [
                       'Management'
                     ],
                     destinationAddresses: [
@@ -264,7 +264,7 @@ describe('FirewallsService', () => {
                       '192.135.0.17 - NSX Service Node2',
                       '192.135.0.18 - NSX Service Node3'
                     ],
-                    sourceInterface: [
+                    sourceInterfaces: [
                       'Management'
                     ],
                     destinationAddresses: [
