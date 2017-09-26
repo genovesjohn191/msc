@@ -1,7 +1,8 @@
 @import '../../../styles/shared/base';
 
 // State change notifications (Wrapper)
-$state-change-large-notifications-width: 400px;
+$state-change-large-notifications-width: 450px;
+$state-change-medium-notifications-width: 400px;
 $state-change-small-notifications-width: 90%;
 $state-change-notifications-margin: 20px;
 
@@ -10,6 +11,9 @@ $state-change-notifications-margin: 20px;
   left: $state-change-notifications-margin;
   bottom: $state-change-notifications-margin;
   width: $state-change-large-notifications-width;
+  @include breakpoint(medium) {
+    width: $state-change-medium-notifications-width;
+  }
   @include breakpoint(small) {
     width: $state-change-small-notifications-width;
   }
