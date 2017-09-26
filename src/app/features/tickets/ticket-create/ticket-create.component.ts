@@ -292,7 +292,7 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
    * Set the data of servers obtained from API
    */
   private _setServers(response: any): void {
-    if (isNullOrEmpty(response)) { return; }
+    if (isNullOrEmpty(response) || isNullOrEmpty(response.content)) { return; }
     let servers = response.content as Server[];
     let service: TicketService = new TicketService();
 
@@ -312,7 +312,7 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
    * Set the data of firewalls obtained from API
    */
   private _setFirewalls(response: any): void {
-    if (isNullOrEmpty(response)) { return; }
+    if (isNullOrEmpty(response) || isNullOrEmpty(response.content)) { return; }
     let firewalls = response.content as Firewall[];
     let service: TicketService = new TicketService();
 

@@ -15,7 +15,7 @@
     <div class="services">
       <ng-container *ngIf="displayedServices">
         <ul class="unstyled-list">
-          <li *ngFor="let serviceItem of displayedServices">
+          <li *ngFor="let serviceItem of (displayedServices | mcsTicketServicePipe)">
             <mcs-checkbox
               [label]="serviceItem.name"
               [(ngModel)]="serviceItem.isChecked"

@@ -9,6 +9,7 @@ import { ticketsProviders } from './tickets.constants';
 /** Shared Components */
 import {
   TicketServiceComponent,
+  TicketServicePipe,
   TicketActivityComponent,
   TicketAttachmentComponent,
   TicketNewCommentComponent
@@ -21,6 +22,7 @@ import { TicketCreateComponent } from './ticket-create';
     TicketsComponent,
     TicketComponent,
     TicketServiceComponent,
+    TicketServicePipe,
     TicketActivityComponent,
     TicketAttachmentComponent,
     TicketNewCommentComponent,
