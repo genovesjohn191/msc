@@ -40,8 +40,8 @@ import { TicketCreateService } from './ticket-create.service';
 import { Server } from '../../servers';
 import { Firewall } from '../../networking';
 
-const HEADLINE_MAX_CHAR = 4000;
-const DETAILS_MAX_CHAR = 80;
+const HEADLINE_MAX_CHAR = 80;
+const DETAILS_MAX_CHAR = 4000;
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -253,12 +253,12 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.fcHeadline = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.maxLength(DETAILS_MAX_CHAR)
+      CoreValidators.maxLength(HEADLINE_MAX_CHAR)
     ]);
 
     this.fcDetails = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.maxLength(HEADLINE_MAX_CHAR)
+      CoreValidators.maxLength(DETAILS_MAX_CHAR)
     ]);
 
     this.fcService = new FormControl('', [
