@@ -43,7 +43,7 @@
         "serverName": "Starting from an existing server's configuration helps you get a new server up and running quicker.",
         "network": "DHCP mode: You'll get a lease with an IP address on boot. Static Pool mode: this will give you the next available IP in the static pool.",
         "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
-        "provisioningNotifications":"We're currently deploying your stack. Your servers will soon be provisioned and ready.<br/><br/>You can watch the state of provisioning as each step evolves."
+        "provisioningNotifications": "We're currently deploying your stack. Your servers will soon be provisioned and ready.<br/><br/>You can watch the state of provisioning as each step evolves."
       },
       "vdcDropdownList": {
         "name": "Virtual Data Centres",
@@ -111,7 +111,7 @@
           }
         }
       },
-      "storage":{
+      "storage": {
         "label": "Storage",
         "title": "Manage Disks",
         "primary": "Primary",
@@ -159,10 +159,32 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tickets.",
     "noRecordsFoundMessage": "No tickets to display.",
     "retry": "Try again shortly",
+    "createTicket": {
+      "header": "We all need help from time to time.",
+      "description": "Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView",
+      "type": "Ticket Type",
+      "headline": "Headline (max {{max_char}} characters)",
+      "details": "Details (max {{max_char}} characters)",
+      "services": "Services",
+      "attachments": "Attachments",
+      "cancel": "Cancel",
+      "newTicket": "Log Ticket",
+      "contextualHelp": {
+        "type": "Select the ticket type",
+        "headline": "A short title that describes this ticket.",
+        "details": "Please provide as much information as you can and describe any attempts made to remedy the problem",
+        "services": "Choose the service type this ticket relates to.",
+        "attachments": "Optionally attach screenshots or other files to this support ticket by dragging and dropping into this area from your computer (limit 1 file)."
+      }
+    },
     "shared": {
       "ticketNewComment": {
         "selectFile": "File attachments (select or drag & drop)",
         "dragDropZone": "Choose File"
+      },
+      "ticketAttachment": {
+        "chooseFile": "Choose File",
+        "dragDropZone": "File attachments (select or drag & drop)"
       }
     }
   },
@@ -235,24 +257,24 @@
     "portalTableCaption": "Partner portals you can access.",
     "otherServicesTableCaption": "Other services we offer.",
     "table": {
-      "header":{
+      "header": {
         "name": "Portal",
         "description": "Description",
         "access": "Access",
         "order": "Get it now"
       },
-      "descriptions" : {
-        "vCloud" : {
-          "name" : "Vcloud Director",
-          "description" : "Manage your virtual machines and Virtual Data Centers."
+      "descriptions": {
+        "vCloud": {
+          "name": "Vcloud Director",
+          "description": "Manage your virtual machines and Virtual Data Centers."
         },
-        "vSphere" : {
-          "name" : "vSphere",
-          "description" : "Manage every detail of your virtual data centres."
+        "vSphere": {
+          "name": "vSphere",
+          "description": "Manage every detail of your virtual data centres."
         },
-        "firewall" : {
-          "name" : "FortiManager",
-          "description" : "Manage your network firewall."
+        "firewall": {
+          "name": "FortiManager",
+          "description": "Manage your network firewall."
         }
       },
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of other tools.",

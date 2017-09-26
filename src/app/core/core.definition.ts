@@ -121,6 +121,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_INFORMATION_2 = 'info-2';
   public static ASSETS_FONT_COMMENT = 'comment';
   public static ASSETS_FONT_ATTACHMENT = 'attachment';
+  public static ASSETS_FONT_NAVBAR = 'navbar';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serversListingFilter';

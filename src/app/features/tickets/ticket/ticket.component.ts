@@ -25,7 +25,8 @@ import {
   TicketCommentCategory,
   TicketCommentType,
   TicketCreateComment,
-  TicketCreateAttachment
+  TicketCreateAttachment,
+  TicketFileInfo
 } from '../models';
 import { TicketsService } from '../tickets.service';
 
@@ -168,30 +169,26 @@ export class TicketComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _createAttachment(attachedFile: any) {
+  private _createAttachment(attachedFile: TicketFileInfo) {
     if (isNullOrEmpty(attachedFile)) { return; }
 
     // Create attachment
-    let fileReader = new FileReader();
     let newAttachment = new TicketCreateAttachment();
 
-    fileReader.readAsBinaryString(attachedFile._file);
-    fileReader.onload = () => {
-      newAttachment.fileName = attachedFile.file.name;
-      newAttachment.contents = btoa(fileReader.result);
+    newAttachment.fileName = attachedFile.fileName;
+    newAttachment.contents = attachedFile.base64Contents;
 
-      this.createAttachmentSubscription = this._ticketsService
-        .createAttachment(this.ticket.id, newAttachment)
-        .subscribe((response) => {
-          // Add the new attachment in the activity list and the attachments
-          if (!isNullOrEmpty(response)) {
-            let activity = new TicketActivity();
-            activity.setBasedOnAttachment(response.content);
-            this.activities.push(activity);
-            this.ticket.attachments.push(response.content);
-          }
-        });
-    };
+    this.createAttachmentSubscription = this._ticketsService
+      .createAttachment(this.ticket.id, newAttachment)
+      .subscribe((response) => {
+        // Add the new attachment in the activity list and the attachments
+        if (!isNullOrEmpty(response)) {
+          let activity = new TicketActivity();
+          activity.setBasedOnAttachment(response.content);
+          this.activities.push(activity);
+          this.ticket.attachments.push(response.content);
+        }
+      });
   }
 
   /**

@@ -1,0 +1,32 @@
+<div class="ticket-attachment-wrapper">
+
+  <!-- File Selection Zone Area -->
+  <div class="ticket-attachment-filezone-wrapper">
+
+    <!-- Drop zone -->
+    <div class="dropzone" ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
+      (fileOver)="onFileOver($event)"
+      [uploader]="fileUploader">
+
+      <mcs-icon [key]="attachmentIconKey"></mcs-icon>
+      <span>{{ textContent.dragDropZone }}</span>
+    </div>
+
+    <!-- Selection zone -->
+    <mcs-button size="small" (onClick)="chooFileElement.click()">
+      <input #chooFileElement type="file"
+        ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
+      {{ textContent.chooseFile }}
+    </mcs-button>
+  </div>
+
+  <!-- Attached files -->
+  <div class="ticket-attached-files-wrapper" *ngIf="attachedFiles">
+    <div *ngFor="let attachedItem of attachedFiles" class="ticket-attached-item">
+      <!-- TODO: Add icon here -->
+      <mcs-icon [key]="closeIconKey" class="close-icon"
+        (click)="removeAttachment(attachedItem)"></mcs-icon>
+      <span>{{ attachedItem?.file.name }}</span>
+    </div>
+  </div>
+</div>

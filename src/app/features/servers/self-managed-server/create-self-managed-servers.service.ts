@@ -4,9 +4,7 @@ import {
   Server,
   ServerCreate
 } from '../models';
-import {
-  ContextualHelpDirective
-} from '../shared/contextual-help/contextual-help.directive';
+import { ContextualHelpDirective } from '../../../shared';
 
 @Injectable()
 export class CreateSelfManagedServersService {

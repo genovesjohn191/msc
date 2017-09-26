@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed,
   getTestBed
 } from '@angular/core/testing';
@@ -11,11 +10,11 @@ import {
 } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ContextualHelpDirective } from './contextual-help.directive';
-import { ServersTestingModule } from '../../testing';
 import {
   McsBrowserService,
   McsDeviceType
-} from '../../../../core';
+} from '../../core';
+import { CoreTestingModule } from '../../core/testing';
 
 @Component({
   selector: 'mcs-test',
@@ -44,7 +43,7 @@ describe('ContextualHelpDirective', () => {
         ContextualHelpDirective
       ],
       imports: [
-        ServersTestingModule
+        CoreTestingModule
       ]
     });
 

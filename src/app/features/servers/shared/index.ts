@@ -1,6 +1,3 @@
-/** Context Information */
-export * from './contextual-help/contextual-help.component';
-export * from './contextual-help/contextual-help.directive';
 /** Server Actions Component */
 export * from './server-command/server-command.component';
 /** Server Performance Scale Component */

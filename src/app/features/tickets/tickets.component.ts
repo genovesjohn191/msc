@@ -12,6 +12,7 @@ import {
   McsTextContentProvider,
   CoreDefinition
 } from '../../core';
+import { Router } from '@angular/router';
 import {
   formatDate,
   isNullOrEmpty,
@@ -56,7 +57,8 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _ticketsService: TicketsService
+    private _ticketsService: TicketsService,
+    private _router: Router
   ) {
     this.dataColumns = new Array();
   }
@@ -79,6 +81,13 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dataColumns = [];
       this.dataColumns = null;
     }
+  }
+
+  /**
+   * This will navigate to ticket creation page
+   */
+  public onClickNewTicket(): void {
+    this._router.navigate(['./tickets/create']);
   }
 
   /**

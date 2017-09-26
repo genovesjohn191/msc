@@ -16,6 +16,7 @@ import { TableModule } from './table/table.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
 import { PageHeaderModule } from './page-header/page-header.module';
 import { LoaderModule } from './loader/loader.module';
+import { ContextualHelpModule } from './contextual-help';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -63,7 +64,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     TableModule,
     ListPanelModule,
     PageHeaderModule,
-    LoaderModule
+    LoaderModule,
+    ContextualHelpModule
   ],
   exports: [
     ButtonComponent,
@@ -92,7 +94,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     TableModule,
     ListPanelModule,
     PageHeaderModule,
-    LoaderModule
+    LoaderModule,
+    ContextualHelpModule
   ]
 })
 

@@ -21,15 +21,28 @@ import {
   TicketCreateAttachment,
   TicketCommentCategory,
   TicketAttachment,
+  TicketCreate,
   TicketCreateComment,
   TicketCommentType,
   TicketComment,
 } from './models';
+import {
+  Server,
+  ServersService
+} from '../servers';
+import {
+  Firewall,
+  FirewallsService
+} from '../networking';
 
 @Injectable()
 export class TicketsService {
 
-  constructor(private _mcsApiService: McsApiService) { }
+  constructor(
+    private _mcsApiService: McsApiService,
+    private _serversService: ServersService,
+    private _firewallsService: FirewallsService
+  ) { }
 
   /**
    * Get all the tickets from the API
@@ -65,6 +78,32 @@ export class TicketsService {
   }
 
   /**
+   * Get all the servers from the API
+   * @param page Page index of the page to obtained
+   * @param perPage Size of item per page
+   * @param searchKeyword Keyword to be search during filtering
+   */
+  public getServers(
+    page?: number,
+    perPage?: number,
+    searchKeyword?: string): Observable<McsApiSuccessResponse<Server[]>> {
+    return this._serversService.getServers(page, perPage, searchKeyword);
+  }
+
+  /**
+   * Get all the firewalls from the API
+   * @param page Page index of the page to obtained
+   * @param perPage Size of item per page
+   * @param searchKeyword Keyword to be search during filtering
+   */
+  public getFirewalls(
+    page?: number,
+    perPage?: number,
+    searchKeyword?: string): Observable<McsApiSuccessResponse<Firewall[]>> {
+    return this._firewallsService.getFirewalls(page, perPage, searchKeyword);
+  }
+
+  /**
    * Get the ticket from the API
    * @param id ID of the ticket to obtain
    */
@@ -79,6 +118,28 @@ export class TicketsService {
           reviverParser) as McsApiSuccessResponse<Ticket[]>;
 
         return notificationsJobResponse;
+      })
+      .catch(this._handleApiResponseError);
+  }
+
+  /**
+   * This will create the new ticket based on the inputted information
+   * @param ticketData Ticket data to be created
+   */
+  public createTicket(ticketData: TicketCreate):
+    Observable<McsApiSuccessResponse<TicketCreate>> {
+
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/tickets`;
+    mcsApiRequestParameter.recordData = JSON.stringify(ticketData, this._requestReviverParser);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let ticketResponse: McsApiSuccessResponse<TicketCreate>;
+        ticketResponse = JSON.parse(response.text(),
+          this._responseReviverParser) as McsApiSuccessResponse<TicketCreate>;
+
+        return ticketResponse;
       })
       .catch(this._handleApiResponseError);
   }
@@ -186,6 +247,10 @@ export class TicketsService {
 
       case 'type':
         value = getEnumString(TicketCommentType, value);
+        break;
+
+      case 'subType':
+        value = getEnumString(TicketSubType, value);
         break;
       default:
         break;

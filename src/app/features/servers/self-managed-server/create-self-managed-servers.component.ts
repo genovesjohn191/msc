@@ -28,6 +28,7 @@ import {
   updateArrayRecord,
   refreshView
 } from '../../../utilities';
+import { ContextualHelpDirective } from '../../../shared';
 import {
   Server,
   ServerPlatform,
@@ -38,7 +39,6 @@ import {
   ServerCreateNetwork,
   ServerServiceType
 } from '../models';
-import { ContextualHelpDirective } from '../shared/contextual-help/contextual-help.directive';
 import { CreateSelfManagedServersService } from './create-self-managed-servers.service';
 import {
   CreateSelfManagedServerComponent

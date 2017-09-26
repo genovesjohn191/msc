@@ -1,6 +1,6 @@
-import { FileItem } from 'ng2-file-upload';
+import { TicketFileInfo } from './ticket-file-info';
 
 export class TicketNewComment {
   public comment: string;
-  public attachedFile: FileItem;
+  public attachedFile: TicketFileInfo;
 }

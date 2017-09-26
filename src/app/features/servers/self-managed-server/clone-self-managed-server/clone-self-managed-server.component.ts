@@ -27,8 +27,8 @@ import {
   mergeArrays,
   isNullOrEmpty
 } from '../../../../utilities';
+import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
-import { ContextualHelpDirective } from '../../shared/contextual-help/contextual-help.directive';
 
 @Component({
   selector: 'mcs-clone-self-managed-server',

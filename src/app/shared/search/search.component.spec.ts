@@ -53,7 +53,7 @@ describe('SearchComponent', () => {
     beforeEach(fakeAsync(() => {
       spyOn(component.searchChangedStream, 'next');
       component.onChangeKeyEvent('A');
-      tick(component.delayInSeconds);
+      tick(component.delayInSeconds as number);
     }));
 
     it(`should notify the searchChangedStream subscribers when key is pressed.`, () => {
@@ -69,7 +69,7 @@ describe('SearchComponent', () => {
     beforeEach(fakeAsync(() => {
       spyOn(component.searchChangedStream, 'next');
       component.onEnterKeyUpEvent('B');
-      tick(component.delayInSeconds);
+      tick(component.delayInSeconds as number);
     }));
 
     it(`should notify the searchChangedStream subscribers when key is pressed.`, () => {

@@ -20,28 +20,8 @@ $ticket-new-comment-file-hover-color: $color-grey-04;
   }
 
   .ticket-action-wrapper {
-    @include display-flex(row);
-    justify-content: space-between;
-    align-items: center;
-
-    .uploader-wrapper {
-      @include display-flex(row);
-      align-items: center;
-      @include set-items-interval($space-medium, horizontal);
-
-      .dropzone {
-        border: 2px dotted transparent;
-        @include set-items-interval($space-xsmall, horizontal);
-
-        &.file-hover {
-          border: 2px dotted $ticket-new-comment-file-hover-color;
-        }
-      }
-
-      input[type="file"] {
-        display: none;
-      }
-    }
+    @include display-flex(column);
+    @include set-items-interval($space-medium);
 
     .ticket-create-wrapper {
       @include display-flex(row);
