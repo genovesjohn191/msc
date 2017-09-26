@@ -66,8 +66,9 @@ export class FirewallService {
   public getFirewallPolicies(
     id: any,
     page?: number,
-    perPage?: number): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
-    return this._firewallsService.getFirewallPolicies(id);
+    perPage?: number,
+    searchKeyword?: string): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
+    return this._firewallsService.getFirewallPolicies(id, page, perPage, searchKeyword);
   }
 
 }
