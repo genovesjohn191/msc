@@ -42,8 +42,8 @@ export class CreateSelfManagedServersService {
   /**
    * This will get the server templates data from the API
    */
-  public getServerTemplates() {
-    return this._serversService.getServerTemplates();
+  public getServersOs() {
+    return this._serversService.getServerOs();
   }
 
   /**

@@ -38,7 +38,7 @@
         <mcs-new-self-managed-server
           [visible]="serverCreateType === serverCreateTypeEnum.New"
           [resource]="resource"
-          [template]="template"
+          [serversOs]="serversOs"
           (onOutputServerDetails)="setServerDetails($event)">
         </mcs-new-self-managed-server>
 
@@ -47,7 +47,7 @@
           [visible]="serverCreateType === serverCreateTypeEnum.Copy"
           [servers]="servers"
           [resource]="resource"
-          [template]="template"
+          [serversOs]="serversOs"
           (onOutputServerDetails)="setServerDetails($event)">
         </mcs-copy-self-managed-server>
 
