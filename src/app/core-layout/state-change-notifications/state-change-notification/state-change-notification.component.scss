@@ -74,6 +74,7 @@ $state-change-notification-icon-width: $state-change-notification-icon-font-size
     color: $color-grey-02;
     font-family: $base-font;
     margin: 0 $space-large;
+    width: 90px;
     @include font-size($state-change-notification-message-font-size);
   }
 }
