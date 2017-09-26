@@ -86,3 +86,31 @@ export function updateArrayRecord<T>(
 
   return sourceArray;
 }
+
+/**
+ * Delete the specific record in the array list based on predicate
+ * @param sourceArray Source of the array list
+ * @param itemCount Item count to be deleted in the source array list
+ * @param predicate Rules of matching the element
+ */
+export function deleteArrayRecord<T>(
+  sourceArray: T[],
+  predicate: (_predicate: T) => boolean,
+  itemCount: number = 1): T[] {
+
+  // Initialize for undefined and null record
+  if (!sourceArray) { sourceArray = new Array(); }
+  let indexes: number[] = new Array();
+
+  for (let index = 0; index < sourceArray.length; index++) {
+    if (predicate(sourceArray[index])) {
+      indexes.push(index);
+      if (indexes.length >= itemCount) { break; }
+    }
+  }
+  indexes.forEach((index) => {
+    sourceArray.splice(index, 1);
+  });
+
+  return sourceArray;
+}

@@ -1,6 +1,7 @@
 import {
   mergeArrays,
-  updateArrayRecord
+  updateArrayRecord,
+  deleteArrayRecord
 } from './mcs-array.function';
 
 // Dummy class
@@ -51,13 +52,13 @@ describe('ARRAY Functions', () => {
   describe('updateArrayRecord()', () => {
     it(`should append the array record when the predicate is undefined
     and appendIfNotExist is true`, () => {
-      let arrayRecord: TestStructure[] = new Array();
-      let updatedElement: TestStructure = new TestStructure('1', '2');
+        let arrayRecord: TestStructure[] = new Array();
+        let updatedElement: TestStructure = new TestStructure('1', '2');
 
-      arrayRecord.push(new TestStructure('1', 'hello1'));
-      let mergedArray = updateArrayRecord(arrayRecord, updatedElement, true);
-      expect(mergedArray.length).toEqual(2);
-    });
+        arrayRecord.push(new TestStructure('1', 'hello1'));
+        let mergedArray = updateArrayRecord(arrayRecord, updatedElement, true);
+        expect(mergedArray.length).toEqual(2);
+      });
 
     it(`should append the array record when the appendIfNotExist flag is true`, () => {
       let arrayRecord: TestStructure[] = new Array();
@@ -91,6 +92,34 @@ describe('ARRAY Functions', () => {
         }
       );
       expect(mergedArray.length).toEqual(1);
+    });
+  });
+
+  describe('deleteArrayRecord()', () => {
+    it(`should delete the record from the array list based on predicate`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello1'));
+      listItems.push(new TestStructure('3', 'hello2'));
+
+      deleteArrayRecord(listItems, (record) => {
+        return record.value === 'hello1';
+      });
+      expect(listItems.length).toEqual(2);
+    });
+
+    it(`should delete the record from the array list based on predicate and item count`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello1'));
+      listItems.push(new TestStructure('3', 'hello2'));
+
+      deleteArrayRecord(listItems, (record) => {
+        return record.value === 'hello1';
+      }, 2);
+      expect(listItems.length).toEqual(1);
     });
   });
 });

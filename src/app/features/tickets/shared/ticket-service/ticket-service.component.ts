@@ -10,7 +10,8 @@ import {
 import { Observable } from 'rxjs/Rx';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  deleteArrayRecord
 } from '../../../../utilities';
 import {
   CoreDefinition,
@@ -133,8 +134,9 @@ export class TicketServiceComponent implements AfterViewInit, OnDestroy {
     // Remove from selection if item is unchecked and add
     // the item if is checked
     if (serviceItem.isChecked === false) {
-      let index = this.selectedServiceItems.indexOf(serviceItem.serviceId);
-      this.selectedServiceItems.splice(index, 1);
+      deleteArrayRecord(this.selectedServiceItems, (service) => {
+        return service.serviceId === serviceItem.serviceId;
+      });
     } else {
       this.selectedServiceItems.push(serviceItem);
     }
