@@ -1,10 +1,13 @@
+<mcs-page-header class="page-header-wrapper">
+  <mcs-page-title *mcsPageTitleDef>
+    {{ textContent.header }}
+  </mcs-page-title>
+</mcs-page-header>
+
 <div class="ticket-create-wrapper">
   <!-- Create ticket details -->
   <div class="ticket-create-information">
-    <div class="ticket-create-header">
-      <h3>{{ textContent.header }}</h3>
-      <p [innerHTML]="textContent.description"></p>
-    </div>
+    <p [innerHTML]="textContent.description"></p>
 
     <form [formGroup]="fgCreateTicket" class="create-ticket-form">
 
