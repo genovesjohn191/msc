@@ -300,7 +300,7 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     servers.forEach((server) => {
       let serviceData = new TicketServiceData();
 
-      serviceData.name = `${server.managementName}(${server.serviceId})`;
+      serviceData.name = `${server.managementName} (${server.serviceId})`;
       serviceData.isChecked = false;
       serviceData.serviceId = server.serviceId;
       service.serviceItems.push(serviceData);
@@ -320,7 +320,7 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     firewalls.forEach((firewall) => {
       let serviceData = new TicketServiceData();
 
-      serviceData.name = `${firewall.managementName}(${firewall.serviceId})`;
+      serviceData.name = `${firewall.managementName} (${firewall.serviceId})`;
       serviceData.isChecked = false;
       serviceData.serviceId = firewall.serviceId;
       service.serviceItems.push(serviceData);
