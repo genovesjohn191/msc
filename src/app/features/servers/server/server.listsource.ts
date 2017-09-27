@@ -15,7 +15,10 @@ import {
   ServerClientObject
 } from '../models';
 import { ServersService } from '../servers.service';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  compareStrings
+} from '../../../utilities';
 
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
@@ -96,6 +99,10 @@ export class ServerListSource implements McsDataSource<ServerList> {
 
   private _mapServerList(servers: Server[]): ServerList[] {
     if (isNullOrEmpty(servers)) { return; }
+
+    servers.sort((first: Server, second: Server) => {
+      return compareStrings(first.managementName, second.managementName);
+    });
 
     let serverList = new Array<ServerList>();
     servers.forEach((server) => {

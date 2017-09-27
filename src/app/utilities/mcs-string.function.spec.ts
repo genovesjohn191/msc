@@ -3,7 +3,8 @@ import {
   getEncodedUrl,
   replacePlaceholder,
   getEnumString,
-  getRecordCountLabel
+  getRecordCountLabel,
+  compareStrings
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -59,6 +60,23 @@ describe('STRING Functions', () => {
     it(`return plural if count is greater than 1`, () => {
       let recordCountLabel = getRecordCountLabel(5, 'Singular', 'Plural');
       expect(recordCountLabel).toBe('5 Plural');
+    });
+  });
+
+  describe('compareStrings()', () => {
+    it(`return -1 if firstString < secondString`, () => {
+      let result = compareStrings('Alpha', 'Beta');
+      expect(result).toBe(-1);
+    });
+
+    it(`return 0 if firstString and secondString are the same`, () => {
+      let result = compareStrings('Alpha', 'Alpha');
+      expect(result).toBe(0);
+    });
+
+    it(`return 1 if firstString > secondString`, () => {
+      let result = compareStrings('Beta', 'Alpha');
+      expect(result).toBe(1);
     });
   });
 });
