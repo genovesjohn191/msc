@@ -72,3 +72,24 @@ export function getRecordCountLabel(count: number, singularSuffix: string, plura
 
   return recordCountLabel;
 }
+
+/**
+ * This will compare two strings and will return the ffg:
+ *
+ * -1 = firstString < secondString
+ * 0 = firstString > secondString
+ * 1 = firstString === secondString
+ *
+ * @param firstString First string to compare
+ * @param secondString Second string to compare
+ */
+export function compareStrings(firstString: string, secondString: string): number {
+  let a = firstString.toLowerCase();
+  let b = secondString.toLowerCase();
+
+  if (a === b) {
+    return 0;
+  } else {
+    return (a < b) ? -1 : 1 ;
+  }
+}

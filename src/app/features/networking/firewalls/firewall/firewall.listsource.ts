@@ -17,7 +17,8 @@ import { FirewallsService } from '../firewalls.service';
 import { FirewallService } from './firewall.service';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  compareStrings
 } from '../../../../utilities';
 
 const SERVER_LIST_GROUP_OTHERS = 'Others';
@@ -103,6 +104,10 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
 
   private _mapFirewallList(firewalls: Firewall[]): FirewallList[] {
     if (isNullOrEmpty(firewalls)) { return; }
+
+    firewalls.sort((first: Firewall, second: Firewall) => {
+      return compareStrings(first.managementName, second.managementName);
+    });
 
     let firewallList = new Array<FirewallList>();
     firewalls.forEach((firewall) => {
