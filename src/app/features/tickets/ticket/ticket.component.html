@@ -4,11 +4,12 @@
     <mcs-page-title *mcsPageTitleDef>
       {{ textContent.header }}{{ ticket.crispTicketNumber }}
     </mcs-page-title>
-    <mcs-page-subtitle *mcsPageSubTitleDef class="hidden-small">
+    <mcs-page-subtitle *mcsPageSubTitleDef class="hidden-small" [hidden]="!ticketResolved">
+      <mcs-icon [key]="checkIconKey" size="large"></mcs-icon>
       <span>{{ getStateString(ticket.state) }} ({{ convertDateToString(ticket.createdOn) }})</span>
     </mcs-page-subtitle>
   </mcs-page-header>
-  <span class="status">{{ getStateString(ticket.state) }}
+  <span class="status" [hidden]="!ticketResolved">{{ getStateString(ticket.state) }}
     ({{ convertDateToString(ticket.createdOn) }})</span>
 </div>
 

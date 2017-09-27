@@ -8,7 +8,10 @@ import {
   ParamMap
 } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
-import { McsTextContentProvider } from '../../../core';
+import {
+  CoreDefinition,
+  McsTextContentProvider
+} from '../../../core';
 import {
   isNullOrEmpty,
   getEnumString,
@@ -80,6 +83,14 @@ export class TicketComponent implements OnInit, OnDestroy {
   private _showCommentBox: boolean;
   public get showCommentBox(): boolean {
     return this._showCommentBox;
+  }
+
+  public get ticketResolved(): boolean {
+    return isNullOrEmpty(this.ticket) ? false : this.ticket.state === TicketStatus.Resolved;
+  }
+
+  public get checkIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
   public constructor(
