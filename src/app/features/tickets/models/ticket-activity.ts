@@ -9,7 +9,7 @@ export class TicketActivity {
   public type: TicketActivityType;
 
   public setBasedOnComment(comment: TicketComment): void {
-    this.header = comment.name;
+    this.header = comment.createdBy;
     this.content = comment.value;
     this.date = comment.createdOn;
     this.type = TicketActivityType.Comment;

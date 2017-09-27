@@ -5,7 +5,8 @@ import {
 import {
   Http,
   Headers,
-  Response
+  Response,
+  ResponseContentType
 } from '@angular/http';
 import {
   Observable,
@@ -54,7 +55,8 @@ export class McsApiService {
       this.getFullUrl(apiRequest.endPoint),
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
-        search: apiRequest.searchParameters
+        search: apiRequest.searchParameters,
+        responseType: apiRequest.responseType
       })
       .catch((error) => this.handleError(error));
   }
@@ -70,7 +72,8 @@ export class McsApiService {
       apiRequest.recordData,
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
-        search: apiRequest.searchParameters
+        search: apiRequest.searchParameters,
+        responseType: apiRequest.responseType
       })
       .catch((error) => this.handleError(error));
   }
@@ -87,7 +90,8 @@ export class McsApiService {
       apiRequest.recordData,
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
-        search: apiRequest.searchParameters
+        search: apiRequest.searchParameters,
+        responseType: apiRequest.responseType
       })
       .catch((error) => this.handleError(error));
   }
@@ -102,7 +106,8 @@ export class McsApiService {
       this.getFullUrl(apiRequest.endPoint),
       apiRequest.recordData,
       {
-        headers: this._getHeaders(apiRequest.optionalHeaders)
+        headers: this._getHeaders(apiRequest.optionalHeaders),
+        responseType: apiRequest.responseType
       })
       .catch((error) => this.handleError(error));
   }
@@ -116,7 +121,8 @@ export class McsApiService {
     return this._http.delete(
       this.getFullUrl(apiRequest.endPoint),
       {
-        headers: this._getHeaders(apiRequest.optionalHeaders)
+        headers: this._getHeaders(apiRequest.optionalHeaders),
+        responseType: apiRequest.responseType
       })
       .catch((error) => this.handleError(error));
   }

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
+import {
+  URLSearchParams,
+  ResponseContentType
+} from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 /** Services and Models */
 import {
@@ -159,7 +162,7 @@ export class TicketsService {
       .map((response) => {
         let commentResponse: McsApiSuccessResponse<TicketComment>;
         commentResponse = JSON.parse(response.text(),
-          reviverParser) as McsApiSuccessResponse<TicketComment>;
+          this._responseReviverParser) as McsApiSuccessResponse<TicketComment>;
 
         return commentResponse;
       })
@@ -181,9 +184,26 @@ export class TicketsService {
       .map((response) => {
         let attachmentResponse: McsApiSuccessResponse<TicketAttachment>;
         attachmentResponse = JSON.parse(response.text(),
-          reviverParser) as McsApiSuccessResponse<TicketAttachment>;
+          this._responseReviverParser) as McsApiSuccessResponse<TicketAttachment>;
 
         return attachmentResponse;
+      })
+      .catch(this._handleApiResponseError);
+  }
+
+  /**
+   * Get the File attachment from API as Blob
+   * @param ticketId ID of the ticket
+   * @param attachmentId Attachment ID of the file
+   */
+  public getFileAttachment(ticketId: any, attachmentId: any): Observable<Blob> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments/${attachmentId}/file`;
+    mcsApiRequestParameter.responseType = ResponseContentType.Blob;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        return response.blob();
       })
       .catch(this._handleApiResponseError);
   }
@@ -224,6 +244,10 @@ export class TicketsService {
 
       case 'priority':
         value = TicketPriority[value];
+        break;
+
+      case 'category':
+        value = TicketCommentCategory[value];
         break;
 
       default:
