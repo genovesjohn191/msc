@@ -37,6 +37,10 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   public firewallCpu: string;
   public firewallMemory: string;
 
+  public deviceStatusIconKey: string;
+  public connectionStatusIconKey: string;
+  public configurationStatusIconKey: string;
+
   public get deviceStatus()  {
     return FirewallDeviceStatus;
   }
@@ -56,6 +60,9 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     this.firewall = new Firewall();
     this.firewallCpu = '';
     this.firewallMemory = '';
+    this.deviceStatusIconKey = '';
+    this.connectionStatusIconKey = '';
+    this.configurationStatusIconKey = '';
   }
 
   public ngOnInit(): void {
@@ -93,8 +100,8 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   private _initializeFirewallData(): void {
-    let cpuUnit = this.firewallOverviewTextContent.resources.cpuUnit;
-    let ramUnit = this.firewallOverviewTextContent.resources.ramUnit;
+    let cpuUnit = this.firewallOverviewTextContent.properties.cpuUnit;
+    let ramUnit = this.firewallOverviewTextContent.properties.ramUnit;
 
     this.subscription = this._firewallService.selectedFirewallStream
       .subscribe((firewall) => {
@@ -103,10 +110,47 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
         this.firewall = firewall;
         this.firewallCpu = `${firewall.cpuCount} ${cpuUnit}`;
         this.firewallMemory = `${convertToGb(firewall.memoryMB)} ${ramUnit}`;
+
+        this._setDeviceStatusIconKey();
+        this._setConnectionStatusIconKey();
+        this._setConfigurationStatusIconKey();
       });
   }
 
   private _validateLicense(expiry: Date): boolean {
     return compareDates(expiry, new Date()) >= 0;
+  }
+
+  private _setDeviceStatusIconKey(): void {
+    let iconKey = '';
+
+    switch (this.firewall.deviceStatus) {
+      case FirewallDeviceStatus.InProgress:
+      case FirewallDeviceStatus.Installed:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+
+      default:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+    }
+
+    this.deviceStatusIconKey = iconKey;
+  }
+
+  private _setConnectionStatusIconKey(): void {
+    let upConnectionStatus = this.firewall.connectionStatus === FirewallConnectionStatus.Up;
+
+    this.connectionStatusIconKey =  (upConnectionStatus) ?
+      CoreDefinition.ASSETS_SVG_STATE_RUNNING :
+      CoreDefinition.ASSETS_SVG_STATE_STOPPED ;
+  }
+
+  private _setConfigurationStatusIconKey(): void {
+    let inSync = this.firewall.configurationStatus === FirewallConfigurationStatus.InSync;
+
+    this.configurationStatusIconKey = (inSync) ?
+      CoreDefinition.ASSETS_SVG_STATE_RUNNING :
+      CoreDefinition.ASSETS_SVG_STATE_STOPPED ;
   }
 }

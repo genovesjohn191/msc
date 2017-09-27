@@ -215,25 +215,22 @@
         "label": "Overview",
         "properties": {
           "title": "Firewall Properties",
-          "firewall": "Firewall",
           "model": "Model",
-          "role": "Role",
-          "connectionStatus": "Connection Status",
-          "configurationStatus": "Config Status",
-          "deviceStatus": "Device Status"
-        },
-        "supportIdentifiers": {
-          "title": "Support Identifiers",
-          "service": "Service",
-          "serial": "Serial",
-          "haGroupName": "HA Group Name"
-        },
-        "resources": {
-          "title": "Resources",
           "cpu": "CPU",
           "ram": "RAM",
           "cpuUnit": "CPU",
           "ramUnit": "GB"
+        },
+        "supportIdentifiers": {
+          "title": "Support Identifiers",
+          "service": "Service",
+          "serial": "Serial"
+        },
+        "status": {
+          "title": "Status",
+          "deviceStatus": "Device Status",
+          "connectionStatus": "Connection Status",
+          "configurationStatus": "Config Status"
         },
         "utmServices": {
           "title": "UTM Services",
@@ -243,6 +240,11 @@
           "licensed": "Licensed",
           "invalidLicense": "Invalid License",
           "expires": "Expires"
+        },
+        "topology": {
+          "title": "Topology",
+          "role": "Role",
+          "haGroupName": "HA Group Name"
         }
       },
       "policies": {

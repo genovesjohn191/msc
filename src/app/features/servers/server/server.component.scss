@@ -9,7 +9,7 @@ $server-list-panel-spacing: $space-medium;
 
   .server-list-panel-wrapper {
     position: relative;
-    @include flex(0 0 30%);
+    @include flex(0 0 20%);
 
     .server-list-panel {
       @include set-items-interval($server-list-panel-spacing, vertical);
@@ -19,7 +19,7 @@ $server-list-panel-spacing: $space-medium;
 
   .server-features-wrapper {
     position: relative;
-    @include flex(0 0 70%);
+    @include flex(0 0 80%);
     padding-left: $space-xlarge;
 
     .server-features {

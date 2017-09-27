@@ -7,10 +7,11 @@ $firewall-details-row-spacing: 50px;
     @include set-items-interval($firewall-details-row-spacing, vertical);
 
     ul {
-      @include set-items-interval($space-xsmall, vertical);
+      @include set-items-interval($space-small, vertical);
     }
 
-    .utm-services {
+    .utm-services,
+    .status {
       ul {
         li {
           @include display-flex(row);
