@@ -118,7 +118,7 @@ export class TicketsService {
       .map((response) => {
         let notificationsJobResponse: McsApiSuccessResponse<Ticket[]>;
         notificationsJobResponse = JSON.parse(response.text(),
-          reviverParser) as McsApiSuccessResponse<Ticket[]>;
+          this._responseReviverParser) as McsApiSuccessResponse<Ticket[]>;
 
         return notificationsJobResponse;
       })
