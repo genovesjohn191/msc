@@ -2,7 +2,7 @@
 <div class="ticket-header-wrapper" [mcsLoader]="ticketSubscription">
   <mcs-page-header class="page-header-wrapper">
     <mcs-page-title *mcsPageTitleDef>
-      Trouble Ticket #{{ ticket.crispTicketNumber }}
+      {{ textContent.header }}{{ ticket.crispTicketNumber }}
     </mcs-page-title>
     <mcs-page-subtitle *mcsPageSubTitleDef class="hidden-small">
       <span>{{ getStateString(ticket.state) }} ({{ convertDateToString(ticket.createdOn) }})</span>
@@ -29,11 +29,11 @@
   <div class="service">
     <ul class="unstyled-list">
       <li>
-        <span class="label">Type:</span>
+        <span class="label">{{ textContent.type }}</span>
         <span class="item">{{ getSubTypeString(ticket.subType) }}</span>
       </li>
       <li>
-        <span class="label">Services:</span>
+        <span class="label">{{ textContent.services }}</span>
         <span class="item">
           <a class="display-block" *ngFor="let service of ticket.serviceId">
             {{ service }}
@@ -46,11 +46,11 @@
   <div class="information">
     <ul class="unstyled-list">
       <li>
-        <span class="label">Logged By:</span>
+        <span class="label">{{ textContent.loggedBy }}</span>
         <span class="item">{{ ticket.requestor }}</span>
       </li>
       <li>
-        <span class="label">Date Logged:</span>
+        <span class="label">{{ textContent.dateLogged }}</span>
         <span class="item">{{ convertDateToString(ticket.createdOn) }}</span>
       </li>
     </ul>
@@ -59,10 +59,10 @@
 
 <!-- Ticket Attachments (Not available on mobile) -->
 <div class="ticket-attachments-wrapper">
-  <h3 class="ticket-attachments-title">Attachments:</h3>
+  <h3 class="ticket-attachments-title">{{ textContent.attachments }}</h3>
   <ul class="unstyled-list">
     <li *ngFor="let attachment of ticket.attachments">
-      {{ attachment.fileName }}
+      <a (click)="downloadAttachment(attachment)">{{ attachment.fileName }}</a>
     </li>
   </ul>
 </div>
@@ -70,7 +70,7 @@
 <!-- Ticket Activities -->
 <div class="ticket-activities-wrapper">
   <div class="ticket-activities-header">
-    <h3>Activities:</h3>
+    <h3>{{ textContent.activity }}</h3>
     <div class="create-new-comment-wrapper">
       <ng-container [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]">
       </ng-container>

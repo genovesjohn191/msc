@@ -163,9 +163,19 @@
     "retry": "Try again shortly",
     "dataSingular": "Ticket",
     "dataPlural": "Tickets",
+    "ticket" : {
+      "header": "Trouble Ticket #",
+      "type": "Type:",
+      "services": "Services:",
+      "loggedBy": "Logged By:",
+      "dateLogged": "Date Logged:",
+      "attachments": "Attachments:",
+      "activity": "Activity:",
+      "newActivity": "New Comment/Attachment"
+    },
     "createTicket": {
       "header": "Tickets",
-      "description": "We all need help from time to time. <br/><br/> Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView.",
+      "description": "We all need help from time to time.<br/><br/>Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView.",
       "type": "Ticket Type",
       "headline": "Headline (max {{max_char}} characters)",
       "details": "Details (max {{max_char}} characters)",

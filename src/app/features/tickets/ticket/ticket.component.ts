@@ -8,6 +8,7 @@ import {
   ParamMap
 } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
+import { McsTextContentProvider } from '../../../core';
 import {
   isNullOrEmpty,
   getEnumString,
@@ -29,6 +30,7 @@ import {
   TicketFileInfo
 } from '../models';
 import { TicketsService } from '../tickets.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'mcs-ticket',
@@ -38,6 +40,7 @@ import { TicketsService } from '../tickets.service';
 
 export class TicketComponent implements OnInit, OnDestroy {
 
+  public textContent: any;
   public ticketSubscription: any;
   public createCommentSubscription: any;
   public createAttachmentSubscription: any;
@@ -81,13 +84,15 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _activatedRoute: ActivatedRoute,
-    private _ticketsService: TicketsService
+    private _ticketsService: TicketsService,
+    private _textContentProvider: McsTextContentProvider
   ) {
     this._ticket = new Ticket();
     this._activities = new Array();
   }
 
   public ngOnInit() {
+    this.textContent = this._textContentProvider.content.tickets.ticket;
     // Get ticket data by ID
     this._getTicketById();
   }
@@ -123,22 +128,45 @@ export class TicketComponent implements OnInit, OnDestroy {
     return convertDateToStandardString(date);
   }
 
+  /**
+   * New comment to display the comment box
+   */
   public newComment() {
     this._showCommentBox = true;
   }
 
+  /**
+   * Cancel comment to hide the comment box
+   */
   public cancelComment(event: any) {
     this._showCommentBox = false;
   }
 
-  public createComment(event: TicketNewComment) {
-    if (isNullOrEmpty(event)) { return; }
+  /**
+   * Download the file attachment based on the blob
+   * @param attachment Attachment information of the file to download
+   */
+  public downloadAttachment(attachment: TicketAttachment) {
+    if (isNullOrEmpty(attachment)) { return; }
+
+    this._ticketsService.getFileAttachment(this.ticket.id, attachment.id)
+      .subscribe((blobResponse) => {
+        saveAs(blobResponse, attachment.fileName);
+      });
+  }
+
+  /**
+   * Create the whole comment including attachment
+   * @param comment Comment information details
+   */
+  public createComment(comment: TicketNewComment) {
+    if (isNullOrEmpty(comment)) { return; }
 
     // Create comment
-    this._createCommentContent(event.comment);
+    this._createCommentContent(comment.comment);
 
     // Create attachment
-    this._createAttachment(event.attachedFile);
+    this._createAttachment(comment.attachedFile);
 
     // Close create new attachment box
     this._showCommentBox = false;
@@ -160,11 +188,7 @@ export class TicketComponent implements OnInit, OnDestroy {
         if (!isNullOrEmpty(response)) {
           let activity = new TicketActivity();
           activity.setBasedOnComment(response.content);
-          this.activities.push(activity);
-          // Sort activities by date
-          this.activities.sort((_first: TicketActivity, _second: TicketActivity) => {
-            return compareDates(_second.date, _first.date);
-          });
+          this._addActivity(activity);
         }
       });
   }
@@ -185,8 +209,8 @@ export class TicketComponent implements OnInit, OnDestroy {
         if (!isNullOrEmpty(response)) {
           let activity = new TicketActivity();
           activity.setBasedOnAttachment(response.content);
-          this.activities.push(activity);
-          this.ticket.attachments.push(response.content);
+          this._addActivity(activity);
+          this.ticket.attachments.splice(0, 0, response.content);
         }
       });
   }
@@ -207,6 +231,20 @@ export class TicketComponent implements OnInit, OnDestroy {
           this.ticket = response.content;
         }
       });
+  }
+
+  /**
+   * Add a new activity and sort it by dates accordingly
+   * @param activity Activity to be added
+   */
+  private _addActivity(activity: TicketActivity) {
+    if (isNullOrEmpty(activity)) { return; }
+
+    this.activities.push(activity);
+    // Sort activities by date
+    this.activities.sort((_first: TicketActivity, _second: TicketActivity) => {
+      return compareDates(_second.date, _first.date);
+    });
   }
 
   /**

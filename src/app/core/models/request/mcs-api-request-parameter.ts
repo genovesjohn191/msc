@@ -1,6 +1,7 @@
 import {
   Headers,
-  URLSearchParams
+  URLSearchParams,
+  ResponseContentType
 } from '@angular/http';
 
 export class McsApiRequestParameter {
@@ -48,10 +49,24 @@ export class McsApiRequestParameter {
     this._searchParameters = value;
   }
 
+  /**
+   * Response type parameters
+   *
+   * `@Note:` By default, this is JSON Type
+   */
+  private _responseType: ResponseContentType;
+  public get responseType(): ResponseContentType {
+    return this._responseType;
+  }
+  public set responseType(value: ResponseContentType) {
+    this._responseType = value;
+  }
+
   constructor() {
     this._endPoint = '';
     this._recordData = undefined;
     this._optionalHeaders = new Headers();
     this._searchParameters = new URLSearchParams();
+    this._responseType = ResponseContentType.Json;
   }
 }
