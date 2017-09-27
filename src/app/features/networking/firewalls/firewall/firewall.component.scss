@@ -20,6 +20,7 @@ $firewall-list-panel-spacing: $space-large;
     position: relative;
     @include flex(0 0 70%);
     padding-left: $space-xlarge;
+    padding-right: $space-large;
 
     .firewall-details {
       min-height: 100%;
