@@ -9,7 +9,7 @@ $firewall-list-panel-spacing: $space-large;
 
   .firewall-list-panel-wrapper {
     position: relative;
-    @include flex(0 0 30%);
+    @include flex(0 0 20%);
     
     .firewall-list-panel {
       @include set-items-interval($firewall-list-panel-spacing, vertical);
@@ -18,7 +18,7 @@ $firewall-list-panel-spacing: $space-large;
   
   .firewall-details-wrapper {
     position: relative;
-    @include flex(0 0 70%);
+    @include flex(0 0 80%);
     padding-left: $space-xlarge;
     padding-right: $space-large;
 
