@@ -1,4 +1,5 @@
 window.ENV_CONFIG = {
+  environment: 'MCS_ENVIRONMENT',
   apiHost: 'MCS_API_HOST',
   host: 'MCS_HOST',
   port: 'MCS_PORT',
