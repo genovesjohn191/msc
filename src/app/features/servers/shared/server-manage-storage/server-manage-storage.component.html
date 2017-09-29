@@ -53,8 +53,10 @@
   </div>
 
   <!-- Insufficient Storage Capacity Warning Message -->
-  <div *ngIf="!hasAvailableStorageSpace" class="storage-full-warning">
-    <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-    <h4>{{ storageTextContent.fullStorageSpace }}</h4>
+  <div *ngIf="storageProfileValue && !hasAvailableStorageSpace">
+    <div [@animate]="'fadeIn'" class="storage-full-warning">
+      <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
+      <h4>{{ storageTextContent.fullStorageSpace }}</h4>
+    </div>
   </div>
 </div>

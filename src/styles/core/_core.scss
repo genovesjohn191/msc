@@ -251,3 +251,14 @@ html {
     margin-left: auto;
   }
 }
+
+// TODO: Temporary fix for loader. Will remove after refactoring loader
+.loader-container {
+  display: block;
+  position: relative;
+  min-height: 100%;
+
+  .loader-container {
+    z-index: $zindex-loader-container;
+  }
+}

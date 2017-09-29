@@ -11,7 +11,7 @@ import {
   ServerManageStorage,
   ServerPlatform,
   ServerResource,
-  ServerStorage,
+  ServerPlatformStorage,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
 } from '../../models';

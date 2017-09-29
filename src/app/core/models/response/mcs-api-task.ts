@@ -4,6 +4,7 @@ export class McsApiTask {
   public summaryInformation: string;
   public errorMessage: string;
   public status: string;
+  public referenceObject: any;
   public durationInSeconds: number;
   public createdOn: Date;
   public updatedOn: Date;

@@ -133,13 +133,11 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnInit() {
     this.storageTextContent = this._textProvider.content.servers.server.storage;
-    if (this.storageProfileList && this.storageProfileList.getGroupNames().length > 0) {
-      let groupName = this.storageProfileList.getGroupNames()[0];
-      this.storageProfileValue = this.storageProfileList.getGroup(groupName)[0].key;
-    }
 
     // Register form group for custom storage
     this._registerFormGroup();
+
+    this._setStorageProfileValue();
     this._initializeValues();
   }
 
@@ -199,6 +197,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   private _initializeValues(): void {
     this.onStorageProfileChanged(this.storageProfileValue);
     this.onCustomStorageChanged(this.memoryGB);
+  }
+
+  private _setStorageProfileValue(): void {
+    if (isNullOrEmpty(this.storageProfileList)) { return; }
+
+    let groupName = this.storageProfileList.getGroupNames()[0];
+    this.storageProfileValue = this.storageProfileList.getGroup(groupName)[0].key;
   }
 
   private _registerFormGroup(): void {

@@ -6,24 +6,25 @@ $server-list-panel-spacing: $space-medium;
 .server-container {
   @include display-flex(row);
   align-items: flex-start;
+  width: 100%;
+  height: 100%;
 
   .server-list-panel-wrapper {
     position: relative;
     @include flex(0 0 20%);
+    min-height: 100%;
 
     .server-list-panel {
       @include set-items-interval($server-list-panel-spacing, vertical);
-      min-height: 100%;
     }
   }
 
   .server-features-wrapper {
-    position: relative;
     @include flex(0 0 80%);
+    min-height: 100%;
     padding-left: $space-xlarge;
 
     .server-features {
-      min-height: 100%;
       @include breakpoint(medium) {
         @include flex(0 0 100%);
         max-width: 100%;

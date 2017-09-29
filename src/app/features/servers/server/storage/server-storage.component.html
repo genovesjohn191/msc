@@ -1,134 +1,130 @@
-<div class="mcs-server-storage" [@animate]="'fadeIn'">
+<div class="server-storage" >
   <h3 class="heading">{{ serverStorageText.title }}</h3>
-  <div *ngIf="isLoadingStorage" class="loading-spinner">
-    <mcs-icon [key]="spinnerIconKey" size="xlarge"></mcs-icon>
-  </div>
-  <div *ngIf="!isLoadingStorage" [@animate]="'fadeIn'">
-     <div *ngIf="!expandStorage" class="details">
-      <div class="storage-container">
-        <ul class="unstyled-list storage">
-          <li>
-            <span class="storage-device-label">
-              <strong>{{ serverStorageText.storageDevice }}</strong>
-            </span>
-            <span class="storage-profile-label">
-              <strong>{{ serverStorageText.storageProfile }}</strong>
-            </span>
-            <span class="capacity-label">
-              <strong>{{ serverStorageText.capacity }}</strong>
-            </span>
-          </li>
-          <li *ngFor="let storage of storageDevices; let i = index">
-            <span class="name">
-              <mcs-icon *ngIf="!getStorageStatus(storage.id)"
-                [key]="storageIconKey" size="small"
-                class="hidden-small"></mcs-icon>
-              <mcs-icon *ngIf="getStorageStatus(storage.id)" [key]="spinnerIconKey"
-                size="small" class="hidden-small"
-                mcsPopover trigger="hover" maxWidth="250px"
-                padding="narrow" [content]="expandingStorage"></mcs-icon>
-              <ng-template #expandingStorage>
-                <span class="expanding-storage-popover">
-                  {{ getStorageStatus(storage.id) }}
-                </span>
-              </ng-template>
-              <span>{{ storage.name }}</span>
-            </span>
-            <span class="storage-profile">{{ storage.storageProfile }}</span>
-            <span class="capacity">
-              <span class="value">{{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}</span>
-              <span *mcsHasPermission="['VmEdit']" [hidden]="disabled" class="expand text-right">
-                <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
+
+  <div *ngIf="!expandStorage" class="details">
+    <div class="storage-container">
+      <ul class="unstyled-list storage">
+        <li>
+          <span class="storage-device-label">
+            <strong>{{ serverStorageText.storageDevice }}</strong>
+          </span>
+          <span class="storage-profile-label">
+            <strong>{{ serverStorageText.storageProfile }}</strong>
+          </span>
+          <span class="capacity-label">
+            <strong>{{ serverStorageText.capacity }}</strong>
+          </span>
+        </li>
+        <li *ngFor="let storage of storageDevices; let i = index">
+          <span class="name">
+            <mcs-icon *ngIf="!getStorageStatus(storage.id)"
+              [key]="storageIconKey" size="small"
+              class="hidden-small"></mcs-icon>
+            <mcs-icon *ngIf="getStorageStatus(storage.id)" [key]="spinnerIconKey"
+              size="small" class="hidden-small"
+              mcsPopover trigger="hover" maxWidth="250px"
+              padding="narrow" [content]="expandingStorage"></mcs-icon>
+            <ng-template #expandingStorage>
+              <span class="expanding-storage-popover">
+                {{ getStorageStatus(storage.id) }}
               </span>
-              <span *mcsHasPermission="['VmEdit']" [hidden]="disabled" class="delete text-right">
-                <a [hidden]="isPrimaryStorage(storage)" (click)="setModalInstance(deleteStorageModal)"
-                  [mcsModal]="deleteStorageAlert" modalSize="medium" #deleteStorageModal="mcsModal">
-                    {{ serverStorageText.deleteStorageLink }}</a>
-                <ng-template #deleteStorageAlert>
-                  <div modal-title>
-                    <span>Delete {{ storage.name }} Storage</span>
-                  </div>
-                  <div modal-body>
-                    <div class="delete-storage-alert-container">
-                      <mcs-alert type="warning"
-                        [title]="getDeleteStorageAlertMessage(storage)">
-                          <span>{{ serverStorageText.deleteStorageConfirmation }}</span>
-                      </mcs-alert>
-                      <div class="confirm">
-                        <a (click)="closeDeleteStorageModal()"
-                          [ngClass]="{'disabled': deletingStorage}">Cancel</a>
-                        <mcs-button icon="arrow" #deleteButton [disabled]="deletingStorage"
-                          (click)="onDeleteStorage(storage)">
-                          Yes
-                        </mcs-button>
-                      </div>
+            </ng-template>
+            <span>{{ storage.name }}</span>
+          </span>
+          <span class="storage-profile">{{ storage.storageProfile }}</span>
+          <span class="capacity">
+            <span class="value">{{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}</span>
+            <span *mcsHasPermission="['VmEdit']" [hidden]="disabled" class="expand text-right">
+              <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
+            </span>
+            <span *mcsHasPermission="['VmEdit']" [hidden]="disabled" class="delete text-right">
+              <a [hidden]="isPrimaryStorage(storage)" (click)="setModalInstance(deleteStorageModal)"
+                [mcsModal]="deleteStorageAlert" modalSize="medium" #deleteStorageModal="mcsModal">
+                  {{ serverStorageText.deleteStorageLink }}</a>
+              <ng-template #deleteStorageAlert>
+                <div modal-title>
+                  <span>Delete {{ storage.name }} Storage</span>
+                </div>
+                <div modal-body>
+                  <div class="delete-storage-alert-container">
+                    <mcs-alert type="warning"
+                      [title]="getDeleteStorageAlertMessage(storage)">
+                        <span>{{ serverStorageText.deleteStorageConfirmation }}</span>
+                    </mcs-alert>
+                    <div class="confirm">
+                      <a (click)="closeDeleteStorageModal()"
+                        [ngClass]="{'disabled': deletingStorage}">Cancel</a>
+                      <mcs-button icon="arrow" #deleteButton [disabled]="deletingStorage"
+                        (click)="onDeleteStorage(storage)">
+                        Yes
+                      </mcs-button>
                     </div>
                   </div>
-                </ng-template>
-              </span>
+                </div>
+              </ng-template>
             </span>
-          </li>
-        </ul>
-      </div>
-      <div *ngIf="!storageProfileList" class="loading-spinner">
-        <mcs-icon [key]="spinnerIconKey" size="xlarge"></mcs-icon>
-      </div>
-      <div *ngIf="storageProfileList" [@animate]="'fadeIn'">
-        <div *mcsHasPermission="['VmEdit']">
-          <div *ngIf="!hasReachedDisksLimit" class="add-new-storage">
-            <mcs-server-manage-storage #mcsStorage
-              [storageProfileList]="storageProfileList"
-              [memoryMB]="memoryMB"
-              [availableMemoryMB]="availableMemoryMB"
-              [minimumMB]="minimumMB"
-              [storageSliderValues]="newStorageSliderValues"
-              (storageChanged)="onStorageChanged($event)"
-              [disabled]="disabled">
-              <!--Server manage storage contents on the left hand side (description)-->
-              <div title>
-                <h4>{{ serverStorageText.addStorageHeading }}</h4>
-              </div>
-            </mcs-server-manage-storage>
-            <div class="attach">
-              <mcs-button icon="arrow" #attachButton (click)="onClickAttach()"
-                [disabled]="!isValidStorageValues || !hasAvailableStorageSpace">Attach</mcs-button>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div *mcsHasPermission="['VmEdit']" class="loader-container">
+      <div [mcsLoader]="serverPlatformSubscription">
+        <div *ngIf="!hasReachedDisksLimit" class="add-new-storage">
+          <mcs-server-manage-storage *ngIf="storageProfileList" #mcsStorage
+            [storageProfileList]="storageProfileList"
+            [memoryMB]="memoryMB"
+            [availableMemoryMB]="availableMemoryMB"
+            [minimumMB]="minimumMB"
+            [storageSliderValues]="newStorageSliderValues"
+            (storageChanged)="onStorageChanged($event)"
+            [disabled]="disabled">
+            <!--Server manage storage contents on the left hand side (description)-->
+            <div title>
+              <h4>{{ serverStorageText.addStorageHeading }}</h4>
             </div>
+          </mcs-server-manage-storage>
+          <div class="attach">
+            <mcs-button icon="arrow" #attachButton (click)="onClickAttach()"
+              [disabled]="!isValidStorageValues || !hasAvailableStorageSpace">Attach</mcs-button>
           </div>
         </div>
+  
         <div *ngIf="hasReachedDisksLimit" class="storage-limit-warning">
           <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
           <h4>{{ serverStorageText.reachedStorageLimit }}</h4>
         </div>
       </div>
     </div>
+  </div>
 
-    <div *ngIf="expandStorage" class="increase-storage">
-       <mcs-server-manage-storage #mcsStorage
-        [memoryMB]="selectedStorageDevice.sizeMB"
-        [availableMemoryMB]="getStorageAvailableMemory(selectedStorageDevice.storageProfile)"
-        [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
-        [storageSliderValues]="selectedStorageSliderValues"
-        (storageChanged)="onStorageChanged($event)"
-        [disabled]="disabled">
-        <!--Server manage storage contents on the left hand side (description)-->
-         <div title>
-          <h4>{{ serverStorageText.expandStorageHeading }}</h4>
-        </div>
-
-        <div details>
-          <p><strong>Storage Device : </strong> <span>{{ selectedStorageDevice.name}}</span></p>
-          <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile}}</span></p>
-          <p>
-            <strong>Current Size : </strong>
-            <span>{{ appendGbUnit(convertStorageInGb(selectedStorageDevice.sizeMB)) }}</span>
-          </p>
-        </div>
-      </mcs-server-manage-storage>
-      <div class="update">
-        <a (click)="closeExpandStorageBox()" [ngClass]="{'disabled': disabled}">Cancel</a>
-        <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" #updateButton (click)="onClickUpdate()"
-          [disabled]="!isValidStorageValues || expandingStorage">Update</mcs-button>
+  <div *ngIf="expandStorage" class="increase-storage">
+    <mcs-server-manage-storage #mcsStorage
+      [memoryMB]="selectedStorageDevice.sizeMB"
+      [availableMemoryMB]="getStorageAvailableMemory(selectedStorageDevice.storageProfile)"
+      [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
+      [storageSliderValues]="selectedStorageSliderValues"
+      (storageChanged)="onStorageChanged($event)"
+      [disabled]="disabled">
+      <!--Server manage storage contents on the left hand side (description)-->
+        <div title>
+        <h4>{{ serverStorageText.expandStorageHeading }}</h4>
       </div>
+
+      <div details>
+        <p><strong>Storage Device : </strong> <span>{{ selectedStorageDevice.name}}</span></p>
+        <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile}}</span></p>
+        <p>
+          <strong>Current Size : </strong>
+          <span>{{ appendGbUnit(convertStorageInGb(selectedStorageDevice.sizeMB)) }}</span>
+        </p>
+      </div>
+    </mcs-server-manage-storage>
+    <div class="update">
+      <a (click)="closeExpandStorageBox()" [ngClass]="{'disabled': disabled}">Cancel</a>
+      <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" #updateButton (click)="onClickUpdate()"
+        [disabled]="!isValidStorageValues || expandingStorage">Update</mcs-button>
     </div>
   </div>
+
 </div>

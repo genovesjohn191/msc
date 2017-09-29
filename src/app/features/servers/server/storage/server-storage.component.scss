@@ -4,12 +4,17 @@ $server-storage-title-font: $base-font-bold;
 $server-storage-title-font-size: $h4-default-font-size;
 $server-storage-form-border-color: $color-grey-00;
 
+:host {
+  display: block;
+  position: relative;
+}
+
 %disabled {
   cursor: not-allowed;
   opacity: $disabled-opacity;
 }
 
-.mcs-server-storage {
+.server-storage {
   .heading {
     margin-bottom: $space-large;
   }
