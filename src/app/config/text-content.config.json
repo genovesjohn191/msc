@@ -108,7 +108,10 @@
           "cancel": "Cancel",
           "scaling": "Scaling in Progress",
           "validationError": {
-            "memory": "Memory should not exceed {{available_memory}}",
+            "memory": {
+              "max": "Memory should not exceed {{available_memory}}",
+              "invalid": "Memory size must be a multiple of {{multiple}} MB"
+            },
             "cpu": "Number of CPU should not exceed {{available_cpu}}"
           }
         }

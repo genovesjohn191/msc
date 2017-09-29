@@ -250,16 +250,13 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public scaleServer() {
-    if (this.platformDataSubscription) {
-      this.platformDataSubscription.unsubscribe();
-    }
+    this.isServerScale = true;
 
     this.platformDataSubscription = this._serverService.getPlatformData()
       .subscribe((data) => {
         this.platformData = data.content;
         this.resource = this._getResourceByVdc(this.server.vdcName);
         this._initializeServerPerformanceScaleValue();
-        this.isServerScale = true;
       });
   }
 
