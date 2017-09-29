@@ -1,8 +1,9 @@
 @import "../../../styles/shared/base";
 
+$button-min-height: 40px;
 $button-font-size-small: $caption-default-font-size;
-$button-padding: 10px 15px;
-$button-padding-small: 5px 10px;
+$button-padding: $space-small $space-medium;
+$button-padding-small: $space-xsmall $space-small;
 $button-primary-background-color: $color-primary-01;
 $button-primary-background-color-disabled: $color-grey-01;
 $button-hover-background-color: $color-primary-00;
@@ -48,6 +49,10 @@ $button-primary-text-color: $color-white;
 
   &.has-icon {
     padding: $space-xsmall 15px;
+
+    &.default {
+      min-height: $button-min-height;
+    }
 
     .label {
       justify-content: space-between;

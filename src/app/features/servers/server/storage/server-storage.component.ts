@@ -4,14 +4,17 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+ } from 'rxjs/Rx';
 import {
   Server,
   ServerFileSystem,
   ServerManageStorage,
   ServerPlatform,
   ServerResource,
-  ServerStorage,
+  ServerPlatformStorage,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
 } from '../../models';
@@ -34,7 +37,8 @@ import {
   mergeArrays,
   updateArrayRecord,
   isNullOrEmpty,
-  replacePlaceholder
+  replacePlaceholder,
+  compareStrings
 } from '../../../../utilities';
 
 import { McsStorage } from '../../shared';
@@ -66,24 +70,26 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   @ViewChild('deleteButton')
   public deleteButton: McsLoader;
 
+  public storageDataSubscription: any;
+
   public serverStorageText: any;
   public expandStorage: boolean;
   public expandingStorage: boolean;
   public deletingStorage: boolean;
   public deleteStorageAlertMessage: string;
 
-  public serverSubscription: any;
-  public serverStorageSubscription: any;
+  public serverSubscription: Subscription;
+  public notificationsSubscription: Subscription;
+  public serverPlatformSubscription: Subscription;
+
   public server: Server;
   public storageDevices: ServerStorageDevice[];
 
-  public serverPlatformSubscription: any;
   public serverPlatformData: ServerPlatform;
-  public serverPlatformStorage: ServerStorage[];
+  public serverPlatformStorage: ServerPlatformStorage[];
 
   public storageChangedValue: ServerManageStorage;
 
-  public notificationsSubscription: any;
   public notifications: McsApiJob[];
 
   public storageProfileList: McsList;
@@ -95,8 +101,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public selectedStorageDevice: ServerStorageDevice;
   public selectedStorageSliderValues: number[];
-
-  public isLoadingStorage: boolean;
 
   public disabled: boolean;
 
@@ -130,10 +134,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return this._validateStorageChangedValues();
   }
 
-  public get isLoading(): boolean {
-    return !this.hasStorageDevice || !this.storageProfileList;
-  }
-
   /**
    * Server platform data mapping
    */
@@ -161,12 +161,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.usedMemoryMB = 0;
     this.selectedStorageSliderValues = new Array<number>();
     this.serverPlatformData = new ServerPlatform();
-    this.serverPlatformStorage = new Array<ServerStorage>();
+    this.serverPlatformStorage = new Array<ServerPlatformStorage>();
     this.storageChangedValue = new ServerManageStorage();
     this.storageChangedValue.valid = false;
     this.notifications = new Array<McsApiJob>();
     this._serverPlatformMap = new Map<string, ServerResource>();
-    this.isLoadingStorage = true;
     this.disabled = false;
   }
 
@@ -175,7 +174,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.serverStorageText = this._textProvider.content.servers.server.storage;
     this.deleteStorageAlertMessage = this.serverStorageText.deleteStorageAlertMessage;
 
-    this._listenToServerPlatformData();
+    this._getPlatformData();
     this._listenToSelectedServerStream();
     this._listenToNotificationsStream();
   }
@@ -188,6 +187,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.storageChangedValue = serverStorage;
     this.availableMemoryMB = this.getStorageAvailableMemory(serverStorage.storageProfile);
     this._setNewStorageSliderValues();
+
+    if (this.storageDataSubscription) {
+      this.storageDataSubscription.unsubscribe();
+    }
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
@@ -340,31 +343,43 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     if (this.notificationsSubscription) {
       this.notificationsSubscription.unsubscribe();
     }
-
-    if (this.serverStorageSubscription) {
-      this.serverStorageSubscription.unsubscribe();
-    }
   }
 
-  private _listenToServerPlatformData(): void {
+  /**
+   * This will get the platform data
+   */
+  private _getPlatformData(): void {
     this.serverPlatformSubscription = this._serverService.getPlatformData()
-      .subscribe((data) => {
-        this._setPlatformData(data);
-        this._initializeValues();
+      .subscribe((response) => {
+        this._setPlatformData(response);
       });
   }
 
+  /**
+   * This will listen to the selected server
+   * and set values for storage management
+   */
   private _listenToSelectedServerStream(): void {
     this.serverSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
-        if (server) {
-          this.server = server;
-          this._setStorageDevices();
-          this._initializeValues();
+        if (isNullOrEmpty(server)) { return; }
+
+        this.server = server;
+        this._setStorageDevices();
+
+        if (!isNullOrEmpty(this.serverPlatformSubscription)) {
+          this.serverPlatformSubscription.add(() => {
+            this._setServerPlatformStorage();
+            this._setStorageProfiles();
+          });
         }
       });
   }
 
+  /**
+   * This will listen to the ongoing jobs and will update
+   * the UI based on the executed storage action/s
+   */
   private _listenToNotificationsStream(): void {
     this.notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((notifications) => {
@@ -377,7 +392,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
           });
 
           if (!isNullOrEmpty(storageJobs)) {
-            this._listenToServerPlatformData();
             this.disabled = true;
             this.notifications = mergeArrays(this.notifications, storageJobs,
               (_first: McsApiJob, _second: McsApiJob) => {
@@ -402,6 +416,12 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                 case McsJobType.CreateServerDisk:
                   if (this.attachButton) { this.attachButton.hideLoader(); }
 
+                  // Append Create Server Disk / Update Disk Data
+                  let disk = new ServerStorageDevice();
+                  disk.name = job.clientReferenceObject.name;
+                  disk.storageProfile = job.clientReferenceObject.storageProfile;
+                  disk.sizeMB = job.clientReferenceObject.sizeMB;
+
                   // Update the available memory when completed
                   if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
                     this.availableMemoryMB -= this.usedMemoryMB;
@@ -409,17 +429,12 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                     this._setSelectedStorageSliderValues();
                     this.usedMemoryMB = 0;
                     this.disabled = false;
-                  }
 
-                  // Append Create Server Disk / Update Disk Data
-                  let disk = new ServerStorageDevice();
-                  // TODO: This will be provided by the API
-                  if (job.clientReferenceObject.diskId) {
-                    disk.id = job.clientReferenceObject.diskId;
+                    // TODO: This will be provided by the API
+                    if (!isNullOrEmpty(job.tasks[0].referenceObject)) {
+                      disk.id = job.tasks[0].referenceObject.diskId;
+                    }
                   }
-                  disk.name = job.clientReferenceObject.name;
-                  disk.storageProfile = job.clientReferenceObject.storageProfile;
-                  disk.sizeMB = job.clientReferenceObject.sizeMB;
 
                   updateArrayRecord(this.storageDevices, disk, true,
                     (_first: any, _second: any) => {
@@ -459,28 +474,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _setStorageDevices(): void {
-    if (isNullOrEmpty(this.server)) { return; }
-
-    this.isLoadingStorage = true;
-    this.serverStorageSubscription = this._serverService.getServerStorage(this.server.id)
-      .subscribe((storage) => {
-        this.storageDevices = storage.content;
-        this.isLoadingStorage = false;
-      });
-  }
-
-  private _initializeValues(): void {
-    if (!this.server || this._serverPlatformMap.size === 0) { return; }
-    this._setServerPlatformStorage();
-    this._setStorageProfiles();
-  }
-
   /**
    * This will set the Platform data to platform mapping
-   * for easily access across its chidren component
    *
-   * `@Note` This will execute together with the servers and template obtainment
    * @param response Api response
    */
   private _setPlatformData(response: any): void {
@@ -494,7 +490,26 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This will set the storage devices of the selected server
+   */
+  private _setStorageDevices(): void {
+    if (isNullOrEmpty(this.server.storageDevice)) { return; }
+
+    this.storageDevices = this.server.storageDevice;
+    this.storageDevices.sort(
+      (_first: ServerStorageDevice, _second: ServerStorageDevice) => {
+        return compareStrings(_first.name, _second.name);
+      }
+    );
+  }
+
+  /**
+   * This will set the storage from the platform data
+   */
   private _setServerPlatformStorage(): void {
+    if (isNullOrEmpty(this.server.vdcName)) { return; }
+
     this.serverPlatformStorage.splice(0);
 
     if (this._serverPlatformMap.has(this.server.vdcName)) {
@@ -503,7 +518,12 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * This will set the storage profiles for storage management
+   */
   private _setStorageProfiles(): void {
+    if (isNullOrEmpty(this.serverPlatformStorage)) { return; }
+
     let storageProfileList = new McsList();
 
     this.serverPlatformStorage.forEach((storage) => {
@@ -514,6 +534,14 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.storageProfileList = storageProfileList;
   }
 
+  /**
+   * This will return the slider values based
+   * on the memoryMB and availableMemory
+   * of the currently selected storage profile
+   *
+   * @param memoryMB Initial or Minimum value of the slider
+   * @param availableMemoryMB Available memory of the storage profile
+   */
   private _getStorageSliderValues(memoryMB: number, availableMemoryMB: number): number[] {
     let memoryGB = Math.floor(convertToGb(memoryMB));
     let maximumMemoryGB = memoryGB + Math.floor(convertToGb(availableMemoryMB));
@@ -533,6 +561,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return storageSliderValues;
   }
 
+  /**
+   * This will set the slider values for
+   * the new storage to be added
+   */
   private _setNewStorageSliderValues(): void {
     if (isNullOrEmpty(this.availableMemoryMB)) { return; }
     this.newStorageSliderValues = this._getStorageSliderValues(
@@ -540,6 +572,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * This will set the slider values for
+   * the storage to be expanded
+   */
   private _setSelectedStorageSliderValues(): void {
     if (isNullOrEmpty(this.availableMemoryMB)) { return; }
     this.selectedStorageSliderValues = this._getStorageSliderValues(
@@ -547,6 +583,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * This will validate the the values of the storage
+   */
   private _validateStorageChangedValues(): boolean {
     let isValid: boolean = false;
 

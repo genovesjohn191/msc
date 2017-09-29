@@ -16,7 +16,7 @@ import {
   ServerThumbnail,
   ServerPlatform,
   ServerResource,
-  ServerStorage,
+  ServerPlatformStorage,
   ServerNetwork,
   ServerServiceType,
   ServerStorageDeviceUpdate,

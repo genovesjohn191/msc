@@ -35,7 +35,7 @@ import {
   ServerIpAddress,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerStorage,
+  ServerPlatformStorage,
   ServerNetwork,
   ServerOs
 } from '../../models';
