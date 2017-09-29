@@ -111,9 +111,10 @@
 
 </section>
 
-<section *ngIf="server && isServerScale" class="server-performance-scale-container">
+<section *ngIf="server && isServerScale"
+  class="server-performance-scale-container loader-container">
   <h3>Scaling {{ server.managementName }}</h3>
-  <mcs-server-performance-scale
+  <mcs-server-performance-scale [mcsLoader]="platformDataSubscription"
     [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
     [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
     (scaleChanged)="onScaleChanged($event)">

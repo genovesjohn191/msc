@@ -36,6 +36,8 @@ import {
   isNullOrEmpty
 } from '../../../../utilities';
 
+const CUSTOM_MEMORY_MULTIPLE = 4;
+
 @Component({
   selector: 'mcs-server-performance-scale',
   styles: [require('./server-performance-scale.component.scss')],
@@ -59,8 +61,9 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public customMemoryGBTable: McsList;
   public customCpuCountValue: number;
   public customCpuCountTable: McsList;
-  public invalidCustomMemoryMessage: string;
-  public invalidCustomCpuMessage: string;
+  public invalidCustomMemoryMaxValueMessage: string;
+  public invalidCustomMemoryValueMessage: string;
+  public invalidCustomCpuMaxValueMessage: string;
 
   public serverScaleForm: FormGroup;
   public serverScaleCustomRam: FormControl;
@@ -174,8 +177,12 @@ export class ServerPerformanceScaleComponent implements OnInit {
       CoreValidators.min(this.memoryMB),
       CoreValidators.numeric,
       CoreValidators.custom(
-        this._customRamValidator.bind(this),
-        this.invalidCustomMemoryMessage
+        this._customRamValidatorAcceptableValue.bind(this),
+        this.invalidCustomMemoryValueMessage
+      ),
+      CoreValidators.custom(
+        this._customRamValidatorMaxValue.bind(this),
+        this.invalidCustomMemoryMaxValueMessage
       )
     ]);
     this.serverScaleCustomRam.valueChanges
@@ -187,8 +194,8 @@ export class ServerPerformanceScaleComponent implements OnInit {
       CoreValidators.min(this.cpuCount),
       CoreValidators.numeric,
       CoreValidators.custom(
-        this._customCpuValidator.bind(this),
-        this.invalidCustomCpuMessage
+        this._customCpuValidatorMaxValue.bind(this),
+        this.invalidCustomCpuMaxValueMessage
       )
     ]);
     this.serverScaleCustomCpu.valueChanges
@@ -201,22 +208,32 @@ export class ServerPerformanceScaleComponent implements OnInit {
     });
   }
 
-  private _customRamValidator(inputValue: any): boolean {
+  private _customRamValidatorMaxValue(inputValue: any): boolean {
     return inputValue <= this.availableMemoryMB;
   }
 
-  private _customCpuValidator(inputValue: any): boolean {
+  private _customRamValidatorAcceptableValue(inputValue: any): boolean {
+    return inputValue % CUSTOM_MEMORY_MULTIPLE === 0;
+  }
+
+  private _customCpuValidatorMaxValue(inputValue: any): boolean {
     return inputValue <= this.availableCpuCount;
   }
 
   private _setInvalidMessages(): void {
-    this.invalidCustomMemoryMessage = replacePlaceholder(
-      this.serverScalePerformanceTextContent.validationError.memory,
+    this.invalidCustomMemoryMaxValueMessage = replacePlaceholder(
+      this.serverScalePerformanceTextContent.validationError.memory.max,
       'available_memory',
       appendUnitSuffix(this.availableMemoryMB, 'megabyte')
     );
 
-    this.invalidCustomCpuMessage = replacePlaceholder(
+    this.invalidCustomMemoryValueMessage = replacePlaceholder(
+      this.serverScalePerformanceTextContent.validationError.memory.invalid,
+      'multiple',
+      CUSTOM_MEMORY_MULTIPLE.toString()
+    );
+
+    this.invalidCustomCpuMaxValueMessage = replacePlaceholder(
       this.serverScalePerformanceTextContent.validationError.cpu,
       'available_cpu',
       appendUnitSuffix(this.availableCpuCount, 'cpu')
