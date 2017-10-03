@@ -114,11 +114,6 @@
     }
   },
   "firewallsListingFilter": {
-    "status": {
-      "text": "Status",
-      "value": true,
-      "exclude": true
-    },
     "firewall": {
       "text": "Firewall",
       "value": true,
@@ -154,13 +149,11 @@
   "firewallPoliciesListingFilter": {
     "action": {
       "text": "Action",
-      "value": true,
-      "exclude": true
+      "value": true
     },
     "sequence": {
       "text": "Sequence",
-      "value": true,
-      "exclude": true
+      "value": true
     },
     "sourceInterfaces": {
       "text": "Source Interfaces",
@@ -174,11 +167,13 @@
     },
     "source": {
       "text": "Source",
-      "value": true
+      "value": true,
+      "exclude": true
     },
     "destination": {
       "text": "Destination",
-      "value": true
+      "value": true,
+      "exclude": true
     },
     "label": {
       "text": "Label",

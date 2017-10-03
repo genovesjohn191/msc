@@ -121,35 +121,17 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   private _setDeviceStatusIconKey(): void {
-    let iconKey = '';
-
-    switch (this.firewall.deviceStatus) {
-      case FirewallDeviceStatus.InProgress:
-      case FirewallDeviceStatus.Installed:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-      default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-    }
-
-    this.deviceStatusIconKey = iconKey;
+    this.deviceStatusIconKey = this._firewallService
+      .getFirewallDeviceStatusIconKey(this.firewall.deviceStatus);
   }
 
   private _setConnectionStatusIconKey(): void {
-    let upConnectionStatus = this.firewall.connectionStatus === FirewallConnectionStatus.Up;
-
-    this.connectionStatusIconKey =  (upConnectionStatus) ?
-      CoreDefinition.ASSETS_SVG_STATE_RUNNING :
-      CoreDefinition.ASSETS_SVG_STATE_STOPPED ;
+    this.connectionStatusIconKey = this._firewallService
+      .getFirewallConnectionStatusIconKey(this.firewall.connectionStatus);
   }
 
   private _setConfigurationStatusIconKey(): void {
-    let inSync = this.firewall.configurationStatus === FirewallConfigurationStatus.InSync;
-
-    this.configurationStatusIconKey = (inSync) ?
-      CoreDefinition.ASSETS_SVG_STATE_RUNNING :
-      CoreDefinition.ASSETS_SVG_STATE_STOPPED ;
+    this.configurationStatusIconKey = this._firewallService
+      .getFirewallConfigurationStatusIconKey(this.firewall.configurationStatus);
   }
 }
