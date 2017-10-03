@@ -1,114 +1,132 @@
-<!-- Page Header with title, subtitle (for total record), and description -->
-<mcs-page-header class="page-header-wrapper">
-  <mcs-page-title *mcsPageTitleDef>
-    {{ textContent.header }}
-  </mcs-page-title>
-  <mcs-page-description *mcsPageDescriptionDef>
-    {{ textContent.description }}
-  </mcs-page-description>
-</mcs-page-header>
+<mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
 
-<!-- Table with filtering and pagination -->
-<div class="notifications-table-wrapper">
+    <!-- Notifications Action -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count">
+          <span>{{ recordsFoundLabel }}</span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef>
     <!-- Search -->
-    <div class="search-wrapper">
-      <mcs-search #search class="search"></mcs-search>
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
+      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+    </mcs-left-panel-item>
 
-      <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey"
         (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
 
-      <span class="record-count">{{ totalRecordCount }} {{ textContent.header }}</span>
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Description -->
+      <span>{{ textContent.description }}</span>
+
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+
+        <!-- Status Column -->
+        <ng-container mcsColumnDef="status">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.status.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+            <mcs-icon [key]="getStatusIconKey(row.status)"
+              [color]="getStatusIconColor(row.status)" size="small"></mcs-icon>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- User Column -->
+        <ng-container mcsColumnDef="user">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.user.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.ownerName }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Notification Column -->
+        <ng-container mcsColumnDef="notification">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.notification.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <a href="#">
+              {{ row.description }}<br/>
+              {{ row.summaryInformation }}
+            </a>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Start Time Column -->
+        <ng-container mcsColumnDef="startTime">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.startTime.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              {{ convertDateTimeToString(row.startedOn) }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Completed Column -->
+        <ng-container mcsColumnDef="completed">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.completed.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              {{ convertDateTimeToString(row.endedOn) }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- VDC Column -->
+        <ng-container mcsColumnDef="vdc">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.vdc.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            M2VDC27117006
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ textContent.noNotifications }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="totalRecordCount"
+        [pageIndex]="0"
+        [pageSize]="25">
+      </mcs-paginator>
     </div>
-
-    <!-- Table -->
-    <mcs-table [dataSource]="dataSource">
-
-      <!-- Status Column -->
-      <ng-container mcsColumnDef="status">
-        <mcs-header-cell *mcsHeaderCellDef>
-          {{ columnSettings.status.text }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
-          <mcs-icon [key]="getStatusIconKey(row.status)"
-            [color]="getStatusIconColor(row.status)" size="small"></mcs-icon>
-        </mcs-data-cell>
-      </ng-container>
-
-      <!-- User Column -->
-      <ng-container mcsColumnDef="user">
-        <mcs-header-cell *mcsHeaderCellDef>
-          {{ columnSettings.user.text }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.ownerName }}
-        </mcs-data-cell>
-      </ng-container>
-
-      <!-- Notification Column -->
-      <ng-container mcsColumnDef="notification">
-        <mcs-header-cell *mcsHeaderCellDef>
-          {{ columnSettings.notification.text }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row">
-          <a href="#">
-            {{ row.description }}<br/>
-            {{ row.summaryInformation }}
-          </a>
-        </mcs-data-cell>
-      </ng-container>
-
-      <!-- Start Time Column -->
-      <ng-container mcsColumnDef="startTime">
-        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-          {{ columnSettings.startTime.text }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ convertDateTimeToString(row.startedOn) }}
-        </mcs-data-cell>
-      </ng-container>
-
-      <!-- Completed Column -->
-      <ng-container mcsColumnDef="completed">
-        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-          {{ columnSettings.completed.text }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ convertDateTimeToString(row.endedOn) }}
-        </mcs-data-cell>
-      </ng-container>
-
-      <!-- VDC Column -->
-      <ng-container mcsColumnDef="vdc">
-        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-          {{ columnSettings.vdc.text }}
-        </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-          M2VDC27117006
-        </mcs-data-cell>
-      </ng-container>
-
-      <!-- Data Status Integration -->
-      <ng-container mcsDataStatusDef>
-        <mcs-data-empty *mcsDataEmptyDef>
-          <span>{{ textContent.noNotifications }}</span>
-        </mcs-data-empty>
-        <mcs-data-error *mcsDataErrorDef>
-          <div class="data-error">
-            <span>{{ textContent.errorMessage }}</span>
-            <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
-          </div>
-        </mcs-data-error>
-      </ng-container>
-
-      <!-- Header and Data row -->
-      <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-      <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-    </mcs-table>
-
-    <!-- Paginator -->
-    <mcs-paginator #paginator
-      [totalCount]="totalRecordCount"
-      [pageIndex]="0"
-      [pageSize]="25">
-    </mcs-paginator>
-  </div>
+  </mcs-content-panel>
+</mcs-page>

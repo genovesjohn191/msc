@@ -2,11 +2,7 @@
 
 $paginator-min-height: $space-xlarge;
 
-:host {
-  display: block;
-}
-
-.paginator-container {
+.paginator-wrapper {
   @include display-flex(row);
   align-items: center;
   justify-content: center;

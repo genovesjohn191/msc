@@ -1,9 +1,10 @@
 import {
   Component,
   Input,
-  ChangeDetectionStrategy,
+  EventEmitter,
   ChangeDetectorRef,
-  EventEmitter
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   CoreDefinition,
@@ -16,7 +17,11 @@ import { isNullOrEmpty } from '../../utilities';
   selector: 'mcs-paginator',
   templateUrl: './paginator.component.html',
   styles: [require('./paginator.component.scss')],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'paginator-wrapper'
+  }
 })
 
 export class PaginatorComponent implements McsPaginator {

@@ -3,7 +3,10 @@ import {
   OnChanges,
   Input,
   ElementRef,
-  Renderer2
+  Renderer2,
+  ViewChild,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CoreDefinition } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
@@ -16,7 +19,8 @@ import {
 @Component({
   selector: 'mcs-icon',
   templateUrl: './icon.component.html',
-  styles: [require('./icon.component.scss')]
+  styles: [require('./icon.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class IconComponent implements OnChanges {
@@ -37,7 +41,8 @@ export class IconComponent implements OnChanges {
   public constructor(
     private _iconService: IconService,
     private _renderer: Renderer2,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     // Size of icons by default is medium and the type is SVG
     this.size = 'medium';
@@ -155,5 +160,8 @@ export class IconComponent implements OnChanges {
       this._renderer.createElement('i');
     this._renderer.appendChild(this._elementRef.nativeElement,
       this.iconElement);
+
+    // Refresh view manually
+    this._changeDetectorRef.markForCheck();
   }
 }

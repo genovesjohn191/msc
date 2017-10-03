@@ -1,141 +1,185 @@
-<!-- Table with filtering and pagination -->
-<div class="mcs-table-wrapper">
-  <!-- Search -->
-  <div class="search-wrapper">
-    <mcs-search #search class="search"></mcs-search>
+<mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
 
-    <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
-      (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    <!-- Server Creation -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="icon-label-wrapper" cursor="pointer" (click)="onClickNewServerButton($event)">
+        <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+        <span>{{ textContent.newServer }}</span>
+      </div>
+    </mcs-top-panel-item>
 
-    <mcs-button (onClick)="onClickNewServerButton($event)" size="small">
-      New Server
-    </mcs-button>
-
-    <span class="record-count">{{ recordsFoundLabel }}</span>
-  </div>
-
-  <!-- Table -->
-  <mcs-table [dataSource]="dataSource">
-    <!-- Name Column -->
-    <ng-container mcsColumnDef="name">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.name.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        <ng-template #loadingContent>
-          <span class="loading-content-popover">
-            {{ getActiveServerTooltip(row.id) }}
-          </span>
-        </ng-template>
-
-        <div class="emphasize">
-          <div *ngIf="getServerPowerstate(row)">
-            <mcs-icon [key]="getStateIconKey(row.powerState)"
-              size="medium"></mcs-icon>
-          </div>
-          <div *ngIf="!getServerPowerstate(row)" class="power-state-spinner">
-            <mcs-icon [key]="spinnerIconKey" size="medium"
-              mcsPopover trigger="hover" maxWidth="250px" padding="none"
-              [content]="loadingContent"></mcs-icon>
-          </div>
-          <a [routerLink]="['/servers', row.id]">{{ row.managementName }}</a>
+    <!-- Server Actions -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="icon-label-wrapper hidden-medium" cursor="pointer">
+          <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.start }}</span>
         </div>
-      </mcs-data-cell>
-    </ng-container>
 
-    <!-- Type Column -->
-    <ng-container mcsColumnDef="type">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
-        {{ columnSettings.type.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
-        {{ getServiceTypeText(row.serviceType) }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Catalog Column -->
-    <ng-container mcsColumnDef="catalog">
-      <mcs-header-cell *mcsHeaderCellDef  class="hidden-xsmall">
-        {{ columnSettings.catalog.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
-        {{ row.guestOs }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Private IP Column -->
-    <ng-container mcsColumnDef="privateIp">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.privateIp.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.managementIpAddress }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Zone Column -->
-    <ng-container mcsColumnDef="zone">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.zone.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.availabilityZone }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Service ID Column -->
-    <ng-container mcsColumnDef="serviceId">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.serviceId.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.serviceId }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- VApp Column -->
-    <ng-container mcsColumnDef="vApp">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.vApp.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.vAppName }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Action Column TODO: add restriction here VmPowerStateEdit -->
-    <ng-container mcsColumnDef="action">
-      <mcs-header-cell *mcsHeaderCellDef>
-        <!-- {{ columnSettings.action.text }} -->
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
-        <mcs-server-command [command]="getActionStatus(row)"
-          (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Data Status Integration -->
-    <ng-container mcsDataStatusDef>
-      <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ textContent.noServers }}</span>
-      </mcs-data-empty>
-      <mcs-data-error *mcsDataErrorDef>
-        <div class="data-error">
-          <span>{{ textContent.errorMessage }}</span>
-          <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+        <div class="icon-label-wrapper hidden-medium" cursor="pointer">
+          <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.stop }}</span>
         </div>
-      </mcs-data-error>
-    </ng-container>
 
-    <!-- Header and Data row -->
-    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-  </mcs-table>
+        <div class="icon-label-wrapper hidden-medium" cursor="pointer">
+          <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.restart }}</span>
+        </div>
 
-  <!-- Paginator -->
-  <mcs-paginator #paginator
-    [totalCount]="totalRecordCount"
-    [pageIndex]="0"
-    [pageSize]="25">
-  </mcs-paginator>
-</div>
+        <div class="total-record-count">
+          <span>{{ recordsFoundLabel }}</span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef>
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
+      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey"
+        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+        <!-- Name Column -->
+        <ng-container mcsColumnDef="name">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.name.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <ng-template #loadingContent>
+              <span class="loading-content-popover">
+                {{ getActiveServerTooltip(row.id) }}
+              </span>
+            </ng-template>
+
+            <div class="emphasize">
+              <div *ngIf="getServerPowerstate(row)">
+                <mcs-icon [key]="getStateIconKey(row.powerState)"
+                  size="medium"></mcs-icon>
+              </div>
+              <div *ngIf="!getServerPowerstate(row)" class="power-state-spinner">
+                <mcs-icon [key]="spinnerIconKey" size="medium"
+                  mcsPopover trigger="hover" maxWidth="250px" padding="none"
+                  [content]="loadingContent"></mcs-icon>
+              </div>
+              <a [routerLink]="['/servers', row.id]">{{ row.managementName }}</a>
+            </div>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container mcsColumnDef="type">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+            {{ columnSettings.type.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+            {{ getServiceTypeText(row.serviceType) }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Catalog Column -->
+        <ng-container mcsColumnDef="catalog">
+          <mcs-header-cell *mcsHeaderCellDef  class="hidden-xsmall">
+            {{ columnSettings.catalog.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+            {{ row.guestOs }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Private IP Column -->
+        <ng-container mcsColumnDef="privateIp">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.privateIp.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.managementIpAddress }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Zone Column -->
+        <ng-container mcsColumnDef="zone">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.zone.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.availabilityZone }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container mcsColumnDef="serviceId">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.serviceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.serviceId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- VApp Column -->
+        <ng-container mcsColumnDef="vApp">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.vApp.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.vAppName }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Action Column TODO: add restriction here VmPowerStateEdit -->
+        <ng-container mcsColumnDef="action">
+          <mcs-header-cell *mcsHeaderCellDef>
+            <!-- {{ columnSettings.action.text }} -->
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+            <mcs-server-command [command]="getActionStatus(row)"
+              (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ textContent.noServers }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="totalRecordCount"
+        [pageIndex]="0"
+        [pageSize]="25">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

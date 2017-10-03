@@ -1,0 +1,16 @@
+<!-- Left Panel Wrapper -->
+<div #pageLeftElement display-flex="column" flex="none"
+  class="page-left-wrapper hidden-small">
+  <ng-container mcsLeftPanelPlaceholder></ng-container>
+</div>
+
+<!-- Top and Content Panel Wrapper -->
+<div display-flex="column" flex="auto" class="page-right-wrapper">
+  <div display-flex flex="none" class="page-top-wrapper">
+    <mcs-icon (click)="toggleLeftPanel()" [key]="barIconKey"
+      class="left-panel-nav-icon hidden-small"></mcs-icon>
+    <span class="page-header">{{ header }}</span>
+    <ng-container mcsTopPanelPlaceholder></ng-container>
+  </div>
+  <ng-container mcsContentPanelPlaceholder></ng-container>
+</div>

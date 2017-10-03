@@ -1,0 +1,30 @@
+.listing-table-wrapper {
+  display: inline-block;
+  @include set-items-interval($space-xxlarge);
+
+  @include breakpoint(small) {
+    display: block;
+  }
+
+  .emphasize {
+    @include set-items-interval($space-small, horizontal);
+    @include display-flex(row);
+    align-items: center;
+  }
+}
+
+.listing-action-wrapper {
+  @include flex(1 1 auto);
+  @include display-flex(row);
+  align-items: center;
+  @include set-items-interval($space-xlarge, horizontal);
+
+  .total-record-count {
+    margin-left: auto;
+  }
+}
+
+.listing-status-wrapper {
+  @include display-flex(row);
+  @include set-items-interval($space-small, horizontal);
+}

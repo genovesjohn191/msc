@@ -11,7 +11,6 @@ import {
 import { Subscription } from 'rxjs/Rx';
 import {
   McsApiJob,
-  McsBrowserService,
   McsNotificationContextService,
   McsDeviceType,
   CoreDefinition
@@ -38,8 +37,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   public constructor(
     private _notificationContext: McsNotificationContextService,
     private _renderer: Renderer2,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _browserService: McsBrowserService
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.placement = 'left';
     this.notifications = new Array();

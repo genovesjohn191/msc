@@ -102,21 +102,6 @@ describe('TicketsComponent', () => {
     });
   });
 
-  describe('updateColumnSettings()', () => {
-    it('should update the columns settings based on the new settings', () => {
-      let columnSettings = { object: { text: 'sample', value: true } };
-      component.updateColumnSettings(columnSettings);
-      expect(component.columnSettings).toBe(columnSettings);
-    });
-
-    it('should update the data columns to be use in table based on the new settings', () => {
-      let columnSettings = { header: { text: 'sample', value: true } };
-      component.updateColumnSettings(columnSettings);
-      expect(component.dataColumns.length).toBe(1);
-      expect(component.dataColumns[0]).toBe('header');
-    });
-  });
-
   describe('dataSource()', () => {
     beforeEach(async(() => {
       component.paginator = {

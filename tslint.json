@@ -21,7 +21,6 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "component-selector": [true, "element", ["mcs"], "kebab-case"],
-    "directive-selector": [true, "attribute", ["mcs"], "camelCase"],
     "invoke-injectable": true,
     "no-access-missing-member": true,
     "no-attribute-parameter-decorator": true,
@@ -30,7 +29,7 @@
     "no-output-rename": true,
     "pipe-naming": [true, "camelCase", ["mcs"]],
     "templates-use-public": true,
-    "use-host-property-decorator": true,
+    "use-host-property-decorator": false,
     "use-input-property-decorator": true,
     "use-life-cycle-interface": true,
     "use-output-property-decorator": true,
@@ -50,6 +49,7 @@
     "no-string-literal": false,
     "no-use-before-declare": true,
     "object-literal-sort-keys": false,
+    "object-literal-key-quotes": false,
     "ordered-imports": [
       false
     ],

@@ -43,6 +43,8 @@ export * from './interfaces/mcs-paginator.interface';
 export * from './interfaces/mcs-loader.interface';
 export * from './interfaces/mcs-modal.interface';
 export * from './interfaces/mcs-search.interface';
+/** Base */
+export * from './base/mcs-table-listing.base';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';

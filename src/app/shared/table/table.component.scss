@@ -59,13 +59,6 @@ mcs-table {
       @include font-size($table-header-font-size);
       font-family: $circular-pro-book;
       padding: $table-header-cell-padding;
-
-      &:first-child {
-        @include border-top-left-radius($table-header-border-radius);
-      }
-      &:last-child {
-        @include border-top-right-radius($table-header-border-radius);
-      }
     }
   }
 

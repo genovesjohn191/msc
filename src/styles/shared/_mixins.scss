@@ -326,6 +326,18 @@
 //   @include flex-wrap(nowrap);
 // }
 
+// Flex Align-items
+@mixin align-items ($value) {
+  -webkit-align-items: $value;
+  align-items: $value;
+}
+
+// Usage
+
+// .mcs-flex-item {
+//   @include align-items(center);
+// }
+
 // Textbox Highlight
 @mixin textbox-highlight($value) {
   -webkit-touch-callout: $value;

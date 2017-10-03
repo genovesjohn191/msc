@@ -8,6 +8,7 @@ import {
 /** External modules */
 import { FileUploadModule } from 'ng2-file-upload';
 /** Modules */
+import { LayoutModule } from './layout/layout.module';
 import { PopoverModule } from './popover/popover.module';
 import { ModalModule } from './modal/modal.module';
 import { IconModule } from './icon/icon.module';
@@ -16,6 +17,7 @@ import { TableModule } from './table/table.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
 import { PageHeaderModule } from './page-header/page-header.module';
 import { LoaderModule } from './loader/loader.module';
+import { PageModule } from './page/page.module';
 import { ContextualHelpModule } from './contextual-help';
 /** Components */
 import { ButtonComponent } from './button/button.component';
@@ -57,6 +59,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    LayoutModule,
     PopoverModule,
     ModalModule,
     IconModule,
@@ -65,6 +68,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ListPanelModule,
     PageHeaderModule,
     LoaderModule,
+    PageModule,
     ContextualHelpModule
   ],
   exports: [
@@ -87,6 +91,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    LayoutModule,
     PopoverModule,
     ModalModule,
     IconModule,
@@ -95,6 +100,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ListPanelModule,
     PageHeaderModule,
     LoaderModule,
+    PageModule,
     ContextualHelpModule
   ]
 })

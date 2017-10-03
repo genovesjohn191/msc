@@ -29,6 +29,11 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
     "noServers": "No servers to display.",
     "retry": "Try again shortly",
+    "start": "Start",
+    "stop": "Stop",
+    "restart": "Restart",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
     "dataSingular": "Server",
     "dataPlural": "Servers",
     "columnHeaders": {
@@ -164,6 +169,8 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tickets.",
     "noRecordsFoundMessage": "No tickets to display.",
     "retry": "Try again shortly",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
     "dataSingular": "Ticket",
     "dataPlural": "Tickets",
     "ticket" : {
@@ -211,6 +218,8 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
     "noFirewalls": "No firewalls to display.",
     "retry": "Try again shortly",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
     "dataSingular": "Firewall",
     "dataPlural": "Firewalls",
     "firewall": {
@@ -308,6 +317,10 @@
     "title": "Macquarie Cloud Services: Notifications",
     "header": "Notifications",
     "description": "Notifications play back and track activity within the portal.",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "dataSingular": "Notification",
+    "dataPlural": "Notifications",
     "tableHeader": {
       "status": "Status",
       "user": "User",

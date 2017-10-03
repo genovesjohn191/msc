@@ -1,38 +1,5 @@
 @import "../../../styles/shared/base";
 
-$notifications-search-min-width: 300px;
-
-.notifications-table-wrapper {
-  display: inline-block;
-  @include set-items-interval($space-xxlarge);
-
-  @include breakpoint(small) {
-    display: block;
-  }
-
-  .search-wrapper {
-    @include display-flex(row);
-    align-items: center;
-    @include set-items-interval($space-large, horizontal);
-
-    @include breakpoint(small) {
-      @include display-flex(column);
-      align-items: stretch;
-    }
-
-    mcs-search {
-      min-width: $notifications-search-min-width;
-      @include breakpoint(small) {
-        min-width: 100%;
-      }
-    }
-
-    .record-count {
-      margin-left: auto;
-    }
-  }
-
-  .data-error {
-    @include set-items-interval($space-small, horizontal);
-  }
+:host {
+  display: block;
 }

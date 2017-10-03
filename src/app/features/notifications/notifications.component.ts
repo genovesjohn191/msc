@@ -2,9 +2,10 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ChangeDetectorRef,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 /** Services */
 import { NotificationsService } from './notifications.service';
@@ -14,30 +15,30 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsSearch,
-  McsPaginator
+  McsPaginator,
+  McsBrowserService,
+  McsDeviceType,
+  McsTableListingBase
 } from '../../core';
 import {
-  formatDate,
+  convertDateToStandardString,
   refreshView,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getRecordCountLabel
 } from '../../utilities';
 
 @Component({
   selector: 'mcs-notifications',
   templateUrl: './notifications.component.html',
-  styles: [require('./notifications.component.scss')]
+  styles: [require('./notifications.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NotificationsComponent
+  extends McsTableListingBase<NotificationsDataSource>
+  implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  // Filter selector variables
-  public columnSettings: any;
-
-  // Table variables
-  public dataSource: NotificationsDataSource;
-  public dataColumns: string[];
 
   @ViewChild('search')
   public search: McsSearch;
@@ -45,7 +46,15 @@ export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('paginator')
   public paginator: McsPaginator;
 
+  // Subscription
   private _notificationsSubscription: any;
+
+  public get recordsFoundLabel(): string {
+    return getRecordCountLabel(
+      this.totalRecordCount,
+      this.textContent.dataSingular,
+      this.textContent.dataPlural);
+  }
 
   public get totalRecordCount(): number {
     return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
@@ -56,11 +65,14 @@ export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   public constructor(
+    _browserService: McsBrowserService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _notificationsService: NotificationsService,
-    private _notificationContextService: McsNotificationContextService,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) { }
+    private _notificationContextService: McsNotificationContextService
+  ) {
+    super(_browserService, _changeDetectorRef);
+  }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.notifications;
@@ -68,38 +80,14 @@ export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy 
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this._initiliazeDatasource();
+      this.initializeDatasource();
     });
   }
 
   public ngOnDestroy() {
+    this.dispose();
     if (!isNullOrEmpty(this._notificationsSubscription)) {
       this._notificationsSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this.dataSource)) {
-      this.dataSource.disconnect();
-    }
-    if (!isNullOrEmpty(this.dataColumns)) {
-      this.dataColumns = [];
-      this.dataColumns = null;
-    }
-  }
-
-  /**
-   * Update the column settings based on filtered selectors
-   * and update the data column of the table together
-   * @param columns New column settings
-   */
-  public updateColumnSettings(columns: any): void {
-    if (columns) {
-      this.columnSettings = columns;
-      let columnDetails = Object.keys(this.columnSettings);
-
-      this.dataColumns = [];
-      columnDetails.forEach((column) => {
-        if (!this.columnSettings[column].value) { return; }
-        this.dataColumns.push(column);
-      });
     }
   }
 
@@ -120,24 +108,17 @@ export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   /**
-   * Converts the date and time to string
-   * based on the given format
-   * @param date Date to be converted
+   * Initialize the table datasource according to pagination and search settings
    */
-  public convertDateTimeToString(date: Date): string {
-    let convertedString: string = '';
-    if (date) {
-      convertedString = formatDate(date, 'LTS, ddd DD MMM, YYYY');
-    }
-    return convertedString;
-  }
-
-  /**
-   * Retry to obtain the source from API
-   */
-  public retryDatasource(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
-    this._initiliazeDatasource();
+  protected initializeDatasource(): void {
+    // Set datasource
+    this.dataSource = new NotificationsDataSource(
+      this._notificationContextService,
+      this._notificationsService,
+      this.paginator,
+      this.search
+    );
+    this.changeDetectorRef.markForCheck();
   }
 
   /**
@@ -169,18 +150,5 @@ export class NotificationsComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     return { key: iconKey, color: iconColor };
-  }
-
-  /**
-   * Initialize the table datasource according to pagination and search settings
-   */
-  private _initiliazeDatasource(): void {
-    // Set datasource
-    this.dataSource = new NotificationsDataSource(
-      this._notificationContextService,
-      this._notificationsService,
-      this.paginator,
-      this.search
-    );
   }
 }
