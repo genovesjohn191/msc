@@ -33,6 +33,7 @@ export class FirewallComponent implements OnInit, OnDestroy {
   @ViewChild('listSearch')
   public _listSearch: McsSearch;
 
+  public firewallsTextContent: any;
   public firewallTextContent: any;
   public subscription: any;
   public firewallListSource: FirewallListSource | null;
@@ -83,6 +84,7 @@ export class FirewallComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     // OnInit
+    this.firewallsTextContent = this._textContentProvider.content.firewalls;
     this.firewallTextContent = this._textContentProvider.content.firewalls.firewall;
     this._initializeListsource();
     this._getFirewallById();
@@ -122,6 +124,14 @@ export class FirewallComponent implements OnInit, OnDestroy {
     return iconKey;
   }
 
+  /**
+   * Retry to obtain the source from API
+   */
+  public retryListsource(): void {
+    if (isNullOrEmpty(this.firewallListSource)) { return; }
+    this._initializeListsource();
+  }
+
   public ngOnDestroy() {
     // OnDestroy
     if (this.subscription) {
@@ -132,7 +142,6 @@ export class FirewallComponent implements OnInit, OnDestroy {
   private _initializeListsource(): void {
     this.firewallListSource = new FirewallListSource(
       this._firewallsService,
-      this._firewallService,
       this._listSearch
     );
   }

@@ -19,9 +19,9 @@ export class TestListPanelComponent {
   @ViewChild(ListPanelComponent)
   public component: ListPanelComponent<any>;
 
-  public dataSource: ListPanelDatasource;
+  public listSource: ListPanelDatasource;
   constructor() {
-    this.dataSource = new ListPanelDatasource();
+    this.listSource = new ListPanelDatasource();
   }
 }
 
@@ -50,7 +50,7 @@ describe('ListPanelComponent', () => {
     TestBed.overrideComponent(TestListPanelComponent, {
       set: {
         template: `
-        <mcs-list-panel [dataSource]="dataSource">
+        <mcs-list-panel [listSource]="listSource">
           <ng-container mcsListDef>
             <mcs-list-header *mcsListHeaderDef="let propValue; propertyName: 'color';"
               [groupName]="propValue">

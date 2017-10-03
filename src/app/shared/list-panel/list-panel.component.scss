@@ -75,4 +75,17 @@ $list-item-border-color: $color-primary-01;
       }
     }
   }
+
+  mcs-list-items-empty,
+  mcs-list-items-error,
+  .mcs-data-loading {
+    @include display-flex(row);
+    align-items: center;
+    min-height: $space-xlarge;
+    padding: 0 $space-medium;
+  }
+
+  .mcs-data-loading {
+    justify-content: center;
+  }
 }

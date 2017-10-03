@@ -56,6 +56,7 @@ export class ServerListSource implements McsDataSource<ServerList> {
     this._serverListStream = new BehaviorSubject<ServerList[]>(this._serverList);
     this._getServers();
     this._listenToActiveServers();
+    this.dataLoadingStream = new Subject<McsDataStatus>();
     this._searchMode = false;
   }
 
@@ -68,6 +69,7 @@ export class ServerListSource implements McsDataSource<ServerList> {
 
     return Observable.merge(...displayDataChanges)
       .map(() => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
         let serverList = new Array<ServerList>();
         this._searchMode = (this._search.keyword) ? true : false ;
 
@@ -122,6 +124,7 @@ export class ServerListSource implements McsDataSource<ServerList> {
   private _getServers(): void {
     this.serverListSubscription = this._serversService.getServers()
       .subscribe((response) => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
         this._serverList = this._mapServerList(response.content);
         this._serverListStream.next(this._serverList);
       });
