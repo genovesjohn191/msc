@@ -4,24 +4,24 @@ import {
   Input,
   Output,
   EventEmitter,
-  ViewChild,
-  HostListener,
-  ElementRef
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
-
-/** Services */
 import {
   McsStorageService,
-  McsTextContentProvider,
-  McsAssetsProvider,
-  McsFilterProvider,
-  CoreDefinition
+  McsFilterProvider
 } from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 
 @Component({
   selector: 'mcs-filter-selector',
   templateUrl: './filter-selector.component.html',
-  styles: [require('./filter-selector.component.scss')]
+  styles: [require('./filter-selector.component.scss')],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'filter-selector-wrapper'
+  }
 })
 
 export class FilterSelectorComponent implements OnInit {
@@ -31,44 +31,47 @@ export class FilterSelectorComponent implements OnInit {
   @Output()
   public onGetFilters: EventEmitter<any>;
 
-  public filterItems: any;
-  public filterTitle: string;
-  public iconClass: string;
-
-  public get columnsIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
+  /**
+   * Filter Items based on the filter-configuration definition
+   */
+  private _filterItems: any;
+  public get filterItems(): any {
+    return this._filterItems;
+  }
+  public set filterItems(value: any) {
+    if (this._filterItems !== value) {
+      this._filterItems = value;
+    }
   }
 
   public constructor(
     private _mcsStorageService: McsStorageService,
-    private _elementReference: ElementRef,
-    private _textContentProvider: McsTextContentProvider,
     private _filterProvider: McsFilterProvider
   ) {
     this.key = '';
-    this.filterTitle = '';
     this.onGetFilters = new EventEmitter();
-  }
-
-  public ngOnInit() {
-    this.filterTitle = this._textContentProvider.content.filterSelector.title;
-    this._getFilterItems();
-    this.onNotifyGetFilters();
-  }
-
-  public onCloseFilterSelector() {
-    this._mcsStorageService.setItem(this.key, this.filterItems);
-    this.onNotifyGetFilters();
-  }
-
-  public onNotifyGetFilters(event?: any): void {
-    this.onGetFilters.emit(this.filterItems);
   }
 
   public get filterKeys(): any {
     return Object.keys(this.filterItems);
   }
 
+  public ngOnInit() {
+    this._getFilterItems();
+    this.onNotifyGetFilters();
+  }
+
+  /**
+   * Notify the outside subscribers that the filter has been changed
+   */
+  public onNotifyGetFilters(): void {
+    this._mcsStorageService.setItem(this.key, this.filterItems);
+    this.onGetFilters.emit(this.filterItems);
+  }
+
+  /**
+   * Get the filter items in the storage or default filter settings
+   */
   private _getFilterItems(): void {
     this.filterItems = this._mcsStorageService.getItem<any>(this.key);
     if (!this.filterItems) {

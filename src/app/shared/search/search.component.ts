@@ -3,9 +3,10 @@ import {
   Input,
   OnInit,
   OnDestroy,
-  ChangeDetectionStrategy,
+  EventEmitter,
   ChangeDetectorRef,
-  EventEmitter
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   Observable,
@@ -22,7 +23,11 @@ import { isNullOrEmpty } from '../../utilities';
   selector: 'mcs-search',
   templateUrl: './search.component.html',
   styles: [require('./search.component.scss')],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'search-wrapper'
+  }
 })
 
 export class SearchComponent implements OnInit, OnDestroy, McsSearch {

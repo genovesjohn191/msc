@@ -3,22 +3,24 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 /** Services */
 import {
   McsPaginator,
   McsSearch,
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  McsBrowserService,
+  McsTableListingBase
 } from '../../core';
 import { Router } from '@angular/router';
 import {
-  formatDate,
   isNullOrEmpty,
   getEnumString,
   refreshView,
-  convertDateToStandardString,
   getRecordCountLabel
 } from '../../utilities';
 import { TicketsService } from './tickets.service';
@@ -28,19 +30,15 @@ import { TicketStatus } from './models';
 @Component({
   selector: 'mcs-tickets',
   templateUrl: './tickets.component.html',
-  styles: [require('./tickets.component.scss')]
+  styles: [require('./tickets.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TicketsComponent
+  extends McsTableListingBase<TicketsDataSource>
+  implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  // Filter selector variables
-  public columnSettings: any;
-
-  // Table variables
-  public dataSource: TicketsDataSource;
-  public dataColumns: string[];
 
   @ViewChild('search')
   public search: McsSearch;
@@ -63,12 +61,18 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 
+  public get addIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_PLUS;
+  }
+
   constructor(
+    _browserService: McsBrowserService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _ticketsService: TicketsService,
     private _router: Router
   ) {
-    this.dataColumns = new Array();
+    super(_browserService, _changeDetectorRef);
   }
 
   public ngOnInit(): void {
@@ -77,18 +81,12 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this._initiliazeDatasource();
+      this.initializeDatasource();
     });
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this.dataSource)) {
-      this.dataSource.disconnect();
-    }
-    if (!isNullOrEmpty(this.dataColumns)) {
-      this.dataColumns = [];
-      this.dataColumns = null;
-    }
+    this.dispose();
   }
 
   /**
@@ -107,48 +105,15 @@ export class TicketsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Converts the date and time to string based on standard format
-   * @param date Date to be converted
-   */
-  public convertDateTimeToString(date: Date): string {
-    return convertDateToStandardString(date);
-  }
-
-  /**
-   * Update the column settings based on filtered selectors
-   * and update the data column of the table together
-   * @param columns New column settings
-   */
-  public updateColumnSettings(columns: any): void {
-    if (columns) {
-      this.columnSettings = columns;
-      let columnDetails = Object.keys(this.columnSettings);
-
-      this.dataColumns = [];
-      columnDetails.forEach((column) => {
-        if (!this.columnSettings[column].value) { return; }
-        this.dataColumns.push(column);
-      });
-    }
-  }
-
-  /**
-   * Retry to obtain the source from API
-   */
-  public retryDatasource(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
-    this._initiliazeDatasource();
-  }
-
-  /**
    * Initialize the table datasource according to pagination and search settings
    */
-  private _initiliazeDatasource(): void {
+  protected initializeDatasource(): void {
     // Set datasource
     this.dataSource = new TicketsDataSource(
       this._ticketsService,
       this.paginator,
       this.search
     );
+    this.changeDetectorRef.markForCheck();
   }
 }

@@ -1,7 +1,8 @@
 @import "../shared/base";
 @import "fonts";
+@import "layout/mcs-layout";
+@import "classes/mcs-listing";
 @import "classes/mcs-page-title";
-@import "classes/mcs-search";
 @import "classes/mcs-tabs";
 @import "classes/mcs-pre-loader";
 
@@ -207,21 +208,6 @@ html {
   color: $color-grey-02;
 }
 
-.mcs-table-wrapper {
-  display: inline-block;
-  @include set-items-interval($space-xxlarge);
-
-  @include breakpoint(small) {
-    display: block;
-  }
-
-  .emphasize {
-    @include set-items-interval($space-small, horizontal);
-    @include display-flex(row);
-    align-items: center;
-  }
-}
-
 .search-wrapper {
   @include display-flex(row);
   align-items: center;
@@ -261,4 +247,10 @@ html {
   .loader-container {
     z-index: $zindex-loader-container;
   }
+}
+
+.icon-label-wrapper {
+  @include display-flex(row);
+  align-items: center;
+  @include set-items-interval($space-small, horizontal);
 }

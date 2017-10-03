@@ -3,7 +3,9 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServersService } from './servers.service';
@@ -21,7 +23,9 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsSearch,
-  McsPaginator
+  McsPaginator,
+  McsBrowserService,
+  McsTableListingBase
 } from '../../core';
 import {
   isNullOrEmpty,
@@ -32,25 +36,24 @@ import {
 @Component({
   selector: 'mcs-servers',
   templateUrl: './servers.component.html',
-  styles: [require('./servers.component.scss')]
+  styles: [require('./servers.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ServersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ServersComponent
+  extends McsTableListingBase<ServersDataSource>
+  implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  // Filter selector variables
-  public columnSettings: any;
-
-  // Table variables
-  public dataSource: ServersDataSource;
-  public dataColumns: string[];
 
   @ViewChild('search')
   public search: McsSearch;
 
   @ViewChild('paginator')
   public paginator: McsPaginator;
+
+  // Subscription
+  private _activeServerSubscription: any;
 
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
@@ -71,11 +74,30 @@ export class ServersComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
+  public get addIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_PLUS;
+  }
+
+  public get startIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_PLAY;
+  }
+
+  public get stopIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_STOP;
+  }
+
+  public get restartIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_RESTART;
+  }
+
   public constructor(
+    _browserService: McsBrowserService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _router: Router
   ) {
+    super(_browserService, _changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -84,17 +106,15 @@ export class ServersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this._initiliazeDatasource();
+      this.initializeDatasource();
+      this._listenToActiveServers();
     });
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this.dataSource)) {
-      this.dataSource.disconnect();
-    }
-    if (!isNullOrEmpty(this.dataColumns)) {
-      this.dataColumns = [];
-      this.dataColumns = null;
+    this.dispose();
+    if (!isNullOrEmpty(this._activeServerSubscription)) {
+      this._activeServerSubscription.unsubscribe();
     }
   }
 
@@ -173,24 +193,6 @@ export class ServersComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Update the column settings based on filtered selectors
-   * and update the data column of the table together
-   * @param columns New column settings
-   */
-  public updateColumnSettings(columns: any): void {
-    if (columns) {
-      this.columnSettings = columns;
-      let columnDetails = Object.keys(this.columnSettings);
-
-      this.dataColumns = [];
-      columnDetails.forEach((column) => {
-        if (!this.columnSettings[column].value) { return; }
-        this.dataColumns.push(column);
-      });
-    }
-  }
-
-  /**
    * This will navigate to new server page
    * @param event Event invoked
    */
@@ -250,22 +252,25 @@ export class ServersComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Retry to obtain the source from API
-   */
-  public retryDatasource(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
-    this._initiliazeDatasource();
-  }
-
-  /**
    * Initialize the table datasource according to pagination and search settings
    */
-  private _initiliazeDatasource(): void {
+  protected initializeDatasource(): void {
     // Set datasource
     this.dataSource = new ServersDataSource(
       this._serversService,
       this.paginator,
       this.search
     );
+    this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Listener to all the active servers to refresh the view when data is being changed
+   */
+  private _listenToActiveServers(): void {
+    this._activeServerSubscription = this._serversService.activeServersStream
+      .subscribe(() => {
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }

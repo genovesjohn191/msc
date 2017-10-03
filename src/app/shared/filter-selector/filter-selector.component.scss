@@ -1,29 +1,7 @@
 @import '../../../styles/shared/base';
 
-$filter-selector-title-font-size: $font-size-large;
-$filter-selector-content-font-size: $font-size-default;
-
-.mcs-filter-selector {
-  display: inline-block;
-  .icon-link {
-    cursor: pointer;
-    position: relative;
-    display: block;
-    margin: 0px 5px;
-    mcs-icon {
-      vertical-align: middle;
-    }
-  }
-}
-
-.mcs-popover-title {
-  display: block;
-  @include font-size($filter-selector-title-font-size);
-}
-
-.mcs-popover-filters {
-  li {
-    padding-top: $space-small;
-    @include font-size($filter-selector-content-font-size);
-  }
+.filter-selector-wrapper {
+  @include display-flex(column);
+  justify-content: center;
+  @include set-items-interval($space-small);
 }

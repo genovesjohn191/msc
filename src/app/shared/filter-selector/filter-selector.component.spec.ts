@@ -9,8 +9,7 @@ import { FilterItem } from './filter-item';
 /** Services */
 import {
   McsStorageService,
-  McsFilterProvider,
-  CoreDefinition
+  McsFilterProvider
 } from '../../core';
 import { CoreTestingModule } from '../../core/testing';
 
@@ -79,12 +78,6 @@ describe('FilterSelectorComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should set the iconClass and filterTitle values', () => {
-      component.ngOnInit();
-      expect(component.iconClass).not.toEqual(undefined || null || '');
-      expect(component.filterTitle).not.toEqual(undefined || null || '');
-    });
-
     it('should call the getItem() of MscStorageService when localStorage is not empty',
       inject([McsStorageService], (mcsStorageService: McsStorageService) => {
         spyOn(mcsStorageService, 'getItem');
@@ -118,27 +111,6 @@ describe('FilterSelectorComponent', () => {
     it('should call the emit() of onGetFilters (EventEmitter)', () => {
       spyOn(component.onGetFilters, 'emit');
       component.ngOnInit();
-      expect(component.onGetFilters.emit).toHaveBeenCalled();
-    });
-  });
-
-  describe('IconKey() | Property', () => {
-    it('should get the columns icon key definition', () => {
-      expect(component.columnsIconKey).toBe(CoreDefinition.ASSETS_SVG_COLUMNS_BLACK);
-    });
-  });
-
-  describe('onCloseFilterSelector()', () => {
-    it('should call the setItem() of MscStorageService 1 time',
-      inject([McsStorageService], (mcsStorageService: McsStorageService) => {
-        spyOn(mcsStorageService, 'setItem');
-        component.onCloseFilterSelector();
-        expect(mcsStorageService.setItem).toHaveBeenCalledTimes(1);
-      }));
-
-    it('should call the emit() of onGetFilters (EventEmitter)', () => {
-      spyOn(component.onGetFilters, 'emit');
-      component.onCloseFilterSelector();
       expect(component.onGetFilters.emit).toHaveBeenCalled();
     });
   });

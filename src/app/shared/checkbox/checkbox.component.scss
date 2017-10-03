@@ -1,5 +1,9 @@
 @import "../../../styles/shared/base";
 
+.checkbox-wrapper {
+  display: block;
+}
+
 label {
   cursor: pointer;
   max-width: 90%;

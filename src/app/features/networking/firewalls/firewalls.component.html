@@ -1,123 +1,148 @@
-<!-- Table with filtering and pagination -->
-<div class="mcs-table-wrapper">
-  <!-- Search -->
-  <div class="search-wrapper">
-    <mcs-search #search class="search"></mcs-search>
+<mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
 
-    <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
-      (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
-
-    <span class="record-count">{{ recordsFoundLabel }}</span>
-  </div>
-
-  <!-- Table -->
-  <mcs-table [dataSource]="dataSource">
-    <!-- Status Column -->
-    <ng-container mcsColumnDef="status">
-      <mcs-header-cell *mcsHeaderCellDef class="text-center">
-        {{ columnSettings.status.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
-        <mcs-icon [key]="getStatusIconKey(row.connectionStatus)"></mcs-icon>
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Firewall Column -->
-    <ng-container mcsColumnDef="firewall">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.firewall.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Serial Number Column -->
-    <ng-container mcsColumnDef="serialNumber" >
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.serialNumber.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.serialNumber }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Firmware Version Column -->
-    <ng-container mcsColumnDef="firmwareVersion">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.firmwareVersion.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.osVendor }} {{ row.osRelease }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- IP Address Column -->
-    <ng-container mcsColumnDef="ipAddress">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.ipAddress.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.managementIpAddress }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Role Column -->
-    <ng-container mcsColumnDef="role">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.role.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        {{ row.haRole }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Service ID Column -->
-    <ng-container mcsColumnDef="serviceId">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.serviceId.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        {{ row.serviceId }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Action Column TODO: add restriction here -->
-    <ng-container mcsColumnDef="action">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small"></mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
-        <mcs-icon class="action" [key]="cogIconKey" size="large"
-          mcsPopover placement="bottom" orientation="left"
-          theme="light" padding="narrow" [content]="actionContent">
-        </mcs-icon>
-        <ng-template #actionContent>
-          <a class="action-item" [href]="row.url" target="_blank">View in Portal</a>
-        </ng-template>
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Data Status Integration -->
-    <ng-container mcsDataStatusDef>
-      <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ firewallsTextContent.noFirewalls }}</span>
-      </mcs-data-empty>
-      <mcs-data-error *mcsDataErrorDef>
-        <div class="data-error">
-          <span>{{ firewallsTextContent.errorMessage }}</span>
-          <a (click)="retryDatasource()">{{ firewallsTextContent.retry }}</a>.
+    <!-- Firewall Action -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count">
+          <span>{{ recordsFoundLabel }}</span>
         </div>
-      </mcs-data-error>
-    </ng-container>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
 
-    <!-- Header and Data row -->
-    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-  </mcs-table>
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef>
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
+      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+    </mcs-left-panel-item>
 
-  <!-- Paginator -->
-  <mcs-paginator #paginator
-    [totalCount]="totalRecordCount"
-    [pageIndex]="0"
-    [pageSize]="25">
-  </mcs-paginator>
-</div>
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey"
+        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+        <!-- Status Column -->
+        <ng-container mcsColumnDef="status">
+          <mcs-header-cell *mcsHeaderCellDef class="text-center">
+            {{ columnSettings.status.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+            <mcs-icon [key]="getStatusIconKey(row.connectionStatus)"></mcs-icon>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Firewall Column -->
+        <ng-container mcsColumnDef="firewall">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.firewall.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Serial Number Column -->
+        <ng-container mcsColumnDef="serialNumber" >
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.serialNumber.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.serialNumber }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Firmware Version Column -->
+        <ng-container mcsColumnDef="firmwareVersion">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.firmwareVersion.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.osVendor }} {{ row.osRelease }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- IP Address Column -->
+        <ng-container mcsColumnDef="ipAddress">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.ipAddress.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.managementIpAddress }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container mcsColumnDef="role">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.role.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.haRole }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container mcsColumnDef="serviceId">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.serviceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.serviceId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Action Column TODO: add restriction here -->
+        <ng-container mcsColumnDef="action">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small"></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
+            <mcs-icon class="action" [key]="cogIconKey" size="large"
+              mcsPopover placement="bottom" orientation="left"
+              theme="light" padding="narrow" [content]="actionContent">
+            </mcs-icon>
+            <ng-template #actionContent>
+              <a class="action-item" [href]="row.url" target="_blank">View in Portal</a>
+            </ng-template>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ firewallsTextContent.noFirewalls }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ firewallsTextContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ firewallsTextContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="totalRecordCount"
+        [pageIndex]="0"
+        [pageSize]="25">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

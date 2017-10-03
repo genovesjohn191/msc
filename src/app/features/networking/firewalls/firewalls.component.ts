@@ -3,7 +3,9 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirewallsService } from './firewalls.service';
@@ -18,7 +20,9 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsSearch,
-  McsPaginator
+  McsPaginator,
+  McsBrowserService,
+  McsTableListingBase
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -29,19 +33,15 @@ import {
 @Component({
   selector: 'mcs-firewalls',
   templateUrl: './firewalls.component.html',
-  styles: [require('./firewalls.component.scss')]
+  styles: [require('./firewalls.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FirewallsComponent
+  extends McsTableListingBase<FirewallsDataSource>
+  implements OnInit, AfterViewInit, OnDestroy {
 
-  public firewallsTextContent: any;
-
-  // Filter selector variables
-  public columnSettings: any;
-
-  // Table variables
-  public dataSource: FirewallsDataSource;
-  public dataColumns: string[];
+  public textContent: any;
 
   @ViewChild('search')
   public search: McsSearch;
@@ -52,8 +52,8 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
       this.totalRecordCount,
-      this.firewallsTextContent.dataSingular,
-      this.firewallsTextContent.dataPlural);
+      this.textContent.dataSingular,
+      this.textContent.dataPlural);
   }
 
   public get totalRecordCount(): number {
@@ -73,32 +73,33 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public constructor(
+    _browserService: McsBrowserService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _router: Router,
     private _firewallsService: FirewallsService
   ) {
+    super(_browserService, _changeDetectorRef);
   }
 
   public ngOnInit() {
-    this.firewallsTextContent = this._textProvider.content.firewalls;
+    this.textContent = this._textProvider.content.firewalls;
   }
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this._initializeDatasource();
+      this.initializeDatasource();
     });
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this.dataSource)) {
-      this.dataSource.disconnect();
-    }
-    if (!isNullOrEmpty(this.dataColumns)) {
-      this.dataColumns = [];
-      this.dataColumns = null;
-    }
+    this.dispose();
   }
 
+  /**
+   * Get the status Icon Key based on firewall state
+   * @param status Status to check
+   */
   public getStatusIconKey(status: FirewallConnectionStatus): string {
     let iconKey = '';
 
@@ -120,40 +121,15 @@ export class FirewallsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Update the column settings based on filtered selectors
-   * and update the data column of the table together
-   * @param columns New column settings
-   */
-  public updateColumnSettings(columns: any): void {
-    if (columns) {
-      this.columnSettings = columns;
-      let columnDetails = Object.keys(this.columnSettings);
-
-      this.dataColumns = [];
-      columnDetails.forEach((column) => {
-        if (!this.columnSettings[column].value) { return; }
-        this.dataColumns.push(column);
-      });
-    }
-  }
-
-  /**
-   * Retry to obtain the source from API
-   */
-  public retryDatasource(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
-    this._initializeDatasource();
-  }
-
-  /**
    * Initialize the table datasource according to pagination and search settings
    */
-  private _initializeDatasource(): void {
+  protected initializeDatasource(): void {
     // Set datasource
     this.dataSource = new FirewallsDataSource(
       this._firewallsService,
       this.paginator,
       this.search
     );
+    this.changeDetectorRef.markForCheck();
   }
 }

@@ -1,22 +1,5 @@
-<div class="mcs-filter-selector">
-  <a class="icon-link" mcsPopover
-    placement="bottom" orientation="right" theme="gray"
-    [content]="filterSelectorContent"
-    (onClose)="onCloseFilterSelector()">
-    <mcs-icon [key]="columnsIconKey" size="xlarge"></mcs-icon>
-  </a>
-
-  <ng-template #filterSelectorContent>
-    <span class="mcs-popover-title">{{ filterTitle }}</span>
-    <div class="mcs-popover-filters">
-      <ul class="unstyled-list">
-        <li *ngFor="let key of filterKeys" [hidden]="filterItems[key].exclude">
-          <mcs-checkbox
-            [label]="filterItems[key].text"
-            [(ngModel)]="filterItems[key].value"
-            (change)="onNotifyGetFilters()"></mcs-checkbox>
-        </li>
-      </ul>
-    </div>
-  </ng-template>
-</div>
+<!-- Generate checkbox in each of the filter items excluding those who are excluded -->
+<ng-container *ngFor="let key of filterKeys" >
+  <mcs-checkbox [label]="filterItems[key].text" *ngIf="!filterItems[key].exclude"
+    [(ngModel)]="filterItems[key].value" (change)="onNotifyGetFilters()"></mcs-checkbox>
+</ng-container>

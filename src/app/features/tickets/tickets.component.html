@@ -1,113 +1,132 @@
-<!-- Page Header with title, subtitle (for total record), and description -->
-<mcs-page-header class="page-header-wrapper">
-  <mcs-page-title *mcsPageTitleDef>
-    {{ textContent.header }}
-  </mcs-page-title>
-  <mcs-page-description *mcsPageDescriptionDef>
-    {{ textContent.description }}
-  </mcs-page-description>
-</mcs-page-header>
+<mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
 
-<!-- Table with filtering and pagination -->
-<div class="mcs-table-wrapper">
-  <!-- Search -->
-  <div class="search-wrapper">
-    <mcs-search #search class="search"></mcs-search>
-
-    <mcs-filter-selector class="hidden-small" [key]="columnSettingsKey"
-      (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
-
-    <mcs-button (onClick)="onClickNewTicket()" size="small">
-      {{ textContent.newTicket }}
-    </mcs-button>
-
-    <span class="record-count">{{ recordsFoundLabel }}</span>
-  </div>
-
-  <!-- Table -->
-  <mcs-table [dataSource]="dataSource">
-    <!-- ID Column -->
-    <ng-container mcsColumnDef="ticketId">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.ticketId.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        <a [routerLink]="['/tickets', row.id]">{{ row.number }}</a>
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Status Column -->
-    <ng-container mcsColumnDef="status">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.status.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        {{ getStatusString(row.state) }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Headline Column -->
-    <ng-container mcsColumnDef="headline">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ columnSettings.headline.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
-        <a [routerLink]="['/tickets', row.id]">{{ row.shortDescription }}</a>
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Logged By Column -->
-    <ng-container mcsColumnDef="loggedBy">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.loggedBy.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.requestor }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Last Updated Date Column -->
-    <ng-container mcsColumnDef="lastUpdatedDate">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.lastUpdatedDate.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ convertDateTimeToString(row.updatedOn) }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Last Updated By Column -->
-    <ng-container mcsColumnDef="lastUpdatedBy">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ columnSettings.lastUpdatedBy.text }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ row.updatedBy }}
-      </mcs-data-cell>
-    </ng-container>
-
-    <!-- Data Status Integration -->
-    <ng-container mcsDataStatusDef>
-      <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ textContent.noRecordsFoundMessage }}</span>
-      </mcs-data-empty>
-      <mcs-data-error *mcsDataErrorDef>
-        <div class="data-error">
-          <span>{{ textContent.errorMessage }}</span>
-          <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+    <!-- Ticket Action -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="icon-label-wrapper" cursor="pointer" (click)="onClickNewTicket($event)">
+          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.newTicket }}</span>
         </div>
-      </mcs-data-error>
-    </ng-container>
 
-    <!-- Header and Data row -->
-    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-  </mcs-table>
+        <div class="total-record-count">
+          <span>{{ recordsFoundLabel }}</span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
 
-  <!-- Paginator -->
-  <mcs-paginator #paginator
-    [totalCount]="totalRecordCount"
-    [pageIndex]="0"
-    [pageSize]="25">
-  </mcs-paginator>
-</div>
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef>
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
+      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey"
+        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Description -->
+      <span>{{ textContent.description }}</span>
+
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+        <!-- ID Column -->
+        <ng-container mcsColumnDef="ticketId">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.ticketId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <a [routerLink]="['/tickets', row.id]">{{ row.number }}</a>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container mcsColumnDef="status">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.status.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ getStatusString(row.state) }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Headline Column -->
+        <ng-container mcsColumnDef="headline">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.headline.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+            <a [routerLink]="['/tickets', row.id]">{{ row.shortDescription }}</a>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Logged By Column -->
+        <ng-container mcsColumnDef="loggedBy">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.loggedBy.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.requestor }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Last Updated Date Column -->
+        <ng-container mcsColumnDef="lastUpdatedDate">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.lastUpdatedDate.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ convertDateTimeToString(row.updatedOn) }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Last Updated By Column -->
+        <ng-container mcsColumnDef="lastUpdatedBy">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.lastUpdatedBy.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.updatedBy }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ textContent.noRecordsFoundMessage }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [totalCount]="totalRecordCount"
+        [pageIndex]="0"
+        [pageSize]="25">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

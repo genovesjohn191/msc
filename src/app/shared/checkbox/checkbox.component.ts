@@ -4,6 +4,9 @@ import {
   Input,
   Output,
   EventEmitter,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -14,6 +17,11 @@ import {
   selector: 'mcs-checkbox',
   templateUrl: './checkbox.component.html',
   styles: [require('./checkbox.component.scss')],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'checkbox-wrapper'
+  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -54,7 +62,7 @@ export class CheckboxComponent implements ControlValueAccessor {
     }
   }
 
-  public constructor() {
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.label = '';
   }
 
@@ -69,6 +77,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   public writeValue(value: any) {
     if (value !== this._isChecked) {
       this._isChecked = value;
+      this._changeDetectorRef.markForCheck();
     }
   }
 

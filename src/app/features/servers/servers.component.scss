@@ -1,7 +1,11 @@
 @import "../../../styles/shared/base";
 
-.data-error {
-  @include set-items-interval($space-small, horizontal);
+.top-panel-item-wrapper {
+  @include breakpoint(small) {
+    &:first-child {
+      border-right: none !important;
+    }
+  }
 }
 
 .loading-content-popover {
