@@ -6,13 +6,9 @@ import {
   tick,
   getTestBed
 } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { StateChangeNotificationComponent } from './state-change-notification.component';
 import {
-  McsAssetsProvider,
   McsApiJob,
-  McsApiService,
-  McsApiRequestParameter,
   McsNotificationContextService,
   McsNotificationJobService,
   CoreDefinition

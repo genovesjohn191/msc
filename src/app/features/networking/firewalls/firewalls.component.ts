@@ -7,14 +7,10 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { FirewallsService } from './firewalls.service';
 import { FirewallsDataSource } from './firewalls.datasource';
 /** Models */
-import {
-  Firewall,
-  FirewallConnectionStatus
-} from './models';
+import { FirewallConnectionStatus } from './models';
 /** Core */
 import {
   McsTextContentProvider,
@@ -76,7 +72,6 @@ export class FirewallsComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _router: Router,
     private _firewallsService: FirewallsService
   ) {
     super(_browserService, _changeDetectorRef);

@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import {
-  reviverParser,
-  convertJsonStringToObject
-} from '../../utilities';
+import { convertJsonStringToObject } from '../../utilities';
 
 // Services Declarations
 import {

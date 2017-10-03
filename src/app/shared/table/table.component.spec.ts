@@ -29,7 +29,6 @@ describe('TableComponent', () => {
 
   /** Stub Services/Components */
   let component: TestTableComponent;
-  let dataSource = new TableDatasource();
 
   beforeEach(async(() => {
     /** Testbed Reset Module */

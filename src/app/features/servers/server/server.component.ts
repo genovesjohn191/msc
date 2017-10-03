@@ -13,7 +13,6 @@ import {
   ServerClientObject,
   ServerPowerState,
   ServerCommand,
-  ServerPlatform,
   ServerServiceType
 } from '../models';
 import {
@@ -112,8 +111,8 @@ export class ServerComponent implements OnInit, OnDestroy {
         powerState: server.powerState,
         commandAction: ServerCommand[action]
       } as ServerClientObject)
-      .subscribe((response) => {
-        // console.log(response);
+      .subscribe(() => {
+        // Subscribe to execute the command post
       });
   }
 

@@ -6,7 +6,7 @@ import {
 describe('EVENTS Utility Functions', () => {
   describe('registerEvent()', () => {
     it(`should register the event and call the listen of angular renderer`, () => {
-      let mockRenderer = { listen(element: any, event: any, callback: any) { return; } };
+      let mockRenderer = { listen(_element: any, _event: any, _callback: any) { return; } };
       let mockCallback = () => {
         return undefined;
       };
@@ -19,7 +19,7 @@ describe('EVENTS Utility Functions', () => {
 
   describe('unregisterEvent()', () => {
     it(`should unregister the event and call the removeEventListener`, () => {
-      let mockElement = { removeEventListener(event: any, callback: any) { return; } };
+      let mockElement = { removeEventListener(_event: any, _callback: any) { return; } };
       let mockCallback = () => {
         return undefined;
       };

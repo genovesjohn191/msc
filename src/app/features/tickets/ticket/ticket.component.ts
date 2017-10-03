@@ -7,7 +7,6 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider
@@ -23,7 +22,6 @@ import {
   TicketStatus,
   TicketSubType,
   TicketAttachment,
-  TicketComment,
   TicketActivity,
   TicketNewComment,
   TicketCommentCategory,
@@ -149,7 +147,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   /**
    * Cancel comment to hide the comment box
    */
-  public cancelComment(event: any) {
+  public cancelComment(_event: any) {
     this._showCommentBox = false;
   }
 

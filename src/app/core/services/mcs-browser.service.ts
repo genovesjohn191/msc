@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  HostListener,
-  OnInit
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { McsDeviceType } from '../enumerations/mcs-device-type.enum';
 import { McsSize } from '../models/mcs-size';

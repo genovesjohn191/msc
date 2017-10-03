@@ -9,12 +9,10 @@ import {
   ContentChild,
   ChangeDetectorRef,
   Renderer2,
-  ElementRef,
   NgIterable,
   IterableDiffer,
   IterableDiffers,
   TrackByFunction,
-  IterableChangeRecord,
   ChangeDetectionStrategy,
   ViewEncapsulation,
   HostBinding
@@ -165,7 +163,6 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
-    private _elementRef: ElementRef,
     private _differs: IterableDiffers,
     private _listPanelService: ListPanelService
   ) {

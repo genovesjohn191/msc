@@ -7,17 +7,12 @@ import {
 import {
   Server,
   ServerPerformanceScale,
-  ServerThumbnail,
   ServerUpdate,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerPlatform
 } from '../models';
-import {
-  McsApiSuccessResponse,
-  McsApiJob,
-  CoreDefinition
-} from '../../../core/';
+import { McsApiSuccessResponse } from '../../../core/';
 
 @Injectable()
 export class ServerService {

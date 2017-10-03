@@ -5,7 +5,6 @@ import {
 } from '@angular/core/testing';
 import { EventEmitter } from '@angular/core';
 import { FilterSelectorComponent } from './filter-selector.component';
-import { FilterItem } from './filter-item';
 /** Services */
 import {
   McsStorageService,
@@ -21,7 +20,7 @@ describe('FilterSelectorComponent', () => {
   /** Stub Services/Components */
   let component: FilterSelectorComponent;
   let mscStorageServiceMock = {
-    getItem<T>(key: string): any {
+    getItem<T>(_key: string): T {
       let filters: any;
       filters = filterItems;
       if (mockFlag === 0) {
@@ -35,7 +34,7 @@ describe('FilterSelectorComponent', () => {
     }
   };
   let filterProviderMock = {
-    getDefaultFilters(key: string): any {
+    getDefaultFilters(_key: string): any {
       return filterItems;
     }
   };

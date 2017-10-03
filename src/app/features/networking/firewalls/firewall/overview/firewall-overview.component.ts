@@ -11,8 +11,7 @@ import {
   Firewall,
   FirewallDeviceStatus,
   FirewallConnectionStatus,
-  FirewallConfigurationStatus,
-  FirewallUtm
+  FirewallConfigurationStatus
 } from '../../models';
 import { FirewallService } from '../firewall.service';
 import {

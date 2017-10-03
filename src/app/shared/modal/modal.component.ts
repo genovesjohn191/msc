@@ -16,11 +16,9 @@ import {
 } from '@angular/core';
 import {
   trigger,
-  state,
   style,
   transition,
-  animate,
-  keyframes
+  animate
 } from '@angular/animations';
 import { refreshView } from '../../utilities';
 

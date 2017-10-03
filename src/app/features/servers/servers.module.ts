@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 /** Servers */
 import { ServersComponent } from './servers.component';
 /** Shared */

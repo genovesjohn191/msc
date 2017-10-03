@@ -4,7 +4,6 @@
 import {
   Component,
   ViewEncapsulation,
-  Renderer2,
   NgZone,
   OnInit,
   OnDestroy,
@@ -20,7 +19,6 @@ import {
   NavigationCancel,
   NavigationError
 } from '@angular/router';
-import { McsRoutePermissionGuard } from './core';
 import { animateFactory } from './utilities';
 /*
  * App Component
@@ -59,9 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private _router: Router,
-    private _ngZone: NgZone,
-    private _renderer: Renderer2,
-    private _routePermissionGuard: McsRoutePermissionGuard
+    private _ngZone: NgZone
   ) {
     this.isInitialDisplayed = true;
   }

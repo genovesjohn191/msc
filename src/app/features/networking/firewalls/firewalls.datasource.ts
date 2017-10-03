@@ -76,7 +76,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
    * This will invoke when the data obtainment is completed
    * @param firewalls Data to be provided when the datasource is connected
    */
-  public onCompletion(status: McsDataStatus, firewalls?: Firewall[]): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
   }

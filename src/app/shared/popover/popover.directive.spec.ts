@@ -6,7 +6,6 @@ import {
 import {
   Component,
   ViewChild,
-  ComponentRef,
   DebugElement
 } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -158,7 +157,6 @@ describe('PopoverDirective', () => {
   });
 
   describe('moveElementPosition()', () => {
-    let elementPosition: ClientRect;
     beforeEach(async(() => {
       component.popover.trigger = 'manual';
       directiveElement.triggerEventHandler('click', {});

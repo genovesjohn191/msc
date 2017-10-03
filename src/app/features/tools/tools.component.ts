@@ -2,7 +2,6 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
 /** Services */
 import { McsTextContentProvider } from '../../core';
 import { ToolsService } from './tools.service';

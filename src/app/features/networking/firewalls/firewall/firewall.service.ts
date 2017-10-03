@@ -9,9 +9,7 @@ import {
   FirewallPolicy
 } from '../models';
 import {
-  McsApiSuccessResponse,
-  McsApiJob,
-  CoreDefinition
+  McsApiSuccessResponse
 } from '../../../../core/';
 
 @Injectable()

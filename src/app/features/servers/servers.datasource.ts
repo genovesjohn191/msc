@@ -76,7 +76,7 @@ export class ServersDataSource implements McsDataSource<Server> {
    * This will invoke when the data obtainment is completed
    * @param servers Data to be provided when the datasource is connected
    */
-  public onCompletion(status: McsDataStatus, servers?: Server[]): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
   }

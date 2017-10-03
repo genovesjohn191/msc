@@ -7,8 +7,7 @@ import {
 } from '@angular/core/testing';
 import {
   Component,
-  ViewChild,
-  DebugElement
+  ViewChild
 } from '@angular/core';
 import {
   Subscription,

@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  Optional
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class McsFilterProvider {

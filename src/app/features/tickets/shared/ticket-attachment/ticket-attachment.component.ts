@@ -4,8 +4,7 @@ import {
   Output,
   OnInit,
   EventEmitter,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   FileUploader,
@@ -37,10 +36,7 @@ export class TicketAttachmentComponent implements OnInit {
   @Output()
   public attachedFilesChanged: EventEmitter<TicketFileInfo[]>;
 
-  public constructor(
-    private _textContentProvider: McsTextContentProvider,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) {
+  public constructor(private _textContentProvider: McsTextContentProvider  ) {
     // Set uploader configuration
     this.attachedFilesChanged = new EventEmitter<TicketFileInfo[]>();
   }

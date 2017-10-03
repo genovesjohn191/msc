@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { Http, Headers, Response } from '@angular/http';
 /** Services */
 import { McsTextContentProvider } from '../../core';
-import { NetworkingService } from './networking.service';
 /** Models */
 import { NetworkingModel } from './networking.model';
 
@@ -17,10 +14,7 @@ export class NetworkingComponent {
   public title: string;
   public modelData: NetworkingModel[];
 
-  public constructor(
-    private _textContentProvider: McsTextContentProvider,
-    private _netService: NetworkingService
-  ) {
+  public constructor(private _textContentProvider: McsTextContentProvider) {
     this.title = this._textContentProvider.content.networking.title;
   }
 }

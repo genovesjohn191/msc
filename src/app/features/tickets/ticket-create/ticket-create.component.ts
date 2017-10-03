@@ -27,10 +27,8 @@ import {
 } from '../../../core';
 import { ContextualHelpDirective } from '../../../shared';
 import {
-  Ticket,
   TicketCreate,
   TicketType,
-  TicketComment,
   TicketCreateAttachment,
   TicketService,
   TicketServiceData,
@@ -237,7 +235,7 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     // Create ticket
     this.createTicketSubscription = this._ticketCreateService
       .createTicket(ticket)
-      .subscribe((response) => {
+      .subscribe(() => {
         this._router.navigate(['/tickets']);
       });
   }

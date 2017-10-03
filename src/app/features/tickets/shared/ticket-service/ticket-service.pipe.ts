@@ -10,7 +10,7 @@ import { TicketServiceData } from '../../models';
 })
 
 export class TicketServicePipe implements PipeTransform {
-  public transform(services: TicketServiceData[], ...args: any[]): any {
+  public transform(services: TicketServiceData[], ..._args: any[]): any {
     return services.filter((service) => !isNullOrEmpty(service.serviceId));
   }
 }

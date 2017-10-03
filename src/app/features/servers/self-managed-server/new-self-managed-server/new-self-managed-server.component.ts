@@ -35,7 +35,6 @@ import {
   ServerIpAddress,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerPlatformStorage,
   ServerNetwork,
   ServerOs
 } from '../../models';
@@ -335,7 +334,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       formControlIpAddress: this.formControlIpAddress
     });
     this.formGroupSubscription = this.formGroupNewServer.statusChanges
-      .subscribe((status) => {
+      .subscribe(() => {
         this._outputServerDetails();
       });
   }

@@ -6,12 +6,10 @@ import {
 import { ServerManagementComponent } from './server-management.component';
 import {
   Server,
-  ServerThumbnail,
   ServerServiceType
 } from '../../models';
 import {
   CoreDefinition,
-  McsList,
   McsNotificationContextService,
   McsApiJob
 } from '../../../../core';

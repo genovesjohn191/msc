@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   OnInit,
   OnDestroy
 } from '@angular/core';
@@ -72,7 +71,6 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
 
     // Create path url
     for (let url of urlPaths) {
-      let breadcrumb: Breadcrumb;
       let name: string;
 
       if (!url) { continue; }

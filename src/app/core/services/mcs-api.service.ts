@@ -5,8 +5,7 @@ import {
 import {
   Http,
   Headers,
-  Response,
-  ResponseContentType
+  Response
 } from '@angular/http';
 import {
   Observable,

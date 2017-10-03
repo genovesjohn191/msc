@@ -6,8 +6,7 @@ import {
   ElementRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  ViewEncapsulation,
-  Renderer2
+  ViewEncapsulation
 } from '@angular/core';
 import {
   Router,
@@ -67,7 +66,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _elementRef: ElementRef,
-    private _renderer: Renderer2,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef
   ) {

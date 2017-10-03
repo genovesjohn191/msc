@@ -1,11 +1,7 @@
-import {
-  Injectable,
-  Optional
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 /** Core Configuration */
 import { CoreConfig } from '../core.config';
-import { CoreDefinition } from '../core.definition';
 import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()

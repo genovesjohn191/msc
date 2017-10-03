@@ -5,7 +5,6 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   McsPaginator,
   McsSearch,
@@ -21,7 +20,6 @@ import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
 import {
   refreshView,
   isNullOrEmpty,
-  getEnumString,
   replacePlaceholder
 } from '../../../../../utilities';
 
@@ -84,7 +82,6 @@ export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestr
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _activatedRoute: ActivatedRoute,
     private _firewallService: FirewallService
   ) {
     this.dataColumns = new Array();

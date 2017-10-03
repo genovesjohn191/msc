@@ -13,7 +13,6 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   CoreValidators,
-  McsList,
   McsListItem
 } from '../../../../core';
 import {

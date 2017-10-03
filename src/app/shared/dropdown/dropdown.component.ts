@@ -3,24 +3,17 @@ import {
   OnChanges,
   AfterViewInit,
   Input,
-  Output,
   Renderer2,
   ElementRef,
   ViewChild,
-  forwardRef,
-  HostListener
+  forwardRef
 } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-
-/** Interface */
-import { Loading } from '../loading.interface';
-
 /** Core */
 import {
-  McsAssetsProvider,
   McsList,
   McsListItem,
   CoreDefinition
@@ -97,7 +90,6 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   }
 
   public constructor(
-    private _assetsProvider: McsAssetsProvider,
     private _renderer: Renderer2,
     private _elementRef: ElementRef,
   ) {

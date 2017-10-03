@@ -1,25 +1,13 @@
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import {
-  CoreDefinition,
-  McsApiSuccessResponse,
-  McsApiJob,
-  McsApiRequestParameter,
-  McsJobType
-} from '../../../core';
-import {
-  Server,
-  ServerStorageDeviceUpdate,
-  ServerPlatform
-} from '../models';
-import { reviverParser } from '../../../utilities';
+import { McsApiSuccessResponse } from '../../../core';
+import { Server } from '../models';
 
 export const mockServersService = {
 
   getServers(
-    page?: number,
-    perPage?: number,
-    serverName?: string): Observable<McsApiSuccessResponse<Server[]>> {
+    _page?: number,
+    _perPage?: number,
+    _serverName?: string): Observable<McsApiSuccessResponse<Server[]>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<Server[]>();
     mcsApiResponseMock.status = 200;

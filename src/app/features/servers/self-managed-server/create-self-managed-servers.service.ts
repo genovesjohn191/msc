@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServersService } from '../servers.service';
-import {
-  Server,
-  ServerCreate
-} from '../models';
+import { ServerCreate } from '../models';
 import { ContextualHelpDirective } from '../../../shared';
 
 @Injectable()

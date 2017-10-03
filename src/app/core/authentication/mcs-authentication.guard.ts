@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
-  RouterStateSnapshot,
-  Router,
-  Params
+  RouterStateSnapshot
 } from '@angular/router';
 import { McsAuthenticationService } from './mcs-authentication.service';
 import { Observable } from 'rxjs/Rx';
@@ -12,10 +10,7 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class McsAuthenticationGuard implements CanActivate {
 
-  constructor(
-    private _router: Router,
-    private _authenticationService: McsAuthenticationService
-  ) { }
+  constructor(private _authenticationService: McsAuthenticationService) { }
 
   public canActivate(
     activatedRoute: ActivatedRouteSnapshot,

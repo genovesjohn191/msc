@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import {
-  Router,
-  Params
-} from '@angular/router';
+import { Params } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 import { Observable } from 'rxjs/Rx';
 

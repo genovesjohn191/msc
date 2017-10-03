@@ -1,8 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  ChangeDetectorRef
-} from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import {
   McsBrowserService,
   McsDeviceType

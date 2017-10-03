@@ -2,15 +2,11 @@ import {
   Component,
   OnInit,
   ChangeDetectorRef,
-  ViewChild,
-  ElementRef
+  ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-
 /** Services/Providers */
 import {
-  McsAssetsProvider,
   McsTextContentProvider,
   McsApiJob,
   McsNotificationContextService,

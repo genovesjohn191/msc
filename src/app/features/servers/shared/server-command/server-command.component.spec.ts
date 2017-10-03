@@ -1,21 +1,14 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 import { ServerCommandComponent } from './server-command.component';
 import { CoreDefinition } from '../../../../core';
-import { ServersService } from '../../servers.service';
 import { ServerCommand } from '../../models';
 
 describe('ServerCommandComponent', () => {
   /** Stub Services/Components */
   let component: ServerCommandComponent;
-  let assetsProviderMock = {
-    getIcon(iconClass: string) {
-      return iconClass;
-    }
-  };
 
   beforeEach(async(() => {
     /** Testbed Reset Module */

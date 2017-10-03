@@ -2,7 +2,6 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { TemplateRef } from '@angular/core';
 import { ModalComponent } from './modal.component';
 
 describe('ModalComponent', () => {

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AppState } from '../../app.service';
-import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { CoreDefinition } from '../core.definition';
 import { BehaviorSubject } from 'rxjs/Rx';
 

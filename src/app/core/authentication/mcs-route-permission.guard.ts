@@ -67,7 +67,7 @@ export class McsRoutePermissionGuard {
 
   private _getRouteRequiredPermission(route: string): string[] {
     let requiredPermission: string[];
-    this._routeRequiredPermissions.forEach((value: string[], key: string) => {
+    this._routeRequiredPermissions.forEach((_value: string[], key: string) => {
 
       if (route.startsWith(key)) {
         requiredPermission = this._routeRequiredPermissions.get(key);

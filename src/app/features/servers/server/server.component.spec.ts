@@ -23,12 +23,11 @@ import { ServerService } from '../server/server.service';
 describe('ServerComponent', () => {
   /** Stub Services/Components */
   let component: ServerComponent;
-  let serverService: ServerService;
   let router: Router;
   let mockActivatedRoute = {
     snapshot: {
       paramMap: {
-        get(property: any) {
+        get(_property: any) {
           return true;
         }
       }

@@ -6,7 +6,6 @@ import {
 } from '@angular/core/testing';
 import {
   Response,
-  Http,
   RequestMethod
 } from '@angular/http';
 import {

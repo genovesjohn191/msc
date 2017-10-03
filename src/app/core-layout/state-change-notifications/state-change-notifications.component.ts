@@ -8,11 +8,9 @@ import {
   ElementRef,
   ChangeDetectorRef
 } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
 import {
   McsApiJob,
   McsNotificationContextService,
-  McsDeviceType,
   CoreDefinition
 } from '../../core';
 import { refreshView } from '../../utilities';

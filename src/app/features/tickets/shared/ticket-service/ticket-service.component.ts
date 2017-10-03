@@ -19,8 +19,7 @@ import {
 } from '../../../../core';
 import {
   TicketService,
-  TicketServiceData,
-  TicketActivity
+  TicketServiceData
 } from '../../models';
 
 @Component({

@@ -7,9 +7,9 @@ import {
 export const mockNotificationsService = {
 
   getNotifications(
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<McsApiJob[]>> {
+    _page?: number,
+    _perPage?: number,
+    _searchKeyword?: string): Observable<McsApiSuccessResponse<McsApiJob[]>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob[]>();
     mcsApiResponseMock.status = 200;

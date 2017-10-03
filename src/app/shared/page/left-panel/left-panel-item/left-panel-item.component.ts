@@ -5,7 +5,6 @@ import {
   ViewChild,
   AfterContentInit,
   Renderer2,
-  ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { isNullOrEmpty } from '../../../../utilities';
@@ -55,10 +54,7 @@ export class LeftPanelItemComponent implements AfterContentInit {
   }
   private _offset: offsetType;
 
-  constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _renderer: Renderer2
-  ) { }
+  constructor(private _renderer: Renderer2) { }
 
   public ngAfterContentInit(): void {
     if (!isNullOrEmpty(this.itemElement) && !isNullOrEmpty(this.offset)) {

@@ -5,9 +5,9 @@ import { Ticket } from '../models';
 export const mockTicketsService = {
 
   getTickets(
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<Ticket[]>> {
+    _page?: number,
+    _perPage?: number,
+    _searchKeyword?: string): Observable<McsApiSuccessResponse<Ticket[]>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<Ticket[]>();
     mcsApiResponseMock.status = 200;
@@ -24,7 +24,7 @@ export const mockTicketsService = {
     return Observable.of(mcsApiResponseMock);
   },
 
-  getTicket(id: any): Observable<McsApiSuccessResponse<Ticket>> {
+  getTicket(_id: any): Observable<McsApiSuccessResponse<Ticket>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<Ticket>();
     mcsApiResponseMock.status = 200;

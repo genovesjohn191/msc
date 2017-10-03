@@ -1,14 +1,8 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
-import { Title } from '@angular/platform-browser';
 import { MainNavigationComponent } from './main-navigation.component';
-import {
-  McsBrowserService,
-  CoreDefinition
-} from '../../core';
 import { CoreLayoutTestingModule } from '../testing';
 
 describe('MainNavigationComponent', () => {

@@ -67,7 +67,7 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    * This will invoke when the data obtainment is completed
    * @param portals Data to be provided when the datasource is connected
    */
-  public onCompletion(status: McsDataStatus, portals?: Portal[]): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
   }
 }

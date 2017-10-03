@@ -370,7 +370,6 @@ export class ServersService {
    * @param serverId Server ID to be display
    */
   public getActiveServerInformation(serverId: any): string {
-    let commandInformation: string = '';
     let activeServer = this._activeServers
       .find((severInformations) => {
         return severInformations.serverId === serverId;

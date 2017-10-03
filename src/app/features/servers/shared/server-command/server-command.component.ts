@@ -2,17 +2,11 @@ import {
   Component,
   Input,
   Output,
-  OnInit,
-  OnChanges,
   EventEmitter,
-  ViewChild,
-  ElementRef
+  ViewChild
 } from '@angular/core';
 import { CoreDefinition } from '../../../../core';
-import {
-  ServerPowerState,
-  ServerCommand
-} from '../../models';
+import { ServerCommand } from '../../models';
 
 @Component({
   selector: 'mcs-server-command',

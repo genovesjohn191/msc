@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { Router } from '@angular/router';
 /** Providers / Services */
 import { CoreDefinition } from '../../../core';
 

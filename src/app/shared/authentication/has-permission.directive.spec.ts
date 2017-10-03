@@ -7,11 +7,8 @@ import {
 } from '@angular/core/testing';
 import {
   Component,
-  ViewChild,
-  DebugElement,
-  ViewContainerRef
+  ViewChild
 } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { CoreDefinition } from '../../core/core.definition';
 import { McsApiIdentity } from '../../core/models/response/mcs-api-identity';
 import { AppState } from '../../app.service';
@@ -31,11 +28,8 @@ describe('HasPermissionDirective', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
-  let directiveElement: DebugElement;
-  let buttonElement: any;
   let fixtureInstance: ComponentFixture<TestComponent>;
   let appState: AppState;
-  let viewContainerRef: ViewContainerRef;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */

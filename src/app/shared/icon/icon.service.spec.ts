@@ -7,10 +7,7 @@ import {
   IconType,
   IconService
 } from './icon.service';
-import {
-  CoreDefinition,
-  McsAssetsProvider
-} from '../../core';
+import { McsAssetsProvider } from '../../core';
 import { CoreTestingModule } from '../../core/testing';
 
 describe('IconService', () => {

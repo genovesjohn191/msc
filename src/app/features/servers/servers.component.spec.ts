@@ -2,16 +2,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
-import {
-  CoreDefinition,
-  McsApiSearchKey
-} from '../../core';
-
-import { Server } from './models';
+import { CoreDefinition } from '../../core';
 import { ServersComponent } from './servers.component';
 import { ServersService } from './servers.service';
 import {

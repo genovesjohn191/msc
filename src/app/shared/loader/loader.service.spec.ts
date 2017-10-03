@@ -3,7 +3,6 @@ import {
   TestBed,
   getTestBed
 } from '@angular/core/testing';
-import { Component } from '@angular/core';
 import {
   Subscription,
   Subject
@@ -65,7 +64,6 @@ describe('LoaderDirective', () => {
   });
 
   describe('setSubscriber() | isActive() more than 1 subscription', () => {
-    let subscriptions: Subscription[] = new Array();
     let subscription1: Subscription;
     let subscription2: Subscription;
     let subject = new Subject<any>();

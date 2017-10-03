@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
 // Services Declarations
 import {
   McsApiService,
@@ -9,14 +8,12 @@ import {
   McsApiSuccessResponse,
   McsApiErrorResponse
 } from '../../../core/';
-
 // Models
 import {
   Firewall,
   FirewallDeviceStatus,
   FirewallConfigurationStatus,
   FirewallConnectionStatus,
-  FirewallHaMode,
   FirewallPolicy,
   FirewallPolicyAction,
   FirewallPolicyNat

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { McsTextContentProvider } from '../../core';
 
 @Injectable()
@@ -7,7 +6,7 @@ export class ValidationMessageService {
   private _textContent: any;
 
   constructor(private _textContentProvider: McsTextContentProvider) {
-    this._textContent = _textContentProvider.content.shared.validationMessage;
+    this._textContent = this._textContentProvider.content.shared.validationMessage;
   }
 
   /**

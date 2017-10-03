@@ -1,18 +1,12 @@
 import {
   async,
-  TestBed,
-  getTestBed
+  TestBed
 } from '@angular/core/testing';
 import { FirewallPoliciesComponent } from './firewall-policies.component';
 import {
   NetworkingTestingModule,
   mockFirewallService
 } from '../../../testing';
-import {
-  FirewallPolicy,
-  FirewallPolicyAction,
-  FirewallPolicyNat
-} from '../../models';
 import { FirewallService } from '../firewall.service';
 
 describe('FirewallOverviewComponent', () => {

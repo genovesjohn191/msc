@@ -30,19 +30,11 @@ import {
 } from '../../../../core';
 import {
   getEncodedUrl,
-  animateFactory,
   refreshView,
-  getElementStyle,
   appendUnitSuffix,
   isNullOrEmpty
 } from '../../../../utilities';
-import { Observable } from 'rxjs/Rx';
 import { ServerService } from '../server.service';
-import {
-  FormGroup,
-  FormControl,
-  Validators
-} from '@angular/forms';
 
 @Component({
   selector: 'mcs-server-management',

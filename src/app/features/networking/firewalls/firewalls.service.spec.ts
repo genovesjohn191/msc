@@ -24,7 +24,6 @@ import {
 } from './models';
 import { FirewallsService } from './firewalls.service';
 import {
-  McsApiJob,
   McsApiSuccessResponse,
   McsApiErrorResponse
 } from '../../../core';
@@ -130,7 +129,7 @@ describe('FirewallsService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -199,7 +198,7 @@ describe('FirewallsService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -342,7 +341,7 @@ describe('FirewallsService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));

@@ -1,7 +1,5 @@
 import {
   Component,
-  OnInit,
-  ElementRef,
   Input
 } from '@angular/core';
 import { CoreDefinition } from '../../core';

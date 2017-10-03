@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Http,
-  Headers,
-  Response
-} from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 // Services Declarations
@@ -40,7 +36,6 @@ export class NetworkingService {
   private handleError(error: Response | any) {
     // TODO: Refactor during actual development
     // In a real world app, we might use a remote logging infrastructure
-    console.error('Error thrown from fusion api networking service.');
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -50,7 +45,6 @@ export class NetworkingService {
       errMsg = error.message ? error.message : error.toString();
     }
 
-    console.error('MFP Errors: ' + errMsg);
     return Observable.throw(errMsg);
   }
 }

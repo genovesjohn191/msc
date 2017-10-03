@@ -55,7 +55,7 @@ export class GadgetsDataSource implements McsDataSource<any> {
     // Disconnect all resources
   }
 
-  public onCompletion(status: McsDataStatus): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Add delay to see the loader on the paginator
     setTimeout(() => {
       this._paginator.pageCompleted();

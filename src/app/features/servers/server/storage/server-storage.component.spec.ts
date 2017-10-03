@@ -1,37 +1,16 @@
 import {
   async,
-  inject,
   TestBed,
   getTestBed
 } from '@angular/core/testing';
 import { ServerStorageComponent } from './server-storage.component';
 import {
-  Server,
-  ServerFileSystem,
-  ServerManageStorage,
-  ServerPlatform,
-  ServerResource,
-  ServerPlatformStorage,
-  ServerStorageDevice,
-  ServerStorageDeviceUpdate,
-} from '../../models';
-import {
   CoreDefinition,
-  McsTextContentProvider,
-  McsList,
-  McsListItem,
   McsNotificationContextService,
-  McsApiJob,
-  McsJobType
+  McsApiJob
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersTestingModule } from '../../testing';
-import {
-  appendUnitSuffix,
-  convertToGb,
-  animateFactory,
-  mergeArrays
-} from '../../../../utilities';
 
 describe('ServerStorageComponent', () => {
   /** Stub Services/Components */

@@ -2,12 +2,10 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { Component } from '@angular/core';
 import { RadioButtonGroupComponent } from './radio-button-group.component';
 import {
   McsListItem,
   McsAssetsProvider,
-  CoreConfig,
   CoreDefinition,
   Key
 } from '../../core';

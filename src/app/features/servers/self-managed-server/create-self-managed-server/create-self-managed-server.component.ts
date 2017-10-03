@@ -6,7 +6,6 @@ import {
   ViewChildren,
   QueryList
 } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   FormGroup,
   FormControl
@@ -19,7 +18,6 @@ import {
   ServerOs
 } from '../../models';
 import {
-  McsList,
   CoreDefinition,
   CoreValidators,
   McsTextContentProvider
@@ -27,8 +25,7 @@ import {
 import {
   mergeArrays,
   refreshView,
-  isFormControlValid,
-  isNullOrEmpty
+  isFormControlValid
 } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';

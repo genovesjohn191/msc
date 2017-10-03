@@ -29,7 +29,6 @@ describe('ListPanelComponent', () => {
 
   /** Stub Services/Components */
   let component: TestListPanelComponent;
-  let dataSource = new ListPanelDatasource();
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
