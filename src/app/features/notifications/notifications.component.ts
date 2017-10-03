@@ -17,11 +17,9 @@ import {
   McsSearch,
   McsPaginator,
   McsBrowserService,
-  McsDeviceType,
   McsTableListingBase
 } from '../../core';
 import {
-  convertDateToStandardString,
   refreshView,
   isNullOrEmpty,
   getRecordCountLabel

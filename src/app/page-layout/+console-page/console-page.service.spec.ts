@@ -6,7 +6,6 @@ import {
 } from '@angular/core/testing';
 import {
   Response,
-  Http,
   RequestMethod
 } from '@angular/http';
 import {
@@ -113,7 +112,7 @@ describe('ConsoleService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));

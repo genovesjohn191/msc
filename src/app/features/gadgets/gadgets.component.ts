@@ -1,15 +1,9 @@
 import {
   Component,
   OnInit,
-  ViewChild,
-  ElementRef
+  ViewChild
 } from '@angular/core';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
 /** Models */
 import { Gadgets } from './gadgets';
 import { GadgetsDatabase } from './gadgets.database';
@@ -169,7 +163,6 @@ export class GadgetsComponent implements OnInit {
   public onInitListing() {
     this.listingSource = new GadgetsListSource(
       this.gadgetsDatabase,
-      this.paginator,
       this.listPanelSearch
     );
   }

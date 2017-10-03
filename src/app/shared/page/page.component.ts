@@ -3,24 +3,15 @@ import {
   Input,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  EventEmitter,
   ViewChild,
   ContentChild,
   AfterContentInit,
-  AfterViewInit,
   ViewEncapsulation,
   ElementRef,
   Renderer2
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsTextContentProvider,
-  McsPaginator
-} from '../../core';
-import {
-  isNullOrEmpty,
-  animateFactory
-} from '../../utilities';
+import { CoreDefinition } from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 import {
   ContentPanelDefDirective,
   ContentPanelPlaceholderDirective

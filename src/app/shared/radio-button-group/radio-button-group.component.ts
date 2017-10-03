@@ -14,7 +14,6 @@ import {
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 import {
-  McsAssetsProvider,
   McsListItem,
   CoreDefinition,
   Key
@@ -72,10 +71,7 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
     }
   }
 
-  public constructor(
-    private _assetsProvider: McsAssetsProvider,
-    private _renderer: Renderer2
-  ) {
+  public constructor(private _renderer: Renderer2) {
     this.itemIndex = 0;
     this.items = new Array();
     this.orientation = 'vertical';

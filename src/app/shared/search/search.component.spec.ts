@@ -5,16 +5,12 @@ import {
   fakeAsync
 } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
-import { McsSearch } from '../../core';
 import { CoreTestingModule } from '../../core/testing';
 
 describe('SearchComponent', () => {
 
   /** Stub Services/Components */
   let component: SearchComponent;
-  let searchData = {
-    keyword: 'arrian'
-  } as McsSearch;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */

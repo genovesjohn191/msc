@@ -1,8 +1,7 @@
 import { EventEmitter } from '@angular/core';
 import {
   async,
-  TestBed,
-  tick
+  TestBed
 } from '@angular/core/testing';
 import {
   CoreDefinition,

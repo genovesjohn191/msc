@@ -7,7 +7,6 @@ import {
   NetworkingTestingModule,
   mockFirewallService
 } from '../../../testing';
-import { Firewall } from '../../models';
 import { FirewallService } from '../firewall.service';
 
 describe('FirewallOverviewComponent', () => {

@@ -73,25 +73,6 @@ describe('StateChangeNotificationsComponent', () => {
     });
   }));
 
-  // Creation of notification based on id and status
-  let createNotification = (notificationId: string, notificationStatus: string) => {
-    let notification: McsApiJob = new McsApiJob();
-
-    notification.id = notificationId;
-    notification.errorMessage = notificationStatus;
-    notification.createdOn = new Date('2017-04-26T01:51:34Z');
-    notification.startedOn = new Date('2017-04-26T01:51:34Z');
-    notification.updatedOn = new Date('2017-04-26T01:55:12Z');
-    notification.endedOn = null;
-    notification.status = notificationStatus;
-    notification.summaryInformation = 'Test Job 2 Summary';
-    notification.ownerName = 'Shaun Domingo';
-    notification.durationInSeconds = 0;
-    notification.description = 'mongo-db' + notificationId;
-
-    return notification;
-  };
-
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should position the notification wrapper to bottom left(initially) by default', () => {

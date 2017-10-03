@@ -52,7 +52,7 @@ describe('HeaderComponent', () => {
       }));
 
     it('mcsLogo variable should not be equal to undefined, null, or empty',
-      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
+      inject([McsAssetsProvider], (_assetsProvider: McsAssetsProvider) => {
         expect(component.mcsLogo).not.toEqual(undefined);
         expect(component.mcsLogo).not.toEqual(null);
         expect(component.mcsLogo).not.toEqual('');

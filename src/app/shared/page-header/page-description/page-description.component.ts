@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   ChangeDetectionStrategy
 } from '@angular/core';
 
@@ -10,9 +9,4 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PageDescriptionComponent {
-
-  public constructor() {
-    // Add Implementation here
-  }
-}
+export class PageDescriptionComponent { }

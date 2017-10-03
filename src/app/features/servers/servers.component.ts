@@ -132,7 +132,7 @@ export class ServersComponent
         powerState: server.powerState,
         commandAction: ServerCommand[action]
       } as ServerClientObject)
-      .subscribe((response) => {
+      .subscribe(() => {
         // This will execute the process
       });
   }
@@ -194,9 +194,8 @@ export class ServersComponent
 
   /**
    * This will navigate to new server page
-   * @param event Event invoked
    */
-  public onClickNewServerButton(event: any) {
+  public onClickNewServerButton() {
     this._router.navigate(['./servers/create']);
   }
 

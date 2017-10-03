@@ -11,7 +11,6 @@ import {
   McsStorageService,
   McsFilterProvider
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
 
 @Component({
   selector: 'mcs-filter-selector',

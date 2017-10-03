@@ -6,13 +6,6 @@ import {
   EventEmitter
 } from '@angular/core';
 import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate
-} from '@angular/animations';
-import {
   FormGroup,
   FormControl
 } from '@angular/forms';
@@ -351,14 +344,6 @@ export class ServerPerformanceScaleComponent implements OnInit {
     refreshView(() => {
       this.scaleChanged.next(performanceScale);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-  }
-
-  private _fillValidationMessagePlaceholder(
-    message: string,
-    placeholder: string,
-    value: string
-  ): string {
-    return message.replace(`{{${placeholder}}}`, value);
   }
 
   private _validateScaleValues(scale: ServerPerformanceScale): boolean {

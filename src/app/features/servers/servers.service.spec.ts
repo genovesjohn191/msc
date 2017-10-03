@@ -159,7 +159,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -229,7 +229,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -307,7 +307,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -376,7 +376,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -464,7 +464,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -545,7 +545,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -614,7 +614,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -692,7 +692,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -762,7 +762,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));
@@ -834,7 +834,7 @@ describe('ServersService', () => {
           expect(error.message).toEqual('error thrown');
           return Observable.of(new McsApiErrorResponse());
         })
-        .subscribe((response) => {
+        .subscribe(() => {
           // dummy subscribe to invoke exception
         });
     }));

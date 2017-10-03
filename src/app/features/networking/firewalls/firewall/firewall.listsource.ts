@@ -6,22 +6,17 @@ import {
 import {
   McsDataSource,
   McsDataStatus,
-  McsSearch,
-  McsListPanelItem
+  McsSearch
 } from '../../../../core';
 import {
   Firewall,
   FirewallList
 } from '../models';
 import { FirewallsService } from '../firewalls.service';
-import { FirewallService } from './firewall.service';
 import {
   isNullOrEmpty,
-  refreshView,
   compareStrings
 } from '../../../../utilities';
-
-const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 export class FirewallListSource implements McsDataSource<FirewallList> {
   /**
@@ -91,7 +86,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     }
   }
 
-  public onCompletion(status: McsDataStatus, data?: any): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
   }
 

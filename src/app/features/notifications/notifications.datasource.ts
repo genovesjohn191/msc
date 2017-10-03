@@ -114,7 +114,7 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
    * This will invoke when the data obtainment is completed
    * @param notifications Data to be provided when the datasource is connected
    */
-  public onCompletion(status: McsDataStatus, notifications?: McsApiJob[]): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
   }

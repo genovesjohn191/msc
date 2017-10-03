@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  Router,
   Resolve,
   ActivatedRouteSnapshot
 } from '@angular/router';
@@ -10,10 +9,7 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class ServerResolver implements Resolve<any> {
 
-  constructor(
-    private _router: Router,
-    private _serversService: ServersService
-  ) { }
+  constructor(private _serversService: ServersService) { }
 
   public resolve(route: ActivatedRouteSnapshot) {
     return this._serversService.getServer(route.params['id'])

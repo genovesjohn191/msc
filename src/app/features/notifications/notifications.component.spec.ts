@@ -1,26 +1,8 @@
 import {
   async,
-  inject,
-  TestBed,
-  tick,
-  fakeAsync
+  TestBed
 } from '@angular/core/testing';
-import { HttpModule } from '@angular/http';
-import {
-  Observable,
-  Subject
-} from 'rxjs/Rx';
-import {
-  McsTextContentProvider,
-  McsApiSearchKey,
-  McsApiRequestParameter,
-  McsApiSuccessResponse,
-  McsApiJob,
-  McsApiService,
-  McsNotificationContextService,
-  McsNotificationJobService,
-  CoreDefinition
-} from '../../core';
+import { CoreDefinition } from '../../core';
 import {
   NotificationsTestingModule,
   mockNotificationsService

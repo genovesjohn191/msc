@@ -1,9 +1,6 @@
 import {
   Component,
-  Input,
-  ChangeDetectionStrategy,
-  Renderer2,
-  ElementRef
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 @Component({

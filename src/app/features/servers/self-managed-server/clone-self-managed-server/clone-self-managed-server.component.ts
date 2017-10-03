@@ -115,7 +115,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
     this.formGroupCloneServer = new FormGroup({
       formControlTargetServerName: this.formControlTargetServerName
     });
-    this.formGroupCloneServer.statusChanges.subscribe((status) => {
+    this.formGroupCloneServer.statusChanges.subscribe(() => {
       this._outputServerDetails();
     });
   }

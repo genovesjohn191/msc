@@ -9,10 +9,7 @@ import {
   Input
 } from '@angular/core';
 import { CoreDefinition } from '../../../core';
-import {
-  registerEvent,
-  isNullOrEmpty
-} from '../../../utilities';
+import { isNullOrEmpty } from '../../../utilities';
 import { ListPanelService } from '../list-panel.service';
 
 @Component({

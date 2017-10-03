@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import {
   Observable,
   Subject
@@ -7,7 +6,6 @@ import {
   CoreDefinition,
   McsApiSuccessResponse,
   McsApiJob,
-  McsApiRequestParameter,
   McsJobType,
 } from '../../../core';
 import {
@@ -15,18 +13,15 @@ import {
   ServerPowerState,
   ServerThumbnail,
   ServerPlatform,
-  ServerResource,
-  ServerPlatformStorage,
   ServerNetwork,
   ServerServiceType,
   ServerStorageDeviceUpdate,
 } from '../models';
-import { reviverParser } from '../../../utilities';
 
 export const mockServerService = {
 
   selectedServerStream: new Subject<any>(),
-  getServer(id: any): Observable<McsApiSuccessResponse<Server>> {
+  getServer(_id: any): Observable<McsApiSuccessResponse<Server>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<Server>();
     mcsApiResponseMock.status = 200;
@@ -45,8 +40,8 @@ export const mockServerService = {
     this.selectedServerStream.next(server);
   },
   setPerformanceScale(
-    serverId: any,
-    cpuSizeScale: any): Observable<McsApiSuccessResponse<McsApiJob>> {
+    _serverId: any,
+    _cpuSizeScale: any): Observable<McsApiSuccessResponse<McsApiJob>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
     mcsApiResponseMock.status = 200;
@@ -55,7 +50,7 @@ export const mockServerService = {
 
     return Observable.of(mcsApiResponseMock);
   },
-  getServerThumbnail(serverId: any) {
+  getServerThumbnail(_serverId: any) {
     return Observable.of({
       content: {
         file: 'aaaBBBcccDDD',
@@ -104,8 +99,8 @@ export const mockServerService = {
     return Observable.of(mcsApiResponseMock);
   },
   createServerStorage(
-    serverId: any,
-    storageData: ServerStorageDeviceUpdate
+    _serverId: any,
+    _storageData: ServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
@@ -126,9 +121,9 @@ export const mockServerService = {
     return Observable.of(mcsApiResponseMock);
   },
   updateServerStorage(
-    serverId: any,
-    storageId: any,
-    storageData: ServerStorageDeviceUpdate
+    _serverId: any,
+    _storageId: any,
+    _storageData: ServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
@@ -148,8 +143,8 @@ export const mockServerService = {
     return Observable.of(mcsApiResponseMock);
   },
   deleteServerStorage(
-    serverId: any,
-    storageId: any
+    _serverId: any,
+    _storageId: any
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();

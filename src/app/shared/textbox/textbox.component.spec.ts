@@ -2,7 +2,6 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-
 import { TextboxComponent } from './textbox.component';
 import {
   McsTextContentProvider,

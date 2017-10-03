@@ -1,16 +1,12 @@
 import {
   Directive,
   ContentChild,
-  IterableDiffer,
   AfterContentInit,
   ElementRef,
-  Renderer2,
-  HostListener
+  Renderer2
 } from '@angular/core';
-import { McsBrowserService } from '../../../core';
 import {
   getElementOffset,
-  refreshView,
   isNullOrEmpty,
   registerEvent
 } from '../../../utilities';
@@ -62,7 +58,7 @@ export class ListStickyDirective implements AfterContentInit {
     this._registerEvents();
   }
 
-  private _onScroll(event) {
+  private _onScroll(_event: any) {
     if (isNullOrEmpty(this._listSearchOffset) ||
       isNullOrEmpty(this._listPanelOffset)) { return; }
 

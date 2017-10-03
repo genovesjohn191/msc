@@ -21,7 +21,6 @@ import { McsApiSuccessResponse } from '../models/response/mcs-api-success-respon
 export class McsNotificationJobService {
   private _websocket: WebSocket;
   private _websocketClient: any;
-  private _websocketSubscription: any;
 
   /**
    * Subscribe to get the updated notification from websocket(RabbitMQ) in real time
@@ -103,7 +102,7 @@ export class McsNotificationJobService {
     this._websocket.close();
   }
 
-  private _onCloseConnection(event) {
+  private _onCloseConnection(_event: any) {
     refreshView(() => {
       this._initializeWebsocket();
       this._connectionStatusStream.next(McsConnectionStatus.Retrying);

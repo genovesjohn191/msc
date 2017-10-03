@@ -6,8 +6,7 @@ import {
 import {
   McsDataSource,
   McsDataStatus,
-  McsSearch,
-  McsListPanelItem
+  McsSearch
 } from '../../../core';
 import {
   Server,
@@ -95,7 +94,7 @@ export class ServerListSource implements McsDataSource<ServerList> {
     }
   }
 
-  public onCompletion(status: McsDataStatus): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
   }
 

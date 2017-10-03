@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  OnChanges,
   AfterViewInit,
   Input,
   Renderer2,
@@ -12,21 +11,13 @@ import {
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
-  Validator,
-  FormControl
+  NG_VALUE_ACCESSOR
 } from '@angular/forms';
-
 /** Providers */
 import {
-  McsTextContentProvider,
   CoreDefinition,
   McsLoader
 } from '../../core';
-
-/** Enum */
-import { McsTextboxValidationType } from './textbox-type.enum';
 
 @Component({
   selector: 'mcs-textbox',
@@ -101,11 +92,7 @@ export class TextboxComponent
     }
   }
 
-  public constructor(
-    private _textProvider: McsTextContentProvider,
-    private _renderer: Renderer2,
-    private _elementRef: ElementRef
-  ) {
+  public constructor(private _renderer: Renderer2) {
     this.inputType = 'text';
     this.valid = true;
     this.disabled = false;
@@ -125,11 +112,11 @@ export class TextboxComponent
     }
   }
 
-  public onFocus(event): void {
+  public onFocus(_event): void {
     this._renderer.addClass(this.mcsTextbox.nativeElement, 'active');
   }
 
-  public onFocusOut(event): void {
+  public onFocusOut(_event): void {
     this._renderer.removeClass(this.mcsTextbox.nativeElement, 'active');
   }
 

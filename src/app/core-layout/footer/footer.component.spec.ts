@@ -52,21 +52,21 @@ describe('FooterComponent', () => {
       }));
 
     it('mcsLogo variable should not be equal to undefined, null, or empty',
-      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
+      inject([McsAssetsProvider], (_assetsProvider: McsAssetsProvider) => {
         expect(component.mcsLogo).not.toEqual(undefined);
         expect(component.mcsLogo).not.toEqual(null);
         expect(component.mcsLogo).not.toEqual('');
       }));
 
     it('title variable should not be equal to undefined, null, or empty',
-      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
+      inject([McsAssetsProvider], (_assetsProvider: McsAssetsProvider) => {
         expect(component.footerTextContent).not.toEqual(undefined);
         expect(component.footerTextContent).not.toEqual(null);
         expect(component.footerTextContent).not.toEqual('');
       }));
 
     it('links variable should not be equal to undefined, null, or empty',
-      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
+      inject([McsAssetsProvider], (_assetsProvider: McsAssetsProvider) => {
         expect(component.links).not.toEqual(undefined);
         expect(component.links).not.toEqual(null);
         expect(component.links).not.toEqual('');

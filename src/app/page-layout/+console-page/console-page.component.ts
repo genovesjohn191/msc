@@ -3,7 +3,6 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
-  Input,
   ElementRef,
   ViewChild,
   ViewEncapsulation,
@@ -13,10 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 import { refreshView } from '../../utilities';
 import {
   McsTextContentProvider,
-  McsBrowserService,
   CoreDefinition,
-  Key,
-  McsSize
+  Key
 } from '../../core';
 import { ConsolePageService } from './console-page.service';
 
@@ -74,15 +71,11 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private _url: string;
   private _vmx: string;
   private _routeSubscription: any;
-  private _browserSubscription: any;
   private _zoneSubscription: any;
-  private _windowSize: McsSize;
 
   public constructor(
     private _consoleService: ConsolePageService,
     private _textContentProvider: McsTextContentProvider,
-    private _browserService: McsBrowserService,
-    private _elementRef: ElementRef,
     private _activatedRoute: ActivatedRoute,
     private _zone: NgZone
   ) {
@@ -98,7 +91,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Subscribe to the angular zone to check weather the console
     // is already displayed and adjust the screensize of the vm console
-    this._zoneSubscription = this._zone.onStable.subscribe((response) => {
+    this._zoneSubscription = this._zone.onStable.subscribe(() => {
       this._resizeConsoleScreen(window.innerHeight, window.innerWidth);
     });
   }

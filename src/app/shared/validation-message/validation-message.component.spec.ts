@@ -12,7 +12,7 @@ describe('ValidationMessageComponent', () => {
   /** Stub Services/Components */
   let component: ValidationMessageComponent;
   let mockValidationMessageService = {
-    getValidatorErrorMessage(validatorName: string, validatorValue?: any) {
+    getValidatorErrorMessage(validatorName: string, _validatorValue?: any) {
       return validatorName;
     }
   };

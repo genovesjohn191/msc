@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 

@@ -5,7 +5,6 @@ import {
   BehaviorSubject
 } from 'rxjs/Rx';
 import {
-  McsPaginator,
   McsSearch,
   McsListPanelItem,
   McsDataStatus
@@ -42,7 +41,6 @@ export class GadgetsListSource implements McsDataSource<UserData> {
 
   constructor(
     private _exampleDatabase: GadgetsDatabase,
-    private _paginator: McsPaginator,
     private _listPanelSearch: McsSearch
   ) {
     this._filterMode = false;
@@ -106,7 +104,7 @@ export class GadgetsListSource implements McsDataSource<UserData> {
     // Disconnect all resources
   }
 
-  public onCompletion(status: McsDataStatus): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
   }
 }

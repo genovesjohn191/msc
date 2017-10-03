@@ -185,7 +185,6 @@ export class McsNotificationContextService {
 
   private _updateNotifications(updatedNotification: McsApiJob) {
     if (updatedNotification && updatedNotification.id) {
-      let isExist: boolean = false;
       let jobsComparer = (firstRecord: McsApiJob, secondRecord: McsApiJob) => {
         return firstRecord.id === secondRecord.id;
       };

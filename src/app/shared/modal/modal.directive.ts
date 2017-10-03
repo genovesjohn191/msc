@@ -4,7 +4,6 @@ import {
   Injector,
   ComponentFactoryResolver,
   ViewContainerRef,
-  NgZone,
   OnInit,
   OnDestroy,
   Input,
@@ -40,8 +39,7 @@ export class ModalDirective implements OnInit, OnDestroy, McsModal {
     private _injector: Injector,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer2,
-    private _ngZone: NgZone
+    private _renderer: Renderer2
   ) {
     this.modalSize = 'large';
   }
@@ -104,7 +102,7 @@ export class ModalDirective implements OnInit, OnDestroy, McsModal {
     }
   }
 
-  public onCloseModal(event: any): void {
+  public onCloseModal(_event: any): void {
     if (!this.componentRef) { return; }
     this.close();
   }

@@ -1,18 +1,9 @@
 import {
   async,
   TestBed,
-  getTestBed,
-  fakeAsync
+  getTestBed
 } from '@angular/core/testing';
-import {
-  Response,
-  Http,
-  RequestMethod
-} from '@angular/http';
-import {
-  MockBackend,
-  MockConnection
-} from '@angular/http/testing';
+import { MockBackend } from '@angular/http/testing';
 import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationService } from './mcs-authentication.service';
 import { McsApiIdentity } from '../models/response/mcs-api-identity';

@@ -7,8 +7,6 @@ import {
   Router,
   NavigationEnd
 } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsService } from './breadcrumbs.service';
 import { CoreLayoutTestingModule } from '../testing';
@@ -73,7 +71,7 @@ describe('BreadcrumbsComponent', () => {
 
   describe('onNavigateEnd()', () => {
     it('should update the component.routerList content(length) based on the URL received',
-      inject([BreadcrumbsService], (breadcrumbService: BreadcrumbsService) => {
+      inject([BreadcrumbsService], (_breadcrumbService: BreadcrumbsService) => {
         component.onNavigateEnd(new NavigationEnd(1, '/servers/child', '/servers/child'));
         expect(component.breadcrumbs.length).toEqual(2);
       }));

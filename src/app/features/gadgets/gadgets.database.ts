@@ -1,8 +1,4 @@
-import {
-  Observable,
-  Subject,
-  BehaviorSubject
-} from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/Rx';
 
 /** Constants used to fill up our data base. */
 const COLORS = ['maroon', 'red', 'orange'];

@@ -1,7 +1,6 @@
 import {
   Directive,
-  ContentChild,
-  IterableDiffer
+  ContentChild
 } from '@angular/core';
 /** Directives */
 import { ListHeaderDefDirective } from '../list-header';

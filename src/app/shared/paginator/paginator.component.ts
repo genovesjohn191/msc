@@ -11,7 +11,6 @@ import {
   McsTextContentProvider,
   McsPaginator
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
 
 @Component({
   selector: 'mcs-paginator',
@@ -63,7 +62,7 @@ export class PaginatorComponent implements McsPaginator {
     this._totalCount = 0;
     this.loading = false;
     this.pageChangedStream = new EventEmitter<any>();
-    this.textContent = _textContentProvider.content.shared.paginator;
+    this.textContent = this._textContentProvider.content.shared.paginator;
   }
 
   /**

@@ -2,7 +2,6 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { Component } from '@angular/core';
 import { IconComponent } from './icon.component';
 import {
   IconType,

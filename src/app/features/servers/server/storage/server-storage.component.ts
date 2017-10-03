@@ -4,13 +4,9 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import {
-  Observable,
-  Subscription
- } from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Rx';
 import {
   Server,
-  ServerFileSystem,
   ServerManageStorage,
   ServerPlatform,
   ServerResource,
@@ -31,13 +27,11 @@ import {
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import {
-  appendUnitSuffix,
   convertToGb,
   animateFactory,
   mergeArrays,
   updateArrayRecord,
   isNullOrEmpty,
-  replacePlaceholder,
   compareStrings
 } from '../../../../utilities';
 
@@ -288,7 +282,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.deleteButton.showLoader();
 
     this._serverService.deleteServerStorage(this.server.id, storage.id)
-      .subscribe((response) => { this.disabled = true; });
+      .subscribe(() => { this.disabled = true; });
   }
 
   public getStorageAvailableMemory(storageProfile: string): number {

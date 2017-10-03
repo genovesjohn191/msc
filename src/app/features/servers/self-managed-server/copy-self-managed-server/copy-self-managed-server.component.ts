@@ -324,7 +324,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
       formControlIpAddress: this.formControlIpAddress
     });
     this.formGroupSubscription = this.formGroupCopyServer.statusChanges
-      .subscribe((status) => {
+      .subscribe(() => {
         this._outputServerDetails();
       });
   }

@@ -76,7 +76,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
    * This will invoke when the data obtainment is completed
    * @param tickets Data to be provided when the datasource is connected
    */
-  public onCompletion(status: McsDataStatus, tickets?: Ticket[]): void {
+  public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
   }

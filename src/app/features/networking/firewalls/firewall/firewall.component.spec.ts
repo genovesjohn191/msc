@@ -4,10 +4,7 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { FirewallComponent } from './firewall.component';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { NetworkingTestingModule } from '../../testing';
 import { FirewallsService } from '../firewalls.service';
 import { FirewallService } from './firewall.service';

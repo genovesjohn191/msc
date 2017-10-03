@@ -2,11 +2,9 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { EventEmitter } from '@angular/core';
 import { CheckboxComponent } from './checkbox.component';
 
 describe('CheckboxComponent', () => {
-  const filterText: string = 'text';
 
   /** Stub Services/Components */
   let component: CheckboxComponent;

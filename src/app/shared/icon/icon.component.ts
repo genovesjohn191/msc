@@ -4,7 +4,6 @@ import {
   Input,
   ElementRef,
   Renderer2,
-  ViewChild,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';

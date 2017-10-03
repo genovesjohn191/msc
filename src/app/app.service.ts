@@ -15,7 +15,7 @@ export class AppState {
   }
   // never allow mutation
   public set state(value) {
-    throw new Error('do not mutate the `.state` directly');
+    throw new Error(`do not mutate the ${value} directly +`);
   }
 
   public get(prop?: any) {

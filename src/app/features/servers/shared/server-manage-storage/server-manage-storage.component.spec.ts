@@ -7,20 +7,12 @@ import {
 import { ServerManageStorageComponent } from './server-manage-storage.component';
 import {
   CoreDefinition,
-  CoreValidators,
   McsTextContentProvider,
   McsList,
   McsListItem
 } from '../../../../core';
-import {
-  ServerManageStorage,
-  ServerInputManageType,
-  ServerStorageDevice
-} from '../../models';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
+import { ServerInputManageType } from '../../models';
+import { FormControl } from '@angular/forms';
 
 describe('ServerManageStorageComponent', () => {
 
