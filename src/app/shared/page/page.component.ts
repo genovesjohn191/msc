@@ -59,13 +59,27 @@ export class PageComponent implements AfterContentInit {
   /**
    * Determine weather the left panel is collapsed
    */
-  private _leftPanelCollapsed: boolean;
+  private _showLeftPanel: boolean;
   public get showLeftPanel(): boolean {
-    return this._leftPanelCollapsed;
+    return this._showLeftPanel;
   }
   public set showLeftPanel(value: boolean) {
-    if (this._leftPanelCollapsed !== value) {
-      this._leftPanelCollapsed = value;
+    if (this._showLeftPanel !== value) {
+      this._showLeftPanel = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  /**
+   * Determine weather the left panel is displayed on the specific page
+   */
+  private _hasLeftPanel: boolean;
+  public get hasLeftPanel(): boolean {
+    return this._hasLeftPanel;
+  }
+  public set hasLeftPanel(value: boolean) {
+    if (this._hasLeftPanel !== value) {
+      this._hasLeftPanel = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -95,6 +109,7 @@ export class PageComponent implements AfterContentInit {
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.showLeftPanel = true;
+    this.hasLeftPanel = true;
   }
 
   public get barIconKey(): string {
@@ -110,6 +125,8 @@ export class PageComponent implements AfterContentInit {
     if (!isNullOrEmpty(this._leftPanelDefinition)) {
       this._leftPanelPlaceholder.viewContainer
         .createEmbeddedView(this._leftPanelDefinition.template);
+    } else {
+      this.hasLeftPanel = false;
     }
 
     if (!isNullOrEmpty(this._topPanelDefinition)) {

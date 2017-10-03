@@ -122,12 +122,12 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ firewallsTextContent.noFirewalls }}</span>
+            <span>{{ textContent.noFirewalls }}</span>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
-              <span>{{ firewallsTextContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ firewallsTextContent.retry }}</a>.
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>
