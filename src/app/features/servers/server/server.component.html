@@ -2,7 +2,7 @@
   <div class="server-list-panel-wrapper hidden-medium">
     <div class="server-list-panel" [mcsLoader]="serverListSource.serverListSubscription">
         <mcs-search #search [delayInSeconds]="0" mcsListSearchDef></mcs-search>
-        <mcs-list-panel mcsListPanelDef [dataSource]="serverListSource" 
+        <mcs-list-panel mcsListPanelDef [listSource]="serverListSource" 
           [selectedListItem]="selectedItem" [searchMode]="serverListSource.searchMode">
           <ng-container mcsListDef>
             <mcs-list-header *mcsListHeaderDef="let vdc; propertyName: 'vdcName';"
@@ -25,6 +25,19 @@
 
               <a>{{ server.name }}</a>
             </mcs-list-item>
+          </ng-container>
+
+          <!-- List Items Status Integration -->
+          <ng-container mcsListItemsStatusDef>
+            <mcs-list-items-empty *mcsListItemsEmptyDef>
+              <span>{{ serversTextContent.noServers }}</span>
+            </mcs-list-items-empty>
+            <mcs-list-items-error *mcsListItemsErrorDef>
+              <div class="data-error">
+                <span>{{ serversTextContent.errorMessage }}</span>
+                <a (click)="retryListsource()">{{ serversTextContent.retry }}</a>.
+              </div>
+            </mcs-list-items-error>
           </ng-container>
         </mcs-list-panel>
       </div>

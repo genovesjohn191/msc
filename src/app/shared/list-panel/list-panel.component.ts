@@ -22,6 +22,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 /** Core / Utilities */
 import {
+  CoreDefinition,
   McsDataSource,
   McsDataStatus,
   McsListPanelItem
@@ -31,11 +32,16 @@ import {
   refreshView
 } from '../../utilities';
 /** List panel directives */
-import { ListItemsPlaceholderDirective } from './shared';
+import {
+  ListItemsPlaceholderDirective,
+  ListItemsStatusPlaceholderDirective
+} from './shared';
 import { ListDefDirective } from './list-definition';
 import { ListItemOutletDirective } from './list-item';
 /** List panel services */
 import { ListPanelService } from './list-panel.service';
+/** List items status */
+import { ListItemsStatusDefDirective } from './list-items-status';
 
 const NO_GROUP_ITEMS = 'no_group_items';
 const LIST_PANEL_CLASS = 'list-panel-wrapper';
@@ -102,31 +108,33 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
    * An observable datasource to bind inside the table data
    */
   @Input()
-  public get dataSource(): McsDataSource<T> {
-    return this._dataSource;
+  public get listSource(): McsDataSource<T> {
+    return this._listSource;
   }
-  public set dataSource(value: McsDataSource<T>) {
-    if (this._dataSource !== value) {
-      this._switchDataSource(value);
-      this._dataSource = value;
+  public set listSource(value: McsDataSource<T>) {
+    if (this._listSource !== value) {
+      this._switchListSource(value);
+      this._listSource = value;
     }
   }
-  private _dataSource: McsDataSource<T>;
-  private _dataSourceSubscription: any;
-  private _data: NgIterable<T>;
-  private _dataDiffer: IterableDiffer<T>;
-  private _dataMap: Map<string, T[]>;
+  private _listSource: McsDataSource<T>;
+  private _listSourceSubscription: any;
+  private _listItems: NgIterable<T>;
+  private _listDiffer: IterableDiffer<T>;
+  private _listMap: Map<string, T[]>;
 
   /**
    * Get/Set the data obtainment status based on observables
    */
-  private _dataStatus: McsDataStatus;
-  public get dataStatus(): McsDataStatus {
-    return this._dataStatus;
+  private _listStatus: McsDataStatus;
+  public get listStatus(): McsDataStatus {
+    return this._listStatus;
   }
-  public set dataStatus(value: McsDataStatus) {
-    if (this._dataStatus !== value) {
-      this._dataStatus = value;
+  public set listStatus(value: McsDataStatus) {
+    if (this._listStatus !== value) {
+      this._listStatus = value;
+      this._switchListStatus(value);
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -136,9 +144,23 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
   @ViewChild(ListItemsPlaceholderDirective)
   private _listItemsPlaceholder: ListItemsPlaceholderDirective;
 
+  @ViewChild(ListItemsStatusPlaceholderDirective)
+  private _listItemsStatusPlaceholder: ListItemsStatusPlaceholderDirective;
+
   /** Columns */
   @ContentChild(ListDefDirective)
   private _listDefinition: ListDefDirective;
+
+  @ContentChild(ListItemsStatusDefDirective)
+  private _listItemsStatusDefinition: ListItemsStatusDefDirective;
+
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
+  public get dataStatusEnum(): any {
+    return McsDataStatus;
+  }
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -147,53 +169,81 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
     private _differs: IterableDiffers,
     private _listPanelService: ListPanelService
   ) {
-    this._data = [];
-    this._dataMap = new Map<string, T[]>();
+    this._listItems = [];
+    this._listMap = new Map<string, T[]>();
+
+    // Add loader while table is initializing
+    this.listStatus = McsDataStatus.InProgress;
   }
 
   public ngOnInit() {
-    this._dataDiffer = this._differs.find([]).create(this._trackBy);
+    this._listDiffer = this._differs.find([]).create(this._trackBy);
   }
 
   public ngAfterContentInit() {
     // Render item groups
-    if (this.dataSource && !this._dataSourceSubscription) {
-      this._getDatasource();
+    if (this.listSource && !this._listSourceSubscription) {
+      this._getListsource();
     }
   }
 
   public ngAfterContentChecked() {
-    if (!isNullOrEmpty(this._data)) {
+    if (!isNullOrEmpty(this._listItems)) {
       this._renderItemGroups();
     }
   }
 
   public ngOnDestroy() {
-    if (this._dataSourceSubscription) {
-      this._dataSourceSubscription.unsubscribe();
-      this.dataSource.disconnect();
+    if (this._listSourceSubscription) {
+      this._listSourceSubscription.unsubscribe();
+      this.listSource.disconnect();
     }
   }
 
   /**
    * This will remove the subscription of the previous datasource
    * including the data-row view to refresh all the data from scratch
-   * @param newDatasource New Datasource obtained
+   * @param newListsource New Datasource obtained
    */
-  private _switchDataSource(newDatasource: McsDataSource<T>) {
-    if (isNullOrEmpty(newDatasource) || isNullOrEmpty(this.dataSource)) { return; }
+  private _switchListSource(newListsource: McsDataSource<T>) {
+    if (isNullOrEmpty(newListsource) || isNullOrEmpty(this.listSource)) { return; }
 
-    this._data = [];
-    if (newDatasource) {
-      this.dataSource.disconnect();
+    this._listItems = [];
+    if (newListsource) {
+      this.listSource.disconnect();
     }
-    if (this._dataSourceSubscription) {
-      this._dataSourceSubscription.unsubscribe();
-      this._dataSourceSubscription = null;
+    if (this._listSourceSubscription) {
+      this._listSourceSubscription.unsubscribe();
+      this._listSourceSubscription = null;
     }
 
-    if (!newDatasource) {
+    if (!newListsource) {
       this._listItemsPlaceholder.viewContainer.clear();
+    }
+  }
+
+  /**
+   * Switch the data status based on the new data status
+   * `@Note:` This will remove the previous status in the DOM
+   * @param newListStatus New datastatus to be set
+   */
+  private _switchListStatus(newListStatus: McsDataStatus) {
+    if (isNullOrEmpty(this._listItemsStatusDefinition)) { return; }
+    this._listItemsStatusPlaceholder.viewContainer.clear();
+
+    switch (newListStatus) {
+      case McsDataStatus.Empty:
+        if (isNullOrEmpty(this._listItemsStatusDefinition.listItemsEmptyDef)) { break; }
+        this._listItemsStatusPlaceholder.viewContainer
+          .createEmbeddedView(this._listItemsStatusDefinition.listItemsEmptyDef.template);
+        break;
+
+      case McsDataStatus.Error:
+        if (isNullOrEmpty(this._listItemsStatusDefinition.listItemsErrorDef)) { break; }
+        this._listItemsStatusPlaceholder.viewContainer
+          .createEmbeddedView(this._listItemsStatusDefinition.listItemsErrorDef.template);
+      default:
+        break;
     }
   }
 
@@ -201,11 +251,11 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
    * This will render the header rows including each header cells
    */
   private _renderItemGroups(): void {
-    let changes = this._dataDiffer.diff(this._data);
+    let changes = this._listDiffer.diff(this._listItems);
     if (!changes) { return; }
 
     this._listItemsPlaceholder.viewContainer.clear();
-    this._dataMap.forEach((values: T[], key: string) => {
+    this._listMap.forEach((values: T[], key: string) => {
       if (key === NO_GROUP_ITEMS) {
         this._insertListNoGroupItems(values);
       } else {
@@ -295,22 +345,22 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
    *
    * `@Note` This will run asynchronously
    */
-  private _getDatasource(): void {
-    this._dataSourceSubscription = this.dataSource.connect()
+  private _getListsource(): void {
+    this._listSourceSubscription = this.listSource.connect()
       .catch((error) => {
-        this.dataStatus = McsDataStatus.Error;
-        this._dataSource.onCompletion(this.dataStatus, undefined);
+        this.listStatus = McsDataStatus.Error;
+        this._listSource.onCompletion(this.listStatus, undefined);
         return Observable.throw(error);
       })
       .subscribe((data) => {
-        this._data = data;
-        this._dataMap = this._createListItemsMap(data);
+        this._listItems = data;
+        this._listMap = this._createListItemsMap(data);
         this._renderItemGroups();
 
-        this.dataStatus = isNullOrEmpty(data) ?
+        this.listStatus = isNullOrEmpty(data) ?
           McsDataStatus.Empty :
           McsDataStatus.Success;
-        this._dataSource.onCompletion(this.dataStatus, data);
+        this._listSource.onCompletion(this.listStatus, data);
       });
   }
 

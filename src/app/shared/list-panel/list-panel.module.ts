@@ -21,8 +21,19 @@ import {
   ListItemDefDirective,
   ListItemOutletDirective
 } from './list-item';
+/** List items status */
+import {
+  ListItemsEmptyComponent,
+  ListItemsErrorComponent,
+  ListItemsEmptyDefDirective,
+  ListItemsErrorDefDirective,
+  ListItemsStatusDefDirective
+} from './list-items-status';
 /** Shared */
-import { ListItemsPlaceholderDirective } from './shared';
+import {
+  ListItemsPlaceholderDirective,
+  ListItemsStatusPlaceholderDirective
+} from './shared';
 import { IconModule } from '../icon/icon.module';
 
 @NgModule({
@@ -37,7 +48,13 @@ import { IconModule } from '../icon/icon.module';
     ListItemsPlaceholderDirective,
     ListPanelDefDirective,
     ListSearchDefDirective,
-    ListStickyDirective
+    ListStickyDirective,
+    ListItemsEmptyComponent,
+    ListItemsErrorComponent,
+    ListItemsEmptyDefDirective,
+    ListItemsErrorDefDirective,
+    ListItemsStatusDefDirective,
+    ListItemsStatusPlaceholderDirective
   ],
   imports: [
     CommonModule,
@@ -54,7 +71,13 @@ import { IconModule } from '../icon/icon.module';
     ListItemsPlaceholderDirective,
     ListPanelDefDirective,
     ListSearchDefDirective,
-    ListStickyDirective
+    ListStickyDirective,
+    ListItemsEmptyComponent,
+    ListItemsErrorComponent,
+    ListItemsEmptyDefDirective,
+    ListItemsErrorDefDirective,
+    ListItemsStatusDefDirective,
+    ListItemsStatusPlaceholderDirective
   ],
   providers: [
     ListPanelService

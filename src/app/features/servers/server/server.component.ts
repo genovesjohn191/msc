@@ -41,6 +41,7 @@ export class ServerComponent implements OnInit, OnDestroy {
   public server: Server;
   public activeServerSubscription: any;
   public selectedServerSubscription: any;
+  public serversTextContent: any;
   public serverTextContent: any;
   public serverListSource: ServerListSource | null;
 
@@ -82,6 +83,7 @@ export class ServerComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.serversTextContent = this._textContentProvider.content.servers;
     this.serverTextContent = this._textContentProvider.content.servers.server;
     this._serverId = this._activatedRoute.snapshot.paramMap.get('id');
 
@@ -166,6 +168,14 @@ export class ServerComponent implements OnInit, OnDestroy {
 
   public getActiveServerTooltip(serverId: any) {
     return this._serversService.getActiveServerInformation(serverId);
+  }
+
+  /**
+   * Retry to obtain the source from API
+   */
+  public retryListsource(): void {
+    if (isNullOrEmpty(this.serverListSource)) { return; }
+    this._initializeListsource();
   }
 
   public ngOnDestroy() {

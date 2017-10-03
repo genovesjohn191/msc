@@ -48,12 +48,12 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
 
   constructor(
     private _firewallsService: FirewallsService,
-    private _firewallService: FirewallService,
     private _search: McsSearch
   ) {
     this._searchMode = false;
     this._firewallListStream = new BehaviorSubject<FirewallList[]>([]);
     this._setFirewallListData();
+    this.dataLoadingStream = new Subject<McsDataStatus>();
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
@@ -65,6 +65,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
 
     return Observable.merge(...displayDataChanges)
       .map(() => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
         let firewallList = new Array<FirewallList>();
         this._searchMode = (this._search.keyword) ? true : false ;
 
@@ -97,6 +98,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
   private _setFirewallListData(): void {
     this._firewallsSubscription = this._firewallsService.getFirewalls()
       .subscribe((response) => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
         this._firewallList = this._mapFirewallList(response.content);
         this._firewallListStream.next(this._firewallList);
       });
