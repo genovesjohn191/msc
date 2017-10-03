@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { McsAuthenticationGuard } from '../../core';
 /** Components */
 import { ConsolePageComponent } from './console-page.component';
 
@@ -7,7 +8,8 @@ import { ConsolePageComponent } from './console-page.component';
  */
 export const consolePageRoutes: Routes = [
   {
-    path: '',
-    component: ConsolePageComponent
+    path: 'console/:id',
+    component: ConsolePageComponent,
+    canActivate: [McsAuthenticationGuard]
   }
 ];
