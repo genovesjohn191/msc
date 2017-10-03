@@ -57,6 +57,10 @@ import {
   CoreConfig,
   McsAuthenticationIdentity
 } from './core';
+import {
+  ConsolePageModule,
+  DefaultPageModule
+} from './page-layout';
 
 /**
  * MCS Portal Utilities
@@ -105,6 +109,8 @@ const mcsCoreConfig = {
     BrowserAnimationsModule,
     CookieModule.forRoot(),
     CoreModule.forRoot(mcsCoreConfig),
+    ConsolePageModule,
+    DefaultPageModule,
     RouterModule.forRoot(routes)
   ],
   providers: [
