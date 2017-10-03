@@ -1,6 +1,6 @@
 <!-- Left Panel Wrapper -->
 <div #pageLeftElement display-flex="column" flex="none"
-  class="page-left-wrapper hidden-small">
+  class="page-left-wrapper hidden-small" [hidden]="!hasLeftPanel">
   <ng-container mcsLeftPanelPlaceholder></ng-container>
 </div>
 
@@ -8,7 +8,7 @@
 <div display-flex="column" flex="auto" class="page-right-wrapper">
   <div display-flex flex="none" class="page-top-wrapper">
     <mcs-icon (click)="toggleLeftPanel()" [key]="barIconKey"
-      class="left-panel-nav-icon hidden-small"></mcs-icon>
+      class="left-panel-nav-icon hidden-small" [hidden]="!hasLeftPanel"></mcs-icon>
     <span class="page-header">{{ header }}</span>
     <ng-container mcsTopPanelPlaceholder></ng-container>
   </div>
