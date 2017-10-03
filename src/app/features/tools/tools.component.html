@@ -1,62 +1,60 @@
-<!-- Page Header with title, subtitle (for total record), and description -->
-<mcs-page-header class="page-header-wrapper">
-  <mcs-page-title *mcsPageTitleDef>
-    {{ textContent.header }}
-  </mcs-page-title>
-  <mcs-page-description *mcsPageDescriptionDef>
-    {{ textContent.description }}
-  </mcs-page-description>
-</mcs-page-header>
+<mcs-page [header]="textContent.header">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <p>
+      {{ textContent.description }}
+    </p>
 
-<div class="mcs-table-wrapper">
+    <div class="listing-table-wrapper">
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+        <!-- Service Column -->
+        <ng-container mcsColumnDef="name">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.table.header.name }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.name}}
+          </mcs-data-cell>
+        </ng-container>
 
-  <!-- Table -->
-  <mcs-table [dataSource]="dataSource">
-    <!-- Service Column -->
-    <ng-container mcsColumnDef="name">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ textContent.table.header.name }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        {{ row.name}}
-      </mcs-data-cell>
-    </ng-container>
+        <!-- Description Column -->
+        <ng-container mcsColumnDef="description">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ textContent.table.header.description }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ toolDescription.get(row.name) }}
+          </mcs-data-cell>
+        </ng-container>
 
-    <!-- Description Column -->
-    <ng-container mcsColumnDef="description">
-      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-        {{ textContent.table.header.description }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-        {{ toolDescription.get(row.name) }}
-      </mcs-data-cell>
-    </ng-container>
+        <!-- Access Column -->
+        <ng-container mcsColumnDef="url">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.table.header.access }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <a [href]="row.url" target="_blank">{{ row.resource }} <br />(requires login)</a>
+          </mcs-data-cell>
+        </ng-container>
 
-    <!-- Access Column -->
-    <ng-container mcsColumnDef="url">
-      <mcs-header-cell *mcsHeaderCellDef>
-        {{ textContent.table.header.access }}
-      </mcs-header-cell>
-      <mcs-data-cell *mcsDataCellDef="let row">
-        <a [href]="row.url" target="_blank">{{ row.resource }} <br />(requires login)</a>
-      </mcs-data-cell>
-    </ng-container>
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ textContent.noRecordsFoundMessage }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="data-error">
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
 
-    <!-- Data Status Integration -->
-    <ng-container mcsDataStatusDef>
-      <mcs-data-empty *mcsDataEmptyDef>
-        <span>{{ textContent.noRecordsFoundMessage }}</span>
-      </mcs-data-empty>
-      <mcs-data-error *mcsDataErrorDef>
-        <div class="data-error">
-          <span>{{ textContent.errorMessage }}</span>
-          <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
-        </div>
-      </mcs-data-error>
-    </ng-container>
-
-    <!-- Header and Data row -->
-    <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-    <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-  </mcs-table>
-</div>
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+    </div>
+  </mcs-content-panel>
+</mcs-page>
