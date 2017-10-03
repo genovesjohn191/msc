@@ -104,24 +104,8 @@ export class FirewallComponent implements OnInit, OnDestroy {
     );
   }
 
-  public getStatusIconKey(status: FirewallConnectionStatus): string {
-    let iconKey = '';
-
-    switch (status) {
-      case FirewallConnectionStatus.Up:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-      case FirewallConnectionStatus.Down:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-
-      case FirewallConnectionStatus.Unknown:
-      default:
-        // TODO: Confirm the icon for Unknown Status
-        break;
-    }
-
-    return iconKey;
+  public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
+    return this._firewallService.getFirewallConnectionStatusIconKey(status);
   }
 
   /**

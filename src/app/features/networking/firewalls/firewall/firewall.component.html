@@ -12,7 +12,7 @@
           <mcs-list-item *mcsListItemDef="let firewall"
             [itemId]="firewall.id" [groupName]="firewall.haGroupName"
             (click)="onFirewallSelect(firewall.id)">
-            <mcs-icon [key]="getStatusIconKey(firewall.connectionStatus)"></mcs-icon>
+            <mcs-icon [key]="getConnectionStatusIconKey(firewall.connectionStatus)"></mcs-icon>
             <a>{{ firewall.name }}</a>
           </mcs-list-item>
         </ng-container>

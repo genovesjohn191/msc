@@ -35,22 +35,13 @@
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
-        <!-- Status Column -->
-        <ng-container mcsColumnDef="status">
-          <mcs-header-cell *mcsHeaderCellDef class="text-center">
-            {{ columnSettings.status.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
-            <mcs-icon [key]="getStatusIconKey(row.connectionStatus)"></mcs-icon>
-          </mcs-data-cell>
-        </ng-container>
-
         <!-- Firewall Column -->
         <ng-container mcsColumnDef="firewall">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.firewall.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+          <mcs-data-cell *mcsDataCellDef="let row" class="firewall-column">
+            <mcs-icon [key]="getConnectionStatusIconKey(row.connectionStatus)"></mcs-icon>
             <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
           </mcs-data-cell>
         </ng-container>

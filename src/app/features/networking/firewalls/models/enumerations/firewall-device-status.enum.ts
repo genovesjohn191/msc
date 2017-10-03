@@ -10,9 +10,9 @@ export enum FirewallDeviceStatus {
   Cancelled = 7,
   Pending = 8,
   Retrieved = 9,
-  ChangeConf = 10,
-  SyncFail = 11,
+  ChangedConfig = 10,
+  SyncFailed = 11,
   Timeout = 12,
-  RevReverted = 13,
+  Reverted = 13,
   AutoUpdated = 14
 }

@@ -18,6 +18,9 @@ import { Observable } from 'rxjs/Rx';
 /** Services and Models */
 import {
   Firewall,
+  FirewallConnectionStatus,
+  FirewallConfigurationStatus,
+  FirewallDeviceStatus,
   FirewallPolicy,
   FirewallPolicyAction,
   FirewallPolicyNat
@@ -25,7 +28,8 @@ import {
 import { FirewallsService } from './firewalls.service';
 import {
   McsApiSuccessResponse,
-  McsApiErrorResponse
+  McsApiErrorResponse,
+  CoreDefinition
 } from '../../../core';
 import { NetworkingTestingModule } from '../testing';
 
@@ -345,5 +349,82 @@ describe('FirewallsService', () => {
           // dummy subscribe to invoke exception
         });
     }));
+  });
+
+  describe('getFirewallConnectionStatusIconKey()', () => {
+    it('should return green status icon key when the connection status is Up', () => {
+      expect(firewallsService.getFirewallConnectionStatusIconKey(FirewallConnectionStatus.Up))
+        .toEqual(CoreDefinition.ASSETS_SVG_STATE_RUNNING);
+    });
+
+    it('should return red status icon key when the connection status is Down', () => {
+      expect(firewallsService.getFirewallConnectionStatusIconKey(FirewallConnectionStatus.Down))
+        .toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+    });
+
+    it('should return amber status icon key when the connection status is Unknown', () => {
+      expect(firewallsService.getFirewallConnectionStatusIconKey(FirewallConnectionStatus.Unknown))
+        .toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+    });
+  });
+
+  describe('getFirewallConfigurationStatusIconKey()', () => {
+    it('should return green status icon key when the configuration status is InSync', () => {
+      expect(firewallsService.getFirewallConfigurationStatusIconKey(
+        FirewallConfigurationStatus.InSync)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RUNNING);
+    });
+
+    it('should return red status icon key when the configuration status is OutOfSync', () => {
+      expect(firewallsService.getFirewallConfigurationStatusIconKey(
+        FirewallConfigurationStatus.OutOfSync)).toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+    });
+
+    it('should return amber status icon key when the configuration status is Unknown', () => {
+      expect(firewallsService.getFirewallConfigurationStatusIconKey(
+        FirewallConfigurationStatus.Unknown)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+    });
+  });
+
+  describe('getFirewallDeviceStatusIconKey()', () => {
+    it('should return green status icon key', () => {
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.AutoUpdated)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RUNNING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.InProgress)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RUNNING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Retrieved)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RUNNING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Reverted)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RUNNING);
+    });
+
+    it('should return red status icon key', () => {
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Aborted)).toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Cancelled)).toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.None)).toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.SyncFailed)).toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Timeout)).toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Unknown)).toEqual(CoreDefinition.ASSETS_SVG_STATE_STOPPED);
+    });
+
+    it('should return amber status icon key', () => {
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.ChangedConfig)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.CheckedIn)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Installed)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Pending)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Retry)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+      expect(firewallsService.getFirewallDeviceStatusIconKey(
+        FirewallDeviceStatus.Sched)).toEqual(CoreDefinition.ASSETS_SVG_STATE_RESTARTING);
+    });
   });
 });
