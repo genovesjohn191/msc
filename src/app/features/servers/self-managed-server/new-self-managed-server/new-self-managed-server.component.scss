@@ -1,5 +1,7 @@
 @import "../../../../../styles/shared/base";
 
+$label-font-size: $h4-default-font-size;
+
 .new-self-managed-server-container {
   width: 100%;
   @include set-items-interval($space-large);
@@ -29,6 +31,6 @@
 
   .label {
     font-family: $base-font-bold;
-    @include font-size(20);
+    @include font-size($label-font-size);
   }
 }

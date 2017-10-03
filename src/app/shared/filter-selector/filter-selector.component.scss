@@ -1,7 +1,7 @@
 @import '../../../styles/shared/base';
 
-$filter-selector-title-font-size: $font-size-default;
-$filter-selector-content-font-size: $font-size-small;
+$filter-selector-title-font-size: $font-size-large;
+$filter-selector-content-font-size: $font-size-default;
 
 .mcs-filter-selector {
   display: inline-block;
