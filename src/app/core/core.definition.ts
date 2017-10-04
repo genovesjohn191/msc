@@ -93,6 +93,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_LOGOUT_WHITE = 'logout-white';
   public static ASSETS_SVG_USER_WHITE = 'user-white';
   public static ASSETS_SVG_CIRCLE_INFO_BLACK = 'circle-info-black';
+  public static ASSETS_SVG_COG = 'cog';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
