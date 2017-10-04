@@ -3,12 +3,13 @@
 // Main Page
 $page-border-color: $color-grey-05;
 $page-header-font: $circular-pro-bold;
-$page-header-padding: $space-medium;
+$page-header-padding: 0 $space-large;
 // Left Panel Definition
 $left-panel-width: 275px;
 $left-panel-icon-padding: $space-small;
 $left-panel-item-padding: $space-medium;
 // Top Panel Definition
+$top-panel-height: 50px;
 $top-panel-item-padding: $page-header-padding;
 // Content Panel Definition is declared inside the variables.scss
 
@@ -49,16 +50,18 @@ $top-panel-item-padding: $page-header-padding;
     .page-top-wrapper {
       align-items: center;
       border-bottom: 1px solid $page-border-color;
+      height: $top-panel-height;
 
       .page-header {
-        font-family: $page-header-font;
         padding: $page-header-padding;
-        border-right: 1px solid $page-border-color;
+        margin: 0;
+        width: auto;
       }
 
       .left-panel-nav-icon {
         cursor: pointer;
-        padding-left: $top-panel-item-padding;
+        padding: $top-panel-item-padding;
+        padding-right: 0;
       }
 
       .top-panel-wrapper {
@@ -68,8 +71,13 @@ $top-panel-item-padding: $page-header-padding;
 
         .top-panel-item-wrapper {
           @include display-flex(row);
+          height: $top-panel-height;
           padding: $top-panel-item-padding;
           border-right: 1px solid $page-border-color;
+
+          &:first-child {
+            border-left: 1px solid $page-border-color;
+          }
 
           &:last-child {
             @include flex(1 1 auto);

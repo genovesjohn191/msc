@@ -6,7 +6,9 @@ import {
   Renderer2,
   ElementRef,
   ViewChild,
-  forwardRef
+  forwardRef,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -27,6 +29,7 @@ const DEFAULT_DROPDOWN_PLACEHOLDER = 'Select Option';
   selector: 'mcs-dropdown',
   templateUrl: './dropdown.component.html',
   styles: [require('./dropdown.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -37,7 +40,6 @@ const DEFAULT_DROPDOWN_PLACEHOLDER = 'Select Option';
 })
 
 export class DropdownComponent implements OnChanges, AfterViewInit, ControlValueAccessor {
-  public isOpen: boolean;
   public selectedItem: McsListItem;
 
   @Input()
@@ -60,6 +62,20 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
 
   @ViewChild('mcsDropdownGroupName')
   public mcsDropdownGroupName: ElementRef;
+
+  /**
+   * Flag to determine weather the dropdown items is open
+   */
+  private _isOpen: boolean;
+  public get isOpen(): boolean {
+    return this._isOpen;
+  }
+  public set isOpen(value: boolean) {
+    if (this._isOpen !== value) {
+      this._isOpen = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
 
   /**
    * On Touched Event Callback
@@ -92,6 +108,7 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   public constructor(
     private _renderer: Renderer2,
     private _elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.dropdownData = new McsList();
     this.isOpen = false;
@@ -153,6 +170,7 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
     if (value !== this._option) {
       this._option = value;
       this.getSelectedItem(this.option);
+      this._changeDetectorRef.markForCheck();
     }
   }
 

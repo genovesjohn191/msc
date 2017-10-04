@@ -4,7 +4,9 @@ import {
   OnDestroy,
   ViewChildren,
   QueryList,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   FormGroup,
@@ -44,7 +46,8 @@ const DETAILS_MAX_CHAR = 4000;
 @Component({
   selector: 'mcs-ticket-create',
   templateUrl: './ticket-create.component.html',
-  styles: [require('./ticket-create.component.scss')]
+  styles: [require('./ticket-create.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -107,7 +110,8 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
-    private _ticketCreateService: TicketCreateService
+    private _ticketCreateService: TicketCreateService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.ticketTypeList = new McsList();
     this.services = new Array();
@@ -283,6 +287,9 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     ]).subscribe((data) => {
       this._setServers(data[0]);
       this._setFirewalls(data[1]);
+    });
+    this.servicesSubscription.add(() => {
+      this._changeDetectorRef.markForCheck();
     });
   }
 
