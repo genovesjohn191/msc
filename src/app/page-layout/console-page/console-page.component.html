@@ -1,39 +1,21 @@
-<div *ngIf="!consoleVisible" class="console-page-loading">
+<div *ngIf="consoleIsConnecting" class="console-message">
   <mcs-icon [key]="loadingIconKey" size="medium"></mcs-icon>
   <span>{{ consolePageTextContent.loading }}</span>
 </div>
 
+<div *ngIf="!isServerPoweredOn()" class="console-message">
+  <span>{{ consolePageTextContent.disconnectedMessage }}</span>
+</div>
+
 <div #consoleDialogElement class="console-page-dialog">
-  <div *ngIf="consoleVisible" class="menu-header">
+  <div class="menu-header" [hidden]="!consoleIsConnected">
     <div mcsPopover trigger="hover" maxWidth="200px"
         [content]="sendCtrlAltDelTooltip" orientation="right" padding="narrow">
-      <mcs-icon (click)="onClickPowerOn()" [key]="keyboardIconKey" size="medium"></mcs-icon>
+      <mcs-icon (click)="onClickCtrlAltDelete()" [key]="keyboardIconKey" size="medium"></mcs-icon>
       <ng-template #sendCtrlAltDelTooltip>
         {{ consolePageTextContent.sendCtrlAltDelete }}
       </ng-template>
     </div>
-    <div mcsPopover trigger="hover" maxWidth="200px"
-        [content]="powerOnTooltip" orientation="right" padding="narrow">
-      <mcs-icon (click)="onClickPowerOn()" [key]="playIconKey" size="medium"></mcs-icon>
-      <ng-template #powerOnTooltip>
-        {{ consolePageTextContent.sendPowerOn }}
-      </ng-template>
-    </div>
-    <div mcsPopover trigger="hover" maxWidth="200px"
-        [content]="restartTooltip" orientation="right" padding="narrow">
-      <mcs-icon (click)="onClickRestart()" [key]="restartIconKey" size="medium"></mcs-icon>
-      <ng-template #restartTooltip>
-        {{ consolePageTextContent.sendRestart }}
-      </ng-template>
-    </div>
-    <div mcsPopover trigger="hover" maxWidth="200px"
-        [content]="powerOffTooltip" orientation="right" padding="narrow">
-      <mcs-icon (click)="onClickPowerOff()" [key]="stopIconKey" size="medium"></mcs-icon>
-      <ng-template #powerOffTooltip>
-        {{ consolePageTextContent.sendPowerOff }}
-      </ng-template>
-    </div>
   </div>
-
-  <div id="wmksContainer" #consoleUiElement class="console-ui"></div>
+  <div [hidden]="!consoleIsConnected" id="wmksContainer" #consoleUiElement class="console-ui"></div>
 </div>

@@ -13,8 +13,9 @@ body {
   background-color: $color-black;
 }
 
-.console-page-loading {
+.console-message {
   @include display-flex(row);
+  padding: 10px;
   align-items: center;
   justify-content: center;
   background-color: $color-white;
@@ -24,6 +25,9 @@ body {
 
 .console-page-dialog {
   .menu-header {
+    top: 40px;
+    position: absolute;
+    width: 100%;
     background-color: $color-white;
     border: 1px solid $color-grey-06;
     @include display-flex(row);
@@ -32,7 +36,6 @@ body {
 
     div {
       cursor: pointer;
-      margin-top: 8px;
       border-bottom: 2px solid transparent;
       @include display-flex(row);
       align-items: center;
@@ -48,16 +51,8 @@ body {
   }
 
   .console-ui {
+    top: 80px;
     position: absolute;
     display: block;
   }
-}
-
-// Remove the overlay in jquery dialog.
-// This is not necessary in console page since
-// we dont use the dialog to display
-.ui-widget-overlay {
-  display: none;
-  height: 0 !important;
-  width: 0 !important;
 }

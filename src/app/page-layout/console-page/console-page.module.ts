@@ -7,6 +7,8 @@ import { ConsolePageComponent } from './console-page.component';
 import { ConsolePageService } from './console-page.service';
 /** Constants */
 import { consolePageRoutes } from './console-page.constants';
+/** Services */
+import { ServersService } from '../../features/servers';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,8 @@ import { consolePageRoutes } from './console-page.constants';
     RouterModule.forChild(consolePageRoutes)
   ],
   providers: [
-    ConsolePageService
+    ConsolePageService,
+    ServersService
   ]
 })
 
