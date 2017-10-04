@@ -24,7 +24,7 @@ export class ServerCommandComponent {
   public popoverActionElement: any;
 
   public get gearIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_GEAR;
+    return CoreDefinition.ASSETS_SVG_COG;
   }
 
   public get startStatus(): any {

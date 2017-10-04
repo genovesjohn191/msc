@@ -4,18 +4,19 @@
 $table-default-minimum-width: 800px;
 $table-medium-minimum-width: 650px;
 $table-small-minimum-width: 100%;
+$table-cell-side-padding: 22px;
 
 // Table header
 $table-header-background-color: $color-black;
 $table-header-font-color: $color-white;
 $table-header-border-radius: $space-xsmall;
-$table-header-cell-padding: $space-small;
+$table-header-cell-padding: $space-small $table-cell-side-padding;
 $table-header-font-size: $font-size-default;
 
 // Table rows
 $table-data-even-background-color: $color-grey-07;
 $table-data-font-size: $font-size-default;
-$table-data-cell-padding: $space-xsmall $space-small;
+$table-data-cell-padding: $space-xsmall $table-cell-side-padding;
 
 // Table cells
 $table-cell-divider-color: $color-white;

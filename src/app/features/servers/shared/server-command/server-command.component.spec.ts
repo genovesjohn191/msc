@@ -41,7 +41,7 @@ describe('ServerCommandComponent', () => {
   /** Test Implementation */
   describe('IconKey() | Property', () => {
     it('should get the gear icon key definition', () => {
-      expect(component.gearIconKey).toBe(CoreDefinition.ASSETS_FONT_GEAR);
+      expect(component.gearIconKey).toBe(CoreDefinition.ASSETS_SVG_COG);
     });
   });
 

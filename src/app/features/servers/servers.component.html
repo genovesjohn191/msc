@@ -73,10 +73,10 @@
             <div class="emphasize">
               <div *ngIf="getServerPowerstate(row)">
                 <mcs-icon [key]="getStateIconKey(row.powerState)"
-                  size="medium"></mcs-icon>
+                  size="small"></mcs-icon>
               </div>
               <div *ngIf="!getServerPowerstate(row)" class="power-state-spinner">
-                <mcs-icon [key]="spinnerIconKey" size="medium"
+                <mcs-icon [key]="spinnerIconKey" size="small"
                   mcsPopover trigger="hover" maxWidth="250px" padding="none"
                   [content]="loadingContent"></mcs-icon>
               </div>
