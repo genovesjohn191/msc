@@ -9,7 +9,7 @@
   <div display-flex flex="none" class="page-top-wrapper">
     <mcs-icon (click)="toggleLeftPanel()" [key]="barIconKey"
       class="left-panel-nav-icon hidden-small" [hidden]="!hasLeftPanel"></mcs-icon>
-    <span class="page-header">{{ header }}</span>
+    <h3 class="page-header">{{ header }}</h3>
     <ng-container mcsTopPanelPlaceholder></ng-container>
   </div>
   <ng-container mcsContentPanelPlaceholder></ng-container>

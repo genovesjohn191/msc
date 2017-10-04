@@ -7,22 +7,6 @@ $ticket-label-font: $circular-pro-bold;
   @include set-items-interval($space-xlarge);
 }
 
-.ticket-header-wrapper {
-  @include display-flex(column);
-
-  h2 {
-    width: auto;
-  }
-
-  // Display in case of mobile
-  .status {
-    display: none;
-    @include breakpoint(small) {
-      display: block;
-    }
-  }
-}
-
 .ticket-headline-wrapper {
   display: block;
   text-align: left;

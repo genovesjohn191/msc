@@ -1,7 +1,8 @@
 <div class="ticket-server-wrapper">
   <!-- Service header main wrapper -->
   <div class="services-name-wrapper">
-    <div *ngFor="let item of services" class="service-item" [ngClass]="{active: isActive(item)}">
+    <div *ngFor="let item of services; trackBy: trackByFn"
+      class="service-item" [ngClass]="{active: isActive(item)}">
       <a (click)="setSelectedService(item)">{{ item.serviceName }}</a>
       <mcs-icon [key]="caretRightIconKey"></mcs-icon>
     </div>

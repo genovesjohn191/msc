@@ -1,7 +1,9 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -36,7 +38,8 @@ import { saveAs } from 'file-saver';
 @Component({
   selector: 'mcs-ticket',
   templateUrl: './ticket.component.html',
-  styles: [require('./ticket.component.scss')]
+  styles: [require('./ticket.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class TicketComponent implements OnInit, OnDestroy {
@@ -61,6 +64,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
       this._ticket = value;
       this._setActivities(this._ticket);
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -72,7 +76,10 @@ export class TicketComponent implements OnInit, OnDestroy {
     return this._activities;
   }
   public set activities(value: TicketActivity[]) {
-    this._activities = value;
+    if (this._activities !== value) {
+      this._activities = value;
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   /**
@@ -87,6 +94,10 @@ export class TicketComponent implements OnInit, OnDestroy {
     return isNullOrEmpty(this.ticket) ? false : this.ticket.state === TicketStatus.Resolved;
   }
 
+  public get ticketHeader(): string {
+    return `${this.textContent.header}${this.ticket.crispTicketNumber}`;
+  }
+
   public get checkIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHECK;
   }
@@ -94,7 +105,8 @@ export class TicketComponent implements OnInit, OnDestroy {
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _ticketsService: TicketsService,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this._ticket = new Ticket();
     this._activities = new Array();
@@ -111,6 +123,15 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (this.ticketSubscription) {
       this.ticketSubscription.unsubscribe();
     }
+  }
+
+  /**
+   * Track by function to help determine the view which data has beed modified
+   * @param index Index of the current loop
+   * @param _item Item of the loop
+   */
+  public trackByFn(index: any, _item: any) {
+    return index;
   }
 
   /**
@@ -200,6 +221,9 @@ export class TicketComponent implements OnInit, OnDestroy {
           this._addActivity(activity);
         }
       });
+    this.createCommentSubscription.add(() => {
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   private _createAttachment(attachedFile: TicketFileInfo) {
@@ -222,6 +246,9 @@ export class TicketComponent implements OnInit, OnDestroy {
           this.ticket.attachments.splice(0, 0, response.content);
         }
       });
+    this.createAttachmentSubscription.add(() => {
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**

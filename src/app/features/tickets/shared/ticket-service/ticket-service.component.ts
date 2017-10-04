@@ -5,7 +5,9 @@ import {
   EventEmitter,
   ViewChild,
   AfterViewInit,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {
@@ -25,7 +27,8 @@ import {
 @Component({
   selector: 'mcs-ticket-service',
   templateUrl: './ticket-service.component.html',
-  styles: [require('./ticket-service.component.scss')]
+  styles: [require('./ticket-service.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class TicketServiceComponent implements AfterViewInit, OnDestroy {
@@ -44,6 +47,7 @@ export class TicketServiceComponent implements AfterViewInit, OnDestroy {
     if (this._services !== value) {
       this._services = value;
       this.setSelectedService(this._services[0]);
+      this._changeDetectorRef.markForCheck();
     }
   }
   private _services: TicketService[];
@@ -86,12 +90,13 @@ export class TicketServiceComponent implements AfterViewInit, OnDestroy {
   public set displayedServices(value: TicketServiceData[]) {
     if (this._displayedServices !== value) {
       this._displayedServices = value;
+      this._changeDetectorRef.markForCheck();
     }
   }
 
   private _searchkeySubscription: any;
 
-  public constructor() {
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.services = new Array();
     this.selectionChanged = new EventEmitter<any>();
     this.selectedServiceItems = new Array();
@@ -112,6 +117,15 @@ export class TicketServiceComponent implements AfterViewInit, OnDestroy {
     if (!isNullOrEmpty(this._searchkeySubscription)) {
       this._searchkeySubscription.unsubscribe();
     }
+  }
+
+  /**
+   * Track by function to help determine the view which data has beed modified
+   * @param index Index of the current loop
+   * @param _item Item of the loop
+   */
+  public trackByFn(index: any, _item: any) {
+    return index;
   }
 
   /**
