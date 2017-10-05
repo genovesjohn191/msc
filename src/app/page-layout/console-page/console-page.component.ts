@@ -9,12 +9,15 @@ import {
   NgZone
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { refreshView } from '../../utilities';
+import { refreshView, isNullOrEmpty } from '../../utilities';
 import {
   McsTextContentProvider,
   CoreDefinition,
   Key
 } from '../../core';
+import { ServersService } from '../../features/servers';
+import { ServerPowerState } from '../../features/servers/models';
+
 import { ConsolePageService } from './console-page.service';
 
 // JQuery script implementation
@@ -46,47 +49,41 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_SVG_KEYBOARD;
   }
 
-  public get playIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLAY;
-  }
-
-  public get stopIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_STOP;
-  }
-
-  public get restartIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_RESTART;
-  }
-
   public get loadingIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public consoleVisible: boolean;
   public consolePageTextContent: any;
+  public consoleIsConnecting: boolean;
+  public consoleIsConnected: boolean;
+  public consoleDisconnecting: boolean;
 
   private _vmConsole: any;
   private _vmConsoleDialog: any;
-
   private _url: string;
   private _vmx: string;
   private _routeSubscription: any;
   private _zoneSubscription: any;
+  private _serverId: string;
 
   public constructor(
     private _consoleService: ConsolePageService,
     private _textContentProvider: McsTextContentProvider,
+    private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
     private _zone: NgZone
   ) {
-    this.consoleVisible = false;
+    this.consoleDisconnecting = false;
+    this.consoleIsConnecting = false;
+    this.consoleIsConnected = false;
   }
 
   public ngOnInit() {
     this.consolePageTextContent = this._textContentProvider.content.consolePage;
     this._routeSubscription = this._activatedRoute.params
       .subscribe((params) => {
-        this._setupVmConsole(params['id']);
+        this._serverId = params['id'];
+        this._setupVmConsole(this._serverId);
       });
 
     // Subscribe to the angular zone to check weather the console
@@ -116,7 +113,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  public onClickPowerOn() {
+  public onClickCtrlAltDelete() {
     // TODO: Set the corresponding key to power on the server
     this._sendKeyCodes([
       Key.Ctrl,
@@ -125,26 +122,51 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     ]);
   }
 
-  public onClickRestart() {
-    // TODO: Set the corresponding key to restart on the server
-    this._sendKeyCodes([
-      Key.Ctrl,
-      Key.Alt,
-      Key.Delete
-    ]);
+  /**
+   * Return the server powerstate based on the active server status
+   * @param server Server to be check
+   */
+  public isServerPoweredOn(): boolean {
+    let serverPowerstate = ServerPowerState.PoweredOn;
+
+    if (!isNullOrEmpty(this._serversService.activeServers)) {
+      for (let active of this._serversService.activeServers) {
+        if (active.serverId === this._serverId) {
+          // Update the powerstate of the corresponding server based on the row
+          serverPowerstate = this._serversService.getActiveServerPowerState(active);
+          break;
+        }
+      }
+    }
+
+    let isPoweredOn = serverPowerstate === ServerPowerState.PoweredOn;
+
+    if (!isPoweredOn) {
+      this._disconnectVmConsole();
+    }
+
+    if (isPoweredOn && this.consoleDisconnecting) {
+      this._reconnectVmConsole();
+    }
+
+    return isPoweredOn;
   }
 
-  public onClickPowerOff() {
-    // TODO: Set the corresponding key to power off the server
-    this._sendKeyCodes([
-      Key.Ctrl,
-      Key.Alt,
-      Key.Delete
-    ]);
+  private _disconnectVmConsole(): void {
+    this.consoleIsConnected = false;
+    this.consoleDisconnecting = true;
+  }
+
+  private _reconnectVmConsole(): void {
+    this.consoleDisconnecting = false;
+    this.consoleIsConnecting = false;
+    this.consoleIsConnected = false;
+    this._setupVmConsole(this._serverId);
   }
 
   private _setupVmConsole(serverId: any) {
-    if (!serverId) { return; }
+    if (!serverId || this.consoleIsConnecting) { return; }
+    this.consoleIsConnecting = true;
 
     this._consoleService.getServerConsole(serverId)
       .subscribe((consoleData) => {
@@ -153,6 +175,8 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
           this._vmx = consoleData.content.vmx;
 
           this._connectConsole();
+          this.consoleIsConnected = true;
+          this.consoleIsConnecting = false;
           this._createDialog();
           this._displayConsole();
         }
@@ -172,7 +196,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _displayConsole(): void {
     // Display console dialog and set the visibility flag to true
-    this.consoleVisible = true;
     this._vmConsoleDialog.dialog('open');
   }
 

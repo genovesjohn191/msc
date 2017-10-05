@@ -2,9 +2,7 @@
   "consolePage": {
     "loading": "Loading VM Console...",
     "sendCtrlAltDelete": "Send ctrl+alt+del",
-    "sendPowerOn": "Send PowerOn",
-    "sendPowerOff": "Send PowerOff",
-    "sendRestart": "Send Restart"
+    "disconnectedMessage": "Console got disconnected. We will try to reconnect once the server is back."
   },
   "navigation": {
     "home": "Home",
