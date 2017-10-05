@@ -1,6 +1,6 @@
 import {
   mergeArrays,
-  updateArrayRecord,
+  addOrUpdateArrayRecord,
   deleteArrayRecord
 } from './mcs-array.function';
 
@@ -49,32 +49,32 @@ describe('ARRAY Functions', () => {
     });
   });
 
-  describe('updateArrayRecord()', () => {
+  describe('addOrUpdateArrayRecord()', () => {
     it(`should append the array record when the predicate is undefined
-    and appendIfNotExist is true`, () => {
+    and updateOnly is true`, () => {
         let arrayRecord: TestStructure[] = new Array();
         let updatedElement: TestStructure = new TestStructure('1', '2');
 
         arrayRecord.push(new TestStructure('1', 'hello1'));
-        let mergedArray = updateArrayRecord(arrayRecord, updatedElement, true);
+        let mergedArray = addOrUpdateArrayRecord(arrayRecord, updatedElement, false);
         expect(mergedArray.length).toEqual(2);
       });
 
-    it(`should append the array record when the appendIfNotExist flag is true`, () => {
+    it(`should append the array record when the updateOnly flag is false`, () => {
       let arrayRecord: TestStructure[] = new Array();
       let updatedElement: TestStructure = new TestStructure('1', '2');
 
       arrayRecord.push(new TestStructure('1', 'hello1'));
-      let mergedArray = updateArrayRecord(arrayRecord, updatedElement, true);
+      let mergedArray = addOrUpdateArrayRecord(arrayRecord, updatedElement, false);
       expect(mergedArray.length).toEqual(2);
     });
 
-    it(`should not append the array record when the appendIfNotExist flag is false`, () => {
+    it(`should not append the array record when the updateOnly flag is true`, () => {
       let arrayRecord: TestStructure[] = new Array();
       let updatedElement: TestStructure = new TestStructure('1', '2');
 
       arrayRecord.push(new TestStructure('1', 'hello1'));
-      let mergedArray = updateArrayRecord(arrayRecord, updatedElement, false);
+      let mergedArray = addOrUpdateArrayRecord(arrayRecord, updatedElement, true);
       expect(mergedArray.length).toEqual(1);
     });
 
@@ -83,15 +83,44 @@ describe('ARRAY Functions', () => {
       let updatedElement: TestStructure = new TestStructure('1', '2');
 
       arrayRecord.push(new TestStructure('1', 'hello1'));
-      let mergedArray = updateArrayRecord(
+      let mergedArray = addOrUpdateArrayRecord(
         arrayRecord,
         updatedElement,
-        true,
+        false,
         (first: TestStructure, second: TestStructure) => {
           return first.key === second.key;
         }
       );
       expect(mergedArray.length).toEqual(1);
+    });
+
+    it(`should add the record at the end of the array
+      when the insertIndex is not set`, () => {
+      let arrayRecord: TestStructure[] = [
+        new TestStructure('1', 'hello'),
+        new TestStructure('2', 'world')
+      ];
+      let updatedElement: TestStructure = new TestStructure('3', 'earth');
+
+      let mergedArray = addOrUpdateArrayRecord(
+        arrayRecord, updatedElement, false);
+      expect(mergedArray.length).toEqual(3);
+      expect(mergedArray[2]).toEqual(updatedElement);
+    });
+
+    it(`should add the record to the set index value
+      when  insertIndex is set`, () => {
+      let insertIndex = 1;
+      let arrayRecord: TestStructure[] = [
+        new TestStructure('1', 'hello'),
+        new TestStructure('2', 'world')
+      ];
+      let updatedElement: TestStructure = new TestStructure('3', 'earth');
+
+      let mergedArray = addOrUpdateArrayRecord(
+        arrayRecord, updatedElement, false, undefined, insertIndex);
+      expect(mergedArray.length).toEqual(3);
+      expect(mergedArray[insertIndex]).toEqual(updatedElement);
     });
   });
 

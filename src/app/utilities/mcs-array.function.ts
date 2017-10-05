@@ -51,18 +51,20 @@ export function mergeArrays<T>(
  * already exist the value on the array will be updated otherwise
  * the updated element will be appended as the last record of the array
  * @param sourceArray Record list for the updatedElement to be append to
- * @param updatedElement Updated element to check if the record is already exist
- * @param appendIfNotExist `@Optional` flag if the record should be appended in the array
+ * @param record Updated element to check if the record is already exist
+ * @param updateOnly `@Optional` flag if the record should be appended in the array
  * @param predicate Rules of matching the element
+ * @param insertIndex `@Optional` Custom index to insert the record
  */
-// TODO: Create updateArrayRecord and addUpdateArrayRecord method to separate the process
-export function updateArrayRecord<T>(
+export function addOrUpdateArrayRecord<T>(
   sourceArray: T[],
-  updatedElement: T,
-  appendIfNotExist: boolean,
-  predicate?: (_pr1: T, _pr2: T) => boolean): T[] {
+  record: T,
+  updateOnly: boolean,
+  predicate?: (_pr1: T, _pr2: T) => boolean,
+  insertIndex?: number): T[] {
 
-  let isExist: boolean = false;
+  let isExisting: boolean = false;
+  let insertThisItem: boolean = !updateOnly;
 
   // Initialize for undefined and null record
   if (!sourceArray) { sourceArray = new Array(); }
@@ -71,17 +73,20 @@ export function updateArrayRecord<T>(
   if (predicate) {
 
     for (let index = 0; index < sourceArray.length; index++) {
-      if (predicate(sourceArray[index], updatedElement)) {
-        isExist = true;
-        sourceArray[index] = updatedElement;
+      if (predicate(sourceArray[index], record)) {
+        isExisting = true;
+        sourceArray[index] = record;
         break;
       }
     }
-    if (!isExist && appendIfNotExist) {
-      sourceArray.push(updatedElement);
-    }
-  } else if (appendIfNotExist) {
-    sourceArray.push(updatedElement);
+    insertThisItem = insertThisItem && !isExisting;
+  }
+
+  if (insertThisItem) {
+    let validIndex = insertIndex !== undefined && insertIndex >= 0;
+    validIndex
+      ? sourceArray.splice(insertIndex, 0, record)
+      : sourceArray.push(record);
   }
 
   return sourceArray;
