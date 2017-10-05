@@ -30,7 +30,7 @@ import {
   convertToGb,
   animateFactory,
   mergeArrays,
-  updateArrayRecord,
+  addOrUpdateArrayRecord,
   isNullOrEmpty,
   compareStrings
 } from '../../../../utilities';
@@ -430,7 +430,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                     }
                   }
 
-                  updateArrayRecord(this.storageDevices, disk, true,
+                  addOrUpdateArrayRecord(this.storageDevices, disk, false,
                     (_first: any, _second: any) => {
                       return _first.id === _second.id;
                     });

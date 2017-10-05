@@ -104,10 +104,10 @@ describe('McsNotificationContextService', () => {
           });
 
         expect(updatedNotifications.length).toBe(2);
-        expect(updatedNotifications[0].id).toBe(initId);
-        expect(updatedNotifications[0].description).toBe(initDescription);
-        expect(updatedNotifications[1].id).toBe(newId);
-        expect(updatedNotifications[1].description).toBe(newDescription);
+        expect(updatedNotifications[0].id).toBe(newId);
+        expect(updatedNotifications[0].description).toBe(newDescription);
+        expect(updatedNotifications[1].id).toBe(initId);
+        expect(updatedNotifications[1].description).toBe(initDescription);
 
         if (subscriber) { subscriber.unsubscribe(); }
       });

@@ -25,7 +25,7 @@ import {
 } from '../../../core';
 import {
   mergeArrays,
-  updateArrayRecord,
+  addOrUpdateArrayRecord,
   refreshView
 } from '../../../utilities';
 import { ContextualHelpDirective } from '../../../shared';
@@ -296,7 +296,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
 
           // Update new created servers
           for (let job of creationJobs) {
-            updateArrayRecord(this.notifications, job, false,
+            addOrUpdateArrayRecord(this.notifications, job, true,
               (_first: McsApiJob, _second: McsApiJob) => {
                 return _first.id === _second.id;
               });
