@@ -3,22 +3,3 @@
 :host {
   display: block;
 }
-
-.firewall-column {
-  @include set-items-interval($space-xsmall, horizontal);
-  align-items: center;
-}
-
-.action {
-  cursor: pointer;
-}
-
-.action-item {
-  text-decoration: none;
-}.action {
-  cursor: pointer;
-}
-
-.action-item {
-  text-decoration: none;
-}

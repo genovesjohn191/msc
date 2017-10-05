@@ -1,24 +1,10 @@
 @import "../../../../../../styles/shared/base";
 
+// TODO: Temporary max-width for overview page
+$firewall-overview-width-desktop: 750px;
+$firewall-overview-width-mobile: 500px;
 $firewall-details-row-spacing: 50px;
 
-.firewall-overview-container {
-  .overview {
-    @include set-items-interval($firewall-details-row-spacing, vertical);
-
-    ul {
-      @include set-items-interval($space-small, vertical);
-    }
-
-    .utm-services,
-    .status {
-      ul {
-        li {
-          @include display-flex(row);
-          align-items: center;
-          @include set-items-interval($space-xsmall, horizontal);
-        }
-      }
-    }
-  }
+:host {
+  display: block;
 }

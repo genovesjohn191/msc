@@ -1,8 +1,6 @@
 <mcs-page [header]="textContent.header">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
-
-    <!-- Firewall Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <div class="total-record-count">
@@ -40,7 +38,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.firewall.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="firewall-column">
+          <mcs-data-cell *mcsDataCellDef="let row" class="emphasize">
             <mcs-icon [key]="getConnectionStatusIconKey(row.connectionStatus)"></mcs-icon>
             <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
           </mcs-data-cell>
@@ -100,12 +98,14 @@
         <ng-container mcsColumnDef="action">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small"></mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
-            <mcs-icon class="action" [key]="cogIconKey" size="large"
-              mcsPopover placement="bottom" orientation="left"
-              theme="light" padding="narrow" [content]="actionContent">
+            <mcs-icon class="action" [key]="cogIconKey" size="medium"
+              mcsPopover placement="bottom" orientation="left" theme="light"
+              padding="narrow" [content]="actionContent" cursor="pointer">
             </mcs-icon>
             <ng-template #actionContent>
-              <a class="action-item" [href]="row.url" target="_blank">View in Portal</a>
+              <div class="action-container">
+                <a [href]="row.url" target="_blank">View in Portal</a>
+              </div>
             </ng-template>
           </mcs-data-cell>
         </ng-container>

@@ -1,9 +1,26 @@
+$filter-search-max-width: 300px;
+$filter-selector-width: 100px;
+
 .listing-table-wrapper {
   display: inline-block;
-  @include set-items-interval($space-xxlarge);
+  @include set-items-interval($space-xlarge);
 
   @include breakpoint(small) {
     display: block;
+  }
+
+  .filter-section {
+    @include set-items-interval($space-medium, horizontal);
+    @include display-flex(row);
+    align-items: center;
+
+    mcs-search {
+      max-width: $filter-search-max-width;
+    }
+
+    .record-count {
+      margin-left: auto;
+    }
   }
 
   .emphasize {
@@ -27,4 +44,8 @@
 .listing-status-wrapper {
   @include display-flex(row);
   @include set-items-interval($space-small, horizontal);
+}
+
+.filter-selector {
+  width: $filter-selector-width;
 }

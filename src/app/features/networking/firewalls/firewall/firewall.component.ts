@@ -2,7 +2,10 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   Router,
@@ -22,14 +25,18 @@ import {
 import { FirewallsService } from '../firewalls.service';
 import { FirewallService } from './firewall.service';
 import { FirewallListSource } from './firewall.listsource';
-import { isNullOrEmpty } from '../../../../utilities';
+import {
+  isNullOrEmpty,
+  refreshView
+} from '../../../../utilities';
 
 @Component({
   selector: 'mcs-firewall',
   styles: [require('./firewall.component.scss')],
-  templateUrl: './firewall.component.html'
+  templateUrl: './firewall.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FirewallComponent implements OnInit, OnDestroy {
+export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('listSearch')
   public _listSearch: McsSearch;
 
@@ -43,7 +50,7 @@ export class FirewallComponent implements OnInit, OnDestroy {
   }
 
   public get cogIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_GEAR;
+    return CoreDefinition.ASSETS_SVG_COG;
   }
 
   public get hasFirewallData(): boolean {
@@ -61,6 +68,7 @@ export class FirewallComponent implements OnInit, OnDestroy {
       }
 
       this._firewall = value;
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -70,9 +78,11 @@ export class FirewallComponent implements OnInit, OnDestroy {
   }
   public set selectedItem(value: McsListPanelItem) {
     this._selectedItem = value;
+    this._changeDetectorRef.markForCheck();
   }
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _firewallsService: FirewallsService,
     private _firewallService: FirewallService,
@@ -86,8 +96,20 @@ export class FirewallComponent implements OnInit, OnDestroy {
     // OnInit
     this.firewallsTextContent = this._textContentProvider.content.firewalls;
     this.firewallTextContent = this._textContentProvider.content.firewalls.firewall;
-    this._initializeListsource();
     this._getFirewallById();
+  }
+
+  public ngAfterViewInit() {
+    refreshView(() => {
+      this._initializeListsource();
+    });
+  }
+
+  public ngOnDestroy() {
+    // OnDestroy
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   /**
@@ -116,18 +138,12 @@ export class FirewallComponent implements OnInit, OnDestroy {
     this._initializeListsource();
   }
 
-  public ngOnDestroy() {
-    // OnDestroy
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
   private _initializeListsource(): void {
     this.firewallListSource = new FirewallListSource(
       this._firewallsService,
       this._listSearch
     );
+    this._changeDetectorRef.markForCheck();
   }
 
   private _getFirewallById(): void {
@@ -144,7 +160,9 @@ export class FirewallComponent implements OnInit, OnDestroy {
             groupName: this.firewall.haGroupName
           } as McsListPanelItem;
           this._firewallService.setSelectedFirewall(this.firewall);
+          this._changeDetectorRef.markForCheck();
         }
       });
+
   }
 }
