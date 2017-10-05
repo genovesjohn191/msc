@@ -39,6 +39,10 @@ $top-panel-item-padding: $page-header-padding;
         @include display-flex(column);
         padding: $left-panel-item-padding;
         @include set-items-interval($space-small);
+
+        .listing-panel-wrapper {
+          @include set-items-interval($space-medium, vertical);
+        }
       }
     }
   }
@@ -94,9 +98,19 @@ $top-panel-item-padding: $page-header-padding;
       position: relative;
       overflow: auto;
       padding: $content-large-padding;
-
       @include breakpoint(small) {
         padding: $content-small-padding
+      }
+
+      .content-wrapper {
+        display: inline-block;
+        @include breakpoint(xsmall) {
+          display: block;
+        }
+
+        .title {
+          margin-bottom: $space-xlarge;
+        }
       }
     }
   }

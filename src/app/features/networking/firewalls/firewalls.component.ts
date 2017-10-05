@@ -61,7 +61,7 @@ export class FirewallsComponent
   }
 
   public get cogIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_GEAR;
+    return CoreDefinition.ASSETS_SVG_COG;
   }
 
   public get spinnerIconKey(): string {
@@ -93,6 +93,14 @@ export class FirewallsComponent
 
   public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
     return this._firewallsService.getFirewallConnectionStatusIconKey(status);
+  }
+
+  /**
+   * Retry to obtain the source from API
+   */
+  public retryDatasource(): void {
+    if (isNullOrEmpty(this.dataSource)) { return; }
+    this.initializeDatasource();
   }
 
   /**

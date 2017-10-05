@@ -3,13 +3,17 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
+  CoreDefinition,
+  McsTextContentProvider,
   McsPaginator,
   McsSearch,
-  McsTextContentProvider,
-  CoreDefinition
+  McsBrowserService,
+  McsTableListingBase
 } from '../../../../../core';
 import {
   FirewallPolicy,
@@ -20,7 +24,8 @@ import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
 import {
   refreshView,
   isNullOrEmpty,
-  replacePlaceholder
+  replacePlaceholder,
+  getRecordCountLabel
 } from '../../../../../utilities';
 
 const FIREWALL_POLICY_SEQUENCE_PLACEHOLDER = 'sequence';
@@ -28,10 +33,13 @@ const FIREWALL_POLICY_SEQUENCE_PLACEHOLDER = 'sequence';
 @Component({
   selector: 'mcs-firewall-policies',
   styles: [require('./firewall-policies.component.scss')],
-  templateUrl: './firewall-policies.component.html'
+  templateUrl: './firewall-policies.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FirewallPoliciesComponent
+  extends McsTableListingBase<FirewallPoliciesDataSource>
+  implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
   public search: McsSearch;
@@ -56,8 +64,19 @@ export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestr
     return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
   }
 
+  public get recordsFoundLabel(): string {
+    return getRecordCountLabel(
+      this.totalRecordCount,
+      this.firewallPoliciesTextContent.dataSingular,
+      this.firewallPoliciesTextContent.dataPlural);
+  }
+
   public get columnSettingsKey(): string {
     return CoreDefinition.FILTERSELECTOR_FIREWALL_POLICIES_LISTING;
+  }
+
+  public get columnFilterIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
   }
 
   public get infoIconKey(): string {
@@ -81,9 +100,12 @@ export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   constructor(
+    _browserService: McsBrowserService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _firewallService: FirewallService
   ) {
+    super(_browserService, _changeDetectorRef);
     this.dataColumns = new Array();
     this.isViewMode = false;
     this.selectedFirewallPolicy = new FirewallPolicy();
@@ -97,14 +119,12 @@ export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestr
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this._initializeDatasource();
+      this.initializeDatasource();
     });
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this.dataSource)) {
-      this.dataSource.disconnect();
-    }
+    this.dispose();
   }
 
   /**
@@ -132,6 +152,7 @@ export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestr
   public showFirewallPolicyDetails(policy: FirewallPolicy): void {
     this.selectedFirewallPolicy = policy;
     this.isViewMode = true;
+    this.changeDetectorRef.markForCheck();
   }
 
   /**
@@ -140,6 +161,7 @@ export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestr
   public hideFirewallPolicyDetails(): void {
     this.selectedFirewallPolicy = new FirewallPolicy();
     this.isViewMode = false;
+    this.changeDetectorRef.markForCheck();
   }
 
   /**
@@ -178,14 +200,18 @@ export class FirewallPoliciesComponent implements OnInit, AfterViewInit, OnDestr
    */
   public retryDatasource(): void {
     if (isNullOrEmpty(this.dataSource)) { return; }
-    this._initializeDatasource();
+    this.initializeDatasource();
   }
 
-  private _initializeDatasource(): void {
+  /**
+   * Initialize the table datasource according to pagination and search settings
+   */
+  protected initializeDatasource(): void {
     this.dataSource = new FirewallPoliciesDataSource(
       this._firewallService,
       this.paginator,
       this.search
     );
+    this.changeDetectorRef.markForCheck();
   }
 }

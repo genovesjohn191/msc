@@ -220,7 +220,7 @@ html {
   }
 
   mcs-search {
-    min-width: 300px;;
+    min-width: 300px;
     @include breakpoint(small) {
       min-width: 100%;
     }

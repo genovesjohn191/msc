@@ -2,7 +2,7 @@
   <div class="server-list-panel-wrapper hidden-medium">
     <div class="server-list-panel" [mcsLoader]="serverListSource.serverListSubscription">
         <mcs-search #search [delayInSeconds]="0" mcsListSearchDef></mcs-search>
-        <mcs-list-panel mcsListPanelDef [listSource]="serverListSource" 
+        <mcs-list-panel [listSource]="serverListSource" 
           [selectedListItem]="selectedItem" [searchMode]="serverListSource.searchMode">
           <ng-container mcsListDef>
             <mcs-list-header *mcsListHeaderDef="let vdc; propertyName: 'vdcName';"

@@ -221,6 +221,8 @@
     "dataSingular": "Firewall",
     "dataPlural": "Firewalls",
     "firewall": {
+      "header": "Firewall",
+      "panel": "Listing Panel",
       "overview": {
         "label": "Overview",
         "properties": {
@@ -262,6 +264,8 @@
         "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewall policies.",
         "noPolicies": "No firewall policies to display.",
         "retry": "Try again shortly",
+        "dataSingular": "Policy",
+        "dataPlural": "Policies",
         "policy": {
           "title": "Policy: Seq {{sequence}}",
           "source": "Source",

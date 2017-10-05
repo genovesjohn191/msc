@@ -1,6 +1,11 @@
 @import "../../../styles/shared/base";
 
 $navlink-padding: 9px;
+$content-grid-width-desktop: 750px;
+$content-grid-width-mobile: 500px;
+$grid-row-spacing: 50px;
+$table-filter-search-max-width: 300px;
+$table-filter-selector-width: 100px;
 
 .mcs-tabs {
   .nav-tabs {
@@ -9,6 +14,10 @@ $navlink-padding: 9px;
     margin-bottom: $space-medium;
 
     .nav-item {
+      &.action-cog {
+        margin-left: auto;
+      }
+
       .nav-link {
         @include font-size(18);
         font-family: $base-font-bold;
@@ -34,4 +43,62 @@ $navlink-padding: 9px;
     }
   }
 
+  .tab-content {
+    .content-grid {
+      @include set-items-interval($grid-row-spacing, vertical);
+      width: $content-grid-width-desktop;
+      white-space: nowrap;
+      @include breakpoint(small) {
+        width: $content-grid-width-mobile;
+      }
+      @include breakpoint(xsmall) {
+        @include set-items-interval($space-xlarge, vertical);
+        width: 100%;
+      }
+
+      .grid-row {
+        @include display-flex(row);
+        @include breakpoint(xsmall) {
+          @include display-flex(column);
+          @include set-items-interval($space-xlarge, vertical);
+        }
+      }
+
+      .grid-column {
+        @include flex(1 0 50%);
+        @include breakpoint(small) {
+          &:first-of-type {
+            @include flex(1 0 auto)
+          }
+        }
+        @include breakpoint(xsmall) {
+          @include flex(1)
+        }
+
+        ul {
+          @include set-items-interval($space-small, vertical);
+
+          &.listing {
+            padding-left: $space-small;
+            margin-bottom: $space-small;
+          }
+        
+          li {
+            @include display-flex(row);
+            align-items: center;
+            @include set-items-interval($space-xsmall, horizontal);
+          }
+        }
+      }
+    }
+  }
+}
+
+.action-container {
+  width: 100px;
+  
+  a, a:hover {
+    display: block;
+    text-decoration: none;
+  }
 }

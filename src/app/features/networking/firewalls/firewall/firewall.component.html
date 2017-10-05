@@ -1,72 +1,77 @@
-<section class="firewall-container">
-  <div class="firewall-list-panel-wrapper hidden-medium">
-    <div class="firewall-list-panel" [mcsLoader]="firewallListSource.firewallsSubscription">
-      <mcs-search #listSearch [delayInSeconds]="0" mcsListSearchDef></mcs-search>
-      <mcs-list-panel mcsListPanelDef [listSource]="firewallListSource" 
-        [selectedListItem]="selectedItem" [searchMode]="firewallListSource.searchMode">
-        <ng-container mcsListDef>
-          <mcs-list-header *mcsListHeaderDef="let haGroup; propertyName: 'haGroupName';"
-            [groupName]="haGroup">
-            <span>{{ haGroup }}</span>
-          </mcs-list-header>
-          <mcs-list-item *mcsListItemDef="let firewall"
-            [itemId]="firewall.id" [groupName]="firewall.haGroupName"
-            (click)="onFirewallSelect(firewall.id)">
-            <mcs-icon [key]="getConnectionStatusIconKey(firewall.connectionStatus)"></mcs-icon>
-            <a>{{ firewall.name }}</a>
-          </mcs-list-item>
-        </ng-container>
-
-        <!-- List Items Status Integration -->
-        <ng-container mcsListItemsStatusDef>
-          <mcs-list-items-empty *mcsListItemsEmptyDef>
-            <span>{{ firewallsTextContent.noFirewalls }}</span>
-          </mcs-list-items-empty>
-          <mcs-list-items-error *mcsListItemsErrorDef>
-            <div class="data-error">
-              <span>{{ firewallsTextContent.errorMessage }}</span>
-              <a (click)="retryListsource()">{{ firewallsTextContent.retry }}</a>.
-            </div>
-          </mcs-list-items-error>
-        </ng-container>
-      </mcs-list-panel>
-    </div>
-  </div>
-
-  <div class="firewall-details-wrapper">
-    <div class="firewall-details" [mcsLoader]="subscription">
-        <h2 class="firewall-name">{{ firewall.managementName }} ({{ firewall.haRole }})</h2>
-        <div class="mcs-tabs">
-          <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" role="tab"
-                [routerLink]="['overview']" routerLinkActive="active">
-                  {{ firewallTextContent.overview.label }}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" role="tab"
-                [routerLink]="['policies']" routerLinkActive="active">
-                {{ firewallTextContent.policies.label }}</a>
-            </li>
-            <li class="nav-item action-cog">
-              <mcs-icon class="action" [key]="cogIconKey" size="large"
-                mcsPopover placement="bottom" orientation="left"
-                theme="light" padding="narrow" [content]="actionContent">
-              </mcs-icon>
-              <ng-template #actionContent>
-                <div class="action-container">
-                  <a class="action-item" [href]="firewall.url" target="_blank">View in Portal</a>
-                </div>
-              </ng-template>
-            </li>
-          </ul>
+<mcs-page [header]="firewallTextContent.header">
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef>
+    <!-- listing panel -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="firewallTextContent.panel">
+      <div class="listing-panel-wrapper">
+        <mcs-search #listSearch [delayInSeconds]="0"></mcs-search>
+        <mcs-list-panel [listSource]="firewallListSource" 
+          [selectedListItem]="selectedItem" [searchMode]="firewallListSource?.searchMode"
+          [mcsLoader]="firewallListSource?.firewallsSubscription">
+          <ng-container mcsListDef>
+            <mcs-list-header *mcsListHeaderDef="let haGroup; propertyName: 'haGroupName';"
+              [groupName]="haGroup">
+              <span>{{ haGroup }}</span>
+            </mcs-list-header>
+            <mcs-list-item *mcsListItemDef="let firewall"
+              [itemId]="firewall.id" [groupName]="firewall.haGroupName"
+              (click)="onFirewallSelect(firewall.id)">
+              <mcs-icon [key]="getConnectionStatusIconKey(firewall.connectionStatus)"></mcs-icon>
+              <a>{{ firewall.name }}</a>
+            </mcs-list-item>
+          </ng-container>
   
-          <div class="tab-content">
-            <div class="tab-pane active" role="tabpanel">
-              <router-outlet></router-outlet>
-            </div>
+          <!-- List Items Status Integration -->
+          <ng-container mcsListItemsStatusDef>
+            <mcs-list-items-empty *mcsListItemsEmptyDef>
+              <span>{{ firewallsTextContent.noFirewalls }}</span>
+            </mcs-list-items-empty>
+            <mcs-list-items-error *mcsListItemsErrorDef>
+              <div class="data-error">
+                <span>{{ firewallsTextContent.errorMessage }}</span>
+                <a (click)="retryListsource()">{{ firewallsTextContent.retry }}</a>.
+              </div>
+            </mcs-list-items-error>
+          </ng-container>
+        </mcs-list-panel>
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="content-wrapper" [mcsLoader]="subscription">
+      <h2 class="title">{{ firewall.managementName }} ({{ firewall.haRole }})</h2>
+      <div class="mcs-tabs">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab"
+              [routerLink]="['overview']" routerLinkActive="active">
+                {{ firewallTextContent.overview.label }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab"
+              [routerLink]="['policies']" routerLinkActive="active">
+              {{ firewallTextContent.policies.label }}</a>
+          </li>
+          <li class="nav-item action-cog">
+            <mcs-icon class="action" [key]="cogIconKey" size="large"
+              mcsPopover placement="bottom" orientation="left" theme="light"
+              padding="narrow" [content]="actionContent" cursor="pointer">
+            </mcs-icon>
+            <ng-template #actionContent>
+              <div class="action-container">
+                <a [href]="firewall.url" target="_blank">View in Portal</a>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" role="tabpanel">
+            <router-outlet></router-outlet>
           </div>
         </div>
       </div>
-  </div>
-</section>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

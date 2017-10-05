@@ -3,7 +3,6 @@ import {
   Input,
   OnInit,
   OnDestroy,
-  AfterContentInit,
   AfterContentChecked,
   ViewChild,
   ContentChild,
@@ -55,7 +54,7 @@ const LIST_NO_GROUP_CLASS = 'list-no-group-wrapper';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ListPanelComponent<T> implements OnInit, AfterContentInit,
+export class ListPanelComponent<T> implements OnInit,
   AfterContentChecked, OnDestroy {
 
   @HostBinding('class')
@@ -113,6 +112,7 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
     if (this._listSource !== value) {
       this._switchListSource(value);
       this._listSource = value;
+      this._changeDetectorRef.markForCheck();
     }
   }
   private _listSource: McsDataSource<T>;
@@ -132,7 +132,6 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
     if (this._listStatus !== value) {
       this._listStatus = value;
       this._switchListStatus(value);
-      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -177,16 +176,13 @@ export class ListPanelComponent<T> implements OnInit, AfterContentInit,
     this._listDiffer = this._differs.find([]).create(this._trackBy);
   }
 
-  public ngAfterContentInit() {
-    // Render item groups
-    if (this.listSource && !this._listSourceSubscription) {
-      this._getListsource();
-    }
-  }
-
   public ngAfterContentChecked() {
     if (!isNullOrEmpty(this._listItems)) {
       this._renderItemGroups();
+    }
+
+    if (this.listSource && !this._listSourceSubscription) {
+      this._getListsource();
     }
   }
 
