@@ -68,7 +68,7 @@
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['backups']" routerLinkActive="active">Backups</a>
           </li> -->
-          <li class="nav-item hidden-medium server-cog" *mcsHasPermission="['VmPowerStateEdit']">
+          <li class="nav-item hidden-medium action-cog" *mcsHasPermission="['VmPowerStateEdit']">
             <mcs-server-command [command]="getActionStatus(server)"
               (onClick)="executeServerCommand(server, $event)"></mcs-server-command>
           </li>

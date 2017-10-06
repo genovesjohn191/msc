@@ -1,7 +1,7 @@
 @import "../../../styles/shared/base";
 
 $validation-message-text-color: $color-red-00;
-$validation-message-font-size: 16;
+$validation-message-font-size: $font-size-default;
 $validation-message-font-family: $circular-pro-book;
 
 :host {
