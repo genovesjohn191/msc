@@ -148,7 +148,7 @@ export class TextboxComponent
    * Event for the blur of the textbox itself to reflect the
    * status of _touched in the input property
    */
-  public onTouched() {
+  public onTouched(_event: any) {
     this._onTouched(null);
   }
 

@@ -20,7 +20,6 @@ import {
 } from '../../models';
 import {
   refreshView,
-  animateFactory,
   convertToGb,
   convertToMb,
   replacePlaceholder,
@@ -38,10 +37,7 @@ import { McsStorage } from '../mcs-storage.interface';
 @Component({
   selector: 'mcs-server-manage-storage',
   styles: [require('./server-manage-storage.component.scss')],
-  templateUrl: './server-manage-storage.component.html',
-  animations: [
-    animateFactory({ duration: '500ms' })
-  ]
+  templateUrl: './server-manage-storage.component.html'
 })
 
 export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy, McsStorage {

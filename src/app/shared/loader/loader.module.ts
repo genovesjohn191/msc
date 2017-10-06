@@ -8,6 +8,7 @@ import { LoaderBackdropComponent } from './loader-backdrop/loader-backdrop.compo
 
 /** Modules */
 import { IconModule } from '../icon/icon.module';
+import { LayoutModule } from '../layout/layout.module';
 
 @NgModule({
   declarations: [
@@ -17,11 +18,13 @@ import { IconModule } from '../icon/icon.module';
   ],
   imports: [
     CommonModule,
-    IconModule
+    IconModule,
+    LayoutModule
   ],
   exports: [
     LoaderDirective,
-    IconModule
+    IconModule,
+    LayoutModule
   ],
   entryComponents: [
     LoaderComponent

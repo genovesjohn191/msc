@@ -28,7 +28,6 @@ import {
 import { ServerService } from '../server.service';
 import {
   convertToGb,
-  animateFactory,
   mergeArrays,
   addOrUpdateArrayRecord,
   isNullOrEmpty,
@@ -45,10 +44,7 @@ const PRIMARY_STORAGE_NAME = 'Hard disk 1';
 @Component({
   selector: 'mcs-server-storage',
   styles: [require('./server-storage.component.scss')],
-  templateUrl: './server-storage.component.html',
-  animations: [
-    animateFactory({ duration: '500ms' })
-  ]
+  templateUrl: './server-storage.component.html'
 })
 
 export class ServerStorageComponent implements OnInit, OnDestroy {

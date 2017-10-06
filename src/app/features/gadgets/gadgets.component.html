@@ -25,7 +25,7 @@
   <div class="gadgets-container-item">
       <h3 class="title">WIZARD</h3>
 
-      <mcs-wizard (onCancel)="onCancelCreation()" cancelText="Return" completedText="Done">
+      <mcs-wizard cancelText="Return" completedText="Done">
           <!-- Step 1  -->
           <mcs-wizard-step stepTitle="1. Name" [valid]="formName.valid">
             <h3>Cutomer name details</h3>
@@ -363,15 +363,6 @@
          <th *ngIf="filterItems['dashboard'].value">{{ filterItems['dashboard'].text }}</th>
        </tr>
      </thead>
-     <tbody>
-       <tr *ngFor="let dashboard of dashboards">
-         <td *ngIf="filterItems['serverName'].value">{{gadgets.serverName}}</td>
-         <td *ngIf="filterItems['networking'].value">{{gadgets.networking}}</td>
-         <td *ngIf="filterItems['catalog'].value">{{gadgets.catalog}}</td>
-         <td *ngIf="filterItems['others'].value">{{gadgets.others}}</td>
-         <td *ngIf="filterItems['dashboard'].value">{{gadgets.dashboard}}</td>
-       </tr>
-     </tbody>
    </table>
   </div>
 

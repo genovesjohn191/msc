@@ -14,20 +14,14 @@ import {
 } from '@angular/router';
 /** Providers / Services */
 import { CoreDefinition } from '../../../core';
-import {
-  isNullOrEmpty,
-  animateFactory
-} from '../../../utilities';
+import { isNullOrEmpty } from '../../../utilities';
 
 @Component({
   selector: 'mcs-navigation-mobile',
   templateUrl: './navigation-mobile.component.html',
   styles: [require('./navigation-mobile.component.scss')],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  animations: [
-    animateFactory({ duration: '300ms', easing: 'ease-in-out' })
-  ]
+  encapsulation: ViewEncapsulation.None
 })
 
 export class NavigationMobileComponent implements OnInit, OnDestroy {
@@ -35,15 +29,15 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   private _routerSubscription: any;
 
   /**
-   * Show or hide the navigation element
+   * Show or hide the navigation element based on slide value
    */
-  private _showHide: string;
-  public get showHide(): string {
-    return this._showHide;
+  private _slideTrigger: string;
+  public get slideTrigger(): string {
+    return this._slideTrigger;
   }
-  public set showHide(value: string) {
-    if (this._showHide !== value) {
-      this._showHide = value;
+  public set slideTrigger(value: string) {
+    if (this._slideTrigger !== value) {
+      this._slideTrigger = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -95,10 +89,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public open(): void {
-    this.showHide = 'slideInLeft';
+    this.slideTrigger = 'slideInLeft';
   }
 
   public close(): void {
-    this.showHide = 'slideOutLeft';
+    this.slideTrigger = 'slideOutLeft';
   }
 }

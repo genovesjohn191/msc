@@ -19,11 +19,11 @@ import { coreProviders } from './core.constants';
 })
 
 export class CoreModule {
-  public static forRoot(config: CoreConfig): ModuleWithProviders {
+  public static forRoot(config: () => CoreConfig): ModuleWithProviders {
     return {
       ngModule: CoreModule,
       providers: [
-        { provide: CoreConfig, useValue: config }
+        { provide: CoreConfig, useFactory: config }
       ]
     };
   }

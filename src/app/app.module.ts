@@ -61,6 +61,7 @@ import {
   ConsolePageModule,
   DefaultPageModule
 } from './page-layout';
+import { SharedModule } from './shared';
 
 /**
  * MCS Portal Utilities
@@ -87,13 +88,15 @@ type StoreType = {
 /**
  * Set Core Configuration based on environment variables
  */
-const mcsCoreConfig = {
-  apiHost: resolveEnvVar('API_HOST', API_URL),
-  loginUrl: resolveEnvVar('LOGIN_URL', LOGIN_URL),
-  logoutUrl: resolveEnvVar('LOGOUT_URL', LOGOUT_URL),
-  imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
-  iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL)
-} as CoreConfig;
+export function coreConfig(): CoreConfig {
+  return {
+    apiHost: resolveEnvVar('API_HOST', API_URL),
+    loginUrl: resolveEnvVar('LOGIN_URL', LOGIN_URL),
+    logoutUrl: resolveEnvVar('LOGOUT_URL', LOGOUT_URL),
+    imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
+    iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL)
+  } as CoreConfig;
+}
 
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
@@ -108,7 +111,8 @@ const mcsCoreConfig = {
     HttpModule,
     BrowserAnimationsModule,
     CookieModule.forRoot(),
-    CoreModule.forRoot(mcsCoreConfig),
+    CoreModule.forRoot(coreConfig),
+    SharedModule,
     ConsolePageModule,
     DefaultPageModule,
     RouterModule.forRoot(routes)

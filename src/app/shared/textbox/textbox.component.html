@@ -13,5 +13,5 @@
     (blur)="onTouched($event)"
     [disabled]="disabled" />
   <mcs-icon *ngIf="iconKey" [key]="iconKey"
-    size="small" (click)="onFocus()"></mcs-icon>
+    size="small" (click)="onFocus($event)"></mcs-icon>
 </div>

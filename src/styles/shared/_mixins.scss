@@ -382,8 +382,16 @@
 // Transition
 @mixin transition($transition...) {
   @if length($transition) == 0 {
+    -webkit-transition: $transition-base;
+    -moz-transition: $transition-base;
+    -ms-transition: $transition-base;
+    -o-transition: $transition-base;
     transition: $transition-base;
   } @else {
+    -webkit-transition: $transition;
+    -moz-transition: $transition;
+    -ms-transition: $transition;
+    -o-transition: $transition;
     transition: $transition;
   }
 }
@@ -393,6 +401,22 @@
 // .mcs-textbox {
 //   @include transition(.4s linear);
 // }
+
+// Animation
+@mixin animation($animation) {
+  -webkit-animation: $animation;
+  -moz-animation: $animation;
+  -ms-animation: $animation;
+  -o-animation: $animation;
+  animation: $animation;
+}
+
+// Usage
+
+// .mcs-textbox {
+//   @include animation(Name .4s linear);
+// }
+
 
 // Set background-opacrity
 @mixin background-opacity($color, $opacity) {

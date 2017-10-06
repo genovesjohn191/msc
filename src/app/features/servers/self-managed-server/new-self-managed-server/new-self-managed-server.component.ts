@@ -23,7 +23,6 @@ import {
 import {
   refreshView,
   mergeArrays,
-  animateFactory,
   isNullOrEmpty,
   convertToGb
 } from '../../../../utilities';
@@ -45,10 +44,7 @@ const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MU
 @Component({
   selector: 'mcs-new-self-managed-server',
   templateUrl: './new-self-managed-server.component.html',
-  styles: [require('./new-self-managed-server.component.scss')],
-  animations: [
-    animateFactory({ duration: '500ms' })
-  ]
+  styles: [require('./new-self-managed-server.component.scss')]
 })
 
 export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -96,11 +92,13 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public contextualTextContent: any;
   public availableMemoryMB: number;
   public availableCpuCount: number;
+  public animateTrigger: string;
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
+    this.animateTrigger = 'fadeIn';
     this.memoryMB = 0;
     this.cpuCount = 0;
     this.storageMemoryMB = 0;
