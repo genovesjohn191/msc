@@ -4,7 +4,7 @@
 
     <!-- Server Creation -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <div class="icon-label-wrapper" cursor="pointer" (click)="onClickNewServerButton()">
+      <div class="action-item" cursor="pointer" (click)="onClickNewServerButton()">
         <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
         <span>{{ textContent.newServer }}</span>
       </div>
@@ -13,22 +13,22 @@
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="icon-label-wrapper hidden-medium" cursor="pointer">
+        <div class="action-item hidden-medium" cursor="pointer">
           <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
           <span>{{ textContent.start }}</span>
         </div>
 
-        <div class="icon-label-wrapper hidden-medium" cursor="pointer">
+        <div class="action-item hidden-medium" cursor="pointer">
           <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
           <span>{{ textContent.stop }}</span>
         </div>
 
-        <div class="icon-label-wrapper hidden-medium" cursor="pointer">
+        <div class="action-item hidden-medium" cursor="pointer">
           <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
           <span>{{ textContent.restart }}</span>
         </div>
 
-        <div class="total-record-count">
+        <div class="total-record-count right-align">
           <span>{{ recordsFoundLabel }}</span>
         </div>
       </div>

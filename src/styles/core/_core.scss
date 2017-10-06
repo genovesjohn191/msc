@@ -240,6 +240,12 @@ html {
   }
 }
 
+
+// Alignment classes
+.right-align {
+  margin-left: auto !important;
+}
+
 // TODO: Temporary fix for loader. Will remove after refactoring loader
 .loader-container {
   display: block;

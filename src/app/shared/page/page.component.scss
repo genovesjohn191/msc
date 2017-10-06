@@ -11,6 +11,8 @@ $left-panel-item-padding: $space-medium;
 // Top Panel Definition
 $top-panel-height: 50px;
 $top-panel-item-padding: $page-header-padding;
+$action-item-hover-color: $color-grey-07;
+$action-item-active-color: $color-grey-06;
 // Content Panel Definition is declared inside the variables.scss
 
 .page-wrapper {
@@ -76,8 +78,27 @@ $top-panel-item-padding: $page-header-padding;
         .top-panel-item-wrapper {
           @include display-flex(row);
           height: $top-panel-height;
-          padding: $top-panel-item-padding;
           border-right: 1px solid $page-border-color;
+          .listing-action-wrapper{
+            @include set-items-interval(0, horizontal);
+          }
+
+          .action-item {
+            padding: $top-panel-item-padding;
+            border-bottom: 1px solid $page-border-color;
+            height: 100%;
+            @include display-flex(row);
+            align-items: center;
+            @include set-items-interval($space-small, horizontal);
+
+            &:hover {
+              background-color: $action-item-hover-color;
+            }
+
+            &:active {
+              background-color: $action-item-active-color;
+            }
+          }
 
           &:first-child {
             border-left: 1px solid $page-border-color;

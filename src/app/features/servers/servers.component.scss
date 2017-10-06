@@ -1,13 +1,5 @@
 @import "../../../styles/shared/base";
 
-.top-panel-item-wrapper {
-  @include breakpoint(small) {
-    &:first-child {
-      border-right: none !important;
-    }
-  }
-}
-
 .loading-content-popover {
   display: block;
   padding: $space-small;

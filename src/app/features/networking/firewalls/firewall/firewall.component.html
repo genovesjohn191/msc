@@ -1,4 +1,4 @@
-<mcs-page [header]="firewallTextContent.header">
+<mcs-page [header]="header">
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef>
     <!-- listing panel -->
@@ -40,7 +40,6 @@
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="content-wrapper" [mcsLoader]="subscription">
-      <h2 class="title">{{ firewall.managementName }} ({{ firewall.haRole }})</h2>
       <div class="mcs-tabs">
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item">

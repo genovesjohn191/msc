@@ -37,7 +37,7 @@ $filter-selector-width: 100px;
   @include set-items-interval($space-xlarge, horizontal);
 
   .total-record-count {
-    margin-left: auto;
+    margin-right: $space-large;
   }
 }
 

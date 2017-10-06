@@ -5,12 +5,12 @@
     <!-- Ticket Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="icon-label-wrapper" cursor="pointer" (click)="onClickNewTicket($event)">
+        <div class="action-item" cursor="pointer" (click)="onClickNewTicket($event)">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
           <span>{{ textContent.newTicket }}</span>
         </div>
 
-        <div class="total-record-count">
+        <div class="total-record-count right-align">
           <span>{{ recordsFoundLabel }}</span>
         </div>
       </div>

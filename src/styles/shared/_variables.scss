@@ -117,8 +117,8 @@ $main-navigation-color: $color-black;
 $main-navigation-bg-color: $color-primary-01;
 $main-navigation-box-shadow-color: $color-black;
 
-$content-large-padding: $space-xxlarge $space-large;
-$content-small-padding: $space-xxlarge $space-medium;
+$content-large-padding: $space-xxlarge $space-xxlarge $space-xxlarge $space-large;
+$content-small-padding: $space-xxlarge $space-large $space-xxlarge $space-medium;
 
 // Input
 $input-font: $base-font;

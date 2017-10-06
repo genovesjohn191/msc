@@ -44,6 +44,7 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
   public firewallTextContent: any;
   public subscription: any;
   public firewallListSource: FirewallListSource | null;
+  public header: string;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -159,6 +160,7 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
             itemId: this.firewall.id,
             groupName: this.firewall.haGroupName
           } as McsListPanelItem;
+          this.header = `${this.firewall.managementName} (${this.firewall.haRole})`;
           this._firewallService.setSelectedFirewall(this.firewall);
           this._changeDetectorRef.markForCheck();
         }
