@@ -12,15 +12,11 @@ import {
   McsTextContentProvider
 } from '../../core';
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
-import { animateFactory } from '../../utilities';
 
 @Component({
   selector: 'mcs-wizard',
   templateUrl: './wizard.component.html',
-  styles: [require('./wizard.component.scss')],
-  animations: [
-    animateFactory({ duration: '300ms', easing: 'ease-in-out' })
-  ]
+  styles: [require('./wizard.component.scss')]
 })
 
 export class WizardComponent implements AfterContentInit {

@@ -6,9 +6,7 @@ import {
   ViewEncapsulation,
   NgZone,
   OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef
+  OnDestroy
 } from '@angular/core';
 import {
   Router,
@@ -19,7 +17,7 @@ import {
   NavigationCancel,
   NavigationError
 } from '@angular/router';
-import { animateFactory } from './utilities';
+
 /*
  * App Component
  * Top Level Component
@@ -28,16 +26,10 @@ import { animateFactory } from './utilities';
   selector: 'mcs-app',
   encapsulation: ViewEncapsulation.None,
   styles: [require('./app.component.scss')],
-  templateUrl: './app.component.html',
-  animations: [
-    animateFactory({ duration: '300ms', easing: 'ease-in-out' })
-  ]
+  templateUrl: './app.component.html'
 })
 
 export class AppComponent implements OnInit, OnDestroy {
-
-  @ViewChild('spinnerElement')
-  public spinnerElement: ElementRef;
 
   public routerSubscription: any;
   public isInitialDisplayed: boolean;
@@ -45,13 +37,13 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * Pre loader animation will be applied then status is changed
    */
-  private _animation: string;
-  public get animation(): string {
-    return this._animation;
+  private _trigger: string;
+  public get trigger(): string {
+    return this._trigger;
   }
-  public set animation(value: string) {
-    if (this._animation !== value) {
-      this._animation = value;
+  public set trigger(value: string) {
+    if (this._trigger !== value) {
+      this._trigger = value;
     }
   }
 
@@ -98,7 +90,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _showLoader(): void {
     if (!this.isInitialDisplayed) { return; }
     this._ngZone.runOutsideAngular(() => {
-      this.animation = 'fadeIn';
+      this.trigger = undefined;
     });
   }
 
@@ -111,7 +103,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private _hideLoader(): void {
     this.isInitialDisplayed = false;
     this._ngZone.runOutsideAngular(() => {
-      this.animation = 'fadeOut';
+      this.trigger = 'fadeOut';
     });
   }
 }

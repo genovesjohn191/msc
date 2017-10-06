@@ -14,7 +14,7 @@
   </div>
 
   <!--Storage profile content element (dropdown)-->
-  <div *ngIf="storageProfileList" [@animate]="'fadeIn'" class="storage-profile-content">
+  <div *ngIf="storageProfileList" animate trigger="fadeIn" class="storage-profile-content">
     <mcs-dropdown [ngModel]="storageProfileValue"
       [disabled]="disabled"
       (ngModelChange)="onStorageProfileChanged($event)"
@@ -26,7 +26,7 @@
   <form *ngIf="inputManageType == inputManageTypeEnum.Custom && hasAvailableStorageSpace"
     [formGroup]="formGroupServerStorage" class="custom-size-form">
 
-    <div [@animate]="'fadeIn'" class="custom-size-input">
+    <div animate trigger="fadeIn" class="custom-size-input">
       <span class="label">{{ storageTextContent.label }} : </span>
       <mcs-textbox width="150px" placeholder="GB"
         formControlName="formControlServerStorageCustom"
@@ -35,26 +35,27 @@
       <span class="unit">{{ storageTextContent.unit }}</span>
     </div>
     <mcs-validation-message [control]="formControlServerStorageCustom"
-      [@animate]="'fadeIn'"></mcs-validation-message>
+      animate trigger="fadeIn"></mcs-validation-message>
   </form>
 
   <!--Slider content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Slider
     && hasAvailableStorageSpace" class="slider-content">
 
-    <mcs-slider [@animate]="'fadeIn'" [min]="minimum" [max]="maximum" [disabled]="disabled"
+    <mcs-slider animate trigger="fadeIn"
+      [min]="minimum" [max]="maximum" [disabled]="disabled"
       [ngModel]="storageSliderValue" (ngModelChange)="onStorageChanged($event)"></mcs-slider>
-    <span [@animate]="'fadeIn'" class="storage-label">
+    <span animate trigger="fadeIn" class="storage-label">
       {{ currentMemory }}
     </span>
-    <span [@animate]="'fadeIn'" class="available-label">
+    <span animate trigger="fadeIn" class="available-label">
       ({{ remainingMemory }} Remaining)
     </span>
   </div>
 
   <!-- Insufficient Storage Capacity Warning Message -->
   <div *ngIf="storageProfileValue && !hasAvailableStorageSpace">
-    <div [@animate]="'fadeIn'" class="storage-full-warning">
+    <div animate trigger="fadeIn" class="storage-full-warning">
       <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
       <h4>{{ storageTextContent.fullStorageSpace }}</h4>
     </div>

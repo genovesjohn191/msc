@@ -23,7 +23,6 @@ import {
 import {
   refreshView,
   replacePlaceholder,
-  animateFactory,
   appendUnitSuffix,
   isFormControlValid,
   isNullOrEmpty
@@ -34,10 +33,7 @@ const CUSTOM_MEMORY_MULTIPLE = 4;
 @Component({
   selector: 'mcs-server-performance-scale',
   styles: [require('./server-performance-scale.component.scss')],
-  templateUrl: './server-performance-scale.component.html',
-  animations: [
-    animateFactory({ duration: '500ms' })
-  ]
+  templateUrl: './server-performance-scale.component.html'
 })
 
 export class ServerPerformanceScaleComponent implements OnInit {

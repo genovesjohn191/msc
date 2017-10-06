@@ -60,10 +60,6 @@ describe(`AppComponent`, () => {
     it(`should defined the router subscription`, () => {
       expect(component.routerSubscription).toBeDefined();
     });
-
-    it(`should defined the spinner element`, () => {
-      expect(component.spinnerElement).toBeDefined();
-    });
   });
 
   describe('ngOnDestroy()', () => {

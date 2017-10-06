@@ -21,7 +21,6 @@ import {
 } from '../../models';
 import {
   refreshView,
-  animateFactory,
   replacePlaceholder
 } from '../../../../utilities';
 
@@ -31,10 +30,7 @@ const Netmask = require('netmask').Netmask;
 @Component({
   selector: 'mcs-server-ip-address',
   styles: [require('./server-ip-address.component.scss')],
-  templateUrl: './server-ip-address.component.html',
-  animations: [
-    animateFactory({ duration: '500ms' })
-  ]
+  templateUrl: './server-ip-address.component.html'
 })
 
 export class ServerIpAddressComponent implements OnInit {

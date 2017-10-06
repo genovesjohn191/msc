@@ -1,0 +1,21 @@
+@import "mcs-fade";
+@import "mcs-rotate";
+@import "mcs-slide";
+@import "mcs-tada";
+@import "mcs-zoom";
+
+$animation-default-duration: 500ms;
+$animation-hinge-duration: 2s;
+
+.animation {
+  animation-duration: $animation-default-duration;
+  animation-fill-mode: both;
+}
+
+.animation.infinite {
+  animation-iteration-count: infinite;
+}
+
+.animation.hinge {
+  animation-duration: $animation-hinge-duration;
+}

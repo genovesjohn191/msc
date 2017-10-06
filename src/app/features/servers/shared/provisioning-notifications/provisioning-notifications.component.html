@@ -2,7 +2,7 @@
   <!-- Progress Information -->
   <div class="progress-container">
     <h3 class="title">{{ getTitle() }}</h3>
-    <mcs-progress-bar *ngIf="progressBarVisibility" [@animate]="progressbarAnimation"
+    <mcs-progress-bar *ngIf="progressBarVisibility" animate [trigger]="animateTrigger"
       [(ngModel)]="progressValue" [maxValue]="progressMax"></mcs-progress-bar>
   </div>
 

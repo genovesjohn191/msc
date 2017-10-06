@@ -14,17 +14,13 @@ import {
 } from '../../../core';
 import {
   formatDate,
-  refreshView,
-  animateFactory
+  refreshView
 } from '../../../utilities';
 
 @Component({
   selector: 'mcs-state-change-notification',
   templateUrl: './state-change-notification.component.html',
-  styles: [require('./state-change-notification.component.scss')],
-  animations: [
-    animateFactory({ duration: '300ms', easing: 'ease-in-out' })
-  ]
+  styles: [require('./state-change-notification.component.scss')]
 })
 
 export class StateChangeNotificationComponent implements OnInit, OnChanges {
@@ -36,7 +32,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
 
   public iconStatusKey: string;
   public iconStatusColor: any;
-  public animate: string;
+  public slideTrigger: string;
 
   private _timer: any;
   private _timeStart: any;
@@ -52,7 +48,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit() {
-    this.animate = 'slideInLeft';
+    this.slideTrigger = 'slideInLeft';
   }
 
   public ngOnChanges() {
@@ -153,7 +149,7 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
 
     // Remove notification from the list when fade out animation is finished
     this._timer = refreshView(() => {
-      this.animate = 'slideOutLeft';
+      this.slideTrigger = 'slideOutLeft';
 
       this._ngZone.runOutsideAngular(() => {
         refreshView(() => {

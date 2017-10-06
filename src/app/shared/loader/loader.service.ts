@@ -7,13 +7,13 @@ export class LoaderService {
   /**
    * Animation strategy for the loader and backdrop component
    */
-  private _animate: string;
-  public get animate(): string {
-    return this._animate;
+  private _fadeOut: string;
+  public get fadeOut(): string {
+    return this._fadeOut;
   }
-  public set animate(value: string) {
-    if (this._animate !== value) {
-      this._animate = value;
+  public set fadeOut(value: string) {
+    if (this._fadeOut !== value) {
+      this._fadeOut = value;
     }
   }
 
@@ -56,10 +56,10 @@ export class LoaderService {
    */
   public isActive(): boolean {
     if (isNullOrEmpty(this._subscriptions)) {
-      this._animate = 'fadeOut';
+      this.fadeOut = 'fadeOut';
       return false;
     }
-    this._animate = undefined;
+    this.fadeOut = undefined;
     return true;
   }
 

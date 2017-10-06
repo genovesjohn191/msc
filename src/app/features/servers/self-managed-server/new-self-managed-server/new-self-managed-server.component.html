@@ -1,5 +1,5 @@
 <form [hidden]="!visible" [formGroup]="formGroupNewServer"
-  class="new-self-managed-server-container" [@animate]="'fadeIn'">
+  class="new-self-managed-server-container" animate [trigger]="animateTrigger">
 
   <div class="server-details">
     <!-- TODO: Temporary removed, it is under discussion -->
