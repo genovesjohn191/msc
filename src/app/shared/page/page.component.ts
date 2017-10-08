@@ -112,8 +112,9 @@ export class PageComponent implements AfterContentInit {
     this.hasLeftPanel = true;
   }
 
-  public get barIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_NAVBAR;
+  public get navIconKey(): string {
+    return this.showLeftPanel ? CoreDefinition.ASSETS_FONT_CLOSE :
+      CoreDefinition.ASSETS_FONT_NAVBAR;
   }
 
   public ngAfterContentInit(): void {
@@ -143,10 +144,10 @@ export class PageComponent implements AfterContentInit {
    */
   public toggleLeftPanel(): void {
     if (this.showLeftPanel) {
-      this._renderer.setStyle(this.pageLeftElement.nativeElement, 'width', 0);
+      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
       this.showLeftPanel = false;
     } else {
-      this._renderer.removeStyle(this.pageLeftElement.nativeElement, 'width');
+      this._renderer.removeClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
       this.showLeftPanel = true;
     }
   }
