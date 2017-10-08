@@ -4,15 +4,20 @@
 $page-border-color: $color-grey-05;
 $page-header-font: $circular-pro-bold;
 $page-header-padding: 0 $space-large;
-// Left Panel Definition
-$left-panel-width: 275px;
-$left-panel-icon-padding: $space-small;
-$left-panel-item-padding: $space-medium;
 // Top Panel Definition
 $top-panel-height: 50px;
 $top-panel-item-padding: $page-header-padding;
 $action-item-hover-color: $color-grey-07;
 $action-item-active-color: $color-grey-06;
+// Left Panel Definition
+$left-panel-width: 275px;
+$left-panel-icon-padding: $space-small;
+$left-panel-item-padding: $space-medium;
+// Left Panel Navigation
+$left-panel-navigation-height: $top-panel-height;
+$left-panel-navigation-width: 30px;
+$left-panel-navigation-padding: $left-panel-item-padding;
+$left-panel-navigation-collapse-padding: 6px;
 // Content Panel Definition is declared inside the variables.scss
 
 .page-wrapper {
@@ -27,6 +32,24 @@ $action-item-active-color: $color-grey-06;
     @include transition(0.3s);
     width: $left-panel-width;
     border-right: 1px solid $page-border-color;
+
+    &.left-panel-collapse {
+      width: $left-panel-navigation-width;
+
+      .left-panel-wrapper {
+        display: none;
+      }
+
+      .left-nav-wrapper {
+        padding: $left-panel-navigation-collapse-padding;
+      }
+    }
+
+    .left-nav-wrapper {
+      height: $left-panel-navigation-height;
+      padding: $left-panel-navigation-padding;
+      border-bottom: 1px solid $page-border-color;
+    }
 
     // Left Panel Styling
     .left-panel-wrapper {
@@ -62,12 +85,6 @@ $action-item-active-color: $color-grey-06;
         padding: $page-header-padding;
         margin: 0;
         width: auto;
-      }
-
-      .left-panel-nav-icon {
-        cursor: pointer;
-        padding: $top-panel-item-padding;
-        padding-right: 0;
       }
 
       .top-panel-wrapper {
