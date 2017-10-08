@@ -39,7 +39,7 @@
             {{ columnSettings.firewall.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="emphasize">
-            <mcs-icon [key]="getConnectionStatusIconKey(row.connectionStatus)"></mcs-icon>
+            <mcs-icon [key]="getConnectionStatusIconKey(row.connectionStatus)" size="small"></mcs-icon>
             <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
           </mcs-data-cell>
         </ng-container>

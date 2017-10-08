@@ -1,11 +1,11 @@
 <a mcsPopover #popoverActionElement="mcsPopover" padding="none"
   placement="bottom" orientation="left" theme="light"
   [content]="cogContent">
-  <mcs-icon [key]="gearIconKey" size="small"></mcs-icon>
+  <mcs-icon [key]="gearIconKey" size="medium"></mcs-icon>
 </a>
 
 <ng-template #cogContent>
-<div class="cog-container">
+  <div class="cog-container">
     <a #startButton (click)="onExecuteCommand('Start', startButton)"
       [attr.disabled]="startStatus">
       Start

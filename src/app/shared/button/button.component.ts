@@ -8,7 +8,9 @@ import {
   EventEmitter,
   Renderer2,
   ElementRef,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 /** Providers */
@@ -25,14 +27,12 @@ enum IconType {
 @Component({
   selector: 'mcs-button',
   templateUrl: './button.component.html',
-  styles: [require('./button.component.scss')]
+  styles: [require('./button.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoader {
-  public iconType: IconType;
   public iconTypeEnum = IconType;
-  public showSpinner: boolean;
-  public iconKey: string;
 
   @Input()
   public type: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
@@ -62,7 +62,43 @@ export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoa
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public constructor(private _renderer: Renderer2) {
+  private _iconType: IconType;
+  public get iconType(): IconType {
+    return this._iconType;
+  }
+  public set iconType(value: IconType) {
+    if (this._iconType !== value) {
+      this._iconType = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _showSpinner: boolean;
+  public get showSpinner(): boolean {
+    return this._showSpinner;
+  }
+  public set showSpinner(value: boolean) {
+    if (this._showSpinner !== value) {
+      this._showSpinner = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _iconKey: string;
+  public get iconKey(): string {
+    return this._iconKey;
+  }
+  public set iconKey(value: string) {
+    if (this._iconKey !== value) {
+      this._iconKey = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  public constructor(
+    private _renderer: Renderer2,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
     this.type = 'primary';
     this.icon = 'normal';
     this.size = 'default';
@@ -92,6 +128,8 @@ export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoa
       this._renderer.setStyle(this.mcsButton.nativeElement, 'width', '100%');
       this._renderer.setStyle(this.mcsButton.nativeElement, 'max-width', this.width);
     }
+
+    this._changeDetectorRef.markForCheck();
   }
 
   public ngOnChanges() {
@@ -100,6 +138,8 @@ export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoa
     } else {
       this._renderer.removeAttribute(this.mcsButton.nativeElement, 'disabled');
     }
+
+    this._changeDetectorRef.markForCheck();
   }
 
   public emitEvent($event) {

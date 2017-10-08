@@ -60,6 +60,8 @@
       "invalidServerName": "Server name can only contain letters, numbers or hypen"
     },
     "server": {
+      "header": "Servers",
+      "panel": "Listing Panel",
       "management": {
         "label": "Management",
         "vmProperties": {

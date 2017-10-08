@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import {
@@ -44,7 +46,8 @@ const PRIMARY_STORAGE_NAME = 'Hard disk 1';
 @Component({
   selector: 'mcs-server-storage',
   styles: [require('./server-storage.component.scss')],
-  templateUrl: './server-storage.component.html'
+  templateUrl: './server-storage.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ServerStorageComponent implements OnInit, OnDestroy {
@@ -63,13 +66,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public storageDataSubscription: any;
 
   public serverStorageText: any;
-  public expandStorage: boolean;
-  public expandingStorage: boolean;
-  public deletingStorage: boolean;
+
   public deleteStorageAlertMessage: string;
 
-  public serverSubscription: Subscription;
-  public notificationsSubscription: Subscription;
   public serverPlatformSubscription: Subscription;
 
   public server: Server;
@@ -85,16 +84,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public storageProfileList: McsList;
   public newStorageSliderValues: number[];
   public memoryMB: number;
-  public availableMemoryMB: number;
   public minimumMB: number;
   public usedMemoryMB: number;
 
   public selectedStorageDevice: ServerStorageDevice;
   public selectedStorageSliderValues: number[];
 
-  public disabled: boolean;
-
   public deleteStorageModal: McsModal;
+
+  private _serverSubscription: Subscription;
+  private _notificationsSubscription: Subscription;
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
@@ -132,12 +131,69 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return this._serverPlatformMap;
   }
 
+  private _availableMemoryMB: number;
+  public get availableMemoryMB(): number {
+    return this._availableMemoryMB;
+  }
+  public set availableMemoryMB(value: number) {
+    if (this._availableMemoryMB !== value) {
+      this._availableMemoryMB = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _disabled: boolean;
+  public get disabled(): boolean {
+    return this._disabled;
+  }
+  public set disabled(value: boolean) {
+    if (this._disabled !== value) {
+      this._disabled = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _expandStorage: boolean;
+  public get expandStorage(): boolean {
+    return this._expandStorage;
+  }
+  public set expandStorage(value: boolean) {
+    if (this._expandStorage !== value) {
+      this._expandStorage = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _expandingStorage: boolean;
+  public get expandingStorage(): boolean {
+    return this._expandingStorage;
+  }
+  public set expandingStorage(value: boolean) {
+    if (this._expandingStorage !== value) {
+      this._expandingStorage = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _deletingStorage: boolean;
+  public get deletingStorage(): boolean {
+    return this._deletingStorage;
+  }
+  public set deletingStorage(value: boolean) {
+    if (this._deletingStorage !== value) {
+      this._deletingStorage = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
     private _notificationContextService: McsNotificationContextService
   ) {
     // Constructor
+    this.disabled = false;
     this.expandStorage = false;
     this.expandingStorage = false;
     this.deletingStorage = false;
@@ -156,7 +212,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.storageChangedValue.valid = false;
     this.notifications = new Array<McsApiJob>();
     this._serverPlatformMap = new Map<string, ServerResource>();
-    this.disabled = false;
   }
 
   public ngOnInit() {
@@ -322,16 +377,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.serverSubscription) {
-      this.serverSubscription.unsubscribe();
+    if (this._serverSubscription) {
+      this._serverSubscription.unsubscribe();
     }
 
     if (this.serverPlatformSubscription) {
       this.serverPlatformSubscription.unsubscribe();
     }
 
-    if (this.notificationsSubscription) {
-      this.notificationsSubscription.unsubscribe();
+    if (this._notificationsSubscription) {
+      this._notificationsSubscription.unsubscribe();
     }
   }
 
@@ -343,6 +398,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         this._setPlatformData(response);
       });
+
+    this.serverPlatformSubscription.add(() => {
+      return this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**
@@ -350,7 +409,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * and set values for storage management
    */
   private _listenToSelectedServerStream(): void {
-    this.serverSubscription = this._serverService.selectedServerStream
+    this._serverSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
         if (isNullOrEmpty(server)) { return; }
 
@@ -371,7 +430,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * the UI based on the executed storage action/s
    */
   private _listenToNotificationsStream(): void {
-    this.notificationsSubscription = this._notificationContextService.notificationsStream
+    this._notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((notifications) => {
         if (notifications && this.server) {
           let storageJobs = notifications.filter((job) => {
@@ -458,6 +517,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                   // Do nothing
                   break;
               }
+
+              this._notificationsSubscription.add(() => {
+                return this._changeDetectorRef.markForCheck();
+              });
             }
           }
         }

@@ -4,7 +4,9 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
-  Renderer2
+  Renderer2,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   Server,
@@ -39,7 +41,8 @@ import { ServerService } from '../server.service';
 @Component({
   selector: 'mcs-server-management',
   styles: [require('./server-management.component.scss')],
-  templateUrl: './server-management.component.html'
+  templateUrl: './server-management.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ServerManagementComponent implements OnInit, OnDestroy {
@@ -132,8 +135,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _serverService: ServerService,
     private _renderer: Renderer2,
     private _notificationContextService: McsNotificationContextService,
-    private _browserService: McsBrowserService
+    private _browserService: McsBrowserService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
+    this.server = new Server();
     this.initialServerPerformanceScaleValue = new ServerPerformanceScale();
     this._serverCpuSizeScale = new ServerPerformanceScale();
     this.activeNotifications = new Array();
@@ -146,6 +151,11 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.serverManagementTextContent = this._textProvider.content.servers.server.management;
+
+    this.platformDataSubscription = this._serverService.getPlatformData()
+      .subscribe((data) => {
+        this.platformData = data.content;
+      });
 
     this.serverSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
@@ -176,6 +186,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
               this._hideThumbnail();
             }
           }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+          this._changeDetectorRef.markForCheck();
         }
       });
 
@@ -184,12 +195,14 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       .subscribe((updatedNotifications) => {
         this.activeNotifications = updatedNotifications;
         this._getScalingNotificationStatus();
+        this._changeDetectorRef.markForCheck();
       });
 
     // Listen to device change
     this.deviceTypeSubscription = this._browserService.deviceTypeStream
       .subscribe((deviceType) => {
         this._deviceType = deviceType;
+        this._changeDetectorRef.markForCheck();
       });
   }
 
@@ -242,14 +255,11 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public scaleServer() {
-    this.isServerScale = true;
+    if (isNullOrEmpty(this.platformData)) { return; }
 
-    this.platformDataSubscription = this._serverService.getPlatformData()
-      .subscribe((data) => {
-        this.platformData = data.content;
-        this.resource = this._getResourceByVdc(this.server.vdcName);
-        this._initializeServerPerformanceScaleValue();
-      });
+    this.resource = this._getResourceByVdc(this.server.vdcName);
+    this._initializeServerPerformanceScaleValue();
+    this.isServerScale = true;
   }
 
   public onScaleChanged(scale: ServerPerformanceScale) {
@@ -267,6 +277,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       this._serverService.setPerformanceScale(this.server.id, this._serverCpuSizeScale)
         .subscribe((response) => {
           this.scalingResponse = response;
+          this._changeDetectorRef.markForCheck();
         });
   }
 
@@ -347,6 +358,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       this.remainingMemory = this.resource.memoryLimitMB - this.resource.memoryUsedMB;
       this.remainingCpu = this.resource.cpuLimit - this.resource.cpuUsed;
     }
+
+    this._changeDetectorRef.markForCheck();
   }
 
   private _getServerThumbnail() {
@@ -368,6 +381,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
           );
           this._showThumbnail();
         }
+
+        this._changeDetectorRef.markForCheck();
       });
   }
 
