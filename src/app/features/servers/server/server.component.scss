@@ -1,51 +1,5 @@
 @import "../../../../styles/shared/base";
 
-$server-name-margin-top: 3px;
-$server-list-panel-spacing: $space-medium;
-
-.server-container {
-  @include display-flex(row);
-  align-items: flex-start;
-  width: 100%;
-  height: 100%;
-
-  .server-list-panel-wrapper {
-    position: relative;
-    @include flex(0 0 20%);
-    min-height: 100%;
-
-    .server-list-panel {
-      @include set-items-interval($server-list-panel-spacing, vertical);
-    }
-  }
-
-  .server-features-wrapper {
-    @include flex(0 0 80%);
-    min-height: 100%;
-    padding-left: $space-xlarge;
-
-    .server-features {
-      @include breakpoint(medium) {
-        @include flex(0 0 100%);
-        max-width: 100%;
-      }
-    
-      .server-name {
-        margin-top: $server-name-margin-top;
-        margin-bottom: $space-medium;
-      }
-    
-      .mcs-tabs {
-        .nav-tabs {
-          align-items: center;
-    
-          .server-cog {
-            margin-left: auto;
-            margin-right: $space-xsmall;
-            padding-bottom: $space-xsmall;
-          }
-        }
-      }
-    }
-  }
+:host {
+  display: block;
 }

@@ -1,4 +1,4 @@
-<div class="server-storage" >
+<div class="content-responsive server-storage" >
   <h3 class="heading">{{ serverStorageText.title }}</h3>
 
   <div *ngIf="!expandStorage" class="details">
@@ -68,7 +68,7 @@
       </ul>
     </div>
 
-    <div *mcsHasPermission="['VmEdit']" class="loader-container">
+    <div *mcsHasPermission="['VmEdit']">
       <div [mcsLoader]="serverPlatformSubscription">
         <div *ngIf="!hasReachedDisksLimit" class="add-new-storage">
           <mcs-server-manage-storage *ngIf="storageProfileList" #mcsStorage
@@ -89,7 +89,7 @@
               [disabled]="!isValidStorageValues || !hasAvailableStorageSpace">Attach</mcs-button>
           </div>
         </div>
-  
+
         <div *ngIf="hasReachedDisksLimit" class="storage-limit-warning">
           <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
           <h4>{{ serverStorageText.reachedStorageLimit }}</h4>

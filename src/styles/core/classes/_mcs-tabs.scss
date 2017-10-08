@@ -1,8 +1,8 @@
 @import "../../../styles/shared/base";
 
 $navlink-padding: 9px;
-$content-grid-width-desktop: 750px;
-$content-grid-width-mobile: 500px;
+$content-responsive-width-desktop: 750px;
+$content-responsive-width-mobile: 500px;
 $grid-row-spacing: 50px;
 $table-filter-search-max-width: 300px;
 $table-filter-selector-width: 100px;
@@ -44,16 +44,21 @@ $table-filter-selector-width: 100px;
   }
 
   .tab-content {
-    .content-grid {
-      @include set-items-interval($grid-row-spacing, vertical);
-      width: $content-grid-width-desktop;
+    .content-responsive {
+      width: $content-responsive-width-desktop;
       white-space: nowrap;
       @include breakpoint(small) {
-        width: $content-grid-width-mobile;
+        width: $content-responsive-width-mobile;
       }
       @include breakpoint(xsmall) {
-        @include set-items-interval($space-xlarge, vertical);
         width: 100%;
+      }
+    }
+
+    .content-grid {
+      @include set-items-interval($grid-row-spacing, vertical);
+      @include breakpoint(xsmall) {
+        @include set-items-interval($space-xlarge, vertical);
       }
 
       .grid-row {
@@ -76,11 +81,11 @@ $table-filter-selector-width: 100px;
         }
 
         ul {
-          @include set-items-interval($space-small, vertical);
+          @include set-items-interval($space-xsmall, vertical);
 
           &.listing {
-            padding-left: $space-small;
-            margin-bottom: $space-small;
+            padding-left: $space-xsmall;
+            margin-bottom: $space-xsmall;
           }
         
           li {

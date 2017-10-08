@@ -10,7 +10,8 @@ import {
   TemplateRef,
   ComponentRef,
   Renderer2,
-  HostListener
+  HostListener,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ModalComponent } from './modal.component';
 import {
@@ -39,7 +40,8 @@ export class ModalDirective implements OnInit, OnDestroy, McsModal {
     private _injector: Injector,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.modalSize = 'large';
   }
@@ -75,6 +77,8 @@ export class ModalDirective implements OnInit, OnDestroy, McsModal {
 
       window.document.querySelector('body')
         .appendChild(this.componentRef.location.nativeElement);
+
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -88,6 +92,8 @@ export class ModalDirective implements OnInit, OnDestroy, McsModal {
         this.componentService.deleteComponent();
         this.componentRef.destroy();
         this.componentRef = null;
+
+        this._changeDetectorRef.markForCheck();
       }, 300);
     }
   }

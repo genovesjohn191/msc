@@ -12,7 +12,9 @@ import {
   HostBinding,
   HostListener,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   trigger,
@@ -32,6 +34,7 @@ const ATTRIBUTE_MODAL_BODY = 'modal-body';
   selector: 'mcs-modal',
   templateUrl: './modal.component.html',
   styles: [require('./modal.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('dialog', [
       transition('void => *', [
@@ -93,9 +96,10 @@ export class ModalComponent implements OnInit, AfterViewInit, OnDestroy {
   public tabIndex;
 
   public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
     private _elementRef: ElementRef,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
   ) {
     this.size = 'large';
     this.visible = true;
@@ -116,6 +120,7 @@ export class ModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
     refreshView(() => {
       this.setModalContents(this._getElementNodes());
+      this._changeDetectorRef.markForCheck();
     });
   }
 

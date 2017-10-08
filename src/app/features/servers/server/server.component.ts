@@ -2,7 +2,10 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   Router,
@@ -21,7 +24,10 @@ import {
   McsListPanelItem,
   McsSearch
 } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  refreshView
+} from '../../../utilities';
 import { ServersService } from '../servers.service';
 import { ServerService } from '../server/server.service';
 import { ServerListSource } from './server.listsource';
@@ -31,9 +37,10 @@ const SERVER_LIST_GROUP_OTHERS = 'Others';
 @Component({
   selector: 'mcs-server',
   styles: [require('./server.component.scss')],
-  templateUrl: './server.component.html'
+  templateUrl: './server.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServerComponent implements OnInit, OnDestroy {
+export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('search')
   public search: McsSearch;
 
@@ -76,7 +83,8 @@ export class ServerComponent implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _serversService: ServersService,
     private _serverService: ServerService,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef,
   ) {
     this.server = new Server();
   }
@@ -86,8 +94,22 @@ export class ServerComponent implements OnInit, OnDestroy {
     this.serverTextContent = this._textContentProvider.content.servers.server;
     this._serverId = this._activatedRoute.snapshot.paramMap.get('id');
 
-    this._initializeListsource();
     this._getServerById();
+  }
+
+  public ngAfterViewInit() {
+    refreshView(() => {
+      this._initializeListsource();
+    });
+  }
+
+  public ngOnDestroy() {
+    if (this.selectedServerSubscription) {
+      this.selectedServerSubscription.unsubscribe();
+    }
+    if (this.activeServerSubscription) {
+      this.activeServerSubscription.unsubscribe();
+    }
   }
 
   public onServerSelect(serverId: any) {
@@ -177,20 +199,12 @@ export class ServerComponent implements OnInit, OnDestroy {
     this._initializeListsource();
   }
 
-  public ngOnDestroy() {
-    if (this.selectedServerSubscription) {
-      this.selectedServerSubscription.unsubscribe();
-    }
-    if (this.activeServerSubscription) {
-      this.activeServerSubscription.unsubscribe();
-    }
-  }
-
   private _initializeListsource(): void {
     this.serverListSource = new ServerListSource(
       this._serversService,
       this.search
     );
+    this._changeDetectorRef.markForCheck();
   }
 
   private _getServerById(): void {
@@ -203,6 +217,7 @@ export class ServerComponent implements OnInit, OnDestroy {
         } as McsListPanelItem;
 
         this._serverService.setSelectedServer(this.server);
+        this._changeDetectorRef.markForCheck();
       });
   }
 }

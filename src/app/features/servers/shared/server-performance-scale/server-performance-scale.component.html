@@ -19,7 +19,7 @@
   <!--Custom size content element-->
   <form [formGroup]="serverScaleForm">
     <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
-      <div animate="fade" [trigger]="true" class="custom-size-content">
+      <div animate trigger="fadeIn" class="custom-size-content">
         <ul class="custom-size-inputs unstyled-list">
           <li>
             <div class="input-group">
@@ -60,7 +60,7 @@
   <!--Slider content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Slider">
     <div class="scale">
-      <mcs-slider animate="fade" [trigger]="true"
+      <mcs-slider animate trigger="fadeIn"
         [min]="minimum" [max]="maximum"
         [ngModel]="sliderValue"
         (ngModelChange)="onSliderChanged($event)"></mcs-slider>

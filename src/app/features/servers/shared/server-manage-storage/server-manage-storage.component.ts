@@ -6,7 +6,9 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   CoreDefinition,
@@ -37,7 +39,8 @@ import { McsStorage } from '../mcs-storage.interface';
 @Component({
   selector: 'mcs-server-manage-storage',
   styles: [require('./server-manage-storage.component.scss')],
-  templateUrl: './server-manage-storage.component.html'
+  templateUrl: './server-manage-storage.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy, McsStorage {
@@ -62,15 +65,8 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   @Output()
   public storageChanged: EventEmitter<ServerManageStorage>;
 
-  public inputManageType: ServerInputManageType;
   public inputManageTypeEnum = ServerInputManageType;
   public storageTextContent: any;
-
-  public storageProfileValue: string;
-  public storageSliderValue: number;
-  public customStorageValue: number;
-  public minimum: number;
-  public maximum: number;
 
   public formGroupServerStorage: FormGroup;
   public formControlServerStorageCustom: FormControl;
@@ -100,7 +96,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public get remainingMemory(): string {
     return appendUnitSuffix(
-      this.storageSliderValues[this.maximum] -  this.storageSliderValues[this.storageSliderValue],
+      this.storageSliderValues[this.maximum] - this.storageSliderValues[this.storageSliderValue],
       'gigabyte'
     );
   }
@@ -113,7 +109,76 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return CoreDefinition.ASSETS_FONT_WARNING;
   }
 
-  public constructor(private _textProvider: McsTextContentProvider) {
+  private _inputManageType: ServerInputManageType;
+  public get inputManageType(): ServerInputManageType {
+    return this._inputManageType;
+  }
+  public set inputManageType(value: ServerInputManageType) {
+    if (this._inputManageType !== value) {
+      this._inputManageType = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _storageProfileValue: string;
+  public get storageProfileValue(): string {
+    return this._storageProfileValue;
+  }
+  public set storageProfileValue(value: string) {
+    if (this._storageProfileValue !== value) {
+      this._storageProfileValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _storageSliderValue: number;
+  public get storageSliderValue(): number {
+    return this._storageSliderValue;
+  }
+  public set storageSliderValue(value: number) {
+    if (this._storageSliderValue !== value) {
+      this._storageSliderValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _customStorageValue: number;
+  public get customStorageValue(): number {
+    return this._customStorageValue;
+  }
+  public set customStorageValue(value: number) {
+    if (this._customStorageValue !== value) {
+      this._customStorageValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _minimum: number;
+  public get minimum(): number {
+    return this._minimum;
+  }
+  public set minimum(value: number) {
+    if (this._minimum !== value) {
+      this._minimum = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _maximum: number;
+  public get maximum(): number {
+    return this._maximum;
+  }
+  public set maximum(value: number) {
+    if (this._maximum !== value) {
+      this._maximum = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  public constructor(
+    private _textProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
     this.minimumMB = 1;
     this.storageProfileValue = '';
     this.storageSliderValues = new Array();
@@ -176,10 +241,10 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public completed(): void {
-    refreshView(() => {
-      this.inputManageType = ServerInputManageType.Slider;
-      this.storageSliderValue = 0;
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+    this.formControlServerStorageCustom.reset();
+    this.storageSliderValue = 0;
+    this.customStorageValue = 0;
+    this.onChangeInputManageType(ServerInputManageType.Slider);
   }
 
   public ngOnDestroy() {
@@ -204,7 +269,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     // Create custom storage control and register the listener
     this.formControlServerStorageCustom = new FormControl(
       { disabled: this.disabled },
-      [ CoreValidators.required ]
+      [CoreValidators.required]
     );
     this.formControlSubscription = this.formControlServerStorageCustom.valueChanges
       .subscribe(this.onCustomStorageChanged.bind(this));

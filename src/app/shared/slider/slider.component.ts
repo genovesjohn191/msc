@@ -2,7 +2,9 @@ import {
   Component,
   Input,
   HostBinding,
-  forwardRef
+  forwardRef,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -10,6 +12,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
   selector: 'mcs-slider',
   templateUrl: './slider.component.html',
   styles: [require('./slider.component.scss')],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -68,7 +71,7 @@ export class SliderComponent {
     }
   }
 
-  public constructor() {
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.sliderValue = 0;
     this.disabled = false;
   }
@@ -78,7 +81,10 @@ export class SliderComponent {
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    this._sliderValue = value;
+    if (this._sliderValue !== value) {
+      this._sliderValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   /**

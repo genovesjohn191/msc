@@ -1,10 +1,5 @@
 @import "../../../../../../styles/shared/base";
 
-// TODO: Temporary max-width for overview page
-$firewall-overview-width-desktop: 750px;
-$firewall-overview-width-mobile: 500px;
-$firewall-details-row-spacing: 50px;
-
 :host {
   display: block;
 }

@@ -108,12 +108,4 @@ describe('ServerStorageComponent', () => {
       expect(component.serverStorageText).toBeDefined();
     });
   });
-
-  describe('ngOnDestroy()', () => {
-    it('should unsubscribe from the subscription', () => {
-      spyOn(component.serverSubscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.serverSubscription.unsubscribe).toHaveBeenCalled();
-    });
-  });
 });

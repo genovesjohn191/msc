@@ -7,7 +7,9 @@ $server-text-color: $color-black;
 $server-vm-console-enabled-color: $server-text-color;
 $server-vm-console-disabled-color: $color-grey-02;
 
-.server-management-container {
+:host {
+  display: block;
+  position: relative;
 
   .server-thumbnail {
     margin-bottom: $space-small;
@@ -50,29 +52,12 @@ $server-vm-console-disabled-color: $color-grey-02;
     }
   }
 
-  .server-details {
-    color: $server-text-color;
-    margin: $space-xlarge 0;
-    @include set-items-interval(50px, vertical);
-  }
-}
+  .server-performance-scale {
+    @include set-items-interval($space-large, vertical);
 
-.server-performance-scale-container {
-   @include set-items-interval(10px, vertical);
-   margin: $space-xlarge 0;
-
-  .note {
-    @include display-flex(row);
-    align-items: center;
-    justify-content: center;
-    @include font-size(16);
-    @include set-items-interval(5px, horizontal);
-    margin-bottom: $space-xlarge;
-  }
-
-  .scaling {
-    @include display-flex(row);
-    justify-content: space-between;
-    align-items: center;
+    .note {
+      @include font-size(16);
+      @include set-items-interval($space-xsmall, horizontal);
+    }
   }
 }
