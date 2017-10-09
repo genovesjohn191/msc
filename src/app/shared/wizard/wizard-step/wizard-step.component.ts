@@ -6,7 +6,7 @@ import {
 @Component({
   selector: 'mcs-wizard-step',
   templateUrl: './wizard-step.component.html',
-  styles: [require('./wizard-step.component.scss')]
+  styleUrls: ['./wizard-step.component.scss']
 })
 
 export class WizardStepComponent {

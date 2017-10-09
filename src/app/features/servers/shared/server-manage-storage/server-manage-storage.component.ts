@@ -38,7 +38,7 @@ import { McsStorage } from '../mcs-storage.interface';
 
 @Component({
   selector: 'mcs-server-manage-storage',
-  styles: [require('./server-manage-storage.component.scss')],
+  styleUrls: ['./server-manage-storage.component.scss'],
   templateUrl: './server-manage-storage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

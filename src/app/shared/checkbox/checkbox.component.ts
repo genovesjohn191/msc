@@ -16,7 +16,7 @@ import {
 @Component({
   selector: 'mcs-checkbox',
   templateUrl: './checkbox.component.html',
-  styles: [require('./checkbox.component.scss')],
+  styleUrls: ['./checkbox.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

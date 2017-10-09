@@ -19,7 +19,7 @@ import { isNullOrEmpty } from '../../../utilities';
 @Component({
   selector: 'mcs-navigation-mobile',
   templateUrl: './navigation-mobile.component.html',
-  styles: [require('./navigation-mobile.component.scss')],
+  styleUrls: ['./navigation-mobile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })

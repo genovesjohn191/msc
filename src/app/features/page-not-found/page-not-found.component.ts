@@ -9,7 +9,7 @@ import { McsTextContentProvider } from '../../core';
 @Component({
   selector: 'mcs-page-not-found',
   templateUrl: './page-not-found.component.html',
-  styles: [require('./page-not-found.component.scss')]
+  styleUrls: ['./page-not-found.component.scss']
 })
 
 export class PageNotFoundComponent implements OnInit {

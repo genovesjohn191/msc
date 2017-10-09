@@ -19,7 +19,7 @@ import {
 @Component({
   selector: 'mcs-provisioning-notifications',
   templateUrl: './provisioning-notifications.component.html',
-  styles: [require('./provisioning-notifications.component.scss')]
+  styleUrls: ['./provisioning-notifications.component.scss']
 })
 
 export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {

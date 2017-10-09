@@ -9,7 +9,7 @@ import { McsAssetsProvider } from '../../core';
 @Component({
   selector: 'mcs-header',
   templateUrl: './header.component.html',
-  styles: [require('./header.component.scss')]
+  styleUrls: ['./header.component.scss']
 })
 
 export class HeaderComponent implements OnInit {

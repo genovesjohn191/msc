@@ -9,7 +9,7 @@ import { McsTextContentProvider } from '../../core';
 @Component({
   selector: 'mcs-permission-required-page',
   templateUrl: './access-denied-page.component.html',
-  styles: [require('./access-denied-page.component.scss')]
+  styleUrls: ['./access-denied-page.component.scss']
 })
 
 export class AccessDeniedPageComponent implements OnInit {

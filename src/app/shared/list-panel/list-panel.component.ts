@@ -49,7 +49,7 @@ const LIST_NO_GROUP_CLASS = 'list-no-group-wrapper';
 @Component({
   selector: 'mcs-list-panel',
   templateUrl: './list-panel.component.html',
-  styles: [require('./list-panel.component.scss')],
+  styleUrls: ['./list-panel.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

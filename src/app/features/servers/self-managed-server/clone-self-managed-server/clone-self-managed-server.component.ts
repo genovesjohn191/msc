@@ -33,7 +33,7 @@ import { CreateSelfManagedServersService } from '../create-self-managed-servers.
 @Component({
   selector: 'mcs-clone-self-managed-server',
   templateUrl: './clone-self-managed-server.component.html',
-  styles: [require('./clone-self-managed-server.component.scss')]
+  styleUrls: ['./clone-self-managed-server.component.scss']
 })
 
 export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {

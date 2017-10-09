@@ -44,7 +44,7 @@ const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MU
 @Component({
   selector: 'mcs-new-self-managed-server',
   templateUrl: './new-self-managed-server.component.html',
-  styles: [require('./new-self-managed-server.component.scss')]
+  styleUrls: ['./new-self-managed-server.component.scss']
 })
 
 export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {

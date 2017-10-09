@@ -30,7 +30,7 @@ import { TicketStatus } from './models';
 @Component({
   selector: 'mcs-tickets',
   templateUrl: './tickets.component.html',
-  styles: [require('./tickets.component.scss')],
+  styleUrls: ['./tickets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

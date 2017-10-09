@@ -12,7 +12,7 @@ import {
 @Component({
   selector: 'mcs-ticket-new-comment',
   templateUrl: './ticket-new-comment.component.html',
-  styles: [require('./ticket-new-comment.component.scss')]
+  styleUrls: ['./ticket-new-comment.component.scss']
 })
 
 export class TicketNewCommentComponent {

@@ -40,7 +40,7 @@ import { ServerService } from '../server.service';
 
 @Component({
   selector: 'mcs-server-management',
-  styles: [require('./server-management.component.scss')],
+  styleUrls: ['./server-management.component.scss'],
   templateUrl: './server-management.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

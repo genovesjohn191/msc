@@ -5,7 +5,7 @@ import { LoaderService } from './loader.service';
 @Component({
   selector: 'mcs-loader',
   templateUrl: './loader.component.html',
-  styles: [require('./loader.component.scss')],
+  styleUrls: ['./loader.component.scss'],
 })
 
 export class LoaderComponent {

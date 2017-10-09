@@ -29,7 +29,7 @@ const Netmask = require('netmask').Netmask;
 
 @Component({
   selector: 'mcs-server-ip-address',
-  styles: [require('./server-ip-address.component.scss')],
+  styleUrls: ['./server-ip-address.component.scss'],
   templateUrl: './server-ip-address.component.html'
 })
 

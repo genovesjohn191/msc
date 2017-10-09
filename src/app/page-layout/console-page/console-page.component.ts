@@ -33,7 +33,7 @@ const DIALOG_HEADER_SIZE = 35;
 @Component({
   selector: 'mcs-console-page',
   templateUrl: './console-page.component.html',
-  styles: [require('./console-page.component.scss')],
+  styleUrls: ['./console-page.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 

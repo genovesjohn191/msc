@@ -4,7 +4,7 @@ import {
 
 @Component({
   selector: 'mcs-server-backups',
-  styles: [require('./server-backups.component.scss')],
+  styleUrls: ['./server-backups.component.scss'],
   templateUrl: './server-backups.component.html'
 })
 export class ServerBackupsComponent {

@@ -8,7 +8,7 @@ import { ValidationMessageService } from './validation-message.service';
 @Component({
   selector: 'mcs-validation-message',
   templateUrl: './validation-message.component.html',
-  styles: [require('./validation-message.component.scss')]
+  styleUrls: ['./validation-message.component.scss']
 })
 
 export class ValidationMessageComponent {

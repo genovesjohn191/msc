@@ -28,7 +28,7 @@ const DEFAULT_DROPDOWN_PLACEHOLDER = 'Select Option';
 @Component({
   selector: 'mcs-dropdown',
   templateUrl: './dropdown.component.html',
-  styles: [require('./dropdown.component.scss')],
+  styleUrls: ['./dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

@@ -23,7 +23,7 @@ import {
 @Component({
   selector: 'mcs-page-header',
   templateUrl: './page-header.component.html',
-  styles: [require('./page-header.component.scss')],
+  styleUrls: ['./page-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

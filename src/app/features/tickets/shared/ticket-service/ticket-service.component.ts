@@ -27,7 +27,7 @@ import {
 @Component({
   selector: 'mcs-ticket-service',
   templateUrl: './ticket-service.component.html',
-  styles: [require('./ticket-service.component.scss')],
+  styleUrls: ['./ticket-service.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

@@ -28,7 +28,7 @@ import {
 @Component({
   selector: 'mcs-notifications',
   templateUrl: './notifications.component.html',
-  styles: [require('./notifications.component.scss')],
+  styleUrls: ['./notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

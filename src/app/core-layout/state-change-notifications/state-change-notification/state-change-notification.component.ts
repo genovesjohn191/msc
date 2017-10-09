@@ -20,7 +20,7 @@ import {
 @Component({
   selector: 'mcs-state-change-notification',
   templateUrl: './state-change-notification.component.html',
-  styles: [require('./state-change-notification.component.scss')]
+  styleUrls: ['./state-change-notification.component.scss']
 })
 
 export class StateChangeNotificationComponent implements OnInit, OnChanges {

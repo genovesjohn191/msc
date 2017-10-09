@@ -21,7 +21,7 @@ import {
 @Component({
   selector: 'mcs-main-navigation',
   templateUrl: './main-navigation.component.html',
-  styles: [require('./main-navigation.component.scss')]
+  styleUrls: ['./main-navigation.component.scss']
 })
 
 export class MainNavigationComponent implements AfterViewInit {

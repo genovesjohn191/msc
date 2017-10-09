@@ -28,7 +28,7 @@ import {
 @Component({
   selector: 'mcs-gadgets',
   templateUrl: './gadgets.component.html',
-  styles: [require('./gadgets.component.scss')]
+  styleUrls: ['./gadgets.component.scss']
 })
 
 export class GadgetsComponent implements OnInit {

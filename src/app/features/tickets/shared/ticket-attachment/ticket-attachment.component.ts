@@ -20,7 +20,7 @@ import { TicketFileInfo } from '../../models';
 @Component({
   selector: 'mcs-ticket-attachment',
   templateUrl: './ticket-attachment.component.html',
-  styles: [require('./ticket-attachment.component.scss')],
+  styleUrls: ['./ticket-attachment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

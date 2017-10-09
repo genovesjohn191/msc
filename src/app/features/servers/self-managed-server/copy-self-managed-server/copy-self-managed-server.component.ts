@@ -40,7 +40,7 @@ import { CreateSelfManagedServersService } from '../create-self-managed-servers.
 @Component({
   selector: 'mcs-copy-self-managed-server',
   templateUrl: './copy-self-managed-server.component.html',
-  styles: [require('./copy-self-managed-server.component.scss')]
+  styleUrls: ['./copy-self-managed-server.component.scss']
 })
 
 export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {

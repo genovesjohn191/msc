@@ -11,7 +11,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
   selector: 'mcs-slider',
   templateUrl: './slider.component.html',
-  styles: [require('./slider.component.scss')],
+  styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

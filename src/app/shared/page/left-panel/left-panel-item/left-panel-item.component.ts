@@ -14,7 +14,7 @@ type offsetType = 'small' | 'medium' | 'large';
 @Component({
   selector: 'mcs-left-panel-item',
   templateUrl: './left-panel-item.component.html',
-  styles: [require('./left-panel-item.component.scss')],
+  styleUrls: ['./left-panel-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'left-panel-item-wrapper'

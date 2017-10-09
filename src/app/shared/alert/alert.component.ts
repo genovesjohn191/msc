@@ -8,7 +8,7 @@ import { CoreDefinition } from '../../core';
 @Component({
   selector: 'mcs-alert',
   templateUrl: './alert.component.html',
-  styles: [require('./alert.component.scss')],
+  styleUrls: ['./alert.component.scss'],
 })
 
 export class AlertComponent {

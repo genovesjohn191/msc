@@ -28,7 +28,7 @@ import {
 @Component({
   selector: 'mcs-page',
   templateUrl: './page.component.html',
-  styles: [require('./page.component.scss')],
+  styleUrls: ['./page.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

@@ -10,7 +10,7 @@ import { ServerCommand } from '../../models';
 
 @Component({
   selector: 'mcs-server-command',
-  styles: [require('./server-command.component.scss')],
+  styleUrls: ['./server-command.component.scss'],
   templateUrl: './server-command.component.html'
 })
 export class ServerCommandComponent {

@@ -36,7 +36,7 @@ const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 @Component({
   selector: 'mcs-server',
-  styles: [require('./server.component.scss')],
+  styleUrls: ['./server.component.scss'],
   templateUrl: './server.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -35,7 +35,7 @@ const SERVER_NAME_MAX = 15;
 @Component({
   selector: 'mcs-create-self-managed-server',
   templateUrl: './create-self-managed-server.component.html',
-  styles: [require('./create-self-managed-server.component.scss')]
+  styleUrls: ['./create-self-managed-server.component.scss']
 })
 
 export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
