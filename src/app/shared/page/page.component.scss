@@ -35,6 +35,7 @@ $left-panel-navigation-collapse-padding: 6px;
 
     &.left-panel-collapse {
       width: $left-panel-navigation-width;
+      cursor: pointer;
 
       .left-panel-wrapper {
         display: none;
@@ -49,6 +50,10 @@ $left-panel-navigation-collapse-padding: 6px;
       height: $left-panel-navigation-height;
       padding: $left-panel-navigation-padding;
       border-bottom: 1px solid $page-border-color;
+    }
+
+    .placeholder-wrapper {
+      height: 100%;
     }
 
     // Left Panel Styling

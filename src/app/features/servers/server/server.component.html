@@ -1,4 +1,4 @@
-<mcs-page [header]="serverTextContent.header">
+<mcs-page [header]="server.managementName">
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef>
     <!-- listing panel -->
@@ -49,29 +49,21 @@
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="content-wrapper" [mcsLoader]="serverSubscription">
-      <h2 class="title">{{ server.managementName }}</h2>
       <div class="mcs-tabs">
         <ul class="nav nav-tabs" role="tablist">
+
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['management']" routerLinkActive="active">
                 {{ serverTextContent.management.label }}</a>
           </li>
-          <!-- TODO: Temporarily hidden for phase one -->
-          <!-- <li *ngIf="isManaged" class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab"
-              [routerLink]="['services']" routerLinkActive="active">Services</a>
-          </li> -->
+
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['storage']" routerLinkActive="active">
                 {{ serverTextContent.storage.label }}</a>
           </li>
-          <!-- TODO: Temporarily hidden for phase one -->
-          <!-- <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" role="tab"
-              [routerLink]="['backups']" routerLinkActive="active">Backups</a>
-          </li> -->
+
           <li class="nav-item action-cog" *mcsHasPermission="['VmPowerStateEdit']">
             <mcs-server-command [command]="getActionStatus(server)"
               (onClick)="executeServerCommand(server, $event)"></mcs-server-command>

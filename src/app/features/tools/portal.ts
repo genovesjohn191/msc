@@ -1,5 +1,7 @@
+import { PortalAccess } from './portal.access';
+
 export class Portal {
   public name: string;
-  public resource: string;
-  public url: string;
+  public resourceSpecific: boolean;
+  public portalAccess: PortalAccess[];
 }

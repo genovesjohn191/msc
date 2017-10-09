@@ -8,7 +8,6 @@ import {
 } from '../../core';
 import { Portal } from './portal';
 import { ToolsService } from './tools.service';
-import { isNullOrEmpty } from '../../utilities';
 
 export class ToolsDataSource implements McsDataSource<Portal> {
   /**
@@ -45,7 +44,7 @@ export class ToolsDataSource implements McsDataSource<Portal> {
 
         // Remove all portals without resource
         for (let portal of response.content) {
-          if (isNullOrEmpty(portal.resource)) {
+          if (!portal.resourceSpecific) {
             let index = response.content.indexOf(portal, 0);
             response.content.splice(index, 1);
           }
