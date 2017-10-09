@@ -22,7 +22,9 @@ export class McsRoutePermissionGuard {
   constructor(
     private _router: Router,
     private _authenticationService: McsAuthenticationService) {
+  }
 
+  public initializeRouteChecking(): void {
     /** Register Event for Route Activation */
     this._routerEventHandler = this._router.events
       .subscribe((event) => {
@@ -30,6 +32,12 @@ export class McsRoutePermissionGuard {
           this.onNavigateEnd(event);
         }
       });
+  }
+
+  public dispose(): void {
+    if (!isNullOrEmpty(this._routerEventHandler)) {
+      this._routerEventHandler.unsubscribe();
+    }
   }
 
   public onNavigateEnd(navStart: NavigationEnd) {
@@ -45,7 +53,8 @@ export class McsRoutePermissionGuard {
     // Get token if exist
     let authToken = this._authenticationService.getAuthToken();
     if (isNullOrEmpty(authToken)) {
-      this._authenticationService.logIn();
+      // TODO: Set the logout temporary to fixed the issue of error in login page
+      this._authenticationService.logOut();
     }
   }
 

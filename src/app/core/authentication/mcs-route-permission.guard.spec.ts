@@ -49,6 +49,9 @@ describe('McsRoutePermissionGuard', () => {
 
   /** Test Implementation */
   describe('onNavigateEnd', () => {
+    beforeEach(async(() => {
+      mcsRoutePermissionGuard.initializeRouteChecking();
+    }));
 
     // Server Pages
     it('should deny access to /servers route when user has no VmAccess permission', () => {
