@@ -7,7 +7,7 @@ import { McsTextContentProvider } from '../../core';
 @Component({
   selector: 'mcs-dashboard',
   templateUrl: './dashboard.component.html',
-  styles: [require('./dashboard.component.scss')]
+  styleUrls: ['./dashboard.component.scss']
 })
 
 export class DashboardComponent implements OnInit {

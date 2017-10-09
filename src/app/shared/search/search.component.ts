@@ -22,7 +22,7 @@ import { isNullOrEmpty } from '../../utilities';
 @Component({
   selector: 'mcs-search',
   templateUrl: './search.component.html',
-  styles: [require('./search.component.scss')],
+  styleUrls: ['./search.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

@@ -18,7 +18,7 @@ import { refreshView } from '../../utilities';
 @Component({
   selector: 'mcs-state-change-notifications',
   templateUrl: './state-change-notifications.component.html',
-  styles: [require('./state-change-notifications.component.scss')]
+  styleUrls: ['./state-change-notifications.component.scss']
 })
 
 export class StateChangeNotificationsComponent implements OnInit, OnDestroy {

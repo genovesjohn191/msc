@@ -55,7 +55,7 @@ import { DataStatusDefDirective } from './data-status';
 @Component({
   selector: 'mcs-table',
   templateUrl: './table.component.html',
-  styles: [require('./table.component.scss')],
+  styleUrls: ['./table.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

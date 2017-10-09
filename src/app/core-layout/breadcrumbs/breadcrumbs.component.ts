@@ -17,7 +17,7 @@ import { Breadcrumb } from './breadcrumb';
 @Component({
   selector: 'mcs-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
-  styles: [require('./breadcrumbs.component.scss')]
+  styleUrls: ['./breadcrumbs.component.scss']
 })
 
 export class BreadcrumbsComponent implements OnInit, OnDestroy {

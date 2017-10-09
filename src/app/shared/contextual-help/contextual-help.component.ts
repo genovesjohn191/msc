@@ -9,7 +9,7 @@ import { ContextualHelpDirective } from './contextual-help.directive';
 @Component({
   selector: 'mcs-contextual-help',
   templateUrl: './contextual-help.component.html',
-  styles: [require('./contextual-help.component.scss')]
+  styleUrls: ['./contextual-help.component.scss']
 })
 
 export class ContextualHelpComponent {

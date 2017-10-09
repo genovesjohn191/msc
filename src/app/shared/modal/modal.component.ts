@@ -33,7 +33,7 @@ const ATTRIBUTE_MODAL_BODY = 'modal-body';
 @Component({
   selector: 'mcs-modal',
   templateUrl: './modal.component.html',
-  styles: [require('./modal.component.scss')],
+  styleUrls: ['./modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('dialog', [

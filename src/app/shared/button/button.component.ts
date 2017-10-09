@@ -27,7 +27,7 @@ enum IconType {
 @Component({
   selector: 'mcs-button',
   templateUrl: './button.component.html',
-  styles: [require('./button.component.scss')],
+  styleUrls: ['./button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

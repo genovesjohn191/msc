@@ -25,7 +25,7 @@ import {
 @Component({
   selector: 'mcs-app',
   encapsulation: ViewEncapsulation.None,
-  styles: [require('./app.component.scss')],
+  styleUrls: ['./app.component.scss'],
   templateUrl: './app.component.html'
 })
 

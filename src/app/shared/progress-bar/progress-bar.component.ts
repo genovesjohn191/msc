@@ -13,7 +13,7 @@ export const PERCENTAGE_OFFSET = -5;
 @Component({
   selector: 'mcs-progress-bar',
   templateUrl: './progress-bar.component.html',
-  styles: [require('./progress-bar.component.scss')],
+  styleUrls: ['./progress-bar.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

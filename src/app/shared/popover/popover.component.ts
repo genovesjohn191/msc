@@ -16,7 +16,7 @@ import { registerEvent } from '../../utilities';
   selector: 'mcs-popover',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './popover.component.html',
-  styles: [require('./popover.component.scss')]
+  styleUrls: ['./popover.component.scss']
 })
 
 export class PopoverComponent implements OnInit {

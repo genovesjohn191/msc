@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'mcs-content',
   templateUrl: './content.component.html',
-  styles: [require('./content.component.scss')]
+  styleUrls: ['./content.component.scss']
 })
 
 export class ContentComponent {

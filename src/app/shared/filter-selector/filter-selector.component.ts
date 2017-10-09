@@ -15,7 +15,7 @@ import {
 @Component({
   selector: 'mcs-filter-selector',
   templateUrl: './filter-selector.component.html',
-  styles: [require('./filter-selector.component.scss')],
+  styleUrls: ['./filter-selector.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

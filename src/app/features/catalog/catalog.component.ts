@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'mcs-catalog',
   templateUrl: './catalog.component.html',
-  styles: [require('./catalog.component.scss')]
+  styleUrls: ['./catalog.component.scss']
 })
 
 export class CatalogComponent {

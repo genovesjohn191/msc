@@ -32,7 +32,7 @@ import {
 
 @Component({
   selector: 'mcs-firewall',
-  styles: [require('./firewall.component.scss')],
+  styleUrls: ['./firewall.component.scss'],
   templateUrl: './firewall.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

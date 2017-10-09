@@ -25,7 +25,7 @@ import {
 
 @Component({
   selector: 'mcs-firewall-overview',
-  styles: [require('./firewall-overview.component.scss')],
+  styleUrls: ['./firewall-overview.component.scss'],
   templateUrl: './firewall-overview.component.html'
 })
 

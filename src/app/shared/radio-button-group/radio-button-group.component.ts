@@ -22,7 +22,7 @@ import {
 @Component({
   selector: 'mcs-radio-button-group',
   templateUrl: './radio-button-group.component.html',
-  styles: [require('./radio-button-group.component.scss')],
+  styleUrls: ['./radio-button-group.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

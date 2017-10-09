@@ -32,7 +32,7 @@ const FIREWALL_POLICY_SEQUENCE_PLACEHOLDER = 'sequence';
 
 @Component({
   selector: 'mcs-firewall-policies',
-  styles: [require('./firewall-policies.component.scss')],
+  styleUrls: ['./firewall-policies.component.scss'],
   templateUrl: './firewall-policies.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

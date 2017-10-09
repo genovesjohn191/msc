@@ -7,7 +7,7 @@ import { NetworkingModel } from './networking.model';
 @Component({
   selector: 'mcs-networking',
   templateUrl: './networking.component.html',
-  styles: [require('./networking.component.scss')]
+  styleUrls: ['./networking.component.scss']
 })
 
 export class NetworkingComponent {

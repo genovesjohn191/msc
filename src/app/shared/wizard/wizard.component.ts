@@ -16,7 +16,7 @@ import { WizardStepComponent } from './wizard-step/wizard-step.component';
 @Component({
   selector: 'mcs-wizard',
   templateUrl: './wizard.component.html',
-  styles: [require('./wizard.component.scss')]
+  styleUrls: ['./wizard.component.scss']
 })
 
 export class WizardComponent implements AfterContentInit {

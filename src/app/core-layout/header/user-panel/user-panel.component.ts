@@ -22,7 +22,7 @@ import { refreshView } from '../../../utilities';
 @Component({
   selector: 'mcs-user-panel',
   templateUrl: './user-panel.component.html',
-  styles: [require('./user-panel.component.scss')]
+  styleUrls: ['./user-panel.component.scss']
 })
 
 export class UserPanelComponent implements OnInit {

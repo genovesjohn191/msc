@@ -18,7 +18,7 @@ import {
 @Component({
   selector: 'mcs-icon',
   templateUrl: './icon.component.html',
-  styles: [require('./icon.component.scss')],
+  styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

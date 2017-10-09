@@ -36,7 +36,7 @@ import {
 @Component({
   selector: 'mcs-servers',
   templateUrl: './servers.component.html',
-  styles: [require('./servers.component.scss')],
+  styleUrls: ['./servers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

@@ -4,7 +4,7 @@ import { LoaderService } from '../loader.service';
 @Component({
   selector: 'mcs-loader-backdrop',
   templateUrl: './loader-backdrop.component.html',
-  styles: [require('./loader-backdrop.component.scss')]
+  styleUrls: ['./loader-backdrop.component.scss']
 })
 
 export class LoaderBackdropComponent {

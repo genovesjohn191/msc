@@ -22,7 +22,7 @@ import {
 @Component({
   selector: 'mcs-textbox',
   templateUrl: './textbox.component.html',
-  styles: [require('./textbox.component.scss')],
+  styleUrls: ['./textbox.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

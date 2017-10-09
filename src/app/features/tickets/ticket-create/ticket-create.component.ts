@@ -46,7 +46,7 @@ const DETAILS_MAX_CHAR = 4000;
 @Component({
   selector: 'mcs-ticket-create',
   templateUrl: './ticket-create.component.html',
-  styles: [require('./ticket-create.component.scss')],
+  styleUrls: ['./ticket-create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

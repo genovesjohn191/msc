@@ -20,7 +20,7 @@ import {
 @Component({
   selector: 'mcs-running-notification',
   templateUrl: './running-notification.component.html',
-  styles: [require('./running-notification.component.scss')]
+  styleUrls: ['./running-notification.component.scss']
 })
 
 export class RunningNotificationComponent implements OnInit, OnChanges {

@@ -34,7 +34,7 @@ const CUSTOM_MEMORY_MULTIPLE = 4;
 
 @Component({
   selector: 'mcs-server-performance-scale',
-  styles: [require('./server-performance-scale.component.scss')],
+  styleUrls: ['./server-performance-scale.component.scss'],
   templateUrl: './server-performance-scale.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

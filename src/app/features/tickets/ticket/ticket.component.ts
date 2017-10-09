@@ -38,7 +38,7 @@ import { saveAs } from 'file-saver';
 @Component({
   selector: 'mcs-ticket',
   templateUrl: './ticket.component.html',
-  styles: [require('./ticket.component.scss')],
+  styleUrls: ['./ticket.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

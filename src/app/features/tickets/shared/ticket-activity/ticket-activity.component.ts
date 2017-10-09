@@ -14,7 +14,7 @@ import {
 @Component({
   selector: 'mcs-ticket-activity',
   templateUrl: './ticket-activity.component.html',
-  styles: [require('./ticket-activity.component.scss')],
+  styleUrls: ['./ticket-activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

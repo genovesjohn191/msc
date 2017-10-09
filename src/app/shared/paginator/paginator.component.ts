@@ -15,7 +15,7 @@ import {
 @Component({
   selector: 'mcs-paginator',
   templateUrl: './paginator.component.html',
-  styles: [require('./paginator.component.scss')],
+  styleUrls: ['./paginator.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

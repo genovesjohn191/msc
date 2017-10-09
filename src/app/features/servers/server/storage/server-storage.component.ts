@@ -45,7 +45,7 @@ const PRIMARY_STORAGE_NAME = 'Hard disk 1';
 
 @Component({
   selector: 'mcs-server-storage',
-  styles: [require('./server-storage.component.scss')],
+  styleUrls: ['./server-storage.component.scss'],
   templateUrl: './server-storage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -12,7 +12,7 @@ import {
 @Component({
   selector: 'mcs-footer',
   templateUrl: './footer.component.html',
-  styles: [require('./footer.component.scss')]
+  styleUrls: ['./footer.component.scss']
 })
 
 export class FooterComponent implements OnInit {
