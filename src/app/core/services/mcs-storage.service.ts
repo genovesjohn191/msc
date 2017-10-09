@@ -1,22 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AppState } from '../../app.service';
+import { isNullOrEmpty } from '../../utilities';
+import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 
 @Injectable()
 export class McsStorageService {
-  /**
-   * User ID
-   */
-  private _userId: any;
-  public get userId(): any {
-    return this._userId;
-  }
-  public set userId(v: any) {
-    this._userId = v;
-  }
 
-  constructor(private _appState: AppState) {
-    // Get User ID from AppState
-    this._userId = this._appState.get('userId');
+  constructor(private _authIdentity: McsAuthenticationIdentity) {
   }
 
   /**
@@ -82,7 +71,8 @@ export class McsStorageService {
     let localStorageKey: string = '';
 
     // Create Key
-    localStorageKey = this._userId + '_' + key;
+    localStorageKey = !isNullOrEmpty(this._authIdentity) ?
+      `${this._authIdentity.userId}_${key}` : key;
     return localStorageKey;
   }
 }

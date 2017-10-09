@@ -1,7 +1,8 @@
 import {
   mergeArrays,
   addOrUpdateArrayRecord,
-  deleteArrayRecord
+  deleteArrayRecord,
+  compareArrays
 } from './mcs-array.function';
 
 // Dummy class
@@ -96,32 +97,32 @@ describe('ARRAY Functions', () => {
 
     it(`should add the record at the end of the array
       when the insertIndex is not set`, () => {
-      let arrayRecord: TestStructure[] = [
-        new TestStructure('1', 'hello'),
-        new TestStructure('2', 'world')
-      ];
-      let updatedElement: TestStructure = new TestStructure('3', 'earth');
+        let arrayRecord: TestStructure[] = [
+          new TestStructure('1', 'hello'),
+          new TestStructure('2', 'world')
+        ];
+        let updatedElement: TestStructure = new TestStructure('3', 'earth');
 
-      let mergedArray = addOrUpdateArrayRecord(
-        arrayRecord, updatedElement, false);
-      expect(mergedArray.length).toEqual(3);
-      expect(mergedArray[2]).toEqual(updatedElement);
-    });
+        let mergedArray = addOrUpdateArrayRecord(
+          arrayRecord, updatedElement, false);
+        expect(mergedArray.length).toEqual(3);
+        expect(mergedArray[2]).toEqual(updatedElement);
+      });
 
     it(`should add the record to the set index value
       when  insertIndex is set`, () => {
-      let insertIndex = 1;
-      let arrayRecord: TestStructure[] = [
-        new TestStructure('1', 'hello'),
-        new TestStructure('2', 'world')
-      ];
-      let updatedElement: TestStructure = new TestStructure('3', 'earth');
+        let insertIndex = 1;
+        let arrayRecord: TestStructure[] = [
+          new TestStructure('1', 'hello'),
+          new TestStructure('2', 'world')
+        ];
+        let updatedElement: TestStructure = new TestStructure('3', 'earth');
 
-      let mergedArray = addOrUpdateArrayRecord(
-        arrayRecord, updatedElement, false, undefined, insertIndex);
-      expect(mergedArray.length).toEqual(3);
-      expect(mergedArray[insertIndex]).toEqual(updatedElement);
-    });
+        let mergedArray = addOrUpdateArrayRecord(
+          arrayRecord, updatedElement, false, undefined, insertIndex);
+        expect(mergedArray.length).toEqual(3);
+        expect(mergedArray[insertIndex]).toEqual(updatedElement);
+      });
   });
 
   describe('deleteArrayRecord()', () => {
@@ -149,6 +150,89 @@ describe('ARRAY Functions', () => {
         return record.value === 'hello1';
       }, 2);
       expect(listItems.length).toEqual(1);
+    });
+  });
+
+  describe('compareArrays()', () => {
+    it(`should return -1 when the first array has larger content
+    with compare to second array`, () => {
+        let firstArray: TestStructure[] = new Array();
+        let secondArray: TestStructure[] = new Array();
+        let comparisonResult: number;
+
+        firstArray.push(new TestStructure('1', 'hello1'));
+        firstArray.push(new TestStructure('2', 'hello1'));
+        firstArray.push(new TestStructure('3', 'hello2'));
+        firstArray.push(new TestStructure('4', 'hello2'));
+
+        secondArray.push(new TestStructure('1', 'hello1'));
+        secondArray.push(new TestStructure('2', 'hello1'));
+        secondArray.push(new TestStructure('3', 'hello2'));
+
+        comparisonResult = compareArrays(firstArray, secondArray, (_first, _second) => {
+          return _first.key === _second.key;
+        });
+        expect(comparisonResult).toEqual(-1);
+      });
+
+    it(`should return 1 when the second array has larger content
+    with compare to first array`, () => {
+        let firstArray: TestStructure[] = new Array();
+        let secondArray: TestStructure[] = new Array();
+        let comparisonResult: number;
+
+        firstArray.push(new TestStructure('1', 'hello1'));
+        firstArray.push(new TestStructure('2', 'hello1'));
+        firstArray.push(new TestStructure('3', 'hello2'));
+
+        secondArray.push(new TestStructure('1', 'hello1'));
+        secondArray.push(new TestStructure('2', 'hello1'));
+        secondArray.push(new TestStructure('3', 'hello2'));
+        secondArray.push(new TestStructure('4', 'hello2'));
+
+        comparisonResult = compareArrays(firstArray, secondArray, (_first, _second) => {
+          return _first.key === _second.key;
+        });
+        expect(comparisonResult).toEqual(1);
+      });
+
+    it(`should return 0 when both arrays are the same`, () => {
+      let firstArray: TestStructure[] = new Array();
+      let secondArray: TestStructure[] = new Array();
+      let comparisonResult: number;
+
+      firstArray.push(new TestStructure('1', 'hello1'));
+      firstArray.push(new TestStructure('2', 'hello1'));
+      firstArray.push(new TestStructure('3', 'hello2'));
+
+      secondArray.push(new TestStructure('1', 'hello1'));
+      secondArray.push(new TestStructure('2', 'hello1'));
+      secondArray.push(new TestStructure('3', 'hello2'));
+
+      comparisonResult = compareArrays(firstArray, secondArray, (_first, _second) => {
+        return _first.key === _second.key;
+      });
+
+      expect(comparisonResult).toEqual(0);
+    });
+
+    it(`should return -2 when both array records are not the same`, () => {
+      let firstArray: TestStructure[] = new Array();
+      let secondArray: TestStructure[] = new Array();
+      let comparisonResult: number;
+
+      firstArray.push(new TestStructure('1', 'hello1'));
+      firstArray.push(new TestStructure('2', 'hello1'));
+      firstArray.push(new TestStructure('3', 'hello2'));
+
+      secondArray.push(new TestStructure('1', 'hello1'));
+      secondArray.push(new TestStructure('2', 'hello1'));
+      secondArray.push(new TestStructure('4', 'hello2'));
+
+      comparisonResult = compareArrays(firstArray, secondArray, (_first, _second) => {
+        return _first.key === _second.key;
+      });
+      expect(comparisonResult).toEqual(-2);
     });
   });
 });

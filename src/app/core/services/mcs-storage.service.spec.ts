@@ -4,22 +4,15 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { McsStorageService } from './mcs-storage.service';
-import { AppState } from '../../app.service';
+import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { CoreTestingModule } from '../testing';
 
 describe('McsStorageService', () => {
 
   /** Declare Service */
   let mcsStorageService: McsStorageService;
-  let appState: AppState;
   let key: string = 'key_test';
   let userId: string = 'F500120501';
-
-  /** Initialize Service */
-  beforeEach(async(() => {
-    appState = new AppState();
-    appState.set('userId', userId);
-  }));
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -33,7 +26,12 @@ describe('McsStorageService', () => {
     });
 
     /** Testbed Override Provider */
-    TestBed.overrideProvider(McsStorageService, { useValue: new McsStorageService(appState) });
+    TestBed.overrideProvider(McsStorageService, {
+      useValue: new McsStorageService({
+        companyId: '12345',
+        userId: 'F500120501'
+      } as McsAuthenticationIdentity)
+    });
 
     /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
