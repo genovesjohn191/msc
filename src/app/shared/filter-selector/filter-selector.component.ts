@@ -11,6 +11,10 @@ import {
   McsStorageService,
   McsFilterProvider
 } from '../../core';
+import {
+  isNullOrEmpty,
+  compareArrays
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-filter-selector',
@@ -69,12 +73,23 @@ export class FilterSelectorComponent implements OnInit {
   }
 
   /**
-   * Get the filter items in the storage or default filter settings
+   * Get the filter items in the storage and check if it is updated or not
+   * otherwise get default filter settings
    */
   private _getFilterItems(): void {
     this.filterItems = this._mcsStorageService.getItem<any>(this.key);
-    if (!this.filterItems) {
+
+    if (isNullOrEmpty(this.filterItems)) {
       this.filterItems = this._filterProvider.getDefaultFilters(this.key);
+    } else {
+      let comparison: number = 0;
+      let defaultFilterKeys = Object.keys(this._filterProvider.getDefaultFilters(this.key));
+      let filterItemKeys = Object.keys(this.filterItems);
+
+      comparison = compareArrays(defaultFilterKeys, filterItemKeys);
+      if (comparison !== 0) {
+        this.filterItems = this._filterProvider.getDefaultFilters(this.key);
+      }
     }
   }
 }

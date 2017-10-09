@@ -119,3 +119,41 @@ export function deleteArrayRecord<T>(
 
   return sourceArray;
 }
+
+/**
+ * Compare 2 array record based on predicate definition
+ * 1 = First array is greater than second array
+ * 0 = Both arrays are the same
+ * -1 = Second array is greater than first array
+ * -2 = Array records are not the same
+ * @param firstArray First Array to be compared
+ * @param secondArray Second Array to be compared
+ * @param predicate Predicate definition to be use as comparison,
+ * default comparison method will be use when this predicate is not given.
+ */
+export function compareArrays<T>(
+  firstArray: T[],
+  secondArray: T[],
+  predicate?: (_p1: T, _p2: T) => boolean): number {
+  let contentType: number = 0;
+
+  // Initialize for undefined and null record
+  if (!firstArray) { firstArray = new Array(); }
+  if (!secondArray) { secondArray = new Array(); }
+
+  // Set the default comparer when the predicate is not provided
+  if (!predicate) { predicate = (_rec1, _rec2) => _rec1 === _rec2; }
+
+  // Check record count
+  if (firstArray.length > secondArray.length) { return contentType = -1; }
+  if (secondArray.length > firstArray.length) { return contentType = 1; }
+
+  // Check record content
+  for (let index = 0; index < firstArray.length; index++) {
+    if (!predicate(firstArray[index], secondArray[index])) {
+      contentType = -2;
+      break;
+    }
+  }
+  return contentType;
+}
