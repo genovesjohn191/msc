@@ -123,6 +123,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_COMMENT = 'comment';
   public static ASSETS_FONT_ATTACHMENT = 'attachment';
   public static ASSETS_FONT_NAVBAR = 'navbar';
+  public static ASSETS_FONT_ANGLE_DOUBLE_RIGHT = 'angle-double-right';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serversListingFilter';

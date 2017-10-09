@@ -19,7 +19,7 @@
         </ng-container>
 
         <!-- Description Column -->
-        <ng-container mcsColumnDef="description">
+        <ng-container mcsColumnDef="resourceSpecific">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ textContent.table.header.description }}
           </mcs-header-cell>
@@ -29,12 +29,14 @@
         </ng-container>
 
         <!-- Access Column -->
-        <ng-container mcsColumnDef="url">
+        <ng-container mcsColumnDef="portalAccess">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ textContent.table.header.access }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a [href]="row.url" target="_blank">{{ row.resource }} <br />(requires login)</a>
+            <div *ngFor="let access of row.portalAccess" class="access-link-wrapper">
+              <a [href]="access.url" target="_blank">{{ access.name }} <br />(requires login)</a>
+            </div>
           </mcs-data-cell>
         </ng-container>
 

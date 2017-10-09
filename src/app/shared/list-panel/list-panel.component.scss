@@ -69,7 +69,7 @@ $list-item-border-color: $color-primary-01;
       margin-top: $space-xsmall;
     }
 
-    &.active {
+    &.active, &:hover {
       :not(.icon-container) {
         font-family: $list-item-font-family-active;
       }

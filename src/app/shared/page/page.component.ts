@@ -59,13 +59,13 @@ export class PageComponent implements AfterContentInit {
   /**
    * Determine weather the left panel is collapsed
    */
-  private _showLeftPanel: boolean;
-  public get showLeftPanel(): boolean {
-    return this._showLeftPanel;
+  private _leftPanelIsVisible: boolean;
+  public get leftPanelIsVisible(): boolean {
+    return this._leftPanelIsVisible;
   }
-  public set showLeftPanel(value: boolean) {
-    if (this._showLeftPanel !== value) {
-      this._showLeftPanel = value;
+  public set leftPanelIsVisible(value: boolean) {
+    if (this._leftPanelIsVisible !== value) {
+      this._leftPanelIsVisible = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -108,13 +108,13 @@ export class PageComponent implements AfterContentInit {
     private _renderer: Renderer2,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this.showLeftPanel = true;
+    this.leftPanelIsVisible = true;
     this.hasLeftPanel = true;
   }
 
   public get navIconKey(): string {
-    return this.showLeftPanel ? CoreDefinition.ASSETS_FONT_CLOSE :
-      CoreDefinition.ASSETS_FONT_NAVBAR;
+    return this.leftPanelIsVisible ? CoreDefinition.ASSETS_FONT_CLOSE :
+      CoreDefinition.ASSETS_FONT_ANGLE_DOUBLE_RIGHT;
   }
 
   public ngAfterContentInit(): void {
@@ -143,12 +143,25 @@ export class PageComponent implements AfterContentInit {
    * Set the class of the left panel if it shown or hidden
    */
   public toggleLeftPanel(): void {
-    if (this.showLeftPanel) {
+    this._changePanelDisplay(this.leftPanelIsVisible);
+  }
+
+  /**
+   * Set the class of the left panel if it shown or hidden
+   */
+  public showLeftPanel(): void {
+    if (!this.leftPanelIsVisible) {
+      this._changePanelDisplay(false);
+    }
+  }
+
+  private _changePanelDisplay(collapse: boolean) {
+    if (collapse) {
       this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
-      this.showLeftPanel = false;
+      this.leftPanelIsVisible = false;
     } else {
       this._renderer.removeClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
-      this.showLeftPanel = true;
+      this.leftPanelIsVisible = true;
     }
   }
 }

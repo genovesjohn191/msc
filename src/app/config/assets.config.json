@@ -26,7 +26,8 @@
     "info-2": "fa fa-info",
     "comment": "fa fa-comment",
     "attachment": "fa fa-paperclip",
-    "navbar": "fa fa-bars"
+    "navbar": "fa fa-bars",
+    "angle-double-right": "fa fa-angle-double-right"
   },
   "svgIcons": {
     "no-icon-available": "no-icon-available.svg",

@@ -7,8 +7,9 @@
     <mcs-icon (click)="toggleLeftPanel()" [key]="navIconKey"
       cursor="pointer" [hidden]="!hasLeftPanel"></mcs-icon>
   </div>
-
-  <ng-container mcsLeftPanelPlaceholder></ng-container>
+  <div display-flex class="placeholder-wrapper" (click)="showLeftPanel()">
+    <ng-container mcsLeftPanelPlaceholder></ng-container>
+  </div>
 </div>
 
 <!-- Top and Content Panel Wrapper -->

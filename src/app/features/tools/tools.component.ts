@@ -27,7 +27,7 @@ export class ToolsComponent implements OnInit {
   ) {
     this.textContent = this._textContentProvider.content.tools;
     this._initializeToolDescriptionMap();
-    this.dataColumns = ['name','description', 'url'];
+    this.dataColumns = ['name','resourceSpecific', 'portalAccess'];
   }
 
   public ngOnInit(): void {
