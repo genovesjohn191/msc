@@ -4,7 +4,7 @@ import { McsAuthenticationService } from '../../core';
 @Component({
   selector: 'mcs-default-page',
   templateUrl: './default-page.component.html',
-  styles: [require('./default-page.component.scss')]
+  styleUrls: ['./default-page.component.scss']
 })
 
 export class DefaultPageComponent {

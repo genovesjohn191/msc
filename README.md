@@ -101,6 +101,10 @@ Environment variable setup can be done both in the container build process and w
 ## Development
 - Simply supply your values in `assets/env.config.js`
 
+## Development AoT Testing
+- First build app in AoT `npm run build:aot`
+- Test in browser using `npm run server:prod:ci`
+
 ## Build
 1. Customize environment variables from the `env.setup` file on the root directory. 
 2. Set the variables by calling `$ source ./env.setup` from the root directory.
@@ -120,6 +124,8 @@ The following are some things that will make AoT compile fail.
 - Don’t use `control.errors?.someError`, use `control.hasError(‘someError’)`
 - Don’t use functions in your providers, routes or declarations, export a function and then reference that function name
 - @Inputs, @Outputs, View or Content Child(ren), Hostbindings, and any field you use from the template or annotate for Angular should be public
+- https://github.com/rangle/angular-2-aot-sandbox#aot-dos-and-donts
+
 
 # Updating Dependencies
 Run `npm install -g npm-check-updates` to install CLI-tool.
