@@ -1,6 +1,6 @@
 <mcs-page [header]="server.managementName">
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef>
+  <mcs-left-panel *mcsLeftPanelDef="serverTextContent.leftPanelHeader">
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="serverTextContent.panel">
       <div class="listing-panel-wrapper">

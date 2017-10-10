@@ -5,7 +5,7 @@
     <!-- Notifications Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="total-record-count">
+        <div class="total-record-count right-align">
           <span>{{ recordsFoundLabel }}</span>
         </div>
       </div>
@@ -13,7 +13,7 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef>
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
       <mcs-search *ngIf="!isMobile" #search></mcs-search>

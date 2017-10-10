@@ -189,6 +189,7 @@
 // Rotate
 @mixin rotate($value) {
   -webkit-transform: rotate($value + deg);
+     -moz-transform: rotate($value + deg);
       -ms-transform: rotate($value + deg);
           transform: rotate($value + deg);
 }
@@ -203,6 +204,7 @@
 // Translate
 @mixin translate($xValue, $yValue) {
   -webkit-transform: translate($Xvalue, $Yvalue);
+     -moz-transform: translate($Xvalue, $Yvalue);
       -ms-transform: translate($Xvalue, $Yvalue);
           transform: translate($Xvalue, $Yvalue);
 }
@@ -211,6 +213,20 @@
 
 // .div {
 //   @include translate(15px, 30px);
+// }
+
+// Translate Rotate
+@mixin transform($value) {
+  -webkit-transform: $value;
+     -moz-transform: $value;
+      -ms-transform: $value;
+          transform: $value;
+}
+
+// Usage
+
+// .div {
+//   @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
 // }
 
 // Box Shadow

@@ -10,6 +10,7 @@ $top-panel-item-padding: $page-header-padding;
 $action-item-hover-color: $color-grey-07;
 $action-item-active-color: $color-grey-06;
 // Left Panel Definition
+$left-panel-header-font-size: $font-default;
 $left-panel-width: 275px;
 $left-panel-icon-padding: $space-small;
 $left-panel-item-padding: $space-medium;
@@ -54,6 +55,17 @@ $left-panel-navigation-collapse-padding: 6px;
 
     .placeholder-wrapper {
       height: 100%;
+      position: relative;
+      display: inline-block;
+
+      .left-panel-label {
+        font-size: $left-panel-header-font-size;
+        position: absolute;
+        text-align: right;
+        top: 210px;
+        left: 50%;
+        width: 400px;
+      }
     }
 
     // Left Panel Styling

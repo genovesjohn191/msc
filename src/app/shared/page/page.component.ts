@@ -84,6 +84,12 @@ export class PageComponent implements AfterContentInit {
     }
   }
 
+  public get leftPanelHeader(): string {
+    return this._leftPanelDefinition === undefined
+      ? ''
+      : this._leftPanelDefinition.header;
+  }
+
   /** Placeholder of panel directives */
   @ViewChild(ContentPanelPlaceholderDirective)
   private _contentPanelPlaceholder: ContentPanelPlaceholderDirective;

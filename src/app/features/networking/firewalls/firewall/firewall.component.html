@@ -1,6 +1,6 @@
 <mcs-page [header]="header">
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef>
+  <mcs-left-panel *mcsLeftPanelDef="firewallTextContent.leftPanelHeader">
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="firewallTextContent.panel">
       <div class="listing-panel-wrapper">
@@ -53,7 +53,7 @@
               {{ firewallTextContent.policies.label }}</a>
           </li>
           <li class="nav-item action-cog">
-            <mcs-icon class="action" [key]="cogIconKey" size="large"
+            <mcs-icon class="action" [key]="cogIconKey" size="medium"
               mcsPopover placement="bottom" orientation="left" theme="light"
               padding="narrow" [content]="actionContent" cursor="pointer">
             </mcs-icon>
