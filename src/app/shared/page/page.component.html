@@ -4,10 +4,12 @@
 
   <div display-flex flex="none" justify-content="flex-end"
     align-items="center" class="left-nav-wrapper">
+    <span [hidden]="!leftPanelIsVisible" class="left-align">{{ leftPanelHeader }}</span>
     <mcs-icon (click)="toggleLeftPanel()" [key]="navIconKey"
       cursor="pointer" [hidden]="!hasLeftPanel"></mcs-icon>
   </div>
   <div display-flex class="placeholder-wrapper" (click)="showLeftPanel()">
+    <div [hidden]="leftPanelIsVisible" class="left-panel-label rotate-sideways">{{ leftPanelHeader }}</div>
     <ng-container mcsLeftPanelPlaceholder></ng-container>
   </div>
 </div>

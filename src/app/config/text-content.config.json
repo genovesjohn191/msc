@@ -23,6 +23,7 @@
   "servers": {
     "title": "Macquarie Cloud Services: Servers",
     "header": "Servers",
+    "leftPanelHeader": "Server Filter",
     "newServer": "New Server",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
     "noServers": "No servers to display.",
@@ -61,6 +62,7 @@
     },
     "server": {
       "header": "Servers",
+      "leftPanelHeader": "Server Filter",
       "panel": "Listing Panel",
       "management": {
         "label": "Management",
@@ -164,6 +166,7 @@
   "tickets": {
     "title": "Macquarie Cloud Services: Tickets",
     "header": "Tickets",
+    "leftPanelHeader": "Ticket Filter",
     "description": "Below is the list of your Macquarie Cloud Services tickets.",
     "newTicket": "New Ticket",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of tickets.",
@@ -215,6 +218,7 @@
   "firewalls": {
     "title": "Macquarie Cloud Services: Networking",
     "header": "Firewalls",
+    "leftPanelHeader": "Firewall Filter",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
     "noFirewalls": "No firewalls to display.",
     "retry": "Try again shortly",
@@ -224,6 +228,7 @@
     "dataPlural": "Firewalls",
     "firewall": {
       "header": "Firewall",
+      "leftPanelHeader": "Firewall Filter",
       "panel": "Listing Panel",
       "overview": {
         "label": "Overview",
@@ -320,6 +325,7 @@
   "notifications": {
     "title": "Macquarie Cloud Services: Notifications",
     "header": "Notifications",
+    "leftPanelHeader": "Notification Filter",
     "description": "Notifications play back and track activity within the portal.",
     "filterColumn": "Filter Column",
     "tableSearch": "Table Search",

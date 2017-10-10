@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef>
 
     <!-- Server Creation -->
-    <mcs-top-panel-item *mcsTopPanelItemDef>
+    <mcs-top-panel-item *mcsLeftPanelDef="textContent.leftPanelHeader">
       <div class="action-item" cursor="pointer" (click)="onClickNewServerButton()">
         <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
         <span>{{ textContent.newServer }}</span>

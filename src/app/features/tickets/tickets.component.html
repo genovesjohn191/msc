@@ -18,7 +18,7 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef>
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
       <mcs-search *ngIf="!isMobile" #search></mcs-search>
