@@ -1,3 +1,7 @@
-<input type="checkbox" [(ngModel)]="isChecked" id="{{ label }}" 
-  (click)="onClickEvent($event)">
-<label for="{{ label }}">{{ label }}</label>
+<input type="checkbox"
+  [id]="id"
+  [(ngModel)]="isChecked"
+  [indeterminate]="indeterminate"
+  (click)="onClickEvent($event)"
+  (blur)="onBlur()">
+<label [for]="id">{{ label }}</label>

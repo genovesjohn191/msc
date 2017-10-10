@@ -22,6 +22,11 @@
     }
   },
   "serversListingFilter": {
+    "select": {
+      "text": "Select",
+      "value": true,
+      "exclude": true
+    },
     "name": {
       "text": "Name",
       "value": true,

@@ -8,6 +8,7 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 import { Server } from './models';
 import { ServersService } from './servers.service';
 
@@ -26,6 +27,19 @@ export class ServersDataSource implements McsDataSource<Server> {
   }
   public set totalRecordCount(value: number) {
     this._totalRecordCount = value;
+  }
+
+  /**
+   * Current displayed record on the table listing
+   */
+  private _displayedRecord: Server[];
+  public get displayedRecord(): Server[] {
+    return this._displayedRecord;
+  }
+  public set displayedRecord(value: Server[]) {
+    if (this._displayedRecord !== value) {
+      this._displayedRecord = value;
+    }
   }
 
   constructor(
@@ -76,8 +90,18 @@ export class ServersDataSource implements McsDataSource<Server> {
    * This will invoke when the data obtainment is completed
    * @param servers Data to be provided when the datasource is connected
    */
-  public onCompletion(_status: McsDataStatus): void {
+  public onCompletion(_status: McsDataStatus, _record: Server[]): void {
     // Execute all data from completion
     this._paginator.pageCompleted();
+    this.displayedRecord = _record;
+  }
+
+  /**
+   * Get the displayed server by ID
+   * @param serverId Server Id to obtained
+   */
+  public getDisplayedServerById(serverId: any): Server {
+    if (isNullOrEmpty(this.displayedRecord)) { return ;}
+    return this.displayedRecord.find((server) => server.id === serverId);
   }
 }

@@ -1,10 +1,13 @@
 import {
   Component,
+  Input,
   ChangeDetectionStrategy,
   ViewChild,
   ContentChildren,
   AfterContentInit,
-  QueryList
+  QueryList,
+  ElementRef,
+  Renderer2
 } from '@angular/core';
 import { isNullOrEmpty } from '../../../utilities';
 import {
@@ -28,17 +31,42 @@ import {
 
 export class TopPanelComponent implements AfterContentInit {
 
+  @Input()
+  public get active(): boolean {
+    return this._active;
+  }
+  public set active(value: boolean) {
+    if (this._active !== value) {
+      this._active = value;
+      this._setActiveParentElement(value);
+    }
+  }
+  private _active: boolean;
+
   @ViewChild(TopPanelItemPlaceholderDirective)
   private _topPanelItemPlaceholder: TopPanelItemPlaceholderDirective;
 
   @ContentChildren(TopPanelItemDefDirective)
   private _topPanelItemDefinition: QueryList<TopPanelItemDefDirective>;
 
+  constructor(
+    private _elementRef: ElementRef,
+    private _renderer: Renderer2
+  ) { }
+
   public ngAfterContentInit() {
     if (!isNullOrEmpty(this._topPanelItemDefinition)) {
       this._topPanelItemDefinition.forEach((item) => {
         this._topPanelItemPlaceholder.viewContainer.createEmbeddedView(item.template);
       });
+    }
+  }
+
+  private _setActiveParentElement(value: boolean): void {
+    if (value) {
+      this._renderer.addClass(this._elementRef.nativeElement.parentElement, 'active');
+    } else {
+      this._renderer.removeClass(this._elementRef.nativeElement.parentElement, 'active');
     }
   }
 }

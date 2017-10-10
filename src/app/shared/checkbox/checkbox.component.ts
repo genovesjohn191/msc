@@ -13,6 +13,8 @@ import {
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 
+let UNIQUE_ID: number = 0;
+
 @Component({
   selector: 'mcs-checkbox',
   templateUrl: './checkbox.component.html',
@@ -32,11 +34,35 @@ import {
 })
 
 export class CheckboxComponent implements ControlValueAccessor {
+  @Output()
+  public onClick: EventEmitter<any> = new EventEmitter();
+
+  @Input()
+  public id: string;
+
   @Input()
   public label: string;
 
-  @Output()
-  public onClick: EventEmitter<any> = new EventEmitter();
+  @Input()
+  public indeterminate: boolean;
+
+  @Input()
+  public get checked(): boolean {
+    return this._checked;
+  }
+  public set checked(value: boolean) {
+    if (this._checked !== value) {
+      this._checked = value;
+      this.isChecked = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _checked: boolean;
+
+  /**
+   * This will generate a new unique id if the id is not given
+   */
+  private _nextUniqueId: number = ++UNIQUE_ID;
 
   /**
    * On Touched Event Callback
@@ -58,16 +84,24 @@ export class CheckboxComponent implements ControlValueAccessor {
   public set isChecked(value: boolean) {
     if (value !== this._isChecked) {
       this._isChecked = value;
-      this._onChanged(value);
+      if (this._onChanged) {
+        this._onChanged(value);
+      }
+      this._changeDetectorRef.markForCheck();
     }
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.label = '';
+    this.id = `mcs-checkbox-${this._nextUniqueId}`;
   }
 
   public onClickEvent($event) {
     this.onClick.emit($event);
+  }
+
+  public onBlur(): void {
+    this._onTouched();
   }
 
   /**
@@ -75,9 +109,8 @@ export class CheckboxComponent implements ControlValueAccessor {
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (value !== this._isChecked) {
-      this._isChecked = value;
-      this._changeDetectorRef.markForCheck();
+    if (value !== this.isChecked) {
+      this.isChecked = value;
     }
   }
 

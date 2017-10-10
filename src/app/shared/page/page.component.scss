@@ -34,9 +34,13 @@ $left-panel-navigation-collapse-padding: 6px;
     width: $left-panel-width;
     border-right: 1px solid $page-border-color;
 
+    .horizontal-label {
+      white-space: nowrap;
+    }
+
+
     &.left-panel-collapse {
       width: $left-panel-navigation-width;
-      cursor: pointer;
 
       .left-panel-wrapper {
         display: none;
@@ -54,12 +58,9 @@ $left-panel-navigation-collapse-padding: 6px;
     }
 
     .placeholder-wrapper {
-      height: 100%;
       position: relative;
-      display: inline-block;
 
-      .left-panel-label {
-        font-size: $left-panel-header-font-size;
+      .vertical-label {
         position: absolute;
         text-align: right;
         top: 210px;
@@ -98,6 +99,10 @@ $left-panel-navigation-collapse-padding: 6px;
       border-bottom: 1px solid $page-border-color;
       height: $top-panel-height;
 
+      &.active {
+        border-bottom: 1px solid $color-primary-00;
+      }
+
       .page-header {
         padding: $page-header-padding;
         margin: 0;
@@ -119,7 +124,6 @@ $left-panel-navigation-collapse-padding: 6px;
 
           .action-item {
             padding: $top-panel-item-padding;
-            border-bottom: 1px solid $page-border-color;
             height: 100%;
             @include display-flex(row);
             align-items: center;
