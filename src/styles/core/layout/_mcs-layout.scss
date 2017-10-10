@@ -58,3 +58,8 @@
 .read-only {
   color: $color-grey-02;
 }
+
+.disabled-element {
+  opacity: 0.4;
+  pointer-events: none;
+}

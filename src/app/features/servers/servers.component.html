@@ -1,9 +1,9 @@
 <mcs-page [header]="textContent.header">
   <!-- Top Panel -->
-  <mcs-top-panel *mcsTopPanelDef>
+  <mcs-top-panel *mcsTopPanelDef [active]="selection.hasValue()">
 
     <!-- Server Creation -->
-    <mcs-top-panel-item *mcsLeftPanelDef="textContent.leftPanelHeader">
+    <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="action-item" cursor="pointer" (click)="onClickNewServerButton()">
         <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
         <span>{{ textContent.newServer }}</span>
@@ -13,17 +13,23 @@
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="action-item hidden-medium" cursor="pointer">
+        <div class="action-item hidden-medium" cursor="pointer"
+          [disabled]="!startable || !selection.hasValue()"
+          (click)="executeTopPanelAction('Start')">
           <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
           <span>{{ textContent.start }}</span>
         </div>
 
-        <div class="action-item hidden-medium" cursor="pointer">
+        <div class="action-item hidden-medium" cursor="pointer"
+          [disabled]="!stoppable || !selection.hasValue()"
+          (click)="executeTopPanelAction('Stop')">
           <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
           <span>{{ textContent.stop }}</span>
         </div>
 
-        <div class="action-item hidden-medium" cursor="pointer">
+        <div class="action-item hidden-medium" cursor="pointer"
+          [disabled]="!restartable || !selection.hasValue()"
+          (click)="executeTopPanelAction('Restart')">
           <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
           <span>{{ textContent.restart }}</span>
         </div>
@@ -36,7 +42,7 @@
   </mcs-top-panel>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef>
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
       <mcs-search *ngIf="!isMobile" #search></mcs-search>
@@ -58,6 +64,21 @@
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
+        <!-- Selection Column -->
+        <ng-container mcsColumnDef="select">
+          <mcs-header-cell *mcsHeaderCellDef class="text-center action-cell">
+            <mcs-checkbox (change)="toggleSelectAll()"
+              [checked]="isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mcs-checkbox>
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
+            <mcs-checkbox (change)="selection.toggle(row.id)"
+              [checked]="selection.isSelected(row.id)">
+            </mcs-checkbox>
+          </mcs-data-cell>
+        </ng-container>
+
         <!-- Name Column -->
         <ng-container mcsColumnDef="name">
           <mcs-header-cell *mcsHeaderCellDef>
@@ -71,11 +92,11 @@
             </ng-template>
 
             <div class="emphasize">
-              <div *ngIf="getServerPowerstate(row)">
+              <div *ngIf="getServerPowerState(row)">
                 <mcs-icon [key]="getStateIconKey(row.powerState)"
                   size="small"></mcs-icon>
               </div>
-              <div *ngIf="!getServerPowerstate(row)" class="power-state-spinner">
+              <div *ngIf="!getServerPowerState(row)" class="power-state-spinner">
                 <mcs-icon [key]="spinnerIconKey" size="small"
                   mcsPopover trigger="hover" maxWidth="250px" padding="none"
                   [content]="loadingContent"></mcs-icon>
@@ -147,11 +168,12 @@
 
         <!-- Action Column TODO: add restriction here VmPowerStateEdit -->
         <ng-container mcsColumnDef="action">
-          <mcs-header-cell *mcsHeaderCellDef>
+          <mcs-header-cell *mcsHeaderCellDef class="action-cell">
             <!-- {{ columnSettings.action.text }} -->
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
             <mcs-server-command [command]="getActionStatus(row)"
+              (click)="$event.stopPropagation()"
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>
         </ng-container>
@@ -171,7 +193,9 @@
 
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          [ngClass]="{'active-row': selection.isSelected(row.id)}"
+          (click)="selection.toggle(row.id)"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

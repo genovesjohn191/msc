@@ -17,6 +17,8 @@ $table-header-font-size: $font-size-default;
 $table-data-even-background-color: $color-grey-07;
 $table-data-font-size: $font-size-default;
 $table-data-cell-padding: $space-xsmall $table-cell-side-padding;
+$table-data-border-color: $color-grey-05;
+$table-data-hover-background-color: $color-grey-07;
 
 // Table cells
 $table-cell-divider-color: $color-white;
@@ -67,14 +69,16 @@ mcs-table {
     display: table-row;
     text-align: left;
     white-space: nowrap;
+    border-bottom: 1px solid $table-data-border-color;
 
-    &:nth-of-type(even) {
-      background-color: $table-data-even-background-color;
+    &:hover {
+      background-color: $table-data-hover-background-color;
     }
 
     mcs-data-cell {
       @extend %cell-style;
       @include font-size($table-data-font-size);
+      border-right: none;
       font-family: $circular-pro-book;
       padding: $table-data-cell-padding;
     }

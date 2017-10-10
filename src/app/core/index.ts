@@ -29,6 +29,7 @@ export * from './models/mcs-list';
 export * from './models/mcs-list-item';
 export * from './models/mcs-list-panel-item';
 export * from './models/mcs-size';
+export * from './models/mcs-selection';
 /** Enumerations */
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-user-type.enum';

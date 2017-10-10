@@ -2,16 +2,17 @@
 <div #pageLeftElement display-flex="column" flex="none"
   class="page-left-wrapper hidden-small" [hidden]="!hasLeftPanel">
 
-  <div display-flex flex="none" justify-content="flex-end"
-    align-items="center" class="left-nav-wrapper">
-    <span [hidden]="!leftPanelIsVisible" class="left-align">{{ leftPanelHeader }}</span>
-    <mcs-icon (click)="toggleLeftPanel()" [key]="navIconKey"
+  <div display-flex flex="none" align-items="center" class="left-nav-wrapper">
+    <span class="horizontal-label" [hidden]="!leftPanelIsVisible">{{ leftPanelHeader }}</span>
+    <mcs-icon [key]="navIconKey" class="right-align" (click)="toggleLeftPanel()"
       cursor="pointer" [hidden]="!hasLeftPanel"></mcs-icon>
   </div>
-  <div display-flex class="placeholder-wrapper" (click)="showLeftPanel()">
-    <div [hidden]="leftPanelIsVisible" class="left-panel-label rotate-sideways">{{ leftPanelHeader }}</div>
-    <ng-container mcsLeftPanelPlaceholder></ng-container>
+  <div *ngIf="!leftPanelIsVisible" (click)="toggleLeftPanel()"
+    display-flex="column" flex="auto" class="placeholder-wrapper" cursor="pointer">
+    <div class="vertical-label rotate-sideways">{{ leftPanelHeader }}</div>
   </div>
+  <!-- Left panel binding content -->
+  <ng-container mcsLeftPanelPlaceholder></ng-container>
 </div>
 
 <!-- Top and Content Panel Wrapper -->

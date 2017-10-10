@@ -49,12 +49,19 @@
     "storage": "storage.svg",
     "keyboard": "keyboard.svg",
     "play": "play.svg",
+    "start": "start.svg",
     "restart": "restart.svg",
     "stop": "stop.svg",
     "user-white": "user-white.svg",
     "logout-white": "logout-white.svg",
     "circle-info-black": "circle-info-black.svg",
-    "cog": "cog.svg"
+    "cog": "cog.svg",
+    "info-svg": "info.svg",
+    "new-server": "new-server.svg",
+    "next-arrow": "next-arrow.svg",
+    "notification-bell": "notification-bell.svg",
+    "reload": "reload.svg",
+    "warning-svg": "warning.svg"
   },
   "gifIcons": {
     "spinner": "spinner.gif"

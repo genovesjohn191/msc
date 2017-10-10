@@ -25,6 +25,7 @@ import {
   McsSearch,
   McsPaginator,
   McsBrowserService,
+  McsSelection,
   McsTableListingBase
 } from '../../core';
 import {
@@ -45,6 +46,7 @@ export class ServersComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
+  public selection: McsSelection<Server>;
 
   @ViewChild('search')
   public search: McsSearch;
@@ -75,11 +77,11 @@ export class ServersComponent
   }
 
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_PLUS;
+    return CoreDefinition.ASSETS_SVG_NEW_SERVER;
   }
 
   public get startIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_PLAY;
+    return CoreDefinition.ASSETS_SVG_START;
   }
 
   public get stopIconKey(): string {
@@ -98,6 +100,7 @@ export class ServersComponent
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
+    this.selection = new McsSelection<Server>(false);
   }
 
   public ngOnInit() {
@@ -116,6 +119,79 @@ export class ServersComponent
     if (!isNullOrEmpty(this._activeServerSubscription)) {
       this._activeServerSubscription.unsubscribe();
     }
+  }
+
+  /**
+   * Return true if all the displayed record is selected otherwise false
+   */
+  public isAllSelected(): boolean {
+    if (isNullOrEmpty(this.dataSource)) { return false; }
+    if (!this.selection.hasValue()) { return false; }
+    return this.selection.selected.length === this.dataSource.displayedRecord.length;
+  }
+
+  /**
+   * Select all displayed record in the table
+   */
+  public toggleSelectAll(): void {
+    if (isNullOrEmpty(this.dataSource)) { return; }
+
+    if (this.isAllSelected()) {
+      this.selection.clear();
+    } else {
+      this.dataSource.displayedRecord.forEach((record) => {
+        this.selection.select(record.id);
+      });
+    }
+  }
+
+  /**
+   * Return true when Start button on the top panel is disabled
+   *
+   * `@Note`: All selected servers must be powered OFF
+   */
+  public get startable(): boolean {
+    return this.selection.selected.filter((serverId) => {
+      let server = this.dataSource.getDisplayedServerById(serverId);
+      let state = this.getServerPowerState(server);
+      return state !== ServerPowerState.PoweredOff;
+    }).length === 0;
+  }
+
+  /**
+   * Return true when Stop button on the top panel is disabled
+   *
+   * `@Note`: All selected servers must be powered ON
+   */
+  public get stoppable(): boolean {
+    return this.selection.selected.filter((serverId) => {
+      let server = this.dataSource.getDisplayedServerById(serverId);
+      let state = this.getServerPowerState(server);
+      return state !== ServerPowerState.PoweredOn;
+    }).length === 0;
+  }
+
+  /**
+   * Return true when Restart button on the top panel is disabled
+   *
+   * `@Note`: All selected servers must be powered ON
+   */
+  public get restartable(): boolean {
+    return this.stoppable;
+  }
+
+  /**
+   * Execute the corresponding action based on top panel commands
+   * @param action Action to be set
+   */
+  public executeTopPanelAction(action: string) {
+    if (!this.selection.hasValue()) { return; }
+
+    this.selection.selected.forEach((serverId) => {
+      let server = this.dataSource.displayedRecord
+        .find((data) => data.id === serverId);
+      this.executeServerCommand(server, action);
+    });
   }
 
   /**
@@ -232,7 +308,7 @@ export class ServersComponent
    * Return the server powerstate based on the active server status
    * @param server Server to be check
    */
-  public getServerPowerstate(server: Server): number {
+  public getServerPowerState(server: Server): number {
     let serverPowerstate = server.powerState;
 
     if (isNullOrEmpty(this._serversService.activeServers)) {
@@ -254,7 +330,7 @@ export class ServersComponent
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
-    // Set datasource
+    // Set datasource instance
     this.dataSource = new ServersDataSource(
       this._serversService,
       this.paginator,

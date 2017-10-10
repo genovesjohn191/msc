@@ -1,6 +1,8 @@
 $filter-search-max-width: 300px;
 $filter-selector-width: 100px;
 
+$action-cell-width: 55px;
+
 .listing-table-wrapper {
   display: inline-block;
   @include set-items-interval($space-xlarge);
@@ -27,6 +29,15 @@ $filter-selector-width: 100px;
     @include set-items-interval($space-small, horizontal);
     @include display-flex(row);
     align-items: center;
+  }
+
+  .action-cell {
+    width: $action-cell-width;
+    max-width: $action-cell-width;
+  }
+
+  .active-row {
+    background-color: $color-grey-07;
   }
 }
 

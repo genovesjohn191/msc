@@ -152,15 +152,6 @@ export class PageComponent implements AfterContentInit {
     this._changePanelDisplay(this.leftPanelIsVisible);
   }
 
-  /**
-   * Set the class of the left panel if it shown or hidden
-   */
-  public showLeftPanel(): void {
-    if (!this.leftPanelIsVisible) {
-      this._changePanelDisplay(false);
-    }
-  }
-
   private _changePanelDisplay(collapse: boolean) {
     if (collapse) {
       this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');

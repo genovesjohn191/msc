@@ -88,12 +88,19 @@ export class CoreDefinition {
   public static ASSETS_SVG_STORAGE = 'storage';
   public static ASSETS_SVG_KEYBOARD = 'keyboard';
   public static ASSETS_SVG_PLAY = 'play';
+  public static ASSETS_SVG_START = 'start';
   public static ASSETS_SVG_RESTART = 'restart';
   public static ASSETS_SVG_STOP = 'stop';
   public static ASSETS_SVG_LOGOUT_WHITE = 'logout-white';
   public static ASSETS_SVG_USER_WHITE = 'user-white';
   public static ASSETS_SVG_CIRCLE_INFO_BLACK = 'circle-info-black';
   public static ASSETS_SVG_COG = 'cog';
+  public static ASSETS_SVG_INFO = 'info-svg';
+  public static ASSETS_SVG_NEW_SERVER = 'new-server';
+  public static ASSETS_SVG_NEXT_ARROW = 'next-arrow';
+  public static ASSETS_SVG_NOTIFICATION_BELL = 'notification-bell';
+  public static ASSETS_SVG_RELOAD = 'reload';
+  public static ASSETS_SVG_WARNING = 'warning-svg';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
