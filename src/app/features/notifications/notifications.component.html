@@ -39,14 +39,18 @@
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
 
-        <!-- Status Column -->
-        <ng-container mcsColumnDef="status">
+        <!-- Notification Column -->
+        <ng-container mcsColumnDef="notification">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.status.text }}
+            {{ columnSettings.notification.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-center">
+          <mcs-data-cell *mcsDataCellDef="let row">
             <mcs-icon [key]="getStatusIconKey(row.status)"
               [color]="getStatusIconColor(row.status)" size="small"></mcs-icon>
+            <span>
+              {{ row.description }}<br/>
+              {{ row.summaryInformation }}
+            </span>
           </mcs-data-cell>
         </ng-container>
 
@@ -57,19 +61,6 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
               {{ row.ownerName }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Notification Column -->
-        <ng-container mcsColumnDef="notification">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.notification.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <a href="#">
-              {{ row.description }}<br/>
-              {{ row.summaryInformation }}
-            </a>
           </mcs-data-cell>
         </ng-container>
 

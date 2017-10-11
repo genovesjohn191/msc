@@ -10,6 +10,8 @@ $ticket-create-label-font: $circular-pro-bold;
 
 .ticket-create-information {
   @include set-items-interval($space-large);
+  display: block;
+  @include flex(none);
 
   .ticket-create-header {
     @include display-flex(column);

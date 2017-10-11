@@ -119,8 +119,8 @@ export class PageComponent implements AfterContentInit {
   }
 
   public get navIconKey(): string {
-    return this.leftPanelIsVisible ? CoreDefinition.ASSETS_FONT_CLOSE :
-      CoreDefinition.ASSETS_FONT_ANGLE_DOUBLE_RIGHT;
+    return this.leftPanelIsVisible ? CoreDefinition.ASSETS_SVG_CLOSE_BLACK :
+      CoreDefinition.ASSETS_SVG_NEXT_ARROW;
   }
 
   public ngAfterContentInit(): void {

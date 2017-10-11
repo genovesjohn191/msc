@@ -124,6 +124,10 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_NAVBAR;
   }
 
+  public get backIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+  }
+
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.tickets.createTicket;
     this.contextualContent = this.textContent.contextualHelp;
@@ -199,9 +203,9 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Cancel ticket and will navigate to ticket listing
+   * Navigate to ticket listing
    */
-  public onCancelTicket(): void {
+  public gotoTickets(): void {
     this._router.navigate(['/tickets']);
   }
 

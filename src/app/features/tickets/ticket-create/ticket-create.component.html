@@ -1,9 +1,20 @@
 <mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <!-- Server Creation -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="action-item right-align" cursor="pointer" (click)="gotoTickets()">
+        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+        <span>{{ textContent.backToTickets }}</span>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <div class="contextual-help-page-wrapper">
       <!-- Create ticket details -->
-      <div class="page-information-wrapper ticket-create-information">
+      <div class="page-information-wrapper ticket-create-information limited-view">
         <p [innerHTML]="textContent.description"></p>
 
         <form [formGroup]="fgCreateTicket" class="create-ticket-form">
@@ -83,10 +94,8 @@
 
         <!-- Ticket Action -->
         <div class="ticket-action-wrapper">
-          <mcs-button (onClick)="onCancelTicket()" size="small">
-            {{ textContent.cancel }}
-          </mcs-button>
           <mcs-button icon="arrow" (onClick)="onLogTicket()" size="small"
+            class="right-align"
             [disabled]="!fgCreateTicket.valid" [mcsLoader]="createTicketSubscription">
             {{ textContent.newTicket }}
           </mcs-button>

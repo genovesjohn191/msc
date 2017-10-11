@@ -25,12 +25,15 @@ $ticket-meta-item-hover-color: $color-grey-06;
         display: block;
       }
       margin-right: $space-small;
-      background-color: $ticket-meta-item-color;
       padding: $space-xsmall;
       margin-bottom: $space-xsmall;
 
-      &:hover {
-        background-color: $ticket-meta-item-hover-color;
+      &.rollover {
+        background-color: $ticket-meta-item-color;
+
+        &:hover {
+          background-color: $ticket-meta-item-hover-color;
+        }
       }
     }
   }

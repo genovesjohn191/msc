@@ -123,6 +123,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_CLOSE = 'close';
   public static ASSETS_FONT_CHEVRON_DOWN = 'chevron-down';
   public static ASSETS_FONT_CHEVRON_UP = 'chevron-up';
+  public static ASSETS_FONT_CHEVRON_LEFT = 'chevron-left';
   public static ASSETS_FONT_GEAR = 'gear';
   public static ASSETS_FONT_SIGN_OUT = 'sign-out';
   public static ASSETS_FONT_USER = 'user';

@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
+  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
@@ -106,6 +107,10 @@ export class TicketComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_ATTACHMENT;
   }
 
+  public get backIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+  }
+
   public get requestor(): string {
     return isNullOrEmpty(this.ticket) || isNullOrEmpty(this.ticket.requestor)
       ? `${this.textContent.missingRequestorLabel} - `
@@ -125,6 +130,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public constructor(
+    private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _ticketsService: TicketsService,
     private _textContentProvider: McsTextContentProvider,
@@ -145,6 +151,13 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (this.ticketSubscription) {
       this.ticketSubscription.unsubscribe();
     }
+  }
+
+  /**
+   * Navigate to ticket listing
+   */
+  public gotoTickets(): void {
+    this._router.navigate(['/tickets']);
   }
 
   /**
