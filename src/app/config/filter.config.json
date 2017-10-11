@@ -63,18 +63,13 @@
     }
   },
   "notificationsListingFilter": {
-    "status": {
-      "text": "Status",
+    "notification": {
+      "text": "Notification",
       "value": true,
       "exclude": true
     },
     "user": {
       "text": "User",
-      "value": true,
-      "exclude": true
-    },
-    "notification": {
-      "text": "Notification",
       "value": true,
       "exclude": true
     },

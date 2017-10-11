@@ -1,62 +1,64 @@
 <mcs-page [header]="textContent.header">
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <p>
-      {{ textContent.description }}
-    </p>
+    <div class="content-wrapper limited-view">
+      <p>
+        {{ textContent.description }}
+      </p>
 
-    <div class="listing-table-wrapper">
-      <!-- Table -->
-      <mcs-table [dataSource]="dataSource">
-        <!-- Service Column -->
-        <ng-container mcsColumnDef="name">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.table.header.name }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            {{ row.name}}
-          </mcs-data-cell>
-        </ng-container>
+      <div class="listing-table-wrapper">
+        <!-- Table -->
+        <mcs-table [dataSource]="dataSource">
+          <!-- Service Column -->
+          <ng-container mcsColumnDef="name">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ textContent.table.header.name }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              {{ row.name}}
+            </mcs-data-cell>
+          </ng-container>
 
-        <!-- Description Column -->
-        <ng-container mcsColumnDef="resourceSpecific">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-            {{ textContent.table.header.description }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ toolDescription.get(row.name) }}
-          </mcs-data-cell>
-        </ng-container>
+          <!-- Description Column -->
+          <ng-container mcsColumnDef="resourceSpecific">
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+              {{ textContent.table.header.description }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              {{ toolDescription.get(row.name) }}
+            </mcs-data-cell>
+          </ng-container>
 
-        <!-- Access Column -->
-        <ng-container mcsColumnDef="portalAccess">
-          <mcs-header-cell *mcsHeaderCellDef>
-            {{ textContent.table.header.access }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <div *ngFor="let access of row.portalAccess" class="access-link-wrapper">
-              <a [href]="access.url" target="_blank">{{ access.name }} <br />(requires login)</a>
-            </div>
-          </mcs-data-cell>
-        </ng-container>
+          <!-- Access Column -->
+          <ng-container mcsColumnDef="portalAccess">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ textContent.table.header.access }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <div *ngFor="let access of row.portalAccess" class="access-link-wrapper">
+                <a [href]="access.url" target="_blank">{{ access.name }} <br />(requires login)</a>
+              </div>
+            </mcs-data-cell>
+          </ng-container>
 
-        <!-- Data Status Integration -->
-        <ng-container mcsDataStatusDef>
-          <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.noRecordsFoundMessage }}</span>
-          </mcs-data-empty>
-          <mcs-data-error *mcsDataErrorDef>
-            <div class="data-error">
-              <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
-            </div>
-          </mcs-data-error>
-        </ng-container>
+          <!-- Data Status Integration -->
+          <ng-container mcsDataStatusDef>
+            <mcs-data-empty *mcsDataEmptyDef>
+              <span>{{ textContent.noRecordsFoundMessage }}</span>
+            </mcs-data-empty>
+            <mcs-data-error *mcsDataErrorDef>
+              <div class="data-error">
+                <span>{{ textContent.errorMessage }}</span>
+                <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              </div>
+            </mcs-data-error>
+          </ng-container>
 
-        <!-- Header and Data row -->
-        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
-      </mcs-table>
+          <!-- Header and Data row -->
+          <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+        </mcs-table>
+      </div>
     </div>
   </mcs-content-panel>
 </mcs-page>

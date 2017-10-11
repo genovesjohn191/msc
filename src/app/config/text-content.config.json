@@ -185,17 +185,18 @@
       "missingRequestorLabel": "Unknown Requestor",
       "missingServicesLabel": "No services found",
       "missingAttachmentsLabel": "No attachments found",
-      "missingActivitiesLabel": "No activities yet"
+      "missingActivitiesLabel": "No activities yet",
+      "backToTickets": "Back To Tickets"
     },
     "createTicket": {
-      "header": "Tickets",
+      "header": "Create New Ticket",
       "description": "We all need help from time to time.<br/><br/>Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView.",
       "type": "Ticket Type",
       "headline": "Headline (max {{max_char}} characters)",
       "details": "Details (max {{max_char}} characters)",
       "services": "Services",
       "attachments": "Attachments",
-      "cancel": "Cancel",
+      "backToTickets": "Back To Tickets",
       "newTicket": "Log Ticket",
       "contextualHelp": {
         "type": "Select the ticket type",

@@ -1,9 +1,9 @@
 <mcs-page [header]="ticketHeader" [mcsLoader]="ticketSubscription">
   <!-- Top Panel -->
-  <ng-container *ngIf="ticketResolved">
-    <mcs-top-panel *mcsTopPanelDef>
+  <mcs-top-panel *mcsTopPanelDef>
 
-      <!-- Ticket Status -->
+    <!-- Ticket Status -->
+    <ng-container *ngIf="ticketResolved">
       <mcs-top-panel-item *mcsTopPanelItemDef>
         <div flex="auto" display-flex align-items="center" justify-content="flex-end">
           <mcs-icon [key]="checkIconKey" size="large"></mcs-icon>
@@ -12,8 +12,16 @@
           </span>
         </div>
       </mcs-top-panel-item>
-    </mcs-top-panel>
-  </ng-container>
+    </ng-container>
+
+    <!-- Back to Tickets -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="action-item right-align" cursor="pointer" (click)="gotoTickets()">
+        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+        <span>{{ textContent.backToTickets }}</span>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
@@ -46,7 +54,7 @@
           <h4>{{ textContent.attachments }}</h4>
           <span *ngIf="missingAttachments" class="missing-data-info">{{ textContent.missingAttachmentsLabel }}</span>
           <ul class="unstyled-list">
-            <li *ngFor="let attachment of ticket.attachments; trackBy: trackByFn">
+            <li class="rollover" *ngFor="let attachment of ticket.attachments; trackBy: trackByFn">
               <mcs-icon [key]="attachmentIconKey" size="small"></mcs-icon>
               <a (click)="downloadAttachment(attachment)">{{ attachment.fileName }}</a>
             </li>
