@@ -198,11 +198,9 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
 
   private _registerEvents(): void {
     // Register for mouse click
-    registerEvent(this._renderer, document,
-      'click', this.onClickOutside.bind(this));
+    registerEvent(document, 'click', this.onClickOutside.bind(this));
 
     // Register touch event for IOS
-    registerEvent(this._renderer, document,
-      'touchstart', this.onClickOutside.bind(this));
+    registerEvent(document, 'touchstart', this.onClickOutside.bind(this));
   }
 }

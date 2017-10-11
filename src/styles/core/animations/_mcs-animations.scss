@@ -19,3 +19,7 @@ $animation-hinge-duration: 2s;
 .animation.hinge {
   animation-duration: $animation-hinge-duration;
 }
+
+.animation.out-end {
+  display: none !important;
+}

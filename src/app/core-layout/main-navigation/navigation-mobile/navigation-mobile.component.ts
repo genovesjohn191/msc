@@ -4,6 +4,8 @@ import {
   OnDestroy,
   HostListener,
   ElementRef,
+  Renderer2,
+  ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   ViewEncapsulation
@@ -25,6 +27,9 @@ import { isNullOrEmpty } from '../../../utilities';
 })
 
 export class NavigationMobileComponent implements OnInit, OnDestroy {
+
+  @ViewChild('navigationList')
+  public navigationList: ElementRef;
 
   private _routerSubscription: any;
 
@@ -60,11 +65,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _elementRef: ElementRef,
+    private _renderer: Renderer2,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.close();
-  }
+  ) { }
 
   public ngOnInit() {
     this._routerSubscription = this._router.events
@@ -89,6 +93,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public open(): void {
+    this._renderer.setStyle(this.navigationList.nativeElement, 'display', 'block');
     this.slideTrigger = 'slideInLeft';
   }
 

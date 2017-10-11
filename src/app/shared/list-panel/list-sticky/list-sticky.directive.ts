@@ -128,7 +128,6 @@ export class ListStickyDirective implements AfterContentInit {
 
   private _registerEvents(): void {
     // Register for mouse click
-    registerEvent(this._renderer, document,
-      'scroll', this._onScroll.bind(this));
+    registerEvent(document, 'scroll', this._onScroll.bind(this));
   }
 }
