@@ -5,7 +5,11 @@ import {
   ElementRef,
   OnInit
 } from '@angular/core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  registerEvent,
+  unregisterEvent
+} from '../../utilities';
 
 @Directive({
   selector: '[animate]'
@@ -27,6 +31,12 @@ export class AnimateDirective implements OnInit {
   private _animate: string;
 
   /**
+   * Event handler references
+   */
+  private _endAnimationHandler = this._endAnimationCallback.bind(this);
+  private _endOutAnimationHandler = this._endOutAnimationCallback.bind(this);
+
+  /**
    * Type of animation to be triggered
    */
   @Input()
@@ -36,6 +46,8 @@ export class AnimateDirective implements OnInit {
   public set trigger(value: string) {
     if (this._trigger !== value) {
       this._trigger = value;
+      unregisterEvent(this._elementRef.nativeElement, 'animationend',
+        [this._endAnimationHandler, this._endOutAnimationHandler]);
       this._triggerAnimation();
     }
   }
@@ -65,7 +77,13 @@ export class AnimateDirective implements OnInit {
    */
   private _triggerAnimation(): void {
     if (isNullOrEmpty(this.trigger)) { return; }
+
+    // Set the actual display of the host element
+    // since out animations are setting the display to none of host element
+    this._renderer.removeClass(this._elementRef.nativeElement, 'out-end');
     this._renderer.addClass(this._elementRef.nativeElement, this.trigger);
+
+    // Register animation end callbacks
     this._endAnimation();
     this._endOutAnimation();
   }
@@ -75,12 +93,17 @@ export class AnimateDirective implements OnInit {
    */
   private _endAnimation(): void {
     if (isNullOrEmpty(this.trigger)) { return; }
-    this._renderer.listen(this._elementRef.nativeElement, 'animationend', () => {
-      if (!isNullOrEmpty(this.animate)) {
-        this._renderer.removeClass(this._elementRef.nativeElement, this.animate);
-      }
-      this._renderer.removeClass(this._elementRef.nativeElement, this.trigger);
-    });
+    registerEvent(this._elementRef.nativeElement, 'animationend', this._endAnimationHandler);
+  }
+
+  /**
+   * End animation callback
+   */
+  private _endAnimationCallback(): void {
+    if (!isNullOrEmpty(this.animate)) {
+      this._renderer.removeClass(this._elementRef.nativeElement, this.animate);
+    }
+    this._renderer.removeClass(this._elementRef.nativeElement, this.trigger);
   }
 
   /**
@@ -89,9 +112,14 @@ export class AnimateDirective implements OnInit {
   private _endOutAnimation(): void {
     if (isNullOrEmpty(this.trigger)) { return; }
     if (this.trigger.includes('Out')) {
-      this._renderer.listen(this._elementRef.nativeElement, 'animationend', () => {
-        this._renderer.setStyle(this._elementRef.nativeElement, 'display', 'none');
-      });
+      registerEvent(this._elementRef.nativeElement, 'animationend', this._endOutAnimationHandler);
     }
+  }
+
+  /**
+   * End out animation callback
+   */
+  private _endOutAnimationCallback(): void {
+    this._renderer.addClass(this._elementRef.nativeElement, 'out-end');
   }
 }

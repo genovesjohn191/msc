@@ -14,6 +14,7 @@ import {
   McsBrowserService,
   McsDeviceType
 } from '../../core';
+import { triggerEvent } from '../../utilities';
 import { CoreTestingModule } from '../../core/testing';
 
 @Component({
@@ -28,6 +29,7 @@ export class TestComponent {
 describe('ContextualHelpDirective', () => {
 
   /** Stub Services/Components */
+  let fixtureInstance: any;
   let component: TestComponent;
   let directiveElement: DebugElement;
   let browserService: McsBrowserService;
@@ -58,7 +60,7 @@ describe('ContextualHelpDirective', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      let fixtureInstance = TestBed.createComponent(TestComponent);
+      fixtureInstance = TestBed.createComponent(TestComponent);
       fixtureInstance.detectChanges();
 
       component = fixtureInstance.componentInstance;
@@ -87,14 +89,14 @@ describe('ContextualHelpDirective', () => {
 
   describe('mouseenter()', () => {
     it(`should set has focus flag to true when mouseenter is triggered`, () => {
-      directiveElement.triggerEventHandler('mouseenter', {});
+      triggerEvent(directiveElement.nativeElement, 'mouseenter');
       expect(component.contextualHelp.hasFocus).toBeTruthy();
     });
   });
 
   describe('mouseleave()', () => {
     it(`should set has focus false to true when mouseleave is triggered`, () => {
-      directiveElement.triggerEventHandler('mouseleave', {});
+      triggerEvent(directiveElement.nativeElement, 'mouseleave');
       expect(component.contextualHelp.hasFocus).toBeFalsy();
     });
   });

@@ -8,6 +8,7 @@ import {
   ViewChild,
   DebugElement
 } from '@angular/core';
+import { triggerEvent } from '../../utilities';
 import { By } from '@angular/platform-browser';
 
 import { PopoverDirective } from './popover.directive';
@@ -78,7 +79,7 @@ describe('PopoverDirective', () => {
   /** Test Implementation */
   describe('click() Event', () => {
     beforeEach(async(() => {
-      directiveElement.triggerEventHandler('click', {});
+      triggerEvent(directiveElement.nativeElement, 'click');
     }));
 
     it(`should open/create the popover when click is triggered first time`, () => {
@@ -87,7 +88,7 @@ describe('PopoverDirective', () => {
     });
 
     it(`should close/delete the popover when click is triggered second time`, () => {
-      directiveElement.triggerEventHandler('click', {});
+      triggerEvent(directiveElement.nativeElement, 'click');
       let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
       expect(mcsPopoverExist).toBe(null);
     });
@@ -97,7 +98,7 @@ describe('PopoverDirective', () => {
     beforeEach(async(() => {
       component.popover.trigger = 'hover';
       component.popover.ngOnInit();
-      directiveElement.triggerEventHandler('mouseenter', {});
+      triggerEvent(directiveElement.nativeElement, 'mouseenter');
     }));
 
     it(`should open/create the popover when 'mouseenter' is invoked`, () => {
@@ -106,7 +107,7 @@ describe('PopoverDirective', () => {
     });
 
     it(`should close/delete the popover when 'mouseleave' is invoked`, () => {
-      directiveElement.triggerEventHandler('mouseleave', {});
+      triggerEvent(directiveElement.nativeElement, 'mouseleave');
       let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
       expect(mcsPopoverExist).toBe(null);
     });
@@ -124,7 +125,7 @@ describe('PopoverDirective', () => {
         left: 50,
         right: 50
       };
-      directiveElement.triggerEventHandler('click', {});
+      triggerEvent(directiveElement.nativeElement, 'click');
     }));
 
     it(`should set the orientation of mcs-popover element to left`, () => {
@@ -159,7 +160,7 @@ describe('PopoverDirective', () => {
   describe('moveElementPosition()', () => {
     beforeEach(async(() => {
       component.popover.trigger = 'manual';
-      directiveElement.triggerEventHandler('click', {});
+      triggerEvent(directiveElement.nativeElement, 'click');
     }));
 
     it(`should call the setRightOrientation()

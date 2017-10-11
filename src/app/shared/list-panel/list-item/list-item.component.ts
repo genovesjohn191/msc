@@ -31,6 +31,11 @@ export class ListItemComponent implements OnInit, OnDestroy {
 
   private _itemChangedStreamSubscription: any;
 
+  /**
+   * Click event handler
+   */
+  private _clickEventHandler = this.onClickItem.bind(this);
+
   public constructor(
     public elementRef: ElementRef,
     public renderer: Renderer2,
@@ -39,13 +44,11 @@ export class ListItemComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this._listenToItemSelection();
-    registerEvent(this.renderer, this.elementRef.nativeElement,
-      'click', this.onClickItem.bind(this));
+    registerEvent(this.elementRef.nativeElement, 'click', this._clickEventHandler);
   }
 
   public ngOnDestroy() {
-    unregisterEvent(this.elementRef.nativeElement, 'click',
-      this.onClickItem.bind(this));
+    unregisterEvent(this.elementRef.nativeElement, 'click', this._clickEventHandler);
     if (this._itemChangedStreamSubscription) {
       this._itemChangedStreamSubscription.unsubscribe();
     }

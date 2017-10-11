@@ -3,8 +3,7 @@ import {
   OnDestroy,
   Directive,
   Input,
-  ElementRef,
-  Renderer2
+  ElementRef
 } from '@angular/core';
 import {
   McsBrowserService,
@@ -37,9 +36,14 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
     this._hasFocus = value;
   }
 
+  /**
+   * Control event handler
+   */
+  private _mouseEnterHandler = this._onMouseEnter.bind(this);
+  private _mouseLeaveHandler = this._onMouseLeave.bind(this);
+
   constructor(
     private _elementRef: ElementRef,
-    private _renderer: Renderer2,
     private _browserService: McsBrowserService
   ) {
     this.mcsContextualHelp = '';
@@ -100,17 +104,13 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
 
   private _registerEvents(): void {
     // Register both for mouse in and mouse out
-    registerEvent(this._renderer, this._elementRef.nativeElement,
-      'mouseenter', this._onMouseEnter.bind(this));
-    registerEvent(this._renderer, this._elementRef.nativeElement,
-      'mouseleave', this._onMouseLeave.bind(this));
+    registerEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
+    registerEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
   }
 
   private _unregisterEvents(): void {
     // Unregister both for mouse in and mouse out
-    unregisterEvent(this._elementRef.nativeElement,
-      'mouseenter', this._onMouseEnter.bind(this));
-    unregisterEvent(this._elementRef.nativeElement,
-      'mouseleave', this._onMouseLeave.bind(this));
+    unregisterEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
+    unregisterEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
   }
 }

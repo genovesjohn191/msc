@@ -1,19 +1,20 @@
 import {
   registerEvent,
-  unregisterEvent
+  unregisterEvent,
+  triggerEvent
 } from './mcs-events.function';
 
 describe('EVENTS Utility Functions', () => {
   describe('registerEvent()', () => {
-    it(`should register the event and call the listen of angular renderer`, () => {
-      let mockRenderer = { listen(_element: any, _event: any, _callback: any) { return; } };
+    it(`should register the event and call the removeEventListenerr`, () => {
+      let mockElement = { addEventListener(_event: any, _callback: any) { return; } };
       let mockCallback = () => {
         return undefined;
       };
 
-      spyOn(mockRenderer, 'listen');
-      registerEvent(mockRenderer, document.createElement('div'), 'click', mockCallback);
-      expect(mockRenderer.listen).toHaveBeenCalledTimes(1);
+      spyOn(mockElement, 'addEventListener');
+      registerEvent(mockElement, 'click', mockCallback);
+      expect(mockElement.addEventListener).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -27,6 +28,16 @@ describe('EVENTS Utility Functions', () => {
       spyOn(mockElement, 'removeEventListener');
       unregisterEvent(mockElement, 'click', mockCallback);
       expect(mockElement.removeEventListener).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('triggerEvent()', () => {
+    it(`should trigger the event and call the removeEventListener`, () => {
+      let mockElement = { dispatchEvent(_event: any) { return; } };
+
+      spyOn(mockElement, 'dispatchEvent');
+      triggerEvent(mockElement, 'click');
+      expect(mockElement.dispatchEvent).toHaveBeenCalledTimes(1);
     });
   });
 });

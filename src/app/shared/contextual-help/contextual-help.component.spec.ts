@@ -56,7 +56,7 @@ describe('ContextualHelpComponent', () => {
     beforeEach(async(() => {
       createdElement = document.createElement('div');
       let contextualHelpDirective = new ContextualHelpDirective(
-        new ElementRef(createdElement), undefined, undefined);
+        new ElementRef(createdElement), undefined);
       component.contextualInformations.push(contextualHelpDirective);
       fixtureInstance.detectChanges();
     }));

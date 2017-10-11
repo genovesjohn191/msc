@@ -1,45 +1,71 @@
-
-type eventType = 'click' | 'mouseenter' | 'mouseleave' | 'touchstart' | 'scroll';
+/** Callback type for the event */
+type eventCallback = (_event: any) => any;
 
 /**
  * This will register the event of the specific event type
- *
- * `@Note` Angular Hostlistener was not used instead of this
- * because of IOS issues
- * @param renderer Angular renderer to be use
  * @param nativeElement Native element to be registered in the event
- * @param event Event type
- * @param callback Callback function to register in the event
+ * @param eventName Event Nameof the event to be registered
+ * @param callback Callbacks function to register in the event (it can be array)
  */
 export function registerEvent(
-  renderer: any,
   nativeElement: any,
-  event: eventType,
-  callback: (event: any) => boolean | void
+  eventName: string,
+  callbacks: eventCallback | eventCallback[]
 ): void {
-  // Check renderer and event inputs are not undefined
-  if (!renderer || !event || !nativeElement) { return undefined; }
+  // Check event inputs and host element are not undefined
+  if (!eventName || !nativeElement) { return undefined; }
 
-  // Register event in angular renderer
-  renderer.listen(nativeElement, event, callback);
+  // Add the event listener of the host element
+  if (Array.isArray(callbacks)) {
+    callbacks.forEach((callback) => {
+      nativeElement.addEventListener(eventName, callback);
+    });
+  } else {
+    nativeElement.addEventListener(eventName, callbacks);
+  }
 }
 
 /**
  * This will unregister the event of the specific event type
  *
  * @param nativeElement Native element to be registered in the event
- * @param event Event type
- * @param callback Callback function to be removed
+ * @param eventName Event Nameof the event to be registered
+ * @param callbacks Callbacks function to be removed (it can be array)
  */
 export function unregisterEvent(
   nativeElement: any,
-  event: eventType,
-  callback: (event: any) => boolean | void
+  eventName: string,
+  callbacks: eventCallback | eventCallback[]
 ): void {
   // Check event and nativeElement parameters are not undefined
-  if (!event || !nativeElement) { return undefined; }
+  if (!eventName || !nativeElement) { return undefined; }
 
-  // Unregister event using removeEventListener
-  // because angular renderer don't have own unregister method
-  nativeElement.removeEventListener(event, callback);
+  // Remove the event listener of the host element
+  if (Array.isArray(callbacks)) {
+    callbacks.forEach((callback) => {
+      nativeElement.removeEventListener(eventName, callback);
+    });
+  } else {
+    nativeElement.removeEventListener(eventName, callbacks);
+  }
+}
+
+/**
+ * This will trigger the assosiated event on the given element
+ * @param nativeElement Native element to invoke the event
+ * @param eventName Event Nameof the event to be triggered
+ * @param _eventInit Event configuration
+ */
+export function triggerEvent(
+  nativeElement: any,
+  eventName: string,
+  _eventInit: EventInit = { cancelable: true }
+): void {
+  // Check event and nativeElement parameters are not undefined
+  if (!eventName || !nativeElement) { return undefined; }
+
+  // Remove the event listener of the host element
+  nativeElement.dispatchEvent(
+    new Event(eventName, _eventInit)
+  );
 }

@@ -24,8 +24,8 @@ $navigation-item-font-size: $h4-default-font-size;
 
   @include breakpoint(small) {
     padding: $main-navigation-small-padding;
-    }
-  
+  }
+
   .navigation-item {
     a {
       @include font-size($navigation-item-font-size);

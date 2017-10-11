@@ -250,17 +250,16 @@ export class PopoverDirective implements OnInit, OnDestroy {
     switch (this.trigger) {
       case 'hover':
         // Register both for mouse in and mouse out
-        registerEvent(this._renderer, this._elementRef.nativeElement,
-          'mouseenter', this.openOnMouseHover.bind(this));
-        registerEvent(this._renderer, this._elementRef.nativeElement,
-          'mouseleave', this.closeOnMouseLeave.bind(this));
+        registerEvent(this._elementRef.nativeElement, 'mouseenter',
+          this.openOnMouseHover.bind(this));
+        registerEvent(this._elementRef.nativeElement, 'mouseleave',
+          this.closeOnMouseLeave.bind(this));
         break;
 
       case 'manual':
       default:
         // Register for mouse click
-        registerEvent(this._renderer, this._elementRef.nativeElement,
-          'click', this.onClick.bind(this));
+        registerEvent(this._elementRef.nativeElement, 'click', this.onClick.bind(this));
         break;
     }
   }
