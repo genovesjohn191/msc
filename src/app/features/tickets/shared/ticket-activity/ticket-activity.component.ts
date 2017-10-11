@@ -35,6 +35,10 @@ export class TicketActivityComponent {
   }
   private _activity: TicketActivity;
 
+  public get isAttachment(): boolean {
+    return this.activity.type === TicketActivityType.Attachment;
+  }
+
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this._activity = new TicketActivity();
   }

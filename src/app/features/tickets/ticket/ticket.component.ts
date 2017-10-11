@@ -102,6 +102,28 @@ export class TicketComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
+  public get attachmentIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_ATTACHMENT;
+  }
+
+  public get requestor(): string {
+    return isNullOrEmpty(this.ticket) || isNullOrEmpty(this.ticket.requestor)
+      ? `${this.textContent.missingRequestorLabel} - `
+      : `${this.ticket.requestor} - `;
+  }
+
+  public get missingServices(): boolean {
+    return isNullOrEmpty(this.ticket.serviceId);
+  }
+
+  public get missingAttachments(): boolean {
+    return isNullOrEmpty(this.ticket.attachments);
+  }
+
+  public get missingActivities(): boolean {
+    return isNullOrEmpty(this.activities);
+  }
+
   public constructor(
     private _activatedRoute: ActivatedRoute,
     private _ticketsService: TicketsService,

@@ -90,6 +90,8 @@ $container-large: $desktop-min-width;
 $container-medium: $tablet-min-width;
 $container-small: 100%;
 
+$limited-view-width: 800px;
+
 // Spacer
 $space-xxlarge: 40px;
 $space-xlarge: 30px;
@@ -106,19 +108,6 @@ $zindex-header: 1000;
 $zindex-navigation: 1000;
 $zindex-popover: 1100;
 $zindex-notifications: 1100;
-
-// Core layout
-$header-large-padding: $space-large;
-$header-small-padding: $space-large $space-medium;
-
-$main-navigation-large-padding: 0 $space-large;
-$main-navigation-small-padding: 0 $space-medium;
-$main-navigation-color: $color-black;
-$main-navigation-bg-color: $color-primary-01;
-$main-navigation-box-shadow-color: $color-black;
-
-$content-large-padding: $space-xxlarge $space-xxlarge $space-xxlarge $space-large;
-$content-small-padding: $space-xxlarge $space-large $space-xxlarge $space-medium;
 
 // Input
 $input-font: $base-font;
