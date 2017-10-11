@@ -178,13 +178,14 @@
     "dataPlural": "Tickets",
     "ticket" : {
       "header": "Trouble Ticket #",
-      "type": "Type:",
-      "services": "Services:",
-      "loggedBy": "Logged By:",
-      "dateLogged": "Date Logged:",
-      "attachments": "Attachments:",
-      "activity": "Activity:",
-      "newActivity": "New Comment/Attachment"
+      "services": "Services",
+      "attachments": "Attachments",
+      "activity": "Activity",
+      "newActivity": "New Comment/Attachment",
+      "missingRequestorLabel": "Unknown Requestor",
+      "missingServicesLabel": "No services found",
+      "missingAttachmentsLabel": "No attachments found",
+      "missingActivitiesLabel": "No activities yet"
     },
     "createTicket": {
       "header": "Tickets",

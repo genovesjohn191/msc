@@ -1,5 +1,8 @@
 @import "../../../styles/shared/base";
 
+$content-large-padding: $space-large $space-xxlarge $space-large $space-large;
+$content-small-padding: $space-large $space-xxlarge $space-large $space-large;
+
 // Main Page
 $page-border-color: $color-grey-05;
 $page-header-font: $circular-pro-bold;
@@ -169,6 +172,13 @@ $left-panel-navigation-collapse-padding: 6px;
 
         .title {
           margin-bottom: $space-xlarge;
+        }
+
+        &.limited-view {
+          width: $limited-view-width;
+          @include breakpoint(medium) {
+            width: 100%;
+          }
         }
       }
     }

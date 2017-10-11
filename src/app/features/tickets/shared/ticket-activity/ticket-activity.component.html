@@ -1,5 +1,5 @@
 <!-- Ticket Activity Wrapper -->
-<div class="ticket-activity-wrapper">
+<div [ngClass]="{attachment: isAttachment}" class="ticket-activity-wrapper">
 
   <!-- Ticket Activity Icon Wrapper -->
   <div class="icon-wrapper">
@@ -9,8 +9,8 @@
   <!-- Ticket Activity Header Wrapper (Header, Content) -->
   <div class="information-wrapper">
     <div class="header">
-      <h5>{{ activity.header }}</h5>
-      <span>{{ convertDateTimeToString(activity.date) }}</span>
+      <strong>{{ activity.header }}</strong>
+      <span class="right-align hidden-small">{{ convertDateTimeToString(activity.date) }}</span>
     </div>
 
     <div class="content">

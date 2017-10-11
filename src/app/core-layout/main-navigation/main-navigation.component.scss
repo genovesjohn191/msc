@@ -1,5 +1,10 @@
 @import "../../../styles/shared/base";
 
+$main-navigation-large-padding: 0 $space-large;
+$main-navigation-small-padding: 0 $space-medium;
+$main-navigation-color: $color-black;
+$main-navigation-bg-color: $color-primary-01;
+$main-navigation-box-shadow-color: $color-black;
 $navigation-item-font-size: $h4-default-font-size;
 
 :host {

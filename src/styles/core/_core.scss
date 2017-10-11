@@ -240,7 +240,6 @@ html {
   }
 }
 
-
 // Alignment classes
 .right-align {
   margin-left: auto !important;
@@ -269,4 +268,12 @@ html {
   @include display-flex(row);
   align-items: center;
   @include set-items-interval($space-small, horizontal);
+}
+
+// Elements
+.metadata {
+  font-size: 11px;
+  background-color: $color-grey-07;
+  padding: 2px 5px;
+  margin-bottom: $space-xsmall;
 }

@@ -1,5 +1,8 @@
 @import '../../../styles/shared/base';
 
+$header-large-padding: $space-large;
+$header-small-padding: $space-large $space-medium;
+
 header {
   @include breakpoint(small) {
     position: fixed;

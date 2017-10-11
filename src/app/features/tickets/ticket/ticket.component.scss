@@ -1,22 +1,9 @@
 @import "../../../../styles/shared/base";
 
-$ticket-list-padding: $space-xsmall 0;
-$ticket-label-font: $circular-pro-bold;
+$ticket-meta-item-color: $color-grey-07;
+$ticket-meta-item-hover-color: $color-grey-06;
 
-:host {
-  @include set-items-interval($space-xlarge);
-}
-
-.ticket-headline-wrapper {
-  display: block;
-  text-align: left;
-}
-
-.ticket-details-wrapper {
-  display: block;
-}
-
-.ticket-services-wrapper {
+.ticket-meta-wrapper {
   @include display-flex(row);
   @include flex-wrap(wrap);
   justify-content: space-between;
@@ -24,56 +11,34 @@ $ticket-label-font: $circular-pro-bold;
   * {
     @include flex(1 1 0);
   }
-
-  .unstyled-list {
-    li {
-      @include display-flex(row);
-      justify-content: space-between;
-      padding: $ticket-list-padding;
-
-      .label {
-        @include flex(1 0 40%);
-        font-family: $ticket-label-font;
-      }
-
-      .item {
-        @include flex(1 0 60%);
-        @include display-flex(column);
-        @include set-items-interval($space-small);
-      }
-    }
-  }
 }
 
-.ticket-attachments-wrapper {
+.ticket-info-wrapper {
   display: block;
-  @include set-items-interval($space-medium);
-  @include breakpoint(small) {
-    display: none;
-  }
 
   .unstyled-list {
-    text-decoration: underline;
-    @include column-count(3);
-
-    @include breakpoint(small) {
-      @include column-count(1);
-    }
+    // text-decoration: underline;
 
     li {
-      padding: $ticket-list-padding;
+      display: inline-block;
+      @include breakpoint(small) {
+        display: block;
+      }
+      margin-right: $space-small;
+      background-color: $ticket-meta-item-color;
+      padding: $space-xsmall;
+      margin-bottom: $space-xsmall;
+
+      &:hover {
+        background-color: $ticket-meta-item-hover-color;
+      }
     }
   }
-}
-
-.ticket-activities-wrapper {
-  display: block;
-  @include set-items-interval($space-medium);
 
   .ticket-activities-header {
     @include display-flex(row);
-    justify-content: space-between;
     align-items: center;
+    margin: $space-large 0;
 
     .create-new-comment-wrapper {
       position: relative;

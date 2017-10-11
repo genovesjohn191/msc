@@ -8,10 +8,9 @@ $ticket-new-comment-file-hover-color: $color-grey-04;
 }
 
 .ticket-new-comment-wrapper {
-  padding: $space-small;
+  padding-bottom: $space-small;
   @include display-flex(column);
   @include set-items-interval($space-small);
-  @include box-shadow(0 0 5px 1px rgba($ticket-new-comment-box-shadow-color, 0.2));
 
   .ticket-comment {
     textarea {
