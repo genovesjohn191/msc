@@ -1,6 +1,7 @@
 import { ServerClientObject } from './server-client-object';
 import { ServerCreateStorage } from './server-create-storage';
 import { ServerCreateNetwork } from './server-create-network';
+import { ServerImageType } from '../enumerations/server-image-type.enum';
 
 export class ServerCreate {
   public platform: string;
@@ -8,7 +9,9 @@ export class ServerCreate {
   public name: string;
   public cpuCount: number;
   public memoryMB: number;
-  public guestOs: string;
+  public imageType: ServerImageType;
+  public image: string;
+  public target: string;
   public serviceId: string;
   public storage: ServerCreateStorage;
   public network: ServerCreateNetwork;

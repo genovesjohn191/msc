@@ -2,19 +2,21 @@
   class="new-self-managed-server-container" animate [trigger]="animateTrigger">
 
   <div class="server-details">
-    <!-- TODO: Temporary removed, it is under discussion -->
-    <!-- <div class="control-group">
-      <mcs-dropdown name="vApp"
+    <div class="control-group">
+      <mcs-dropdown name="vApp" formControlName="formControlVApp"
+        [placeholder]="vAppPlaceholder"
         [dropdownData]="vAppItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVapp"></mcs-validation-message>
-    </div> -->
+      <mcs-validation-message [control]="formControlVApp"></mcs-validation-message>
+    </div>
 
     <div class="control-group">
-      <mcs-dropdown name="VM Template"
-        formControlName="formControlVTemplate"
-        [dropdownData]="vTemplateItems"
-        [mcsContextualHelp]="contextualTextContent.serverTemplate"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVTemplate"></mcs-validation-message>
+      <!-- <mcs-server-image [os]="osItems" [templates]="vTemplateItems"
+        formControlName="formControlImage"
+        [mcsContextualHelp]="contextualTextContent.serverTemplate"></mcs-server-image> -->
+        <mcs-dropdown name="vApp" formControlName="formControlImage"
+          [placeholder]="serverImagePlaceholder"
+          [dropdownData]="serverImageItems"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlImage"></mcs-validation-message>
     </div>
   </div>
 

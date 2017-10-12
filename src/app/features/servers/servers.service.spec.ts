@@ -24,6 +24,8 @@ import {
   ServerCommand,
   ServerPowerState,
   ServerPlatform,
+  ServerResource,
+  ServerServiceType,
   ServerStorageDevice,
   ServerStorageDeviceUpdate
 } from './models';
@@ -458,6 +460,85 @@ describe('ServersService', () => {
       });
 
       serversService.getPlatformData()
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe(() => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('getResources()', () => {
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                status: 200,
+                totalCount: 2,
+                content: [
+                  {
+                    id: '097379e6-c003-42ab-8ab6-5884a810b9ef',
+                    name: 'M1VDC27117001',
+                    serviceType: 'Managed'
+                  },
+                  {
+                    id: '847adb5a-6afe-44c9-a1cc-1c19eb7a1981',
+                    name: 'M1SVC27117002',
+                    serviceType: 'SelfManaged'
+                  }
+                ]
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse<ServerResource[]> when successful',
+      fakeAsync(() => {
+      serversService.getResources()
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<ServerResource[]>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].totalCount).toEqual(2);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].id)
+            .toEqual('097379e6-c003-42ab-8ab6-5884a810b9ef');
+          expect(mcsApiSucessResponse[0].content[0].name).toEqual('M1VDC27117001');
+          expect(mcsApiSucessResponse[0].content[0].serviceType)
+            .toEqual(ServerServiceType.Managed);
+
+          expect(mcsApiSucessResponse[0].content[1].id)
+            .toEqual('847adb5a-6afe-44c9-a1cc-1c19eb7a1981');
+          expect(mcsApiSucessResponse[0].content[1].name).toEqual('M1SVC27117002');
+          expect(mcsApiSucessResponse[0].content[1].serviceType)
+            .toEqual(ServerServiceType.SelfManaged);
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Get);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.getResources()
         .catch((error: McsApiErrorResponse) => {
           expect(error).toBeDefined();
           expect(error.status).toEqual(404);

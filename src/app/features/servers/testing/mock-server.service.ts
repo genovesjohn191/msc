@@ -13,9 +13,12 @@ import {
   ServerPowerState,
   ServerThumbnail,
   ServerPlatform,
+  ServerResource,
   ServerNetwork,
   ServerServiceType,
   ServerStorageDeviceUpdate,
+  ServerCatalogType,
+  ServerCatalogItemType
 } from '../models';
 
 export const mockServerService = {
@@ -70,6 +73,7 @@ export const mockServerService = {
           environment: 'Macquarie_Telecom_Contoso_100320',
           resources: [
             {
+              id: '847adb5a-6afe-44c9-a1cc-1c19eb7a1981',
               name: 'M1VDC27117001',
               serviceType: ServerServiceType.SelfManaged,
               availabilityZone: 'IC1',
@@ -89,12 +93,53 @@ export const mockServerService = {
                   usedMB: 359471.22
                 }
               ],
-              networks: new Array<ServerNetwork>()
+              networks: new Array<ServerNetwork>(),
+              catalogs: [
+                {
+                  id: 'd570cc74-493a-45dc-a714-3525bcd0fc19',
+                  name: 'Customer_100320_SVC_Contoso',
+                  type: ServerCatalogType.SelfManaged,
+                  itemName: 'test-template',
+                  itemType: ServerCatalogItemType.Template
+                }
+              ],
+              vApps: [
+                {
+                  name: 'api-server',
+                  virtualMachines: [
+                    {
+                      name: 'api-server2'
+                    },
+                    {
+                      name: 'api-server'
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
       ]
     };
+
+    return Observable.of(mcsApiResponseMock);
+  },
+  getResources() {
+    let mcsApiResponseMock = new McsApiSuccessResponse<ServerResource[]>();
+    mcsApiResponseMock.status = 200;
+    mcsApiResponseMock.totalCount = 2;
+    mcsApiResponseMock.content = [
+      {
+        id: '097379e6-c003-42ab-8ab6-5884a810b9ef',
+        name: 'M1VDC27117001',
+        serviceType: ServerServiceType.Managed
+      } as ServerResource,
+      {
+        id: '847adb5a-6afe-44c9-a1cc-1c19eb7a1981',
+        name: 'M1SVC27117002',
+        serviceType: ServerServiceType.SelfManaged
+      } as ServerResource
+    ];
 
     return Observable.of(mcsApiResponseMock);
   },

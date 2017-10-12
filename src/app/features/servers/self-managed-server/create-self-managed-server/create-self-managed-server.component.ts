@@ -15,7 +15,7 @@ import {
   ServerCreateType,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerOs
+  ServerGroupedOs
 } from '../../models';
 import {
   CoreDefinition,
@@ -46,7 +46,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   public resource: ServerResource;
 
   @Input()
-  public serversOs: ServerOs[];
+  public serversOs: ServerGroupedOs[];
 
   @Input()
   public servers: Server[];
@@ -72,6 +72,11 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   public get serverCreateType(): ServerCreateType {
     return this._serverCreateType;
   }
+  public set serverCreateType(value: ServerCreateType) {
+    if (this._serverCreateType !== value) {
+      this._serverCreateType = value;
+    }
+  }
 
   /**
    * Get the server inputted based on the current server type
@@ -92,6 +97,10 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     return this._serverInputs.isValid && this.formGroupCreateServer.valid;
   }
 
+  private _serverNew: ServerCreateSelfManaged;
+  private _serverCopy: ServerCreateSelfManaged;
+  private _serverClone: ServerCreateSelfManaged;
+
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
@@ -99,6 +108,9 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     this._serverCreateType = ServerCreateType.New;
     this._serverInputs = new ServerCreateSelfManaged();
     this._isValid = false;
+    this._serverNew = new ServerCreateSelfManaged();
+    this._serverCopy = new ServerCreateSelfManaged();
+    this._serverClone = new ServerCreateSelfManaged();
   }
 
   public ngOnInit() {
@@ -124,15 +136,43 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   }
 
   public setCreationType(type: ServerCreateType): void {
-    if (!type) { return; }
     this._serverCreateType = type;
+
+    switch (type) {
+      case ServerCreateType.Copy:
+        this._serverInputs = this._serverCopy;
+        break;
+
+      case ServerCreateType.Clone:
+        this._serverInputs = this._serverClone;
+        break;
+
+      case ServerCreateType.New:
+      default:
+        this._serverInputs = this._serverNew;
+        break;
+    }
   }
 
   public setServerDetails($serverDetails: ServerCreateSelfManaged): void {
     if (!$serverDetails) { return; }
 
-    this._serverCreateType = this.serverCreateType;
-    this._serverInputs = $serverDetails;
+    switch ($serverDetails.type) {
+      case ServerCreateType.Copy:
+        this._serverCopy = $serverDetails;
+        break;
+
+      case ServerCreateType.Clone:
+        this._serverClone = $serverDetails;
+        break;
+
+      case ServerCreateType.New:
+      default:
+        this._serverNew = $serverDetails;
+        break;
+    }
+
+    this.setCreationType(this._serverCreateType);
   }
 
   public isControlValid(control: any): boolean {

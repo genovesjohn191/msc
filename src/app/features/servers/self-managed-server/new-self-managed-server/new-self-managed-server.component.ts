@@ -35,11 +35,18 @@ import {
   ServerCreateSelfManaged,
   ServerResource,
   ServerNetwork,
-  ServerOs
+  ServerGroupedOs,
+  ServerCreateType,
+  ServerImageType,
+  ServerImage,
+  ServerCatalogType
 } from '../../models';
 
 const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
 const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MULTIPLIER;
+const VAPP_PLACEHOLDER = 'Select VApp';
+const SERVER_IMAGE_PLACEHOLDER = 'Select Image';
+const CUSTOM_TEMPLATE_GROUP = 'Custom Templates';
 
 @Component({
   selector: 'mcs-new-self-managed-server',
@@ -55,7 +62,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public resource: ServerResource;
 
   @Input()
-  public serversOs: ServerOs[];
+  public serversOs: ServerGroupedOs[];
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -66,7 +73,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   // Form variables
   public formGroupNewServer: FormGroup;
   public formControlVApp: FormControl;
-  public formControlVTemplate: FormControl;
+  public formControlImage: FormControl;
   public formControlNetwork: FormControl;
   public formControlScale: FormControl;
   public formControlStorage: FormControl;
@@ -82,9 +89,13 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public storageAvailableMemoryMB: number;
   public selectedStorage: ServerManageStorage;
 
+  public serverImageData: ServerImage[];
+
   // Dropdowns
   public vAppItems: McsList;
+  public osItems: McsList;
   public vTemplateItems: McsList;
+  public serverImageItems: McsList;
   public networkItems: McsList;
   public storageItems: McsList;
 
@@ -94,8 +105,24 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public availableCpuCount: number;
   public animateTrigger: string;
 
+  public get vAppPlaceholder(): string {
+    return VAPP_PLACEHOLDER;
+  }
+
+  public get serverImagePlaceholder(): string {
+    return SERVER_IMAGE_PLACEHOLDER;
+  }
+
+  private get _memoryGB(): number {
+    return Math.floor(convertToGb(this.storageMemoryMB));
+  }
+
+  private get _maximumMemoryGB(): number {
+    return this._memoryGB + Math.floor(convertToGb(this.storageAvailableMemoryMB));
+  }
+
   public constructor(
-    private _managedServerService: CreateSelfManagedServersService,
+    private _serverService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
     this.animateTrigger = 'fadeIn';
@@ -107,9 +134,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.storageSliderValues = new Array<number>();
     this.storageAvailableMemoryMB = 0;
     this.selectedStorage = new ServerManageStorage();
-
+    this.serverImageData = new Array<ServerImage>();
     this.vAppItems = new McsList();
+    this.osItems = new McsList();
     this.vTemplateItems = new McsList();
+    this.serverImageItems = new McsList();
     this.networkItems = new McsList();
     this.storageItems = new McsList();
     this.selectedNetwork = new ServerNetwork();
@@ -127,7 +156,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     if (this.resource) {
       this._setVAppItems();
-      this._setVTemplateItems();
+      this._setServerImageItems();
       this._setStorageItems();
       this._setNetworkItems();
       this._setAvailableMemoryMB();
@@ -143,8 +172,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
           .map((description) => {
             return description;
           });
-        this._managedServerService.subContextualHelp =
-          mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
+        this._serverService.subContextualHelp =
+          mergeArrays(this._serverService.subContextualHelp, contextInformations);
       }
     });
   }
@@ -189,40 +218,55 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setAvailableMemoryMB(): void {
-    this.availableMemoryMB = this.resource.memoryLimitMB - this.resource.memoryUsedMB;
+    this.availableMemoryMB = this._serverService.computeAvailableMemoryMB(this.resource);
   }
 
   private _setAvailableCpuCount(): void {
-    this.availableCpuCount = this.resource.cpuLimit - this.resource.cpuUsed;
+    this.availableCpuCount = this._serverService.computeAvailableCpu(this.resource);
   }
 
   private _setVAppItems(): void {
     if (isNullOrEmpty(this.resource)) { return; }
 
     // Populate dropdown list
-    this.resource.storage.forEach((storage) => {
-      this.vAppItems.push('Virtual Applications', new McsListItem(storage.name, storage.name));
+    this.resource.vApps.forEach((vApp) => {
+      this.vAppItems.push('Virtual Applications', new McsListItem(vApp.name, vApp.name));
     });
-    // Select first element of the dropdown
-    if (!isNullOrEmpty(this.vAppItems.getGroupNames())) {
-      this.formControlVApp.setValue(this.vAppItems.getGroup(
-        this.vAppItems.getGroupNames()[0])[0].value);
-    }
+
   }
 
-  private _setVTemplateItems(): void {
-    if (isNullOrEmpty(this.serversOs)) { return; }
+  private _setServerImageItems(): void {
+    let serverImageId = 0;
 
-    // Populate dropdown list
-    this.serversOs.forEach((serverOs) => {
-      this.vTemplateItems.push('Virtual Templates',
-        new McsListItem(serverOs.name, serverOs.name));
+    this.serversOs.forEach((groupedOs) => {
+      groupedOs.os.forEach((os) => {
+        let serverImage = new ServerImage();
+        serverImage.id = serverImageId;
+        serverImage.imageType = ServerImageType.Os;
+        serverImage.image = os.name;
+
+        this.serverImageData.push(serverImage);
+        this.serverImageItems.push(groupedOs.platform,
+          new McsListItem(serverImage.id, serverImage.image));
+
+        serverImageId++;
+      });
     });
-    // Select first element of the dropdown
-    if (!isNullOrEmpty(this.vTemplateItems.getGroupNames())) {
-      this.formControlVTemplate.setValue(this.vTemplateItems.getGroup(
-        this.vTemplateItems.getGroupNames()[0])[0].value);
-    }
+
+    this.resource.catalogs.forEach((catalog) => {
+      if (catalog.type === ServerCatalogType.SelfManaged) {
+        let serverImage = new ServerImage();
+        serverImage.id = serverImageId;
+        serverImage.imageType = ServerImageType.Template;
+        serverImage.image = catalog.itemName;
+
+        this.serverImageData.push(serverImage);
+        this.serverImageItems.push(CUSTOM_TEMPLATE_GROUP,
+          new McsListItem(serverImage.id, serverImage.image));
+
+        serverImageId++;
+      }
+    });
   }
 
   private _setNetworkItems(): void {
@@ -232,6 +276,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.resource.networks.forEach((network) => {
       this.networkItems.push('Networks', new McsListItem(network.name, network.name));
     });
+
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.networkItems.getGroupNames())) {
       this.formControlNetwork.setValue(this.networkItems.getGroup(
@@ -250,37 +295,26 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setStorageAvailableMemoryMB(): void {
-    let availableMemoryMB = 0;
     let serverStorage = this.formControlStorage.value as ServerManageStorage;
 
-    if (serverStorage) {
-      let storageProfile = this.resource.storage
-        .find((profile) => {
-          return profile.name === serverStorage.storageProfile;
-        });
+    let resourceStorage = this.resource.storage
+      .find((resource) => {
+        return resource.name === serverStorage.storageProfile;
+      });
 
-      if (storageProfile) {
-        availableMemoryMB = storageProfile.limitMB - storageProfile.usedMB;
-        if (availableMemoryMB < 0) { availableMemoryMB = 0; }
-      }
-    }
-
-    this.storageAvailableMemoryMB = availableMemoryMB;
+    this.storageAvailableMemoryMB = this._serverService.computeAvailableStorageMB(resourceStorage);
   }
 
   private _setStorageSliderValues(): void {
-    if (isNullOrEmpty(this.storageAvailableMemoryMB)) { return; }
+    if (isNullOrEmpty(this._memoryGB) || isNullOrEmpty(this._maximumMemoryGB)) { return; }
 
-    let memoryGB = Math.floor(convertToGb(this.storageMemoryMB));
-    let maximumMemoryGB = memoryGB + Math.floor(convertToGb(this.storageAvailableMemoryMB));
-
-    this.storageSliderValues = new Array<number>();
-    this.storageSliderValues.push(memoryGB);
-    for (let value = memoryGB; value < maximumMemoryGB;) {
-      if ((value + NEW_SERVER_STORAGE_SLIDER_STEP) <= maximumMemoryGB) {
+    this.storageSliderValues.splice(0);
+    this.storageSliderValues.push(this._memoryGB);
+    for (let value = this._memoryGB; value < this._maximumMemoryGB;) {
+      if ((value + NEW_SERVER_STORAGE_SLIDER_STEP) <= this._maximumMemoryGB) {
         value += NEW_SERVER_STORAGE_SLIDER_STEP;
       } else {
-        value = maximumMemoryGB;
+        value = this._maximumMemoryGB;
       }
 
       this.storageSliderValues.push(value);
@@ -289,17 +323,16 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.formControlVApp = new FormControl('', [
-      CoreValidators.required
-    ]);
+    this.formControlVApp = new FormControl('', []);
 
-    this.formControlVTemplate = new FormControl('', [
+    this.formControlImage = new FormControl('', [
       CoreValidators.required
     ]);
 
     this.formControlNetwork = new FormControl('', [
       CoreValidators.required
     ]);
+
     this.formControlNetwork.valueChanges
       .subscribe((networkSelected) => {
         let networkFound = this.resource.networks.find((network) => {
@@ -324,8 +357,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     // Register Form Groups using binding
     this.formGroupNewServer = new FormGroup({
-      // formControlVapp: this.formControlVApp,
-      formControlVTemplate: this.formControlVTemplate,
+      formControlVApp: this.formControlVApp,
+      formControlImage: this.formControlImage,
       formControlNetwork: this.formControlNetwork,
       formControlScale: this.formControlScale,
       formControlStorage: this.formControlStorage,
@@ -342,8 +375,18 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     newSelfManaged = new ServerCreateSelfManaged();
 
     // Set the variable based on the form values
+    newSelfManaged.type = ServerCreateType.New;
     newSelfManaged.vApp = this.formControlVApp.value;
-    newSelfManaged.vTemplate = this.formControlVTemplate.value;
+
+    let serverImage = this.serverImageData.find((data) => {
+      return data.id === this.formControlImage.value;
+    });
+
+    if (!isNullOrEmpty(serverImage)) {
+      newSelfManaged.imageType = serverImage.imageType;
+      newSelfManaged.image = serverImage.image;
+    }
+
     newSelfManaged.networkName = this.formControlNetwork.value;
     newSelfManaged.performanceScale = this.formControlScale.value;
     newSelfManaged.serverManageStorage = this.formControlStorage.value;

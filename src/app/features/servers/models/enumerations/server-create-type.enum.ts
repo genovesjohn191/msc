@@ -1,5 +1,5 @@
 export enum ServerCreateType {
-  New = 1,
-  Copy = 2,
-  Clone = 3
+  New = 0,
+  Copy = 1,
+  Clone = 2
 }

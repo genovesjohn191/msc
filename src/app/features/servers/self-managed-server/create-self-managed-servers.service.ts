@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ServersService } from '../servers.service';
-import { ServerCreate } from '../models';
+import {
+  ServerCreate,
+  ServerResource,
+  ServerResourceStorage
+} from '../models';
 import { ContextualHelpDirective } from '../../../shared';
 
 @Injectable()
@@ -23,10 +27,10 @@ export class CreateSelfManagedServersService {
   }
 
   /**
-   * This will get the platform data from the servers service
+   * This will get the resources data from the servers service
    */
-  public getPlatformData() {
-    return this._serversService.getPlatformData();
+  public getResources() {
+    return this._serversService.getResources();
   }
 
   /**
@@ -49,5 +53,17 @@ export class CreateSelfManagedServersService {
    */
   public createServer(serverData: ServerCreate) {
     return this._serversService.createServer(serverData);
+  }
+
+  public computeAvailableMemoryMB(resource: ServerResource): number {
+    return this._serversService.computeAvailableMemoryMB(resource);
+  }
+
+  public computeAvailableCpu(resource: ServerResource): number {
+    return this._serversService.computeAvailableCpu(resource);
+  }
+
+  public computeAvailableStorageMB(storage: ServerResourceStorage): number {
+    return this._serversService.computeAvailableStorageMB(storage);
   }
 }

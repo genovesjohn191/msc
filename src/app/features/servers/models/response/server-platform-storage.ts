@@ -1,4 +1,4 @@
-export class ServerPlatformStorage {
+export class ServerResourceStorage {
   public name: string;
   public enabled: boolean;
   public limitMB: number;

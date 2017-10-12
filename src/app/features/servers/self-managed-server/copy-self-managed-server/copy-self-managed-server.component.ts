@@ -25,17 +25,24 @@ import {
   ServerIpAddress,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerOs,
+  ServerGroupedOs,
   ServerNetwork,
-  Server
+  Server,
+  ServerCreateType,
+  ServerCatalogType,
+  ServerCatalogItemType,
+  ServerImageType
 } from '../../models';
 import {
   refreshView,
   mergeArrays,
-  isNullOrEmpty
+  isNullOrEmpty,
+  convertToGb
 } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
+
+const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
 
 @Component({
   selector: 'mcs-copy-self-managed-server',
@@ -54,7 +61,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public resource: ServerResource;
 
   @Input()
-  public serversOs: ServerOs[];
+  public serversOs: ServerGroupedOs[];
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -66,7 +73,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public formGroupCopyServer: FormGroup;
   public formControlTargetServerName: FormControl;
   public formControlVApp: FormControl;
-  public formControlVTemplate: FormControl;
+  public formControlImage: FormControl;
   public formControlNetwork: FormControl;
   public formControlScale: FormControl;
   public formControlStorage: FormControl;
@@ -74,13 +81,18 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public formGroupSubscription: any;
 
   // Scale and Storage
-  public storageMemoryMB: number;
-  public selectedNetwork: ServerNetwork;
+
   public selectedServer: Server;
+  public storageMemoryMB: number;
+  public storageAvailableMemoryMB: number;
+  public selectedNetwork: ServerNetwork;
+  public storageSliderValues: number[];
+  public selectedStorage: ServerManageStorage;
 
   // Dropdowns
   public serverItems: McsList;
   public vAppItems: McsList;
+  public osItems: McsList;
   public vTemplateItems: McsList;
   public networkItems: McsList;
   public storageItems: McsList;
@@ -98,35 +110,27 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     return this.selectedServer ? this.selectedServer.cpuCount : 0;
   }
 
-  public get storageAvailableMemoryMB(): number {
-    let availableMemoryMB: number = 0;
-    let serverStorage = this.formControlStorage.value as ServerManageStorage;
-    if (!this.resource) { return 0; }
+  private get _memoryGB(): number {
+    return Math.floor(convertToGb(this.storageMemoryMB));
+  }
 
-    if (serverStorage) {
-      let storageProfile = this.resource.storage
-        .find((profile) => {
-          return profile.name === serverStorage.storageProfile;
-        });
-
-      if (storageProfile) {
-        availableMemoryMB = (storageProfile.limitMB - storageProfile.usedMB) -
-          serverStorage.storageMB;
-      }
-    }
-
-    return availableMemoryMB;
+  private get _maximumMemoryGB(): number {
+    return this._memoryGB + Math.floor(convertToGb(this.storageAvailableMemoryMB));
   }
 
   public constructor(
-    private _managedServerService: CreateSelfManagedServersService,
+    private _serverService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
     this.storageMemoryMB = 0;
+    this.storageAvailableMemoryMB = 0;
+    this.storageSliderValues = new Array<number>();
+    this.selectedStorage = new ServerManageStorage();
     this.availableMemoryMB = 0;
     this.availableCpuCount = 0;
 
     this.serverItems = new McsList();
+    this.osItems = new McsList();
     this.vAppItems = new McsList();
     this.vTemplateItems = new McsList();
     this.networkItems = new McsList();
@@ -145,6 +149,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     if (this.resource) {
       this._setServersItems();
       this._setVAppItems();
+      this._setOsItems();
       this._setVTemplateItems();
       this._setStorageItems();
       this._setNetworkItems();
@@ -161,8 +166,8 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
           .map((description) => {
             return description;
           });
-        this._managedServerService.subContextualHelp =
-          mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
+        this._serverService.subContextualHelp =
+          mergeArrays(this._serverService.subContextualHelp, contextInformations);
       }
     });
   }
@@ -174,9 +179,15 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
-    if (!this.formControlStorage) { return; }
+    if (isNullOrEmpty(this.formControlStorage)) { return; }
+
     if (serverStorage.valid) {
       this.formControlStorage.setValue(serverStorage);
+      if (this.selectedStorage.storageProfile !== serverStorage.storageProfile) {
+        this.selectedStorage = serverStorage;
+        this._setStorageAvailableMemoryMB();
+        this._setStorageSliderValues();
+      }
     } else {
       this.formControlStorage.reset();
     }
@@ -201,11 +212,11 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   private _setAvailableMemoryMB(): void {
-    this.availableMemoryMB = this.resource.memoryLimitMB - this.resource.memoryUsedMB;
+    this.availableMemoryMB = this._serverService.computeAvailableMemoryMB(this.resource);
   }
 
   private _setAvailableCpuCount(): void {
-    this.availableCpuCount = this.resource.cpuLimit - this.resource.cpuUsed;
+    this.availableCpuCount = this._serverService.computeAvailableCpu(this.resource);
   }
 
   private _setServersItems(): void {
@@ -237,18 +248,24 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     }
   }
 
-  private _setVTemplateItems(): void {
-    if (!this.serversOs) { return; }
-
-    // Populate dropdown list
-    this.serversOs.forEach((serverOs) => {
-      this.vTemplateItems.push('Virtual Templates',
-        new McsListItem(serverOs.name, serverOs.name));
+  private _setOsItems(): void {
+    this.serversOs.forEach((groupedOs) => {
+      groupedOs.os.forEach((os) => {
+        this.osItems.push(groupedOs.platform,
+          new McsListItem(ServerImageType.Os, os.name));
+      });
     });
-    // Select first element of the dropdown
-    if (!isNullOrEmpty(this.vTemplateItems.getGroupNames())) {
-      this.formControlVTemplate.setValue(this.selectedServer.os);
-    }
+  }
+
+  private _setVTemplateItems(): void {
+    if (isNullOrEmpty(this.resource.catalogs)) { return; }
+
+    this.resource.catalogs.forEach((catalog) => {
+      if (catalog.type === ServerCatalogType.SelfManaged) {
+        this.vTemplateItems.push(ServerCatalogItemType[catalog.itemType],
+          new McsListItem(ServerImageType.Template, catalog.itemName));
+      }
+    });
   }
 
   private _setNetworkItems(): void {
@@ -271,7 +288,41 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     this.resource.storage.forEach((storage) => {
       this.storageItems.push('Storages', new McsListItem(storage.name, storage.name));
     });
-    // The selection of element is happened under onStorageChanged method
+
+    this._setStorageMemoryMB();
+  }
+
+  private _setStorageAvailableMemoryMB(): void {
+    let serverStorage = this.formControlStorage.value as ServerManageStorage;
+
+    let resourceStorage = this.resource.storage
+    .find((resource) => {
+      return resource.name === serverStorage.storageProfile;
+    });
+
+    this.storageAvailableMemoryMB = this._serverService.computeAvailableStorageMB(resourceStorage);
+  }
+
+  private _setStorageSliderValues(): void {
+    if (isNullOrEmpty(this._memoryGB) || isNullOrEmpty(this._maximumMemoryGB)) { return; }
+
+    this.storageSliderValues.splice(0);
+    this.storageSliderValues.push(this._memoryGB);
+    for (let value = this._memoryGB; value < this._maximumMemoryGB;) {
+      if ((value + NEW_SERVER_STORAGE_SLIDER_STEP) <= this._maximumMemoryGB) {
+        value += NEW_SERVER_STORAGE_SLIDER_STEP;
+      } else {
+        value = this._maximumMemoryGB;
+      }
+
+      this.storageSliderValues.push(value);
+    }
+  }
+
+  private _setStorageMemoryMB(): void {
+    if (isNullOrEmpty(this.selectedServer.storageDevice)) { return; }
+
+    this.storageMemoryMB = this.selectedServer.storageDevice[0].sizeMB;
   }
 
   private _registerFormGroup(): void {
@@ -289,11 +340,9 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
         }
       });
 
-    this.formControlVApp = new FormControl('', [
-      CoreValidators.required
-    ]);
+    this.formControlVApp = new FormControl('', []);
 
-    this.formControlVTemplate = new FormControl('', [
+    this.formControlImage = new FormControl('', [
       CoreValidators.required
     ]);
 
@@ -316,8 +365,8 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     // Register Form Groups using binding
     this.formGroupCopyServer = new FormGroup({
       formControlTargetServerName: this.formControlTargetServerName,
-      // formControlVApp: this.formControlVApp,
-      formControlVTemplate: this.formControlVTemplate,
+      formControlVApp: this.formControlVApp,
+      formControlImage: this.formControlImage,
       formControlNetwork: this.formControlNetwork,
       formControlScale: this.formControlScale,
       formControlStorage: this.formControlStorage,
@@ -334,9 +383,10 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     copySelfManaged = new ServerCreateSelfManaged();
 
     // Set the variable based on the form values
+    copySelfManaged.type = ServerCreateType.Copy;
     copySelfManaged.targetServerName = this.formControlTargetServerName.value;
     copySelfManaged.vApp = this.formControlVApp.value;
-    copySelfManaged.vTemplate = this.formControlVTemplate.value;
+    copySelfManaged.image = this.formControlImage.value;
     copySelfManaged.networkName = this.formControlNetwork.value;
     copySelfManaged.performanceScale = this.formControlScale.value;
     copySelfManaged.serverManageStorage = this.formControlStorage.value;
