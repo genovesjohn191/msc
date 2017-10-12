@@ -2,6 +2,7 @@
 export * from './request/server-storage-device-update';
 export * from './request/server-update';
 export * from './request/server-create';
+export * from './request/server-clone';
 export * from './request/server-create-storage';
 export * from './request/server-create-network';
 export * from './request/server-client-object';

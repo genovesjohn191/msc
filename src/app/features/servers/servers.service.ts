@@ -26,6 +26,7 @@ import {
   ServerPowerState,
   ServerThumbnail,
   ServerCreate,
+  ServerClone,
   ServerUpdate,
   ServerCommand,
   ServerPlatform,
@@ -192,6 +193,30 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
     mcsApiRequestParameter.recordData = JSON.stringify(serverData, this._convertProperty);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * This will clone an existing server
+   * @param id Server id to be cloned
+   * @param serverData Server data to be cloned
+   */
+  public cloneServer(
+    id: string,
+    serverData: ServerClone
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/clone`;
+    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {

@@ -2,6 +2,7 @@ export enum McsJobType {
   CreateServer = 100001,
   UpdateServer = 100002,
   DeleteServer = 100003,
+  CloneServer = 100004,
 
   // Server Snapshot
   CreateServerSnapshot = 100051,

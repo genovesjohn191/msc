@@ -36,9 +36,11 @@ import {
   ServerResource,
   ServerVApp,
   ServerCreate,
+  ServerClone,
   ServerCreateStorage,
   ServerCreateNetwork,
-  ServerServiceType
+  ServerServiceType,
+  ServerCreateType
 } from '../models';
 import { CreateSelfManagedServersService } from './create-self-managed-servers.service';
 import {
@@ -230,47 +232,62 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
 
     // Loop to all new servers
     this.newServers.forEach((server) => {
-      let serverCreate = new ServerCreate();
-      // Server Data
-      serverCreate.platform = 'vcloud';
-      serverCreate.resource = server.componentRef.instance.vdcName;
-      serverCreate.name = server.componentRef.instance.serverName;
+      if (server.componentRef.instance.serverCreateType === ServerCreateType.Clone) {
+        let serverId = server.componentRef.instance.serverInputs.targetServer;
+        let serverClone = new ServerClone();
+        serverClone.name = server.componentRef.instance.serverName;
 
-      serverCreate.target = server.componentRef.instance.serverInputs.vApp;
-      serverCreate.imageType = server.componentRef.instance.serverInputs.imageType;
-      serverCreate.image = server.componentRef.instance.serverInputs.image;
-      serverCreate.serviceId = ''; // This is only empty if the type is Self-Managed
+        this._createSelfManagedServices.cloneServer(serverId, serverClone)
+          .subscribe((response) => {
+            // Subscribe to execute the creation asynchronously
+            // and get the current jobs
+            if (response.content) {
+              this.notifications.push(response.content);
+            }
+          });
+      } else {
+        let serverCreate = new ServerCreate();
+        // Server Data
+        serverCreate.platform = 'vcloud';
+        serverCreate.resource = server.componentRef.instance.vdcName;
+        serverCreate.name = server.componentRef.instance.serverName;
 
-      // Scale
-      serverCreate.cpuCount = server.componentRef.instance
-        .serverInputs.performanceScale.cpuCount;
-      serverCreate.memoryMB = server.componentRef.instance
-        .serverInputs.performanceScale.memoryMB;
+        serverCreate.target = server.componentRef.instance.serverInputs.vApp;
+        serverCreate.imageType = server.componentRef.instance.serverInputs.imageType;
+        serverCreate.image = server.componentRef.instance.serverInputs.image;
+        serverCreate.serviceId = ''; // This is only empty if the type is Self-Managed
 
-      // Storage
-      serverCreate.storage = new ServerCreateStorage();
-      serverCreate.storage.name = server.componentRef.instance
-        .serverInputs.serverManageStorage.storageProfile;
-      serverCreate.storage.storageMB = server.componentRef.instance
-        .serverInputs.serverManageStorage.storageMB;
+        // Scale
+        serverCreate.cpuCount = server.componentRef.instance
+          .serverInputs.performanceScale.cpuCount;
+        serverCreate.memoryMB = server.componentRef.instance
+          .serverInputs.performanceScale.memoryMB;
 
-      // Network
-      serverCreate.network = new ServerCreateNetwork();
-      serverCreate.network.name = server.componentRef.instance
-        .serverInputs.networkName;
-      serverCreate.network.ipAllocationMode = server.componentRef.instance
-        .serverInputs.ipAddress.ipAllocationMode;
-      serverCreate.network.ipAddress = server.componentRef.instance
-        .serverInputs.ipAddress.customIpAddress;
+        // Storage
+        serverCreate.storage = new ServerCreateStorage();
+        serverCreate.storage.name = server.componentRef.instance
+          .serverInputs.serverManageStorage.storageProfile;
+        serverCreate.storage.storageMB = server.componentRef.instance
+          .serverInputs.serverManageStorage.storageMB;
 
-      this._createSelfManagedServices.createServer(serverCreate)
-        .subscribe((response) => {
-          // Subscribe to execute the creation asynchronously
-          // and get the current jobs
-          if (response.content) {
-            this.notifications.push(response.content);
-          }
-        });
+        // Network
+        serverCreate.network = new ServerCreateNetwork();
+        serverCreate.network.name = server.componentRef.instance
+          .serverInputs.networkName;
+        serverCreate.network.ipAllocationMode = server.componentRef.instance
+          .serverInputs.ipAddress.ipAllocationMode;
+        serverCreate.network.ipAddress = server.componentRef.instance
+          .serverInputs.ipAddress.customIpAddress;
+
+        this._createSelfManagedServices.createServer(serverCreate)
+          .subscribe((response) => {
+            // Subscribe to execute the creation asynchronously
+            // and get the current jobs
+            if (response.content) {
+              this.notifications.push(response.content);
+            }
+          });
+      }
     });
   }
 
@@ -303,7 +320,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
       .notificationsStream.subscribe((updatedNotifications) => {
         if (updatedNotifications) {
           let creationJobs = updatedNotifications.filter((job) => {
-            return job.type === McsJobType.CreateServer;
+            return job.type === McsJobType.CreateServer || job.type === McsJobType.CloneServer;
           });
 
           // Update new created servers

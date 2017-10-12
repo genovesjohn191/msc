@@ -3,9 +3,9 @@
 
   <div class="server-configuration-details">
     <mcs-dropdown name="Clone this server"
-      formControlName="formControlTargetServerName"
+      formControlName="formControlTargetServer"
       [dropdownData]="serverItems"
       [mcsContextualHelp]="contextualTextContent.cloneServer"></mcs-dropdown>
-    <mcs-validation-message [control]="formControlTargetServerName"></mcs-validation-message>
+    <mcs-validation-message [control]="formControlTargetServer"></mcs-validation-message>
   </div>
 </form>

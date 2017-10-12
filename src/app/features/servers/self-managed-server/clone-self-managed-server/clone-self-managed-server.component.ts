@@ -52,7 +52,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   // Form variables
   public formGroupCloneServer: FormGroup;
-  public formControlTargetServerName: FormControl;
+  public formControlTargetServer: FormControl;
 
   // Others
   public serverItems: McsList;
@@ -101,20 +101,20 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.serverItems.getGroupNames())) {
-      this.formControlTargetServerName.setValue(this.servers[0].id);
+      this.formControlTargetServer.setValue(this.servers[0].id);
       this.selectedServer = this.servers[0];
     }
   }
 
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.formControlTargetServerName = new FormControl('', [
+    this.formControlTargetServer = new FormControl('', [
       CoreValidators.required
     ]);
 
     // Register Form Groups using binding
     this.formGroupCloneServer = new FormGroup({
-      formControlTargetServerName: this.formControlTargetServerName
+      formControlTargetServer: this.formControlTargetServer
     });
     this.formGroupCloneServer.statusChanges.subscribe(() => {
       this._outputServerDetails();
@@ -127,7 +127,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
     // Set the variable based on the form values
     cloneSelfManaged.type = ServerCreateType.Clone;
-    cloneSelfManaged.targetServerName = this.formControlTargetServerName.value;
+    cloneSelfManaged.targetServer = this.formControlTargetServer.value;
     cloneSelfManaged.isValid = this.formGroupCloneServer.valid;
     this.onOutputServerDetails.next(cloneSelfManaged);
   }
