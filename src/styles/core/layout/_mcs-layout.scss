@@ -54,6 +54,24 @@
   justify-content: none;
 }
 
+// Alignment classes
+.right-align {
+  margin-left: auto !important;
+}
+
+.left-align {
+  margin-right: auto !important;
+}
+
+.top-align {
+  vertical-align: top !important;
+}
+
+// Layout classes
+.inline-block {
+  display: inline-block;
+}
+
 // Status
 .read-only {
   color: $color-grey-02;

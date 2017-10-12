@@ -240,28 +240,8 @@ html {
   }
 }
 
-// Alignment classes
-.right-align {
-  margin-left: auto !important;
-}
-
-.left-align {
-  margin-right: auto !important;
-}
-
 .rotate-sideways {
   @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
-}
-
-// TODO: Temporary fix for loader. Will remove after refactoring loader
-.loader-container {
-  display: block;
-  position: relative;
-  min-height: 100%;
-
-  .loader-container {
-    z-index: $zindex-loader-container;
-  }
 }
 
 .icon-label-wrapper {

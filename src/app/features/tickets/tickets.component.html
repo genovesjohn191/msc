@@ -68,7 +68,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.headline.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell">
             <a [routerLink]="['/tickets', row.id]">{{ row.shortDescription }}</a>
           </mcs-data-cell>
         </ng-container>
