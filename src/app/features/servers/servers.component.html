@@ -84,7 +84,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.name.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
             <ng-template #loadingContent>
               <span class="loading-content-popover">
                 {{ getActiveServerTooltip(row.id) }}

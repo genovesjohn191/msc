@@ -44,10 +44,10 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.notification.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
-            <mcs-icon [key]="getStatusIconKey(row.status)"
+          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
+            <mcs-icon [key]="getStatusIconKey(row.status)" class="top-align"
               [color]="getStatusIconColor(row.status)" size="small"></mcs-icon>
-            <span>
+            <span class="inline-block">
               {{ row.description }}<br/>
               {{ row.summaryInformation }}
             </span>
