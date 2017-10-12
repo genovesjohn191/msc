@@ -26,7 +26,8 @@ html {
     @include font-size($font-size-default, $line-height-default);
     @include breakpoint(small) {
       @include font-size($font-size-small, $line-height-small);
-      padding-top: 65px;
+      // TODO: Remove completely once fix is confirmed in mobile
+      // padding-top: 65px;
     }
 
     h1, h2, h3, h4 {

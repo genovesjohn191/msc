@@ -5,7 +5,8 @@ $header-small-padding: $space-large $space-medium;
 
 header {
   @include breakpoint(small) {
-    position: fixed;
+    // TODO: Remove completely once fix is confirmed in mobile
+    // position: fixed; 
     top: 0;
     width: 100%;
     padding-right: 0;

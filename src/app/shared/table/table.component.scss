@@ -60,6 +60,7 @@ mcs-table {
     mcs-header-cell {
       @extend %cell-style;
       @include font-size($table-header-font-size);
+      vertical-align: middle;
       font-family: $circular-pro-book;
       padding: $table-header-cell-padding;
     }
@@ -78,6 +79,7 @@ mcs-table {
     mcs-data-cell {
       @extend %cell-style;
       @include font-size($table-data-font-size);
+      vertical-align: middle;
       border-right: none;
       font-family: $circular-pro-book;
       padding: $table-data-cell-padding;
