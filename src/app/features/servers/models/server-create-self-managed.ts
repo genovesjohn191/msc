@@ -7,7 +7,7 @@ import { ServerImageType } from './enumerations/server-image-type.enum';
 export class ServerCreateSelfManaged {
   public type: ServerCreateType;
   public isValid: boolean;
-  public targetServerName: string;
+  public targetServer: string;
   public vApp: string;
   public imageType: ServerImageType;
   public image: string;

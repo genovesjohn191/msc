@@ -71,7 +71,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
   // Form variables
   public formGroupCopyServer: FormGroup;
-  public formControlTargetServerName: FormControl;
+  public formControlTargetServer: FormControl;
   public formControlVApp: FormControl;
   public formControlImage: FormControl;
   public formControlNetwork: FormControl;
@@ -230,7 +230,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.serverItems.getGroupNames())) {
-      this.formControlTargetServerName.setValue(this.servers[0].id);
+      this.formControlTargetServer.setValue(this.servers[0].id);
       this.selectedServer = this.servers[0];
     }
   }
@@ -327,10 +327,10 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.formControlTargetServerName = new FormControl('', [
+    this.formControlTargetServer = new FormControl('', [
       CoreValidators.required
     ]);
-    this.formControlTargetServerName.valueChanges
+    this.formControlTargetServer.valueChanges
       .subscribe((targetServerId) => {
         let serverFound = this.servers.find((server) => {
           return server.id === targetServerId;
@@ -364,7 +364,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
     // Register Form Groups using binding
     this.formGroupCopyServer = new FormGroup({
-      formControlTargetServerName: this.formControlTargetServerName,
+      formControlTargetServer: this.formControlTargetServer,
       formControlVApp: this.formControlVApp,
       formControlImage: this.formControlImage,
       formControlNetwork: this.formControlNetwork,
@@ -384,7 +384,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
     // Set the variable based on the form values
     copySelfManaged.type = ServerCreateType.Copy;
-    copySelfManaged.targetServerName = this.formControlTargetServerName.value;
+    copySelfManaged.targetServer = this.formControlTargetServer.value;
     copySelfManaged.vApp = this.formControlVApp.value;
     copySelfManaged.image = this.formControlImage.value;
     copySelfManaged.networkName = this.formControlNetwork.value;

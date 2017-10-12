@@ -3,7 +3,8 @@ import { ServersService } from '../servers.service';
 import {
   ServerCreate,
   ServerResource,
-  ServerResourceStorage
+  ServerResourceStorage,
+  ServerClone
 } from '../models';
 import { ContextualHelpDirective } from '../../../shared';
 
@@ -65,5 +66,14 @@ export class CreateSelfManagedServersService {
 
   public computeAvailableStorageMB(storage: ServerResourceStorage): number {
     return this._serversService.computeAvailableStorageMB(storage);
+  }
+
+  /**
+   * This will clone an existing server
+   * @param id Server id to be cloned
+   * @param serverData Server data to be cloned
+   */
+  public cloneServer(id: string, serverData: ServerClone) {
+    return this._serversService.cloneServer(id, serverData);
   }
 }
