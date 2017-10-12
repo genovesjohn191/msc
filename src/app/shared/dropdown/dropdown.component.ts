@@ -78,16 +78,6 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   }
 
   /**
-   * On Touched Event Callback
-   */
-  private _onTouched: () => {};
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: (_: any) => {};
-
-  /**
    * Active Item (model binding)
    */
   private _option: any;
@@ -104,6 +94,16 @@ export class DropdownComponent implements OnChanges, AfterViewInit, ControlValue
   public get caretDownIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CARET_DOWN;
   }
+
+  /**
+   * On Touched Event Callback
+   */
+  private _onTouched: () => {};
+
+  /**
+   * On Changed Event Callback
+   */
+  private _onChanged: (_: any) => {};
 
   public constructor(
     private _renderer: Renderer2,

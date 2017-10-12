@@ -10,18 +10,10 @@
       <mcs-validation-message [control]="formControlTargetServerName"></mcs-validation-message>
     </div>
 
-    <!-- TODO: Temporary removed, it is under discussion -->
-    <!-- <div class="control-group">
-      <mcs-dropdown name="vApp"
-        [dropdownData]="vAppItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVapp"></mcs-validation-message>
-    </div> -->
-
     <div class="control-group">
-      <mcs-dropdown name="VM Template"
-        formControlName="formControlVTemplate"
-        [dropdownData]="vTemplateItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVTemplate"></mcs-validation-message>
+      <mcs-dropdown name="vApp" formControlName="formControlVApp"
+        [dropdownData]="vAppItems"></mcs-dropdown>
+      <mcs-validation-message [control]="formControlVApp"></mcs-validation-message>
     </div>
   </div>
 
@@ -40,8 +32,12 @@
 
     <div class="storage-information">
       <mcs-server-manage-storage
-        [memoryMB]="storageMemoryMB" [availableMemoryMB]="storageAvailableMemoryMB"
-        [storageProfileList]="storageItems" (storageChanged)="onStorageChanged($event)">
+        [memoryMB]="storageMemoryMB"
+        [availableMemoryMB]="storageAvailableMemoryMB"
+        [minimumMB]="storageMemoryMB"
+        [storageProfileList]="storageItems"
+        [storageSliderValues]="storageSliderValues"
+        (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (title and description)-->
         <div title>
           <span class="label">Storage: </span>

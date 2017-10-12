@@ -17,7 +17,8 @@ import {
 } from '../../core/';
 import {
   reviverParser,
-  convertJsonStringToObject
+  convertJsonStringToObject,
+  isNullOrEmpty
 } from '../../utilities';
 import {
   Server,
@@ -28,10 +29,15 @@ import {
   ServerUpdate,
   ServerCommand,
   ServerPlatform,
-  ServerOs,
+  ServerResource,
+  ServerResourceStorage,
+  ServerGroupedOs,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
-  ServerServiceType
+  ServerServiceType,
+  ServerImageType,
+  ServerCatalogType,
+  ServerCatalogItemType
 } from './models';
 
 /**
@@ -185,7 +191,7 @@ export class ServersService {
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
-    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
+    mcsApiRequestParameter.recordData = JSON.stringify(serverData, this._convertProperty);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
@@ -201,18 +207,18 @@ export class ServersService {
   /**
    * This will get the server os data from the API
    */
-  public getServerOs(): Observable<McsApiSuccessResponse<ServerOs[]>> {
+  public getServerOs(): Observable<McsApiSuccessResponse<ServerGroupedOs[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/os';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerOs[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerOs[]>>(
+        let apiResponse: McsApiSuccessResponse<ServerGroupedOs[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerGroupedOs[]>>(
           response.text(),
           this._convertProperty
         );
-        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerOs[]>();
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerGroupedOs[]>();
       })
       .catch(this._handleServerError);
   }
@@ -401,6 +407,37 @@ export class ServersService {
       .catch(this._handleServerError);
   }
 
+  /**
+   * Get Resources Data (MCS API Response)
+   */
+  public getResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = '/servers/resources';
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<ServerResource[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerResource[]>>(
+          response.text(),
+          this._convertProperty
+        );
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerResource[]>();
+      })
+      .catch(this._handleServerError);
+  }
+
+  public computeAvailableMemoryMB(resource: ServerResource): number {
+    return !isNullOrEmpty(resource) ? resource.memoryLimitMB - resource.memoryUsedMB : 0 ;
+  }
+
+  public computeAvailableCpu(resource: ServerResource): number {
+    return !isNullOrEmpty(resource) ? resource.cpuLimit - resource.cpuUsed : 0 ;
+  }
+
+  public computeAvailableStorageMB(storage: ServerResourceStorage): number {
+    return !isNullOrEmpty(storage) ? storage.limitMB - storage.usedMB : 0 ;
+  }
+
   private _listenToNotificationUpdate(): void {
     // listener for the notification updates
     this._notificationContextService.notificationsStream
@@ -444,12 +481,30 @@ export class ServersService {
   }
 
   private _convertProperty(key, value): any {
-    // Convert powerState to enumeration
-    if (key === 'powerState') {
-      value = ServerPowerState[value];
-    // Convert serviceType to enumeration
-    } else if (key === 'serviceType') {
-      value = ServerServiceType[value];
+
+    switch (key) {
+      case 'powerState':
+        value = ServerPowerState[value];
+        break;
+
+      case 'serviceType':
+        value = ServerServiceType[value];
+        break;
+
+      case 'imageType':
+       value = ServerImageType[value];
+       break;
+
+      case 'type':
+        value = ServerCatalogType[value];
+        break;
+
+      case 'itemType':
+        value = ServerCatalogItemType[value];
+        break;
+
+      default:
+        break;
     }
 
     return value;

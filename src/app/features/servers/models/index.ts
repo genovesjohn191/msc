@@ -16,7 +16,10 @@ export * from './response/server-platform';
 export * from './response/server-platform-storage';
 export * from './response/server-environment';
 export * from './response/server-resource';
+export * from './response/server-vapp';
+export * from './response/server-virtual-machine';
 export * from './response/server-network';
+export * from './response/server-grouped-os';
 export * from './response/server-os';
 export * from './response/server-guest-os';
 
@@ -26,6 +29,7 @@ export * from './server-manage-storage';
 export * from './server-ip-address';
 export * from './server-create-self-managed';
 export * from './server-list';
+export * from './server-image';
 
 /** Enumerations */
 export * from './enumerations/server-command.enum';
@@ -33,3 +37,6 @@ export * from './enumerations/server-power-state.enum';
 export * from './enumerations/server-input-manage-type.enum';
 export * from './enumerations/server-create-type.enum';
 export * from './enumerations/server-service-type.enum';
+export * from './enumerations/server-image-type.enum';
+export * from './enumerations/server-catalog-type.enum';
+export * from './enumerations/server-catalog-item-type.enum';

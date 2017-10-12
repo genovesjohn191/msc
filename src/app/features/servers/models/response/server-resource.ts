@@ -1,8 +1,11 @@
-import { ServerPlatformStorage } from './server-platform-storage';
+import { ServerResourceStorage } from './server-platform-storage';
 import { ServerNetwork } from './server-network';
 import { ServerServiceType } from '../enumerations/server-service-type.enum';
+import { ServerCatalog } from './server-catalog';
+import { ServerVApp } from './server-vapp';
 
 export class ServerResource {
+  public id: string;
   public name: string;
   public serviceType: ServerServiceType;
   public availabilityZone: string;
@@ -14,6 +17,8 @@ export class ServerResource {
   public memoryReservationMB: number;
   public memoryLimitMB: number;
   public memoryUsedMB: number;
-  public storage: ServerPlatformStorage[];
+  public storage: ServerResourceStorage[];
   public networks: ServerNetwork[];
+  public catalogs: ServerCatalog[];
+  public vApps: ServerVApp[];
 }

@@ -20,7 +20,8 @@ import {
 } from '../../../../core';
 import {
   ServerCreateSelfManaged,
-  Server
+  Server,
+  ServerCreateType
 } from '../../models';
 import {
   refreshView,
@@ -125,6 +126,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
     cloneSelfManaged = new ServerCreateSelfManaged();
 
     // Set the variable based on the form values
+    cloneSelfManaged.type = ServerCreateType.Clone;
     cloneSelfManaged.targetServerName = this.formControlTargetServerName.value;
     cloneSelfManaged.isValid = this.formGroupCloneServer.valid;
     this.onOutputServerDetails.next(cloneSelfManaged);

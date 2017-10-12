@@ -92,6 +92,16 @@ export class TextboxComponent
     }
   }
 
+  /**
+   * On Touched Event Callback
+   */
+  private _onTouched: () => {};
+
+  /**
+   * On Changed Event Callback
+   */
+  private _onChanged: (_: any) => {};
+
   public constructor(private _renderer: Renderer2) {
     this.inputType = 'text';
     this.valid = true;
@@ -149,7 +159,7 @@ export class TextboxComponent
    * status of _touched in the input property
    */
   public onTouched(_event: any) {
-    this._onTouched(null);
+    this._onTouched();
   }
 
   public showLoader(): void {
@@ -174,21 +184,5 @@ export class TextboxComponent
         this.iconKey = undefined;
         break;
     }
-  }
-
-  /**
-   * On Touched Event Callback
-   */
-  private _onTouched: any = () => {
-    // This is for reference only
-    // it will populate during model binding
-  }
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: any = (_: any) => {
-    // This is for reference only
-    // it will populate during model binding
   }
 }

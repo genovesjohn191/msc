@@ -8,6 +8,7 @@ $dropdown-value-font-size: $input-font-size;
 $dropdown-options-border-color: $color-grey-02;
 $dropdown-options-padding: 15px 0 20px;
 $dropdown-options-box-shadow: 0px 1px 3px 0px $color-grey-02;
+$dropdown-option-group-spacing: $space-large;
 $dropdown-option-group-name-font: $base-font-bold;
 $dropdown-option-group-name-color: $color-grey-02;
 $dropdown-option-item-background-hover: $color-grey-07;
@@ -52,7 +53,7 @@ $dropdown-option-item-background-hover: $color-grey-07;
       margin-bottom: 0;
 
       > li:not(:last-child) {
-        margin-bottom: 30px;
+        margin-bottom: $dropdown-option-group-spacing;
       }
 
       .group-name {

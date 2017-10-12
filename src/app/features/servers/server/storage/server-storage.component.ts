@@ -12,7 +12,7 @@ import {
   ServerManageStorage,
   ServerPlatform,
   ServerResource,
-  ServerPlatformStorage,
+  ServerResourceStorage,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
 } from '../../models';
@@ -75,7 +75,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public storageDevices: ServerStorageDevice[];
 
   public serverPlatformData: ServerPlatform;
-  public serverPlatformStorage: ServerPlatformStorage[];
+  public serverPlatformStorage: ServerResourceStorage[];
 
   public storageChangedValue: ServerManageStorage;
 
@@ -207,7 +207,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.usedMemoryMB = 0;
     this.selectedStorageSliderValues = new Array<number>();
     this.serverPlatformData = new ServerPlatform();
-    this.serverPlatformStorage = new Array<ServerPlatformStorage>();
+    this.serverPlatformStorage = new Array<ServerResourceStorage>();
     this.storageChangedValue = new ServerManageStorage();
     this.storageChangedValue.valid = false;
     this.notifications = new Array<McsApiJob>();

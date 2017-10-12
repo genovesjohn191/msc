@@ -31,9 +31,10 @@ import {
 import { ContextualHelpDirective } from '../../../shared';
 import {
   Server,
-  ServerPlatform,
+  ServerGroupedOs,
   ServerOs,
   ServerResource,
+  ServerVApp,
   ServerCreate,
   ServerCreateStorage,
   ServerCreateNetwork,
@@ -73,11 +74,11 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   private _mainContextInformations: ContextualHelpDirective[];
 
   /**
-   * Server platform data mapping
+   * Server resources data mapping
    */
-  private _serverPlatformMap: Map<string, ServerResource>;
-  public get serverPlatformMap(): Map<string, ServerResource> {
-    return this._serverPlatformMap;
+  private _serverResourceMap: Map<string, ServerResource>;
+  public get serverResourceMap(): Map<string, ServerResource> {
+    return this._serverResourceMap;
   }
 
   /**
@@ -89,10 +90,18 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   }
 
   /**
+   * Server VApp list
+   */
+  private _serverVApp: ServerVApp[];
+  public get serverVApp(): ServerVApp[] {
+    return this._serverVApp;
+  }
+
+  /**
    * Server OS list
    */
-  private _serversOs: ServerOs[];
-  public get serversOs(): ServerOs[] {
+  private _serversOs: ServerGroupedOs[];
+  public get serversOs(): ServerGroupedOs[] {
     return this._serversOs;
   }
 
@@ -133,7 +142,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     this._mainContextInformations = new Array();
     this._serversOs = new Array();
     this._serverListMap = new Map<string, Server[]>();
-    this._serverPlatformMap = new Map<string, ServerResource>();
+    this._serverResourceMap = new Map<string, ServerResource>();
   }
 
   public ngOnInit() {
@@ -144,11 +153,11 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     // Get all the data from api in parallel
     this._obtainDataSubscription = Observable.forkJoin([
       this._createSelfManagedServices.getAllServers(),
-      this._createSelfManagedServices.getPlatformData(),
+      this._createSelfManagedServices.getResources(),
       this._createSelfManagedServices.getServersOs()
     ]).subscribe((data) => {
       this._setAllServers(data[0]);
-      this._setPlatformData(data[1]);
+      this._setResourcesData(data[1]);
       this._setServerOs(data[2]);
 
       // Add server
@@ -197,7 +206,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
 
     // Set Component Input Parameters
     componentService.componentRef.instance.vdcName = this.vdcValue;
-    componentService.componentRef.instance.resource = this._serverPlatformMap.get(this.vdcValue);
+    componentService.componentRef.instance.resource = this._serverResourceMap.get(this.vdcValue);
     componentService.componentRef.instance.servers = this._serverListMap.get(this.vdcValue);
     componentService.componentRef.instance.serversOs = this.serversOs;
     componentService.appendComponentTo(this.selfManagedServersElement.nativeElement);
@@ -226,7 +235,10 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
       serverCreate.platform = 'vcloud';
       serverCreate.resource = server.componentRef.instance.vdcName;
       serverCreate.name = server.componentRef.instance.serverName;
-      serverCreate.guestOs = server.componentRef.instance.serverInputs.vTemplate;
+
+      serverCreate.target = server.componentRef.instance.serverInputs.vApp;
+      serverCreate.imageType = server.componentRef.instance.serverInputs.imageType;
+      serverCreate.image = server.componentRef.instance.serverInputs.image;
       serverCreate.serviceId = ''; // This is only empty if the type is Self-Managed
 
       // Scale
@@ -263,10 +275,10 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   }
 
   private _setVdcItems(): void {
-    if (!this._serverPlatformMap) { return; }
+    if (!this._serverResourceMap) { return; }
 
     // Populate vdc list dropdown list
-    this._serverPlatformMap.forEach((value, key) => {
+    this._serverResourceMap.forEach((value, key) => {
       this.vdcList.push(this.createServerTextContent.vdcDropdownList.name,
         new McsListItem(
           key,
@@ -335,15 +347,13 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
    * `@Note` This will execute together with the servers and os obtainment
    * @param response Api response
    */
-  private _setPlatformData(response: any): void {
+  private _setResourcesData(response: any): void {
     if (response && response.content) {
-      let serverPlatform = response.content as ServerPlatform;
-      serverPlatform.environments.forEach((environment) => {
-        environment.resources.forEach((resource) => {
-          if (resource.serviceType === ServerServiceType.SelfManaged) {
-            this._serverPlatformMap.set(resource.name, resource);
-          }
-        });
+      let serverResources = response.content as ServerResource[];
+      serverResources.forEach((resource) => {
+        if (resource.serviceType === ServerServiceType.SelfManaged) {
+          this._serverResourceMap.set(resource.name, resource);
+        }
       });
     }
   }
@@ -357,13 +367,26 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
    */
   private _setServerOs(response: any): void {
     if (response && response.content) {
-      let serverOs = response.content as ServerOs[];
+      let serverOs = response.content as ServerGroupedOs[];
+      let serverGroupedOs = new Array<ServerGroupedOs>();
 
-      serverOs.forEach((os) => {
-        if (os.serviceType === ServerServiceType.SelfManaged) {
-          this._serversOs.push(os);
+      serverOs.forEach((group) => {
+        let groupedOs = new ServerGroupedOs();
+        groupedOs.platform = group.platform;
+        groupedOs.os = new Array<ServerOs>();
+
+        group.os.forEach((os) => {
+          if (os.serviceType === ServerServiceType.SelfManaged) {
+            groupedOs.os.push(os);
+          }
+        });
+
+        if (groupedOs.os.length > 0) {
+          serverGroupedOs.push(groupedOs);
         }
       });
+
+      this._serversOs = serverGroupedOs;
     }
   }
 }
