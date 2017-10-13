@@ -6,13 +6,14 @@ type environmentName =
   'LOGOUT_URL' |
   'SENTRY_DSN' |
   'IMAGE_ROOT' |
-  'ICON_ROOT';
+  'ICON_ROOT' |
+  'MACQUARIE_VIEW_URL';
 
 import {
   isNullOrEmpty
 } from '.';
 
-export function resolveEnvVar(envName: environmentName, defaultValue: string): string {
+export function resolveEnvVar(envName: environmentName, defaultValue: string = ''): string {
   if (isNullOrEmpty(window['ENV_CONFIG'])) {
     return defaultValue;
   }
@@ -43,6 +44,9 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string): s
       break;
     case 'ICON_ROOT':
       overrideValue = window['ENV_CONFIG'].iconRoot;
+      break;
+      case 'MACQUARIE_VIEW_URL':
+      overrideValue = window['ENV_CONFIG'].macquarieViewUrl;
       break;
     default:
       return defaultValue;

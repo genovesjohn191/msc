@@ -5,7 +5,7 @@ $dropdown-border-color: $color-black;
 $dropdown-border-radius: 2px;
 $dropdown-padding: 10px 15px;
 $dropdown-value-font-size: $input-font-size;
-$options-maxh-eight: 300px;
+$options-max-height: 300px;
 $dropdown-options-border-color: $color-grey-02;
 $dropdown-options-padding: 15px 0 20px;
 $dropdown-options-box-shadow: 0px 1px 3px 0px $color-grey-02;
@@ -39,7 +39,7 @@ $dropdown-option-item-font-size: $font-size-large;
   }
 
   .dropdown-options {
-    max-height: $options-maxh-eight;
+    max-height: $options-max-height;
     overflow: auto;
     position: absolute;
     z-index: $zindex-dropdown;
@@ -64,18 +64,18 @@ $dropdown-option-item-font-size: $font-size-large;
         display: block;
         font-family: $dropdown-option-group-name-font;
         color: $dropdown-option-group-name-color;
-        padding: 0 15px;
+        padding: 0 $space-medium;
         @include font-size($dropdown-option-item-font-size);
       }
 
       .option-item {
         list-style: none;
         padding-left: 0;
-        margin-top: 5px;
+        margin-top: $space-xsmall;
 
         .item-value {
           display: block;
-          padding: 5px 15px;
+          padding: $space-xsmall $space-medium;
           @include font-size($dropdown-option-item-font-size);
 
           &:hover {
