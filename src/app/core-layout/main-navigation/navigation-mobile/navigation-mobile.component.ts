@@ -16,7 +16,10 @@ import {
 } from '@angular/router';
 /** Providers / Services */
 import { CoreDefinition } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  resolveEnvVar
+} from '../../../utilities';
 
 @Component({
   selector: 'mcs-navigation-mobile',
@@ -45,6 +48,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
       this._slideTrigger = value;
       this._changeDetectorRef.markForCheck();
     }
+  }
+
+  public get macquarieViewUrl(): string {
+    return resolveEnvVar('MACQUARIE_VIEW_URL');
   }
 
   public get toggleIconKey(): string {

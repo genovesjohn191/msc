@@ -4,6 +4,7 @@ window.ENV_CONFIG = {
   host: 'MCS_HOST',
   port: 'MCS_PORT',
   sentryDsn: 'MCS_SENTRY_DSN',
+  macquarieViewUrl: 'MCS_MACQUARIE_VIEW_URL',
   loginUrl: 'MCS_LOGIN_URL',
   logoutUrl: 'MCS_LOGOUT_URL',
   imageRoot: 'MCS_IMAGE_ROOT',
