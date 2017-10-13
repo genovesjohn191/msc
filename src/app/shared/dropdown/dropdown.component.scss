@@ -2,9 +2,10 @@
 
 $dropdown-background: $color-white;
 $dropdown-border-color: $color-black;
-$dropdown-border-radius: 5px;
+$dropdown-border-radius: 2px;
 $dropdown-padding: 10px 15px;
 $dropdown-value-font-size: $input-font-size;
+$options-maxh-eight: 300px;
 $dropdown-options-border-color: $color-grey-02;
 $dropdown-options-padding: 15px 0 20px;
 $dropdown-options-box-shadow: 0px 1px 3px 0px $color-grey-02;
@@ -12,6 +13,7 @@ $dropdown-option-group-spacing: $space-large;
 $dropdown-option-group-name-font: $base-font-bold;
 $dropdown-option-group-name-color: $color-grey-02;
 $dropdown-option-item-background-hover: $color-grey-07;
+$dropdown-option-item-font-size: $font-size-large;
 
 .mcs-dropdown {
   background-color: $dropdown-background;
@@ -37,6 +39,8 @@ $dropdown-option-item-background-hover: $color-grey-07;
   }
 
   .dropdown-options {
+    max-height: $options-maxh-eight;
+    overflow: auto;
     position: absolute;
     z-index: $zindex-dropdown;
     background-color: $dropdown-background;
@@ -61,6 +65,7 @@ $dropdown-option-item-background-hover: $color-grey-07;
         font-family: $dropdown-option-group-name-font;
         color: $dropdown-option-group-name-color;
         padding: 0 15px;
+        @include font-size($dropdown-option-item-font-size);
       }
 
       .option-item {
@@ -70,7 +75,8 @@ $dropdown-option-item-background-hover: $color-grey-07;
 
         .item-value {
           display: block;
-          padding: 0 30px;
+          padding: 5px 15px;
+          @include font-size($dropdown-option-item-font-size);
 
           &:hover {
             background-color: $dropdown-option-item-background-hover;

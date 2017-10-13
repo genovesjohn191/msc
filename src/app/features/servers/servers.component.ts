@@ -25,6 +25,7 @@ import {
   McsSearch,
   McsPaginator,
   McsBrowserService,
+  McsDeviceType,
   McsSelection,
   McsTableListingBase
 } from '../../core';
@@ -56,6 +57,7 @@ export class ServersComponent
 
   // Subscription
   private _activeServerSubscription: any;
+  private _selectionModeSubscription: any;
 
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
@@ -100,7 +102,7 @@ export class ServersComponent
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
-    this.selection = new McsSelection<Server>(false);
+    this.selection = new McsSelection<Server>(true);
   }
 
   public ngOnInit() {
@@ -111,6 +113,7 @@ export class ServersComponent
     refreshView(() => {
       this.initializeDatasource();
       this._listenToActiveServers();
+      this._listenToSelectionModeChange();
     });
   }
 
@@ -118,6 +121,9 @@ export class ServersComponent
     this.dispose();
     if (!isNullOrEmpty(this._activeServerSubscription)) {
       this._activeServerSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._selectionModeSubscription)) {
+      this._selectionModeSubscription.unsubscribe();
     }
   }
 
@@ -346,6 +352,16 @@ export class ServersComponent
     this._activeServerSubscription = this._serversService.activeServersStream
       .subscribe(() => {
         this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private _listenToSelectionModeChange(): void {
+    this._selectionModeSubscription = this.browserService.deviceTypeStream
+      .subscribe((deviceType) => {
+        let multipleSelection = !(deviceType === McsDeviceType.MobileLandscape ||
+          deviceType === McsDeviceType.MobilePortrait);
+
+        this.selection = new McsSelection<Server>(multipleSelection);
       });
   }
 }
