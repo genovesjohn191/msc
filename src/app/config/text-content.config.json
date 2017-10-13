@@ -37,7 +37,7 @@
     "dataPlural": "Servers",
     "columnHeaders": {
       "state": "State",
-      "name": "Name",
+      "name": "Server",
       "action": "Action"
     },
     "createSelfManagedServer": {

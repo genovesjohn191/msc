@@ -13,21 +13,21 @@
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="action-item hidden-medium" cursor="pointer"
+        <div class="action-item hidden-small" cursor="pointer"
           [disabled]="!startable || !selection.hasValue()"
           (click)="executeTopPanelAction('Start')">
           <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
           <span>{{ textContent.start }}</span>
         </div>
 
-        <div class="action-item hidden-medium" cursor="pointer"
+        <div class="action-item hidden-small" cursor="pointer"
           [disabled]="!stoppable || !selection.hasValue()"
           (click)="executeTopPanelAction('Stop')">
           <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
           <span>{{ textContent.stop }}</span>
         </div>
 
-        <div class="action-item hidden-medium" cursor="pointer"
+        <div class="action-item hidden-small" cursor="pointer"
           [disabled]="!restartable || !selection.hasValue()"
           (click)="executeTopPanelAction('Restart')">
           <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
@@ -66,13 +66,13 @@
       <mcs-table [dataSource]="dataSource">
         <!-- Selection Column -->
         <ng-container mcsColumnDef="select">
-          <mcs-header-cell *mcsHeaderCellDef class="text-center action-cell">
+          <mcs-header-cell *mcsHeaderCellDef class="text-center action-cell hidden-small">
             <mcs-checkbox (change)="toggleSelectAll()"
               [checked]="isAllSelected()"
               [indeterminate]="selection.hasValue() && !isAllSelected()">
             </mcs-checkbox>
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell hidden-small">
             <mcs-checkbox (change)="selection.toggle(row.id)"
               [checked]="selection.isSelected(row.id)">
             </mcs-checkbox>

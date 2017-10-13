@@ -40,7 +40,7 @@ export class McsSelection<T> {
    */
   public select(value: T): void {
     if (this.isSelected(value)) { return; }
-    if (this._isMultiple) {
+    if (!this._isMultiple) {
       this._selected.clear();
     }
 

@@ -12,8 +12,7 @@ import {
   McsFilterProvider
 } from '../../core';
 import {
-  isNullOrEmpty,
-  compareArrays
+  isNullOrEmpty
 } from '../../utilities';
 
 @Component({
@@ -81,15 +80,23 @@ export class FilterSelectorComponent implements OnInit {
 
     if (isNullOrEmpty(this.filterItems)) {
       this.filterItems = this._filterProvider.getDefaultFilters(this.key);
-    } else {
-      let comparison: number = 0;
-      let defaultFilterKeys = Object.keys(this._filterProvider.getDefaultFilters(this.key));
-      let filterItemKeys = Object.keys(this.filterItems);
-
-      comparison = compareArrays(defaultFilterKeys, filterItemKeys);
-      if (comparison !== 0) {
-        this.filterItems = this._filterProvider.getDefaultFilters(this.key);
-      }
+      return;
     }
+
+    let defaultFiltersString =
+      this._convertToComparableString(this._filterProvider.getDefaultFilters(this.key));
+    let currentFiltersString = this._convertToComparableString(this.filterItems);
+
+    let isEqual: boolean = defaultFiltersString === currentFiltersString;
+
+    if (!isEqual) {
+      this.filterItems = this._filterProvider.getDefaultFilters(this.key);
+    }
+  }
+
+  private _convertToComparableString(filters: any): string {
+    return JSON.stringify(filters)
+      .replace(/,"value":true/gi, '')
+      .replace(/,"value":false/gi, '');
   }
 }

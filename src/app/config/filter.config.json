@@ -28,7 +28,7 @@
       "exclude": true
     },
     "name": {
-      "text": "Name",
+      "text": "Server",
       "value": true,
       "exclude": true
     },
