@@ -113,7 +113,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public onServerSelect(serverId: any) {
-    if (isNullOrEmpty(serverId)) { return; }
+    if (isNullOrEmpty(serverId) || this._serverId === serverId) { return; }
 
     this._serverId = serverId;
     this._getServerById();

@@ -21,9 +21,6 @@ import {
 import {
   McsTextContentProvider,
   CoreDefinition,
-  McsList,
-  McsListItem,
-  McsApiSuccessResponse,
   McsApiJob,
   McsNotificationContextService,
   McsBrowserService,
@@ -46,7 +43,9 @@ import { ServerService } from '../server.service';
 })
 
 export class ServerManagementComponent implements OnInit, OnDestroy {
-  public server: Server;
+  @ViewChild('thumbnailElement')
+  public thumbnailElement: ElementRef;
+
   public serverManagementTextContent: any;
   public primaryVolume: string;
   public secondaryVolumes: string;
@@ -60,29 +59,72 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public scalingSubscription: any;
   public notificationsSubscription: any;
   public deviceTypeSubscription: any;
-  public activeNotifications: McsApiJob[];
+  public serverScaleJobs: McsApiJob[];
 
   public platformData: ServerPlatform;
   public platformDataSubscription: any;
   public resource: ServerResource;
 
-  public serverMemoryValue: string;
-  public serverCpuValue: string;
-
   public remainingMemory: number;
   public remainingCpu: number;
 
-  public isServerScale: boolean;
-  public isScaling: boolean;
-  public scalingResponse: McsApiSuccessResponse<McsApiJob>;
-
   public initialServerPerformanceScaleValue: ServerPerformanceScale;
-
-  @ViewChild('thumbnailElement')
-  public thumbnailElement: ElementRef;
 
   private _serverCpuSizeScale: ServerPerformanceScale;
   private _deviceType: McsDeviceType;
+
+  private _server: Server;
+  public get server(): Server {
+    return this._server;
+  }
+  public set server(value: Server) {
+    this._server = value;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _isServerScale: boolean;
+  public get isServerScale(): boolean {
+    return this._isServerScale;
+  }
+  public set isServerScale(value: boolean) {
+    if (this._isServerScale !== value) {
+      this._isServerScale = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _isScaling: boolean;
+  public get isScaling(): boolean {
+    return this._isScaling;
+  }
+  public set isScaling(value: boolean) {
+    if (this._isScaling !== value) {
+      this._isScaling = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _serverMemoryValue: string;
+  public get serverMemoryValue(): string {
+    return this._serverMemoryValue;
+  }
+  public set serverMemoryValue(value: string) {
+    if (this._serverMemoryValue !== value) {
+      this._serverMemoryValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _serverCpuValue: string;
+  public get serverCpuValue(): string {
+    return this._serverCpuValue;
+  }
+  public set serverCpuValue(value: string) {
+    if (this._serverCpuValue !== value) {
+      this._serverCpuValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
@@ -141,12 +183,14 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.server = new Server();
     this.initialServerPerformanceScaleValue = new ServerPerformanceScale();
     this._serverCpuSizeScale = new ServerPerformanceScale();
-    this.activeNotifications = new Array();
+    this.serverScaleJobs = new Array();
     this.platformData = new ServerPlatform();
     this.resource = new ServerResource();
     this.serviceType = ServerServiceType.SelfManaged;
     this.primaryVolume = '';
     this.secondaryVolumes = '';
+    this.isServerScale = false;
+    this.isScaling = false;
   }
 
   public ngOnInit() {
@@ -162,40 +206,28 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         if (server) {
           // Get server data
           this.server = server;
-          this.serviceType = this.server.serviceType;
-
-          this.serverMemoryValue = appendUnitSuffix(server.memoryMB, 'megabyte');
-          this.serverCpuValue = appendUnitSuffix(server.cpuCount, 'cpu');
-
-          if (this.hasStorage) {
-            this.primaryVolume = appendUnitSuffix(this.server.fileSystem[0].capacityGB, 'gigabyte');
-            this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
-          } else {
-            this.primaryVolume = '';
-            this.secondaryVolumes = '';
-          }
-          this._getServerThumbnail();
 
           // Initialize values
-          this.isServerScale = false;
-          this.isScaling = false;
-          this._getScalingNotificationStatus();
+          this._getServerDetails();
+          this._getServerThumbnail();
+          this._getScalingJobStatus();
 
           refreshView(() => {
             if (!this.consoleEnabled) {
               this._hideThumbnail();
             }
           }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-          this._changeDetectorRef.markForCheck();
         }
       });
 
     // Listen to notifications stream
     this.notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((updatedNotifications) => {
-        this.activeNotifications = updatedNotifications;
-        this._getScalingNotificationStatus();
-        this._changeDetectorRef.markForCheck();
+      .subscribe((jobs) => {
+        this.serverScaleJobs = jobs.filter((job) => {
+          return job.type === McsJobType.UpdateServer;
+        });
+
+        this._getScalingJobStatus();
       });
 
     // Listen to device change
@@ -234,26 +266,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
   }
 
-  public getServerStorageProfile() {
-    let list: McsList = new McsList();
-
-    list.push('', new McsListItem('disk-storage-profile', 'Disk Storage Profile'));
-
-    return list;
-  }
-
-  public getServerStorageCapacity() {
-    let list: McsList = new McsList();
-
-    list.push('', new McsListItem('100GB', '100 GB'));
-    list.push('', new McsListItem('150GB', '150 GB'));
-    list.push('', new McsListItem('200GB', '200 GB'));
-    list.push('', new McsListItem('500GB', '500 GB'));
-    list.push('', new McsListItem('1TB', '1 TB'));
-
-    return list;
-  }
-
   public scaleServer() {
     if (isNullOrEmpty(this.platformData)) { return; }
 
@@ -273,12 +285,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.isScaling = true;
 
     // Update the Server CPU size scale
-    this.scalingSubscription =
-      this._serverService.setPerformanceScale(this.server.id, this._serverCpuSizeScale)
-        .subscribe((response) => {
-          this.scalingResponse = response;
-          this._changeDetectorRef.markForCheck();
-        });
+    this.scalingSubscription = this._serverService.setPerformanceScale(
+      this.server.id, this._serverCpuSizeScale).subscribe();
   }
 
   public cancelScale(): void {
@@ -331,21 +339,29 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return serverResource;
   }
 
-  private _getScalingNotificationStatus() {
-    if (this.activeNotifications.length > 0 && this.server) {
-      let serverScalingNotification: McsApiJob = this.activeNotifications.find((notification) => {
-        let isFound: boolean = false;
-        if (notification.clientReferenceObject) {
-          isFound = notification.clientReferenceObject.activeServerId === this.server.id;
-        }
-        return isFound;
-      });
+  private _getServerDetails() {
+    if (isNullOrEmpty(this.server)) { return; }
 
-      this.isScaling = serverScalingNotification &&
-        serverScalingNotification.type === McsJobType.UpdateServer &&
-        (serverScalingNotification.status === CoreDefinition.NOTIFICATION_JOB_PENDING
-          || serverScalingNotification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+    this._setServerMemoryCpuValues();
+
+    this.serviceType = this.server.serviceType;
+
+    if (this.hasStorage) {
+      this.primaryVolume = appendUnitSuffix(this.server.fileSystem[0].capacityGB, 'gigabyte');
+      this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
+    } else {
+      this.primaryVolume = '';
+      this.secondaryVolumes = '';
     }
+
+    this.isScaling = false;
+  }
+
+  private _setServerMemoryCpuValues(): void {
+    if (isNullOrEmpty(this.server)) { return; }
+
+    this.serverMemoryValue = appendUnitSuffix(this.server.memoryMB, 'megabyte');
+    this.serverCpuValue = appendUnitSuffix(this.server.cpuCount, 'cpu');
   }
 
   private _initializeServerPerformanceScaleValue() {
@@ -357,6 +373,39 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     if (this.resource) {
       this.remainingMemory = this.resource.memoryLimitMB - this.resource.memoryUsedMB;
       this.remainingCpu = this.resource.cpuLimit - this.resource.cpuUsed;
+    }
+
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _getScalingJobStatus() {
+    if (isNullOrEmpty(this.serverScaleJobs) && this.server) { return; }
+
+    let activeServerJob = this.serverScaleJobs.find((job) => {
+      return job.clientReferenceObject.activeServerId === this.server.id;
+    });
+
+    if (isNullOrEmpty(activeServerJob)) { return; }
+
+    switch (activeServerJob.status) {
+      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+        if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {
+          this.server.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
+          this.server.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
+          this._setServerMemoryCpuValues();
+        }
+        this.isScaling = false;
+        break;
+
+      case CoreDefinition.NOTIFICATION_JOB_PENDING:
+      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+        this.isScaling = true;
+        break;
+
+      case CoreDefinition.NOTIFICATION_JOB_FAILED:
+      default:
+        this.isScaling = false;
+        break;
     }
 
     this._changeDetectorRef.markForCheck();

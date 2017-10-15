@@ -76,7 +76,9 @@ export class ServerService {
         memoryMB: cpuSizeScale.memoryMB,
         cpuCount: cpuSizeScale.cpuCount,
         clientReferenceObject: {
-          activeServerId: serverId
+          activeServerId: serverId,
+          memoryMB: cpuSizeScale.memoryMB,
+          cpuCount: cpuSizeScale.cpuCount
         }
       } as ServerUpdate
     );
