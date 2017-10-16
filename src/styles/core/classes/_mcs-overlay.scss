@@ -1,0 +1,41 @@
+$overlay-transparent-color: none;
+$overlay-light-color: $color-white;
+$overlay-dark-color: rgba($color: $color-black, $alpha: 0.6);
+
+.mcs-overlay-wrapper {
+  position: fixed;
+  z-index: $zindex-overlay;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.mcs-overlay-backdrop {
+  position: absolute;
+  pointer-events: auto;
+  z-index: $zindex-overlay;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  &.transparent-backdrop {
+    background: $overlay-transparent-color;
+  }
+
+  &.light-backdrop {
+    background: $overlay-light-color;
+  }
+
+  &.dark-backdrop {
+    background: $overlay-dark-color
+  }
+}
+
+.mcs-overlay-pane {
+  position: absolute;
+  pointer-events: auto;
+  z-index: $zindex-overlay;
+}
