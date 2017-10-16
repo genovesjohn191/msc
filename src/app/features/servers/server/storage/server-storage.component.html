@@ -17,16 +17,16 @@
         </li>
         <li *ngFor="let storage of storageDevices; let i = index">
           <span class="name">
-            <mcs-icon *ngIf="!getStorageStatus(storage.id)"
+            <mcs-icon *ngIf="!isActiveStorage(storage.id)"
               [key]="storageIconKey" size="small"
               class="hidden-small"></mcs-icon>
-            <mcs-icon *ngIf="getStorageStatus(storage.id)" [key]="spinnerIconKey"
+            <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
               size="small" class="hidden-small"
               mcsPopover trigger="hover" maxWidth="250px"
               padding="narrow" [content]="expandingStorage"></mcs-icon>
             <ng-template #expandingStorage>
               <span class="expanding-storage-popover">
-                {{ getStorageStatus(storage.id) }}
+                {{ getStorageSummaryInformation(storage.id) }}
               </span>
             </ng-template>
             <span>{{ storage.name }}</span>
@@ -69,7 +69,7 @@
     </div>
 
     <div *mcsHasPermission="['VmEdit']">
-      <div [mcsLoader]="serverPlatformSubscription">
+      <div [mcsLoader]="serverResourceSubscription">
         <div *ngIf="!hasReachedDisksLimit" class="add-new-storage">
           <mcs-server-manage-storage *ngIf="storageProfileList" #mcsStorage
             [storageProfileList]="storageProfileList"

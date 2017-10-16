@@ -10,7 +10,9 @@ import {
   ServerUpdate,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
-  ServerPlatform
+  ServerPlatform,
+  ServerResource,
+  ServerResourceStorage
 } from '../models';
 import { McsApiSuccessResponse } from '../../../core/';
 
@@ -49,6 +51,13 @@ export class ServerService {
    */
   public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {
     return this._serversService.getPlatformData();
+  }
+
+  /**
+   * Get Resources Data (MCS API Response)
+   */
+  public getResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
+    return this._serversService.getResources();
   }
 
   /**
@@ -146,6 +155,10 @@ export class ServerService {
    */
   public setSelectedServer(server: Server): void {
     this.selectedServerStream.next(server);
+  }
+
+  public computeAvailableStorageMB(storage: ServerResourceStorage): number {
+    return this._serversService.computeAvailableStorageMB(storage);
   }
 
   /**

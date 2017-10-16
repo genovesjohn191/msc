@@ -3,7 +3,8 @@ import {
   Input,
   Output,
   EventEmitter,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CoreDefinition } from '../../../../core';
 import { ServerCommand } from '../../models';
@@ -11,7 +12,8 @@ import { ServerCommand } from '../../models';
 @Component({
   selector: 'mcs-server-command',
   styleUrls: ['./server-command.component.scss'],
-  templateUrl: './server-command.component.html'
+  templateUrl: './server-command.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServerCommandComponent {
   @Input()
