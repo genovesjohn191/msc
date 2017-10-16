@@ -33,6 +33,10 @@
   @include align-items(stretch);
 }
 
+.text-center {
+  text-align: center;
+}
+
 // Justify Content
 .justify-content-flex-start {
   justify-content: flex-start;
@@ -67,9 +71,22 @@
   vertical-align: top !important;
 }
 
+// Spacing
+.vspace-xsmall {
+  margin: $space-xsmall 0;
+}
+
+.vspace-small {
+  margin: $space-small 0;
+}
+
 // Layout classes
 .inline-block {
   display: inline-block;
+}
+
+.full-width {
+  width:100%;
 }
 
 // Status
@@ -80,4 +97,13 @@
 .disabled-element {
   opacity: 0.4;
   pointer-events: none;
+}
+
+//
+
+.clickable-text {
+  :hover {
+    cursor: pointer;
+    font-family: $base-font-bold;
+  }
 }

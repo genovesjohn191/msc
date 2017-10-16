@@ -177,6 +177,7 @@ $left-panel-navigation-collapse-padding: 6px;
       }
 
       .limited-view {
+        @include flex(none);
         width: $limited-view-width;
         @include breakpoint(medium) {
           width: 100%;

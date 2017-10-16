@@ -29,8 +29,5 @@ $label-font-size: $h4-default-font-size;
     @include set-items-interval($space-large);
   }
 
-  .label {
-    font-family: $base-font-bold;
-    @include font-size($label-font-size);
-  }
 }
+

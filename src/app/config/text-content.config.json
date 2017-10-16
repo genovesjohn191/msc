@@ -42,6 +42,7 @@
     },
     "createSelfManagedServer": {
       "header": "Create a New Server",
+      "backToServers": "Back To Servers",
       "contextualHelp": {
         "enterServerName": "A friendly Server name.",
         "intellicentre": "Virtual Data Centre to deploy this Server in.",
