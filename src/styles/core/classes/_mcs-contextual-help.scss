@@ -5,6 +5,8 @@ $page-information-border-color: $color-grey-04;
   @include display-flex(row);
 
   .page-information-wrapper {
+    @include set-items-interval($space-large);
+    display: block;
     position: relative;
     @include flex(1 1 auto);
     padding-right: $page-information-padding;

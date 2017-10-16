@@ -20,7 +20,7 @@
         <form [formGroup]="fgCreateTicket" class="create-ticket-form">
 
           <!-- Ticket Type -->
-          <div class="ticket-type">
+          <div class="field">
             <label class="label" for="type">*{{ textContent.type }}</label>
             <div class="item">
               <mcs-dropdown id="type"
@@ -32,7 +32,7 @@
           </div>
 
           <!-- Headline -->
-          <div class="ticket-headline">
+          <div class="field">
             <label class="label" for="headline">
               *{{ convertHeadlineText(textContent.headline) }}
             </label>
@@ -46,21 +46,20 @@
           </div>
 
           <!-- Details -->
-          <div class="ticket-details">
+          <div class="field">
             <label class="label" for="details">
               *{{ convertDetailsText(textContent.details) }}
             </label>
             <div class="item">
               <textarea id="details" rows="3" placeholder="Enter details"
-                formControlName="fcDetails"
+                formControlName="fcDetails" class="full-width"
                 [mcsContextualHelp]="contextualContent.details"></textarea>
               <mcs-validation-message [control]="fcDetails"></mcs-validation-message>
             </div>
           </div>
 
           <!-- Services -->
-          <div class="ticket-services">
-
+          <div class="field">
             <label class="label" for="services">{{ textContent.services }}</label>
             <div class="item">
               <div class="service-item">
@@ -83,7 +82,7 @@
           </div>
 
           <!-- Attachments -->
-          <div class="ticket-attachments">
+          <div class="field">
             <h4>{{ textContent.attachments }}</h4>
             <mcs-ticket-attachment attachedType="multiple"
               (attachedFilesChanged)="onChangedAttachments($event)"
@@ -93,7 +92,7 @@
         </form>
 
         <!-- Ticket Action -->
-        <div class="ticket-action-wrapper">
+        <div class="field">
           <mcs-button icon="arrow" (onClick)="onLogTicket()" size="small"
             class="right-align"
             [disabled]="!fgCreateTicket.valid" [mcsLoader]="createTicketSubscription">

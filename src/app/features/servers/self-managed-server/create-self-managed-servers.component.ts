@@ -126,6 +126,10 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     return inValidExists ? false : true;
   }
 
+  public get backIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+  }
+
   public constructor(
     private _createSelfManagedServices: CreateSelfManagedServersService,
     private _router: Router,
@@ -222,7 +226,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
       this._createSelfManagedServices.subContextualHelp);
   }
 
-  public onNavigateToServerPage() {
+  public gotoServers() {
     this._router.navigate(['/servers']);
   }
 
