@@ -1,0 +1,109 @@
+@import "../../../styles/shared/base";
+
+// Select component trigger wrapper
+$select-trigger-padding: $space-small $space-medium;
+$select-trigger-border-color: $color-black;
+$select-trigger-border-radius: 2px;
+// Select group container
+$select-group-container-bg-color: $color-white;
+$select-group-container-border-color: $color-grey-03;
+$select-group-container-border-radius: 2px;
+$select-group-container-padding: $space-small;
+// Select group wrapper
+$select-group-wrapper-padding: $space-small 0;
+$select-group-wrapper-border-color: $select-group-container-border-color;
+// Select Item
+$select-item-min-width: 100px;
+$select-item-padding: $space-xsmall $space-small;
+$select-item-hover-color: $color-grey-07;
+// Select sub-group
+$select-sub-group-padding: $space-small;
+$select-sub-group-bg-color: $color-white;
+$select-sub-group-border-color: $color-grey-03;
+$select-sub-group-box-shadow: $color-black;
+$select-sub-group-max-height: 500px;
+
+.select-wrapper {
+  position: relative;
+  display: block;
+  z-index: $zindex-select;
+}
+
+.select-trigger {
+  padding: $select-trigger-padding;
+  border: 1px solid $select-trigger-border-color;
+  border-radius: $select-trigger-border-radius;
+}
+
+.select-group-container {
+  position: absolute;
+  width: 100%;
+  background-color: $select-group-container-bg-color;
+  border: 1px solid $select-group-container-border-color;
+  border-radius: $select-group-container-border-radius;
+  padding: $select-group-container-padding;
+
+  @include box-shadow((
+    0 2px 4px -1px rgba($select-sub-group-box-shadow, 0.2),
+    0 4px 5px 0 rgba($select-sub-group-box-shadow, 0.14),
+    0 1px 10px 0 rgba($select-sub-group-box-shadow, 0.12)
+  ));
+}
+
+.select-group-wrapper {
+  @include flex(0 0 auto);
+  @include display-flex(column);
+  border-bottom: 1px solid $select-group-wrapper-border-color;
+  padding: $select-group-wrapper-padding;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .select-group-header {
+    h4 {
+      margin: 0;
+    }
+  }
+}
+
+.select-item-wrapper {
+  @include flex(0 0 auto);
+  padding: $select-item-padding;
+  position: relative;
+  white-space: nowrap;
+  min-width: $select-item-min-width;
+  cursor: pointer;
+
+  .select-item-content {
+    @include display-flex(row);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .icon-wrapper {
+    padding-left: $space-large;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $select-item-hover-color;
+  }
+
+  .select-group-wrapper {
+    padding: $select-sub-group-padding;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: $select-sub-group-bg-color;
+    border: 1px solid $select-sub-group-border-color;
+    max-height: $select-sub-group-max-height;
+    overflow-y: auto;
+
+    @include box-shadow((
+      0 2px 4px -1px rgba($select-sub-group-box-shadow, 0.2),
+      0 4px 5px 0 rgba($select-sub-group-box-shadow, 0.14),
+      0 1px 10px 0 rgba($select-sub-group-box-shadow, 0.12)
+    ));
+  }
+}

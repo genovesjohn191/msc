@@ -1,0 +1,12 @@
+<!-- Data content -->
+<div class="select-item-content">
+  <ng-content></ng-content>
+  <mcs-icon *ngIf="hasSubgroup" size="small" [key]="carretRightIconKey"></mcs-icon>
+</div>
+
+<!-- Sub-group content -->
+<ng-container *ngIf="subGroupOpen">
+  <div animate trigger="fadeIn">
+    <ng-content select="[sub-group]"></ng-content>
+  </div>
+</ng-container>

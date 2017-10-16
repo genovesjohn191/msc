@@ -1,0 +1,22 @@
+<!-- Template binding -->
+<ng-template #placeholderTemplate>
+  <span read-only>{{ placeholder }}</span>
+</ng-template>
+
+<!-- Selection trigger -->
+<div class="select-trigger"
+  display-flex justify-content="space-between"
+  align-items="center" cursor="pointer" (click)="toggle()">
+
+  <span *ngIf="modelValue;else placeholderTemplate">
+    {{ displayedText }}
+  </span>
+  <mcs-icon size="small" [key]="carretDownIconKey"></mcs-icon>
+</div>
+
+<!-- Group Items container -->
+<ng-container *ngIf="panelOpen">
+  <div display-flex="column" class="select-group-container">
+    <ng-content></ng-content>
+  </div>
+</ng-container>
