@@ -10,6 +10,7 @@ export * from './services/mcs-component.service';
 export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
+export * from './services/mcs-overlay.service';
 /** Providers */
 export * from './providers/mcs-text-content.provider';
 export * from './providers/mcs-assets.provider';
@@ -44,6 +45,7 @@ export * from './interfaces/mcs-paginator.interface';
 export * from './interfaces/mcs-loader.interface';
 export * from './interfaces/mcs-modal.interface';
 export * from './interfaces/mcs-search.interface';
+export * from './interfaces/mcs-component-type.interface';
 /** Base */
 export * from './base/mcs-table-listing.base';
 /** Authentication */
@@ -51,3 +53,8 @@ export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';
 export * from './authentication/mcs-authentication.identity';
 export * from './authentication/mcs-route-permission.guard';
+/** Factory */
+export * from './factory/mcs-overlay-ref';
+export * from './factory/mcs-overlay-state';
+export * from './factory/mcs-portal-component';
+export * from './factory/mcs-portal-template';

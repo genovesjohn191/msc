@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  AfterViewInit,
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -31,7 +32,7 @@ import {
   styleUrls: ['./gadgets.component.scss']
 })
 
-export class GadgetsComponent implements OnInit {
+export class GadgetsComponent implements OnInit, AfterViewInit {
   public title: string;
   public filterItems: any;
   public gadgets: Gadgets[];
@@ -123,8 +124,6 @@ export class GadgetsComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.onInitTable();
-    this.onInitListing();
     this.setGadgets();
     this.getAllIcons();
     this.textboxValue = 'Windows Server 2012';
@@ -149,6 +148,13 @@ export class GadgetsComponent implements OnInit {
     this.formDetails = this._formBuilder.group({
       textEmailAddress: ['', [Validators.required, Validators.minLength(2)]],
       textContactNo: ['', [Validators.required, Validators.minLength(2)]]
+    });
+  }
+
+  public ngAfterViewInit(): void {
+    refreshView(() => {
+      this.onInitTable();
+      this.onInitListing();
     });
   }
 
