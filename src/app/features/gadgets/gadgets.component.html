@@ -571,6 +571,35 @@
         </form>
       </div>
 
+      <!-- Select -->
+      <div class="gadgets-container-item">
+        <h3 class="title">SELECT</h3>
+
+          <mcs-select [(ngModel)]="selectedValue" placeholder="Hello placeholder"
+            [ngStyle]="{width: '300px'}">
+            <mcs-select-group header="Group header">
+              <mcs-select-item *ngFor="let food of foods" [value]="food.value">
+                {{ food.viewValue }}
+              </mcs-select-item>
+
+              <mcs-select-item> Sub-group
+                <mcs-select-group sub-group>
+                  <mcs-select-item *ngFor="let food of foods" [value]="food.value">
+                    {{ food.viewValue }}
+                  </mcs-select-item>
+                </mcs-select-group>
+              </mcs-select-item>
+            </mcs-select-group>
+
+            <mcs-select-group header="Group header">
+              <mcs-select-item *ngFor="let food of foods" [value]="food.value">
+                {{ food.viewValue }}
+              </mcs-select-item>
+            </mcs-select-group>
+          </mcs-select>
+          <span>Selected value is : {{ selectedValue }}</span>
+      </div>
+
       <!-- Form -->
       <div class="gadgets-container-item">
         <h3 class="title">FORMS</h3>

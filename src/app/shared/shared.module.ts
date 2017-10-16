@@ -19,6 +19,7 @@ import { PageHeaderModule } from './page-header/page-header.module';
 import { LoaderModule } from './loader/loader.module';
 import { PageModule } from './page/page.module';
 import { ContextualHelpModule } from './contextual-help';
+import { SelectModule } from './select/select.module';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -69,7 +70,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     PageHeaderModule,
     LoaderModule,
     PageModule,
-    ContextualHelpModule
+    ContextualHelpModule,
+    SelectModule
   ],
   exports: [
     ButtonComponent,
@@ -101,7 +103,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     PageHeaderModule,
     LoaderModule,
     PageModule,
-    ContextualHelpModule
+    ContextualHelpModule,
+    SelectModule
   ]
 })
 
