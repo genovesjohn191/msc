@@ -113,6 +113,9 @@ describe('TicketsComponent', () => {
 
       component.search = {
         keyword: undefined,
+        showLoading: () => {
+          // Dummy content
+        },
         searchChangedStream: new EventEmitter()
       } as McsSearch;
 

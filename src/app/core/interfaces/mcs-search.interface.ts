@@ -10,4 +10,6 @@ export interface McsSearch {
    * Event that emit the changes when search is changed within the time bound
    */
   searchChangedStream: EventEmitter<any>;
+
+  showLoading(showLoading: boolean): void;
 }

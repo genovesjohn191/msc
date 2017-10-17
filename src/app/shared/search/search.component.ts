@@ -40,6 +40,19 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   public keyword: string;
   public searchChangedStream: EventEmitter<any>;
 
+  private _iconKey: string = 'search';
+
+  public get iconKey(): string {
+    return this._iconKey;
+  }
+
+  public set iconKey(value: string) {
+    if (this._iconKey !== value) {
+      this._iconKey = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
   /** Search subscription */
   private _searchSubject: Subject<string>;
   private _searchSubscription: any;
@@ -81,6 +94,11 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   public onEnterKeyUpEvent(key: any): void {
     this.keyword = key;
     this._onSearchChanged();
+  }
+
+  public showLoading(showLoading: boolean): void {
+    let iconKey = showLoading ? 'loading' : 'search';
+    this.iconKey = iconKey;
   }
 
   private _onSearchChanged() {

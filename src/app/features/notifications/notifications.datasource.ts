@@ -116,6 +116,7 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
    */
   public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
+    this._search.showLoading(false);
     this._paginator.pageCompleted();
   }
 
@@ -134,6 +135,7 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
+        this._search.showLoading(true);
         return this._notificationsService.getNotifications(
           undefined,
           displayedRecords,

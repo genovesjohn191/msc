@@ -53,6 +53,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
+        this._search.showLoading(true);
         return this._firewallsService.getFirewalls(
           undefined,
           displayedRecords,
@@ -78,6 +79,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
    */
   public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
+    this._search.showLoading(false);
     this._paginator.pageCompleted();
   }
 }
