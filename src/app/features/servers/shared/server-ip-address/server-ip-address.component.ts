@@ -150,7 +150,7 @@ export class ServerIpAddressComponent implements OnInit {
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
         ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : '';
-        ipAddressData.ipAllocationMode = 'Static';
+        ipAddressData.ipAllocationMode = 'Manual';
         ipAddressData.valid = this.formControlIpdAdrress.valid;
         break;
 
