@@ -43,7 +43,15 @@ export class TextboxComponent
   public inputType: 'text' | 'number' | 'password';
 
   @Input()
-  public icon: 'normal' | 'search' | 'caret-down';
+  public get icon(): 'normal' | 'search' | 'loading' | 'caret-down' {
+    return this._icon;
+  }
+  public set icon(value: 'normal' | 'search' | 'loading' | 'caret-down') {
+    if (this._icon !== value) {
+      this._icon = value;
+      this._setIconKeyAndType(value);
+    }
+  }
 
   @Input()
   public name: string;
@@ -80,6 +88,8 @@ export class TextboxComponent
    * Model Binding Property
    */
   private _value: string;
+  private _icon: 'normal' | 'search' | 'loading' | 'caret-down';
+
   public get value(): string {
     return this._value;
   }
@@ -91,16 +101,6 @@ export class TextboxComponent
       }
     }
   }
-
-  /**
-   * On Touched Event Callback
-   */
-  private _onTouched: () => {};
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: (_: any) => {};
 
   public constructor(private _renderer: Renderer2) {
     this.inputType = 'text';
@@ -170,6 +170,9 @@ export class TextboxComponent
     this.iconKey = this.icon;
   }
 
+  private _onChanged: (value: any) => void = () => { /** dummy */ };
+  private _onTouched = () => { /** dummy */ };
+
   private _setIconKeyAndType(icon: string): void {
     // Set icon type if it is SVG or font-awesome
     switch (icon) {
@@ -178,6 +181,9 @@ export class TextboxComponent
         break;
       case 'caret-down':
         this.iconKey = CoreDefinition.ASSETS_FONT_CARET_DOWN;
+        break;
+      case 'loading':
+        this.iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
         break;
       case 'normal':
       default:

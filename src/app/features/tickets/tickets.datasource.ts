@@ -52,7 +52,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
       .switchMap(() => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
-
+        this._search.showLoading(true);
         return this._ticketsService.getTickets(
           undefined,
           displayedRecords,
@@ -78,6 +78,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
    */
   public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
+    this._search.showLoading(false);
     this._paginator.pageCompleted();
   }
 }

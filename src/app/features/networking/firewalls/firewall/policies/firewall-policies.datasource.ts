@@ -60,6 +60,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
           return Observable.of(undefined);
         }
 
+        this._search.showLoading(true);
         return this._firewallService.getFirewallPolicies(
           firewallId,
           undefined,
@@ -86,6 +87,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
    */
   public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
+    this._search.showLoading(false);
     this._paginator.pageCompleted();
   }
 }
