@@ -52,7 +52,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
       .switchMap(() => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
-        this._search.showLoading(true);
+
         return this._ticketsService.getTickets(
           undefined,
           displayedRecords,

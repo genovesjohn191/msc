@@ -67,7 +67,6 @@ export class ServersDataSource implements McsDataSource<Server> {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
-        this._search.showLoading(true);
         return this._serversService.getServers(
           undefined,
           displayedRecords,

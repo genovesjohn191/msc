@@ -60,7 +60,6 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
           return Observable.of(undefined);
         }
 
-        this._search.showLoading(true);
         return this._firewallService.getFirewallPolicies(
           firewallId,
           undefined,

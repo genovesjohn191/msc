@@ -135,7 +135,6 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
-        this._search.showLoading(true);
         return this._notificationsService.getNotifications(
           undefined,
           displayedRecords,
