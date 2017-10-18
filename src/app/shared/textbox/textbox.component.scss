@@ -1,6 +1,7 @@
 @import "../../../styles/shared/base";
 
 $textbox-icon-offset: $icon-small-font-size + 20;
+$prefix-font-size: $font-size-default;
 
 :host {
   display: block;
@@ -57,6 +58,12 @@ $textbox-icon-offset: $icon-small-font-size + 20;
       background-color: $color-white;
       cursor: not-allowed;
     }
+  }
+
+  .suffix-text {
+    @include font-size($prefix-font-size);
+    color: $color-grey-03;
+    margin-right: $space-small;
   }
 
   mcs-icon {
