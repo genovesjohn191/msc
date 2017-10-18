@@ -30,7 +30,7 @@
       </mcs-server-performance-scale>
     </div>
 
-    <div class="storage-information">
+    <div class="storage-information" *ngIf="storageItems">
       <mcs-server-manage-storage
         [memoryMB]="storageMemoryMB"
         [availableMemoryMB]="storageAvailableMemoryMB"

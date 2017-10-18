@@ -41,6 +41,7 @@ $select-sub-group-max-height: 500px;
   border: 1px solid $select-group-container-border-color;
   border-radius: $select-group-container-border-radius;
   padding: $select-group-container-padding;
+  z-index: $zindex-select;
 
   @include box-shadow((
     0 2px 4px -1px rgba($select-sub-group-box-shadow, 0.2),

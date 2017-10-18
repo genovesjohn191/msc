@@ -13,8 +13,7 @@ import {
 import {
   CoreDefinition,
   CoreValidators,
-  McsTextContentProvider,
-  McsList
+  McsTextContentProvider
 } from '../../../../core';
 import {
   ServerManageStorage,
@@ -54,7 +53,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public minimumMB: number;
 
   @Input()
-  public storageProfileList: McsList;
+  public storageProfileList: any;
 
   @Input()
   public storageSliderValues: number[];
@@ -196,7 +195,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     // Register form group for custom storage
     this._registerFormGroup();
 
-    this._setStorageProfileValue();
     this._initializeValues();
   }
 
@@ -254,15 +252,10 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   private _initializeValues(): void {
-    this.onStorageProfileChanged(this.storageProfileValue);
+    if (!isNullOrEmpty(this.storageProfileList)) {
+      this.onStorageProfileChanged(this.storageProfileList[0].value);
+    }
     this.onCustomStorageChanged(this.memoryGB);
-  }
-
-  private _setStorageProfileValue(): void {
-    if (isNullOrEmpty(this.storageProfileList)) { return; }
-
-    let groupName = this.storageProfileList.getGroupNames()[0];
-    this.storageProfileValue = this.storageProfileList.getGroup(groupName)[0].key;
   }
 
   private _registerFormGroup(): void {

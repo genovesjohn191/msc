@@ -79,7 +79,7 @@
     <div *mcsHasPermission="['VmEdit']">
       <div [mcsLoader]="serverResourceSubscription">
         <div *ngIf="!hasReachedDisksLimit" class="add-new-storage">
-          <mcs-server-manage-storage *ngIf="storageProfileList" #mcsStorage
+          <mcs-server-manage-storage *ngIf="hasStorageProfileList" #mcsStorage
             [storageProfileList]="storageProfileList"
             [memoryMB]="memoryMB"
             [availableMemoryMB]="availableMemoryMB"
