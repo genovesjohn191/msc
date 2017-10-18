@@ -57,7 +57,7 @@
   <div *ngIf="storageProfileValue && !hasAvailableStorageSpace">
     <div animate trigger="fadeIn" class="storage-full-warning">
       <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-      <h4>{{ storageTextContent.fullStorageSpace }}</h4>
+      <h4 class="squishy">{{ storageTextContent.fullStorageSpace }}</h4>
     </div>
   </div>
 </div>
