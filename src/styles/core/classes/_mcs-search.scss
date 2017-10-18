@@ -1,0 +1,29 @@
+.search-wrapper {
+  @include display-flex(row);
+  align-items: center;
+  @include set-items-interval($space-large, horizontal);
+
+  @include breakpoint(small) {
+    @include display-flex(column);
+    align-items: stretch;
+  }
+
+  mcs-search {
+    min-width: 300px;
+    @include breakpoint(small) {
+      min-width: 100%;
+    }
+  }
+
+  mcs-button {
+    @include breakpoint(small) {
+      margin: 0;
+      display: block;
+      min-width: 100%;
+    }
+  }
+
+  .record-count {
+    margin-left: auto;
+  }
+}

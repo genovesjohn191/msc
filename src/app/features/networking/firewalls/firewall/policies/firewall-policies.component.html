@@ -19,11 +19,11 @@
       <mcs-filter-selector hidden [key]="columnSettingsKey"
         (onGetFilters)="updateColumnSettings($event)">
       </mcs-filter-selector>
-      <div class="record-count" flex="none">
+      <div class="record-count hidden-small" flex="none">
         <span>{{ recordsFoundLabel }}</span>
       </div>
     </div>
-  
+
     <!-- Table -->
     <mcs-table [dataSource]="dataSource">
       <ng-container mcsColumnDef="action">
@@ -41,7 +41,7 @@
           </ng-template>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="sequence">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.sequence.text }}
@@ -50,12 +50,12 @@
           <span>{{ row.objectSequence }}</span>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="sourceInterfaces">
-        <mcs-header-cell *mcsHeaderCellDef>
+        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.sourceInterfaces.text }}
         </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+        <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
           <ul class="unstyled-list">
             <li *ngFor="let sourceInterfaces of row.sourceInterfaces">
               <span>{{ sourceInterfaces }}</span>
@@ -63,12 +63,12 @@
           </ul>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="destinationInterfaces">
-        <mcs-header-cell *mcsHeaderCellDef>
+        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.destinationInterfaces.text }}
         </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+        <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
           <ul class="unstyled-list">
             <li *ngFor="let destinationInterface of row.destinationInterfaces">
               <span>{{ destinationInterface }}</span>
@@ -76,33 +76,47 @@
           </ul>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="source">
         <mcs-header-cell *mcsHeaderCellDef>
           {{ columnSettings.source.text }}
         </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+        <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell">
+          <strong class="visible-small">Address</strong>
           <ul class="unstyled-list">
             <li *ngFor="let source of row.sourceAddresses">
               <span>{{ source }}</span>
             </li>
           </ul>
+          <strong class="visible-small">Interface</strong>
+          <ul class="unstyled-list visible-small">
+            <li *ngFor="let sourceInterfaces of row.sourceInterfaces">
+              <span>{{ sourceInterfaces }}</span>
+            </li>
+          </ul>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="destination">
         <mcs-header-cell *mcsHeaderCellDef>
           {{ columnSettings.destination.text }}
         </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="text-left">
+        <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell">
+          <strong class="visible-small">Address</strong>
           <ul class="unstyled-list">
             <li *ngFor="let destination of row.destinationAddresses">
               <span>{{ destination }}</span>
             </li>
           </ul>
+          <strong class="visible-small">Interface</strong>
+          <ul class="unstyled-list visible-small">
+            <li *ngFor="let destinationInterface of row.destinationInterfaces">
+              <span>{{ destinationInterface }}</span>
+            </li>
+          </ul>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="label">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.label.text }}
@@ -111,7 +125,7 @@
           <span>{{ row.label }}</span>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="schedule">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.schedule.text }}
@@ -124,12 +138,12 @@
           </ul>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="service">
-        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        <mcs-header-cell *mcsHeaderCellDef>
           {{ columnSettings.service.text }}
         </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
+        <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell">
           <ul class="unstyled-list">
             <li *ngFor="let service of row.service">
               <span>{{ service }}</span>
@@ -137,18 +151,18 @@
           </ul>
         </mcs-data-cell>
       </ng-container>
-  
+
       <ng-container mcsColumnDef="details">
-        <mcs-header-cell *mcsHeaderCellDef>
+        <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.details.text }}
         </mcs-header-cell>
-        <mcs-data-cell *mcsDataCellDef="let row" class="details text-center">
+        <mcs-data-cell *mcsDataCellDef="let row" class="details text-center hidden-small">
           <mcs-icon [key]="infoIconKey" size="medium"
             (click)="showFirewallPolicyDetails(row)"
             cursor="pointer"></mcs-icon>
         </mcs-data-cell>
       </ng-container>
-  
+
       <!-- Data Status Integration -->
       <ng-container mcsDataStatusDef>
         <mcs-data-empty *mcsDataEmptyDef>
@@ -161,11 +175,11 @@
           </div>
         </mcs-data-error>
       </ng-container>
-  
+
       <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
       <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
     </mcs-table>
-  
+
     <!-- Paginator -->
     <mcs-paginator #paginator
       [totalCount]="totalRecordCount"

@@ -157,13 +157,11 @@
     },
     "sourceInterfaces": {
       "text": "Source Interfaces",
-      "value": true,
-      "exclude": true
+      "value": true
     },
     "destinationInterfaces": {
       "text": "Destination Interfaces",
-      "value": true,
-      "exclude": true
+      "value": true
     },
     "source": {
       "text": "Source",
@@ -185,12 +183,12 @@
     },
     "service": {
       "text": "Service",
-      "value": true
+      "value": true,
+      "exclude": true
     },
     "details": {
       "text": "Details",
-      "value": true,
-      "exclude": true
+      "value": true
     }
   }
 }

@@ -85,13 +85,6 @@ mcs-table {
       padding: $table-data-cell-padding;
     }
   }
-
-  .squishy-cell {
-    @include breakpoint(small) {
-      word-break: break-all;
-      white-space: normal;
-    }
-  }
 }
 
 .mcs-table-footer-wrapper {

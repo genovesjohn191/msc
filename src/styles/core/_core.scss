@@ -161,89 +161,10 @@ html {
   }
 }
 
-.hidden-medium {
-  @include breakpoint(medium) {
-    display: none !important;
-  }
-}
-
-.hidden-small {
-  @include breakpoint(small) {
-    display: none !important;
-  }
-}
-
-.hidden-xsmall {
-  @include breakpoint(xsmall) {
-    display: none !important;
-  }
-}
-
-.unstyled-list {
+ul.unstyled-list {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.text-color-success,
-.text-color-completed {
-  color: $color-green-00;
-}
-
-.text-color-error,
-.text-color-failed,
-.text-color-cancelled {
-  color: $color-red-00;
-}
-
-.text-color-active {
-  color: $color-black;
-}
-
-.font-normal {
-  font-family: $base-font;
-}
-
-.font-bold {
-  font-family: $base-font-bold;
-}
-
-.missing-data-info {
-  color: $color-grey-02;
-}
-
-.search-wrapper {
-  @include display-flex(row);
-  align-items: center;
-  @include set-items-interval($space-large, horizontal);
-
-  @include breakpoint(small) {
-    @include display-flex(column);
-    align-items: stretch;
-  }
-
-  mcs-search {
-    min-width: 300px;
-    @include breakpoint(small) {
-      min-width: 100%;
-    }
-  }
-
-  mcs-button {
-    @include breakpoint(small) {
-      margin: 0;
-      display: block;
-      min-width: 100%;
-    }
-  }
-
-  .record-count {
-    margin-left: auto;
-  }
-}
-
-.rotate-sideways {
-  @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
 }
 
 .icon-label-wrapper {
@@ -253,6 +174,10 @@ html {
 }
 
 // Elements
+.missing-data-info {
+  color: $color-grey-02;
+}
+
 .metadata {
   font-size: 11px;
   background-color: $color-grey-07;
@@ -260,12 +185,9 @@ html {
   margin-bottom: $space-xsmall;
 }
 
-// Form
-.label {
-  font-family: $base-font-bold;
-  @include font-size($h4-default-font-size);
-}
-
-.field {
-  margin-bottom: $space-large;
+.squishy-cell {
+  @include breakpoint(small) {
+    word-break: break-all;
+    white-space: normal;
+  }
 }
