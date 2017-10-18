@@ -117,6 +117,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_EMPTY_BOX = 'empty-box';
   public static ASSETS_FONT_CIRCLE = 'circle';
   public static ASSETS_FONT_CARET_RIGHT = 'caret-right';
+  public static ASSETS_FONT_CARET_LEFT = 'caret-left';
   public static ASSETS_FONT_CARET_DOWN = 'caret-down';
   public static ASSETS_FONT_PLAY = 'play';
   public static ASSETS_FONT_CHECKBOX_2 = 'check-box-2';

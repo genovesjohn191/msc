@@ -167,8 +167,9 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (value !== this.modelValue) {
-      this.modelValue = value;
+    if (this._items) {
+      let selectedItem = this._items.find((item) => item.value === value);
+      this._selectItem(selectedItem);
     }
   }
 
@@ -207,6 +208,7 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
   }
 
   private _selectItem(item: SelectItemComponent) {
+    if (isNullOrEmpty(item)) { return; }
     this._clearItemSelection(item);
     item.select();
     this._selection.select(item);

@@ -1,0 +1,9 @@
+<!-- Header Panel -->
+<ng-content select="[panel-header-def]"></ng-content>
+
+<!-- Content Panel -->
+<div [@bodyExpansion]="animateTrigger" class="accordion-content-panel-wrapper">
+  <div class="accordion-content-panel">
+    <ng-content></ng-content>
+  </div>
+</div>

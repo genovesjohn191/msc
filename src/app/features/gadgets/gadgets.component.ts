@@ -91,7 +91,7 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   public search: McsSearch;
 
   // Select
-  public selectedValue: any;
+  public selectedValue: any = 'steak-0';
   public foods = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },

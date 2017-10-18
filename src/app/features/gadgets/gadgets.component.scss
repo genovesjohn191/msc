@@ -25,3 +25,14 @@
 .table-container {
   @include set-items-interval($space-large);
 }
+
+// Accordion
+.accordion-sample-wrapper {
+  @include display-flex(row);
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  @include breakpoint(small) {
+    @include set-items-interval($space-large);
+  }
+}
