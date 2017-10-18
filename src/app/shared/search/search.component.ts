@@ -76,6 +76,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
         CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000))
       .distinctUntilChanged()
       .subscribe((searchTerm) => {
+        this.showLoading(true);
         this.keyword = searchTerm;
         this._onSearchChanged();
       });
@@ -102,6 +103,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   }
 
   private _onSearchChanged() {
+    this.showLoading(true);
     this.searchChangedStream.next(this);
     this._changeDetectorRef.markForCheck();
   }
