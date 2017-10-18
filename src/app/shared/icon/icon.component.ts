@@ -5,7 +5,8 @@ import {
   ElementRef,
   Renderer2,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import { CoreDefinition } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
@@ -19,7 +20,11 @@ import {
   selector: 'mcs-icon',
   templateUrl: './icon.component.html',
   styleUrls: ['./icon.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'icon-wrapper'
+  }
 })
 
 export class IconComponent implements OnChanges {

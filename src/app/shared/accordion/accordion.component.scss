@@ -6,7 +6,11 @@ $accordion-panel-box-shadow-color: $color-black;
 // Accordion panel header
 $accordion-panel-header-height: 45px;
 $accordion-panel-header-padding: 0 22px;
+$accordion-panel-header-bg-color: $color-grey-08;
 $accordion-panel-header-active-bg-color: $color-grey-07;
+$accordion-panel-header-color: $color-grey-01;
+$accordion-panel-header-active-color: $color-black;
+$accordion-panel-header-border-active-color: $color-primary-00;
 // Accordion content panel
 $accordion-panel-content-padding: $space-medium 22px;
 
@@ -30,11 +34,18 @@ $accordion-panel-content-padding: $space-medium 22px;
     align-items: center;
     padding: $accordion-panel-header-padding;
     height: $accordion-panel-header-height;
+    color: $accordion-panel-header-color;
+    background-color: $accordion-panel-header-bg-color;
+    border-left: 2px solid transparent;
     cursor: pointer;
 
     &:hover,
     &.active {
       background-color: $accordion-panel-header-active-bg-color;
+    }
+    &.active {
+      color: $accordion-panel-header-active-color;
+      border-left: 2px solid $accordion-panel-header-border-active-color;
     }
 
     * {
@@ -43,7 +54,6 @@ $accordion-panel-content-padding: $space-medium 22px;
 
     .icon-wrapper {
       @include flex(0 0 auto);
-      padding-left: $space-medium;
     }
   }
 

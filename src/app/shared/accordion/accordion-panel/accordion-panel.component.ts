@@ -115,6 +115,7 @@ export class AccordionPanelComponent implements OnInit {
   public openPanel(): void {
     this.animateTrigger = 'expanded';
     this.panelOpen = true;
+    this.headerPanel.updateView();
   }
 
   /**
@@ -123,6 +124,7 @@ export class AccordionPanelComponent implements OnInit {
   public closePanel(): void {
     this.animateTrigger = 'collapsed';
     this.panelOpen = false;
+    this.headerPanel.updateView();
   }
 
   private _emitSelectionChanged(): void {
