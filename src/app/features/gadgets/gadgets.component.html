@@ -571,6 +571,68 @@
         </form>
       </div>
 
+      <!-- Accordion -->
+    <div class="gadgets-container-item">
+      <h3 class="title">ACCORDION</h3>
+
+      <div class="accordion-sample-wrapper">
+        <mcs-accordion [ngStyle]="{width: '600px'}">
+          <!-- Panel 1 -->
+          <mcs-accordion-panel>
+            <mcs-accordion-panel-header panel-header-def>
+              <mcs-icon key="notification-bell"></mcs-icon>
+              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Single Panel Expanded</h4>
+            </mcs-accordion-panel-header>
+
+            <span>Standard management network for this VDC.</span>
+            <span>
+              <b>Gateway:</b> 172.30.18.94/27
+            </span>
+          </mcs-accordion-panel>
+
+          <!-- Panel 2 -->
+          <mcs-accordion-panel [expanded]="true">
+            <mcs-accordion-panel-header panel-header-def>
+              <mcs-icon key="calendar"></mcs-icon>
+              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
+            </mcs-accordion-panel-header>
+
+            <span>Standard management network for this VDC.</span>
+            <span>
+              <b>Gateway:</b> 172.30.18.95/27
+            </span>
+          </mcs-accordion-panel>
+        </mcs-accordion>
+
+        <mcs-accordion [multi]="true" [ngStyle]="{width: '600px'}">
+          <!-- Panel 1 -->
+          <mcs-accordion-panel [expanded]="true">
+            <mcs-accordion-panel-header panel-header-def>
+              <mcs-icon key="notification-bell"></mcs-icon>
+              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h4>
+            </mcs-accordion-panel-header>
+            <span>Standard management network for this VDC.</span>
+            <span>
+              <b>Gateway:</b> 172.30.18.94/27
+            </span>
+          </mcs-accordion-panel>
+
+          <!-- Panel 2 -->
+          <mcs-accordion-panel [expanded]="true">
+            <mcs-accordion-panel-header panel-header-def>
+              <mcs-icon key="calendar"></mcs-icon>
+              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
+            </mcs-accordion-panel-header>
+            <span>Standard management network for this VDC.</span>
+            <span>
+              <b>Gateway:</b> 172.30.18.95/27
+            </span>
+          </mcs-accordion-panel>
+        </mcs-accordion>
+      </div>
+
+    </div>
+
       <!-- Select -->
       <div class="gadgets-container-item">
         <h3 class="title">SELECT</h3>

@@ -4,9 +4,9 @@ import { IconModule } from '../icon/icon.module';
 import { LayoutModule } from '../layout/layout.module';
 import { SelectComponent } from './select.component';
 // Select Group
-import {SelectGroupComponent} from './select-group/select-group.component';
+import { SelectGroupComponent } from './select-group/select-group.component';
 // Select Item
-import {SelectItemComponent} from './select-item/select-item.component';
+import { SelectItemComponent } from './select-item/select-item.component';
 
 @NgModule({
   declarations: [

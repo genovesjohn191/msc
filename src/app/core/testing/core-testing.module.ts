@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   BaseRequestOptions,
   HttpModule,
@@ -22,7 +24,9 @@ export function httpFactory(backend: XHRBackend, defaultOptions: BaseRequestOpti
 
 @NgModule({
   imports: [
+    FormsModule,
     RouterTestingModule,
+    BrowserAnimationsModule,
     HttpModule,
     CookieModule.forRoot()
   ],
