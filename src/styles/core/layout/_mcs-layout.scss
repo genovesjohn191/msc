@@ -58,7 +58,7 @@
   justify-content: none;
 }
 
-// Alignment classes
+// Overrides
 .right-align {
   margin-left: auto !important;
 }
@@ -69,6 +69,40 @@
 
 .top-align {
   vertical-align: top !important;
+}
+
+.font-normal {
+  font-family: $base-font !important;
+}
+
+.font-bold {
+  font-family: $base-font-bold !important;
+}
+
+.hidden-medium {
+  @include breakpoint(medium) {
+    display: none !important;
+  }
+}
+
+.hidden-small {
+  @include breakpoint(small) {
+    display: none !important;
+  }
+}
+
+.hidden-xsmall {
+  @include breakpoint(xsmall) {
+    display: none !important;
+  }
+}
+
+.visible-small {
+  display: none !important;
+
+  @include breakpoint(small) {
+    display: block !important;
+  }
 }
 
 // Spacing
@@ -99,11 +133,21 @@
   pointer-events: none;
 }
 
-//
-
 .clickable-text {
   :hover {
     cursor: pointer;
     font-family: $base-font-bold;
+  }
+}
+
+// Special effects
+.rotate-sideways {
+  @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
+}
+
+// Simple table
+table.mcs-simple-table {
+  td {
+    padding-right: $space-small;
   }
 }

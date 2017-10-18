@@ -1,5 +1,3 @@
-@import "../../../styles/shared/base";
-
 $navlink-padding: 9px;
 $content-responsive-width-desktop: 750px;
 $content-responsive-width-mobile: 500px;
@@ -87,7 +85,7 @@ $table-filter-selector-width: 100px;
             padding-left: $space-xsmall;
             margin-bottom: $space-xsmall;
           }
-        
+
           li {
             @include display-flex(row);
             align-items: center;
@@ -101,7 +99,7 @@ $table-filter-selector-width: 100px;
 
 .action-container {
   width: 100px;
-  
+
   a, a:hover {
     display: block;
     text-decoration: none;

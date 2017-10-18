@@ -2,38 +2,47 @@
   <h3 class="heading">{{ serverStorageText.title }}</h3>
 
   <div *ngIf="!expandStorage" class="details">
-    <div class="storage-container">
-      <ul class="unstyled-list storage">
-        <li>
-          <span class="storage-device-label">
+    <table class="mcs-simple-table full-width">
+      <thead>
+        <tr>
+          <td>
             <strong>{{ serverStorageText.storageDevice }}</strong>
-          </span>
-          <span class="storage-profile-label">
+          </td>
+          <td>
             <strong>{{ serverStorageText.storageProfile }}</strong>
-          </span>
-          <span class="capacity-label">
+          </td>
+          <td>
             <strong>{{ serverStorageText.capacity }}</strong>
-          </span>
-        </li>
-        <li *ngFor="let storage of storageDevices; let i = index">
-          <span class="name">
-            <mcs-icon *ngIf="!isActiveStorage(storage.id)"
-              [key]="storageIconKey" size="small"
-              class="hidden-small"></mcs-icon>
-            <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
-              size="small" class="hidden-small"
-              mcsPopover trigger="hover" maxWidth="250px"
-              padding="narrow" [content]="expandingStorage"></mcs-icon>
+          </td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let storage of storageDevices; let i = index">
+          <td class="squishy-cell">
             <ng-template #expandingStorage>
               <span class="expanding-storage-popover">
                 {{ getStorageSummaryInformation(storage.id) }}
               </span>
             </ng-template>
-            <span>{{ storage.name }}</span>
-          </span>
-          <span class="storage-profile">{{ storage.storageProfile }}</span>
-          <span class="capacity">
-            <span class="value">{{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}</span>
+            <span>
+              <mcs-icon *ngIf="!isActiveStorage(storage.id)"
+                [key]="storageIconKey" size="small"
+                class="hidden-small"></mcs-icon>
+              <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
+                size="small" class="hidden-small"
+                mcsPopover trigger="hover" maxWidth="250px"
+                padding="narrow" [content]="expandingStorage"></mcs-icon>
+                {{ storage.name }}
+            </span>
+          </td>
+          <td class="squishy-cell">
+            {{ storage.storageProfile }}
+          </td>
+          <td>
+            {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
+          </td>
+          <td>
             <span *mcsHasPermission="['VmEdit']" [hidden]="disabled" class="expand text-right">
               <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
             </span>
@@ -63,11 +72,10 @@
                 </div>
               </ng-template>
             </span>
-          </span>
-        </li>
-      </ul>
-    </div>
-
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <div *mcsHasPermission="['VmEdit']">
       <div [mcsLoader]="serverResourceSubscription">
         <div *ngIf="!hasReachedDisksLimit" class="add-new-storage">
