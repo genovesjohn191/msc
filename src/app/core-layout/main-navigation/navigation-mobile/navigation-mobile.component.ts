@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  HostListener,
   ElementRef,
   Renderer2,
   ViewChild,
@@ -18,7 +17,9 @@ import {
 import { CoreDefinition } from '../../../core';
 import {
   isNullOrEmpty,
-  resolveEnvVar
+  resolveEnvVar,
+  registerEvent,
+  unregisterEvent
 } from '../../../utilities';
 
 @Component({
@@ -70,6 +71,11 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_CLOSE;
   }
 
+  /**
+   * Event handler references
+   */
+  private _clickOutsideHandler = this.onClickOutside.bind(this);
+
   public constructor(
     private _elementRef: ElementRef,
     private _renderer: Renderer2,
@@ -84,17 +90,18 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
           this.close();
         }
       });
+    registerEvent(document, 'click', this._clickOutsideHandler);
   }
 
   public ngOnDestroy() {
     if (!isNullOrEmpty(this._routerSubscription)) {
       this._routerSubscription.unsubscribe();
     }
+    unregisterEvent(document, 'click', this._clickOutsideHandler);
   }
 
-  @HostListener('document:click', ['$event.target'])
-  public onClickOutside(target): void {
-    if (!this._elementRef.nativeElement.contains(target)) {
+  public onClickOutside(_event: any): void {
+    if (!this._elementRef.nativeElement.contains(_event.target)) {
       this.close();
     }
   }
@@ -105,6 +112,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public close(): void {
-    this.slideTrigger = 'slideOutLeft';
+    if (this.slideTrigger) {
+      this.slideTrigger = 'slideOutLeft';
+    }
   }
 }
