@@ -31,8 +31,8 @@
       <mcs-textbox width="150px" placeholder="GB"
         formControlName="formControlServerStorageCustom"
         [valid]="isControlValid(formControlServerStorageCustom)"
-        [ngModel]="customStorageValue"></mcs-textbox>
-      <span class="unit">{{ storageTextContent.unit }}</span>
+        [ngModel]="customStorageValue" [suffix]="storageTextContent.unit">
+      </mcs-textbox>
     </div>
     <mcs-validation-message [control]="formControlServerStorageCustom"
       animate trigger="fadeIn"></mcs-validation-message>

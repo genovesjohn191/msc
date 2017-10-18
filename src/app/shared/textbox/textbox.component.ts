@@ -54,16 +54,17 @@ export class TextboxComponent
   }
 
   @Input()
+  public get suffix(): string {
+    return this._suffix;
+  }
+  public set suffix(value: string) {
+    if (this._suffix !== value) {
+      this._suffix = value;
+    }
+  }
+
+  @Input()
   public name: string;
-
-  @Input()
-  public step: number;
-
-  @Input()
-  public min: number;
-
-  @Input()
-  public max: number;
 
   @Input()
   public placeholder: string;
@@ -89,6 +90,7 @@ export class TextboxComponent
    */
   private _value: string;
   private _icon: 'normal' | 'search' | 'loading' | 'caret-down';
+  private _suffix: string;
 
   public get value(): string {
     return this._value;
@@ -106,6 +108,10 @@ export class TextboxComponent
     this.inputType = 'text';
     this.valid = true;
     this.disabled = false;
+  }
+
+  public hasSuffix(): boolean {
+    return this._suffix !== undefined;
   }
 
   public ngOnInit() {

@@ -29,10 +29,10 @@
                   placeholder="RAM"
                   formControlName="serverScaleCustomRam"
                   [(ngModel)]="customMemoryGBValue"
-                  [valid]="isControlValid(serverScaleCustomRam)">
+                  [valid]="isControlValid(serverScaleCustomRam)"
+                  [suffix]="serverScalePerformanceTextContent.ramUnit">
                 </mcs-textbox>
               </span>
-               <span class="unit">{{ serverScalePerformanceTextContent.ramUnit }}</span>
             </div>
             <mcs-validation-message [control]="serverScaleCustomRam"></mcs-validation-message>
           </li>
@@ -44,10 +44,10 @@
                   placeholder="CPUs"
                   formControlName="serverScaleCustomCpu"
                   [(ngModel)]="customCpuCountValue"
-                  [valid]="isControlValid(serverScaleCustomCpu)">
+                  [valid]="isControlValid(serverScaleCustomCpu)"
+                  [suffix]="serverScalePerformanceTextContent.cpuUnit">
                 </mcs-textbox>
               </span>
-               <span class="unit">{{ serverScalePerformanceTextContent.cpuUnit }}</span>
             </div>
             <mcs-validation-message [control]="serverScaleCustomCpu"></mcs-validation-message>
           </li>
