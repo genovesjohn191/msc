@@ -95,7 +95,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public osItems: McsList;
   public vTemplateItems: McsList;
   public networkItems: McsList;
-  public storageItems: McsList;
+  public storageItems: any;
 
   // Others
   public contextualTextContent: any;
@@ -134,7 +134,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     this.vAppItems = new McsList();
     this.vTemplateItems = new McsList();
     this.networkItems = new McsList();
-    this.storageItems = new McsList();
+    this.storageItems = new Array();
     this.selectedNetwork = new ServerNetwork();
     this.selectedServer = new Server();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
@@ -286,7 +286,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
     // Populate dropdown list
     this.resource.storage.forEach((storage) => {
-      this.storageItems.push('Storages', new McsListItem(storage.name, storage.name));
+      this.storageItems.push({ value: storage.name, text: storage.name });
     });
 
     this._setStorageMemoryMB();

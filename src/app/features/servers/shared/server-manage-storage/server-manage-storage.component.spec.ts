@@ -7,9 +7,7 @@ import {
 import { ServerManageStorageComponent } from './server-manage-storage.component';
 import {
   CoreDefinition,
-  McsTextContentProvider,
-  McsList,
-  McsListItem
+  McsTextContentProvider
 } from '../../../../core';
 import { ServerInputManageType } from '../../models';
 import { FormControl } from '@angular/forms';
@@ -52,13 +50,10 @@ describe('ServerManageStorageComponent', () => {
       component.memoryMB = 256000;
       component.availableMemoryMB = 102400;
 
-      component.storageProfileList = new McsList();
-      component.storageProfileList.push('Storage Profiles',
-        new McsListItem('storageProfile1', 'Storage 1'));
-      component.storageProfileList.push('Storage Profiles',
-        new McsListItem('storageProfile2', 'Storage 2'));
-      component.storageProfileList.push('Storage Profiles',
-        new McsListItem('storageProfile3', 'Storage 3'));
+      component.storageProfileList = new Array();
+      component.storageProfileList.push({ value: 'storageProfile1', text: 'Storage 1' });
+      component.storageProfileList.push({ value: 'storageProfile2', text: 'Storage 2' });
+      component.storageProfileList.push({ value: 'storageProfile3', text: 'Storage 3' });
 
       component.ngOnInit();
     });
@@ -68,7 +63,7 @@ describe('ServerManageStorageComponent', () => {
   describe('ngOnInit()', () => {
     it(`should set the storageProfileValue to the first item of storageProfileList`, () => {
       expect(component.storageProfileValue)
-        .toBe(component.storageProfileList.getGroup('Storage Profiles')[0].key);
+        .toBe(component.storageProfileList[0].value);
     });
 
     it(`should initialize the sliderValue`, fakeAsync(() => {

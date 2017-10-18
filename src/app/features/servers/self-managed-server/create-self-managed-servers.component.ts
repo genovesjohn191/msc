@@ -26,7 +26,8 @@ import {
 import {
   mergeArrays,
   addOrUpdateArrayRecord,
-  refreshView
+  refreshView,
+  isNullOrEmpty
 } from '../../../utilities';
 import { ContextualHelpDirective } from '../../../shared';
 import {
@@ -120,9 +121,12 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   }
 
   public get isServersValid(): boolean {
+    if (isNullOrEmpty(this.newServers)) { return false; }
+
     let inValidExists = this.newServers.find((newServer) => {
       return !newServer.componentRef.instance.isValid;
     });
+
     return inValidExists ? false : true;
   }
 

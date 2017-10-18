@@ -18,8 +18,6 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsList,
-  McsListItem,
   McsNotificationContextService,
   McsApiJob,
   McsJobType,
@@ -72,7 +70,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public storageDevices: ServerStorageDevice[];
   public storageChangedValue: ServerManageStorage;
 
-  public storageProfileList: McsList;
+  public storageProfileList: any[];
   public newStorageSliderValues: number[];
   public memoryMB: number;
   public minimumMB: number;
@@ -99,6 +97,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
+  }
+
+  public get hasStorageProfileList(): boolean {
+    return !isNullOrEmpty(this.storageProfileList);
   }
 
   public get hasStorageDevice(): boolean {
@@ -205,6 +207,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.storageChangedValue.valid = false;
     this.storageJob = new McsApiJob();
     this._serverResourceMap = new Map<string, ServerResource>();
+    this.storageProfileList = new Array();
   }
 
   public ngOnInit() {
@@ -566,14 +569,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   private _setStorageProfiles(): void {
     if (isNullOrEmpty(this.serverResourceStorage)) { return; }
 
-    let storageProfileList = new McsList();
-
     this.serverResourceStorage.forEach((storage) => {
-      storageProfileList.push('Storage Profiles',
-        new McsListItem(storage.name, storage.name));
+      this.storageProfileList.push({ value: storage.name, text: storage.name });
     });
-
-    this.storageProfileList = storageProfileList;
   }
 
   /**

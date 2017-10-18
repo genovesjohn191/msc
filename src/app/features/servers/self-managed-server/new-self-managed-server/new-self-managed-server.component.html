@@ -3,19 +3,38 @@
 
   <div class="server-details">
     <div class="control-group">
-      <mcs-dropdown name="vApp" formControlName="formControlVApp"
-        [placeholder]="vAppPlaceholder"
-        [dropdownData]="vAppItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVApp"></mcs-validation-message>
+      <mcs-select formControlName="formControlVApp" [placeholder]="vAppPlaceholder">
+        <mcs-select-item [value]="">{{ vAppPlaceholder }}</mcs-select-item>
+        <mcs-select-group header="Virtual Applications">
+          <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
+            {{ vApp.text }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
     </div>
 
     <div class="control-group">
-      <!-- <mcs-server-image [os]="osItems" [templates]="vTemplateItems"
-        formControlName="formControlImage"
-        [mcsContextualHelp]="contextualTextContent.serverTemplate"></mcs-server-image> -->
-        <mcs-dropdown name="vApp" formControlName="formControlImage"
-          [placeholder]="serverImagePlaceholder"
-          [dropdownData]="serverImageItems"></mcs-dropdown>
+      <mcs-select formControlName="formControlImage"
+        [placeholder]="serverImagePlaceholder"
+        [mcsContextualHelp]="contextualTextContent.serverTemplate">
+        <mcs-select-item [value]="">{{ serverImagePlaceholder }}</mcs-select-item>
+        <mcs-select-group header="Operating System">
+          <mcs-select-item *ngFor="let platform of serverOsItems">
+            {{ platform.group }}
+            <mcs-select-group sub-group>
+              <mcs-select-item *ngFor="let os of platform.items" [value]="os.value">
+                {{ os.text }}
+              </mcs-select-item>
+            </mcs-select-group>
+          </mcs-select-item>
+        </mcs-select-group>
+
+        <mcs-select-group header="Custom Templates">
+          <mcs-select-item *ngFor="let template of serverTemplateItems" [value]="template.value">
+            {{ template.text }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
       <mcs-validation-message [control]="formControlImage"></mcs-validation-message>
     </div>
   </div>
@@ -33,7 +52,7 @@
       </mcs-server-performance-scale>
     </div>
 
-    <div class="storage-information">
+    <div class="storage-information" *ngIf="storageItems">
       <mcs-server-manage-storage
         [memoryMB]="storageMemoryMB"
         [availableMemoryMB]="storageAvailableMemoryMB"
@@ -53,10 +72,16 @@
     <span class="label">Network:</span>
 
     <div class="control-group">
-      <mcs-dropdown name="Primary Network"
-        formControlName="formControlNetwork"
-        [dropdownData]="networkItems"
-        [mcsContextualHelp]="contextualTextContent.network"></mcs-dropdown>
+      <mcs-select formControlName="formControlNetwork"
+        [placeholder]="networkPlaceholder"
+        [mcsContextualHelp]="contextualTextContent.network">
+        <mcs-select-item [value]="">{{ networkPlaceholder }}</mcs-select-item>
+        <mcs-select-group header="Networks">
+          <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
+            {{ network.text }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
       <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
     </div>
 

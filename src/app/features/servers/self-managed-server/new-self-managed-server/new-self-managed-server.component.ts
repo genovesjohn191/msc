@@ -14,8 +14,6 @@ import {
   FormControl
 } from '@angular/forms';
 import {
-  McsList,
-  McsListItem,
   McsTextContentProvider,
   CoreValidators,
   CoreDefinition
@@ -42,11 +40,13 @@ import {
   ServerCatalogType
 } from '../../models';
 
+const RAM_MINIMUM_VALUE = 2048;
+const CPU_MINIMUM_VALUE = 1;
 const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
 const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MULTIPLIER;
 const VAPP_PLACEHOLDER = 'Select VApp';
 const SERVER_IMAGE_PLACEHOLDER = 'Select Image';
-const CUSTOM_TEMPLATE_GROUP = 'Custom Templates';
+const NETWORK_PLACEHOLDER = 'Select Network';
 
 @Component({
   selector: 'mcs-new-self-managed-server',
@@ -92,12 +92,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public serverImageData: ServerImage[];
 
   // Dropdowns
-  public vAppItems: McsList;
-  public osItems: McsList;
-  public vTemplateItems: McsList;
-  public serverImageItems: McsList;
-  public networkItems: McsList;
-  public storageItems: McsList;
+  public vAppItems: any;
+  public serverOsItems: any;
+  public serverTemplateItems: any;
+  public networkItems: any;
+  public storageItems: any;
 
   // Others
   public contextualTextContent: any;
@@ -113,12 +112,16 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     return SERVER_IMAGE_PLACEHOLDER;
   }
 
+  public get networkPlaceholder(): string {
+    return NETWORK_PLACEHOLDER;
+  }
+
   private get _memoryGB(): number {
     return Math.floor(convertToGb(this.storageMemoryMB));
   }
 
   private get _maximumMemoryGB(): number {
-    return this._memoryGB + Math.floor(convertToGb(this.storageAvailableMemoryMB));
+    return Math.floor(convertToGb(this.storageAvailableMemoryMB));
   }
 
   public constructor(
@@ -135,12 +138,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.storageAvailableMemoryMB = 0;
     this.selectedStorage = new ServerManageStorage();
     this.serverImageData = new Array<ServerImage>();
-    this.vAppItems = new McsList();
-    this.osItems = new McsList();
-    this.vTemplateItems = new McsList();
-    this.serverImageItems = new McsList();
-    this.networkItems = new McsList();
-    this.storageItems = new McsList();
+    this.vAppItems = new Array();
+    this.serverOsItems = new Array();
+    this.serverTemplateItems = new Array();
+    this.networkItems = new Array();
+    this.storageItems = new Array();
     this.selectedNetwork = new ServerNetwork();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
@@ -149,7 +151,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.contextualTextContent = this._textContentProvider.content
       .servers.createSelfManagedServer.contextualHelp;
 
-    // TODO: Temporary value. To be confirmed
+    this.memoryMB = RAM_MINIMUM_VALUE;
+    this.cpuCount = CPU_MINIMUM_VALUE;
     this.storageMemoryMB = NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB;
 
     this._registerFormGroup();
@@ -174,6 +177,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
           });
         this._serverService.subContextualHelp =
           mergeArrays(this._serverService.subContextualHelp, contextInformations);
+      }
+
+      // Select network initial value
+      if (!isNullOrEmpty(this.networkItems)) {
+        this.formControlNetwork.setValue(this.networkItems[0].value);
       }
     });
   }
@@ -230,13 +238,13 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     // Populate dropdown list
     this.resource.vApps.forEach((vApp) => {
-      this.vAppItems.push('Virtual Applications', new McsListItem(vApp.name, vApp.name));
+      this.vAppItems.push({value: vApp.name, text: vApp.name});
     });
 
   }
 
   private _setServerImageItems(): void {
-    let serverImageId = 0;
+    let serverImageId = 1;
 
     this.serversOs.forEach((groupedOs) => {
       groupedOs.os.forEach((os) => {
@@ -246,8 +254,17 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
         serverImage.image = os.name;
 
         this.serverImageData.push(serverImage);
-        this.serverImageItems.push(groupedOs.platform,
-          new McsListItem(serverImage.id, serverImage.image));
+
+        let osItem = { value: serverImage.id, text: serverImage.image };
+        let osGroupIndex = this.serverOsItems.findIndex((item) => {
+          return item.group === groupedOs.platform;
+        });
+
+        if (osGroupIndex > -1) {
+          this.serverOsItems[osGroupIndex].items.push(osItem);
+        } else {
+          this.serverOsItems.push({ group: groupedOs.platform, items: [osItem] });
+        }
 
         serverImageId++;
       });
@@ -261,8 +278,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
         serverImage.image = catalog.itemName;
 
         this.serverImageData.push(serverImage);
-        this.serverImageItems.push(CUSTOM_TEMPLATE_GROUP,
-          new McsListItem(serverImage.id, serverImage.image));
+        this.serverTemplateItems.push({ value: serverImage.id, text: serverImage.image });
 
         serverImageId++;
       }
@@ -274,24 +290,17 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     // Populate dropdown list
     this.resource.networks.forEach((network) => {
-      this.networkItems.push('Networks', new McsListItem(network.name, network.name));
+      this.networkItems.push({ value: network.name, text: network.name });
     });
-
-    // Select first element of the dropdown
-    if (!isNullOrEmpty(this.networkItems.getGroupNames())) {
-      this.formControlNetwork.setValue(this.networkItems.getGroup(
-        this.networkItems.getGroupNames()[0])[0].key);
-    }
   }
 
   private _setStorageItems(): void {
     if (isNullOrEmpty(this.resource)) { return; }
 
-    // Populate dropdown list
+    // Populate select with storage profiles
     this.resource.storage.forEach((storage) => {
-      this.storageItems.push('Storages', new McsListItem(storage.name, storage.name));
+      this.storageItems.push({ value: storage.name, text: storage.name });
     });
-    // The selection of element is happened under onStorageChanged method
   }
 
   private _setStorageAvailableMemoryMB(): void {
