@@ -119,9 +119,15 @@ export class McsNotificationJobService {
     // Setup websocker client
     this._websocketClient = webStomp.over(this._websocket, { debug: false });
 
+    // TODO: Test fix for the message broker disconnection, refactor when needed
     this._websocketClient.connect(
       this._getHeaders(),
-      this._onConnect.bind(this)
+      this._onConnect.bind(this),
+      () => {
+        setTimeout(() => {
+          this._initializeWebsocket();
+        }, 5000);
+      }
     );
   }
 
