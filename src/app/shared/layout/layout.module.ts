@@ -5,6 +5,7 @@ import { ReadOnlyDirective } from './read-only.directive';
 import { DisabledDirective } from './disabled.directive';
 import { CursorDirective } from './cursor.directive';
 import { AnimateDirective } from './animation.directive';
+import { ScrollableDirective } from './scrollable.directive';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { AnimateDirective } from './animation.directive';
     ReadOnlyDirective,
     DisabledDirective,
     CursorDirective,
-    AnimateDirective
+    AnimateDirective,
+    ScrollableDirective
   ],
   exports: [
     DisplayFlexDirective,
@@ -21,7 +23,8 @@ import { AnimateDirective } from './animation.directive';
     ReadOnlyDirective,
     DisabledDirective,
     CursorDirective,
-    AnimateDirective
+    AnimateDirective,
+    ScrollableDirective
   ]
 })
 

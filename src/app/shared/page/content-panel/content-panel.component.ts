@@ -5,10 +5,14 @@ import {
 
 @Component({
   selector: 'mcs-content-panel',
-  template: `<ng-content></ng-content>`,
+  template: `
+  <div class="content-panel-wrapper" mcsScrollable>
+    <ng-content></ng-content>
+  </div>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'content-panel-wrapper'
+    'class': 'display-flex-row flex-auto'
   }
 })
 
