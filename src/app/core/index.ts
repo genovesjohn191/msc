@@ -11,6 +11,8 @@ export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
 export * from './services/mcs-overlay.service';
+export * from './services/mcs-scroll-dispatcher.service';
+export * from './services/mcs-viewport-ruler.service';
 /** Providers */
 export * from './providers/mcs-text-content.provider';
 export * from './providers/mcs-assets.provider';
@@ -46,6 +48,7 @@ export * from './interfaces/mcs-loader.interface';
 export * from './interfaces/mcs-modal.interface';
 export * from './interfaces/mcs-search.interface';
 export * from './interfaces/mcs-component-type.interface';
+export * from './interfaces/mcs-scrollable.interface';
 /** Base */
 export * from './base/mcs-table-listing.base';
 /** Authentication */

@@ -14,7 +14,10 @@ import {
   Renderer2,
   EventEmitter
 } from '@angular/core';
-import { McsComponentService } from '../../core';
+import {
+  McsComponentService,
+  McsScrollDispatcherService
+} from '../../core';
 import {
   getElementPositionFromHost,
   getElementPosition,
@@ -74,7 +77,8 @@ export class PopoverDirective implements OnInit, OnDestroy {
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
     private _renderer: Renderer2,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private _scrollDispatcher: McsScrollDispatcherService
   ) {
     // Set default values for Inputs
     this.placement = 'bottom';
@@ -86,6 +90,20 @@ export class PopoverDirective implements OnInit, OnDestroy {
     this.elementContainer = 'body';
     this.onOpen = new EventEmitter();
     this.onClose = new EventEmitter();
+
+    // Move popover element position when angular view is stable
+    this.zoneSubscription = this._ngZone.onStable.subscribe(() => {
+      if (this.componentRef) {
+        this.moveElementPosition(this.placement, this.orientation);
+      }
+    });
+
+    // Listen for every scroll position
+    this._scrollDispatcher.scrolled(0, () => {
+      if (this.componentRef) {
+        this.moveElementPosition(this.placement, this.orientation);
+      }
+    });
   }
 
   public ngOnInit() {
@@ -100,13 +118,6 @@ export class PopoverDirective implements OnInit, OnDestroy {
 
     // Register all events listener
     this._registerEvents();
-
-    // Move popover element position when angular view is stable
-    this.zoneSubscription = this._ngZone.onStable.subscribe(() => {
-      if (this.componentRef) {
-        this.moveElementPosition(this.placement, this.orientation);
-      }
-    });
   }
 
   public ngOnDestroy() {
@@ -187,6 +198,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
     targetElementPosition = getElementPosition(this.componentRef.location.nativeElement);
     this.setPopoverPlacement();
 
+    // Set popover orientation
     switch (placement) {
       case 'left':
       case 'right':

@@ -13,6 +13,7 @@ import { By } from '@angular/platform-browser';
 
 import { PopoverDirective } from './popover.directive';
 import { PopoverModule } from './popover.module';
+import { CoreTestingModule } from '../../core/testing';
 
 @Component({
   selector: 'mcs-test',
@@ -41,6 +42,7 @@ describe('PopoverDirective', () => {
         TestComponent
       ],
       imports: [
+        CoreTestingModule,
         PopoverModule
       ]
     });
@@ -80,6 +82,7 @@ describe('PopoverDirective', () => {
   describe('click() Event', () => {
     beforeEach(async(() => {
       triggerEvent(directiveElement.nativeElement, 'click');
+      fixtureInstance.detectChanges();
     }));
 
     it(`should open/create the popover when click is triggered first time`, () => {
@@ -89,6 +92,7 @@ describe('PopoverDirective', () => {
 
     it(`should close/delete the popover when click is triggered second time`, () => {
       triggerEvent(directiveElement.nativeElement, 'click');
+      fixtureInstance.detectChanges();
       let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
       expect(mcsPopoverExist).toBe(null);
     });
@@ -99,6 +103,7 @@ describe('PopoverDirective', () => {
       component.popover.trigger = 'hover';
       component.popover.ngOnInit();
       triggerEvent(directiveElement.nativeElement, 'mouseenter');
+      fixtureInstance.detectChanges();
     }));
 
     it(`should open/create the popover when 'mouseenter' is invoked`, () => {
@@ -108,6 +113,7 @@ describe('PopoverDirective', () => {
 
     it(`should close/delete the popover when 'mouseleave' is invoked`, () => {
       triggerEvent(directiveElement.nativeElement, 'mouseleave');
+      fixtureInstance.detectChanges();
       let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
       expect(mcsPopoverExist).toBe(null);
     });
