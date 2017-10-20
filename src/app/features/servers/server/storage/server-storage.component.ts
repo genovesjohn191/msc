@@ -120,12 +120,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Server platform data mapping
+   * Server resource data mapping
    */
   private _serverResourceMap: Map<string, ServerResource>;
-  public get serverPlatformMap(): Map<string, ServerResource> {
-    return this._serverResourceMap;
-  }
 
   private _availableMemoryMB: number;
   public get availableMemoryMB(): number {

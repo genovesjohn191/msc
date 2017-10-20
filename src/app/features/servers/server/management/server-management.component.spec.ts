@@ -127,15 +127,4 @@ describe('ServerManagementComponent', () => {
       expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
     });
   });
-
-  describe('ngOnDestroy()', () => {
-    it('should unsubscribe from the subscription', () => {
-
-      spyOn(component.serverSubscription, 'unsubscribe');
-      spyOn(component.notificationsSubscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.serverSubscription.unsubscribe).toHaveBeenCalled();
-      expect(component.notificationsSubscription.unsubscribe).toHaveBeenCalled();
-    });
-  });
 });

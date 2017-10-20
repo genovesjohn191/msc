@@ -47,8 +47,8 @@
     </mcs-left-panel-item>
   </mcs-left-panel>
 
-  <mcs-content-panel *mcsContentPanelDef>
-    <div class="content-wrapper" [mcsLoader]="serverSubscription">
+  <mcs-content-panel *mcsContentPanelDef [mcsLoader]="serverSubscription">
+    <div class="content-wrapper">
       <div class="mcs-tabs">
         <ul class="nav nav-tabs" role="tablist">
 
@@ -65,8 +65,10 @@
           </li>
 
           <li class="nav-item action-cog" *mcsHasPermission="['VmPowerStateEdit']">
-            <mcs-server-command [command]="getActionStatus(server)"
-              (onClick)="executeServerCommand(server, $event)"></mcs-server-command>
+            <mcs-server-command [commandList]="serverCommandList"
+              [command]="getActionStatus(server)"
+              (onClick)="executeServerCommand(server, $event)">
+            </mcs-server-command>
           </li>
         </ul>
 

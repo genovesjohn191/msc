@@ -103,7 +103,7 @@
 
 <div *ngIf="isServerScale" class="content-responsive server-performance-scale">
   <h3>Scaling {{ server.managementName }}</h3>
-  <mcs-server-performance-scale [mcsLoader]="platformDataSubscription"
+  <mcs-server-performance-scale [mcsLoader]="resourceSubscription"
     [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
     [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
     (scaleChanged)="onScaleChanged($event)">

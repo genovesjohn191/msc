@@ -2,10 +2,14 @@
   class="clone-self-managed-server-container">
 
   <div class="server-configuration-details">
-    <mcs-dropdown name="Clone this server"
-      formControlName="formControlTargetServer"
-      [dropdownData]="serverItems"
-      [mcsContextualHelp]="contextualTextContent.cloneServer"></mcs-dropdown>
+    <mcs-select formControlName="formControlTargetServer" [placeholder]="targetServerPlaceholder">
+      <mcs-select-item [value]="">{{ targetServerPlaceholder }}</mcs-select-item>
+      <mcs-select-group header="Servers">
+        <mcs-select-item *ngFor="let server of servers" [value]="server.id">
+          {{ server.managementName }}
+        </mcs-select-item>
+      </mcs-select-group>
+    </mcs-select>
     <mcs-validation-message [control]="formControlTargetServer"></mcs-validation-message>
   </div>
 </form>

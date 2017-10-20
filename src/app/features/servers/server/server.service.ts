@@ -12,7 +12,8 @@ import {
   ServerStorageDeviceUpdate,
   ServerPlatform,
   ServerResource,
-  ServerResourceStorage
+  ServerResourceStorage,
+  ServerCommand
 } from '../models';
 import { McsApiSuccessResponse } from '../../../core/';
 
@@ -25,16 +26,10 @@ export class ServerService {
    * This will notify the subscriber everytime the server is selected or
    * everytime there are new data from the selected server
    */
-  private _selectedServerStream: BehaviorSubject<Server>;
-  public get selectedServerStream(): BehaviorSubject<Server> {
-    return this._selectedServerStream;
-  }
-  public set selectedServerStream(value: BehaviorSubject<Server>) {
-    this._selectedServerStream = value;
-  }
+  public selectedServerStream: BehaviorSubject<Server>;
 
   constructor(private _serversService: ServersService) {
-    this._selectedServerStream = new BehaviorSubject<Server>(undefined);
+    this.selectedServerStream = new BehaviorSubject<Server>(undefined);
     this._listenToActiveServers();
   }
 
@@ -157,8 +152,37 @@ export class ServerService {
     this.selectedServerStream.next(server);
   }
 
+  /**
+   * Execute the server command according to inputs
+   * @param server Server to process the action
+   * @param action Action to be execute
+   */
+  public executeServerCommand(server: Server, action: ServerCommand) {
+    this._serversService.executeServerCommand(server, action);
+  }
+
+  public computeAvailableMemoryMB(resource: ServerResource): number {
+    return this._serversService.computeAvailableMemoryMB(resource);
+  }
+
+  public computeAvailableCpu(resource: ServerResource): number {
+    return this._serversService.computeAvailableCpu(resource);
+  }
+
   public computeAvailableStorageMB(storage: ServerResourceStorage): number {
     return this._serversService.computeAvailableStorageMB(storage);
+  }
+
+  public setResourceMap(resources: ServerResource[]): Map<string, ServerResource> {
+    let serverResourceMap = new Map<string, ServerResource>();
+
+    if (resources) {
+      resources.forEach((resource) => {
+        serverResourceMap.set(resource.name, resource);
+      });
+    }
+
+    return serverResourceMap;
   }
 
   /**
@@ -181,7 +205,7 @@ export class ServerService {
               if (selectedServer.id === activeServer.serverId) {
                 selectedServer.powerState = this._serversService
                   .getActiveServerPowerState(activeServer);
-                this._selectedServerStream.next(selectedServer);
+                this.selectedServerStream.next(selectedServer);
               }
             }
           }

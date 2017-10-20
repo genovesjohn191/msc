@@ -4,6 +4,7 @@ import {
   Observable,
   BehaviorSubject
 } from 'rxjs/Rx';
+import { Router } from '@angular/router';
 /** Services and Models */
 import {
   McsApiService,
@@ -18,7 +19,8 @@ import {
 import {
   reviverParser,
   convertJsonStringToObject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getEnumString
 } from '../../utilities';
 import {
   Server,
@@ -72,7 +74,8 @@ export class ServersService {
 
   constructor(
     private _mcsApiService: McsApiService,
-    private _notificationContextService: McsNotificationContextService
+    private _notificationContextService: McsNotificationContextService,
+    private _router: Router
   ) {
     this._activeServers = new Array();
     this._activeServersStream = new BehaviorSubject(undefined);
@@ -138,13 +141,13 @@ export class ServersService {
    */
   public postServerCommand(
     id: any,
-    action: string,
+    action: ServerCommand,
     referenceObject: any
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/command`;
     mcsApiRequestParameter.recordData = JSON.stringify({
-      command: action,
+      command: getEnumString(ServerCommand, action),
       clientReferenceObject: referenceObject
     });
 
@@ -449,6 +452,47 @@ export class ServersService {
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerResource[]>();
       })
       .catch(this._handleServerError);
+  }
+
+  /**
+   * Execute the server command according to inputs
+   * @param server Server to process the action
+   * @param action Action to be execute
+   */
+  public executeServerCommand(server: Server, action: ServerCommand) {
+    switch (action) {
+      case ServerCommand.ViewVCloud:
+        window.open(server.vCloudUrl);
+        break;
+
+      case ServerCommand.Scale:
+        this._router.navigate(
+          [`/servers/${server.id}/management`],
+          { queryParams: { scale: true } }
+        );
+        break;
+
+      case ServerCommand.Clone:
+        this._router.navigate(
+          [`/servers/create`],
+          { queryParams: { clone: server.id } }
+        );
+        break;
+
+      default:
+        this.postServerCommand(
+        server.id,
+        action,
+        {
+          serverId: server.id,
+          powerState: server.powerState,
+          commandAction: action
+        } as ServerClientObject)
+          .subscribe(() => {
+            // Subscribe to execute the command post
+          });
+        break;
+    }
   }
 
   public computeAvailableMemoryMB(resource: ServerResource): number {

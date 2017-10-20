@@ -6,15 +6,19 @@ import {
   ElementRef,
   Renderer2,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
 } from '@angular/core';
+import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 import {
   Server,
   ServerFileSystem,
   ServerPerformanceScale,
   ServerThumbnail,
   ServerPowerState,
-  ServerPlatform,
   ServerResource,
   ServerServiceType
 } from '../../models';
@@ -55,23 +59,25 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
 
-  public serverSubscription: any;
-  public scalingSubscription: any;
-  public notificationsSubscription: any;
-  public deviceTypeSubscription: any;
-  public serverScaleJobs: McsApiJob[];
-
-  public platformData: ServerPlatform;
-  public platformDataSubscription: any;
   public resource: ServerResource;
 
+  public serverScaleJobs: McsApiJob[];
   public remainingMemory: number;
   public remainingCpu: number;
 
-  public initialServerPerformanceScaleValue: ServerPerformanceScale;
+  public serverSubscription: Subscription;
+  public resourceSubscription: Subscription;
 
-  private _serverCpuSizeScale: ServerPerformanceScale;
+  private _resourceMap: Map<string, ServerResource>;
+  private _serverPerformanceScale: ServerPerformanceScale;
   private _deviceType: McsDeviceType;
+
+  private _hasServer: boolean;
+
+  private _scalingSubscription: Subscription;
+  private _paramsSubscription: Subscription;
+  private _notificationsSubscription: Subscription;
+  private _deviceTypeSubscription: Subscription;
 
   private _server: Server;
   public get server(): Server {
@@ -104,26 +110,12 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _serverMemoryValue: string;
   public get serverMemoryValue(): string {
-    return this._serverMemoryValue;
-  }
-  public set serverMemoryValue(value: string) {
-    if (this._serverMemoryValue !== value) {
-      this._serverMemoryValue = value;
-      this._changeDetectorRef.markForCheck();
-    }
+    return appendUnitSuffix(this.server.memoryMB, 'megabyte');
   }
 
-  private _serverCpuValue: string;
   public get serverCpuValue(): string {
-    return this._serverCpuValue;
-  }
-  public set serverCpuValue(value: string) {
-    if (this._serverCpuValue !== value) {
-      this._serverCpuValue = value;
-      this._changeDetectorRef.markForCheck();
-    }
+    return appendUnitSuffix(this.server.cpuCount, 'cpu');
   }
 
   // Check if the current server's serverType is managed
@@ -152,10 +144,9 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public get hasUpdate(): boolean {
-    return this.initialServerPerformanceScaleValue &&
-      this._serverCpuSizeScale && this._serverCpuSizeScale.valid &&
-      (this.initialServerPerformanceScaleValue.memoryMB < this._serverCpuSizeScale.memoryMB ||
-        this.initialServerPerformanceScaleValue.cpuCount < this._serverCpuSizeScale.cpuCount);
+    return this._serverPerformanceScale.valid &&
+      (this.server.memoryMB < this._serverPerformanceScale.memoryMB ||
+      this.server.cpuCount < this._serverPerformanceScale.cpuCount);
   }
 
   public get isPoweredOn(): boolean {
@@ -178,64 +169,60 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     private _notificationContextService: McsNotificationContextService,
     private _browserService: McsBrowserService,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _activatedRoute: ActivatedRoute
   ) {
-    this.server = new Server();
-    this.initialServerPerformanceScaleValue = new ServerPerformanceScale();
-    this._serverCpuSizeScale = new ServerPerformanceScale();
-    this.serverScaleJobs = new Array();
-    this.platformData = new ServerPlatform();
-    this.resource = new ServerResource();
-    this.serviceType = ServerServiceType.SelfManaged;
     this.primaryVolume = '';
     this.secondaryVolumes = '';
+    this.serviceType = ServerServiceType.SelfManaged;
+    this.resource = new ServerResource();
+    this.server = new Server();
+    this.serverScaleJobs = new Array();
+    this._resourceMap = new Map<string, ServerResource>();
+    this._hasServer = false;
     this.isServerScale = false;
     this.isScaling = false;
+    this._serverPerformanceScale = new ServerPerformanceScale();
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.serverManagementTextContent = this._textProvider.content.servers.server.management;
 
-    this.platformDataSubscription = this._serverService.getPlatformData()
-      .subscribe((data) => {
-        this.platformData = data.content;
-      });
+    this._setServerData();
+    this._getScaleParam();
+    this._listenToNotificationsStream();
+    this._listenToDeviceChange();
+  }
 
-    this.serverSubscription = this._serverService.selectedServerStream
-      .subscribe((server) => {
-        if (server) {
-          // Get server data
-          this.server = server;
+  public ngOnDestroy(): void {
+    if (this.serverSubscription) {
+      this.serverSubscription.unsubscribe();
+    }
 
-          // Initialize values
-          this._getServerDetails();
-          this._getServerThumbnail();
-          this._getScalingJobStatus();
+    if (this.resourceSubscription) {
+      this.resourceSubscription.unsubscribe();
+    }
 
-          refreshView(() => {
-            if (!this.consoleEnabled) {
-              this._hideThumbnail();
-            }
-          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        }
-      });
+    if (this._scalingSubscription) {
+      this._scalingSubscription.unsubscribe();
+    }
 
-    // Listen to notifications stream
-    this.notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((jobs) => {
-        this.serverScaleJobs = jobs.filter((job) => {
-          return job.type === McsJobType.UpdateServer;
-        });
+    if (this._notificationsSubscription) {
+      this._notificationsSubscription.unsubscribe();
+    }
 
-        this._getScalingJobStatus();
-      });
+    if (this._deviceTypeSubscription) {
+      this._deviceTypeSubscription.unsubscribe();
 
-    // Listen to device change
-    this.deviceTypeSubscription = this._browserService.deviceTypeStream
-      .subscribe((deviceType) => {
-        this._deviceType = deviceType;
-        this._changeDetectorRef.markForCheck();
-      });
+    }
+
+    if (this._paramsSubscription) {
+      this._paramsSubscription.unsubscribe();
+    }
+
+    if (this._serverPerformanceScale) {
+      this._serverPerformanceScale = undefined;
+    }
   }
 
   public mergeIpAddresses(ipAddresses: string[]): string {
@@ -266,83 +253,79 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
   }
 
-  public scaleServer() {
-    if (isNullOrEmpty(this.platformData)) { return; }
-
-    this.resource = this._getResourceByVdc(this.server.vdcName);
-    this._initializeServerPerformanceScaleValue();
+  public scaleServer(): void {
+    this._setResourceData();
     this.isServerScale = true;
   }
 
   public onScaleChanged(scale: ServerPerformanceScale) {
-    this._serverCpuSizeScale = scale;
+    this._serverPerformanceScale = scale;
   }
 
   public onClickScale(): void {
-    if (!this._serverCpuSizeScale || !this.hasUpdate) { return; }
+    if (!this._serverPerformanceScale || !this.hasUpdate) { return; }
 
     this.isServerScale = false;
     this.isScaling = true;
 
     // Update the Server CPU size scale
-    this.scalingSubscription = this._serverService.setPerformanceScale(
-      this.server.id, this._serverCpuSizeScale).subscribe();
+    this._scalingSubscription = this._serverService.setPerformanceScale(
+      this.server.id, this._serverPerformanceScale).subscribe();
   }
 
   public cancelScale(): void {
+    this._serverPerformanceScale = new ServerPerformanceScale();
     this.isServerScale = false;
-    this._serverCpuSizeScale = undefined;
   }
 
-  public ngOnDestroy() {
-    if (this.serverSubscription) {
-      this.serverSubscription.unsubscribe();
-    }
+  private _setServerData(): void {
+    this.serverSubscription = this._serverService.selectedServerStream
+      .subscribe((server) => {
+        if (server) {
+          // Get server data
+          this.server = server;
 
-    if (this.scalingSubscription) {
-      this.scalingSubscription.unsubscribe();
-    }
+          // Initialize values
+          this._getServerDetails();
+          this._getServerThumbnail();
+          this._getScalingJobStatus();
+          this._getScaleParam();
 
-    if (this.notificationsSubscription) {
-      this.notificationsSubscription.unsubscribe();
-    }
-
-    if (this.deviceTypeSubscription) {
-      this.deviceTypeSubscription.unsubscribe();
-
-    }
-
-    if (this.platformDataSubscription) {
-      this.platformDataSubscription.unsubscribe();
-    }
-
-    if (this._serverCpuSizeScale) {
-      this._serverCpuSizeScale = undefined;
-    }
-  }
-
-  private _getResourceByVdc(vdcName: string): ServerResource {
-    if (!this.platformData.environments) { return; }
-
-    let serverResource: ServerResource;
-
-    for (let environment of this.platformData.environments) {
-      serverResource = environment.resources.find((result) => {
-        return result.name === vdcName;
+          refreshView(() => {
+            if (!this.consoleEnabled) {
+              this._hideThumbnail();
+            }
+          }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        }
       });
-
-      if (serverResource) {
-        break;
-      }
-    }
-
-    return serverResource;
   }
 
-  private _getServerDetails() {
-    if (isNullOrEmpty(this.server)) { return; }
+  private _setResourceData(): void {
+    this.resourceSubscription = this._serverService.getResources()
+      .subscribe((response) => {
+        if (isNullOrEmpty(response)) { return; }
 
-    this._setServerMemoryCpuValues();
+        this._resourceMap = this._serverService.setResourceMap(response.content);
+
+        if (this._resourceMap.has(this.server.vdcName)) {
+          this.resource = this._resourceMap.get(this.server.vdcName);
+        }
+
+        this._setRemainingValues();
+      });
+  }
+
+  private _setRemainingValues(): void {
+    if (isNullOrEmpty(this.server) || isNullOrEmpty(this.resource)) { return; }
+
+    this.remainingMemory = this._serverService.computeAvailableMemoryMB(this.resource);
+    this.remainingCpu = this._serverService.computeAvailableCpu(this.resource);
+
+    this._changeDetectorRef.markForCheck();
+  }
+
+  private _getServerDetails(): void {
+    if (isNullOrEmpty(this.server)) { return; }
 
     this.serviceType = this.server.serviceType;
 
@@ -354,31 +337,12 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       this.secondaryVolumes = '';
     }
 
+    this._hasServer = true;
+    this.isServerScale = false;
     this.isScaling = false;
   }
 
-  private _setServerMemoryCpuValues(): void {
-    if (isNullOrEmpty(this.server)) { return; }
-
-    this.serverMemoryValue = appendUnitSuffix(this.server.memoryMB, 'megabyte');
-    this.serverCpuValue = appendUnitSuffix(this.server.cpuCount, 'cpu');
-  }
-
-  private _initializeServerPerformanceScaleValue() {
-    if (this.server) {
-      this.initialServerPerformanceScaleValue.memoryMB = this.server.memoryMB;
-      this.initialServerPerformanceScaleValue.cpuCount = this.server.cpuCount;
-    }
-
-    if (this.resource) {
-      this.remainingMemory = this.resource.memoryLimitMB - this.resource.memoryUsedMB;
-      this.remainingCpu = this.resource.cpuLimit - this.resource.cpuUsed;
-    }
-
-    this._changeDetectorRef.markForCheck();
-  }
-
-  private _getScalingJobStatus() {
+  private _getScalingJobStatus(): void {
     if (isNullOrEmpty(this.serverScaleJobs) && this.server) { return; }
 
     let activeServerJob = this.serverScaleJobs.find((job) => {
@@ -392,7 +356,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {
           this.server.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
           this.server.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
-          this._setServerMemoryCpuValues();
         }
         this.isScaling = false;
         break;
@@ -411,7 +374,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
-  private _getServerThumbnail() {
+  private _getServerThumbnail(): void {
     if (!this.server || !this.consoleEnabled) { return; }
 
     // Hide thumbnail if it is already displayed in initial routing
@@ -435,7 +398,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _showThumbnail() {
+  private _showThumbnail(): void {
     if (!this.thumbnailElement) { return; }
 
     // Add thumbnail source
@@ -452,12 +415,38 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
-  private _hideThumbnail() {
-    if (!this.thumbnailElement) { return; }
-
+  private _hideThumbnail(): void {
     refreshView(() => {
+      if (!this.thumbnailElement) { return; }
+
       this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'none');
       this._renderer.removeAttribute(this.thumbnailElement.nativeElement, 'src');
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+  }
+
+  private _getScaleParam(): void {
+    this._paramsSubscription = this._activatedRoute.queryParams
+      .subscribe((params: ParamMap) => {
+        if (this._hasServer && params['scale']) {
+          this.scaleServer();
+        }
+      });
+  }
+
+  private _listenToNotificationsStream(): void {
+    this._notificationsSubscription = this._notificationContextService.notificationsStream
+      .subscribe((jobs) => {
+        this.serverScaleJobs = jobs.filter((job) => {
+          return job.type === McsJobType.UpdateServer;
+        });
+      });
+  }
+
+  private _listenToDeviceChange(): void {
+    this._deviceTypeSubscription = this._browserService.deviceTypeStream
+      .subscribe((deviceType) => {
+        this._deviceType = deviceType;
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }
