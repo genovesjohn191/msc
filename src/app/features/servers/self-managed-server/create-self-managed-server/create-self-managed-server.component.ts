@@ -7,9 +7,14 @@ import {
   QueryList
 } from '@angular/core';
 import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
+import {
   FormGroup,
   FormControl
 } from '@angular/forms';
+import { Subscription } from 'rxjs/Rx';
 import {
   Server,
   ServerCreateType,
@@ -63,6 +68,8 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
   public createServerTextContent: any;
   public serverName: string;
   public serverCreateTypeEnum = ServerCreateType;
+  public paramSubscription: Subscription;
+  public targetServerId: string;
 
   /**
    * Get the current creation type of the server
@@ -103,7 +110,8 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _activatedRoute: ActivatedRoute
   ) {
     this._serverCreateType = ServerCreateType.New;
     this._serverInputs = new ServerCreateSelfManaged();
@@ -118,6 +126,7 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
       .servers.createSelfManagedServer;
     this.contextualTextContent = this.createServerTextContent.contextualHelp;
 
+    this._setTargetServer();
     this._registerFormGroup();
   }
 
@@ -177,6 +186,16 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public isControlValid(control: any): boolean {
     return isFormControlValid(control);
+  }
+
+  private _setTargetServer(): void {
+    this.paramSubscription = this._activatedRoute.queryParams
+      .subscribe((params: ParamMap) => {
+        this.targetServerId = params['clone'];
+        if (this.targetServerId) {
+          this.setCreationType(ServerCreateType.Clone);
+        }
+      });
   }
 
   private _registerFormGroup(): void {

@@ -240,7 +240,7 @@ describe('ServersService', () => {
   describe('postServerCommand()', () => {
     let requestOptions = {
       id: 500,
-      action: 'Start',
+      action: ServerCommand.Start,
       referenceObject: { command: 1, clientReferenceObject: undefined }
     };
 

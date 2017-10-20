@@ -13,8 +13,6 @@ import {
   FormControl
 } from '@angular/forms';
 import {
-  McsList,
-  McsListItem,
   McsTextContentProvider,
   CoreValidators
 } from '../../../../core';
@@ -31,6 +29,8 @@ import {
 import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 
+const TARGET_SERVER_PLACEHOLDER = 'Select Server';
+
 @Component({
   selector: 'mcs-clone-self-managed-server',
   templateUrl: './clone-self-managed-server.component.html',
@@ -40,6 +40,9 @@ import { CreateSelfManagedServersService } from '../create-self-managed-servers.
 export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   @Input()
   public visible: boolean;
+
+  @Input()
+  public targetServer: string;
 
   @Input()
   public servers: Server[];
@@ -55,16 +58,16 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   public formControlTargetServer: FormControl;
 
   // Others
-  public serverItems: McsList;
   public contextualTextContent: any;
-  public selectedServer: Server;
+
+  public get targetServerPlaceholder(): string {
+    return TARGET_SERVER_PLACEHOLDER;
+  }
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
-    this.serverItems = new McsList();
-    this.selectedServer = new Server();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
@@ -73,7 +76,10 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
       .servers.createSelfManagedServer.contextualHelp;
 
     this._registerFormGroup();
-    this._setServerItems();
+
+    if (isNullOrEmpty(this.targetServer)) {
+      this.targetServer = this.servers[0].id;
+    }
   }
 
   public ngAfterViewInit() {
@@ -87,23 +93,9 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
         this._managedServerService.subContextualHelp =
           mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
       }
+
+      this.formControlTargetServer.setValue(this.targetServer);
     });
-  }
-
-  private _setServerItems(): void {
-    if (!this.servers) { return; }
-
-    // Populate dropdown list
-    this.servers.forEach((server) => {
-      this.serverItems.push('Servers',
-        new McsListItem(server.id, server.managementName));
-    });
-
-    // Select first element of the dropdown
-    if (!isNullOrEmpty(this.serverItems.getGroupNames())) {
-      this.formControlTargetServer.setValue(this.servers[0].id);
-      this.selectedServer = this.servers[0];
-    }
   }
 
   private _registerFormGroup(): void {

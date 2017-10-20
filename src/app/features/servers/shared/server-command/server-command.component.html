@@ -6,17 +6,10 @@
 
 <ng-template #cogContent>
   <div class="cog-container">
-    <a #startButton (click)="onExecuteCommand('Start', startButton)"
-      [attr.disabled]="startStatus">
-      Start
-    </a>
-    <a #stopButton (click)="onExecuteCommand('Stop', stopButton)"
-      [attr.disabled]="stopStatus">
-      Stop
-    </a>
-    <a #restartButton (click)="onExecuteCommand('Restart', restartButton)"
-      [attr.disabled]="restartStatus">
-      Restart
+    <a *ngFor="let serverCommand of commandList"
+      (click)="onExecuteCommand(serverCommand)"
+      [disabled]="disableAction(serverCommand)">
+      {{ getServerCommandLabel(serverCommand) }}
     </a>
   </div>
 </ng-template>

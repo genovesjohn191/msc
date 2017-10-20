@@ -54,7 +54,7 @@
         <!-- Clone Self-Managed Server  -->
         <mcs-clone-self-managed-server
           [visible]="serverCreateType === serverCreateTypeEnum.Clone"
-          [servers]="servers"
+          [servers]="servers" [targetServer]="targetServerId"
           (onOutputServerDetails)="setServerDetails($event)">
         </mcs-clone-self-managed-server>
       </div>

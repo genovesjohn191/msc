@@ -13,7 +13,6 @@ import { ServersDataSource } from './servers.datasource';
 /** Models */
 import {
   Server,
-  ServerClientObject,
   ServerPowerState,
   ServerCommand,
   ServerServiceType
@@ -47,6 +46,7 @@ export class ServersComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
+  public serverCommandList: ServerCommand[];
   public selection: McsSelection<Server>;
 
   @ViewChild('search')
@@ -58,6 +58,10 @@ export class ServersComponent
   // Subscription
   private _activeServerSubscription: any;
   private _selectionModeSubscription: any;
+
+  public get serverCommand() {
+    return ServerCommand;
+  }
 
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
@@ -103,10 +107,17 @@ export class ServersComponent
   ) {
     super(_browserService, _changeDetectorRef);
     this.selection = new McsSelection<Server>(true);
+    this.serverCommandList = new Array();
   }
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers;
+    this.serverCommandList = [
+      ServerCommand.Start,
+      ServerCommand.Stop,
+      ServerCommand.Restart,
+      ServerCommand.ViewVCloud
+    ];
   }
 
   public ngAfterViewInit() {
@@ -190,7 +201,7 @@ export class ServersComponent
    * Execute the corresponding action based on top panel commands
    * @param action Action to be set
    */
-  public executeTopPanelAction(action: string) {
+  public executeTopPanelAction(action: ServerCommand) {
     if (!this.selection.hasValue()) { return; }
 
     this.selection.selected.forEach((serverId) => {
@@ -205,18 +216,8 @@ export class ServersComponent
    * @param server Server to process the action
    * @param action Action to be execute
    */
-  public executeServerCommand(server: Server, action: string) {
-    this._serversService.postServerCommand(
-      server.id,
-      action,
-      {
-        serverId: server.id,
-        powerState: server.powerState,
-        commandAction: ServerCommand[action]
-      } as ServerClientObject)
-      .subscribe(() => {
-        // This will execute the process
-      });
+  public executeServerCommand(server: Server, action: ServerCommand) {
+    this._serversService.executeServerCommand(server, action);
   }
 
   /**

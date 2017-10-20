@@ -13,7 +13,6 @@ import {
 } from '@angular/router';
 import {
   Server,
-  ServerClientObject,
   ServerPowerState,
   ServerCommand,
   ServerServiceType
@@ -50,6 +49,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   public serversTextContent: any;
   public serverTextContent: any;
   public serverListSource: ServerListSource | null;
+  public serverCommandList: ServerCommand[];
 
   private _serverId: any;
 
@@ -87,14 +87,22 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
   ) {
     this.server = new Server();
+    this.serverCommandList = new Array();
   }
 
   public ngOnInit() {
     this.serversTextContent = this._textContentProvider.content.servers;
     this.serverTextContent = this._textContentProvider.content.servers.server;
     this._serverId = this._activatedRoute.snapshot.paramMap.get('id');
-
     this._getServerById();
+    this.serverCommandList = [
+      ServerCommand.Start,
+      ServerCommand.Stop,
+      ServerCommand.Restart,
+      ServerCommand.Scale,
+      ServerCommand.Clone,
+      ServerCommand.ViewVCloud
+    ];
   }
 
   public ngAfterViewInit() {
@@ -124,18 +132,8 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  public executeServerCommand(server: Server, action: string) {
-    this._serversService.postServerCommand(
-      server.id,
-      action,
-      {
-        serverId: server.id,
-        powerState: server.powerState,
-        commandAction: ServerCommand[action]
-      } as ServerClientObject)
-      .subscribe(() => {
-        // Subscribe to execute the command post
-      });
+  public executeServerCommand(server: Server, action: ServerCommand): void {
+    this._serverService.executeServerCommand(server, action);
   }
 
   public getActionStatus(server: Server): any {

@@ -15,21 +15,21 @@
       <div class="listing-action-wrapper">
         <div class="action-item hidden-small" cursor="pointer"
           [disabled]="!startable || !selection.hasValue()"
-          (click)="executeTopPanelAction('Start')">
+          (click)="executeTopPanelAction(serverCommand.Start)">
           <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
           <span>{{ textContent.start }}</span>
         </div>
 
         <div class="action-item hidden-small" cursor="pointer"
           [disabled]="!stoppable || !selection.hasValue()"
-          (click)="executeTopPanelAction('Stop')">
+          (click)="executeTopPanelAction(serverCommand.Stop)">
           <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
           <span>{{ textContent.stop }}</span>
         </div>
 
         <div class="action-item hidden-small" cursor="pointer"
           [disabled]="!restartable || !selection.hasValue()"
-          (click)="executeTopPanelAction('Restart')">
+          (click)="executeTopPanelAction(serverCommand.Restart)">
           <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
           <span>{{ textContent.restart }}</span>
         </div>
@@ -44,7 +44,7 @@
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
       <mcs-search *ngIf="!isMobile" #search></mcs-search>
     </mcs-left-panel-item>
 
@@ -172,8 +172,8 @@
             <!-- {{ columnSettings.action.text }} -->
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
-            <mcs-server-command [command]="getActionStatus(row)"
-              (click)="$event.stopPropagation()"
+            <mcs-server-command [commandList]="serverCommandList"
+              [command]="getActionStatus(row)" (click)="$event.stopPropagation()"
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>
         </ng-container>
