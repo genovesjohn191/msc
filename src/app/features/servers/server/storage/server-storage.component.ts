@@ -461,7 +461,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                   // TODO: This will be provided by the API
                   if (!isNullOrEmpty(storageJob.tasks)) {
                     let referenceObject = storageJob.tasks[0].referenceObject;
-                    if (isNullOrEmpty(disk.id) && !isNullOrEmpty(referenceObject)) {
+                    if (isNullOrEmpty(disk.id) && !isNullOrEmpty(referenceObject.diskId)) {
                       this.storageJob.clientReferenceObject.diskId = referenceObject.diskId;
                       disk.id = referenceObject.diskId;
                     }
