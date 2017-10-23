@@ -12,7 +12,8 @@ import {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'display-flex-row flex-auto'
+    'class': 'display-flex-row flex-auto',
+    'style': 'overflow: hidden'
   }
 })
 
