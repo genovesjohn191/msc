@@ -24,6 +24,7 @@ import {
   TopPanelDefDirective,
   TopPanelPlaceholderDirective
 } from './top-panel';
+import { PageService } from './page.service';
 
 @Component({
   selector: 'mcs-page',
@@ -59,15 +60,8 @@ export class PageComponent implements AfterContentInit {
   /**
    * Determine weather the left panel is collapsed
    */
-  private _leftPanelIsVisible: boolean;
   public get leftPanelIsVisible(): boolean {
-    return this._leftPanelIsVisible;
-  }
-  public set leftPanelIsVisible(value: boolean) {
-    if (this._leftPanelIsVisible !== value) {
-      this._leftPanelIsVisible = value;
-      this._changeDetectorRef.markForCheck();
-    }
+    return this._pageService.leftPanelIsVisible;
   }
 
   /**
@@ -112,9 +106,9 @@ export class PageComponent implements AfterContentInit {
 
   public constructor(
     private _renderer: Renderer2,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _pageService: PageService
   ) {
-    this.leftPanelIsVisible = true;
     this.hasLeftPanel = true;
   }
 
@@ -141,6 +135,8 @@ export class PageComponent implements AfterContentInit {
         .createEmbeddedView(this._topPanelDefinition.template);
     }
 
+    this._initializeLeftPanelDisplay();
+
     // Manually triggered change detection strategy
     this._changeDetectorRef.markForCheck();
   }
@@ -149,16 +145,30 @@ export class PageComponent implements AfterContentInit {
    * Set the class of the left panel if it shown or hidden
    */
   public toggleLeftPanel(): void {
-    this._changePanelDisplay(this.leftPanelIsVisible);
+    this._changePanelDisplay(this._pageService.leftPanelIsVisible);
   }
 
+  /**
+   * Initialize left panel collapse/toggle mode based on the flag
+   */
+  private _initializeLeftPanelDisplay(): void {
+    if (!this._pageService.leftPanelIsVisible) {
+      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
+    }
+  }
+
+  /**
+   * Change the panel display in which determines wheather the left panel is collapsed
+   * @param collapse Collapse flag of the left panel
+   */
   private _changePanelDisplay(collapse: boolean) {
     if (collapse) {
       this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
-      this.leftPanelIsVisible = false;
+      this._pageService.leftPanelIsVisible = false;
     } else {
       this._renderer.removeClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
-      this.leftPanelIsVisible = true;
+      this._pageService.leftPanelIsVisible = true;
     }
+    this._changeDetectorRef.markForCheck();
   }
 }

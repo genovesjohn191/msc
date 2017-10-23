@@ -4,6 +4,7 @@ import { LayoutModule } from '../layout';
 import { IconModule } from '../icon/icon.module';
 /** Page */
 import { PageComponent } from './page.component';
+import { PageService } from './page.service';
 /** Left Panel */
 import {
   LeftPanelComponent,
@@ -70,6 +71,9 @@ import {
     ContentPanelComponent,
     ContentPanelDefDirective,
     ContentPanelPlaceholderDirective
+  ],
+  providers: [
+    PageService
   ]
 })
 
