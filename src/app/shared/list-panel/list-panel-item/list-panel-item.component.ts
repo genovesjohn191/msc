@@ -3,9 +3,10 @@ import {
   Input,
   OnInit,
   OnDestroy,
-  ChangeDetectionStrategy,
   ElementRef,
-  Renderer2
+  Renderer2,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   registerEvent,
@@ -16,12 +17,16 @@ import { ListPanelService } from '../list-panel.service';
 import { McsListPanelItem } from '../../../core';
 
 @Component({
-  selector: 'mcs-list-item',
-  templateUrl: './list-item.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'mcs-list-panel-item',
+  templateUrl: './list-panel-item.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'list-panel-item-wrapper'
+  }
 })
 
-export class ListItemComponent implements OnInit, OnDestroy {
+export class ListPanelItemComponent implements OnInit, OnDestroy {
 
   @Input()
   public itemId: any;

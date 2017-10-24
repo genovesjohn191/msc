@@ -1,8 +1,6 @@
 import {
   Directive,
   ElementRef,
-  Injector,
-  ComponentFactoryResolver,
   ViewContainerRef,
   NgZone,
   OnInit,
@@ -11,22 +9,26 @@ import {
   Output,
   TemplateRef,
   ComponentRef,
-  Renderer2,
   EventEmitter
 } from '@angular/core';
 import {
-  McsComponentService,
-  McsScrollDispatcherService
+  McsScrollDispatcherService,
+  McsOverlayService,
+  McsOverlayRef,
+  McsOverlayState,
+  McsPortalComponent
 } from '../../core';
 import {
   getElementPositionFromHost,
   getElementPosition,
-  registerEvent
+  registerEvent,
+  isNullOrEmpty,
+  unregisterEvent
 } from '../../utilities';
 import { PopoverComponent } from './popover.component';
 
 // Offet of the arrow from left/right/top/bottom
-const POPOVER_ARROW_OFFSET = 30;
+const POPOVER_ARROW_OFFSET = 20;
 
 @Directive({
   selector: '[mcsPopover]',
@@ -35,16 +37,13 @@ const POPOVER_ARROW_OFFSET = 30;
 
 export class PopoverDirective implements OnInit, OnDestroy {
   @Input()
-  public title: TemplateRef<any> | string;
+  public priority: 'low' | 'medium' | 'high';
 
   @Input()
-  public content: TemplateRef<any> | string;
+  public content: TemplateRef<any>;
 
   @Input()
   public maxWidth: string;
-
-  @Input()
-  public elementContainer: 'default' | 'body';
 
   @Input()
   public padding: 'default' | 'none';
@@ -67,27 +66,33 @@ export class PopoverDirective implements OnInit, OnDestroy {
   @Output()
   public onClose: EventEmitter<any>;
 
-  public componentService: McsComponentService<PopoverComponent>;
+  // Others
   public componentRef: ComponentRef<PopoverComponent>;
   public zoneSubscription: any;
+  private _overlayRef: McsOverlayRef;
+
+  /**
+   * Event handler references
+   */
+  private _mouseEnterHandler = this.openOnMouseHover.bind(this);
+  private _mouseLeaveHandler = this.closeOnMouseLeave.bind(this);
+  private _mouseClickHandler = this.onClick.bind(this);
 
   constructor(
     private _elementRef: ElementRef,
-    private _injector: Injector,
-    private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer2,
     private _ngZone: NgZone,
-    private _scrollDispatcher: McsScrollDispatcherService
+    private _scrollDispatcher: McsScrollDispatcherService,
+    private _overlayService: McsOverlayService
   ) {
     // Set default values for Inputs
+    this.priority = 'low';
     this.placement = 'bottom';
     this.orientation = 'center';
     this.maxWidth = '250px';
     this.theme = 'light';
     this.trigger = 'manual';
     this.padding = 'default';
-    this.elementContainer = 'body';
     this.onOpen = new EventEmitter();
     this.onClose = new EventEmitter();
 
@@ -107,20 +112,12 @@ export class PopoverDirective implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    // Initilize component service instance to set the view host attributes
-    this.componentService = new McsComponentService<PopoverComponent>(
-      PopoverComponent,
-      this._componentFactoryResolver,
-      this._viewContainerRef,
-      this._injector,
-      this._renderer
-    );
-
     // Register all events listener
     this._registerEvents();
   }
 
   public ngOnDestroy() {
+    this._unregisterEvents();
     this.close();
     if (this.zoneSubscription) {
       this.zoneSubscription.unsubscribe();
@@ -128,35 +125,39 @@ export class PopoverDirective implements OnInit, OnDestroy {
   }
 
   public open() {
-    if (!this.componentRef) {
-      this.componentRef = this.componentService
-        .createComponent([this.title, this.content]);
+    // Create overlay element
+    let overlayState = new McsOverlayState();
+    overlayState.hasBackdrop = false;
+    overlayState.pointerEvents = 'auto';
+    this._overlayRef = this._overlayService.create(overlayState);
 
-      this.componentRef.instance.title = this.title;
-      this.componentRef.instance.placement = this.placement;
-      this.componentRef.instance.maxWidth = this.maxWidth;
-      this.componentRef.instance.theme = this.theme;
-      this.componentRef.instance.trigger = this.trigger;
-      this.componentRef.instance.padding = this.padding;
-      this.componentRef.instance.onClickOutsideEvent.subscribe((event) => {
-        this.onClickOutside(event);
-      });
+    // Create template portal and attach to overlay
+    let portalComponent = new McsPortalComponent(
+      PopoverComponent, this._viewContainerRef, this.content
+    );
 
-      // Attach popover element inside the body
-      if (this.elementContainer === 'body') {
-        window.document.querySelector(this.elementContainer)
-          .appendChild(this.componentRef.location.nativeElement);
-      }
-
-      this.componentRef.changeDetectorRef.markForCheck();
-      this.onOpen.emit();
-    }
+    // Set Input parameters of popover component
+    this.componentRef = this._overlayRef.attachComponent(portalComponent);
+    this.componentRef.instance.placement = this.placement;
+    this.componentRef.instance.maxWidth = this.maxWidth;
+    this.componentRef.instance.theme = this.theme;
+    this.componentRef.instance.trigger = this.trigger;
+    this.componentRef.instance.padding = this.padding;
+    this.componentRef.instance.priority = this.priority;
+    this.componentRef.instance.onClickOutsideEvent.subscribe((event) => {
+      this.onClickOutside(event);
+    });
+    this.componentRef.changeDetectorRef.markForCheck();
+    this.onOpen.emit();
   }
 
   public close() {
+    if (isNullOrEmpty(this._overlayRef)) { return; }
+    this._overlayRef.detach();
+    this._overlayRef.dispose();
+    this._overlayRef = null;
+
     if (this.componentRef) {
-      this.componentService.deleteComponent();
-      this.componentRef.destroy();
       this.componentRef = null;
       this.onClose.emit();
     }
@@ -249,7 +250,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
     let targetElementPosition = getElementPositionFromHost(
       this._elementRef.nativeElement,
       this.componentRef.location.nativeElement,
-      this.placement, this.elementContainer === 'body');
+      this.placement, true);
 
     this.componentRef.location
       .nativeElement.style.top = `${targetElementPosition.top}px`;
@@ -261,18 +262,19 @@ export class PopoverDirective implements OnInit, OnDestroy {
   private _registerEvents(): void {
     switch (this.trigger) {
       case 'hover':
-        // Register both for mouse in and mouse out
-        registerEvent(this._elementRef.nativeElement, 'mouseenter',
-          this.openOnMouseHover.bind(this));
-        registerEvent(this._elementRef.nativeElement, 'mouseleave',
-          this.closeOnMouseLeave.bind(this));
+        registerEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
+        registerEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
         break;
-
       case 'manual':
       default:
-        // Register for mouse click
-        registerEvent(this._elementRef.nativeElement, 'click', this.onClick.bind(this));
+        registerEvent(this._elementRef.nativeElement, 'click', this._mouseClickHandler);
         break;
     }
+  }
+
+  private _unregisterEvents(): void {
+    unregisterEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
+    unregisterEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
+    unregisterEvent(this._elementRef.nativeElement, 'click', this._mouseClickHandler);
   }
 }

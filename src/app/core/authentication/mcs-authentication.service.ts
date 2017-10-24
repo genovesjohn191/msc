@@ -154,8 +154,8 @@ export class McsAuthenticationService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/identity';
     mcsApiRequestParameter.optionalHeaders.append(
-      CoreDefinition.HEADERS_AUTHORIZATION,
-      `${CoreDefinition.HEADERS_BEARER} ${authToken}`
+      CoreDefinition.HEADER_AUTHORIZATION,
+      `${CoreDefinition.HEADER_BEARER} ${authToken}`
     );
 
     return this._apiService.get(mcsApiRequestParameter)

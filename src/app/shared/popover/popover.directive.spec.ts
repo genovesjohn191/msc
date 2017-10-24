@@ -60,7 +60,7 @@ describe('PopoverDirective', () => {
         </ng-template>
 
         <button class="btn btn-primary" mcsPopover #popover="mcsPopover"
-          theme="light" trigger="manual" elementContainer="default"
+          theme="light" trigger="manual"
           title="popoverTitle" [content]="popoverContent"
           placement="bottom" orientation="center">Light</button><br/>
         `
@@ -86,14 +86,14 @@ describe('PopoverDirective', () => {
     }));
 
     it(`should open/create the popover when click is triggered first time`, () => {
-      let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
+      let mcsPopoverExist = document.querySelector('mcs-popover');
       expect(mcsPopoverExist).not.toBe(null);
     });
 
     it(`should close/delete the popover when click is triggered second time`, () => {
       triggerEvent(directiveElement.nativeElement, 'click');
       fixtureInstance.detectChanges();
-      let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
+      let mcsPopoverExist = document.querySelector('mcs-popover');
       expect(mcsPopoverExist).toBe(null);
     });
   });
@@ -107,14 +107,14 @@ describe('PopoverDirective', () => {
     }));
 
     it(`should open/create the popover when 'mouseenter' is invoked`, () => {
-      let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
+      let mcsPopoverExist = document.querySelector('mcs-popover');
       expect(mcsPopoverExist).not.toBe(null);
     });
 
     it(`should close/delete the popover when 'mouseleave' is invoked`, () => {
       triggerEvent(directiveElement.nativeElement, 'mouseleave');
       fixtureInstance.detectChanges();
-      let mcsPopoverExist = fixtureInstance.nativeElement.querySelector('mcs-popover');
+      let mcsPopoverExist = document.querySelector('mcs-popover');
       expect(mcsPopoverExist).toBe(null);
     });
   });
@@ -135,28 +135,28 @@ describe('PopoverDirective', () => {
     }));
 
     it(`should set the orientation of mcs-popover element to left`, () => {
-      let expectedResult = elementPosition.width * 0.5 - 30;
+      let expectedResult = elementPosition.width * 0.5 - 20;
       component.popover.setLeftOrientation(elementPosition);
       expect(component.popover.componentRef.instance.contentElement.nativeElement.style.left)
         .toBe(`${-expectedResult}px`);
     });
 
     it(`should set the orientation of mcs-popover element to right`, () => {
-      let expectedResult = elementPosition.width * 0.5 - 30;
+      let expectedResult = elementPosition.width * 0.5 - 20;
       component.popover.setRightOrientation(elementPosition);
       expect(component.popover.componentRef.instance.contentElement.nativeElement.style.right)
         .toBe(`${-expectedResult}px`);
     });
 
     it(`should set the orientation of mcs-popover element to top`, () => {
-      let expectedResult = elementPosition.height * 0.5 - 30;
+      let expectedResult = elementPosition.height * 0.5 - 20;
       component.popover.setTopOrientation(elementPosition);
       expect(component.popover.componentRef.instance.contentElement.nativeElement.style.top)
         .toBe(`${-expectedResult}px`);
     });
 
     it(`should set the orientation of mcs-popover element to bottom`, () => {
-      let expectedResult = elementPosition.height * 0.5 - 30;
+      let expectedResult = elementPosition.height * 0.5 - 20;
       component.popover.setBottomOrientation(elementPosition);
       expect(component.popover.componentRef.instance.contentElement.nativeElement.style.bottom)
         .toBe(`${-expectedResult}px`);

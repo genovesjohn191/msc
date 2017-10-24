@@ -1,73 +1,89 @@
-<div class="mcs-user-panel">
-  <aside class="notification">
-    <a class="icon-link" mcsPopover #popoverInstance="mcsPopover"
-      (onClose)="onCloseNotificationPanel()"
-      (onOpen)="onOpenNotificationPanel()"
-      maxWidth="350px" padding="none"
-      placement="bottom" orientation="center" theme="light"
-      [title]="notificationsTitle" [content]="notificationsContent">
+<!-- Switch User Panel Template for popover -->
+<ng-template #userSettings>
+  <div class="switch-account-settings-wrapper">
+    <div class="profile-settings">
+      <mcs-account-panel (selectionChanged)="userPopover?.close()"></mcs-account-panel>
+    </div>
 
-      <!--Bell Icon for notification-->
-      <mcs-icon [key]="bellIconKey" type="font" size="small" color="white"></mcs-icon>
-      <span *ngIf="hasNotification">{{ notifications.length }}</span>
-      <div *ngIf="hasNotification" class="caret-down">
-        <mcs-icon [key]="caretDownIconKey" type="font" size="small" color="white"></mcs-icon>
+    <div class="logout-panel">
+      <a cursor="pointer" (click)="logout($event)">Logout</a>
+    </div>
+
+    <div class="switch-account-panel hidden-small">
+      <mcs-switch-account [ngStyle]="{width: '400px'}"
+        (selectionChanged)="userPopover?.close()">
+      </mcs-switch-account>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Notifications Panel template -->
+<ng-template #notificationsContent>
+  <ng-container *ngIf="notificationsPopover.componentRef">
+    <div class="notifications-content-wrapper">
+      <div class="notification-item font-bold"
+        display-flex justify-content="flex-start" align-items="center">
+        <span>{{ notificationTextContent.title }}</span>
       </div>
+
+      <div *ngIf="!hasNotification && !hasConnectionError">
+        <span>{{ notificationTextContent.noRecord }}</span>
+      </div>
+
+      <div *ngIf="hasConnectionError">
+        <span>{{ notificationTextContent.connectionError }}</span>
+      </div>
+
+      <div cursor="pointer" class="notification-item"
+        *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplayPipe); trackBy: trackByFn">
+        <mcs-running-notification [attribute]="notification"></mcs-running-notification>
+      </div>
+
+      <div class="notification-item" display-flex justify-content="center" align-items="center">
+        <a (click)="viewNotificationsPage()">
+          {{ notificationTextContent.viewMore }}
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<div class="user-panel-wrapper">
+  <!-- Notification bell icon -->
+  <div class="user-panel-item notification-item" display-flex="column" justify-content="center">
+    <a (click)="clickNotifications($event)" display-flex align-items="center"
+      class="icon-content">
+      <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
+      <span *ngIf="hasNotification" display-flex align-items="center" justify-content="center">
+        {{ notifications.length }}
+      </span>
+      <!-- Popover will display here -->
+      <mcs-icon [hidden]="!hasNotification" class="caret-down"
+        [key]="caretDownIconKey" size="small" color="white"
+
+        mcsPopover #notificationsPopover="mcsPopover"
+        (onClose)="onCloseNotificationPanel()"
+        (onOpen)="onOpenNotificationPanel()"
+        maxWidth="350px" padding="none"
+        placement="bottom" orientation="left" theme="light" priority="high"
+        [content]="notificationsContent"></mcs-icon>
     </a>
+  </div>
 
-    <ng-template #notificationsTitle>
-      <span *ngIf="popoverInstance.componentRef"
-        class="mcs-notification-title">{{ notificationTextContent.title }}</span>
-    </ng-template>
-
-    <ng-template #notificationsContent>
-      <div *ngIf="popoverInstance.componentRef" class="mcs-notification-content">
-        <ul class="unstyled-list">
-          <li class="no-notifications" *ngIf="!hasNotification && !hasConnectionError">
-            <span>{{ notificationTextContent.noRecord }}</span>
-          </li>
-          <li class="error-connection" *ngIf="hasConnectionError">
-            <span>{{ notificationTextContent.connectionError }}</span>
-          </li>
-          <li *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplayPipe)">
-            <mcs-running-notification [attribute]="notification"></mcs-running-notification>
-          </li>
-          <li class="view-all-notifications">
-            <a class="icon-link" (click)="viewNotificationsPage()">
-              {{ notificationTextContent.viewMore }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </ng-template>
-  </aside>
-  <aside class="user-panel">
-    <a class="icon-link" mcsPopover padding="none"
-      placement="bottom" orientation="center" theme="light"
-      [content]="userSettings">
+  <!-- User icon -->
+  <div class="user-panel-item user-item" display-flex="column" justify-content="center">
+    <a (click)="clickUser($event)" display-flex align-items="center">
       <mcs-icon class="user-icon" [key]="userIconKey" size="medium"></mcs-icon>
-
       <span class="hidden-small">{{ firstName }} {{ lastName }}</span>
-      <mcs-icon class="hidden-small user-caret-down-icon" [key]="caretDownIconKey"
-        size="small" color="white"></mcs-icon>
-    </a>
+      <!-- Popover will display here -->
+      <mcs-icon class="caret-down right-align"
+        [key]="caretDownIconKey" size="small" color="white"
 
-    <ng-template #userSettings>
-     <div class="user-settings-container">
-        <a class="icon-link" [routerLink]="['/tickets']" *mcsHasPermission="['TicketView']">
-          Tickets
-        </a>
-        <a class="icon-link" (click)="logout($event)">
-          Logout
-        </a>
-      </div>
-    </ng-template>
-    <small class="user-info">Macquarie Telecom</small>
-  </aside>
-  <aside class="exit">
-    <a (click)="logout($event)">
-      <mcs-icon class="hidden-small" [key]="logoutIconKey"
-        size="medium" color="white"></mcs-icon>
+        mcsPopover #userPopover="mcsPopover"
+        padding="none" placement="bottom" orientation="left"
+        theme="dark" priority="high"
+        [content]="userSettings" maxWidth="500px"></mcs-icon>
     </a>
-  </aside>
+    <small class="user-info" read-only>{{ getActiveAccount()?.name }}</small>
+  </div>
 </div>

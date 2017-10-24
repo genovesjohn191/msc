@@ -6,7 +6,7 @@ import {
 @Component({
   selector: 'mcs-content-panel',
   template: `
-  <div class="content-panel-wrapper" mcsScrollable>
+  <div class="content-panel-wrapper" scrollable>
     <ng-content></ng-content>
   </div>
   `,

@@ -23,12 +23,18 @@ export class CoreDefinition {
   public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 5000;
 
   /** Headers */
-  public static HEADERS_AUTHORIZATION = 'Authorization';
-  public static HEADERS_BEARER = 'Bearer';
+  public static HEADER_BEARER = 'Bearer';
+  public static HEADER_ACCEPT = 'Accept';
+  public static HEADER_CONTENT_TYPE = 'Content-Type';
+  public static HEADER_API_VERSION = 'Api-Version';
+  public static HEADER_COMPANY_ID = 'Company-Id';
+  public static HEADER_AUTHORIZATION = 'Authorization';
 
   /** AppState Properties */
   public static APPSTATE_AUTH_TOKEN = 'AuthToken';
   public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
+  public static APPSTATE_ACTIVE_ACCOUNT = 'ActiveAccount';
+  public static APPSTATE_DEFAULT_ACCOUNT = 'DefaultAccount';
 
   /** Cookie Names */
   public static COOKIE_AUTH_TOKEN  = 'MCSPAT';
@@ -82,8 +88,14 @@ export class CoreDefinition {
   public static ASSETS_SVG_STATE_RUNNING = 'state-running';
   public static ASSETS_SVG_STATE_STOPPED = 'state-stopped';
   public static ASSETS_SVG_COLUMNS_BLACK = 'columns-black';
+  public static ASSETS_SVG_PERSON_WHITE = 'person-white';
+  public static ASSETS_SVG_PERSON_BLUE = 'person-blue';
+  public static ASSETS_SVG_PERSON_GREEN = 'person-green';
+  public static ASSETS_SVG_PERSON_RED = 'person-red';
   public static ASSETS_SVG_ARROW_RIGHT_WHITE = 'arrow-right-white';
+  public static ASSETS_SVG_ARROW_RIGHT_BLUE = 'arrow-right-blue';
   public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';
+  public static ASSETS_SVG_ARROW_UP_BLUE = 'arrow-up-blue';
   public static ASSETS_SVG_TOGGLE_NAV = 'toggle-nav';
   public static ASSETS_SVG_STORAGE = 'storage';
   public static ASSETS_SVG_KEYBOARD = 'keyboard';

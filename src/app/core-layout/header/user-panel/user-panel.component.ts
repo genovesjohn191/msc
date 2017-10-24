@@ -1,8 +1,10 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
+  ViewChild,
   ChangeDetectorRef,
-  ViewChild
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 /** Services/Providers */
@@ -15,17 +17,24 @@ import {
   McsDeviceType,
   McsConnectionStatus,
   McsAuthenticationIdentity,
-  McsAuthenticationService
+  McsAuthenticationService,
+  McsApiCompany
 } from '../../../core';
-import { refreshView } from '../../../utilities';
+import { AppState } from '../../../app.service';
+import { SwitchAccountService } from '../../shared';
+import {
+  refreshView,
+  isNullOrEmpty
+} from '../../../utilities';
 
 @Component({
   selector: 'mcs-user-panel',
   templateUrl: './user-panel.component.html',
-  styleUrls: ['./user-panel.component.scss']
+  styleUrls: ['./user-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class UserPanelComponent implements OnInit {
+export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsApiJob[];
   public hasConnectionError: boolean;
   public statusIconClass: string;
@@ -45,7 +54,7 @@ export class UserPanelComponent implements OnInit {
   }
 
   public get caretDownIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CARET_DOWN;
+    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
   public get logoutIconKey(): string {
@@ -60,8 +69,16 @@ export class UserPanelComponent implements OnInit {
     return this._authenticationIdentity.lastName;
   }
 
-  @ViewChild('popoverInstance')
-  public popoverInstance: any;
+  @ViewChild('notificationsPopover')
+  public notificationsPopover: any;
+
+  @ViewChild('userPopover')
+  public userPopover: any;
+
+  private _notificationsStreamSubscription: any;
+  private _notificationsConnectionSubscription: any;
+  private _browserSubscription: any;
+  private _activeAccountSubscription: any;
 
   public constructor(
     private _textContent: McsTextContentProvider,
@@ -70,7 +87,9 @@ export class UserPanelComponent implements OnInit {
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _authenticationService: McsAuthenticationService
+    private _authenticationService: McsAuthenticationService,
+    private _appState: AppState,
+    private _switchAccountService: SwitchAccountService
   ) {
     this.hasConnectionError = false;
     this.statusIconClass = '';
@@ -78,62 +97,39 @@ export class UserPanelComponent implements OnInit {
     this.deviceType = McsDeviceType.Desktop;
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.notificationTextContent = this._textContent.content.header.userPanel.notifications;
 
-    // Subscribe to notification changes
-    this._notificationContextService.notificationsStream
-      .subscribe((updatedNotifications) => {
-        this.notifications = updatedNotifications;
-        if (!this.hasNotification && this.popoverInstance) {
-          this.popoverInstance.close();
-        }
-        refreshView(() => {
-          this._changeDetectorRef.detectChanges();
-        }, CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
-      });
+    // Listen to events
+    this._listenToNotificationsStatus();
+    this._listenToBrowserResize();
+    this._listenToSwitchAccount();
+  }
 
-    // Subscribe to connection status stream to check for possible errors
-    this._notificationContextService.connectionStatusStream
-      .subscribe((status) => {
-
-        if (status === McsConnectionStatus.Success) {
-          this.hasConnectionError = false;
-        } else if (status === McsConnectionStatus.Failed ||
-          status === McsConnectionStatus.Fatal) {
-          this.hasConnectionError = true;
-        }
-      });
-
-    // Subscribe to browser service
-    this._browserService.deviceTypeStream.subscribe((deviceType: McsDeviceType) => {
-      this.deviceType = deviceType;
-      if (this.popoverInstance) {
-        switch (deviceType) {
-          case McsDeviceType.MobilePortrait:
-          case McsDeviceType.MobileLandscape:
-            this.popoverInstance.orientation = 'left';
-            break;
-
-          case McsDeviceType.Desktop:
-          case McsDeviceType.Tablet:
-            this.popoverInstance.orientation = 'center';
-          default:
-            break;
-        }
-      }
-    });
+  public ngOnDestroy(): void {
+    if (!isNullOrEmpty(this._notificationsStreamSubscription)) {
+      this._notificationsStreamSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._notificationsConnectionSubscription)) {
+      this._notificationsConnectionSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._browserSubscription)) {
+      this._browserSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._activeAccountSubscription)) {
+      this._activeAccountSubscription.unsubscribe();
+    }
   }
 
   public viewNotificationsPage(): void {
-    if (this.popoverInstance) { this.popoverInstance.close(); }
+    if (this.notificationsPopover) { this.notificationsPopover.close(); }
     refreshView(() => {
       this._router.navigate(['./notifications']);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
   public onOpenNotificationPanel(): void {
-    if (this.popoverInstance &&
+    if (this.notificationsPopover &&
       !this.hasNotification || this.deviceType !== McsDeviceType.Desktop) {
       this.viewNotificationsPage();
     }
@@ -146,5 +142,84 @@ export class UserPanelComponent implements OnInit {
   public logout(event): void {
     event.preventDefault();
     this._authenticationService.logOut();
+  }
+
+  public clickUser(_event: any): void {
+    if (isNullOrEmpty(this.userPopover)) { return; }
+    _event.stopPropagation();
+    refreshView(() => {
+      this.notificationsPopover.close();
+      this.userPopover.toggle();
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  public clickNotifications(_event: any): void {
+    if (isNullOrEmpty(this.notificationsPopover)) { return; }
+    _event.stopPropagation();
+    refreshView(() => {
+      this.userPopover.close();
+      this.notificationsPopover.toggle();
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  public getActiveAccount(): McsApiCompany {
+    let activeAccount: McsApiCompany;
+    activeAccount = this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) ?
+      this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) :
+      this._appState.get(CoreDefinition.APPSTATE_DEFAULT_ACCOUNT);
+    return activeAccount;
+  }
+
+  /**
+   * Track by function to help determine the view which data has beed modified
+   * @param index Index of the current loop
+   * @param _item Item of the loop
+   */
+  public trackByFn(index: any, _item: any) {
+    return index;
+  }
+
+  private _listenToNotificationsStatus(): void {
+    // Subscribe to notification changes
+    this._notificationsStreamSubscription = this._notificationContextService
+      .notificationsStream
+      .subscribe((updatedNotifications) => {
+        this.notifications = updatedNotifications;
+        if (!this.hasNotification && this.notificationsPopover) {
+          this.notificationsPopover.close();
+        }
+        this._changeDetectorRef.markForCheck();
+      });
+
+    // Subscribe to connection status stream to check for possible errors
+    this._notificationsConnectionSubscription = this._notificationContextService
+      .connectionStatusStream
+      .subscribe((status) => {
+        if (status === McsConnectionStatus.Success) {
+          this.hasConnectionError = false;
+        } else if (status === McsConnectionStatus.Failed ||
+          status === McsConnectionStatus.Fatal) {
+          this.hasConnectionError = true;
+        }
+        this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  private _listenToBrowserResize(): void {
+    // Subscribe to browser service
+    this._browserSubscription = this._browserService.deviceTypeStream
+      .subscribe((deviceType: McsDeviceType) => {
+        this.deviceType = deviceType;
+        this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  private _listenToSwitchAccount(): void {
+    this._activeAccountSubscription = this._switchAccountService.activeAccountStream
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

@@ -2,25 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListPanelComponent } from './list-panel.component';
 import { ListPanelService } from './list-panel.service';
-/** List Sticky */
-import {
-  ListPanelDefDirective,
-  ListSearchDefDirective,
-  ListStickyDirective
-} from './list-sticky';
 /** List Definition */
-import { ListDefDirective } from './list-definition';
+import { ListPanelDefDirective } from './list-panel-def';
 /** List Headers */
 import {
-  ListHeaderComponent,
-  ListHeaderDefDirective
-} from './list-header';
+  ListPanelHeaderComponent,
+  ListPanelHeaderDefDirective
+} from './list-panel-header';
 /** List Items */
 import {
-  ListItemComponent,
-  ListItemDefDirective,
-  ListItemOutletDirective
-} from './list-item';
+  ListPanelItemComponent,
+  ListPanelItemDefDirective,
+  ListPanelItemOutletDirective
+} from './list-panel-item';
 /** List items status */
 import {
   ListItemsEmptyComponent,
@@ -39,16 +33,13 @@ import { IconModule } from '../icon/icon.module';
 @NgModule({
   declarations: [
     ListPanelComponent,
-    ListHeaderComponent,
-    ListItemComponent,
-    ListDefDirective,
-    ListItemDefDirective,
-    ListItemOutletDirective,
-    ListHeaderDefDirective,
-    ListItemsPlaceholderDirective,
     ListPanelDefDirective,
-    ListSearchDefDirective,
-    ListStickyDirective,
+    ListPanelHeaderComponent,
+    ListPanelHeaderDefDirective,
+    ListPanelItemComponent,
+    ListPanelItemDefDirective,
+    ListPanelItemOutletDirective,
+    ListItemsPlaceholderDirective,
     ListItemsEmptyComponent,
     ListItemsErrorComponent,
     ListItemsEmptyDefDirective,
@@ -62,16 +53,13 @@ import { IconModule } from '../icon/icon.module';
   ],
   exports: [
     ListPanelComponent,
-    ListHeaderComponent,
-    ListItemComponent,
-    ListDefDirective,
-    ListItemDefDirective,
-    ListItemOutletDirective,
-    ListHeaderDefDirective,
-    ListItemsPlaceholderDirective,
     ListPanelDefDirective,
-    ListSearchDefDirective,
-    ListStickyDirective,
+    ListPanelHeaderComponent,
+    ListPanelHeaderDefDirective,
+    ListPanelItemComponent,
+    ListPanelItemDefDirective,
+    ListPanelItemOutletDirective,
+    ListItemsPlaceholderDirective,
     ListItemsEmptyComponent,
     ListItemsErrorComponent,
     ListItemsEmptyDefDirective,

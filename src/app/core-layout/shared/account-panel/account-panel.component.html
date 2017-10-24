@@ -1,0 +1,14 @@
+<div class="account-panel-wrapper">
+  <mcs-list header="Account">
+    <mcs-list-item>
+      <a cursor="pointer" (click)="notifySelectionChange('settings')">Account settings</a>
+    </mcs-list-item>
+    <mcs-list-item>
+      <a cursor="pointer" (click)="notifySelectionChange('profile')">Profile</a>
+    </mcs-list-item>
+    <mcs-list-item>
+      <a cursor="pointer" [routerLink]="['/tickets']"
+      *mcsHasPermission="['TicketView']" (click)="notifySelectionChange('tickets')">Tickets</a>
+    </mcs-list-item>
+  </mcs-list>
+</div>

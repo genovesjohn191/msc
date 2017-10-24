@@ -21,7 +21,7 @@ import { registerEvent } from '../../utilities';
 
 export class PopoverComponent implements OnInit {
   @Input()
-  public title: any;
+  public priority: 'low' | 'medium' | 'high';
 
   @Input()
   public placement: string;
@@ -51,12 +51,16 @@ export class PopoverComponent implements OnInit {
   @HostBinding('style.max-width')
   public maxWidth;
 
-  public constructor(private _renderer: Renderer2) {
+  public constructor(
+    private _elementRef: ElementRef,
+    private _renderer: Renderer2
+  ) {
     this.onClickOutsideEvent = new EventEmitter<any>();
   }
 
   public ngOnInit() {
     this.role = 'tooltip';
+    this._setPriority();
     this._setArrowDirection();
     this._setTheme();
     this._setPadding();
@@ -65,6 +69,11 @@ export class PopoverComponent implements OnInit {
 
   public onClickOutside(event: any): void {
     this.onClickOutsideEvent.emit(event);
+  }
+
+  public _setPriority() {
+    if (!this.priority) { return; }
+    this._renderer.addClass(this._elementRef.nativeElement, `priority-${this.priority}`);
   }
 
   public _setArrowDirection() {

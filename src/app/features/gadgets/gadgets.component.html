@@ -136,9 +136,6 @@
 
         <div class="col">
           <div class="gadgets-container-item">
-            <ng-template #popoverSideTitle>
-              <span>Here is the title</span>
-            </ng-template>
             <ng-template #popoverSideContent>
               <mcs-textbox name="textIcon" icon="search" width="200px"
                 placeholder="Type to search..."></mcs-textbox><br/>
@@ -148,14 +145,12 @@
             <div class="content">
               <small><em>Popover left placement and bottom orientation</em></small> <br/>
               <mcs-button mcsPopover
-                theme="dark" trigger="manual" maxWidth="300px"
-                [title]="popoverSideTitle" [content]="popoverSideContent"
+                theme="dark" trigger="manual" maxWidth="300px" [content]="popoverSideContent"
                 placement="left" orientation="bottom">LeftBottom</mcs-button><br/>
 
               <small><em>Popover right placement and top orientation</em></small> <br/>
               <mcs-button mcsPopover
-                theme="light" trigger="manual" maxWidth="300px"
-                [title]="popoverSideTitle" [content]="popoverSideContent"
+                theme="light" trigger="manual" maxWidth="300px" [content]="popoverSideContent"
                 placement="right" orientation="top">RightTop</mcs-button><br/>
             </div>
           </div>
@@ -163,9 +158,6 @@
 
         <div class="col">
           <div class="gadgets-container-item">
-            <ng-template #popoverTitle>
-              <span>Popover Title</span>
-            </ng-template>
             <ng-template #popoverContent>
               <mcs-textbox name="textIcon" icon="search" width="200px"
               placeholder="Type to search..."></mcs-textbox><br/>
@@ -176,14 +168,13 @@
             <div class="content">
               <small><em>Popover top placement and left orientation</em></small> <br/>
               <mcs-button mcsPopover
-                theme="dark" trigger="manual" maxWidth="300px"
-                [title]="popoverTitle" [content]="popoverContent"
+                theme="dark" trigger="manual" maxWidth="300px" [content]="popoverContent"
                 placement="top" orientation="left">TopLeft</mcs-button><br/>
 
               <small><em>Popover bottom placement and right orientation</em></small> <br/>
               <mcs-button mcsPopover
                 theme="light" trigger="manual" maxWidth="300px"
-                [title]="popoverTitle" [content]="popoverContent"
+                [content]="popoverContent"
                 placement="bottom" orientation="right">BottomRight</mcs-button><br/>
             </div>
           </div>
@@ -199,19 +190,19 @@
           [selectedListItem]="listingSource?.selectedElement"
           [searchMode]="listingSource?.filterMode">
 
-          <ng-container mcsListDef>
+          <ng-container mcsListPanelDef>
             <!-- Header List Definition -->
-            <mcs-list-header *mcsListHeaderDef="let propValue; propertyName: 'color';"
+            <mcs-list-panel-header *mcsListPanelHeaderDef="let propValue; propertyName: 'color';"
               [groupName]="propValue">
               <a >{{ propValue }}</a>
-            </mcs-list-header>
+            </mcs-list-panel-header>
 
             <!-- Item List Definition -->
-            <mcs-list-item *mcsListItemDef="let item"
+            <mcs-list-panel-item *mcsListPanelItemDef="let item"
               [itemId]="item.id" [groupName]="item.color">
               <mcs-icon key="add-blue"></mcs-icon>
               <a>{{ item.name }}</a>
-            </mcs-list-item>
+            </mcs-list-panel-item>
           </ng-container>
         </mcs-list-panel>
       </div>

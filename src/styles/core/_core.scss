@@ -8,6 +8,7 @@
 @import "classes/mcs-tabs";
 @import "classes/mcs-pre-loader";
 @import "classes/mcs-overlay";
+@import "classes/mcs-scrollbar";
 
 *,
 *:after,
@@ -89,6 +90,7 @@ html {
 
       &:hover {
         cursor: pointer;
+        color: $color-primary-01;
       }
 
       // Override bootstrap no underline for non-href

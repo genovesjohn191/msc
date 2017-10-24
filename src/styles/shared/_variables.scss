@@ -56,8 +56,6 @@ $icon-large-font-size: 20;
 $icon-medium-font-size: 15;
 $icon-small-font-size: $font-size-default;
 
-$notifications-font-size: 12;
-
 // Color Palettes
 $color-black: #000;
 $color-white: #fff;
@@ -108,9 +106,12 @@ $zindex-loader: 900;
 $zindex-loader-container: 800;
 $zindex-header: 1000;
 $zindex-navigation: 1000;
-$zindex-popover: 1100;
 $zindex-notifications: 1100;
 $zindex-overlay: 2000;
+
+$zindex-popover-low: 500;
+$zindex-popover-medium: 1000;
+$zindex-popover-high: 1500;
 
 // Input
 $input-font: $base-font;

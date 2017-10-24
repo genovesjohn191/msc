@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 90 90" style="enable-background:new 0 0 90 90;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;}
+	.st1{display:inline;}
+	
+		.st2{opacity:0.7;fill:none;stroke:#FFFFFF;stroke-width:4.6071;stroke-linecap:round;stroke-miterlimit:10;enable-background:new    ;}
+	.st3{opacity:0.9;fill:#FFFFFF;enable-background:new    ;}
+	.st4{fill:#FFFFFF;}
+	.st5{display:inline;opacity:0.29;}
+	.st6{fill:none;stroke:#FFFFFF;stroke-width:0.25;stroke-miterlimit:10;}
+	.st7{fill:none;stroke:#FFFFFF;stroke-width:0.25;stroke-miterlimit:10;stroke-dasharray:3.01,3.01;}
+	.st8{fill:none;stroke:#FFFFFF;stroke-width:0.25;stroke-miterlimit:10;stroke-dasharray:3,3;}
+	.st9{display:inline;opacity:0.29;fill:#FFFFFF;}
+	.st10{font-family:'MyriadPro-Regular';}
+	.st11{font-size:6.0202px;}
+</style>
+<g id="Layer_1" class="st0">
+	<rect class="st1" width="90" height="90"/>
+</g>
+<g id="icon">
+	<g id="Stroke">
+		<path class="st2" d="M60.8,20.8c3.7,8.7-0.4,18.7-9.1,22.4c-8.7,3.7-18.7-0.4-22.4-9.1c-1.8-4.2-1.8-9,0-13.3"/>
+		<path class="st2" d="M8.6,81C8.4,60.9,24.6,44.4,44.7,44.2s36.6,15.9,36.8,36.1c0,0.2,0,0.5,0,0.7"/>
+	</g>
+	<g id="Fill">
+		<circle class="st3" cx="8.6" cy="81" r="2.3"/>
+		<circle class="st3" cx="29.3" cy="20.8" r="2.3"/>
+		<circle class="st3" cx="60.7" cy="20.8" r="2.3"/>
+		<circle class="st3" cx="81.5" cy="81" r="2.3"/>
+		<path class="st4" d="M42.4,10.3c0-1.4,1.2-2.6,2.6-2.6l0,0l0,0c1.4,0,2.6,1.2,2.6,2.6l0,0l0,0c0,1.4-1.2,2.6-2.6,2.6l0,0l0,0
+			C43.6,12.9,42.4,11.7,42.4,10.3L42.4,10.3z"/>
+		<path class="st4" d="M52.2,14.8L52.2,14.8c-1.2-0.7-1.7-2.3-1-3.5c0,0,0,0,0,0l0,0c0.7-1.2,2.3-1.7,3.5-1c0,0,0,0,0,0l0,0
+			c1.2,0.7,1.7,2.3,1,3.5c0,0,0,0,0,0l0,0c-0.5,0.8-1.3,1.3-2.2,1.3l0,0C53.1,15.1,52.6,15,52.2,14.8z"/>
+		<path class="st4" d="M34.3,13.8c-0.7-1.2-0.3-2.8,1-3.5l0,0l0,0c1.2-0.7,2.8-0.3,3.5,1c0,0,0,0,0,0l0,0c0.7,1.2,0.3,2.8-0.9,3.5
+			c0,0,0,0,0,0l0,0c-0.4,0.2-0.8,0.3-1.3,0.3l0,0C35.6,15.1,34.7,14.6,34.3,13.8z"/>
+	</g>
+</g>
+<g id="Layer_4">
+</g>
+<g id="_x2A_delete_when_export_x2A__guide" class="st0">
+	<g class="st5">
+		<g>
+			<polyline class="st6" points="84.1,82.5 84.1,84 82.6,84 			"/>
+			<line class="st7" x1="79.6" y1="84" x2="8.9" y2="84"/>
+			<polyline class="st6" points="7.4,84 5.9,84 5.9,82.5 			"/>
+			<line class="st8" x1="5.9" y1="79.5" x2="5.9" y2="9"/>
+			<polyline class="st6" points="5.9,7.5 5.9,6 7.4,6 			"/>
+			<line class="st7" x1="10.4" y1="6" x2="81.1" y2="6"/>
+			<polyline class="st6" points="82.6,6 84.1,6 84.1,7.5 			"/>
+			<line class="st8" x1="84.1" y1="10.5" x2="84.1" y2="81"/>
+		</g>
+	</g>
+	<text transform="matrix(1 0 0 1 32.5 45)" class="st9 st10 st11">SAFE ZONE</text>
+</g>
+</svg>

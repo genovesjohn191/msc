@@ -1,67 +1,61 @@
 @import '../../../../styles/shared/base';
 
 // Header User-Panel
-$user-panel-caret-offset: 18px;
-$user-panel-notification-size: 18px;
+$user-panel-item-height: 40px;
+$user-panel-item-padding: 0 $space-xlarge;
+$user-panel-item-divider-color: $color-grey-01;
 $notification-minimum-width: 350px;
+// Notification item variables
+$notification-item-label-bg-color: $color-primary-01;
+$notification-item-label-color: $color-black;
+$notification-item-label-font: $base-font-bold;
+$notification-item-label-size: 18px;
 
-.mcs-user-panel {
+// User panel layout
+.user-panel-wrapper {
   @include display-flex(row);
   align-items: center;
-  @include set-items-interval($space-xlarge, horizontal);
 
-  .notification {
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: none;
+    }
+  }
 
-    .icon-link {
-      display: block;
+  .user-panel-item {
+    height: $user-panel-item-height;
+    padding: $user-panel-item-padding;
+
+    .caret-down {
+      pointer-events: none;
+      padding-left: $space-xsmall;
+    }
+  }
+
+  .notification-item {
+    .icon-content {
       position: relative;
+      min-width: $space-xlarge;
+    }
 
-      .caret-down {
-        position: absolute;
-        display: inline-block;
-        top: 0;
-        left: $user-panel-caret-offset;
-      }
-
-      mcs-icon {
-        position: relative;
-      }
-
-      span {
-        background-color: $color-primary-01;
-        position: absolute;
-        width: $user-panel-notification-size;
-        height: $user-panel-notification-size;
-        top: -10px;
-        right: -10px;
-        @include border-radius(100%);
-        @include font-size($notifications-font-size);
-        font-family: $base-font-bold;
-        text-align: center;
-        color: $color-black;
-      }
+    span {
+      background-color: $notification-item-label-bg-color;
+      position: absolute;
+      width: $notification-item-label-size;
+      height: $notification-item-label-size;
+      top: -10px;
+      left: 5px;
+      @include border-radius(100%);
+      font-family: $notification-item-label-font;
+      text-align: center;
+      color: $notification-item-label-color;
     }
   }
 
-  .exit {
-    padding-left: $space-medium;
-    border-left: 1px solid $color-grey-01;
-    display: none;
-    @include breakpoint(small) {
-      display: inline-block;
-    }
-  }
-
-  .user-panel {
-    max-height: 40px;
-    text-align: center;
-    @include breakpoint(small) {
-      padding-left: $space-medium;
-    }
-
-    .icon-link {
-      @include display-flex(row);
-    }
+  .user-item {
+    border-left: 1px solid $user-panel-item-divider-color;
+    padding-right: 0;
 
     .user-icon {
       display: none;
@@ -70,75 +64,47 @@ $notification-minimum-width: 350px;
       }
     }
 
-    .user-caret-down-icon {
-      padding-left: $space-xsmall;
-    }
-
     .user-info {
       display: block;
+      padding-right: $space-large;
       @include breakpoint(small) {
         display: none;
       }
-      color:  $color-grey-01;
-      @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
-    }
-    a {
-      text-decoration: none;
     }
   }
 }
 
-.mcs-notification-title {
-  display: block;
-  padding: $space-xsmall $space-small;
-  font-family: $base-font-bold;
-  @include font-size($font-size-default);
-}
-
-.mcs-notification-content {
-  li {
-    cursor: pointer;
-    padding: $space-small;
-    border-top: 1px solid $color-grey-04;
-    min-width: $notification-minimum-width;
-    @include display-flex(column);
-
-    &.no-notifications,
-    &.error-connection {
-      cursor: default;
-      text-align: center;
-      span {
-        font-family: $base-font;
-        @include font-size($font-size-default);
-      }
-    }
-    &.error-connection {
-      color: $color-red-00;
-    }
-
-    &.view-all-notifications {
-      text-align: center;
-      cursor: default;
-      display: inline-block;
-      a {
-        font-family: $base-font-bold;
-        @include font-size($font-size-default);
-      }
-    }
-  }
-}
-
-.user-settings-container {
+// Popover for notifications layout
+.notifications-content-wrapper {
   @include display-flex(column);
-  padding: $space-small 0;
+  @include set-items-divider($color-grey-04);
+  min-width: $notification-minimum-width;
+
+  .notification-item {
+    padding: $space-small;
+  }
+}
+
+// Popover for switch account layout
+.switch-account-settings-wrapper {
+  @include display-flex(column);
+  @include set-items-divider();
+  background-color: $color-black;
+  color: $color-grey-05;
+  min-width: 200px;
+
   a {
+    color: $color-grey-05;
     text-decoration: none;
-    padding: $space-xsmall $space-large;
-    text-decoration: none;
-    &:hover,
-    &:focus {
+    &:hover {
+      color: $color-primary-01;
       text-decoration: none;
-      background-color: $color-grey-05;
     }
+  }
+
+  .profile-settings,
+  .switch-account-panel,
+  .logout-panel {
+    padding: $space-medium;
   }
 }

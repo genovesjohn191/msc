@@ -64,7 +64,7 @@ export class McsOverlayService {
   private _createOverlayPane(): HTMLElement {
     let pane = document.createElement('div');
 
-    pane.id = `mcs-overlay-${nextUniqueId}`;
+    pane.id = `mcs-overlay-${nextUniqueId++}`;
     pane.classList.add('mcs-overlay-pane');
     this._containerElement.appendChild(pane);
     return pane;

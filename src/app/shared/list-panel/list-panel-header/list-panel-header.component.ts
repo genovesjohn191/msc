@@ -1,24 +1,29 @@
 import {
   Component,
-  ChangeDetectionStrategy,
   OnInit,
   OnDestroy,
   Renderer2,
   ElementRef,
+  Input,
   ChangeDetectorRef,
-  Input
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CoreDefinition } from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
 import { ListPanelService } from '../list-panel.service';
 
 @Component({
-  selector: 'mcs-list-header',
-  templateUrl: './list-header.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'mcs-list-panel-header',
+  templateUrl: './list-panel-header.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'list-panel-header-wrapper'
+  }
 })
 
-export class ListHeaderComponent implements OnInit, OnDestroy {
+export class ListPanelHeaderComponent implements OnInit, OnDestroy {
 
   @Input()
   public groupName: string;
@@ -69,7 +74,7 @@ export class ListHeaderComponent implements OnInit, OnDestroy {
   private _toggleChildElementVisibility(): void {
     if (isNullOrEmpty(this.elementRef)) { return; }
 
-    let itemElements = this.elementRef.nativeElement.querySelectorAll('mcs-list-item');
+    let itemElements = this.elementRef.nativeElement.querySelectorAll('mcs-list-panel-item');
     for (let element of itemElements) {
       if (this.collapse) {
         this.renderer.setStyle(element, 'display', 'none');

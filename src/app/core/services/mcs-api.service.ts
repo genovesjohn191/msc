@@ -173,6 +173,7 @@ export class McsApiService {
     let headers = new Headers();
 
     this._setDefaultHeaders(headers);
+    this._setAccountHeader(headers);
     this._setAuthorizationHeader(headers);
     this._setOptionalHeaders(headers, optHeaders);
 
@@ -184,9 +185,22 @@ export class McsApiService {
    * @param {Headers} headers Header Instance
    */
   private _setDefaultHeaders(headers: Headers) {
-    headers.set('Accept', 'application/json');
-    headers.set('Content-Type', 'application/json');
-    headers.set('Api-Version', '1.0');
+    headers.set(CoreDefinition.HEADER_ACCEPT, 'application/json');
+    headers.set(CoreDefinition.HEADER_CONTENT_TYPE, 'application/json');
+    headers.set(CoreDefinition.HEADER_API_VERSION, '1.0');
+  }
+
+  /**
+   * Set account header based on active account
+   *
+   * `@Note:` When active account is default, the appstate for active account is undefined
+   * @param headers Header Instance
+   */
+  private _setAccountHeader(headers: Headers) {
+    let activeAccount = this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT);
+    if (activeAccount) {
+      headers.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount.id);
+    }
   }
 
   /**
@@ -196,7 +210,8 @@ export class McsApiService {
   private _setAuthorizationHeader(headers: Headers) {
     let authToken = this._appState.get(CoreDefinition.APPSTATE_AUTH_TOKEN);
     if (authToken) {
-      headers.set('Authorization', 'Bearer ' + authToken);
+      headers.set(CoreDefinition.HEADER_AUTHORIZATION,
+        `${CoreDefinition.HEADER_BEARER} ${authToken}`);
     }
   }
 
