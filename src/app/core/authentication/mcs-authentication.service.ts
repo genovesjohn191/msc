@@ -83,8 +83,6 @@ export class McsAuthenticationService {
   public setAuthToken(authToken: string, expiration?: Date): void {
     // Update cookie
     this._setCookie(authToken, expiration);
-    // Update app state
-    this._appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, authToken);
   }
 
   /**
@@ -93,7 +91,6 @@ export class McsAuthenticationService {
   public deleteAuthToken(): void {
     // Delete the token from Appstate and Cookie
     this._cookieService.remove(CoreDefinition.COOKIE_AUTH_TOKEN);
-    this._appState.set(CoreDefinition.APPSTATE_AUTH_TOKEN, undefined);
   }
 
   /**

@@ -11,6 +11,7 @@ import {
   Observable,
   Subject
 } from 'rxjs/Rx';
+import { CookieService } from 'ngx-cookie';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import { isUrlValid } from '../../utilities';
@@ -38,6 +39,7 @@ export class McsApiService {
 
   constructor(
     private _http: Http,
+    private _cookieService: CookieService,
     private _appState: AppState,
     @Optional() private _config: CoreConfig
   ) {
@@ -205,10 +207,14 @@ export class McsApiService {
 
   /**
    * Set setAuthorizationHeaders
+   *
+   * `@Note:` This will automatically navigate to login page
+   * when cookie is empty because the API will throw error if
+   * no token provided
    * @param {Headers} headers Header Instance
    */
   private _setAuthorizationHeader(headers: Headers) {
-    let authToken = this._appState.get(CoreDefinition.APPSTATE_AUTH_TOKEN);
+    let authToken = this._cookieService.get(CoreDefinition.COOKIE_AUTH_TOKEN);
     if (authToken) {
       headers.set(CoreDefinition.HEADER_AUTHORIZATION,
         `${CoreDefinition.HEADER_BEARER} ${authToken}`);

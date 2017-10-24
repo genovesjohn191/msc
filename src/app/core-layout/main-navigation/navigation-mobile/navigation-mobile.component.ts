@@ -25,7 +25,8 @@ import { AppState } from '../../../app.service';
 import {
   CoreDefinition,
   McsApiCompany,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsAuthenticationService
 } from '../../../core';
 import { SwitchAccountService } from '../../shared';
 import {
@@ -123,7 +124,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _appState: AppState,
     private _switchAccountService: SwitchAccountService,
-    private _authenticationIdentity: McsAuthenticationIdentity
+    private _authenticationIdentity: McsAuthenticationIdentity,
+    private _authenticationService: McsAuthenticationService
   ) {
     this.accountPanelOpen = false;
     this.switchAccountAnimation = 'collapsed';
@@ -148,6 +150,11 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
       this._activeAccountSubscription.unsubscribe();
     }
     unregisterEvent(document, 'click', this._clickOutsideHandler);
+  }
+
+  public logout(event): void {
+    event.preventDefault();
+    this._authenticationService.logOut();
   }
 
   public onClickOutside(_event: any): void {
