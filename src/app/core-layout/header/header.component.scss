@@ -4,13 +4,13 @@ $header-large-padding: $space-large;
 $header-small-padding: $space-large $space-medium;
 
 header {
+  z-index: $zindex-header;
   @include breakpoint(small) {
     // TODO: Remove completely once fix is confirmed in mobile
-    // position: fixed; 
+    // position: fixed;
     top: 0;
     width: 100%;
     padding-right: 0;
-    z-index: $zindex-header;
   }
 }
 

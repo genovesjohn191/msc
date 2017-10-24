@@ -5,22 +5,22 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="firewallTextContent.panel">
       <div class="listing-panel-wrapper">
         <mcs-search #listSearch [delayInSeconds]="0"></mcs-search>
-        <mcs-list-panel [listSource]="firewallListSource" 
+        <mcs-list-panel [listSource]="firewallListSource"
           [selectedListItem]="selectedItem" [searchMode]="firewallListSource?.searchMode"
           [mcsLoader]="firewallListSource?.firewallsSubscription">
-          <ng-container mcsListDef>
-            <mcs-list-header *mcsListHeaderDef="let haGroup; propertyName: 'haGroupName';"
-              [groupName]="haGroup">
+          <ng-container mcsListPanelDef>
+            <mcs-list-panel-header [groupName]="haGroup"
+              *mcsListPanelHeaderDef="let haGroup; propertyName: 'haGroupName';">
               <span>{{ haGroup }}</span>
-            </mcs-list-header>
-            <mcs-list-item *mcsListItemDef="let firewall"
+            </mcs-list-panel-header>
+            <mcs-list-panel-item *mcsListPanelItemDef="let firewall"
               [itemId]="firewall.id" [groupName]="firewall.haGroupName"
               (click)="onFirewallSelect(firewall.id)">
               <mcs-icon [key]="getConnectionStatusIconKey(firewall.connectionStatus)"></mcs-icon>
               <a>{{ firewall.name }}</a>
-            </mcs-list-item>
+            </mcs-list-panel-item>
           </ng-container>
-  
+
           <!-- List Items Status Integration -->
           <ng-container mcsListItemsStatusDef>
             <mcs-list-items-empty *mcsListItemsEmptyDef>

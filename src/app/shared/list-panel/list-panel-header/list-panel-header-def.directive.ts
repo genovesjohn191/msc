@@ -5,12 +5,12 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[mcsListHeaderDef]'
+  selector: '[mcsListPanelHeaderDef]'
 })
 
-export class ListHeaderDefDirective {
+export class ListPanelHeaderDefDirective {
 
-  @Input('mcsListHeaderDefPropertyName')
+  @Input('mcsListPanelHeaderDefPropertyName')
   public get propertyName(): string {
     return this._propertyName;
   }

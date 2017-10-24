@@ -4,13 +4,19 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 /** Modules */
 import { SharedModule } from '../shared';
-import { MainNavigationModule } from './main-navigation/main-navigation.module';
 /** Multiple Components */
 import {
   StateChangeNotificationsComponent,
   StateChangeNotificationComponent,
   StateChangeNotificationMaxDisplayPipe
 } from './state-change-notifications';
+import {
+  MainNavigationComponent,
+  NavigationDesktopComponent,
+  NavigationMobileComponent,
+  NavigationDesktopItemsDirective,
+  NavigationMobileItemsDirective
+} from './main-navigation';
 /** Layout Components */
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
@@ -21,12 +27,20 @@ import {
   RunningNotificationComponent,
   RunningNotificationMaxDisplayPipe
 } from './header';
+import {
+  AccountPanelComponent,
+  SwitchAccountComponent,
+  RecentCompaniesMaxPipe
+} from './shared';
 /** Constants */
 import { coreLayoutProviders } from './core-layout.constants';
 
 @NgModule({
   declarations: [
     BreadcrumbsComponent,
+    AccountPanelComponent,
+    SwitchAccountComponent,
+    RecentCompaniesMaxPipe,
     ContentComponent,
     FooterComponent,
     HeaderComponent,
@@ -34,6 +48,11 @@ import { coreLayoutProviders } from './core-layout.constants';
     UserPanelComponent,
     StateChangeNotificationComponent,
     StateChangeNotificationsComponent,
+    MainNavigationComponent,
+    NavigationDesktopComponent,
+    NavigationMobileComponent,
+    NavigationDesktopItemsDirective,
+    NavigationMobileItemsDirective,
     RunningNotificationMaxDisplayPipe,
     StateChangeNotificationMaxDisplayPipe
   ],
@@ -41,10 +60,12 @@ import { coreLayoutProviders } from './core-layout.constants';
     CommonModule,
     RouterModule,
     FormsModule,
-    SharedModule,
-    MainNavigationModule
+    SharedModule
   ],
   exports: [
+    AccountPanelComponent,
+    SwitchAccountComponent,
+    RecentCompaniesMaxPipe,
     ContentComponent,
     FooterComponent,
     HeaderComponent,
@@ -52,12 +73,16 @@ import { coreLayoutProviders } from './core-layout.constants';
     UserPanelComponent,
     StateChangeNotificationComponent,
     StateChangeNotificationsComponent,
+    MainNavigationComponent,
+    NavigationDesktopComponent,
+    NavigationMobileComponent,
+    NavigationDesktopItemsDirective,
+    NavigationMobileItemsDirective,
     RunningNotificationMaxDisplayPipe,
     StateChangeNotificationMaxDisplayPipe,
     CommonModule,
     RouterModule,
-    FormsModule,
-    MainNavigationModule
+    FormsModule
   ],
   providers: [
     ...coreLayoutProviders

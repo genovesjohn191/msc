@@ -1,30 +1,34 @@
 @import '../../../styles/shared/base';
 
-$popover-max-width: 250px;
+$popover-max-width: auto;
 $popover-min-width: 100px;
-$popover-font-family: $base-font-bold;
-$popover-font-size: 16;
 $popover-default-padding: 25px 30px;
 $popover-narrow-padding: 10px;
 $popover-arrow-width: 10px;
 $popover-arrow-border-width: $popover-arrow-width + 1;
-$popover-border-radius: 5px;
+$popover-border-radius: 2px;
 
 :host {
   position: absolute;
   top: 0;
   left: 0;
   display: block;
-  font-family: $popover-font-family;
-  z-index: $zindex-popover;
   min-width: $popover-min-width;
+  &.priority-low {
+    z-index: $zindex-popover-low;
+  }
+  &.priority-medium {
+    z-index: $zindex-popover-medium;
+  }
+  &.priority-high {
+    z-index: $zindex-popover-high;
+  }
 }
 
 @mixin popover-container($text-color, $background-color, $border-color: "transparent") {
   position: relative;
   width: 100%;
   color: $text-color;
-  @include font-size($popover-font-size);
   @include display-flex(column);
   @include border-radius($popover-border-radius);
 
@@ -149,13 +153,12 @@ $popover-border-radius: 5px;
     }
 
     .mcs-popover-template {
-      @include font-size($popover-font-size - 2);
       word-wrap: break-word;
     }
   }
 }
 
-.mcs-popover-container {
+.mcs-popover-wrapper {
   &.light {
     @include popover-container($color-black, $color-white, $color-grey-04) {
       box-shadow: 0 5px 10px rgba($color-black,0.2);
@@ -163,7 +166,7 @@ $popover-border-radius: 5px;
   }
 
   &.dark {
-    @include popover-container($color-white, rgba($color-black, 0.8));
+    @include popover-container($color-white, $color-black, $color-grey-01);
   }
 
   &.gray {

@@ -1,0 +1,19 @@
+@import "../../../../styles/shared/base";
+
+:host {
+  display: block;
+}
+
+.account-panel-wrapper {
+  @include flex(0 0 auto);
+  @include display-flex(column);
+
+  a {
+    color: $color-grey-05;
+    text-decoration: none;
+    &:hover {
+      color: $color-primary-01;
+      text-decoration: none;
+    }
+  }
+}

@@ -65,7 +65,8 @@ export class McsOverlayRef {
       componentRef = portal.viewContainerRef.createComponent(
         componentFactory,
         portal.viewContainerRef.length,
-        portal.injector || portal.viewContainerRef.parentInjector
+        portal.injector || portal.viewContainerRef.parentInjector,
+        portal.getAttachmentNodes()
       );
       this._setDisposeFunc(() => componentRef.destroy());
     } else {

@@ -1,0 +1,12 @@
+@import "../../../styles/shared/base";
+
+.list-wrapper {
+  @include flex(0 0 auto);
+  @include display-flex(column);
+  @include set-items-interval($space-xsmall);
+
+  .list-item-wrapper {
+    @include flex(0 0 auto);
+    display: block;
+  }
+}

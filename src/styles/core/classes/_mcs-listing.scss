@@ -45,7 +45,6 @@ $action-cell-width: 55px;
   @include flex(1 1 auto);
   @include display-flex(row);
   align-items: center;
-  @include set-items-interval($space-xlarge, horizontal);
 
   .total-record-count {
     margin-right: $space-large;

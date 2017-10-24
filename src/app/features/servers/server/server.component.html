@@ -7,16 +7,17 @@
         <mcs-search #search [delayInSeconds]="0"></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
           [searchMode]="serverListSource?.searchMode" [mcsLoader]="serverListSource?.serverListSubscription">
-          <ng-container mcsListDef>
-            <mcs-list-header *mcsListHeaderDef="let vdc; propertyName: 'vdcName';"
+          <ng-container mcsListPanelDef>
+            <mcs-list-panel-header *mcsListPanelHeaderDef="let vdc; propertyName: 'vdcName';"
               [groupName]="vdc">
               <span>{{ vdc }}</span>
-            </mcs-list-header>
-            <mcs-list-item *mcsListItemDef="let server"
+            </mcs-list-panel-header>
+            <mcs-list-panel-item *mcsListPanelItemDef="let server"
               [itemId]="server.id" [groupName]="server.vdcName"
               (click)="onServerSelect(server.id)">
 
-              <mcs-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"></mcs-icon>
+              <mcs-icon *ngIf="server.powerState"
+                [key]="getStateIconKey(server.powerState)"></mcs-icon>
               <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
                 mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
                 [content]="loadingContent"></mcs-icon>
@@ -27,7 +28,7 @@
               </ng-template>
 
               <a>{{ server.name }}</a>
-            </mcs-list-item>
+            </mcs-list-panel-item>
           </ng-container>
 
           <!-- List Items Status Integration -->

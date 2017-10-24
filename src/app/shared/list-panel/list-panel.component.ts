@@ -7,14 +7,12 @@ import {
   ViewChild,
   ContentChild,
   ChangeDetectorRef,
-  Renderer2,
   NgIterable,
   IterableDiffer,
   IterableDiffers,
   TrackByFunction,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
-  HostBinding
+  ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 /** Core / Utilities */
@@ -33,32 +31,28 @@ import {
   ListItemsPlaceholderDirective,
   ListItemsStatusPlaceholderDirective
 } from './shared';
-import { ListDefDirective } from './list-definition';
-import { ListItemOutletDirective } from './list-item';
+import { ListPanelDefDirective } from './list-panel-def';
+import { ListPanelItemOutletDirective } from './list-panel-item';
 /** List panel services */
 import { ListPanelService } from './list-panel.service';
 /** List items status */
 import { ListItemsStatusDefDirective } from './list-items-status';
 
 const NO_GROUP_ITEMS = 'no_group_items';
-const LIST_PANEL_CLASS = 'list-panel-wrapper';
-const LIST_HEADER_CLASS = 'list-header-wrapper';
-const LIST_ITEM_CLASS = 'list-item-wrapper';
-const LIST_NO_GROUP_CLASS = 'list-no-group-wrapper';
 
 @Component({
   selector: 'mcs-list-panel',
   templateUrl: './list-panel.component.html',
   styleUrls: ['./list-panel.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'list-panel-wrapper'
+  }
 })
 
 export class ListPanelComponent<T> implements OnInit,
   AfterContentChecked, OnDestroy {
-
-  @HostBinding('class')
-  public class = LIST_PANEL_CLASS;
 
   /**
    * A search mode flag that triggers when searching from the datasource
@@ -145,8 +139,8 @@ export class ListPanelComponent<T> implements OnInit,
   private _listItemsStatusPlaceholder: ListItemsStatusPlaceholderDirective;
 
   /** Columns */
-  @ContentChild(ListDefDirective)
-  private _listDefinition: ListDefDirective;
+  @ContentChild(ListPanelDefDirective)
+  private _listDefinition: ListPanelDefDirective;
 
   @ContentChild(ListItemsStatusDefDirective)
   private _listItemsStatusDefinition: ListItemsStatusDefDirective;
@@ -161,7 +155,6 @@ export class ListPanelComponent<T> implements OnInit,
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _renderer: Renderer2,
     private _differs: IterableDiffers,
     private _listPanelService: ListPanelService
   ) {
@@ -271,13 +264,8 @@ export class ListPanelComponent<T> implements OnInit,
     if (isNullOrEmpty(headerName)) { return; }
 
     let itemGroupDef = this._listDefinition.listHeaderDefinition;
-    let view = this._listItemsPlaceholder.viewContainer
+    this._listItemsPlaceholder.viewContainer
       .createEmbeddedView(itemGroupDef.template, { $implicit: headerName });
-
-    // Add class
-    if (!isNullOrEmpty(view)) {
-      this._renderer.addClass(view.rootNodes[0], LIST_HEADER_CLASS);
-    }
   }
 
   /**
@@ -292,13 +280,8 @@ export class ListPanelComponent<T> implements OnInit,
     // on the most recent outlet of the view (mcs-list-item)
     let itemDef = this._listDefinition.listItemDefinition;
     items.forEach((context) => {
-      let view = ListItemOutletDirective.mostRecentOutlet.viewContainer
+      ListPanelItemOutletDirective.mostRecentOutlet.viewContainer
         .createEmbeddedView(itemDef.template, { $implicit: context });
-
-      // Add class
-      if (!isNullOrEmpty(view)) {
-        this._renderer.addClass(view.rootNodes[0], LIST_ITEM_CLASS);
-      }
     });
   }
 
@@ -312,13 +295,8 @@ export class ListPanelComponent<T> implements OnInit,
 
     let noGroupDef = this._listDefinition.listItemDefinition;
     items.forEach((context) => {
-      let view = this._listItemsPlaceholder.viewContainer
+      this._listItemsPlaceholder.viewContainer
         .createEmbeddedView(noGroupDef.template, { $implicit: context });
-
-      // Add class
-      if (!isNullOrEmpty(view)) {
-        this._renderer.addClass(view.rootNodes[0], LIST_NO_GROUP_CLASS);
-      }
     });
   }
 

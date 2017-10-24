@@ -28,6 +28,7 @@ export * from './models/response/mcs-api-job-connection';
 export * from './models/response/mcs-api-job';
 export * from './models/response/mcs-api-task';
 export * from './models/response/mcs-api-console';
+export * from './models/response/mcs-api-company';
 export * from './models/mcs-list';
 export * from './models/mcs-list-item';
 export * from './models/mcs-list-panel-item';

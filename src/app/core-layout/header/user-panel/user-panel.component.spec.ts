@@ -62,7 +62,7 @@ describe('UserPanelComponent', () => {
     });
 
     it('should return the caret down icon definition key', () => {
-      expect(component.caretDownIconKey).toBe(CoreDefinition.ASSETS_FONT_CARET_DOWN);
+      expect(component.caretDownIconKey).toBe(CoreDefinition.ASSETS_FONT_CHEVRON_DOWN);
     });
 
     it('should return the caret right icon definition key', () => {

@@ -122,9 +122,6 @@ $left-panel-navigation-collapse-padding: 6px;
           @include display-flex(row);
           height: $top-panel-height;
           border-right: 1px solid $page-border-color;
-          .listing-action-wrapper{
-            @include set-items-interval(0, horizontal);
-          }
 
           .action-item {
             white-space: nowrap;
@@ -156,6 +153,9 @@ $left-panel-navigation-collapse-padding: 6px;
     }
 
     // Content Panel Styling with scrollable x and y
+    mcs-content-panel {
+      overflow: hidden;
+    }
     .content-panel-wrapper {
       @include flex(1 1 auto);
       display: block;

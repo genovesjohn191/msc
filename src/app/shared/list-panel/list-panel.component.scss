@@ -38,7 +38,7 @@ $list-item-border-color: $color-primary-01;
     }
   }
 
-  .list-header-wrapper {
+  .list-panel-header-wrapper {
     @include display-flex(column);
     justify-content: center;
     @extend %list-header-styling;
@@ -57,7 +57,7 @@ $list-item-border-color: $color-primary-01;
     }
   }
 
-  .list-item-wrapper {
+  .list-panel-item-wrapper {
     position: relative;
     padding: $list-item-padding;
     @include font-size($list-item-font-size);

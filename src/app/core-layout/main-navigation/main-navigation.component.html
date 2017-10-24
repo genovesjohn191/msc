@@ -23,7 +23,8 @@
 
     <!-- Networking -->
     <!-- TODO: Replaced texts to Firwalls and added temporary firewall restriction for Phase 1 -->
-    <div class="navigation-item" routerLinkActive="active" *mcsHasPermission="['FirewallConfigurationView']">
+    <div class="navigation-item" routerLinkActive="active"
+      *mcsHasPermission="['FirewallConfigurationView']">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
       <a [routerLink]="['/networking']" (click)="setTitle(textContent.firewalls.title)">

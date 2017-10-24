@@ -13,8 +13,21 @@ import {
   Router,
   NavigationStart
 } from '@angular/router';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 /** Providers / Services */
-import { CoreDefinition } from '../../../core';
+import { AppState } from '../../../app.service';
+import {
+  CoreDefinition,
+  McsApiCompany,
+  McsAuthenticationIdentity
+} from '../../../core';
+import { SwitchAccountService } from '../../shared';
 import {
   isNullOrEmpty,
   resolveEnvVar,
@@ -27,7 +40,19 @@ import {
   templateUrl: './navigation-mobile.component.html',
   styleUrls: ['./navigation-mobile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+    trigger('indicatorIcon', [
+      state('collapsed', style({ transform: 'rotate(0deg)' })),
+      state('expanded', style({ transform: 'rotate(180deg)' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4,0.0,0.2,1)'))
+    ]),
+    trigger('bodyExpansion', [
+      state('collapsed', style({ height: '0px', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4,0.0,0.2,1)')),
+    ])
+  ],
 })
 
 export class NavigationMobileComponent implements OnInit, OnDestroy {
@@ -35,7 +60,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   @ViewChild('navigationList')
   public navigationList: ElementRef;
 
+  public accountPanelOpen: boolean;
+  public switchAccountAnimation: string;
   private _routerSubscription: any;
+  private _activeAccountSubscription: any;
 
   /**
    * Show or hide the navigation element based on slide value
@@ -67,8 +95,20 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
+  public get caretDownIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
+  }
+
   public get closeIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CLOSE;
+  }
+
+  public get firstName(): string {
+    return this._authenticationIdentity.firstName;
+  }
+
+  public get lastName(): string {
+    return this._authenticationIdentity.lastName;
   }
 
   /**
@@ -80,8 +120,14 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _elementRef: ElementRef,
     private _renderer: Renderer2,
     private _router: Router,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) { }
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _appState: AppState,
+    private _switchAccountService: SwitchAccountService,
+    private _authenticationIdentity: McsAuthenticationIdentity
+  ) {
+    this.accountPanelOpen = false;
+    this.switchAccountAnimation = 'collapsed';
+  }
 
   public ngOnInit() {
     this._routerSubscription = this._router.events
@@ -91,11 +137,15 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
         }
       });
     registerEvent(document, 'click', this._clickOutsideHandler);
+    this._listenToSwitchAccount();
   }
 
   public ngOnDestroy() {
     if (!isNullOrEmpty(this._routerSubscription)) {
       this._routerSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._activeAccountSubscription)) {
+      this._activeAccountSubscription.unsubscribe();
     }
     unregisterEvent(document, 'click', this._clickOutsideHandler);
   }
@@ -104,6 +154,13 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     if (!this._elementRef.nativeElement.contains(_event.target)) {
       this.close();
     }
+  }
+
+  public toggleAccountPanel(): void {
+    this.accountPanelOpen = !this.accountPanelOpen;
+    this.switchAccountAnimation = this.accountPanelOpen ?
+      'expanded' : 'collapsed';
+    this._changeDetectorRef.markForCheck();
   }
 
   public open(): void {
@@ -115,5 +172,20 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     if (this.slideTrigger) {
       this.slideTrigger = 'slideOutLeft';
     }
+  }
+
+  public getActiveAccount(): McsApiCompany {
+    let activeAccount: McsApiCompany;
+    activeAccount = this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) ?
+      this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) :
+      this._appState.get(CoreDefinition.APPSTATE_DEFAULT_ACCOUNT);
+    return activeAccount;
+  }
+
+  private _listenToSwitchAccount(): void {
+    this._activeAccountSubscription = this._switchAccountService.activeAccountStream
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

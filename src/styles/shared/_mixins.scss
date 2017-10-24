@@ -395,6 +395,34 @@
 //   @include set-items-interval(20);
 // }
 
+@mixin set-items-divider($color: default, $orientation: vertical) {
+  @if $color == default {
+    $color: $color-grey-01;
+  }
+
+  @if $orientation == vertical {
+    > * {
+      border-top: 1px solid $color;
+      &:first-child {
+        border-top: 1px solid transparent;
+      }
+    }
+  } @else {
+    > * {
+      border-left: 1px solid $color;
+      &:first-child {
+        border-left: 1px solid transparent;
+      }
+    }
+  }
+}
+
+// Usage
+
+// .mcs-textbox {
+//   @include set-items-divider(default, vertical);
+// }
+
 // Transition
 @mixin transition($transition...) {
   @if length($transition) == 0 {

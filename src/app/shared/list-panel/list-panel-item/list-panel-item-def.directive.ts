@@ -4,9 +4,9 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[mcsListItemDef]'
+  selector: '[mcsListPanelItemDef]'
 })
 
-export class ListItemDefDirective {
+export class ListPanelItemDefDirective {
   constructor(public template: TemplateRef<any>) { }
 }

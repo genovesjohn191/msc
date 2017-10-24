@@ -50,16 +50,16 @@ describe('ListPanelComponent', () => {
       set: {
         template: `
         <mcs-list-panel [listSource]="listSource">
-          <ng-container mcsListDef>
-            <mcs-list-header *mcsListHeaderDef="let propValue; propertyName: 'color';"
+          <ng-container mcsListPanelDef>
+            <mcs-list-panel-header *mcsListPanelHeaderDef="let propValue; propertyName: 'color';"
               [groupName]="propValue">
               <a >{{ propValue }}</a>
-            </mcs-list-header>
+            </mcs-list-panel-header>
 
-            <mcs-list-item *mcsListItemDef="let item"
+            <mcs-list-panel-item *mcsListPanelItemDef="let item"
               [itemId]="item.userId" [groupName]="item.color">
               {{ item.name }}
-            </mcs-list-item>
+            </mcs-list-panel-item>
           </ng-container>
         </mcs-list-panel>
         `
@@ -85,29 +85,29 @@ describe('ListPanelComponent', () => {
   });
 
   describe('ngAfterContentInit() | ngAfterContentChecked()', () => {
-    it(`should create 3 mcs-list-header element`, () => {
+    it(`should create 3 mcs-list-panel-header element`, () => {
       let headerElement: NodeListOf<Element>;
-      headerElement = document.querySelectorAll('mcs-list-header');
+      headerElement = document.querySelectorAll('mcs-list-panel-header');
       expect(headerElement.length).toBe(3);
     });
 
-    it(`should create <a> element tag based on the content of the mcs-list-header`, () => {
+    it(`should create <a> element tag based on the content of the mcs-list-panel-header`, () => {
       let tagElement: NodeListOf<Element>;
       tagElement = document.querySelectorAll('a');
       expect(tagElement.length).toBe(3);
     });
 
-    it(`should create mcs-list-item element based on the datasource record`, () => {
+    it(`should create mcs-list-panel-item element based on the datasource record`, () => {
       let dataRowElement: NodeListOf<Element>;
-      dataRowElement = document.querySelectorAll('mcs-list-item');
+      dataRowElement = document.querySelectorAll('mcs-list-panel-item');
       expect(dataRowElement.length).toBe(4);
     });
   });
 
   describe('onClickItems()', () => {
-    it(`should set the class to active when mcs-list-item element is clicked`, () => {
+    it(`should set the class to active when mcs-list-panel-item element is clicked`, () => {
       let itemElements: NodeListOf<Element>;
-      itemElements = document.querySelectorAll('mcs-list-item');
+      itemElements = document.querySelectorAll('mcs-list-panel-item');
       let item = itemElements.item(0);
 
       item.dispatchEvent(new Event('click'));
@@ -115,21 +115,21 @@ describe('ListPanelComponent', () => {
     });
 
     it(`should remove the active class of the other item
-    when mcs-list-item element is clicked`, () => {
+    when mcs-list-panel-item element is clicked`, () => {
       let itemElements: NodeListOf<Element>;
-      itemElements = document.querySelectorAll('mcs-list-item');
+      itemElements = document.querySelectorAll('mcs-list-panel-item');
       let item = itemElements.item(0);
 
       item.dispatchEvent(new Event('click'));
       expect(itemElements.item(1).classList.contains('active')).toBeFalsy();
     });
 
-    it(`should set the class of mcs-list-header to active
-    when mcs-list-item element is clicked`, () => {
+    it(`should set the class of mcs-list-panel-header to active
+    when mcs-list-panel-item element is clicked`, () => {
       let itemElements: NodeListOf<Element>;
       let headerElements: NodeListOf<Element>;
-      itemElements = document.querySelectorAll('mcs-list-item');
-      headerElements = document.querySelectorAll('mcs-list-header');
+      itemElements = document.querySelectorAll('mcs-list-panel-item');
+      headerElements = document.querySelectorAll('mcs-list-panel-header');
       let item = itemElements.item(0);
 
       item.dispatchEvent(new Event('click'));

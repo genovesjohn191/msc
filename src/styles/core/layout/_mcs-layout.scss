@@ -151,3 +151,11 @@ table.mcs-simple-table {
     padding-right: $space-small;
   }
 }
+
+// Icon with label
+.labelled-icon {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  @include set-items-interval($space-small, horizontal);
+  align-items: center;
+}
