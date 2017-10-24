@@ -1,9 +1,11 @@
 import {
   Component,
+  OnInit,
   Output,
   EventEmitter,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { McsTextContentProvider } from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
 
 @Component({
@@ -13,13 +15,19 @@ import { isNullOrEmpty } from '../../../utilities';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class AccountPanelComponent {
+export class AccountPanelComponent implements OnInit {
+
+  public textContent: any;
 
   @Output()
   public selectionChanged: EventEmitter<any>;
 
-  constructor() {
+  constructor(private _textContent: McsTextContentProvider) {
     this.selectionChanged = new EventEmitter();
+  }
+
+  public ngOnInit(): void {
+    this.textContent = this._textContent.content.accountPanel;
   }
 
   /**

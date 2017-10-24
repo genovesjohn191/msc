@@ -360,6 +360,11 @@
     "heading": "You don't have permission to access this page.",
     "linkText": "Click here to return to the Dashboard."
   },
+  "accountPanel": {
+    "accountSettings": "Account Settings",
+    "profile": "Profile",
+    "tickets": "Tickets"
+  },
   "header": {
     "userPanel": {
       "notifications": {

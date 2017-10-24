@@ -31,7 +31,6 @@ export class CoreDefinition {
   public static HEADER_AUTHORIZATION = 'Authorization';
 
   /** AppState Properties */
-  public static APPSTATE_AUTH_TOKEN = 'AuthToken';
   public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
   public static APPSTATE_ACTIVE_ACCOUNT = 'ActiveAccount';
   public static APPSTATE_DEFAULT_ACCOUNT = 'DefaultAccount';

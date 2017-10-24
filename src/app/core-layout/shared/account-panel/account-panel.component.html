@@ -1,14 +1,20 @@
 <div class="account-panel-wrapper">
   <mcs-list header="Account">
     <mcs-list-item>
-      <a cursor="pointer" (click)="notifySelectionChange('settings')">Account settings</a>
+      <a cursor="pointer" (click)="notifySelectionChange('settings')">
+        {{ textContent.accountSettings }}
+      </a>
     </mcs-list-item>
     <mcs-list-item>
-      <a cursor="pointer" (click)="notifySelectionChange('profile')">Profile</a>
+      <a cursor="pointer" (click)="notifySelectionChange('profile')">
+        {{ textContent.profile }}
+      </a>
     </mcs-list-item>
     <mcs-list-item>
       <a cursor="pointer" [routerLink]="['/tickets']"
-      *mcsHasPermission="['TicketView']" (click)="notifySelectionChange('tickets')">Tickets</a>
+        *mcsHasPermission="['TicketView']" (click)="notifySelectionChange('tickets')">
+        {{ textContent.tickets }}
+      </a>
     </mcs-list-item>
   </mcs-list>
 </div>
