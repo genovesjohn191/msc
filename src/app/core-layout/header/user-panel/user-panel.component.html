@@ -9,7 +9,7 @@
       <a cursor="pointer" (click)="logout($event)">Logout</a>
     </div>
 
-    <div class="switch-account-panel hidden-small">
+    <div *mcsHasPermission="['CompanyView']" class="switch-account-panel hidden-small">
       <mcs-switch-account [ngStyle]="{width: '400px'}"
         (selectionChanged)="userPopover?.close()">
       </mcs-switch-account>
@@ -34,7 +34,7 @@
         <span>{{ notificationTextContent.connectionError }}</span>
       </div>
 
-      <div cursor="pointer" class="notification-item"
+      <div class="notification-item"
         *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplayPipe); trackBy: trackByFn">
         <mcs-running-notification [attribute]="notification"></mcs-running-notification>
       </div>
@@ -50,40 +50,39 @@
 
 <div class="user-panel-wrapper">
   <!-- Notification bell icon -->
-  <div class="user-panel-item notification-item" display-flex="column" justify-content="center">
-    <a (click)="clickNotifications($event)" display-flex align-items="center"
-      class="icon-content">
+  <div class="user-panel-item notification-item" display-flex align-items="center">
+    <a display-flex align-items="center" class="icon-content"
+
+      mcsPopover #notificationsPopover="mcsPopover"
+      (onClose)="onCloseNotificationPanel()"
+      (onOpen)="onOpenNotificationPanel()"
+      maxWidth="350px" padding="none"
+      placement="bottom" orientation="left" theme="light" priority="high"
+      [content]="notificationsContent">
+
       <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
       <span *ngIf="hasNotification" display-flex align-items="center" justify-content="center">
         {{ notifications.length }}
       </span>
-      <!-- Popover will display here -->
-      <mcs-icon [hidden]="!hasNotification" class="caret-down"
-        [key]="caretDownIconKey" size="small" color="white"
-
-        mcsPopover #notificationsPopover="mcsPopover"
-        (onClose)="onCloseNotificationPanel()"
-        (onOpen)="onOpenNotificationPanel()"
-        maxWidth="350px" padding="none"
-        placement="bottom" orientation="left" theme="light" priority="high"
-        [content]="notificationsContent"></mcs-icon>
     </a>
   </div>
 
   <!-- User icon -->
-  <div class="user-panel-item user-item" display-flex="column" justify-content="center">
-    <a (click)="clickUser($event)" display-flex align-items="center">
+  <div class="user-panel-item user-item" display-flex align-items="center">
+    <a flex="auto" display-flex="column" cursor="pointer"
+      (click)="clickUser()" stop-propagation>
       <mcs-icon class="user-icon" [key]="userIconKey" size="medium"></mcs-icon>
       <span class="hidden-small">{{ firstName }} {{ lastName }}</span>
-      <!-- Popover will display here -->
-      <mcs-icon class="caret-down right-align"
-        [key]="caretDownIconKey" size="small" color="white"
-
-        mcsPopover #userPopover="mcsPopover"
-        padding="none" placement="bottom" orientation="left"
-        theme="dark" priority="high"
-        [content]="userSettings" maxWidth="500px"></mcs-icon>
+      <small class="user-info" read-only>{{ getActiveAccount()?.name }}</small>
     </a>
-    <small class="user-info" read-only>{{ getActiveAccount()?.name }}</small>
+
+    <!-- Popover will display here -->
+    <mcs-icon class="caret-down right-align" flex="none" display-flex flex-align="top"
+      [key]="caretDownIconKey" size="small" color="white" cursor="pointer"
+
+      mcsPopover #userPopover="mcsPopover"
+      padding="none" placement="bottom" orientation="left"
+      theme="dark" priority="high"
+      [content]="userSettings" maxWidth="500px"></mcs-icon>
   </div>
 </div>

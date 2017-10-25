@@ -16,7 +16,6 @@ import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import { isUrlValid } from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
-import { AppState } from '../../app.service';
 
 /**
  * Macquarie Portal Api Service class
@@ -40,7 +39,6 @@ export class McsApiService {
   constructor(
     private _http: Http,
     private _cookieService: CookieService,
-    private _appState: AppState,
     @Optional() private _config: CoreConfig
   ) {
     this._errorResponseStream = new Subject<Response | any>();
@@ -195,13 +193,13 @@ export class McsApiService {
   /**
    * Set account header based on active account
    *
-   * `@Note:` When active account is default, the appstate for active account is undefined
+   * `@Note:` When active account is default, the cookie content for active account is undefined
    * @param headers Header Instance
    */
   private _setAccountHeader(headers: Headers) {
-    let activeAccount = this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT);
+    let activeAccount = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
     if (activeAccount) {
-      headers.set(CoreDefinition.HEADER_COMPANY_ID, activeAccount.id);
+      headers.set(CoreDefinition.HEADER_COMPANY_ID, JSON.parse(activeAccount).id);
     }
   }
 

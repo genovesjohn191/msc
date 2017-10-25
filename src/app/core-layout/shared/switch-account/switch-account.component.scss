@@ -49,7 +49,7 @@ $switch-account-content-min-height: 100px;
     .company-list-wrapper {
       position: relative;
       min-height: $switch-account-content-min-height;
-      @include set-items-interval($space-medium);
+      @include set-items-interval($space-large);
     }
   }
 }

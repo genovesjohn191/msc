@@ -50,9 +50,9 @@ export class McsAuthenticationService {
    */
   public logOut(): void {
     if (isNullOrEmpty(this._coreConfig.logoutUrl)) {
-      throw new Error(`Invalid login url of ${this._coreConfig.logoutUrl}`);
+      throw new Error(`Invalid logout url of ${this._coreConfig.logoutUrl}`);
     }
-    this.deleteAuthToken();
+    this.deleteCookieContent();
     window.location.href = this._coreConfig.logoutUrl;
   }
 
@@ -86,11 +86,12 @@ export class McsAuthenticationService {
   }
 
   /**
-   * This will delete the token to Cookie and Appstate
+   * This will delete the content of the cookie that was created by MCS
    */
-  public deleteAuthToken(): void {
+  public deleteCookieContent(): void {
     // Delete the token from Appstate and Cookie
     this._cookieService.remove(CoreDefinition.COOKIE_AUTH_TOKEN);
+    this._cookieService.remove(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
   }
 
   /**
@@ -207,7 +208,7 @@ export class McsAuthenticationService {
 
       switch (errorResponse.status) {
         case McsHttpStatusCode.Unauthorized:
-          this.deleteAuthToken();
+          this.deleteCookieContent();
           this.logIn();
           break;
 

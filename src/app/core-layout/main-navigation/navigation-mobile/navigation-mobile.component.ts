@@ -20,8 +20,8 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { CookieService } from 'ngx-cookie';
 /** Providers / Services */
-import { AppState } from '../../../app.service';
 import {
   CoreDefinition,
   McsApiCompany,
@@ -61,7 +61,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   @ViewChild('navigationList')
   public navigationList: ElementRef;
 
-  public accountPanelOpen: boolean;
   public switchAccountAnimation: string;
   private _routerSubscription: any;
   private _activeAccountSubscription: any;
@@ -76,6 +75,18 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public set slideTrigger(value: string) {
     if (this._slideTrigger !== value) {
       this._slideTrigger = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _accountPanelOpen: boolean;
+  public get accountPanelOpen(): boolean {
+    return this._accountPanelOpen;
+  }
+  public set accountPanelOpen(value: boolean) {
+    if (this._accountPanelOpen !== value) {
+      this._accountPanelOpen = value;
+      this.switchAccountAnimation = value ? 'expanded' : 'collapsed';
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -122,7 +133,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _appState: AppState,
+    private _cookieService: CookieService,
     private _switchAccountService: SwitchAccountService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService
@@ -165,9 +176,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public toggleAccountPanel(): void {
     this.accountPanelOpen = !this.accountPanelOpen;
-    this.switchAccountAnimation = this.accountPanelOpen ?
-      'expanded' : 'collapsed';
-    this._changeDetectorRef.markForCheck();
   }
 
   public open(): void {
@@ -178,14 +186,16 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public close(): void {
     if (this.slideTrigger) {
       this.slideTrigger = 'slideOutLeft';
+      setTimeout(() => { this.accountPanelOpen = false; }, 500);
     }
   }
 
   public getActiveAccount(): McsApiCompany {
     let activeAccount: McsApiCompany;
-    activeAccount = this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) ?
-      this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) :
-      this._appState.get(CoreDefinition.APPSTATE_DEFAULT_ACCOUNT);
+    let cookieContent: string;
+    cookieContent = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    activeAccount = cookieContent ? JSON.parse(cookieContent) :
+      this._switchAccountService.defaultAccount;
     return activeAccount;
   }
 

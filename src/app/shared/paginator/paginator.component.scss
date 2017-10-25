@@ -1,12 +1,9 @@
 @import "../../../styles/shared/base";
 
-$paginator-min-height: $space-xlarge;
-
 .paginator-wrapper {
   @include display-flex(row);
   align-items: center;
   justify-content: center;
-  min-height: $paginator-min-height;
 
   a {
     @include font-size($font-size-default);

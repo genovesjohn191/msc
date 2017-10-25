@@ -32,11 +32,10 @@ export class CoreDefinition {
 
   /** AppState Properties */
   public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
-  public static APPSTATE_ACTIVE_ACCOUNT = 'ActiveAccount';
-  public static APPSTATE_DEFAULT_ACCOUNT = 'DefaultAccount';
 
   /** Cookie Names */
   public static COOKIE_AUTH_TOKEN  = 'MCSPAT';
+  public static COOKIE_ACTIVE_ACCOUNT = 'MCSACC';
 
   /** Query Parameters */
   public static QUERY_PARAM_BEARER  = 'bearer';

@@ -35,7 +35,8 @@
   </div>
 
   <!-- Account panel Item -->
-  <div class="navigation-mobile-item navigation-account-panel-wrapper">
+  <div *mcsHasPermission="['CompanyView']"
+    class="navigation-mobile-item navigation-account-panel-wrapper" >
     <div class="user-account-trigger">
       <div class="labelled-icon" display-flex justify-content="space-between"
         cursor="pointer" (click)="toggleAccountPanel()">
@@ -51,7 +52,7 @@
       </div>
 
       <div class="switch-account-details">
-        <mcs-switch-account></mcs-switch-account>
+        <mcs-switch-account (selectionChanged)="close()"></mcs-switch-account>
       </div>
     </div>
   </div>

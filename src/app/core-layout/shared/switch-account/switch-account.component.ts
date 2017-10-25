@@ -1,6 +1,7 @@
 import {
   Component,
-  OnInit,
+  ViewChild,
+  AfterViewInit,
   OnDestroy,
   Output,
   EventEmitter,
@@ -9,9 +10,16 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsApiCompany
+  McsApiCompany,
+  McsPaginator,
+  McsSearch,
+  McsTextContentProvider,
+  McsDataStatus
 } from '../../../core';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import { isNullOrEmpty } from '../../../utilities';
 import { SwitchAccountService } from './switch-account.service';
 
@@ -22,13 +30,19 @@ import { SwitchAccountService } from './switch-account.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SwitchAccountComponent implements OnInit, OnDestroy {
+export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
+
+  @ViewChild('search')
+  public search: McsSearch;
+
+  @ViewChild('paginator')
+  public paginator: McsPaginator;
 
   @Output()
   public selectionChanged: EventEmitter<any>;
 
-  // TODO: Add Paging and filtering of data
-  public companies: McsApiCompany[];
+  // Companies
+  public displayedCompanies: McsApiCompany[];
   public recentCompanies: McsApiCompany[];
   public activeAccount: McsApiCompany;
 
@@ -37,18 +51,16 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
   public recentCompaniesSubscription: Subscription;
   public activeAccountSubscription: Subscription;
 
-  /**
-   * Panel is opened when the value is true, otherwise fale/close
-   */
-  private _panelOpen: boolean;
-  public get panelOpen(): boolean {
-    return this._panelOpen;
+  // Others
+  public textContent: any;
+  public get companies(): McsApiCompany[] {
+    return this._switchAccountService.companies;
   }
-  public set panelOpen(value: boolean) {
-    if (this._panelOpen !== value) {
-      this._panelOpen = value;
-      this._changeDetectorRef.markForCheck();
-    }
+  public get dataStatus(): McsDataStatus {
+    return this._switchAccountService.companiesStatus;
+  }
+  public get dataStatusEnum(): any {
+    return McsDataStatus;
   }
 
   // Icons
@@ -64,6 +76,10 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_SVG_ARROW_RIGHT_BLUE;
   }
 
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
   public get userIconKey(): string {
     // TODO: Change the color to red based on the company status
     return CoreDefinition.ASSETS_SVG_PERSON_GREEN;
@@ -71,16 +87,19 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
 
   constructor(
     private _switchAccountService: SwitchAccountService,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _textContentProvider: McsTextContentProvider
   ) {
     this.selectionChanged = new EventEmitter();
+    this.textContent = this._textContentProvider.content.switchAccount;
   }
 
-  public ngOnInit(): void {
-    // Listen to any change on the company mapping
-    this._listenToCompanies();
-    this._listenToRecentCompanies();
-    this._listenToActiveCompany();
+  public ngAfterViewInit(): void {
+    setTimeout(() => {
+      this._listenToCompanies();
+      this._listenToRecentCompanies();
+      this._listenToActiveCompany();
+    });
   }
 
   public ngOnDestroy(): void {
@@ -118,25 +137,58 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  public togglePanel(): void {
-    this.panelOpen = this.panelOpen ? false : true;
-    // Add rotation of the caret
-  }
-
   public selectAccount(account: McsApiCompany): void {
     if (isNullOrEmpty(account)) { return; }
     this._switchAccountService.switchAccount(account);
     this.selectionChanged.emit(account);
   }
 
+  /**
+   * Retry getting the companies
+   */
+  public retry(): void {
+    this._switchAccountService.getCompanies();
+  }
+
+  /**
+   * Company list observables that is currently listening
+   * to any changes of the page/search
+   */
   private _listenToCompanies(): void {
-    this.companiesSubscription = this._switchAccountService.companiesStream
-      .subscribe((companies) => {
-        this.companies = companies;
+    const displayDataChanges = [
+      this._switchAccountService.companiesStream,
+      this.paginator.pageChangedStream,
+      this.search.searchChangedStream
+    ];
+
+    this.companiesSubscription = Observable.merge(...displayDataChanges)
+      .map(() => {
+        // Get all record by page settings
+        let pageData = this.companies.slice();
+        let displayedCount = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
+
+        // Get all record by filter settings and return them
+        let actualData = pageData.slice(0, displayedCount);
+        return actualData.slice().filter((item: McsApiCompany) => {
+          let searchStr = (item.name).toLowerCase();
+          return searchStr.indexOf(this.search.keyword.toLowerCase()) !== -1;
+        });
+      })
+      .subscribe((result) => {
+        if (this._switchAccountService.companiesStatus !== McsDataStatus.Error) {
+          this._switchAccountService.companiesStatus = isNullOrEmpty(result) ?
+          McsDataStatus.Empty : McsDataStatus.Success;
+        }
+        this.displayedCompanies = result;
+        this.search.showLoading(false);
+        this.paginator.pageCompleted();
         this._changeDetectorRef.markForCheck();
       });
   }
 
+  /**
+   * Listener to recent companies selected
+   */
   private _listenToRecentCompanies(): void {
     this.recentCompaniesSubscription = this._switchAccountService.recentCompaniesStream
       .subscribe((recent) => {
@@ -145,6 +197,9 @@ export class SwitchAccountComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Listener to active company changes
+   */
   private _listenToActiveCompany(): void {
     this.activeAccountSubscription = this._switchAccountService.activeAccountStream
       .subscribe((active) => {
