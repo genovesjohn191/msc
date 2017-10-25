@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LayoutModule } from '../layout/layout.module';
 /** Components/Directives */
 import { PopoverComponent } from './popover.component';
 import { PopoverDirective } from './popover.directive';
@@ -10,10 +11,12 @@ import { PopoverDirective } from './popover.directive';
     PopoverDirective
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    LayoutModule
   ],
   exports: [
-    PopoverDirective
+    PopoverDirective,
+    LayoutModule
   ],
   entryComponents: [
     PopoverComponent

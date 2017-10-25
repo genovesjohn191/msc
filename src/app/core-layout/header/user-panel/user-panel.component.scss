@@ -28,7 +28,6 @@ $notification-item-label-size: 18px;
     padding: $user-panel-item-padding;
 
     .caret-down {
-      pointer-events: none;
       padding-left: $space-xsmall;
     }
   }
@@ -36,7 +35,6 @@ $notification-item-label-size: 18px;
   .notification-item {
     .icon-content {
       position: relative;
-      min-width: $space-xlarge;
     }
 
     span {

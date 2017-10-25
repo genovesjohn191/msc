@@ -6,6 +6,7 @@ import { DisabledDirective } from './disabled.directive';
 import { CursorDirective } from './cursor.directive';
 import { AnimateDirective } from './animation.directive';
 import { ScrollableDirective } from './scrollable.directive';
+import { StopPropagationDirective } from './stop-propagation.directive';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { ScrollableDirective } from './scrollable.directive';
     DisabledDirective,
     CursorDirective,
     AnimateDirective,
-    ScrollableDirective
+    ScrollableDirective,
+    StopPropagationDirective
   ],
   exports: [
     DisplayFlexDirective,
@@ -24,7 +26,8 @@ import { ScrollableDirective } from './scrollable.directive';
     DisabledDirective,
     CursorDirective,
     AnimateDirective,
-    ScrollableDirective
+    ScrollableDirective,
+    StopPropagationDirective
   ]
 })
 

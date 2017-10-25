@@ -1,18 +1,19 @@
 // Variables settings
 $scrollbar-box-shadow-bg-color: $color-black;
 $scrollbar-border-radius: 10px;
-$scrollbar-track-color: $color-grey-08;
 $scrollbar-small: 6px;
 $scrollbar-medium: 12px;
 $scrollbar-default-bg-color: $color-primary-01;
+$scrollbar-default-track-color: $color-grey-08;
 $scrollbar-dark-bg-color: $color-grey-00;
+$scrollbar-dark-track-color: $color-black;
 
 // Scrollbar Default
 .scrollbar-default::-webkit-scrollbar-track
 {
   -webkit-box-shadow: inset 0 0 6px rgba($scrollbar-box-shadow-bg-color, 0.3);
   border-radius: $scrollbar-border-radius;
-  background-color: $scrollbar-track-color;
+  background-color: $scrollbar-default-track-color;
 }
 
 .scrollbar-default::-webkit-scrollbar-thumb
@@ -27,7 +28,7 @@ $scrollbar-dark-bg-color: $color-grey-00;
 {
   -webkit-box-shadow: inset 0 0 6px rgba($scrollbar-box-shadow-bg-color, 0.3);
   border-radius: $scrollbar-border-radius;
-  background-color: $scrollbar-track-color;
+  background-color: $scrollbar-dark-track-color;
 }
 
 .scrollbar-dark::-webkit-scrollbar-thumb

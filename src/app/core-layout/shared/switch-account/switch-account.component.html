@@ -1,6 +1,6 @@
 <!-- Switch trigger -->
 <div class="switch-account-wrapper" scrollable="dark" scrollbarSize="small">
-  <span>Switch Account</span>
+  <span>{{ textContent?.header }}</span>
 
   <!-- Account Details -->
   <div class="account-details-content">
@@ -10,16 +10,6 @@
         <div class="labelled-icon">
           <mcs-icon [key]="arrowUpBueIconKey" size="small"></mcs-icon>
           <span>{{ getTextFormat(defaultAccount) }}</span>
-        </div>
-      </mcs-list-item>
-    </mcs-list>
-
-    <!-- Active account -->
-    <mcs-list header="Active account" *ngIf="activeAccount">
-      <mcs-list-item>
-        <div class="labelled-icon">
-          <mcs-icon [key]="arrowUpBueIconKey" size="small"></mcs-icon>
-          <span>{{ getTextFormat(activeAccount) }}</span>
         </div>
       </mcs-list-item>
     </mcs-list>
@@ -44,12 +34,10 @@
 
     <!-- Company list -->
     <div class="company-list-wrapper">
-      <mcs-search></mcs-search>
+      <mcs-search #search delayInSeconds="none"></mcs-search>
+
       <mcs-list header="Company Accounts" class="company-list">
-        <mcs-list-item [ngStyle]="{position: 'relative'}" *ngIf="!companies">
-          <div [mcsLoader]="companiesSubscription"></div>
-        </mcs-list-item>
-        <mcs-list-item *ngFor="let item of companies; trackBy: trackByFn">
+        <mcs-list-item *ngFor="let item of displayedCompanies; trackBy: trackByFn">
           <div class="labelled-icon account-action" (click)="selectAccount(item)" cursor="pointer">
             <mcs-icon color="white" [key]="userIconKey" size="small"></mcs-icon>
             <span>{{ getTextFormat(item) }}</span>
@@ -57,6 +45,27 @@
           </div>
         </mcs-list-item>
       </mcs-list>
+
+      <!-- Data obtainment status -->
+      <div [ngSwitch]="dataStatus" display-flex align-items="center" justify-content="center">
+        <div *ngSwitchCase="dataStatusEnum.InProgress">
+          <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+        </div>
+        <div *ngSwitchCase="dataStatusEnum.Empty">
+          <span>{{ textContent.noCompanies }}</span>
+        </div>
+        <div *ngSwitchCase="dataStatusEnum.Error">
+          <span>{{ textContent.errorMessage }}</span>
+          <a (click)="retry()">{{ textContent.retry }}</a>
+        </div>
+      </div>
+
+      <mcs-paginator #paginator
+        [hidden]="dataStatus !== dataStatusEnum.Success"
+        [totalCount]="companies?.length"
+        [pageIndex]="0"
+        [pageSize]="5">
+      </mcs-paginator>
     </div>
   </div>
 </div>

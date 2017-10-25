@@ -7,6 +7,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie';
 /** Services/Providers */
 import {
   McsTextContentProvider,
@@ -20,7 +21,6 @@ import {
   McsAuthenticationService,
   McsApiCompany
 } from '../../../core';
-import { AppState } from '../../../app.service';
 import { SwitchAccountService } from '../../shared';
 import {
   refreshView,
@@ -88,7 +88,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
-    private _appState: AppState,
+    private _cookieService: CookieService,
     private _switchAccountService: SwitchAccountService
   ) {
     this.hasConnectionError = false;
@@ -144,9 +144,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this._authenticationService.logOut();
   }
 
-  public clickUser(_event: any): void {
+  public clickUser(): void {
     if (isNullOrEmpty(this.userPopover)) { return; }
-    _event.stopPropagation();
     refreshView(() => {
       this.notificationsPopover.close();
       this.userPopover.toggle();
@@ -154,21 +153,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  public clickNotifications(_event: any): void {
-    if (isNullOrEmpty(this.notificationsPopover)) { return; }
-    _event.stopPropagation();
-    refreshView(() => {
-      this.userPopover.close();
-      this.notificationsPopover.toggle();
-      this._changeDetectorRef.markForCheck();
-    });
-  }
-
   public getActiveAccount(): McsApiCompany {
     let activeAccount: McsApiCompany;
-    activeAccount = this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) ?
-      this._appState.get(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT) :
-      this._appState.get(CoreDefinition.APPSTATE_DEFAULT_ACCOUNT);
+    let cookieContent: string;
+    cookieContent = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    activeAccount = cookieContent ? JSON.parse(cookieContent) :
+      this._switchAccountService.defaultAccount;
     return activeAccount;
   }
 

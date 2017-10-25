@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs/Rx';
+import { CookieService } from 'ngx-cookie';
 import { CoreLayoutService } from '../../core-layout.services';
 import {
   McsAuthenticationIdentity,
   McsApiCompany,
-  CoreDefinition
+  CoreDefinition,
+  McsDataStatus
 } from '../../../core';
-import { AppState } from '../../../app.service';
 import { isNullOrEmpty } from '../../../utilities';
 
 @Injectable()
@@ -17,22 +21,29 @@ export class SwitchAccountService {
   public recentCompaniesStream: BehaviorSubject<McsApiCompany[]>;
   public activeAccountStream: BehaviorSubject<McsApiCompany>;
 
+  // Company List
+  public companies: McsApiCompany[];
+  public obtainedSuccessfully: boolean;
+  public companiesStatus: McsDataStatus;
+
   // Others
   private _activeAccount: McsApiCompany;
 
   constructor(
     private _coreLayoutService: CoreLayoutService,
     private _authIdentity: McsAuthenticationIdentity,
-    private _appState: AppState
+    private _cookieService: CookieService
   ) {
     // Initialize member variables
+    this.companies = new Array();
     this.companiesStream = new BehaviorSubject(undefined);
     this.recentCompaniesStream = new BehaviorSubject(undefined);
     this.activeAccountStream = new BehaviorSubject(undefined);
     this._activeAccount = new McsApiCompany();
 
     // Initialize companies
-    this._initializeCompanies();
+    this.getCompanies();
+    this._getActiveAccount();
   }
 
   /**
@@ -51,31 +62,55 @@ export class SwitchAccountService {
   public switchAccount(company: McsApiCompany) {
     if (isNullOrEmpty(company)) { return; }
     this._activeAccount = company;
-    this._setAppstate();
+    this._setActiveAccount();
     this.activeAccountStream.next(company);
   }
 
   /**
    * Initializes the companies data only once
    */
-  private _initializeCompanies(): void {
+  public getCompanies(): void {
+    this.companiesStatus = McsDataStatus.InProgress;
+
     this._coreLayoutService.getCompanies()
+      .catch((error) => {
+        this.companiesStatus = McsDataStatus.Error;
+        this.companiesStream.next(undefined);
+        return Observable.throw(error);
+      })
       .subscribe((response) => {
         if (response) {
+          this.companiesStatus = response.content ?
+            McsDataStatus.Empty : McsDataStatus.Success;
+          this.companies = response.content;
           this.companiesStream.next(response.content);
         }
       });
-    this._appState.set(CoreDefinition.APPSTATE_DEFAULT_ACCOUNT, this.defaultAccount);
   }
 
   /**
-   * Set app state and use it in api service
+   * Get the active account from cookie
    */
-  private _setAppstate(): void {
+  private _getActiveAccount(): void {
+    let selectedAccount = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    if (selectedAccount) {
+      this._activeAccount = JSON.parse(selectedAccount);
+      this.activeAccountStream.next(this._activeAccount);
+    }
+  }
+
+  /**
+   * Set Active account to cookie and App state
+   */
+  private _setActiveAccount(): void {
     if (this.defaultAccount.id !== this._activeAccount.id) {
-      this._appState.set(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT, this._activeAccount);
+      this._cookieService.put(
+        CoreDefinition.COOKIE_ACTIVE_ACCOUNT,
+        JSON.stringify(this._activeAccount),
+        { expires: this._authIdentity.expiry }
+      );
     } else {
-      this._appState.set(CoreDefinition.APPSTATE_ACTIVE_ACCOUNT, undefined);
+      this._cookieService.remove(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
     }
   }
 }

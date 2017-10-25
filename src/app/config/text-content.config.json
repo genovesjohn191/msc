@@ -180,7 +180,7 @@
     "tableSearch": "Table Search",
     "dataSingular": "Ticket",
     "dataPlural": "Tickets",
-    "ticket" : {
+    "ticket": {
       "header": "Trouble Ticket #",
       "services": "Services",
       "attachments": "Attachments",
@@ -364,6 +364,12 @@
     "accountSettings": "Account Settings",
     "profile": "Profile",
     "tickets": "Tickets"
+  },
+  "switchAccount": {
+    "header": "Switch Account",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of companies.",
+    "noCompanies": "No companies to display.",
+    "retry": "Try again shortly"
   },
   "header": {
     "userPanel": {
