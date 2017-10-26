@@ -25,6 +25,11 @@ import {
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent
 } from './self-managed-server';
+/** VDC */
+import {
+  VdcComponent,
+  VdcOverviewComponent
+} from './vdc';
 /** Services and Resolvers */
 import { serversProviders } from './servers.constants';
 /** Modules */
@@ -50,7 +55,9 @@ import { SharedModule } from '../../shared';
     NewSelfManagedServerComponent,
     CopySelfManagedServerComponent,
     CloneSelfManagedServerComponent,
-    ProvisioningNotificationsComponent
+    ProvisioningNotificationsComponent,
+    VdcComponent,
+    VdcOverviewComponent
   ],
   imports: [
     SharedModule

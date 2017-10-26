@@ -42,6 +42,7 @@ export class Server {
   public snmpVersion: string;
   public instanceId: any;
   public organizationName: string;
+  public vdcId: string;
   public vdcName: string;
   public vAppName: string;
   public vCloudUrl: string;

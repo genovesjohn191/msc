@@ -44,7 +44,6 @@ $table-filter-selector-width: 100px;
   .tab-content {
     .content-responsive {
       width: $content-responsive-width-desktop;
-      white-space: nowrap;
       @include breakpoint(small) {
         width: $content-responsive-width-mobile;
       }
@@ -61,8 +60,10 @@ $table-filter-selector-width: 100px;
 
       .grid-row {
         @include display-flex(row);
+        @include set-items-interval($space-medium, horizontal);
         @include breakpoint(xsmall) {
           @include display-flex(column);
+          @include set-items-interval(0, horizontal);
           @include set-items-interval($space-xlarge, vertical);
         }
       }

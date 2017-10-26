@@ -1,0 +1,4 @@
+<div class="capacity-bar-wrapper">
+  <div class="capacity-bar" [ngClass]="{'low': isLow}" [ngStyle]="{width: percentage}"></div>
+  <span [ngClass]="{'low': isLow}">{{ percentage }}</span>
+</div>

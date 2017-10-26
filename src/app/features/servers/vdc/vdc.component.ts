@@ -16,7 +16,7 @@ import {
   Server,
   ServerPowerState,
   ServerCommand,
-  ServerServiceType
+  ServerResource
 } from '../models';
 import {
   CoreDefinition,
@@ -29,37 +29,36 @@ import {
   refreshView
 } from '../../../utilities';
 import { ServersService } from '../servers.service';
-import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
-
-const SERVER_LIST_GROUP_OTHERS = 'Others';
+import { VdcService } from './vdc.service';
 
 @Component({
-  selector: 'mcs-server',
-  styleUrls: ['./server.component.scss'],
-  templateUrl: './server.component.html',
+  selector: 'mcs-vdc',
+  templateUrl: './vdc.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class VdcComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('search')
   public search: McsSearch;
 
-  public server: Server;
-  public serverSubscription: Subscription;
-  public serversTextContent: any;
+  public vdcSubscription: Subscription;
+  public textContent: any;
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
-  public serverCommandList: ServerCommand[];
 
-  private _serverId: any;
-
-  // Check if the current server's serverType is managed
-  public get isManaged(): boolean {
-    return this.server && this.server.serviceType === ServerServiceType.Managed;
-  }
+  private _vdcId: any;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
+  private _vdc: ServerResource;
+  public get vdc(): ServerResource {
+    return this._vdc;
+  }
+  public set vdc(value: ServerResource) {
+    this._vdc = value;
+    this._changeDetectorRef.markForCheck();
   }
 
   private _selectedItem: McsListPanelItem;
@@ -73,28 +72,18 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _serversService: ServersService,
-    private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _serversService: ServersService,
+    private _vdcService: VdcService
   ) {
-    this.server = new Server();
-    this.serverCommandList = new Array();
+    this.vdc = new ServerResource();
   }
 
   public ngOnInit() {
-    this.serversTextContent = this._textContentProvider.content.servers;
-    this.serverTextContent = this._textContentProvider.content.servers.server;
-    this._serverId = this._activatedRoute.snapshot.paramMap.get('id');
-    this._getServerById();
-    this.serverCommandList = [
-      ServerCommand.Start,
-      ServerCommand.Stop,
-      ServerCommand.Restart,
-      ServerCommand.Scale,
-      ServerCommand.Clone,
-      ServerCommand.ViewVCloud
-    ];
+    this.textContent = this._textContentProvider.content.servers;
+    this._vdcId = this._activatedRoute.snapshot.paramMap.get('id');
+    this._getVdcById();
   }
 
   public ngAfterViewInit() {
@@ -104,25 +93,15 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.serverSubscription) {
-      this.serverSubscription.unsubscribe();
+    if (!isNullOrEmpty(this.vdcSubscription)) {
+      this.vdcSubscription.unsubscribe();
     }
   }
 
   public onServerSelect(serverId: any) {
-    if (isNullOrEmpty(serverId) || this._serverId === serverId) { return; }
+    if (isNullOrEmpty(serverId)) { return; }
 
-    this._serverId = serverId;
-    this._getServerById();
-
-    this._router.navigate(
-      ['/servers', serverId],
-      { relativeTo: this._activatedRoute }
-    );
-  }
-
-  public executeServerCommand(server: Server, action: ServerCommand): void {
-    this._serverService.executeServerCommand(server, action);
+    this._router.navigate(['/servers', serverId]);
   }
 
   public getActionStatus(server: Server): any {
@@ -194,17 +173,21 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
-  private _getServerById(): void {
-    this.serverSubscription = this._serverService.getServer(this._serverId)
-      .subscribe((response) => {
-        this.server = response.content;
+  private _getVdcById(): void {
+    this.vdcSubscription = this._vdcService.getResources().subscribe((response) => {
+      if (!isNullOrEmpty(response) && !isNullOrEmpty(response.content)) {
+        let resources = response.content as ServerResource[];
+        this.vdc = resources.find((resource) => {
+          return resource.id === this._vdcId;
+        });
+
         this.selectedItem = {
-          itemId: this.server.id,
-          groupName: (this.server.vdcName) ? this.server.vdcName : SERVER_LIST_GROUP_OTHERS
+          itemId: '',
+          groupName: this.vdc.name
         } as McsListPanelItem;
 
-        this._serverService.setSelectedServer(this.server);
-        this._changeDetectorRef.markForCheck();
-      });
+        this._vdcService.setSelectedVdc(this.vdc);
+      }
+    });
   }
 }

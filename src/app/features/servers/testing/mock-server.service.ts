@@ -85,6 +85,7 @@ export const mockServerService = {
               memoryReservationMB: 6553,
               memoryLimitMB: 32768,
               memoryUsedMB: 0,
+              url: 'https://labvcloud.macquarieview.com/cloud/org/Macquarie_Telecom_Contoso_100320',
               storage: [
                 {
                   name: 'T2000-PVDC0301',

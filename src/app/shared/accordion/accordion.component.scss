@@ -38,6 +38,7 @@ $accordion-panel-content-padding: $space-medium 22px;
     background-color: $accordion-panel-header-bg-color;
     border-left: 2px solid transparent;
     cursor: pointer;
+    @include set-items-interval($space-small, horizontal);
 
     &:hover,
     &.active {
@@ -50,6 +51,7 @@ $accordion-panel-content-padding: $space-medium 22px;
 
     * {
       @include flex(1 1 auto);
+      margin-bottom: 0;
     }
 
     .icon-wrapper {

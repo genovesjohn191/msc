@@ -43,6 +43,37 @@
       "name": "Server",
       "action": "Action"
     },
+    "vdc": {
+      "leftPanelHeader": "Server Filter",
+      "panel": "Listing Panel",
+      "overview": {
+        "label": "Overview",
+        "vdcProperties": {
+          "title": "VDC Properties",
+          "serviceType": "Service Type",
+          "zone": "Zone",
+          "configuration": "Configuration",
+          "scale": "Scale",
+          "scaling": "Scaling"
+        },
+        "vcloud": {
+          "title": "vCloud Director Virtual Data Centre",
+          "viewVcloud": "View in VCloud"
+        },
+        "networkInformation": {
+          "title": "Network Information",
+          "description": "All networks are fully operational",
+          "gateway": "Gateway"
+        },
+        "storageProfiles": {
+          "title": "Storage Profiles",
+          "status": "Status",
+          "utilisation": "Utilisation",
+          "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on capacity.",
+          "lowStorageProfile": "You're running low on capacity in this profile."
+        }
+      }
+    },
     "createSelfManagedServer": {
       "header": "Create a New Server",
       "backToServers": "Back To Servers",

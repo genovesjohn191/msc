@@ -1,0 +1,41 @@
+@import "../../../styles/shared/base";
+
+// Capacity Bar
+$capacity-bar-height: 20px;
+$capacity-bar-font-size: $font-size-large;
+$capacity-bar-border-radius: 3px;
+$capacity-bar-wrapper-bg-color: $color-primary-02;
+$capacity-bar-bg-color-default: $color-primary-01;
+$capacity-bar-bg-color-low: $color-red-00;
+$capacity-bar-label-color-default: $color-black;
+$capacity-bar-label-color-low: $color-white;
+
+.capacity-bar-wrapper {
+  position: relative;
+  height: $capacity-bar-height;
+  background-color: $capacity-bar-wrapper-bg-color;
+  @include border-radius($capacity-bar-border-radius);
+  overflow: hidden;
+  text-align: center;
+
+  .capacity-bar {
+    position: absolute;
+    @include border-radius($capacity-bar-border-radius);
+    background-color: $capacity-bar-bg-color-default;
+    height: inherit;
+
+    &.low {
+      background-color: $capacity-bar-bg-color-low;
+    }
+  }
+
+  span {
+    position: relative;
+    @include font-size($capacity-bar-font-size);
+    color: $capacity-bar-label-color-default;
+
+    &.low {
+      color: $capacity-bar-label-color-low;
+    }
+  }
+}

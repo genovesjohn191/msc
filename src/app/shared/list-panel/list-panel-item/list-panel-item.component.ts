@@ -70,18 +70,19 @@ export class ListPanelItemComponent implements OnInit, OnDestroy {
     this._itemChangedStreamSubscription = this.listPanelService.selectedItemChangedStream
       .subscribe((data) => {
         if (isNullOrEmpty(data)) { return; }
-        let itemIsSelected = (this.itemId === data.itemId && this.groupName === data.groupName);
+        let itemIsSelected = this.itemId === data.itemId;
         let itemIsInGroup = this.groupName === data.groupName;
 
         if (itemIsSelected) {
           this.renderer.addClass(this.elementRef.nativeElement, 'active');
-          this.renderer.addClass(this.elementRef.nativeElement.parentElement, 'active');
-        } else if (!itemIsInGroup) {
-          this.renderer.removeClass(this.elementRef.nativeElement.parentElement, 'active');
+        } else {
+          this.renderer.removeClass(this.elementRef.nativeElement, 'active');
         }
 
-        if (this.itemId !== data.itemId) {
-          this.renderer.removeClass(this.elementRef.nativeElement, 'active');
+        if (itemIsInGroup) {
+          this.renderer.addClass(this.elementRef.nativeElement.parentElement, 'active');
+        } else {
+          this.renderer.removeClass(this.elementRef.nativeElement.parentElement, 'active');
         }
       });
   }

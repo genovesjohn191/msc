@@ -1,0 +1,72 @@
+<!-- Popover server status for server list panel -->
+<ng-template #loadingContent>
+  <span class="loading-content-popover">
+    {{ getActiveServerTooltip(server.id) }}
+  </span>
+</ng-template>
+
+<mcs-page [header]="vdc.name">
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="textContent.vdc.leftPanelHeader">
+    <!-- listing panel -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.vdc.panel" [mcsLoader]="vdcSubscription">
+      <div class="listing-panel-wrapper">
+        <mcs-search #search [delayInSeconds]="0"></mcs-search>
+        <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
+          [searchMode]="serverListSource?.searchMode">
+          <ng-container mcsListPanelDef>
+            <mcs-list-panel-header *mcsListPanelHeaderDef="let vdc; propertyName: 'vdcName';"
+              [groupName]="vdc">
+              <span>{{ vdc }}</span>
+            </mcs-list-panel-header>
+            <mcs-list-panel-item *mcsListPanelItemDef="let server"
+              [itemId]="server.id" [groupName]="server.vdcName"
+              (click)="onServerSelect(server.id)">
+
+              <mcs-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"></mcs-icon>
+              <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
+                mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
+                [content]="loadingContent"></mcs-icon>
+
+              <a>{{ server.name }}</a>
+            </mcs-list-panel-item>
+          </ng-container>
+
+          <!-- List Items Status Integration -->
+          <ng-container mcsListItemsStatusDef>
+            <mcs-list-items-empty *mcsListItemsEmptyDef>
+              <span>{{ textContent.noServers }}</span>
+            </mcs-list-items-empty>
+            <mcs-list-items-error *mcsListItemsErrorDef>
+              <div class="data-error">
+                <span>{{ textContent.errorMessage }}</span>
+                <a (click)="retryListsource()">{{ textContent.retry }}</a>.
+              </div>
+            </mcs-list-items-error>
+          </ng-container>
+        </mcs-list-panel>
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <mcs-content-panel *mcsContentPanelDef [mcsLoader]="vdcSubscription">
+    <div class="content-wrapper">
+      <div class="mcs-tabs">
+        <ul class="nav nav-tabs" role="tablist">
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" role="tab"
+              [routerLink]="['overview']" routerLinkActive="active">
+                Overview</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" role="tabpanel">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

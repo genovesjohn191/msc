@@ -1,10 +1,6 @@
 import { Routes } from '@angular/router';
-/** Services and Resolvers */
-import { ServersResolver } from './servers.resolver';
-import {
-  ServerService,
-  ServerResolver
-} from './server/';
+/** Services */
+import { ServerService } from './server/';
 import { CreateSelfManagedServersService } from './self-managed-server';
 import { ServersService } from './servers.service';
 /** Components */
@@ -17,6 +13,11 @@ import {
   ServerStorageComponent
 } from './server';
 import { CreateSelfManagedServersComponent } from './self-managed-server';
+import {
+  VdcComponent,
+  VdcOverviewComponent,
+  VdcService
+} from './vdc';
 
 /**
  * List of services for the main module
@@ -25,8 +26,7 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   CreateSelfManagedServersService,
-  ServersResolver,
-  ServerResolver
+  VdcService
 ];
 
 /**
@@ -48,6 +48,14 @@ export const serversRoutes: Routes = [
       { path: 'services', component: ServerServicesComponent },
       { path: 'storage', component: ServerStorageComponent },
       { path: 'backups', component: ServerBackupsComponent }
+    ]
+  },
+  {
+    path: 'servers/vdc/:id',
+    component: VdcComponent,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: VdcOverviewComponent }
     ]
   }
 ];

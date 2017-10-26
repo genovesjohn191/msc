@@ -17,6 +17,7 @@ export class ServerResource {
   public memoryReservationMB: number;
   public memoryLimitMB: number;
   public memoryUsedMB: number;
+  public url: string;
   public storage: ServerResourceStorage[];
   public networks: ServerNetwork[];
   public catalogs: ServerCatalog[];
