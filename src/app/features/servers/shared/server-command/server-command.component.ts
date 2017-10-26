@@ -16,7 +16,6 @@ import { isNullOrEmpty } from '../../../../utilities';
 
 @Component({
   selector: 'mcs-server-command',
-  styleUrls: ['./server-command.component.scss'],
   templateUrl: './server-command.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

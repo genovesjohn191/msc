@@ -50,8 +50,7 @@ import {
 
 @Component({
   selector: 'mcs-create-self-managed-servers',
-  templateUrl: './create-self-managed-servers.component.html',
-  styleUrls: ['./create-self-managed-servers.component.scss']
+  templateUrl: './create-self-managed-servers.component.html'
 })
 
 export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit, OnDestroy {

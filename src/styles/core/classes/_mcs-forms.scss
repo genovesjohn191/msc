@@ -1,8 +1,8 @@
-.label {
-  font-family: $base-font-bold;
-  @include font-size($h4-default-font-size);
-}
-
 .field {
   margin-bottom: $space-large;
+
+  .label {
+    font-family: $base-font-bold;
+    @include font-size($h4-default-font-size);
+  }
 }

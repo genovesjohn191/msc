@@ -9,8 +9,7 @@ import { ToolsDataSource } from './tools.datasource';
 
 @Component({
   selector: 'mcs-tools',
-  templateUrl: './tools.component.html',
-  styleUrls: ['./tools.component.scss']
+  templateUrl: './tools.component.html'
 })
 
 export class ToolsComponent implements OnInit {

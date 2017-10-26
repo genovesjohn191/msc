@@ -140,6 +140,14 @@
   }
 }
 
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
 // Special effects
 .rotate-sideways {
   @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
