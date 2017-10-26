@@ -9,6 +9,7 @@
 @import "classes/mcs-pre-loader";
 @import "classes/mcs-overlay";
 @import "classes/mcs-scrollbar";
+@import "classes/mcs-cog-container";
 
 *,
 *:after,
@@ -79,6 +80,7 @@ html {
       }
     }
 
+    $link-hover-color: $color-primary-01;
     a {
       font-family: $link-font;
       text-decoration: underline;
@@ -90,7 +92,7 @@ html {
 
       &:hover {
         cursor: pointer;
-        color: $color-primary-01;
+        color: $link-hover-color;
       }
 
       // Override bootstrap no underline for non-href
@@ -98,13 +100,17 @@ html {
         text-decoration: underline;
         &:hover {
           text-decoration: underline;
+          cursor: pointer;
+          color: $link-hover-color;
         }
       }
 
       &:not([href]) {
-        text-decoration: none;
+        text-decoration: underline;
         &:hover {
-          text-decoration: none;
+          text-decoration: underline;
+          cursor: pointer;
+          color: $link-hover-color;
         }
       }
     }

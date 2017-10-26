@@ -1,0 +1,24 @@
+.cog-container {
+  @include display-flex(column);
+
+  a {
+    @extend .no-wrap;
+    @extend .with-hover-background;
+
+    padding: $space-xsmall $space-medium;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &[disabled] {
+      cursor: not-allowed;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+}

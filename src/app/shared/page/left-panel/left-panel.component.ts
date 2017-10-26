@@ -17,12 +17,15 @@ import {
 @Component({
   selector: 'mcs-left-panel',
   template: `
-    <ng-container mcsLeftPanelItemPlaceholder></ng-container>
-    <ng-content></ng-content>
+    <div class="left-panel-wrapper" scrollable>
+      <ng-container mcsLeftPanelItemPlaceholder></ng-container>
+      <ng-content></ng-content>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'left-panel-wrapper'
+    'class': 'display-flex-row flex-auto',
+    'style': 'overflow: hidden'
   }
 })
 
