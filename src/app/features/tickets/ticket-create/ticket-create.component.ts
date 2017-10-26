@@ -46,7 +46,6 @@ const DETAILS_MAX_CHAR = 4000;
 @Component({
   selector: 'mcs-ticket-create',
   templateUrl: './ticket-create.component.html',
-  styleUrls: ['./ticket-create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -213,6 +212,12 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
    * Create ticket according to inputs
    */
   public onLogTicket(): void {
+    this.fcDetails.markAsTouched();
+    this.fcHeadline.markAsTouched();
+    if (!this.fgCreateTicket.valid) {
+      return;
+    }
+
     let ticket = new TicketCreate();
 
     // Set ticket data information

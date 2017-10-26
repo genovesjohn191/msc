@@ -10,6 +10,7 @@
 @import "classes/mcs-overlay";
 @import "classes/mcs-scrollbar";
 @import "classes/mcs-cog-container";
+@import "classes/mcs-forms";
 
 *,
 *:after,
@@ -134,6 +135,10 @@ html {
       &:focus {
         outline: none;
         border-color: $input-border-color-focused;
+      }
+
+      &.ng-invalid.ng-touched {
+        border: 1px solid $color-red-00;
       }
     }
 

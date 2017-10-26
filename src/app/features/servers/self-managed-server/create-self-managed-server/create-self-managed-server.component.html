@@ -17,12 +17,12 @@
           [ngClass]="{active: serverCreateType === serverCreateTypeEnum.New}">
           {{ createServerTextContent.newServer }}</a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" data-toggle="tab" role="tab"
           (click)="setCreationType(serverCreateTypeEnum.Copy)"
           [ngClass]="{active: serverCreateType === serverCreateTypeEnum.Copy}">
           {{ createServerTextContent.copyServer }}</a>
-      </li>
+      </li> -->
       <li class="nav-item">
         <a class="nav-link" data-toggle="tab" role="tab"
           (click)="setCreationType(serverCreateTypeEnum.Clone)"
@@ -43,13 +43,13 @@
         </mcs-new-self-managed-server>
 
         <!-- Copy Self-Managed Server  -->
-        <mcs-copy-self-managed-server
+        <!-- <mcs-copy-self-managed-server
           [visible]="serverCreateType === serverCreateTypeEnum.Copy"
           [servers]="servers"
           [resource]="resource"
           [serversOs]="serversOs"
           (onOutputServerDetails)="setServerDetails($event)">
-        </mcs-copy-self-managed-server>
+        </mcs-copy-self-managed-server> -->
 
         <!-- Clone Self-Managed Server  -->
         <mcs-clone-self-managed-server

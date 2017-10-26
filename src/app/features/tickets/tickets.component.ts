@@ -30,8 +30,10 @@ import { TicketStatus } from './models';
 @Component({
   selector: 'mcs-tickets',
   templateUrl: './tickets.component.html',
-  styleUrls: ['./tickets.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 
 export class TicketsComponent
