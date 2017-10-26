@@ -3,7 +3,7 @@
 .list-wrapper {
   @include flex(0 0 auto);
   @include display-flex(column);
-  @include set-items-interval($space-xsmall);
+  @include set-items-interval($space-small);
 
   .list-item-wrapper {
     @include flex(0 0 auto);

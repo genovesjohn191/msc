@@ -8,7 +8,8 @@
   <div class="cog-container">
     <a *ngFor="let serverCommand of commandList"
       (click)="onExecuteCommand(serverCommand)"
-      [disabled]="disableAction(serverCommand)">
+      [disabled]="disableAction(serverCommand)"
+      class="no-wrap with-hover-background">
       {{ getServerCommandLabel(serverCommand) }}
     </a>
   </div>
