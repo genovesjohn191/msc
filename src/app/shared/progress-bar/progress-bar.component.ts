@@ -1,7 +1,9 @@
 import {
   Component,
   forwardRef,
-  Input
+  Input,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -14,6 +16,7 @@ export const PERCENTAGE_OFFSET = -5;
   selector: 'mcs-progress-bar',
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -51,7 +54,7 @@ export class ProgressBarComponent implements ControlValueAccessor {
     }
   }
 
-  public constructor() {
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.maxValue = 0;
     this._value = 0;
   }
@@ -63,6 +66,7 @@ export class ProgressBarComponent implements ControlValueAccessor {
   public writeValue(value: any) {
     if (value !== this._value) {
       this._value = value;
+      this._changeDetectorRef.markForCheck();
     }
   }
 

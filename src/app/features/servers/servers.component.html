@@ -156,6 +156,16 @@
           </mcs-data-cell>
         </ng-container>
 
+        <!-- VDC Column -->
+        <ng-container mcsColumnDef="vdc">
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+              {{ columnSettings.vdc.text }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              <a [routerLink]="['/servers/vdc', row.vdcId]">{{ row.vdcName }}</a>
+            </mcs-data-cell>
+          </ng-container>
+
         <!-- VApp Column -->
         <ng-container mcsColumnDef="vApp">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">

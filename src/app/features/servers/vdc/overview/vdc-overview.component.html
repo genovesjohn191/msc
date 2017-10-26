@@ -1,0 +1,101 @@
+<div class="content-responsive content-grid">
+  <div class="grid-row">
+    <div class="grid-column">
+      <h3>{{ textContent.vdcProperties.title }}</h3>
+      <mcs-list>
+        <!-- Service Type -->
+        <mcs-list-item>
+          {{ textContent.vdcProperties.serviceType }}: {{ getServiceTypeText(vdc.serviceType) }}
+        </mcs-list-item>
+        <!-- Zone -->
+        <mcs-list-item>
+          {{ textContent.vdcProperties.zone }}: {{ vdc.availabilityZone }}
+        </mcs-list-item>
+        <!-- Configuration -->
+        <mcs-list-item>
+          <div class="configuration">
+            <span>{{ textContent.vdcProperties.configuration }}:</span>
+            <span>{{ vdcMemoryValue }} / {{ vdcCpuValue }}</span>
+          </div>
+        </mcs-list-item>
+      </mcs-list>
+    </div>
+
+    <!-- VCloud -->
+    <div class="grid-column">
+      <div class="server-thumbnail">
+        <h3 class="thumbnail-title">{{ textContent.vcloud.title }}</h3>
+
+        <mcs-list>
+          <mcs-list-item *ngIf="isSelfManaged">
+            <mcs-button (onClick)="createNewServer(vdc.serviceType)">New Server</mcs-button>
+          </mcs-list-item>
+          <mcs-list-item *ngIf="vdc.url">
+            <a [href]="vdc.url" target="_blank">{{ textContent.vcloud.viewVcloud}}</a>
+          </mcs-list-item>
+        </mcs-list>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-row">
+    <div class="grid-column">
+      <h3>{{ textContent.networkInformation.title }}</h3>
+      <div class="vertical-items-spacing-medium">
+        <span>{{ textContent.networkInformation.description }}</span>
+        <mcs-accordion>
+          <mcs-accordion-panel *ngFor="let network of vdc.networks; let i = index" [expanded]="i === 0">
+            <mcs-accordion-panel-header panel-header-def>
+              <h4>{{ network.name }}</h4>
+            </mcs-accordion-panel-header>
+
+            <div class="vertical-items-spacing-small" display-flex="column">
+              <span>Standard management network for this VDC.</span>
+              <span>
+                <b>{{ textContent.networkInformation.gateway }}:</b> {{ network.gateway }}
+              </span>
+            </div>
+          </mcs-accordion-panel>
+        </mcs-accordion>
+      </div>
+    </div>
+
+    <div class="grid-column">
+      <h3 class="horizontal-items-spacing-small" display-flex="row" align-items="center">
+        <mcs-icon *ngIf="hasLowCapacityStorage" [key]="warningIconKey"></mcs-icon>
+        <span>{{ textContent.storageProfiles.title }}</span>
+      </h3>
+
+      <div class="vertical-items-spacing-medium">
+        <span *ngIf="hasLowCapacityStorage">{{ displayStorageSummary() }}</span>
+        <mcs-accordion>
+          <mcs-accordion-panel *ngFor="let storage of vdc.storage; let i = index" [expanded]="i === 0">
+            <mcs-accordion-panel-header panel-header-def>
+              <mcs-icon [key]="getStorageStatusIconKey(storage)"></mcs-icon>
+              <h4>{{ storage.name }}</h4>
+            </mcs-accordion-panel-header>
+
+            <div class="vertical-items-spacing-small" display-flex="column">
+              <span>
+                <b>{{ textContent.storageProfiles.status }}:</b> {{ getStorageStatus(storage.enabled) }}
+              </span>
+              <span class="horizontal-items-spacing-xsmall" display-flex="row" align-items="center">
+                <b flex="none">{{ textContent.storageProfiles.utilisation }}:</b>
+                <mcs-capacity-bar [(ngModel)]="storage.usedMB"
+                  [max]="storage.limitMB" flex="auto"></mcs-capacity-bar>
+              </span>
+              <span class="right-align">{{ getCurrentStorageValues(storage.usedMB, storage.limitMB) }}</span>
+            </div>
+
+            <div *ngIf="isStorageProfileLow(storage)"
+              class="horizontal-items-spacing-small vspace-small"
+              display-flex="row" align-items="center" justify-content="center">
+              <mcs-icon [key]="warningIconKey"></mcs-icon>
+              <span>{{ textContent.storageProfiles.lowStorageProfile }}</span>
+            </div>
+          </mcs-accordion-panel>
+        </mcs-accordion>
+      </div>
+    </div>
+  </div>
+</div>

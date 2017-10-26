@@ -36,6 +36,7 @@ import { WizardComponent } from './wizard/wizard.component';
 import { WizardStepComponent } from './wizard/wizard-step/wizard-step.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SearchComponent } from './search/search.component';
+import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
 /** Directives */
 import { HasPermissionDirective } from './authentication/has-permission.directive';
 
@@ -54,7 +55,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     WizardComponent,
     PaginatorComponent,
     HasPermissionDirective,
-    SearchComponent
+    SearchComponent,
+    CapacityBarComponent
   ],
   imports: [
     FileUploadModule,
@@ -110,7 +112,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ContextualHelpModule,
     SelectModule,
     AccordionModule,
-    ListModule
+    ListModule,
+    CapacityBarComponent
   ]
 })
 

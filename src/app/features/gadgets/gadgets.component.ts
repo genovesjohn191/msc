@@ -4,7 +4,6 @@ import {
   AfterViewInit,
   ViewChild
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 /** Models */
 import { Gadgets } from './gadgets';
 import { GadgetsDatabase } from './gadgets.database';
@@ -25,6 +24,7 @@ import {
   FormControl,
   Validators
 } from '@angular/forms';
+import { ServersService } from '../servers';
 
 @Component({
   selector: 'mcs-gadgets',
@@ -99,7 +99,7 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   ];
 
   public constructor(
-    private _route: ActivatedRoute,
+    private _serversServices: ServersService,
     private _formBuilder: FormBuilder
   ) {
     this.title = 'Gadgets component';
@@ -132,11 +132,15 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit() {
+    this._serversServices.getServers()
+      .subscribe((response) => {
+        this.servers = response.content;
+      });
+
     this.setGadgets();
     this.getAllIcons();
     this.textboxValue = 'Windows Server 2012';
     this.disabled = true;
-    this.servers = this._route.snapshot.data.servers.content;
     this.dropdownData = this.servers ? this.mapDropdownData(this.servers) : new McsList();
     this.reactiveForm = new FormGroup({
       textEmail: new FormControl(null, Validators.required),

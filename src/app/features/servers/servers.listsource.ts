@@ -7,21 +7,21 @@ import {
   McsDataSource,
   McsDataStatus,
   McsSearch
-} from '../../../core';
+} from '../../core';
 import {
   Server,
   ServerList,
   ServerClientObject
-} from '../models';
-import { ServersService } from '../servers.service';
+} from './models';
+import { ServersService } from './servers.service';
 import {
   isNullOrEmpty,
   compareStrings
-} from '../../../utilities';
+} from '../../utilities';
 
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
-export class ServerListSource implements McsDataSource<ServerList> {
+export class ServersListSource implements McsDataSource<ServerList> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */

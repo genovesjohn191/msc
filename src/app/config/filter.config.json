@@ -52,6 +52,10 @@
       "text": "Service ID",
       "value": true
     },
+    "vdc": {
+      "text": "VDC",
+      "value": true
+    },
     "vApp": {
       "text": "vApp",
       "value": false
