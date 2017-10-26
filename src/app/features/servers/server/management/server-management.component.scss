@@ -23,18 +23,12 @@ $server-vm-console-disabled-color: $color-grey-02;
       cursor: pointer;
       @include set-items-interval(5px, vertical);
 
-      &.enabled {
-        cursor: pointer;
-        * {
-          cursor: pointer;
-          color: $server-vm-console-enabled-color;
-        }
-      }
-
       &.disabled {
-        cursor: not-allowed;
+        text-decoration: none;
+        cursor: default;
         * {
-          cursor: not-allowed;
+          text-decoration: none;
+          cursor: default;
           color: $server-vm-console-disabled-color;
         }
       }
@@ -49,15 +43,6 @@ $server-vm-console-disabled-color: $color-grey-02;
           min-width: $server-thumbnail-width;
         }
       }
-    }
-  }
-
-  .server-performance-scale {
-    @include set-items-interval($space-large, vertical);
-
-    .note {
-      @include font-size(16);
-      @include set-items-interval($space-xsmall, horizontal);
     }
   }
 }

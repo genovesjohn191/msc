@@ -11,7 +11,7 @@ export class CoreDefinition {
   /** Notifications */
   public static NOTIFICATION_JOB_PENDING = 'Pending';
   public static NOTIFICATION_JOB_ACTIVE = 'Active';
-  public static NOTIFICATION_JOB_TIMEDOUT = 'TimedOut';
+  public static NOTIFICATION_JOB_TIMEDOUT = 'Timedout';
   public static NOTIFICATION_JOB_FAILED = 'Failed';
   public static NOTIFICATION_JOB_CANCELLED = 'Cancelled';
   public static NOTIFICATION_JOB_COMPLETED = 'Completed';

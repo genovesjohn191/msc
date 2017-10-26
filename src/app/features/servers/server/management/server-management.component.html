@@ -32,8 +32,6 @@
             <li *ngFor="let media of server.media">{{ media.mediaName }}</li>
           </ul>
           <ng-template #elseBlock>None</ng-template>
-          <!-- TODO: Removed temporarily since it has no functionality yet -->
-          <!-- <a>Attach</a> -->
         </li>
       </ul>
     </div>
@@ -117,7 +115,7 @@
     </span>
   </mcs-server-performance-scale>
 
-  <div *ngIf="isPoweredOn" class="note"
+  <div *ngIf="isPoweredOn"
     display-flex="row" align-items="center" justify-content="center">
     <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
     <span>{{ serverManagementTextContent.performanceScale.warning }}</span>

@@ -55,10 +55,10 @@
           <li class="nav-item action-cog">
             <mcs-icon class="action" [key]="cogIconKey" size="medium"
               mcsPopover placement="bottom" orientation="left" theme="light"
-              padding="narrow" [content]="actionContent" cursor="pointer">
+              padding="none" [content]="actionContent" cursor="pointer">
             </mcs-icon>
             <ng-template #actionContent>
-              <div class="action-container">
+              <div class="cog-container">
                 <a [href]="firewall.url" target="_blank">View in Portal</a>
               </div>
             </ng-template>

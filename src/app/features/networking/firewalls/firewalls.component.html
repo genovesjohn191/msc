@@ -100,11 +100,13 @@
           <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
             <mcs-icon class="action" [key]="cogIconKey" size="medium"
               mcsPopover placement="bottom" orientation="left" theme="light"
-              padding="narrow" [content]="actionContent" cursor="pointer">
+              padding="none" [content]="actionContent" cursor="pointer">
             </mcs-icon>
             <ng-template #actionContent>
-              <div class="action-container">
-                <a [href]="row.url" target="_blank">View in Portal</a>
+              <div class="cog-container">
+                <a [href]="row.url" target="_blank">
+                  View in Portal
+                </a>
               </div>
             </ng-template>
           </mcs-data-cell>
