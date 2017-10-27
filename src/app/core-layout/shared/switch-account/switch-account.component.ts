@@ -118,11 +118,6 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     return this._switchAccountService.defaultAccount;
   }
 
-  public onClickAccount(account: McsApiCompany): void {
-    if (isNullOrEmpty(account)) { return; }
-    this._switchAccountService.switchAccount(account);
-  }
-
   public getTextFormat(company: McsApiCompany): string {
     if (isNullOrEmpty(company)) { return ''; }
     return `${company.name}(${company.id})`;
@@ -137,6 +132,9 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     return index;
   }
 
+  /**
+   * Select the corresponding account and refresh the page
+   */
   public selectAccount(account: McsApiCompany): void {
     if (isNullOrEmpty(account)) { return; }
     this._switchAccountService.switchAccount(account);
@@ -170,7 +168,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
         // Get all record by filter settings and return them
         let actualData = pageData.slice(0, displayedCount);
         return actualData.slice().filter((item: McsApiCompany) => {
-          let searchStr = (item.name).toLowerCase();
+          let searchStr = (item.name + item.id).toLowerCase();
           return searchStr.indexOf(this.search.keyword.toLowerCase()) !== -1;
         });
       })

@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie';
 import { CoreLayoutService } from '../../core-layout.services';
 import {
   McsAuthenticationIdentity,
+  McsAuthenticationService,
   McsApiCompany,
   CoreDefinition,
   McsDataStatus
@@ -32,6 +33,7 @@ export class SwitchAccountService {
   constructor(
     private _coreLayoutService: CoreLayoutService,
     private _authIdentity: McsAuthenticationIdentity,
+    private _authService: McsAuthenticationService,
     private _cookieService: CookieService
   ) {
     // Initialize member variables
@@ -42,8 +44,10 @@ export class SwitchAccountService {
     this._activeAccount = new McsApiCompany();
 
     // Initialize companies
-    this.getCompanies();
-    this._getActiveAccount();
+    if (this._authService.hasPermission(['CompanyView'])) {
+      this.getCompanies();
+      this._getActiveAccount();
+    }
   }
 
   /**
@@ -64,6 +68,9 @@ export class SwitchAccountService {
     this._activeAccount = company;
     this._setActiveAccount();
     this.activeAccountStream.next(company);
+
+    // Refresh the page
+    location.reload();
   }
 
   /**
@@ -82,7 +89,10 @@ export class SwitchAccountService {
         if (response) {
           this.companiesStatus = response.content ?
             McsDataStatus.Empty : McsDataStatus.Success;
-          this.companies = response.content;
+          // Remove default company in the list
+          this.companies = response.content.filter((account) => {
+            return this.defaultAccount && this.defaultAccount.id !== account.id;
+          });
           this.companiesStream.next(response.content);
         }
       });

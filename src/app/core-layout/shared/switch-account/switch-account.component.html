@@ -7,7 +7,9 @@
     <!-- Default account -->
     <mcs-list header="Default">
       <mcs-list-item>
-        <div class="labelled-icon">
+        <div class="labelled-icon account-action"
+          (click)="selectAccount(defaultAccount)" cursor="pointer">
+
           <mcs-icon [key]="arrowUpBueIconKey" size="small"></mcs-icon>
           <span>{{ getTextFormat(defaultAccount) }}</span>
         </div>

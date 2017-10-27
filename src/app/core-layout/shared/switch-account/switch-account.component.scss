@@ -23,6 +23,16 @@ $switch-account-content-min-height: 100px;
     max-height: $switch-account-mobile-max-height;
   }
 
+  .account-action {
+    &:hover {
+      color: $color-primary-01;
+    }
+    .arrow-right {
+      margin-left: auto;
+      padding-left: $space-medium;
+    }
+  }
+
   .account-details-content {
     @include flex(0 0 auto);
     @include display-flex(column);
@@ -34,17 +44,6 @@ $switch-account-content-min-height: 100px;
     @include flex(0 0 auto);
     @include display-flex(column);
     @include set-items-interval($space-medium);
-
-    .account-action {
-      &:hover {
-        color: $color-primary-01;
-      }
-
-      .arrow-right {
-        margin-left: auto;
-        padding-left: $space-medium;
-      }
-    }
 
     .company-list-wrapper {
       position: relative;

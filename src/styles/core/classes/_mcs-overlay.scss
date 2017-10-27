@@ -1,10 +1,23 @@
 $overlay-transparent-color: none;
 $overlay-light-color: $color-white;
-$overlay-dark-color: rgba($color: $color-black, $alpha: 0.6);
+$overlay-dark-color: rgba($color: $color-black, $alpha: 0.4);
 
 .mcs-overlay-wrapper {
   position: fixed;
   z-index: $zindex-overlay;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.mcs-overlay-item-wrapper {
+  @include display-flex(row);
+  z-index: $zindex-overlay;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
   top: 0;
   left: 0;
@@ -35,7 +48,32 @@ $overlay-dark-color: rgba($color: $color-black, $alpha: 0.6);
 }
 
 .mcs-overlay-pane {
-  position: absolute;
+  @include display-flex(row);
   pointer-events: auto;
   z-index: $zindex-overlay;
+  position: absolute;
+
+  &.center {
+    top: 50%;
+    left: 50%;
+    @include translate(-50%, -50%);
+  }
+  &.left-center {
+    top: 50%;
+    @include translate(0, -50%);
+  }
+  &.top-center {
+    left: 50%;
+    @include translate(-50%, 0);
+  }
+  &.right-center {
+    top: 50%;
+    right: 0;
+    @include translate(0, -50%);
+  }
+  &.bottom-center {
+    bottom: 0;
+    left: 50%;
+    @include translate(-50%, 0);
+  }
 }
