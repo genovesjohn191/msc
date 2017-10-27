@@ -9,13 +9,21 @@ import { RouterModule } from '@angular/router';
 import { CoreConfig } from './core.config';
 /** Services/Providers */
 import { coreProviders } from './core.constants';
+/** Dialog */
+import { McsDialogComponent } from './factory/dialog/mcs-dialog.component';
+import { McsDialogRefDirective } from './factory/dialog/mcs-dialog-ref.directive';
 
 @NgModule({
+  declarations: [
+    McsDialogComponent,
+    McsDialogRefDirective
+  ],
   providers: [
     ...coreProviders
   ],
-  imports: [ RouterModule ],
-  exports: [ RouterModule ]
+  imports: [RouterModule],
+  exports: [RouterModule],
+  entryComponents: [McsDialogComponent]
 })
 
 export class CoreModule {
@@ -28,7 +36,7 @@ export class CoreModule {
     };
   }
 
-  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+  constructor( @Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
       throw new Error(
         'CoreModule is already loaded. Import it in the AppModule only');

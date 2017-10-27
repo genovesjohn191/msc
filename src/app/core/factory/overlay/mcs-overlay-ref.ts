@@ -3,17 +3,21 @@ import {
   ApplicationRef,
   ComponentRef,
   EmbeddedViewRef,
-  NgZone
+  NgZone,
+  Injector
 } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
 import {
   isNullOrEmpty,
   registerEvent,
   getElementPositionFromHost
-} from '../../utilities';
+} from '../../../utilities';
 import { McsOverlayState } from './mcs-overlay-state';
-import { McsPortalComponent } from './mcs-portal-component';
-import { McsPortalTemplate } from './mcs-portal-template';
+import { McsPortalComponent } from '../portal/mcs-portal-component';
+import { McsPortalTemplate } from '../portal/mcs-portal-template';
+
+// placement type enumerations
+type placementType = 'left' | 'top' | 'right' | 'bottom' | 'center';
 
 /**
  * Overlay Reference class that supports the functionalities to attach and detach
@@ -34,11 +38,13 @@ export class McsOverlayRef {
   private _disposeFunc: (() => void) | null;
 
   constructor(
+    private _overlayItem: HTMLElement,
     private _overlayPane: HTMLElement,
     private _overlayState: McsOverlayState,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _applicationRef: ApplicationRef,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private _injector: Injector
   ) {
     this.backdropClickStream = new Subject<any>();
   }
@@ -70,7 +76,8 @@ export class McsOverlayRef {
       );
       this._setDisposeFunc(() => componentRef.destroy());
     } else {
-      componentRef = componentFactory.create(portal.injector);
+      componentRef = componentFactory.create(
+        portal.injector || this._injector);
       this._applicationRef.attachView(componentRef.hostView);
       this._setDisposeFunc(() => {
         this._applicationRef.detachView(componentRef.hostView);
@@ -146,19 +153,73 @@ export class McsOverlayRef {
   }
 
   /**
+   * Move the element based on global position that is currently displayed on the view port
+   * @param placement Placement of the element, center, left, top, bottom
+   */
+  public moveElementToGlobal(placement?: placementType) {
+    if (isNullOrEmpty(this._overlayPane)) { return; }
+    let classPosition: string = 'center';
+
+    switch (placement) {
+      case 'left':
+        classPosition = 'left-center';
+        break;
+      case 'top':
+        classPosition = 'top-center';
+        break;
+      case 'right':
+        classPosition = 'right-center';
+        break;
+      case 'bottom':
+        classPosition = 'bottom-center';
+        break;
+      case 'center':
+      default:
+        break;
+    }
+    this._overlayPane.classList.add(classPosition);
+  }
+
+  /**
    * Detach the element from the overlay
    */
   public detach(): void {
-    this._detachBackdrop();
+    this.detachBackdrop();
 
     // Remove the pointer events of the attachment
     if (this._overlayState.pointerEvents) {
       this._overlayPane.style.pointerEvents = 'none';
     }
+    // Remove the current item of the overlay
+    if (!isNullOrEmpty(this._overlayItem)) {
+      this._overlayItem.parentElement.removeChild(this._overlayItem);
+    }
     // Remove the current overlay after detaching the background
     if (!isNullOrEmpty(this.overlayPane.parentNode)) {
       this.overlayPane.parentNode.removeChild(this._overlayPane);
     }
+  }
+
+  /**
+   * Detaches the backdrop of this overlay
+   */
+  public detachBackdrop(): void {
+    if (isNullOrEmpty(this._backdropElement)) { return; }
+
+    let finishDetach = () => {
+      if (this._backdropElement.parentNode) {
+        this._backdropElement.parentNode.removeChild(this._backdropElement);
+      }
+    };
+    // Set the styling of backdrop including the fadeIn effect
+    registerEvent(this._backdropElement, 'animationEnd', finishDetach);
+    this._backdropElement.classList.remove('fadeIn');
+    this._backdropElement.classList.add('fadeOut');
+    this._backdropElement.style.pointerEvents = 'none';
+    // Run the detaching outside angular to make sure the finishDetach method will be called
+    this._ngZone.runOutsideAngular(() => {
+      setTimeout(finishDetach, 500);
+    });
   }
 
   /**
@@ -236,27 +297,5 @@ export class McsOverlayRef {
         this._backdropElement.classList.add('transparent-backdrop');
         break;
     }
-  }
-
-  /**
-   * Detaches the backdrop of this overlay
-   */
-  private _detachBackdrop(): void {
-    if (isNullOrEmpty(this._backdropElement)) { return; }
-
-    let finishDetach = () => {
-      if (this._backdropElement.parentNode) {
-        this._backdropElement.parentNode.removeChild(this._backdropElement);
-      }
-    };
-    // Set the styling of backdrop including the fadeIn effect
-    registerEvent(this._backdropElement, 'animationEnd', finishDetach);
-    this._backdropElement.classList.remove('fadeIn');
-    this._backdropElement.classList.add('fadeOut');
-    this._backdropElement.style.pointerEvents = 'none';
-    // Run the detaching outside angular to make sure the finishDetach method will be called
-    this._ngZone.runOutsideAngular(() => {
-      setTimeout(finishDetach, 500);
-    });
   }
 }

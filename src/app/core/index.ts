@@ -11,6 +11,7 @@ export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
 export * from './services/mcs-overlay.service';
+export * from './services/mcs-dialog.service';
 export * from './services/mcs-scroll-dispatcher.service';
 export * from './services/mcs-viewport-ruler.service';
 /** Providers */
@@ -58,7 +59,9 @@ export * from './authentication/mcs-authentication.service';
 export * from './authentication/mcs-authentication.identity';
 export * from './authentication/mcs-route-permission.guard';
 /** Factory */
-export * from './factory/mcs-overlay-ref';
-export * from './factory/mcs-overlay-state';
-export * from './factory/mcs-portal-component';
-export * from './factory/mcs-portal-template';
+export * from './factory/dialog/mcs-dialog-ref';
+export * from './factory/dialog/mcs-dialog-config';
+export * from './factory/overlay/mcs-overlay-ref';
+export * from './factory/overlay/mcs-overlay-state';
+export * from './factory/portal/mcs-portal-component';
+export * from './factory/portal/mcs-portal-template';

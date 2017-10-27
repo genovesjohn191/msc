@@ -2,10 +2,11 @@ import {
   Injectable,
   ComponentFactoryResolver,
   ApplicationRef,
-  NgZone
+  NgZone,
+  Injector
 } from '@angular/core';
-import { McsOverlayState } from '../factory/mcs-overlay-state';
-import { McsOverlayRef } from '../factory/mcs-overlay-ref';
+import { McsOverlayState } from '../factory/overlay/mcs-overlay-state';
+import { McsOverlayRef } from '../factory/overlay/mcs-overlay-ref';
 import { isNullOrEmpty } from '../../utilities';
 
 /** Next overlay unique ID. */
@@ -19,10 +20,9 @@ export class McsOverlayService {
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _applicationRef: ApplicationRef,
-    private _ngZone: NgZone
-  ) {
-    // Do something
-  }
+    private _ngZone: NgZone,
+    private _injector: Injector
+  ) { }
 
   /**
    * Create the overlay element and its component relation
@@ -32,16 +32,21 @@ export class McsOverlayService {
     // Create the wrapper element to all the overlay components
     this._createWrapperElement();
 
+    // Create the global wrapper for each item
+    let itemWrapper = this._createWrapperItem(state.hasBackdrop);
+
     // Create 1 overlay element to each request for creation
-    let overlay = this._createOverlayPane();
+    let overlay = this._createOverlayPane(itemWrapper);
 
     // Return the Overlay Reference
     return new McsOverlayRef(
+      itemWrapper,
       overlay,
       state,
       this._componentFactoryResolver,
       this._applicationRef,
-      this._ngZone
+      this._ngZone,
+      this._injector
     );
   }
 
@@ -59,14 +64,28 @@ export class McsOverlayService {
   }
 
   /**
+   * Create the wrapper item for each overlay if the state has backdrop
+   * @param hasbackDrop Backdrop flag
+   */
+  private _createWrapperItem(hasbackDrop: boolean): HTMLElement {
+    if (!hasbackDrop) { return undefined; }
+    let itemContainer = document.createElement('div');
+
+    itemContainer.classList.add('mcs-overlay-item-wrapper');
+    this._containerElement.appendChild(itemContainer);
+    return itemContainer;
+  }
+
+  /**
    * Create the overlay pane element
    */
-  private _createOverlayPane(): HTMLElement {
+  private _createOverlayPane(itemWrapper: HTMLElement): HTMLElement {
     let pane = document.createElement('div');
 
     pane.id = `mcs-overlay-${nextUniqueId++}`;
     pane.classList.add('mcs-overlay-pane');
-    this._containerElement.appendChild(pane);
+    itemWrapper ? itemWrapper.appendChild(pane) :
+      this._containerElement.appendChild(pane);
     return pane;
   }
 }
