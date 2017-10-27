@@ -19,6 +19,7 @@ import { McsApiSuccessResponse } from '../models/response/mcs-api-success-respon
  */
 @Injectable()
 export class McsNotificationJobService {
+  private _connecting: boolean = false;
   private _websocket: WebSocket;
   private _websocketClient: any;
 
@@ -44,18 +45,15 @@ export class McsNotificationJobService {
     this._connectionStatusStream = value;
   }
 
-  private _jobConnectStream: BehaviorSubject<McsApiJobConnection>;
   private _apiSubscription: any;
   private _jobConnection: McsApiJobConnection;
 
   constructor(private _apiService: McsApiService) {
-    this._jobConnectStream = new BehaviorSubject<McsApiJobConnection>(undefined);
     this._notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
     this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
       (McsConnectionStatus.Success);
 
-    // Initialize websocket to connect with the real time update of notifications
-    this._initializeWebsocket();
+    this._getConnectionsDetails();
   }
 
   /**
@@ -70,33 +68,6 @@ export class McsNotificationJobService {
     }
   }
 
-  private _initializeWebsocket() {
-    try {
-      // Listen for job connection to get the identity details
-      this._jobConnectStream.subscribe((jobConnection) => {
-        if (jobConnection) {
-          this._jobConnection = jobConnection;
-
-          // Register all listeners for websocket to determine the connection status
-          this._websocket = new WebSocket(this._jobConnection.host);
-          this._websocket.onopen = this._onOpenConnection.bind(this);
-          this._websocket.onerror = this._onErrorConnection.bind(this);
-          this._websocket.onclose = this._onCloseConnection.bind(this);
-
-          // Connect to websocket
-          this._connectToWebsocket();
-        }
-      });
-
-      // Get Connection details from API
-      this._getConnectionsDetails();
-
-    } catch (error) {
-      // notify all subscribers for the error occured
-      this._connectionStatusStream.next(McsConnectionStatus.Fatal);
-    }
-  }
-
   private _onErrorConnection() {
     this._connectionStatusStream.next(McsConnectionStatus.Failed);
     this._websocket.close();
@@ -104,7 +75,7 @@ export class McsNotificationJobService {
 
   private _onCloseConnection(_event: any) {
     refreshView(() => {
-      this._initializeWebsocket();
+      this._connectToWebsocket();
       this._connectionStatusStream.next(McsConnectionStatus.Retrying);
     }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
   }
@@ -114,19 +85,28 @@ export class McsNotificationJobService {
   }
 
   private _connectToWebsocket() {
+    this._connecting = true;
+
     let webStomp = require('webstomp-client');
+    this._websocket = new WebSocket(this._jobConnection.host);
+    this._websocket.onopen = this._onOpenConnection.bind(this);
+    this._websocket.onerror = this._onErrorConnection.bind(this);
+    this._websocket.onclose = this._onCloseConnection.bind(this);
 
     // Setup websocker client
+    this._websocketClient = null;
     this._websocketClient = webStomp.over(this._websocket, { debug: false });
 
-    // TODO: Test fix for the message broker disconnection, refactor when needed
     this._websocketClient.connect(
       this._getHeaders(),
       this._onConnect.bind(this),
       () => {
-        setTimeout(() => {
-          this._initializeWebsocket();
-        }, 5000);
+        if (!this._connecting) {
+          this._connecting = true;
+          setTimeout(() => {
+            this._connectToWebsocket();
+          }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
+        }
       }
     );
   }
@@ -140,6 +120,7 @@ export class McsNotificationJobService {
   }
 
   private _onConnect(): void {
+    this._connecting = false;
     this._websocketClient.subscribe(this._jobConnection.destinationRoute,
       this._onMessage.bind(this));
   }
@@ -171,7 +152,8 @@ export class McsNotificationJobService {
         return jobConnection;
       })
       .subscribe((details) => {
-        this._jobConnectStream.next(details.content);
+        this._jobConnection = details.content;
+        this._connectToWebsocket();
       });
   }
 
