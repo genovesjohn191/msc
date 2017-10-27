@@ -8,17 +8,11 @@
     padding: $space-xsmall $space-medium;
     text-decoration: none;
 
-    &:hover {
+    &:not([href]):not([tabindex]) {
       text-decoration: none;
-    }
-
-    &[disabled] {
-      cursor: not-allowed;
-    }
-
-    &:hover,
-    &:focus {
-      text-decoration: none;
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 import {
+  OnInit,
   Component,
   Output,
   EventEmitter
@@ -8,6 +9,9 @@ import {
   TicketNewComment,
   TicketFileInfo
 } from '../../models';
+import {
+  McsTextContentProvider
+} from '../../../../core';
 
 @Component({
   selector: 'mcs-ticket-new-comment',
@@ -15,7 +19,9 @@ import {
   styleUrls: ['./ticket-new-comment.component.scss']
 })
 
-export class TicketNewCommentComponent {
+export class TicketNewCommentComponent implements OnInit {
+
+  public textContent: any;
 
   @Output()
   public onCreateComment: EventEmitter<any>;
@@ -36,9 +42,13 @@ export class TicketNewCommentComponent {
     this._comment = value;
   }
 
-  public constructor() {
+  public constructor(private _textContentProvider: McsTextContentProvider) {
     this.onCreateComment = new EventEmitter<any>();
     this.onCancelComment = new EventEmitter<any>();
+  }
+
+  public ngOnInit() {
+    this.textContent = this._textContentProvider.content.tickets.ticket;
   }
 
   /**

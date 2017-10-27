@@ -10,6 +10,8 @@ import {
   TicketActivity,
   TicketActivityType
 } from '../../models';
+import { TicketsService } from '../../tickets.service';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'mcs-ticket-activity',
@@ -20,6 +22,7 @@ import {
 
 export class TicketActivityComponent {
 
+  public downloading: boolean;
   /**
    * Activity of the ticket to be populated on the view
    */
@@ -33,13 +36,32 @@ export class TicketActivityComponent {
       this._changeDetectorRef.markForCheck();
     }
   }
+
+  @Input()
+  public get ticketId(): TicketActivity {
+    return this._ticketId;
+  }
+  public set ticketId(value: TicketActivity) {
+    if (this._ticketId !== value) {
+      this._ticketId = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
+  private _ticketId: any;
   private _activity: TicketActivity;
 
   public get isAttachment(): boolean {
     return this.activity.type === TicketActivityType.Attachment;
   }
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _ticketsService: TicketsService) {
     this._activity = new TicketActivity();
   }
 
@@ -55,5 +77,19 @@ export class TicketActivityComponent {
    */
   public convertDateTimeToString(date: Date): string {
     return convertDateToStandardString(date);
+  }
+
+  /**
+   * Download the file attachment based on the blob
+   * @param attachment Attachment information of the file to download
+   */
+  public downloadAttachment() {
+    this.downloading = true;
+    this._ticketsService.getFileAttachment(this._ticketId, this._activity.id)
+      .subscribe((blobResponse) => {
+        saveAs(blobResponse, this._activity.content);
+        this.downloading = false;
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

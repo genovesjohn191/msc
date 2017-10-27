@@ -221,7 +221,9 @@
       "missingServicesLabel": "No services found",
       "missingAttachmentsLabel": "No attachments found",
       "missingActivitiesLabel": "No activities yet",
-      "backToTickets": "Back To Tickets"
+      "backToTickets": "Back To Tickets",
+      "addActivity": "Add",
+      "cancelActivity": "Cancel"
     },
     "createTicket": {
       "header": "Create New Ticket",
