@@ -39,12 +39,12 @@ $ticket-meta-item-hover-color: $color-grey-06;
   }
 
   .ticket-activities-header {
-    @include display-flex(row);
     align-items: center;
     margin: $space-large 0;
 
     .create-new-comment-wrapper {
       position: relative;
+      text-align:center;
     }
   }
 }

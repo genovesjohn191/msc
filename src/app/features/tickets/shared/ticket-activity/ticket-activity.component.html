@@ -14,7 +14,11 @@
     </div>
 
     <div class="content">
-      <p>{{ activity.content }}</p>
+      <p *ngIf="!isAttachment">{{ activity.content }}</p>
+      <p *ngIf="isAttachment">
+        <mcs-icon [hidden]="!downloading" [key]="spinnerIconKey" size="small"></mcs-icon>
+        <a [hidden]="downloading" (click)="downloadAttachment()">{{ activity.content }}</a>
+      </p>
     </div>
   </div>
 </div>

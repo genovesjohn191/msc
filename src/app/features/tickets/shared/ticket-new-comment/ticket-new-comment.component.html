@@ -13,8 +13,8 @@
 
     <!-- Ticket comment/attachment creation -->
     <div class="ticket-create-wrapper">
-      <mcs-button size="small" (onClick)="cancelComment()">Cancel</mcs-button>
-      <mcs-button size="small" (onClick)="createComment()">Add</mcs-button>
+      <mcs-button size="small" (onClick)="cancelComment()">{{ textContent.cancelActivity }}</mcs-button>
+      <mcs-button size="small" (onClick)="createComment()">{{ textContent.addActivity }}</mcs-button>
     </div>
   </div>
 </div>

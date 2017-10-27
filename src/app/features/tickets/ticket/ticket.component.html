@@ -69,7 +69,7 @@
           <div class="create-new-comment-wrapper">
             <ng-container [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]">
             </ng-container>
-            <mcs-button size="small" (click)="newComment()">New Comment/Attachment</mcs-button>
+            <a (click)="newComment()" [hidden]="showCommentBox">{{ textContent.newActivity }}</a>
           </div>
         </div>
         <ng-container *ngIf="showCommentBox">
@@ -79,7 +79,7 @@
           </mcs-ticket-new-comment>
         </ng-container>
         <span *ngIf="missingActivities" class="missing-data-info">{{ textContent.missingActivitiesLabel }}</span>
-        <mcs-ticket-activity *ngFor="let activity of activities; trackBy: trackByFn"
+        <mcs-ticket-activity [ticketId]="ticket.id" *ngFor="let activity of activities; trackBy: trackByFn"
           [activity]="activity">
         </mcs-ticket-activity>
       </div>

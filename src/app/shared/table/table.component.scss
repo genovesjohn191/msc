@@ -4,7 +4,7 @@
 $table-default-minimum-width: 800px;
 $table-medium-minimum-width: 650px;
 $table-small-minimum-width: 100%;
-$table-cell-side-padding: 22px;
+$table-cell-side-padding: $space-medium;
 
 // Table header
 $table-header-background-color: $color-black;
@@ -16,7 +16,7 @@ $table-header-font-size: $font-size-default;
 // Table rows
 $table-data-even-background-color: $color-grey-07;
 $table-data-font-size: $font-size-default;
-$table-data-cell-padding: $space-xsmall $table-cell-side-padding;
+$table-data-cell-padding: $space-small $table-cell-side-padding;
 $table-data-border-color: $color-grey-05;
 $table-data-hover-background-color: $color-grey-07;
 

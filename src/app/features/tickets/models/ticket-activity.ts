@@ -3,12 +3,14 @@ import { TicketComment } from './response/ticket-comment';
 import { TicketAttachment } from './response/ticket-attachment';
 
 export class TicketActivity {
+  public id: string;
   public header: string;
   public content: string;
   public date: Date;
   public type: TicketActivityType;
 
   public setBasedOnComment(comment: TicketComment): void {
+    this.id = comment.id;
     this.header = comment.createdBy;
     this.content = comment.value;
     this.date = comment.createdOn;
@@ -16,6 +18,7 @@ export class TicketActivity {
   }
 
   public setBasedOnAttachment(attachment: TicketAttachment) {
+    this.id = attachment.id;
     this.header = attachment.createdBy;
     this.content = attachment.fileName;
     this.date = attachment.createdOn;
