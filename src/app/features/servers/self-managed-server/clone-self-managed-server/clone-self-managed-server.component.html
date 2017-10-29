@@ -1,7 +1,6 @@
 <form [hidden]="!visible" [formGroup]="formGroupCloneServer"
   class="clone-self-managed-server-container">
-
-  <div class="server-configuration-details">
+  <div *ngIf="hasServers" class="server-configuration-details">
     <mcs-select formControlName="formControlTargetServer" [placeholder]="targetServerPlaceholder">
       <mcs-select-item [value]="">{{ targetServerPlaceholder }}</mcs-select-item>
       <mcs-select-group header="Servers">
@@ -11,5 +10,9 @@
       </mcs-select-group>
     </mcs-select>
     <mcs-validation-message [control]="formControlTargetServer"></mcs-validation-message>
+  </div>
+  <div *ngIf="!hasServers" class="horizontal-items-spacing-small" display-flex="row" align-items="center">
+    <mcs-icon [key]="warningIconKey"></mcs-icon>
+    <span>{{ noServersTextContent }}</span>
   </div>
 </form>

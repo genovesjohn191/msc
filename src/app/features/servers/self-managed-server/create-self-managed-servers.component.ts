@@ -15,8 +15,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import {
   McsApiJob,
-  McsList,
-  McsListItem,
   CoreDefinition,
   McsTextContentProvider,
   McsComponentService,
@@ -27,7 +25,8 @@ import {
   mergeArrays,
   addOrUpdateArrayRecord,
   refreshView,
-  isNullOrEmpty
+  isNullOrEmpty,
+  replacePlaceholder
 } from '../../../utilities';
 import { ContextualHelpDirective } from '../../../shared';
 import {
@@ -61,7 +60,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   public contextualHelpDirectives;
 
   public vdcValue: any;
-  public vdcList: McsList;
+  public vdcList: any;
 
   public contextualTextContent: any;
   public createServerTextContent: any;
@@ -71,7 +70,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   public isLoading: boolean;
 
   // Others
-  private _obtainDataSubscription: any;
+  public obtainDataSubscription: any;
   private _notificationsSubscription: any;
   private _mainContextInformations: ContextualHelpDirective[];
 
@@ -115,6 +114,10 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
+  public get hasResources(): boolean {
+    return !isNullOrEmpty(this.serverResourceMap.size);
+  }
+
   public get hasNotifications(): boolean {
     return this.notifications && this.notifications.length > 0;
   }
@@ -145,7 +148,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   ) {
     this.notifications = new Array();
     this.newServers = new Array();
-    this.vdcList = new McsList();
+    this.vdcList = new Array();
     this.isLoading = true;
 
     this._mainContextInformations = new Array();
@@ -160,7 +163,7 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     this.contextualTextContent = this.createServerTextContent.contextualHelp;
 
     // Get all the data from api in parallel
-    this._obtainDataSubscription = Observable.forkJoin([
+    this.obtainDataSubscription = Observable.forkJoin([
       this._createSelfManagedServices.getAllServers(),
       this._createSelfManagedServices.getResources(),
       this._createSelfManagedServices.getServersOs()
@@ -191,8 +194,8 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
   }
 
   public ngOnDestroy() {
-    if (this._obtainDataSubscription) {
-      this._obtainDataSubscription.unsubscribe();
+    if (this.obtainDataSubscription) {
+      this.obtainDataSubscription.unsubscribe();
     }
     if (this._notificationsSubscription) {
       this._notificationsSubscription.unsubscribe();
@@ -303,17 +306,21 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
 
     // Populate vdc list dropdown list
     this._serverResourceMap.forEach((value, key) => {
-      this.vdcList.push(this.createServerTextContent.vdcDropdownList.name,
-        new McsListItem(
-          key,
-          this.createServerTextContent.vdcDropdownList.prefix + `${value.name}`
-        ));
+      let prefix = replacePlaceholder(
+        this.createServerTextContent.vdcDropdownList.prefix,
+        'availability_zone',
+        value.availabilityZone
+      );
+
+      this.vdcList.push({
+        value: key,
+        text: `${prefix} ${value.name}`
+      });
     });
 
     // Select first element of the VDC
-    if (this.vdcList) {
-      this.vdcValue = this.vdcList.getGroup(
-        this.vdcList.getGroupNames()[0])[0].key;
+    if (!isNullOrEmpty(this.vdcList)) {
+      this.vdcValue = this.vdcList[0].value;
     }
   }
 

@@ -20,7 +20,7 @@
               mcsPopover trigger="hover" maxWidth="250px"
               padding="narrow" [content]="scalingContent"></mcs-icon>
             <ng-template #scalingContent>
-              <span class="scaling-content-popover">
+              <span class="scaling-content-popover no-wrap">
                 {{ serverManagementTextContent.performanceScale.scaling }}
               </span>
             </ng-template>
@@ -77,8 +77,10 @@
       <ul class="unstyled-list server-interfaces">
         <!-- Network Interface -->
         <li *ngFor="let interface of server.interfaces; let i = index">
-          {{ serverManagementTextContent.networkInformation.interface }} {{ i }} :
-          <span>{{ mergeIpAddresses(interface.ipAddress) }}</span>
+          <span>{{ serverManagementTextContent.networkInformation.interface }} {{ i }}:</span>
+          <span *ngFor="let ip of interface.ipAddress" display-flex="column">
+            <span>{{ ip }}</span>
+          </span>
         </li>
       </ul>
     </div>
@@ -100,32 +102,34 @@
 </div>
 
 <div *ngIf="isServerScale" class="content-responsive server-performance-scale">
-  <h3>Scaling {{ server.managementName }}</h3>
-  <mcs-server-performance-scale [mcsLoader]="resourceSubscription"
-    [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
-    [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
-    (scaleChanged)="onScaleChanged($event)">
+  <div [mcsLoader]="resourceSubscription">
+    <h3>Scaling {{ server.managementName }}</h3>
+    <mcs-server-performance-scale *ngIf="remainingMemory && remainingCpu"
+      [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
+      [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
+      (scaleChanged)="onScaleChanged($event)">
 
-    <!--Performance scale container-->
-    <span slider-details>
-      {{ serverManagementTextContent.performanceScale.sliderGuidance }}
-    </span>
-    <span custom-details>
-      {{ serverManagementTextContent.performanceScale.customGuidance }}
-    </span>
-  </mcs-server-performance-scale>
+      <!--Performance scale container-->
+      <span slider-details>
+        {{ serverManagementTextContent.performanceScale.sliderGuidance }}
+      </span>
+      <span custom-details>
+        {{ serverManagementTextContent.performanceScale.customGuidance }}
+      </span>
+    </mcs-server-performance-scale>
 
-  <div *ngIf="isPoweredOn"
-    display-flex="row" align-items="center" justify-content="center">
-    <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
-    <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
-  </div>
+    <div *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
+      display-flex="row" align-items="center" justify-content="center">
+      <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
+      <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
+    </div>
 
-  <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
-    <a class="text-underline" (click)="cancelScale()">
-      {{ serverManagementTextContent.performanceScale.cancel }}</a>
-    <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" class="scale"
-      [disabled]="!hasUpdate" (click)="onClickScale()">
-        {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
+    <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
+      <a class="text-underline" (click)="cancelScale()">
+        {{ serverManagementTextContent.performanceScale.cancel }}</a>
+      <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" class="scale"
+        [disabled]="!hasUpdate" (click)="onClickScale()">
+          {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
+    </div>
   </div>
 </div>

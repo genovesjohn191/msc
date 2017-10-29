@@ -12,26 +12,24 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <div class="contextual-help-page-wrapper">
-      <div class="page-information-wrapper limited-view">
+      <div class="page-information-wrapper limited-view" [mcsLoader]="obtainDataSubscription">
         <!-- Generic Wizard -->
-        <mcs-wizard (onCancel)="gotoServers()" (onComplete)="onDeployServer()">
+        <mcs-wizard [hidden]="!hasResources" (onCancel)="gotoServers()" (onComplete)="onDeployServer()">
           <!-- Step 1 -->
           <mcs-wizard-step stepTitle="1. Server Details"
             [valid]="isServersValid">
             <section class="server-details">
-              <mcs-dropdown name="dropdownDefault"
-                placeholder="Loading VDC..."
-                [(ngModel)]="vdcValue" [dropdownData]="vdcList"
-                [mcsContextualHelp]="contextualTextContent.intellicentre"></mcs-dropdown>
+              <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC">
+                <mcs-select-group [header]="createServerTextContent.vdcDropdownList.name">
+                  <mcs-select-item *ngFor="let vdc of vdcList" [value]="vdc.value">
+                    {{ vdc.text }}
+                  </mcs-select-item>
+                </mcs-select-group>
+              </mcs-select>
 
-              <div class="new-servers-container" #selfManagedServersElement>
-                <!-- This will dynamically populated during runtime when adding servers -->
-                <div *ngIf="isLoading" class="text-center">
-                  <mcs-icon  [key]="spinnerIconKey" size="xlarge" style="margin: 10px auto;"></mcs-icon>
-                </div>
-              </div>
+              <div class="new-servers-container" #selfManagedServersElement></div>
 
-              <!-- TODO: Templorary disable multiple server deployment for phase 1 -->
+              <!-- TODO: Temporary disable multiple server deployment for phase 1 -->
               <!-- <div class="additional-server-container vspace-small">
                 <div class="add-server clickable-text" (click)="addServer()">
                   <mcs-icon [key]="addIconKey" size="large"></mcs-icon>
@@ -50,6 +48,11 @@
             </section>
           </mcs-wizard-step>
         </mcs-wizard>
+        <!-- Alert for no resource found -->
+        <mcs-alert [hidden]="hasResources" type="failed"
+          [title]="createServerTextContent.noResourceFound.header">
+          <span>{{ createServerTextContent.noResourceFound.content }}</span>
+        </mcs-alert>
       </div>
       <div class="contextual-information-wrapper">
           <mcs-contextual-help

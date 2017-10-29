@@ -5,7 +5,6 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import { CoreDefinition } from './core.definition';
-import { isNullOrEmpty } from '../utilities';
 
 export class CoreValidators {
 
@@ -47,13 +46,9 @@ export class CoreValidators {
    * {'required': true}
    */
   public static required(control: AbstractControl): ValidationErrors | null {
-    if (isNullOrEmpty(control)) {
-      return null;
-    }
-    let isWhitespace = control.value.toString().trim().length === 0;
-    let isValid = !isWhitespace;
-
-    return isValid ? null : { required: true };
+    return Validators.required(control) === null ?
+      control.value.toString().trim().length === 0 ? { 'required': true }
+        : null : Validators.required(control);
   }
 
   /**

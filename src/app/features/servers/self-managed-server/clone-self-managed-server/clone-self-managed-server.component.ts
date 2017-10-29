@@ -14,7 +14,8 @@ import {
 } from '@angular/forms';
 import {
   McsTextContentProvider,
-  CoreValidators
+  CoreValidators,
+  CoreDefinition
 } from '../../../../core';
 import {
   ServerCreateSelfManaged,
@@ -58,10 +59,19 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   public formControlTargetServer: FormControl;
 
   // Others
+  public noServersTextContent: any;
   public contextualTextContent: any;
 
   public get targetServerPlaceholder(): string {
     return TARGET_SERVER_PLACEHOLDER;
+  }
+
+  public get warningIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_WARNING;
+  }
+
+  public get hasServers(): boolean {
+    return !isNullOrEmpty(this.servers);
   }
 
   public constructor(
@@ -72,12 +82,15 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit() {
+    this.noServersTextContent = this._textContentProvider.content
+    .servers.createSelfManagedServer.noServers;
+
     this.contextualTextContent = this._textContentProvider.content
       .servers.createSelfManagedServer.contextualHelp;
 
     this._registerFormGroup();
 
-    if (isNullOrEmpty(this.targetServer)) {
+    if (isNullOrEmpty(this.targetServer) && this.hasServers) {
       this.targetServer = this.servers[0].id;
     }
   }
