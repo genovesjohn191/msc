@@ -88,12 +88,17 @@
       },
       "vdcDropdownList": {
         "name": "Virtual Data Centres",
-        "prefix": "Self Managed VDC - IC1 "
+        "prefix": "Self Managed VDC - {{availability_zone}} "
       },
       "newServer": "New server",
       "copyServer": "Copy a server",
       "cloneServer": "Clone a server",
-      "invalidServerName": "Server name can only contain letters, numbers or hypen"
+      "invalidServerName": "Server name can only contain letters, numbers or hypen",
+      "noResourceFound": {
+        "header": "Unable to Create Server",
+        "content": "No resources found. You can't create a server at this moment. Please try again later"
+      },
+      "noServers": "No servers to clone. Create a new server first."
     },
     "server": {
       "header": "Servers",

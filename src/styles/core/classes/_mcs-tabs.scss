@@ -89,7 +89,7 @@ $table-filter-selector-width: 100px;
 
           li {
             @include display-flex(row);
-            align-items: center;
+            align-items: flex-start;
             @include set-items-interval($space-xsmall, horizontal);
           }
         }

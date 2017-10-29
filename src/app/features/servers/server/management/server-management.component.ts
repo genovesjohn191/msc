@@ -439,6 +439,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
         this.serverScaleJobs = jobs.filter((job) => {
           return job.type === McsJobType.UpdateServer;
         });
+
+        this._getScalingJobStatus();
       });
   }
 

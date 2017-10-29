@@ -157,7 +157,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     this._registerFormGroup();
 
-    if (this.resource) {
+    if (!isNullOrEmpty(this.resource)) {
       this._setVAppItems();
       this._setServerImageItems();
       this._setStorageItems();
@@ -193,7 +193,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
-    if (isNullOrEmpty(this.formControlStorage)) { return; }
+    if (isNullOrEmpty(this.formControlStorage) || isNullOrEmpty(this.resource)) { return; }
 
     if (serverStorage.valid) {
       this.formControlStorage.setValue(serverStorage);
