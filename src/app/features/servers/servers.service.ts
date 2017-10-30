@@ -15,7 +15,8 @@ import {
   McsApiJob,
   McsJobType,
   CoreDefinition,
-  McsDialogService
+  McsDialogService,
+  McsAuthenticationIdentity
 } from '../../core/';
 import {
   reviverParser,
@@ -90,6 +91,7 @@ export class ServersService {
   constructor(
     private _mcsApiService: McsApiService,
     private _dialogService: McsDialogService,
+    private _authIdentity: McsAuthenticationIdentity,
     private _notificationContextService: McsNotificationContextService,
     private _router: Router
   ) {
@@ -526,6 +528,7 @@ export class ServersService {
         this.resetVmPassowrd(server.id,
           {
             serverId: server.id,
+            userId: this._authIdentity.userId,
             commandAction: ServerCommand.ResetVmPassword
           })
           .subscribe(() => {
@@ -567,7 +570,9 @@ export class ServersService {
       if (isNullOrEmpty(updatedJobs)) { return; }
 
       let resettedPasswords = updatedJobs.filter((job) => {
-        return job.type === McsJobType.ResetServerPassword &&
+        return job.clientReferenceObject &&
+          job.clientReferenceObject.userId === this._authIdentity.userId &&
+          job.type === McsJobType.ResetServerPassword &&
           !isNullOrEmpty(job.tasks[0].referenceObject);
       });
       if (!isNullOrEmpty(resettedPasswords)) {
