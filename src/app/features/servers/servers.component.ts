@@ -37,9 +37,6 @@ import {
   getRecordCountLabel
 } from '../../utilities';
 
-// Constant Definition
-const RESET_PASSWORD_DIALOG_SIZE = '400px';
-
 @Component({
   selector: 'mcs-servers',
   templateUrl: './servers.component.html',
@@ -228,7 +225,7 @@ export class ServersComponent
     if (action === ServerCommand.ResetVmPassword) {
       let dialogRef = this._dialogService.open(ResetPasswordDialogComponent, {
         data: server,
-        width: RESET_PASSWORD_DIALOG_SIZE
+        size: 'medium'
       });
       dialogRef.afterClosed().subscribe((dialogResult) => {
         if (dialogResult) {
