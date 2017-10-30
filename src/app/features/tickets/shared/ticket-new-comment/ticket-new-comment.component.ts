@@ -16,7 +16,7 @@ import {
 @Component({
   selector: 'mcs-ticket-new-comment',
   templateUrl: './ticket-new-comment.component.html',
-  styleUrls: ['./ticket-new-comment.component.scss']
+  host: { 'class' : 'block'}
 })
 
 export class TicketNewCommentComponent implements OnInit {

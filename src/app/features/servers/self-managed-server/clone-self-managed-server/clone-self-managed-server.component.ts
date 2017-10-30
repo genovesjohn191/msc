@@ -34,8 +34,7 @@ const TARGET_SERVER_PLACEHOLDER = 'Select Server';
 
 @Component({
   selector: 'mcs-clone-self-managed-server',
-  templateUrl: './clone-self-managed-server.component.html',
-  styleUrls: ['./clone-self-managed-server.component.scss']
+  templateUrl: './clone-self-managed-server.component.html'
 })
 
 export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {

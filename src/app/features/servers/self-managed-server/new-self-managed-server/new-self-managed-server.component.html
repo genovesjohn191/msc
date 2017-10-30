@@ -1,96 +1,91 @@
-<form [hidden]="!visible" [formGroup]="formGroupNewServer"
-  class="new-self-managed-server-container" animate [trigger]="animateTrigger">
+<form [hidden]="!visible" [formGroup]="formGroupNewServer" animate [trigger]="animateTrigger">
 
-  <div class="server-details">
-    <div class="control-group">
-      <mcs-select formControlName="formControlVApp" [placeholder]="vAppPlaceholder">
-        <mcs-select-item [value]="">{{ vAppPlaceholder }}</mcs-select-item>
-        <mcs-select-group header="Virtual Applications">
-          <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
-            {{ vApp.text }}
-          </mcs-select-item>
-        </mcs-select-group>
-      </mcs-select>
-    </div>
-
-    <div class="control-group">
-      <mcs-select formControlName="formControlImage"
-        [placeholder]="serverImagePlaceholder"
-        [mcsContextualHelp]="contextualTextContent.serverTemplate">
-        <mcs-select-item [value]="">{{ serverImagePlaceholder }}</mcs-select-item>
-        <mcs-select-group header="Operating System">
-          <mcs-select-item *ngFor="let platform of serverOsItems">
-            {{ platform.group }}
-            <mcs-select-group sub-group>
-              <mcs-select-item *ngFor="let os of platform.items" [value]="os.value">
-                {{ os.text }}
-              </mcs-select-item>
-            </mcs-select-group>
-          </mcs-select-item>
-        </mcs-select-group>
-
-        <mcs-select-group header="Custom Templates">
-          <mcs-select-item *ngFor="let template of serverTemplateItems" [value]="template.value">
-            {{ template.text }}
-          </mcs-select-item>
-        </mcs-select-group>
-      </mcs-select>
-      <mcs-validation-message [control]="formControlImage"></mcs-validation-message>
-    </div>
+  <div class="field">
+    <mcs-select formControlName="formControlVApp" [placeholder]="vAppPlaceholder">
+      <mcs-select-item [value]="">{{ vAppPlaceholder }}</mcs-select-item>
+      <mcs-select-group header="Virtual Applications">
+        <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
+          {{ vApp.text }}
+        </mcs-select-item>
+      </mcs-select-group>
+    </mcs-select>
   </div>
 
-  <div class="computer-details">
-    <div class="computer-information">
-      <mcs-server-performance-scale
-        [memoryMB]="memoryMB" [cpuCount]="cpuCount"
-        [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpuCount"
-        (scaleChanged)="onScaleChanged($event)">
-        <!--Performance scale contents on the left hand side (title and description)-->
-        <div title>
-          <span class="label">Compute Size: </span>
-        </div>
-      </mcs-server-performance-scale>
-    </div>
+  <div class="field">
+    <mcs-select formControlName="formControlImage"
+      [placeholder]="serverImagePlaceholder"
+      [mcsContextualHelp]="textHelpContent.serverTemplate">
+      <mcs-select-item [value]="">{{ serverImagePlaceholder }}</mcs-select-item>
+      <mcs-select-group header="Operating System">
+        <mcs-select-item *ngFor="let platform of serverOsItems">
+          {{ platform.group }}
+          <mcs-select-group sub-group>
+            <mcs-select-item *ngFor="let os of platform.items" [value]="os.value">
+              {{ os.text }}
+            </mcs-select-item>
+          </mcs-select-group>
+        </mcs-select-item>
+      </mcs-select-group>
 
-    <div class="storage-information" *ngIf="storageItems">
-      <mcs-server-manage-storage
-        [memoryMB]="storageMemoryMB"
-        [availableMemoryMB]="storageAvailableMemoryMB"
-        [minimumMB]="storageMemoryMB"
-        [storageProfileList]="storageItems"
-        [storageSliderValues]="storageSliderValues"
-        (storageChanged)="onStorageChanged($event)">
-        <!--Server manage storage contents on the left hand side (title and description)-->
-        <div title>
-          <span class="label">Storage: </span>
-        </div>
-      </mcs-server-manage-storage>
-    </div>
+      <mcs-select-group header="Custom Templates">
+        <mcs-select-item *ngFor="let template of serverTemplateItems" [value]="template.value">
+          {{ template.text }}
+        </mcs-select-item>
+      </mcs-select-group>
+    </mcs-select>
+    <mcs-validation-message [control]="formControlImage"></mcs-validation-message>
   </div>
 
-  <div class="network-details">
-    <span class="label">Network:</span>
+  <div class="field">
+    <mcs-server-performance-scale
+      [memoryMB]="memoryMB" [cpuCount]="cpuCount"
+      [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpuCount"
+      (scaleChanged)="onScaleChanged($event)">
+      <!--Performance scale contents on the left hand side (title and description)-->
+      <div title>
+        <span class="label no-line-height">{{ textContent.computeSizeLabel }}</span>
+      </div>
+    </mcs-server-performance-scale>
+  </div>
 
-    <div class="control-group">
-      <mcs-select formControlName="formControlNetwork"
-        [placeholder]="networkPlaceholder"
-        [mcsContextualHelp]="contextualTextContent.network">
-        <mcs-select-item [value]="">{{ networkPlaceholder }}</mcs-select-item>
-        <mcs-select-group header="Networks">
-          <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
-            {{ network.text }}
-          </mcs-select-item>
-        </mcs-select-group>
-      </mcs-select>
-      <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
-    </div>
+  <div class="field" *ngIf="storageItems">
+    <mcs-server-manage-storage
+      [memoryMB]="storageMemoryMB"
+      [availableMemoryMB]="storageAvailableMemoryMB"
+      [minimumMB]="storageMemoryMB"
+      [storageProfileList]="storageItems"
+      [storageSliderValues]="storageSliderValues"
+      (storageChanged)="onStorageChanged($event)">
+      <!--Server manage storage contents on the left hand side (title and description)-->
+      <div title>
+        <span class="label no-line-height">{{ textContent.storageLabel }}</span>
+      </div>
+    </mcs-server-manage-storage>
+  </div>
 
+  <div class="field">
+    <span class="label">{{ textContent.networkLabel }}</span>
+    <mcs-select formControlName="formControlNetwork"
+      [placeholder]="networkPlaceholder"
+      [mcsContextualHelp]="textHelpContent.network">
+      <mcs-select-item [value]="">{{ networkPlaceholder }}</mcs-select-item>
+      <mcs-select-group header="Networks">
+        <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
+          {{ network.text }}
+        </mcs-select-item>
+      </mcs-select-group>
+    </mcs-select>
+    <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
+
+  </div>
+
+  <div class="field">
     <mcs-server-ip-address [gateway]="selectedNetwork.gateway"
       [subnetMask]="selectedNetwork.netmask"
       (ipAddressChanged)="onIpAddressChanged($event)">
       <!--Ip address contents on the left hand side (title and description)-->
       <div title>
-        <span class="label">IP Address: </span>
+        <span class="label no-line-height">{{ textContent.ipAddressLabel }}</span>
       </div>
     </mcs-server-ip-address>
   </div>

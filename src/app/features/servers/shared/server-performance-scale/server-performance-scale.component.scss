@@ -8,7 +8,6 @@
   @include display-flex(row);
   @include flex-wrap(wrap);
   @include set-items-interval(10px, vertical);
-  @include font-size(16);
 
   * {
     @include flex(1 1 100%);
@@ -33,10 +32,9 @@
 
   .custom-size-content {
     min-height: 100px;
-    margin: $space-large 0;
 
     .custom-size-inputs {
-      @include set-items-interval($space-large, vertical);
+      @include set-items-interval($space-small, vertical);
 
       li {
         .input-group {

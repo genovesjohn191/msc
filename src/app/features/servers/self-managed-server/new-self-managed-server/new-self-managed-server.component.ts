@@ -50,8 +50,7 @@ const NETWORK_PLACEHOLDER = 'Select Network';
 
 @Component({
   selector: 'mcs-new-self-managed-server',
-  templateUrl: './new-self-managed-server.component.html',
-  styleUrls: ['./new-self-managed-server.component.scss']
+  templateUrl: './new-self-managed-server.component.html'
 })
 
 export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -99,7 +98,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public storageItems: any;
 
   // Others
-  public contextualTextContent: any;
+  public textContent: any;
+  public textHelpContent: any;
   public availableMemoryMB: number;
   public availableCpuCount: number;
   public animateTrigger: string;
@@ -148,8 +148,10 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public ngOnInit() {
-    this.contextualTextContent = this._textContentProvider.content
-      .servers.createSelfManagedServer.contextualHelp;
+    this.textContent = this._textContentProvider.content
+      .servers.createSelfManagedServer;
+    this.textHelpContent = this._textContentProvider.content
+    .servers.createSelfManagedServer.contextualHelp;
 
     this.memoryMB = RAM_MINIMUM_VALUE;
     this.cpuCount = CPU_MINIMUM_VALUE;
