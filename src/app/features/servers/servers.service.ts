@@ -45,8 +45,6 @@ import {
   ServerCatalogItemType
 } from './models';
 import { ResetPasswordFinishedDialogComponent } from './shared';
-// Constant Definition
-const RESET_PASSWORD_FINISHED_DIALOG_SIZE = '400px';
 
 /**
  * Servers Services Class
@@ -582,8 +580,8 @@ export class ServersService {
           // Display dialog
           this._dialogService.open(ResetPasswordFinishedDialogComponent, {
             data: credentialObject,
-            width: RESET_PASSWORD_FINISHED_DIALOG_SIZE,
-            id: credentialObject.server
+            size: 'medium',
+            disableClose: true
           });
         });
       }

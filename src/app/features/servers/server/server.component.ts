@@ -35,7 +35,6 @@ import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
 
 // Constant Definition
-const RESET_PASSWORD_DIALOG_SIZE = '400px';
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 @Component({
@@ -136,7 +135,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     if (action === ServerCommand.ResetVmPassword) {
       let dialogRef = this._dialogService.open(ResetPasswordDialogComponent, {
         data: server,
-        width: RESET_PASSWORD_DIALOG_SIZE
+        size: 'medium'
       });
       dialogRef.afterClosed().subscribe((dialogResult) => {
         if (dialogResult) {

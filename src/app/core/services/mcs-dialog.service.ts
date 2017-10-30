@@ -53,6 +53,12 @@ export class McsDialogService {
     config: McsDialogConfig = new McsDialogConfig()
   ): McsDialogRef<T> {
 
+    // Check weather the dialog is opened or not
+    let dialogExist = this._openDialogs.find((dialog) => {
+      return dialog.id === config.id;
+    });
+    if (dialogExist) { return undefined; }
+
     config.hasBackdrop = isNullOrEmpty(config.hasBackdrop) ? true : config.hasBackdrop;
     config.backdropColor = isNullOrEmpty(config.backdropColor) ? 'dark' : config.backdropColor;
 
@@ -132,12 +138,6 @@ export class McsDialogService {
     config: McsDialogConfig
   ): McsDialogRef<T> {
 
-    // Check weather the dialog is opened or not
-    let dialogExist = this._openDialogs.find((dialog) => {
-      return dialog.id === config.id;
-    });
-    if (dialogExist) { return undefined; }
-
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
     let dialogRef = new McsDialogRef<T>(overlayRef, dialogContainer, config.id);
@@ -145,7 +145,9 @@ export class McsDialogService {
     // Close the dialog when the backdrop is click or outside the dialog component
     if (config.hasBackdrop) {
       overlayRef.backdropClickStream.subscribe(() => {
-        dialogRef.close();
+        if (!config.disableClose) {
+          dialogRef.close();
+        }
       });
     }
 
@@ -161,7 +163,7 @@ export class McsDialogService {
     }
 
     // Do the update position here
-    dialogRef.updateSize(config.width, config.height);
+    dialogRef.updateSize(config.size, config.width, config.height);
     return dialogRef;
   }
 
@@ -193,7 +195,9 @@ export class McsDialogService {
 
     if (event.keyCode === Key.Escape) {
       let topDialog = this._openDialogs[this._openDialogs.length - 1];
-      topDialog.close();
+      if (!topDialog.disableClose) {
+        topDialog.close();
+      }
     }
   }
 

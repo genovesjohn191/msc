@@ -2,6 +2,7 @@ import {
   Observable,
   Subject
 } from 'rxjs/Rx';
+import { CoreDefinition } from '../../core.definition';
 import { McsOverlayRef } from '../overlay/mcs-overlay-ref';
 import { McsDialogContainerComponent } from './mcs-dialog-container.component';
 
@@ -16,6 +17,12 @@ export class McsDialogRef<T> {
    * Instance of the component attached in the dialog
    */
   public componentInstance: T;
+
+  /**
+   * Determine weather the dialog should disable the close
+   * when esc key is pressed and clickoutside
+   */
+  public disableClose = this._dialogContainer.dialogConfig.disableClose;
 
   // Other variables
   private _afterClosed: Subject<any> = new Subject();
@@ -68,7 +75,24 @@ export class McsDialogRef<T> {
    * @param width Width of the container
    * @param height Height of the container
    */
-  public updateSize(width: string = 'auto', height: string = 'auto'): void {
+  public updateSize(size?: any, width: string = 'auto', height: string = 'auto'): void {
+    // Set the actual width of the dialog when the size is specified
+    switch (size) {
+      case 'small':
+        width = CoreDefinition.DIALOG_SIZE_SMALL;
+        break;
+      case 'medium':
+        width = CoreDefinition.DIALOG_SIZE_MEDIUM;
+        break;
+      case 'large':
+        width = CoreDefinition.DIALOG_SIZE_LARGE;
+        break;
+      case 'xlarge':
+        width = CoreDefinition.DIALOG_SIZE_XLARGE;
+        break;
+      default:
+        break;
+    }
     this._dialogContainer.updateSize(width, height);
   }
 }

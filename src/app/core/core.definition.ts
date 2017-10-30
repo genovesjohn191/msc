@@ -165,4 +165,10 @@ export class CoreDefinition {
   /** Console Size */
   public static CONSOLE_DEFAULT_WIDTH = 800;
   public static CONSOLE_DEFAULT_HEIGHT = 600;
+
+  /** Dialog Size */
+  public static DIALOG_SIZE_SMALL = '300px';
+  public static DIALOG_SIZE_MEDIUM = '400px';
+  public static DIALOG_SIZE_LARGE = '500px';
+  public static DIALOG_SIZE_XLARGE = '600px';
 }
