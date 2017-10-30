@@ -1,0 +1,7 @@
+<div class="dialog-title">
+  <ng-content></ng-content>
+</div>
+<div class="right-align">
+  <mcs-icon [key]="closeIconKey" size="small" cursor="pointer"
+    (click)="dialogRef?.close(dialogResult)"></mcs-icon>
+</div>

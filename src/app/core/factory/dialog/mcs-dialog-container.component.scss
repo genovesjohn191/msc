@@ -1,0 +1,27 @@
+@import "../../../../styles/shared/base";
+
+$dialog-container-border-radius: 2px;
+$dialog-container-max-width: 80vw;
+$dialog-container-max-height: 80vh;
+$dialog-container-background-color: $color-white;
+$dialog-container-color: rgba($color-black, 0.87);
+
+.dialog-container-wrapper {
+  display: block;
+  border-radius: $dialog-container-border-radius;
+  box-sizing: border-box;
+  overflow: hidden;
+  max-height: $dialog-container-max-height;
+  max-width: $dialog-container-max-width;
+  outline: 0;
+  width: 100%;
+  height: 100%;
+  background: $dialog-container-background-color;
+  color: $dialog-container-color;
+
+  @include box-shadow((
+    0 11px 15px -7px rgba(0,0,0,.2),
+    0 24px 38px 3px rgba(0,0,0,.14),
+    0 9px 46px 8px rgba(0,0,0,.12)
+  ));
+}

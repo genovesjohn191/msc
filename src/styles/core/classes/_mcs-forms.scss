@@ -3,6 +3,6 @@
 
   .label {
     font-family: $base-font-bold;
-    @include font-size($h4-default-font-size);
+    @include font-size($font-size-large);
   }
 }

@@ -52,6 +52,9 @@ $link-default-line-height: $line-height-default;
 $link-small-font-size: 12;
 $link-small-line-height: 14;
 
+$strong-font: $base-font-bold;
+$strong-font-weight: normal;
+
 $icon-large-font-size: 20;
 $icon-medium-font-size: 15;
 $icon-small-font-size: $font-size-default;
@@ -137,3 +140,7 @@ $button-font-size: $font-size-large;
 
 // Opacity
 $disabled-opacity: 0.65;
+
+// Border colors
+$border-color-light: $color-grey-04;
+$border-color-dark: $color-grey-01;

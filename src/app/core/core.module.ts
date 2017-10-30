@@ -10,12 +10,12 @@ import { CoreConfig } from './core.config';
 /** Services/Providers */
 import { coreProviders } from './core.constants';
 /** Dialog */
-import { McsDialogComponent } from './factory/dialog/mcs-dialog.component';
+import { McsDialogContainerComponent } from './factory/dialog/mcs-dialog-container.component';
 import { McsDialogRefDirective } from './factory/dialog/mcs-dialog-ref.directive';
 
 @NgModule({
   declarations: [
-    McsDialogComponent,
+    McsDialogContainerComponent,
     McsDialogRefDirective
   ],
   providers: [
@@ -23,7 +23,7 @@ import { McsDialogRefDirective } from './factory/dialog/mcs-dialog-ref.directive
   ],
   imports: [RouterModule],
   exports: [RouterModule],
-  entryComponents: [McsDialogComponent]
+  entryComponents: [McsDialogContainerComponent]
 })
 
 export class CoreModule {

@@ -15,7 +15,7 @@ import { McsOverlayService } from './mcs-overlay.service';
 import { McsComponentType } from '../interfaces/mcs-component-type.interface';
 import { McsDialogRef } from '../factory/dialog/mcs-dialog-ref';
 import { McsDialogConfig } from '../factory/dialog/mcs-dialog-config';
-import { McsDialogComponent } from '../factory/dialog/mcs-dialog.component';
+import { McsDialogContainerComponent } from '../factory/dialog/mcs-dialog-container.component';
 import {
   isNullOrEmpty,
   registerEvent,
@@ -25,7 +25,7 @@ import { Key } from '../../core';
 
 // Injection token definition list for dialog
 export const MCS_DIALOG_DATA = new InjectionToken<any>('McsDialogData');
-export const MCS_DIALOG_COMPONENT = new InjectionToken<any>('McsDialogComponent');
+export const MCS_DIALOG_CONTAINER = new InjectionToken<any>('McsDialogContainerComponent');
 
 @Injectable()
 export class McsDialogService {
@@ -104,10 +104,13 @@ export class McsDialogService {
   private _attachDialogContainer(
     overlay: McsOverlayRef,
     config: McsDialogConfig
-  ): McsDialogComponent {
+  ): McsDialogContainerComponent {
 
-    let containerPortal = new McsPortalComponent(McsDialogComponent, config.viewContainerRef);
-    let containerRef: ComponentRef<McsDialogComponent> = overlay.attachComponent(containerPortal);
+    let containerPortal = new McsPortalComponent(
+      McsDialogContainerComponent, config.viewContainerRef
+    );
+    let containerRef: ComponentRef<McsDialogContainerComponent> =
+      overlay.attachComponent(containerPortal);
     containerRef.instance.dialogConfig = config;
 
     return containerRef.instance;
@@ -115,6 +118,8 @@ export class McsDialogService {
 
   /**
    * Attaches the dialog content that might be template or component
+   *
+   * `@Note:` This will return undefined when the dialog is already displayed
    * @param portal Portal type to be created
    * @param dialogContainer Dialog container/component where the content will be attached
    * @param overlayRef Overlay reference that was created previously
@@ -122,10 +127,16 @@ export class McsDialogService {
    */
   private _attachDialogContent<T>(
     portal: McsComponentType<T> | TemplateRef<T>,
-    dialogContainer: McsDialogComponent,
+    dialogContainer: McsDialogContainerComponent,
     overlayRef: McsOverlayRef,
     config: McsDialogConfig
   ): McsDialogRef<T> {
+
+    // Check weather the dialog is opened or not
+    let dialogExist = this._openDialogs.find((dialog) => {
+      return dialog.id === config.id;
+    });
+    if (dialogExist) { return undefined; }
 
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
@@ -163,12 +174,12 @@ export class McsDialogService {
   private _createInjector<T>(
     config: McsDialogConfig,
     dialogRef: McsDialogRef<T>,
-    dialogContainer: McsDialogComponent
+    dialogContainer: McsDialogContainerComponent
   ): Injector {
 
     return ReflectiveInjector.resolveAndCreate([
       { provide: McsDialogRef, useValue: dialogRef },
-      { provide: MCS_DIALOG_COMPONENT, useValue: dialogContainer },
+      { provide: MCS_DIALOG_CONTAINER, useValue: dialogContainer },
       { provide: MCS_DIALOG_DATA, useValue: config.data }
     ]);
   }

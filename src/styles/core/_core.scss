@@ -81,6 +81,11 @@ html {
       }
     }
 
+    strong, b {
+      font-family: $strong-font;
+      font-weight: $strong-font-weight;
+    }
+
     $link-hover-color: $color-primary-01;
     a {
       font-family: $link-font;
