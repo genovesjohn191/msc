@@ -1,6 +1,5 @@
-<form [hidden]="!visible" [formGroup]="formGroupCloneServer"
-  class="clone-self-managed-server-container">
-  <div *ngIf="hasServers" class="server-configuration-details">
+<form [hidden]="!visible" [formGroup]="formGroupCloneServer">
+  <div *ngIf="hasServers">
     <mcs-select formControlName="formControlTargetServer" [placeholder]="targetServerPlaceholder">
       <mcs-select-item [value]="">{{ targetServerPlaceholder }}</mcs-select-item>
       <mcs-select-group header="Servers">

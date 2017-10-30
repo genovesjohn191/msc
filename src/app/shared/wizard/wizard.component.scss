@@ -10,7 +10,7 @@
 }
 
 .mcs-tabs {
-  @include set-items-interval($space-xxlarge);
+  @include set-items-interval($space-medium);
 
   .nav-item {
     .nav-link {
@@ -29,14 +29,6 @@
   .tab-footer {
     @include display-flex(row);
     align-items: center;
-
-    a {
-      align-self: flex-end;
-      margin-right: auto;
-    }
-
-    mcs-button {
-      margin-left: auto;
-    }
+    justify-content: space-between;
   }
 }

@@ -46,8 +46,7 @@ const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
 
 @Component({
   selector: 'mcs-copy-self-managed-server',
-  templateUrl: './copy-self-managed-server.component.html',
-  styleUrls: ['./copy-self-managed-server.component.scss']
+  templateUrl: './copy-self-managed-server.component.html'
 })
 
 export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {

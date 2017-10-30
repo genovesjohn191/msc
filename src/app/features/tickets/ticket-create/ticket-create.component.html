@@ -89,16 +89,19 @@
               [mcsContextualHelp]="contextualContent.attachments">
             </mcs-ticket-attachment>
           </div>
-        </form>
 
-        <!-- Ticket Action -->
-        <div class="field">
-          <mcs-button icon="arrow" (onClick)="onLogTicket()" size="small"
-            class="right-align"
-            [mcsLoader]="createTicketSubscription">
-            {{ textContent.newTicket }}
-          </mcs-button>
-        </div>
+          <!-- Ticket Action -->
+          <div class="basic-action-bar">
+            <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
+
+            <mcs-button
+              icon="arrow"
+              (onClick)="onLogTicket()"
+              [mcsLoader]="createTicketSubscription">
+              {{ textContent.newTicket }}
+            </mcs-button>
+          </div>
+        </form>
       </div>
 
       <!-- Create ticket contextual help -->

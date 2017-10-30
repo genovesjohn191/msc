@@ -1,8 +1,25 @@
-.field {
-  margin-bottom: $space-large;
+$label-spacer: 40;
 
-  .label {
-    font-family: $base-font-bold;
-    @include font-size($font-size-large);
+.basic-form, form {
+  .field {
+    margin-bottom: $space-medium;
+
+    span.label {
+      font-family: $base-font-bold;
+      @include font-size($font-size-large, 45);
+
+      &.no-line-height {
+        line-height: 0;
+      }
+    }
+  }
+
+  .basic-action-bar {
+    @include display-flex(row);
+    align-items: center;
+    margin-top: $space-medium;
+    justify-content: space-between;
   }
 }
+
+

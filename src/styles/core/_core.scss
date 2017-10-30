@@ -153,7 +153,7 @@ html {
 
     button, button.btn {
       font-family: $button-font;
-      font-size: $button-font-size;
+      @include font-size($button-font-size);
     }
 
     header {

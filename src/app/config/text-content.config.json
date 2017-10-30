@@ -78,6 +78,10 @@
     "createSelfManagedServer": {
       "header": "Create a New Server",
       "backToServers": "Back To Servers",
+      "computeSizeLabel": "Compute Size",
+      "storageLabel": "Storage",
+      "networkLabel": "Network",
+      "ipAddressLabel": "IP Address",
       "contextualHelp": {
         "enterServerName": "A friendly Server name.",
         "intellicentre": "Virtual Data Centre to deploy this Server in.",
@@ -257,6 +261,7 @@
       "attachments": "Attachments",
       "backToTickets": "Back To Tickets",
       "newTicket": "Log Ticket",
+      "cancelActivity": "Cancel",
       "contextualHelp": {
         "type": "Select the ticket type",
         "headline": "A short title that describes this ticket.",
