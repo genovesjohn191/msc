@@ -8,7 +8,9 @@ import {
   AfterContentInit,
   ViewEncapsulation,
   ElementRef,
-  Renderer2
+  Renderer2,
+  ViewContainerRef,
+  TemplateRef
 } from '@angular/core';
 import { CoreDefinition } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
@@ -42,20 +44,27 @@ export class PageComponent implements AfterContentInit {
   @ViewChild('pageLeftElement')
   public pageLeftElement: ElementRef;
 
+  @ViewChild('headerContainer', { read: ViewContainerRef })
+  public headerContainer: ViewContainerRef;
+
+  @ViewChild('headerText')
+  public headerText: ElementRef;
+
   /**
    * Page Header
    */
   @Input()
-  public get header(): string {
+  public get header(): string | TemplateRef<any> {
     return this._header;
   }
-  public set header(value: string) {
+  public set header(value: string | TemplateRef<any>) {
     if (this._header !== value) {
       this._header = value;
+      this._createHeaderElement();
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _header: string;
+  private _header: string | TemplateRef<any>;
 
   /**
    * Determine weather the left panel is collapsed
@@ -170,5 +179,21 @@ export class PageComponent implements AfterContentInit {
       this._pageService.leftPanelIsVisible = true;
     }
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Create Header Element based on header type inputted
+   */
+  private _createHeaderElement(): void {
+    if (!isNullOrEmpty(this.headerContainer)) {
+      if (this.header instanceof TemplateRef) {
+        this.headerContainer.clear();
+        this.headerContainer.createEmbeddedView(this.header);
+        this.headerText.nativeElement.remove();
+      } else {
+        let element: HTMLElement = this.headerText.nativeElement;
+        element.innerText = this.header;
+      }
+    }
   }
 }

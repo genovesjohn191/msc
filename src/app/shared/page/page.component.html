@@ -18,7 +18,10 @@
 <!-- Top and Content Panel Wrapper -->
 <div display-flex="column" flex="auto" class="page-right-wrapper">
   <div display-flex flex="none" class="page-top-wrapper">
-    <h3 class="page-header">{{ header }}</h3>
+    <div class="page-header">
+      <ng-container #headerContainer></ng-container>
+      <h3 class="reset-header" #headerText></h3>
+    </div>
     <ng-container mcsTopPanelPlaceholder></ng-container>
   </div>
   <ng-container mcsContentPanelPlaceholder></ng-container>
