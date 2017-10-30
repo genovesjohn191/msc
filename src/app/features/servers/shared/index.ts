@@ -10,3 +10,6 @@ export * from './server-ip-address/server-ip-address.component';
 export * from './provisioning-notifications/provisioning-notifications.component';
 /** Interfaces */
 export * from './mcs-storage.interface';
+/** Server Dialogs */
+export * from './server-dialogs/reset-password/reset-password.dialog';
+export * from './server-dialogs/reset-password-finished/reset-password-finished.dialog';

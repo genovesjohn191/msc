@@ -1,0 +1,44 @@
+@import "../../../styles/shared/base";
+
+$dialog-header-padding: $space-small $space-large;
+$dialog-actions-padding: $space-small $space-large;
+$dialog-content-padding: $space-large;
+$dialog-border-color: $border-color-light;
+
+.dialog-wrapper {
+  @include display-flex(column);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dialog-header-wrapper {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  align-items: center;
+  padding: $dialog-header-padding;
+  border-bottom: 1px solid $dialog-border-color;
+
+  .dialog-title {
+    h3 {
+      margin: 0;
+    }
+  }
+}
+
+.dialog-content-wrapper {
+  @include flex(1 1 auto);
+  @include display-flex(column);
+  padding: $dialog-content-padding;
+  overflow: auto;
+}
+
+.dialog-actions-wrapper {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  @include set-items-interval($space-xlarge, horizontal);
+  align-items: center;
+  justify-content: flex-end;
+  padding: $dialog-actions-padding;
+  border-top: 1px solid $dialog-border-color;
+}

@@ -7,7 +7,9 @@ import {
   ServerPerformanceScaleComponent,
   ServerManageStorageComponent,
   ServerIpAddressComponent,
-  ProvisioningNotificationsComponent
+  ProvisioningNotificationsComponent,
+  ResetPasswordDialogComponent,
+  ResetPasswordFinishedDialogComponent
 } from './shared';
 /** Server */
 import {
@@ -37,6 +39,8 @@ import { SharedModule } from '../../shared';
 
 @NgModule({
   entryComponents: [
+    ResetPasswordDialogComponent,
+    ResetPasswordFinishedDialogComponent,
     CreateSelfManagedServerComponent
   ],
   declarations: [
@@ -57,7 +61,10 @@ import { SharedModule } from '../../shared';
     CloneSelfManagedServerComponent,
     ProvisioningNotificationsComponent,
     VdcComponent,
-    VdcOverviewComponent
+    VdcOverviewComponent,
+
+    ResetPasswordDialogComponent,
+    ResetPasswordFinishedDialogComponent
   ],
   imports: [
     SharedModule

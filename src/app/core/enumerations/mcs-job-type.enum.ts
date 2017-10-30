@@ -15,5 +15,8 @@ export enum McsJobType {
   // Server Disk Management
   CreateServerDisk = 100151,
   UpdateServerDisk = 100152,
-  DeleteServerDisk = 100153
+  DeleteServerDisk = 100153,
+
+  // Server Password
+  ResetServerPassword = 100201
 }

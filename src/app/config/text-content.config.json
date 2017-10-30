@@ -34,6 +34,7 @@
     "scale": "Scale",
     "clone": "Clone",
     "vcloud": "View in vCloud",
+    "resetVmPassword": "Reset VM Password",
     "filterColumn": "Filter Column",
     "tableSearch": "Table Search",
     "dataSingular": "Server",
@@ -200,6 +201,22 @@
         "custom": "Enter a custom IP Address.",
         "default": "Select from default",
         "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})"
+      },
+      "resetPasswordDialog": {
+        "title": "Reset Server Password",
+        "poweredOnInfo": "Resetting the server password requires a restart of your server. Are you sure you want to reset the password and restart server <strong>{{server_name}}</strong> now?",
+        "poweredOffInfo": "Are you sure you want to reset the password for <strong>{{server_name}}</strong>?",
+        "cancel": "Cancel",
+        "poweredOnReset": "Reset Password and Restart",
+        "poweredOffReset": "Reset Password"
+      },
+      "resetPasswordFinishedDialog": {
+        "title": "Your Server Password",
+        "information": "We've reset the password for server <strong>{{server_name}}</strong>.",
+        "warning": "We won't show you this password again so we've emailed it to you for your reference.",
+        "close": "Close",
+        "username": "Username:",
+        "password": "Password:"
       }
     }
   },

@@ -17,6 +17,8 @@ import {
   ServerCommand,
   ServerServiceType
 } from './models';
+/** Shared */
+import { ResetPasswordDialogComponent } from './shared';
 /** Core */
 import {
   McsTextContentProvider,
@@ -26,13 +28,17 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsSelection,
-  McsTableListingBase
+  McsTableListingBase,
+  McsDialogService
 } from '../../core';
 import {
   isNullOrEmpty,
   refreshView,
   getRecordCountLabel
 } from '../../utilities';
+
+// Constant Definition
+const RESET_PASSWORD_DIALOG_SIZE = '400px';
 
 @Component({
   selector: 'mcs-servers',
@@ -101,6 +107,7 @@ export class ServersComponent
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _dialogService: McsDialogService,
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _router: Router
@@ -116,7 +123,8 @@ export class ServersComponent
       ServerCommand.Start,
       ServerCommand.Stop,
       ServerCommand.Restart,
-      ServerCommand.ViewVCloud
+      ServerCommand.ViewVCloud,
+      ServerCommand.ResetVmPassword
     ];
   }
 
@@ -217,7 +225,19 @@ export class ServersComponent
    * @param action Action to be execute
    */
   public executeServerCommand(server: Server, action: ServerCommand) {
-    this._serversService.executeServerCommand(server, action);
+    if (action === ServerCommand.ResetVmPassword) {
+      let dialogRef = this._dialogService.open(ResetPasswordDialogComponent, {
+        data: server,
+        width: RESET_PASSWORD_DIALOG_SIZE
+      });
+      dialogRef.afterClosed().subscribe((dialogResult) => {
+        if (dialogResult) {
+          this._serversService.executeServerCommand(server, action);
+        }
+      });
+    } else {
+      this._serversService.executeServerCommand(server, action);
+    }
   }
 
   /**
@@ -356,6 +376,9 @@ export class ServersComponent
       });
   }
 
+  /**
+   * Listener to selection mode change in all servers
+   */
   private _listenToSelectionModeChange(): void {
     this._selectionModeSubscription = this.browserService.deviceTypeStream
       .subscribe((deviceType) => {

@@ -14,7 +14,8 @@ import {
   McsNotificationContextService,
   McsApiJob,
   McsJobType,
-  CoreDefinition
+  CoreDefinition,
+  McsDialogService
 } from '../../core/';
 import {
   reviverParser,
@@ -42,6 +43,9 @@ import {
   ServerCatalogType,
   ServerCatalogItemType
 } from './models';
+import { ResetPasswordFinishedDialogComponent } from './shared';
+// Constant Definition
+const RESET_PASSWORD_FINISHED_DIALOG_SIZE = '400px';
 
 /**
  * Servers Services Class
@@ -72,13 +76,27 @@ export class ServersService {
     this._activeServersStream = value;
   }
 
+  /**
+   * Subscribe to get notify when job is ended or ongoing
+   */
+  private _jobsStream: BehaviorSubject<McsApiJob[]>;
+  public get jobsStream(): BehaviorSubject<McsApiJob[]> {
+    return this._jobsStream;
+  }
+  public set jobsStream(value: BehaviorSubject<McsApiJob[]>) {
+    this._jobsStream = value;
+  }
+
   constructor(
     private _mcsApiService: McsApiService,
+    private _dialogService: McsDialogService,
     private _notificationContextService: McsNotificationContextService,
     private _router: Router
   ) {
     this._activeServers = new Array();
+    this._jobsStream = new BehaviorSubject(undefined);
     this._activeServersStream = new BehaviorSubject(undefined);
+    this._listenToResetPassword();
     this._listenToNotificationUpdate();
   }
 
@@ -148,6 +166,30 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${id}/command`;
     mcsApiRequestParameter.recordData = JSON.stringify({
       command: getEnumString(ServerCommand, action),
+      clientReferenceObject: referenceObject
+    });
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Post server reset vm password
+   * @param id Server identification
+   * @param referenceObject Reference object to obtain during subscribe
+   */
+  public resetVmPassowrd(id: any, referenceObject: any):
+    Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/password/reset`;
+    mcsApiRequestParameter.recordData = JSON.stringify({
       clientReferenceObject: referenceObject
     });
 
@@ -377,9 +419,10 @@ export class ServersService {
     switch (activeServer.notificationStatus) {
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
         serverPowerstate =
-        activeServer.commandAction === ServerCommand.Start
-        || activeServer.commandAction === ServerCommand.Restart ?
-          ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
+          activeServer.commandAction === ServerCommand.Start ||
+            activeServer.commandAction === ServerCommand.Restart ||
+            activeServer.commandAction === ServerCommand.ResetVmPassword ?
+            ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
         break;
 
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
@@ -479,15 +522,24 @@ export class ServersService {
         );
         break;
 
+      case ServerCommand.ResetVmPassword:
+        this.resetVmPassowrd(server.id,
+          {
+            serverId: server.id,
+            commandAction: ServerCommand.ResetVmPassword
+          })
+          .subscribe(() => {
+            // Subscribe to execute the reset vm password
+          });
+        break;
+
       default:
-        this.postServerCommand(
-        server.id,
-        action,
-        {
-          serverId: server.id,
-          powerState: server.powerState,
-          commandAction: action
-        } as ServerClientObject)
+        this.postServerCommand(server.id, action,
+          {
+            serverId: server.id,
+            powerState: server.powerState,
+            commandAction: action
+          } as ServerClientObject)
           .subscribe(() => {
             // Subscribe to execute the command post
           });
@@ -496,17 +548,46 @@ export class ServersService {
   }
 
   public computeAvailableMemoryMB(resource: ServerResource): number {
-    return !isNullOrEmpty(resource) ? resource.memoryLimitMB - resource.memoryUsedMB : 0 ;
+    return !isNullOrEmpty(resource) ? resource.memoryLimitMB - resource.memoryUsedMB : 0;
   }
 
   public computeAvailableCpu(resource: ServerResource): number {
-    return !isNullOrEmpty(resource) ? resource.cpuLimit - resource.cpuUsed : 0 ;
+    return !isNullOrEmpty(resource) ? resource.cpuLimit - resource.cpuUsed : 0;
   }
 
   public computeAvailableStorageMB(storage: ServerResourceStorage): number {
-    return !isNullOrEmpty(storage) ? storage.limitMB - storage.usedMB : 0 ;
+    return !isNullOrEmpty(storage) ? storage.limitMB - storage.usedMB : 0;
   }
 
+  /**
+   * Listener to all servers that reset their password
+   */
+  private _listenToResetPassword(): void {
+    this.jobsStream.subscribe((updatedJobs) => {
+      if (isNullOrEmpty(updatedJobs)) { return; }
+
+      let resettedPasswords = updatedJobs.filter((job) => {
+        return job.type === McsJobType.ResetServerPassword &&
+          !isNullOrEmpty(job.tasks[0].referenceObject);
+      });
+      if (!isNullOrEmpty(resettedPasswords)) {
+        resettedPasswords.forEach((resettedPassword) => {
+          let credentialObject = resettedPassword.tasks[0].referenceObject.credential;
+
+          // Display dialog
+          this._dialogService.open(ResetPasswordFinishedDialogComponent, {
+            data: credentialObject,
+            width: RESET_PASSWORD_FINISHED_DIALOG_SIZE,
+            id: credentialObject.server
+          });
+        });
+      }
+    });
+  }
+
+  /**
+   * Listen to notifications update in the job context
+   */
   private _listenToNotificationUpdate(): void {
     // listener for the notification updates
     this._notificationContextService.notificationsStream
@@ -515,7 +596,8 @@ export class ServersService {
 
         // Filter only those who have client reference object on notification jobs
         updatedNotifications.forEach((notification) => {
-          if (notification.type === McsJobType.ChangeServerPowerState
+          if ((notification.type === McsJobType.ChangeServerPowerState ||
+            notification.type === McsJobType.ResetServerPassword)
             && notification.clientReferenceObject) {
 
             activeServers.push({
@@ -532,9 +614,14 @@ export class ServersService {
         // Set active servers to property
         this._activeServers = activeServers;
         this._activeServersStream.next(activeServers);
+        this._jobsStream.next(updatedNotifications);
       });
   }
 
+  /**
+   * Server error obtainment in API Handler
+   * @param error Error content from API
+   */
   private _handleServerError(error: Response | any) {
     let mcsApiErrorResponse: McsApiErrorResponse;
 
@@ -545,10 +632,14 @@ export class ServersService {
     } else {
       mcsApiErrorResponse = error;
     }
-
     return Observable.throw(mcsApiErrorResponse);
   }
 
+  /**
+   * Property conversion reviver in JSON format
+   * @param key Key of the object
+   * @param value Value of the object
+   */
   private _convertProperty(key, value): any {
 
     switch (key) {
@@ -561,8 +652,8 @@ export class ServersService {
         break;
 
       case 'imageType':
-       value = ServerImageType[value];
-       break;
+        value = ServerImageType[value];
+        break;
 
       case 'type':
         value = ServerCatalogType[value];

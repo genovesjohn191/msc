@@ -18,11 +18,13 @@ import {
   ServerCommand,
   ServerServiceType
 } from '../models';
+import { ResetPasswordDialogComponent } from '../shared';
 import {
   CoreDefinition,
   McsTextContentProvider,
   McsListPanelItem,
-  McsSearch
+  McsSearch,
+  McsDialogService
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -32,6 +34,8 @@ import { ServersService } from '../servers.service';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
 
+// Constant Definition
+const RESET_PASSWORD_DIALOG_SIZE = '400px';
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 @Component({
@@ -52,6 +56,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   public serverCommandList: ServerCommand[];
 
   private _serverId: any;
+  private _activeServerSubscription: any;
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
@@ -73,6 +78,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
+    private _dialogService: McsDialogService,
     private _serversService: ServersService,
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider,
@@ -93,19 +99,24 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
       ServerCommand.Restart,
       ServerCommand.Scale,
       ServerCommand.Clone,
-      ServerCommand.ViewVCloud
+      ServerCommand.ViewVCloud,
+      ServerCommand.ResetVmPassword
     ];
   }
 
   public ngAfterViewInit() {
     refreshView(() => {
       this._initializeListsource();
+      this._listenToActiveServers();
     });
   }
 
   public ngOnDestroy() {
-    if (this.serverSubscription) {
+    if (!isNullOrEmpty(this.serverSubscription)) {
       this.serverSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._activeServerSubscription)) {
+      this._activeServerSubscription.unsubscribe();
     }
   }
 
@@ -122,7 +133,19 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public executeServerCommand(server: Server, action: ServerCommand): void {
-    this._serverService.executeServerCommand(server, action);
+    if (action === ServerCommand.ResetVmPassword) {
+      let dialogRef = this._dialogService.open(ResetPasswordDialogComponent, {
+        data: server,
+        width: RESET_PASSWORD_DIALOG_SIZE
+      });
+      dialogRef.afterClosed().subscribe((dialogResult) => {
+        if (dialogResult) {
+          this._serversService.executeServerCommand(server, action);
+        }
+      });
+    } else {
+      this._serversService.executeServerCommand(server, action);
+    }
   }
 
   public getActionStatus(server: Server): any {
@@ -204,6 +227,16 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
         } as McsListPanelItem;
 
         this._serverService.setSelectedServer(this.server);
+        this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  /**
+   * Listener to all the active servers to refresh the view when data is being changed
+   */
+  private _listenToActiveServers(): void {
+    this._activeServerSubscription = this._serversService.activeServersStream
+      .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
   }

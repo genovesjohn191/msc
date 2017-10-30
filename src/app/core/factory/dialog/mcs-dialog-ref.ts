@@ -3,7 +3,7 @@ import {
   Subject
 } from 'rxjs/Rx';
 import { McsOverlayRef } from '../overlay/mcs-overlay-ref';
-import { McsDialogComponent } from './mcs-dialog.component';
+import { McsDialogContainerComponent } from './mcs-dialog-container.component';
 
 // Counter for unique dialog ids.
 let nextUniqueId = 0;
@@ -23,7 +23,7 @@ export class McsDialogRef<T> {
 
   constructor(
     private _overlayRef: McsOverlayRef,
-    private _dialogContainer: McsDialogComponent,
+    private _dialogContainer: McsDialogContainerComponent,
     public readonly id: string = `mcs-dialog-${nextUniqueId++}`
   ) {
 
@@ -64,7 +64,7 @@ export class McsDialogRef<T> {
   }
 
   /**
-   * Update the size of the dialog container based on the given length
+   * Update the size of the dialog container based on the given width and height
    * @param width Width of the container
    * @param height Height of the container
    */

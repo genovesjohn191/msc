@@ -75,6 +75,10 @@ export class ServerCommandComponent implements OnInit {
         label = this.textContent.vcloud;
         break;
 
+      case ServerCommand.ResetVmPassword:
+        label = this.textContent.resetVmPassword;
+        break;
+
       default:
         label = '';
         break;

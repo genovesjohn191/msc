@@ -23,6 +23,7 @@ export * from './response/server-network';
 export * from './response/server-grouped-os';
 export * from './response/server-os';
 export * from './response/server-guest-os';
+export * from './response/server-credential';
 
 /** Other Models that are use inside server component */
 export * from './server-performance-scale';

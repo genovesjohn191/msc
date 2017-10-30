@@ -26,11 +26,11 @@ import { McsDialogRefDirective } from './mcs-dialog-ref.directive';
 import { McsDialogConfig } from './mcs-dialog-config';
 
 @Component({
-  selector: 'mcs-dialog',
+  selector: 'mcs-dialog-container',
   template: `
     <ng-template mcsDialogRef></ng-template>
   `,
-  styleUrls: ['./mcs-dialog.component.scss'],
+  styleUrls: ['./mcs-dialog-container.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
@@ -42,14 +42,14 @@ import { McsDialogConfig } from './mcs-dialog-config';
     ])
   ],
   host: {
-    'class': 'dialog-wrapper',
+    'class': 'dialog-container-wrapper',
     '[@slideDialog]': 'state',
     '(@slideDialog.start)': 'onAnimationStart($event)',
     '(@slideDialog.done)': 'onAnimationDone($event)',
   }
 })
 
-export class McsDialogComponent {
+export class McsDialogContainerComponent {
 
   @ViewChild(McsDialogRefDirective)
   public portalHost: McsDialogRefDirective;

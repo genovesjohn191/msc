@@ -19,10 +19,11 @@
               <mcs-icon *ngIf="server.powerState"
                 [key]="getStateIconKey(server.powerState)"></mcs-icon>
               <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
+
                 mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
-                [content]="loadingContent"></mcs-icon>
+                [content]="loadingContent" orientation="right"></mcs-icon>
               <ng-template #loadingContent>
-                <span class="loading-content-popover">
+                <span class="loading-content-popover no-wrap">
                   {{ getActiveServerTooltip(server.id) }}
                 </span>
               </ng-template>

@@ -86,7 +86,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
             <ng-template #loadingContent>
-              <span class="loading-content-popover">
+              <span class="loading-content-popover no-wrap">
                 {{ getActiveServerTooltip(row.id) }}
               </span>
             </ng-template>
