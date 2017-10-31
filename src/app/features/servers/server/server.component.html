@@ -1,4 +1,20 @@
-<mcs-page [header]="server.managementName">
+<mcs-page [header]="headerTemplate">
+  <ng-template #headerTemplate>
+    <div class="horizontal-items-spacing-small"
+    display-flex="row" align-items="center">
+      <div>
+        <a [routerLink]="['/servers/vdc', server.vdcId]">
+          <h3 class="reset-header">{{ server.vdcName }}</h3>
+        </a>
+      </div>
+      <div>
+        <mcs-icon [key]="angleDoubleRightIconKey"></mcs-icon>
+      </div>
+      <div>
+        <h3 class="reset-header">{{ server.managementName }}</h3>
+      </div>
+    </div>
+  </ng-template>
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="serverTextContent.leftPanelHeader">
     <!-- listing panel -->
@@ -16,13 +32,11 @@
             <mcs-list-panel-item *mcsListPanelItemDef="let server"
               [itemId]="server.id" [groupName]="server.vdcName"
               (click)="onServerSelect(server.id)">
-
               <mcs-icon *ngIf="server.powerState"
                 [key]="getStateIconKey(server.powerState)"></mcs-icon>
               <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
                 [mcsTooltip]="getActiveServerTooltip(server.id)"
                 mcsTooltipPosition="right"></mcs-icon>
-
               <a>{{ server.name }}</a>
             </mcs-list-panel-item>
           </ng-container>
@@ -48,7 +62,6 @@
     <div class="content-wrapper">
       <div class="mcs-tabs">
         <ul class="nav nav-tabs" role="tablist">
-
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" role="tab"
               [routerLink]="['management']" routerLinkActive="active">
@@ -63,8 +76,7 @@
 
           <li class="nav-item action-cog" *mcsHasPermission="['VmPowerStateEdit']">
             <mcs-server-command [commandList]="serverCommandList"
-              [command]="getActionStatus(server)"
-              (onClick)="executeServerCommand(server, $event)">
+              [command]="serverCommand" (onClick)="executeServerCommand(server, $event)">
             </mcs-server-command>
           </li>
         </ul>

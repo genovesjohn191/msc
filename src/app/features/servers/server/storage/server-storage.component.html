@@ -42,11 +42,11 @@
           <td>
             {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
           </td>
-          <td>
-            <span *mcsHasPermission="['VmEdit']" [hidden]="disabled" class="expand text-right">
+          <td class="horizontal-items-spacing-medium">
+            <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="expand text-right">
               <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
             </span>
-            <span *mcsHasPermission="['VmEdit']" [hidden]="disabled" class="delete text-right">
+            <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
               <a [hidden]="isPrimaryStorage(storage)" (click)="setModalInstance(deleteStorageModal)"
                 [mcsModal]="deleteStorageAlert" modalSize="medium" #deleteStorageModal="mcsModal">
                   {{ serverStorageText.deleteStorageLink }}</a>
@@ -86,7 +86,7 @@
             [minimumMB]="minimumMB"
             [storageSliderValues]="newStorageSliderValues"
             (storageChanged)="onStorageChanged($event)"
-            [disabled]="disabled">
+            [disabled]="isProcessing">
             <!--Server manage storage contents on the left hand side (description)-->
             <div title>
               <h4>{{ serverStorageText.addStorageHeading }}</h4>
@@ -113,7 +113,7 @@
       [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
       [storageSliderValues]="selectedStorageSliderValues"
       (storageChanged)="onStorageChanged($event)"
-      [disabled]="disabled">
+      [disabled]="isProcessing">
       <!--Server manage storage contents on the left hand side (description)-->
         <div title>
         <h4>{{ serverStorageText.expandStorageHeading }}</h4>
@@ -129,7 +129,7 @@
       </div>
     </mcs-server-manage-storage>
     <div class="update">
-      <a (click)="closeExpandStorageBox()" [ngClass]="{'disabled': disabled}">Cancel</a>
+      <a (click)="closeExpandStorageBox()" [ngClass]="{'disabled': isProcessing}">Cancel</a>
       <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" #updateButton (click)="onClickUpdate()"
         [disabled]="!isValidStorageValues || expandingStorage">Update</mcs-button>
     </div>

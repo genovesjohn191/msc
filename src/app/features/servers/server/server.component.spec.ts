@@ -15,7 +15,6 @@ import {
 import {
   Server,
   ServerPowerState,
-  ServerCommand,
   ServerServiceType
 } from '../models';
 import { ServerService } from '../server/server.service';
@@ -105,12 +104,6 @@ describe('ServerComponent', () => {
       spyOn(router, 'navigate');
       component.onServerSelect(mockServerDetails.id);
       expect(router.navigate).toHaveBeenCalled();
-    });
-  });
-
-  describe('getActionStatus()', () => {
-    it('should return the server action status', () => {
-      expect(component.getActionStatus(mockServerDetails)).toEqual(ServerCommand.Start);
     });
   });
 });

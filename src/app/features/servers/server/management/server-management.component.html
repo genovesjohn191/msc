@@ -13,7 +13,7 @@
             <span>{{ serverManagementTextContent.vmProperties.configuration }}:</span>
             <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
             <span *mcsHasPermission="['VmEdit']">
-              <a *ngIf="!isScaling" (click)="scaleServer()">
+              <a *ngIf="!isScaling" (click)="scaleServer()" [disabled]="isProcessing">
               {{ serverManagementTextContent.performanceScale.scale }}</a>
             </span>
             <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
