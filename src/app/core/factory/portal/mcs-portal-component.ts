@@ -30,7 +30,7 @@ export class McsPortalComponent<T> {
    * Return the equivalent templateRef attachment nodes
    */
   public getAttachmentNodes(): any[] {
-    if (!this.viewContainerRef) { return undefined; }
+    if (!this.viewContainerRef || !this.templateRef) { return undefined; }
     let contentViewNodes: any[] = new Array();
     let attachmentNodes = this.viewContainerRef
       .createEmbeddedView(this.templateRef as TemplateRef<T>)

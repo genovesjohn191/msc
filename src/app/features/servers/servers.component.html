@@ -85,21 +85,13 @@
             {{ columnSettings.name.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
-            <ng-template #loadingContent>
-              <span class="loading-content-popover no-wrap">
-                {{ getActiveServerTooltip(row.id) }}
-              </span>
-            </ng-template>
-
             <div class="emphasize">
               <div *ngIf="getServerPowerState(row)">
-                <mcs-icon [key]="getStateIconKey(row.powerState)"
-                  size="small"></mcs-icon>
+                <mcs-icon [key]="getStateIconKey(row.powerState)" size="small"></mcs-icon>
               </div>
               <div *ngIf="!getServerPowerState(row)" class="power-state-spinner">
                 <mcs-icon [key]="spinnerIconKey" size="small"
-                  mcsPopover trigger="hover" maxWidth="250px" padding="none"
-                  [content]="loadingContent"></mcs-icon>
+                  [mcsTooltip]="getActiveServerTooltip(row.id)"></mcs-icon>
               </div>
               <a [routerLink]="['/servers', row.id]">{{ row.managementName }}</a>
             </div>

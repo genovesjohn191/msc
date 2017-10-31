@@ -58,22 +58,16 @@ $overlay-dark-color: rgba($color: $color-black, $alpha: 0.4);
     left: 50%;
     @include translate(-50%, -50%);
   }
-  &.left-center {
-    top: 50%;
-    @include translate(0, -50%);
-  }
   &.top-center {
-    left: 50%;
-    @include translate(-50%, 0);
-  }
-  &.right-center {
-    top: 50%;
-    right: 0;
-    @include translate(0, -50%);
+    @include translate(-50%, -100%);
   }
   &.bottom-center {
-    bottom: 0;
-    left: 50%;
     @include translate(-50%, 0);
+  }
+  &.left-center {
+    @include translate(-100%, -50%);
+  }
+  &.right-center {
+    @include translate(0, -50%);
   }
 }

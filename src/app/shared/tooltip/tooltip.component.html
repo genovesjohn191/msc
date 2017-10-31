@@ -1,0 +1,7 @@
+<div #tooltipPanel class="tooltip-panel"
+  [style.transform-origin]="transformOrigin"
+  [@state]="visibility"
+  (@state.done)="afterVisibilityAnimation($event)">
+
+  <span>{{ message }}</span>
+</div>

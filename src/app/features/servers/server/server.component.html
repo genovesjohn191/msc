@@ -6,7 +6,8 @@
       <div class="listing-panel-wrapper">
         <mcs-search #search [delayInSeconds]="0"></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
-          [searchMode]="serverListSource?.searchMode" [mcsLoader]="serverListSource?.serverListSubscription">
+          [searchMode]="serverListSource?.searchMode"
+          [mcsLoader]="serverListSource?.serverListSubscription">
           <ng-container mcsListPanelDef>
             <mcs-list-panel-header *mcsListPanelHeaderDef="let vdc; propertyName: 'vdcName';"
               [groupName]="vdc">
@@ -19,14 +20,8 @@
               <mcs-icon *ngIf="server.powerState"
                 [key]="getStateIconKey(server.powerState)"></mcs-icon>
               <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
-
-                mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
-                [content]="loadingContent" orientation="right"></mcs-icon>
-              <ng-template #loadingContent>
-                <span class="loading-content-popover no-wrap">
-                  {{ getActiveServerTooltip(server.id) }}
-                </span>
-              </ng-template>
+                [mcsTooltip]="getActiveServerTooltip(server.id)"
+                mcsTooltipPosition="right"></mcs-icon>
 
               <a>{{ server.name }}</a>
             </mcs-list-panel-item>

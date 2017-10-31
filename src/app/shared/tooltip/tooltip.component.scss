@@ -1,0 +1,30 @@
+@import "../../../styles/shared/base";
+
+$tooltip-dark-color: $color-white;
+$tooltip-dark-bg-color: rgba($color-black, 0.87);
+$tooltip-light-color: $color-grey-00;
+$tooltip-light-bg-color: $color-white;
+$tooltip-border-radius: 2px;
+$tooltip-padding: $space-xsmall $space-small;
+
+.tooltip-wrapper {
+  @include display-flex(column);
+  position: relative;
+}
+
+.tooltip-panel {
+  @include border-radius($tooltip-border-radius);
+  margin: $space-small;
+  padding: $tooltip-padding;
+
+  &.dark {
+    color: $tooltip-dark-color;
+    background-color: $tooltip-dark-bg-color;
+  }
+
+  &.light {
+    color: $tooltip-light-color;
+    background-color: $tooltip-light-bg-color;
+    @include box-shadow(0 5px 10px rgba($color-black,0.2));
+  }
+}
