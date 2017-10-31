@@ -40,8 +40,10 @@
 
       <mcs-list header="Company Accounts" class="company-list">
         <mcs-list-item *ngFor="let item of displayedCompanies; trackBy: trackByFn">
-          <div class="labelled-icon account-action" (click)="selectAccount(item)" cursor="pointer">
-            <mcs-icon color="white" [key]="userIconKey" size="small"></mcs-icon>
+          <div class="labelled-icon account-action" (click)="selectAccount(item)" cursor="pointer"
+            [mcsTooltip]="getStatusText(item.status)" mcsTooltipColor="light">
+
+            <mcs-icon color="white" [key]="getUserIconKey(item.status)" size="small"></mcs-icon>
             <span>{{ getTextFormat(item) }}</span>
             <mcs-icon class="arrow-right" [key]="arrowRightBueIconKey" size="small"></mcs-icon>
           </div>

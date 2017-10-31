@@ -11,6 +11,7 @@ import {
 import {
   CoreDefinition,
   McsApiCompany,
+  McsCompanyStatus,
   McsPaginator,
   McsSearch,
   McsTextContentProvider,
@@ -20,7 +21,10 @@ import {
   Observable,
   Subscription
 } from 'rxjs/Rx';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  getEnumString
+} from '../../../utilities';
 import { SwitchAccountService } from './switch-account.service';
 
 @Component({
@@ -80,11 +84,6 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public get userIconKey(): string {
-    // TODO: Change the color to red based on the company status
-    return CoreDefinition.ASSETS_SVG_PERSON_GREEN;
-  }
-
   constructor(
     private _switchAccountService: SwitchAccountService,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -112,6 +111,34 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     if (!isNullOrEmpty(this.activeAccountSubscription)) {
       this.activeAccountSubscription.unsubscribe();
     }
+  }
+
+  public getUserIconKey(status: McsCompanyStatus) {
+    let userIcon: string;
+    switch (status) {
+      case McsCompanyStatus.Internal:
+      case McsCompanyStatus.Subsidiary:
+      case McsCompanyStatus.Customer:
+        userIcon = CoreDefinition.ASSETS_SVG_PERSON_GREEN;
+        break;
+
+      case McsCompanyStatus.Cancelling:
+        // TODO: This should be color yellow icon
+        userIcon = CoreDefinition.ASSETS_SVG_PERSON_BLUE;
+        break;
+
+      case McsCompanyStatus.Cancelled:
+      case McsCompanyStatus.Prospect:
+      case McsCompanyStatus.NoLonger:
+      default:
+        userIcon = CoreDefinition.ASSETS_SVG_PERSON_RED;
+        break;
+    }
+    return userIcon;
+  }
+
+  public getStatusText(status: McsCompanyStatus) {
+    return getEnumString(McsCompanyStatus, status);
   }
 
   public get defaultAccount(): McsApiCompany {
@@ -175,7 +202,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
       .subscribe((result) => {
         if (this._switchAccountService.companiesStatus !== McsDataStatus.Error) {
           this._switchAccountService.companiesStatus = isNullOrEmpty(result) ?
-          McsDataStatus.Empty : McsDataStatus.Success;
+            McsDataStatus.Empty : McsDataStatus.Success;
         }
         this.displayedCompanies = result;
         this.search.showLoading(false);

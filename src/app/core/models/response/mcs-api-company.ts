@@ -1,3 +1,5 @@
+import { McsCompanyStatus } from '../../enumerations/mcs-company-status.enum';
+
 export class McsApiCompany {
   public id: any;
   public name: string;
@@ -5,4 +7,5 @@ export class McsApiCompany {
   public hasData: boolean;
   public hasVoice: boolean;
   public hasMobile: boolean;
+  public status: McsCompanyStatus;
 }
