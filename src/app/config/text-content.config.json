@@ -386,6 +386,18 @@
         "firewall": {
           "name": "FortiManager",
           "description": "Manage your network firewall."
+        },
+        "zerto": {
+          "name": "Zerto",
+          "description": "True High Availability, at the click of a button."
+        },
+        "ciscoUcs": {
+          "name": "Cisco UCS",
+          "description": "Unified management of all server hardware managed under one umbrella."
+        },
+        "f5": {
+          "name": "F5",
+          "description": "Manage load balancing and SSL offload."
         }
       },
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of other tools.",
