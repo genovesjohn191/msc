@@ -5,7 +5,8 @@ import {
   McsApiService,
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsApiErrorResponse
+  McsApiErrorResponse,
+  McsCompanyStatus
 } from '../core';
 import {
   convertJsonStringToObject,
@@ -29,7 +30,7 @@ export class CoreLayoutService {
         let apiResponse: McsApiSuccessResponse<McsApiCompany[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiCompany[]>>(
           response.text(),
-          reviverParser
+          this._convertProperty
         );
 
         return apiResponse;
@@ -53,5 +54,23 @@ export class CoreLayoutService {
     }
 
     return Observable.throw(mcsApiErrorResponse);
+  }
+
+  /**
+   * Property conversion reviver in JSON format
+   * @param key Key of the object
+   * @param value Value of the object
+   */
+  private _convertProperty(key, value): any {
+    switch (key) {
+      case 'status':
+        value = McsCompanyStatus[value];
+        break;
+
+      default:
+        value = reviverParser(key, value);
+        break;
+    }
+    return value;
   }
 }
