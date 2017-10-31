@@ -28,8 +28,6 @@ export class ToolsDataSource implements McsDataSource<Portal> {
     this._totalRecordCount = value;
   }
 
-  private _textContent: any;
-
   constructor(private _toolsService: ToolsService) {
     this._totalRecordCount = 0;
   }
