@@ -135,17 +135,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _disabled: boolean;
-  public get disabled(): boolean {
-    return this._disabled;
-  }
-  public set disabled(value: boolean) {
-    if (this._disabled !== value) {
-      this._disabled = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   private _expandStorage: boolean;
   public get expandStorage(): boolean {
     return this._expandStorage;
@@ -179,6 +168,17 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _isProcessing: boolean;
+  public get isProcessing(): boolean {
+    return this._isProcessing;
+  }
+  public set isProcessing(value: boolean) {
+    if (this._isProcessing !== value) {
+      this._isProcessing = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
@@ -186,7 +186,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     private _notificationContextService: McsNotificationContextService
   ) {
     // Constructor
-    this.disabled = false;
+    this.isProcessing = false;
     this.expandStorage = false;
     this.expandingStorage = false;
     this.deletingStorage = false;
@@ -239,7 +239,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public closeExpandStorageBox() {
-    if (this.disabled) { return; }
+    if (this.isProcessing) { return; }
     this.selectedStorageDevice = new ServerStorageDevice();
     this.expandStorage = false;
   }
@@ -271,7 +271,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public onClickAttach(): void {
     if (!this.isValidStorageValues || !this.hasAvailableStorageSpace) { return; }
 
-    this.disabled = true;
+    this.isProcessing = true;
     this.mcsStorage.completed();
     this.attachButton.showLoader();
 
@@ -295,7 +295,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     if (!this.isValidStorageValues || this.expandingStorage) { return; }
 
     this.expandingStorage = true;
-    this.disabled = true;
+    this.isProcessing = true;
     this.mcsStorage.completed();
     this.updateButton.showLoader();
 
@@ -327,7 +327,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.deleteButton.showLoader();
 
     this._serverService.deleteServerStorage(this.server.id, storage.id)
-      .subscribe(() => { this.disabled = true; });
+      .subscribe(() => { this.isProcessing = true; });
   }
 
   public getStorageAvailableMemory(storageProfile: string): number {
@@ -410,26 +410,26 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this._notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((notifications) => {
         if (notifications && this.server) {
-          let storageJob = notifications.find((job) => {
-            return (job.type === McsJobType.CreateServerDisk ||
-              job.type === McsJobType.UpdateServerDisk ||
-              job.type === McsJobType.DeleteServerDisk) &&
-              (job.clientReferenceObject && job.clientReferenceObject.serverId === this.server.id);
+          let serverJob = notifications.find((job) => {
+            return job.clientReferenceObject &&
+              job.clientReferenceObject.serverId === this.server.id;
           });
 
-          if (!isNullOrEmpty(storageJob)) {
-            if (storageJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED) {
+          if (!isNullOrEmpty(serverJob)) {
+            this.isProcessing = serverJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING
+              || serverJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+
+            let isCompleted = serverJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+
+            if (serverJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED) {
               this.storageJob = new McsApiJob();
-              this.disabled = false;
               return;
             }
 
             let disk = new ServerStorageDevice();
-            let isCompleted = storageJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-            this.storageJob = (isCompleted) ? new McsApiJob() : storageJob ;
-            this.disabled = true;
+            this.storageJob = (isCompleted) ? new McsApiJob() : serverJob ;
 
-            switch (storageJob.type) {
+            switch (serverJob.type) {
               case McsJobType.UpdateServerDisk:
                 if (this.updateButton) {
                   this.updateButton.hideLoader();
@@ -437,16 +437,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                   this.expandStorage = false;
                 }
 
-                disk.id = storageJob.clientReferenceObject.diskId;
+                disk.id = serverJob.clientReferenceObject.diskId;
                 if (!isCompleted) { break; }
 
               case McsJobType.CreateServerDisk:
                 if (this.attachButton) { this.attachButton.hideLoader(); }
 
                 // Append Create Server Disk / Update Disk Data
-                disk.name = storageJob.clientReferenceObject.name;
-                disk.storageProfile = storageJob.clientReferenceObject.storageProfile;
-                disk.sizeMB = storageJob.clientReferenceObject.sizeMB;
+                disk.name = serverJob.clientReferenceObject.name;
+                disk.storageProfile = serverJob.clientReferenceObject.storageProfile;
+                disk.sizeMB = serverJob.clientReferenceObject.sizeMB;
 
                 // Update the available memory when completed
                 if (isCompleted) {
@@ -456,11 +456,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                   this._setNewStorageSliderValues();
                   this._setSelectedStorageSliderValues();
                   this.usedMemoryMB = 0;
-                  this.disabled = false;
 
                   // TODO: This will be provided by the API
-                  if (!isNullOrEmpty(storageJob.tasks)) {
-                    let referenceObject = storageJob.tasks[0].referenceObject;
+                  if (!isNullOrEmpty(serverJob.tasks)) {
+                    let referenceObject = serverJob.tasks[0].referenceObject;
                     if (isNullOrEmpty(disk.id) && !isNullOrEmpty(referenceObject.diskId)) {
                       this.storageJob.clientReferenceObject.diskId = referenceObject.diskId;
                       disk.id = referenceObject.diskId;
@@ -483,7 +482,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
                 if (isCompleted) {
                   disk = this.storageDevices.find((storage) => {
-                    return storage.id === storageJob.clientReferenceObject.diskId;
+                    return storage.id === serverJob.clientReferenceObject.diskId;
                   });
 
                   if (!isNullOrEmpty(disk)) {
@@ -493,8 +492,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                     deleteArrayRecord(this.storageDevices, (storage) => {
                       return storage.id === disk.id;
                     });
-
-                    this.disabled = false;
                   }
                 }
                 break;

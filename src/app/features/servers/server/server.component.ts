@@ -24,7 +24,9 @@ import {
   McsTextContentProvider,
   McsListPanelItem,
   McsSearch,
-  McsDialogService
+  McsDialogService,
+  McsApiJob,
+  McsNotificationContextService
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -49,6 +51,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('search')
   public search: McsSearch;
 
+  public jobs: McsApiJob[];
   public server: Server;
   public serverSubscription: Subscription;
   public serversTextContent: any;
@@ -58,6 +61,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _serverId: any;
   private _activeServerSubscription: any;
+  private _notificationsSubscription: any;
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
@@ -68,12 +72,27 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
+  public get angleDoubleRightIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_ANGLE_DOUBLE_RIGHT;
+  }
+
   private _selectedItem: McsListPanelItem;
   public get selectedItem(): McsListPanelItem {
     return this._selectedItem;
   }
   public set selectedItem(value: McsListPanelItem) {
     this._selectedItem = value;
+  }
+
+  private _serverCommand: ServerCommand;
+  public get serverCommand(): ServerCommand {
+    return this._serverCommand;
+  }
+  public set serverCommand(value: ServerCommand) {
+    if (this.serverCommand !== value) {
+      this._serverCommand = value;
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   constructor(
@@ -84,16 +103,18 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _notificationContextService: McsNotificationContextService
   ) {
+    this.jobs = new Array<McsApiJob>();
     this.server = new Server();
     this.serverCommandList = new Array();
+    this.serverCommand = ServerCommand.None;
   }
 
   public ngOnInit() {
     this.serversTextContent = this._textContentProvider.content.servers;
     this.serverTextContent = this._textContentProvider.content.servers.server;
     this._serverId = this._activatedRoute.snapshot.paramMap.get('id');
-    this._getServerById();
     this.serverCommandList = [
       ServerCommand.Start,
       ServerCommand.Stop,
@@ -103,6 +124,9 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
       ServerCommand.ViewVCloud,
       ServerCommand.ResetVmPassword
     ];
+
+    this._getServerById();
+    this._listenToNotificationsStream();
   }
 
   public ngAfterViewInit() {
@@ -118,6 +142,9 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (!isNullOrEmpty(this._activeServerSubscription)) {
       this._activeServerSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._notificationsSubscription)) {
+      this._notificationsSubscription.unsubscribe();
     }
   }
 
@@ -147,27 +174,6 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this._serversService.executeServerCommand(server, action);
     }
-  }
-
-  public getActionStatus(server: Server): any {
-    if (!server) { return undefined; }
-    let status: ServerCommand;
-
-    switch (server.powerState) {
-      case ServerPowerState.PoweredOn:
-        status = ServerCommand.Start;
-        break;
-
-      case ServerPowerState.PoweredOff:
-        status = ServerCommand.Stop;
-        break;
-
-      default:
-        status = ServerCommand.None;
-        break;
-    }
-
-    return status;
   }
 
   public getStateIconKey(state: number): string {
@@ -228,8 +234,39 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
         } as McsListPanelItem;
 
         this._serverService.setSelectedServer(this.server);
+        this._setServerCommand();
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  private _setServerCommand(): void {
+    if (isNullOrEmpty(this.jobs) && isNullOrEmpty(this.server.powerState)) { return; }
+
+    let command: ServerCommand;
+    let activeServerJob = this.jobs.find((job) => {
+      return !isNullOrEmpty(job.clientReferenceObject) &&
+        job.clientReferenceObject.serverId === this._serverId;
+    });
+
+    if (!isNullOrEmpty(activeServerJob)) {
+      command = ServerCommand.None;
+    } else {
+      switch (this.server.powerState) {
+        case ServerPowerState.PoweredOn:
+          command = ServerCommand.Start;
+          break;
+
+        case ServerPowerState.PoweredOff:
+          command = ServerCommand.Stop;
+          break;
+
+        default:
+          command = ServerCommand.None;
+          break;
+      }
+    }
+
+    this.serverCommand = command;
   }
 
   /**
@@ -239,6 +276,14 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     this._activeServerSubscription = this._serversService.activeServersStream
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  private _listenToNotificationsStream(): void {
+    this._notificationsSubscription = this._notificationContextService.notificationsStream
+      .subscribe((jobs) => {
+        this.jobs = jobs;
+        this._setServerCommand();
       });
   }
 }

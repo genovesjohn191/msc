@@ -110,7 +110,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
       let serverListItem = new ServerList();
       serverListItem.id = server.id;
       serverListItem.name = server.managementName;
-      serverListItem.powerState = server.powerState;
+      serverListItem.powerState = this._getServerPowerState(server);
       serverListItem.vdcName = (!isNullOrEmpty(server.vdcName)) ?
         server.vdcName : SERVER_LIST_GROUP_OTHERS ;
 
@@ -127,6 +127,28 @@ export class ServersListSource implements McsDataSource<ServerList> {
         this._serverList = this._mapServerList(response.content);
         this._serverListStream.next(this._serverList);
       });
+  }
+
+  /**
+   * Return the server powerstate based on the active server status
+   * @param server Server to be check
+   */
+  private _getServerPowerState(server: Server): number {
+    let serverPowerstate = server.powerState;
+
+    if (isNullOrEmpty(this._serversService.activeServers)) {
+      return serverPowerstate;
+    } else {
+      for (let active of this._serversService.activeServers) {
+        if (active.serverId === server.id) {
+          // Update the powerstate of the corresponding server based on the row
+          serverPowerstate = this._serversService.getActiveServerPowerState(active);
+          server.powerState = serverPowerstate;
+          break;
+        }
+      }
+      return serverPowerstate;
+    }
   }
 
   /**

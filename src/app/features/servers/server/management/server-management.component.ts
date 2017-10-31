@@ -61,7 +61,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
   public resource: ServerResource;
 
-  public serverScaleJobs: McsApiJob[];
+  public jobs: McsApiJob[];
   public remainingMemory: number;
   public remainingCpu: number;
 
@@ -110,6 +110,17 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _isProcessing: boolean;
+  public get isProcessing(): boolean {
+    return this._isProcessing;
+  }
+  public set isProcessing(value: boolean) {
+    if (this._isProcessing !== value) {
+      this._isProcessing = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
   public get serverMemoryValue(): string {
     return appendUnitSuffix(this.server.memoryMB, 'megabyte');
   }
@@ -146,7 +157,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public get hasUpdate(): boolean {
     return this._serverPerformanceScale.valid &&
       (this.server.memoryMB < this._serverPerformanceScale.memoryMB ||
-      this.server.cpuCount < this._serverPerformanceScale.cpuCount);
+        this.server.cpuCount < this._serverPerformanceScale.cpuCount);
   }
 
   public get isPoweredOn(): boolean {
@@ -177,11 +188,12 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.serviceType = ServerServiceType.SelfManaged;
     this.resource = new ServerResource();
     this.server = new Server();
-    this.serverScaleJobs = new Array();
+    this.jobs = new Array();
     this._resourceMap = new Map<string, ServerResource>();
     this._hasServer = false;
     this.isServerScale = false;
     this.isScaling = false;
+    this.isProcessing = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
   }
 
@@ -343,32 +355,36 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   private _getScalingJobStatus(): void {
-    if (isNullOrEmpty(this.serverScaleJobs) && this.server) { return; }
+    if (isNullOrEmpty(this.jobs) && this.server) { return; }
 
-    let activeServerJob = this.serverScaleJobs.find((job) => {
-      return job.clientReferenceObject.activeServerId === this.server.id;
+    let activeServerJob = this.jobs.find((job) => {
+      return job.clientReferenceObject.serverId === this.server.id;
     });
 
-    if (isNullOrEmpty(activeServerJob)) { return; }
+    this.isProcessing = !isNullOrEmpty(activeServerJob) &&
+      (activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING ||
+      activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
 
-    switch (activeServerJob.status) {
-      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {
-          this.server.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
-          this.server.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
-        }
-        this.isScaling = false;
-        break;
+    if (this.isProcessing && activeServerJob.type === McsJobType.UpdateServer) {
+      switch (activeServerJob.status) {
+        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+          if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {
+            this.server.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
+            this.server.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
+          }
+          this.isScaling = false;
+          break;
 
-      case CoreDefinition.NOTIFICATION_JOB_PENDING:
-      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-        this.isScaling = true;
-        break;
+        case CoreDefinition.NOTIFICATION_JOB_PENDING:
+        case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+          this.isScaling = true;
+          break;
 
-      case CoreDefinition.NOTIFICATION_JOB_FAILED:
-      default:
-        this.isScaling = false;
-        break;
+        case CoreDefinition.NOTIFICATION_JOB_FAILED:
+        default:
+          this.isScaling = false;
+          break;
+      }
     }
 
     this._changeDetectorRef.markForCheck();
@@ -436,10 +452,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _listenToNotificationsStream(): void {
     this._notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((jobs) => {
-        this.serverScaleJobs = jobs.filter((job) => {
-          return job.type === McsJobType.UpdateServer;
-        });
-
+        this.jobs = jobs;
         this._getScalingJobStatus();
       });
   }
