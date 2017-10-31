@@ -42,13 +42,8 @@ export class ToolsDataSource implements McsDataSource<Portal> {
       .map((response) => {
         this._totalRecordCount = response.totalCount;
 
-        // Remove all portals without resource
-        for (let portal of response.content) {
-          if (!portal.resourceSpecific) {
-            let index = response.content.indexOf(portal, 0);
-            response.content.splice(index, 1);
-          }
-        }
+        let partnerPortals: Portal[] = [];
+        let otherServices: Portal[] = [];
 
         // Add Macquarie View
         let macquarieView = new Portal();
@@ -57,7 +52,16 @@ export class ToolsDataSource implements McsDataSource<Portal> {
         macquarieViewPortalAccess.name = macquarieView.name;
         macquarieViewPortalAccess.url = resolveEnvVar('MACQUARIE_VIEW_URL');
         macquarieView.portalAccess = Array(macquarieViewPortalAccess);
-        response.content.splice(0, 0, macquarieView);
+        partnerPortals.push(macquarieView);
+
+        // Map portals to respective locations
+        for (let portal of response.content) {
+          portal.resourceSpecific
+            ? partnerPortals.push(portal)
+            : otherServices.push(portal);
+        }
+
+        response.content = partnerPortals;
 
         return response.content;
       });
