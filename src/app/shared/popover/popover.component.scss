@@ -161,7 +161,7 @@ $popover-border-radius: 2px;
 .mcs-popover-wrapper {
   &.light {
     @include popover-container($color-black, $color-white, $color-grey-04) {
-      box-shadow: 0 5px 10px rgba($color-black,0.2);
+      @include box-shadow(0 5px 10px rgba($color-black,0.2));
     }
   }
 

@@ -89,9 +89,10 @@ export class SwitchAccountService {
         if (response) {
           this.companiesStatus = response.content ?
             McsDataStatus.Empty : McsDataStatus.Success;
-          // Remove default company in the list
+          // Remove default company and currenlty active account in the list
           this.companies = response.content.filter((account) => {
-            return this.defaultAccount && this.defaultAccount.id !== account.id;
+            return (this.defaultAccount && this.defaultAccount.id !== account.id) &&
+              (this._activeAccount && this._activeAccount.id !== account.id);
           });
           this.companiesStream.next(response.content);
         }

@@ -31,7 +31,7 @@ $select-sub-group-max-height: 500px;
 .select-trigger {
   padding: $select-trigger-padding;
   border: 1px solid $select-trigger-border-color;
-  border-radius: $select-trigger-border-radius;
+  @include border-radius($select-trigger-border-radius);
 }
 
 .select-group-container {
@@ -39,7 +39,7 @@ $select-sub-group-max-height: 500px;
   width: 100%;
   background-color: $select-group-container-bg-color;
   border: 1px solid $select-group-container-border-color;
-  border-radius: $select-group-container-border-radius;
+  @include border-radius($select-group-container-border-radius);
   padding: $select-group-container-padding;
   z-index: $zindex-select;
 

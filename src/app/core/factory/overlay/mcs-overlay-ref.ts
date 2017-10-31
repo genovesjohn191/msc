@@ -146,10 +146,9 @@ export class McsOverlayRef {
     let elementPosition = getElementPositionFromHost(
       hostElement, this._overlayPane, placement, true
     );
-
-    // TODO: Add listener to scroll changes to update the position of the target element
     this._overlayPane.style.top = `${elementPosition.top}px`;
     this._overlayPane.style.left = `${elementPosition.left}px`;
+    this._overlayPane.classList.add(`${placement}-center`);
   }
 
   /**
@@ -158,26 +157,9 @@ export class McsOverlayRef {
    */
   public moveElementToGlobal(placement?: placementType) {
     if (isNullOrEmpty(this._overlayPane)) { return; }
-    let classPosition: string = 'center';
-
-    switch (placement) {
-      case 'left':
-        classPosition = 'left-center';
-        break;
-      case 'top':
-        classPosition = 'top-center';
-        break;
-      case 'right':
-        classPosition = 'right-center';
-        break;
-      case 'bottom':
-        classPosition = 'bottom-center';
-        break;
-      case 'center':
-      default:
-        break;
-    }
-    this._overlayPane.classList.add(classPosition);
+    placement === 'center' ?
+      this._overlayPane.classList.add(placement) :
+      this._overlayPane.classList.add(`${placement}-center`);
   }
 
   /**

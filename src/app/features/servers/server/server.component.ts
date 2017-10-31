@@ -39,9 +39,11 @@ const SERVER_LIST_GROUP_OTHERS = 'Others';
 
 @Component({
   selector: 'mcs-server',
-  styleUrls: ['./server.component.scss'],
   templateUrl: './server.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('search')
