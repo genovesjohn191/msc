@@ -6,7 +6,9 @@ import {
   McsDataSource,
   McsDataStatus
 } from '../../core';
+import { resolveEnvVar } from '../../utilities';
 import { Portal } from './portal';
+import { PortalAccess } from './portal.access';
 import { ToolsService } from './tools.service';
 
 export class ToolsDataSource implements McsDataSource<Portal> {
@@ -26,9 +28,9 @@ export class ToolsDataSource implements McsDataSource<Portal> {
     this._totalRecordCount = value;
   }
 
-  constructor(
-    private _toolsService: ToolsService
-  ) {
+  private _textContent: any;
+
+  constructor(private _toolsService: ToolsService) {
     this._totalRecordCount = 0;
   }
 
@@ -49,6 +51,15 @@ export class ToolsDataSource implements McsDataSource<Portal> {
             response.content.splice(index, 1);
           }
         }
+
+        // Add Macquarie View
+        let macquarieView = new Portal();
+        macquarieView.name = 'Macquarie View';
+        let macquarieViewPortalAccess = new PortalAccess();
+        macquarieViewPortalAccess.name = macquarieView.name;
+        macquarieViewPortalAccess.url = resolveEnvVar('MACQUARIE_VIEW_URL');
+        macquarieView.portalAccess = Array(macquarieViewPortalAccess);
+        response.content.splice(0, 0, macquarieView);
 
         return response.content;
       });

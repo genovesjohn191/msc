@@ -371,6 +371,10 @@
         "order": "Get it now"
       },
       "descriptions": {
+        "macquarieView": {
+          "name": "Macquarie View",
+          "description": "Manage company contacts, users, invoices and monitor your infrastructure."
+        },
         "vCloud": {
           "name": "Vcloud Director",
           "description": "Manage your virtual machines and Virtual Data Centers."

@@ -45,6 +45,9 @@ export class ToolsComponent implements OnInit {
     let descriptions = this.textContent.table.descriptions;
     this.toolDescription = new Map<string, string>();
     this.toolDescription.set(
+      descriptions.macquarieView.name,
+      descriptions.macquarieView.description);
+    this.toolDescription.set(
       descriptions.vCloud.name,
       descriptions.vCloud.description);
     this.toolDescription.set(
