@@ -29,7 +29,8 @@
     "comment": "fa fa-comment",
     "attachment": "fa fa-paperclip",
     "navbar": "fa fa-bars",
-    "angle-double-right": "fa fa-angle-double-right"
+    "angle-double-right": "fa fa-angle-double-right",
+    "trash-o": "fa fa-trash-o"
   },
   "svgIcons": {
     "no-icon-available": "no-icon-available.svg",

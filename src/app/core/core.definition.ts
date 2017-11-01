@@ -143,6 +143,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_ATTACHMENT = 'attachment';
   public static ASSETS_FONT_NAVBAR = 'navbar';
   public static ASSETS_FONT_ANGLE_DOUBLE_RIGHT = 'angle-double-right';
+  public static ASSETS_FONT_TRASH = 'trash-o';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serversListingFilter';

@@ -50,7 +50,7 @@ export class TicketAttachmentComponent implements OnInit {
   }
 
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CLOSE;
+    return CoreDefinition.ASSETS_FONT_TRASH;
   }
 
   public ngOnInit() {

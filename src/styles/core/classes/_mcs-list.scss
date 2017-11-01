@@ -1,0 +1,26 @@
+ul {
+  &.inline-list {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      display: inline-block;
+      @include breakpoint(small) {
+        display: block;
+      }
+      margin-right: $space-small;
+      padding: $space-xsmall;
+      margin-bottom: $space-xsmall;
+    }
+
+    &.rollover {
+      li {
+        background-color: $color-grey-07;
+
+        &:hover {
+          background-color: $color-grey-06;
+        }
+      }
+    }
+  }
+}

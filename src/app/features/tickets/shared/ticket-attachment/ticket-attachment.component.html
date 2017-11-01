@@ -1,13 +1,13 @@
-<div class="ticket-attachment-wrapper">
+<div class="ticket-attachment-wrapper dropzone"
+  ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
+  (fileOver)="onFileOver($event)"
+  [uploader]="fileUploader">
 
   <!-- File Selection Zone Area -->
   <div class="ticket-attachment-filezone-wrapper">
 
     <!-- Drop zone -->
-    <div class="dropzone" ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
-      (fileOver)="onFileOver($event)"
-      [uploader]="fileUploader">
-
+    <div >
       <mcs-icon [key]="attachmentIconKey"></mcs-icon>
       <span>{{ textContent.dragDropZone }}</span>
     </div>
@@ -22,11 +22,13 @@
 
   <!-- Attached files -->
   <div class="ticket-attached-files-wrapper" *ngIf="attachedFiles">
-    <div *ngFor="let attachedItem of attachedFiles" class="ticket-attached-item">
-      <!-- TODO: Add icon here -->
-      <mcs-icon [key]="closeIconKey" class="close-icon"
-        (click)="removeAttachment(attachedItem)"></mcs-icon>
-      <span>{{ attachedItem?.file.name }}</span>
-    </div>
+    <ul class="inline-list rollover">
+      <li (click)="removeAttachment(attachedItem)"
+        class="enable-pointer"
+        *ngFor="let attachedItem of attachedFiles">
+        <mcs-icon [key]="closeIconKey" size="small"></mcs-icon>
+        <span>{{ attachedItem?.file.name }}</span>
+      </li>
+    </ul>
   </div>
 </div>

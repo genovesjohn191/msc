@@ -4,7 +4,8 @@ $label-spacer: 40;
   .field {
     margin-bottom: $space-medium;
 
-    span.label {
+    span.label, label.label {
+      margin: 0;
       font-family: $base-font-bold;
       @include font-size($font-size-large, 45);
 
