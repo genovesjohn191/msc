@@ -1,0 +1,66 @@
+@import "../../../styles/shared/base";
+
+// Tab group
+$tab-group-border: $border-color-light;
+// Tab header
+$tab-header-item-min-width: 100px;
+$tab-header-item-color: $color-grey-02;
+$tab-header-item-active-color: $color-black;
+$tab-header-item-active-bg-color: $color-grey-08;
+$tab-header-item-padding: $space-small $space-medium;
+// Tab border bar
+$tab-border-bar-bg-color: $color-black;
+$tab-border-bar-thickness: 2px;
+$tab-border-bar-animation-duration: 500ms;
+$tab-border-bar-transition-style: cubic-bezier(0.35, 0, 0.25, 1);
+// Tab body
+$tab-body-padding: $space-medium;
+
+.tab-group-wrapper {
+  @include display-flex(column);
+}
+
+.tab-header-wrapper {
+  position: relative;
+  @include display-flex(column);
+  border-bottom: 1px solid $tab-group-border;
+
+  .tab-header-labels-wrapper {
+    @include display-flex(row);
+    @include align-items(center);
+
+    .tab-header-item-wrapper {
+      @include display-flex(row);
+      @include align-items(center);
+      justify-content: center;
+      min-width: $tab-header-item-min-width;
+      padding: $tab-header-item-padding;
+      color: $tab-header-item-color;
+      cursor: pointer;
+
+      &.active {
+        color: $tab-header-item-active-color;
+        background-color: $tab-header-item-active-bg-color;
+      }
+      &.custom-tab {
+        cursor: default;
+        color: $tab-header-item-active-color;
+      }
+    }
+  }
+
+  .tab-border-bar-wrapper {
+    background-color: $tab-border-bar-bg-color;
+    position: absolute;
+    bottom: 0;
+    height: $tab-border-bar-thickness;
+    @include transition(
+      $tab-border-bar-animation-duration
+      $tab-border-bar-transition-style
+    );
+  }
+}
+
+.tab-group-body-wrapper {
+  padding: $tab-body-padding;
+}

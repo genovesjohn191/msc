@@ -24,6 +24,7 @@ import { AccordionModule } from './accordion/accordion.module';
 import { ListModule } from './list/list.module';
 import { DialogModule } from './dialog/dialog.module';
 import { TooltipModule } from './tooltip/tooltip.module';
+import { TabGroupModule } from './tab-group/tab-group.module';
 /** Components */
 import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
@@ -81,7 +82,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     AccordionModule,
     ListModule,
     DialogModule,
-    TooltipModule
+    TooltipModule,
+    TabGroupModule
   ],
   exports: [
     ButtonComponent,
@@ -119,7 +121,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     AccordionModule,
     ListModule,
     DialogModule,
-    TooltipModule
+    TooltipModule,
+    TabGroupModule
   ]
 })
 
