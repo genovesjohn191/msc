@@ -114,6 +114,14 @@
   margin: $space-small 0;
 }
 
+.vspace-medium {
+  margin: $space-medium 0;
+}
+
+.vspace-large {
+  margin: $space-large 0;
+}
+
 // Layout classes
 .block {
   display: block;
@@ -188,9 +196,21 @@ table.mcs-simple-table {
   @include set-items-interval($space-medium, vertical);
 }
 
+.text-center {
+  text-align: center;
+}
+
 // Reset: TODO: Temporary fix for header margins and width
 .reset-header {
   width: auto;
   display: inline-block;
   margin: 0;
+}
+
+.dropzone {
+  border: 5px dashed transparent;
+
+  &.file-hover {
+    border: 5px dashed $color-grey-04;
+  }
 }

@@ -27,7 +27,7 @@
   <mcs-content-panel *mcsContentPanelDef>
     <div class="content-wrapper limited-view">
       <!-- Ticket Content -->
-      <div class="ticket-info-wrapper">
+      <div>
         <h4>{{ ticket.shortDescription }}</h4>
         <span class="metadata">{{ getSubTypeString(ticket.subType) }}</span>
         <p>
@@ -38,11 +38,11 @@
       </div>
 
       <!-- Ticket Meta Data -->
-      <div class="ticket-meta-wrapper hidden-small">
-        <div class="ticket-info-wrapper">
+      <div class="hidden-small" display-flex="row">
+        <div>
           <h4>{{ textContent.services }}</h4>
           <span *ngIf="missingServices" class="missing-data-info">{{ textContent.missingServicesLabel }}</span>
-          <ul class="unstyled-list">
+          <ul class="inline-list">
             <li *ngFor="let service of ticket.serviceId; trackBy: trackByFn">
               {{ service }}
             </li>
@@ -50,11 +50,11 @@
         </div>
 
         <!-- Ticket Attachments -->
-        <div class="ticket-info-wrapper">
+        <div>
           <h4>{{ textContent.attachments }}</h4>
           <span *ngIf="missingAttachments" class="missing-data-info">{{ textContent.missingAttachmentsLabel }}</span>
-          <ul class="unstyled-list">
-            <li class="rollover" *ngFor="let attachment of ticket.attachments; trackBy: trackByFn">
+          <ul class="inline-list rollover">
+            <li *ngFor="let attachment of ticket.attachments; trackBy: trackByFn">
               <mcs-icon [key]="attachmentIconKey" size="small"></mcs-icon>
               <a (click)="downloadAttachment(attachment)">{{ attachment.fileName }}</a>
             </li>
@@ -63,10 +63,10 @@
       </div>
 
       <!-- Ticket Activities -->
-      <div class="ticket-info-wrapper">
-        <div class="ticket-activities-header">
+      <div>
+        <div class="vspace-large">
           <h4>{{ textContent.activity }}</h4>
-          <div class="create-new-comment-wrapper">
+          <div class="text-center">
             <ng-container [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]">
             </ng-container>
             <a (click)="newComment()" [hidden]="showCommentBox">{{ textContent.newActivity }}</a>

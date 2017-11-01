@@ -11,6 +11,7 @@
 @import "classes/mcs-scrollbar";
 @import "classes/mcs-cog-container";
 @import "classes/mcs-forms";
+@import "classes/mcs-list";
 
 *,
 *:after,
@@ -189,6 +190,12 @@ ul.unstyled-list {
   @include display-flex(row);
   align-items: center;
   @include set-items-interval($space-small, horizontal);
+}
+
+.enable-pointer {
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 // Elements

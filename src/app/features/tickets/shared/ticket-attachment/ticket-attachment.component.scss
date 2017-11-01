@@ -5,7 +5,6 @@ $ticket-attachment-bg-color: $color-grey-07;
 $ticket-attachment-padding: $space-small;
 // Filezone selection
 $ticket-attachment-filezone-bg-color: $color-white;
-$ticket-attachment-filezone-hover-color: $color-grey-03;
 $ticket-attachment-filezone-box-shadow-color: $color-black;
 $ticket-attachment-filezone-padding: $space-medium;
 // File wrapper variables
@@ -30,15 +29,6 @@ $ticket-attachment-files-padding: $space-medium;
     background-color: $ticket-attachment-filezone-bg-color;
     @include box-shadow(0 0 5px 1px rgba($ticket-attachment-filezone-box-shadow-color, 0.2));
 
-    .dropzone {
-      border: 2px dotted transparent;
-      @include set-items-interval($space-xsmall, horizontal);
-
-      &.file-hover {
-        border: 2px dotted $ticket-attachment-filezone-hover-color;
-      }
-    }
-
     input[type="file"] {
       display: none;
     }
@@ -53,10 +43,6 @@ $ticket-attachment-files-padding: $space-medium;
       @include display-flex(row);
       align-items: center;
       @include set-items-interval($space-small, horizontal);
-
-      .close-icon {
-        cursor: pointer;
-      }
     }
   }
 }
