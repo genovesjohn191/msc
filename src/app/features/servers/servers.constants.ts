@@ -12,6 +12,7 @@ import {
   ServerServicesComponent,
   ServerStorageComponent
 } from './server';
+import { McsNavigateAwayGuard } from '../../core';
 import { CreateSelfManagedServersComponent } from './self-managed-server';
 import {
   VdcComponent,
@@ -37,7 +38,9 @@ export const serversRoutes: Routes = [
     path: 'servers', component: ServersComponent
   },
   {
-    path: 'servers/create', component: CreateSelfManagedServersComponent
+    path: 'servers/create',
+    component: CreateSelfManagedServersComponent,
+    canDeactivate:[McsNavigateAwayGuard]
   },
   {
     path: 'servers/:id',
