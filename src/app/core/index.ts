@@ -3,6 +3,8 @@ export * from './core.module';
 export * from './core.config';
 export * from './core.definition';
 export * from './core.validators';
+/** Forms */
+export * from './forms/mcs-navigate-away.guard';
 /** Services */
 export * from './services/mcs-api.service';
 export * from './services/mcs-storage.service';
@@ -52,6 +54,7 @@ export * from './interfaces/mcs-modal.interface';
 export * from './interfaces/mcs-search.interface';
 export * from './interfaces/mcs-component-type.interface';
 export * from './interfaces/mcs-scrollable.interface';
+export * from './interfaces/mcs-safe-to-navigate-away.interface';
 /** Base */
 export * from './base/mcs-table-listing.base';
 /** Authentication */

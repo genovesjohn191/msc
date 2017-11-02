@@ -9,6 +9,8 @@ import { TicketCreateService } from './ticket-create';
 import { ServersService } from '../servers';
 import { FirewallsService } from '../networking';
 
+import { McsNavigateAwayGuard } from '../../core';
+
 /**
  * List of services for the main module
  */
@@ -24,6 +26,8 @@ export const ticketsProviders: any[] = [
  */
 export const ticketsRoutes: Routes = [
   { path: 'tickets', component: TicketsComponent },
-  { path: 'tickets/create', component: TicketCreateComponent },
+  { path: 'tickets/create',
+    component: TicketCreateComponent,
+    canDeactivate:[McsNavigateAwayGuard] },
   { path: 'tickets/:id', component: TicketComponent }
 ];

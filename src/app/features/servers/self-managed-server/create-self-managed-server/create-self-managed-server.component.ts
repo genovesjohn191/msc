@@ -25,8 +25,10 @@ import {
 import {
   CoreDefinition,
   CoreValidators,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsSafeToNavigateAway
 } from '../../../../core';
+
 import {
   mergeArrays,
   refreshView,
@@ -43,7 +45,10 @@ const SERVER_NAME_MAX = 15;
   styleUrls: ['./create-self-managed-server.component.scss']
 })
 
-export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
+export class CreateSelfManagedServerComponent implements
+  OnInit,
+  AfterViewInit,
+  McsSafeToNavigateAway {
   @Input()
   public vdcName: string;
 
@@ -121,6 +126,10 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
     this._serverClone = new ServerCreateSelfManaged();
   }
 
+  public safeToNavigateAway(): boolean {
+    return !this.formGroupCreateServer.dirty;
+  }
+
   public ngOnInit() {
     this.createServerTextContent = this._textContentProvider.content
       .servers.createSelfManagedServer;
@@ -165,7 +174,6 @@ export class CreateSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public setServerDetails($serverDetails: ServerCreateSelfManaged): void {
     if (!$serverDetails) { return; }
-
     switch ($serverDetails.type) {
       case ServerCreateType.Copy:
         this._serverCopy = $serverDetails;

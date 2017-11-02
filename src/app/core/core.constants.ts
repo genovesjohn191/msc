@@ -17,7 +17,8 @@ import { McsAuthenticationIdentity } from './authentication/mcs-authentication.i
 import { McsAuthenticationService } from './authentication/mcs-authentication.service';
 import { McsAuthenticationGuard } from './authentication/mcs-authentication.guard';
 import { McsRoutePermissionGuard } from './authentication/mcs-route-permission.guard';
-
+/** Forms */
+import { McsNavigateAwayGuard } from './forms/mcs-navigate-away.guard';
 /**
  * Array coverage for the core modules
  */
@@ -37,5 +38,6 @@ export const coreProviders: any[] = [
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsAuthenticationGuard,
-  McsRoutePermissionGuard
+  McsRoutePermissionGuard,
+  McsNavigateAwayGuard
 ];

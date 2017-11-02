@@ -58,7 +58,6 @@ $state-change-notification-icon-width: $state-change-notification-icon-font-size
           @include font-size($state-change-notification-message-font-size);
           font-family: $base-font;
           vertical-align: top;
-          word-break: break-all;
         }
       }
     }
@@ -67,6 +66,7 @@ $state-change-notification-icon-width: $state-change-notification-icon-font-size
       clear: both;
       margin-bottom: $space-xsmall;
       font-family: $base-font;
+      word-break: break-all;
       @include font-size($state-change-notification-message-font-size);
     }
   }

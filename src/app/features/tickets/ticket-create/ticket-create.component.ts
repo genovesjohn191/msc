@@ -39,6 +39,7 @@ import {
 import { TicketCreateService } from './ticket-create.service';
 import { Server } from '../../servers';
 import { Firewall } from '../../networking';
+import { McsSafeToNavigateAway } from '../../../core';
 
 const HEADLINE_MAX_CHAR = 80;
 const DETAILS_MAX_CHAR = 4000;
@@ -49,7 +50,11 @@ const DETAILS_MAX_CHAR = 4000;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TicketCreateComponent implements
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  McsSafeToNavigateAway {
 
   public textContent: any;
   public contextualContent: any;
@@ -125,6 +130,10 @@ export class TicketCreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+  }
+
+  public safeToNavigateAway(): boolean {
+    return !this.fgCreateTicket.dirty;
   }
 
   public ngOnInit() {

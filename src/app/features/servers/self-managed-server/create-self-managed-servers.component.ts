@@ -19,7 +19,8 @@ import {
   McsTextContentProvider,
   McsComponentService,
   McsNotificationContextService,
-  McsJobType
+  McsJobType,
+  McsSafeToNavigateAway
 } from '../../../core';
 import {
   mergeArrays,
@@ -52,7 +53,12 @@ import {
   templateUrl: './create-self-managed-servers.component.html'
 })
 
-export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CreateSelfManagedServersComponent implements
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  McsSafeToNavigateAway {
+
   @ViewChild('selfManagedServersElement')
   public selfManagedServersElement: ElementRef;
 
@@ -155,6 +161,17 @@ export class CreateSelfManagedServersComponent implements OnInit, AfterViewInit,
     this._serversOs = new Array();
     this._serverListMap = new Map<string, Server[]>();
     this._serverResourceMap = new Map<string, ServerResource>();
+  }
+
+  public safeToNavigateAway(): boolean {
+    let canNavigate: boolean = true;
+    this.newServers.forEach((server) => {
+      if (!server.componentRef.instance.safeToNavigateAway()) {
+        canNavigate = false;
+      }
+    });
+
+    return canNavigate;
   }
 
   public ngOnInit() {
