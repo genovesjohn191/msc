@@ -6,6 +6,8 @@ $content-small-padding: $space-large $space-medium $space-large $space-large;
 // Main Page
 $page-border-color: $color-grey-05;
 $page-header-font: $circular-pro-bold;
+$page-header-font-size-default: $h3-default-font-size;
+$page-header-font-size-small: $font-size-large;
 $page-header-padding: 0 $space-large;
 // Top Panel Definition
 $top-panel-height: 50px;
@@ -111,6 +113,14 @@ $left-panel-navigation-collapse-padding: 6px;
         padding: $page-header-padding;
         @include display-flex(row);
         align-items: center;
+
+        *:not(.icon-container) {
+          font-family: $page-header-font;
+          @include font-size($page-header-font-size-default);
+          @include breakpoint(small) {
+            @include font-size($page-header-font-size-small);
+          }
+        }
       }
 
       .top-panel-wrapper {

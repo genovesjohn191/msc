@@ -365,7 +365,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       (activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING ||
       activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
 
-    if (this.isProcessing && activeServerJob.type === McsJobType.UpdateServer) {
+    if (!isNullOrEmpty(activeServerJob) && activeServerJob.type === McsJobType.UpdateServer) {
       switch (activeServerJob.status) {
         case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
           if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {

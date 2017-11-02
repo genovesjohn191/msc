@@ -64,23 +64,23 @@ export class ServerService {
 
   /**
    * This method will set the CPU Size Scale based on the given data
-   * @param serverId Server ID
+   * @param id Server ID
    * @param cpuSizeScale CPU Size Scale of the server to be updated
    */
   public setPerformanceScale(
-    serverId: any,
+    id: any,
     cpuSizeScale: ServerPerformanceScale
   ) {
     if (!cpuSizeScale) { return; }
 
     // Update scaling of server based on cpu size scale
     return this._serversService.patchServer(
-      serverId,
+      id,
       {
         memoryMB: cpuSizeScale.memoryMB,
         cpuCount: cpuSizeScale.cpuCount,
         clientReferenceObject: {
-          activeServerId: serverId,
+          serverId: id,
           memoryMB: cpuSizeScale.memoryMB,
           cpuCount: cpuSizeScale.cpuCount
         }
