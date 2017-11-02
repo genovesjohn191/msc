@@ -6,7 +6,6 @@ import {
 import { ElementRef } from '@angular/core';
 import { ContextualHelpComponent } from './contextual-help.component';
 import { ContextualHelpDirective } from './contextual-help.directive';
-import { CoreDefinition } from '../../core';
 
 describe('ContextualHelpComponent', () => {
 
@@ -61,12 +60,6 @@ describe('ContextualHelpComponent', () => {
       fixtureInstance.detectChanges();
     }));
 
-    it('should get the styles of the contextual help element', () => {
-      let spanElement = fixtureInstance.nativeElement.querySelector('span');
-
-      expect(spanElement.style.top).toBeDefined();
-      expect(spanElement.style.position).toBe('absolute');
-      expect(spanElement.style.fontFamily).toBe(CoreDefinition.BASE_FONT);
-    });
+    // TODO: Refactor the unit of contextual help component
   });
 });

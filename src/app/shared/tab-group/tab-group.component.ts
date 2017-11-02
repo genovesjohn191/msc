@@ -28,26 +28,33 @@ import { TabComponent } from './tab/tab.component';
 
 export class TabGroupComponent implements AfterContentInit {
 
-  @Input()
-  public selectedTabIndex: number;
-
   @ContentChildren(TabComponent)
   public tabs: QueryList<TabComponent>;
+
+  @Input()
+  public get selectedTabId(): any {
+    return this._selectedTabId;
+  }
+  public set selectedTabId(value: any) {
+    if (this._selectedTabId !== value) {
+      this._selectedTabId = value;
+      refreshView(() => {
+        this._setActiveTab(value);
+      });
+    }
+  }
+  private _selectedTabId: any;
 
   /** Selection model to determine which tab is selected */
   private _selectionModel: McsSelection<TabComponent>;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this.selectedTabIndex = 0;
     this._selectionModel = new McsSelection<TabComponent>(false);
   }
 
   public ngAfterContentInit(): void {
-    // Select the first tab in case the selectedtabindex is not provided
     refreshView(() => {
-      if (!isNullOrEmpty(this.tabs)) {
-        this.selectTab(this.tabs.toArray()[this.selectedTabIndex]);
-      }
+      this._setActiveTab(undefined);
     });
   }
 
@@ -64,8 +71,22 @@ export class TabGroupComponent implements AfterContentInit {
    * @param tab Tab to be selected
    */
   public selectTab(tab: TabComponent): void {
-    if (isNullOrEmpty(tab) || !tab.supportSelection) { return; }
+    if (isNullOrEmpty(tab) || !tab.canSelect) { return; }
     this._selectionModel.select(tab);
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _setActiveTab(selectedId: any): void {
+    if (isNullOrEmpty(this.tabs)) { return; }
+
+    if (isNullOrEmpty(selectedId)) {
+      this.selectTab(this.tabs.toArray()[0]);
+    } else {
+      this.tabs.forEach((tab) => {
+        if (tab.id === selectedId) {
+          this.selectTab(tab);
+        }
+      });
+    }
   }
 }
