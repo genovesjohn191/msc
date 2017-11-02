@@ -1,0 +1,18 @@
+<mcs-dialog>
+    <mcs-dialog-header>
+      <h3 class="reset-header">{{ displayDialogTitle() }}</h3>
+    </mcs-dialog-header>
+
+    <mcs-dialog-content>
+      <mcs-alert type="warning" [title]="displayDialogAlertMessage()">
+        <span>{{ textContent.confirmation }}</span>
+      </mcs-alert>
+    </mcs-dialog-content>
+
+    <mcs-dialog-actions>
+      <a (click)="closeDialog()">{{ textContent.cancel }}</a>
+      <mcs-button icon="arrow" size="small" (click)="deleteStorage()">
+        {{ textContent.confirm }}
+      </mcs-button>
+    </mcs-dialog-actions>
+  </mcs-dialog>

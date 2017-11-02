@@ -9,7 +9,8 @@ import {
   ServerIpAddressComponent,
   ProvisioningNotificationsComponent,
   ResetPasswordDialogComponent,
-  ResetPasswordFinishedDialogComponent
+  ResetPasswordFinishedDialogComponent,
+  DeleteStorageDialogComponent
 } from './shared';
 /** Server */
 import {
@@ -41,6 +42,7 @@ import { SharedModule } from '../../shared';
   entryComponents: [
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,
+    DeleteStorageDialogComponent,
     CreateSelfManagedServerComponent
   ],
   declarations: [
@@ -62,9 +64,9 @@ import { SharedModule } from '../../shared';
     ProvisioningNotificationsComponent,
     VdcComponent,
     VdcOverviewComponent,
-
     ResetPasswordDialogComponent,
-    ResetPasswordFinishedDialogComponent
+    ResetPasswordFinishedDialogComponent,
+    DeleteStorageDialogComponent
   ],
   imports: [
     SharedModule

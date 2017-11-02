@@ -17,13 +17,7 @@
               {{ serverManagementTextContent.performanceScale.scale }}</a>
             </span>
             <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
-              mcsPopover trigger="hover" maxWidth="250px"
-              padding="narrow" [content]="scalingContent"></mcs-icon>
-            <ng-template #scalingContent>
-              <span class="scaling-content-popover no-wrap">
-                {{ serverManagementTextContent.performanceScale.scaling }}
-              </span>
-            </ng-template>
+              [mcsTooltip]="serverManagementTextContent.performanceScale.scaling"></mcs-icon>
           </div>
         </li>
         <!-- Media -->

@@ -19,22 +19,15 @@
       </thead>
       <tbody>
         <tr *ngFor="let storage of storageDevices; let i = index">
-          <td class="squishy-cell">
-            <ng-template #expandingStorage>
-              <span class="expanding-storage-popover">
-                {{ getStorageSummaryInformation(storage.id) }}
-              </span>
-            </ng-template>
-            <span>
-              <mcs-icon *ngIf="!isActiveStorage(storage.id)"
-                [key]="storageIconKey" size="small"
-                class="hidden-small"></mcs-icon>
-              <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
-                size="small" class="hidden-small"
-                mcsPopover trigger="hover" maxWidth="250px"
-                padding="narrow" [content]="expandingStorage"></mcs-icon>
-                {{ storage.name }}
-            </span>
+          <td class="squishy-cell horizontal-items-spacing-xsmall"
+            display-flex="row" align-items="center">
+            <mcs-icon *ngIf="!isActiveStorage(storage.id)"
+              [key]="storageIconKey" size="small"
+              class="hidden-small"></mcs-icon>
+            <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
+              size="small" class="hidden-small"
+              [mcsTooltip]="getStorageSummaryInformation(storage.id)"></mcs-icon>
+            <span>{{ storage.name }}</span>
           </td>
           <td class="squishy-cell">
             {{ storage.storageProfile }}
@@ -47,30 +40,9 @@
               <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
             </span>
             <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
-              <a [hidden]="isPrimaryStorage(storage)" (click)="setModalInstance(deleteStorageModal)"
-                [mcsModal]="deleteStorageAlert" modalSize="medium" #deleteStorageModal="mcsModal">
-                  {{ serverStorageText.deleteStorageLink }}</a>
-              <ng-template #deleteStorageAlert>
-                <div modal-title>
-                  <span>Delete {{ storage.name }} Storage</span>
-                </div>
-                <div modal-body>
-                  <div class="delete-storage-alert-container">
-                    <mcs-alert type="warning"
-                      [title]="getDeleteStorageAlertMessage(storage)">
-                        <span>{{ serverStorageText.deleteStorageConfirmation }}</span>
-                    </mcs-alert>
-                    <div class="confirm">
-                      <a (click)="closeDeleteStorageModal()"
-                        [ngClass]="{'disabled': deletingStorage}">Cancel</a>
-                      <mcs-button icon="arrow" #deleteButton [disabled]="deletingStorage"
-                        (click)="onDeleteStorage(storage)">
-                        Yes
-                      </mcs-button>
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
+              <a [hidden]="isPrimaryStorage(storage)" (click)="deleteStorage(storage)">
+                {{ serverStorageText.deleteStorageLink }}
+              </a>
             </span>
           </td>
         </tr>

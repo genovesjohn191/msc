@@ -18,7 +18,7 @@ import {
   ServerServiceType
 } from './models';
 /** Shared */
-import { ResetPasswordDialogComponent } from './shared';
+import { DeleteStorageDialogComponent } from './shared';
 /** Core */
 import {
   McsTextContentProvider,
@@ -222,7 +222,7 @@ export class ServersComponent
    */
   public executeServerCommand(server: Server, action: ServerCommand) {
     if (action === ServerCommand.ResetVmPassword) {
-      let dialogRef = this._dialogService.open(ResetPasswordDialogComponent, {
+      let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
         data: server,
         size: 'medium'
       });

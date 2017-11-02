@@ -13,3 +13,4 @@ export * from './mcs-storage.interface';
 /** Server Dialogs */
 export * from './server-dialogs/reset-password/reset-password.dialog';
 export * from './server-dialogs/reset-password-finished/reset-password-finished.dialog';
+export * from './server-dialogs/delete-storage/delete-storage.dialog';

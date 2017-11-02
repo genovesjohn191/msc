@@ -181,11 +181,6 @@
         "expandStorageHeading": "Expand Disk : ",
         "expandStorageLink": "Expand",
         "deleteStorageLink": "Delete",
-        "addingStorageMessage": "Creating Disk...",
-        "expandingStorageMessage": "Expanding Disk...",
-        "deletingStorageMessage": "Deleting Disk...",
-        "deleteStorageAlertMessage": "The data on {{disk_name}} will be lost forever.",
-        "deleteStorageConfirmation": "Are you sure you want to delete this volume?",
         "unit": "GB",
         "sliderSwitch": "Select from slider",
         "customSwitch": "Enter custom size",
@@ -221,6 +216,13 @@
         "close": "Close",
         "username": "Username:",
         "password": "Password:"
+      },
+      "deleteStorageDialog": {
+        "title": "Delete {{storage_name}} Storage",
+        "alert": "The data on {{storage_name}} will be lost forever.",
+        "confirmation": "Are you sure you want to delete this volume?",
+        "cancel": "Cancel",
+        "confirm": "Yes"
       }
     }
   },

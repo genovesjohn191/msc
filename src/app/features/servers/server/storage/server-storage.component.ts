@@ -22,7 +22,7 @@ import {
   McsApiJob,
   McsJobType,
   McsLoader,
-  McsModal
+  McsDialogService
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import {
@@ -33,7 +33,10 @@ import {
   deleteArrayRecord
 } from '../../../../utilities';
 
-import { McsStorage } from '../../shared';
+import {
+  McsStorage,
+  DeleteStorageDialogComponent
+} from '../../shared';
 
 const STORAGE_SLIDER_STEP_DEFAULT = 25;
 const STORAGE_MAXIMUM_DISKS = 14;
@@ -57,9 +60,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   @ViewChild('updateButton')
   public updateButton: McsLoader;
 
-  @ViewChild('deleteButton')
-  public deleteButton: McsLoader;
-
   public serverStorageText: any;
   public deleteStorageAlertMessage: string;
 
@@ -78,8 +78,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public selectedStorageDevice: ServerStorageDevice;
   public selectedStorageSliderValues: number[];
-
-  public deleteStorageModal: McsModal;
 
   public serverResourceSubscription: Subscription;
   public storageDataSubscription: Subscription;
@@ -183,7 +181,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
-    private _notificationContextService: McsNotificationContextService
+    private _notificationContextService: McsNotificationContextService,
+    private _dialogService: McsDialogService
   ) {
     // Constructor
     this.isProcessing = false;
@@ -244,14 +243,17 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.expandStorage = false;
   }
 
-  public setModalInstance(mcsModal: McsModal): void {
-    if (!mcsModal) { return; }
-    this.deleteStorageModal = mcsModal;
-  }
+  public deleteStorage(storage: ServerStorageDevice): void {
+    let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
+      data: storage,
+      size: 'medium'
+    });
 
-  public closeDeleteStorageModal(): void {
-    if (this.deletingStorage) { return; }
-    this.deleteStorageModal.close();
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.onDeleteStorage(storage);
+      }
+    });
   }
 
   public convertStorageInGb(value: number): number {
@@ -321,13 +323,12 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteStorage(storage: ServerStorageDevice): void {
-    if (this.deletingStorage) { return; }
+    if (this.isProcessing) { return; }
 
-    this.deletingStorage = true;
-    this.deleteButton.showLoader();
+    this.isProcessing = true;
 
     this._serverService.deleteServerStorage(this.server.id, storage.id)
-      .subscribe(() => { this.isProcessing = true; });
+      .subscribe();
   }
 
   public getStorageAvailableMemory(storageProfile: string): number {
@@ -475,11 +476,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
               case McsJobType.DeleteServerDisk:
                 // Delete Disk
-                if (this.deleteStorageModal) {
-                  this.deletingStorage = false;
-                  this.deleteStorageModal.close();
-                }
-
                 if (isCompleted) {
                   disk = this.storageDevices.find((storage) => {
                     return storage.id === serverJob.clientReferenceObject.diskId;
