@@ -29,13 +29,15 @@ let nextUniqueId = 0;
 export class TabComponent implements AfterViewInit {
 
   public portalTemplate: McsPortalTemplate<any>;
-  public id = `mcs-tab-${nextUniqueId++}`;
+
+  @Input()
+  public id: any = `mcs-tab-${nextUniqueId++}`;
 
   @Input()
   public label: string;
 
   @Input()
-  public supportSelection: boolean;
+  public canSelect: boolean;
 
   @ContentChild(TabLabelDirective)
   public labelTemplate: TabLabelDirective;
@@ -44,7 +46,7 @@ export class TabComponent implements AfterViewInit {
   private _content: TemplateRef<any>;
 
   constructor(private _viewContainerRef: ViewContainerRef) {
-    this.supportSelection = true;
+    this.canSelect = true;
   }
 
   public ngAfterViewInit(): void {

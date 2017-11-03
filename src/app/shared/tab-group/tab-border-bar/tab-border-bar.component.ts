@@ -3,6 +3,7 @@ import {
   Renderer2,
   ElementRef,
   NgZone,
+  ChangeDetectorRef,
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -20,6 +21,7 @@ import {
 export class TabBorderBarComponent {
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
     private _elementRef: ElementRef,
     private _ngZone: NgZone
@@ -37,6 +39,7 @@ export class TabBorderBarComponent {
     } else {
       this._setStyles(element);
     }
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

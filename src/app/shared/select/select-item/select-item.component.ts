@@ -48,7 +48,7 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
   @ContentChildren(SelectGroupComponent)
   public groups: QueryList<SelectGroupComponent>;
 
-  public id: string = `mcs-option-${nextUniqueId++}`;
+  public id: string = `mcs-select-item-${nextUniqueId++}`;
 
   /**
    * Sub group open flag determines wheather the sub-group is open or not

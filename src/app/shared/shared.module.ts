@@ -9,6 +9,7 @@ import {
 import { FileUploadModule } from 'ng2-file-upload';
 /** Modules */
 import { LayoutModule } from './layout/layout.module';
+import { ButtonModule } from './button/button.module';
 import { PopoverModule } from './popover/popover.module';
 import { ModalModule } from './modal/modal.module';
 import { IconModule } from './icon/icon.module';
@@ -25,8 +26,8 @@ import { ListModule } from './list/list.module';
 import { DialogModule } from './dialog/dialog.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
+import { WizardModule } from './wizard/wizard.module';
 /** Components */
-import { ButtonComponent } from './button/button.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { RadioButtonGroupComponent } from './radio-button-group/radio-button-group.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
@@ -35,8 +36,6 @@ import { DropdownComponent } from './dropdown/dropdown.component';
 import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
-import { WizardComponent } from './wizard/wizard.component';
-import { WizardStepComponent } from './wizard/wizard-step/wizard-step.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SearchComponent } from './search/search.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
@@ -45,7 +44,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
 
 @NgModule({
   declarations: [
-    ButtonComponent,
     CheckboxComponent,
     RadioButtonGroupComponent,
     FilterSelectorComponent,
@@ -54,8 +52,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,
-    WizardStepComponent,
-    WizardComponent,
     PaginatorComponent,
     HasPermissionDirective,
     SearchComponent,
@@ -71,6 +67,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     PopoverModule,
     ModalModule,
     IconModule,
+    ButtonModule,
     ValidationMessageModule,
     TableModule,
     ListPanelModule,
@@ -83,10 +80,10 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ListModule,
     DialogModule,
     TooltipModule,
-    TabGroupModule
+    TabGroupModule,
+    WizardModule
   ],
   exports: [
-    ButtonComponent,
     CheckboxComponent,
     RadioButtonGroupComponent,
     FilterSelectorComponent,
@@ -95,8 +92,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,
-    WizardStepComponent,
-    WizardComponent,
     PaginatorComponent,
     HasPermissionDirective,
     SearchComponent,
@@ -110,6 +105,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     PopoverModule,
     ModalModule,
     IconModule,
+    ButtonModule,
     ValidationMessageModule,
     TableModule,
     ListPanelModule,
@@ -122,7 +118,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ListModule,
     DialogModule,
     TooltipModule,
-    TabGroupModule
+    TabGroupModule,
+    WizardModule
   ]
 })
 

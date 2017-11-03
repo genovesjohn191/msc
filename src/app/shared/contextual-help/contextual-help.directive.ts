@@ -20,6 +20,7 @@ import {
 
 export class ContextualHelpDirective implements OnInit, OnDestroy {
   public browserStreamSubscription: any;
+  public refreshFunc: () => void;
 
   @Input()
   public mcsContextualHelp: string;
@@ -96,10 +97,16 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
 
   private _onMouseEnter(): void {
     this._hasFocus = true;
+    if (this.refreshFunc) {
+      this.refreshFunc();
+    }
   }
 
   private _onMouseLeave(): void {
     this._hasFocus = false;
+    if (this.refreshFunc) {
+      this.refreshFunc();
+    }
   }
 
   private _registerEvents(): void {
