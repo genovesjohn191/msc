@@ -4,7 +4,7 @@
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="firewallTextContent.panel">
       <div class="listing-panel-wrapper">
-        <mcs-search #listSearch [delayInSeconds]="0"></mcs-search>
+        <mcs-search #listSearch delayInSeconds="none"></mcs-search>
         <mcs-list-panel [listSource]="firewallListSource"
           [selectedListItem]="selectedItem" [searchMode]="firewallListSource?.searchMode"
           [mcsLoader]="firewallListSource?.firewallsSubscription">

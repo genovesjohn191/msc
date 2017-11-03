@@ -20,7 +20,7 @@
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="serverTextContent.panel">
       <div class="listing-panel-wrapper">
-        <mcs-search #search [delayInSeconds]="0"></mcs-search>
+        <mcs-search #search delayInSeconds="none"></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
           [searchMode]="serverListSource?.searchMode"
           [mcsLoader]="serverListSource?.serverListSubscription">

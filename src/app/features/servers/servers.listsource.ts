@@ -96,6 +96,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
 
   public onCompletion(_status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
+    this._search.showLoading(false);
   }
 
   private _mapServerList(servers: Server[]): ServerList[] {
@@ -117,6 +118,10 @@ export class ServersListSource implements McsDataSource<ServerList> {
       serverList.push(serverListItem);
     });
 
+    serverList.sort((first: ServerList, second: ServerList) => {
+      return compareStrings(first.vdcName, second.vdcName);
+    });
+
     return serverList;
   }
 
@@ -136,9 +141,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
   private _getServerPowerState(server: Server): number {
     let serverPowerstate = server.powerState;
 
-    if (isNullOrEmpty(this._serversService.activeServers)) {
-      return serverPowerstate;
-    } else {
+    if (!isNullOrEmpty(this._serversService.activeServers)) {
       for (let active of this._serversService.activeServers) {
         if (active.serverId === server.id) {
           // Update the powerstate of the corresponding server based on the row
@@ -147,8 +150,9 @@ export class ServersListSource implements McsDataSource<ServerList> {
           break;
         }
       }
-      return serverPowerstate;
     }
+
+    return serverPowerstate;
   }
 
   /**

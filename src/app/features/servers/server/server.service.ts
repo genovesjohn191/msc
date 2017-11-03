@@ -13,7 +13,8 @@ import {
   ServerPlatform,
   ServerResource,
   ServerResourceStorage,
-  ServerCommand
+  ServerCommand,
+  ServerPowerState
 } from '../models';
 import { McsApiSuccessResponse } from '../../../core/';
 
@@ -69,7 +70,8 @@ export class ServerService {
    */
   public setPerformanceScale(
     id: any,
-    cpuSizeScale: ServerPerformanceScale
+    cpuSizeScale: ServerPerformanceScale,
+    serverPowerState: ServerPowerState
   ) {
     if (!cpuSizeScale) { return; }
 
@@ -82,7 +84,8 @@ export class ServerService {
         clientReferenceObject: {
           serverId: id,
           memoryMB: cpuSizeScale.memoryMB,
-          cpuCount: cpuSizeScale.cpuCount
+          cpuCount: cpuSizeScale.cpuCount,
+          powerState: serverPowerState,
         }
       } as ServerUpdate
     );
@@ -128,11 +131,12 @@ export class ServerService {
    */
   public deleteServerStorage(
     serverId: any,
-    storageId: any
+    storageId: any,
+    storageData: ServerStorageDeviceUpdate
   ) {
 
     // Delete a server storage
-    return this._serversService.deleteServerStorage(serverId, storageId);
+    return this._serversService.deleteServerStorage(serverId, storageId, storageData);
   }
 
   /**
