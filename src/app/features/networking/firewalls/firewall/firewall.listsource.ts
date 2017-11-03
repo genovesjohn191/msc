@@ -88,6 +88,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
 
   public onCompletion(_status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
+    this._search.showLoading(false);
   }
 
   private _setFirewallListData(): void {

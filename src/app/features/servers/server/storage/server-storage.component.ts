@@ -286,7 +286,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       serverId: this.server.id,
       name: `${this.serverStorageText.diskName} ${this.storageDevices.length + 1}`,
       storageProfile: this.storageChangedValue.storageProfile,
-      sizeMB: this.storageChangedValue.storageMB
+      sizeMB: this.storageChangedValue.storageMB,
+      powerState: this.server.powerState
     };
 
     this.storageChangedValue = new ServerManageStorage();
@@ -312,7 +313,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       diskId: this.selectedStorageDevice.id,
       name: this.selectedStorageDevice.name,
       storageProfile: this.selectedStorageDevice.storageProfile,
-      sizeMB: this.storageChangedValue.storageMB
+      sizeMB: this.storageChangedValue.storageMB,
+      powerState: this.server.powerState
     };
 
     this._serverService.updateServerStorage(
@@ -327,8 +329,14 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
     this.isProcessing = true;
 
-    this._serverService.deleteServerStorage(this.server.id, storage.id)
-      .subscribe();
+    let storageData = new ServerStorageDeviceUpdate();
+    storageData.clientReferenceObject = {
+      serverId: this.server.id,
+      diskId: storage.id,
+      powerState: this.server.powerState
+    };
+
+    this._serverService.deleteServerStorage(this.server.id, storage.id, storageData).subscribe();
   }
 
   public getStorageAvailableMemory(storageProfile: string): number {
@@ -416,10 +424,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
               job.clientReferenceObject.serverId === this.server.id;
           });
 
-          if (!isNullOrEmpty(serverJob)) {
-            this.isProcessing = serverJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING
-              || serverJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+          this.isProcessing = !isNullOrEmpty(serverJob) &&
+            (serverJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING ||
+            serverJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
 
+          let isStorageJob = !isNullOrEmpty(serverJob) &&
+            (serverJob.type === McsJobType.CreateServerDisk ||
+            serverJob.type === McsJobType.UpdateServerDisk ||
+            serverJob.type === McsJobType.DeleteServerDisk);
+
+          if (isStorageJob) {
             let isCompleted = serverJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
 
             if (serverJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED) {

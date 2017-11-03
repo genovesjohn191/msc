@@ -9,6 +9,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {
+  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
@@ -181,6 +182,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _notificationContextService: McsNotificationContextService,
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _activatedRoute: ActivatedRoute
   ) {
     this.primaryVolume = '';
@@ -282,7 +284,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
     // Update the Server CPU size scale
     this._scalingSubscription = this._serverService.setPerformanceScale(
-      this.server.id, this._serverPerformanceScale).subscribe();
+      this.server.id, this._serverPerformanceScale, this.server.powerState).subscribe();
+    this._router.navigate(['/servers/', this.server.id, 'management']);
   }
 
   public cancelScale(): void {
@@ -358,7 +361,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(this.jobs) && this.server) { return; }
 
     let activeServerJob = this.jobs.find((job) => {
-      return job.clientReferenceObject.serverId === this.server.id;
+      return !isNullOrEmpty(job.clientReferenceObject) &&
+        job.clientReferenceObject.serverId === this.server.id;
     });
 
     this.isProcessing = !isNullOrEmpty(activeServerJob) &&

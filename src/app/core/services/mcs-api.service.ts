@@ -121,6 +121,7 @@ export class McsApiService {
       this.getFullUrl(apiRequest.endPoint),
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
+        body: apiRequest.recordData,
         responseType: apiRequest.responseType
       })
       .catch((error) => this.handleError(error));

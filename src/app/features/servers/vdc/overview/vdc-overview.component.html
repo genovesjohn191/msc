@@ -43,7 +43,7 @@
       <h3>{{ textContent.networkInformation.title }}</h3>
       <div class="vertical-items-spacing-medium">
         <span>{{ textContent.networkInformation.description }}</span>
-        <mcs-accordion>
+        <mcs-accordion [multi]="true">
           <mcs-accordion-panel *ngFor="let network of vdc.networks; let i = index" [expanded]="i === 0">
             <mcs-accordion-panel-header panel-header-def>
               <h4>{{ network.name }}</h4>

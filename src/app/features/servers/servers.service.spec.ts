@@ -807,7 +807,10 @@ describe('ServersService', () => {
     });
 
     it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
-      serversService.deleteServerStorage(requestOptions.id, requestOptions.storageId)
+      serversService.deleteServerStorage(
+        requestOptions.id,
+        requestOptions.storageId,
+        requestOptions.serverStorageUpdate)
         .subscribe((response) => {
           let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
           mcsApiSucessResponse = response;
@@ -836,7 +839,10 @@ describe('ServersService', () => {
         ) as any as Error);
       });
 
-      serversService.deleteServerStorage(requestOptions.id, requestOptions.storageId)
+      serversService.deleteServerStorage(
+        requestOptions.id,
+        requestOptions.storageId,
+        requestOptions.serverStorageUpdate)
         .catch((error: McsApiErrorResponse) => {
           expect(error).toBeDefined();
           expect(error.status).toEqual(404);

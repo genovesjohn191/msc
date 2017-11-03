@@ -373,10 +373,12 @@ export class ServersService {
    */
   public deleteServerStorage(
     serverId: any,
-    storageId: any
+    storageId: any,
+    storageData: ServerStorageDeviceUpdate
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
+    mcsApiRequestParameter.recordData = JSON.stringify(storageData);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .map((response) => {
@@ -418,11 +420,12 @@ export class ServersService {
     // Get actual server status
     switch (activeServer.notificationStatus) {
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        serverPowerstate =
-          activeServer.commandAction === ServerCommand.Start ||
-            activeServer.commandAction === ServerCommand.Restart ||
-            activeServer.commandAction === ServerCommand.ResetVmPassword ?
-            ServerPowerState.PoweredOn : ServerPowerState.PoweredOff;
+        if (isNullOrEmpty(activeServer.commandAction)) {
+          serverPowerstate = activeServer.powerState;
+        } else {
+          serverPowerstate = activeServer.commandAction === ServerCommand.Stop ?
+            ServerPowerState.PoweredOff : ServerPowerState.PoweredOn ;
+        }
         break;
 
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
@@ -599,9 +602,7 @@ export class ServersService {
 
         // Filter only those who have client reference object on notification jobs
         updatedNotifications.forEach((notification) => {
-          if ((notification.type === McsJobType.ChangeServerPowerState ||
-            notification.type === McsJobType.ResetServerPassword)
-            && notification.clientReferenceObject) {
+          if (notification.clientReferenceObject) {
 
             activeServers.push({
               serverId: notification.clientReferenceObject.serverId,

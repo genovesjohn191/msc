@@ -1,9 +1,9 @@
 @import "../../../styles/shared/base";
 
 // Alerts
-$alert-container-padding: 20px 25px;
-$alert-icon-container-size: 50px;
-$alert-title-font-size: 18;
+$alert-container-padding: $space-small;
+$alert-icon-container-size: 30px;
+$alert-title-font-size: 16;
 $alert-background-opacity: 0.09;
 
 .mcs-alert {
@@ -16,7 +16,7 @@ $alert-background-opacity: 0.09;
   .alert-icon {
     @include display-flex(row);
     align-items: center;
-    margin-right: $space-large;
+    margin-right: $space-small;
     @include border-radius(100%);
     width: $alert-icon-container-size;
     height: $alert-icon-container-size;
