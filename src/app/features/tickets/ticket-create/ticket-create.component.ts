@@ -6,7 +6,8 @@ import {
   QueryList,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  HostListener
 } from '@angular/core';
 import {
   FormGroup,
@@ -134,6 +135,11 @@ export class TicketCreateComponent implements
 
   public safeToNavigateAway(): boolean {
     return !this.fgCreateTicket.dirty;
+  }
+
+  @HostListener('window:beforeunload')
+  public navigateAwayGuard() {
+    return false;
   }
 
   public ngOnInit() {
