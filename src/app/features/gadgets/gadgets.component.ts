@@ -11,7 +11,6 @@ import { GadgetsDataSource } from './gadgets.datasource';
 import { GadgetsListSource } from './gadgets.listsource';
 import { Server } from '../servers/models';
 import {
-  McsList,
   McsListItem,
   McsPaginator,
   McsModal,
@@ -39,8 +38,6 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   public textboxValue: string;
   public disabled: boolean;
   public servers: Server[];
-  public dropdownData: McsList;
-  public dropdownValue: string;
   public numberModel: number;
   public textboxModel: any;
   public wizardModel: any;
@@ -104,7 +101,6 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   ) {
     this.title = 'Gadgets component';
     this.gadgets = new Array();
-    this.dropdownValue = '';
     this.radioButtonHorizontal = 'dhcp';
     this.radioButtonVertical = 'next';
     this.showPreviousStep = true;
@@ -141,7 +137,6 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
     this.getAllIcons();
     this.textboxValue = 'Windows Server 2012';
     this.disabled = true;
-    this.dropdownData = this.servers ? this.mapDropdownData(this.servers) : new McsList();
     this.reactiveForm = new FormGroup({
       textEmail: new FormControl(null, Validators.required),
       textIpAddress: new FormControl(null, Validators.required),
@@ -283,24 +278,6 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
       console.log('done');
       textbox.hideLoader();
     }, 2000);
-  }
-
-  public mapDropdownData(servers: Server[]): McsList {
-    if (!servers) { return; }
-
-    let dropdownData = new McsList();
-
-    for (let server of servers) {
-      dropdownData.push(
-        server.serviceType.toString(),
-        new McsListItem(server.managementName, server.managementName)
-      );
-    }
-
-    let groupName = dropdownData.getGroupNames()[0];
-    this.dropdownValue = dropdownData.getGroup(groupName)[0].key;
-
-    return dropdownData;
   }
 
   public closeModal1() {

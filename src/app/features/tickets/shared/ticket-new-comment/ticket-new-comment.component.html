@@ -1,20 +1,24 @@
 <div class="basic-form">
-  <!-- Comment text area -->
-  <div class="field">
-    <textarea [(ngModel)]="comment" class="full-width" rows="3"></textarea>
-  </div>
+  <form [formGroup]="fgCreateComment">
+    <!-- Comment text area -->
+    <div class="field">
+      <textarea formControlName="fcComment" class="full-width" rows="3"></textarea>
+      <mcs-validation-message [control]="fcComment"></mcs-validation-message>
+    </div>
 
-  <div class="field">
-    <!-- Uploader of attachment wrapper -->
-    <mcs-ticket-attachment attachedType="single"
-      (attachedFilesChanged)="onChangedAttachments($event)">
-    </mcs-ticket-attachment>
+    <div class="field">
+      <!-- Uploader of attachment wrapper -->
+      <mcs-ticket-attachment attachedType="single"
+        (attachedFilesChanged)="onChangedAttachments($event)">
+      </mcs-ticket-attachment>
+    </div>
 
     <!-- Ticket comment/attachment creation -->
-    <div class="basic-action-bar">
+    <div class="field basic-action-bar">
       <a (click)="cancelComment()">{{ textContent.cancelActivity }}</a>
-
-      <mcs-button (onClick)="createComment()">{{ textContent.addActivity }}</mcs-button>
+      <mcs-button (onClick)="createComment()" [disabled]="!fgCreateComment.valid">
+        {{ textContent.addActivity }}
+      </mcs-button>
     </div>
-  </div>
+  </form>
 </div>

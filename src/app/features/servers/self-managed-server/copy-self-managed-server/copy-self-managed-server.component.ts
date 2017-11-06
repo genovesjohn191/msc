@@ -89,11 +89,11 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public selectedStorage: ServerManageStorage;
 
   // Dropdowns
-  public serverItems: McsList;
-  public vAppItems: McsList;
+  public serverItems: any;
+  public vAppItems: any;
   public osItems: McsList;
   public vTemplateItems: McsList;
-  public networkItems: McsList;
+  public networkItems: any;
   public storageItems: any;
 
   // Others
@@ -128,11 +128,11 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     this.availableMemoryMB = 0;
     this.availableCpuCount = 0;
 
-    this.serverItems = new McsList();
+    this.serverItems = new Array();
+    this.vAppItems = new Array();
     this.osItems = new McsList();
-    this.vAppItems = new McsList();
     this.vTemplateItems = new McsList();
-    this.networkItems = new McsList();
+    this.networkItems = new Array();
     this.storageItems = new Array();
     this.selectedNetwork = new ServerNetwork();
     this.selectedServer = new Server();
@@ -223,12 +223,14 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
     // Populate dropdown list
     this.servers.forEach((server) => {
-      this.serverItems.push('Servers',
-        new McsListItem(server.id, server.managementName));
+      this.serverItems.push({
+        'value': server.id,
+        'text': server.managementName
+      });
     });
 
     // Select first element of the dropdown
-    if (!isNullOrEmpty(this.serverItems.getGroupNames())) {
+    if (!isNullOrEmpty(this.serverItems)) {
       this.formControlTargetServer.setValue(this.servers[0].id);
       this.selectedServer = this.servers[0];
     }
@@ -239,10 +241,13 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
     // Populate dropdown list
     this.resource.storage.forEach((storage) => {
-      this.vAppItems.push('Virtual Applications', new McsListItem(storage.name, storage.name));
+      this.vAppItems.push({
+        'value': storage.name,
+        'text': storage.name
+      });
     });
     // Select first element of the dropdown
-    if (!isNullOrEmpty(this.vAppItems.getGroupNames())) {
+    if (!isNullOrEmpty(this.vAppItems)) {
       this.formControlVApp.setValue(this.selectedServer.vAppName);
     }
   }
@@ -272,10 +277,13 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
     // Populate dropdown list
     this.resource.networks.forEach((network) => {
-      this.networkItems.push('Networks', new McsListItem(network.name, network.name));
+      this.networkItems.push({
+        'value': network.name,
+        'text': network.name
+      });
     });
     // Select first element of the dropdown
-    if (!isNullOrEmpty(this.networkItems.getGroupNames())) {
+    if (!isNullOrEmpty(this.networkItems)) {
       this.formControlNetwork.setValue(this.selectedServer.hostName);
     }
   }

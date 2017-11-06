@@ -23,8 +23,6 @@ import {
 } from '../../../utilities';
 import {
   McsTextContentProvider,
-  McsList,
-  McsListItem,
   CoreValidators,
   CoreDefinition
 } from '../../../core';
@@ -80,7 +78,7 @@ export class TicketCreateComponent implements
 
   // Ticket Type Dropdown
   public ticketTypeValue: any;
-  public ticketTypeList: McsList;
+  public ticketTypeList: any;
 
   // others
   public servicesSubscription: any;
@@ -118,7 +116,7 @@ export class TicketCreateComponent implements
     private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this.ticketTypeList = new McsList();
+    this.ticketTypeList = new Array();
     this.services = new Array();
     this.contextualHelp = new Array();
     this.isServicesOpen = false;
@@ -361,15 +359,18 @@ export class TicketCreateComponent implements
    * Set ticket type based on selection
    */
   private _setTicketType(): void {
-    this.ticketTypeList.push('Ticket Type',
-      new McsListItem(TicketType.Enquiry, 'Enquiry'));
-    this.ticketTypeList.push('Ticket Type',
-      new McsListItem(TicketType.TroubleTicket, 'Trouble Ticket'));
+    this.ticketTypeList.push({
+      'value': TicketType.Enquiry,
+      'text': 'Enquiry'
+    });
+    this.ticketTypeList.push({
+      'value': TicketType.TroubleTicket,
+      'text': 'Trouble Ticket'
+    });
 
     // Select first element
-    if (!isNullOrEmpty(this.ticketTypeList.getGroupNames())) {
-      this.fcType.setValue(this.ticketTypeList.getGroup(
-        this.ticketTypeList.getGroupNames()[0])[0].key);
+    if (!isNullOrEmpty(this.ticketTypeList)) {
+      this.fcType.setValue(this.ticketTypeList[0].value);
     }
   }
 }
