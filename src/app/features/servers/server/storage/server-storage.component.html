@@ -26,7 +26,8 @@
               class="hidden-small"></mcs-icon>
             <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
               size="small" class="hidden-small"
-              [mcsTooltip]="getStorageSummaryInformation(storage.id)"></mcs-icon>
+              [mcsTooltip]="getStorageSummaryInformation(storage.id)"
+              mcsTooltipPosition="right"></mcs-icon>
             <span>{{ storage.name }}</span>
           </td>
           <td class="squishy-cell">
@@ -40,7 +41,7 @@
               <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
             </span>
             <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
-              <a [hidden]="isPrimaryStorage(storage)" (click)="deleteStorage(storage)">
+              <a *ngIf="hasMultipleStorageDevice" (click)="deleteStorage(storage)">
                 {{ serverStorageText.deleteStorageLink }}
               </a>
             </span>

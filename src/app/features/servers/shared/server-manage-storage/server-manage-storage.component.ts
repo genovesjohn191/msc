@@ -218,6 +218,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public onCustomStorageChanged(inputValue: number) {
     this.customStorageValue = inputValue;
+    this._setCustomControlValidator();
     this._notifyStorageChanged();
   }
 
