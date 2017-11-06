@@ -105,6 +105,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return !isNullOrEmpty(this.storageDevices);
   }
 
+  public get hasMultipleStorageDevice(): boolean {
+    return this.storageDevices.length > 1;
+  }
+
   public get hasReachedDisksLimit(): boolean {
     return this.storageDevices.length >= STORAGE_MAXIMUM_DISKS;
   }
@@ -558,8 +562,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    */
   private _setServerResourceStorage(): void {
     if (isNullOrEmpty(this.server.vdcName)) { return; }
-
-    this.serverResourceStorage.splice(0);
 
     if (this._serverResourceMap.has(this.server.vdcName)) {
       let serverResource = this._serverResourceMap.get(this.server.vdcName);
