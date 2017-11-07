@@ -6,16 +6,21 @@ import {
   EventEmitter,
   AfterViewInit,
   ViewChildren,
-  QueryList
+  QueryList,
+  ChangeDetectorRef,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   FormGroup,
-  FormControl
+  FormControl,
+  FormControlDirective
 } from '@angular/forms';
 import {
   McsTextContentProvider,
   CoreValidators,
-  CoreDefinition
+  CoreDefinition,
+  McsTouchedControl
 } from '../../../../core';
 import {
   ServerCreateSelfManaged,
@@ -25,22 +30,20 @@ import {
 import {
   refreshView,
   mergeArrays,
-  isNullOrEmpty
+  isNullOrEmpty,
+  isFormControlValid
 } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 
-const TARGET_SERVER_PLACEHOLDER = 'Select Server';
-
 @Component({
   selector: 'mcs-clone-self-managed-server',
-  templateUrl: './clone-self-managed-server.component.html'
+  templateUrl: './clone-self-managed-server.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
-  @Input()
-  public visible: boolean;
-
+export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, McsTouchedControl {
   @Input()
   public targetServer: string;
 
@@ -53,17 +56,18 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
+  @ViewChildren(FormControlDirective)
+  public formControls: QueryList<FormControlDirective>;
+
   // Form variables
-  public formGroupCloneServer: FormGroup;
-  public formControlTargetServer: FormControl;
+  public fgCloneServer: FormGroup;
+  public fcServerName: FormControl;
+  public fcTargetServer: FormControl;
 
   // Others
-  public noServersTextContent: any;
-  public contextualTextContent: any;
-
-  public get targetServerPlaceholder(): string {
-    return TARGET_SERVER_PLACEHOLDER;
-  }
+  public createType: ServerCreateType;
+  public textContent: any;
+  public textHelpContent: any;
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
@@ -75,20 +79,21 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
+    this.createType = ServerCreateType.Clone;
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
   public ngOnInit() {
-    this.noServersTextContent = this._textContentProvider.content
-    .servers.createSelfManagedServer.noServers;
+    // Set text content including contextual help
+    this.textContent = this._textContentProvider.content
+      .servers.createSelfManagedServer;
+    this.textHelpContent = this.textContent.contextualHelp;
 
-    this.contextualTextContent = this._textContentProvider.content
-      .servers.createSelfManagedServer.contextualHelp;
-
+    // Register forms
     this._registerFormGroup();
-
     if (isNullOrEmpty(this.targetServer) && this.hasServers) {
       this.targetServer = this.servers[0].id;
     }
@@ -96,6 +101,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit() {
     refreshView(() => {
+      // Get all contextual help information
       if (this.contextualHelpDirectives) {
         let contextInformations: ContextualHelpDirective[];
         contextInformations = this.contextualHelpDirectives
@@ -105,22 +111,47 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
         this._managedServerService.subContextualHelp =
           mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
       }
-
-      this.formControlTargetServer.setValue(this.targetServer);
+      this.fcTargetServer.setValue(this.targetServer);
+      this._changeDetectorRef.markForCheck();
     });
+  }
+
+  public isControlValid(control: any): boolean {
+    return isFormControlValid(control);
+  }
+
+  /**
+   * This will mark all controls to touched
+   */
+  public touchedAllControls(): void {
+    if (isNullOrEmpty(this.formControls)) { return; }
+    this.formControls.forEach((control) => {
+      control.form.markAsTouched();
+    });
+    this._changeDetectorRef.markForCheck();
   }
 
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.formControlTargetServer = new FormControl('', [
+    this.fcServerName = new FormControl('', [
+      CoreValidators.required,
+      CoreValidators.maxLength(CoreDefinition.SERVER_NAME_MAX),
+      CoreValidators.custom(
+        this._customServerNameValidator.bind(this),
+        this.textContent.invalidServerName
+      )
+    ]);
+
+    this.fcTargetServer = new FormControl('', [
       CoreValidators.required
     ]);
 
     // Register Form Groups using binding
-    this.formGroupCloneServer = new FormGroup({
-      formControlTargetServer: this.formControlTargetServer
+    this.fgCloneServer = new FormGroup({
+      fcServerName: this.fcServerName,
+      fcTargetServer: this.fcTargetServer
     });
-    this.formGroupCloneServer.statusChanges.subscribe(() => {
+    this.fgCloneServer.statusChanges.subscribe(() => {
       this._outputServerDetails();
     });
   }
@@ -131,8 +162,13 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
     // Set the variable based on the form values
     cloneSelfManaged.type = ServerCreateType.Clone;
-    cloneSelfManaged.targetServer = this.formControlTargetServer.value;
-    cloneSelfManaged.isValid = this.formGroupCloneServer.valid;
+    cloneSelfManaged.serverName = this.fcServerName.value;
+    cloneSelfManaged.targetServer = this.fcTargetServer.value;
+    cloneSelfManaged.isValid = this.fgCloneServer.valid;
     this.onOutputServerDetails.next(cloneSelfManaged);
+  }
+
+  private _customServerNameValidator(inputValue: any): boolean {
+    return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Rx';
 import { ServersService } from '../servers.service';
 import {
   ServerCreate,
@@ -15,15 +16,20 @@ export class CreateSelfManagedServersService {
    * Sub contextual help to all the components which are
    * dynamically created during runtime
    */
+  public subContextualHelpStream: Subject<any>;
   private _subContextualHelp: ContextualHelpDirective[];
   public get subContextualHelp(): ContextualHelpDirective[] {
     return this._subContextualHelp;
   }
   public set subContextualHelp(value: ContextualHelpDirective[]) {
-    this._subContextualHelp = value;
+    if (this._subContextualHelp !== value) {
+      this._subContextualHelp = value;
+      this.subContextualHelpStream.next();
+    }
   }
 
   constructor(private _serversService: ServersService) {
+    this.subContextualHelpStream = new Subject();
     this._subContextualHelp = new Array();
   }
 

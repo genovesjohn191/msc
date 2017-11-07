@@ -5,21 +5,38 @@ import {
   QueryList,
   Input,
   Output,
-  EventEmitter
+  ViewChild,
+  TemplateRef,
+  EventEmitter,
+  ChangeDetectorRef,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   CoreDefinition,
   McsTextContentProvider
 } from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
 
 @Component({
   selector: 'mcs-wizard',
   templateUrl: './wizard.component.html',
-  styleUrls: ['./wizard.component.scss']
+  styleUrls: ['./wizard.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'wizard-wrapper'
+  }
 })
 
 export class WizardComponent implements AfterContentInit {
+  @Input()
+  public header: string;
+
+  @Input()
+  public headerTemplate: TemplateRef<any>;
+
   @Input()
   public cancelText: string;
 
@@ -35,20 +52,26 @@ export class WizardComponent implements AfterContentInit {
   @Output()
   public onComplete: EventEmitter<any>;
 
+  @ViewChild('actionTemplate')
+  public actionTemplate: TemplateRef<any>;
+
   @ContentChildren(WizardStepComponent)
   public wizardSteps: QueryList<WizardStepComponent>;
 
   public wizardTextContent: any;
-  public activeStep: WizardStepComponent;
   public activeStepIndex: number;
   public isCompleted: boolean;
+  public activeStep: WizardStepComponent;
 
   // This is the list of all the steps in the wizard
   // including the hidden steps. If you want to get the
   // displayed steps only, use the displayedSteps variable instead
   public steps: WizardStepComponent[];
 
-  public constructor(private _textContentProvider: McsTextContentProvider) {
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _textContentProvider: McsTextContentProvider
+  ) {
     this.isCompleted = false;
     this.steps = new Array();
     this.activeStep = new WizardStepComponent();
@@ -107,44 +130,74 @@ export class WizardComponent implements AfterContentInit {
 
     // Set text content
     this.wizardTextContent = this._textContentProvider.content.shared.wizard;
+    this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Event that triggers when the cancel button is clicked
+   */
   public onClickCancel(): void {
     this.onCancel.emit();
   }
 
+  /**
+   * Event that triggers when the next button is clicked
+   */
   public onClickNext(): void {
     if (!this.hasNextStep) { return; }
-
-    // Set Active step to completed
-    this.activeStep.completed = true;
-    let nextStep: WizardStepComponent = this.displayedSteps[this.activeStepIndex + 1];
-    this.setActiveStep(nextStep);
+    isNullOrEmpty(this.activeStep.onNext.observers) ? this.proceedNext() :
+      this.activeStep.onNext.emit(this.proceedNext.bind(this));
   }
 
+  /**
+   * Event that triggers when the previous/back button is clicked
+   */
   public onClickPrevious(): void {
     if (!this.hasPreviousStep) { return; }
-
     let previousStep: WizardStepComponent = this.displayedSteps[this.activeStepIndex - 1];
     this.setActiveStep(previousStep);
   }
 
+  /**
+   * Event that triggers when the complete/go button is clicked
+   */
   public onClickCompleted(): void {
     if (!this.enableCompletedStep) { return; }
+    isNullOrEmpty(this.activeStep.onNext.observers) ? this.proceedCompletion() :
+      this.activeStep.onNext.emit(this.proceedCompletion.bind(this));
+  }
 
-    this.isCompleted = true;
-    // Set Active step to completed
+  /**
+   * Event that triggers outside when all the requirements are valid to proceed
+   */
+  public proceedNext(): void {
     this.activeStep.completed = true;
-    this.onComplete.emit();
     let nextStep: WizardStepComponent = this.displayedSteps[this.activeStepIndex + 1];
     this.setActiveStep(nextStep);
   }
 
+  /**
+   * Event that triggers outside when all the requirements are valid to completion
+   */
+  public proceedCompletion(): void {
+    this.proceedNext();
+    this.isCompleted = true;
+    this.onComplete.emit();
+  }
+
+  /**
+   * Go to specified step
+   * @param step Step to go through
+   */
   public goToStep(step: WizardStepComponent) {
     if (this.isCompleted || !step.enabled) { return; }
     this.setActiveStep(step);
   }
 
+  /**
+   * Set active step based on the current step
+   * @param step Step to be active
+   */
   public setActiveStep(step: WizardStepComponent): void {
     if (this.activeStep !== step) {
       // Set the previous step to inactive
@@ -157,7 +210,20 @@ export class WizardComponent implements AfterContentInit {
 
       // Set the active step index
       this.activeStepIndex = this.displayedSteps.indexOf(this.activeStep);
+      this._attachActionTemplate();
       this.onStepChanged.emit(this.activeStep);
+      this._changeDetectorRef.markForCheck();
     }
+  }
+
+  /**
+   * Attach the action template if it exist in the declaration to
+   * the template of the placement.
+   */
+  private _attachActionTemplate(): void {
+    if (isNullOrEmpty(this.activeStep.actionPlacement) ||
+      isNullOrEmpty(this.actionTemplate)) { return; }
+    this.activeStep.actionPlacement.viewContainerRef
+      .createEmbeddedView(this.actionTemplate);
   }
 }

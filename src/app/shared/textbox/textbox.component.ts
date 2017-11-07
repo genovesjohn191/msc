@@ -29,7 +29,10 @@ import {
       useExisting: forwardRef(() => TextboxComponent),
       multi: true
     }
-  ]
+  ],
+  host: {
+    '[attr.tabindex]': '0',
+  }
 })
 
 export class TextboxComponent
@@ -104,7 +107,10 @@ export class TextboxComponent
     }
   }
 
-  public constructor(private _renderer: Renderer2) {
+  public constructor(
+    private _renderer: Renderer2,
+    private _elementRef: ElementRef
+  ) {
     this.inputType = 'text';
     this.valid = true;
     this.disabled = false;
@@ -134,6 +140,10 @@ export class TextboxComponent
 
   public onFocusOut(_event): void {
     this._renderer.removeClass(this.mcsTextbox.nativeElement, 'active');
+  }
+
+  public focus(): void {
+    this._elementRef.nativeElement.focus();
   }
 
   /**

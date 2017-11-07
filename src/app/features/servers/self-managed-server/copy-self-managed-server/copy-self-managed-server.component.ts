@@ -97,6 +97,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public storageItems: any;
 
   // Others
+  public createType: ServerCreateType;
   public contextualTextContent: any;
   public availableMemoryMB: number;
   public availableCpuCount: number;
@@ -128,6 +129,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     this.availableMemoryMB = 0;
     this.availableCpuCount = 0;
 
+    this.createType = ServerCreateType.Copy;
     this.serverItems = new Array();
     this.vAppItems = new Array();
     this.osItems = new McsList();
@@ -303,9 +305,9 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     let serverStorage = this.formControlStorage.value as ServerManageStorage;
 
     let resourceStorage = this.resource.storage
-    .find((resource) => {
-      return resource.name === serverStorage.storageProfile;
-    });
+      .find((resource) => {
+        return resource.name === serverStorage.storageProfile;
+      });
 
     this.storageAvailableMemoryMB = this._serverService.computeAvailableStorageMB(resourceStorage);
   }

@@ -214,3 +214,12 @@ table.mcs-simple-table {
     border: 5px dashed $color-grey-04;
   }
 }
+
+// Limited view to all the page
+.limited-view {
+  @include flex(0 0 auto !important); // Force the page to not apply flex auto
+  width: $limited-view-width;
+  @include breakpoint(medium) {
+    width: 100%;
+  }
+}

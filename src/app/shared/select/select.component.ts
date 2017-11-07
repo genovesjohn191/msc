@@ -44,6 +44,7 @@ import { SelectItemComponent } from './select-item/select-item.component';
   ],
   host: {
     'class': 'select-wrapper',
+    '[attr.tabindex]': '0',
     '(keydown)': 'onKeyDown($event)',
     '(blur)': 'onBlur()'
   }
@@ -153,6 +154,10 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
 
   public toggle() {
     this.panelOpen ? this.closePanel() : this.openPanel();
+  }
+
+  public focus(): void {
+    this._elementRef.nativeElement.focus();
   }
 
   public onBlur(): void {

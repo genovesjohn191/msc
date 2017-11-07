@@ -2,9 +2,10 @@ import {
   Component,
   OnInit,
   Input,
-  AfterViewInit,
   ViewChildren,
-  QueryList
+  QueryList,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -23,32 +24,22 @@ import {
   ServerGroupedOs
 } from '../../models';
 import {
-  CoreDefinition,
-  CoreValidators,
   McsTextContentProvider,
-  McsSafeToNavigateAway
+  McsTouchedControl
 } from '../../../../core';
-
-import {
-  mergeArrays,
-  refreshView,
-  isFormControlValid
-} from '../../../../utilities';
+import { isNullOrEmpty } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../../../shared';
-import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
-
-const SERVER_NAME_MAX = 15;
 
 @Component({
   selector: 'mcs-create-self-managed-server',
   templateUrl: './create-self-managed-server.component.html',
-  styleUrls: ['./create-self-managed-server.component.scss']
+  styleUrls: ['./create-self-managed-server.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CreateSelfManagedServerComponent implements
-  OnInit,
-  AfterViewInit,
-  McsSafeToNavigateAway {
+export class CreateSelfManagedServerComponent implements OnInit, McsTouchedControl {
+
   @Input()
   public vdcName: string;
 
@@ -64,13 +55,17 @@ export class CreateSelfManagedServerComponent implements
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
+  @ViewChildren('createServerInstance')
+  public createServerInstance: QueryList<any>;
+
   // Form variables
   public formGroupCreateServer: FormGroup;
   public formControlServerName: FormControl;
 
   // Others
+  public activeCreationTabId: any;
   public contextualTextContent: any;
-  public createServerTextContent: any;
+  public textContent: any;
   public serverName: string;
   public serverCreateTypeEnum = ServerCreateType;
   public paramSubscription: Subscription;
@@ -106,7 +101,7 @@ export class CreateSelfManagedServerComponent implements
    */
   private _isValid: boolean;
   public get isValid(): boolean {
-    return this._serverInputs.isValid && this.formGroupCreateServer.valid;
+    return this._serverInputs.isValid;
   }
 
   private _serverNew: ServerCreateSelfManaged;
@@ -114,7 +109,6 @@ export class CreateSelfManagedServerComponent implements
   private _serverClone: ServerCreateSelfManaged;
 
   public constructor(
-    private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider,
     private _activatedRoute: ActivatedRoute
   ) {
@@ -126,33 +120,73 @@ export class CreateSelfManagedServerComponent implements
     this._serverClone = new ServerCreateSelfManaged();
   }
 
-  public safeToNavigateAway(): boolean {
-    return !this.formGroupCreateServer.dirty;
-  }
-
   public ngOnInit() {
-    this.createServerTextContent = this._textContentProvider.content
+    this.textContent = this._textContentProvider.content
       .servers.createSelfManagedServer;
-    this.contextualTextContent = this.createServerTextContent.contextualHelp;
+    this.contextualTextContent = this.textContent.contextualHelp;
 
     this._setTargetServer();
-    this._registerFormGroup();
   }
 
-  public ngAfterViewInit() {
-    refreshView(() => {
-      if (this.contextualHelpDirectives) {
-        let contextInformations: ContextualHelpDirective[];
-        contextInformations = this.contextualHelpDirectives
-          .map((description) => {
-            return description;
-          });
-        this._managedServerService.subContextualHelp =
-          mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
+  /**
+   * Return true when all the forms are touched and changes are made, otherwise false
+   */
+  public isTouchedAndDirty(): boolean {
+    let touchedDirty: boolean = false;
+    if (isNullOrEmpty(this.createServerInstance)) { return; }
+
+    // Check for dirty controls if they are marked already
+    this.createServerInstance.map((instance) => {
+      if (isNullOrEmpty(instance.formControls)) {
+        throw new Error('Instance of the component doesnt have form');
+      }
+      instance.formControls.map((control) => {
+        if (touchedDirty) { return; }
+        touchedDirty = control.form.touched && control.form.dirty;
+      });
+    });
+    return touchedDirty;
+  }
+
+  /**
+   * This will mark all children form controls to touched
+   */
+  public touchedAllControls(): void {
+    if (isNullOrEmpty(this.createServerInstance)) { return; }
+
+    // Mark all controls of child component to touched;
+    this.createServerInstance.map((createComponent) => {
+      if (createComponent.createType === this.activeCreationTabId) {
+        createComponent.touchedAllControls();
       }
     });
   }
 
+  /**
+   * Set focus on the first invalid element of the control
+   */
+  public setFocusToInvalidElement(): HTMLElement {
+    if (isNullOrEmpty(this.createServerInstance)) { return; }
+
+    // Mark all controls of child component to touched;
+    this.createServerInstance.map((createComponent) => {
+      if (createComponent.createType === this.activeCreationTabId) {
+        // Set focus to the first invalid element only
+        let focusFlag: boolean;
+        createComponent.formControls.forEach((formControl) => {
+          if (!formControl.valid && !focusFlag) {
+            focusFlag = true;
+            formControl.valueAccessor.focus();
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Set the creation type based on the selection of the tab
+   * @param type Creation type
+   */
   public setCreationType(type: ServerCreateType): void {
     this._serverCreateType = type;
 
@@ -172,30 +206,35 @@ export class CreateSelfManagedServerComponent implements
     }
   }
 
-  public setServerDetails($serverDetails: ServerCreateSelfManaged): void {
-    if (!$serverDetails) { return; }
-    switch ($serverDetails.type) {
+  /**
+   * Set the server details based on the inputted information
+   * @param _serverDetails Server details
+   */
+  public setServerDetails(_serverDetails: ServerCreateSelfManaged): void {
+    if (isNullOrEmpty(_serverDetails)) { return; }
+
+    switch (_serverDetails.type) {
       case ServerCreateType.Copy:
-        this._serverCopy = $serverDetails;
+        this._serverCopy = _serverDetails;
         break;
-
       case ServerCreateType.Clone:
-        this._serverClone = $serverDetails;
+        this._serverClone = _serverDetails;
         break;
-
       case ServerCreateType.New:
       default:
-        this._serverNew = $serverDetails;
+        this._serverNew = _serverDetails;
         break;
     }
-
-    this.setCreationType(this._serverCreateType);
+    this.setCreationType(_serverDetails.type);
   }
 
-  public isControlValid(control: any): boolean {
-    return isFormControlValid(control);
+  public onTabChanged(_event) {
+    this.activeCreationTabId = _event.id;
   }
 
+  /**
+   * Set the target server
+   */
   private _setTargetServer(): void {
     this.paramSubscription = this._activatedRoute.queryParams
       .subscribe((params: ParamMap) => {
@@ -204,30 +243,5 @@ export class CreateSelfManagedServerComponent implements
           this.setCreationType(ServerCreateType.Clone);
         }
       });
-  }
-
-  private _registerFormGroup(): void {
-    // Register Form Controls
-    this.formControlServerName = new FormControl('', [
-      CoreValidators.required,
-      CoreValidators.maxLength(SERVER_NAME_MAX),
-      CoreValidators.custom(
-        this._customServerNameValidator.bind(this),
-        this.createServerTextContent.invalidServerName
-      )
-    ]);
-    this.formControlServerName.valueChanges
-      .subscribe((inputValue) => {
-        this.serverName = inputValue;
-      });
-
-    // Register Form Groups using binding
-    this.formGroupCreateServer = new FormGroup({
-      formControlServerName: this.formControlServerName
-    });
-  }
-
-  private _customServerNameValidator(inputValue: any): boolean {
-    return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
   }
 }

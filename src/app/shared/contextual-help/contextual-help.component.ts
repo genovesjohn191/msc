@@ -6,7 +6,10 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { CoreDefinition } from '../../core';
-import { getElementPositionFromHost } from '../../utilities';
+import {
+  getElementPositionFromHost,
+  refreshView
+} from '../../utilities';
 import { ContextualHelpDirective } from './contextual-help.directive';
 
 @Component({
@@ -19,7 +22,16 @@ import { ContextualHelpDirective } from './contextual-help.directive';
 
 export class ContextualHelpComponent {
   @Input()
-  public contextualInformations: ContextualHelpDirective[];
+  public get contextualInformations(): ContextualHelpDirective[] {
+    return this._contextualInformations;
+  }
+  public set contextualInformations(value: ContextualHelpDirective[]) {
+    if (this._contextualInformations !== value) {
+      this._contextualInformations = value;
+      this._markForCheck();
+    }
+  }
+  private _contextualInformations: ContextualHelpDirective[];
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.contextualInformations = new Array();
@@ -54,6 +66,10 @@ export class ContextualHelpComponent {
    * Refresh the view of the component itself
    */
   private _markForCheck(): void {
-    this._changeDetectorRef.markForCheck();
+    // We need to run this detection change in a separate thread in order
+    // to apply the visibilty settings of directive
+    refreshView(() => {
+      this._changeDetectorRef.markForCheck();
+    });
   }
 }

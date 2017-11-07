@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  Output,
+  EventEmitter,
   ContentChildren,
   QueryList,
   AfterContentInit,
@@ -31,6 +33,9 @@ export class TabGroupComponent implements AfterContentInit {
   @ContentChildren(TabComponent)
   public tabs: QueryList<TabComponent>;
 
+  @Output()
+  public tabChanged: EventEmitter<any>;
+
   @Input()
   public get selectedTabId(): any {
     return this._selectedTabId;
@@ -49,6 +54,7 @@ export class TabGroupComponent implements AfterContentInit {
   private _selectionModel: McsSelection<TabComponent>;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
+    this.tabChanged = new EventEmitter();
     this._selectionModel = new McsSelection<TabComponent>(false);
   }
 
@@ -74,6 +80,7 @@ export class TabGroupComponent implements AfterContentInit {
     if (isNullOrEmpty(tab) || !tab.canSelect) { return; }
     this._selectionModel.select(tab);
     this._changeDetectorRef.markForCheck();
+    this.tabChanged.emit(tab);
   }
 
   private _setActiveTab(selectedId: any): void {

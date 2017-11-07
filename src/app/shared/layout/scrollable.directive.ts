@@ -17,13 +17,20 @@ import {
 } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 
+// Unique Id that generates during runtime
+let nextUniqueId = 0;
 type ScrollbarStyle = 'default' | 'dark';
 
 @Directive({
-  selector: '[scrollable]'
+  selector: '[scrollable]',
+  host: {
+    '[id]': 'scrollbarId'
+  }
 })
 
 export class ScrollableDirective implements OnInit, OnDestroy, McsScrollable {
+  @Input()
+  public scrollbarId: string = `mcs-scrollbar-item-${nextUniqueId++}`;
 
   @Input()
   public scrollbarSize: 'small' | 'medium';
@@ -54,6 +61,7 @@ export class ScrollableDirective implements OnInit, OnDestroy, McsScrollable {
       });
     });
     this._scrollDispatcher.register(this);
+    this._setElementOverflow();
     this._setScrollStyle();
     this._setScrollSize();
   }
@@ -82,6 +90,19 @@ export class ScrollableDirective implements OnInit, OnDestroy, McsScrollable {
   private _setScrollStyle(): void {
     if (isNullOrEmpty(this.scrollbarStyle)) { this.scrollbarStyle = 'default'; }
     this._renderer.addClass(this._elementRef.nativeElement, `scrollbar-${this.scrollbarStyle}`);
+  }
+
+  /**
+   * Set the overflow of the element to display the scroll
+   */
+  private _setElementOverflow(): void {
+    this._renderer.setStyle(this._elementRef.nativeElement, 'overflow', 'auto');
+
+    // Set the parent element overflow
+    let parentElement = (this._elementRef.nativeElement as HTMLElement).parentElement;
+    if (!isNullOrEmpty(parentElement)) {
+      this._renderer.setStyle(parentElement, 'overflow', 'hidden');
+    }
   }
 
   /**

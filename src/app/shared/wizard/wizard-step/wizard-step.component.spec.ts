@@ -57,10 +57,6 @@ describe('WizardStepComponent', () => {
       expect(component.showPrevious).toBeTruthy();
     });
 
-    it(`should set the valid to true`, () => {
-      expect(component.valid).toBeTruthy();
-    });
-
     it(`should set the isActive to false`, () => {
       expect(component.isActive).toBeFalsy();
     });
