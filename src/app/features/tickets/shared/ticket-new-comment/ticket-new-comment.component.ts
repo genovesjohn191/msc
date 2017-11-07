@@ -4,13 +4,18 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
+import {
+  FormGroup,
+  FormControl
+} from '@angular/forms';
 import { isNullOrEmpty } from '../../../../utilities';
 import {
   TicketNewComment,
   TicketFileInfo
 } from '../../models';
 import {
-  McsTextContentProvider
+  McsTextContentProvider,
+  CoreValidators
 } from '../../../../core';
 
 @Component({
@@ -22,6 +27,8 @@ import {
 export class TicketNewCommentComponent implements OnInit {
 
   public textContent: any;
+  public fgCreateComment: FormGroup;
+  public fcComment: FormControl;
 
   @Output()
   public onCreateComment: EventEmitter<any>;
@@ -31,17 +38,6 @@ export class TicketNewCommentComponent implements OnInit {
 
   private _attachedFile: TicketFileInfo;
 
-  /**
-   * Comment of the text area
-   */
-  private _comment: string;
-  public get comment(): string {
-    return this._comment;
-  }
-  public set comment(value: string) {
-    this._comment = value;
-  }
-
   public constructor(private _textContentProvider: McsTextContentProvider) {
     this.onCreateComment = new EventEmitter<any>();
     this.onCancelComment = new EventEmitter<any>();
@@ -49,6 +45,7 @@ export class TicketNewCommentComponent implements OnInit {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.tickets.ticket;
+    this._registerFormGroup();
   }
 
   /**
@@ -73,8 +70,22 @@ export class TicketNewCommentComponent implements OnInit {
   public createComment() {
     let details = new TicketNewComment();
 
-    details.comment = this.comment;
+    details.comment = this.fcComment.value;
     details.attachedFile = this._attachedFile;
     this.onCreateComment.emit(details);
+  }
+
+  /**
+   * Form groups and Form controls registration area
+   */
+  private _registerFormGroup(): void {
+    this.fcComment = new FormControl('', [
+      CoreValidators.required
+    ]);
+
+    // Register Form Groups using binding
+    this.fgCreateComment = new FormGroup({
+      fcComment: this.fcComment
+    });
   }
 }

@@ -32,7 +32,6 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
 import { RadioButtonGroupComponent } from './radio-button-group/radio-button-group.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { TextboxComponent } from './textbox/textbox.component';
-import { DropdownComponent } from './dropdown/dropdown.component';
 import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
@@ -48,7 +47,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RadioButtonGroupComponent,
     FilterSelectorComponent,
     TextboxComponent,
-    DropdownComponent,
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,
@@ -88,7 +86,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RadioButtonGroupComponent,
     FilterSelectorComponent,
     TextboxComponent,
-    DropdownComponent,
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,

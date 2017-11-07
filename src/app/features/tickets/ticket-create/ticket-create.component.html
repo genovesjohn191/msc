@@ -23,10 +23,15 @@
           <div class="field">
             <label class="label" for="type">*{{ textContent.type }}</label>
             <div class="item">
-              <mcs-dropdown id="type"
-                formControlName="fcType"
-                [dropdownData]="ticketTypeList"
-                [mcsContextualHelp]="contextualContent.type"></mcs-dropdown>
+              <mcs-select id="type" formControlName="fcType"
+                placeholder="Ticket Type"
+                [mcsContextualHelp]="contextualContent.type">
+                <mcs-select-group header="Ticket Type">
+                  <mcs-select-item *ngFor="let ticketType of ticketTypeList" [value]="ticketType.value">
+                    {{ ticketType.text }}
+                  </mcs-select-item>
+                </mcs-select-group>
+              </mcs-select>
               <mcs-validation-message [control]="fcType"></mcs-validation-message>
             </div>
           </div>

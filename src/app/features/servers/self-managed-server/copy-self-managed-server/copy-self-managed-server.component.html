@@ -1,18 +1,27 @@
 <form [hidden]="!visible" [formGroup]="formGroupCopyServer">
 
   <div class="server-configuration-details">
-    <div class="control-group">
-      <mcs-dropdown name="Server Name"
-        formControlName="formControlTargetServer"
-        [dropdownData]="serverItems"
-        [mcsContextualHelp]="contextualTextContent.serverName"></mcs-dropdown>
+    <div class="field">
+      <mcs-select formControlName="formControlTargetServer">
+        <mcs-select-item [value]="">Select Server</mcs-select-item>
+        <mcs-select-group header="Servers">
+          <mcs-select-item *ngFor="let server of serverItems" [value]="server.value">
+            {{ server.text }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
       <mcs-validation-message [control]="formControlTargetServer"></mcs-validation-message>
     </div>
 
-    <div class="control-group">
-      <mcs-dropdown name="vApp" formControlName="formControlVApp"
-        [dropdownData]="vAppItems"></mcs-dropdown>
-      <mcs-validation-message [control]="formControlVApp"></mcs-validation-message>
+    <div class="field">
+      <mcs-select formControlName="formControlVApp">
+        <mcs-select-item [value]="">Select VApp</mcs-select-item>
+        <mcs-select-group header="Virtual Applications">
+          <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
+            {{ vApp.text }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
     </div>
   </div>
 
@@ -46,23 +55,29 @@
   </div>
 
   <div class="network-details">
-    <span class="label">Network:</span>
-
-    <div class="control-group">
-      <mcs-dropdown name="Primary Network"
-        formControlName="formControlNetwork"
-        [dropdownData]="networkItems"
-        [mcsContextualHelp]="contextualTextContent.network"></mcs-dropdown>
+    <div class="field">
+      <span class="label">Network</span>
+      <mcs-select formControlName="formControlNetwork"
+        [mcsContextualHelp]="contextualTextContent.network">
+        <mcs-select-item [value]="">Select Network</mcs-select-item>
+        <mcs-select-group header="Networks">
+          <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
+            {{ network.text }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
       <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
     </div>
 
-    <mcs-server-ip-address [gateway]="selectedNetwork.gateway"
-      [subnetMask]="selectedNetwork.netmask"
-      (ipAddressChanged)="onIpAddressChanged($event)">
-      <!--Ip address contents on the left hand side (title and description)-->
-      <div title>
-        <span class="label">IP Address: </span>
-      </div>
-    </mcs-server-ip-address>
+    <div class="field">
+      <mcs-server-ip-address [gateway]="selectedNetwork.gateway"
+        [subnetMask]="selectedNetwork.netmask"
+        (ipAddressChanged)="onIpAddressChanged($event)">
+        <!--Ip address contents on the left hand side (title and description)-->
+        <div title>
+          <span class="label">IP Address: </span>
+        </div>
+      </mcs-server-ip-address>
+    </div>
   </div>
 </form>
