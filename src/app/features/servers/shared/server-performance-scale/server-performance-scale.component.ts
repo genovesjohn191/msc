@@ -118,7 +118,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   public ngOnInit() {
     this.serverScalePerformanceTextContent
-      = this._textProvider.content.servers.server.management.performanceScale;
+      = this._textProvider.content.servers.shared.performanceScale;
 
     // Set Invalid messages
     this._setInvalidMessages();

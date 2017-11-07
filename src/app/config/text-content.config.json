@@ -23,6 +23,7 @@
   "servers": {
     "title": "Macquarie Cloud Services: Servers",
     "header": "Servers",
+    "description": "View and manage any Managed or Self-Managed VDC servers. Dedicated and physical servers will be displayed in future versions of the portal.",
     "leftPanelHeader": "Server Filter",
     "newServer": "New Server",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
@@ -82,6 +83,18 @@
       "storageLabel": "Storage",
       "networkLabel": "Network",
       "ipAddressLabel": "IP Address",
+      "headers": {
+        "vApp": "Virtual Applications",
+        "os": "Operating System",
+        "templates": "Custom Templates",
+        "network": "Networks"
+      },
+      "placeholder": {
+        "vApp": "Select VApp",
+        "image": "Select Image",
+        "network": "Select Network",
+        "server": "Select Server"
+      },
       "contextualHelp": {
         "enterServerName": "A friendly Server name.",
         "intellicentre": "Virtual Data Centre to deploy this Server in.",
@@ -147,46 +160,31 @@
           "description": "Ensure your server is fully protected. Enable and configure managed services for this server."
         },
         "performanceScale": {
-          "sliderGuidance": "Move the slider to select the new compute size for this VM.",
-          "customGuidance": "Enter a custom size for this VM.",
+          "description": "Scale your server for improved and better performance.",
+          "instruction": "You can input a custom size for RAM and vCPU for scaling your VM. Alternatively, you can also click on select from slider and drag the slider to an appropriate size based on your needs.",
+          "sliderMessage": "Select the RAM and CPU for this server from a slider.",
+          "customMessage": "Manually enter the size of RAM and CPU for this server.",
           "warning": "Scaling the Server will require a restart.",
-          "sliderSwitch": "Select from slider",
-          "customSwitch": "Enter custom size",
-          "ramLabel": "RAM",
-          "ramUnit": "MB",
-          "cpuLabel": "CPUs",
-          "cpuUnit": "vCPU",
           "scale": "Scale",
           "cancel": "Cancel",
-          "scaling": "Scaling in Progress",
-          "validationError": {
-            "memory": {
-              "max": "Memory should not exceed {{available_memory}}",
-              "invalid": "Memory size must be a multiple of {{multiple}} MB"
-            },
-            "cpu": "Number of CPU should not exceed {{available_cpu}}"
-          }
+          "scaling": "Scaling in Progress"
         }
       },
       "storage": {
         "label": "Storage",
         "title": "Manage Disks",
+        "description": "Manage the disks attached to your server. You can add new, delete or expand existing disks.",
         "primary": "Primary",
         "other": "Other",
         "storageDevice": "Storage Device",
         "storageProfile": "Storage Profile",
         "capacity": "Capacity",
         "diskName": "Hard disk",
-        "addStorageHeading": "Add New Storage Volume.",
+        "addStorageHeading": "Add New Disk",
         "expandStorageHeading": "Expand Disk : ",
         "expandStorageLink": "Expand",
         "deleteStorageLink": "Delete",
-        "unit": "GB",
-        "sliderSwitch": "Select from slider",
-        "customSwitch": "Enter custom size",
-        "validationError": "Storage size should not exceed {{available_storage}}",
-        "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
-        "fullStorageSpace": "You can’t add additional disks to this server because there is insufficient storage capacity (0 GB remaining)."
+        "reachedStorageLimit": "You've reached the maximum number of disks for this server."
       }
     },
     "shared": {
@@ -223,6 +221,33 @@
         "confirmation": "Are you sure you want to delete this volume?",
         "cancel": "Cancel",
         "confirm": "Yes"
+      },
+      "storageScale": {
+        "label": "Storage",
+        "unit": "GB",
+        "sliderSwitch": "Select from slider",
+        "sliderMessage": "Select the disk size from a slider.",
+        "customSwitch": "Enter custom size",
+        "customMessage": "Manually enter the disk size.",
+        "validationError": "Storage size should not exceed {{available_storage}}",
+        "fullStorageSpace": "You can’t add additional disks to this server because there is insufficient storage capacity (0 GB remaining)."
+      },
+      "performanceScale": {
+        "sliderSwitch": "Select from slider",
+        "sliderMessage": "Select the RAM and CPU for this server from a slider.",
+        "customSwitch": "Enter custom size",
+        "customMessage": "Manually enter the size of RAM and CPU for this server.",
+        "ramLabel": "RAM",
+        "ramUnit": "MB",
+        "cpuLabel": "CPUs",
+        "cpuUnit": "vCPU",
+        "validationError": {
+          "memory": {
+            "max": "Memory should not exceed {{available_memory}}",
+            "invalid": "Memory size must be a multiple of {{multiple}} MB"
+          },
+          "cpu": "Number of CPU should not exceed {{available_cpu}}"
+        }
       }
     }
   },
@@ -286,6 +311,7 @@
   "firewalls": {
     "title": "Macquarie Cloud Services: Networking",
     "header": "Firewalls",
+    "description": "View details of your firewalls and firewall policies. Firewalls prevent malicious traffic from accessing services deployed in your environment.",
     "leftPanelHeader": "Firewall Filter",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
     "noFirewalls": "No firewalls to display.",
@@ -336,6 +362,7 @@
       },
       "policies": {
         "label": "Policies",
+        "description": "Firewall policies specify the permissible and forbidden traffic at the network perimeter. View details of your firewall policies here.",
         "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewall policies.",
         "noPolicies": "No firewall policies to display.",
         "retry": "Try again shortly",
@@ -379,7 +406,7 @@
         },
         "vCloud": {
           "name": "Vcloud Director",
-          "description": "Manage your virtual machines and Virtual Data Centers."
+          "description": "Manage your Virtual Machines and Virtual Data Centers."
         },
         "vSphere": {
           "name": "vSphere",
@@ -387,7 +414,7 @@
         },
         "firewall": {
           "name": "FortiManager",
-          "description": "Manage your network firewall."
+          "description": "Manage your network Firewall."
         },
         "zerto": {
           "name": "Zerto",
@@ -426,9 +453,6 @@
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of notifications.",
     "noNotifications": "No notifications to display.",
     "retry": "Try again shortly"
-  },
-  "others": {
-    "title": "Macquarie Cloud Services: Others"
   },
   "pageNotFound": {
     "heading": "Page not found",
