@@ -105,18 +105,19 @@
 
       <!--Performance scale container-->
       <span slider-details>
-        {{ serverManagementTextContent.performanceScale.sliderGuidance }}
+        {{ serverManagementTextContent.performanceScale.sliderMessage }}
       </span>
       <span custom-details>
-        {{ serverManagementTextContent.performanceScale.customGuidance }}
+        {{ serverManagementTextContent.performanceScale.customMessage }}
       </span>
     </mcs-server-performance-scale>
 
-    <div *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
+    <br/>
+    <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
       display-flex="row" align-items="center" justify-content="center">
       <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
       <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
-    </div>
+    </p>
 
     <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
       <a class="text-underline" (click)="cancelScale()">

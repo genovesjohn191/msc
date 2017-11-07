@@ -190,7 +190,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnInit() {
-    this.storageTextContent = this._textProvider.content.servers.server.storage;
+    this.storageTextContent = this._textProvider.content.servers.shared.storageScale;
 
     // Register form group for custom storage
     this._registerFormGroup();

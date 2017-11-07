@@ -13,6 +13,11 @@
         {{ storageTextContent.sliderSwitch }}</a>
   </div>
 
+  <p *ngIf="inputManageType == inputManageTypeEnum.Slider">
+    {{ storageTextContent.sliderMessage }}</p>
+  <p *ngIf="inputManageType == inputManageTypeEnum.Custom">
+    {{ storageTextContent.customMessage }}</p>
+
   <!--Storage profile content element (dropdown)-->
   <div *ngIf="storageProfileList" animate trigger="fadeIn" class="storage-profile-content">
     <mcs-select [(ngModel)]="storageProfileValue"
