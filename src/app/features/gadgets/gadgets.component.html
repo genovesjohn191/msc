@@ -2,6 +2,7 @@
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
     <section class="gadgets-container">
+
       <!-- Icons -->
       <div class="gadgets-container-item">
         <h3 class="title">ICONS</h3>
@@ -28,9 +29,9 @@
       <div class="gadgets-container-item">
           <h3 class="title">WIZARD</h3>
 
-          <mcs-wizard cancelText="Return" completedText="Done">
+          <mcs-wizard cancelText="Return" completedText="Done" [ngStyle]="{position: 'relative'}">
               <!-- Step 1  -->
-              <mcs-wizard-step stepTitle="1. Name" [valid]="formName.valid">
+              <mcs-wizard-step stepTitle="1. Name">
                 <h3>Cutomer name details</h3>
 
                 <form [formGroup]="formName">

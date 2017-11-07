@@ -1,9 +1,18 @@
-<form [hidden]="!visible" [formGroup]="formGroupNewServer" animate [trigger]="animateTrigger">
-
+<form [formGroup]="fgNewServer">
+  <!-- Server Name Input -->
   <div class="field">
-    <mcs-select formControlName="formControlVApp" [placeholder]="vAppPlaceholder">
-      <mcs-select-item [value]="">{{ vAppPlaceholder }}</mcs-select-item>
-      <mcs-select-group header="Virtual Applications">
+    <mcs-textbox width="100%" placeholder="* Enter a server name"
+      [formControl]="fcServerName"
+      [mcsContextualHelp]="textHelpContent.enterServerName"
+      [valid]="isControlValid(fcServerName)"></mcs-textbox>
+    <mcs-validation-message [control]="fcServerName"></mcs-validation-message>
+  </div>
+
+  <!-- Virtual Applications Selection -->
+  <div class="field">
+    <mcs-select [formControl]="fcVApp" [placeholder]="textContent.placeholder.vApp">
+      <mcs-select-item [value]="">{{ textContent.placeholder.vApp }}</mcs-select-item>
+      <mcs-select-group [header]="textContent.headers.vApp">
         <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
           {{ vApp.text }}
         </mcs-select-item>
@@ -11,12 +20,12 @@
     </mcs-select>
   </div>
 
+  <!-- Imges Selection -->
   <div class="field">
-    <mcs-select formControlName="formControlImage"
-      [placeholder]="serverImagePlaceholder"
+    <mcs-select [formControl]="fcImage" [placeholder]="textContent.placeholder.image"
       [mcsContextualHelp]="textHelpContent.serverTemplate">
-      <mcs-select-item [value]="">{{ serverImagePlaceholder }}</mcs-select-item>
-      <mcs-select-group header="Operating System">
+      <mcs-select-item [value]="">{{ textContent.placeholder.image }}</mcs-select-item>
+      <mcs-select-group [header]="textContent.headers.os">
         <mcs-select-item *ngFor="let platform of serverOsItems">
           {{ platform.group }}
           <mcs-select-group sub-group>
@@ -27,15 +36,16 @@
         </mcs-select-item>
       </mcs-select-group>
 
-      <mcs-select-group header="Custom Templates">
+      <mcs-select-group [header]="textContent.headers.templates">
         <mcs-select-item *ngFor="let template of serverTemplateItems" [value]="template.value">
           {{ template.text }}
         </mcs-select-item>
       </mcs-select-group>
     </mcs-select>
-    <mcs-validation-message [control]="formControlImage"></mcs-validation-message>
+    <mcs-validation-message [control]="fcImage"></mcs-validation-message>
   </div>
 
+  <!-- Server RAM -->
   <div class="field">
     <mcs-server-performance-scale
       [memoryMB]="memoryMB" [cpuCount]="cpuCount"
@@ -48,6 +58,7 @@
     </mcs-server-performance-scale>
   </div>
 
+  <!-- Storage Management -->
   <div class="field" *ngIf="storageItems">
     <mcs-server-manage-storage
       [memoryMB]="storageMemoryMB"
@@ -63,22 +74,22 @@
     </mcs-server-manage-storage>
   </div>
 
+  <!-- Network Selection -->
   <div class="field">
     <span class="label">{{ textContent.networkLabel }}</span>
-    <mcs-select formControlName="formControlNetwork"
-      [placeholder]="networkPlaceholder"
+    <mcs-select [formControl]="fcNetwork" [placeholder]="textContent.placeholder.network"
       [mcsContextualHelp]="textHelpContent.network">
-      <mcs-select-item [value]="">{{ networkPlaceholder }}</mcs-select-item>
-      <mcs-select-group header="Networks">
+      <mcs-select-item [value]="">{{ textContent.placeholder.network }}</mcs-select-item>
+      <mcs-select-group [header]="textContent.headers.network">
         <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
           {{ network.text }}
         </mcs-select-item>
       </mcs-select-group>
     </mcs-select>
-    <mcs-validation-message [control]="formControlNetwork"></mcs-validation-message>
-
+    <mcs-validation-message [control]="fcNetwork"></mcs-validation-message>
   </div>
 
+  <!-- IP Address setting -->
   <div class="field">
     <mcs-server-ip-address [gateway]="selectedNetwork.gateway"
       [subnetMask]="selectedNetwork.netmask"

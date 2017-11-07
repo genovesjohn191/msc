@@ -1,32 +1,27 @@
-<div class="mcs-tabs">
-
-  <!-- Title and tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item" *ngFor="let step of displayedSteps" [hidden]="step.hidden">
-
-      <a class="nav-link" data-toggle="tab" role="tab"
-        [ngClass]="{
-          'active': step.isActive,
-          'enabled': step.enabled,
-          'disabled': !step.enabled,
-          'completed': isCompleted
-        }"
-        (click)="goToStep(step)">
-
+<!-- Steps template declaration -->
+<ng-template #stepsTemplate>
+  <div class="wizard-steps-items" scrollable>
+    <div class="step-item" *ngFor="let step of displayedSteps"
+      (click)="goToStep(step)"
+      [hidden]="step.hidden"
+      [ngClass]="{
+        'active': step.isActive,
+        'enabled': step.enabled,
+        'disabled': !step.enabled,
+        'completed': isCompleted
+      }">
+      <div class="step-completed-icon">
         <mcs-icon *ngIf="step.completed" [key]="checkIconKey"
           size="small" color="blue"></mcs-icon>
-        <span> {{ step.stepTitle }} </span>
-      </a>
-    </li>
-  </ul>
-
-  <!-- Wizard Setup Content here -->
-  <div class="tab-content">
-    <ng-content></ng-content>
+      </div>
+      <strong class="step-title">{{ step.stepTitle }}</strong>
+    </div>
   </div>
+</ng-template>
 
-  <!-- Button to enable other wizard step -->
-  <div class="tab-footer">
+<!-- Actions template declaration -->
+<ng-template #actionTemplate>
+  <div class="step-actions">
     <a class="cancel" (click)="onClickCancel()"
       [hidden]="!enableCancel">{{ cancelTextContent }}</a>
 
@@ -34,11 +29,50 @@
       [hidden]="!hasPreviousStep">{{ wizardTextContent.previous }}</a>
 
     <mcs-button icon="arrow" (onClick)="onClickNext()"
-      [hidden]="!hasNextStep" [disabled]="!activeStep.valid">
+      [hidden]="!hasNextStep">
       {{ wizardTextContent.next }}</mcs-button>
 
     <mcs-button icon="arrow" (onClick)="onClickCompleted()"
-      [hidden]="!enableCompletedStep" [disabled]="!activeStep.valid">
+      [hidden]="!enableCompletedStep">
       {{ completedTextContent }}</mcs-button>
+  </div>
+</ng-template>
+
+<!-- Left panel wrapper in case of desktop -->
+<div class="wizard-left-panel-wrapper hidden-small">
+  <div class="wizard-steps-header">
+    <h4 class="reset-header" read-only>STEPS</h4>
+  </div>
+  <ng-container *ngTemplateOutlet="stepsTemplate"></ng-container>
+</div>
+
+<!-- Content panel generation -->
+<div class="wizard-content-panel-wrapper">
+  <div class="wizard-top-header">
+    <ng-container *ngIf="headerTemplate">
+      <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="!headerTemplate">
+      <h3 class="reset-header">{{ header }}</h3>
+    </ng-container>
+  </div>
+
+  <!-- Top panel wrapper in case of mobile -->
+  <div class="wizard-top-panel-mobile-wrapper">
+    <ng-container *ngTemplateOutlet="stepsTemplate"></ng-container>
+  </div>
+
+  <!-- Active steps content -->
+  <div class="wizard-steps-content" scrollable scrollbarId="wizard-content">
+    <div [ngClass]="activeStep?.customClass">
+      <ng-container *ngIf="activeStep?.actionPlacement">
+        <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
+      </ng-container>
+
+      <ng-container *ngIf="!activeStep?.actionPlacement">
+        <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
+        <ng-template [ngTemplateOutlet]="actionTemplate"></ng-template>
+      </ng-container>
+    </div>
   </div>
 </div>

@@ -1,63 +1,44 @@
-<mcs-page [header]="createServerTextContent.header">
-  <!-- Top Panel -->
-  <mcs-top-panel *mcsTopPanelDef>
-    <!-- Server Creation -->
-    <mcs-top-panel-item *mcsTopPanelItemDef>
-      <div class="action-item right-align" cursor="pointer" (click)="gotoServers()">
-        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
-        <span>{{ createServerTextContent.backToServers }}</span>
-      </div>
-    </mcs-top-panel-item>
-  </mcs-top-panel>
-  <!-- Content Panel -->
-  <mcs-content-panel *mcsContentPanelDef>
+<mcs-wizard [hidden]="!hasResources" [header]="createServerTextContent.header"
+  (onCancel)="gotoServers()" (onComplete)="onDeployServer()"
+  [mcsLoader]="obtainDataSubscription">
+  <!-- Step 1 -->
+  <mcs-wizard-step stepTitle="1. Server Details" customClass="limited-view"
+    (onNext)="onPreDeployServer($event)">
     <div class="contextual-help-page-wrapper">
-      <div class="page-information-wrapper limited-view" [mcsLoader]="obtainDataSubscription">
-        <!-- Generic Wizard -->
-        <mcs-wizard [hidden]="!hasResources" (onCancel)="gotoServers()" (onComplete)="onDeployServer()">
-          <!-- Step 1 -->
-          <mcs-wizard-step stepTitle="1. Server Details"
-            [valid]="isServersValid">
-            <section class="server-details">
-              <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC">
-                <mcs-select-group [header]="createServerTextContent.vdcDropdownList.name">
-                  <mcs-select-item *ngFor="let vdc of vdcList" [value]="vdc.value">
-                    {{ vdc.text }}
-                  </mcs-select-item>
-                </mcs-select-group>
-              </mcs-select>
 
-              <div class="new-servers-container" #selfManagedServersElement></div>
+      <div class="page-information-wrapper">
+        <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC">
+          <mcs-select-group [header]="createServerTextContent.vdcDropdownList.name">
+            <mcs-select-item *ngFor="let vdc of vdcList" [value]="vdc.value">
+              {{ vdc.text }}
+            </mcs-select-item>
+          </mcs-select-group>
+        </mcs-select>
+        <div class="new-servers-container" #selfManagedServersElement></div>
+        <ng-container mcsWizardActionPlacement></ng-container>
 
-              <!-- TODO: Temporary disable multiple server deployment for phase 1 -->
-              <!-- <div class="additional-server-container vspace-small">
-                <div class="add-server clickable-text" (click)="addServer()">
-                  <mcs-icon [key]="addIconKey" size="large"></mcs-icon>
-                  <span class="clickable-text">Add another server</span>
-                </div>
-              </div> -->
-            </section>
-          </mcs-wizard-step>
-
-          <!-- Step 2  -->
-          <mcs-wizard-step stepTitle="2. Go!">
-            <section class="jobs-progress" *ngIf="hasNotifications">
-              <mcs-provisioning-notifications [jobs]="notifications"
-                [mcsContextualHelp]="contextualTextContent.provisioningNotifications">
-              </mcs-provisioning-notifications>
-            </section>
-          </mcs-wizard-step>
-        </mcs-wizard>
-        <!-- Alert for no resource found -->
-        <mcs-alert [hidden]="hasResources" type="failed"
-          [title]="createServerTextContent.noResourceFound.header">
-          <span>{{ createServerTextContent.noResourceFound.content }}</span>
-        </mcs-alert>
+        <!-- TODO: Temporary disable multiple server deployment for phase 1 -->
+        <!-- <div class="additional-server-container vspace-small">
+          <div class="add-server clickable-text" (click)="addServer()">
+            <mcs-icon [key]="addIconKey" size="large"></mcs-icon>
+            <span class="clickable-text">Add another server</span>
+          </div>
+        </div> -->
       </div>
+
       <div class="contextual-information-wrapper">
-          <mcs-contextual-help
-          [contextualInformations]="getAllContextualInformations()"></mcs-contextual-help>
+        <mcs-contextual-help [contextualInformations]="getAllContextualInformations()">
+        </mcs-contextual-help>
       </div>
     </div>
-  </mcs-content-panel>
-</mcs-page>
+  </mcs-wizard-step>
+
+  <!-- Step 2  -->
+  <mcs-wizard-step stepTitle="2. Go!">
+    <div class="jobs-progress" *ngIf="hasNotifications">
+      <mcs-provisioning-notifications [jobs]="notifications"
+        [mcsContextualHelp]="contextualTextContent.provisioningNotifications">
+      </mcs-provisioning-notifications>
+    </div>
+  </mcs-wizard-step>
+</mcs-wizard>

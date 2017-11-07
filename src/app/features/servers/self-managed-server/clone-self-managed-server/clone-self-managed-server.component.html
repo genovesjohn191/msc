@@ -1,7 +1,18 @@
-<form [hidden]="!visible" [formGroup]="formGroupCloneServer">
-  <div *ngIf="hasServers">
-    <mcs-select formControlName="formControlTargetServer" [placeholder]="targetServerPlaceholder">
-      <mcs-select-item [value]="">{{ targetServerPlaceholder }}</mcs-select-item>
+<form [formGroup]="fgCloneServer">
+  <!-- Server Name Input -->
+  <div class="field">
+    <mcs-textbox width="100%" placeholder="* Enter a server name"
+      [formControl]="fcServerName"
+      [mcsContextualHelp]="textHelpContent.enterServerName"
+      [valid]="isControlValid(fcServerName)"></mcs-textbox>
+    <mcs-validation-message [control]="fcServerName"></mcs-validation-message>
+  </div>
+
+  <!-- Server Selection -->
+  <ng-container *ngIf="hasServers">
+    <mcs-select [formControl]="fcTargetServer"
+      [placeholder]="textContent.placeholder.server">
+      <mcs-select-item [value]="">{{ textContent.placeholder.server }}</mcs-select-item>
       <mcs-select-group header="Servers">
         <mcs-select-item *ngFor="let server of servers" [value]="server.id">
           {{ server.managementName }}
@@ -9,9 +20,12 @@
       </mcs-select-group>
     </mcs-select>
     <mcs-validation-message [control]="formControlTargetServer"></mcs-validation-message>
-  </div>
-  <div *ngIf="!hasServers" class="horizontal-items-spacing-small" display-flex="row" align-items="center">
+  </ng-container>
+
+  <!-- Warning icon when no servers found -->
+  <div *ngIf="!hasServers" class="horizontal-items-spacing-small"
+    display-flex="row" align-items="center">
     <mcs-icon [key]="warningIconKey"></mcs-icon>
-    <span>{{ noServersTextContent }}</span>
+    <span>{{ textContent.noServers }}</span>
   </div>
 </form>

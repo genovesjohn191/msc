@@ -7,22 +7,28 @@ import {
   EventEmitter,
   AfterViewInit,
   ViewChildren,
-  QueryList
+  QueryList,
+  ChangeDetectorRef,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   FormGroup,
-  FormControl
+  FormControl,
+  FormControlDirective
 } from '@angular/forms';
 import {
   McsTextContentProvider,
   CoreValidators,
-  CoreDefinition
+  CoreDefinition,
+  McsTouchedControl
 } from '../../../../core';
 import {
   refreshView,
   mergeArrays,
   isNullOrEmpty,
-  convertToGb
+  convertToGb,
+  isFormControlValid
 } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
@@ -44,19 +50,16 @@ const RAM_MINIMUM_VALUE = 2048;
 const CPU_MINIMUM_VALUE = 1;
 const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
 const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MULTIPLIER;
-const VAPP_PLACEHOLDER = 'Select VApp';
-const SERVER_IMAGE_PLACEHOLDER = 'Select Image';
-const NETWORK_PLACEHOLDER = 'Select Network';
 
 @Component({
   selector: 'mcs-new-self-managed-server',
-  templateUrl: './new-self-managed-server.component.html'
+  templateUrl: './new-self-managed-server.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input()
-  public visible: boolean;
-
+export class NewSelfManagedServerComponent implements
+  OnInit, AfterViewInit, OnDestroy, McsTouchedControl {
   @Input()
   public resource: ServerResource;
 
@@ -69,15 +72,19 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
+  @ViewChildren(FormControlDirective)
+  public formControls: QueryList<FormControlDirective>;
+
   // Form variables
-  public formGroupNewServer: FormGroup;
-  public formControlVApp: FormControl;
-  public formControlImage: FormControl;
-  public formControlNetwork: FormControl;
-  public formControlScale: FormControl;
-  public formControlStorage: FormControl;
-  public formControlIpAddress: FormControl;
-  public formGroupSubscription: any;
+  public fgNewServer: FormGroup;
+  public fcServerName: FormControl;
+  public fcVApp: FormControl;
+  public fcImage: FormControl;
+  public fcNetwork: FormControl;
+  public fcScale: FormControl;
+  public fcStorage: FormControl;
+  public fcIpAddress: FormControl;
+  public fgSubscription: any;
 
   // Scale and Storage
   public memoryMB: number;
@@ -87,7 +94,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public storageSliderValues: number[];
   public storageAvailableMemoryMB: number;
   public selectedStorage: ServerManageStorage;
-
   public serverImageData: ServerImage[];
 
   // Dropdowns
@@ -98,23 +104,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public storageItems: any;
 
   // Others
+  public createType: ServerCreateType;
   public textContent: any;
   public textHelpContent: any;
   public availableMemoryMB: number;
   public availableCpuCount: number;
-  public animateTrigger: string;
-
-  public get vAppPlaceholder(): string {
-    return VAPP_PLACEHOLDER;
-  }
-
-  public get serverImagePlaceholder(): string {
-    return SERVER_IMAGE_PLACEHOLDER;
-  }
-
-  public get networkPlaceholder(): string {
-    return NETWORK_PLACEHOLDER;
-  }
 
   private get _memoryGB(): number {
     return Math.floor(convertToGb(this.storageMemoryMB));
@@ -126,15 +120,16 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
   public constructor(
     private _serverService: CreateSelfManagedServersService,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this.animateTrigger = 'fadeIn';
     this.memoryMB = 0;
     this.cpuCount = 0;
     this.storageMemoryMB = 0;
     this.availableMemoryMB = 0;
     this.availableCpuCount = 0;
     this.storageSliderValues = new Array<number>();
+    this.createType = ServerCreateType.New;
     this.storageAvailableMemoryMB = 0;
     this.selectedStorage = new ServerManageStorage();
     this.serverImageData = new Array<ServerImage>();
@@ -151,7 +146,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.textContent = this._textContentProvider.content
       .servers.createSelfManagedServer;
     this.textHelpContent = this._textContentProvider.content
-    .servers.createSelfManagedServer.contextualHelp;
+      .servers.createSelfManagedServer.contextualHelp;
 
     this.memoryMB = RAM_MINIMUM_VALUE;
     this.cpuCount = CPU_MINIMUM_VALUE;
@@ -167,64 +162,78 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       this._setAvailableMemoryMB();
       this._setAvailableCpuCount();
     }
+    this._changeDetectorRef.markForCheck();
   }
 
   public ngAfterViewInit() {
     refreshView(() => {
+      // Merge the sub contextual help
       if (this.contextualHelpDirectives) {
         let contextInformations: ContextualHelpDirective[];
-        contextInformations = this.contextualHelpDirectives
-          .map((description) => {
-            return description;
-          });
+        contextInformations = this.contextualHelpDirectives.map((description) => description);
         this._serverService.subContextualHelp =
           mergeArrays(this._serverService.subContextualHelp, contextInformations);
       }
 
       // Select network initial value
       if (!isNullOrEmpty(this.networkItems)) {
-        this.formControlNetwork.setValue(this.networkItems[0].value);
+        this.fcNetwork.setValue(this.networkItems[0].value);
       }
     });
   }
 
   public ngOnDestroy() {
-    if (this.formGroupSubscription) {
-      this.formGroupSubscription.unsubscribe();
+    if (this.fgSubscription) {
+      this.fgSubscription.unsubscribe();
     }
   }
 
+  public isControlValid(control: any): boolean {
+    return isFormControlValid(control);
+  }
+
   public onStorageChanged(serverStorage: ServerManageStorage) {
-    if (isNullOrEmpty(this.formControlStorage) || isNullOrEmpty(this.resource)) { return; }
+    if (isNullOrEmpty(this.fcStorage) || isNullOrEmpty(this.resource)) { return; }
 
     if (serverStorage.valid) {
-      this.formControlStorage.setValue(serverStorage);
+      this.fcStorage.setValue(serverStorage);
       if (this.selectedStorage.storageProfile !== serverStorage.storageProfile) {
         this.selectedStorage = serverStorage;
         this._setStorageAvailableMemoryMB();
         this._setStorageSliderValues();
       }
     } else {
-      this.formControlStorage.reset();
+      this.fcStorage.reset();
     }
   }
 
   public onScaleChanged(serverScale: ServerPerformanceScale) {
-    if (isNullOrEmpty(this.formControlScale)) { return; }
+    if (isNullOrEmpty(this.fcScale)) { return; }
     if (serverScale.valid) {
-      this.formControlScale.setValue(serverScale);
+      this.fcScale.setValue(serverScale);
     } else {
-      this.formControlScale.reset();
+      this.fcScale.reset();
     }
   }
 
   public onIpAddressChanged(ipAddress: ServerIpAddress): void {
-    if (isNullOrEmpty(this.formControlIpAddress)) { return; }
+    if (isNullOrEmpty(this.fcIpAddress)) { return; }
     if (ipAddress.valid) {
-      this.formControlIpAddress.setValue(ipAddress);
+      this.fcIpAddress.setValue(ipAddress);
     } else {
-      this.formControlIpAddress.reset();
+      this.fcIpAddress.reset();
     }
+  }
+
+  /**
+   * This will mark all controls to touched
+   */
+  public touchedAllControls(): void {
+    if (isNullOrEmpty(this.formControls)) { return; }
+    this.formControls.forEach((control) => {
+      control.form.markAsTouched();
+    });
+    this._changeDetectorRef.markForCheck();
   }
 
   private _setAvailableMemoryMB(): void {
@@ -240,9 +249,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     // Populate dropdown list
     this.resource.vApps.forEach((vApp) => {
-      this.vAppItems.push({value: vApp.name, text: vApp.name});
+      this.vAppItems.push({ value: vApp.name, text: vApp.name });
     });
-
   }
 
   private _setServerImageItems(): void {
@@ -306,7 +314,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setStorageAvailableMemoryMB(): void {
-    let serverStorage = this.formControlStorage.value as ServerManageStorage;
+    let serverStorage = this.fcStorage.value as ServerManageStorage;
 
     let resourceStorage = this.resource.storage
       .find((resource) => {
@@ -327,24 +335,32 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       } else {
         value = this._maximumMemoryGB;
       }
-
       this.storageSliderValues.push(value);
     }
   }
 
   private _registerFormGroup(): void {
     // Register Form Controls
-    this.formControlVApp = new FormControl('', []);
+    this.fcServerName = new FormControl('', [
+      CoreValidators.required,
+      CoreValidators.maxLength(CoreDefinition.SERVER_NAME_MAX),
+      CoreValidators.custom(
+        this._customServerNameValidator.bind(this),
+        this.textContent.invalidServerName
+      )
+    ]);
 
-    this.formControlImage = new FormControl('', [
+    this.fcVApp = new FormControl('', []);
+
+    this.fcImage = new FormControl('', [
       CoreValidators.required
     ]);
 
-    this.formControlNetwork = new FormControl('', [
+    this.fcNetwork = new FormControl('', [
       CoreValidators.required
     ]);
 
-    this.formControlNetwork.valueChanges
+    this.fcNetwork.valueChanges
       .subscribe((networkSelected) => {
         let networkFound = this.resource.networks.find((network) => {
           return network.name === networkSelected;
@@ -354,28 +370,29 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
         }
       });
 
-    this.formControlScale = new FormControl('', [
+    this.fcScale = new FormControl('', [
       CoreValidators.required
     ]);
 
-    this.formControlStorage = new FormControl('', [
+    this.fcStorage = new FormControl('', [
       CoreValidators.required
     ]);
 
-    this.formControlIpAddress = new FormControl('', [
+    this.fcIpAddress = new FormControl('', [
       CoreValidators.required
     ]);
 
     // Register Form Groups using binding
-    this.formGroupNewServer = new FormGroup({
-      formControlVApp: this.formControlVApp,
-      formControlImage: this.formControlImage,
-      formControlNetwork: this.formControlNetwork,
-      formControlScale: this.formControlScale,
-      formControlStorage: this.formControlStorage,
-      formControlIpAddress: this.formControlIpAddress
+    this.fgNewServer = new FormGroup({
+      formControlServerName: this.fcServerName,
+      formControlVApp: this.fcVApp,
+      formControlImage: this.fcImage,
+      formControlNetwork: this.fcNetwork,
+      formControlScale: this.fcScale,
+      formControlStorage: this.fcStorage,
+      formControlIpAddress: this.fcIpAddress
     });
-    this.formGroupSubscription = this.formGroupNewServer.statusChanges
+    this.fgSubscription = this.fgNewServer.statusChanges
       .subscribe(() => {
         this._outputServerDetails();
       });
@@ -387,10 +404,10 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     // Set the variable based on the form values
     newSelfManaged.type = ServerCreateType.New;
-    newSelfManaged.vApp = this.formControlVApp.value;
+    newSelfManaged.vApp = this.fcVApp.value;
 
     let serverImage = this.serverImageData.find((data) => {
-      return data.id === this.formControlImage.value;
+      return data.id === this.fcImage.value;
     });
 
     if (!isNullOrEmpty(serverImage)) {
@@ -398,12 +415,17 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       newSelfManaged.image = serverImage.image;
     }
 
-    newSelfManaged.networkName = this.formControlNetwork.value;
-    newSelfManaged.performanceScale = this.formControlScale.value;
-    newSelfManaged.serverManageStorage = this.formControlStorage.value;
-    newSelfManaged.ipAddress = this.formControlIpAddress.value;
-    newSelfManaged.isValid = this.formGroupNewServer.valid;
+    newSelfManaged.serverName = this.fcServerName.value;
+    newSelfManaged.networkName = this.fcNetwork.value;
+    newSelfManaged.performanceScale = this.fcScale.value;
+    newSelfManaged.serverManageStorage = this.fcStorage.value;
+    newSelfManaged.ipAddress = this.fcIpAddress.value;
+    newSelfManaged.isValid = this.fgNewServer.valid;
 
     this.onOutputServerDetails.next(newSelfManaged);
+  }
+
+  private _customServerNameValidator(inputValue: any): boolean {
+    return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
   }
 }

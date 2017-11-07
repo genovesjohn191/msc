@@ -9,7 +9,10 @@ import {
   ComponentFactoryResolver,
   ViewContainerRef,
   Renderer2,
-  ElementRef
+  ElementRef,
+  ChangeDetectorRef,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
@@ -50,7 +53,9 @@ import {
 
 @Component({
   selector: 'mcs-create-self-managed-servers',
-  templateUrl: './create-self-managed-servers.component.html'
+  templateUrl: './create-self-managed-servers.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CreateSelfManagedServersComponent implements
@@ -74,9 +79,11 @@ export class CreateSelfManagedServersComponent implements
   public notifications: McsApiJob[];
   public newServers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
   public isLoading: boolean;
+  public deployingServers: boolean;
 
   // Others
   public obtainDataSubscription: any;
+  private _contextulHelpSubscription: any;
   private _notificationsSubscription: any;
   private _mainContextInformations: ContextualHelpDirective[];
 
@@ -150,7 +157,8 @@ export class CreateSelfManagedServersComponent implements
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
     private _renderer: Renderer2,
-    private _notificationContextService: McsNotificationContextService
+    private _notificationContextService: McsNotificationContextService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.notifications = new Array();
     this.newServers = new Array();
@@ -161,17 +169,6 @@ export class CreateSelfManagedServersComponent implements
     this._serversOs = new Array();
     this._serverListMap = new Map<string, Server[]>();
     this._serverResourceMap = new Map<string, ServerResource>();
-  }
-
-  public safeToNavigateAway(): boolean {
-    let canNavigate: boolean = true;
-    this.newServers.forEach((server) => {
-      if (!server.componentRef.instance.safeToNavigateAway()) {
-        canNavigate = false;
-      }
-    });
-
-    return canNavigate;
   }
 
   public ngOnInit() {
@@ -195,7 +192,8 @@ export class CreateSelfManagedServersComponent implements
       this.addServer();
     });
 
-    // Listen to notifications
+    // Listen to contextual helps and notifications
+    this._listenToContextualHelp();
     this._listenToNotifications();
   }
 
@@ -211,14 +209,33 @@ export class CreateSelfManagedServersComponent implements
   }
 
   public ngOnDestroy() {
-    if (this.obtainDataSubscription) {
+    if (!isNullOrEmpty(this.obtainDataSubscription)) {
       this.obtainDataSubscription.unsubscribe();
     }
-    if (this._notificationsSubscription) {
+    if (!isNullOrEmpty(this._notificationsSubscription)) {
       this._notificationsSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._contextulHelpSubscription)) {
+      this._contextulHelpSubscription.unsubscribe();
     }
   }
 
+  /**
+   * Event that triggers when navigating away from the current page
+   * and all the inputted setting on the form are checked
+   */
+  public safeToNavigateAway(): boolean {
+    let canNavigate: boolean = true;
+    for (let server of this.newServers) {
+      canNavigate = !server.componentRef.instance.isTouchedAndDirty() || this.deployingServers;
+      if (canNavigate) { break; }
+    }
+    return canNavigate;
+  }
+
+  /**
+   * Add new server instance that supports multiple servers creation
+   */
   public addServer(): void {
     if (!this.selfManagedServersElement) { return; }
 
@@ -242,19 +259,46 @@ export class CreateSelfManagedServersComponent implements
 
     // Add new server to servers list
     this.newServers.push(componentService);
+    this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Get all the contextual helps including the child components
+   */
   public getAllContextualInformations() {
     return mergeArrays(this._mainContextInformations,
       this._createSelfManagedServices.subContextualHelp);
   }
 
+  /**
+   * Go to servers page
+   */
   public gotoServers() {
     this._router.navigate(['/servers']);
   }
 
+  /**
+   * This will check first if all fields for the server before deployment is valid
+   */
+  public onPreDeployServer(_eventFunc: any): void {
+    if (this.isServersValid) {
+      _eventFunc();
+    } else {
+      // Touched all form controls
+      this.newServers.forEach((server) => {
+        server.componentRef.instance.touchedAllControls();
+        server.componentRef.instance.setFocusToInvalidElement();
+      });
+    }
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Deploy server when go is clicked
+   */
   public onDeployServer() {
-    // Clear notifications
+    // Clear notifications and set the deployment flag to true
+    this.deployingServers = true;
     this.notifications = new Array();
 
     // Loop to all new servers
@@ -262,7 +306,7 @@ export class CreateSelfManagedServersComponent implements
       if (server.componentRef.instance.serverCreateType === ServerCreateType.Clone) {
         let serverId = server.componentRef.instance.serverInputs.targetServer;
         let serverClone = new ServerClone();
-        serverClone.name = server.componentRef.instance.serverName;
+        serverClone.name = server.componentRef.instance.serverInputs.serverName;
 
         this._createSelfManagedServices.cloneServer(serverId, serverClone)
           .subscribe((response) => {
@@ -279,6 +323,7 @@ export class CreateSelfManagedServersComponent implements
         serverCreate.resource = server.componentRef.instance.vdcName;
         serverCreate.name = server.componentRef.instance.serverName;
 
+        serverCreate.name = server.componentRef.instance.serverInputs.serverName;
         serverCreate.target = server.componentRef.instance.serverInputs.vApp;
         serverCreate.imageType = server.componentRef.instance.serverInputs.imageType;
         serverCreate.image = server.componentRef.instance.serverInputs.image;
@@ -318,6 +363,9 @@ export class CreateSelfManagedServersComponent implements
     });
   }
 
+  /**
+   * Set the VDC items to dropdown
+   */
   private _setVdcItems(): void {
     if (!this._serverResourceMap) { return; }
 
@@ -362,6 +410,16 @@ export class CreateSelfManagedServersComponent implements
               });
           }
         }
+      });
+  }
+
+  /**
+   * Listener to all contextual help to refresh the view since the changedetection is OnPush
+   */
+  private _listenToContextualHelp(): void {
+    this._contextulHelpSubscription = this._createSelfManagedServices.
+      subContextualHelpStream.subscribe(() => {
+        this._changeDetectorRef.markForCheck();
       });
   }
 

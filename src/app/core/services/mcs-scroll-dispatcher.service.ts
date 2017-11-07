@@ -127,6 +127,60 @@ export class McsScrollDispatcherService {
   }
 
   /**
+   * Scroll element based on the given parameters
+   * @param element Element to be scrolled
+   * @param scrollableElementId Scrollable element that serve as the based on the element to scroll
+   * @param offset Addition offset of the scrolled element
+   * @param duration Duration of the scrolling
+   */
+  public scrollToElement(
+    element: HTMLElement,
+    scrollableElementId: string = 'page-content',
+    offset: number = 0,
+    duration: number = 500
+  ): void {
+    if (isNullOrEmpty(element)) { return; }
+
+    // Get the element with scrollbar based on Id provided
+    let scrollableElement: any;
+    this._scrollableMap.forEach((_value, key) => {
+      if (key.scrollbarId === scrollableElementId) {
+        scrollableElement = key.getElementRef().nativeElement;
+      }
+    });
+    // Execute scrolling of element
+    this._executeScrollingToElement(scrollableElement, element.offsetTop + offset, duration);
+  }
+
+  /**
+   * Execute the scrolling to element by the given scrollable element
+   * @param scrollableElement Scrollable element that serve as the based on the element to scroll
+   * @param elementOffsetY Offset Y of the element to be scrolled
+   * @param duration Duration of the scrolling
+   */
+  private _executeScrollingToElement(
+    scrollableElement: HTMLElement,
+    elementOffsetY: number,
+    duration: number
+  ) {
+    let startingY = scrollableElement.scrollTop;
+    let diff = elementOffsetY - startingY;
+    let start;
+
+    window.requestAnimationFrame(function step(timestamp) {
+      start = (!start) ? timestamp : start;
+
+      const time = timestamp - start;
+      let percent = Math.min(time / duration, 1);
+
+      scrollableElement.scrollTo(0, startingY + diff * percent);
+      if (time < duration) {
+        window.requestAnimationFrame(step);
+      }
+    });
+  }
+
+  /**
    * Notify the scrolled stream
    */
   private _notifyStream(): void {
