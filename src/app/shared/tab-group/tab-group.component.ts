@@ -60,7 +60,7 @@ export class TabGroupComponent implements AfterContentInit {
 
   public ngAfterContentInit(): void {
     refreshView(() => {
-      this._setActiveTab(undefined);
+      this._setActiveTab(this.selectedTabId);
     });
   }
 
@@ -83,6 +83,10 @@ export class TabGroupComponent implements AfterContentInit {
     this.tabChanged.emit(tab);
   }
 
+  /**
+   * Set the active tab based on the given ID
+   * @param selectedId Id to be selected
+   */
   private _setActiveTab(selectedId: any): void {
     if (isNullOrEmpty(this.tabs)) { return; }
 

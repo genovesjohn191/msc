@@ -1,0 +1,59 @@
+$content-responsive-width-desktop: 750px;
+$content-responsive-width-mobile: 500px;
+$grid-row-spacing: 50px;
+
+.routing-tab-wrapper {
+  .content-responsive {
+    width: $content-responsive-width-desktop;
+    @include breakpoint(small) {
+      width: $content-responsive-width-mobile;
+    }
+    @include breakpoint(xsmall) {
+      width: 100%;
+    }
+  }
+
+  .content-grid {
+    @include set-items-interval($grid-row-spacing, vertical);
+    @include breakpoint(xsmall) {
+      @include set-items-interval($space-xlarge, vertical);
+    }
+
+    .grid-row {
+      @include display-flex(row);
+      @include set-items-interval($space-medium, horizontal);
+      @include breakpoint(xsmall) {
+        @include display-flex(column);
+        @include set-items-interval(0, horizontal);
+        @include set-items-interval($space-xlarge, vertical);
+      }
+    }
+
+    .grid-column {
+      @include flex(1 0 50%);
+      @include breakpoint(small) {
+        &:first-of-type {
+          @include flex(1 0 auto)
+        }
+      }
+      @include breakpoint(xsmall) {
+        @include flex(1)
+      }
+
+      ul {
+        @include set-items-interval($space-xsmall, vertical);
+
+        &.listing {
+          padding-left: $space-xsmall;
+          margin-bottom: $space-xsmall;
+        }
+
+        li {
+          @include display-flex(row);
+          align-items: flex-start;
+          @include set-items-interval($space-xsmall, horizontal);
+        }
+      }
+    }
+  }
+}

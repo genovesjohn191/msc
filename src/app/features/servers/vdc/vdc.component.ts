@@ -22,7 +22,8 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsListPanelItem,
-  McsSearch
+  McsSearch,
+  McsRoutingTabBase
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -32,12 +33,18 @@ import { ServersService } from '../servers.service';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 
+// Add another group type in here if you have addition tab
+type tabGroupType = 'overview';
+
 @Component({
   selector: 'mcs-vdc',
   templateUrl: './vdc.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VdcComponent implements OnInit, AfterViewInit, OnDestroy {
+export class VdcComponent
+  extends McsRoutingTabBase<tabGroupType>
+  implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('search')
   public search: McsSearch;
 
@@ -70,19 +77,20 @@ export class VdcComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute,
+    _router: Router,
+    _activatedRoute: ActivatedRoute,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversService: ServersService,
     private _vdcService: VdcService
   ) {
+    super(_router, _activatedRoute);
     this.vdc = new ServerResource();
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers;
-    this._vdcId = this._activatedRoute.snapshot.paramMap.get('id');
+    this._vdcId = this.activatedRoute.snapshot.paramMap.get('id');
     this._getVdcById();
   }
 
@@ -93,6 +101,7 @@ export class VdcComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
+    super.dispose();
     if (!isNullOrEmpty(this.vdcSubscription)) {
       this.vdcSubscription.unsubscribe();
     }
@@ -101,7 +110,21 @@ export class VdcComponent implements OnInit, AfterViewInit, OnDestroy {
   public onServerSelect(serverId: any) {
     if (isNullOrEmpty(serverId)) { return; }
 
-    this._router.navigate(['/servers', serverId]);
+    this.router.navigate(['/servers', serverId]);
+  }
+
+  /**
+   * Event that emits when the tab is changed in the routing tabgroup
+   * @param tab Active tab
+   */
+  public onTabChanged(tab: any) {
+    if (isNullOrEmpty(this.vdc) || isNullOrEmpty(this.vdc.id)) { return; }
+    // Navigate route based on current active tab
+    if (tab.id === 'overview') {
+      this.router.navigate([`servers/vdc/${this.vdc.id}/overview`]);
+    } else {
+      // Add navigation of other tab here
+    }
   }
 
   public getActionStatus(server: Server): any {

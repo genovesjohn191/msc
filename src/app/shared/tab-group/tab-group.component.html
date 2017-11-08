@@ -2,6 +2,7 @@
 <mcs-tab-header>
   <mcs-tab-header-item *ngFor="let tab of tabs"
     [active]="activeTab?.id === tab.id"
+    [ngClass]="tab?.customClass"
     [class.custom-tab]="!tab.canSelect" (click)="selectTab(tab)">
 
     <ng-container *ngIf="tab.labelTemplate">

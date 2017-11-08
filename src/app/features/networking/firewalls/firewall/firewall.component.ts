@@ -16,7 +16,8 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsSearch,
-  McsListPanelItem
+  McsListPanelItem,
+  McsRoutingTabBase
 } from '../../../../core';
 import {
   Firewall,
@@ -30,13 +31,19 @@ import {
   refreshView
 } from '../../../../utilities';
 
+// Add another group type in here if you have addition tab
+type tabGroupType = 'overview' | 'policies';
+
 @Component({
   selector: 'mcs-firewall',
   styleUrls: ['./firewall.component.scss'],
   templateUrl: './firewall.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FirewallComponent
+  extends McsRoutingTabBase<tabGroupType>
+  implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('listSearch')
   public _listSearch: McsSearch;
 
@@ -83,18 +90,18 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(
+    _router: Router,
+    _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _firewallsService: FirewallsService,
-    private _firewallService: FirewallService,
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute
+    private _firewallService: FirewallService
   ) {
+    super(_router, _activatedRoute);
     this.firewall = new Firewall();
   }
 
   public ngOnInit() {
-    // OnInit
     this.firewallsTextContent = this._textContentProvider.content.firewalls;
     this.firewallTextContent = this._textContentProvider.content.firewalls.firewall;
     this._getFirewallById();
@@ -107,8 +114,8 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    // OnDestroy
-    if (this.subscription) {
+    super.dispose();
+    if (!isNullOrEmpty(this.subscription)) {
       this.subscription.unsubscribe();
     }
   }
@@ -121,9 +128,9 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
   public onFirewallSelect(firewallId: any): void {
     if (isNullOrEmpty(firewallId)) { return; }
 
-    this._router.navigate(
+    this.router.navigate(
       ['/networking/firewalls', firewallId],
-      { relativeTo: this._activatedRoute }
+      { relativeTo: this.activatedRoute }
     );
   }
 
@@ -139,6 +146,16 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
     this._initializeListsource();
   }
 
+  public onTabChanged(tab: any) {
+    if (isNullOrEmpty(this.firewall) || isNullOrEmpty(this.firewall.id)) { return; }
+    // Navigate route based on current active tab
+    if (tab.id === 'overview') {
+      this.router.navigate([`networking/firewalls/${this.firewall.id}/overview`]);
+    } else {
+      this.router.navigate([`networking/firewalls/${this.firewall.id}/policies`]);
+    }
+  }
+
   private _initializeListsource(): void {
     this.firewallListSource = new FirewallListSource(
       this._firewallsService,
@@ -148,7 +165,7 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private _getFirewallById(): void {
-    this.subscription = this._activatedRoute.paramMap
+    this.subscription = this.activatedRoute.paramMap
       .switchMap((params: ParamMap) => {
         let firewallId = params.get('id');
         return this._firewallService.getFirewall(firewallId);
@@ -165,6 +182,5 @@ export class FirewallComponent implements OnInit, AfterViewInit, OnDestroy {
           this._changeDetectorRef.markForCheck();
         }
       });
-
   }
 }

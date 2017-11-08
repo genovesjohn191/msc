@@ -26,7 +26,8 @@ import {
   McsSearch,
   McsDialogService,
   McsApiJob,
-  McsNotificationContextService
+  McsNotificationContextService,
+  McsRoutingTabBase
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -39,6 +40,9 @@ import { ServersListSource } from '../servers.listsource';
 // Constant Definition
 const SERVER_LIST_GROUP_OTHERS = 'Others';
 
+// Add another group type in here if you have addition tab
+type tabGroupType = 'management' | 'storage';
+
 @Component({
   selector: 'mcs-server',
   templateUrl: './server.component.html',
@@ -47,7 +51,10 @@ const SERVER_LIST_GROUP_OTHERS = 'Others';
     'class': 'block'
   }
 })
-export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ServerComponent
+  extends McsRoutingTabBase<tabGroupType>
+  implements OnInit, AfterViewInit, OnDestroy {
+
   @ViewChild('search')
   public search: McsSearch;
 
@@ -96,8 +103,8 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute,
+    _router: Router,
+    _activatedRoute: ActivatedRoute,
     private _dialogService: McsDialogService,
     private _serversService: ServersService,
     private _serverService: ServerService,
@@ -105,6 +112,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _notificationContextService: McsNotificationContextService
   ) {
+    super(_router, _activatedRoute);
     this.jobs = new Array<McsApiJob>();
     this.server = new Server();
     this.serverCommandList = new Array();
@@ -114,7 +122,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   public ngOnInit() {
     this.serversTextContent = this._textContentProvider.content.servers;
     this.serverTextContent = this._textContentProvider.content.servers.server;
-    this._serverId = this._activatedRoute.snapshot.paramMap.get('id');
+    this._serverId = this.activatedRoute.snapshot.paramMap.get('id');
     this.serverCommandList = [
       ServerCommand.Start,
       ServerCommand.Stop,
@@ -137,6 +145,7 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
+    super.dispose();
     if (!isNullOrEmpty(this.serverSubscription)) {
       this.serverSubscription.unsubscribe();
     }
@@ -154,9 +163,9 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
     this._serverId = serverId;
     this._getServerById();
 
-    this._router.navigate(
+    this.router.navigate(
       ['/servers', serverId],
-      { relativeTo: this._activatedRoute }
+      { relativeTo: this.activatedRoute }
     );
   }
 
@@ -206,6 +215,17 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public getActiveServerTooltip(serverId: any) {
     return this._serversService.getActiveServerInformation(serverId);
+  }
+
+  public onTabChanged(tab: any) {
+    if (isNullOrEmpty(this.server) || isNullOrEmpty(this.server.id)) { return; }
+
+    // Navigate route based on current active tab
+    if (tab.id === 'management') {
+      this.router.navigate([`servers/${this.server.id}/management`]);
+    } else {
+      this.router.navigate([`servers/${this.server.id}/storage`]);
+    }
   }
 
   /**
@@ -279,6 +299,9 @@ export class ServerComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  /**
+   * Listener for notifications changed
+   */
   private _listenToNotificationsStream(): void {
     this._notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((jobs) => {

@@ -43,6 +43,7 @@ $tab-body-padding: $space-medium;
       }
       &.custom-tab {
         cursor: default;
+        min-width: 0;
         color: $tab-header-item-active-color;
       }
     }
