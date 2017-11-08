@@ -7,7 +7,8 @@
     <div class="contextual-help-page-wrapper">
 
       <div class="page-information-wrapper">
-        <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC">
+        <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC"
+          [mcsContextualHelp]="contextualTextContent.vdcField">
           <mcs-select-group [header]="createServerTextContent.vdcDropdownList.name">
             <mcs-select-item *ngFor="let vdc of vdcList" [value]="vdc.value">
               {{ vdc.text }}

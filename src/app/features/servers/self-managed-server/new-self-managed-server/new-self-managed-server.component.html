@@ -3,14 +3,16 @@
   <div class="field">
     <mcs-textbox width="100%" placeholder="* Enter a server name"
       [formControl]="fcServerName"
-      [mcsContextualHelp]="textHelpContent.enterServerName"
+      [mcsContextualHelp]="textHelpContent.serverNameField"
       [valid]="isControlValid(fcServerName)"></mcs-textbox>
     <mcs-validation-message [control]="fcServerName"></mcs-validation-message>
   </div>
 
   <!-- Virtual Applications Selection -->
   <div class="field">
-    <mcs-select [formControl]="fcVApp" [placeholder]="textContent.placeholder.vApp">
+    <mcs-select [formControl]="fcVApp"
+      [mcsContextualHelp]="textHelpContent.vAppField"
+      [placeholder]="textContent.placeholder.vApp">
       <mcs-select-item [value]="">{{ textContent.placeholder.vApp }}</mcs-select-item>
       <mcs-select-group [header]="textContent.headers.vApp">
         <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
@@ -23,7 +25,7 @@
   <!-- Imges Selection -->
   <div class="field">
     <mcs-select [formControl]="fcImage" [placeholder]="textContent.placeholder.image"
-      [mcsContextualHelp]="textHelpContent.serverTemplate">
+      [mcsContextualHelp]="textHelpContent.serverTemplateField">
       <mcs-select-item [value]="">{{ textContent.placeholder.image }}</mcs-select-item>
       <mcs-select-group [header]="textContent.headers.os">
         <mcs-select-item *ngFor="let platform of serverOsItems">
@@ -49,6 +51,7 @@
   <div class="field">
     <mcs-server-performance-scale
       [memoryMB]="memoryMB" [cpuCount]="cpuCount"
+      [mcsContextualHelp]="textHelpContent.computeField"
       [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpuCount"
       (scaleChanged)="onScaleChanged($event)">
       <!--Performance scale contents on the left hand side (title and description)-->
@@ -66,6 +69,7 @@
       [minimumMB]="storageMemoryMB"
       [storageProfileList]="storageItems"
       [storageSliderValues]="storageSliderValues"
+      [mcsContextualHelp]="textHelpContent.storageField"
       (storageChanged)="onStorageChanged($event)">
       <!--Server manage storage contents on the left hand side (title and description)-->
       <div title>
@@ -78,7 +82,7 @@
   <div class="field">
     <span class="label">{{ textContent.networkLabel }}</span>
     <mcs-select [formControl]="fcNetwork" [placeholder]="textContent.placeholder.network"
-      [mcsContextualHelp]="textHelpContent.network">
+      [mcsContextualHelp]="textHelpContent.networkField">
       <mcs-select-item [value]="">{{ textContent.placeholder.network }}</mcs-select-item>
       <mcs-select-group [header]="textContent.headers.network">
         <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
