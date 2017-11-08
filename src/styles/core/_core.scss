@@ -2,10 +2,13 @@
 @import "fonts";
 @import "animations/mcs-animations";
 @import "layout/mcs-layout";
+
+// TODO: Check if others are not affected
+// @import "layout/mcs-reset";
 @import "classes/mcs-contextual-help";
 @import "classes/mcs-listing";
 @import "classes/mcs-page-title";
-@import "classes/mcs-tabs";
+@import "classes/mcs-routing-tab";
 @import "classes/mcs-pre-loader";
 @import "classes/mcs-overlay";
 @import "classes/mcs-scrollbar";

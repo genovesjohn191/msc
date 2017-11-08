@@ -57,6 +57,7 @@ export * from './interfaces/mcs-scrollable.interface';
 export * from './interfaces/mcs-safe-to-navigate-away.interface';
 export * from './interfaces/mcs-touched-controls.interface';
 /** Base */
+export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-table-listing.base';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';

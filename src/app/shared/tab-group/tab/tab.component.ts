@@ -37,6 +37,9 @@ export class TabComponent implements AfterViewInit {
   public label: string;
 
   @Input()
+  public customClass: string;
+
+  @Input()
   public canSelect: boolean;
 
   @ContentChild(TabLabelDirective)
