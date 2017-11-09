@@ -116,6 +116,17 @@ $zindex-popover-low: 500;
 $zindex-popover-medium: 1000;
 $zindex-popover-high: 1500;
 
+// Opacity
+$disabled-opacity: 0.65;
+
+// Border colors
+$border-color-light: $color-grey-04;
+$border-color-dark: $color-grey-01;
+
+// Border Radius
+$border-radius-small: 2px;
+$border-radius-medium: 4px;
+
 // Input
 $input-font: $base-font;
 $input-font-size: $font-size-default;
@@ -127,7 +138,7 @@ $input-border-color-focused: $color-primary-01;
 $input-text-color: $color-black;
 $input-placeholder-text-color: $color-grey-02;
 $input-background-color: $color-white;
-$input-border-radius: 2px;
+$input-border-radius: $border-radius-small;
 $input-padding: $space-small $space-medium;
 $input-padding-small: $space-xsmall $space-small;
 $input-font: $base-font;
@@ -138,9 +149,6 @@ $input-line-height: $line-height-default;
 $button-font: $base-font-bold;
 $button-font-size: $font-size-large;
 
-// Opacity
-$disabled-opacity: 0.65;
-
-// Border colors
-$border-color-light: $color-grey-04;
-$border-color-dark: $color-grey-01;
+// Shared settings for the page
+$shared-top-panel-size: 50px;
+$shared-left-panel-size: 275px;

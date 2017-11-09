@@ -9,7 +9,8 @@
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.vdc.leftPanelHeader">
     <!-- listing panel -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.vdc.panel" [mcsLoader]="vdcSubscription">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.vdc.panel"
+    [mcsLoader]="vdcSubscription">
       <div class="listing-panel-wrapper">
         <mcs-search #search delayInSeconds="none"></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
@@ -23,7 +24,8 @@
               [itemId]="server.id" [groupName]="server.vdcName"
               (click)="onServerSelect(server.id)">
 
-              <mcs-icon *ngIf="server.powerState" [key]="getStateIconKey(server.powerState)"></mcs-icon>
+              <mcs-icon *ngIf="server.powerState"
+                [key]="getStateIconKey(server.powerState)"></mcs-icon>
               <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
                 mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
                 [content]="loadingContent"></mcs-icon>
@@ -50,15 +52,15 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef [mcsLoader]="vdcSubscription">
-    <div class="inline-block">
+    <div class="routing-tab-wrapper">
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
         <mcs-tab [label]="textContent.vdc.overview.label" id="overview">
         </mcs-tab>
       </mcs-tab-group>
-      <div class="routing-tab-wrapper">
-        <router-outlet></router-outlet>
-      </div>
+
+      <!-- Tab content for routing tab -->
+      <router-outlet></router-outlet>
     </div>
   </mcs-content-panel>
 </mcs-page>

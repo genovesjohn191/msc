@@ -126,7 +126,7 @@ export class TextboxComponent
 
   public ngAfterViewInit() {
     if (this.width) {
-      this._renderer.addClass(this.mcsTextbox.nativeElement, 'w-100');
+      this._renderer.addClass(this.mcsTextbox.nativeElement, 'full-width');
     }
 
     if (this.borderColor) {

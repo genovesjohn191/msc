@@ -1,10 +1,8 @@
 @import "../shared/base";
 @import "fonts";
 @import "animations/mcs-animations";
+@import "layout/mcs-reset";
 @import "layout/mcs-layout";
-
-// TODO: Check if others are not affected
-// @import "layout/mcs-reset";
 @import "classes/mcs-contextual-help";
 @import "classes/mcs-listing";
 @import "classes/mcs-page-title";
@@ -34,8 +32,6 @@ html {
     @include font-size($font-size-default, $line-height-default);
     @include breakpoint(small) {
       @include font-size($font-size-small, $line-height-small);
-      // TODO: Remove completely once fix is confirmed in mobile
-      // padding-top: 65px;
     }
 
     h1, h2, h3, h4 {

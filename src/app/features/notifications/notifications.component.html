@@ -28,10 +28,9 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-
     <div class="listing-table-wrapper">
       <!-- Description -->
-      <span>{{ textContent.description }}</span>
+      <p>{{ textContent.description }}</p>
 
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search></mcs-search>

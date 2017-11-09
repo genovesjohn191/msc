@@ -14,9 +14,13 @@ $button-warning-background-color: $color-yellow-00;
 $button-danger-background-color: $color-red-00;
 $button-primary-text-color: $color-white;
 
-.mcs-button {
+.button-wrapper {
+  white-space: nowrap;
+  border: 1px solid transparent;
+  user-select: none;
+  @include border-radius($border-radius-small);
   @include display-inline-flex(row);
-  align-items: center;
+  @include align-items(center);
   background-color: $button-primary-background-color;
   color: $button-primary-text-color;
   padding: $button-padding;
@@ -28,7 +32,7 @@ $button-primary-text-color: $color-white;
 
   .label {
     @include display-inline-flex(row);
-    align-items: center;
+    @include align-items(center);
     width: 100%;
   }
 

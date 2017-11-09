@@ -3,11 +3,11 @@
 // Select component trigger wrapper
 $select-trigger-padding: $space-small $space-medium;
 $select-trigger-border-color: $color-black;
-$select-trigger-border-radius: 2px;
+$select-trigger-border-radius: $border-radius-small;
 // Select group container
 $select-group-container-bg-color: $color-white;
 $select-group-container-border-color: $color-grey-03;
-$select-group-container-border-radius: 2px;
+$select-group-container-border-radius: $border-radius-small;
 $select-group-container-padding: $space-small;
 // Select group wrapper
 $select-group-wrapper-padding: $space-small 0;

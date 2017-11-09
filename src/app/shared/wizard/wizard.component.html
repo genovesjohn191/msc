@@ -41,7 +41,7 @@
 <!-- Left panel wrapper in case of desktop -->
 <div class="wizard-left-panel-wrapper hidden-small">
   <div class="wizard-steps-header">
-    <h4 class="reset-header" read-only>STEPS</h4>
+    <h4 read-only>{{ wizardTextContent.steps }}</h4>
   </div>
   <ng-container *ngTemplateOutlet="stepsTemplate"></ng-container>
 </div>
@@ -53,7 +53,7 @@
       <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
     </ng-container>
     <ng-container *ngIf="!headerTemplate">
-      <h3 class="reset-header">{{ header }}</h3>
+      <h3>{{ header }}</h3>
     </ng-container>
   </div>
 

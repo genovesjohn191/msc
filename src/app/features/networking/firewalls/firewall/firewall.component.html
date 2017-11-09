@@ -39,7 +39,7 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef [mcsLoader]="subscription">
-    <div class="inline-block">
+    <div class="routing-tab-wrapper">
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
         <mcs-tab [label]="firewallTextContent.overview.label" id="overview">
@@ -64,9 +64,9 @@
           </ng-template>
         </mcs-tab>
       </mcs-tab-group>
-      <div class="routing-tab-wrapper">
-        <router-outlet></router-outlet>
-      </div>
+
+      <!-- Tab content for routing tab -->
+      <router-outlet></router-outlet>
     </div>
   </mcs-content-panel>
 </mcs-page>

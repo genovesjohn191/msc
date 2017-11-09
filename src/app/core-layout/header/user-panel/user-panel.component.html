@@ -72,7 +72,7 @@
     <a flex="auto" display-flex="column" cursor="pointer"
       (click)="clickUser()" stop-propagation>
       <mcs-icon class="user-icon" [key]="userIconKey" size="medium"></mcs-icon>
-      <span class="hidden-small">{{ firstName }} {{ lastName }}</span>
+      <span class="hidden-small text-light">{{ firstName }} {{ lastName }}</span>
       <small class="user-info" read-only>{{ getActiveAccount()?.name }}</small>
     </a>
 

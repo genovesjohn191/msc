@@ -132,7 +132,7 @@
 }
 
 .full-width {
-  width:100%;
+  width: 100%;
 }
 
 // Status
@@ -143,6 +143,10 @@
 .disabled-element {
   opacity: 0.4;
   pointer-events: none;
+}
+
+.hide-element {
+  display: none !important;
 }
 
 .clickable-text {
@@ -196,15 +200,17 @@ table.mcs-simple-table {
   @include set-items-interval($space-medium, vertical);
 }
 
+// Text settings
 .text-center {
   text-align: center;
 }
 
-// Reset: TODO: Temporary fix for header margins and width
-.reset-header {
-  width: auto;
-  display: inline-block;
-  margin: 0;
+.text-light {
+  color: $color-grey-05;
+}
+
+.text-dark {
+  color: $color-black;
 }
 
 .dropzone {

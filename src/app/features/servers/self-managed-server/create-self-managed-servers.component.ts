@@ -303,7 +303,7 @@ export class CreateSelfManagedServersComponent implements
 
     // Loop to all new servers
     this.newServers.forEach((server) => {
-      if (server.componentRef.instance.serverCreateType === ServerCreateType.Clone) {
+      if (server.componentRef.instance.serverInputs.type === ServerCreateType.Clone) {
         let serverId = server.componentRef.instance.serverInputs.targetServer;
         let serverClone = new ServerClone();
         serverClone.name = server.componentRef.instance.serverInputs.serverName;

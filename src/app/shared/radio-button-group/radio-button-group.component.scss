@@ -31,6 +31,7 @@ $radio-button-label-offset: 12px;
       @include display-flex(row);
       align-items: center;
       margin: 0;
+      white-space: nowrap;
 
       mcs-icon {
         display: inline-block;
