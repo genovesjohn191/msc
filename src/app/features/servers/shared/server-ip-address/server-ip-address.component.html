@@ -18,6 +18,12 @@
         {{ ipAddressTextContent.default }}</a>
   </div>
 
+  <p *ngIf="inputManageType == inputManageTypeEnum.Buttons">
+    {{ ipAddressTextContent.defaultMessage }}</p>
+  <p *ngIf="inputManageType == inputManageTypeEnum.Custom">
+    {{ ipAddressTextContent.customMessage }}
+  </p>
+
   <!--Custom IP Address content element-->
   <form [formGroup]="formGroupIpAddress">
     <div *ngIf="inputManageType == inputManageTypeEnum.Custom">

@@ -90,27 +90,36 @@
         "network": "Networks"
       },
       "placeholder": {
-        "vApp": "Select VApp",
+        "vApp": "Select vApp (Optional)",
         "image": "Select Image",
         "network": "Select Network",
         "server": "Select Server"
       },
       "contextualHelp": {
-        "enterServerName": "A friendly Server name.",
+        "vdcField": "Virtual Data Center to deploy your server. You can deploy your server to any Virtual Data Center available in this list.",
+        "serverNameField": "Choose a friendly name for your server. The server name must be 15 characters or less and contain letters, numbers and hyphens.",
+        "vAppField": "A vApp houses one or more servers. By default we create a vApp for each of your servers.",
         "intellicentre": "Virtual Data Centre to deploy this Server in.",
-        "serverTemplate": "Choose the server's template.",
+        "serverTemplateField": "Select the operating system or your own custom template to create this server from.",
+        "computeField": "Choose the memory and vCPU for your server. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining compute in your Virtual Data Centre.",
+        "storageField": "Choose the profile and size of the server's primary storage volume. Click 'Enter custom size' to enter a precise value. Your selection is bound by the remaining capacity in the selected storage profile.",
         "serverName": "Starting from an existing server's configuration helps you get a new server up and running quicker.",
-        "network": "DHCP mode: You'll get a lease with an IP address on boot. Static Pool mode: this will give you the next available IP in the static pool.",
+        "networkField": "Select the network to create a primary network interface for your server.",
+        "ipAddressField": "Select a method for acquiring the server's private IP address. Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
         "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
-        "provisioningNotifications": "We're currently deploying your stack. Your servers will soon be provisioned and ready.<br/><br/>You can watch the state of provisioning as each step evolves."
+        "provisioningNotifications": "We're currently deploying your server. Your server will be ready in a few minutes. Browsing to another page will not affect your server build. You can track progress from notifications area at the top of the portal.",
+        "quickNavigateToCreatedServer":"You can go back to server listing page to view your newly created server",
+        "backToListing":"This link would take you back to your server listing page"
       },
       "vdcDropdownList": {
         "name": "Virtual Data Centres",
         "prefix": "Self Managed VDC - {{availability_zone}} "
       },
       "newServer": "New server",
+      "newServerDescription": "Creating a new server allows you to specify the way your server will be built.",
       "copyServer": "Copy a server",
       "cloneServer": "Clone a server",
+      "cloneServerDescription": "Cloning a server gives you an exact replica of an existing server in the same Virtual Data Centre.",
       "invalidServerName": "Server name can only contain letters, numbers or hypen",
       "noResourceFound": {
         "header": "Unable to Create Server",
@@ -196,7 +205,9 @@
       },
       "serverIpAddress": {
         "custom": "Enter a custom IP Address.",
+        "customMessage": "Warning: entering a custom IP address may cause conflicts if other servers in the network have this IP address assigned via another method.",
         "default": "Select from default",
+        "defaultMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
         "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})"
       },
       "resetPasswordDialog": {
