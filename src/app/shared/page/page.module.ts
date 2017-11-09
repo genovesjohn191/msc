@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LayoutModule } from '../layout';
 import { IconModule } from '../icon/icon.module';
 /** Page */
+import { PageHeaderDirective } from './page-header.directive';
 import { PageComponent } from './page.component';
 import { PageService } from './page.service';
 /** Left Panel */
@@ -33,6 +34,7 @@ import {
 @NgModule({
   declarations: [
     PageComponent,
+    PageHeaderDirective,
     LeftPanelComponent,
     LeftPanelDefDirective,
     LeftPanelPlaceholderDirective,
@@ -56,6 +58,7 @@ import {
   ],
   exports: [
     PageComponent,
+    PageHeaderDirective,
     LeftPanelComponent,
     LeftPanelDefDirective,
     LeftPanelPlaceholderDirective,

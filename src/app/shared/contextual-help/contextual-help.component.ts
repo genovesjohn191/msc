@@ -5,7 +5,6 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { CoreDefinition } from '../../core';
 import {
   getElementPositionFromHost,
   refreshView
@@ -56,9 +55,7 @@ export class ContextualHelpComponent {
     return {
       'top': `${targetElementPosition.top}px`,
       'position': 'absolute',
-      'font-family': contextInformation.hasFocus ?
-        CoreDefinition.BASE_FONT_BOLD :
-        CoreDefinition.BASE_FONT
+      'opacity': contextInformation.hasFocus ? 1 : 0
     };
   }
 

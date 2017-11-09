@@ -1,6 +1,4 @@
 $filter-search-max-width: 300px;
-$filter-selector-width: 100px;
-
 $action-cell-width: 55px;
 
 .listing-table-wrapper {
@@ -54,8 +52,4 @@ $action-cell-width: 55px;
 .listing-status-wrapper {
   @include display-flex(row);
   @include set-items-interval($space-small, horizontal);
-}
-
-.filter-selector {
-  width: $filter-selector-width;
 }

@@ -523,7 +523,8 @@
       "previous": "Back",
       "next": "Next",
       "cancel": "Cancel",
-      "completed": "Go"
+      "completed": "Go",
+      "steps": "STEPS"
     },
     "paginator": {
       "nextPage": "More"

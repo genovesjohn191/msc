@@ -6,17 +6,15 @@
       <mcs-search #search flex="auto"></mcs-search>
       <mcs-icon [key]="columnFilterIconKey" size="large" class="hidden-small pointer"
         mcsPopover placement="bottom" orientation="left" theme="light"
-        padding="narrow" [content]="filterSelector" flex="none">
+        padding="narrow" [content]="filterSelector" flex="none" cursor="pointer">
       </mcs-icon>
       <ng-template #filterSelector>
-        <div class="filter-selector">
-          <mcs-filter-selector [key]="columnSettingsKey"
-            (onGetFilters)="updateColumnSettings($event)">
-          </mcs-filter-selector>
-        </div>
+        <mcs-filter-selector [key]="columnSettingsKey"
+          (onGetFilters)="updateColumnSettings($event)">
+        </mcs-filter-selector>
       </ng-template>
       <!-- Note: This is required for generating policies table -->
-      <mcs-filter-selector hidden [key]="columnSettingsKey"
+      <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey"
         (onGetFilters)="updateColumnSettings($event)">
       </mcs-filter-selector>
       <div class="record-count hidden-small" flex="none">

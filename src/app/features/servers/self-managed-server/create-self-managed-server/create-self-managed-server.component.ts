@@ -104,10 +104,6 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
     return this._serverInputs.isValid;
   }
 
-  private _serverNew: ServerCreateSelfManaged;
-  private _serverCopy: ServerCreateSelfManaged;
-  private _serverClone: ServerCreateSelfManaged;
-
   public constructor(
     private _textContentProvider: McsTextContentProvider,
     private _activatedRoute: ActivatedRoute
@@ -115,9 +111,6 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
     this._serverCreateType = ServerCreateType.New;
     this._serverInputs = new ServerCreateSelfManaged();
     this._isValid = false;
-    this._serverNew = new ServerCreateSelfManaged();
-    this._serverCopy = new ServerCreateSelfManaged();
-    this._serverClone = new ServerCreateSelfManaged();
   }
 
   public ngOnInit() {
@@ -184,50 +177,17 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
   }
 
   /**
-   * Set the creation type based on the selection of the tab
-   * @param type Creation type
-   */
-  public setCreationType(type: ServerCreateType): void {
-    this._serverCreateType = type;
-
-    switch (type) {
-      case ServerCreateType.Copy:
-        this._serverInputs = this._serverCopy;
-        break;
-
-      case ServerCreateType.Clone:
-        this._serverInputs = this._serverClone;
-        break;
-
-      case ServerCreateType.New:
-      default:
-        this._serverInputs = this._serverNew;
-        break;
-    }
-  }
-
-  /**
    * Set the server details based on the inputted information
    * @param _serverDetails Server details
    */
   public setServerDetails(_serverDetails: ServerCreateSelfManaged): void {
     if (isNullOrEmpty(_serverDetails)) { return; }
-
-    switch (_serverDetails.type) {
-      case ServerCreateType.Copy:
-        this._serverCopy = _serverDetails;
-        break;
-      case ServerCreateType.Clone:
-        this._serverClone = _serverDetails;
-        break;
-      case ServerCreateType.New:
-      default:
-        this._serverNew = _serverDetails;
-        break;
-    }
-    this.setCreationType(_serverDetails.type);
+    this._serverInputs = _serverDetails;
   }
 
+  /**
+   * Event that emits when tab is changed
+   */
   public onTabChanged(_event) {
     this.activeCreationTabId = _event.id;
   }
@@ -240,7 +200,7 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
       .subscribe((params: ParamMap) => {
         this.targetServerId = params['clone'];
         if (this.targetServerId) {
-          this.setCreationType(ServerCreateType.Clone);
+          this._serverCreateType = ServerCreateType.Clone;
         }
       });
   }

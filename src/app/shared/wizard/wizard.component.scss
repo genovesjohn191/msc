@@ -5,8 +5,8 @@ $content-small-padding: $space-large $space-medium $space-large $space-large;
 
 // Wizard panel
 $wizard-border-color: $border-color-light;
-$wizard-left-panel-width: 275px;
-$wizard-top-panel-height: 50px;
+$wizard-left-panel-width: $shared-left-panel-size;
+$wizard-top-panel-height: $shared-top-panel-size;
 $wizard-top-panel-padding: 0 $space-large;
 $wizard-content-panel-large-padding: $content-large-padding;
 $wizard-content-panel-small-padding: $content-small-padding;
@@ -154,7 +154,6 @@ $step-disabled-color: $color-grey-02;
     }
 
     .step-actions {
-      padding-top: $space-xxlarge;
       @include display-flex(row);
       justify-content: flex-end;
       align-items: center;

@@ -51,7 +51,6 @@ module.exports = function (options) {
     entry: {
 
       'polyfills': './src/polyfills.browser.ts',
-      'twbs': 'bootstrap-loader',
       'fa': 'font-awesome-sass-loader!./config/font-awesome.config.js',
       'main': AOT ? './src/main.browser.aot.ts' :
         './src/main.browser.ts'
@@ -167,14 +166,6 @@ module.exports = function (options) {
           test: /\.scss$/,
           use: ['to-string-loader', 'css-loader', 'sass-loader'],
           exclude: [helpers.root('src', 'styles')]
-        },
-
-        /**
-         * Bootstrap 4 Loader @4.0.0-alpha.6
-         */
-        {
-          test: /bootstrap\/dist\/js\/umd\//,
-          use: 'imports-loader?jQuery=jquery'
         },
 
         /**

@@ -1,20 +1,22 @@
-<mcs-page [header]="headerTemplate">
-  <ng-template #headerTemplate>
+<mcs-page>
+  <!-- Page template header -->
+  <ng-container *mcsPageHeader>
     <div class="horizontal-items-spacing-small"
     display-flex="row" align-items="center">
       <div>
         <a [routerLink]="['/servers/vdc', server.vdcId]">
-          <h3 class="reset-header">{{ server.vdcName }}</h3>
+          <h3>{{ server.vdcName }}</h3>
         </a>
       </div>
       <div>
         <mcs-icon [key]="angleDoubleRightIconKey"></mcs-icon>
       </div>
       <div>
-        <h3 class="reset-header">{{ server.managementName }}</h3>
+        <h3>{{ server.managementName }}</h3>
       </div>
     </div>
-  </ng-template>
+  </ng-container>
+
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="serverTextContent.leftPanelHeader">
     <!-- listing panel -->
@@ -59,7 +61,7 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef [mcsLoader]="serverSubscription">
-    <div class="inline-block">
+    <div class="routing-tab-wrapper">
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Management Tab -->
         <mcs-tab [label]="serverTextContent.management.label" id="management">
@@ -79,9 +81,9 @@
           </ng-template>
         </mcs-tab>
       </mcs-tab-group>
-      <div class="routing-tab-wrapper">
-        <router-outlet></router-outlet>
-      </div>
+
+      <!-- Tab content for routing tab -->
+      <router-outlet></router-outlet>
     </div>
   </mcs-content-panel>
 </mcs-page>

@@ -28,14 +28,24 @@ $scrollbar-dark-track-color: $color-black;
   background-color: $scrollbar-dark-bg-color;
 }
 
+// Scrollbar reset size
+%scrollbar-reset {
+  @include breakpoint(small) {
+    width: unset !important;
+    height: unset !important;
+  }
+}
+
 // Scrollbar small
 .scrollbar-small::-webkit-scrollbar {
   width: $scrollbar-small;
   height: $scrollbar-small;
+  @extend %scrollbar-reset;
 }
 
 // Scrollbar medium
 .scrollbar-medium::-webkit-scrollbar {
   width: $scrollbar-medium;
   height: $scrollbar-medium;
+  @extend %scrollbar-reset;
 }

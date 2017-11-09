@@ -3,6 +3,11 @@ $content-responsive-width-mobile: 500px;
 $grid-row-spacing: 50px;
 
 .routing-tab-wrapper {
+  display: inline-block;
+  @include breakpoint(medium) {
+    display: block;
+  }
+
   .content-responsive {
     width: $content-responsive-width-desktop;
     @include breakpoint(small) {

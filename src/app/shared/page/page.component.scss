@@ -10,13 +10,13 @@ $page-header-font-size-default: $h3-default-font-size;
 $page-header-font-size-small: $font-size-large;
 $page-header-padding: 0 $space-large;
 // Top Panel Definition
-$top-panel-height: 50px;
+$top-panel-height: $shared-top-panel-size;
 $top-panel-item-padding: $page-header-padding;
 $action-item-hover-color: $color-grey-07;
 $action-item-active-color: $color-grey-06;
 // Left Panel Definition
 $left-panel-header-font-size: $font-default;
-$left-panel-width: 275px;
+$left-panel-width: $shared-left-panel-size;
 $left-panel-icon-padding: $space-small;
 $left-panel-item-padding: $space-medium;
 // Left Panel Navigation
