@@ -29,7 +29,6 @@ describe('PopoverDirective', () => {
   /** Stub Services/Components */
   let component: TestComponent;
   let directiveElement: DebugElement;
-  let buttonElement: any;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
   beforeEach(async(() => {
@@ -74,7 +73,6 @@ describe('PopoverDirective', () => {
 
       component = fixtureInstance.componentInstance;
       directiveElement = fixtureInstance.debugElement.query(By.directive(PopoverDirective));
-      buttonElement = fixtureInstance.nativeElement.querySelector('button');
     });
   }));
 
@@ -172,56 +170,64 @@ describe('PopoverDirective', () => {
     it(`should call the setRightOrientation()
       when the placement is top and orientation is right`, () => {
         spyOn(component.popover, 'setRightOrientation');
-        component.popover.moveElementPosition('top', 'right');
+        component.popover.placement = 'top';
+        component.popover.moveElementPosition('right');
         expect(component.popover.setRightOrientation).toHaveBeenCalled();
       });
 
     it(`should call the setLeftOrientation()
       when the placement is top and orientation is left`, () => {
         spyOn(component.popover, 'setLeftOrientation');
-        component.popover.moveElementPosition('top', 'left');
+        component.popover.placement = 'top';
+        component.popover.moveElementPosition('left');
         expect(component.popover.setLeftOrientation).toHaveBeenCalled();
       });
 
     it(`should call the setRightOrientation()
       when the placement is bottom and orientation is right`, () => {
         spyOn(component.popover, 'setRightOrientation');
-        component.popover.moveElementPosition('bottom', 'right');
+        component.popover.placement = 'bottom';
+        component.popover.moveElementPosition('right');
         expect(component.popover.setRightOrientation).toHaveBeenCalled();
       });
 
     it(`should call the setLeftOrientation()
       when the placement is bottom and orientation is left`, () => {
         spyOn(component.popover, 'setLeftOrientation');
-        component.popover.moveElementPosition('bottom', 'left');
+        component.popover.placement = 'bottom';
+        component.popover.moveElementPosition('left');
         expect(component.popover.setLeftOrientation).toHaveBeenCalled();
       });
 
     it(`should call the setTopOrientation()
       when the placement is right and orientation is top`, () => {
         spyOn(component.popover, 'setTopOrientation');
-        component.popover.moveElementPosition('right', 'top');
+        component.popover.placement = 'right';
+        component.popover.moveElementPosition('top');
         expect(component.popover.setTopOrientation).toHaveBeenCalled();
       });
 
     it(`should call the setBottomOrientation()
       when the placement is right and orientation is bottom`, () => {
         spyOn(component.popover, 'setBottomOrientation');
-        component.popover.moveElementPosition('right', 'bottom');
+        component.popover.placement = 'right';
+        component.popover.moveElementPosition('bottom');
         expect(component.popover.setBottomOrientation).toHaveBeenCalled();
       });
 
     it(`should call the setTopOrientation()
       when the placement is left and orientation is top`, () => {
         spyOn(component.popover, 'setTopOrientation');
-        component.popover.moveElementPosition('left', 'top');
+        component.popover.placement = 'left';
+        component.popover.moveElementPosition('top');
         expect(component.popover.setTopOrientation).toHaveBeenCalled();
       });
 
     it(`should call the setBottomOrientation()
       when the placement is left and orientation is bottom`, () => {
         spyOn(component.popover, 'setBottomOrientation');
-        component.popover.moveElementPosition('left', 'bottom');
+        component.popover.placement = 'left';
+        component.popover.moveElementPosition('bottom');
         expect(component.popover.setBottomOrientation).toHaveBeenCalled();
       });
   });

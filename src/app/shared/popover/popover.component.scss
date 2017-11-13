@@ -60,6 +60,7 @@ $popover-border-radius: 2px;
   }
 
   &.arrow-top {
+    flex-direction: column;
     top: $popover-arrow-border-width;
     &::before,
     &::after {
@@ -80,6 +81,7 @@ $popover-border-radius: 2px;
   }
 
   &.arrow-right {
+    flex-direction: row-reverse;
     right: $popover-arrow-border-width;
     &::before,
     &::after {
@@ -99,6 +101,7 @@ $popover-border-radius: 2px;
   }
 
   &.arrow-left {
+    flex-direction: row;
     left: $popover-arrow-border-width;
     &::before,
     &::after {
@@ -118,6 +121,7 @@ $popover-border-radius: 2px;
   }
 
   &.arrow-down {
+    flex-direction: column-reverse;
     bottom: $popover-arrow-border-width;
     &::before,
     &::after {
