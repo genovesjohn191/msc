@@ -8,9 +8,10 @@
 
     <div class="field">
       <!-- Uploader of attachment wrapper -->
-      <mcs-ticket-attachment attachedType="single"
+      <mcs-attachment attachedLimit="single"
+        [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
         (attachedFilesChanged)="onChangedAttachments($event)">
-      </mcs-ticket-attachment>
+      </mcs-attachment>
     </div>
 
     <!-- Ticket comment/attachment creation -->

@@ -5,8 +5,6 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-/** External modules */
-import { FileUploadModule } from 'ng2-file-upload';
 /** Modules */
 import { LayoutModule } from './layout/layout.module';
 import { ButtonModule } from './button/button.module';
@@ -27,6 +25,7 @@ import { DialogModule } from './dialog/dialog.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
 import { WizardModule } from './wizard/wizard.module';
+import { AttachmentModule } from './attachment/attachment.module';
 /** Components */
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { RadioButtonGroupComponent } from './radio-button-group/radio-button-group.component';
@@ -56,7 +55,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     CapacityBarComponent
   ],
   imports: [
-    FileUploadModule,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -79,7 +77,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     DialogModule,
     TooltipModule,
     TabGroupModule,
-    WizardModule
+    WizardModule,
+    AttachmentModule
   ],
   exports: [
     CheckboxComponent,
@@ -93,7 +92,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     HasPermissionDirective,
     SearchComponent,
     CapacityBarComponent,
-    FileUploadModule,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -116,7 +114,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     DialogModule,
     TooltipModule,
     TabGroupModule,
-    WizardModule
+    WizardModule,
+    AttachmentModule
   ]
 })
 

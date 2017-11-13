@@ -531,6 +531,14 @@
     },
     "search": {
       "placeholder": "Type to search..."
+    },
+    "attachment": {
+      "chooseFile": "Choose File",
+      "dragDropZone": "File attachments (select or drag & drop)",
+      "ok": "OK",
+      "errorCaption": "Selection error",
+      "errorFileType": "Invalid file type selected.",
+      "errorGeneral": "Unexpected error occured."
     }
   }
 }

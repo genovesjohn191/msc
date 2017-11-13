@@ -9,12 +9,10 @@ import {
   FormControl
 } from '@angular/forms';
 import { isNullOrEmpty } from '../../../../utilities';
-import {
-  TicketNewComment,
-  TicketFileInfo
-} from '../../models';
+import { TicketNewComment } from '../../models';
 import {
   McsTextContentProvider,
+  McsAttachment,
   CoreValidators
 } from '../../../../core';
 
@@ -36,7 +34,7 @@ export class TicketNewCommentComponent implements OnInit {
   @Output()
   public onCancelComment: EventEmitter<any>;
 
-  private _attachedFile: TicketFileInfo;
+  private _attachedFile: McsAttachment;
 
   public constructor(private _textContentProvider: McsTextContentProvider) {
     this.onCreateComment = new EventEmitter<any>();
@@ -59,7 +57,7 @@ export class TicketNewCommentComponent implements OnInit {
    * Notify when there are changes on the attachment
    * @param attachments Attachment to be part of the comment
    */
-  public onChangedAttachments(attachments: TicketFileInfo[]): void {
+  public onChangedAttachments(attachments: McsAttachment[]): void {
     if (isNullOrEmpty(attachments)) { return; }
     this._attachedFile = attachments[0];
   }

@@ -12,7 +12,8 @@ import {
 } from '@angular/router';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsAttachment
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -30,8 +31,7 @@ import {
   TicketCommentCategory,
   TicketCommentType,
   TicketCreateComment,
-  TicketCreateAttachment,
-  TicketFileInfo
+  TicketCreateAttachment
 } from '../models';
 import { TicketsService } from '../tickets.service';
 import { saveAs } from 'file-saver';
@@ -260,13 +260,13 @@ export class TicketComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _createAttachment(attachedFile: TicketFileInfo) {
+  private _createAttachment(attachedFile: McsAttachment) {
     if (isNullOrEmpty(attachedFile)) { return; }
 
     // Create attachment
     let newAttachment = new TicketCreateAttachment();
 
-    newAttachment.fileName = attachedFile.fileName;
+    newAttachment.fileName = attachedFile.filename;
     newAttachment.contents = attachedFile.base64Contents;
 
     this.createAttachmentSubscription = this._ticketsService

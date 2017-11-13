@@ -11,7 +11,6 @@ import {
   TicketServiceComponent,
   TicketServicePipe,
   TicketActivityComponent,
-  TicketAttachmentComponent,
   TicketNewCommentComponent
 } from './shared';
 /** Create Ticket */
@@ -24,7 +23,6 @@ import { TicketCreateComponent } from './ticket-create';
     TicketServiceComponent,
     TicketServicePipe,
     TicketActivityComponent,
-    TicketAttachmentComponent,
     TicketNewCommentComponent,
     TicketCreateComponent
   ],
