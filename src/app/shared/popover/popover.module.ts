@@ -4,6 +4,7 @@ import { LayoutModule } from '../layout/layout.module';
 /** Components/Directives */
 import { PopoverComponent } from './popover.component';
 import { PopoverDirective } from './popover.directive';
+import { PopoverService } from './popover.service';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,9 @@ import { PopoverDirective } from './popover.directive';
   exports: [
     PopoverDirective,
     LayoutModule
+  ],
+  providers: [
+    PopoverService
   ],
   entryComponents: [
     PopoverComponent

@@ -23,9 +23,11 @@ import {
   getElementPosition,
   registerEvent,
   isNullOrEmpty,
-  unregisterEvent
+  unregisterEvent,
+  getElementOffset
 } from '../../utilities';
 import { PopoverComponent } from './popover.component';
+import { PopoverService } from './popover.service';
 
 // Offet of the arrow from left/right/top/bottom
 const POPOVER_ARROW_OFFSET = 20;
@@ -83,7 +85,8 @@ export class PopoverDirective implements OnInit, OnDestroy {
     private _viewContainerRef: ViewContainerRef,
     private _ngZone: NgZone,
     private _scrollDispatcher: McsScrollDispatcherService,
-    private _overlayService: McsOverlayService
+    private _overlayService: McsOverlayService,
+    private _popoverService: PopoverService
   ) {
     // Set default values for Inputs
     this.priority = 'low';
@@ -99,14 +102,14 @@ export class PopoverDirective implements OnInit, OnDestroy {
     // Move popover element position when angular view is stable
     this.zoneSubscription = this._ngZone.onStable.subscribe(() => {
       if (this.componentRef) {
-        this.moveElementPosition(this.placement, this.orientation);
+        this.moveElementPosition(this.orientation);
       }
     });
 
     // Listen for every scroll position
     this._scrollDispatcher.scrolled(0, () => {
       if (this.componentRef) {
-        this.moveElementPosition(this.placement, this.orientation);
+        this.moveElementPosition(this.orientation);
       }
     });
   }
@@ -125,6 +128,8 @@ export class PopoverDirective implements OnInit, OnDestroy {
   }
 
   public open() {
+    this._removeActivePopover();
+
     // Create overlay element
     let overlayState = new McsOverlayState();
     overlayState.hasBackdrop = false;
@@ -149,6 +154,9 @@ export class PopoverDirective implements OnInit, OnDestroy {
     });
     this.componentRef.changeDetectorRef.markForCheck();
     this.onOpen.emit();
+
+    // Set active popover
+    this._popoverService.activePopover = this;
   }
 
   public close() {
@@ -194,10 +202,15 @@ export class PopoverDirective implements OnInit, OnDestroy {
     this.close();
   }
 
-  public moveElementPosition(placement: string, orientation: string) {
+  public moveElementPosition(orientation: string) {
+    // Update the placement of the component itself
+    let placement = this._getActualPlacement();
+    this.componentRef.instance.placement = placement;
+
+    // Move the element based on the placement position
     let targetElementPosition: any;
     targetElementPosition = getElementPosition(this.componentRef.location.nativeElement);
-    this.setPopoverPlacement();
+    this.setPopoverPlacement(placement);
 
     // Set popover orientation
     switch (placement) {
@@ -246,11 +259,11 @@ export class PopoverDirective implements OnInit, OnDestroy {
       .nativeElement.style.right = `${-rightPosition}px`;
   }
 
-  public setPopoverPlacement() {
+  public setPopoverPlacement(placement: string) {
     let targetElementPosition = getElementPositionFromHost(
       this._elementRef.nativeElement,
       this.componentRef.location.nativeElement,
-      this.placement, true);
+      placement, true);
 
     this.componentRef.location
       .nativeElement.style.top = `${targetElementPosition.top}px`;
@@ -259,6 +272,9 @@ export class PopoverDirective implements OnInit, OnDestroy {
       .nativeElement.style.left = `${targetElementPosition.left}px`;
   }
 
+  /**
+   * Register the events of the popover
+   */
   private _registerEvents(): void {
     switch (this.trigger) {
       case 'hover':
@@ -272,9 +288,99 @@ export class PopoverDirective implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Unregister the events of the popover
+   */
   private _unregisterEvents(): void {
     unregisterEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
     unregisterEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
     unregisterEvent(this._elementRef.nativeElement, 'click', this._mouseClickHandler);
+  }
+
+  /**
+   * Get the actual placement of the popover based on the opposite side
+   * when it is not fitted on the screen
+   */
+  private _getActualPlacement(): string {
+    let placement: string;
+    let isFitted = this._isFitToScreen();
+
+    switch (this.placement) {
+      case 'top':
+        placement = isFitted ? this.placement : 'bottom';
+        break;
+      case 'bottom':
+        placement = isFitted ? this.placement : 'top';
+        break;
+      case 'left':
+        placement = isFitted ? this.placement : 'right';
+        break;
+      case 'right':
+        placement = isFitted ? this.placement : 'left';
+        break;
+    }
+    return placement;
+  }
+
+  /**
+   * This will return true when the popover to be opened is fit to screen
+   * otherwise false (overlapped)
+   */
+  private _isFitToScreen(): boolean {
+    let fitToScreen: boolean = true;
+
+    // Get scrollable element associated with the host element
+    let scrollableElemet = this._scrollDispatcher.getScrollContainers(this._elementRef);
+    if (isNullOrEmpty(scrollableElemet)) { return true; }
+
+    // Get the scroll bottom position of the scrollable element to check
+    // weather the element is fit to screen
+    let scrollTop = scrollableElemet[0].getElementRef().nativeElement.scrollTop;
+    let scrollLeft = scrollableElemet[0].getElementRef().nativeElement.scrollLeft;
+    let scrollBottom = scrollTop + window.innerHeight;
+    let scrollRight = scrollLeft + window.innerWidth;
+
+    // Calculate the actual size of the popover including the offset of the host element
+    let popoverHeight = this.componentRef.instance.contentElement.nativeElement.offsetHeight;
+    let popoverWidth = this.componentRef.instance.contentElement.nativeElement.offsetWidth;
+    let hostOffset = getElementOffset(this._elementRef.nativeElement);
+
+    // Set popover actual position based on the screen size
+    switch (this.placement) {
+      case 'left': {
+        let actualWidth = scrollLeft + hostOffset.right + popoverWidth;
+        if (actualWidth > scrollLeft) { fitToScreen = false; }
+        break;
+      }
+      case 'right': {
+        let actualWidth = scrollLeft + hostOffset.right + popoverWidth;
+        if (actualWidth > scrollRight) { fitToScreen = false; }
+        break;
+      }
+      case 'top': {
+        let actualHeight = scrollTop + hostOffset.bottom + popoverHeight;
+        if (actualHeight > scrollTop) { fitToScreen = false; }
+        break;
+      }
+      case 'bottom': {
+        let actualHeight = scrollTop + hostOffset.bottom + popoverHeight;
+        if (actualHeight > scrollBottom) { fitToScreen = false; }
+        break;
+      }
+    }
+    return fitToScreen;
+  }
+
+  /**
+   * Remove the currently active popover to make sure that
+   * there is only 1 popover display in the DOM
+   *
+   * `@Note:` This will fixed the issue of the stopPropagation.
+   * The document click was not triggered when the executable element
+   * is clicked because it is considered as parent element
+   */
+  private _removeActivePopover(): void {
+    if (isNullOrEmpty(this._popoverService.activePopover)) { return; }
+    this._popoverService.activePopover.close();
   }
 }

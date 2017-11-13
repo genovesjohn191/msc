@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   Input,
   Output,
   ViewChild,
@@ -8,33 +9,23 @@ import {
   ChangeDetectionStrategy,
   HostBinding,
   Renderer2,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef
 } from '@angular/core';
-import { registerEvent } from '../../utilities';
+import {
+  registerEvent,
+  unregisterEvent,
+  isNullOrEmpty
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-popover',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './popover.component.html',
-  styleUrls: ['./popover.component.scss']
+  styleUrls: ['./popover.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PopoverComponent implements OnInit {
-  @Input()
-  public priority: 'low' | 'medium' | 'high';
-
-  @Input()
-  public placement: string;
-
-  @Input()
-  public padding: 'default' | 'narrow' | 'none';
-
-  @Input()
-  public theme: 'dark' | 'light' | 'gray';
-
-  @Input()
-  public trigger: 'manual' | 'hover';
-
+export class PopoverComponent implements OnInit, OnDestroy {
   @Output()
   public onClickOutsideEvent: EventEmitter<any>;
 
@@ -51,9 +42,42 @@ export class PopoverComponent implements OnInit {
   @HostBinding('style.max-width')
   public maxWidth;
 
+  @Input()
+  public priority: 'low' | 'medium' | 'high';
+
+  @Input()
+  public padding: 'default' | 'narrow' | 'none';
+
+  @Input()
+  public theme: 'dark' | 'light' | 'gray';
+
+  @Input()
+  public trigger: 'manual' | 'hover';
+
+  @Input()
+  private _placement: string;
+  public get placement(): string {
+    return this._placement;
+  }
+  public set placement(value: string) {
+    if (this._placement !== value) {
+      this._placement = value;
+      this._clearArrow();
+      this._createArrow();
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  /**
+   * Event handler references
+   */
+  private _clickHandler = this.onClickOutside.bind(this);
+  private _touchHandler = this.onClickOutside.bind(this);
+
   public constructor(
     private _elementRef: ElementRef,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.onClickOutsideEvent = new EventEmitter<any>();
   }
@@ -61,53 +85,32 @@ export class PopoverComponent implements OnInit {
   public ngOnInit() {
     this.role = 'tooltip';
     this._setPriority();
-    this._setArrowDirection();
+    this._createArrow();
     this._setTheme();
     this._setPadding();
     this._registerEvents();
+  }
+
+  public ngOnDestroy() {
+    this._unregisterEvents();
   }
 
   public onClickOutside(event: any): void {
     this.onClickOutsideEvent.emit(event);
   }
 
-  public _setPriority() {
+  private _setPriority() {
     if (!this.priority) { return; }
     this._renderer.addClass(this._elementRef.nativeElement, `priority-${this.priority}`);
   }
 
-  public _setArrowDirection() {
-    switch (this.placement) {
-      case 'top':
-        this._renderer.setStyle(this.popoverElement.nativeElement,
-          'flex-direction', 'column-reverse');
-        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-down');
-        break;
-      case 'right':
-        this._renderer.setStyle(this.popoverElement.nativeElement, 'flex-direction', 'row');
-        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-left');
-        break;
-      case 'left':
-        this._renderer.setStyle(this.popoverElement.nativeElement,
-          'flex-direction', 'row-reverse');
-        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-right');
-        break;
-      case 'bottom':
-      default:
-        this._renderer.setStyle(this.popoverElement.nativeElement, 'flex-direction', 'column');
-        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-top');
-        break;
-    }
-  }
-
-  public _setTheme() {
+  private _setTheme() {
     if (!this.theme) { return; }
     this._renderer.addClass(this.popoverElement.nativeElement, this.theme);
   }
 
-  public _setPadding() {
+  private _setPadding() {
     if (!this.padding || this.padding === 'none') { return; }
-
     switch (this.padding) {
       case 'narrow':
         this._renderer.addClass(this.contentElement.nativeElement, 'narrow-padding');
@@ -120,10 +123,38 @@ export class PopoverComponent implements OnInit {
   }
 
   private _registerEvents(): void {
-    // Register for mouse click
-    registerEvent(document.body, 'click', this.onClickOutside.bind(this));
+    registerEvent(document.body, 'click', this._clickHandler);
+    registerEvent(document.body, 'touchstart', this._touchHandler);
+  }
 
-    // Register touch event for IOS
-    registerEvent(document.body, 'touchstart', this.onClickOutside.bind(this));
+  private _unregisterEvents(): void {
+    unregisterEvent(document.body, 'click', this._clickHandler);
+    unregisterEvent(document.body, 'touchstart', this._touchHandler);
+  }
+
+  private _createArrow() {
+    switch (this.placement) {
+      case 'top':
+        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-down');
+        break;
+      case 'right':
+        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-left');
+        break;
+      case 'left':
+        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-right');
+        break;
+      case 'bottom':
+      default:
+        this._renderer.addClass(this.popoverElement.nativeElement, 'arrow-top');
+        break;
+    }
+  }
+
+  private _clearArrow(): void {
+    if (isNullOrEmpty(this.popoverElement.nativeElement)) { return; }
+    this._renderer.removeClass(this.popoverElement.nativeElement, 'arrow-down');
+    this._renderer.removeClass(this.popoverElement.nativeElement, 'arrow-left');
+    this._renderer.removeClass(this.popoverElement.nativeElement, 'arrow-right');
+    this._renderer.removeClass(this.popoverElement.nativeElement, 'arrow-top');
   }
 }

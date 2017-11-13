@@ -104,10 +104,6 @@ describe('PopoverComponent', () => {
       component.ngOnInit();
     }));
 
-    it(`should set the popoverElement flex-direction to column-reverse`, () => {
-      expect(component.popoverElement.nativeElement.style.flexDirection).toBe('column-reverse');
-    });
-
     it(`should set the arrow-down class to popoverElement`, () => {
       let arrowDownClassExist: boolean;
       arrowDownClassExist = component.popoverElement.nativeElement.classList.contains('arrow-down');
@@ -120,10 +116,6 @@ describe('PopoverComponent', () => {
       component.placement = 'bottom';
       component.ngOnInit();
     }));
-
-    it(`should set the popoverElement flex-direction to column`, () => {
-      expect(component.popoverElement.nativeElement.style.flexDirection).toBe('column');
-    });
 
     it(`should set the arrow-top class to popoverElement`, () => {
       let arrowTopClassExist: boolean;
@@ -138,10 +130,6 @@ describe('PopoverComponent', () => {
       component.ngOnInit();
     }));
 
-    it(`should set the popoverElement flex-direction to row-reverse`, () => {
-      expect(component.popoverElement.nativeElement.style.flexDirection).toBe('row-reverse');
-    });
-
     it(`should set the arrow-right class to popoverElement`, () => {
       let arrowRightClassExist: boolean;
       arrowRightClassExist = component.popoverElement.nativeElement
@@ -155,10 +143,6 @@ describe('PopoverComponent', () => {
       component.placement = 'right';
       component.ngOnInit();
     }));
-
-    it(`should set the popoverElement flex-direction to row`, () => {
-      expect(component.popoverElement.nativeElement.style.flexDirection).toBe('row');
-    });
 
     it(`should set the arrow-left class to popoverElement`, () => {
       let arrowLeftClassExist: boolean;

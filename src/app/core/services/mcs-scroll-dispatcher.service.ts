@@ -113,17 +113,18 @@ export class McsScrollDispatcherService {
    * @param elementRef Element Reference to check the scrollabe content
    */
   public scrollableContainsElement(scrollable: McsScrollable, elementRef: ElementRef): boolean {
+    let isExist: boolean = false;
     let element = elementRef.nativeElement;
     let scrollableElement = scrollable.getElementRef().nativeElement;
 
-    // Traverse through the element parents until we reach null, checking if any of the elements
-    // are the scrollable's element.
-    do {
+    // Traverse through the element parents using forever loop until we reach null,
+    // checking if any of the elements are the scrollable's element.
+    for (; ;) {
+      isExist = element === scrollableElement;
+      if (isNullOrEmpty(element) || isExist) { break; }
       element = element.parentElement;
-      if (element === scrollableElement) { return true; }
-    } while (element);
-
-    return false;
+    }
+    return isExist;
   }
 
   /**

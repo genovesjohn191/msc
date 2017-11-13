@@ -177,7 +177,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
             <mcs-server-command [commandList]="serverCommandList"
-              [command]="getActionStatus(row)" (click)="$event.stopPropagation()"
+              [command]="getActionStatus(row)" stop-propagation
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>
         </ng-container>
