@@ -103,7 +103,7 @@ export class McsDialogContainerComponent {
     if (isNullOrEmpty(portal)) { return; }
 
     let templateRef = this.portalHost.viewContainerRef
-      .createEmbeddedView(portal.templateRef);
+      .createEmbeddedView(portal.templateRef, portal.context);
 
     // Set the dispose function to destroy the template itself
     this._disposeFn = (() => this.portalHost.viewContainerRef.clear());

@@ -1,6 +1,6 @@
-import { TicketFileInfo } from './ticket-file-info';
+import { McsAttachment } from '../../../core';
 
 export class TicketNewComment {
   public comment: string;
-  public attachedFile: TicketFileInfo;
+  public attachedFile: McsAttachment;
 }

@@ -23,6 +23,7 @@ import {
 } from '../../../utilities';
 import {
   McsTextContentProvider,
+  McsAttachment,
   CoreValidators,
   CoreDefinition
 } from '../../../core';
@@ -32,8 +33,7 @@ import {
   TicketType,
   TicketCreateAttachment,
   TicketService,
-  TicketServiceData,
-  TicketFileInfo
+  TicketServiceData
 } from '../models';
 import { TicketCreateService } from './ticket-create.service';
 import { Server } from '../../servers';
@@ -100,11 +100,11 @@ export class TicketCreateComponent implements
   /**
    * Attachment files list
    */
-  private _fileAttachments: TicketFileInfo[];
-  public get fileAttachments(): TicketFileInfo[] {
+  private _fileAttachments: McsAttachment[];
+  public get fileAttachments(): McsAttachment[] {
     return this._fileAttachments;
   }
-  public set fileAttachments(value: TicketFileInfo[]) {
+  public set fileAttachments(value: McsAttachment[]) {
     if (this._fileAttachments !== value) {
       this._fileAttachments = value;
     }
@@ -244,7 +244,7 @@ export class TicketCreateComponent implements
       this.fileAttachments.forEach((attachment) => {
         let attachmentData = new TicketCreateAttachment();
 
-        attachmentData.fileName = attachment.fileName;
+        attachmentData.fileName = attachment.filename;
         attachmentData.contents = attachment.base64Contents;
         ticket.attachments.push(attachmentData);
       });

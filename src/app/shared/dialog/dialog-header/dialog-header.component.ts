@@ -21,8 +21,20 @@ import {
 })
 
 export class DialogHeaderComponent {
+  /**
+   * The dialog result to be attached when the dialog is closed
+   */
   @Input()
   public dialogResult: any;
+
+  /**
+   * Template of the dialog reference since the dialogref injector is null
+   * when the binding for the dialog is template
+   */
+  @Input()
+  public set dialogRefTemplate(value: McsDialogRef<any>) {
+    this.dialogRef = value;
+  }
 
   public get closeIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;

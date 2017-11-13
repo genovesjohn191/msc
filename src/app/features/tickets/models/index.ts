@@ -23,4 +23,3 @@ export * from './ticket-activity';
 export * from './ticket-new-comment';
 export * from './ticket-service';
 export * from './ticket-service-data';
-export * from './ticket-file-info';

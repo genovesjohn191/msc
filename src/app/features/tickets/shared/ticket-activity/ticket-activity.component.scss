@@ -34,6 +34,7 @@ $ticket-activity-separator-color: $color-grey-06;
 
     .content {
       display: block;
+      word-break: break-all;
 
       p {
         text-align: left;

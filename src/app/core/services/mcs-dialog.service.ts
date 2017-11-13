@@ -153,7 +153,7 @@ export class McsDialogService {
 
     // Attach component or template based on portal type
     if (portal instanceof TemplateRef) {
-      dialogContainer.attachTemplate(new McsPortalTemplate(portal, null!));
+      dialogContainer.attachTemplate(new McsPortalTemplate(portal, null!, { data: config.data }));
     } else {
       let injector = this._createInjector<T>(config, dialogRef, dialogContainer);
       let contentRef = dialogContainer.attachComponent(

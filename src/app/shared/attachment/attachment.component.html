@@ -1,10 +1,33 @@
-<div class="ticket-attachment-wrapper dropzone"
+<!-- File Attachment error dialog -->
+<ng-template #errorDialogTemplate let-message="data.message">
+  <mcs-dialog>
+    <mcs-dialog-header [dialogRefTemplate]="errorDialogRef">
+      <h3>{{ textContent.errorCaption }}</h3>
+    </mcs-dialog-header>
+
+    <mcs-dialog-content>
+      <div class="labelled-icon">
+        <mcs-icon [key]="errorIconKey" color="red"></mcs-icon>
+        <p>{{ message }}</p>
+      </div>
+    </mcs-dialog-content>
+
+    <mcs-dialog-actions>
+      <mcs-button size="small" (onClick)="errorDialogRef?.close()">
+        {{ textContent.ok }}</mcs-button>
+    </mcs-dialog-actions>
+  </mcs-dialog>
+</ng-template>
+
+
+<!-- File Attachment Dropzone -->
+<div class="attachment-wrapper dropzone"
   ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
   (fileOver)="onFileOver($event)"
   [uploader]="fileUploader">
 
   <!-- File Selection Zone Area -->
-  <div class="ticket-attachment-filezone-wrapper">
+  <div class="attachment-filezone-wrapper">
 
     <!-- Drop zone -->
     <div >
@@ -21,7 +44,7 @@
   </div>
 
   <!-- Attached files -->
-  <div class="ticket-attached-files-wrapper" *ngIf="attachedFiles">
+  <div class="attached-files-wrapper" *ngIf="attachedFiles">
     <ul class="inline-list rollover">
       <li (click)="removeAttachment(attachedItem)"
         class="enable-pointer"
