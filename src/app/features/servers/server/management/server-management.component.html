@@ -85,7 +85,7 @@
       <h3>{{ serverManagementTextContent.supportIdentifiers.title }}</h3>
       <ul class="unstyled-list">
         <!-- VDC -->
-        <li>{{ serverManagementTextContent.supportIdentifiers.vdc }}: {{ server.vdcName }}</li>
+        <li>{{ serverManagementTextContent.supportIdentifiers.vdc }}: {{ server.resource?.name }}</li>
         <!-- MacView Service ID -->
         <li>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}: {{ server.serviceId }}</li>
         <!-- VMWare ID -->

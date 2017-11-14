@@ -112,8 +112,9 @@ export class ServersListSource implements McsDataSource<ServerList> {
       serverListItem.id = server.id;
       serverListItem.name = server.managementName;
       serverListItem.powerState = this._getServerPowerState(server);
-      serverListItem.vdcName = (!isNullOrEmpty(server.vdcName)) ?
-        server.vdcName : SERVER_LIST_GROUP_OTHERS ;
+      serverListItem.vdcName = (!isNullOrEmpty(server.resource) &&
+        !isNullOrEmpty(server.resource.name)) ?
+        server.resource.name : SERVER_LIST_GROUP_OTHERS ;
 
       serverList.push(serverListItem);
     });

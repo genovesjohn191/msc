@@ -53,7 +53,7 @@ export class VdcComponent
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
 
-  private _vdcId: any;
+  private _resourceId: any;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -90,7 +90,7 @@ export class VdcComponent
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers;
-    this._vdcId = this.activatedRoute.snapshot.paramMap.get('id');
+    this._resourceId = this.activatedRoute.snapshot.paramMap.get('id');
     this._getVdcById();
   }
 
@@ -201,7 +201,7 @@ export class VdcComponent
       if (!isNullOrEmpty(response) && !isNullOrEmpty(response.content)) {
         let resources = response.content as ServerResource[];
         this.vdc = resources.find((resource) => {
-          return resource.id === this._vdcId;
+          return resource.id === this._resourceId;
         });
 
         this.selectedItem = {

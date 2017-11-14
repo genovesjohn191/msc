@@ -156,7 +156,12 @@
               {{ columnSettings.vdc.text }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-              <a [routerLink]="['/servers/vdc', row.vdcId]">{{ row.vdcName }}</a>
+              <!-- TODO: Changed this one temporarily to avoid console errors -->
+              <!-- will change it back once new model properties were implemented -->
+              <!-- <a [routerLink]="['/servers/vdc', row.resource?.id]"> -->
+              <a>
+                {{ row.resource?.name }}
+              </a>
             </mcs-data-cell>
           </ng-container>
 
@@ -166,7 +171,7 @@
             {{ columnSettings.vApp.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ row.vAppName }}
+            {{ row.resource?.vApp }}
           </mcs-data-cell>
         </ng-container>
 

@@ -508,7 +508,7 @@ export class ServersService {
   public executeServerCommand(server: Server, action: ServerCommand) {
     switch (action) {
       case ServerCommand.ViewVCloud:
-        window.open(server.vCloudUrl);
+        window.open(server.portalUrl);
         break;
 
       case ServerCommand.Scale:

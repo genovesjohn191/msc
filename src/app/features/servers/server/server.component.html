@@ -4,8 +4,11 @@
     <div class="horizontal-items-spacing-small"
     display-flex="row" align-items="center">
       <div>
-        <a [routerLink]="['/servers/vdc', server.vdcId]">
-          <h3>{{ server.vdcName }}</h3>
+        <!-- TODO: Changed this one temporarily to avoid console errors -->
+        <!-- will change it back once new model properties were implemented -->
+        <!-- <a [routerLink]="['/servers/vdc', server.resource?.id]"> -->
+        <a>
+          <h3>{{ server.resource?.name }}</h3>
         </a>
       </div>
       <div>

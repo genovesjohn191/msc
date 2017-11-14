@@ -322,8 +322,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
         this._resourceMap = this._serverService.setResourceMap(response.content);
 
-        if (this._resourceMap.has(this.server.vdcName)) {
-          this.resource = this._resourceMap.get(this.server.vdcName);
+        if (this._resourceMap.has(this.server.resource.name)) {
+          this.resource = this._resourceMap.get(this.server.resource.name);
         }
 
         this._setRemainingValues();

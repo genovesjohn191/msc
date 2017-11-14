@@ -1,4 +1,4 @@
-import { ServerResourceStorage } from './server-platform-storage';
+import { ServerResourceStorage } from './server-resource-storage';
 import { ServerNetwork } from './server-network';
 import { ServerServiceType } from '../enumerations/server-service-type.enum';
 import { ServerCatalog } from './server-catalog';
