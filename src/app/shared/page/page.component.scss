@@ -133,23 +133,6 @@ $left-panel-navigation-collapse-padding: 6px;
           height: $top-panel-height;
           border-right: 1px solid $page-border-color;
 
-          .action-item {
-            white-space: nowrap;
-            padding: $top-panel-item-padding;
-            height: 100%;
-            @include display-flex(row);
-            align-items: center;
-            @include set-items-interval($space-small, horizontal);
-
-            &:hover {
-              background-color: $action-item-hover-color;
-            }
-
-            &:active {
-              background-color: $action-item-active-color;
-            }
-          }
-
           &:first-child {
             border-left: 1px solid $page-border-color;
           }

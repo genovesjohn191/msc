@@ -118,6 +118,10 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
     this._unregisterEvents();
   }
 
+  public getHostElement(): any {
+    return this._elementRef.nativeElement;
+  }
+
   public onClickItem(_event: any): void {
     if (this.hasSubgroup) { return; }
     this.select();

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
 import { LayoutModule } from '../layout/layout.module';
+import { RippleModule } from '../ripple/ripple.module';
 import { SelectComponent } from './select.component';
 // Select Group
 import { SelectGroupComponent } from './select-group/select-group.component';
@@ -17,14 +18,16 @@ import { SelectItemComponent } from './select-item/select-item.component';
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule
+    LayoutModule,
+    RippleModule
   ],
   exports: [
     SelectComponent,
     SelectGroupComponent,
     SelectItemComponent,
     IconModule,
-    LayoutModule
+    LayoutModule,
+    RippleModule
   ]
 })
 

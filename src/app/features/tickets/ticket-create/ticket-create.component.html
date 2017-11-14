@@ -3,10 +3,10 @@
   <mcs-top-panel *mcsTopPanelDef>
     <!-- Server Creation -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <div class="action-item right-align" cursor="pointer" (click)="gotoTickets()">
+      <mcs-action-item class="right-align" (click)="gotoTickets()">
         <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
         <span>{{ textContent.backToTickets }}</span>
-      </div>
+      </mcs-action-item>
     </mcs-top-panel-item>
   </mcs-top-panel>
 

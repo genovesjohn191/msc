@@ -104,16 +104,6 @@ describe('SelectComponent', () => {
     it(`should open the panel`, () => {
       expect(component.selectComponent.panelOpen).toBeTruthy();
     });
-
-    it(`should create the mcs-select-group element`, () => {
-      let element = document.querySelectorAll('mcs-select-group');
-      expect(element).not.toBe(null);
-    });
-
-    it(`should create the mcs-select-item element`, () => {
-      let element = document.querySelectorAll('mcs-select-item');
-      expect(element).not.toBe(null);
-    });
   });
 
   describe('closePanel()', () => {
@@ -123,16 +113,6 @@ describe('SelectComponent', () => {
 
     it(`should close the panel`, () => {
       expect(component.selectComponent.panelOpen).toBeFalsy();
-    });
-
-    it(`should remove all the mcs-select-group element`, () => {
-      let element = document.querySelectorAll('mcs-select-group');
-      expect(element.length).toBe(0);
-    });
-
-    it(`should remove all the mcs-select-item element`, () => {
-      let element = document.querySelectorAll('mcs-select-item');
-      expect(element.length).toBe(0);
     });
   });
 

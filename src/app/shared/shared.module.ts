@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 /** Modules */
+import { RippleModule } from './ripple/ripple.module';
 import { LayoutModule } from './layout/layout.module';
 import { ButtonModule } from './button/button.module';
 import { PopoverModule } from './popover/popover.module';
@@ -26,15 +27,16 @@ import { TooltipModule } from './tooltip/tooltip.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
 import { WizardModule } from './wizard/wizard.module';
 import { AttachmentModule } from './attachment/attachment.module';
+import { PaginatorModule } from './paginator/paginator.module';
+import { ActionItemModule } from './action-item/action-item.module';
+import { RadioButtonGroupModule } from './radio-button-group/radio-button-group.module';
 /** Components */
 import { CheckboxComponent } from './checkbox/checkbox.component';
-import { RadioButtonGroupComponent } from './radio-button-group/radio-button-group.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { TextboxComponent } from './textbox/textbox.component';
 import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
-import { PaginatorComponent } from './paginator/paginator.component';
 import { SearchComponent } from './search/search.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
 /** Directives */
@@ -43,13 +45,11 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
 @NgModule({
   declarations: [
     CheckboxComponent,
-    RadioButtonGroupComponent,
     FilterSelectorComponent,
     TextboxComponent,
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,
-    PaginatorComponent,
     HasPermissionDirective,
     SearchComponent,
     CapacityBarComponent
@@ -59,6 +59,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    RippleModule,
     LayoutModule,
     PopoverModule,
     ModalModule,
@@ -78,17 +79,18 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     TooltipModule,
     TabGroupModule,
     WizardModule,
-    AttachmentModule
+    AttachmentModule,
+    PaginatorModule,
+    ActionItemModule,
+    RadioButtonGroupModule
   ],
   exports: [
     CheckboxComponent,
-    RadioButtonGroupComponent,
     FilterSelectorComponent,
     TextboxComponent,
     SliderComponent,
     ProgressBarComponent,
     AlertComponent,
-    PaginatorComponent,
     HasPermissionDirective,
     SearchComponent,
     CapacityBarComponent,
@@ -96,6 +98,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    RippleModule,
     LayoutModule,
     PopoverModule,
     ModalModule,
@@ -115,7 +118,10 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     TooltipModule,
     TabGroupModule,
     WizardModule,
-    AttachmentModule
+    AttachmentModule,
+    PaginatorModule,
+    ActionItemModule,
+    RadioButtonGroupModule
   ]
 })
 

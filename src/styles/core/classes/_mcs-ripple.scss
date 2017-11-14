@@ -1,0 +1,32 @@
+$ripple-dark-bg-color: rgba($color-black, 0.1);
+$ripple-light-bg-color: rgba($color-white, 0.3);
+
+.ripple-directive-wrapper {
+  overflow: hidden;
+}
+
+.ripple-element {
+  position: absolute;
+  pointer-events: none;
+  background-color: $ripple-dark-bg-color;
+  @include border-radius(50%);
+  @include transition(opacity, transform 0ms cubic-bezier(0, 0, 0.2, 1));
+  @include transform(scale(0));
+
+  &.dark {
+    background-color: $ripple-dark-bg-color;
+  }
+  &.light {
+    background-color: $ripple-light-bg-color;
+  }
+}
+
+.ripple-wrapper {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  pointer-events: none;
+  overflow: hidden;
+}

@@ -37,6 +37,7 @@ $tab-body-padding: $space-medium;
       padding: $tab-header-item-padding;
       color: $tab-header-item-color;
       cursor: pointer;
+      position: relative;
 
       &.active {
         color: $tab-header-item-active-color;

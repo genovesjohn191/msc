@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  ViewChild,
   QueryList,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -44,7 +45,6 @@ import { SelectItemComponent } from './select-item/select-item.component';
   ],
   host: {
     'class': 'select-wrapper',
-    '[attr.tabindex]': '0',
     '(keydown)': 'onKeyDown($event)',
     '(blur)': 'onBlur()'
   }
@@ -53,6 +53,9 @@ import { SelectItemComponent } from './select-item/select-item.component';
 export class SelectComponent implements AfterContentInit, OnDestroy, ControlValueAccessor {
   @Input()
   public placeholder: string;
+
+  @ViewChild('triggerElement')
+  private _triggerElement: ElementRef;
 
   @ContentChildren(SelectItemComponent, { descendants: true })
   private _items: QueryList<SelectItemComponent>;
@@ -157,7 +160,8 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
   }
 
   public focus(): void {
-    this._elementRef.nativeElement.focus();
+    if (isNullOrEmpty(this._triggerElement)) { return; }
+    this._triggerElement.nativeElement.focus();
   }
 
   public onBlur(): void {
