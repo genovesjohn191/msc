@@ -4,35 +4,35 @@
 
     <!-- Server Creation -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <div class="action-item" cursor="pointer" (click)="onClickNewServerButton()">
+      <mcs-action-item (click)="onClickNewServerButton()">
         <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
         <span>{{ textContent.newServer }}</span>
-      </div>
+      </mcs-action-item>
     </mcs-top-panel-item>
 
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <div class="action-item hidden-small" cursor="pointer"
+        <mcs-action-item class="hidden-small"
           [disabled]="!startable || !selection.hasValue()"
           (click)="executeTopPanelAction(serverCommand.Start)">
           <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
           <span>{{ textContent.start }}</span>
-        </div>
+        </mcs-action-item>
 
-        <div class="action-item hidden-small" cursor="pointer"
+        <mcs-action-item class="hidden-small"
           [disabled]="!stoppable || !selection.hasValue()"
           (click)="executeTopPanelAction(serverCommand.Stop)">
           <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
           <span>{{ textContent.stop }}</span>
-        </div>
+        </mcs-action-item>
 
-        <div class="action-item hidden-small" cursor="pointer"
+        <mcs-action-item class="hidden-small"
           [disabled]="!restartable || !selection.hasValue()"
           (click)="executeTopPanelAction(serverCommand.Restart)">
           <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
           <span>{{ textContent.restart }}</span>
-        </div>
+        </mcs-action-item>
 
         <div class="total-record-count right-align">
           <span>{{ recordsFoundLabel }}</span>

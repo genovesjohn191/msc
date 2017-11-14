@@ -1,8 +1,10 @@
 import {
   Directive,
   Input,
+  Output,
   Renderer2,
   ElementRef,
+  EventEmitter,
   OnInit
 } from '@angular/core';
 import {
@@ -16,6 +18,10 @@ import {
 })
 
 export class AnimateDirective implements OnInit {
+
+  @Output()
+  public animationEnd: EventEmitter<any>;
+
   /**
    * Animate to be set in the host element
    */
@@ -56,7 +62,9 @@ export class AnimateDirective implements OnInit {
   constructor(
     private _renderer: Renderer2,
     private _elementRef: ElementRef
-  ) { }
+  ) {
+    this.animationEnd = new EventEmitter();
+  }
 
   public ngOnInit() {
     this._setAnimation();
@@ -104,6 +112,7 @@ export class AnimateDirective implements OnInit {
       this._renderer.removeClass(this._elementRef.nativeElement, this.animate);
     }
     this._renderer.removeClass(this._elementRef.nativeElement, this.trigger);
+    this.animationEnd.emit();
   }
 
   /**

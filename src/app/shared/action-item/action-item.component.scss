@@ -1,0 +1,28 @@
+@import "../../../styles/shared/base";
+
+$action-item-hover-color: $color-grey-07;
+$action-item-active-color: $color-grey-06;
+
+.action-item-wrapper {
+  display: block;
+  height: 100%;
+}
+
+.action-item-content {
+  position: relative;
+  white-space: nowrap;
+  padding: 0 $space-large;
+  cursor: pointer;
+  height: 100%;
+  @include display-flex(row);
+  @include align-items(center);
+  @include set-items-interval($space-small, horizontal);
+
+  &:hover {
+    background-color: $action-item-hover-color;
+  }
+
+  &:active {
+    background-color: $action-item-active-color;
+  }
+}

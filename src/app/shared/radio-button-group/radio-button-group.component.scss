@@ -2,48 +2,51 @@
 
 // Radio button
 $radio-button-font-size: $font-size-default;
-$radio-button-padding: 0 0 $space-small 0;
+$radio-button-padding: $space-xsmall 0;
 $radio-button-label-offset: 12px;
 
-.radio-button-group-container {
+.radio-button-group-wrapper {
+  display: block;
 
-  &.horizontal {
-    @include display-flex(row);
-    justify-content: space-between;
-  }
-
-  &.vertical {
-    @include display-flex(column);
-    align-items: flex-start;
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  .radio-button-container {
-    display: inline-block;
-    padding: $radio-button-padding;
-
-    label {
-      cursor: pointer;
-      @include font-size($radio-button-font-size);
+  .radio-button-group-content {
+    &.horizontal {
       @include display-flex(row);
-      align-items: center;
-      margin: 0;
-      white-space: nowrap;
+      justify-content: space-between;
+    }
 
-      mcs-icon {
-        display: inline-block;
-        margin-right: $radio-button-label-offset;
+    &.vertical {
+      @include display-flex(column);
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    .radio-button-wrapper {
+      position: relative;
+      display: inline-block;
+      padding: $radio-button-padding;
+
+      label {
         cursor: pointer;
-      }
+        @include font-size($radio-button-font-size);
+        @include display-flex(row);
+        align-items: center;
+        margin: 0;
+        white-space: nowrap;
 
-      input[type="radio"] {
-        display: none;
+        mcs-icon {
+          display: inline-block;
+          margin-right: $radio-button-label-offset;
+          cursor: pointer;
+        }
+
+        input[type="radio"] {
+          display: none;
+        }
       }
     }
   }
 }
-
-

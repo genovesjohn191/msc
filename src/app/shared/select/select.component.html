@@ -4,7 +4,7 @@
 </ng-template>
 
 <!-- Selection trigger -->
-<div class="select-trigger"
+<div class="select-trigger" [attr.tabindex]="0" #triggerElement
   display-flex justify-content="space-between"
   align-items="center" cursor="pointer" (click)="toggle()">
 
@@ -15,8 +15,8 @@
 </div>
 
 <!-- Group Items container -->
-<ng-container *ngIf="panelOpen">
+<div animate [trigger]="panelOpen ? 'fadeIn' : 'fadeOut'">
   <div display-flex="column" class="select-group-container">
     <ng-content></ng-content>
   </div>
-</ng-container>
+</div>

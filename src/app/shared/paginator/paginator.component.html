@@ -1,3 +1,4 @@
-<a *ngIf="!loading && hasNextPage" (click)="nextPage()"> {{ textContent.nextPage }}
+<a *ngIf="!loading && hasNextPage" (click)="nextPage()" mcsRipple>
+  {{ textContent.nextPage }}
   <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
 </a>

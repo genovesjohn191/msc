@@ -7,7 +7,10 @@ import {
   ElementRef,
   ViewChild,
   OnChanges,
-  Renderer2
+  Renderer2,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -23,13 +26,18 @@ import {
   selector: 'mcs-radio-button-group',
   templateUrl: './radio-button-group.component.html',
   styleUrls: ['./radio-button-group.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => RadioButtonGroupComponent),
       multi: true
     }
-  ]
+  ],
+  host: {
+    'class': 'radio-button-group-wrapper'
+  }
 })
 
 export class RadioButtonGroupComponent implements OnChanges, ControlValueAccessor {
@@ -48,16 +56,6 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
   public itemIndex: number;
 
   /**
-   * On Touched Event Callback
-   */
-  private _onTouched: () => {};
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: (_: any) => {};
-
-  /**
    * Active Item (model binding)
    */
   private _activeKeyItem: any;
@@ -68,10 +66,14 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
     if (value !== this._activeKeyItem) {
       this._activeKeyItem = value;
       this._onChanged(value);
+      this._changeDetectorRef.markForCheck();
     }
   }
 
-  public constructor(private _renderer: Renderer2) {
+  public constructor(
+    private _renderer: Renderer2,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
     this.itemIndex = 0;
     this.items = new Array();
     this.orientation = 'vertical';
@@ -168,9 +170,8 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (value !== this._activeKeyItem) {
-      this._activeKeyItem = value;
-    }
+    this._activeKeyItem = value;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -199,4 +200,8 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
       CoreDefinition.ASSETS_SVG_RADIO_CHECKED :
       CoreDefinition.ASSETS_SVG_RADIO_UNCHECKED;
   }
+
+  // View <-> Model callback methods
+  private _onChanged: (value: any) => void = () => { /** dummy */ };
+  private _onTouched = () => { /** dummy */ };
 }

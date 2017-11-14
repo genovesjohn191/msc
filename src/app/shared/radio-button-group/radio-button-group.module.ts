@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
 import { RippleModule } from '../ripple/ripple.module';
-import { ButtonComponent } from './button.component';
+import { RadioButtonGroupComponent } from './radio-button-group.component';
 
 @NgModule({
   declarations: [
-    ButtonComponent
+    RadioButtonGroupComponent
   ],
   imports: [
     CommonModule,
@@ -14,10 +14,10 @@ import { ButtonComponent } from './button.component';
     RippleModule
   ],
   exports: [
+    RadioButtonGroupComponent,
     IconModule,
-    RippleModule,
-    ButtonComponent
+    RippleModule
   ]
 })
 
-export class ButtonModule { }
+export class RadioButtonGroupModule { }

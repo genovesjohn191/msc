@@ -1,23 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconModule } from '../icon/icon.module';
 import { RippleModule } from '../ripple/ripple.module';
-import { ButtonComponent } from './button.component';
+import { ActionItemComponent } from './action-item.component';
 
 @NgModule({
   declarations: [
-    ButtonComponent
+    ActionItemComponent
   ],
   imports: [
     CommonModule,
-    IconModule,
     RippleModule
   ],
   exports: [
-    IconModule,
-    RippleModule,
-    ButtonComponent
+    ActionItemComponent,
+    RippleModule
   ]
 })
 
-export class ButtonModule { }
+export class ActionItemModule { }

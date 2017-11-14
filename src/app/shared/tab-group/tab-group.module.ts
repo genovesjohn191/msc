@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutModule } from '../layout';
+import { RippleModule } from '../ripple/ripple.module';
 import { TabGroupComponent } from './tab-group.component';
 // Tab
 import { TabComponent } from './tab/tab.component';
@@ -24,7 +25,8 @@ import { TabBodyComponent } from './tab-body/tab-body.component';
   ],
   imports: [
     CommonModule,
-    LayoutModule
+    LayoutModule,
+    RippleModule
   ],
   exports: [
     TabGroupComponent,
@@ -34,7 +36,8 @@ import { TabBodyComponent } from './tab-body/tab-body.component';
     TabHeaderComponent,
     TabBodyComponent,
     TabBorderBarComponent,
-    LayoutModule
+    LayoutModule,
+    RippleModule
   ]
 })
 
