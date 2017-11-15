@@ -34,11 +34,11 @@ export class CoreDefinition {
   public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
 
   /** Cookie Names */
-  public static COOKIE_AUTH_TOKEN  = 'MCSPAT';
+  public static COOKIE_AUTH_TOKEN = 'JWTBearer';
   public static COOKIE_ACTIVE_ACCOUNT = 'MCSACC';
 
   /** Query Parameters */
-  public static QUERY_PARAM_BEARER  = 'bearer';
+  public static QUERY_PARAM_BEARER = 'bearer';
 
   /** Server Page */
   public static SERVER_NAME_MAX = 15;

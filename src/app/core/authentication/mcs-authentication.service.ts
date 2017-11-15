@@ -15,6 +15,7 @@ import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { AppState } from '../../app.service';
 import {
   reviverParser,
+  resolveEnvVar,
   isNullOrEmpty
 } from '../../utilities';
 
@@ -22,6 +23,7 @@ import {
 export class McsAuthenticationService {
 
   private _returnUrl: string; // Return url to be set privately
+  private _jwtCookieName: string;
 
   constructor(
     private _appState: AppState,
@@ -33,6 +35,7 @@ export class McsAuthenticationService {
   ) {
     // Listen for the error in API Response
     this._listenForErrorApiResponse();
+    this._jwtCookieName = resolveEnvVar('JWT_COOKIE_NAME', CoreDefinition.COOKIE_AUTH_TOKEN);
   }
 
   /**
@@ -72,7 +75,7 @@ export class McsAuthenticationService {
     }
 
     // Return the token from the cookie
-    authToken = this._cookieService.get(CoreDefinition.COOKIE_AUTH_TOKEN);
+    authToken = this._cookieService.get(this._jwtCookieName);
     if (authToken) { return authToken; }
   }
 
@@ -90,7 +93,6 @@ export class McsAuthenticationService {
    */
   public deleteCookieContent(): void {
     // Delete the token from Appstate and Cookie
-    this._cookieService.remove(CoreDefinition.COOKIE_AUTH_TOKEN);
     this._cookieService.remove(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
   }
 
@@ -208,8 +210,7 @@ export class McsAuthenticationService {
 
       switch (errorResponse.status) {
         case McsHttpStatusCode.Unauthorized:
-          this.deleteCookieContent();
-          this.logIn();
+          this.logOut();
           break;
 
         case McsHttpStatusCode.Forbidden:

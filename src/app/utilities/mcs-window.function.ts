@@ -4,6 +4,7 @@ type environmentName =
   'PORT' |
   'LOGIN_URL' |
   'LOGOUT_URL' |
+  'JWT_COOKIE_NAME' |
   'SENTRY_DSN' |
   'IMAGE_ROOT' |
   'ICON_ROOT' |
@@ -35,6 +36,9 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
       break;
     case 'LOGOUT_URL':
       overrideValue = window['ENV_CONFIG'].logoutUrl;
+      break;
+    case 'JWT_COOKIE_NAME':
+      overrideValue = window['ENV_CONFIG'].jwtCookieName;
       break;
     case 'SENTRY_DSN':
       overrideValue = window['ENV_CONFIG'].sentryDsn;

@@ -63,7 +63,7 @@ export class McsRoutePermissionGuard {
     let requiredPermissions: string[] = this._getRouteRequiredPermission(navStart.url);
     if (isNullOrEmpty(requiredPermissions)) {
       return;
-    }
+  }
 
     // Check if user has permission
     let hasRoutePermission =
