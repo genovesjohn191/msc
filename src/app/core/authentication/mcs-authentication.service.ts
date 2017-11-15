@@ -93,6 +93,7 @@ export class McsAuthenticationService {
    */
   public deleteCookieContent(): void {
     // Delete the token from Appstate and Cookie
+    // this._cookieService.remove(this._jwtCookieName);
     this._cookieService.remove(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
   }
 
@@ -198,7 +199,7 @@ export class McsAuthenticationService {
 
     // Set cookie with expiration date
     this._cookieService.put(
-      CoreDefinition.COOKIE_AUTH_TOKEN,
+      this._jwtCookieName,
       authentication,
       { expires: expiration }
     );
