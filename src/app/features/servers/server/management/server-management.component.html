@@ -59,8 +59,9 @@
           {{ serverManagementTextContent.storage.secondaryVolumes }}: {{ secondaryVolumes }}
         </li>
         <!-- Storage Policy -->
-        <li *ngIf="server.storagePolicy">
-          {{ serverManagementTextContent.storage.storagePolicy }}: {{ server.storagePolicy }}
+        <li *ngIf="server.environment?.resource?.storage?.name">
+          {{ serverManagementTextContent.storage.storagePolicy }}:
+          {{ server.environment?.resource?.storage?.name }}
         </li>
       </ul>
     </div>
@@ -85,7 +86,10 @@
       <h3>{{ serverManagementTextContent.supportIdentifiers.title }}</h3>
       <ul class="unstyled-list">
         <!-- VDC -->
-        <li>{{ serverManagementTextContent.supportIdentifiers.vdc }}: {{ server.resource?.name }}</li>
+        <li>
+          {{ serverManagementTextContent.supportIdentifiers.vdc }}:
+          {{ server.environment?.resource?.name }}
+        </li>
         <!-- MacView Service ID -->
         <li>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}: {{ server.serviceId }}</li>
         <!-- VMWare ID -->

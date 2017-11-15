@@ -2,7 +2,7 @@ import { ServerMedia } from './server-media';
 import { ServerFileSystem } from './server-file-system';
 import { ServerStorageDevice } from './server-storage-device';
 import { ServerInterface } from './server-interface';
-import { ServerResourceDetails } from './server-resource-details';
+import { ServerEnvironmentSummary } from './server-environment-summary';
 import { ServerPowerState } from '../enumerations/server-power-state.enum';
 import { ServerServiceType } from '../enumerations/server-service-type.enum';
 
@@ -42,11 +42,9 @@ export class Server {
   public serviceDescription: string;
   public snmpVersion: string;
   public instanceId: any;
-  public environment: string;
-  public resource: ServerResourceDetails;
+  public environment: ServerEnvironmentSummary;
   public portalUrl: string;
   public serviceType: ServerServiceType;
-  public storagePolicy: string;
   public availabilityZone: string;
   public interfaces: ServerInterface[];
   public fileSystem: ServerFileSystem[];

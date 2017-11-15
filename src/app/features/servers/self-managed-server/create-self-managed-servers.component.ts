@@ -436,10 +436,17 @@ export class CreateSelfManagedServersComponent implements
       servers.forEach((server) => {
         let serversRecord: Server[] = new Array();
         if (server.serviceType !== ServerServiceType.SelfManaged) { return; }
-        if (!isNullOrEmpty(server.resource) && this._serverListMap.has(server.resource.name)) {
-          serversRecord = this._serverListMap.get(server.resource.name);
-          serversRecord.push(server);
-          this._serverListMap.set(server.resource.name, serversRecord);
+
+        let hasResource = server.environment && server.environment.resource;
+
+        if (hasResource) {
+          let resourceName = server.environment.resource.name;
+
+          if (this._serverListMap.has(resourceName)) {
+            serversRecord = this._serverListMap.get(resourceName);
+            serversRecord.push(server);
+            this._serverListMap.set(resourceName, serversRecord);
+          }
         }
       });
     }
