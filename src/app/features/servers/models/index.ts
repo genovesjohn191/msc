@@ -13,7 +13,7 @@ export * from './response/server-storage-device';
 export * from './response/server-interface';
 export * from './response/server-media';
 export * from './response/server-thumbnail';
-export * from './response/server-resource-details';
+export * from './response/server-resource-summary';
 export * from './response/server-platform';
 export * from './response/server-environment';
 export * from './response/server-resource';

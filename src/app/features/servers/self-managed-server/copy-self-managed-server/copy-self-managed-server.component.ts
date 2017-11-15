@@ -248,9 +248,14 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
         'text': vApp.name
       });
     });
+
+    let hasVapp = this.selectedServer.environment &&
+      this.selectedServer.environment.resource &&
+      this.selectedServer.environment.resource.vApp;
+
     // Select first element of the dropdown
-    if (!isNullOrEmpty(this.vAppItems)) {
-      this.formControlVApp.setValue(this.selectedServer.resource.vApp);
+    if (!isNullOrEmpty(this.vAppItems) && hasVapp) {
+      this.formControlVApp.setValue(this.selectedServer.environment.resource.vApp);
     }
   }
 

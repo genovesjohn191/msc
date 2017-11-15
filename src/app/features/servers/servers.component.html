@@ -157,10 +157,10 @@
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
               <!-- TODO: Changed this one temporarily to avoid console errors -->
-              <!-- will change it back once new model properties were implemented -->
-              <!-- <a [routerLink]="['/servers/vdc', row.resource?.id]"> -->
+              <!-- will change it back once orch implemented the new model changes -->
+              <!-- <a [routerLink]="['/servers/vdc', row.environment?.resource?.id]"> -->
               <a>
-                {{ row.resource?.name }}
+                {{ row.environment?.resource?.name }}
               </a>
             </mcs-data-cell>
           </ng-container>
@@ -171,7 +171,7 @@
             {{ columnSettings.vApp.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ row.resource?.vApp }}
+            {{ row.environment?.resource?.vApp }}
           </mcs-data-cell>
         </ng-container>
 

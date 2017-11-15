@@ -172,7 +172,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public get hasStorageInformation(): boolean {
     return !isNullOrEmpty(this.primaryVolume)
       || !isNullOrEmpty(this.secondaryVolumes)
-      || !isNullOrEmpty(this.server.storagePolicy);
+      || (!isNullOrEmpty(this.server.environment)
+      && !isNullOrEmpty(this.server.environment.resource)
+      && !isNullOrEmpty(this.server.environment.resource.storage)
+      && !isNullOrEmpty(this.server.environment.resource.storage.name));
   }
 
   constructor(
@@ -322,8 +325,15 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
         this._resourceMap = this._serverService.setResourceMap(response.content);
 
-        if (this._resourceMap.has(this.server.resource.name)) {
-          this.resource = this._resourceMap.get(this.server.resource.name);
+        let hasResource = !isNullOrEmpty(this.server.environment)
+          && !isNullOrEmpty(this.server.environment.resource);
+
+        if (hasResource) {
+          let resourceName = this.server.environment.resource.name;
+
+          if (this._resourceMap.has(resourceName)) {
+            this.resource = this._resourceMap.get(resourceName);
+          }
         }
 
         this._setRemainingValues();

@@ -249,9 +249,11 @@ export class ServerComponent
       .subscribe((response) => {
         this.server = response.content;
 
-        let resourceName = (!isNullOrEmpty(this.server.resource) &&
-          !isNullOrEmpty(this.server.resource.name)) ?
-          this.server.resource.name : SERVER_LIST_GROUP_OTHERS;
+        let hasResource = !isNullOrEmpty(this.server.environment)
+          && !isNullOrEmpty(this.server.environment.resource);
+
+        let resourceName = (hasResource) ?
+          this.server.environment.resource.name : SERVER_LIST_GROUP_OTHERS;
 
         this.selectedItem = {
           itemId: this.server.id,

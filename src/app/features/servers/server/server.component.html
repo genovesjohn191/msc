@@ -5,10 +5,10 @@
     display-flex="row" align-items="center">
       <div>
         <!-- TODO: Changed this one temporarily to avoid console errors -->
-        <!-- will change it back once new model properties were implemented -->
+        <!-- will change it back once orch implemented all model changes -->
         <!-- <a [routerLink]="['/servers/vdc', server.resource?.id]"> -->
         <a>
-          <h3>{{ server.resource?.name }}</h3>
+          <h3>{{ server.environment?.resource?.name }}</h3>
         </a>
       </div>
       <div>
