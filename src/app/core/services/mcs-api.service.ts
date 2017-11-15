@@ -14,7 +14,10 @@ import {
 import { CookieService } from 'ngx-cookie';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
-import { isUrlValid, resolveEnvVar } from '../../utilities';
+import {
+  isUrlValid,
+  resolveEnvVar
+} from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 
 /**

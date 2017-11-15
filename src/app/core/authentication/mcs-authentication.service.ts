@@ -24,6 +24,7 @@ export class McsAuthenticationService {
 
   private _returnUrl: string; // Return url to be set privately
   private _jwtCookieName: string;
+  private _enablePassingJwtInUrl: boolean;
 
   constructor(
     private _appState: AppState,
@@ -36,6 +37,8 @@ export class McsAuthenticationService {
     // Listen for the error in API Response
     this._listenForErrorApiResponse();
     this._jwtCookieName = resolveEnvVar('JWT_COOKIE_NAME', CoreDefinition.COOKIE_AUTH_TOKEN);
+    this._enablePassingJwtInUrl =
+      resolveEnvVar('ENABLE_PASSING_JWT_IN_URL', 'true').toLowerCase() === 'true';
   }
 
   /**
@@ -93,7 +96,10 @@ export class McsAuthenticationService {
    */
   public deleteCookieContent(): void {
     // Delete the token from Appstate and Cookie
-    // this._cookieService.remove(this._jwtCookieName);
+    if (this._enablePassingJwtInUrl) {
+      this._cookieService.remove(this._jwtCookieName);
+    }
+
     this._cookieService.remove(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
   }
 
@@ -175,7 +181,9 @@ export class McsAuthenticationService {
   }
 
   private _setUserIdentity(authToken: string, identity: McsApiIdentity) {
-    this.setAuthToken(authToken, identity.expiry);
+    if (this._enablePassingJwtInUrl) {
+      this.setAuthToken(authToken, identity.expiry);
+    }
     this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
     this._authenticationIdentity.applyIdentity();
   }
