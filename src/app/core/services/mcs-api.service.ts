@@ -14,7 +14,7 @@ import {
 import { CookieService } from 'ngx-cookie';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
-import { isUrlValid } from '../../utilities';
+import { isUrlValid, resolveEnvVar } from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 
 /**
@@ -36,12 +36,15 @@ export class McsApiService {
     this._errorResponseStream = value;
   }
 
+  private _jwtCookieName: string;
+
   constructor(
     private _http: Http,
     private _cookieService: CookieService,
     @Optional() private _config: CoreConfig
   ) {
     this._errorResponseStream = new Subject<Response | any>();
+    this._jwtCookieName = resolveEnvVar('JWT_COOKIE_NAME', CoreDefinition.COOKIE_AUTH_TOKEN);
   }
 
   /**
@@ -213,7 +216,7 @@ export class McsApiService {
    * @param {Headers} headers Header Instance
    */
   private _setAuthorizationHeader(headers: Headers) {
-    let authToken = this._cookieService.get(CoreDefinition.COOKIE_AUTH_TOKEN);
+    let authToken = this._cookieService.get(this._jwtCookieName);
     if (authToken) {
       headers.set(CoreDefinition.HEADER_AUTHORIZATION,
         `${CoreDefinition.HEADER_BEARER} ${authToken}`);
