@@ -242,15 +242,15 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     if (!this.resource) { return; }
 
     // Populate dropdown list
-    this.resource.storage.forEach((storage) => {
+    this.resource.vApps.forEach((vApp) => {
       this.vAppItems.push({
-        'value': storage.name,
-        'text': storage.name
+        'value': vApp.name,
+        'text': vApp.name
       });
     });
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.vAppItems)) {
-      this.formControlVApp.setValue(this.selectedServer.vAppName);
+      this.formControlVApp.setValue(this.selectedServer.resource.vApp);
     }
   }
 

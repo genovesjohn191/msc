@@ -248,9 +248,14 @@ export class ServerComponent
     this.serverSubscription = this._serverService.getServer(this._serverId)
       .subscribe((response) => {
         this.server = response.content;
+
+        let resourceName = (!isNullOrEmpty(this.server.resource) &&
+          !isNullOrEmpty(this.server.resource.name)) ?
+          this.server.resource.name : SERVER_LIST_GROUP_OTHERS;
+
         this.selectedItem = {
           itemId: this.server.id,
-          groupName: (this.server.vdcName) ? this.server.vdcName : SERVER_LIST_GROUP_OTHERS
+          groupName: resourceName
         } as McsListPanelItem;
 
         this._serverService.setSelectedServer(this.server);

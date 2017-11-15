@@ -561,10 +561,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * This will set the storage from the platform data
    */
   private _setServerResourceStorage(): void {
-    if (isNullOrEmpty(this.server.vdcName)) { return; }
+    if (isNullOrEmpty(this.server.resource) ||
+      isNullOrEmpty(this.server.resource.name)) { return; }
 
-    if (this._serverResourceMap.has(this.server.vdcName)) {
-      let serverResource = this._serverResourceMap.get(this.server.vdcName);
+    if (this._serverResourceMap.has(this.server.resource.name)) {
+      let serverResource = this._serverResourceMap.get(this.server.resource.name);
       this.serverResourceStorage = serverResource.storage;
     }
   }

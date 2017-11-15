@@ -20,7 +20,9 @@ describe('ServerStorageComponent', () => {
   let mockServerDetails = {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
-    vdcName: 'M1VDC27117001',
+    resource: {
+      name: 'M1VDC27117001'
+    },
     storageDevice: [
       {
         id: '1d6d55d7-0b02-4341-9359-2e4bc783d9b1',
