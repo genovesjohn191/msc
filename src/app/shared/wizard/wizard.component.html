@@ -1,6 +1,6 @@
 <!-- Steps template declaration -->
 <ng-template #stepsTemplate>
-  <div class="wizard-steps-items" scrollable>
+  <div class="wizard-steps-items" scrollable scrollbarId="wizard-items">
     <div class="step-item" *ngFor="let step of displayedSteps"
       (click)="goToStep(step)"
       [hidden]="step.hidden"

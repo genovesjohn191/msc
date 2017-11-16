@@ -1,25 +1,45 @@
-<form [formGroup]="fgCloneServer">
+<form [formGroup]="fgCloneServer" mcsFormGroup>
   <!-- Server Name Input -->
   <div class="field">
-    <mcs-textbox width="100%" placeholder="* Enter a server name"
-      [formControl]="fcServerName"
-      [mcsContextualHelp]="textHelpContent.enterServerName"
-      [valid]="isControlValid(fcServerName)"></mcs-textbox>
-    <mcs-validation-message [control]="fcServerName"></mcs-validation-message>
+    <mcs-form-field>
+      <input mcsInput #serverNameInput
+        placeholder="Enter a server name" maxlength="15"
+        [formControl]="fcServerName"
+        [mcsContextualHelp]="textHelpContent.serverNameField">
+
+      <mcs-hint mcsHint align="start">
+        {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
+      </mcs-hint>
+      <mcs-hint mcsHint align="end">
+        {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
+      </mcs-hint>
+
+      <mcs-error mcsError *ngIf="fcServerName.hasError('required')">
+        {{ textContent.errors.serverNameRequired }}
+      </mcs-error>
+      <mcs-error mcsError *ngIf="fcServerName.hasError('invalidServerName')">
+        {{ textContent.errors.invalidServerName }}
+      </mcs-error>
+    </mcs-form-field>
   </div>
 
   <!-- Server Selection -->
   <ng-container *ngIf="hasServers">
-    <mcs-select [formControl]="fcTargetServer"
-      [placeholder]="textContent.placeholder.server">
-      <mcs-select-item [value]="">{{ textContent.placeholder.server }}</mcs-select-item>
-      <mcs-select-group header="Servers">
-        <mcs-select-item *ngFor="let server of servers" [value]="server.id">
-          {{ server.managementName }}
-        </mcs-select-item>
-      </mcs-select-group>
-    </mcs-select>
-    <mcs-validation-message [control]="formControlTargetServer"></mcs-validation-message>
+    <mcs-form-field>
+      <mcs-select [formControl]="fcTargetServer"
+        [placeholder]="textContent.placeholder.server">
+        <mcs-select-item>-</mcs-select-item>
+        <mcs-select-group header="Servers">
+          <mcs-select-item *ngFor="let server of servers" [value]="server.id">
+            {{ server.managementName }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
+
+      <mcs-error mcsError *ngIf="fcTargetServer.hasError('required')">
+        {{ textContent.errors.selectServerRequired }}
+      </mcs-error>
+    </mcs-form-field>
   </ng-container>
 
   <!-- Warning icon when no servers found -->

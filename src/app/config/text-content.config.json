@@ -95,6 +95,17 @@
         "network": "Select Network",
         "server": "Select Server"
       },
+      "hints": {
+        "serverNameMax": "Max of {{max_char}} characters"
+      },
+      "errors": {
+        "serverNameRequired": "Server name is required",
+        "invalidServerName": "Server name can only contain letters, numbers or hypen",
+        "selectVappRequired": "Virtual application is required",
+        "selectImageRequired": "Image is required",
+        "selectNetworkRequired": "Network is required",
+        "selectServerRequired": "Server is required"
+      },
       "contextualHelp": {
         "vdcField": "Virtual Data Center to deploy your server. You can deploy your server to any Virtual Data Center available in this list.",
         "serverNameField": "Choose a friendly name for your server. The server name must be 15 characters or less and contain letters, numbers and hyphens.",
@@ -120,7 +131,6 @@
       "copyServer": "Copy a server",
       "cloneServer": "Clone a server",
       "cloneServerDescription": "Cloning a server gives you an exact replica of an existing server in the same Virtual Data Centre.",
-      "invalidServerName": "Server name can only contain letters, numbers or hypen",
       "noResourceFound": {
         "header": "Unable to Create Server",
         "content": "No resources found. You can't create a server at this moment. Please try again later"
@@ -293,13 +303,20 @@
       "header": "Create New Ticket",
       "description": "We all need help from time to time.<br/><br/>Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView.",
       "type": "Ticket Type",
-      "headline": "Headline (max {{max_char}} characters)",
-      "details": "Details (max {{max_char}} characters)",
       "services": "Services",
       "attachments": "Attachments",
       "backToTickets": "Back To Tickets",
       "newTicket": "Log Ticket",
       "cancelActivity": "Cancel",
+      "hints": {
+        "headline": "Max of {{max_char}} characters",
+        "details": "Max of {{max_char}} characters"
+      },
+      "errors": {
+        "typeRequired": "Ticket type is required.",
+        "headlineRequired": "Headline is required.",
+        "detailsRequired": "Details is required."
+      },
       "contextualHelp": {
         "type": "Select the ticket type",
         "headline": "A short title that describes this ticket.",

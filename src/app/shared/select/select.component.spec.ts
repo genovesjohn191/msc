@@ -88,11 +88,11 @@ describe('SelectComponent', () => {
 
   describe('modelValue()', () => {
     beforeEach(async(() => {
-      component.selectComponent.modelValue = 'pizza-1';
+      component.selectComponent.value = 'pizza-1';
     }));
 
     it(`should set the modelValue to selectedValue of model binding`, () => {
-      expect(component.selectedValue).toEqual(component.selectComponent.modelValue);
+      expect(component.selectedValue).toEqual(component.selectComponent.value);
     });
   });
 

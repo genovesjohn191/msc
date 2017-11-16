@@ -96,7 +96,7 @@ export class McsScrollDispatcherService {
    * Returns all registered Scrollables that contain the provided element
    * @param elementRef Element Reference of the container
    */
-  public getScrollContainers(elementRef: ElementRef): McsScrollable[] {
+  public getScrollContainers(elementRef: ElementRef | HTMLElement): McsScrollable[] {
     let scrollingContainers: McsScrollable[] = new Array();
 
     this._scrollableMap.forEach((_subscription: Subscription, _scrollable: McsScrollable) => {
@@ -112,9 +112,12 @@ export class McsScrollDispatcherService {
    * @param scrollable Scrollable information
    * @param elementRef Element Reference to check the scrollabe content
    */
-  public scrollableContainsElement(scrollable: McsScrollable, elementRef: ElementRef): boolean {
+  public scrollableContainsElement(
+    scrollable: McsScrollable,
+    elementRef: ElementRef | HTMLElement
+  ): boolean {
     let isExist: boolean = false;
-    let element = elementRef.nativeElement;
+    let element = elementRef instanceof HTMLElement ? elementRef : elementRef.nativeElement;
     let scrollableElement = scrollable.getElementRef().nativeElement;
 
     // Traverse through the element parents using forever loop until we reach null,
@@ -136,21 +139,20 @@ export class McsScrollDispatcherService {
    */
   public scrollToElement(
     element: HTMLElement,
-    scrollableElementId: string = 'page-content',
     offset: number = 0,
-    duration: number = 500
+    duration: number = 300
   ): void {
     if (isNullOrEmpty(element)) { return; }
 
-    // Get the element with scrollbar based on Id provided
-    let scrollableElement: any;
-    this._scrollableMap.forEach((_value, key) => {
-      if (key.scrollbarId === scrollableElementId) {
-        scrollableElement = key.getElementRef().nativeElement;
-      }
-    });
+    // Find the corresponding scrollable element of the given element
+    let scrollableElements = this.getScrollContainers(element);
+    if (isNullOrEmpty(scrollableElements)) { return; }
+
     // Execute scrolling of element
-    this._executeScrollingToElement(scrollableElement, element.offsetTop + offset, duration);
+    this._executeScrollingToElement(
+      scrollableElements[0].getElementRef().nativeElement,
+      element.offsetTop + offset, duration
+    );
   }
 
   /**

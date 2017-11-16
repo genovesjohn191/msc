@@ -32,7 +32,8 @@ import {
   isNullOrEmpty,
   registerEvent,
   unregisterEvent,
-  ErrorStateMatcher
+  ErrorStateMatcher,
+  refreshView
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
 
@@ -88,25 +89,18 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _items: QueryList<SelectItemComponent>;
 
   /**
-   * Model binding value that get updated everytime the item is selected
+   * Base value implementation of value accessor
    */
-  private _modelValue: any;
-  public get modelValue(): any {
-    return this._modelValue;
+  private _value: any;
+  public get value(): any {
+    return this._value;
   }
-  public set modelValue(value: any) {
-    if (this._modelValue !== value) {
-      this._modelValue = value;
+  public set value(value: any) {
+    if (this._value !== value) {
+      this._value = value;
       this._onChanged(value);
       this._changeDetectorRef.markForCheck();
     }
-  }
-
-  /**
-   * Base value implementation of value accessor
-   */
-  public get value(): string {
-    return this.modelValue;
   }
 
   /**
@@ -148,8 +142,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   public constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef,
     @Optional() @Self() public ngControl: NgControl,
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective
@@ -233,10 +227,12 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (this._items) {
-      let selectedItem = this._items.find((item) => item.value === value);
-      this._selectItem(selectedItem);
-    }
+    refreshView(() => {
+      if (this._items) {
+        let selectedItem = this._items.find((item) => item.value === value);
+        this._selectItem(selectedItem);
+      }
+    });
   }
 
   /**
@@ -285,7 +281,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     this._clearItemSelection(item);
     item.select();
     this._selection.select(item);
-    this.modelValue = item.value;
+    this.value = item.value;
     this.stateChanges.next();
   }
 

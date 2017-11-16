@@ -5,9 +5,9 @@ import {
   Output,
   EventEmitter,
   AfterViewInit,
+  ViewChild,
   ViewChildren,
   QueryList,
-  ChangeDetectorRef,
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -19,8 +19,7 @@ import {
 import {
   McsTextContentProvider,
   CoreValidators,
-  CoreDefinition,
-  McsTouchedControl
+  CoreDefinition
 } from '../../../../core';
 import {
   ServerCreateSelfManaged,
@@ -31,19 +30,26 @@ import {
   refreshView,
   mergeArrays,
   isNullOrEmpty,
-  isFormControlValid
+  isFormControlValid,
+  replacePlaceholder
 } from '../../../../utilities';
-import { ContextualHelpDirective } from '../../../../shared';
+import {
+  ContextualHelpDirective,
+  FormGroupDirective
+} from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 
 @Component({
   selector: 'mcs-clone-self-managed-server',
   templateUrl: './clone-self-managed-server.component.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 
-export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, McsTouchedControl {
+export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   @Input()
   public targetServer: string;
 
@@ -52,6 +58,9 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, M
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
+
+  @ViewChild(FormGroupDirective)
+  public fgCreateDirective: FormGroupDirective;
 
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
@@ -79,8 +88,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, M
 
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
-    private _textContentProvider: McsTextContentProvider,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _textContentProvider: McsTextContentProvider
   ) {
     this.createType = ServerCreateType.Clone;
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
@@ -111,8 +119,6 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, M
         this._managedServerService.subContextualHelp =
           mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
       }
-      this.fcTargetServer.setValue(this.targetServer);
-      this._changeDetectorRef.markForCheck();
     });
   }
 
@@ -120,15 +126,8 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, M
     return isFormControlValid(control);
   }
 
-  /**
-   * This will mark all controls to touched
-   */
-  public touchedAllControls(): void {
-    if (isNullOrEmpty(this.formControls)) { return; }
-    this.formControls.forEach((control) => {
-      control.form.markAsTouched();
-    });
-    this._changeDetectorRef.markForCheck();
+  public convertMaxCharText(text: string, maxchar: number): string {
+    return replacePlaceholder(text, 'max_char', maxchar.toString());
   }
 
   private _registerFormGroup(): void {

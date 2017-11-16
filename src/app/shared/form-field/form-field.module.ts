@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutModule } from '../layout/layout.module';
 import { FormFieldComponent } from './form-field.component';
+import { FormGroupDirective } from './form-group.directive';
 // Shared components
 import {
   ErrorComponent,
@@ -13,6 +14,7 @@ import {
 @NgModule({
   declarations: [
     FormFieldComponent,
+    FormGroupDirective,
     ErrorComponent,
     HintComponent,
     PrefixComponent,
@@ -24,6 +26,7 @@ import {
   ],
   exports: [
     FormFieldComponent,
+    FormGroupDirective,
     ErrorComponent,
     HintComponent,
     PrefixComponent,

@@ -26,6 +26,8 @@ $select-sub-group-max-height: 500px;
 .select-wrapper {
   position: relative;
   display: block;
+  width: 100%;
+  outline: none;
 
   .animation {
     animation-timing-function: ease-out;
