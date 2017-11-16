@@ -60,6 +60,7 @@ export * from './interfaces/mcs-touched-controls.interface';
 /** Base */
 export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-table-listing.base';
+export * from './base/mcs-form-field-control.base';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';
