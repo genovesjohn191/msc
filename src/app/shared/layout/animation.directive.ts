@@ -5,7 +5,8 @@ import {
   Renderer2,
   ElementRef,
   EventEmitter,
-  OnInit
+  OnInit,
+  NgZone
 } from '@angular/core';
 import {
   isNullOrEmpty,
@@ -52,8 +53,6 @@ export class AnimateDirective implements OnInit {
   public set trigger(value: string) {
     if (this._trigger !== value) {
       this._trigger = value;
-      unregisterEvent(this._elementRef.nativeElement, 'animationend',
-        [this._endAnimationHandler, this._endOutAnimationHandler]);
       this._triggerAnimation();
     }
   }
@@ -61,7 +60,8 @@ export class AnimateDirective implements OnInit {
 
   constructor(
     private _renderer: Renderer2,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private _ngZone: NgZone
   ) {
     this.animationEnd = new EventEmitter();
   }
@@ -106,6 +106,8 @@ export class AnimateDirective implements OnInit {
 
   /**
    * End animation callback
+   *
+   * `@Note`: This will also unregister the event callback once it was already called
    */
   private _endAnimationCallback(): void {
     if (!isNullOrEmpty(this.animate)) {
@@ -113,6 +115,10 @@ export class AnimateDirective implements OnInit {
     }
     this._renderer.removeClass(this._elementRef.nativeElement, this.trigger);
     this.animationEnd.emit();
+
+    this._ngZone.runOutsideAngular(() => {
+      unregisterEvent(this._elementRef.nativeElement, 'animationend', this._endAnimationHandler);
+    });
   }
 
   /**
@@ -127,8 +133,13 @@ export class AnimateDirective implements OnInit {
 
   /**
    * End out animation callback
+   *
+   * `@Note`: This will also unregister the event callback once it was already called
    */
   private _endOutAnimationCallback(): void {
     this._renderer.addClass(this._elementRef.nativeElement, 'out-end');
+    this._ngZone.runOutsideAngular(() => {
+      unregisterEvent(this._elementRef.nativeElement, 'animationend', this._endOutAnimationHandler);
+    });
   }
 }

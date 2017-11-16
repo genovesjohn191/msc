@@ -1,3 +1,5 @@
-<mcs-textbox #search name="textIcon" [icon]="iconKey" width="100%"
-  placeholder="Type to search..." (keyup)="onChangeKeyEvent(search.value)"
-  (keyup.enter)="onEnterKeyUpEvent(search.value)"></mcs-textbox>
+<mcs-form-field>
+  <input mcsInput type="text" #search placeholder="Type to search..."
+    (keyup)="onChangeKeyEvent(search.value)" (keyup.enter)="onEnterKeyUpEvent(search.value)">
+  <mcs-icon [key]="iconKey" size="small"></mcs-icon>
+</mcs-form-field>

@@ -1,34 +1,43 @@
 import {
   Component,
   Input,
-  ViewChild,
   QueryList,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   ViewEncapsulation,
+  DoCheck,
+  OnChanges,
   OnDestroy,
   AfterContentInit,
   ContentChildren,
-  forwardRef,
-  ElementRef
+  ElementRef,
+  Optional,
+  Self
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR
+  FormGroupDirective,
+  NgControl,
+  NgForm
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { startWith } from 'rxjs/operator/startWith';
 import {
   Key,
   McsSelection,
-  CoreDefinition
+  CoreDefinition,
+  McsFormFieldControlBase
 } from '../../core';
 import {
   isNullOrEmpty,
   registerEvent,
-  unregisterEvent
+  unregisterEvent,
+  ErrorStateMatcher
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
+
+// Unique Id that generates during runtime
+let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-select',
@@ -37,25 +46,43 @@ import { SelectItemComponent } from './select-item/select-item.component';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SelectComponent),
-      multi: true
-    }
+    { provide: McsFormFieldControlBase, useExisting: SelectComponent }
   ],
   host: {
     'class': 'select-wrapper',
+    'role': 'listbox',
+    '[attr.id]': 'id',
+    '[attr.tabindex]': 'tabindex',
     '(keydown)': 'onKeyDown($event)',
-    '(blur)': 'onBlur()'
+    '(blur)': 'onBlur()',
+    '(focus)': 'onFocus()'
   }
 })
 
-export class SelectComponent implements AfterContentInit, OnDestroy, ControlValueAccessor {
+export class SelectComponent extends McsFormFieldControlBase<any>
+  implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
+
+  @Input()
+  public tabindex: number = 0;
+
+  @Input()
+  public id: string = `mcs-select-${nextUniqueId++}`;
+
   @Input()
   public placeholder: string;
 
-  @ViewChild('triggerElement')
-  private _triggerElement: ElementRef;
+  @Input()
+  public errorStateMatcher: ErrorStateMatcher;
+
+  @Input()
+  public get required() { return this._required; }
+  public set required(value: any) { this._required = value; }
+  private _required: boolean = false;
+
+  @Input()
+  public get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
+  public set disabled(value: any) { this._disabled = value; }
+  private _disabled = false;
 
   @ContentChildren(SelectItemComponent, { descendants: true })
   private _items: QueryList<SelectItemComponent>;
@@ -73,6 +100,13 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
       this._onChanged(value);
       this._changeDetectorRef.markForCheck();
     }
+  }
+
+  /**
+   * Base value implementation of value accessor
+   */
+  public get value(): string {
+    return this.modelValue;
   }
 
   /**
@@ -115,8 +149,15 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    @Optional() @Self() public ngControl: NgControl,
+    @Optional() _parentForm: NgForm,
+    @Optional() _parentFormGroup: FormGroupDirective
   ) {
+    super(_elementRef.nativeElement, _parentFormGroup || _parentForm);
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
     this.panelOpen = false;
     this._selection = new McsSelection<SelectItemComponent>(false);
   }
@@ -128,6 +169,16 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
     });
   }
 
+  public ngDoCheck(): void {
+    if (this.ngControl) {
+      this.updateErrorState();
+    }
+  }
+
+  public ngOnChanges(): void {
+    this.stateChanges.next();
+  }
+
   public ngOnDestroy(): void {
     unregisterEvent(document, 'click', this._closeOutsideHandler);
     if (!isNullOrEmpty(this._selectionSubscription)) {
@@ -136,6 +187,7 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
     if (!isNullOrEmpty(this._itemsSubscripton)) {
       this._itemsSubscripton.unsubscribe();
     }
+    this.stateChanges.complete();
   }
 
   public onKeyDown(_event: KeyboardEvent) {
@@ -159,15 +211,20 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
     this.panelOpen ? this.closePanel() : this.openPanel();
   }
 
-  public focus(): void {
-    if (isNullOrEmpty(this._triggerElement)) { return; }
-    this._triggerElement.nativeElement.focus();
-  }
-
+  /** Callback for the cases where the focused state of the input changes. */
   public onBlur(): void {
-    if (!this.panelOpen) {
+    if (!this.disabled && !this.panelOpen) {
+      this.focused = false;
       this._onTouched();
       this._changeDetectorRef.markForCheck();
+      this.stateChanges.next();
+    }
+  }
+
+  public onFocus(): void {
+    if (!this.disabled) {
+      this.focused = true;
+      this.stateChanges.next();
     }
   }
 
@@ -198,6 +255,13 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
     this._onTouched = fn;
   }
 
+  /**
+   * Base implementation of empty checking
+   */
+  public isEmpty(): boolean {
+    return isNullOrEmpty(this.value);
+  }
+
   // View <-> Model callback methods
   private _onChanged: (value: any) => void = () => { /** dummy */ };
   private _onTouched = () => { /** dummy */ };
@@ -222,6 +286,7 @@ export class SelectComponent implements AfterContentInit, OnDestroy, ControlValu
     item.select();
     this._selection.select(item);
     this.modelValue = item.value;
+    this.stateChanges.next();
   }
 
   private _clearItemSelection(selectedItem: SelectItemComponent): void {

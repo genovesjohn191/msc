@@ -40,18 +40,8 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   public keyword: string;
   public searchChangedStream: EventEmitter<any>;
 
-  private _iconKey: string = 'search';
-
-  public get iconKey(): string {
-    return this._iconKey;
-  }
-
-  public set iconKey(value: string) {
-    if (this._iconKey !== value) {
-      this._iconKey = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
+  // Others
+  public iconKey: string;
 
   /** Search subscription */
   private _searchSubject: Subject<string>;
@@ -62,6 +52,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
     private _textContentProvider: McsTextContentProvider
   ) {
     this.keyword = '';
+    this.iconKey = CoreDefinition.ASSETS_FONT_SEARCH;
     this._searchSubject = new Subject<string>();
     this.searchChangedStream = new EventEmitter<any>();
   }
@@ -76,7 +67,6 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
         CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000))
       .distinctUntilChanged()
       .subscribe((searchTerm) => {
-        this.showLoading(true);
         this.keyword = searchTerm;
         this._onSearchChanged();
       });
@@ -98,8 +88,10 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   }
 
   public showLoading(showLoading: boolean): void {
-    let iconKey = showLoading ? 'loading' : 'search';
-    this.iconKey = iconKey;
+    this.iconKey = showLoading ?
+      CoreDefinition.ASSETS_GIF_SPINNER :
+      CoreDefinition.ASSETS_FONT_SEARCH;
+    this._changeDetectorRef.markForCheck();
   }
 
   private _onSearchChanged() {

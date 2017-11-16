@@ -142,10 +142,6 @@ html {
         outline: none;
         border-color: $input-border-color-focused;
       }
-
-      &.ng-invalid.ng-touched {
-        border: 1px solid $color-red-00;
-      }
     }
 
     input::-ms-clear{

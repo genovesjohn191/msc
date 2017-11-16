@@ -30,6 +30,9 @@ import { AttachmentModule } from './attachment/attachment.module';
 import { PaginatorModule } from './paginator/paginator.module';
 import { ActionItemModule } from './action-item/action-item.module';
 import { RadioButtonGroupModule } from './radio-button-group/radio-button-group.module';
+import { FormFieldModule } from './form-field/form-field.module';
+import { InputModule } from './input/input.module';
+import { SearchModule } from './search/search.module';
 /** Components */
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
@@ -37,7 +40,6 @@ import { TextboxComponent } from './textbox/textbox.component';
 import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
-import { SearchComponent } from './search/search.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
 /** Directives */
 import { HasPermissionDirective } from './authentication/has-permission.directive';
@@ -51,7 +53,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
-    SearchComponent,
     CapacityBarComponent
   ],
   imports: [
@@ -82,7 +83,10 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     AttachmentModule,
     PaginatorModule,
     ActionItemModule,
-    RadioButtonGroupModule
+    RadioButtonGroupModule,
+    FormFieldModule,
+    InputModule,
+    SearchModule
   ],
   exports: [
     CheckboxComponent,
@@ -92,7 +96,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
-    SearchComponent,
     CapacityBarComponent,
     CommonModule,
     RouterModule,
@@ -121,7 +124,10 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     AttachmentModule,
     PaginatorModule,
     ActionItemModule,
-    RadioButtonGroupModule
+    RadioButtonGroupModule,
+    FormFieldModule,
+    InputModule,
+    SearchModule
   ]
 })
 

@@ -1,0 +1,106 @@
+@import "../../../styles/shared/base";
+
+// Form field content
+$form-field-content-focus-color: $color-primary-00;
+$form-field-content-error-color: $color-red-00;
+$form-field-content-border-width: $input-border-width;
+$form-field-content-border-style: $input-border-style;
+$form-field-content-border-color: $input-border-color;
+$form-field-content-border-radius: $input-border-radius;
+$form-field-content-spacing-size: $space-small;
+// Form field messages
+$form-field-message-top-offset: 6px;
+$form-field-error-message-color: $color-red-00;
+$form-field-error-hint-color: rgba($color-black, 0.54);
+
+// Form field main wrapper
+.form-field-wrapper {
+  @include display-flex(column);
+
+  &.mcs-focused {
+    .form-field-content {
+      border-color: $form-field-content-focus-color;
+    }
+  }
+
+  &.ng-invalid.ng-touched {
+    .form-field-content {
+      border-color: $form-field-content-error-color;
+    }
+  }
+}
+
+// Main content of the form-field
+.form-field-content {
+  @include display-flex(row);
+  @include align-items(center);
+
+  border-width: $form-field-content-border-width;
+  border-style: $form-field-content-border-style;
+  border-color: $form-field-content-border-color;
+  @include border-radius($form-field-content-border-radius);
+
+  &:focus {
+    outline: none;
+    border-color: $form-field-content-focus-color;
+  }
+
+  .form-field-prefix {
+    white-space: nowrap;
+    padding-left: $form-field-content-spacing-size;
+    @include flex(0 0 auto);
+  }
+
+  .form-field-infix {
+    @include flex(1 1 auto);
+    @include display-flex(row);
+    @include align-items(center);
+    @include set-items-interval($form-field-content-spacing-size, horizontal);
+
+    input,
+    textarea,
+    .select-trigger {
+      border: none;
+      width: 100%;
+      padding-left: $form-field-content-spacing-size;
+      padding-right: $form-field-content-spacing-size;
+    }
+
+    > *:nth-child(n+2):last-child {
+      padding-right: $form-field-content-spacing-size;
+    }
+  }
+
+  .form-field-suffix {
+    white-space: nowrap;
+    padding-right: $form-field-content-spacing-size;
+    @include flex(0 0 auto);
+  }
+}
+
+// Displayed message at the bottom
+.form-field-error-hint-wrapper {
+  .error-wrapper {
+    @include display-flex(row);
+    @include align-items(center);
+    margin-top: $form-field-message-top-offset;
+    color: $form-field-error-message-color;
+  }
+
+  .form-field-hint-wrapper {
+    margin-top: $form-field-message-top-offset;
+    @include display-flex(row);
+    @include align-items(center);
+
+    .hint-wrapper {
+      color: $form-field-error-hint-color;
+      &.start {
+        margin-right: auto;
+      }
+
+      &.end {
+        margin-left: auto;
+      }
+    }
+  }
+}

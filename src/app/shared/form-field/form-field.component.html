@@ -1,0 +1,27 @@
+<div class="form-field-content">
+  <!-- Prefix to be attached before the content -->
+  <div class="form-field-prefix" *ngIf="hasPrefix">
+    <ng-content select="[mcsPrefix]"></ng-content>
+  </div>
+
+  <!-- Input element that is sitting inside the form-field -->
+  <div class="form-field-infix">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Suffix to be attach after the content -->
+  <div class="form-field-suffix" *ngIf="hasSuffix">
+    <ng-content select="[mcsSuffix]"></ng-content>
+  </div>
+</div>
+
+<!-- Error validation and Hint -->
+<div [ngSwitch]="getDisplayedMessages()" class="form-field-error-hint-wrapper">
+  <div *ngSwitchCase="'error'" [@transitionMessages]="subscriptAnimationState">
+    <ng-content select="[mcsError]"></ng-content>
+  </div>
+  <div *ngSwitchCase="'hint'" [@transitionMessages]="subscriptAnimationState"
+    class="form-field-hint-wrapper">
+    <ng-content select="[mcsHint]"></ng-content>
+  </div>
+</div>
