@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   AfterViewInit,
+  ViewChild,
   ViewChildren,
   QueryList,
   ChangeDetectorRef,
@@ -20,17 +21,20 @@ import {
 import {
   McsTextContentProvider,
   CoreValidators,
-  CoreDefinition,
-  McsTouchedControl
+  CoreDefinition
 } from '../../../../core';
 import {
   refreshView,
   mergeArrays,
   isNullOrEmpty,
   convertToGb,
-  isFormControlValid
+  isFormControlValid,
+  replacePlaceholder
 } from '../../../../utilities';
-import { ContextualHelpDirective } from '../../../../shared';
+import {
+  ContextualHelpDirective,
+  FormGroupDirective
+} from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import {
   ServerManageStorage,
@@ -55,11 +59,13 @@ const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MU
   selector: 'mcs-new-self-managed-server',
   templateUrl: './new-self-managed-server.component.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 
-export class NewSelfManagedServerComponent implements
-  OnInit, AfterViewInit, OnDestroy, McsTouchedControl {
+export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input()
   public resource: ServerResource;
 
@@ -68,6 +74,9 @@ export class NewSelfManagedServerComponent implements
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
+
+  @ViewChild(FormGroupDirective)
+  public fgCreateDirective: FormGroupDirective;
 
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
@@ -174,11 +183,6 @@ export class NewSelfManagedServerComponent implements
         this._serverService.subContextualHelp =
           mergeArrays(this._serverService.subContextualHelp, contextInformations);
       }
-
-      // Select network initial value
-      if (!isNullOrEmpty(this.networkItems)) {
-        this.fcNetwork.setValue(this.networkItems[0].value);
-      }
     });
   }
 
@@ -225,15 +229,8 @@ export class NewSelfManagedServerComponent implements
     }
   }
 
-  /**
-   * This will mark all controls to touched
-   */
-  public touchedAllControls(): void {
-    if (isNullOrEmpty(this.formControls)) { return; }
-    this.formControls.forEach((control) => {
-      control.form.markAsTouched();
-    });
-    this._changeDetectorRef.markForCheck();
+  public convertMaxCharText(text: string, maxchar: number): string {
+    return replacePlaceholder(text, 'max_char', maxchar.toString());
   }
 
   private _setAvailableMemoryMB(): void {
@@ -343,14 +340,15 @@ export class NewSelfManagedServerComponent implements
     // Register Form Controls
     this.fcServerName = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.maxLength(CoreDefinition.SERVER_NAME_MAX),
       CoreValidators.custom(
         this._customServerNameValidator.bind(this),
-        this.textContent.invalidServerName
+        'invalidServerName'
       )
     ]);
 
-    this.fcVApp = new FormControl('', []);
+    this.fcVApp = new FormControl('', [
+      // Optional selection
+    ]);
 
     this.fcImage = new FormControl('', [
       CoreValidators.required
@@ -420,7 +418,7 @@ export class NewSelfManagedServerComponent implements
     newSelfManaged.performanceScale = this.fcScale.value;
     newSelfManaged.serverManageStorage = this.fcStorage.value;
     newSelfManaged.ipAddress = this.fcIpAddress.value;
-    newSelfManaged.isValid = this.fgNewServer.valid;
+    newSelfManaged.isValid = this.fgCreateDirective.isValid();
 
     this.onOutputServerDetails.next(newSelfManaged);
   }

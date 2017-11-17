@@ -7,7 +7,7 @@
 <div class="select-trigger" display-flex justify-content="space-between"
   align-items="center" cursor="pointer" (click)="toggle()">
 
-  <span *ngIf="modelValue;else placeholderTemplate">
+  <span *ngIf="value;else placeholderTemplate">
     {{ displayedText }}
   </span>
   <mcs-icon size="small" [key]="carretDownIconKey"></mcs-icon>

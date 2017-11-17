@@ -55,7 +55,10 @@ import {
   selector: 'mcs-create-self-managed-servers',
   templateUrl: './create-self-managed-servers.component.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 
 export class CreateSelfManagedServersComponent implements
@@ -227,7 +230,7 @@ export class CreateSelfManagedServersComponent implements
   public safeToNavigateAway(): boolean {
     let canNavigate: boolean = true;
     for (let server of this.newServers) {
-      canNavigate = !server.componentRef.instance.isTouchedAndDirty() || this.deployingServers;
+      canNavigate = !server.componentRef.instance.hasDirtyFormControls() || this.deployingServers;
       if (canNavigate) { break; }
     }
     return canNavigate;
@@ -286,8 +289,7 @@ export class CreateSelfManagedServersComponent implements
     } else {
       // Touched all form controls
       this.newServers.forEach((server) => {
-        server.componentRef.instance.touchedAllControls();
-        server.componentRef.instance.setFocusToInvalidElement();
+        server.componentRef.instance.validateComponentFormControls();
       });
     }
     this._changeDetectorRef.markForCheck();
@@ -441,12 +443,11 @@ export class CreateSelfManagedServersComponent implements
 
         if (hasResource) {
           let resourceName = server.environment.resource.name;
-
           if (this._serverListMap.has(resourceName)) {
             serversRecord = this._serverListMap.get(resourceName);
-            serversRecord.push(server);
-            this._serverListMap.set(resourceName, serversRecord);
           }
+          serversRecord.push(server);
+          this._serverListMap.set(resourceName, serversRecord);
         }
       });
     }

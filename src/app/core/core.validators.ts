@@ -5,6 +5,7 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import { CoreDefinition } from './core.definition';
+import { McsPropertyType } from './interfaces/mcs-property-type.interface';
 
 export class CoreValidators {
 
@@ -69,10 +70,13 @@ export class CoreValidators {
    */
   public static custom(
     predicate: (validation: any) => boolean,
-    customMessage: string
+    patternName: string
   ): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      return !predicate(control.value) ? { custom: { message: customMessage } } : null;
+      let patternData: McsPropertyType = {};
+      patternData[patternName] = true;
+
+      return !predicate(control.value) ? patternData : null;
     };
   }
 

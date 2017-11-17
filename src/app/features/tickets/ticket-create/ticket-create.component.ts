@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  ViewChild,
   ViewChildren,
   QueryList,
   AfterViewInit,
@@ -27,7 +28,10 @@ import {
   CoreValidators,
   CoreDefinition
 } from '../../../core';
-import { ContextualHelpDirective } from '../../../shared';
+import {
+  ContextualHelpDirective,
+  FormGroupDirective
+} from '../../../shared';
 import {
   TicketCreate,
   TicketType,
@@ -39,9 +43,6 @@ import { TicketCreateService } from './ticket-create.service';
 import { Server } from '../../servers';
 import { Firewall } from '../../networking';
 import { McsSafeToNavigateAway } from '../../../core';
-
-const HEADLINE_MAX_CHAR = 80;
-const DETAILS_MAX_CHAR = 4000;
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -61,6 +62,9 @@ export class TicketCreateComponent implements
   public contextualHelp: ContextualHelpDirective[];
   public isServicesOpen: boolean;
   public textService: string;
+
+  @ViewChild(FormGroupDirective)
+  public fgCreateDirective: FormGroupDirective;
 
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
@@ -132,7 +136,7 @@ export class TicketCreateComponent implements
   }
 
   public safeToNavigateAway(): boolean {
-    return !this.fgCreateTicket.dirty;
+    return this.fgCreateDirective && !this.fgCreateDirective.hasDirtyFormControls();
   }
 
   @HostListener('window:beforeunload')
@@ -166,12 +170,8 @@ export class TicketCreateComponent implements
     }
   }
 
-  public convertHeadlineText(text: string): string {
-    return replacePlaceholder(text, 'max_char', HEADLINE_MAX_CHAR.toString());
-  }
-
-  public convertDetailsText(text: string): string {
-    return replacePlaceholder(text, 'max_char', DETAILS_MAX_CHAR.toString());
+  public convertMaxCharText(text: string, maxchar: number): string {
+    return replacePlaceholder(text, 'max_char', maxchar.toString());
   }
 
   /**
@@ -225,11 +225,9 @@ export class TicketCreateComponent implements
    * Create ticket according to inputs
    */
   public onLogTicket(): void {
-    this.fcDetails.markAsTouched();
-    this.fcHeadline.markAsTouched();
-    if (!this.fgCreateTicket.valid) {
-      return;
-    }
+    // Check all the controls and set the focus on the first invalid control
+    this.fgCreateDirective.validateFormControls(true);
+    if (!this.fgCreateDirective.isValid()) { return; }
 
     let ticket = new TicketCreate();
 
@@ -276,13 +274,11 @@ export class TicketCreateComponent implements
     ]);
 
     this.fcHeadline = new FormControl('', [
-      CoreValidators.required,
-      CoreValidators.maxLength(HEADLINE_MAX_CHAR)
+      CoreValidators.required
     ]);
 
     this.fcDetails = new FormControl('', [
-      CoreValidators.required,
-      CoreValidators.maxLength(DETAILS_MAX_CHAR)
+      CoreValidators.required
     ]);
 
     this.fcService = new FormControl('', [
@@ -367,10 +363,5 @@ export class TicketCreateComponent implements
       'value': TicketType.TroubleTicket,
       'text': 'Trouble Ticket'
     });
-
-    // Select first element
-    if (!isNullOrEmpty(this.ticketTypeList)) {
-      this.fcType.setValue(this.ticketTypeList[0].value);
-    }
   }
 }

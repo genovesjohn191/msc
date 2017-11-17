@@ -17,50 +17,68 @@
       <div class="page-information-wrapper ticket-create-information limited-view">
         <p [innerHTML]="textContent.description"></p>
 
-        <form [formGroup]="fgCreateTicket" class="create-ticket-form">
+        <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">
 
           <!-- Ticket Type -->
           <div class="field">
-            <label class="label" for="type">*{{ textContent.type }}</label>
-            <div class="item">
-              <mcs-select id="type" formControlName="fcType"
-                placeholder="Ticket Type"
+            <mcs-form-field>
+              <mcs-select id="type" placeholder="Select the ticket type"
+                [formControl]="fcType"
                 [mcsContextualHelp]="contextualContent.type">
+                <mcs-select-item>--</mcs-select-item>
                 <mcs-select-group header="Ticket Type">
-                  <mcs-select-item *ngFor="let ticketType of ticketTypeList" [value]="ticketType.value">
+                  <mcs-select-item *ngFor="let ticketType of ticketTypeList"
+                    [value]="ticketType.value">
                     {{ ticketType.text }}
                   </mcs-select-item>
                 </mcs-select-group>
               </mcs-select>
-              <mcs-validation-message [control]="fcType"></mcs-validation-message>
-            </div>
+
+              <mcs-error mcsError *ngIf="fcType.hasError('required')">
+                {{ textContent.errors.typeRequired }}
+              </mcs-error>
+            </mcs-form-field>
           </div>
+
 
           <!-- Headline -->
           <div class="field">
-            <label class="label" for="headline">
-              *{{ convertHeadlineText(textContent.headline) }}
-            </label>
-            <div class="item">
-              <mcs-textbox id="headline" width="100%" placeholder="Enter headline"
-                formControlName="fcHeadline"
-                [mcsContextualHelp]="contextualContent.headline"
-                [valid]="isControlValid(fcHeadline)"></mcs-textbox>
-                <mcs-validation-message [control]="fcHeadline"></mcs-validation-message>
-            </div>
+            <mcs-form-field>
+              <input mcsInput #headlineInput
+                placeholder="Enter headline" maxlength="80"
+                [formControl]="fcHeadline"
+                [mcsContextualHelp]="contextualContent.headline">
+
+                <mcs-hint mcsHint align="start">
+                  {{ convertMaxCharText(textContent.hints.headline, headlineInput.maxLength) }}
+                </mcs-hint>
+                <mcs-hint mcsHint align="end">
+                  {{ headlineInput.value.length }} / {{ headlineInput.maxLength }}
+                </mcs-hint>
+                <mcs-error mcsError *ngIf="fcHeadline.hasError('required')">
+                  {{ textContent.errors.headlineRequired }}
+                </mcs-error>
+            </mcs-form-field>
           </div>
 
           <!-- Details -->
           <div class="field">
-            <label class="label" for="details">
-              *{{ convertDetailsText(textContent.details) }}
-            </label>
-            <div class="item">
-              <textarea id="details" rows="3" placeholder="Enter details"
-                formControlName="fcDetails" class="full-width"
+            <mcs-form-field>
+              <textarea mcsInput rows="3" #detailsInput
+                placeholder="Enter details" maxlength="4000"
+                [formControl]="fcDetails"
                 [mcsContextualHelp]="contextualContent.details"></textarea>
-              <mcs-validation-message [control]="fcDetails"></mcs-validation-message>
-            </div>
+
+              <mcs-hint mcsHint align="start">
+                {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
+              </mcs-hint>
+              <mcs-hint mcsHint align="end">
+                {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
+              </mcs-hint>
+              <mcs-error mcsError *ngIf="fcDetails.hasError('required')">
+                {{ textContent.errors.detailsRequired }}
+              </mcs-error>
+            </mcs-form-field>
           </div>
 
           <!-- Services -->

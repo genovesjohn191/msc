@@ -23,22 +23,21 @@ import {
   ServerResource,
   ServerGroupedOs
 } from '../../models';
-import {
-  McsTextContentProvider,
-  McsTouchedControl
-} from '../../../../core';
+import { McsTextContentProvider } from '../../../../core';
 import { isNullOrEmpty } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../../../shared';
 
 @Component({
   selector: 'mcs-create-self-managed-server',
   templateUrl: './create-self-managed-server.component.html',
-  styleUrls: ['./create-self-managed-server.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 
-export class CreateSelfManagedServerComponent implements OnInit, McsTouchedControl {
+export class CreateSelfManagedServerComponent implements OnInit {
 
   @Input()
   public vdcName: string;
@@ -99,7 +98,6 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
   /**
    * Get the valid flag of the form
    */
-  private _isValid: boolean;
   public get isValid(): boolean {
     return this._serverInputs.isValid;
   }
@@ -110,7 +108,6 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
   ) {
     this._serverCreateType = ServerCreateType.New;
     this._serverInputs = new ServerCreateSelfManaged();
-    this._isValid = false;
   }
 
   public ngOnInit() {
@@ -124,19 +121,17 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
   /**
    * Return true when all the forms are touched and changes are made, otherwise false
    */
-  public isTouchedAndDirty(): boolean {
+  public hasDirtyFormControls(): boolean {
     let touchedDirty: boolean = false;
     if (isNullOrEmpty(this.createServerInstance)) { return; }
 
-    // Check for dirty controls if they are marked already
-    this.createServerInstance.map((instance) => {
-      if (isNullOrEmpty(instance.formControls)) {
-        throw new Error('Instance of the component doesnt have form');
+    // Mark all controls of child component to touched and scroll to first invalid element;
+    this.createServerInstance.map((createComponent) => {
+      if (createComponent.createType === this.activeCreationTabId) {
+        if (createComponent.fgCreateDirective) {
+          touchedDirty = createComponent.fgCreateDirective.hasDirtyFormControls();
+        }
       }
-      instance.formControls.map((control) => {
-        if (touchedDirty) { return; }
-        touchedDirty = control.form.touched && control.form.dirty;
-      });
     });
     return touchedDirty;
   }
@@ -144,34 +139,15 @@ export class CreateSelfManagedServerComponent implements OnInit, McsTouchedContr
   /**
    * This will mark all children form controls to touched
    */
-  public touchedAllControls(): void {
+  public validateComponentFormControls(): void {
     if (isNullOrEmpty(this.createServerInstance)) { return; }
 
-    // Mark all controls of child component to touched;
+    // Mark all controls of child component to touched and scroll to first invalid element;
     this.createServerInstance.map((createComponent) => {
       if (createComponent.createType === this.activeCreationTabId) {
-        createComponent.touchedAllControls();
-      }
-    });
-  }
-
-  /**
-   * Set focus on the first invalid element of the control
-   */
-  public setFocusToInvalidElement(): HTMLElement {
-    if (isNullOrEmpty(this.createServerInstance)) { return; }
-
-    // Mark all controls of child component to touched;
-    this.createServerInstance.map((createComponent) => {
-      if (createComponent.createType === this.activeCreationTabId) {
-        // Set focus to the first invalid element only
-        let focusFlag: boolean;
-        createComponent.formControls.forEach((formControl) => {
-          if (!formControl.valid && !focusFlag) {
-            focusFlag = true;
-            formControl.valueAccessor.focus();
-          }
-        });
+        if (createComponent.fgCreateDirective) {
+          createComponent.fgCreateDirective.validateFormControls(true);
+        }
       }
     });
   }

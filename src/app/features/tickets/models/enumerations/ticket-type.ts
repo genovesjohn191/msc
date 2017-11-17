@@ -1,4 +1,5 @@
 export enum TicketType {
-  TroubleTicket = 0,
-  Enquiry = 1
+  None = 0,
+  TroubleTicket = 1,
+  Enquiry = 2
 }
