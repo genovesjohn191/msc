@@ -260,6 +260,7 @@ export class TicketCreateComponent implements
     this.createTicketSubscription = this._ticketCreateService
       .createTicket(ticket)
       .subscribe(() => {
+        this.fgCreateDirective.resetAllControls();
         this._router.navigate(['/tickets']);
       });
   }

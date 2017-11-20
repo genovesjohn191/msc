@@ -88,6 +88,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
     this._validateControlChild();
     // Subscribe to any state changes of the control
     startWith.call(this._controlChild.stateChanges, null).subscribe(() => {
+      this._redisplayErrorMessage();
       this._changeDetectorRef.markForCheck();
     });
 
@@ -95,6 +96,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
     let ngControl = this._controlChild.ngControl;
     if (ngControl && ngControl.valueChanges) {
       ngControl.valueChanges.subscribe(() => {
+        this._redisplayErrorMessage();
         this._changeDetectorRef.markForCheck();
       });
     }
@@ -134,24 +136,72 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
     return this._suffixChildren && this._suffixChildren.length > 0;
   }
 
+  /**
+   * Get the displayed message whether it should be error or a hint
+   */
   public getDisplayedMessages(): 'error' | 'hint' {
     return (this._errorChildren && this._errorChildren.length > 0 &&
       this._controlChild.errorState) ? 'error' : 'hint';
   }
 
+  /**
+   * Event that emits when the control is focus
+   */
   public onControlFocus(): void {
     if (isNullOrEmpty(this._controlChild)) { return; }
     this._controlChild.focus();
   }
 
+  /**
+   * Get the control state of the child control
+   * @param prop Property state to get
+   */
   public getControlState(prop: string): boolean {
     let ngControl = this._controlChild ? this._controlChild.ngControl : null;
     return ngControl && (ngControl as any)[prop];
   }
 
+  /**
+   * Validate control of the child
+   */
   private _validateControlChild(): void {
     if (isNullOrEmpty(this._controlChild)) {
       throw new Error('Control form field is missing');
     }
+  }
+
+  /**
+   * Get the first error state so that it will displayed first
+   */
+  private _getFirstErrorState(): string {
+    let ngControl = this._controlChild.ngControl;
+    if (!isNullOrEmpty(ngControl)) {
+      for (let propertyName in ngControl.errors) {
+        if (ngControl.errors.hasOwnProperty(propertyName) && ngControl.touched) {
+          return propertyName;
+        }
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * Redisplay the error message and find the first error state to display
+   *
+   * `@Note:` This will be called everytime there are changes on the input element
+   */
+  private _redisplayErrorMessage(): void {
+    if (isNullOrEmpty(this._errorChildren)) { return; }
+    let errorState = this._getFirstErrorState();
+    if (isNullOrEmpty(errorState)) { return; }
+
+    this._errorChildren.map((error) => {
+      if (error.errorState === errorState) {
+        error.show();
+      } else {
+        error.hide();
+      }
+    });
+    this._changeDetectorRef.markForCheck();
   }
 }

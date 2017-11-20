@@ -10,50 +10,70 @@
   <div class="custom-size">
     <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
       (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-        {{ serverScalePerformanceTextContent.customSwitch }}</a>
+        {{ textContent.customSwitch }}</a>
     <a *ngIf="inputManageType == inputManageTypeEnum.Custom"
       (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
-        {{ serverScalePerformanceTextContent.sliderSwitch }}</a>
+        {{ textContent.sliderSwitch }}</a>
   </div>
 
   <!--Custom size content element-->
   <form [formGroup]="serverScaleForm">
     <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
-      <div animate trigger="fadeIn" class="custom-size-content">
-        <ul class="custom-size-inputs unstyled-list">
-          <li>
-            <div class="input-group">
-              <span class="label">{{ serverScalePerformanceTextContent.ramLabel }} : </span>
-              <span class="input">
-                <mcs-textbox width="150px"
-                  placeholder="RAM"
-                  formControlName="serverScaleCustomRam"
-                  [(ngModel)]="customMemoryGBValue"
-                  [valid]="isControlValid(serverScaleCustomRam)"
-                  [suffix]="serverScalePerformanceTextContent.ramUnit">
-                </mcs-textbox>
-              </span>
-            </div>
-            <mcs-validation-message [control]="serverScaleCustomRam"></mcs-validation-message>
-          </li>
-          <li>
-            <div class="input-group">
-              <span class="label">{{ serverScalePerformanceTextContent.cpuLabel }} : </span>
-              <span class="input">
-                <mcs-textbox width="150px"
-                  placeholder="CPUs"
-                  formControlName="serverScaleCustomCpu"
-                  [(ngModel)]="customCpuCountValue"
-                  [valid]="isControlValid(serverScaleCustomCpu)"
-                  [suffix]="serverScalePerformanceTextContent.cpuUnit">
-                </mcs-textbox>
-              </span>
-            </div>
-            <mcs-validation-message [control]="serverScaleCustomCpu"></mcs-validation-message>
-          </li>
-        </ul>
+      <div animate trigger="fadeIn" display-flex="column"
+        align-items="flex-start" class="vertical-items-spacing-medium">
 
+        <div display-flex class="horizontal-items-spacing-medium">
+          <span class="label">{{ textContent.ramLabel }} </span>
+
+          <mcs-form-field [ngStyle]="{width: '150px'}">
+            <input mcsInput placeholder="Enter RAM"
+              [ngModel]="customMemoryGBValue"
+              [formControl]="serverScaleCustomRam">
+            <mcs-suffix mcsSuffix>{{ textContent.ramUnit }}</mcs-suffix>
+
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.ramRequired }}
+            </mcs-error>
+            <mcs-error mcsError errorState="min">
+              {{ ramMinValueText }}
+            </mcs-error>
+            <mcs-error mcsError errorState="numeric">
+              {{ textContent.errors.ramNumeric }}
+            </mcs-error>
+            <mcs-error mcsError errorState="invalidRam">
+              {{ invalidCustomMemoryValueMessage }}
+            </mcs-error>
+            <mcs-error mcsError errorState="maxRamError">
+              {{ invalidCustomMemoryMaxValueMessage }}
+            </mcs-error>
+          </mcs-form-field>
+        </div>
+
+        <div display-flex class="horizontal-items-spacing-medium">
+
+          <span class="label">{{ textContent.cpuLabel }} </span>
+          <mcs-form-field [ngStyle]="{width: '150px'}">
+            <input mcsInput placeholder="Enter CPU"
+              [ngModel]="customCpuCountValue"
+              [formControl]="serverScaleCustomCpu">
+            <mcs-suffix mcsSuffix>{{ textContent.cpuUnit }}</mcs-suffix>
+
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.cpuRequired }}
+            </mcs-error>
+            <mcs-error mcsError errorState="min">
+              {{ cpuMinValueText }}
+            </mcs-error>
+            <mcs-error mcsError errorState="numeric">
+              {{ textContent.errors.cpuNumeric }}
+            </mcs-error>
+            <mcs-error mcsError errorState="maxCpuError">
+              {{ invalidCustomCpuMaxValueMessage }}
+            </mcs-error>
+          </mcs-form-field>
+        </div>
       </div>
+
     </div>
   </form>
 
@@ -66,16 +86,16 @@
         (ngModelChange)="onSliderChanged($event)"></mcs-slider>
       <span class="scale-label">
         {{ currentServerScale.memoryMB + ' ' +
-          serverScalePerformanceTextContent.ramUnit + ' ' +
-            serverScalePerformanceTextContent.ramLabel }} /
-        {{ currentServerScale.cpuCount + ' ' + serverScalePerformanceTextContent.cpuUnit }}
+          textContent.ramUnit + ' ' +
+            textContent.ramLabel }} /
+        {{ currentServerScale.cpuCount + ' ' + textContent.cpuUnit }}
       </span>
       <span class="available-label">
         ({{ remainingMemoryMB + ' ' +
-          serverScalePerformanceTextContent.ramUnit + ' ' +
-            serverScalePerformanceTextContent.ramLabel }} /
+          textContent.ramUnit + ' ' +
+            textContent.ramLabel }} /
               {{ remainingCpuCount + ' ' +
-                serverScalePerformanceTextContent.cpuUnit }} available)
+                textContent.cpuUnit }} available)
       </span>
     </div>
   </div>

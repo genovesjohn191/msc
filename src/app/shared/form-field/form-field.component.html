@@ -1,7 +1,9 @@
 <div class="form-field-content">
   <!-- Prefix to be attached before the content -->
   <div class="form-field-prefix" *ngIf="hasPrefix">
-    <ng-content select="[mcsPrefix]"></ng-content>
+    <div read-only>
+      <ng-content select="[mcsPrefix]"></ng-content>
+    </div>
   </div>
 
   <!-- Input element that is sitting inside the form-field -->
@@ -11,7 +13,9 @@
 
   <!-- Suffix to be attach after the content -->
   <div class="form-field-suffix" *ngIf="hasSuffix">
-    <ng-content select="[mcsSuffix]"></ng-content>
+    <div read-only>
+      <ng-content select="[mcsSuffix]"></ng-content>
+    </div>
   </div>
 </div>
 
