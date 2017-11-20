@@ -13,66 +13,21 @@ $server-manage-storage-font-size: $h4-small-font-size;
 }
 
 .server-manage-storage-container {
-  @include display-flex(row);
-  @include flex-wrap(wrap);
-  @include set-items-interval(10px, vertical);
+  @include display-flex(column);
+  @include set-items-interval($space-large, vertical);
 
   .description {
-    @include flex(0 1 50%);
-    @include display-flex(column);
-  }
-
-  .custom-size {
-    margin: 0;
-    text-align: right;
-    @include flex(0 1 50%);
-  }
-
-  .storage-profile-content {
-    @include flex(0 1 100%);
+    margin-top: $space-small;
   }
 
   .custom-size-form {
-    @include flex(0 1 100%);
-    @include font-size($server-manage-storage-font-size);
     min-height: 100px;
-    margin-top: $space-large;
-
-    .custom-size-input {
-      width: 100%;
-      @include set-items-interval(20px, horizontal);
-
-      * {
-        display: inline-block;
-        vertical-align: middle;
-      }
-
-      mcs-textbox {
-        width: 100% !important;
-      }
-    }
-
-    .custom-size-input-error {
-      display: block;
-      margin-left: 0;
-      > span {
-        text-align: center;
-      }
-    }
-
-    @include breakpoint(small) {
-      @include display-flex(column);
-      * {
-        margin-left: 0;
-      }
-    }
   }
 
   .slider-content {
     @include flex(0 1 100%);
     @include font-size($server-manage-storage-font-size);
     min-height: 100px;
-    margin-top: $space-large;
 
     > .storage-label,
     > .available-label {

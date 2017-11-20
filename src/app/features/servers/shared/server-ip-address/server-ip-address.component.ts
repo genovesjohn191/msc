@@ -45,7 +45,7 @@ export class ServerIpAddressComponent implements OnInit {
 
   public inputManageTypeEnum = ServerInputManageType;
   public inputManageType: ServerInputManageType;
-  public ipAddressTextContent: any;
+  public textContent: any;
 
   public ipAddressValue: any;
   public ipAddressItems: McsListItem[];
@@ -54,7 +54,7 @@ export class ServerIpAddressComponent implements OnInit {
   // Form variables
   public formGroupIpAddress: FormGroup;
   public formControlRadiobuttons: FormControl;
-  public formControlIpdAdrress: FormControl;
+  public fcIpdAdrress: FormControl;
 
   private _netMaskInstance: any;
 
@@ -65,7 +65,7 @@ export class ServerIpAddressComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.ipAddressTextContent = this._textProvider.content
+    this.textContent = this._textProvider.content
       .servers.shared.serverIpAddress;
     this._createNetmaskInstance();
     this._registerFormGroup();
@@ -94,16 +94,26 @@ export class ServerIpAddressComponent implements OnInit {
     });
   }
 
+  public get ipRangeError(): string {
+    return replacePlaceholder(
+      this.textContent.errors.ipAddressRangeError,
+      'ip_range',
+      `${this._netMaskInstance.first} - ${this._netMaskInstance.last}`
+    );
+  }
+
   private _initializeValues(): void {
     this.ipAddressValue = 'Dhcp';
     this._notifyIpAddress();
   }
 
-  private _customIpAddressValidator(inputValue: any) {
+  private _ipRangeValidator(inputValue: any) {
     try {
       // Catch and return false in case the input is not ip address format
       // to prevent exception thrown in the Netmask
-      return this._netMaskInstance.contains(inputValue);
+      return this._netMaskInstance.contains(inputValue) &&
+        this._netMaskInstance.broadcast !== inputValue &&
+        this._netMaskInstance.base !== inputValue;
     } catch (error) {
       return false;
     }
@@ -111,24 +121,20 @@ export class ServerIpAddressComponent implements OnInit {
 
   private _registerFormGroup(): void {
     // Create form controls
-    this.formControlIpdAdrress = new FormControl('', [
+    this.fcIpdAdrress = new FormControl('', [
       CoreValidators.required,
       CoreValidators.ipAddress,
       CoreValidators.custom(
-        this._customIpAddressValidator.bind(this),
-        replacePlaceholder(
-          this.ipAddressTextContent.ipAddressRangeError,
-          'ip_range',
-          `${this._netMaskInstance.first} - ${this._netMaskInstance.last}`
-        )
+        this._ipRangeValidator.bind(this),
+        'ipRange'
       )
     ]);
-    this.formControlIpdAdrress.valueChanges
+    this.fcIpdAdrress.valueChanges
       .subscribe(this.onCustomIpAddressChanged.bind(this));
 
     // Create form group and bind the form controls
     this.formGroupIpAddress = new FormGroup({
-      formControlIpdAdrress: this.formControlIpdAdrress
+      formControlIpdAdrress: this.fcIpdAdrress
     });
   }
 
@@ -151,7 +157,7 @@ export class ServerIpAddressComponent implements OnInit {
       case ServerInputManageType.Custom:
         ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : '';
         ipAddressData.ipAllocationMode = 'Manual';
-        ipAddressData.valid = this.formControlIpdAdrress.valid;
+        ipAddressData.valid = this.fcIpdAdrress.valid;
         break;
 
       case ServerInputManageType.Buttons:

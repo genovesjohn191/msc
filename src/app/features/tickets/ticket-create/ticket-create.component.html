@@ -34,7 +34,7 @@
                 </mcs-select-group>
               </mcs-select>
 
-              <mcs-error mcsError *ngIf="fcType.hasError('required')">
+              <mcs-error mcsError errorState="required">
                 {{ textContent.errors.typeRequired }}
               </mcs-error>
             </mcs-form-field>
@@ -55,7 +55,7 @@
                 <mcs-hint mcsHint align="end">
                   {{ headlineInput.value.length }} / {{ headlineInput.maxLength }}
                 </mcs-hint>
-                <mcs-error mcsError *ngIf="fcHeadline.hasError('required')">
+                <mcs-error mcsError errorState="required">
                   {{ textContent.errors.headlineRequired }}
                 </mcs-error>
             </mcs-form-field>
@@ -75,7 +75,7 @@
               <mcs-hint mcsHint align="end">
                 {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
               </mcs-hint>
-              <mcs-error mcsError *ngIf="fcDetails.hasError('required')">
+              <mcs-error mcsError errorState="required">
                 {{ textContent.errors.detailsRequired }}
               </mcs-error>
             </mcs-form-field>

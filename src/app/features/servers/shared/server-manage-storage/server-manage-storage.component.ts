@@ -65,10 +65,10 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public storageChanged: EventEmitter<ServerManageStorage>;
 
   public inputManageTypeEnum = ServerInputManageType;
-  public storageTextContent: any;
+  public textContent: any;
 
   public formGroupServerStorage: FormGroup;
-  public formControlServerStorageCustom: FormControl;
+  public fcServerStorageCustom: FormControl;
   public formControlSubscription: any;
 
   public invalidCustomStorageMessage: string;
@@ -190,7 +190,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnInit() {
-    this.storageTextContent = this._textProvider.content.servers.shared.storageScale;
+    this.textContent = this._textProvider.content.servers.shared.storageScale;
 
     // Register form group for custom storage
     this._registerFormGroup();
@@ -240,7 +240,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public completed(): void {
-    this.formControlServerStorageCustom.reset();
+    this.fcServerStorageCustom.reset();
     this.storageSliderValue = 0;
     this.customStorageValue = 0;
     this.onChangeInputManageType(ServerInputManageType.Slider);
@@ -252,6 +252,22 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     }
   }
 
+  public get storageAvailableText(): string {
+    return replacePlaceholder(
+      this.textContent.errors.storageAvailable,
+      'available_storage',
+      appendUnitSuffix(this.maximumMemoryGB, 'gigabyte')
+    );
+  }
+
+  public get storageMinValueText(): string {
+    return replacePlaceholder(
+      this.textContent.errors.storageMin,
+      'min_value',
+      this.minimumGB.toString()
+    );
+  }
+
   private _initializeValues(): void {
     if (!isNullOrEmpty(this.storageProfileList)) {
       this.onStorageProfileChanged(this.storageProfileList[0].value);
@@ -261,35 +277,29 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   private _registerFormGroup(): void {
     // Create custom storage control and register the listener
-    this.formControlServerStorageCustom = new FormControl(
+    this.fcServerStorageCustom = new FormControl(
       { disabled: this.disabled },
       [CoreValidators.required]
     );
-    this.formControlSubscription = this.formControlServerStorageCustom.valueChanges
+    this.formControlSubscription = this.fcServerStorageCustom.valueChanges
       .subscribe(this.onCustomStorageChanged.bind(this));
 
     // Bind server storage form control to the main form
     this.formGroupServerStorage = new FormGroup({
-      formControlServerStorageCustom: this.formControlServerStorageCustom
+      formControlServerStorageCustom: this.fcServerStorageCustom
     });
   }
 
   private _setCustomControlValidator(): void {
-    if (!this.formControlServerStorageCustom) { return; }
+    if (!this.fcServerStorageCustom) { return; }
 
-    let validationMessage = replacePlaceholder(
-      this.storageTextContent.validationError,
-      'available_storage',
-      appendUnitSuffix(this.maximumMemoryGB, 'gigabyte')
-    );
-
-    this.formControlServerStorageCustom.setValidators([
+    this.fcServerStorageCustom.setValidators([
       CoreValidators.required,
       CoreValidators.numeric,
       CoreValidators.min(this.minimumGB),
       CoreValidators.custom(
         this._customStorageValidator.bind(this),
-        validationMessage
+        'storageAvailable'
       )
     ]);
   }
@@ -307,7 +317,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       switch (this.inputManageType) {
         case ServerInputManageType.Custom:
           serverStorage.storageMB = convertToMb(this.customStorageValue);
-          serverStorage.valid = this.formControlServerStorageCustom.valid;
+          serverStorage.valid = this.fcServerStorageCustom.valid;
           break;
 
         case ServerInputManageType.Slider:

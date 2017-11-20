@@ -14,10 +14,10 @@
         {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
       </mcs-hint>
 
-      <mcs-error mcsError *ngIf="fcServerName.hasError('required')">
+      <mcs-error mcsError errorState="required">
         {{ textContent.errors.serverNameRequired }}
       </mcs-error>
-      <mcs-error mcsError *ngIf="fcServerName.hasError('invalidServerName')">
+      <mcs-error mcsError errorState="invalidServerName">
         {{ textContent.errors.invalidServerName }}
       </mcs-error>
     </mcs-form-field>
@@ -36,7 +36,7 @@
         </mcs-select-group>
       </mcs-select>
 
-      <mcs-error mcsError *ngIf="fcTargetServer.hasError('required')">
+      <mcs-error mcsError errorState="required">
         {{ textContent.errors.selectServerRequired }}
       </mcs-error>
     </mcs-form-field>

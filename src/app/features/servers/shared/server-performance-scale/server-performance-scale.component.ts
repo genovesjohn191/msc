@@ -44,7 +44,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public maximum: number;
   public inputManageType: ServerInputManageType;
   public inputManageTypeEnum = ServerInputManageType;
-  public serverScalePerformanceTextContent: any;
+  public textContent: any;
 
   public sliderTable: ServerPerformanceScale[];
 
@@ -117,8 +117,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.serverScalePerformanceTextContent
-      = this._textProvider.content.servers.shared.performanceScale;
+    this.textContent = this._textProvider.content.servers.shared.performanceScale;
 
     // Set Invalid messages
     this._setInvalidMessages();
@@ -173,6 +172,22 @@ export class ServerPerformanceScaleComponent implements OnInit {
     return isFormControlValid(control);
   }
 
+  public get ramMinValueText(): string {
+    return replacePlaceholder(
+      this.textContent.errors.ramMin,
+      'min_value',
+      this.memoryMB.toString()
+    );
+  }
+
+  public get cpuMinValueText(): string {
+    return replacePlaceholder(
+      this.textContent.errors.cpuMin,
+      'min_value',
+      this.cpuCount.toString()
+    );
+  }
+
   private _registerFormGroup(): void {
     // Create Custom RAM Control and Register the listener
     this.serverScaleCustomRam = new FormControl('', [
@@ -181,11 +196,11 @@ export class ServerPerformanceScaleComponent implements OnInit {
       CoreValidators.numeric,
       CoreValidators.custom(
         this._customRamValidatorAcceptableValue.bind(this),
-        this.invalidCustomMemoryValueMessage
+        'invalidRam'
       ),
       CoreValidators.custom(
         this._customRamValidatorMaxValue.bind(this),
-        this.invalidCustomMemoryMaxValueMessage
+        'maxRamError'
       )
     ]);
     this.serverScaleCustomRam.valueChanges
@@ -198,7 +213,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
       CoreValidators.numeric,
       CoreValidators.custom(
         this._customCpuValidatorMaxValue.bind(this),
-        this.invalidCustomCpuMaxValueMessage
+        'maxCpuError'
       )
     ]);
     this.serverScaleCustomCpu.valueChanges
@@ -213,19 +228,19 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   private _setInvalidMessages(): void {
     this.invalidCustomMemoryMaxValueMessage = replacePlaceholder(
-      this.serverScalePerformanceTextContent.validationError.memory.max,
+      this.textContent.errors.ramMax,
       'available_memory',
       appendUnitSuffix(this.availableMemoryMB, 'megabyte')
     );
 
     this.invalidCustomMemoryValueMessage = replacePlaceholder(
-      this.serverScalePerformanceTextContent.validationError.memory.invalid,
+      this.textContent.errors.ramInvalid,
       'multiple',
       CUSTOM_MEMORY_MULTIPLE.toString()
     );
 
     this.invalidCustomCpuMaxValueMessage = replacePlaceholder(
-      this.serverScalePerformanceTextContent.validationError.cpu,
+      this.textContent.errors.cpuMax,
       'available_cpu',
       appendUnitSuffix(this.availableCpuCount, 'cpu')
     );

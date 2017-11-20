@@ -14,10 +14,10 @@
         {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
       </mcs-hint>
 
-      <mcs-error mcsError *ngIf="fcServerName.hasError('required')">
+      <mcs-error mcsError errorState="required">
         {{ textContent.errors.serverNameRequired }}
       </mcs-error>
-      <mcs-error mcsError *ngIf="fcServerName.hasError('invalidServerName')">
+      <mcs-error mcsError errorState="invalidServerName">
         {{ textContent.errors.invalidServerName }}
       </mcs-error>
     </mcs-form-field>
@@ -37,7 +37,7 @@
         </mcs-select-group>
       </mcs-select>
 
-      <mcs-error mcsError *ngIf="fcVApp.hasError('required')">
+      <mcs-error mcsError errorState="required">
         {{ textContent.errors.selectVappRequired }}
       </mcs-error>
     </mcs-form-field>
@@ -68,7 +68,7 @@
         </mcs-select-group>
       </mcs-select>
 
-      <mcs-error mcsError *ngIf="fcImage.hasError('required')">
+      <mcs-error mcsError errorState="required">
         {{ textContent.errors.selectImageRequired }}
       </mcs-error>
     </mcs-form-field>
@@ -119,7 +119,7 @@
         </mcs-select-group>
       </mcs-select>
 
-      <mcs-error mcsError *ngIf="fcNetwork.hasError('required')">
+      <mcs-error mcsError errorState="required">
         {{ textContent.errors.selectNetworkRequired }}
       </mcs-error>
     </mcs-form-field>

@@ -12,28 +12,36 @@
   <div class="custom-ip-address">
     <a *ngIf="inputManageType == inputManageTypeEnum.Buttons"
       (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-        {{ ipAddressTextContent.custom }}</a>
+        {{ textContent.custom }}</a>
     <a *ngIf="inputManageType == inputManageTypeEnum.Custom"
       (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
-        {{ ipAddressTextContent.default }}</a>
+        {{ textContent.default }}</a>
   </div>
 
   <p *ngIf="inputManageType == inputManageTypeEnum.Buttons">
-    {{ ipAddressTextContent.defaultMessage }}</p>
+    {{ textContent.defaultMessage }}</p>
   <p *ngIf="inputManageType == inputManageTypeEnum.Custom">
-    {{ ipAddressTextContent.customMessage }}
+    {{ textContent.customMessage }}
   </p>
 
   <!--Custom IP Address content element-->
   <form [formGroup]="formGroupIpAddress">
     <div *ngIf="inputManageType == inputManageTypeEnum.Custom">
       <div animate trigger="fadeIn" class="custom-ip-address-content">
-        <mcs-textbox width="300px"
-          placeholder="* Enter IP Address"
-          formControlName="formControlIpdAdrress"
-          [valid]="isControlValid(formControlIpdAdrress)">
-        </mcs-textbox>
-        <mcs-validation-message [control]="formControlIpdAdrress"></mcs-validation-message>
+        <mcs-form-field [ngStyle]="{width: '300px'}">
+          <input mcsInput placeholder="Enter IP Address"
+            [formControl]="fcIpdAdrress">
+
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.ipAddressRequired }}
+          </mcs-error>
+          <mcs-error mcsError errorState="ipAddress">
+            {{ textContent.errors.ipAddressInvalid }}
+          </mcs-error>
+          <mcs-error mcsError errorState="ipRange">
+            {{ ipRangeError }}
+          </mcs-error>
+        </mcs-form-field>
       </div>
     </div>
   </form>

@@ -99,6 +99,16 @@ export class FormGroupDirective implements AfterContentInit {
   }
 
   /**
+   * Reset all controls from the given content
+   */
+  public resetAllControls(): void {
+    if (isNullOrEmpty(this._formFields)) { return; }
+    this._formFields.map((formField) => {
+      formField.reset();
+    });
+  }
+
+  /**
    * Validate if atleast 1 field is existing, otherwise it will throw an exception
    */
   private _validateControls(): void {

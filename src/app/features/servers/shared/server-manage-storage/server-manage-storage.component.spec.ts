@@ -97,7 +97,7 @@ describe('ServerManageStorageComponent', () => {
   describe('onChangeInputManageType()', () => {
     it(`should change the input manage type to Custom`, fakeAsync(() => {
       component.onChangeInputManageType(ServerInputManageType.Custom);
-      component.formControlServerStorageCustom = new FormControl();
+      component.fcServerStorageCustom = new FormControl();
       tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.inputManageType).toBe(ServerInputManageType.Custom);
     }));
