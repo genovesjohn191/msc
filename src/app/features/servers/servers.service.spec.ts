@@ -237,7 +237,7 @@ describe('ServersService', () => {
     }));
   });
 
-  describe('postServerCommand()', () => {
+  describe('putServerCommand()', () => {
     let requestOptions = {
       id: 500,
       action: ServerCommand.Start,
@@ -265,7 +265,7 @@ describe('ServersService', () => {
     });
 
     it('should map response to McsApiSuccessResponse<Server> when successful', fakeAsync(() => {
-      serversService.postServerCommand(
+      serversService.putServerCommand(
         requestOptions.id,
         requestOptions.action,
         requestOptions.referenceObject
@@ -287,7 +287,7 @@ describe('ServersService', () => {
 
     it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
       mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Post);
+        expect(connection.request.method).toBe(RequestMethod.Put);
 
         connection.mockError(new Response(
           new ResponseOptions({
@@ -298,7 +298,7 @@ describe('ServersService', () => {
         ) as any as Error);
       });
 
-      serversService.postServerCommand(
+      serversService.putServerCommand(
         requestOptions.id,
         requestOptions.action,
         requestOptions.referenceObject

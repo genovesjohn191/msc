@@ -36,7 +36,10 @@ const CUSTOM_MEMORY_MULTIPLE = 4;
   selector: 'mcs-server-performance-scale',
   styleUrls: ['./server-performance-scale.component.scss'],
   templateUrl: './server-performance-scale.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 
 export class ServerPerformanceScaleComponent implements OnInit {

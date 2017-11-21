@@ -151,25 +151,25 @@ export class ServersService {
   }
 
   /**
-   * Post server command/action to process the server
+   * Put server command/action to process the server
    * *Note: This will send a job (notification)
    * @param id Server identification
    * @param command Command type (Start, Stop, Restart)
    * @param referenceObject Reference object of the server client to determine the status of job
    */
-  public postServerCommand(
+  public putServerCommand(
     id: any,
     action: ServerCommand,
     referenceObject: any
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/command`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/power`;
     mcsApiRequestParameter.recordData = JSON.stringify({
       command: getEnumString(ServerCommand, action),
       clientReferenceObject: referenceObject
     });
 
-    return this._mcsApiService.post(mcsApiRequestParameter)
+    return this._mcsApiService.put(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
@@ -538,7 +538,7 @@ export class ServersService {
         break;
 
       default:
-        this.postServerCommand(server.id, action,
+        this.putServerCommand(server.id, action,
           {
             serverId: server.id,
             powerState: server.powerState,

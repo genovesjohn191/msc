@@ -207,8 +207,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   /** Callback for the cases where the focused state of the input changes. */
   public onBlur(): void {
+    this.focused = false;
     if (!this.disabled && !this.panelOpen) {
-      this.focused = false;
       this._onTouched();
       this._changeDetectorRef.markForCheck();
       this.stateChanges.next();

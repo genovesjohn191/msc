@@ -1,9 +1,5 @@
 @import "../../../../../styles/shared/base";
 
-:host {
-  display: block;
-}
-
 .server-performance-scale-container {
   @include display-flex(row);
   @include flex-wrap(wrap);

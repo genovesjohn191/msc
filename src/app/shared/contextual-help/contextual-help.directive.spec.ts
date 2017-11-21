@@ -73,30 +73,22 @@ describe('ContextualHelpDirective', () => {
   }));
 
   /** Test Implementation */
-  describe('ngOnInit()', () => {
-    it(`should call the subscribe of deviceTypeStream from McsBrowserService`, () => {
-      spyOn(browserService.deviceTypeStream, 'subscribe');
-      component.contextualHelp.ngOnInit();
-      expect(browserService.deviceTypeStream.subscribe).toHaveBeenCalled();
-    });
-  });
-
   describe('ContextualHelpDirective()', () => {
     it(`should set the contextual help message`, () => {
       expect(component.contextualHelp.mcsContextualHelp).toBe('Hi');
     });
   });
 
-  describe('mouseenter()', () => {
-    it(`should set has focus flag to true when mouseenter is triggered`, () => {
-      triggerEvent(directiveElement.nativeElement, 'mouseenter');
+  describe('focusIn()', () => {
+    it(`should set has focus flag to true when focusin is triggered`, () => {
+      triggerEvent(directiveElement.nativeElement, 'focusin');
       expect(component.contextualHelp.hasFocus).toBeTruthy();
     });
   });
 
-  describe('mouseleave()', () => {
-    it(`should set has focus false to true when mouseleave is triggered`, () => {
-      triggerEvent(directiveElement.nativeElement, 'mouseleave');
+  describe('focusOut()', () => {
+    it(`should set has focus false to true when focusout is triggered`, () => {
+      triggerEvent(directiveElement.nativeElement, 'focusout');
       expect(component.contextualHelp.hasFocus).toBeFalsy();
     });
   });
