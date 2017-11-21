@@ -80,6 +80,7 @@ export class FormGroupDirective implements AfterContentInit {
         firstElementFound = true;
         let formElement = (formField.valueAccessor as any)._elementRef.nativeElement;
         this._scrollDispatcher.scrollToElement(formElement);
+        formElement.focus();
       }
     });
   }

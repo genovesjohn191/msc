@@ -43,7 +43,10 @@ import {
 /** Column */
 import { ColumnDefDirective } from './column';
 /** Headers */
-import { HeaderRowDefDirective } from './header';
+import {
+  HeaderRowDefDirective,
+  HeaderCellDefDirective
+} from './header';
 /** Datarow */
 import {
   DataCellDefDirective,
@@ -284,13 +287,13 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     if (isNullOrEmpty(this._headerRowDefinition)) { return; }
 
     // Get all header cells within the container
-    let headerCells = this._headerRowDefinition.columns
+    let headerCells: HeaderCellDefDirective[] = new Array();
+    this._headerRowDefinition.columns
       .map((columnName) => {
-        if (!this._columnDefinitionsMap.has(columnName)) {
-          throw new Error('Invalid column definitions in rendering header');
+        if (this._columnDefinitionsMap.has(columnName)) {
+          let column = this._columnDefinitionsMap.get(columnName);
+          headerCells.push(column.headerCellDef);
         }
-        let column = this._columnDefinitionsMap.get(columnName);
-        return column.headerCellDef;
       });
 
     // Render the view for the header row
@@ -340,12 +343,11 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
     // Insert empty cells if there is no data to improve rendering time.
     if (!isNullOrEmpty(dataRow)) {
-      dataCells = row.columns.map((columnName) => {
-        if (!this._columnDefinitionsMap.has(columnName)) {
-          throw new Error('Invalid column definitions in rendering rows');
+      row.columns.map((columnName) => {
+        if (this._columnDefinitionsMap.has(columnName)) {
+          let column = this._columnDefinitionsMap.get(columnName);
+          dataCells.push(column.dataCellDef);
         }
-        let column = this._columnDefinitionsMap.get(columnName);
-        return column.dataCellDef;
       });
     }
 

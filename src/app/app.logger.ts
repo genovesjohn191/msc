@@ -2,17 +2,9 @@ import {
   ErrorHandler,
   isDevMode
 } from '@angular/core';
-const RAVEN = require('raven-js');
-
-/**
- * MCS Portal Utilities
- */
 import { resolveEnvVar } from './utilities';
-
-// Configure Raven Logger
-RAVEN
-  .config(resolveEnvVar('SENTRY_DSN', SENTRY_DSN))
-  .install();
+const RAVEN = require('raven-js');
+let ravenInstalled: boolean = false;
 
 /**
  * Raven error handler class that logs all the error to the sentry
@@ -20,7 +12,9 @@ RAVEN
  */
 class RavenErrorHandler implements ErrorHandler {
   public handleError(error: any): void {
-    RAVEN.captureException(error.originalError || error);
+    if (!isDevMode()) {
+      RAVEN.captureException(error.originalError || error);
+    }
   }
 }
 
@@ -30,6 +24,11 @@ class RavenErrorHandler implements ErrorHandler {
  */
 export function errorHandlerProvider() {
   if (!isDevMode()) {
+    // Configure Raven Logger
+    if (!ravenInstalled) {
+      RAVEN.config(resolveEnvVar('SENTRY_DSN', SENTRY_DSN)).install();
+      ravenInstalled = true;
+    }
     return new RavenErrorHandler();
   } else {
     return new ErrorHandler();
@@ -45,9 +44,11 @@ export function errorHandlerProvider() {
  * @param userEmail User Email of the current email
  */
 export function setUserIdentity(userId: any, userName: string, userEmail: string) {
-  RAVEN.setUserContext({
-    email: userEmail,
-    id: userId,
-    username: userName
-  });
+  if (!isDevMode()) {
+    RAVEN.setUserContext({
+      email: userEmail,
+      id: userId,
+      username: userName
+    });
+  }
 }

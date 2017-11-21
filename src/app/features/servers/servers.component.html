@@ -152,18 +152,18 @@
 
         <!-- VDC Column -->
         <ng-container mcsColumnDef="vdc">
-            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-              {{ columnSettings.vdc.text }}
-            </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-              <!-- TODO: Changed this one temporarily to avoid console errors -->
-              <!-- will change it back once orch implemented the new model changes -->
-              <!-- <a [routerLink]="['/servers/vdc', row.environment?.resource?.id]"> -->
-              <a>
-                {{ row.environment?.resource?.name }}
-              </a>
-            </mcs-data-cell>
-          </ng-container>
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.vdc.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            <!-- TODO: Changed this one temporarily to avoid console errors -->
+            <!-- will change it back once orch implemented the new model changes -->
+            <!-- <a [routerLink]="['/servers/vdc', row.environment?.resource?.id]"> -->
+            <a>
+              {{ row.environment?.resource?.name }}
+            </a>
+          </mcs-data-cell>
+        </ng-container>
 
         <!-- VApp Column -->
         <ng-container mcsColumnDef="vApp">
@@ -175,8 +175,8 @@
           </mcs-data-cell>
         </ng-container>
 
-        <!-- Action Column TODO: add restriction here VmPowerStateEdit -->
-        <ng-container mcsColumnDef="action">
+        <!-- Action Column -->
+        <ng-container mcsColumnDef="action" *mcsHasPermission="['VmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef class="action-cell">
             <!-- {{ columnSettings.action.text }} -->
           </mcs-header-cell>
