@@ -8,6 +8,7 @@ import { CursorDirective } from './cursor.directive';
 import { AnimateDirective } from './animation.directive';
 import { ScrollableDirective } from './scrollable.directive';
 import { StopPropagationDirective } from './stop-propagation.directive';
+import { SetFocusDirective } from './set-focus.directive';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { StopPropagationDirective } from './stop-propagation.directive';
     CursorDirective,
     AnimateDirective,
     ScrollableDirective,
-    StopPropagationDirective
+    StopPropagationDirective,
+    SetFocusDirective
   ],
   exports: [
     DisplayFlexDirective,
@@ -30,7 +32,8 @@ import { StopPropagationDirective } from './stop-propagation.directive';
     CursorDirective,
     AnimateDirective,
     ScrollableDirective,
-    StopPropagationDirective
+    StopPropagationDirective,
+    SetFocusDirective
   ]
 })
 

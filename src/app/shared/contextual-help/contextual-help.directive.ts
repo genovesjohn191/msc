@@ -1,25 +1,20 @@
 import {
-  OnInit,
-  OnDestroy,
   Directive,
+  OnInit,
   Input,
+  Renderer2,
   ElementRef
 } from '@angular/core';
-import {
-  McsBrowserService,
-  McsDeviceType
-} from '../../core';
-import {
-  registerEvent,
-  unregisterEvent
-} from '../../utilities';
 
 @Directive({
-  selector: '[mcsContextualHelp]'
+  selector: '[mcsContextualHelp]',
+  host: {
+    '(focusout)': 'focusOut()',
+    '(focusin)': 'focusIn()'
+  }
 })
 
-export class ContextualHelpDirective implements OnInit, OnDestroy {
-  public browserStreamSubscription: any;
+export class ContextualHelpDirective implements OnInit {
   public refreshFunc: () => void;
 
   @Input()
@@ -34,38 +29,23 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
     return this._hasFocus;
   }
   public set hasFocus(value: boolean) {
-    this._hasFocus = value;
+    if (this._hasFocus !== value) {
+      this._hasFocus = value;
+      if (this.refreshFunc) {
+        this.refreshFunc();
+      }
+    }
   }
 
-  /**
-   * Control event handler
-   */
-  private _mouseEnterHandler = this._onMouseEnter.bind(this);
-  private _mouseLeaveHandler = this._onMouseLeave.bind(this);
-
   constructor(
-    private _elementRef: ElementRef,
-    private _browserService: McsBrowserService
+    private _renderer: Renderer2,
+    private _elementRef: ElementRef
   ) {
     this.mcsContextualHelp = '';
   }
 
   public ngOnInit() {
-    this.browserStreamSubscription = this._browserService.deviceTypeStream
-      .subscribe((device) => {
-        if (device === McsDeviceType.Desktop) {
-          this._registerEvents();
-        } else {
-          this._unregisterEvents();
-        }
-      });
-  }
-
-  public ngOnDestroy() {
-    if (this.browserStreamSubscription) {
-      this.browserStreamSubscription.unsubscribe();
-    }
-    this._unregisterEvents();
+    this._setTabIndex();
   }
 
   /**
@@ -95,29 +75,27 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
     return this._elementRef.nativeElement.offsetParent !== null;
   }
 
-  private _onMouseEnter(): void {
-    this._hasFocus = true;
-    if (this.refreshFunc) {
-      this.refreshFunc();
-    }
+  /**
+   * This will hide the contextual help when new focus is set to other elements
+   */
+  public focusOut(): void {
+    this.hasFocus = false;
   }
 
-  private _onMouseLeave(): void {
-    this._hasFocus = false;
-    if (this.refreshFunc) {
-      this.refreshFunc();
-    }
+  /**
+   * Show the contextual of the host element
+   */
+  public focusIn(): void {
+    this.hasFocus = true;
   }
 
-  private _registerEvents(): void {
-    // Register both for mouse in and mouse out
-    registerEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
-    registerEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
-  }
-
-  private _unregisterEvents(): void {
-    // Unregister both for mouse in and mouse out
-    unregisterEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
-    unregisterEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
+  /**
+   * Set the tab index of the host element
+   *
+   * `@Note:` This is necessary in order for us to enable the focus for div elements
+   */
+  private _setTabIndex(): void {
+    this._renderer.setAttribute(this._elementRef.nativeElement, 'tabindex', '0');
+    this._renderer.addClass(this._elementRef.nativeElement, 'outline-none');
   }
 }

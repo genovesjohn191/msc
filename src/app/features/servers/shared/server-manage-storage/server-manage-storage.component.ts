@@ -39,7 +39,10 @@ import { McsStorage } from '../mcs-storage.interface';
   selector: 'mcs-server-manage-storage',
   styleUrls: ['./server-manage-storage.component.scss'],
   templateUrl: './server-manage-storage.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block',
+  }
 })
 
 export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy, McsStorage {

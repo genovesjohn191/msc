@@ -1,4 +1,7 @@
-import { ErrorHandler } from '@angular/core';
+import {
+  ErrorHandler,
+  isDevMode
+} from '@angular/core';
 const RAVEN = require('raven-js');
 
 /**
@@ -26,7 +29,7 @@ class RavenErrorHandler implements ErrorHandler {
  * environment settings (Production or Development) mode
  */
 export function errorHandlerProvider() {
-  if (ENV.toLowerCase() !== 'development') {
+  if (!isDevMode()) {
     return new RavenErrorHandler();
   } else {
     return new ErrorHandler();

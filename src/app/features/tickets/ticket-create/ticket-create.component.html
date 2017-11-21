@@ -23,7 +23,7 @@
           <div class="field">
             <mcs-form-field>
               <mcs-select id="type" placeholder="Select the ticket type"
-                [formControl]="fcType"
+                [formControl]="fcType" set-focus
                 [mcsContextualHelp]="contextualContent.type">
                 <mcs-select-item>--</mcs-select-item>
                 <mcs-select-group header="Ticket Type">

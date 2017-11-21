@@ -23,15 +23,17 @@
 
   <!--Storage profile content element (dropdown)-->
   <div *ngIf="storageProfileList" animate trigger="fadeIn">
-    <mcs-select [(ngModel)]="storageProfileValue"
-      placeholder="Select storage profile">
-      <mcs-select-group header="Storage Profiles">
-        <mcs-select-item *ngFor="let storageProfile of storageProfileList"
-          [value]="storageProfile.value">
-          {{ storageProfile.text }}
-        </mcs-select-item>
-      </mcs-select-group>
-    </mcs-select>
+    <mcs-form-field>
+      <mcs-select [(ngModel)]="storageProfileValue"
+        placeholder="Select storage profile">
+        <mcs-select-group header="Storage Profiles">
+          <mcs-select-item *ngFor="let storageProfile of storageProfileList"
+            [value]="storageProfile.value">
+            {{ storageProfile.text }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
+    </mcs-form-field>
   </div>
 
   <!--Custom size content element-->
