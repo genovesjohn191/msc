@@ -14,7 +14,9 @@ import {
   ServerResource,
   ServerResourceStorage,
   ServerCommand,
-  ServerPowerState
+  ServerPowerState,
+  ServerNetwork,
+  ServerManageNetwork
 } from '../models';
 import { McsApiSuccessResponse } from '../../../core/';
 
@@ -29,8 +31,11 @@ export class ServerService {
    */
   public selectedServerStream: BehaviorSubject<Server>;
 
+  public selectedServer: Server;
+
   constructor(private _serversService: ServersService) {
     this.selectedServerStream = new BehaviorSubject<Server>(undefined);
+    this.selectedServer = new Server();
     this._listenToActiveServers();
   }
 
@@ -54,13 +59,6 @@ export class ServerService {
    */
   public getResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
     return this._serversService.getResources();
-  }
-
-  /**
-   * Get Server Storage Data (MCS API Response)
-   */
-  public getServerStorage(serverId: any): Observable<McsApiSuccessResponse<ServerStorageDevice[]>> {
-    return this._serversService.getServerStorage(serverId);
   }
 
   /**
@@ -89,6 +87,13 @@ export class ServerService {
         }
       } as ServerUpdate
     );
+  }
+
+  /**
+   * Get Server Storage Data (MCS API Response)
+   */
+  public getServerStorage(serverId: any): Observable<McsApiSuccessResponse<ServerStorageDevice[]>> {
+    return this._serversService.getServerStorage(serverId);
   }
 
   /**
@@ -149,10 +154,58 @@ export class ServerService {
   }
 
   /**
+   * Get Server Networks (MCS API Response)
+   * @param serverId Server Identification
+   */
+  public getServerNetworks(serverId: any): Observable<McsApiSuccessResponse<ServerNetwork[]>> {
+    return this._serversService.getServerNetworks(serverId);
+  }
+
+  /**
+   * Add Server Network (MCS API Response)
+   * @param serverId Server Identification
+   * @param networkData Network Payload
+   */
+  public addServerNetwork(
+    serverId: any,
+    networkData: ServerManageNetwork
+  ) {
+    return this._serversService.addServerNetwork(serverId, networkData);
+  }
+
+  /**
+   * Add Server Network (MCS API Response)
+   * @param serverId Server Identification
+   * @param networkId Network Identification
+   * @param networkData Network Payload
+   */
+  public updateServerNetwork(
+    serverId: any,
+    networkId: any,
+    networkData: ServerManageNetwork
+  ) {
+    return this._serversService.updateServerNetwork(serverId, networkId, networkData);
+  }
+
+  /**
+   * Add Server Network (MCS API Response)
+   * @param serverId Server Identification
+   * @param networkIndex Network Index / NIC#
+   */
+  public deleteServerNetwork(
+    serverId: any,
+    networkId: any,
+    networkData: ServerManageNetwork
+  ) {
+    return this._serversService.deleteServerNetwork(serverId, networkId, networkData);
+  }
+
+  /**
    * Set the selected server instance
    * @param server Server to be selected
    */
   public setSelectedServer(server: Server): void {
+    this.selectedServer = server;
     this.selectedServerStream.next(server);
   }
 

@@ -18,5 +18,10 @@ export enum McsJobType {
   DeleteServerDisk = 100153,
 
   // Server Password
-  ResetServerPassword = 100201
+  ResetServerPassword = 100201,
+
+  // Server Network Management
+  CreateServerNetwork = 100251,
+  UpdateServerNetwork = 100252,
+  DeleteServerNetwork = 100253
 }

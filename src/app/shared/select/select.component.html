@@ -4,7 +4,8 @@
 </ng-template>
 
 <!-- Selection trigger -->
-<div class="select-trigger" display-flex justify-content="space-between"
+<div class="select-trigger" [ngClass]="size"
+  display-flex justify-content="space-between"
   align-items="center" cursor="pointer" (click)="toggle()">
 
   <span *ngIf="value;else placeholderTemplate">

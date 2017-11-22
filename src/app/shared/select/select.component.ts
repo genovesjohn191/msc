@@ -76,6 +76,9 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public errorStateMatcher: ErrorStateMatcher;
 
   @Input()
+  public size: 'default' | 'small';
+
+  @Input()
   public get required() { return this._required; }
   public set required(value: any) { this._required = value; }
   private _required: boolean = false;
@@ -154,6 +157,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     }
     this.panelOpen = false;
     this._selection = new McsSelection<SelectItemComponent>(false);
+    this.size = 'default';
   }
 
   public ngAfterContentInit(): void {

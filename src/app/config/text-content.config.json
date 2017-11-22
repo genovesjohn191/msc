@@ -204,6 +204,32 @@
         "expandStorageLink": "Expand",
         "deleteStorageLink": "Delete",
         "reachedStorageLimit": "You've reached the maximum number of disks for this server."
+      },
+      "nics": {
+        "label": "NICs",
+        "title": "Manage NICs",
+        "description": "",
+        "nic": "NIC",
+        "network": "Network",
+        "primary": "Primary",
+        "ipMode": "IP Mode",
+        "ipAddress": "IP Address",
+        "editLink": "Edit",
+        "deleteLink": "Delete",
+        "addHeading": "Add NIC",
+        "addButton": "Add",
+        "editHeading": "Edit NIC",
+        "editButton": "Update",
+        "primaryCheckbox": "Primary NIC for this server",
+        "networkSelect": {
+          "header": "Networks",
+          "placeholder": "Select a Network"
+        },
+        "ipAllocationMode": {
+          "static": "Static - IP Pool",
+          "dynamic": "Dynamic - IP Pool",
+          "dhcp": "DHCP"
+        }
       }
     },
     "shared": {
@@ -244,6 +270,13 @@
         "title": "Delete {{storage_name}} Storage",
         "alert": "The data on {{storage_name}} will be lost forever.",
         "confirmation": "Are you sure you want to delete this volume?",
+        "cancel": "Cancel",
+        "confirm": "Yes"
+      },
+      "deleteNetworkDialog": {
+        "title": "Delete {{network_name}} Network",
+        "alert": "The data on {{network_name}} will be lost forever.",
+        "confirmation": "Are you sure you want to delete this network?",
         "cancel": "Cancel",
         "confirm": "Yes"
       },

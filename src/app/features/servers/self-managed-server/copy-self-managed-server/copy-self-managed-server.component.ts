@@ -26,7 +26,7 @@ import {
   ServerCreateSelfManaged,
   ServerResource,
   ServerGroupedOs,
-  ServerNetwork,
+  ServerResourceNetwork,
   Server,
   ServerCreateType,
   ServerCatalogType,
@@ -84,7 +84,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public selectedServer: Server;
   public storageMemoryMB: number;
   public storageAvailableMemoryMB: number;
-  public selectedNetwork: ServerNetwork;
+  public selectedNetwork: ServerResourceNetwork;
   public storageSliderValues: number[];
   public selectedStorage: ServerManageStorage;
 
@@ -136,7 +136,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     this.vTemplateItems = new McsList();
     this.networkItems = new Array();
     this.storageItems = new Array();
-    this.selectedNetwork = new ServerNetwork();
+    this.selectedNetwork = new ServerResourceNetwork();
     this.selectedServer = new Server();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }

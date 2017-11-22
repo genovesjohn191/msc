@@ -3,7 +3,9 @@ import {
   Input,
   Output,
   OnInit,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   FormGroup,
@@ -17,7 +19,8 @@ import {
 } from '../../../../core';
 import {
   ServerInputManageType,
-  ServerIpAddress
+  ServerIpAddress,
+  ServerIpAllocationMode
 } from '../../models';
 import {
   refreshView,
@@ -30,10 +33,17 @@ const Netmask = require('netmask').Netmask;
 @Component({
   selector: 'mcs-server-ip-address',
   styleUrls: ['./server-ip-address.component.scss'],
-  templateUrl: './server-ip-address.component.html'
+  templateUrl: './server-ip-address.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ServerIpAddressComponent implements OnInit {
+  @Input()
+  public ipAllocationMode: ServerIpAllocationMode;
+
+  @Input()
+  public ipAddress: string;
+
   @Input()
   public subnetMask: string;
 
@@ -58,7 +68,11 @@ export class ServerIpAddressComponent implements OnInit {
 
   private _netMaskInstance: any;
 
-  public constructor(private _textProvider: McsTextContentProvider) {
+  public constructor(
+    private _textProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
+    this.ipAllocationMode = ServerIpAllocationMode.Dhcp;
     this.ipAddressItems = new Array();
     this.ipAddressChanged = new EventEmitter<ServerIpAddress>();
     this.inputManageType = ServerInputManageType.Buttons;
@@ -103,7 +117,14 @@ export class ServerIpAddressComponent implements OnInit {
   }
 
   private _initializeValues(): void {
-    this.ipAddressValue = 'Dhcp';
+    if (this.ipAllocationMode === ServerIpAllocationMode.Manual) {
+      this.inputManageType = ServerInputManageType.Custom;
+      this.customIpAdrress = this.ipAddress;
+    } else {
+      this.inputManageType = ServerInputManageType.Buttons;
+      this.ipAddressValue = this.ipAllocationMode;
+    }
+
     this._notifyIpAddress();
   }
 
@@ -145,8 +166,10 @@ export class ServerIpAddressComponent implements OnInit {
   }
 
   private _setIpAddressItems(): void {
-    this.ipAddressItems.push(new McsListItem('Dhcp', 'DHCP'));
-    this.ipAddressItems.push(new McsListItem('Pool', 'Next in my static pool'));
+    this.ipAddressItems.push(new McsListItem(ServerIpAllocationMode.Dhcp, 'DHCP'));
+    this.ipAddressItems.push(
+      new McsListItem(ServerIpAllocationMode.Pool, 'Next in my static pool')
+    );
   }
 
   private _notifyIpAddress() {
@@ -156,7 +179,7 @@ export class ServerIpAddressComponent implements OnInit {
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
         ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : '';
-        ipAddressData.ipAllocationMode = 'Manual';
+        ipAddressData.ipAllocationMode = ServerIpAllocationMode.Manual;
         ipAddressData.valid = this.fcIpdAdrress.valid;
         break;
 
@@ -170,6 +193,7 @@ export class ServerIpAddressComponent implements OnInit {
 
     refreshView(() => {
       this.ipAddressChanged.next(ipAddressData);
+      this._changeDetectorRef.markForCheck();
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 }

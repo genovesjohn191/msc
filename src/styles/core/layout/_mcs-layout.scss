@@ -200,6 +200,10 @@ table.mcs-simple-table {
   @include set-items-interval($space-medium, vertical);
 }
 
+.vertical-items-spacing-large {
+  @include set-items-interval($space-large, vertical);
+}
+
 // Text settings
 .text-center {
   text-align: center;

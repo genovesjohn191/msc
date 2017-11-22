@@ -45,9 +45,11 @@ const PRIMARY_STORAGE_NAME = 'Hard disk 1';
 
 @Component({
   selector: 'mcs-server-storage',
-  styleUrls: ['./server-storage.component.scss'],
   templateUrl: './server-storage.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 
 export class ServerStorageComponent implements OnInit, OnDestroy {
@@ -61,7 +63,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public updateButton: McsLoader;
 
   public serverStorageText: any;
-  public deleteStorageAlertMessage: string;
 
   public storageJob: McsApiJob;
   public serverResourceStorage: ServerResourceStorage[];
@@ -189,11 +190,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     private _dialogService: McsDialogService
   ) {
     // Constructor
+    this.server = new Server();
     this.isProcessing = false;
     this.expandStorage = false;
     this.expandingStorage = false;
     this.deletingStorage = false;
-    this.deleteStorageAlertMessage = '';
     this.storageDevices = new Array<ServerStorageDevice>();
     this.selectedStorageDevice = new ServerStorageDevice();
     this.newStorageSliderValues = new Array<number>();
@@ -213,15 +214,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     // OnInit
     this.serverStorageText = this._textProvider.content.servers.server.storage;
-    this.deleteStorageAlertMessage = this.serverStorageText.deleteStorageAlertMessage;
 
     this._getServerResources();
     this._listenToSelectedServerStream();
     this._listenToNotificationsStream();
-  }
-
-  public getDeleteStorageAlertMessage(storageDevice: ServerStorageDevice): string {
-    return this.deleteStorageAlertMessage.replace('{{disk_name}}', storageDevice.name);
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -265,7 +261,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public appendGbUnit(value: number): string {
-    return `${value} ${this.serverStorageText.unit}`;
+    return `${value} ${this._textProvider.content.servers.shared.storageScale.unit}`;
   }
 
   public displayNewDiskName(index: number): string {
@@ -401,16 +397,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   private _listenToSelectedServerStream(): void {
     this._serverSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
-        if (isNullOrEmpty(server)) { return; }
+        if (!isNullOrEmpty(server) && this.server.id !== server.id) {
+          this.server = server;
+          this._setStorageDevices();
 
-        this.server = server;
-        this._setStorageDevices();
-
-        if (!isNullOrEmpty(this.serverResourceSubscription)) {
-          this.serverResourceSubscription.add(() => {
-            this._setServerResourceStorage();
-            this._setStorageProfiles();
-          });
+          if (!isNullOrEmpty(this.serverResourceSubscription)) {
+            this.serverResourceSubscription.add(() => {
+              this._setServerResourceStorage();
+              this._setStorageProfiles();
+            });
+          }
         }
       });
   }
@@ -438,15 +434,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
             serverJob.type === McsJobType.DeleteServerDisk);
 
           if (isStorageJob) {
-            let isCompleted = serverJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-
-            if (serverJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED) {
-              this.storageJob = new McsApiJob();
-              return;
-            }
+            let hasCompleted = serverJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+            let hasFailed = serverJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
 
             let disk = new ServerStorageDevice();
-            this.storageJob = (isCompleted) ? new McsApiJob() : serverJob ;
+            this.storageJob = (hasCompleted || hasFailed) ? new McsApiJob() : serverJob ;
 
             switch (serverJob.type) {
               case McsJobType.UpdateServerDisk:
@@ -457,10 +449,15 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                 }
 
                 disk.id = serverJob.clientReferenceObject.diskId;
-                if (!isCompleted) { break; }
+                if (!hasCompleted) { break; }
 
               case McsJobType.CreateServerDisk:
                 if (this.attachButton) { this.attachButton.hideLoader(); }
+
+                if (hasFailed) {
+                  this.storageDevices.pop();
+                  break;
+                }
 
                 // Append Create Server Disk / Update Disk Data
                 disk.name = serverJob.clientReferenceObject.name;
@@ -468,7 +465,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                 disk.sizeMB = serverJob.clientReferenceObject.sizeMB;
 
                 // Update the available memory when completed
-                if (isCompleted) {
+                if (hasCompleted) {
                   let resourceStorage = this._getStorageByProfile(disk.storageProfile);
                   resourceStorage.usedMB += this.usedMemoryMB;
 
@@ -494,7 +491,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
               case McsJobType.DeleteServerDisk:
                 // Delete Disk
-                if (isCompleted) {
+                if (hasCompleted) {
                   disk = this.storageDevices.find((storage) => {
                     return storage.id === serverJob.clientReferenceObject.diskId;
                   });
@@ -515,7 +512,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
                 break;
             }
 
-            if (isCompleted) {
+            if (hasCompleted) {
               let storage = new ServerManageStorage();
               storage.storageProfile = disk.storageProfile;
               storage.storageMB = 0;

@@ -1,21 +1,10 @@
-$content-responsive-width-desktop: 750px;
-$content-responsive-width-mobile: 500px;
 $grid-row-spacing: 50px;
+$action-box-border-color: $color-grey-00;
 
 .routing-tab-wrapper {
   display: inline-block;
   @include breakpoint(medium) {
     display: block;
-  }
-
-  .content-responsive {
-    width: $content-responsive-width-desktop;
-    @include breakpoint(small) {
-      width: $content-responsive-width-mobile;
-    }
-    @include breakpoint(xsmall) {
-      width: 100%;
-    }
   }
 
   .content-grid {
@@ -60,5 +49,12 @@ $grid-row-spacing: 50px;
         }
       }
     }
+  }
+
+  .action-box {
+    @include set-items-interval($space-medium, vertical);
+    border: 1px solid $action-box-border-color;
+    @include border-radius($input-border-radius);
+    padding: $space-large;
   }
 }

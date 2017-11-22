@@ -1,4 +1,4 @@
-<div class="content-responsive content-grid">
+<div class="limited-view content-grid">
   <div class="grid-row">
     <div class="grid-column">
       <h3>{{ firewallOverviewTextContent.properties.title }}</h3>
@@ -17,7 +17,7 @@
         </li>
       </ul>
     </div>
-  
+
     <div class="grid-column">
       <h3>{{ firewallOverviewTextContent.supportIdentifiers.title }}</h3>
       <ul class="unstyled-list icons-list">
@@ -54,7 +54,7 @@
         </li>
       </ul>
     </div>
-  
+
     <div class="grid-column">
       <h3>{{ firewallOverviewTextContent.utmServices.title }}</h3>
       <ul *ngIf="firewall.utm" class="unstyled-list">
@@ -88,7 +88,7 @@
         <li *ngIf="firewall.haGroupName">
           <span>{{ firewallOverviewTextContent.topology.haGroupName }}:</span>
           <span>{{ firewall.haGroupName }}</span>
-        </li>          
+        </li>
       </ul>
     </div>
   </div>

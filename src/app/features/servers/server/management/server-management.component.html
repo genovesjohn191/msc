@@ -1,4 +1,4 @@
-<div *ngIf="!isServerScale" class="content-responsive content-grid">
+<div *ngIf="!isServerScale" class="limited-view content-grid">
   <div class="grid-row">
     <div class="grid-column">
       <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
@@ -99,7 +99,7 @@
   </div>
 </div>
 
-<div *ngIf="isServerScale" class="content-responsive server-performance-scale">
+<div *ngIf="isServerScale" class="limited-view server-performance-scale">
   <div [mcsLoader]="resourceSubscription">
     <h3>Scaling {{ server.managementName }}</h3>
     <mcs-server-performance-scale *ngIf="remainingMemory && remainingCpu"

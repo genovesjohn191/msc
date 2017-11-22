@@ -42,7 +42,7 @@ import {
   ServerIpAddress,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerNetwork,
+  ServerResourceNetwork,
   ServerGroupedOs,
   ServerCreateType,
   ServerImageType,
@@ -99,7 +99,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public memoryMB: number;
   public cpuCount: number;
   public storageMemoryMB: number;
-  public selectedNetwork: ServerNetwork;
+  public selectedNetwork: ServerResourceNetwork;
   public storageSliderValues: number[];
   public storageAvailableMemoryMB: number;
   public selectedStorage: ServerManageStorage;
@@ -147,7 +147,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.serverTemplateItems = new Array();
     this.networkItems = new Array();
     this.storageItems = new Array();
-    this.selectedNetwork = new ServerNetwork();
+    this.selectedNetwork = new ServerResourceNetwork();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 

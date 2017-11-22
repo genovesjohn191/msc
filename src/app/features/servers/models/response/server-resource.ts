@@ -1,5 +1,5 @@
 import { ServerResourceStorage } from './server-resource-storage';
-import { ServerNetwork } from './server-network';
+import { ServerResourceNetwork } from './server-resource-network';
 import { ServerServiceType } from '../enumerations/server-service-type.enum';
 import { ServerCatalog } from './server-catalog';
 import { ServerVApp } from './server-vapp';
@@ -19,7 +19,7 @@ export class ServerResource {
   public memoryUsedMB: number;
   public url: string;
   public storage: ServerResourceStorage[];
-  public networks: ServerNetwork[];
+  public networks: ServerResourceNetwork[];
   public catalogs: ServerCatalog[];
   public vApps: ServerVApp[];
 }
