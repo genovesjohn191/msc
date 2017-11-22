@@ -221,11 +221,7 @@ export class ServerComponent
     if (isNullOrEmpty(this.server) || isNullOrEmpty(this.server.id)) { return; }
 
     // Navigate route based on current active tab
-    if (tab.id === 'management') {
-      this.router.navigate([`servers/${this.server.id}/management`]);
-    } else {
-      this.router.navigate([`servers/${this.server.id}/storage`]);
-    }
+    this.router.navigate(['servers/', this.server.id, tab.id]);
   }
 
   /**

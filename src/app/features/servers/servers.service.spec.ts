@@ -27,16 +27,20 @@ import {
   ServerResource,
   ServerServiceType,
   ServerStorageDevice,
-  ServerStorageDeviceUpdate
+  ServerStorageDeviceUpdate,
+  ServerNetwork,
+  ServerManageNetwork
 } from './models';
 import { ServersService } from './servers.service';
 import {
+  McsJobType,
   McsApiJob,
   McsApiSuccessResponse,
   McsApiErrorResponse,
   CoreDefinition
 } from '../../core';
 import { ServersTestingModule } from './testing';
+import { getEnumString } from '../../utilities';
 
 describe('ServersService', () => {
 
@@ -916,6 +920,299 @@ describe('ServersService', () => {
 
       serversService.getServerThumbnail(requestOptions.id)
         .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe(() => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('getServerNetworks()', () => {
+    let requestOptions = {
+      id: 459,
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    index: 0,
+                    name: 'Customer_100320-V1012-Web-M1VLN27117001',
+                    ipAddress: '172.30.21.97',
+                    macAddress: '00:50:56:03:00:1a'
+                  }
+                ],
+                totalCount: 1,
+                status: 200,
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse<Server> when successful', fakeAsync(() => {
+      serversService.getServerNetworks(requestOptions.id)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<ServerNetwork[]>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].totalCount).toEqual(1);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].index).toEqual(0);
+          expect(mcsApiSucessResponse[0].content[0].name)
+            .toEqual('Customer_100320-V1012-Web-M1VLN27117001');
+          expect(mcsApiSucessResponse[0].content[0].ipAddress).toEqual('172.30.21.97');
+          expect(mcsApiSucessResponse[0].content[0].macAddress).toEqual('00:50:56:03:00:1a');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Get);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.getServerNetworks(requestOptions.id)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe(() => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('addServerNetwork()', () => {
+    let requestOptions = {
+      id: 459,
+      networkData: new ServerManageNetwork()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: McsJobType.CreateServerNetwork,
+                    summaryInformation: 'Server Network Added'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.addServerNetwork(requestOptions.id, requestOptions.networkData)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].type)
+            .toEqual(getEnumString(McsJobType, McsJobType.CreateServerNetwork));
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Network Added');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Post);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.addServerNetwork(requestOptions.id, requestOptions.networkData)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe(() => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('updateServerNetwork()', () => {
+    let requestOptions = {
+      serverId: 459,
+      networkId: 777,
+      networkData: new ServerManageNetwork()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: McsJobType.UpdateServerNetwork,
+                    summaryInformation: 'Server Network Updated'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.updateServerNetwork(
+        requestOptions.serverId,
+        requestOptions.networkId,
+        requestOptions.networkData
+      ).subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].type)
+            .toEqual(getEnumString(McsJobType, McsJobType.UpdateServerNetwork));
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Network Updated');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Put);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.updateServerNetwork(
+        requestOptions.serverId,
+        requestOptions.networkId,
+        requestOptions.networkData
+      ).catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe(() => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('deleteServerNetwork()', () => {
+    let requestOptions = {
+      id: 459,
+      networkId: 2,
+      networkData: new ServerManageNetwork()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: McsJobType.DeleteServerNetwork,
+                    summaryInformation: 'Server Network Deleted'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.deleteServerNetwork(
+        requestOptions.id,
+        requestOptions.networkId,
+        requestOptions.networkData
+      ).subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].type)
+            .toEqual(getEnumString(McsJobType, McsJobType.DeleteServerNetwork));
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Network Deleted');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Delete);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.deleteServerNetwork(
+        requestOptions.id,
+        requestOptions.networkId,
+        requestOptions.networkData
+      ).catch((error: McsApiErrorResponse) => {
           expect(error).toBeDefined();
           expect(error.status).toEqual(404);
           expect(error.message).toEqual('error thrown');

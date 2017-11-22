@@ -42,7 +42,10 @@ import {
   ServerServiceType,
   ServerImageType,
   ServerCatalogType,
-  ServerCatalogItemType
+  ServerCatalogItemType,
+  ServerNetwork,
+  ServerManageNetwork,
+  ServerIpAllocationMode
 } from './models';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
@@ -411,6 +414,101 @@ export class ServersService {
   }
 
   /**
+   * This will get the server networks from the API
+   */
+  public getServerNetworks(serverId: any): Observable<McsApiSuccessResponse<ServerNetwork[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<ServerNetwork[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetwork[]>>(
+          response.text(), this._convertProperty);
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerNetwork[]>();
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Adding server network
+   * *Note: This will send a job (notification)
+   * @param serverId Server identification
+   * @param networkData Server storage data
+   */
+  public addServerNetwork(
+    serverId: any,
+    networkData: ServerManageNetwork
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
+    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._convertProperty);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          this._convertProperty) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Updating server network
+   * *Note: This will send a job (notification)
+   * @param serverId Server identification
+   * @param networkId Network identification
+   * @param networkData Server storage data
+   */
+  public updateServerNetwork(
+    serverId: any,
+    networkId: any,
+    networkData: ServerManageNetwork
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
+    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._convertProperty);
+
+    return this._mcsApiService.put(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          this._convertProperty) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Deleting server network
+   * *Note: This will send a job (notification)
+   * @param serverId Server identification
+   * @param networkId Network identification
+   */
+  public deleteServerNetwork(
+    serverId: any,
+    networkId: any,
+    networkData: ServerManageNetwork
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
+    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._convertProperty);
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          this._convertProperty) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
    * Get the active server power state based on job status
    * @param server Corresponding server to be checked
    */
@@ -665,6 +763,10 @@ export class ServersService {
 
       case 'itemType':
         value = ServerCatalogItemType[value];
+        break;
+
+      case 'ipAllocationMode':
+        value = ServerIpAllocationMode[value];
         break;
 
       default:

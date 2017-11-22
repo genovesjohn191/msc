@@ -14,11 +14,12 @@ import {
   ServerThumbnail,
   ServerPlatform,
   ServerResource,
-  ServerNetwork,
+  ServerResourceNetwork,
   ServerServiceType,
   ServerStorageDeviceUpdate,
   ServerCatalogType,
-  ServerCatalogItemType
+  ServerCatalogItemType,
+  ServerManageNetwork
 } from '../models';
 
 export const mockServerService = {
@@ -99,7 +100,7 @@ export const mockServerService = {
                   usedMB: 359471.22
                 }
               ],
-              networks: new Array<ServerNetwork>(),
+              networks: new Array<ServerResourceNetwork>(),
               catalogs: [
                 {
                   id: 'd570cc74-493a-45dc-a714-3525bcd0fc19',
@@ -207,6 +208,72 @@ export const mockServerService = {
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
       diskId: '1d6d55d7-0b02-4341-9359-2e4bc783d9b1'
+    };
+    mcsApiResponseMock.status = 200;
+    mcsApiResponseMock.totalCount = 1;
+    mcsApiResponseMock.content = mcsApiJobMock;
+
+    return Observable.of(mcsApiResponseMock);
+  },
+  addServerNetwork(
+    _serverId: any,
+    _networkData: ServerManageNetwork
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+
+    let mcsApiJobMock = new McsApiJob();
+    mcsApiJobMock.id = '5';
+    mcsApiJobMock.type = McsJobType.CreateServerNetwork;
+    mcsApiJobMock.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+    mcsApiJobMock.clientReferenceObject = {
+      serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
+      networkName: 'Customer_100320-V1012-Web-M1VLN27117001'
+    };
+    mcsApiResponseMock.status = 200;
+    mcsApiResponseMock.totalCount = 1;
+    mcsApiResponseMock.content = mcsApiJobMock;
+
+    return Observable.of(mcsApiResponseMock);
+  },
+  updateServerNetwork(
+    _serverId: any,
+    _networkId: any,
+    _networkData: ServerManageNetwork
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+
+    let mcsApiJobMock = new McsApiJob();
+    mcsApiJobMock.id = '5';
+    mcsApiJobMock.type = McsJobType.UpdateServerNetwork;
+    mcsApiJobMock.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+    mcsApiJobMock.clientReferenceObject = {
+      serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
+      networkId: 'ff474c18-9d3e-4214-b33f-f434a689bca4',
+      networkName: 'Customer_100320-V1012-Web-M1VLN27117001'
+    };
+    mcsApiResponseMock.status = 200;
+    mcsApiResponseMock.totalCount = 1;
+    mcsApiResponseMock.content = mcsApiJobMock;
+
+    return Observable.of(mcsApiResponseMock);
+  },
+  deleteServerNetwork(
+    _serverId: any,
+    _networkId: any,
+    _networkData: ServerManageNetwork
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+
+    let mcsApiJobMock = new McsApiJob();
+    mcsApiJobMock.id = '5';
+    mcsApiJobMock.type = McsJobType.DeleteServerNetwork;
+    mcsApiJobMock.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+    mcsApiJobMock.clientReferenceObject = {
+      serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
+      networkId: 'ff474c18-9d3e-4214-b33f-f434a689bca4',
     };
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 1;

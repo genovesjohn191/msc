@@ -1,0 +1,158 @@
+<div class="limited-view vertical-items-spacing-medium" [ngStyle]="{'position': 'relative'}">
+    <h3 class="heading">{{ textContent.title }}</h3>
+
+    <p>{{ textContent.description }}</p>
+
+    <div [hidden]="isUpdate" class="vertical-items-spacing-large">
+      <table class="mcs-simple-table full-width">
+        <thead>
+          <tr>
+            <td>
+              <strong>{{ textContent.nic }}</strong>
+            </td>
+            <td>
+              <strong>{{ textContent.network }}</strong>
+            </td>
+            <td>
+              <strong>{{ textContent.primary }}</strong>
+            </td>
+            <td>
+              <strong>{{ textContent.ipMode }}</strong>
+            </td>
+            <td>
+              <strong>{{ textContent.ipAddress }}</strong>
+            </td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let network of networks">
+            <td [ngStyle]="{'text-align': 'center'}">
+              <span *ngIf="!getActiveNic(network)">{{ network.index }}</span>
+              <mcs-icon *ngIf="getActiveNic(network)" [key]="spinnerIconKey"
+                size="small" class="hidden-small"
+                [mcsTooltip]="getNetworkSummaryInformation(network)"
+                mcsTooltipPosition="right"></mcs-icon>
+            </td>
+            <td>
+              <span>{{ network.name }}</span>
+            </td>
+            <td>
+              <mcs-icon *ngIf="network.isPrimary" [key]="checkIconKey"></mcs-icon>
+            </td>
+            <td>
+              <span>{{ getIpAllocationModeText(network.ipAllocationMode) }}</span>
+            </td>
+            <td>
+              <span>{{ network.ipAddress }}</span>
+            </td>
+            <td class="horizontal-items-spacing-medium">
+              <span *mcsHasPermission="['VmNetworkEdit']">
+                <a *ngIf="!isProcessing" (click)="onUpdateNetwork(network)">{{ textContent.editLink }}</a>
+              </span>
+              <span *mcsHasPermission="['VmNetworkEdit']">
+                <a *ngIf="!isProcessing" (click)="onDeleteNetwork(network)">
+                  {{ textContent.deleteLink }}
+                </a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *mcsHasPermission="['VmNetworkEdit']">
+        <div [mcsLoader]="[networksSubscription, resourceSubscription]">
+          <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
+            class="action-box" [disabled]="isProcessing">
+            <h4>{{ textContent.addHeading }}</h4>
+
+            <!-- Network Selection -->
+            <div class="field">
+              <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
+                [placeholder]="textContent.networkSelect.placeholder">
+                <mcs-select-item [value]="">{{ textContent.networkSelect.placeholder }}</mcs-select-item>
+                <mcs-select-group [header]="textContent.networkSelect.header">
+                  <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+                    {{ network.name }}
+                  </mcs-select-item>
+                </mcs-select-group>
+              </mcs-select>
+            </div>
+
+            <!-- IP Address setting -->
+            <div class="field" *ngIf="networkName">
+              <mcs-server-ip-address [gateway]="networkGateway"
+                [subnetMask]="networkNetmask"
+                (ipAddressChanged)="onIpAddressChanged($event)">
+                <!--Ip address contents on the left hand side (title and description)-->
+                <div title>
+                  <span class="label no-line-height">{{ textContent.ipAddress }}</span>
+                </div>
+              </mcs-server-ip-address>
+            </div>
+
+            <div [ngStyle]="{'text-align': 'right'}">
+              <mcs-button icon="arrow" [disabled]="!validate()" (click)="addNetwork()">
+                {{ textContent.addButton }}
+              </mcs-button>
+            </div>
+          </div>
+
+          <div *ngIf="hasReachedNetworksLimit" class="horizontal-items-spacing-xsmall"
+            display-flex="row" align-items="center" justify-content="center">
+            <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
+            <h4>{{ textContent.reachedNetworksLimit }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isUpdate" class="vertical-items-spacing-large">
+      <div *ngIf="hasAvailableResourceNetwork" class="action-box" [disabled]="isProcessing">
+        <h4>{{ textContent.editHeading }} {{ selectedNic.index }}</h4>
+
+        <!-- Network Selection -->
+        <div class="field">
+          <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
+            [placeholder]="textContent.networkSelect.placeholder">
+            <mcs-select-item [value]="">{{ textContent.networkSelect.placeholder }}</mcs-select-item>
+            <mcs-select-group [header]="textContent.networkSelect.header">
+              <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+                {{ network.name }}
+              </mcs-select-item>
+            </mcs-select-group>
+          </mcs-select>
+        </div>
+
+        <div class="field" *ngIf="networkName">
+          <mcs-checkbox [(ngModel)]="isPrimary"
+            [label]="textContent.primaryCheckbox"
+            [disabled]="selectedNic.isPrimary">
+          </mcs-checkbox>
+        </div>
+
+        <!-- IP Address setting -->
+        <div class="field" *ngIf="networkName">
+          <mcs-server-ip-address
+            [ipAllocationMode]="ipAddress.ipAllocationMode"
+            [ipAddress]="ipAddress.customIpAddress"
+            [gateway]="networkGateway"
+            [subnetMask]="networkNetmask"
+            (ipAddressChanged)="onIpAddressChanged($event)">
+            <!--Ip address contents on the left hand side (title and description)-->
+            <div title>
+              <span class="label no-line-height">{{ textContent.ipAddress }}</span>
+            </div>
+          </mcs-server-ip-address>
+        </div>
+
+        <div display-flex="row" align-items="center" justify-content="space-between">
+          <a (click)="closeUpdateWindow()" [disabled]="isProcessing">Cancel</a>
+          <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow"
+            [disabled]="!validate() || isProcessing" (click)="updateNetwork()">
+            Update
+          </mcs-button>
+        </div>
+      </div>
+    </div>
+  </div>

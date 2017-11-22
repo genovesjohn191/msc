@@ -10,7 +10,8 @@ import {
   ServerComponent,
   ServerManagementComponent,
   ServerServicesComponent,
-  ServerStorageComponent
+  ServerStorageComponent,
+  ServerNicsComponent
 } from './server';
 import { McsNavigateAwayGuard } from '../../core';
 import { CreateSelfManagedServersComponent } from './self-managed-server';
@@ -50,6 +51,7 @@ export const serversRoutes: Routes = [
       { path: 'management', component: ServerManagementComponent },
       { path: 'services', component: ServerServicesComponent },
       { path: 'storage', component: ServerStorageComponent },
+      { path: 'nics', component: ServerNicsComponent },
       { path: 'backups', component: ServerBackupsComponent }
     ]
   },

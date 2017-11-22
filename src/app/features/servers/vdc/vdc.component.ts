@@ -39,7 +39,10 @@ type tabGroupType = 'overview';
 @Component({
   selector: 'mcs-vdc',
   templateUrl: './vdc.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 export class VdcComponent
   extends McsRoutingTabBase<tabGroupType>

@@ -10,14 +10,16 @@ import {
   ProvisioningNotificationsComponent,
   ResetPasswordDialogComponent,
   ResetPasswordFinishedDialogComponent,
-  DeleteStorageDialogComponent
+  DeleteStorageDialogComponent,
+  DeleteNetworkDialogComponent
 } from './shared';
 /** Server */
 import {
   ServerComponent,
   ServerManagementComponent,
-  ServerBackupsComponent,
   ServerStorageComponent,
+  ServerNicsComponent,
+  ServerBackupsComponent,
   ServerServicesComponent
 } from './server/';
 /** Self Managed Servers */
@@ -43,6 +45,7 @@ import { SharedModule } from '../../shared';
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,
     DeleteStorageDialogComponent,
+    DeleteNetworkDialogComponent,
     CreateSelfManagedServerComponent
   ],
   declarations: [
@@ -50,8 +53,9 @@ import { SharedModule } from '../../shared';
     ServerCommandComponent,
     ServerComponent,
     ServerManagementComponent,
-    ServerServicesComponent,
     ServerStorageComponent,
+    ServerNicsComponent,
+    ServerServicesComponent,
     ServerBackupsComponent,
     ServerPerformanceScaleComponent,
     ServerManageStorageComponent,
@@ -66,7 +70,8 @@ import { SharedModule } from '../../shared';
     VdcOverviewComponent,
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,
-    DeleteStorageDialogComponent
+    DeleteStorageDialogComponent,
+    DeleteNetworkDialogComponent
   ],
   imports: [
     SharedModule

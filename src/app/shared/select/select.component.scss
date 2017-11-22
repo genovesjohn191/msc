@@ -1,7 +1,8 @@
 @import "../../../styles/shared/base";
 
 // Select component trigger wrapper
-$select-trigger-padding: $space-small $space-medium;
+$select-trigger-default-padding: $space-small $space-medium;
+$select-trigger-small-padding: 0 $space-xsmall;
 $select-trigger-border-color: $color-black;
 $select-trigger-border-radius: $border-radius-small;
 // Select group container
@@ -36,9 +37,16 @@ $select-sub-group-max-height: 500px;
 }
 
 .select-trigger {
-  padding: $select-trigger-padding;
   border: 1px solid $select-trigger-border-color;
   @include border-radius($select-trigger-border-radius);
+
+  &.default {
+    padding: $select-trigger-default-padding;
+  }
+
+  &.small {
+    padding: $select-trigger-small-padding;
+  }
 }
 
 .select-group-container {

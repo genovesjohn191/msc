@@ -1,5 +1,7 @@
+import { ServerIpAllocationMode } from './enumerations/server-ip-allocation-mode.enum';
+
 export class ServerIpAddress {
   public customIpAddress: string;
-  public ipAllocationMode: 'Dhcp' | 'Pool' | 'Manual' | 'None';
+  public ipAllocationMode: ServerIpAllocationMode;
   public valid: boolean;
 }

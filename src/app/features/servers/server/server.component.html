@@ -74,6 +74,10 @@
         <mcs-tab [label]="serverTextContent.storage.label" id="storage">
         </mcs-tab>
 
+        <!-- Networks Tab -->
+        <mcs-tab [label]="serverTextContent.nics.label" id="nics">
+        </mcs-tab>
+
         <!-- Action tab -->
         <mcs-tab [canSelect]="false" customClass="right-align"
           *mcsHasPermission="['VmPowerStateEdit']">
