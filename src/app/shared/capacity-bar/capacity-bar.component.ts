@@ -98,13 +98,15 @@ export class CapacityBarComponent implements ControlValueAccessor {
     this._onTouched = fn;
   }
 
-  // View <-> Model callback methods
-  private _onChanged: (value: any) => void = () => { /** dummy */ };
-  private _onTouched = () => { /** dummy */ };
+  /**
+   * Event that emits when focus is removed
+   */
+  public onBlur(): void {
+    this._onTouched();
+  }
 
   private _setPercentage(): void {
     let percentage = this._getPercentage();
-
     this.isLow = percentage >= 85;
     this.percentage = `${percentage}%`;
   }
@@ -114,4 +116,8 @@ export class CapacityBarComponent implements ControlValueAccessor {
     let percentage = 100 * this.value / this.max;
     return Math.round(percentage);
   }
+
+  // View <-> Model callback methods
+  private _onChanged: (value: any) => void = () => { /** dummy */ };
+  private _onTouched = () => { /** dummy */ };
 }

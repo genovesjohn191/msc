@@ -21,7 +21,6 @@ export class TestPageHeaderComponent {
 describe('PageHeaderComponent', () => {
 
   /** Stub Services/Components */
-  let component: TestPageHeaderComponent;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -60,8 +59,6 @@ describe('PageHeaderComponent', () => {
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(TestPageHeaderComponent);
       fixture.detectChanges();
-
-      component = fixture.componentInstance;
     });
   }));
 

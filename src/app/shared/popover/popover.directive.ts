@@ -309,14 +309,15 @@ export class PopoverDirective implements OnInit, OnDestroy {
       case 'top':
         placement = isFitted ? this.placement : 'bottom';
         break;
-      case 'bottom':
-        placement = isFitted ? this.placement : 'top';
-        break;
       case 'left':
         placement = isFitted ? this.placement : 'right';
         break;
       case 'right':
         placement = isFitted ? this.placement : 'left';
+        break;
+      case 'bottom':
+      default:
+        placement = isFitted ? this.placement : 'top';
         break;
     }
     return placement;
@@ -362,7 +363,8 @@ export class PopoverDirective implements OnInit, OnDestroy {
         if (actualHeight > scrollTop) { fitToScreen = false; }
         break;
       }
-      case 'bottom': {
+      case 'bottom':
+      default: {
         let actualHeight = scrollTop + hostOffset.bottom + popoverHeight;
         if (actualHeight > scrollBottom) { fitToScreen = false; }
         break;

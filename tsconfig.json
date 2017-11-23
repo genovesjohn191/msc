@@ -8,15 +8,19 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "noEmit": true,
-    "noEmitHelpers": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noEmitHelpers": true,
     "importHelpers": true,
     "strictNullChecks": false,
     "lib": [
       "dom",
       "es6"
     ],
+    "baseUrl": "./src",
+    "paths": {
+      "@angular/*": ["node_modules/@angular/*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ],

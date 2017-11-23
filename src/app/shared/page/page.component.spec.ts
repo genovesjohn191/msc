@@ -22,7 +22,6 @@ export class TestPageComponent {
 describe('PageComponent', () => {
 
   /** Stub Services/Components */
-  let component: TestPageComponent;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -77,8 +76,6 @@ describe('PageComponent', () => {
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(TestPageComponent);
       fixture.detectChanges();
-
-      component = fixture.componentInstance;
     });
   }));
 

@@ -21,7 +21,6 @@ export class TestListComponent {
 describe('ListComponent', () => {
 
   /** Stub Services/Components */
-  let component: TestListComponent;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -54,8 +53,6 @@ describe('ListComponent', () => {
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(TestListComponent);
       fixture.detectChanges();
-
-      component = fixture.componentInstance;
     });
   }));
 

@@ -24,7 +24,6 @@ export class TestAccordionComponent {
 describe('AccordionComponent', () => {
 
   /** Stub Services/Components */
-  let component: TestAccordionComponent;
   let fixtureInstance: ComponentFixture<TestAccordionComponent>;
 
   beforeEach(async(() => {
@@ -105,8 +104,6 @@ describe('AccordionComponent', () => {
     TestBed.compileComponents().then(() => {
       fixtureInstance = TestBed.createComponent(TestAccordionComponent);
       fixtureInstance.detectChanges();
-
-      component = fixtureInstance.componentInstance;
     });
   }));
 

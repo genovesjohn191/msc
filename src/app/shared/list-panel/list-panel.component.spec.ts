@@ -28,7 +28,6 @@ export class TestListPanelComponent {
 describe('ListPanelComponent', () => {
 
   /** Stub Services/Components */
-  let component: TestListPanelComponent;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -70,8 +69,6 @@ describe('ListPanelComponent', () => {
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(TestListPanelComponent);
       fixture.detectChanges();
-
-      component = fixture.componentInstance;
     });
   }));
 

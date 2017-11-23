@@ -104,6 +104,7 @@ $left-panel-navigation-collapse-padding: 6px;
       align-items: center;
       border-bottom: 1px solid $page-border-color;
       height: $top-panel-height;
+      overflow: hidden;
 
       &.active {
         border-bottom: 1px solid $color-primary-00;

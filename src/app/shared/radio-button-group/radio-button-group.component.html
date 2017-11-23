@@ -1,5 +1,5 @@
 <div #radioButtonGroupElement class="radio-button-group-content"
-  tabindex="0" (keydown)="onKeyDown($event)">
+  tabindex="0" (keydown)="onKeyDown($event)" (blur)="onBlur()">
   <div *ngFor="let item of items" class="radio-button-wrapper" mcsRipple>
     <label for="{{ item.key }}" (click)="onClickEvent($event, item)">
       <mcs-icon [key]="getRadioButtonIconKey(item)" size="medium"></mcs-icon>

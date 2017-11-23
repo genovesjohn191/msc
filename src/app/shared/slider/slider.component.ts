@@ -44,24 +44,12 @@ export class SliderComponent {
   public disabled: boolean;
 
   /**
-   * On Touched Event Callback
-   */
-  private _onTouched: () => {};
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: (_: any) => {};
-
-  /**
    * Model Binding
    */
   private _sliderValue: number;
-
   public get sliderValue(): number {
     return this._sliderValue;
   }
-
   public set sliderValue(value: number) {
     if (value !== this._sliderValue) {
       this._sliderValue = value;
@@ -102,4 +90,15 @@ export class SliderComponent {
   public registerOnTouched(fn: any) {
     this._onTouched = fn;
   }
+
+  /**
+   * Event that emits when focus is removed
+   */
+  public onBlur(): void {
+    this._onTouched();
+  }
+
+  // View <-> Model callback methods
+  private _onChanged: (value: any) => void = () => { /** dummy */ };
+  private _onTouched = () => { /** dummy */ };
 }

@@ -3,17 +3,21 @@ module.exports = function (config) {
 
   var configuration = {
 
-    /** Base path that will be used to resolve all patterns (e.g. files, exclude). */
+    /**
+     * Base path that will be used to resolve all patterns (e.g. files, exclude).
+    */
     basePath: '',
 
     /**
-     * Frameworks to Use
+     * Frameworks to use
      *
-     * Available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+     * available frameworks: https://npmjs.org/browse/keyword/karma-adapter
      */
     frameworks: ['jasmine'],
 
-    /** List of files to exclude. */
+    /**
+     * List of files to exclude.
+    */
     exclude: [],
 
     client: {
@@ -21,9 +25,9 @@ module.exports = function (config) {
     },
 
     /**
-     * List of Files / Patterns to Load in the Browser
+     * List of files / patterns to load in the browser
      *
-     * We are building the test environment in ./spec-bundle.js
+     * we are building the test environment in ./spec-bundle.js
      */
     files: [
       { pattern: './config/spec-bundle.js', watched: false },
@@ -38,12 +42,14 @@ module.exports = function (config) {
     },
 
     /**
-     * Preprocess matching files before serving them to the browser.
-     * Available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+     * Preprocess matching files before serving them to the browser
+     * available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
      */
     preprocessors: { './config/spec-bundle.js': ['coverage', 'webpack', 'sourcemap'] },
 
-    /** Webpack Config at ./webpack.test.js */
+    /**
+     * Webpack Config at ./webpack.test.js
+     */
     webpack: testWebpackConfig,
 
     coverageReporter: {
@@ -56,49 +62,62 @@ module.exports = function (config) {
       html: './coverage/html'
     },
 
-    /** Webpack please don't spam the console when running in karma! */
+    /**
+     * Webpack please don't spam the console when running in karma!
+     */
     webpackMiddleware: {
-      /** Webpack-dev-middleware configuration */
+      /**
+       * webpack-dev-middleware configuration
+       * i.e.
+       */
       noInfo: true,
-      /** And use stats to turn off verbose output */
+      /**
+       * and use stats to turn off verbose output
+       */
       stats: {
+        /**
+         * options i.e.
+         */
         chunks: false
       }
     },
 
     /**
-     * Test Results Reporter to Use
+     * Test results reporter to use
      *
-     * Possible values: 'dots', 'progress'
-     * Available reporters: https://npmjs.org/browse/keyword/karma-reporter
+     * possible values: 'dots', 'progress'
+     * available reporters: https://npmjs.org/browse/keyword/karma-reporter
      */
     reporters: ['mocha', 'coverage', 'remap-coverage'],
 
-    /** Web server port */
+    /**
+     * Web server port.
+     */
     port: 9876,
 
-    /** enable/disable colors in the output (reporters and logs) */
+    /**
+     * enable / disable colors in the output (reporters and logs)
+     */
     colors: true,
 
     /**
-     * Level of Logging
-     *
-     * Possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+     * Level of logging
+     * possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
      */
     logLevel: config.LOG_WARN,
 
-    /** enable / disable watching file and executing tests whenever any file changes */
+    /**
+     * enable / disable watching file and executing tests whenever any file changes
+     */
     autoWatch: false,
 
     /**
-     * Start These Browsers
-     *
-     * Available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+     * start these browsers
+     * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
     browsers: [
       'Chrome'
     ],
-
     browserNoActivityTimeout: 120000,
 
     customLaunchers: {
@@ -109,8 +128,7 @@ module.exports = function (config) {
     },
 
     /**
-     * Continuous Integration Mode
-     *
+     * Continuous Integration mode
      * if true, Karma captures browsers, runs the tests and exits
      */
     singleRun: true

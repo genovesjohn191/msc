@@ -191,6 +191,13 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
   }
 
   /**
+   * Event that emits when focus is removed
+   */
+  public onBlur(): void {
+    this._onTouched();
+  }
+
+  /**
    * Get radio button svg icons key based on the checked flag,
    * if it is checked the obtain svg icon is the checked
    * else it is unchecked

@@ -4,20 +4,16 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { McsApiJob } from '../models/response/mcs-api-job';
-import { McsApiService } from './mcs-api.service';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
-import { MockBackend } from '@angular/http/testing';
 import { CoreTestingModule } from '../testing';
 
 describe('McsNotificationContextService', () => {
 
   /** Stub Services Mock */
-  let mcsApiService: McsApiService;
   let mcsNotificationContextService: McsNotificationContextService;
   let mcsNotifcationsJobService: McsNotificationJobService;
-  let mockBackend: MockBackend;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -32,8 +28,6 @@ describe('McsNotificationContextService', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      mockBackend = getTestBed().get(MockBackend);
-      mcsApiService = getTestBed().get(McsApiService);
       mcsNotificationContextService = getTestBed().get(McsNotificationContextService);
       mcsNotifcationsJobService = getTestBed().get(McsNotificationJobService);
     });

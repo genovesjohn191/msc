@@ -68,6 +68,10 @@ export class ScrollableDirective implements OnInit, OnDestroy, McsScrollable {
 
   public ngOnDestroy(): void {
     this._scrollDispatcher.deregister(this);
+    if (this._scrollListener) {
+      this._scrollListener();
+      this._scrollListener = null;
+    }
   }
 
   /**

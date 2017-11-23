@@ -1,4 +1,4 @@
 <div class="mcs-slider">
-  <input type="range" [attr.name]="name" [(ngModel)]="sliderValue"
+  <input type="range" [attr.name]="name" [(ngModel)]="sliderValue" (blur)="onBlur()"
     [attr.min]="min" [attr.max]="max" [attr.step]="step" [disabled]="disabled" />
 </div>

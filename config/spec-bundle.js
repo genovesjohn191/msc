@@ -5,7 +5,7 @@
  * karma.conf.js with the karma-webpack plugin. This is the entry
  * file for webpack test. Just like webpack will create a bundle.js
  * file for our client, when we run test, it will compile and bundle them
- * all here.
+ * all here! Crazy huh. So we need to do some setup
  */
 Error.stackTraceLimit = Infinity;
 
@@ -14,13 +14,15 @@ require('core-js/es7/reflect');
 
 require('zone.js/dist/zone');
 require('zone.js/dist/long-stack-trace-zone');
-require('zone.js/dist/proxy'); /** Since zone.js 0.6.15 */
+require('zone.js/dist/proxy'); // since zone.js 0.6.15
 require('zone.js/dist/sync-test');
-require('zone.js/dist/jasmine-patch'); /** Since zone.js 0.6.14 */
+require('zone.js/dist/jasmine-patch'); // put here since zone.js 0.6.14
 require('zone.js/dist/async-test');
 require('zone.js/dist/fake-async-test');
 
-/** RxJS */
+/**
+ * RxJS
+ */
 require('rxjs/Rx');
 
 var testing = require('@angular/core/testing');
@@ -32,7 +34,7 @@ testing.TestBed.initTestEnvironment(
 );
 
 /**
- * We can use the context method on
+ * Ok, this is kinda crazy. We can use the context method on
  * require that webpack created in order to tell webpack
  * what files we actually want to require or import.
  * Below, context will be a function/object with file names as keys.
@@ -51,5 +53,7 @@ function requireAll(requireContext) {
   return requireContext.keys().map(requireContext);
 }
 
-/** Requires and returns all modules that match. */
+/**
+ * Requires and returns all modules that match
+ */
 var modules = requireAll(testContext);

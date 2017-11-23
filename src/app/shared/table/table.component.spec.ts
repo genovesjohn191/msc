@@ -28,7 +28,6 @@ export class TestTableComponent {
 describe('TableComponent', () => {
 
   /** Stub Services/Components */
-  let component: TestTableComponent;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -71,8 +70,6 @@ describe('TableComponent', () => {
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(TestTableComponent);
       fixture.detectChanges();
-
-      component = fixture.componentInstance;
     });
   }));
 

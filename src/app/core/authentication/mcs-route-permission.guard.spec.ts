@@ -4,9 +4,6 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import {
-  MockBackend
-} from '@angular/http/testing';
-import {
   Router,
   NavigationEnd
 } from '@angular/router';
@@ -20,7 +17,6 @@ import { CoreTestingModule } from '../testing';
 describe('McsRoutePermissionGuard', () => {
 
   /** Stub Services Mock */
-  let mockBackend: MockBackend;
   let mcsRoutePermissionGuard: McsRoutePermissionGuard;
   let router: Router;
   let appState: AppState;
@@ -40,7 +36,6 @@ describe('McsRoutePermissionGuard', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      mockBackend = getTestBed().get(MockBackend);
       router = getTestBed().get(Router);
       appState = getTestBed().get(AppState);
       mcsRoutePermissionGuard = getTestBed().get(McsRoutePermissionGuard);

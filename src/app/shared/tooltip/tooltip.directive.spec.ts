@@ -5,11 +5,9 @@ import {
 } from '@angular/core/testing';
 import {
   Component,
-  ViewChild,
-  DebugElement
+  ViewChild
 } from '@angular/core';
 import { triggerEvent } from '../../utilities';
-import { By } from '@angular/platform-browser';
 
 import { TooltipDirective } from './tooltip.directive';
 import { TooltipModule } from './tooltip.module';
@@ -28,7 +26,6 @@ describe('TooltipDirective', () => {
 
   /** Stub Services/Components */
   let component: TestTooltipComponent;
-  let directiveElement: DebugElement;
   let buttonElement: any;
   let fixtureInstance: ComponentFixture<TestTooltipComponent>;
 
@@ -64,7 +61,6 @@ describe('TooltipDirective', () => {
       fixtureInstance.detectChanges();
 
       component = fixtureInstance.componentInstance;
-      directiveElement = fixtureInstance.debugElement.query(By.directive(TooltipDirective));
       buttonElement = fixtureInstance.nativeElement.querySelector('button');
     });
   }));
@@ -81,22 +77,5 @@ describe('TooltipDirective', () => {
       let elementExist = document.querySelector('mcs-tooltip');
       expect(elementExist).not.toBe(null);
     });
-
-    // TODO: This unit test is still bug in angular v4.2.4, try to uncomment this
-    // test when the version is up.
-
-    // it(`should close/delete the tooltip when the implemented element is not focused`, () => {
-    //   triggerEvent(directiveElement.nativeElement, 'mouseleave');
-    //   fixtureInstance.detectChanges();
-    //   let elementExist = document.querySelector('mcs-tooltip');
-    //   expect(elementExist).toBe(null);
-    // });
-
-    // it(`should close/delete the tooltip when the implemented element is not clicked`, () => {
-    //   triggerEvent(directiveElement.nativeElement, 'click');
-    //   fixtureInstance.detectChanges();
-    //   let elementExist = document.querySelector('mcs-tooltip');
-    //   expect(elementExist).toBe(null);
-    // });
   });
 });

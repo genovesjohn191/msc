@@ -1,6 +1,5 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
 import { Renderer2 } from '@angular/core';
@@ -65,17 +64,6 @@ describe('ButtonComponent', () => {
         component.ngOnInit();
         expect(component.iconKey).toBeUndefined();
       });
-  });
-
-  describe('ngAfterViewInit()', () => {
-    it('should use default styling if no icon found',
-      inject([Renderer2], (renderer: Renderer2) => {
-        spyOn(renderer, 'addClass');
-        component.icon = 'normal';
-        component.ngAfterViewInit();
-        expect(renderer.addClass).not.toHaveBeenCalled();
-      })
-    );
   });
 
   describe('emitEvent()', () => {

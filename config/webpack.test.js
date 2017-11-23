@@ -1,13 +1,16 @@
 const helpers = require('./helpers');
-const path = require('path');
 
-/** Webpack Plugins */
+/**
+ * Webpack Plugins
+ */
 const ProvidePlugin = require('webpack/lib/ProvidePlugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 
-/** Webpack Constants */
+/**
+ * Webpack Constants
+ */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'test';
 
 /**
@@ -40,8 +43,10 @@ module.exports = function (options) {
        */
       extensions: ['.ts', '.js'],
 
-      /** Make sure root is src */
-      modules: [path.resolve(__dirname, 'src'), 'node_modules']
+      /**
+       * Make sure root is src
+       */
+      modules: [helpers.root('src'), 'node_modules']
 
     },
 
@@ -51,7 +56,7 @@ module.exports = function (options) {
      * See: http://webpack.github.io/docs/configuration.html#module
      *
      * 'use:' revered back to 'loader:' as a temp. workaround for #1188
-     * See: https://github.com/AngularClass/angular2-webpack-starter/issues/1188#issuecomment-262872034
+     * See: https://github.com/AngularClass/angular-starter/issues/1188#issuecomment-262872034
      */
     module: {
 
@@ -68,7 +73,9 @@ module.exports = function (options) {
           test: /\.js$/,
           loader: 'source-map-loader',
           exclude: [
-            /** These packages have problems with their sourcemaps */
+            /**
+             * These packages have problems with their sourcemaps
+             */
             helpers.root('node_modules/rxjs'),
             helpers.root('node_modules/@angular')
           ]
@@ -85,7 +92,9 @@ module.exports = function (options) {
             {
               loader: 'awesome-typescript-loader',
               query: {
-                /** Use inline sourcemaps for "karma-remap-coverage" reporter */
+                /**
+                 * Use inline sourcemaps for "karma-remap-coverage" reporter
+                 */
                 sourceMap: false,
                 inlineSourceMap: true,
                 compilerOptions: {
@@ -105,17 +114,6 @@ module.exports = function (options) {
         },
 
         /**
-         * Json loader support for *.json files.
-         *
-         * See: https://github.com/webpack/json-loader
-         */
-        {
-          test: /\.json$/,
-          loader: 'json-loader',
-          exclude: [helpers.root('src/index.html')]
-        },
-
-        /**
          * Raw loader support for *.css files
          * Returns file content as string
          *
@@ -129,14 +127,13 @@ module.exports = function (options) {
 
         /**
          * Raw loader support for *.scss files
-         * Returns file content as string
          *
          * See: https://github.com/webpack/raw-loader
          */
         {
-          test: /\.scss$/,
-          loaders: ['raw-loader','sass-loader'],
-          exclude: /node_modules/
+            test: /\.scss$/,
+            loader: ['raw-loader', 'sass-loader'],
+            exclude: [helpers.root('src/index.html')]
         },
 
         /**
@@ -207,11 +204,15 @@ module.exports = function (options) {
        * See: https://github.com/angular/angular/issues/11580
        */
       new ContextReplacementPlugin(
-        /** The (\\|\/) piece accounts for path separators in *nix and Windows */
+        /**
+         * The (\\|\/) piece accounts for path separators in *nix and Windows
+         */
         /angular(\\|\/)core(\\|\/)@angular/,
-      helpers.root('src'), /** Location of your src */
+        helpers.root('src'), // location of your src
         {
-          /** Your Angular Async Route paths relative to this root directory. */
+          /**
+           * your Angular Async Route paths relative to this root directory
+           */
         }
       ),
 
@@ -223,7 +224,9 @@ module.exports = function (options) {
       new LoaderOptionsPlugin({
         debug: false,
         options: {
-          /** Legacy options go here. */
+          /**
+           * legacy options go here
+           */
         }
       }),
 
