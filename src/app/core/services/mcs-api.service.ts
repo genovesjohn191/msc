@@ -156,19 +156,8 @@ export class McsApiService {
    * @param {any} error Error Response
    */
   public handleError(error: Response | any) {
-    // Notify all the subscribers for the error
+    // Rethrow to notify outside subscribers that an error occured
     this._errorResponseStream.next(error);
-
-    // TODO: Log the general Error here
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-
     return Observable.throw(error);
   }
 

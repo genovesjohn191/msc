@@ -17,18 +17,17 @@
     "no-var-requires": false,
     "trailing-comma": [false, {"multiline": "always", "singleline": "never"}],
     "interface-name": [false, "always-prefix"],
-    /** Angular 2 */
+    /** Angular 5 */
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "component-selector": [true, "element", ["mcs"], "kebab-case"],
-    "invoke-injectable": true,
-    "no-access-missing-member": true,
     "no-attribute-parameter-decorator": true,
+    "no-empty-interface": false,
     "no-forward-ref": false,
     "no-input-rename": true,
     "no-output-rename": true,
+    "only-arrow-functions": false,
     "pipe-naming": [true, "camelCase", ["mcs"]],
-    "templates-use-public": true,
     "use-host-property-decorator": false,
     "use-input-property-decorator": true,
     "use-life-cycle-interface": true,
@@ -44,6 +43,7 @@
       true,
       100
     ],
+    "callable-types": false,
     "prefer-const": false,
     "interface-over-type-literal": false,
     "no-string-literal": false,
@@ -69,6 +69,15 @@
       "allow-leading-underscore",
       "ban-keywords",
       "check-format"
-    ]
+    ],
+    "ban-types": {
+      "options": [
+          ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+          ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+          ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+          ["String", "Avoid using the `String` type. Did you mean `string`?"],
+          ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
+      ]
+    }
   }
 }

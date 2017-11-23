@@ -6,15 +6,11 @@ import {
 import { FirewallComponent } from './firewall.component';
 import { Router } from '@angular/router';
 import { NetworkingTestingModule } from '../../testing';
-import { FirewallsService } from '../firewalls.service';
-import { FirewallService } from './firewall.service';
 
 describe('FirewallComponent', () => {
   /** Stub Services/Components */
   let component: FirewallComponent;
   let router: Router;
-  let firewallsService: FirewallsService;
-  let firewallService: FirewallService;
   let mockFirewallDetails = {
     id: 'b88892a1-9332-48da-a49c-10edbc8f807b',
     serviceId: 'M1VFW27117001',
@@ -51,8 +47,6 @@ describe('FirewallComponent', () => {
 
       component = fixture.componentInstance;
       router = getTestBed().get(Router);
-      firewallsService = getTestBed().get(FirewallsService);
-      firewallService = getTestBed().get(FirewallService);
     });
   }));
 

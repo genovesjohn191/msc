@@ -1,8 +1,7 @@
-/**
- * Configurations are located in './config/'.
- * Look for 'webpack.dev.js', 'webpack.test.js', 'webpack.prod.js'.
- */
 
+/**
+ * Look in ./config folder for webpack.dev.js
+ */
 switch (process.env.NODE_ENV) {
   case 'prod':
   case 'production':

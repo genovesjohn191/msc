@@ -23,7 +23,6 @@ export class TestDialogComponent {
 describe('DialogComponent', () => {
 
   /** Stub Services/Components */
-  let component: DialogComponent;
   let fixtureInstance: ComponentFixture<DialogComponent>;
 
   beforeEach(async(() => {
@@ -66,8 +65,6 @@ describe('DialogComponent', () => {
     TestBed.compileComponents().then(() => {
       fixtureInstance = TestBed.createComponent(TestDialogComponent);
       fixtureInstance.detectChanges();
-
-      component = fixtureInstance.componentInstance;
     });
   }));
 

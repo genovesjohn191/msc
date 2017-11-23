@@ -3,16 +3,16 @@ let gbToMbMultiplier = 1024;
 
 /**
  * This will return the size value together with its unit as a string
- * @param unitType Unit type of the value
+ * @param unit Unit type of the value
  * @param value Size value
  */
-export function appendUnitSuffix(value: number, unitType: unitType): string {
+export function appendUnitSuffix(value: number, unit: unitType): string {
 
-  if (!unitType) { return ''; }
+  if (!unit) { return ''; }
 
   let unitValue: string;
 
-  switch (unitType) {
+  switch (unit) {
     case 'megabyte':
       unitValue = 'MB';
       break;

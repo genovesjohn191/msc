@@ -108,7 +108,10 @@ export class TooltipComponent {
       case 'left': this.transformOrigin = 'right'; break;
       case 'right': this.transformOrigin = 'left'; break;
       case 'top': this.transformOrigin = 'bottom'; break;
-      case 'bottom': this.transformOrigin = 'top'; break;
+      case 'bottom':
+      default:
+        this.transformOrigin = 'top';
+        break;
     }
   }
 

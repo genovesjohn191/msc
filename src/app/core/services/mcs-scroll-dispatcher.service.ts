@@ -170,16 +170,19 @@ export class McsScrollDispatcherService {
     let diff = elementOffsetY - startingY;
     let start;
 
-    window.requestAnimationFrame(function step(timestamp) {
+    // Declare function pointer for calculating scroll
+    let step = (timestamp: number) => {
       start = (!start) ? timestamp : start;
 
       const time = timestamp - start;
       let percent = Math.min(time / duration, 1);
-
       scrollableElement.scrollTo(0, startingY + diff * percent);
       if (time < duration) {
         window.requestAnimationFrame(step);
       }
+    };
+    setTimeout(() => {
+      window.requestAnimationFrame(step);
     });
   }
 

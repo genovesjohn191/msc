@@ -111,10 +111,6 @@ describe('FirewallsService', () => {
 
     it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
       mockBackend.connections.subscribe((connection: MockConnection) => {
-        let parameters = connection.request.url.split('?');
-        let urlSearchParams: URLSearchParams;
-        urlSearchParams = new URLSearchParams(parameters[1]);
-
         expect(connection.request.method).toBe(RequestMethod.Get);
 
         connection.mockError(new Response(

@@ -31,16 +31,6 @@ export class ProgressBarComponent implements ControlValueAccessor {
   public maxValue: number;
 
   /**
-   * On Touched Event Callback
-   */
-  private _onTouched: () => {};
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: (_: any) => {};
-
-  /**
    * IsChecked Flag
    */
   private _value: number;
@@ -86,6 +76,13 @@ export class ProgressBarComponent implements ControlValueAccessor {
     this._onTouched = fn;
   }
 
+  /**
+   * Event that emits when focus is removed
+   */
+  public onBlur(): void {
+    this._onTouched();
+  }
+
   public getValueInRange(): number {
     // Minimum value should be equal to 0 aways
     return Math.max(Math.min(this.value, this.maxValue), 0);
@@ -96,4 +93,8 @@ export class ProgressBarComponent implements ControlValueAccessor {
     let percentNumber = 100 * this.getValueInRange() / this.maxValue;
     return percentNumber.toFixed().toString() + '%';
   }
+
+  // View <-> Model callback methods
+  private _onChanged: (value: any) => void = () => { /** dummy */ };
+  private _onTouched = () => { /** dummy */ };
 }

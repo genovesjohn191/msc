@@ -29,7 +29,6 @@ describe('ModalDirective', () => {
   /** Stub Services/Components */
   let component: TestComponent;
   let directiveElement: DebugElement;
-  let buttonElement: any;
   let fixtureInstance: ComponentFixture<TestComponent>;
 
   beforeEach(async(() => {
@@ -69,7 +68,6 @@ describe('ModalDirective', () => {
 
       component = fixtureInstance.componentInstance;
       directiveElement = fixtureInstance.debugElement.query(By.directive(ModalDirective));
-      buttonElement = fixtureInstance.nativeElement.querySelector('button');
     });
   }));
 

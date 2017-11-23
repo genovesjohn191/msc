@@ -6,7 +6,7 @@
 [Services](https://gist.github.com/gdi2290/634101fec1671ee12b3e#_follow_@AngularClass_on_twitter),
 [Tests](https://angular.io/docs/ts/latest/guide/testing.html), [E2E](https://angular.github.io/protractor/#/faq#what-s-the-difference-between-karma-and-protractor-when-do-i-use-which-)), [Karma](https://karma-runner.github.io/), [Protractor](https://angular.github.io/protractor/), [Jasmine](https://github.com/jasmine/jasmine), [Istanbul](https://github.com/gotwarlost/istanbul), [TypeScript](http://www.typescriptlang.org/), [@types](https://www.npmjs.com/~types), [TsLint](http://palantir.github.io/tslint/), [Codelyzer](https://github.com/mgechev/codelyzer), [Hot Module Replacement](https://webpack.github.io/docs/hot-module-replacement-with-webpack.html), and [Webpack 2](http://webpack.github.io/).
 
-## Quick start 
+## Quick start
 
 > Make sure you have Node version >= 5.0 and NPM >= 3
 
@@ -17,7 +17,7 @@
 3. Install the repo with `npm install`
 
 3. Start the server `npm start`
-	
+
 	Use Hot Module Replacement `npm run server:dev:hmr`
 
 5. Go to [http://0.0.0.0:3000](http://0.0.0.0:3000) or [http://localhost:3000](http://localhost:3000) in your browser
@@ -106,13 +106,13 @@ Environment variable setup can be done both in the container build process and w
 - Test in browser using `npm run server:prod:ci`
 
 ## Build
-1. Customize environment variables from the `env.setup` file on the root directory. 
+1. Customize environment variables from the `env.setup` file on the root directory.
 2. Set the variables by calling `$ source ./env.setup` from the root directory.
 3. Optionally you can confirm if the environment variables are correct using `$ echo $VAR_NAME`
 4. Run your `npm run build` command.
 
 ## Container
-- Supply environment variables via `docker run` command 
+- Supply environment variables via `docker run` command
     e.g. `docker run -d -p 80:80 --env MCS_API_HOST=https://lab-api.macquariecloudservices.com frontend:latest`
 
 # AoT Don'ts
@@ -153,7 +153,7 @@ Extensions: [TSLint](https://marketplace.visualstudio.com/items?itemName=eg2.tsl
 ### Pull Requests Check List
 - Run `npm run lint` (Note: must pass with no errors/warnings)
 - Run `npm test` (Note: all unit test must be passing)
-- Feature branch should follow this format: 
+- Feature branch should follow this format:
 >
 	{feature/fix}/{JIRA-#}-{Branch-Title}
 e.g.

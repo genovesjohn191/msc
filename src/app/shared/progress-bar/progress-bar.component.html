@@ -1,6 +1,5 @@
-<div class="progress-bar-container">
-  <div class="progress-container" [ngStyle]="{width: getPercentage()}">
-  </div>
+<div class="progress-bar-container" (blur)="onBlur()">
+  <div class="progress-container" [ngStyle]="{width: getPercentage()}"></div>
   <span [ngStyle]="{width: getPercentage()}">{{ getPercentage() }}</span>
 </div>
 

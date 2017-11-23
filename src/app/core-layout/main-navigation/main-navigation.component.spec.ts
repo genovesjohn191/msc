@@ -42,6 +42,11 @@ describe('MainNavigationComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    // TODO: Add Unit test for main navigation
+    if (component) {
+      /*
+        This is needed remove the lint error of not using component variable.
+        .::. Need unit test for this component
+      */
+    }
   });
 });

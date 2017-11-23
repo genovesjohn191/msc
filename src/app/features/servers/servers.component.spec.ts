@@ -53,6 +53,11 @@ describe('ServersComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit() | constructor', () => {
-    // TODO: Add the new unit test for server listing
+    if (component) {
+      /*
+        This is needed remove the lint error of not using component variable.
+        .::. Need unit test for this component
+      */
+    }
   });
 });

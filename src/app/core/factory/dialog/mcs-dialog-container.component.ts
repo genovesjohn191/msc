@@ -61,6 +61,8 @@ export class McsDialogContainerComponent {
   public dialogConfig: McsDialogConfig;
   public state: 'void' | 'enter' | 'exit' = 'enter';
   public isAnimating = false;
+
+  // Dispose variables
   private _disposeFn: (() => void) | null;
   private _previousElementFocus: HTMLElement | null = null;
 
@@ -101,6 +103,7 @@ export class McsDialogContainerComponent {
    */
   public attachTemplate<T>(portal: McsPortalTemplate<T>): EmbeddedViewRef<T> {
     if (isNullOrEmpty(portal)) { return; }
+    this._savePreviouslyFocusedElement();
 
     let templateRef = this.portalHost.viewContainerRef
       .createEmbeddedView(portal.templateRef, portal.context);
@@ -124,6 +127,10 @@ export class McsDialogContainerComponent {
    * @param event Animation event
    */
   public onAnimationDone(event: AnimationEvent) {
+    if (event.toState === 'exit') {
+      this._restoreFocus();
+    }
+
     this.animationStateChanged.emit(event);
     this.isAnimating = false;
   }
@@ -147,9 +154,29 @@ export class McsDialogContainerComponent {
   }
 
   /**
+   * Dispose the current dialog attached
+   */
+  public dispose(): void {
+    if (isNullOrEmpty(this._disposeFn)) { return; }
+    this._disposeFn();
+  }
+
+  /**
    * Save the previously focused element
    */
-  private _savePreviouslyFocusedElement() {
+  private _savePreviouslyFocusedElement(): void {
+    if (isNullOrEmpty(document)) { return; }
     this._previousElementFocus = document.activeElement as HTMLElement;
+
+    // Move the focus to the dialog immediately in order to prevent the user
+    // from accidentally opening multiple dialogs at the same time.
+    Promise.resolve().then(() => this._elementRef.nativeElement.focus());
+  }
+
+  private _restoreFocus(): void {
+    let toFocus = this._previousElementFocus;
+    if (toFocus && typeof toFocus.focus === 'function') {
+      toFocus.focus();
+    }
   }
 }

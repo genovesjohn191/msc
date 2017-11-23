@@ -39,6 +39,7 @@ export class McsDialogRef<T> {
       .subscribe((event) => {
         if (event.phaseName === 'done' && event.toState === 'exit') {
           this._overlayRef.dispose();
+          this._dialogContainer.dispose();
           this._afterClosed.next(this._result);
           this._afterClosed.complete();
           this.componentInstance = null;

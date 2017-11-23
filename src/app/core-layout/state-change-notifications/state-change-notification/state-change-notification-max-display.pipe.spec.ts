@@ -34,7 +34,6 @@ export class TestComponent {
 describe('StateChangeNotificationMaxDisplayPipe', () => {
 
   /** Stub Services/Components */
-  let component: TestComponent;
   let divElements: any;
 
   beforeEach(async(() => {
@@ -67,8 +66,6 @@ describe('StateChangeNotificationMaxDisplayPipe', () => {
     TestBed.compileComponents().then(() => {
       let fixtureInstance = TestBed.createComponent(TestComponent);
       fixtureInstance.detectChanges();
-
-      component = fixtureInstance.componentInstance;
       divElements = fixtureInstance.nativeElement.querySelectorAll('div');
     });
   }));

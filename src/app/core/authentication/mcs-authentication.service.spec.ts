@@ -3,7 +3,6 @@ import {
   TestBed,
   getTestBed
 } from '@angular/core/testing';
-import { MockBackend } from '@angular/http/testing';
 import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationService } from './mcs-authentication.service';
 import { McsApiIdentity } from '../models/response/mcs-api-identity';
@@ -13,7 +12,6 @@ import { AppState } from '../../app.service';
 describe('McsAuthenticationService', () => {
 
   /** Stub Services Mock */
-  let mockBackend: MockBackend;
   let appState: AppState;
   let mcsAuthenticationService: McsAuthenticationService;
 
@@ -30,7 +28,6 @@ describe('McsAuthenticationService', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      mockBackend = getTestBed().get(MockBackend);
       appState = getTestBed().get(AppState);
       mcsAuthenticationService = getTestBed().get(McsAuthenticationService);
     });

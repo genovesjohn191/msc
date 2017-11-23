@@ -53,6 +53,11 @@ describe('FirewallsComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit() | constructor', () => {
-    // TODO: Add the new unit test for firewalls listing
+    if (component) {
+      /*
+        This is needed to remove the lint error of not using component variable.
+        .::. Need unit test for this component
+      */
+    }
   });
 });

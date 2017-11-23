@@ -1,20 +1,20 @@
 {
- "name": "App",
- "icons": [
-  {
-   "src": "/assets/icon/android-icon-76x76.png",
-   "sizes": "76x76",
-   "type": "image/png"
-  },
-  {
-   "src": "/assets/icon/android-icon-120x120.png",
-   "sizes": "120x120",
-   "type": "image/png"
-  },
-  {
-   "src": "/assets/icon/android-icon-152x152.png",
-   "sizes": "152x152",
-   "type": "image/png"
-  }
- ]
-}
+  "name": "App",
+  "icons": [
+   {
+    "src": "/assets/icon/android-icon-76x76.png",
+    "sizes": "76x76",
+    "type": "image/png"
+   },
+   {
+    "src": "/assets/icon/android-icon-120x120.png",
+    "sizes": "120x120",
+    "type": "image/png"
+   },
+   {
+    "src": "/assets/icon/android-icon-152x152.png",
+    "sizes": "152x152",
+    "type": "image/png"
+   }
+  ]
+ }

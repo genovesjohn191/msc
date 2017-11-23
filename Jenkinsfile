@@ -114,7 +114,7 @@ podTemplate(
             echo "Building ${image_name} with version ${image_version}."
 
             stage('Run tests & build docker image') {
-                sh "npm install"
+                sh "npm install --no-optional"
                 sh "npm run lint"
                 sh "CHROME_BIN=/usr/bin/google-chrome npm run test:prod" // Requires headless browser in the jnlp-slave container
                 sh "npm run build:aot:prod"
