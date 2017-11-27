@@ -45,7 +45,7 @@ def env_setup_location = "/etc/build-config"
 def env_setup_file = "env.setup"
 def kube_deployment = "portal"
 def slack_notify_on_success = true
-def label = "buildpod"
+def label = "macquariecloudservices.com/build-node=true"
 def debug_sleep = params.DEBUG_SLEEP
 
 echo "Building with the following configuration:"
