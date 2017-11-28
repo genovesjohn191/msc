@@ -102,7 +102,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(subTypeEnumValue)) { return ''; }
 
     let enumTextValue = this.subTypeEnumText[subTypeEnumValue];
-    let ticketTypeValue = isNullOrEmpty(enumTextValue) ? 
+    let ticketTypeValue = isNullOrEmpty(enumTextValue) ?
       '' : replacePlaceholder(this.textContent.header, 'ticketType', enumTextValue);
 
     return `${ticketTypeValue}${this.ticket.crispTicketNumber}`;
@@ -183,7 +183,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Return the status string based on enumeration type
    * @param status Enumeration status to be converted
    */
-  public getStateString(status: TicketStatus) : string{
+  public getStateString(status: TicketStatus): string {
     return getEnumString(TicketStatus, status);
   }
 
