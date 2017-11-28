@@ -169,7 +169,13 @@ module.exports = function (env) {
       new PurifyPlugin(), /* buildOptimizer */
 
       new HashedModuleIdsPlugin(),
-      new ModuleConcatenationPlugin(),
+
+      /**
+       * This module plugin causes the bundling of the production produces out of memory
+       * due to its concatenation method. .::. For more details: See the link below
+       * https://github.com/webpack/webpack/issues/5992
+       */
+      // new ModuleConcatenationPlugin(),
 
       /**
        * Plugin: UglifyJsPlugin
