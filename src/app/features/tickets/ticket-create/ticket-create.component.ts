@@ -34,10 +34,10 @@ import {
 } from '../../../shared';
 import {
   TicketCreate,
-  TicketType,
   TicketCreateAttachment,
   TicketService,
-  TicketServiceData
+  TicketServiceData,
+  TicketSubType
 } from '../models';
 import { TicketCreateService } from './ticket-create.service';
 import { Server } from '../../servers';
@@ -62,6 +62,7 @@ export class TicketCreateComponent implements
   public contextualHelp: ContextualHelpDirective[];
   public isServicesOpen: boolean;
   public textService: string;
+  public subTypeEnumText: any;
 
   @ViewChild(FormGroupDirective)
   public fgCreateDirective: FormGroupDirective;
@@ -147,6 +148,7 @@ export class TicketCreateComponent implements
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.tickets.createTicket;
     this.contextualContent = this.textContent.contextualHelp;
+    this.subTypeEnumText = this._textContentProvider.content.tickets.enumerations.subType;
 
     this._registerFormGroup();
     this._setTicketType();
@@ -235,7 +237,6 @@ export class TicketCreateComponent implements
     ticket.subType = this.fcType.value;
     ticket.shortDescription = this.fcHeadline.value;
     ticket.description = this.fcDetails.value;
-
     // Set Converted File Attachments
     if (!isNullOrEmpty(this.fileAttachments)) {
       ticket.attachments = new Array();
@@ -356,13 +357,15 @@ export class TicketCreateComponent implements
    * Set ticket type based on selection
    */
   private _setTicketType(): void {
+    if (isNullOrEmpty(this.subTypeEnumText)) { return; }
+    
     this.ticketTypeList.push({
-      'value': TicketType.Enquiry,
-      'text': 'Enquiry'
+      'value': TicketSubType.Enquiry,
+      'text': this.subTypeEnumText[TicketSubType.Enquiry]
     });
     this.ticketTypeList.push({
-      'value': TicketType.TroubleTicket,
-      'text': 'Trouble Ticket'
+      'value': TicketSubType.TroubleTicket,
+      'text': this.subTypeEnumText[TicketSubType.TroubleTicket]
     });
   }
 }

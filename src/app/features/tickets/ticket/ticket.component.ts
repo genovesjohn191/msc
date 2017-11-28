@@ -19,7 +19,8 @@ import {
   isNullOrEmpty,
   getEnumString,
   convertDateToStandardString,
-  compareDates
+  compareDates,
+  replacePlaceholder
 } from '../../../utilities';
 import {
   Ticket,
@@ -48,6 +49,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   public ticketSubscription: any;
   public createCommentSubscription: any;
   public createAttachmentSubscription: any;
+  public subTypeEnumText: any;
 
   /**
    * An observable ticket data that obtained based on the given id
@@ -95,7 +97,15 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   public get ticketHeader(): string {
-    return `${this.textContent.header}${this.ticket.crispTicketNumber}`;
+    let subTypeEnumValue = isNullOrEmpty(this.ticket) ? '' : this.ticket.subType;
+
+    if (isNullOrEmpty(subTypeEnumValue)) { return ''; }
+
+    let enumTextValue = this.subTypeEnumText[subTypeEnumValue];
+    let ticketTypeValue = isNullOrEmpty(enumTextValue) ? 
+      '' : replacePlaceholder(this.textContent.header, 'ticketType', enumTextValue);
+
+    return `${ticketTypeValue}${this.ticket.crispTicketNumber}`;
   }
 
   public get checkIconKey(): string {
@@ -141,6 +151,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.tickets.ticket;
+    this.subTypeEnumText = this._textContentProvider.content.tickets.enumerations.subType;
     // Get ticket data by ID
     this._getTicketById();
   }
@@ -172,7 +183,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Return the status string based on enumeration type
    * @param status Enumeration status to be converted
    */
-  public getStateString(status: TicketStatus) {
+  public getStateString(status: TicketStatus) : string{
     return getEnumString(TicketStatus, status);
   }
 
