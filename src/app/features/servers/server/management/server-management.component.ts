@@ -21,7 +21,11 @@ import {
   ServerThumbnail,
   ServerPowerState,
   ServerResource,
-  ServerServiceType
+  ServerServiceType,
+  ServerCatalog,
+  ServerCatalogItemType,
+  ServerMedia,
+  ServerManageMedia
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -30,15 +34,19 @@ import {
   McsNotificationContextService,
   McsBrowserService,
   McsDeviceType,
-  McsJobType
+  McsJobType,
+  McsDialogService
 } from '../../../../core';
 import {
   getEncodedUrl,
   refreshView,
   appendUnitSuffix,
-  isNullOrEmpty
+  isNullOrEmpty,
+  addOrUpdateArrayRecord,
+  deleteArrayRecord
 } from '../../../../utilities';
 import { ServerService } from '../server.service';
+import { DetachMediaDialogComponent } from '../../shared';
 
 @Component({
   selector: 'mcs-server-management',
@@ -61,8 +69,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public serverThumbnailEncoding: string;
 
   public resource: ServerResource;
+  public resourceMediaList: ServerCatalog[];
 
   public jobs: McsApiJob[];
+  public activeServerJob: McsApiJob;
   public remainingMemory: number;
   public remainingCpu: number;
 
@@ -118,6 +128,28 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public set isProcessing(value: boolean) {
     if (this._isProcessing !== value) {
       this._isProcessing = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _isAttachMedia: boolean;
+  public get isAttachMedia(): boolean {
+    return this._isAttachMedia;
+  }
+  public set isAttachMedia(value: boolean) {
+    if (this._isAttachMedia !== value) {
+      this._isAttachMedia = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _selectedMedia: string;
+  public get selectedMedia(): string {
+    return this._selectedMedia;
+  }
+  public set selectedMedia(value: string) {
+    if (this._selectedMedia !== value) {
+      this._selectedMedia = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -178,6 +210,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       && !isNullOrEmpty(this.server.environment.resource.storage.name));
   }
 
+  public get hasAvailableMedia(): boolean {
+    return !isNullOrEmpty(this.resourceMediaList);
+  }
+
   constructor(
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
@@ -186,7 +222,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
-    private _activatedRoute: ActivatedRoute
+    private _activatedRoute: ActivatedRoute,
+    private _dialogService: McsDialogService
   ) {
     this.primaryVolume = '';
     this.secondaryVolumes = '';
@@ -194,17 +231,19 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.resource = new ServerResource();
     this.server = new Server();
     this.jobs = new Array();
+    this.activeServerJob = new McsApiJob();
     this._resourceMap = new Map<string, ServerResource>();
     this._hasServer = false;
     this.isServerScale = false;
     this.isScaling = false;
+    this.isAttachMedia = false;
     this.isProcessing = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
+    this.resourceMediaList = new Array<ServerCatalog>();
   }
 
   public ngOnInit(): void {
     this.serverManagementTextContent = this._textProvider.content.servers.server.management;
-
     this._setServerData();
     this._getScaleParam();
     this._listenToNotificationsStream();
@@ -296,48 +335,147 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.isServerScale = false;
   }
 
+  public getActiveMedia(media: ServerMedia): boolean {
+    return !isNullOrEmpty(this.activeServerJob.clientReferenceObject) &&
+      this.activeServerJob.clientReferenceObject.mediaId === media.id;
+  }
+
+  public getMediaSummaryInformation(media: ServerMedia): string {
+    return (!isNullOrEmpty(this.activeServerJob.clientReferenceObject) &&
+      this.activeServerJob.clientReferenceObject.mediaId === media.id) ?
+        this.activeServerJob.summaryInformation : '';
+  }
+
+  public onAttachMedia(): void {
+    this._setResourceData();
+    this.isAttachMedia = true;
+  }
+
+  public cancelAttachMedia(): void {
+    this.isAttachMedia = false;
+    this.selectedMedia = undefined;
+  }
+
+  public onDetachMedia(media: ServerMedia): void {
+    let dialogRef = this._dialogService.open(DetachMediaDialogComponent, {
+      data: media,
+      size: 'medium'
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.detachMedia(media);
+      }
+    });
+  }
+
+  public attachMedia(): void {
+    if (isNullOrEmpty(this.selectedMedia)) { return; }
+
+    this.isProcessing = true;
+
+    let mediaValues = new ServerManageMedia();
+    mediaValues.name = this.selectedMedia;
+    mediaValues.clientReferenceObject = {
+      serverId: this.server.id,
+      mediaName: this.selectedMedia,
+      powerState: this.server.powerState
+    };
+
+    this.selectedMedia = undefined;
+
+    this._serverService.attachServerMedia(this.server.id, mediaValues)
+      .subscribe((response) => {
+        if (!isNullOrEmpty(response)) {
+          this.isAttachMedia = false;
+        }
+      });
+  }
+
+  public detachMedia(media: ServerMedia): void {
+    if (isNullOrEmpty(media)) { return; }
+
+    this.isProcessing = true;
+
+    let mediaValues = new ServerManageMedia();
+    mediaValues.clientReferenceObject = {
+      serverId: this.server.id,
+      mediaId: media.id,
+      powerState: this.server.powerState
+    };
+
+    this._serverService.detachServerMedia(this.server.id, media.id, mediaValues).subscribe();
+  }
+
   private _setServerData(): void {
     this.serverSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
-        if (server) {
+        if (!isNullOrEmpty(server) && this.server.id !== server.id) {
           // Get server data
           this.server = server;
 
           // Initialize values
+          this._setResourceMap();
+          this._getScaleParam();
           this._getServerDetails();
           this._getServerThumbnail();
-          this._getScalingJobStatus();
-          this._getScaleParam();
+          this._getJobStatus();
 
           refreshView(() => {
             if (!this.consoleEnabled) {
-              this._hideThumbnail();
+              // this._hideThumbnail();
             }
           }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         }
       });
   }
 
-  private _setResourceData(): void {
+  private _setResourceMap(): void {
     this.resourceSubscription = this._serverService.getResources()
       .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-
-        this._resourceMap = this._serverService.setResourceMap(response.content);
-
-        let hasResource = !isNullOrEmpty(this.server.environment)
-          && !isNullOrEmpty(this.server.environment.resource);
-
-        if (hasResource) {
-          let resourceName = this.server.environment.resource.name;
-
-          if (this._resourceMap.has(resourceName)) {
-            this.resource = this._resourceMap.get(resourceName);
-          }
+        if (!isNullOrEmpty(response)) {
+          this._resourceMap = this._serverService.setResourceMap(response.content);
+          this._setResourceData();
         }
-
-        this._setRemainingValues();
       });
+  }
+
+  private _setResourceData(): void {
+    this.resourceMediaList.splice(0);
+
+    let hasResource = !isNullOrEmpty(this.server.environment)
+      && !isNullOrEmpty(this.server.environment.resource);
+
+    if (hasResource) {
+      let resourceName = this.server.environment.resource.name;
+
+      if (this._resourceMap.has(resourceName)) {
+        this.resource = this._resourceMap.get(resourceName);
+        this.resource.catalogs.forEach((catalog) => {
+          if (catalog.itemType === ServerCatalogItemType.Media) {
+            let resourceMedia = new ServerCatalog();
+
+            if (isNullOrEmpty(this.server.media)) {
+              resourceMedia = catalog;
+            } else {
+              let media = this.server.media.find((serverMedia) => {
+                return catalog.itemName !== serverMedia.name;
+              });
+
+              if (!isNullOrEmpty(media)) {
+                resourceMedia.itemName = media.name;
+              }
+            }
+
+            if (!isNullOrEmpty(resourceMedia.itemName)) {
+              this.resourceMediaList.push(resourceMedia);
+            }
+          }
+        });
+      }
+
+      this._setRemainingValues();
+    }
   }
 
   private _setRemainingValues(): void {
@@ -367,37 +505,81 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.isScaling = false;
   }
 
-  private _getScalingJobStatus(): void {
-    if (isNullOrEmpty(this.jobs) && this.server) { return; }
+  private _getJobStatus(): void {
+    if (isNullOrEmpty(this.jobs) && isNullOrEmpty(this.server.id)) { return; }
 
     let activeServerJob = this.jobs.find((job) => {
       return !isNullOrEmpty(job.clientReferenceObject) &&
         job.clientReferenceObject.serverId === this.server.id;
     });
 
-    this.isProcessing = !isNullOrEmpty(activeServerJob) &&
-      (activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING ||
-      activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+    if (!isNullOrEmpty(activeServerJob)) {
+      let hasCompleted = activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+      let hasFailed = activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
 
-    if (!isNullOrEmpty(activeServerJob) && activeServerJob.type === McsJobType.UpdateServer) {
-      switch (activeServerJob.status) {
-        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-          if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {
+      this.isProcessing = !hasCompleted && !hasFailed;
+      this.activeServerJob = (this.isProcessing) ? activeServerJob : new McsApiJob() ;
+
+      let media = new ServerMedia();
+
+      switch (activeServerJob.type) {
+        case McsJobType.UpdateServer:
+          if (hasCompleted && !isNullOrEmpty(activeServerJob.clientReferenceObject)) {
             this.server.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
             this.server.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
           }
-          this.isScaling = false;
           break;
 
-        case CoreDefinition.NOTIFICATION_JOB_PENDING:
-        case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-          this.isScaling = true;
+        case McsJobType.AttachServerMedia:
+          if (hasCompleted || hasFailed) {
+            deleteArrayRecord(this.server.media, (targetMedia) => {
+              return isNullOrEmpty(targetMedia.id);
+            }, 1);
+          }
+
+          if (hasFailed) { break; }
+
+          if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {
+            media.name = activeServerJob.clientReferenceObject.mediaName;
+          }
+
+          if (hasCompleted) {
+            let referenceObject = activeServerJob.tasks[0].referenceObject;
+
+            if (!isNullOrEmpty(referenceObject.resourceId)) {
+              media.id = referenceObject.resourceId;
+            }
+          }
+
+          addOrUpdateArrayRecord(this.server.media, media, false,
+            (_first: any, _second: any) => {
+              return _first.id === _second.id;
+            });
           break;
 
-        case CoreDefinition.NOTIFICATION_JOB_FAILED:
+        case McsJobType.DetachServerMedia:
+          if (hasCompleted) {
+            if (!isNullOrEmpty(activeServerJob.clientReferenceObject)) {
+              media = this.server.media.find((result) => {
+                return result.id === activeServerJob.clientReferenceObject.mediaId;
+              });
+            }
+
+            if (!isNullOrEmpty(media)) {
+              deleteArrayRecord(this.server.media, (targetNetwork) => {
+                return media.id === targetNetwork.id;
+              });
+            }
+          }
+          break;
+
         default:
-          this.isScaling = false;
+          // do nothing
           break;
+      }
+
+      if (hasCompleted) {
+        this._setResourceData();
       }
     }
 
@@ -467,7 +649,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this._notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((jobs) => {
         this.jobs = jobs;
-        this._getScalingJobStatus();
+        this._getJobStatus();
       });
   }
 

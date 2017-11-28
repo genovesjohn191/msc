@@ -23,5 +23,9 @@ export enum McsJobType {
   // Server Network Management
   CreateServerNetwork = 100251,
   UpdateServerNetwork = 100252,
-  DeleteServerNetwork = 100253
+  DeleteServerNetwork = 100253,
+
+  // Server Media Management
+  AttachServerMedia = 100301,
+  DetachServerMedia = 100302
 }

@@ -3,6 +3,9 @@ import {
   Input,
   ChangeDetectionStrategy,
   ViewEncapsulation,
+  ElementRef,
+  Renderer2,
+  AfterViewInit
 } from '@angular/core';
 
 @Component({
@@ -16,7 +19,22 @@ import {
   }
 })
 
-export class ListComponent {
+export class ListComponent implements AfterViewInit {
   @Input()
   public header: string;
+
+  @Input()
+  public spacing: 'xsmall' | 'small' | 'medium';
+
+  public constructor(
+    private _elementRef: ElementRef,
+    private _renderer: Renderer2
+  ) {
+    this.spacing = 'small';
+  }
+
+  public ngAfterViewInit(): void {
+    this._renderer.addClass(this._elementRef.nativeElement, this.spacing);
+  }
+
 }

@@ -25,6 +25,7 @@ $action-box-border-color: $color-grey-00;
 
     .grid-column {
       @include flex(1 0 50%);
+      @include set-items-interval($space-small, vertical);
       @include breakpoint(small) {
         &:first-of-type {
           @include flex(1 0 auto)

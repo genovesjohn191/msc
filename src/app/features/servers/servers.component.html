@@ -156,10 +156,7 @@
             {{ columnSettings.vdc.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            <!-- TODO: Changed this one temporarily to avoid console errors -->
-            <!-- will change it back once orch implemented the new model changes -->
-            <!-- <a [routerLink]="['/servers/vdc', row.environment?.resource?.id]"> -->
-            <a>
+            <a (click)="navigateToResource(row)">
               {{ row.environment?.resource?.name }}
             </a>
           </mcs-data-cell>

@@ -56,7 +56,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
   public resourceSubscription: Subscription;
   public networksSubscription: Subscription;
 
-  public networkJob: McsApiJob;
+  public activeServerJob: McsApiJob;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -178,7 +178,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     this.server = new Server();
     this.networks = new Array<ServerNetwork>();
     this.ipAddress = new ServerIpAddress();
-    this.networkJob = new McsApiJob();
+    this.activeServerJob = new McsApiJob();
     this.selectedNic = new ServerNetwork();
   }
 
@@ -232,15 +232,15 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
   }
 
   public getActiveNic(network: ServerNetwork): boolean {
-    return !isNullOrEmpty(this.networkJob.clientReferenceObject) &&
-      this.networkJob.clientReferenceObject.networkId === network.id;
+    return !isNullOrEmpty(this.activeServerJob.clientReferenceObject) &&
+      this.activeServerJob.clientReferenceObject.networkId === network.id;
   }
 
   public getNetworkSummaryInformation(network: ServerNetwork): string {
-    if (isNullOrEmpty(this.networkJob.clientReferenceObject)) { return ''; }
+    if (isNullOrEmpty(this.activeServerJob.clientReferenceObject)) { return ''; }
 
-    return (this.networkJob.clientReferenceObject.networkId === network.id) ?
-      this.networkJob.summaryInformation : '';
+    return (this.activeServerJob.clientReferenceObject.networkId === network.id) ?
+      this.activeServerJob.summaryInformation : '';
   }
 
   public getIpAllocationModeText(ipAllocationMode: ServerIpAllocationMode): string {
@@ -470,33 +470,25 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
   private _listenToNotificationsStream(): void {
     this._notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((notifications) => {
-        if (notifications && !isNullOrEmpty(this.server)
-          && !isNullOrEmpty(this.networks)) {
+        if (!isNullOrEmpty(notifications) && !isNullOrEmpty(this.server.id)) {
 
-          let serverJob = notifications.find((job) => {
+          let activeServerJob = notifications.find((job) => {
             return job.clientReferenceObject &&
               job.clientReferenceObject.serverId === this.server.id;
           });
 
-          this.isProcessing = !isNullOrEmpty(serverJob) &&
-            (serverJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING ||
-              serverJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+          if (!isNullOrEmpty(activeServerJob)) {
+            let hasCompleted = activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+            let hasFailed = activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
 
-          let isNetworkJob = !isNullOrEmpty(serverJob) &&
-            (serverJob.type === McsJobType.CreateServerNetwork ||
-              serverJob.type === McsJobType.UpdateServerNetwork ||
-              serverJob.type === McsJobType.DeleteServerNetwork);
+            this.isProcessing = !hasCompleted && !hasFailed;
+            this.activeServerJob = (this.isProcessing) ? activeServerJob : new McsApiJob() ;
 
-          if (isNetworkJob) {
-            let hasCompleted = serverJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-            let hasFailed = serverJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
-
-            this.networkJob = (hasCompleted || hasFailed) ? new McsApiJob() : serverJob;
             let network = new ServerNetwork();
 
-            switch (serverJob.type) {
+            switch (activeServerJob.type) {
               case McsJobType.UpdateServerNetwork:
-                network.id = serverJob.clientReferenceObject.networkId;
+                network.id = activeServerJob.clientReferenceObject.networkId;
                 if (!hasCompleted) { break; }
 
               case McsJobType.CreateServerNetwork:
@@ -509,20 +501,21 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
                 if (hasFailed) { break; }
 
                 // Append Created Server Network / Update Network Data
-                network.name = serverJob.clientReferenceObject.networkName;
+                network.name = activeServerJob.clientReferenceObject.networkName;
 
                 // Update the server network when completed
                 if (hasCompleted) {
-                  network.index = serverJob.clientReferenceObject.networkIndex;
-                  network.isPrimary = serverJob.clientReferenceObject.primaryNic;
+                  let clientReferenceObject = activeServerJob.clientReferenceObject;
+                  network.index = clientReferenceObject.networkIndex;
+                  network.isPrimary = clientReferenceObject.primaryNic;
 
-                  let ipAllocationMode: string = serverJob.clientReferenceObject.ipAllocationMode;
+                  let ipAllocationMode: string = clientReferenceObject.ipAllocationMode;
                   network.ipAllocationMode = ServerIpAllocationMode[ipAllocationMode];
 
-                  network.ipAddress = serverJob.clientReferenceObject.ipAddress;
+                  network.ipAddress = clientReferenceObject.ipAddress;
 
-                  if (isNullOrEmpty(network.id) && !isNullOrEmpty(serverJob.tasks)) {
-                    let referenceObject = serverJob.tasks[0].referenceObject;
+                  if (isNullOrEmpty(network.id) && !isNullOrEmpty(activeServerJob.tasks)) {
+                    let referenceObject = activeServerJob.tasks[0].referenceObject;
 
                     if (!isNullOrEmpty(referenceObject.resourceId)) {
                       network.id = referenceObject.resourceId;
@@ -540,7 +533,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
                 // Delete Network
                 if (hasCompleted) {
                   network = this.networks.find((result) => {
-                    return result.id === serverJob.clientReferenceObject.networkId;
+                    return result.id === activeServerJob.clientReferenceObject.networkId;
                   });
 
                   if (!isNullOrEmpty(network)) {

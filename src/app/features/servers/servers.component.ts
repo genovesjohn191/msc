@@ -349,6 +349,13 @@ export class ServersComponent
     }
   }
 
+  public navigateToResource(server: Server): void {
+    if (isNullOrEmpty(server.environment) &&
+      isNullOrEmpty(server.environment.resource)) { return; }
+
+    this._router.navigate(['/servers/vdc', server.environment.resource.id]);
+  }
+
   /**
    * Initialize the table datasource according to pagination and search settings
    */

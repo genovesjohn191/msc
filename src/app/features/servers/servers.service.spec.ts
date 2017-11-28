@@ -29,7 +29,8 @@ import {
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerNetwork,
-  ServerManageNetwork
+  ServerManageNetwork,
+  ServerManageMedia
 } from './models';
 import { ServersService } from './servers.service';
 import {
@@ -1221,6 +1222,151 @@ describe('ServersService', () => {
         .subscribe(() => {
           // dummy subscribe to invoke exception
         });
+    }));
+  });
+
+  describe('attachServerMedia()', () => {
+    let requestOptions = {
+      serverId: 459,
+      mediaData: new ServerManageMedia()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: McsJobType.AttachServerMedia,
+                    summaryInformation: 'Server Media Attached'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.attachServerMedia(requestOptions.serverId, requestOptions.mediaData)
+        .subscribe((response) => {
+          let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+          mcsApiSucessResponse = response;
+
+          expect(response).toBeDefined();
+          expect(mcsApiSucessResponse[0].status).toEqual(200);
+          expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+          expect(mcsApiSucessResponse[0].content[0].type)
+            .toEqual(McsJobType.AttachServerMedia);
+          expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+            .toEqual('Server Media Attached');
+        });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Post);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.attachServerMedia(requestOptions.serverId, requestOptions.mediaData)
+        .catch((error: McsApiErrorResponse) => {
+          expect(error).toBeDefined();
+          expect(error.status).toEqual(404);
+          expect(error.message).toEqual('error thrown');
+          return Observable.of(new McsApiErrorResponse());
+        })
+        .subscribe(() => {
+          // dummy subscribe to invoke exception
+        });
+    }));
+  });
+
+  describe('detachServerMedia()', () => {
+    let requestOptions = {
+      serverId: 459,
+      mediaId: 555,
+      mediaData: new ServerManageMedia()
+    };
+
+    beforeEach(async () => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        connection.mockRespond(new Response(
+          new ResponseOptions({
+            body: [
+              {
+                content: [
+                  {
+                    id: 500,
+                    type: McsJobType.DetachServerMedia,
+                    summaryInformation: 'Server Media Detached'
+                  }
+                ],
+                status: 200
+              }]
+          }
+          )));
+      });
+    });
+
+    it('should map response to McsApiSuccessResponse when successful', fakeAsync(() => {
+      serversService.detachServerMedia(
+        requestOptions.serverId,
+        requestOptions.mediaId,
+        requestOptions.mediaData
+      ).subscribe((response) => {
+        let mcsApiSucessResponse: McsApiSuccessResponse<McsApiJob>;
+        mcsApiSucessResponse = response;
+
+        expect(response).toBeDefined();
+        expect(mcsApiSucessResponse[0].status).toEqual(200);
+        expect(mcsApiSucessResponse[0].content).toBeDefined();
+
+        expect(mcsApiSucessResponse[0].content[0].type)
+          .toEqual(McsJobType.DetachServerMedia);
+        expect(mcsApiSucessResponse[0].content[0].summaryInformation)
+          .toEqual('Server Media Detached');
+      });
+    }));
+
+    it('should map response to McsApiErrorResponse when error occured', fakeAsync(() => {
+      mockBackend.connections.subscribe((connection: MockConnection) => {
+        expect(connection.request.method).toBe(RequestMethod.Delete);
+
+        connection.mockError(new Response(
+          new ResponseOptions({
+            status: 404,
+            statusText: 'error thrown',
+            body: {}
+          })
+        ) as any as Error);
+      });
+
+      serversService.detachServerMedia(
+        requestOptions.serverId,
+        requestOptions.mediaId,
+        requestOptions.mediaData
+      ).catch((error: McsApiErrorResponse) => {
+        expect(error).toBeDefined();
+        expect(error.status).toEqual(404);
+        expect(error.message).toEqual('error thrown');
+        return Observable.of(new McsApiErrorResponse());
+      })
+      .subscribe(() => {
+        // dummy subscribe to invoke exception
+      });
     }));
   });
 

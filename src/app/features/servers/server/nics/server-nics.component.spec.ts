@@ -168,8 +168,8 @@ describe('ServerNicsComponent', () => {
 
   describe('getActiveNic()', () => {
     it('should return true if clientReferenceObject.networkId matches the id of a network', () => {
-      component.networkJob = new McsApiJob();
-      component.networkJob.clientReferenceObject = {
+      component.activeServerJob = new McsApiJob();
+      component.activeServerJob.clientReferenceObject = {
         networkId: mockServerNetworks[0].id
       };
 
@@ -181,9 +181,9 @@ describe('ServerNicsComponent', () => {
     it('should return the summary information of job', () => {
       let summaryInformation = 'Adding Network';
 
-      component.networkJob = new McsApiJob();
-      component.networkJob.summaryInformation = summaryInformation;
-      component.networkJob.clientReferenceObject = {
+      component.activeServerJob = new McsApiJob();
+      component.activeServerJob.summaryInformation = summaryInformation;
+      component.activeServerJob.clientReferenceObject = {
         networkId: mockServerNetworks[0].id
       };
 
