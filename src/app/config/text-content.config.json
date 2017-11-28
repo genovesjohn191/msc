@@ -333,7 +333,7 @@
     "dataSingular": "Ticket",
     "dataPlural": "Tickets",
     "ticket": {
-      "header": "Trouble Ticket #",
+      "header": "{{ticketType}} #",
       "services": "Services",
       "attachments": "Attachments",
       "activity": "Activity",
@@ -380,6 +380,37 @@
       "ticketAttachment": {
         "chooseFile": "Choose File",
         "dragDropZone": "File attachments (select or drag & drop)"
+      }
+    },
+    "enumerations": {
+      "subType": {
+        "0": "None",
+        "1": "Admin Task",
+        "2": "Applications",
+        "3": "Backup",
+        "4": "Carrier",
+        "5": "Colocation",
+        "6": "Compute",
+        "7": "Enquiry",
+        "8": "Facilities",
+        "9": "Fleetview",
+        "10": "Handover",
+        "11": "Inview",
+        "12": "Macquarieview",
+        "13": "Networking",
+        "14": "Planned Outage",
+        "15": "Portals Management Tools",
+        "16": "Provisioning",
+        "17": "Repetitive Bounce",
+        "18": "SecureInternet Gateway",
+        "19": "Security",
+        "20": "Security Facilities",
+        "21": "Service Degradation",
+        "22": "Service Delivery Provisioning",
+        "23": "Service Outage",
+        "24": "Storage",
+        "25": "System",
+        "26": "Trouble Ticket"
       }
     }
   },

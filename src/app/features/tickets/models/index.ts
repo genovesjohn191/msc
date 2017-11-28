@@ -12,7 +12,6 @@ export * from './response/ticket-comment';
 /** Enumerations */
 export * from './enumerations/ticket-priority';
 export * from './enumerations/ticket-status';
-export * from './enumerations/ticket-type';
 export * from './enumerations/ticket-subtype';
 export * from './enumerations/ticket-comment-type';
 export * from './enumerations/ticket-activity-type';
