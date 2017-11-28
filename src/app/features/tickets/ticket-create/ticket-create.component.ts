@@ -358,7 +358,7 @@ export class TicketCreateComponent implements
    */
   private _setTicketType(): void {
     if (isNullOrEmpty(this.subTypeEnumText)) { return; }
-    
+
     this.ticketTypeList.push({
       'value': TicketSubType.Enquiry,
       'text': this.subTypeEnumText[TicketSubType.Enquiry]
