@@ -221,7 +221,14 @@ export class ServerComponent
     if (isNullOrEmpty(this.server) || isNullOrEmpty(this.server.id)) { return; }
 
     // Navigate route based on current active tab
-    this.router.navigate(['servers/', this.server.id, tab.id]);
+    this.router.navigate(['servers', this.server.id, tab.id]);
+  }
+
+  public navigateToResource(server: Server): void {
+    if (isNullOrEmpty(server.environment) &&
+      isNullOrEmpty(server.environment.resource)) { return; }
+
+    this.router.navigate(['/servers/vdc', server.environment.resource.id]);
   }
 
   /**

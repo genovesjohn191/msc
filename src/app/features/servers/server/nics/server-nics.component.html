@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let network of networks">
-            <td [ngStyle]="{'text-align': 'center'}">
+            <td>
               <span *ngIf="!getActiveNic(network)">{{ network.index }}</span>
               <mcs-icon *ngIf="getActiveNic(network)" [key]="spinnerIconKey"
                 size="small" class="hidden-small"

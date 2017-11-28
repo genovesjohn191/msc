@@ -45,7 +45,8 @@ import {
   ServerCatalogItemType,
   ServerNetwork,
   ServerManageNetwork,
-  ServerIpAllocationMode
+  ServerIpAllocationMode,
+  ServerManageMedia
 } from './models';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
@@ -434,7 +435,7 @@ export class ServersService {
    * Adding server network
    * *Note: This will send a job (notification)
    * @param serverId Server identification
-   * @param networkData Server storage data
+   * @param networkData Server network data
    */
   public addServerNetwork(
     serverId: any,
@@ -460,7 +461,7 @@ export class ServersService {
    * *Note: This will send a job (notification)
    * @param serverId Server identification
    * @param networkId Network identification
-   * @param networkData Server storage data
+   * @param networkData Server network data
    */
   public updateServerNetwork(
     serverId: any,
@@ -502,6 +503,58 @@ export class ServersService {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
           this._convertProperty) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Attaching server media
+   * *Note: This will send a job (notification)
+   *
+   * @param serverId Server Identification
+   * @param mediaData Server media data
+   */
+  public attachServerMedia(
+    serverId: any,
+    mediaData: ServerManageMedia
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/media`;
+    mcsApiRequestParameter.recordData = JSON.stringify(mediaData);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
+   * Detaching server media
+   * *Note: This will send a job (notification)
+   *
+   * @param serverId Server Identification
+   * @param mediaId Media Identification
+   * @param mediaData Server media data
+   */
+  public detachServerMedia(
+    serverId: any,
+    mediaId: any,
+    mediaData: ServerManageMedia
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/media/${mediaId}`;
+    mcsApiRequestParameter.recordData = JSON.stringify(mediaData);
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })

@@ -1,15 +1,21 @@
-<div *ngIf="!isServerScale" class="limited-view content-grid">
-  <div class="grid-row">
-    <div class="grid-column">
-      <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
-      <ul class="unstyled-list">
-        <!-- Image -->
-        <li>{{ serverManagementTextContent.vmProperties.image }}: {{ server.os }}</li>
-        <!-- Zone -->
-        <li>{{ serverManagementTextContent.vmProperties.zone }}: {{ server.availabilityZone }}</li>
-        <!-- Configuration -->
-        <li>
-          <div class="server-configuration">
+<div class="limited-view" [ngStyle]="{'position': 'relative'}">
+  <div *ngIf="!isServerScale && !isAttachMedia" class="content-grid" [mcsLoader]="resourceSubscription">
+    <div class="grid-row">
+      <div class="grid-column">
+        <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
+        <mcs-list spacing="xsmall">
+          <!-- Image -->
+          <mcs-list-item>
+            <span>{{ serverManagementTextContent.vmProperties.image }}:</span>
+            <span>{{ server.os }}</span>
+          </mcs-list-item>
+          <!-- Zone -->
+          <mcs-list-item>
+            <span>{{ serverManagementTextContent.vmProperties.zone }}:</span>
+            <span>{{ server.availabilityZone }}</span>
+          </mcs-list-item>
+          <!-- Configuration -->
+          <mcs-list-item>
             <span>{{ serverManagementTextContent.vmProperties.configuration }}:</span>
             <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
             <span *mcsHasPermission="['VmEdit']">
@@ -18,117 +24,187 @@
             </span>
             <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
               [mcsTooltip]="serverManagementTextContent.performanceScale.scaling"></mcs-icon>
+          </mcs-list-item>
+        </mcs-list>
+      </div>
+
+      <!-- Console -->
+      <div class="grid-column">
+        <div class="server-thumbnail">
+          <h3 class="thumbnail-title">{{ serverManagementTextContent.vmConsole.title }}</h3>
+          <div (click)="onClickViewConsole()" class="view-console"
+              [ngClass]="{'enabled': consoleEnabled, 'disabled': !consoleEnabled }">
+              <div class="thumbnail-container">
+                <img #thumbnailElement class="thumbnail"/>
+              </div>
+            <a>{{ serverManagementTextContent.vmConsole.link }}</a>
           </div>
-        </li>
-        <!-- Media -->
-        <li>{{ serverManagementTextContent.vmProperties.media }}:
-          <ul class="unstyled-list server-media" *ngIf="hasMedia; else elseBlock">
-            <li *ngFor="let media of server.media">{{ media.mediaName }}</li>
-          </ul>
-          <ng-template #elseBlock>None</ng-template>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
 
-    <!-- Console -->
-    <div class="grid-column">
-      <div class="server-thumbnail">
-        <h3 class="thumbnail-title">{{ serverManagementTextContent.vmConsole.title }}</h3>
-          <div (click)="onClickViewConsole()" class="view-console"
-            [ngClass]="{'enabled': consoleEnabled, 'disabled': !consoleEnabled }">
-            <div class="thumbnail-container">
-              <img #thumbnailElement class="thumbnail"/>
-            </div>
-          <a>{{ serverManagementTextContent.vmConsole.link }}</a>
+    <div class="grid-row">
+      <div class="grid-column">
+        <h3>{{ serverManagementTextContent.storage.title }}
+          <a *mcsHasPermission="['VmEdit']" [routerLink]="['../storage']">
+            {{ serverManagementTextContent.storage.manage }}
+          </a>
+        </h3>
+        <div *ngIf="!hasStorageInformation">
+          <span class="missing-data-info">{{ serverManagementTextContent.storage.noContentMessage }}</span>
         </div>
+        <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
+          <!-- Primary Volume -->
+          <mcs-list-item>
+            <span>{{ serverManagementTextContent.storage.primaryVolume }}:</span>
+            <span>{{ primaryVolume }}</span>
+          </mcs-list-item>
+          <!-- Secondary Volume -->
+          <mcs-list-item *ngIf="secondaryVolumes">
+            <span>{{ serverManagementTextContent.storage.secondaryVolumes }}:</span>
+            <span>{{ secondaryVolumes }}</span>
+          </mcs-list-item>
+          <!-- Storage Policy -->
+          <mcs-list-item *ngIf="server.environment?.resource?.storage?.name">
+            <span>{{ serverManagementTextContent.storage.storagePolicy }}:</span>
+            <span>{{ server.environment?.resource?.storage?.name }}</span>
+          </mcs-list-item>
+        </mcs-list>
+      </div>
+
+      <div class="grid-column">
+        <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
+        <div *ngIf="!hasNetworkInformation">
+          <span class="missing-data-info">
+            {{ serverManagementTextContent.networkInformation.noContentMessage }}
+          </span>
+        </div>
+        <mcs-list spacing="xsmall">
+          <!-- Network Interface -->
+          <mcs-list-item *ngFor="let interface of server.interfaces; let i = index">
+            <div display-flex="row" class="horizontal-items-spacing-xsmall">
+              <span>{{ serverManagementTextContent.networkInformation.interface }} {{ i }}:</span>
+              <mcs-list spacing="xsmall">
+                <mcs-list-item *ngFor="let ip of interface.ipAddress">{{ ip }}</mcs-list-item>
+              </mcs-list>
+            </div>
+          </mcs-list-item>
+        </mcs-list>
+      </div>
+    </div>
+
+    <div class="grid-row">
+      <div class="grid-column">
+        <h3>
+          {{ serverManagementTextContent.media.title }}
+          <a flex="auto" *mcsHasPermission="['VmEdit']"
+            (click)="onAttachMedia()" [disabled]="!hasAvailableMedia || isProcessing">
+            {{ serverManagementTextContent.media.attach }}
+          </a>
+        </h3>
+        <div *ngIf="!hasAvailableMedia">
+          <mcs-icon [key]="warningIconKey" size="xsmall"></mcs-icon>
+          <span>{{ serverManagementTextContent.media.noAvailableMedia }}</span>
+        </div>
+        <div *ngIf="!hasMedia">
+          <span class="missing-data-info">{{ serverManagementTextContent.media.noContentMessage }}</span>
+        </div>
+        <mcs-list *ngIf="hasMedia" spacing="xsmall">
+          <!-- Media Items -->
+          <mcs-list-item *ngFor="let media of server.media">
+            <div display-flex="row" class="horizontal-items-spacing-xsmall">
+              <span>{{ media.name }}</span>
+              <span *mcsHasPermission="['VmEdit']">
+                <a *ngIf="hasMedia && !getActiveMedia(media)" (click)="onDetachMedia(media)"
+                  [disabled]="isProcessing">{{ serverManagementTextContent.media.detach }}</a>
+
+                <mcs-icon *ngIf="getActiveMedia(media)" [key]="spinnerIconKey"
+                  size="small" class="hidden-small"
+                  [mcsTooltip]="getMediaSummaryInformation(media)"
+                  mcsTooltipPosition="right"></mcs-icon>
+              </span>
+            </div>
+          </mcs-list-item>
+        </mcs-list>
+      </div>
+
+      <div class="grid-column">
+        <h3>{{ serverManagementTextContent.supportIdentifiers.title }}</h3>
+        <mcs-list spacing="xsmall">
+          <!-- VDC -->
+          <mcs-list-item>
+            <span>{{ serverManagementTextContent.supportIdentifiers.vdc }}:</span>
+            <span>{{ server.environment?.resource?.name }}</span>
+          </mcs-list-item>
+          <!-- MacView Service ID -->
+          <mcs-list-item>
+            <span>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}:</span>
+            <span>{{ server.serviceId }}</span>
+          </mcs-list-item>
+          <!-- VMWare ID -->
+          <mcs-list-item>
+            <span>{{ serverManagementTextContent.supportIdentifiers.vmWareId }}:</span>
+            <span>{{ server.instanceId }}</span>
+          </mcs-list-item>
+        </mcs-list>
       </div>
     </div>
   </div>
 
-  <div class="grid-row">
-    <div class="grid-column">
-      <h3>{{ serverManagementTextContent.storage.title }}
-        <a *mcsHasPermission="['VmEdit']" [routerLink]="['../storage']">Manage</a>
-      </h3>
-      <span *ngIf="!hasStorageInformation" class="missing-data-info">{{ serverManagementTextContent.storage.noContentMessage }}</span>
-      <ul class="unstyled-list server-storage" *ngIf="hasStorageInformation">
-        <!-- Primary Volume -->
-        <li>{{ serverManagementTextContent.storage.primaryVolume }}: {{ primaryVolume }}</li>
-        <!-- Secondary Volume -->
-        <li *ngIf="secondaryVolumes">
-          {{ serverManagementTextContent.storage.secondaryVolumes }}: {{ secondaryVolumes }}
-        </li>
-        <!-- Storage Policy -->
-        <li *ngIf="server.environment?.resource?.storage?.name">
-          {{ serverManagementTextContent.storage.storagePolicy }}:
-          {{ server.environment?.resource?.storage?.name }}
-        </li>
-      </ul>
-    </div>
+  <div *ngIf="isServerScale" class="server-performance-scale">
+    <div [mcsLoader]="resourceSubscription">
+      <h3>Scaling {{ server.managementName }}</h3>
+      <mcs-server-performance-scale *ngIf="remainingMemory && remainingCpu"
+        [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
+        [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
+        (scaleChanged)="onScaleChanged($event)">
 
-    <div class="grid-column">
-      <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
-      <span *ngIf="!hasNetworkInformation" class="missing-data-info">{{ serverManagementTextContent.networkInformation.noContentMessage }}</span>
-      <ul class="unstyled-list server-interfaces">
-        <!-- Network Interface -->
-        <li *ngFor="let interface of server.interfaces; let i = index">
-          <span>{{ serverManagementTextContent.networkInformation.interface }} {{ i }}:</span>
-          <span *ngFor="let ip of interface.ipAddress" display-flex="column">
-            <span>{{ ip }}</span>
-          </span>
-        </li>
-      </ul>
+        <!--Performance scale container-->
+        <span slider-details>
+          {{ serverManagementTextContent.performanceScale.sliderMessage }}
+        </span>
+        <span custom-details>
+          {{ serverManagementTextContent.performanceScale.customMessage }}
+        </span>
+      </mcs-server-performance-scale>
+
+      <br/>
+      <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
+        display-flex="row" align-items="center" justify-content="center">
+        <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
+        <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
+      </p>
+
+      <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
+        <a class="text-underline" (click)="cancelScale()">
+          {{ serverManagementTextContent.performanceScale.cancel }}</a>
+        <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" class="scale"
+          [disabled]="!hasUpdate" (click)="onClickScale()">
+            {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
+      </div>
     </div>
   </div>
 
-  <div class="grid-row">
-    <div class="grid-column">
-      <h3>{{ serverManagementTextContent.supportIdentifiers.title }}</h3>
-      <ul class="unstyled-list">
-        <!-- VDC -->
-        <li>
-          {{ serverManagementTextContent.supportIdentifiers.vdc }}:
-          {{ server.environment?.resource?.name }}
-        </li>
-        <!-- MacView Service ID -->
-        <li>{{ serverManagementTextContent.supportIdentifiers.macViewServiceId }}: {{ server.serviceId }}</li>
-        <!-- VMWare ID -->
-        <li>{{ serverManagementTextContent.supportIdentifiers.vmWareId }}: {{ server.instanceId }}</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="isServerScale" class="limited-view server-performance-scale">
-  <div [mcsLoader]="resourceSubscription">
-    <h3>Scaling {{ server.managementName }}</h3>
-    <mcs-server-performance-scale *ngIf="remainingMemory && remainingCpu"
-      [memoryMB]="server.memoryMB" [cpuCount]="server.cpuCount"
-      [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
-      (scaleChanged)="onScaleChanged($event)">
-
-      <!--Performance scale container-->
-      <span slider-details>
-        {{ serverManagementTextContent.performanceScale.sliderMessage }}
-      </span>
-      <span custom-details>
-        {{ serverManagementTextContent.performanceScale.customMessage }}
-      </span>
-    </mcs-server-performance-scale>
-
-    <br/>
-    <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
-      display-flex="row" align-items="center" justify-content="center">
-      <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
-      <span>{{ serverManagementTextContent.performanceScale.warning }}</span>
-    </p>
-
-    <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
-      <a class="text-underline" (click)="cancelScale()">
-        {{ serverManagementTextContent.performanceScale.cancel }}</a>
-      <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" class="scale"
-        [disabled]="!hasUpdate" (click)="onClickScale()">
-          {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
+  <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
+    <div [mcsLoader]="resourceSubscription" class="vertical-items-spacing-medium" [disabled]="isProcessing">
+      <h3>{{ serverManagementTextContent.media.attachHeading }}</h3>
+      <mcs-select [(ngModel)]="selectedMedia"
+        [placeholder]="serverManagementTextContent.media.mediaSelect.placeholder">
+        <mcs-select-group [header]="serverManagementTextContent.media.mediaSelect.header">
+          <mcs-select-item *ngFor="let media of resourceMediaList" [value]="media.itemName">
+            {{ media.itemName }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
+      <div display-flex="row" align-items="center" justify-content="space-between">
+        <a class="text-underline" (click)="cancelAttachMedia()">
+          {{ serverManagementTextContent.media.cancel }}
+        </a>
+        <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" size="small"
+          (onClick)="attachMedia()" [disabled]="!selectedMedia || isProcessing">
+          {{ serverManagementTextContent.media.attach }}
+        </mcs-button>
+      </div>
     </div>
   </div>
 </div>

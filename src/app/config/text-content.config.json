@@ -147,8 +147,7 @@
           "title": "VM Properties",
           "image": "Image",
           "zone": "Zone",
-          "configuration": "Configuration",
-          "media": "Media"
+          "configuration": "Configuration"
         },
         "vmConsole": {
           "title": "VM Console",
@@ -166,7 +165,21 @@
           "secondaryVolumes": "Secondary Volumes",
           "storagePolicy": "Storage Policy",
           "manageStorage": "Manage Storage",
+          "manage": "Manage",
           "noContentMessage": "Storage information is unavailable."
+        },
+        "media": {
+          "title": "Media",
+          "attachHeading": "Attach media to your Server",
+          "mediaSelect": {
+            "header": "Media",
+            "placeholder": "Select a Media"
+          },
+          "attach": "Attach",
+          "detach": "Detach",
+          "cancel": "Cancel",
+          "noContentMessage": "Media information is unavailable.",
+          "noAvailableMedia": "You have no available media to attach."
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
@@ -277,6 +290,13 @@
         "title": "Delete {{network_name}} Network",
         "alert": "The data on {{network_name}} will be lost forever.",
         "confirmation": "Are you sure you want to delete this network?",
+        "cancel": "Cancel",
+        "confirm": "Yes"
+      },
+      "detachMediaDialog": {
+        "title": "Detach {{media_name}} Media",
+        "alert": "The data on {{media_name}} will be lost forever.",
+        "confirmation": "Are you sure you want to detach this media?",
         "cancel": "Cancel",
         "confirm": "Yes"
       },

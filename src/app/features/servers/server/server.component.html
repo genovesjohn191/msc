@@ -4,10 +4,7 @@
     <div class="horizontal-items-spacing-small"
     display-flex="row" align-items="center">
       <div>
-        <!-- TODO: Changed this one temporarily to avoid console errors -->
-        <!-- will change it back once orch implemented all model changes -->
-        <!-- <a [routerLink]="['/servers/vdc', server.resource?.id]"> -->
-        <a>
+        <a (click)="navigateToResource(server)">
           <h3>{{ server.environment?.resource?.name }}</h3>
         </a>
       </div>
@@ -28,7 +25,7 @@
         <mcs-search #search delayInSeconds="none"></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
           [searchMode]="serverListSource?.searchMode"
-          [mcsLoader]="serverListSource?.serverListSubscription">
+          [mcsLoader]="serverSubscription">
           <ng-container mcsListPanelDef>
             <mcs-list-panel-header *mcsListPanelHeaderDef="let vdc; propertyName: 'vdcName';"
               [groupName]="vdc">

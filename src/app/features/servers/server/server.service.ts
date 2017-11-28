@@ -16,7 +16,8 @@ import {
   ServerCommand,
   ServerPowerState,
   ServerNetwork,
-  ServerManageNetwork
+  ServerManageNetwork,
+  ServerManageMedia
 } from '../models';
 import { McsApiSuccessResponse } from '../../../core/';
 
@@ -198,6 +199,32 @@ export class ServerService {
     networkData: ServerManageNetwork
   ) {
     return this._serversService.deleteServerNetwork(serverId, networkId, networkData);
+  }
+
+  /**
+   * Attach Server Media (MCS API Response)
+   * @param serverId Server Identification
+   * @param mediaData Media Payload
+   */
+  public attachServerMedia(
+    serverId: any,
+    mediaData: ServerManageMedia
+  ) {
+    return this._serversService.attachServerMedia(serverId, mediaData);
+  }
+
+  /**
+   * Dettach Server Media (MCS API Response)
+   * @param serverId Server Identification
+   * @param mediaId Media Identification
+   * @param mediaData Media Payload
+   */
+  public detachServerMedia(
+    serverId: any,
+    mediaId: any,
+    mediaData: ServerManageMedia
+  ) {
+    return this._serversService.detachServerMedia(serverId, mediaId, mediaData);
   }
 
   /**

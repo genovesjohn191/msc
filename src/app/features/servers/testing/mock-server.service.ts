@@ -280,5 +280,14 @@ export const mockServerService = {
     mcsApiResponseMock.content = mcsApiJobMock;
 
     return Observable.of(mcsApiResponseMock);
+  },
+  setResourceMap(_resources: ServerResource[]): Map<string, ServerResource> {
+    return new Map<string, ServerResource>();
+  },
+  computeAvailableMemoryMB(_resource: ServerResource): number {
+    return 0;
+  },
+  computeAvailableCpu(_resource: ServerResource): number {
+    return 0;
   }
 };
