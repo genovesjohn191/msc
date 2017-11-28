@@ -43,12 +43,12 @@
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
         <!-- ID Column -->
-        <ng-container mcsColumnDef="ticketId">
+        <ng-container mcsColumnDef="crispTicketNumber">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.ticketId.text }}
+            {{ columnSettings.crispTicketNumber.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a [routerLink]="['/tickets', row.id]">{{ row.number }}</a>
+            <a [routerLink]="['/tickets', row.id]">{{ row.crispTicketNumber }}</a>
           </mcs-data-cell>
         </ng-container>
 
