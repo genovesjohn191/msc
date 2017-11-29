@@ -42,6 +42,13 @@ module.exports = {
       href: '/assets/icon/icon-normal.png'
     },
 
+     /** <link> tag for cross browser favicon **/
+     {
+      rel: 'shortcut icon',
+      type: 'image/x-icon',
+      href: '/assets/icon/icon-normal.png'
+    },
+
     /** <link> tags for a Web App Manifest (for android) **/
     {
       rel: 'manifest',
