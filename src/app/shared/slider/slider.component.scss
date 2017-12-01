@@ -8,9 +8,9 @@ $slider-padding: 8px;
 $slider-duration: 400ms;
 $slider-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
 // Slider track variables
-$slider-bg-color: rgba($color-black,.26);
-$slider-active-bg-color: rgba($color-black,.38);
-$slider-active-darker-bg-color: rgba($color-black,.78);
+$slider-bg-color: $color-grey-03;
+$slider-active-bg-color: $color-grey-02;
+$slider-active-darker-bg-color: $color-grey-01;
 $slider-fill-bg-color: $color-primary-01;
 $slider-track-thickness: 3px;
 $slider-tick-size: $slider-track-thickness;
@@ -24,7 +24,7 @@ $slider-thumb-focus-scale: 1;
 $slider-thumb-disabled-scale: 0.5;
 $slider-thumb-arrow-gap: 12px;
 $slider-thumb-label-size: 28px;
-$slider-thumb-label-min-bg-color: transparent;
+$slider-thumb-label-min-bg-color: $color-white;
 $slider-focus-ring-size: 30px;
 
 // Slider cursor extension
@@ -63,6 +63,7 @@ $slider-focus-ring-size: 30px;
   top: 0;
   left: 0;
   overflow: hidden;
+  background-color: $slider-active-bg-color;
 
   .slider-track-background {
     position: absolute;
