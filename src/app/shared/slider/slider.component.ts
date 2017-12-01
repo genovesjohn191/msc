@@ -646,10 +646,10 @@ export class SliderComponent {
   private _getMouseEventCoordinates(event: MouseEvent | TouchEvent): McsPoint {
     let position = new McsPoint();
     // Set position based on event triggered
-    position.x = !!(event instanceof TouchEvent) ?
-      event.touches[0].clientX : event.clientX;
-    position.y = !!(event instanceof TouchEvent) ?
-      event.touches[0].clientY : event.clientY;
+    position.x = !!(event instanceof MouseEvent) ?
+      event.clientX : event.changedTouches[0].clientX;
+    position.y = !!(event instanceof MouseEvent) ?
+      event.clientY : event.changedTouches[0].clientY;
 
     // Return the coordinates of the mouse
     return position;
