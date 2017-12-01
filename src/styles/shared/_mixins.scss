@@ -489,6 +489,7 @@
 // Set cursor to grab hand
 @mixin cursor-grab {
   cursor: -webkit-grab;
+  cursor: -moz-grab;
   cursor: grab;
 }
 
@@ -501,6 +502,7 @@
 // Set cursor to grabbing hand
 @mixin cursor-grabbing {
   cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
   cursor: grabbing;
 }
 
