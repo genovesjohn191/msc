@@ -138,7 +138,7 @@ export class SliderComponent {
   public get min() { return this._min; }
   public set min(value: number) {
     this._min = coerceNumber(value, this._min);
-    if (this._value === null) {
+    if (isNullOrEmpty(this._value)) {
       this.value = this._min;
     }
     this._percent = this._calculatePercentage(this._value);
@@ -153,6 +153,7 @@ export class SliderComponent {
   public get step() { return this._step; }
   public set step(value: number) {
     this._step = coerceNumber(value, this._min);
+    // Check if the step is a whole number, otherwise it will be rounded off.
     if (value && this._step % 1 !== 0) {
       this._roundLabelTo = this._step.toString().split('.').pop()!.length;
     }
@@ -181,7 +182,7 @@ export class SliderComponent {
    */
   @Input()
   public get value() {
-    if (this._value === null) {
+    if (isNullOrEmpty(this._value)) {
       this.value = this._min;
     }
     return this._value;
@@ -259,6 +260,7 @@ export class SliderComponent {
    */
   public get thumbGap() {
     if (this.disabled) { return DISABLED_THUMB_GAP; }
+    // Add a gap for the thumb when the value is @ minimum and label thumb is not display
     if (this.isMinValue && !this.showLabel) {
       return this._isActive ? MIN_VALUE_ACTIVE_THUMB_GAP : MIN_VALUE_NONACTIVE_THUMB_GAP;
     }
@@ -387,10 +389,7 @@ export class SliderComponent {
     if (this.disabled || this._isSliding) { return; }
 
     // Register sliding events
-    registerEvent(document, 'mousemove', this._onSlideHandler);
-    registerEvent(document, 'touchmove', this._onSlideHandler);
-    registerEvent(document, 'mouseup', this._onSlideEndHandler);
-    registerEvent(document, 'touchend', this._onSlideEndHandler);
+    this._registerMouseEvents();
 
     this._focusHostElement();
     this._valueOnSlideStart = this.value;
@@ -434,10 +433,7 @@ export class SliderComponent {
     this._isSliding = false;
 
     // Unregister sliding events
-    unregisterEvent(document, 'mousemove', this._onSlideHandler);
-    unregisterEvent(document, 'touchmove', this._onSlideHandler);
-    unregisterEvent(document, 'mouseup', this._onSlideEndHandler);
-    unregisterEvent(document, 'touchend', this._onSlideEndHandler);
+    this._unregisterMouseEvents();
 
     if (this._valueOnSlideStart !== this.value) {
       this._emitChangeEvent();
@@ -657,5 +653,25 @@ export class SliderComponent {
 
     // Return the coordinates of the mouse
     return position;
+  }
+
+  /**
+   * Register the associated mouse events for the slider
+   */
+  private _registerMouseEvents(): void {
+    registerEvent(document, 'mousemove', this._onSlideHandler);
+    registerEvent(document, 'touchmove', this._onSlideHandler);
+    registerEvent(document, 'mouseup', this._onSlideEndHandler);
+    registerEvent(document, 'touchend', this._onSlideEndHandler);
+  }
+
+  /**
+   * UnRegister the associated mouse events for the slider
+   */
+  private _unregisterMouseEvents(): void {
+    unregisterEvent(document, 'mousemove', this._onSlideHandler);
+    unregisterEvent(document, 'touchmove', this._onSlideHandler);
+    unregisterEvent(document, 'mouseup', this._onSlideEndHandler);
+    unregisterEvent(document, 'touchend', this._onSlideEndHandler);
   }
 }
