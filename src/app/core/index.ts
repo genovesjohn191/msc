@@ -38,6 +38,7 @@ export * from './models/mcs-list-panel-item';
 export * from './models/mcs-size';
 export * from './models/mcs-selection';
 export * from './models/mcs-attachment';
+export * from './models/mcs-point';
 /** Enumerations */
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-user-type.enum';

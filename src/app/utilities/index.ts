@@ -12,3 +12,4 @@ export * from './mcs-events.function';
 export * from './mcs-form.function';
 export * from './mcs-object.function';
 export * from './mcs-window.function';
+export * from './mcs-coerce.function';

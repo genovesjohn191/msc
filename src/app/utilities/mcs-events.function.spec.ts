@@ -1,7 +1,9 @@
 import {
   registerEvent,
   unregisterEvent,
-  triggerEvent
+  triggerEvent,
+  createMouseEvent,
+  createKeyboardEvent
 } from './mcs-events.function';
 
 describe('EVENTS Utility Functions', () => {
@@ -38,6 +40,20 @@ describe('EVENTS Utility Functions', () => {
       spyOn(mockElement, 'dispatchEvent');
       triggerEvent(mockElement, 'click');
       expect(mockElement.dispatchEvent).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('createMouseEvent()', () => {
+    it(`should create the mouse event`, () => {
+      let event = createMouseEvent('click', 10, 5);
+      expect(event).toBeDefined();
+    });
+  });
+
+  describe('createKeyboardEvent()', () => {
+    it(`should create the keyboard event`, () => {
+      let event = createKeyboardEvent(1);
+      expect(event).toBeDefined();
     });
   });
 });

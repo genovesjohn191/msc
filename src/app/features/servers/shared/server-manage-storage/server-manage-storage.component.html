@@ -70,7 +70,9 @@
     && hasAvailableStorageSpace" class="slider-content">
 
     <mcs-slider animate trigger="fadeIn"
-      [min]="minimum" [max]="maximum" [disabled]="disabled"
+      [min]="minimum" [max]="maximum"
+      [disabled]="disabled"
+      [showTicks]="true"
       [ngModel]="storageSliderValue" (ngModelChange)="onStorageChanged($event)"></mcs-slider>
     <span animate trigger="fadeIn" class="storage-label">
       {{ currentMemory }}

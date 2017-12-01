@@ -33,11 +33,11 @@ import { RadioButtonGroupModule } from './radio-button-group/radio-button-group.
 import { FormFieldModule } from './form-field/form-field.module';
 import { InputModule } from './input/input.module';
 import { SearchModule } from './search/search.module';
+import { SliderModule } from './slider/slider.module';
 /** Components */
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { TextboxComponent } from './textbox/textbox.component';
-import { SliderComponent } from './slider/slider.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
@@ -49,7 +49,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     CheckboxComponent,
     FilterSelectorComponent,
     TextboxComponent,
-    SliderComponent,
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
@@ -86,13 +85,13 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RadioButtonGroupModule,
     FormFieldModule,
     InputModule,
-    SearchModule
+    SearchModule,
+    SliderModule
   ],
   exports: [
     CheckboxComponent,
     FilterSelectorComponent,
     TextboxComponent,
-    SliderComponent,
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
@@ -127,7 +126,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RadioButtonGroupModule,
     FormFieldModule,
     InputModule,
-    SearchModule
+    SearchModule,
+    SliderModule
   ]
 })
 

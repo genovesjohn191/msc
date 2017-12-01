@@ -1,4 +1,16 @@
-<div class="mcs-slider">
-  <input type="range" [attr.name]="name" [(ngModel)]="sliderValue" (blur)="onBlur()"
-    [attr.min]="min" [attr.max]="max" [attr.step]="step" [disabled]="disabled" />
+<div class="slider-content-wrapper" #sliderWrapper>
+  <div class="slider-track-container">
+    <div class="slider-track-background" [ngStyle]="trackBackgroundStyles"></div>
+    <div class="slider-track-fill" [ngStyle]="trackFillStyles"></div>
+  </div>
+  <div class="slider-ticks-container" [ngStyle]="ticksContainerStyles">
+    <div class="slider-ticks" [ngStyle]="ticksStyles"></div>
+  </div>
+  <div class="slider-thumb-container" [ngStyle]="thumbContainerStyles">
+    <div class="slider-focus-ring"></div>
+    <div class="slider-thumb"></div>
+    <div class="slider-thumb-label">
+      <span class="slider-thumb-label-text">{{ displayValue }}</span>
+    </div>
+  </div>
 </div>

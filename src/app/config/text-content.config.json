@@ -321,9 +321,9 @@
         "sliderMessage": "Select the RAM and CPU for this server from a slider.",
         "customSwitch": "Enter custom size",
         "customMessage": "Manually enter the size of RAM and CPU for this server.",
-        "ramLabel": "RAM :",
+        "ramLabel": "RAM",
         "ramUnit": "MB",
-        "cpuLabel": "CPUs:",
+        "cpuLabel": "CPUs",
         "cpuUnit": "vCPU",
         "errors": {
           "ramRequired": "Enter RAM value.",
