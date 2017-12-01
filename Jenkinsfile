@@ -27,8 +27,7 @@ if (!params.REGISTRY_LOCATION) {
                 string(defaultValue: '/home/kubernetes/bin/kubectl', description: 'Location of the kubectl binary on the host operating system.', name: 'HOST_KUBECTL_BIN'),
                 booleanParam(defaultValue: true, description: 'Whether to utilise the Google Container Registry as part of this build. If so searches for Google Service credentials mounted as a json file. Otherwise assumes a local insecure registry.', name: 'GOOGLE_CONTAINER_REGISTRY'),
                 string(defaultValue: 'default', description: 'The namespace where kubernetes resources should be found and bound.', name: 'K8S_NAMESPACE'),
-                booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.'),
-                string(name: 'BUILD_NODE_SELECTOR', defaultValue: 'name!=none', description: 'The kubernetes label selector that determines where to run this build pod.')
+                booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.')
             ]),
             pipelineTriggers([])
         ]
@@ -46,7 +45,6 @@ def env_setup_location = "/etc/build-config"
 def env_setup_file = "env.setup"
 def kube_deployment = "portal"
 def slack_notify_on_success = true
-def build_node_selector = (params.BUILD_NODE_SELECTOR != "" ? params.BUILD_NODE_SELECTOR : 'name!=none')
 def label = "buildpod"
 def debug_sleep = params.DEBUG_SLEEP
 
@@ -88,8 +86,7 @@ podTemplate(
             secretName: 'gcr-service-acct',
             mountPath: service_creds_location
         )
-    ],
-    nodeSelector: build_node_selector
+    ]
 ) {
 
     node (label) {
