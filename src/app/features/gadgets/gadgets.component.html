@@ -424,7 +424,7 @@
         <h3 class="title">SLIDER</h3>
 
         <span class="title font-weight-bold">Storage :</span>
-        <mcs-slider name="defaultSlider" min="100" max="500" step="10"
+        <mcs-slider [step]="10"
           [(ngModel)]="sliderValue"></mcs-slider>
         <p class="text-sm-center font-weight-bold">{{ sliderValue }} GB</p>
       </div>

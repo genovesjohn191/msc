@@ -23,7 +23,7 @@
         align-items="flex-start" class="vertical-items-spacing-medium">
 
         <div display-flex class="horizontal-items-spacing-medium">
-          <span class="label">{{ textContent.ramLabel }} </span>
+          <span class="label">{{ textContent.ramLabel + ' :'}} </span>
 
           <mcs-form-field [ngStyle]="{width: '150px'}">
             <input mcsInput placeholder="Enter RAM"
@@ -51,7 +51,7 @@
 
         <div display-flex class="horizontal-items-spacing-medium">
 
-          <span class="label">{{ textContent.cpuLabel }} </span>
+          <span class="label">{{ textContent.cpuLabel + ':'}} </span>
           <mcs-form-field [ngStyle]="{width: '150px'}">
             <input mcsInput placeholder="Enter CPU"
               [ngModel]="customCpuCountValue"
@@ -82,6 +82,7 @@
     <div class="scale">
       <mcs-slider animate trigger="fadeIn"
         [min]="minimum" [max]="maximum"
+        [showTicks]="true"
         [ngModel]="sliderValue"
         (ngModelChange)="onSliderChanged($event)"></mcs-slider>
       <span class="scale-label">

@@ -485,3 +485,27 @@
 // .mcs-alert {
 //   @include column-count(3);
 // }
+
+// Set cursor to grab hand
+@mixin cursor-grab {
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+// Usage
+
+// .mcs-slider {
+//   @include cursor-grab;
+// }
+
+// Set cursor to grabbing hand
+@mixin cursor-grabbing {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+// Usage
+
+// .mcs-slider {
+//   @include cursor-grabbing;
+// }
