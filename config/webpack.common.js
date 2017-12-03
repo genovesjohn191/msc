@@ -247,7 +247,9 @@ module.exports = function (options) {
         template: 'src/index.html',
         title: METADATA.title,
         chunksSortMode: function (a, b) {
-          const entryPoints = ["inline", "polyfills", "sw-register", "styles", "vendor", "main"];
+          const entryPoints = [
+            "inline", "polyfills", "fa", "sw-register", "styles", "vendor", "main"
+          ];
           return entryPoints.indexOf(a.names[0]) - entryPoints.indexOf(b.names[0]);
         },
         metadata: METADATA,
