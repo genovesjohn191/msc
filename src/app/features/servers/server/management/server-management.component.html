@@ -97,15 +97,14 @@
       <div class="grid-column">
         <h3>
           {{ serverManagementTextContent.media.title }}
+          <span [mcsTooltip]="serverManagementTextContent.media.noAvailableMedia"
+            [mcsTooltipShow]="!hasAvailableMedia">
           <a flex="auto" *mcsHasPermission="['VmEdit']"
             (click)="onAttachMedia()" [disabled]="!hasAvailableMedia || isProcessing">
             {{ serverManagementTextContent.media.attach }}
           </a>
+        </span>
         </h3>
-        <div *ngIf="!hasAvailableMedia">
-          <mcs-icon [key]="warningIconKey" size="xsmall"></mcs-icon>
-          <span>{{ serverManagementTextContent.media.noAvailableMedia }}</span>
-        </div>
         <div *ngIf="!hasMedia">
           <span class="missing-data-info">{{ serverManagementTextContent.media.noContentMessage }}</span>
         </div>
