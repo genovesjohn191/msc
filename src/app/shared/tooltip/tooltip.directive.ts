@@ -38,6 +38,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * Tooltip message to be displayed
    */
   @Input('mcsTooltip')
+
   public get message(): string {
     return this._message;
   }
@@ -48,6 +49,20 @@ export class TooltipDirective implements OnInit, OnDestroy {
     }
   }
   private _message: string;
+
+  /**
+   * Condition when to display tool tip
+   */
+  @Input('mcsTooltipShow')
+  public get visible(): boolean {
+    return this._visible;
+  }
+  public set visible(value: boolean) {
+    if (this._visible !== value) {
+      this._visible = value;
+    }
+  }
+  private _visible: boolean = true;
 
   /**
    * Tool tip position that determines the position of the tooltip
@@ -110,6 +125,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * Show the tooltip
    */
   public show(): void {
+    if (!this._visible) { return; }
     if (isNullOrEmpty(this._tooltipInstance)) {
       this._createTooltip();
     }

@@ -158,7 +158,7 @@
           "title": "Network Information",
           "publicIp": "Public IP",
           "interface": "NIC",
-          "noContentMessage": "Network information is unavailable."
+          "noContentMessage": "There are no NICs for this server."
         },
         "storage": {
           "title": "Storage",
@@ -179,8 +179,8 @@
           "attach": "Attach",
           "detach": "Detach",
           "cancel": "Cancel",
-          "noContentMessage": "Media information is unavailable.",
-          "noAvailableMedia": "You have no available media to attach."
+          "noContentMessage": "No media is mounted for this server.",
+          "noAvailableMedia": "No available media to attach."
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
