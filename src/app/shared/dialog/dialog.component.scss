@@ -38,7 +38,7 @@ $dialog-border-color: $border-color-light;
   @include display-flex(row);
   @include set-items-interval($space-xlarge, horizontal);
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: $dialog-actions-padding;
   border-top: 1px solid $dialog-border-color;
 }

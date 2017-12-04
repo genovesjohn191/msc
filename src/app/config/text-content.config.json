@@ -34,6 +34,7 @@
     "restart": "Restart",
     "scale": "Scale",
     "clone": "Clone",
+    "delete": "Delete",
     "vcloud": "View in vCloud",
     "resetVmPassword": "Reset VM Password",
     "filterColumn": "Filter Column",
@@ -233,7 +234,7 @@
         "addButton": "Add",
         "editHeading": "Edit NIC",
         "editButton": "Update",
-        "primaryCheckbox": "Primary NIC for this server",
+        "primaryCheckbox": "Make this the primary NIC for this server",
         "networkSelect": {
           "header": "Networks",
           "placeholder": "Select a Network"
@@ -299,6 +300,19 @@
         "confirmation": "Are you sure you want to detach this media?",
         "cancel": "Cancel",
         "confirm": "Yes"
+      },
+      "deleteServerDialog": {
+        "title": {
+          "single": "Delete {{server_name}} Server",
+          "multiple": "Delete Servers"
+        },
+        "alert": {
+          "single": "Deleting a server cannot be undone. If this is the only remaining server in a vApp, the vApp will also be deleted.",
+          "multiple": "Deleting a server cannot be undone. If any server selected is the only remaining server in a vApp, the vApp will also be deleted."
+        },
+        "confirmation": "Are you sure you wish to continue?",
+        "cancel": "Cancel",
+        "confirm": "Delete"
       },
       "storageScale": {
         "label": "Storage",

@@ -18,7 +18,10 @@ import {
   ServerCommand,
   ServerServiceType
 } from '../models';
-import { ResetPasswordDialogComponent } from '../shared';
+import {
+  ResetPasswordDialogComponent,
+  DeleteServerDialogComponent
+} from '../shared';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -36,6 +39,7 @@ import {
 import { ServersService } from '../servers.service';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
+import { ServerList } from 'app/features/servers';
 
 // Constant Definition
 const SERVER_LIST_GROUP_OTHERS = 'Others';
@@ -123,15 +127,6 @@ export class ServerComponent
     this.serversTextContent = this._textContentProvider.content.servers;
     this.serverTextContent = this._textContentProvider.content.servers.server;
     this._serverId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.serverCommandList = [
-      ServerCommand.Start,
-      ServerCommand.Stop,
-      ServerCommand.Restart,
-      ServerCommand.Scale,
-      ServerCommand.Clone,
-      ServerCommand.ViewVCloud,
-      ServerCommand.ResetVmPassword
-    ];
 
     this._getServerById();
     this._listenToNotificationsStream();
@@ -170,8 +165,22 @@ export class ServerComponent
   }
 
   public executeServerCommand(server: Server, action: ServerCommand): void {
-    if (action === ServerCommand.ResetVmPassword) {
-      let dialogRef = this._dialogService.open(ResetPasswordDialogComponent, {
+    let dialogComponent = null;
+
+    switch (action) {
+      case ServerCommand.ResetVmPassword:
+        dialogComponent = ResetPasswordDialogComponent;
+        break;
+      case ServerCommand.Delete:
+        dialogComponent = DeleteServerDialogComponent;
+        break;
+      default:
+        // do nothing
+        break;
+    }
+
+    if (!isNullOrEmpty(dialogComponent)) {
+      let dialogRef = this._dialogService.open(dialogComponent, {
         data: server,
         size: 'medium'
       });
@@ -215,6 +224,38 @@ export class ServerComponent
 
   public getActiveServerTooltip(serverId: any) {
     return this._serversService.getActiveServerInformation(serverId);
+  }
+
+  /**
+   * Return true if server is currently deleting and false if not
+   * @param server Server to be check
+   */
+  public getDeletingServer(serverListItem: ServerList): boolean {
+    let isDeleting = false;
+
+    if (!isNullOrEmpty(serverListItem)) {
+      let server = new Server();
+      server.id = serverListItem.id;
+      server.managementName = serverListItem.name;
+      server.powerState = serverListItem.powerState;
+
+      let serverStatus = this._serversService.getServerStatus(server);
+
+      switch (serverStatus.notificationStatus) {
+        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+          this.serverListSource.removeDeletedServer(server);
+
+        case CoreDefinition.NOTIFICATION_JOB_FAILED:
+          isDeleting = false;
+          break;
+
+        default:
+          isDeleting = serverStatus.commandAction === ServerCommand.Delete;
+          break;
+      }
+    }
+
+    return isDeleting;
   }
 
   public onTabChanged(tab: any) {
@@ -264,9 +305,31 @@ export class ServerComponent
         } as McsListPanelItem;
 
         this._serverService.setSelectedServer(this.server);
+        this._setServerCommandList();
         this._setServerCommand();
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  private _setServerCommandList(): void {
+    this.serverCommandList = [
+      ServerCommand.Start,
+      ServerCommand.Stop,
+      ServerCommand.Restart,
+      ServerCommand.Scale,
+      ServerCommand.Clone,
+      ServerCommand.ViewVCloud,
+      ServerCommand.ResetVmPassword
+    ];
+
+    if (this.server.serviceType === ServerServiceType.SelfManaged) {
+      this.serverCommandList.push(ServerCommand.Delete);
+      this.serverCommandList.sort(
+        (_first: ServerCommand, _second: ServerCommand) => {
+          return _first - _second;
+        }
+      );
+    }
   }
 
   private _setServerCommand(): void {

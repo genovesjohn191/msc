@@ -31,9 +31,7 @@ $list-item-border-color: $color-primary-01;
 
     &.active {
       .list-header-container {
-        :not(.icon-container) {
-          font-family: $list-header-font-family-active;
-        }
+        font-family: $list-header-font-family-active;
       }
     }
   }
@@ -51,7 +49,7 @@ $list-item-border-color: $color-primary-01;
     @include set-items-interval($space-xsmall, horizontal);
 
     &.active {
-      :not(.icon-container) {
+      a {
         font-family: $list-item-font-family-active;
       }
     }
@@ -70,7 +68,7 @@ $list-item-border-color: $color-primary-01;
     }
 
     &.active, &:hover {
-      :not(.icon-container) {
+      a {
         font-family: $list-item-font-family-active;
       }
     }

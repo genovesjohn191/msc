@@ -1,0 +1,22 @@
+<mcs-dialog>
+  <mcs-dialog-header>
+    <h3>{{ dialogTitle }}</h3>
+  </mcs-dialog-header>
+
+  <mcs-dialog-content>
+    <div class="labelled-icon">
+      <mcs-icon [key]="warningIconKey"></mcs-icon>
+      <div display-flex="column" class="vertical-items-spacing-medium">
+        <span>{{ dialogAlert }}</span>
+        <span>{{ textContent.confirmation }}</span>
+      </div>
+    </div>
+  </mcs-dialog-content>
+
+  <mcs-dialog-actions align-items="space-between">
+    <a (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <mcs-button (click)="deleteServer()" size="small">
+      <span>{{ textContent.confirm }}</span>
+    </mcs-button>
+  </mcs-dialog-actions>
+</mcs-dialog>

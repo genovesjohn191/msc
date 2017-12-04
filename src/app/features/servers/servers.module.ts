@@ -12,7 +12,8 @@ import {
   ResetPasswordFinishedDialogComponent,
   DeleteStorageDialogComponent,
   DeleteNetworkDialogComponent,
-  DetachMediaDialogComponent
+  DetachMediaDialogComponent,
+  DeleteServerDialogComponent
 } from './shared';
 /** Server */
 import {
@@ -48,6 +49,7 @@ import { SharedModule } from '../../shared';
     DeleteStorageDialogComponent,
     DeleteNetworkDialogComponent,
     DetachMediaDialogComponent,
+    DeleteServerDialogComponent,
     CreateSelfManagedServerComponent
   ],
   declarations: [
@@ -74,7 +76,8 @@ import { SharedModule } from '../../shared';
     ResetPasswordFinishedDialogComponent,
     DeleteStorageDialogComponent,
     DeleteNetworkDialogComponent,
-    DetachMediaDialogComponent
+    DetachMediaDialogComponent,
+    DeleteServerDialogComponent
   ],
   imports: [
     SharedModule
