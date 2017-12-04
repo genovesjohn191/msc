@@ -73,17 +73,17 @@
       </div>
 
       <div class="grid-column">
-        <h3>{{ serverManagementTextContent.networkInformation.title }}</h3>
+        <h3>{{ serverManagementTextContent.nics.title }}</h3>
         <div *ngIf="!hasNetworkInformation">
           <span class="missing-data-info">
-            {{ serverManagementTextContent.networkInformation.noContentMessage }}
+            {{ serverManagementTextContent.nics.noContentMessage }}
           </span>
         </div>
         <mcs-list spacing="xsmall">
           <!-- Network Interface -->
           <mcs-list-item *ngFor="let interface of server.interfaces; let i = index">
             <div display-flex="row" class="horizontal-items-spacing-xsmall">
-              <span>{{ serverManagementTextContent.networkInformation.interface }} {{ i }}:</span>
+              <span>{{ serverManagementTextContent.nics.interface }} {{ i }}:</span>
               <mcs-list spacing="xsmall">
                 <mcs-list-item *ngFor="let ip of interface.ipAddress">{{ ip }}</mcs-list-item>
               </mcs-list>

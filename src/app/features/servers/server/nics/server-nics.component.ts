@@ -30,7 +30,7 @@ import {
 } from '../../../../utilities';
 
 import {
-  DeleteNetworkDialogComponent
+  DeleteNicDialogComponent
 } from '../../shared';
 import { ServerResourceNetwork } from '../../index';
 
@@ -299,7 +299,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteNetwork(network: ServerNetwork): void {
-    let dialogRef = this._dialogService.open(DeleteNetworkDialogComponent, {
+    let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
       data: network,
       size: 'medium'
     });

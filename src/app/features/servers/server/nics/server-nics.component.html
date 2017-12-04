@@ -70,12 +70,10 @@
             <div class="field">
               <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
                 [placeholder]="textContent.networkSelect.placeholder">
-                <mcs-select-item [value]="">{{ textContent.networkSelect.placeholder }}</mcs-select-item>
-                <mcs-select-group [header]="textContent.networkSelect.header">
-                  <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
-                    {{ network.name }}
-                  </mcs-select-item>
-                </mcs-select-group>
+                <mcs-select-item [value]="">-</mcs-select-item>
+                <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+                  {{ network.name }}
+                </mcs-select-item>
               </mcs-select>
             </div>
 
@@ -115,12 +113,10 @@
         <div class="field">
           <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
             [placeholder]="textContent.networkSelect.placeholder">
-            <mcs-select-item [value]="">{{ textContent.networkSelect.placeholder }}</mcs-select-item>
-            <mcs-select-group [header]="textContent.networkSelect.header">
-              <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
-                {{ network.name }}
-              </mcs-select-item>
-            </mcs-select-group>
+            <mcs-select-item [value]="">-</mcs-select-item>
+            <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+              {{ network.name }}
+            </mcs-select-item>
           </mcs-select>
         </div>
 

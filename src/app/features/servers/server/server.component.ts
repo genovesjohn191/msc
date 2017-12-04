@@ -241,17 +241,19 @@ export class ServerComponent
 
       let serverStatus = this._serversService.getServerStatus(server);
 
-      switch (serverStatus.notificationStatus) {
-        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-          this.serverListSource.removeDeletedServer(server);
+      if (serverStatus.commandAction === ServerCommand.Delete) {
+        switch (serverStatus.notificationStatus) {
+          case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+            this.serverListSource.removeDeletedServer(server);
 
-        case CoreDefinition.NOTIFICATION_JOB_FAILED:
-          isDeleting = false;
-          break;
+          case CoreDefinition.NOTIFICATION_JOB_FAILED:
+            isDeleting = false;
+            break;
 
-        default:
-          isDeleting = serverStatus.commandAction === ServerCommand.Delete;
-          break;
+          default:
+            isDeleting = true;
+            break;
+        }
       }
     }
 

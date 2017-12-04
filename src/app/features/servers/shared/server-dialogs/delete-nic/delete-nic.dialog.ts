@@ -6,7 +6,8 @@ import {
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider
+  McsTextContentProvider,
+  CoreDefinition
 } from '../../../../../core';
 import {
   isNullOrEmpty,
@@ -15,25 +16,29 @@ import {
 import { ServerNetwork } from '../../../models';
 
 @Component({
-  selector: 'mcs-delete-network-dialog',
-  templateUrl: './delete-network.dialog.html',
+  selector: 'mcs-delete-nic-dialog',
+  templateUrl: './delete-nic.dialog.html',
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'delete-network-dialog-wrapper'
+    'class': 'delete-nic-dialog-wrapper'
   }
 })
 
-export class DeleteNetworkDialogComponent {
+export class DeleteNicDialogComponent {
   public textContent: any;
   public network: ServerNetwork;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    public dialogRef: McsDialogRef<DeleteNetworkDialogComponent>,
+    public dialogRef: McsDialogRef<DeleteNicDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData: ServerNetwork
   ) {
-    this.textContent = this._textContentProvider.content.servers.shared.deleteNetworkDialog;
+    this.textContent = this._textContentProvider.content.servers.shared.deleteNicDialog;
     this.network = this.dialogData;
+  }
+
+  public get warningIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_WARNING;
   }
 
   /**
@@ -46,14 +51,14 @@ export class DeleteNetworkDialogComponent {
   /**
    * This will close the dialog and set the dialog result to true
    */
-  public deleteNetwork(): void {
+  public deleteNic(): void {
     this.dialogRef.close(this.network);
   }
 
   /**
    * Display dialog title
    */
-  public displayDialogTitle(): string {
+  public get dialogTitle(): string {
     if (isNullOrEmpty(this.network)) { return ''; }
     return replacePlaceholder(
       this.textContent.title,
@@ -65,7 +70,7 @@ export class DeleteNetworkDialogComponent {
   /**
    * Display dialog alert message
    */
-  public displayDialogAlertMessage(): string {
+  public get dialogAlert(): string {
     if (isNullOrEmpty(this.network)) { return ''; }
     return replacePlaceholder(
       this.textContent.alert,

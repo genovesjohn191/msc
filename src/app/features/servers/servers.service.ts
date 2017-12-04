@@ -128,7 +128,7 @@ export class ServersService {
       .map((response) => {
         let serversResponse: McsApiSuccessResponse<Server[]>;
         serversResponse = JSON.parse(response.text(),
-          this._convertProperty) as McsApiSuccessResponse<Server[]>;
+          this._responseReviverParser) as McsApiSuccessResponse<Server[]>;
 
         return serversResponse;
       })
@@ -147,7 +147,7 @@ export class ServersService {
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<Server>;
         serverResponse = JSON.parse(response.text(),
-          this._convertProperty) as McsApiSuccessResponse<Server>;
+          this._responseReviverParser) as McsApiSuccessResponse<Server>;
 
         return serverResponse;
       })
@@ -241,7 +241,7 @@ export class ServersService {
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
-    mcsApiRequestParameter.recordData = JSON.stringify(serverData, this._convertProperty);
+    mcsApiRequestParameter.recordData = JSON.stringify(serverData, this._requestReviverParser);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
@@ -316,7 +316,7 @@ export class ServersService {
         let apiResponse: McsApiSuccessResponse<ServerGroupedOs[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerGroupedOs[]>>(
           response.text(),
-          this._convertProperty
+          this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerGroupedOs[]>();
       })
@@ -335,7 +335,7 @@ export class ServersService {
         let apiResponse: McsApiSuccessResponse<ServerStorageDevice[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerStorageDevice[]>>(
           response.text(),
-          this._convertProperty
+          this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerStorageDevice[]>();
       })
@@ -451,7 +451,7 @@ export class ServersService {
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerNetwork[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetwork[]>>(
-          response.text(), this._convertProperty);
+          response.text(), this._responseReviverParser);
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerNetwork[]>();
       })
       .catch(this._handleServerError);
@@ -469,13 +469,13 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
-    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._convertProperty);
+    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
-          this._convertProperty) as McsApiSuccessResponse<McsApiJob>;
+          this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })
@@ -496,13 +496,13 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._convertProperty);
+    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
-          this._convertProperty) as McsApiSuccessResponse<McsApiJob>;
+          this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })
@@ -522,13 +522,13 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._convertProperty);
+    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response.text(),
-          this._convertProperty) as McsApiSuccessResponse<McsApiJob>;
+          this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })
@@ -617,6 +617,7 @@ export class ServersService {
       default:
         break;
     }
+
     return serverPowerstate;
   }
 
@@ -651,7 +652,7 @@ export class ServersService {
         let apiResponse: McsApiSuccessResponse<ServerPlatform>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerPlatform>>(
           response.text(),
-          this._convertProperty
+          this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerPlatform>();
       })
@@ -670,7 +671,7 @@ export class ServersService {
         let apiResponse: McsApiSuccessResponse<ServerResource[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerResource[]>>(
           response.text(),
-          this._convertProperty
+          this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerResource[]>();
       })
@@ -819,14 +820,12 @@ export class ServersService {
         // Filter only those who have client reference object on notification jobs
         updatedNotifications.forEach((notification) => {
           if (notification.clientReferenceObject) {
-
             activeServers.push({
               serverId: notification.clientReferenceObject.serverId,
               powerState: notification.clientReferenceObject.powerState,
               commandAction: notification.clientReferenceObject.commandAction,
               notificationStatus: notification.status,
               tooltipInformation: notification.summaryInformation
-
             } as ServerClientObject);
           }
         });
@@ -856,11 +855,12 @@ export class ServersService {
   }
 
   /**
-   * Property conversion reviver in JSON format
-   * @param key Key of the object
-   * @param value Value of the object
+   * Convert the json object to corresponding object as response
+   * by comparing its key
+   * @param key Property name of the object to be change
+   * @param value Value of the item
    */
-  private _convertProperty(key, value): any {
+  private _responseReviverParser(key, value): any {
 
     switch (key) {
       case 'powerState':
@@ -885,6 +885,30 @@ export class ServersService {
 
       case 'ipAllocationMode':
         value = ServerIpAllocationMode[value];
+        break;
+
+      default:
+        break;
+    }
+
+    return value;
+  }
+
+  /**
+   * Convert the json object to corresponding object as request
+   * by comparing its key
+   * @param key Property name of the object to be change
+   * @param value Value of the item
+   */
+  private _requestReviverParser(key, value): any {
+
+    switch (key) {
+      case 'imageType':
+        value = getEnumString(ServerImageType, value);
+        break;
+
+      case 'ipAllocationMode':
+        value = getEnumString(ServerIpAllocationMode, value);
         break;
 
       default:
