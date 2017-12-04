@@ -47,7 +47,8 @@ import {
   ServerCreateType,
   ServerImageType,
   ServerImage,
-  ServerCatalogType
+  ServerCatalogType,
+  ServerCatalogItemType
 } from '../../models';
 
 const RAM_MINIMUM_VALUE = 2048;
@@ -278,7 +279,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     });
 
     this.resource.catalogs.forEach((catalog) => {
-      if (catalog.type === ServerCatalogType.SelfManaged) {
+      if (catalog.type === ServerCatalogType.SelfManaged &&
+        catalog.itemType === ServerCatalogItemType.Template) {
         let serverImage = new ServerImage();
         serverImage.id = serverImageId;
         serverImage.imageType = ServerImageType.Template;

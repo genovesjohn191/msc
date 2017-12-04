@@ -279,6 +279,32 @@ export class ServersService {
   }
 
   /**
+   * This will delete an existing server
+   * @param id Server id to delete
+   * @param referenceObject Reference object
+   */
+  public deleteServer(
+    id: string,
+    referenceObject: any
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}`;
+    mcsApiRequestParameter.recordData = JSON.stringify({
+      clientReferenceObject: referenceObject
+    });
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response.text(),
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
    * This will get the server os data from the API
    */
   public getServerOs(): Observable<McsApiSuccessResponse<ServerGroupedOs[]>> {
@@ -681,11 +707,23 @@ export class ServersService {
           {
             serverId: server.id,
             userId: this._authIdentity.userId,
-            commandAction: ServerCommand.ResetVmPassword
+            commandAction: action,
+            powerState: server.powerState,
           })
           .subscribe(() => {
             // Subscribe to execute the reset vm password
           });
+        break;
+
+      case ServerCommand.Delete:
+        this.deleteServer(server.id,
+          {
+            serverId: server.id,
+            commandAction: action,
+            powerState: server.powerState
+          })
+          .subscribe();
+        this._router.navigate(['/servers']);
         break;
 
       default:
@@ -700,6 +738,33 @@ export class ServersService {
           });
         break;
     }
+  }
+
+  /**
+   * Return the active server status
+   * @param server Server to be check
+   */
+  public getServerStatus(server: Server): ServerClientObject {
+    let serverStatus = new ServerClientObject();
+
+    if (!isNullOrEmpty(server)) {
+      serverStatus.powerState = server.powerState;
+      serverStatus.commandAction = ServerCommand.None;
+
+      if (!isNullOrEmpty(this.activeServers)) {
+        for (let active of this.activeServers) {
+          if (active.serverId === server.id) {
+            // Update the powerstate of the corresponding server based on the row
+            serverStatus = active;
+            serverStatus.powerState = this.getActiveServerPowerState(active);
+            server.powerState = serverStatus.powerState;
+            break;
+          }
+        }
+      }
+    }
+
+    return serverStatus;
   }
 
   public computeAvailableMemoryMB(resource: ServerResource): number {

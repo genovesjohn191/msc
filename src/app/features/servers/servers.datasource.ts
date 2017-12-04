@@ -1,6 +1,7 @@
 import {
   Observable,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs/Rx';
 import {
   McsDataSource,
@@ -8,7 +9,11 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  deleteArrayRecord,
+  refreshView
+} from '../../utilities';
 import { Server } from './models';
 import { ServersService } from './servers.service';
 
@@ -42,6 +47,31 @@ export class ServersDataSource implements McsDataSource<Server> {
     }
   }
 
+  /**
+   * This will notify the stream of the table when there are changes on the servers data
+   */
+  private _serversStream: Subject<Server[]>;
+  public get serversStream(): Subject<Server[]> {
+    return this._serversStream;
+  }
+  public set serversStream(value: Subject<Server[]>) {
+    this._serversStream = value;
+  }
+
+  /**
+   * All servers
+   */
+  private _servers: Server[];
+  public get servers(): Server[] {
+    return this._servers;
+  }
+  public set servers(value: Server[]) {
+    this._servers = value;
+  }
+
+  private _serversSubscription: Subscription;
+  private _hasError: boolean;
+
   constructor(
     private _serversService: ServersService,
     private _paginator: McsPaginator,
@@ -49,6 +79,8 @@ export class ServersDataSource implements McsDataSource<Server> {
   ) {
     this._totalRecordCount = 0;
     this.dataLoadingStream = new Subject<McsDataStatus>();
+    this.serversStream = new Subject<Server[]>();
+    this._getServers();
   }
 
   /**
@@ -57,24 +89,15 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public connect(): Observable<Server[]> {
     const displayDataChanges = [
-      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
-      this._paginator.pageChangedStream,
-      this._search.searchChangedStream
+      this.serversStream
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap(() => {
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
-        let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
-
-        return this._serversService.getServers(
-          undefined,
-          displayedRecords,
-          this._search.keyword
-        ).map((response) => {
-          this._totalRecordCount = response.totalCount;
-          return response.content;
-        });
+      .map(() => {
+        if (this._hasError) {
+          throw Observable.throw(new Error(''));
+        }
+        return this.servers;
       });
   }
 
@@ -84,6 +107,9 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public disconnect() {
     this._totalRecordCount = 0;
+    if (!isNullOrEmpty(this._serversSubscription)) {
+      this._serversSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -97,6 +123,17 @@ export class ServersDataSource implements McsDataSource<Server> {
     this.displayedRecord = _record;
   }
 
+  public removeDeletedServer(server: Server): void {
+    if (isNullOrEmpty(server)) { return; }
+
+    refreshView(() => {
+      this.servers = deleteArrayRecord(this.servers, (targetServer) => {
+        return targetServer.id === server.id;
+      });
+      this._serversStream.next();
+    });
+  }
+
   /**
    * Get the displayed server by ID
    * @param serverId Server Id to obtained
@@ -104,5 +141,37 @@ export class ServersDataSource implements McsDataSource<Server> {
   public getDisplayedServerById(serverId: any): Server {
     if (isNullOrEmpty(this.displayedRecord)) { return ;}
     return this.displayedRecord.find((server) => server.id === serverId);
+  }
+
+  private _getServers(): void {
+    const displayDataChanges = [
+      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
+      this._paginator.pageChangedStream,
+      this._search.searchChangedStream
+    ];
+
+    this._serversSubscription = Observable.merge(...displayDataChanges)
+      .switchMap(() => {
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
+        let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
+
+        return this._serversService.getServers(
+          undefined,
+          displayedRecords,
+          this._search.keyword
+        ).map((response) => {
+          this._totalRecordCount = response.totalCount;
+          return response.content;
+        });
+      })
+      .catch((error) => {
+        this._hasError = true;
+        this.serversStream.next(undefined);
+        return Observable.throw(error);
+      })
+      .subscribe((servers) => {
+        this.servers = servers;
+        this._serversStream.next();
+      });
   }
 }

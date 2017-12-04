@@ -15,10 +15,14 @@ import {
   Server,
   ServerPowerState,
   ServerCommand,
-  ServerServiceType
+  ServerServiceType,
+  ServerClientObject
 } from './models';
 /** Shared */
-import { ResetPasswordDialogComponent } from './shared';
+import {
+  ResetPasswordDialogComponent,
+  DeleteServerDialogComponent
+} from './shared';
 /** Core */
 import {
   McsTextContentProvider,
@@ -48,7 +52,6 @@ export class ServersComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-  public serverCommandList: ServerCommand[];
   public selection: McsSelection<Server>;
 
   @ViewChild('search')
@@ -100,6 +103,10 @@ export class ServersComponent
     return CoreDefinition.ASSETS_SVG_RESTART;
   }
 
+  public get deleteIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
+  }
+
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
@@ -110,18 +117,10 @@ export class ServersComponent
   ) {
     super(_browserService, _changeDetectorRef);
     this.selection = new McsSelection<Server>(true);
-    this.serverCommandList = new Array();
   }
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers;
-    this.serverCommandList = [
-      ServerCommand.Start,
-      ServerCommand.Stop,
-      ServerCommand.Restart,
-      ServerCommand.ViewVCloud,
-      ServerCommand.ResetVmPassword
-    ];
   }
 
   public ngAfterViewInit() {
@@ -167,6 +166,32 @@ export class ServersComponent
   }
 
   /**
+   * Set command list for each server
+   */
+  public setServerCommandList(server: Server): ServerCommand[] {
+    if (isNullOrEmpty(server)) { return new Array<ServerCommand>(); }
+
+    let serverCommandList = [
+      ServerCommand.Start,
+      ServerCommand.Stop,
+      ServerCommand.Restart,
+      ServerCommand.ViewVCloud,
+      ServerCommand.ResetVmPassword
+    ];
+
+    if (server.serviceType === ServerServiceType.SelfManaged) {
+      serverCommandList.push(ServerCommand.Delete);
+      serverCommandList.sort(
+        (_first: ServerCommand, _second: ServerCommand) => {
+          return _first - _second;
+        }
+      );
+    }
+
+    return serverCommandList;
+  }
+
+  /**
    * Return true when Start button on the top panel is disabled
    *
    * `@Note`: All selected servers must be powered OFF
@@ -174,7 +199,8 @@ export class ServersComponent
   public get startable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      let state = this.getServerPowerState(server);
+      let serverStatus = this.getServerStatus(server);
+      let state = serverStatus.powerState;
       return state !== ServerPowerState.PoweredOff;
     }).length === 0;
   }
@@ -187,7 +213,8 @@ export class ServersComponent
   public get stoppable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      let state = this.getServerPowerState(server);
+      let serverStatus = this.getServerStatus(server);
+      let state = serverStatus.powerState;
       return state !== ServerPowerState.PoweredOn;
     }).length === 0;
   }
@@ -202,17 +229,53 @@ export class ServersComponent
   }
 
   /**
+   * Return true when Delete button on the top panel is disabled
+   *
+   * `@Note`: All selected servers should not processing any request
+   */
+  public get deletable(): boolean {
+    return this.selection.selected.filter((serverId) => {
+      let server = this.dataSource.getDisplayedServerById(serverId);
+      let serverStatus = this.getServerStatus(server);
+      let state = serverStatus.powerState;
+      return isNullOrEmpty(state);
+    }).length === 0;
+  }
+
+  /**
    * Execute the corresponding action based on top panel commands
    * @param action Action to be set
    */
   public executeTopPanelAction(action: ServerCommand) {
     if (!this.selection.hasValue()) { return; }
 
+    let isDelete = action === ServerCommand.Delete;
+    let servers = new Array<Server>();
+
     this.selection.selected.forEach((serverId) => {
-      let server = this.dataSource.displayedRecord
+      let selectedServer = this.dataSource.displayedRecord
         .find((data) => data.id === serverId);
-      this.executeServerCommand(server, action);
+
+      if (isDelete) {
+         servers.push(selectedServer);
+      } else {
+        this.executeServerCommand(selectedServer, action);
+      }
     });
+
+    if (isDelete && !isNullOrEmpty(servers)) {
+      let dialogRef = this._dialogService.open(DeleteServerDialogComponent, {
+        data: servers,
+        size: 'medium'
+      });
+      dialogRef.afterClosed().subscribe((dialogResult) => {
+        if (dialogResult) {
+          servers.forEach((server) => {
+            this._serversService.executeServerCommand(server, action);
+          });
+        }
+      });
+    }
   }
 
   /**
@@ -220,9 +283,23 @@ export class ServersComponent
    * @param server Server to process the action
    * @param action Action to be execute
    */
-  public executeServerCommand(server: Server, action: ServerCommand) {
-    if (action === ServerCommand.ResetVmPassword) {
-      let dialogRef = this._dialogService.open(ResetPasswordDialogComponent, {
+  public executeServerCommand(server: Server, action: ServerCommand): void {
+    let dialogComponent = null;
+
+    switch (action) {
+      case ServerCommand.ResetVmPassword:
+        dialogComponent = ResetPasswordDialogComponent;
+        break;
+      case ServerCommand.Delete:
+        dialogComponent = DeleteServerDialogComponent;
+        break;
+      default:
+        // do nothing
+        break;
+    }
+
+    if (!isNullOrEmpty(dialogComponent)) {
+      let dialogRef = this._dialogService.open(dialogComponent, {
         data: server,
         size: 'medium'
       });
@@ -328,25 +405,38 @@ export class ServersComponent
   }
 
   /**
-   * Return the server powerstate based on the active server status
+   * Return the active server status
    * @param server Server to be check
    */
-  public getServerPowerState(server: Server): number {
-    let serverPowerstate = server.powerState;
+  public getServerStatus(server: Server): ServerClientObject {
+    return this._serversService.getServerStatus(server);
+  }
 
-    if (isNullOrEmpty(this._serversService.activeServers)) {
-      return serverPowerstate;
-    } else {
-      for (let active of this._serversService.activeServers) {
-        if (active.serverId === server.id) {
-          // Update the powerstate of the corresponding server based on the row
-          serverPowerstate = this._serversService.getActiveServerPowerState(active);
-          server.powerState = serverPowerstate;
+  /**
+   * Return true if server is currently deleting and false if not
+   * @param server Server to be check
+   */
+  public getDeletingServer(server: Server): boolean {
+    let isDeleting = false;
+
+    if (!isNullOrEmpty(server)) {
+      let serverStatus = this.getServerStatus(server);
+
+      switch (serverStatus.notificationStatus) {
+        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+          this.dataSource.removeDeletedServer(server);
+
+        case CoreDefinition.NOTIFICATION_JOB_FAILED:
+          isDeleting = false;
           break;
-        }
+
+        default:
+          isDeleting = serverStatus.commandAction === ServerCommand.Delete;
+          break;
       }
-      return serverPowerstate;
     }
+
+    return isDeleting;
   }
 
   public navigateToResource(server: Server): void {

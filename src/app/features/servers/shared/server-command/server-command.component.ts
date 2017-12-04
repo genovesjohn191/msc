@@ -71,6 +71,10 @@ export class ServerCommandComponent implements OnInit {
         label = this.textContent.clone;
         break;
 
+      case ServerCommand.Delete:
+        label = this.textContent.delete;
+        break;
+
       case ServerCommand.ViewVCloud:
         label = this.textContent.vcloud;
         break;

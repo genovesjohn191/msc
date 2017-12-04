@@ -33,6 +33,7 @@
             </mcs-list-panel-header>
             <mcs-list-panel-item *mcsListPanelItemDef="let server"
               [itemId]="server.id" [groupName]="server.vdcName"
+              [disabled]="getDeletingServer(server)"
               (click)="onServerSelect(server.id)">
               <mcs-icon *ngIf="server.powerState"
                 [key]="getStateIconKey(server.powerState)"></mcs-icon>

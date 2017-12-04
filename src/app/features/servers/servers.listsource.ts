@@ -16,7 +16,9 @@ import {
 import { ServersService } from './servers.service';
 import {
   isNullOrEmpty,
-  compareStrings
+  compareStrings,
+  deleteArrayRecord,
+  refreshView
 } from '../../utilities';
 
 const SERVER_LIST_GROUP_OTHERS = 'Others';
@@ -97,6 +99,17 @@ export class ServersListSource implements McsDataSource<ServerList> {
   public onCompletion(_status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
     this._search.showLoading(false);
+  }
+
+  public removeDeletedServer(server: Server): void {
+    if (isNullOrEmpty(server)) { return; }
+
+    refreshView(() => {
+      this._serverList = deleteArrayRecord(this._serverList, (targetServer) => {
+        return targetServer.id === server.id;
+      });
+      this._serverListStream.next(this._serverList);
+    });
   }
 
   private _mapServerList(servers: Server[]): ServerList[] {

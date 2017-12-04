@@ -173,7 +173,6 @@ table.mcs-simple-table {
   @include flex(0 0 auto);
   @include display-flex(row);
   @include set-items-interval($space-small, horizontal);
-  align-items: center;
 }
 
 .horizontal-items-spacing-xsmall {
