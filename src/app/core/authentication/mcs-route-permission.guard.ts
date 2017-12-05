@@ -41,21 +41,8 @@ export class McsRoutePermissionGuard {
   }
 
   public onNavigateEnd(navStart: NavigationEnd) {
-    // This will check the token if its not expired.
-    // If the token is expired it will redirect automatic to login page
-    this._checkAuthToken();
-
     // Ths will check the permission of the token/identity
     this._checkPermissions(navStart);
-  }
-
-  private _checkAuthToken(): void {
-    // Get token if exist
-    let authToken = this._authenticationService.getAuthToken();
-    if (isNullOrEmpty(authToken)) {
-      // TODO: Set the logout temporary to fixed the issue of error in login page
-      this._authenticationService.logOut();
-    }
   }
 
   private _checkPermissions(navStart: NavigationEnd): void {

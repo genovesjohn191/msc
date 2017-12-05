@@ -26,11 +26,11 @@
         <span>{{ notificationTextContent.title }}</span>
       </div>
 
-      <div *ngIf="!hasNotification && !hasConnectionError">
+      <div class="notification-item" *ngIf="!hasNotification && !hasConnectionError">
         <span>{{ notificationTextContent.noRecord }}</span>
       </div>
 
-      <div *ngIf="hasConnectionError">
+      <div class="notification-item text-error" *ngIf="hasConnectionError">
         <span>{{ notificationTextContent.connectionError }}</span>
       </div>
 

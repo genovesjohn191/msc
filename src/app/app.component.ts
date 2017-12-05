@@ -17,7 +17,11 @@ import {
   NavigationCancel,
   NavigationError
 } from '@angular/router';
-import { McsRoutePermissionGuard } from './core';
+import {
+  McsRoutePermissionGuard,
+  McsErrorHandlerService
+} from './core';
+import { isNullOrEmpty } from './utilities';
 
 /*
  * App Component
@@ -51,7 +55,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private _router: Router,
     private _ngZone: NgZone,
-    private _routePermission: McsRoutePermissionGuard
+    private _routePermission: McsRoutePermissionGuard,
+    private _errorHandlerService: McsErrorHandlerService
   ) {
     this.isInitialDisplayed = true;
   }
@@ -59,13 +64,15 @@ export class AppComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._listenToRouterEvents();
     this._routePermission.initializeRouteChecking();
+    this._errorHandlerService.initializeErrorHandlers();
   }
 
   public ngOnDestroy(): void {
-    if (this.routerSubscription) {
+    if (!isNullOrEmpty(this.routerSubscription)) {
       this.routerSubscription.unsubscribe();
     }
     this._routePermission.dispose();
+    this._errorHandlerService.dispose();
   }
 
   private _listenToRouterEvents(): void {

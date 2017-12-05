@@ -56,7 +56,8 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
         return this._ticketsService.getTickets(
           undefined,
           displayedRecords,
-          this._search.keyword
+          this._search.keyword,
+          false
         ).map((response) => {
           this._totalRecordCount = response.totalCount;
           return response.content;

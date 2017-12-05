@@ -28,7 +28,7 @@ export class ConsolePageService {
     return this._apiService.get(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiConsole>;
-        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<McsApiConsole>;
+        serverResponse = JSON.parse(response) as McsApiSuccessResponse<McsApiConsole>;
 
         return serverResponse;
       })

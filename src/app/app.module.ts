@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import {
   NgModule,
   ErrorHandler
@@ -90,7 +90,7 @@ export function coreConfig(): CoreConfig {
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     CookieModule.forRoot(),
     CoreModule.forRoot(coreConfig),

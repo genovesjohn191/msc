@@ -2,6 +2,7 @@ import {
   ErrorHandler,
   isDevMode
 } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
 import { resolveEnvVar } from './utilities';
 const RAVEN = require('raven-js');
 let ravenInstalled: boolean = false;
@@ -9,10 +10,12 @@ let ravenInstalled: boolean = false;
 /**
  * Raven error handler class that logs all the error to the sentry
  * in case of production mode, otherwise in console.
+ *
+ * `@Note:` Http Response error are not included in logging the sentry
  */
 class RavenErrorHandler implements ErrorHandler {
-  public handleError(error: any): void {
-    if (!isDevMode()) {
+  public handleError(error: HttpResponse<any> | any): void {
+    if (!isDevMode() && !(error instanceof HttpResponse)) {
       RAVEN.captureException(error.originalError || error);
     }
   }

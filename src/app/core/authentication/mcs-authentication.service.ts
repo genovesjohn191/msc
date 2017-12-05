@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/Rx';
 import { CoreDefinition } from '../core.definition';
 import { CoreConfig } from '../core.config';
 import { McsApiService } from '../services/mcs-api.service';
-import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 import { McsApiIdentity } from '../models/response/mcs-api-identity';
@@ -35,7 +34,6 @@ export class McsAuthenticationService {
     private _coreConfig: CoreConfig
   ) {
     // Listen for the error in API Response
-    this._listenForErrorApiResponse();
     this._jwtCookieName = resolveEnvVar('JWT_COOKIE_NAME', CoreDefinition.COOKIE_AUTH_TOKEN);
     this._enablePassingJwtInUrl =
       resolveEnvVar('ENABLE_PASSING_JWT_IN_URL', 'true').toLowerCase() === 'true';
@@ -160,24 +158,23 @@ export class McsAuthenticationService {
   public IsAuthenticated(authToken: string): Observable<boolean> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/identity';
-    mcsApiRequestParameter.optionalHeaders.append(
+    mcsApiRequestParameter.optionalHeaders.set(
       CoreDefinition.HEADER_AUTHORIZATION,
       `${CoreDefinition.HEADER_BEARER} ${authToken}`
     );
 
     return this._apiService.get(mcsApiRequestParameter)
-    .map((response) => {
-      let identityResponse: McsApiSuccessResponse<McsApiIdentity>;
-      identityResponse = JSON.parse(response.text(),
-        reviverParser) as McsApiSuccessResponse<McsApiIdentity>;
+      .map((response) => {
+        let identityResponse: McsApiSuccessResponse<McsApiIdentity>;
+        identityResponse = JSON.parse(response,
+          reviverParser) as McsApiSuccessResponse<McsApiIdentity>;
 
-      if (identityResponse && identityResponse.content) {
-        this._setUserIdentity(authToken, identityResponse.content);
-        return true;
-      }
-
-      return false;
-    });
+        if (identityResponse && identityResponse.content) {
+          this._setUserIdentity(authToken, identityResponse.content);
+          return true;
+        }
+        return false;
+      });
   }
 
   private _setUserIdentity(authToken: string, identity: McsApiIdentity) {
@@ -211,24 +208,5 @@ export class McsAuthenticationService {
       authentication,
       { expires: expiration }
     );
-  }
-
-  private _listenForErrorApiResponse(): void {
-    this._apiService.errorResponseStream.subscribe((errorResponse) => {
-      if (!errorResponse) { return; }
-
-      switch (errorResponse.status) {
-        case McsHttpStatusCode.Unauthorized:
-          this.logOut();
-          break;
-
-        case McsHttpStatusCode.Forbidden:
-          // TODO: Confirm if modal here or alert should be displayed
-          break;
-
-        default:
-          break;
-      }
-    });
   }
 }

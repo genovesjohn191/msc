@@ -26,7 +26,7 @@ export class ToolsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Portal[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Portal[]>>(response.text());
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Portal[]>>(response);
 
         return apiResponse;
       })

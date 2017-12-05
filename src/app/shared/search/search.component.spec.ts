@@ -5,6 +5,7 @@ import {
   fakeAsync
 } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
+import { CoreDefinition } from '../../core';
 import { CoreTestingModule } from '../../core/testing';
 
 describe('SearchComponent', () => {
@@ -35,7 +36,7 @@ describe('SearchComponent', () => {
       }
     });
 
-    /** Tesbed Component Compilation and Creation */
+    /** Testbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
       let fixture = TestBed.createComponent(SearchComponent);
       fixture.detectChanges();
@@ -46,34 +47,18 @@ describe('SearchComponent', () => {
 
   /** Test Implementation */
   describe('onChangeKeyEvent()', () => {
-    beforeEach(fakeAsync(() => {
-      spyOn(component.searchChangedStream, 'next');
+    it(`should set the keyword to "A".`, fakeAsync(() => {
       component.onChangeKeyEvent('A');
-      tick(component.delayInSeconds as number);
-    }));
-
-    it(`should notify the searchChangedStream subscribers when key is pressed.`, () => {
-      expect(component.searchChangedStream.next).toHaveBeenCalledTimes(1);
-    });
-
-    it(`should set the keyword to "A".`, () => {
+      tick(CoreDefinition.SEARCH_TIME as number);
       expect(component.keyword).toBe('A');
-    });
+    }));
   });
 
   describe('onEnterKeyUpEvent()', () => {
-    beforeEach(fakeAsync(() => {
-      spyOn(component.searchChangedStream, 'next');
+    it(`should set the keyword to "B".`, fakeAsync(() => {
       component.onEnterKeyUpEvent('B');
-      tick(component.delayInSeconds as number);
-    }));
-
-    it(`should notify the searchChangedStream subscribers when key is pressed.`, () => {
-      expect(component.searchChangedStream.next).toHaveBeenCalledTimes(1);
-    });
-
-    it(`should set the keyword to "B".`, () => {
+      tick(CoreDefinition.SEARCH_TIME as number);
       expect(component.keyword).toBe('B');
-    });
+    }));
   });
 });

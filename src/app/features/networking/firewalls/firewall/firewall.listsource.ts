@@ -62,7 +62,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
       .map(() => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let firewallList = new Array<FirewallList>();
-        this._searchMode = (this._search.keyword) ? true : false ;
+        this._searchMode = (this._search.keyword) ? true : false;
 
         if (!isNullOrEmpty(this._firewallList)) {
           firewallList = this._firewallList.slice().filter((firewall: FirewallList) => {
@@ -92,7 +92,8 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
   }
 
   private _setFirewallListData(): void {
-    this._firewallsSubscription = this._firewallsService.getFirewalls()
+    this._firewallsSubscription = this._firewallsService
+      .getFirewalls(undefined, undefined, undefined, false)
       .subscribe((response) => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         this._firewallList = this._mapFirewallList(response.content);
