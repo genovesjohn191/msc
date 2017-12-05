@@ -9,6 +9,7 @@ import { McsOverlayService } from './services/mcs-overlay.service';
 import { McsScrollDispatcherService } from './services/mcs-scroll-dispatcher.service';
 import { McsViewportRulerService } from './services/mcs-viewport-ruler.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
+import { McsPlatformService } from './services/mcs-platform.service';
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
@@ -34,6 +35,7 @@ export const coreProviders: any[] = [
   McsScrollDispatcherService,
   McsViewportRulerService,
   McsErrorHandlerService,
+  McsPlatformService,
   McsTextContentProvider,
   McsAssetsProvider,
   McsFilterProvider,

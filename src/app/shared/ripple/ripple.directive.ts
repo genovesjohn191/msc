@@ -7,6 +7,7 @@ import {
   OnDestroy,
   SimpleChanges
 } from '@angular/core';
+import { McsPlatformService } from '../../core';
 import { RippleRenderer } from './factory/ripple-renderer';
 import { RippleConfig } from './factory/ripple-config';
 
@@ -43,12 +44,14 @@ export class RippleDirective implements OnChanges, OnDestroy {
 
   constructor(
     private _ngZone: NgZone,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private _platformService: McsPlatformService
   ) {
     // Instantiate the ripple renderer class
     this._rippleRenderer = new RippleRenderer(
       this._ngZone,
-      this._elementRef
+      this._elementRef,
+      this._platformService
     );
     this._updateRippleRenderer();
   }

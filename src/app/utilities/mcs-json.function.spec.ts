@@ -4,7 +4,8 @@ import {
 import {
   reviverParser,
   convertJsonStringToObject,
-  convertObjectToJsonString
+  convertObjectToJsonString,
+  convertMapToJsonObject
 } from './mcs-json.function';
 
 // Dummy test object class
@@ -72,6 +73,21 @@ describe('JSON Functions', () => {
 
       let convertedObject = convertJsonStringToObject<TestObject>(json);
       expect(convertedObject).toBeUndefined();
+    });
+  });
+
+  describe('convertMapToJsonObject()', () => {
+    let testObject = new Map<string, string>();
+    beforeEach(async(() => {
+      testObject.set('first', 'value1');
+      testObject.set('second', 'value2');
+    }));
+
+    it(`should convert MAP to JSON object`, () => {
+      let convertedObject = convertMapToJsonObject(testObject);
+      expect(convertedObject).toBeDefined();
+      expect(convertedObject.first).toBe('value1');
+      expect(convertedObject.second).toBe('value2');
     });
   });
 });

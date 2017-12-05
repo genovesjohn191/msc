@@ -10,6 +10,7 @@ import {
   McsOverlayRef,
   McsOverlayState,
   McsOverlayService,
+  McsPlatformService,
   McsPortalComponent
 } from '../../core';
 import {
@@ -107,15 +108,20 @@ export class TooltipDirective implements OnInit, OnDestroy {
   constructor(
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
-    private _overlayService: McsOverlayService
+    private _overlayService: McsOverlayService,
+    private _platformService: McsPlatformService
   ) { }
 
   public ngOnInit(): void {
-    this._registerEvents();
+    if (this._platformService.isBrowser) {
+      this._registerEvents();
+    }
   }
 
   public ngOnDestroy(): void {
-    this._unregisterEvents();
+    if (this._platformService.isBrowser) {
+      this._unregisterEvents();
+    }
     if (this._tooltipInstance) {
       this._disposeTooltip();
     }
