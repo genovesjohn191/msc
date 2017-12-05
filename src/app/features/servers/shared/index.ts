@@ -14,6 +14,6 @@ export * from './mcs-storage.interface';
 export * from './server-dialogs/reset-password/reset-password.dialog';
 export * from './server-dialogs/reset-password-finished/reset-password-finished.dialog';
 export * from './server-dialogs/delete-storage/delete-storage.dialog';
-export * from './server-dialogs/delete-network/delete-network.dialog';
+export * from './server-dialogs/delete-nic/delete-nic.dialog';
 export * from './server-dialogs/detach-media/detach-media.dialog';
 export * from './server-dialogs/delete-server/delete-server.dialog';

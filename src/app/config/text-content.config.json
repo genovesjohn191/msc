@@ -154,8 +154,8 @@
           "title": "VM Console",
           "link": "View console"
         },
-        "networkInformation": {
-          "title": "Network Information",
+        "nics": {
+          "title": "NICs",
           "publicIp": "Public IP",
           "interface": "NIC",
           "noContentMessage": "There are no NICs for this server."
@@ -237,7 +237,7 @@
         "primaryCheckbox": "Make this the primary NIC for this server",
         "networkSelect": {
           "header": "Networks",
-          "placeholder": "Select a Network"
+          "placeholder": "Select Network"
         },
         "ipAllocationMode": {
           "static": "Static - IP Pool",
@@ -287,10 +287,10 @@
         "cancel": "Cancel",
         "confirm": "Yes"
       },
-      "deleteNetworkDialog": {
-        "title": "Delete {{network_name}} Network",
+      "deleteNicDialog": {
+        "title": "Delete {{network_name}} NIC",
         "alert": "The data on {{network_name}} will be lost forever.",
-        "confirmation": "Are you sure you want to delete this network?",
+        "confirmation": "Are you sure you want to delete this NIC?",
         "cancel": "Cancel",
         "confirm": "Yes"
       },

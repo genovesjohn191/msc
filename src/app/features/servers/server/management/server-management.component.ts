@@ -566,8 +566,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
             }
 
             if (!isNullOrEmpty(media)) {
-              deleteArrayRecord(this.server.media, (targetNetwork) => {
-                return media.id === targetNetwork.id;
+              deleteArrayRecord(this.server.media, (targetMedia) => {
+                return media.id === targetMedia.id;
               });
             }
           }
