@@ -51,11 +51,11 @@ describe('FirewallsService', () => {
   /** Test Implementation */
   describe('getFirewalls()', () => {
     it('should get all firewalls from API calls', () => {
-      firewallsService.getFirewalls(
-        requestOptions.page,
-        requestOptions.perPage,
-        requestOptions.searchKeyword
-      ).subscribe((response) => {
+      firewallsService.getFirewalls({
+        page: requestOptions.page,
+        perPage: requestOptions.perPage,
+        searchKeyword: requestOptions.searchKeyword
+      }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);

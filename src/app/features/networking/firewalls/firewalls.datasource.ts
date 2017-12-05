@@ -53,12 +53,12 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
-        return this._firewallsService.getFirewalls(
-          undefined,
-          displayedRecords,
-          this._search.keyword,
-          false
-        ).map((response) => {
+        return this._firewallsService.getFirewalls({
+          page: undefined,
+          perPage: displayedRecords,
+          searchKeyword: this._search.keyword,
+          notifyError: false
+        }).map((response) => {
           this._totalRecordCount = response.totalCount;
           return response.content;
         });

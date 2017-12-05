@@ -10,7 +10,8 @@ import {
 import {
   reviverParser,
   convertJsonStringToObject,
-  getEnumString
+  getEnumString,
+  isNullOrEmpty
 } from '../../utilities';
 import {
   Ticket,
@@ -50,21 +51,25 @@ export class TicketsService {
    * @param searchKeyword Keyword to be search during filtering
    * @param notifyError Notify global error flag
    */
-  public getTickets(
+  public getTickets(args?: {
     page?: number,
     perPage?: number,
     searchKeyword?: string,
-    notifyError: boolean = true): Observable<McsApiSuccessResponse<Ticket[]>> {
+    notifyError?: boolean
+  }): Observable<McsApiSuccessResponse<Ticket[]>> {
+
+    // Set default values if null
+    if (isNullOrEmpty(args)) { args = {}; }
 
     let searchParams = new Map<string, any>();
-    searchParams.set('page', page ? page.toString() : undefined);
-    searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('search_keyword', searchKeyword);
+    searchParams.set('page', args.page ? args.page.toString() : undefined);
+    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
+    searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets';
     mcsApiRequestParameter.searchParameters = searchParams;
-    mcsApiRequestParameter.notifyGlobalErrorHandler = notifyError;
+    mcsApiRequestParameter.notifyGlobalErrorHandler = args.notifyError ? args.notifyError : true;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
@@ -81,28 +86,38 @@ export class TicketsService {
 
   /**
    * Get all the servers from the API
-   * @param page Page index of the page to obtained
-   * @param perPage Size of item per page
-   * @param searchKeyword Keyword to be search during filtering
+   * @param pageIdx Page index of the page to obtained
+   * @param perPageCount Size of item per page
+   * @param keyword Keyword to be search during filtering
    */
   public getServers(
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<Server[]>> {
-    return this._serversService.getServers(page, perPage, searchKeyword);
+    pageIdx?: number,
+    perPageCount?: number,
+    keyword?: string): Observable<McsApiSuccessResponse<Server[]>> {
+    return this._serversService.getServers({
+      page: pageIdx,
+      perPage: perPageCount,
+      searchKeyword: keyword,
+      notifyError: false
+    });
   }
 
   /**
    * Get all the firewalls from the API
-   * @param page Page index of the page to obtained
-   * @param perPage Size of item per page
-   * @param searchKeyword Keyword to be search during filtering
+   * @param pageIdx Page index of the page to obtained
+   * @param perPageCount Size of item per page
+   * @param keyword Keyword to be search during filtering
    */
   public getFirewalls(
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<Firewall[]>> {
-    return this._firewallsService.getFirewalls(page, perPage, searchKeyword);
+    pageIdx?: number,
+    perPageCount?: number,
+    keyword?: string): Observable<McsApiSuccessResponse<Firewall[]>> {
+    return this._firewallsService.getFirewalls({
+      page: pageIdx,
+      perPage: perPageCount,
+      searchKeyword: keyword,
+      notifyError: false
+    });
   }
 
   /**

@@ -110,21 +110,25 @@ export class ServersService {
    * @param serverName Server name filter
    * @param notifyError Notify global error flag
    */
-  public getServers(
+  public getServers(args?: {
     page?: number,
     perPage?: number,
-    serverName?: string,
-    notifyError: boolean = true): Observable<McsApiSuccessResponse<Server[]>> {
+    searchKeyword?: string,
+    notifyError?: boolean
+  }): Observable<McsApiSuccessResponse<Server[]>> {
+
+    // Set default values if null
+    if (isNullOrEmpty(args)) { args = {}; }
 
     let searchParams = new Map<string, any>();
-    searchParams.set('page', page ? page.toString() : undefined);
-    searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('search_keyword', serverName);
+    searchParams.set('page', args.page ? args.page.toString() : undefined);
+    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
+    searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
     mcsApiRequestParameter.searchParameters = searchParams;
-    mcsApiRequestParameter.notifyGlobalErrorHandler = notifyError;
+    mcsApiRequestParameter.notifyGlobalErrorHandler = args.notifyError ? args.notifyError : true;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
