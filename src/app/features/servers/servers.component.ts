@@ -422,17 +422,19 @@ export class ServersComponent
     if (!isNullOrEmpty(server)) {
       let serverStatus = this.getServerStatus(server);
 
-      switch (serverStatus.notificationStatus) {
-        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-          this.dataSource.removeDeletedServer(server);
+      if (serverStatus.commandAction === ServerCommand.Delete) {
+        switch (serverStatus.notificationStatus) {
+          case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+            this.dataSource.removeDeletedServer(server);
 
-        case CoreDefinition.NOTIFICATION_JOB_FAILED:
-          isDeleting = false;
-          break;
+          case CoreDefinition.NOTIFICATION_JOB_FAILED:
+            isDeleting = false;
+            break;
 
-        default:
-          isDeleting = serverStatus.commandAction === ServerCommand.Delete;
-          break;
+          default:
+            isDeleting = true;
+            break;
+        }
       }
     }
 
@@ -444,6 +446,14 @@ export class ServersComponent
       isNullOrEmpty(server.environment.resource)) { return; }
 
     this._router.navigate(['/servers/vdc', server.environment.resource.id]);
+  }
+
+  public toggleSelection(server: Server): void {
+    if (isNullOrEmpty(server)) { return; }
+
+    if (!this.getDeletingServer(server)) {
+      this.selection.toggle(server.id);
+    }
   }
 
   /**

@@ -81,7 +81,9 @@
               [indeterminate]="selection.hasValue() && !isAllSelected()">
             </mcs-checkbox>
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row"
+            [disabled]="getDeletingServer(row)"
+            class="text-center action-cell hidden-small">
             <mcs-checkbox (change)="selection.toggle(row.id)"
               [checked]="selection.isSelected(row.id)">
             </mcs-checkbox>
@@ -209,7 +211,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           [ngClass]="{'active-row': selection.isSelected(row.id)}"
-          (click)="selection.toggle(row.id)"></mcs-data-row>
+          (click)="toggleSelection(row)"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->
