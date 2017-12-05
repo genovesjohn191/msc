@@ -5,7 +5,7 @@ import {
   NgZone,
   ChangeDetectorRef,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 @Component({

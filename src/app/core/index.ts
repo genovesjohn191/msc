@@ -17,6 +17,7 @@ export * from './services/mcs-dialog.service';
 export * from './services/mcs-scroll-dispatcher.service';
 export * from './services/mcs-viewport-ruler.service';
 export * from './services/mcs-error-handler.service';
+export * from './services/mcs-platform.service';
 /** Providers */
 export * from './providers/mcs-text-content.provider';
 export * from './providers/mcs-assets.provider';

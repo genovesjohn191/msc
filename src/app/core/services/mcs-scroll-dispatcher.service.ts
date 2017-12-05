@@ -176,7 +176,7 @@ export class McsScrollDispatcherService {
 
       const time = timestamp - start;
       let percent = Math.min(time / duration, 1);
-      scrollableElement.scrollTo(0, startingY + diff * percent);
+      scrollableElement.scrollTop = startingY + diff * percent;
       if (time < duration) {
         window.requestAnimationFrame(step);
       }

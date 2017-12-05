@@ -6,6 +6,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '../../core/testing';
 import { ActionItemComponent } from './action-item.component';
 import { ActionItemModule } from './action-item.module';
 
@@ -29,6 +30,7 @@ describe('ActionItemComponent', () => {
         TestActionItemComponent
       ],
       imports: [
+        CoreTestingModule,
         ActionItemModule
       ]
     });

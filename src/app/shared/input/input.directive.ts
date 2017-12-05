@@ -14,7 +14,10 @@ import {
   NgControl,
   NgForm
 } from '@angular/forms';
-import { McsFormFieldControlBase } from '../../core';
+import {
+  McsFormFieldControlBase,
+  McsPlatformService
+} from '../../core';
 import {
   isNullOrEmpty,
   ErrorStateMatcher
@@ -103,6 +106,7 @@ export class InputDirective extends McsFormFieldControlBase<any>
   constructor(
     private _elementRef: ElementRef,
     private _renderer: Renderer2,
+    private _platformService: McsPlatformService,
     @Optional() @Self() public ngControl: NgControl,
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective,
@@ -138,7 +142,7 @@ export class InputDirective extends McsFormFieldControlBase<any>
    */
   public isTextarea() {
     let nativeElement = this._elementRef.nativeElement;
-    let nodeName = nativeElement.nodeName || nativeElement.name;
+    let nodeName = this._platformService.isBrowser ? nativeElement.nodeName : nativeElement.name;
     return nodeName ? nodeName.toLowerCase() === 'textarea' : false;
   }
 

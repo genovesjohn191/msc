@@ -6,6 +6,7 @@ import { RippleConfig } from './ripple-config';
 import { RippleRef } from './ripple-ref';
 import { RippleState } from './ripple-state.enum';
 import { isNullOrEmpty } from '../../../utilities';
+import { McsPlatformService } from '../../../core';
 
 /** Fade in and out duration constants */
 export const RIPPLE_FADE_IN_DURATION = 450;
@@ -24,18 +25,21 @@ export class RippleRenderer {
 
   constructor(
     private _ngZone: NgZone,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private _platformService: McsPlatformService
   ) {
     // Set container element to set the ripple
-    this._containerElement = this._elementRef.nativeElement;
+    if (this._platformService.isBrowser) {
+      this._containerElement = this._elementRef.nativeElement;
 
-    // Specify events which need to be registered on the trigger.
-    this._triggerEvents.set('mousedown', this.onMousedown.bind(this));
-    this._triggerEvents.set('mouseup', this.onMouseup.bind(this));
-    this._triggerEvents.set('mouseleave', this.onMouseLeave.bind(this));
+      // Specify events which need to be registered on the trigger.
+      this._triggerEvents.set('mousedown', this.onMousedown.bind(this));
+      this._triggerEvents.set('mouseup', this.onMouseup.bind(this));
+      this._triggerEvents.set('mouseleave', this.onMouseLeave.bind(this));
 
-    // By default use the host element as trigger element.
-    this.setTriggerElement(this._containerElement);
+      // By default use the host element as trigger element.
+      this.setTriggerElement(this._containerElement);
+    }
   }
 
   /**
@@ -127,7 +131,7 @@ export class RippleRenderer {
     let rippleEl = rippleRef.element;
     rippleEl.style.transitionDuration = `${RIPPLE_FADE_OUT_DURATION}ms`;
     rippleEl.style.opacity = '0';
-    rippleRef.state = RippleState.FadingIn;
+    rippleRef.state = RippleState.FadingOut;
 
     // Once the ripple faded out, the ripple can be safely removed from the DOM.
     this.runTimeoutOutsideZone(() => {
