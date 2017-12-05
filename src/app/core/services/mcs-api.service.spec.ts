@@ -1,18 +1,9 @@
 import {
   async,
   TestBed,
-  getTestBed,
-  fakeAsync
+  getTestBed
 } from '@angular/core/testing';
-import {
-  Response,
-  RequestMethod
-} from '@angular/http';
-import {
-  MockBackend,
-  MockConnection
-} from '@angular/http/testing';
-import { ResponseOptions } from '@angular/http';
+import { HttpTestingController } from '@angular/common/http/testing';
 import { CoreConfig } from '../core.config';
 import { McsApiService } from './mcs-api.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
@@ -21,7 +12,7 @@ import { CoreTestingModule } from '../testing';
 describe('McsApiService', () => {
 
   /** Stub Services Mock */
-  let mockBackend: MockBackend;
+  let mockBackend: HttpTestingController;
   let mcsApiService: McsApiService;
   let coreConfig: CoreConfig;
 
@@ -38,7 +29,7 @@ describe('McsApiService', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      mockBackend = getTestBed().get(MockBackend);
+      mockBackend = getTestBed().get(HttpTestingController);
       mcsApiService = getTestBed().get(McsApiService);
       coreConfig = getTestBed().get(CoreConfig);
     });
@@ -55,232 +46,227 @@ describe('McsApiService', () => {
     });
   });
 
-  describe('get', () => {
-    it('should get Observable response', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Get);
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            body: [
-              {
-                status: 200,
-                content: 'Mock value',
-                totalCount: 1
-              }]
-          }
-          )));
-      });
+  /** We need to call verify to make sure there is no pending request in each request */
+  afterEach(async((() => {
+    mockBackend.verify();
+  })));
 
+  describe('get', () => {
+    it('should get Observable response', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
       mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.responseType = 'json';
       mcsApiService.get(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
+          expect(response.status).toBe(200);
         });
-    }));
 
-    it('should call handleError method when error occured', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Get);
-        connection.mockError(new Response(
-          new ResponseOptions({
-            status: 404,
-            statusText: 'error thrown',
-            body: {}
-          })
-        ) as any as Error);
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('GET');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.flush({
+        status: 200,
+        content: 'Mock value',
+        totalCount: 1
       });
+    });
 
+    it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
       mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.responseType = 'json';
 
-      spyOn(mcsApiService, 'handleError');
       mcsApiService.get(mcsApiRequestParameter)
-        .finally(() => {
-          expect(mcsApiService.handleError).toHaveBeenCalled();
-        });
-    }));
+        .subscribe(
+        (response) => { expect(response).toBeDefined(); },
+        (error) => { expect(error).toBeDefined(); }
+        );
+
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('GET');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.error(new ErrorEvent('Error'));
+    });
   });
 
   describe('post', () => {
-    it('should insert new entry', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Post);
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            status: 201,
-            statusText: 'success'
-          }
-          )));
-      });
-
+    it('should insert new entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
       mcsApiRequestParameter.endPoint = '/servers/id';
       mcsApiRequestParameter.recordData = 'title: server';
+      mcsApiRequestParameter.responseType = 'json';
 
       mcsApiService.post(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
+          expect(response.status).toBe(201);
         });
-    }));
 
-    it('should call handleError method when error occured', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Post);
-        connection.mockError(new Response(
-          new ResponseOptions({
-            status: 404,
-            statusText: 'error thrown',
-            body: {}
-          })
-        ) as any as Error);
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('POST');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.flush({
+        status: 201,
+        statusText: 'success'
       });
+    });
 
+    it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
-      mcsApiRequestParameter.recordData = 'title: server';
+      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.responseType = 'json';
 
-      spyOn(mcsApiService, 'handleError');
       mcsApiService.post(mcsApiRequestParameter)
-        .finally(() => {
-          expect(mcsApiService.handleError).toHaveBeenCalled();
-        });
-    }));
+        .subscribe(
+        (response) => { expect(response).toBeDefined(); },
+        (error) => { expect(error).toBeDefined(); }
+        );
+
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('POST');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.error(new ErrorEvent('Error'));
+    });
   });
 
   describe('patch', () => {
-    it('should update some fields of the existing entry', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Patch);
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            status: 201,
-            statusText: 'success'
-          }
-          )));
-      });
-
+    it('should update some fields of the existing entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
       mcsApiRequestParameter.endPoint = '/servers/id';
       mcsApiRequestParameter.recordData = 'title: server';
+      mcsApiRequestParameter.responseType = 'json';
 
       mcsApiService.patch(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
+          expect(response.status).toBe(201);
         });
-    }));
 
-    it('should call handleError method when error occured', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Patch);
-        connection.mockError(new Response(
-          new ResponseOptions({
-            status: 404,
-            statusText: 'error thrown',
-            body: {}
-          })
-        ) as any as Error);
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('PATCH');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.flush({
+        status: 201,
+        statusText: 'success'
       });
+    });
 
+    it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
-      mcsApiRequestParameter.recordData = 'title: server';
+      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.responseType = 'json';
 
-      spyOn(mcsApiService, 'handleError');
       mcsApiService.patch(mcsApiRequestParameter)
-        .finally(() => {
-          expect(mcsApiService.handleError).toHaveBeenCalled();
-        });
-    }));
+        .subscribe(
+        (response) => { expect(response).toBeDefined(); },
+        (error) => { expect(error).toBeDefined(); }
+        );
+
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('PATCH');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.error(new ErrorEvent('Error'));
+    });
   });
 
   describe('put', () => {
-    it('should save updated to existing entry', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Put);
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            status: 204,
-            statusText: 'success'
-          }
-          )));
-      });
-
+    it('should save updated to existing entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
       mcsApiRequestParameter.endPoint = '/servers/id';
       mcsApiRequestParameter.recordData = 'title: server';
+      mcsApiRequestParameter.responseType = 'json';
 
       mcsApiService.put(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
+          expect(response.status).toBe(201);
         });
-    }));
 
-    it('should call handleError method when error occured', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Put);
-        connection.mockError(new Response(
-          new ResponseOptions({
-            status: 404,
-            statusText: 'error thrown',
-            body: {}
-          })
-        ) as any as Error);
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('PUT');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.flush({
+        status: 201,
+        statusText: 'success'
       });
+    });
 
+    it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
-      mcsApiRequestParameter.recordData = 'title: server';
+      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.responseType = 'json';
 
-      spyOn(mcsApiService, 'handleError');
       mcsApiService.put(mcsApiRequestParameter)
-        .finally(() => {
-          expect(mcsApiService.handleError).toHaveBeenCalled();
-        });
-    }));
+        .subscribe(
+        (response) => { expect(response).toBeDefined(); },
+        (error) => { expect(error).toBeDefined(); }
+        );
+
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('PUT');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.error(new ErrorEvent('Error'));
+    });
   });
 
   describe('delete', () => {
-    it('should delete existing entry', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Delete);
-        connection.mockRespond(new Response(
-          new ResponseOptions({
-            status: 204,
-            statusText: 'success'
-          }
-          )));
-      });
-
+    it('should delete existing entry', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
       mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.recordData = 'title: server';
+      mcsApiRequestParameter.responseType = 'json';
 
       mcsApiService.delete(mcsApiRequestParameter)
         .subscribe((response) => {
           expect(response).toBeDefined();
+          expect(response.status).toBe(201);
         });
-    }));
 
-    it('should call handleError method when error occured', fakeAsync(() => {
-      mockBackend.connections.subscribe((connection: MockConnection) => {
-        expect(connection.request.method).toBe(RequestMethod.Delete);
-        connection.mockError(new Response(
-          new ResponseOptions({
-            status: 404,
-            statusText: 'error thrown',
-            body: {}
-          })
-        ) as any as Error);
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('DELETE');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.flush({
+        status: 201,
+        statusText: 'success'
       });
+    });
 
+    it('should call handleError method when error occured', () => {
       let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-      mcsApiRequestParameter.endPoint = '/servers/id';
+      mcsApiRequestParameter.endPoint = '/servers';
+      mcsApiRequestParameter.responseType = 'json';
 
-      spyOn(mcsApiService, 'handleError');
       mcsApiService.delete(mcsApiRequestParameter)
-        .finally(() => {
-          expect(mcsApiService.handleError).toHaveBeenCalled();
-        });
-    }));
+        .subscribe(
+        (response) => { expect(response).toBeDefined(); },
+        (error) => { expect(error).toBeDefined(); }
+        );
+
+      // Create request to the backend and expect that the request happened
+      let mockRequest = mockBackend.expectOne(mcsApiRequestParameter.endPoint);
+      expect(mockRequest.request.method).toEqual('DELETE');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      mockRequest.error(new ErrorEvent('Error'));
+    });
   });
 });

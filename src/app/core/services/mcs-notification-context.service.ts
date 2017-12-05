@@ -128,7 +128,7 @@ export class McsNotificationContextService {
     return this._apiService.get(mcsApiRequestParameter)
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob[]>>(response.text(),
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob[]>>(response,
           reviverParser);
         return apiResponse ? apiResponse : new McsApiSuccessResponse<McsApiJob[]>();
       })

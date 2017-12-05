@@ -216,6 +216,18 @@ table.mcs-simple-table {
   color: $color-black;
 }
 
+.text-error {
+  color: $color-red-00;
+}
+
+.text-success {
+  color: $color-green-00;
+}
+
+.text-warning {
+  color: $color-yellow-00;
+}
+
 .dropzone {
   border: 5px dashed transparent;
 

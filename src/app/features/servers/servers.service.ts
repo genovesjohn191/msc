@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
 import {
   Observable,
   BehaviorSubject
@@ -109,13 +108,15 @@ export class ServersService {
    * @param page Page Number
    * @param perPage Count per page
    * @param serverName Server name filter
+   * @param notifyError Notify global error flag
    */
   public getServers(
     page?: number,
     perPage?: number,
-    serverName?: string): Observable<McsApiSuccessResponse<Server[]>> {
+    serverName?: string,
+    notifyError: boolean = true): Observable<McsApiSuccessResponse<Server[]>> {
 
-    let searchParams: URLSearchParams = new URLSearchParams();
+    let searchParams = new Map<string, any>();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
     searchParams.set('search_keyword', serverName);
@@ -123,11 +124,12 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
     mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.notifyGlobalErrorHandler = notifyError;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let serversResponse: McsApiSuccessResponse<Server[]>;
-        serversResponse = JSON.parse(response.text(),
+        serversResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<Server[]>;
 
         return serversResponse;
@@ -146,7 +148,7 @@ export class ServersService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<Server>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<Server>;
 
         return serverResponse;
@@ -176,7 +178,7 @@ export class ServersService {
     return this._mcsApiService.put(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -200,7 +202,7 @@ export class ServersService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -225,7 +227,7 @@ export class ServersService {
     return this._mcsApiService.patch(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -246,7 +248,7 @@ export class ServersService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -270,7 +272,7 @@ export class ServersService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -315,7 +317,7 @@ export class ServersService {
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerGroupedOs[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerGroupedOs[]>>(
-          response.text(),
+          response,
           this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerGroupedOs[]>();
@@ -334,7 +336,7 @@ export class ServersService {
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerStorageDevice[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerStorageDevice[]>>(
-          response.text(),
+          response,
           this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerStorageDevice[]>();
@@ -359,7 +361,7 @@ export class ServersService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -386,7 +388,7 @@ export class ServersService {
     return this._mcsApiService.put(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -413,7 +415,7 @@ export class ServersService {
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -433,7 +435,7 @@ export class ServersService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<ServerThumbnail>;
-        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<ServerThumbnail>;
+        serverResponse = JSON.parse(response) as McsApiSuccessResponse<ServerThumbnail>;
 
         return serverResponse;
       })
@@ -451,7 +453,7 @@ export class ServersService {
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerNetwork[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetwork[]>>(
-          response.text(), this._responseReviverParser);
+          response, this._responseReviverParser);
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerNetwork[]>();
       })
       .catch(this._handleServerError);
@@ -474,7 +476,7 @@ export class ServersService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -501,7 +503,7 @@ export class ServersService {
     return this._mcsApiService.put(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -527,7 +529,7 @@ export class ServersService {
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
+        serverResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
@@ -553,7 +555,7 @@ export class ServersService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })
@@ -580,7 +582,7 @@ export class ServersService {
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text()) as McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })
@@ -601,7 +603,7 @@ export class ServersService {
           serverPowerstate = activeServer.powerState;
         } else {
           serverPowerstate = activeServer.commandAction === ServerCommand.Stop ?
-            ServerPowerState.PoweredOff : ServerPowerState.PoweredOn ;
+            ServerPowerState.PoweredOff : ServerPowerState.PoweredOn;
         }
         break;
 
@@ -651,7 +653,7 @@ export class ServersService {
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerPlatform>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerPlatform>>(
-          response.text(),
+          response,
           this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerPlatform>();
@@ -670,7 +672,7 @@ export class ServersService {
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerResource[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerResource[]>>(
-          response.text(),
+          response,
           this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerResource[]>();

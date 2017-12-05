@@ -29,7 +29,7 @@ export class CoreLayoutService {
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiCompany[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiCompany[]>>(
-          response.text(),
+          response,
           this._convertProperty
         );
 

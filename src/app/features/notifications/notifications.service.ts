@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 /** Services and Models */
 import {
@@ -25,7 +24,7 @@ export class NotificationsService {
     perPage?: number,
     searchKeyword?: string): Observable<McsApiSuccessResponse<McsApiJob[]>> {
 
-    let searchParams: URLSearchParams = new URLSearchParams();
+    let searchParams = new Map<string, any>();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
     searchParams.set('search_keyword', searchKeyword);
@@ -37,7 +36,7 @@ export class NotificationsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let notificationsJobResponse: McsApiSuccessResponse<McsApiJob[]>;
-        notificationsJobResponse = JSON.parse(response.text(),
+        notificationsJobResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
 
         return notificationsJobResponse;
@@ -64,7 +63,7 @@ export class NotificationsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let notificationsJobResponse: McsApiSuccessResponse<McsApiJob[]>;
-        notificationsJobResponse = JSON.parse(response.text(),
+        notificationsJobResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
 
         return notificationsJobResponse;

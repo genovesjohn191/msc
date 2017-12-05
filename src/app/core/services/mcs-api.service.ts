@@ -3,10 +3,11 @@ import {
   Optional
 } from '@angular/core';
 import {
-  Http,
-  Headers,
-  Response
-} from '@angular/http';
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpResponse
+} from '@angular/common/http';
 import {
   Observable,
   Subject
@@ -16,7 +17,9 @@ import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import {
   isUrlValid,
-  resolveEnvVar
+  isNullOrEmpty,
+  resolveEnvVar,
+  convertMapToJsonObject
 } from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 
@@ -31,18 +34,18 @@ export class McsApiService {
    * Subscribe to this stream to get the
    * error response in case of unexpected error
    */
-  private _errorResponseStream: Subject<Response | any>;
-  public get errorResponseStream(): Subject<Response | any> {
+  private _errorResponseStream: Subject<HttpResponse<any> | any>;
+  public get errorResponseStream(): Subject<HttpResponse<any> | any> {
     return this._errorResponseStream;
   }
-  public set errorResponseStream(value: Subject<Response | any>) {
+  public set errorResponseStream(value: Subject<HttpResponse<any> | any>) {
     this._errorResponseStream = value;
   }
 
   private _jwtCookieName: string;
 
   constructor(
-    private _http: Http,
+    private _httpClient: HttpClient,
     private _cookieService: CookieService,
     @Optional() private _config: CoreConfig
   ) {
@@ -55,15 +58,15 @@ export class McsApiService {
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
-  public get(apiRequest: McsApiRequestParameter): Observable<Response> {
-    return this._http.get(
+  public get(apiRequest: McsApiRequestParameter): Observable<any> {
+    return this._httpClient.get(
       this.getFullUrl(apiRequest.endPoint),
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
-        search: apiRequest.searchParameters,
+        params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleError(error));
+      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
   }
 
   /**
@@ -71,16 +74,16 @@ export class McsApiService {
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
-  public post(apiRequest: McsApiRequestParameter): Observable<Response> {
-    return this._http.post(
+  public post(apiRequest: McsApiRequestParameter): Observable<any> {
+    return this._httpClient.post(
       this.getFullUrl(apiRequest.endPoint),
       apiRequest.recordData,
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
-        search: apiRequest.searchParameters,
+        params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleError(error));
+      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
   }
 
   /**
@@ -89,16 +92,16 @@ export class McsApiService {
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
-  public patch(apiRequest: McsApiRequestParameter): Observable<Response> {
-    return this._http.patch(
+  public patch(apiRequest: McsApiRequestParameter): Observable<any> {
+    return this._httpClient.patch(
       this.getFullUrl(apiRequest.endPoint),
       apiRequest.recordData,
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
-        search: apiRequest.searchParameters,
+        params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleError(error));
+      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
   }
 
   /**
@@ -106,15 +109,15 @@ export class McsApiService {
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
-  public put(apiRequest: McsApiRequestParameter): Observable<Response> {
-    return this._http.put(
+  public put(apiRequest: McsApiRequestParameter): Observable<any> {
+    return this._httpClient.put(
       this.getFullUrl(apiRequest.endPoint),
       apiRequest.recordData,
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleError(error));
+      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
   }
 
   /**
@@ -122,15 +125,16 @@ export class McsApiService {
    * @param {McsApiRequestParameter} apiRequest
    * MCS Api request consist of endpoint/url, data, headers, params, etc...
    */
-  public delete(apiRequest: McsApiRequestParameter): Observable<Response> {
-    return this._http.delete(
+  public delete(apiRequest: McsApiRequestParameter): Observable<any> {
+    return this._httpClient.request(
+      'DELETE',
       this.getFullUrl(apiRequest.endPoint),
       {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         body: apiRequest.recordData,
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleError(error));
+      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
   }
 
   /**
@@ -155,9 +159,9 @@ export class McsApiService {
    * Handle Error Exception
    * @param {any} error Error Response
    */
-  public handleError(error: Response | any) {
+  public handleServerError(error: HttpResponse<any> | any, notifyError: boolean = true) {
     // Rethrow to notify outside subscribers that an error occured
-    this._errorResponseStream.next(error);
+    if (notifyError) { this._errorResponseStream.next(error); }
     return Observable.throw(error);
   }
 
@@ -165,22 +169,37 @@ export class McsApiService {
    * Get Headers Value
    * @param {Headers} optHeaders Optional Header
    */
-  private _getHeaders(optHeaders?: Headers) {
-    let headers = new Headers();
+  private _getHeaders(optHeaders?: Map<string, any>): HttpHeaders {
+    let headers = new Map<string, any>();
 
     this._setDefaultHeaders(headers);
     this._setAccountHeader(headers);
     this._setAuthorizationHeader(headers);
     this._setOptionalHeaders(headers, optHeaders);
 
-    return headers;
+    // Return the converted headers
+    return new HttpHeaders(convertMapToJsonObject(headers));
+  }
+
+  /**
+   * Returns the parameters based on HttpParams
+   * @param params Param map to be converted
+   */
+  private _getParams(params: Map<string, any>): HttpParams {
+    if (isNullOrEmpty(params)) { return undefined; }
+
+    let httpParams = new HttpParams();
+    params.forEach((value, key) => {
+      httpParams.set(value, key);
+    });
+    return httpParams;
   }
 
   /**
    * Set Default Headers
    * @param {Headers} headers Header Instance
    */
-  private _setDefaultHeaders(headers: Headers) {
+  private _setDefaultHeaders(headers: Map<string, any>) {
     headers.set(CoreDefinition.HEADER_ACCEPT, 'application/json');
     headers.set(CoreDefinition.HEADER_CONTENT_TYPE, 'application/json');
     headers.set(CoreDefinition.HEADER_API_VERSION, '1.0');
@@ -192,7 +211,7 @@ export class McsApiService {
    * `@Note:` When active account is default, the cookie content for active account is undefined
    * @param headers Header Instance
    */
-  private _setAccountHeader(headers: Headers) {
+  private _setAccountHeader(headers: Map<string, any>) {
     let activeAccount = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
     if (activeAccount) {
       headers.set(CoreDefinition.HEADER_COMPANY_ID, JSON.parse(activeAccount).id);
@@ -207,7 +226,7 @@ export class McsApiService {
    * no token provided
    * @param {Headers} headers Header Instance
    */
-  private _setAuthorizationHeader(headers: Headers) {
+  private _setAuthorizationHeader(headers: Map<string, any>) {
     let authToken = this._cookieService.get(this._jwtCookieName);
     if (authToken) {
       headers.set(CoreDefinition.HEADER_AUTHORIZATION,
@@ -220,11 +239,10 @@ export class McsApiService {
    * @param {Headers} headers Header Instance
    * @param {Headers} optHeaders Optional Header
    */
-  private _setOptionalHeaders(headers: Headers, optHeaders: Headers) {
-    if (!optHeaders) { return; }
-
-    optHeaders.forEach((_values, _name, _headers) => {
-      headers.set(_name, _values);
+  private _setOptionalHeaders(headers: Map<string, any>, optHeaders: Map<string, any>) {
+    if (isNullOrEmpty(optHeaders)) { return; }
+    optHeaders.forEach((value, key) => {
+      headers.set(key, value);
     });
   }
 }

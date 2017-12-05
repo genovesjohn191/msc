@@ -146,7 +146,7 @@ export class McsNotificationJobService {
     this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
       .map((response) => {
         let jobConnection: McsApiSuccessResponse<McsApiJobConnection>;
-        jobConnection = JSON.parse(response.text(),
+        jobConnection = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJobConnection>;
 
         return jobConnection;

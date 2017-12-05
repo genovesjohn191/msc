@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 // Services Declarations
 import {
@@ -27,12 +26,18 @@ export class FirewallsService {
 
   /**
    * Get Firewalls (MCS API Response)
+   * @param page Page Number
+   * @param perPage Count per page
+   * @param searchKeyword Search filter
+   * @param notifyError Notify global error flag
    */
   public getFirewalls(
     page?: number,
     perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<Firewall[]>> {
-    let searchParams: URLSearchParams = new URLSearchParams();
+    searchKeyword?: string,
+    notifyError: boolean = true): Observable<McsApiSuccessResponse<Firewall[]>> {
+
+    let searchParams = new Map<string, any>();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
     searchParams.set('search_keyword', searchKeyword);
@@ -40,11 +45,12 @@ export class FirewallsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/firewalls';
     mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.notifyGlobalErrorHandler = notifyError;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let firewallsResponse: McsApiSuccessResponse<Firewall[]>;
-        firewallsResponse = JSON.parse(response.text(),
+        firewallsResponse = JSON.parse(response,
           this._convertProperty) as McsApiSuccessResponse<Firewall[]>;
 
         return firewallsResponse;
@@ -63,7 +69,7 @@ export class FirewallsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let firewallResponse: McsApiSuccessResponse<Firewall>;
-        firewallResponse = JSON.parse(response.text(),
+        firewallResponse = JSON.parse(response,
           this._convertProperty) as McsApiSuccessResponse<Firewall>;
 
         return firewallResponse;
@@ -83,7 +89,7 @@ export class FirewallsService {
     page?: number,
     perPage?: number,
     searchKeyword?: string): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
-    let searchParams: URLSearchParams = new URLSearchParams();
+    let searchParams = new Map<string, any>();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
     searchParams.set('search_keyword', searchKeyword ? searchKeyword : undefined);
@@ -95,7 +101,7 @@ export class FirewallsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let firewallPoliciesResponse: McsApiSuccessResponse<FirewallPolicy[]>;
-        firewallPoliciesResponse = JSON.parse(response.text(),
+        firewallPoliciesResponse = JSON.parse(response,
           this._convertProperty) as McsApiSuccessResponse<FirewallPolicy[]>;
 
         return firewallPoliciesResponse;

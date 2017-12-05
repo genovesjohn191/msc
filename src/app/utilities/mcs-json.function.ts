@@ -55,3 +55,19 @@ export function convertJsonStringToObject<T>(
   }
   return convertedObject;
 }
+
+/**
+ * Convert the map contents into JSON object
+ * @param map Map to be converted as JSON
+ */
+export function convertMapToJsonObject(map: Map<any, any>): any {
+  // Check for null input parameter
+  if (!map) { return undefined; }
+  let obj = Object.create(null);
+
+  // Append the value of map to object
+  map.forEach((value, key) => {
+    obj[key] = value;
+  });
+  return obj;
+}

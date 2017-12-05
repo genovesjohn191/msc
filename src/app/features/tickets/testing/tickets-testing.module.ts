@@ -11,7 +11,7 @@ import { CoreTestingModule } from '../../../core/testing';
   providers: [
     /** Tickets Services */
     ...ticketsProviders
-  ],
+  ]
 })
 
 export class TicketsTestingModule { }

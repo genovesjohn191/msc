@@ -1,8 +1,4 @@
 import { Injectable } from '@angular/core';
-import {
-  URLSearchParams,
-  ResponseContentType
-} from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 /** Services and Models */
 import {
@@ -52,13 +48,15 @@ export class TicketsService {
    * @param page Page index of the page to obtained
    * @param perPage Size of item per page
    * @param searchKeyword Keyword to be search during filtering
+   * @param notifyError Notify global error flag
    */
   public getTickets(
     page?: number,
     perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<Ticket[]>> {
+    searchKeyword?: string,
+    notifyError: boolean = true): Observable<McsApiSuccessResponse<Ticket[]>> {
 
-    let searchParams: URLSearchParams = new URLSearchParams();
+    let searchParams = new Map<string, any>();
     searchParams.set('page', page ? page.toString() : undefined);
     searchParams.set('per_page', perPage ? perPage.toString() : undefined);
     searchParams.set('search_keyword', searchKeyword);
@@ -66,12 +64,13 @@ export class TicketsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets';
     mcsApiRequestParameter.searchParameters = searchParams;
+    mcsApiRequestParameter.notifyGlobalErrorHandler = notifyError;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Ticket[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Ticket[]>>(
-          response.text(),
+          response,
           this._responseReviverParser
         );
 
@@ -117,7 +116,7 @@ export class TicketsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let notificationsJobResponse: McsApiSuccessResponse<Ticket[]>;
-        notificationsJobResponse = JSON.parse(response.text(),
+        notificationsJobResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<Ticket[]>;
 
         return notificationsJobResponse;
@@ -139,7 +138,7 @@ export class TicketsService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let ticketResponse: McsApiSuccessResponse<TicketCreate>;
-        ticketResponse = JSON.parse(response.text(),
+        ticketResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<TicketCreate>;
 
         return ticketResponse;
@@ -161,7 +160,7 @@ export class TicketsService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let commentResponse: McsApiSuccessResponse<TicketComment>;
-        commentResponse = JSON.parse(response.text(),
+        commentResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<TicketComment>;
 
         return commentResponse;
@@ -183,7 +182,7 @@ export class TicketsService {
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
         let attachmentResponse: McsApiSuccessResponse<TicketAttachment>;
-        attachmentResponse = JSON.parse(response.text(),
+        attachmentResponse = JSON.parse(response,
           this._responseReviverParser) as McsApiSuccessResponse<TicketAttachment>;
 
         return attachmentResponse;
@@ -199,11 +198,11 @@ export class TicketsService {
   public getFileAttachment(ticketId: any, attachmentId: any): Observable<Blob> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments/${attachmentId}/file`;
-    mcsApiRequestParameter.responseType = ResponseContentType.Blob;
+    mcsApiRequestParameter.responseType = 'blob';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        return response.blob();
+        return response;
       })
       .catch(this._handleApiResponseError);
   }
