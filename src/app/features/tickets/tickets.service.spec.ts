@@ -43,11 +43,11 @@ describe('TicketsService', () => {
   /** Test Implementation */
   describe('getTickets()', () => {
     it('should get all tickets from API calls', () => {
-      ticketsService.getTickets(
-        requestOptions.page,
-        requestOptions.perPage,
-        requestOptions.searchKeyword
-      ).subscribe((response) => {
+      ticketsService.getTickets({
+        page: requestOptions.page,
+        perPage: requestOptions.perPage,
+        searchKeyword: requestOptions.searchKeyword
+      }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);

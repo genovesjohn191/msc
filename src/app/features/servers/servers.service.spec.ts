@@ -66,11 +66,11 @@ describe('ServersService', () => {
   /** Test Implementation */
   describe('getServers()', () => {
     it('should get all servers from API calls', () => {
-      serversService.getServers(
-        requestOptions.page,
-        requestOptions.perPage,
-        requestOptions.searchKeyword
-      ).subscribe((response) => {
+      serversService.getServers({
+        page: requestOptions.page,
+        perPage: requestOptions.perPage,
+        searchKeyword: requestOptions.searchKeyword
+      }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);

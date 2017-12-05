@@ -8,6 +8,7 @@ import {
   McsApiErrorResponse,
   CoreDefinition
 } from '../../../core/';
+import { isNullOrEmpty } from '../../../utilities';
 // Models
 import {
   Firewall,
@@ -31,21 +32,25 @@ export class FirewallsService {
    * @param searchKeyword Search filter
    * @param notifyError Notify global error flag
    */
-  public getFirewalls(
+  public getFirewalls(args?: {
     page?: number,
     perPage?: number,
     searchKeyword?: string,
-    notifyError: boolean = true): Observable<McsApiSuccessResponse<Firewall[]>> {
+    notifyError?: boolean
+  }): Observable<McsApiSuccessResponse<Firewall[]>> {
+
+    // Set default values if null
+    if (isNullOrEmpty(args)) { args = {}; }
 
     let searchParams = new Map<string, any>();
-    searchParams.set('page', page ? page.toString() : undefined);
-    searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('search_keyword', searchKeyword);
+    searchParams.set('page', args.page ? args.page.toString() : undefined);
+    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
+    searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/firewalls';
     mcsApiRequestParameter.searchParameters = searchParams;
-    mcsApiRequestParameter.notifyGlobalErrorHandler = notifyError;
+    mcsApiRequestParameter.notifyGlobalErrorHandler = args.notifyError ? args.notifyError : true;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {

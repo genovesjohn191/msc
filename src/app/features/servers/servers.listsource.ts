@@ -72,7 +72,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
       .map(() => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let serverList = new Array<ServerList>();
-        this._searchMode = (this._search.keyword) ? true : false ;
+        this._searchMode = (this._search.keyword) ? true : false;
 
         if (!isNullOrEmpty(this._serverList)) {
           serverList = this._serverList.slice().filter((server: ServerList) => {
@@ -130,7 +130,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
         && !isNullOrEmpty(server.environment.resource);
 
       serverListItem.vdcName = (hasResource) ?
-        server.environment.resource.name : SERVER_LIST_GROUP_OTHERS ;
+        server.environment.resource.name : SERVER_LIST_GROUP_OTHERS;
 
       serverList.push(serverListItem);
     });
@@ -144,7 +144,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
 
   private _getServers(): void {
     this.serverListSubscription = this._serversService
-      .getServers(undefined, undefined, undefined, false)
+      .getServers({ notifyError: false })
       .subscribe((response) => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         this._serverList = this._mapServerList(response.content);

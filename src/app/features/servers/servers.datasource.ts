@@ -139,7 +139,7 @@ export class ServersDataSource implements McsDataSource<Server> {
    * @param serverId Server Id to obtained
    */
   public getDisplayedServerById(serverId: any): Server {
-    if (isNullOrEmpty(this.displayedRecord)) { return ;}
+    if (isNullOrEmpty(this.displayedRecord)) { return; }
     return this.displayedRecord.find((server) => server.id === serverId);
   }
 
@@ -155,12 +155,12 @@ export class ServersDataSource implements McsDataSource<Server> {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
-        return this._serversService.getServers(
-          undefined,
-          displayedRecords,
-          this._search.keyword,
-          false
-        ).map((response) => {
+        return this._serversService.getServers({
+          page: undefined,
+          perPage: displayedRecords,
+          searchKeyword: this._search.keyword,
+          notifyError: false
+        }).map((response) => {
           this._totalRecordCount = response.totalCount;
           return response.content;
         });
