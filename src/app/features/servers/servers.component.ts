@@ -68,6 +68,10 @@ export class ServersComponent
     return ServerCommand;
   }
 
+  public get excludedCommands(): ServerCommand[] {
+    return [ServerCommand.Scale, ServerCommand.Clone];
+  }
+
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
       this.totalRecordCount,
@@ -238,7 +242,7 @@ export class ServersComponent
       let server = this.dataSource.getDisplayedServerById(serverId);
       let serverStatus = this.getServerStatus(server);
       let state = serverStatus.powerState;
-      return isNullOrEmpty(state);
+      return isNullOrEmpty(state) || server.serviceType === ServerServiceType.Managed;
     }).length === 0;
   }
 

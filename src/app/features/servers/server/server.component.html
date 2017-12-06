@@ -25,7 +25,7 @@
         <mcs-search #search delayInSeconds="none"></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
           [searchMode]="serverListSource?.searchMode"
-          [mcsLoader]="serverSubscription">
+          [mcsLoader]="serverListSource?.serverListSubscription">
           <ng-container mcsListPanelDef>
             <mcs-list-panel-header *mcsListPanelHeaderDef="let vdc; propertyName: 'vdcName';"
               [groupName]="vdc">
@@ -80,15 +80,16 @@
         <mcs-tab [canSelect]="false" customClass="right-align"
           *mcsHasPermission="['VmPowerStateEdit']">
           <ng-template mcsTabLabel>
-            <mcs-server-command [commandList]="serverCommandList"
-              [command]="serverCommand" (onClick)="executeServerCommand(server, $event)">
+            <mcs-server-command [serverStatus]="serverStatus" (onClick)="executeServerCommand(server, $event)">
             </mcs-server-command>
           </ng-template>
         </mcs-tab>
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
-      <router-outlet></router-outlet>
+      <div class="routing-tab-content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </mcs-content-panel>
 </mcs-page>

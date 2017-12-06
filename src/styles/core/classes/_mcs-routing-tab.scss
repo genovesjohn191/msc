@@ -1,5 +1,6 @@
 $grid-row-spacing: 50px;
 $action-box-border-color: $color-grey-00;
+$routing-routing-tab-content-min-height: 300px;
 
 .routing-tab-wrapper {
   display: inline-block;
@@ -7,55 +8,60 @@ $action-box-border-color: $color-grey-00;
     display: block;
   }
 
-  .content-grid {
-    @include set-items-interval($grid-row-spacing, vertical);
-    @include breakpoint(xsmall) {
-      @include set-items-interval($space-xlarge, vertical);
-    }
+  .routing-tab-content-wrapper {
+    position: relative;
+    min-height: $routing-routing-tab-content-min-height;
 
-    .grid-row {
-      @include display-flex(row);
-      @include set-items-interval($space-medium, horizontal);
+    .content-grid {
+      @include set-items-interval($grid-row-spacing, vertical);
       @include breakpoint(xsmall) {
-        @include display-flex(column);
-        @include set-items-interval(0, horizontal);
         @include set-items-interval($space-xlarge, vertical);
       }
+
+      .grid-row {
+        @include display-flex(row);
+        @include set-items-interval($space-medium, horizontal);
+        @include breakpoint(xsmall) {
+          @include display-flex(column);
+          @include set-items-interval(0, horizontal);
+          @include set-items-interval($space-xlarge, vertical);
+        }
+      }
+
+      .grid-column {
+        @include flex(1 0 50%);
+        @include set-items-interval($space-small, vertical);
+        @include breakpoint(small) {
+          &:first-of-type {
+            @include flex(1 0 auto)
+          }
+        }
+        @include breakpoint(xsmall) {
+          @include flex(1)
+        }
+
+        ul {
+          @include set-items-interval($space-xsmall, vertical);
+
+          &.listing {
+            padding-left: $space-xsmall;
+            margin-bottom: $space-xsmall;
+          }
+
+          li {
+            @include display-flex(row);
+            align-items: flex-start;
+            @include set-items-interval($space-xsmall, horizontal);
+          }
+        }
+      }
     }
 
-    .grid-column {
-      @include flex(1 0 50%);
-      @include set-items-interval($space-small, vertical);
-      @include breakpoint(small) {
-        &:first-of-type {
-          @include flex(1 0 auto)
-        }
-      }
-      @include breakpoint(xsmall) {
-        @include flex(1)
-      }
-
-      ul {
-        @include set-items-interval($space-xsmall, vertical);
-
-        &.listing {
-          padding-left: $space-xsmall;
-          margin-bottom: $space-xsmall;
-        }
-
-        li {
-          @include display-flex(row);
-          align-items: flex-start;
-          @include set-items-interval($space-xsmall, horizontal);
-        }
-      }
+    .action-box {
+      @include set-items-interval($space-medium, vertical);
+      border: 1px solid $action-box-border-color;
+      @include border-radius($input-border-radius);
+      padding: $space-large;
     }
-  }
-
-  .action-box {
-    @include set-items-interval($space-medium, vertical);
-    border: 1px solid $action-box-border-color;
-    @include border-radius($input-border-radius);
-    padding: $space-large;
   }
 }
