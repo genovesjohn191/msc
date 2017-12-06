@@ -10,7 +10,6 @@ import {
   McsOverlayRef,
   McsOverlayState,
   McsOverlayService,
-  McsPlatformService,
   McsPortalComponent
 } from '../../core';
 import {
@@ -27,8 +26,7 @@ import {
 @Directive({
   selector: '[mcsTooltip]',
   host: {
-    '(longpress)': 'show()',
-    '(touchend)': 'hide()',
+    '(longpress)': 'show()'
   },
   exportAs: 'mcsTooltip'
 })
@@ -108,20 +106,15 @@ export class TooltipDirective implements OnInit, OnDestroy {
   constructor(
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
-    private _overlayService: McsOverlayService,
-    private _platformService: McsPlatformService
+    private _overlayService: McsOverlayService
   ) { }
 
   public ngOnInit(): void {
-    if (this._platformService.isBrowser) {
-      this._registerEvents();
-    }
+    this._registerEvents();
   }
 
   public ngOnDestroy(): void {
-    if (this._platformService.isBrowser) {
-      this._unregisterEvents();
-    }
+    this._unregisterEvents();
     if (this._tooltipInstance) {
       this._disposeTooltip();
     }
@@ -143,9 +136,9 @@ export class TooltipDirective implements OnInit, OnDestroy {
   /**
    * Hide the tooltip
    */
-  public hide(): void {
+  public hide(delay: number = 0): void {
     if (!isNullOrEmpty(this._tooltipInstance)) {
-      this._tooltipInstance.hide();
+      this._tooltipInstance.hide(delay);
     }
   }
 
@@ -216,6 +209,8 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * Register Events of the tooltip
    */
   private _registerEvents(): void {
+    registerEvent(this._elementRef.nativeElement, 'touchstart', this._mouseEnterHandler);
+    registerEvent(this._elementRef.nativeElement, 'touchend', this._mouseLeaveHandler);
     registerEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
     registerEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
   }
@@ -224,6 +219,8 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * Unregister the event of the tooltip
    */
   private _unregisterEvents(): void {
+    unregisterEvent(this._elementRef.nativeElement, 'touchstart', this._mouseEnterHandler);
+    unregisterEvent(this._elementRef.nativeElement, 'touchend', this._mouseLeaveHandler);
     unregisterEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
     unregisterEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
   }

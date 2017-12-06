@@ -55,6 +55,7 @@ export class TooltipComponent {
   public message: string;
   public visibility: TooltipVisibility;
   public transformOrigin: string = 'bottom';
+  public hideTimeoutId: any;
 
   // Stream that emits when tooltip is hidden
   private _onHide: Subject<any>;
@@ -69,6 +70,12 @@ export class TooltipComponent {
    * Show the tooltip
    */
   public show(position: TooltipPosition = 'bottom'): void {
+    // Cancel the delayed hide if it is scheduled
+    if (this.hideTimeoutId) {
+      clearTimeout(this.hideTimeoutId);
+    }
+
+    // Display the tooltip
     this._setTransformOrigin(position);
     this.visibility = 'visible';
     this.markForCheck();
@@ -77,9 +84,11 @@ export class TooltipComponent {
   /**
    * Hide the tooltip
    */
-  public hide(): void {
-    this.visibility = 'hidden';
-    this.markForCheck();
+  public hide(delay: number): void {
+    this.hideTimeoutId = setTimeout(() => {
+      this.visibility = 'hidden';
+      this.markForCheck();
+    }, delay);
   }
 
   /**
