@@ -18,7 +18,6 @@ import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import {
   isNullOrEmpty,
-  isFormControlValid,
   refreshView,
   replacePlaceholder
 } from '../../../utilities';
@@ -181,14 +180,6 @@ export class TicketCreateComponent implements
    */
   public openServices(): void {
     this.isServicesOpen = !this.isServicesOpen;
-  }
-
-  /**
-   * Validate the control
-   * @param control Control to be validate
-   */
-  public isControlValid(control: any): boolean {
-    return isFormControlValid(control);
   }
 
   /**

@@ -86,10 +86,10 @@
             <label class="label" for="services">{{ textContent.services }}</label>
             <div class="item">
               <div class="service-item">
-                <mcs-textbox id="services" width="100%"
-                  formControlName="fcService"
-                  [mcsContextualHelp]="contextualContent.services"
-                  [valid]="isControlValid(fcService)"></mcs-textbox>
+                <mcs-form-field>
+                  <input mcsInput [formControl]="fcService"
+                    [mcsContextualHelp]="contextualContent.services">
+                </mcs-form-field>
                 <div class="service-icon">
                   <mcs-icon [key]="servicesIconKey" size="large"
                     [mcsLoader]="servicesSubscription"
