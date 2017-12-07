@@ -14,14 +14,14 @@ import {
   McsListItem,
   McsPaginator,
   McsModal,
-  McsSearch
+  McsSearch,
+  CoreValidators,
+  CoreDefinition
 } from '../../core';
 import { refreshView } from '../../utilities';
 import {
-  FormGroup,
-  FormBuilder,
   FormControl,
-  Validators
+  FormGroup
 } from '@angular/forms';
 import { ServersService } from '../servers';
 
@@ -39,22 +39,13 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   public disabled: boolean;
   public servers: Server[];
   public numberModel: number;
-  public textboxModel: any;
   public wizardModel: any;
-
   public progressValue: number = 10;
-
-  public textEmail: FormControl;
-  // public textFirstName: FormControl;
-
-  public reactiveForm: FormGroup;
-  public formName: FormGroup;
-  public formDetails: FormGroup;
 
   public radioButtonHorizontal: any;
   public radioButtonVertical: any;
 
-  public sliderValue: number;
+  public sliderValue: number = 0;
 
   // Wizard variables
   public showSecretStep: boolean;
@@ -95,9 +86,19 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
     { value: 'tacos-2', viewValue: 'Tacos' }
   ];
 
+  public fgTestWizard: FormGroup;
+  public fcFirstName: FormControl;
+  public fcMiddleName: FormControl;
+  public fcLastName: FormControl;
+
+  public fgWizardSecondForm: FormGroup;
+  public fcEmailAddress: FormControl;
+  public fcContactNo: FormControl;
+
+  public fcInputBinding: FormControl;
+
   public constructor(
-    private _serversServices: ServersService,
-    private _formBuilder: FormBuilder
+    private _serversServices: ServersService
   ) {
     this.title = 'Gadgets component';
     this.gadgets = new Array();
@@ -109,22 +110,6 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
     this.gifIcons = new Array();
     this.svgIcons = new Array();
     this.fontIcons = new Array();
-    this.textboxModel = {
-      email: '',
-      ipAddress: null,
-      alphanumeric: '',
-      numeric: null,
-      pattern: ''
-    };
-    this.wizardModel = {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      age: '',
-      emailAddress: '',
-      contact: ''
-    };
-    this.sliderValue = 300;
   }
 
   public ngOnInit() {
@@ -135,27 +120,34 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
 
     this.setGadgets();
     this.getAllIcons();
-    this.textboxValue = 'Windows Server 2012';
     this.disabled = true;
-    this.reactiveForm = new FormGroup({
-      textEmail: new FormControl(null, Validators.required),
-      textIpAddress: new FormControl(null, Validators.required),
-      textAlphanumeric: new FormControl(null, Validators.required),
-      textNumeric: new FormControl(null, Validators.required),
-      textPattern: new FormControl(null, Validators.required)
+
+    this.fcFirstName = new FormControl('', [
+      CoreValidators.required
+    ]);
+    this.fcMiddleName = new FormControl('', [
+      CoreValidators.required
+    ]);
+    this.fcLastName = new FormControl('', [
+      CoreValidators.required
+    ]);
+
+    this.fcEmailAddress = new FormControl('', [
+      CoreValidators.email
+    ]);
+    this.fcContactNo = new FormControl('');
+
+    this.fgTestWizard = new FormGroup({
+      formControlFirstName: this.fcFirstName,
+      formControlMiddleName: this.fcMiddleName,
+      formControlLastName: this.fcLastName
     });
 
-    this.formName = this._formBuilder.group({
-      textFirstName: ['', [Validators.required, Validators.minLength(2)]],
-      textMiddleName: ['', [Validators.required, Validators.minLength(2)]],
-      textLastName: ['', [Validators.required, Validators.minLength(2)]],
-      textAge: ['', [Validators.required, Validators.minLength(1)]]
+    this.fgWizardSecondForm = new FormGroup({
+      formControlEmailAddress: this.fcEmailAddress,
+      formControlContactNo: this.fcContactNo,
     });
-
-    this.formDetails = this._formBuilder.group({
-      textEmailAddress: ['', [Validators.required, Validators.minLength(2)]],
-      textContactNo: ['', [Validators.required, Validators.minLength(2)]]
-    });
+    this.fcInputBinding = new FormControl('Windows Server 2012');
   }
 
   public ngAfterViewInit(): void {
@@ -271,17 +263,20 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
     }, 3000);
   }
 
-  public onSearch(textbox: any) {
-    textbox.showLoader();
-    console.log('start search');
-    refreshView(() => {
-      console.log('done');
-      textbox.hideLoader();
-    }, 2000);
-  }
-
   public closeModal1() {
     if (!this.mcsModal1) { return; }
     this.mcsModal1.close();
+  }
+
+  public get searchIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_SEARCH;
+  }
+
+  public get calendarIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CALENDAR;
+  }
+
+  public get notificationBellSvgKey(): string {
+    return CoreDefinition.ASSETS_SVG_NOTIFICATION_BELL;
   }
 }

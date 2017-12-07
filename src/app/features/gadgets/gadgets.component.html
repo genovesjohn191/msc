@@ -27,75 +27,68 @@
 
       <!-- Wizard -->
       <div class="gadgets-container-item">
-          <h3 class="title">WIZARD</h3>
+        <h3 class="title">WIZARD</h3>
 
-          <mcs-wizard cancelText="Return" completedText="Done" [ngStyle]="{position: 'relative'}">
-              <!-- Step 1  -->
-              <mcs-wizard-step stepTitle="1. Name">
-                <h3>Cutomer name details</h3>
+        <mcs-wizard cancelText="Return" completedText="Done" [ngStyle]="{position: 'relative'}">
+            <!-- Step 1  -->
+            <mcs-wizard-step stepTitle="1. Name">
+              <h3>Cutomer name details</h3>
 
-                <form [formGroup]="formName">
+              <form [formGroup]="fgTestWizard" mcsFormGroup>
+                <label>First Name: </label>
+                <mcs-form-field>
+                  <input mcsInput placeholder="Enter your first name"
+                    [formControl]="fcFirstName">
+                </mcs-form-field>
 
-                  <div class="row">
-                    <div class="col">
-                      <label>First Name: </label>
-                      <mcs-textbox width="300px"
-                        formControlName="textFirstName"
-                        [(ngModel)]="wizardModel.firstName"></mcs-textbox>
+                <label>Middle Name: </label>
+                <mcs-form-field>
+                  <input mcsInput placeholder="Enter your middle name"
+                    [formControl]="fcMiddleName">
+                </mcs-form-field>
 
-                      <label>Middle Name: </label>
-                      <mcs-textbox width="300px"
-                        formControlName="textMiddleName"
-                        [(ngModel)]="wizardModel.middleName"></mcs-textbox>
+                <label>Last Name: </label>
+                <mcs-form-field>
+                  <input mcsInput placeholder="Enter your last name"
+                    [formControl]="fcLastName">
+                </mcs-form-field>
+              </form>
+            </mcs-wizard-step>
 
-                      <label>Last Name: </label>
-                      <mcs-textbox width="300px"
-                        formControlName="textLastName"
-                        [(ngModel)]="wizardModel.lastName"></mcs-textbox>
-                    </div>
+            <!-- Step 2  -->
+            <mcs-wizard-step stepTitle="2. Contact Details">
+              <h3>Contact Information</h3>
+              <form [formGroup]="fgWizardSecondForm">
+                <label>Email Address: </label>
+                <mcs-form-field>
+                  <input mcsInput placeholder="Enter your email address"
+                    [formControl]="fcEmailAddress">
+                </mcs-form-field>
 
-                    <div class="col">
-                      <label>Age: </label>
-                      <mcs-textbox width="150px"
-                        formControlName="textAge"
-                        [(ngModel)]="wizardModel.age"></mcs-textbox>
-                    </div>
-                  </div>
-                </form>
-              </mcs-wizard-step>
+                <label>Contact Number: </label>
+                <mcs-form-field>
+                  <input mcsInput placeholder="Enter your contact number"
+                    [formControl]="fcContactNo">
+                </mcs-form-field>
+              </form>
+            </mcs-wizard-step>
 
-              <!-- Step 2  -->
-              <mcs-wizard-step stepTitle="2. Contact Details">
-                <h3>Contact Information</h3>
+            <!-- Step 3  -->
+            <mcs-wizard-step stepTitle="3. Summary">
+              <h3>Summary: </h3>
 
-                <form [formGroup]="formDetails">
-                  <label>Email Address: </label>
-                  <mcs-textbox width="300px"
-                    formControlName="textEmailAddress"
-                    [(ngModel)]="wizardModel.emailAddress"></mcs-textbox>
+              <h5>Full Name: </h5>
+              <span>{{ fcFirstName.value }}
+                {{ fcMiddleName.value }}
+                {{ fcLastName.value }}
+              </span><br/><br/>
 
-                  <label>Contact Number: </label>
-                  <mcs-textbox width="300px"
-                    formControlName="textContactNo"
-                    [(ngModel)]="wizardModel.contact"></mcs-textbox>
-                </form>
-              </mcs-wizard-step>
-
-              <!-- Step 3  -->
-              <mcs-wizard-step stepTitle="3. Summary">
-                <h3>Summary: </h3>
-
-                <h5>Full Name: </h5>
-                <span>{{ wizardModel.firstName }}
-                  {{ wizardModel.middleName }}
-                  {{ wizardModel.lastName }}</span><br/><br/>
-
-                <h5>Contacts: </h5>
-                <span><b>       Mobile:</b> {{ wizardModel.contact }}</span><br/>
-                <span><b>Email Address:</b> {{ wizardModel.emailAddress }}</span>
-              </mcs-wizard-step>
-            </mcs-wizard>
-        </div>
+              <h5>Contacts: </h5>
+              <span><b>       Mobile:</b> {{ fcEmailAddress.value }}</span><br/>
+              <span><b>Email Address:</b> {{ fcContactNo.value }}</span>
+            </mcs-wizard-step>
+          </mcs-wizard>
+      </div>
 
       <!-- Fonts -->
       <div class="gadgets-container-item">
@@ -138,8 +131,9 @@
         <div class="col">
           <div class="gadgets-container-item">
             <ng-template #popoverSideContent>
-              <mcs-textbox name="textIcon" icon="search" width="200px"
-                placeholder="Type to search..."></mcs-textbox><br/>
+              <mcs-form-field [ngStyle]="{width: '200px'}">
+                <input mcsInput placeholder="Type to search...">
+              </mcs-form-field>
             </ng-template>
 
             <h3 class="title">Popover Left and Right</h3>
@@ -160,8 +154,9 @@
         <div class="col">
           <div class="gadgets-container-item">
             <ng-template #popoverContent>
-              <mcs-textbox name="textIcon" icon="search" width="200px"
-              placeholder="Type to search..."></mcs-textbox><br/>
+              <mcs-form-field [ngStyle]="{width: '200px'}">
+                <input mcsInput placeholder="Type to search...">
+              </mcs-form-field><br/>
               <mcs-button size="small" width="200">Search</mcs-button>
             </ng-template>
 
@@ -364,8 +359,11 @@
       <!-- Progressbar -->
       <div class="gadgets-container-item">
         <h3 class="title">PROGRESSBAR</h3>
-
-        <mcs-textbox [(ngModel)]="progressValue" inputType="number"></mcs-textbox>
+        <mcs-form-field [ngStyle]="{width: '200px'}">
+          <input mcsInput placeholder="Type to search..."
+            [(ngModel)]="progressValue"
+            type="number">
+        </mcs-form-field>
         <span>Update model value to move the progress bar</span>
         <mcs-progress-bar [(ngModel)]="progressValue" maxValue="100"></mcs-progress-bar>
       </div>
@@ -458,93 +456,37 @@
       <div class="gadgets-container-item">
         <h3 class="title">TEXTBOXES</h3>
 
-        <form>
+        <form [ngStyle]="{width: '300px'}">
           <label for="textDefault"><strong>Default Textbox</strong></label> <br/>
-          <mcs-textbox name="textDefault" placeholder="Enter text here..."></mcs-textbox>
+            <mcs-form-field>
+              <input mcsInput placeholder="Enter text here...">
+            </mcs-form-field>
           <br/><br/>
 
           <label for="textIcon"><strong>Textbox w/ Icon</strong></label> <br/>
-          <mcs-textbox name="textIcon" icon="search" placeholder="Type to filter..."></mcs-textbox>
+            <mcs-form-field>
+              <input mcsInput placeholder="Type to filter...">
+              <mcs-icon [key]="searchIconKey" size="small"></mcs-icon>
+            </mcs-form-field>
           <br/><br/>
 
           <label for="textCustom"><strong>Textbox w/ Icon & Custom Width</strong></label> <br/>
-          <mcs-textbox name="textCustom" icon="search" width="300px" placeholder="Type to filter..."></mcs-textbox>
+            <mcs-form-field [ngStyle]="{width: '200px'}">
+              <input mcsInput placeholder="Type to filter...">
+              <mcs-icon [key]="searchIconKey" size="small"></mcs-icon>
+            </mcs-form-field>
           <br/><br/>
 
           <label for="textModel"><strong>Textbox w/ Model Binding</strong></label> <br/>
-          <mcs-textbox name="textModel" icon="search" width="300px"
-            [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
-          <div class="textbox-content">
-            Textbox Value : {{ textboxValue }}
-          </div>
+
+            <mcs-form-field>
+              <input mcsInput placeholder="Type to filter..."
+                [formControl]="fcInputBinding">
+            </mcs-form-field>
+            <div class="textbox-content">
+              Textbox Value : {{ fcInputBinding.value }}
+            </div>
           <br/>
-
-          <label for="textStep"><strong>Textbox w/ Min, Max & Step Attributes</strong></label> <br/>
-          <mcs-textbox name="textStep" inputType="number" width="100px"
-            min="1" max="10" step="2" placeholder="GB" [(ngModel)]="numberModel"></mcs-textbox>
-          <div class="textbox-content">
-            <small>Min: 1, Max: 10, Step: 2</small>
-          </div>
-          <br/>
-
-          <label for="textValidationReactiveForm">
-            <strong>Textbox w/ Validation Reactive Form</strong>
-          </label> <br/>
-          <form [formGroup]="reactiveForm">
-            <div class="textbox-content">
-              <small>Email Validation</small>
-            </div>
-            <mcs-textbox formControlName="textEmail" width="300px" [(ngModel)]="textboxModel.email"
-              validationType="email" placeholder="Enter Email"></mcs-textbox>
-
-            <div class="textbox-content">
-              <small>IP Address Validation</small>
-            </div>
-            <mcs-textbox formControlName="textIpAddress" width="300px"
-            [(ngModel)] ="textboxModel.ipAddress"
-              validationType="ipAddress" placeholder="Enter IP Address"></mcs-textbox>
-
-            <div class="textbox-content">
-              <small>Alphanumeric Validation</small>
-            </div>
-            <mcs-textbox formControlName="textAlphanumeric" width="300px"
-              [(ngModel)]="textboxModel.alphanumeric"
-              validationType="alphanumeric" placeholder="Enter Username"></mcs-textbox>
-
-            <div class="textbox-content">
-              <small>Numeric Validation</small>
-            </div>
-            <mcs-textbox formControlName="textNumeric" inputType="number" width="100px"
-              [(ngModel)]="textboxModel.numeric" validationType="numeric"
-              placeholder="GB"></mcs-textbox>
-
-            <div class="textbox-content">
-              <small>Custom Pattern Validation</small> <br/>
-              <small>Minimum eight characters, at least one uppercase letter, one lowercase letter and one number</small>
-            </div>
-            <mcs-textbox formControlName="textPattern" width="300px"
-              [(ngModel)]="textboxModel.pattern" validationType="pattern" placeholder="Type here..."
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$"></mcs-textbox>
-          </form>
-          <p>form is valid: {{ reactiveForm.valid ? 'true' : 'false' }}</p>
-          <pre>Values:<br/>{{ textboxModel | json }}</pre>
-          <br/>
-
-          <label for="textSearch"><strong>Textbox w/ Spinner</strong></label> <br/>
-          <mcs-textbox name="textSearch" #mcsTextbox (keyup)="onSearch(mcsTextbox)"
-            width="300px" placeholder="Type to filter..."></mcs-textbox>
-          <br/><br/>
-
-          <label><strong>Inline Textboxes</strong></label> <br/>
-          <mcs-textbox name="textDefault" placeholder="Enter text here..."></mcs-textbox>
-          <mcs-textbox name="textIcon" icon="search" placeholder="Type to filter..."></mcs-textbox>
-          <br/><br/>
-
-          <label><strong>List of Textboxes</strong></label> <br/>
-          <mcs-textbox name="textDefault" width="500px" placeholder="Enter text here..."></mcs-textbox> <br/>
-          <mcs-textbox name="textIcon" icon="search" width="500px" placeholder="Type to filter..."></mcs-textbox>
-          <mcs-textbox name="textModel" icon="search" width="500px"
-              [(ngModel)]="textboxValue" placeholder="Type to filter..."></mcs-textbox>
         </form>
       </div>
 
@@ -557,7 +499,7 @@
           <!-- Panel 1 -->
           <mcs-accordion-panel>
             <mcs-accordion-panel-header panel-header-def>
-              <mcs-icon key="notification-bell"></mcs-icon>
+              <mcs-icon [key]="notificationBellSvgKey"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Single Panel Expanded</h4>
             </mcs-accordion-panel-header>
 
@@ -570,7 +512,7 @@
           <!-- Panel 2 -->
           <mcs-accordion-panel [expanded]="true">
             <mcs-accordion-panel-header panel-header-def>
-              <mcs-icon key="calendar"></mcs-icon>
+              <mcs-icon [key]="calendarIconKey"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
             </mcs-accordion-panel-header>
 
@@ -585,7 +527,7 @@
           <!-- Panel 1 -->
           <mcs-accordion-panel [expanded]="true">
             <mcs-accordion-panel-header panel-header-def>
-              <mcs-icon key="notification-bell"></mcs-icon>
+              <mcs-icon [key]="notificationBellSvgKey"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h4>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
@@ -597,7 +539,7 @@
           <!-- Panel 2 -->
           <mcs-accordion-panel [expanded]="true">
             <mcs-accordion-panel-header panel-header-def>
-              <mcs-icon key="calendar"></mcs-icon>
+              <mcs-icon [key]="calendarIconKey"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
