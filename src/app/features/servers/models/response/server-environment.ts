@@ -1,6 +1,7 @@
 import { ServerResource } from './server-resource';
 
 export class ServerEnvironment {
-  public environment: string;
+  public id: string;
+  public name: string;
   public resources: ServerResource[];
 }

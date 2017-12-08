@@ -26,7 +26,7 @@ import {
   ServerCreateSelfManaged,
   ServerResource,
   ServerGroupedOs,
-  ServerResourceNetwork,
+  ServerNetwork,
   Server,
   ServerCreateType,
   ServerCatalogType,
@@ -84,7 +84,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public selectedServer: Server;
   public storageMemoryMB: number;
   public storageAvailableMemoryMB: number;
-  public selectedNetwork: ServerResourceNetwork;
+  public selectedNetwork: ServerNetwork;
   public storageSliderValues: number[];
   public selectedStorage: ServerManageStorage;
 
@@ -103,11 +103,11 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public availableCpuCount: number;
 
   public get memoryMB(): number {
-    return this.selectedServer ? this.selectedServer.memoryMB : 0;
+    return this.selectedServer.compute ? this.selectedServer.compute.memoryMB : 0;
   }
 
   public get cpuCount(): number {
-    return this.selectedServer ? this.selectedServer.cpuCount : 0;
+    return this.selectedServer.compute ? this.selectedServer.compute.cpuCount : 0;
   }
 
   private get _memoryGB(): number {
@@ -136,7 +136,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     this.vTemplateItems = new McsList();
     this.networkItems = new Array();
     this.storageItems = new Array();
-    this.selectedNetwork = new ServerResourceNetwork();
+    this.selectedNetwork = new ServerNetwork();
     this.selectedServer = new Server();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
@@ -249,13 +249,9 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
       });
     });
 
-    let hasVapp = this.selectedServer.environment &&
-      this.selectedServer.environment.resource &&
-      this.selectedServer.environment.resource.vApp;
-
     // Select first element of the dropdown
-    if (!isNullOrEmpty(this.vAppItems) && hasVapp) {
-      this.formControlVApp.setValue(this.selectedServer.environment.resource.vApp);
+    if (!isNullOrEmpty(this.vAppItems) && !isNullOrEmpty(this.selectedServer.vApp)) {
+      this.formControlVApp.setValue(this.selectedServer.vApp);
     }
   }
 
@@ -269,9 +265,9 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   private _setVTemplateItems(): void {
-    if (isNullOrEmpty(this.resource.catalogs)) { return; }
+    if (isNullOrEmpty(this.resource.catalogItems)) { return; }
 
-    this.resource.catalogs.forEach((catalog) => {
+    this.resource.catalogItems.forEach((catalog) => {
       if (catalog.type === ServerCatalogType.SelfManaged) {
         this.vTemplateItems.push(ServerCatalogItemType[catalog.itemType],
           new McsListItem(ServerImageType.Template, catalog.itemName));
@@ -291,7 +287,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     });
     // Select first element of the dropdown
     if (!isNullOrEmpty(this.networkItems)) {
-      this.formControlNetwork.setValue(this.selectedServer.hostName);
+      this.formControlNetwork.setValue(this.selectedServer.hostname);
     }
   }
 

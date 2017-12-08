@@ -10,6 +10,7 @@ import {
   ServerResource,
   Server,
   ServerNetwork,
+  ServerNetworkSummary,
   ServerManageNetwork,
   ServerIpAddress,
   ServerIpAllocationMode
@@ -32,7 +33,6 @@ import {
 import {
   DeleteNicDialogComponent
 } from '../../shared';
-import { ServerResourceNetwork } from '../../index';
 
 const STORAGE_MAXIMUM_NETWORKS = 10;
 
@@ -48,12 +48,12 @@ const STORAGE_MAXIMUM_NETWORKS = 10;
 export class ServerNicsComponent implements OnInit, OnDestroy {
 
   public textContent: any;
-  public resourceNetworks: ServerResourceNetwork[];
+  public resourceNetworks: ServerNetwork[];
   public server: Server;
-  public networks: ServerNetwork[];
+  public networks: ServerNetworkSummary[];
   public ipAddress: ServerIpAddress;
 
-  public resourceSubscription: Subscription;
+  public serverResourceSubscription: Subscription;
   public networksSubscription: Subscription;
 
   public activeServerJob: McsApiJob;
@@ -111,11 +111,11 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _selectedNic: ServerNetwork;
-  public get selectedNic(): ServerNetwork {
+  private _selectedNic: ServerNetworkSummary;
+  public get selectedNic(): ServerNetworkSummary {
     return this._selectedNic;
   }
-  public set selectedNic(value: ServerNetwork) {
+  public set selectedNic(value: ServerNetworkSummary) {
     if (this._selectedNic !== value) {
       this._selectedNic = value;
       this._changeDetectorRef.markForCheck();
@@ -174,26 +174,25 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     this.isProcessing = false;
     this.isUpdate = false;
     this._resourceMap = new Map<string, ServerResource>();
-    this.resourceNetworks = new Array<ServerResourceNetwork>();
+    this.resourceNetworks = new Array<ServerNetwork>();
     this.server = new Server();
-    this.networks = new Array<ServerNetwork>();
+    this.networks = new Array<ServerNetworkSummary>();
     this.ipAddress = new ServerIpAddress();
     this.activeServerJob = new McsApiJob();
-    this.selectedNic = new ServerNetwork();
+    this.selectedNic = new ServerNetworkSummary();
   }
 
   public ngOnInit() {
     // OnInit
     this.textContent = this._textProvider.content.servers.server.nics;
 
-    this._getResources();
     this._listenToSelectedServerStream();
     this._listenToNotificationsStream();
   }
 
   public ngOnDestroy() {
-    if (this.resourceSubscription) {
-      this.resourceSubscription.unsubscribe();
+    if (this.serverResourceSubscription) {
+      this.serverResourceSubscription.unsubscribe();
     }
 
     if (this.networksSubscription) {
@@ -282,7 +281,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onUpdateNetwork(network: ServerNetwork): void {
+  public onUpdateNetwork(network: ServerNetworkSummary): void {
     if (isNullOrEmpty(network)) { return; }
 
     this.selectedNic = network;
@@ -380,21 +379,28 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
    * This will get the server resources
    */
   private _getResources(): void {
-    this.resourceSubscription = this._serverService.getResources()
-      .subscribe((response) => {
-        this._setResourceMap(response);
-      });
+    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
+    .subscribe((resources) => {
+      if (!isNullOrEmpty(resources)) {
+        this._setResourceMap(resources);
+      }
+    });
+
+    this.serverResourceSubscription.add(() => {
+      this._setResourceNetworks();
+      this._getServerNetworks();
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**
    * This will set the Platform data to platform mapping
    *
-   * @param response Api response
+   * @param resources Server Resources
    */
-  private _setResourceMap(response: any): void {
-    if (response && response.content) {
-      let serverResources = response.content as ServerResource[];
-      serverResources.forEach((resource) => {
+  private _setResourceMap(resources: ServerResource[]): void {
+    if (!isNullOrEmpty(resources)) {
+      resources.forEach((resource) => {
         this._resourceMap.set(resource.name, resource);
       });
 
@@ -406,11 +412,8 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
    * This will set the resource networks
    */
   private _setResourceNetworks(): void {
-    let hasResource = this.server.environment &&
-      this.server.environment.resource;
-
-    if (hasResource) {
-      let resourceName = this.server.environment.resource.name;
+    if (this.server.platform) {
+      let resourceName = this.server.platform.resourceName;
 
       if (!isNullOrEmpty(resourceName) && this._resourceMap.has(resourceName)) {
         let resource = this._resourceMap.get(resourceName);
@@ -428,7 +431,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
 
     this.networksSubscription = this._serverService.getServerNetworks(this.server.id)
       .subscribe((response) => {
-        this.networks = response.content as ServerNetwork[];
+        this.networks = response.content as ServerNetworkSummary[];
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -452,13 +455,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
 
         if (this.server.id !== server.id) {
           this.server = server;
-
-          if (!isNullOrEmpty(this.resourceSubscription)) {
-            this.resourceSubscription.add(() => {
-              this._setResourceNetworks();
-              this._getServerNetworks();
-            });
-          }
+          this._getResources();
         }
       });
   }
@@ -484,7 +481,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
             this.isProcessing = !hasCompleted && !hasFailed;
             this.activeServerJob = (this.isProcessing) ? activeServerJob : new McsApiJob() ;
 
-            let network = new ServerNetwork();
+            let network = new ServerNetworkSummary();
 
             switch (activeServerJob.type) {
               case McsJobType.UpdateServerNetwork:

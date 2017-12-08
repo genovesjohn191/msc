@@ -1,4 +1,5 @@
 <div class="limited-view vertical-items-spacing-medium" [ngStyle]="{'position': 'relative'}">
+  <div [mcsLoader]="[networksSubscription, serverResourceSubscription]">
     <h3 class="heading">{{ textContent.title }}</h3>
 
     <p>{{ textContent.description }}</p>
@@ -61,46 +62,44 @@
       </table>
 
       <div *mcsHasPermission="['VmNetworkEdit']">
-        <div [mcsLoader]="[networksSubscription, resourceSubscription]">
-          <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
-            class="action-box" [disabled]="isProcessing">
-            <h4>{{ textContent.addHeading }}</h4>
+        <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
+          class="action-box" [disabled]="isProcessing">
+          <h4>{{ textContent.addHeading }}</h4>
 
-            <!-- Network Selection -->
-            <div class="field">
-              <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
-                [placeholder]="textContent.networkSelect.placeholder">
-                <mcs-select-item [value]="">-</mcs-select-item>
-                <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
-                  {{ network.name }}
-                </mcs-select-item>
-              </mcs-select>
-            </div>
-
-            <!-- IP Address setting -->
-            <div class="field" *ngIf="networkName">
-              <mcs-server-ip-address [gateway]="networkGateway"
-                [subnetMask]="networkNetmask"
-                (ipAddressChanged)="onIpAddressChanged($event)">
-                <!--Ip address contents on the left hand side (title and description)-->
-                <div title>
-                  <span class="label no-line-height">{{ textContent.ipAddress }}</span>
-                </div>
-              </mcs-server-ip-address>
-            </div>
-
-            <div [ngStyle]="{'text-align': 'right'}">
-              <mcs-button icon="arrow" [disabled]="!validate()" (click)="addNetwork()">
-                {{ textContent.addButton }}
-              </mcs-button>
-            </div>
+          <!-- Network Selection -->
+          <div class="field">
+            <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
+              [placeholder]="textContent.networkSelect.placeholder">
+              <mcs-select-item [value]="">-</mcs-select-item>
+              <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+                {{ network.name }}
+              </mcs-select-item>
+            </mcs-select>
           </div>
 
-          <div *ngIf="hasReachedNetworksLimit" class="horizontal-items-spacing-xsmall"
-            display-flex="row" align-items="center" justify-content="center">
-            <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-            <h4>{{ textContent.reachedNetworksLimit }}</h4>
+          <!-- IP Address setting -->
+          <div class="field" *ngIf="networkName">
+            <mcs-server-ip-address [gateway]="networkGateway"
+              [subnetMask]="networkNetmask"
+              (ipAddressChanged)="onIpAddressChanged($event)">
+              <!--Ip address contents on the left hand side (title and description)-->
+              <div title>
+                <span class="label no-line-height">{{ textContent.ipAddress }}</span>
+              </div>
+            </mcs-server-ip-address>
           </div>
+
+          <div [ngStyle]="{'text-align': 'right'}">
+            <mcs-button icon="arrow" [disabled]="!validate()" (click)="addNetwork()">
+              {{ textContent.addButton }}
+            </mcs-button>
+          </div>
+        </div>
+
+        <div *ngIf="hasReachedNetworksLimit" class="horizontal-items-spacing-xsmall"
+          display-flex="row" align-items="center" justify-content="center">
+          <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
+          <h4>{{ textContent.reachedNetworksLimit }}</h4>
         </div>
       </div>
     </div>
@@ -152,3 +151,4 @@
       </div>
     </div>
   </div>
+</div>

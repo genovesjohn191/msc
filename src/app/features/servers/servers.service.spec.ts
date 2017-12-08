@@ -16,7 +16,7 @@ import {
   ServerResource,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
-  ServerNetwork,
+  ServerNetworkSummary,
   ServerManageNetwork,
   ServerManageMedia,
   ServerCreate,
@@ -374,7 +374,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerNetwork[]>();
+      let responseData = new McsApiSuccessResponse<ServerNetworkSummary[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       mockRequest.flush(responseData);
@@ -505,9 +505,9 @@ describe('ServersService', () => {
     });
   });
 
-  describe('getPlatformData()', () => {
+  describe('getServerPlatforms()', () => {
     it('should get the plaform data from API calls', () => {
-      serversService.getPlatformData()
+      serversService.getServerPlatforms()
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(200);
@@ -515,11 +515,11 @@ describe('ServersService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/platform`);
+      let mockRequest = httpMock.expectOne(`/servers/platforms`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerPlatform>();
+      let responseData = new McsApiSuccessResponse<ServerPlatform[]>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);

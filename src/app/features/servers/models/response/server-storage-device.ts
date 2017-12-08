@@ -4,7 +4,7 @@ export class ServerStorageDevice {
   public sizeMB: number;
   public storageDeviceType: string;
   public storageDeviceInterfaceType: string;
-  public backingVcenter: string;
+  public backingVCenter: string;
   public backingId: string;
   public storageProfile: string;
   public wwn: string;

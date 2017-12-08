@@ -1,7 +1,8 @@
-import { ServerResourceStorage } from './server-resource-storage';
-import { ServerResourceNetwork } from './server-resource-network';
 import { ServerServiceType } from '../enumerations/server-service-type.enum';
-import { ServerCatalog } from './server-catalog';
+import { ServerCompute } from './server-compute';
+import { ServerStorage } from './server-storage';
+import { ServerNetwork } from './server-network';
+import { ServerCatalogItem } from './server-catalog-item';
 import { ServerVApp } from './server-vapp';
 
 export class ServerResource {
@@ -9,17 +10,9 @@ export class ServerResource {
   public name: string;
   public serviceType: ServerServiceType;
   public availabilityZone: string;
-  public cpuAllocation: number;
-  public cpuReservation: number;
-  public cpuLimit: number;
-  public cpuUsed: number;
-  public memoryAllocationMB: number;
-  public memoryReservationMB: number;
-  public memoryLimitMB: number;
-  public memoryUsedMB: number;
-  public url: string;
-  public storage: ServerResourceStorage[];
-  public networks: ServerResourceNetwork[];
-  public catalogs: ServerCatalog[];
+  public compute: ServerCompute;
+  public storage: ServerStorage[];
+  public networks: ServerNetwork[];
+  public catalogItems: ServerCatalogItem[];
   public vApps: ServerVApp[];
 }

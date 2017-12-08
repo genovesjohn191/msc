@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import {
   ServerResource,
-  ServerResourceStorage,
+  ServerStorage,
   ServerServiceType
 } from '../../models';
 import { VdcService } from '../vdc.service';
@@ -52,11 +52,13 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   }
 
   public get vdcMemoryValue(): string {
-    return appendUnitSuffix(this.vdc.memoryLimitMB, 'megabyte');
+    return !isNullOrEmpty(this.vdc.compute) ?
+      appendUnitSuffix(this.vdc.compute.memoryLimitMB, 'megabyte') : '' ;
   }
 
   public get vdcCpuValue(): string {
-    return appendUnitSuffix(this.vdc.cpuLimit, 'cpu');
+    return !isNullOrEmpty(this.vdc.compute) ?
+      appendUnitSuffix(this.vdc.compute.cpuLimit, 'cpu') : '' ;
   }
 
   public get hasLowCapacityStorage(): boolean {
@@ -109,7 +111,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     return serviceTypeText;
   }
 
-  public getStorageStatusIconKey(storage: ServerResourceStorage): string {
+  public getStorageStatusIconKey(storage: ServerStorage): string {
     let iconKey = '';
 
     let percentage = this._computeStorageValuePercentage(storage);
@@ -156,7 +158,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     return storages.length;
   }
 
-  public isStorageProfileLow(storage: ServerResourceStorage): boolean {
+  public isStorageProfileLow(storage: ServerStorage): boolean {
     if (isNullOrEmpty(storage)) { return false; }
 
     return this._computeStorageValuePercentage(storage) > 85;
@@ -192,7 +194,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _computeStorageValuePercentage(storage: ServerResourceStorage): number {
+  private _computeStorageValuePercentage(storage: ServerStorage): number {
     if (isNullOrEmpty(storage)) { return 0; }
 
     let percentage = 100 * storage.usedMB / storage.limitMB;

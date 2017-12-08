@@ -34,7 +34,7 @@ import {
   ServerCommand,
   ServerPlatform,
   ServerResource,
-  ServerResourceStorage,
+  ServerStorage,
   ServerGroupedOs,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
@@ -42,10 +42,11 @@ import {
   ServerImageType,
   ServerCatalogType,
   ServerCatalogItemType,
-  ServerNetwork,
+  ServerNetworkSummary,
   ServerManageNetwork,
   ServerIpAllocationMode,
-  ServerManageMedia
+  ServerManageMedia,
+  ServerPlatformType
 } from './models';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
@@ -449,16 +450,17 @@ export class ServersService {
   /**
    * This will get the server networks from the API
    */
-  public getServerNetworks(serverId: any): Observable<McsApiSuccessResponse<ServerNetwork[]>> {
+  public getServerNetworks(
+    serverId: any): Observable<McsApiSuccessResponse<ServerNetworkSummary[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerNetwork[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetwork[]>>(
+        let apiResponse: McsApiSuccessResponse<ServerNetworkSummary[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetworkSummary[]>>(
           response, this._responseReviverParser);
-        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerNetwork[]>();
+        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerNetworkSummary[]>();
       })
       .catch(this._handleServerError);
   }
@@ -649,9 +651,9 @@ export class ServersService {
   /**
    * Get Platform Data (MCS API Response)
    */
-  public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {
+  public getServerPlatforms(): Observable<McsApiSuccessResponse<ServerPlatform[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/platform';
+    mcsApiRequestParameter.endPoint = '/servers/platforms';
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
@@ -775,14 +777,32 @@ export class ServersService {
   }
 
   public computeAvailableMemoryMB(resource: ServerResource): number {
-    return !isNullOrEmpty(resource) ? resource.memoryLimitMB - resource.memoryUsedMB : 0;
+    let availableMemoryMB = 0;
+
+    if (!isNullOrEmpty(resource)) {
+      let resourceCompute = resource.compute;
+
+      availableMemoryMB = !isNullOrEmpty(resourceCompute) ?
+        resourceCompute.memoryLimitMB - resourceCompute.memoryUsedMB : 0;
+    }
+
+    return availableMemoryMB;
   }
 
   public computeAvailableCpu(resource: ServerResource): number {
-    return !isNullOrEmpty(resource) ? resource.cpuLimit - resource.cpuUsed : 0;
+    let availableCpu = 0;
+
+    if (!isNullOrEmpty(resource)) {
+      let resourceCompute = resource.compute;
+
+      availableCpu = !isNullOrEmpty(resourceCompute) ?
+        resourceCompute.cpuLimit - resourceCompute.cpuUsed : 0;
+    }
+
+    return availableCpu;
   }
 
-  public computeAvailableStorageMB(storage: ServerResourceStorage): number {
+  public computeAvailableStorageMB(storage: ServerStorage): number {
     return !isNullOrEmpty(storage) ? storage.limitMB - storage.usedMB : 0;
   }
 
@@ -882,7 +902,7 @@ export class ServersService {
         break;
 
       case 'type':
-        value = ServerCatalogType[value];
+        value = ServerCatalogType[value] || ServerPlatformType[value];
         break;
 
       case 'itemType':

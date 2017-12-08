@@ -42,7 +42,7 @@ import {
   ServerIpAddress,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerResourceNetwork,
+  ServerNetwork,
   ServerGroupedOs,
   ServerCreateType,
   ServerImageType,
@@ -100,7 +100,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public memoryMB: number;
   public cpuCount: number;
   public storageMemoryMB: number;
-  public selectedNetwork: ServerResourceNetwork;
+  public selectedNetwork: ServerNetwork;
   public storageSliderValues: number[];
   public storageAvailableMemoryMB: number;
   public selectedStorage: ServerManageStorage;
@@ -148,7 +148,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.serverTemplateItems = new Array();
     this.networkItems = new Array();
     this.storageItems = new Array();
-    this.selectedNetwork = new ServerResourceNetwork();
+    this.selectedNetwork = new ServerNetwork();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
 
@@ -278,7 +278,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       });
     });
 
-    this.resource.catalogs.forEach((catalog) => {
+    this.resource.catalogItems.forEach((catalog) => {
       if (catalog.type === ServerCatalogType.SelfManaged &&
         catalog.itemType === ServerCatalogItemType.Template) {
         let serverImage = new ServerImage();

@@ -12,14 +12,16 @@ import {
   ServerStorageDeviceUpdate,
   ServerPlatform,
   ServerResource,
-  ServerResourceStorage,
+  ServerEnvironment,
+  ServerStorage,
   ServerCommand,
   ServerPowerState,
-  ServerNetwork,
+  ServerNetworkSummary,
   ServerManageNetwork,
   ServerManageMedia
 } from '../models';
 import { McsApiSuccessResponse } from '../../../core/';
+import { isNullOrEmpty } from '../../../utilities';
 
 @Injectable()
 export class ServerService {
@@ -51,8 +53,8 @@ export class ServerService {
   /**
    * Get Platform Data (MCS API Response)
    */
-  public getPlatformData(): Observable<McsApiSuccessResponse<ServerPlatform>> {
-    return this._serversService.getPlatformData();
+  public getServerPlatforms(): Observable<McsApiSuccessResponse<ServerPlatform[]>> {
+    return this._serversService.getServerPlatforms();
   }
 
   /**
@@ -158,7 +160,8 @@ export class ServerService {
    * Get Server Networks (MCS API Response)
    * @param serverId Server Identification
    */
-  public getServerNetworks(serverId: any): Observable<McsApiSuccessResponse<ServerNetwork[]>> {
+  public getServerNetworks(
+    serverId: any): Observable<McsApiSuccessResponse<ServerNetworkSummary[]>> {
     return this._serversService.getServerNetworks(serverId);
   }
 
@@ -253,8 +256,33 @@ export class ServerService {
     return this._serversService.computeAvailableCpu(resource);
   }
 
-  public computeAvailableStorageMB(storage: ServerResourceStorage): number {
+  public computeAvailableStorageMB(storage: ServerStorage): number {
     return this._serversService.computeAvailableStorageMB(storage);
+  }
+
+  public getServerResources(server: Server): Observable<ServerResource[]> {
+    return this.getServerPlatforms().map((response) => {
+      let serverPlatform: ServerPlatform;
+
+      if (!isNullOrEmpty(response) && !isNullOrEmpty(response.content)) {
+        serverPlatform = response.content.find((targetPlatform) => {
+          return targetPlatform.type === server.platform.type;
+        });
+      }
+
+      return !isNullOrEmpty(serverPlatform) ? serverPlatform : new ServerPlatform() ;
+    }).map((platform) => {
+      let serverEnvironment: ServerEnvironment;
+
+      if (!isNullOrEmpty(platform) && !isNullOrEmpty(platform.environments)) {
+        serverEnvironment = platform.environments.find((targetEnvironment) => {
+          return targetEnvironment.name === server.platform.environmentName;
+        });
+      }
+
+      return !isNullOrEmpty(serverEnvironment) ?
+        serverEnvironment.resources : new Array<ServerResource>() ;
+    });
   }
 
   public setResourceMap(resources: ServerResource[]): Map<string, ServerResource> {
