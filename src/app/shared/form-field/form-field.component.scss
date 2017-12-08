@@ -1,6 +1,7 @@
 @import "../../../styles/shared/base";
 
 // Form field content
+$form-field-content-min-height: 40px;
 $form-field-content-focus-color: $color-primary-00;
 $form-field-content-error-color: $color-red-00;
 $form-field-content-border-width: $input-border-width;
@@ -34,6 +35,7 @@ $form-field-error-hint-color: rgba($color-black, 0.54);
 .form-field-content {
   @include display-flex(row);
   @include align-items(center);
+  min-height: $form-field-content-min-height;
 
   border-width: $form-field-content-border-width;
   border-style: $form-field-content-border-style;

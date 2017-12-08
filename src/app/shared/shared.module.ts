@@ -34,6 +34,7 @@ import { FormFieldModule } from './form-field/form-field.module';
 import { InputModule } from './input/input.module';
 import { SearchModule } from './search/search.module';
 import { SliderModule } from './slider/slider.module';
+import { TagListModule } from './tag-list/tag-list.module';
 /** Components */
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
@@ -84,7 +85,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     FormFieldModule,
     InputModule,
     SearchModule,
-    SliderModule
+    SliderModule,
+    TagListModule
   ],
   exports: [
     CheckboxComponent,
@@ -124,7 +126,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     FormFieldModule,
     InputModule,
     SearchModule,
-    SliderModule
+    SliderModule,
+    TagListModule
   ]
 })
 
