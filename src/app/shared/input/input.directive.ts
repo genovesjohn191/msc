@@ -20,7 +20,8 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  ErrorStateMatcher
+  ErrorStateMatcher,
+  coerceBoolean
 } from '../../utilities';
 
 // Unique Id that generates during runtime
@@ -68,14 +69,16 @@ export class InputDirective extends McsFormFieldControlBase<any>
   public errorStateMatcher: ErrorStateMatcher;
 
   @Input()
-  public get required() { return this._required; }
-  public set required(value: any) { this._required = value; }
+  public get required(): boolean { return this._required; }
+  public set required(value: boolean) { this._required = coerceBoolean(value); }
   private _required: boolean = false;
 
   @Input()
-  public get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
-  public set disabled(value: any) { this._disabled = value; }
-  private _disabled = false;
+  public get disabled(): boolean {
+    return this.ngControl ? this.ngControl.disabled : this._disabled;
+  }
+  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
+  private _disabled: boolean = false;
 
   @Input()
   public get type(): string { return this._type; }

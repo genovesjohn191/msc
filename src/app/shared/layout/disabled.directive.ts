@@ -4,6 +4,7 @@ import {
   Renderer2,
   ElementRef
 } from '@angular/core';
+import { coerceBoolean } from '../../utilities';
 
 @Directive({
   selector: '[disabled]'
@@ -19,9 +20,8 @@ export class DisabledDirective {
   }
   public set disabled(value: boolean) {
     if (this._disabled !== value) {
-      this._disabled = value;
-
-      this._setDisabled(value);
+      this._disabled = coerceBoolean(value);
+      this._setDisabled(this._disabled);
     }
   }
   private _disabled: boolean;

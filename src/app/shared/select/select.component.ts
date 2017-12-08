@@ -33,7 +33,8 @@ import {
   registerEvent,
   unregisterEvent,
   ErrorStateMatcher,
-  refreshView
+  refreshView,
+  coerceBoolean
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
 
@@ -79,14 +80,16 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public size: 'default' | 'small';
 
   @Input()
-  public get required() { return this._required; }
-  public set required(value: any) { this._required = value; }
+  public get required(): boolean { return this._required; }
+  public set required(value: boolean) { this._required = coerceBoolean(value); }
   private _required: boolean = false;
 
   @Input()
-  public get disabled() { return this.ngControl ? this.ngControl.disabled : this._disabled; }
-  public set disabled(value: any) { this._disabled = value; }
-  private _disabled = false;
+  public get disabled(): boolean {
+    return this.ngControl ? this.ngControl.disabled : this._disabled;
+  }
+  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
+  private _disabled: boolean = false;
 
   @ContentChildren(SelectItemComponent, { descendants: true })
   private _items: QueryList<SelectItemComponent>;

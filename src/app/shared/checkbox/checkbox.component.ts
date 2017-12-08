@@ -12,6 +12,7 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
+import { coerceBoolean } from '../../utilities';
 
 let UNIQUE_ID: number = 0;
 
@@ -52,8 +53,8 @@ export class CheckboxComponent implements ControlValueAccessor {
   }
   public set checked(value: boolean) {
     if (this._checked !== value) {
-      this._checked = value;
-      this.isChecked = value;
+      this._checked = coerceBoolean(value);
+      this._onChanged(this._checked);
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -63,33 +64,6 @@ export class CheckboxComponent implements ControlValueAccessor {
    * This will generate a new unique id if the id is not given
    */
   private _nextUniqueId: number = ++UNIQUE_ID;
-
-  /**
-   * On Touched Event Callback
-   */
-  private _onTouched: () => {};
-
-  /**
-   * On Changed Event Callback
-   */
-  private _onChanged: (_: any) => {};
-
-  /**
-   * IsChecked Flag
-   */
-  private _isChecked: boolean;
-  public get isChecked(): boolean {
-    return this._isChecked;
-  }
-  public set isChecked(value: boolean) {
-    if (value !== this._isChecked) {
-      this._isChecked = value;
-      if (this._onChanged) {
-        this._onChanged(value);
-      }
-      this._changeDetectorRef.markForCheck();
-    }
-  }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.label = '';
@@ -109,8 +83,8 @@ export class CheckboxComponent implements ControlValueAccessor {
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (value !== this.isChecked) {
-      this.isChecked = value;
+    if (value !== this.checked) {
+      this.checked = value;
     }
   }
 
@@ -129,4 +103,8 @@ export class CheckboxComponent implements ControlValueAccessor {
   public registerOnTouched(fn: any) {
     this._onTouched = fn;
   }
+
+  // View <-> Model callback methods
+  private _onChanged: (value: any) => void = () => { /** dummy */ };
+  private _onTouched = () => { /** dummy */ };
 }

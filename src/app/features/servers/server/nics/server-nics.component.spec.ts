@@ -12,7 +12,7 @@ import {
 import { ServerService } from '../server.service';
 import { ServersTestingModule } from '../../testing';
 import {
-  ServerNetwork,
+  ServerNetworkSummary,
   ServerIpAddress,
   ServerIpAllocationMode
 } from '../../models';
@@ -173,7 +173,7 @@ describe('ServerNicsComponent', () => {
         networkId: mockServerNetworks[0].id
       };
 
-      expect(component.getActiveNic(mockServerNetworks[0] as ServerNetwork)).toBeTruthy();
+      expect(component.getActiveNic(mockServerNetworks[0] as ServerNetworkSummary)).toBeTruthy();
     });
   });
 
@@ -187,7 +187,7 @@ describe('ServerNicsComponent', () => {
         networkId: mockServerNetworks[0].id
       };
 
-      expect(component.getNetworkSummaryInformation(mockServerNetworks[0] as ServerNetwork))
+      expect(component.getNetworkSummaryInformation(mockServerNetworks[0] as ServerNetworkSummary))
         .toBe(summaryInformation);
     });
   });

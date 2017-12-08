@@ -15,7 +15,8 @@ import {
 import {
   isNullOrEmpty,
   registerEvent,
-  unregisterEvent
+  unregisterEvent,
+  coerceBoolean
 } from '../../utilities';
 import {
   TooltipComponent,
@@ -62,7 +63,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
   }
   public set visible(value: boolean) {
     if (this._visible !== value) {
-      this._visible = value;
+      this._visible = coerceBoolean(value);
     }
   }
   private _visible: boolean = true;

@@ -4,9 +4,8 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
-import {
-  McsAuthenticationService
-} from '../../core';
+import { McsAuthenticationService } from '../../core';
+import { coerceArray } from '../../utilities';
 
 @Directive({
   selector: '[mcsHasPermission]'
@@ -14,7 +13,7 @@ import {
 
 export class HasPermissionDirective {
   @Input() set mcsHasPermission(requiredPermission: string[]) {
-    if (this._authenticationService.hasPermission(requiredPermission)) {
+    if (this._authenticationService.hasPermission(coerceArray(requiredPermission))) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();

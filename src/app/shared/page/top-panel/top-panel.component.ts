@@ -9,7 +9,10 @@ import {
   ElementRef,
   Renderer2
 } from '@angular/core';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  coerceBoolean
+} from '../../../utilities';
 import {
   TopPanelItemPlaceholderDirective
 } from './top-panel-item/top-panel-item-placeholder.directive';
@@ -37,8 +40,8 @@ export class TopPanelComponent implements AfterContentInit {
   }
   public set active(value: boolean) {
     if (this._active !== value) {
-      this._active = value;
-      this._setActiveParentElement(value);
+      this._active = coerceBoolean(value);
+      this._setActiveParentElement(this._active);
     }
   }
   private _active: boolean;

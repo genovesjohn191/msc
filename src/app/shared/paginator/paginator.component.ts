@@ -11,6 +11,7 @@ import {
   McsTextContentProvider,
   McsPaginator
 } from '../../core';
+import { coerceNumber } from '../../utilities';
 
 @Component({
   selector: 'mcs-paginator',
@@ -32,7 +33,7 @@ export class PaginatorComponent implements McsPaginator {
   @Input()
   public get pageIndex(): number { return this._pageIndex; }
   public set pageIndex(value: number) {
-    this._pageIndex = value;
+    this._pageIndex = coerceNumber(value);
     this._changeDetectorRef.markForCheck();
   }
   private _pageIndex: number;
@@ -40,7 +41,7 @@ export class PaginatorComponent implements McsPaginator {
   @Input()
   public get pageSize(): number { return this._pageSize; }
   public set pageSize(value: number) {
-    this._pageSize = value;
+    this._pageSize = coerceNumber(value);
     this._changeDetectorRef.markForCheck();
   }
   private _pageSize: number;
@@ -48,7 +49,7 @@ export class PaginatorComponent implements McsPaginator {
   @Input()
   public get totalCount(): number { return this._totalCount; }
   public set totalCount(value: number) {
-    this._totalCount = value;
+    this._totalCount = coerceNumber(value);
     this._changeDetectorRef.markForCheck();
   }
   private _totalCount: number;
