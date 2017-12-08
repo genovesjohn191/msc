@@ -1,6 +1,6 @@
-import { ServerOs } from './server-os';
+import { ServerOperatingSystem } from './server-operating-system';
 
 export class ServerGroupedOs {
   public platform: string;
-  public os: ServerOs[];
+  public os: ServerOperatingSystem[];
 }

@@ -1,58 +1,58 @@
-<div class="limited-view vertical-items-spacing-medium" [ngStyle]="{'position': 'relative'}">
-  <h3 class="heading">{{ serverStorageText.title }}</h3>
+<div class="limited-view" [ngStyle]="{'position': 'relative'}">
+  <div class="vertical-items-spacing-medium" [mcsLoader]="serverResourceSubscription">
+    <h3 class="heading">{{ serverStorageText.title }}</h3>
 
-  <p>{{ serverStorageText.description }}</p>
+    <p>{{ serverStorageText.description }}</p>
 
-  <div *ngIf="!expandStorage" class="vertical-items-spacing-large">
-    <table class="mcs-simple-table full-width">
-      <thead>
-        <tr>
-          <td>
-            <strong>{{ serverStorageText.storageDevice }}</strong>
-          </td>
-          <td>
-            <strong>{{ serverStorageText.storageProfile }}</strong>
-          </td>
-          <td>
-            <strong>{{ serverStorageText.capacity }}</strong>
-          </td>
-          <td></td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let storage of storageDevices; let i = index">
-          <td class="squishy-cell horizontal-items-spacing-xsmall"
-            display-flex="row" align-items="center">
-            <mcs-icon *ngIf="!isActiveStorage(storage.id)"
-              [key]="storageIconKey" size="small"
-              class="hidden-small"></mcs-icon>
-            <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
-              size="small" class="hidden-small"
-              [mcsTooltip]="getStorageSummaryInformation(storage.id)"
-              mcsTooltipPosition="right"></mcs-icon>
-            <span>{{ storage.name }}</span>
-          </td>
-          <td class="squishy-cell">
-            {{ storage.storageProfile }}
-          </td>
-          <td>
-            {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
-          </td>
-          <td class="horizontal-items-spacing-medium">
-            <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="expand text-right">
-              <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
-            </span>
-            <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
-              <a *ngIf="hasMultipleStorageDevice" (click)="deleteStorage(storage)">
-                {{ serverStorageText.deleteStorageLink }}
-              </a>
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div *mcsHasPermission="['VmEdit']">
-      <div [mcsLoader]="serverResourceSubscription">
+    <div *ngIf="!expandStorage" class="vertical-items-spacing-large">
+      <table class="mcs-simple-table full-width">
+        <thead>
+          <tr>
+            <td>
+              <strong>{{ serverStorageText.storageDevice }}</strong>
+            </td>
+            <td>
+              <strong>{{ serverStorageText.storageProfile }}</strong>
+            </td>
+            <td>
+              <strong>{{ serverStorageText.capacity }}</strong>
+            </td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let storage of storageDevices; let i = index">
+            <td class="squishy-cell horizontal-items-spacing-xsmall"
+              display-flex="row" align-items="center">
+              <mcs-icon *ngIf="!isActiveStorage(storage.id)"
+                [key]="storageIconKey" size="small"
+                class="hidden-small"></mcs-icon>
+              <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
+                size="small" class="hidden-small"
+                [mcsTooltip]="getStorageSummaryInformation(storage.id)"
+                mcsTooltipPosition="right"></mcs-icon>
+              <span>{{ storage.name }}</span>
+            </td>
+            <td class="squishy-cell">
+              {{ storage.storageProfile }}
+            </td>
+            <td>
+              {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
+            </td>
+            <td class="horizontal-items-spacing-medium">
+              <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="expand text-right">
+                <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
+              </span>
+              <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
+                <a *ngIf="hasMultipleStorageDevice" (click)="deleteStorage(storage)">
+                  {{ serverStorageText.deleteStorageLink }}
+                </a>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *mcsHasPermission="['VmEdit']">
         <div *ngIf="!hasReachedDisksLimit" class="action-box">
           <mcs-server-manage-storage *ngIf="hasStorageProfileList" #mcsStorage
             [storageProfileList]="storageProfileList"
@@ -80,35 +80,34 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="expandStorage">
-    <mcs-server-manage-storage #mcsStorage
-      [memoryMB]="selectedStorageDevice.sizeMB"
-      [availableMemoryMB]="getStorageAvailableMemory(selectedStorageDevice.storageProfile)"
-      [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
-      [storageSliderValues]="selectedStorageSliderValues"
-      (storageChanged)="onStorageChanged($event)"
-      [disabled]="isProcessing">
-      <!--Server manage storage contents on the left hand side (description)-->
-        <div title>
-        <h4>{{ serverStorageText.expandStorageHeading }}</h4>
-      </div>
+    <div *ngIf="expandStorage">
+      <mcs-server-manage-storage #mcsStorage
+        [memoryMB]="selectedStorageDevice.sizeMB"
+        [availableMemoryMB]="getStorageAvailableMemory(selectedStorageDevice.storageProfile)"
+        [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
+        [storageSliderValues]="selectedStorageSliderValues"
+        (storageChanged)="onStorageChanged($event)"
+        [disabled]="isProcessing">
+        <!--Server manage storage contents on the left hand side (description)-->
+          <div title>
+          <h4>{{ serverStorageText.expandStorageHeading }}</h4>
+        </div>
 
-      <div details>
-        <p><strong>Storage Device : </strong> <span>{{ selectedStorageDevice.name}}</span></p>
-        <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile}}</span></p>
-        <p>
-          <strong>Current Size : </strong>
-          <span>{{ appendGbUnit(convertStorageInGb(selectedStorageDevice.sizeMB)) }}</span>
-        </p>
+        <div details>
+          <p><strong>Storage Device : </strong> <span>{{ selectedStorageDevice.name}}</span></p>
+          <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile}}</span></p>
+          <p>
+            <strong>Current Size : </strong>
+            <span>{{ appendGbUnit(convertStorageInGb(selectedStorageDevice.sizeMB)) }}</span>
+          </p>
+        </div>
+      </mcs-server-manage-storage>
+      <div display-flex="row" align-items="center" justify-content="space-between">
+        <a (click)="closeExpandStorageBox()" [ngClass]="{'disabled': isProcessing}">Cancel</a>
+        <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" #updateButton (click)="onClickUpdate()"
+          [disabled]="!isValidStorageValues || expandingStorage">Update</mcs-button>
       </div>
-    </mcs-server-manage-storage>
-    <div display-flex="row" align-items="center" justify-content="space-between">
-      <a (click)="closeExpandStorageBox()" [ngClass]="{'disabled': isProcessing}">Cancel</a>
-      <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" #updateButton (click)="onClickUpdate()"
-        [disabled]="!isValidStorageValues || expandingStorage">Update</mcs-button>
     </div>
   </div>
-
 </div>

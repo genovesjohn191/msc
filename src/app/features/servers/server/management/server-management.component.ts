@@ -22,7 +22,7 @@ import {
   ServerPowerState,
   ServerResource,
   ServerServiceType,
-  ServerCatalog,
+  ServerCatalogItem,
   ServerCatalogItemType,
   ServerMedia,
   ServerManageMedia
@@ -69,7 +69,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public serverThumbnailEncoding: string;
 
   public resource: ServerResource;
-  public resourceMediaList: ServerCatalog[];
+  public resourceMediaList: ServerCatalogItem[];
 
   public jobs: McsApiJob[];
   public activeServerJob: McsApiJob;
@@ -77,7 +77,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public remainingCpu: number;
 
   public serverSubscription: Subscription;
-  public resourceSubscription: Subscription;
+  public serverResourceSubscription: Subscription;
 
   private _resourceMap: Map<string, ServerResource>;
   private _serverPerformanceScale: ServerPerformanceScale;
@@ -155,11 +155,13 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public get serverMemoryValue(): string {
-    return appendUnitSuffix(this.server.memoryMB, 'megabyte');
+    return !isNullOrEmpty(this.server.compute) ?
+      appendUnitSuffix(this.server.compute.memoryMB, 'megabyte') : '' ;
   }
 
   public get serverCpuValue(): string {
-    return appendUnitSuffix(this.server.cpuCount, 'cpu');
+    return !isNullOrEmpty(this.server.compute) ?
+      appendUnitSuffix(this.server.compute.cpuCount, 'megabyte') : '' ;
   }
 
   // Check if the current server's serverType is managed
@@ -188,26 +190,22 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public get hasUpdate(): boolean {
-    return this._serverPerformanceScale.valid &&
-      (this.server.memoryMB < this._serverPerformanceScale.memoryMB ||
-        this.server.cpuCount < this._serverPerformanceScale.cpuCount);
+    return this._serverPerformanceScale.valid && this.server.compute &&
+      (this.server.compute.memoryMB < this._serverPerformanceScale.memoryMB ||
+        this.server.compute.cpuCount < this._serverPerformanceScale.cpuCount);
   }
 
   public get isPoweredOn(): boolean {
     return this.server.powerState === ServerPowerState.PoweredOn;
   }
 
-  public get hasNetworkInformation(): boolean {
-    return !isNullOrEmpty(this.server.interfaces);
+  public get hasNics(): boolean {
+    return !isNullOrEmpty(this.server.nics);
   }
 
   public get hasStorageInformation(): boolean {
     return !isNullOrEmpty(this.primaryVolume)
-      || !isNullOrEmpty(this.secondaryVolumes)
-      || (!isNullOrEmpty(this.server.environment)
-      && !isNullOrEmpty(this.server.environment.resource)
-      && !isNullOrEmpty(this.server.environment.resource.storage)
-      && !isNullOrEmpty(this.server.environment.resource.storage.name));
+      || !isNullOrEmpty(this.secondaryVolumes);
   }
 
   public get hasAvailableMedia(): boolean {
@@ -239,7 +237,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     this.isAttachMedia = false;
     this.isProcessing = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
-    this.resourceMediaList = new Array<ServerCatalog>();
+    this.resourceMediaList = new Array<ServerCatalogItem>();
   }
 
   public ngOnInit(): void {
@@ -255,8 +253,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       this.serverSubscription.unsubscribe();
     }
 
-    if (this.resourceSubscription) {
-      this.resourceSubscription.unsubscribe();
+    if (this.serverResourceSubscription) {
+      this.serverResourceSubscription.unsubscribe();
     }
 
     if (this._scalingSubscription) {
@@ -415,7 +413,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
           this.server = server;
 
           // Initialize values
-          this._setResourceMap();
+          this._getServerResources();
           this._getScaleParam();
           this._getServerDetails();
           this._getServerThumbnail();
@@ -430,30 +428,31 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       });
   }
 
-  private _setResourceMap(): void {
-    this.resourceSubscription = this._serverService.getResources()
-      .subscribe((response) => {
-        if (!isNullOrEmpty(response)) {
-          this._resourceMap = this._serverService.setResourceMap(response.content);
+  private _getServerResources(): void {
+    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
+      .subscribe((resources) => {
+        if (!isNullOrEmpty(resources)) {
+          this._resourceMap = this._serverService.setResourceMap(resources);
           this._setResourceData();
         }
       });
+
+    this.serverResourceSubscription.add(() => {
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   private _setResourceData(): void {
     this.resourceMediaList.splice(0);
 
-    let hasResource = !isNullOrEmpty(this.server.environment)
-      && !isNullOrEmpty(this.server.environment.resource);
-
-    if (hasResource) {
-      let resourceName = this.server.environment.resource.name;
+    if (this.server.platform) {
+      let resourceName = this.server.platform.resourceName;
 
       if (this._resourceMap.has(resourceName)) {
         this.resource = this._resourceMap.get(resourceName);
-        this.resource.catalogs.forEach((catalog) => {
+        this.resource.catalogItems.forEach((catalog) => {
           if (catalog.itemType === ServerCatalogItemType.Media) {
-            let resourceMedia = new ServerCatalog();
+            let resourceMedia = new ServerCatalogItem();
 
             if (isNullOrEmpty(this.server.media)) {
               resourceMedia = catalog;
@@ -524,9 +523,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
       switch (activeServerJob.type) {
         case McsJobType.UpdateServer:
-          if (hasCompleted && !isNullOrEmpty(activeServerJob.clientReferenceObject)) {
-            this.server.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
-            this.server.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
+          if (hasCompleted && !isNullOrEmpty(this.server.compute) &&
+            !isNullOrEmpty(activeServerJob.clientReferenceObject)) {
+            this.server.compute.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
+            this.server.compute.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
           }
           break;
 

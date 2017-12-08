@@ -30,9 +30,10 @@
           <mcs-list-item *ngIf="isSelfManaged">
             <mcs-button (onClick)="createNewServer(vdc.serviceType)">New Server</mcs-button>
           </mcs-list-item>
-          <mcs-list-item *ngIf="vdc.url">
+          <!-- TODO: Will ask orch to put back url property -->
+          <!-- <mcs-list-item *ngIf="vdc.url">
             <a [href]="vdc.url" target="_blank">{{ textContent.vcloud.viewVcloud}}</a>
-          </mcs-list-item>
+          </mcs-list-item> -->
         </mcs-list>
       </div>
     </div>

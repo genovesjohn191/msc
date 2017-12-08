@@ -442,10 +442,9 @@ export class ServersComponent
   }
 
   public navigateToResource(server: Server): void {
-    if (isNullOrEmpty(server.environment) &&
-      isNullOrEmpty(server.environment.resource)) { return; }
+    if (isNullOrEmpty(server.platform)) { return; }
 
-    this._router.navigate(['/servers/vdc', server.environment.resource.id]);
+    this._router.navigate(['/servers/vdc', server.platform.resourceId]);
   }
 
   public toggleSelection(server: Server): void {

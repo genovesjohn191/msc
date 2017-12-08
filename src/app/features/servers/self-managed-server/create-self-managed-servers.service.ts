@@ -4,7 +4,7 @@ import { ServersService } from '../servers.service';
 import {
   ServerCreate,
   ServerResource,
-  ServerResourceStorage,
+  ServerStorage,
   ServerClone
 } from '../models';
 import { ContextualHelpDirective } from '../../../shared';
@@ -70,7 +70,7 @@ export class CreateSelfManagedServersService {
     return this._serversService.computeAvailableCpu(resource);
   }
 
-  public computeAvailableStorageMB(storage: ServerResourceStorage): number {
+  public computeAvailableStorageMB(storage: ServerStorage): number {
     return this._serversService.computeAvailableStorageMB(storage);
   }
 

@@ -36,7 +36,7 @@ import { ContextualHelpDirective } from '../../../shared';
 import {
   Server,
   ServerGroupedOs,
-  ServerOs,
+  ServerOperatingSystem,
   ServerResource,
   ServerVApp,
   ServerCreate,
@@ -439,10 +439,8 @@ export class CreateSelfManagedServersComponent implements
         let serversRecord: Server[] = new Array();
         if (server.serviceType !== ServerServiceType.SelfManaged) { return; }
 
-        let hasResource = server.environment && server.environment.resource;
-
-        if (hasResource) {
-          let resourceName = server.environment.resource.name;
+        if (!isNullOrEmpty(server.platform)) {
+          let resourceName = server.platform.resourceName;
           if (this._serverListMap.has(resourceName)) {
             serversRecord = this._serverListMap.get(resourceName);
           }
@@ -486,7 +484,7 @@ export class CreateSelfManagedServersComponent implements
       serverOs.forEach((group) => {
         let groupedOs = new ServerGroupedOs();
         groupedOs.platform = group.platform;
-        groupedOs.os = new Array<ServerOs>();
+        groupedOs.os = new Array<ServerOperatingSystem>();
 
         group.os.forEach((os) => {
           if (os.serviceType === ServerServiceType.SelfManaged) {

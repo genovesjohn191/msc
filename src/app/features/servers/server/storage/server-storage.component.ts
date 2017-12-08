@@ -11,7 +11,7 @@ import {
   Server,
   ServerManageStorage,
   ServerResource,
-  ServerResourceStorage,
+  ServerStorage,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
 } from '../../models';
@@ -65,7 +65,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public serverStorageText: any;
 
   public storageJob: McsApiJob;
-  public serverResourceStorage: ServerResourceStorage[];
+  public serverStorage: ServerStorage[];
 
   public server: Server;
   public storageDevices: ServerStorageDevice[];
@@ -203,7 +203,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.minimumMB = STORAGE_MINIMUM_VALUE;
     this.usedMemoryMB = 0;
     this.selectedStorageSliderValues = new Array<number>();
-    this.serverResourceStorage = new Array<ServerResourceStorage>();
+    this.serverStorage = new Array<ServerStorage>();
     this.storageChangedValue = new ServerManageStorage();
     this.storageChangedValue.valid = false;
     this.storageJob = new McsApiJob();
@@ -215,7 +215,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     // OnInit
     this.serverStorageText = this._textProvider.content.servers.server.storage;
 
-    this._getServerResources();
     this._listenToSelectedServerStream();
     this._listenToNotificationsStream();
   }
@@ -380,12 +379,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * This will get the server resources
    */
   private _getServerResources(): void {
-    this.serverResourceSubscription = this._serverService.getResources()
-      .subscribe((response) => {
-        this._setServerResourceMap(response);
+    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
+      .subscribe((resources) => {
+        if (!isNullOrEmpty(resources)) {
+          this._setServerResourceMap(resources);
+        }
       });
 
     this.serverResourceSubscription.add(() => {
+      this._setServerStorage();
+      this._setStorageProfiles();
       this._changeDetectorRef.markForCheck();
     });
   }
@@ -400,13 +403,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
         if (!isNullOrEmpty(server) && this.server.id !== server.id) {
           this.server = server;
           this._setStorageDevices();
-
-          if (!isNullOrEmpty(this.serverResourceSubscription)) {
-            this.serverResourceSubscription.add(() => {
-              this._setServerResourceStorage();
-              this._setStorageProfiles();
-            });
-          }
+          this._getServerResources();
         }
       });
   }
@@ -529,12 +526,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   /**
    * This will set the Platform data to platform mapping
    *
-   * @param response Api response
+   * @param resources Server Resources
    */
-  private _setServerResourceMap(response: any): void {
-    if (response && response.content) {
-      let serverResources = response.content as ServerResource[];
-      serverResources.forEach((resource) => {
+  private _setServerResourceMap(resources: ServerResource[]): void {
+    if (!isNullOrEmpty(resources)) {
+      resources.forEach((resource) => {
         this._serverResourceMap.set(resource.name, resource);
       });
     }
@@ -557,15 +553,14 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   /**
    * This will set the storage from the platform data
    */
-  private _setServerResourceStorage(): void {
-    if (isNullOrEmpty(this.server.environment) ||
-      isNullOrEmpty(this.server.environment.resource)) { return; }
+  private _setServerStorage(): void {
+    if (isNullOrEmpty(this.server.platform)) { return; }
 
-    let resourceName = this.server.environment.resource.name;
+    let resourceName = this.server.platform.resourceName;
 
     if (this._serverResourceMap.has(resourceName)) {
       let serverResource = this._serverResourceMap.get(resourceName);
-      this.serverResourceStorage = serverResource.storage;
+      this.serverStorage = serverResource.storage;
     }
   }
 
@@ -573,9 +568,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * This will set the storage profiles for storage management
    */
   private _setStorageProfiles(): void {
-    if (isNullOrEmpty(this.serverResourceStorage)) { return; }
+    if (isNullOrEmpty(this.serverStorage)) { return; }
 
-    this.serverResourceStorage.forEach((storage) => {
+    this.serverStorage.forEach((storage) => {
       this.storageProfileList.push({ value: storage.name, text: storage.name });
     });
   }
@@ -586,10 +581,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    *
    * @param profile Storage profile
    */
-  private _getStorageByProfile(profile: string): ServerResourceStorage {
-    if (isNullOrEmpty(this.serverResourceStorage)) { return; }
+  private _getStorageByProfile(profile: string): ServerStorage {
+    if (isNullOrEmpty(this.serverStorage)) { return; }
 
-    return this.serverResourceStorage.find((storage) => {
+    return this.serverStorage.find((storage) => {
       return storage.name === profile;
     });
   }

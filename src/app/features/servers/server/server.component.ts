@@ -268,10 +268,9 @@ export class ServerComponent
   }
 
   public navigateToResource(server: Server): void {
-    if (isNullOrEmpty(server.environment) &&
-      isNullOrEmpty(server.environment.resource)) { return; }
+    if (isNullOrEmpty(server.platform)) { return; }
 
-    this.router.navigate(['/servers/vdc', server.environment.resource.id]);
+    this.router.navigate(['/servers/vdc', server.platform.resourceId]);
   }
 
   /**
@@ -295,11 +294,11 @@ export class ServerComponent
       .subscribe((response) => {
         this.server = response.content;
 
-        let hasResource = !isNullOrEmpty(this.server.environment)
-          && !isNullOrEmpty(this.server.environment.resource);
+        let hasResourceName = !isNullOrEmpty(this.server.platform)
+          && !isNullOrEmpty(this.server.platform.resourceName);
 
-        let resourceName = (hasResource) ?
-          this.server.environment.resource.name : SERVER_LIST_GROUP_OTHERS;
+        let resourceName = (hasResourceName) ?
+          this.server.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
 
         this.selectedItem = {
           itemId: this.server.id,
