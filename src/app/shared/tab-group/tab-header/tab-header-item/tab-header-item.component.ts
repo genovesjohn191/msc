@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { coerceBoolean } from '../../../../utilities';
 
 @Component({
   selector: 'mcs-tab-header-item',
@@ -34,8 +35,8 @@ export class TabHeaderItemComponent {
   }
   public set active(value: boolean) {
     if (this._active !== value) {
-      this._active = value;
-      if (value === true) {
+      this._active = coerceBoolean(value);
+      if (this._active) {
         this.selectionChanged.next(this);
       }
       this.changeDetectorRef.markForCheck();

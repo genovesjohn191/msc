@@ -5,6 +5,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { coerceBoolean } from '../../../utilities';
 
 @Component({
   selector: 'mcs-tab-body',
@@ -28,7 +29,7 @@ export class TabBodyComponent {
   }
   public set active(value: boolean) {
     if (this._active !== value) {
-      this._active = value;
+      this._active = coerceBoolean(value);
     }
   }
   private _active: boolean;

@@ -4,6 +4,7 @@ import {
   Renderer2,
   ElementRef
 } from '@angular/core';
+import { coerceBoolean } from '../../utilities';
 
 @Directive({
   selector: '[hidden]'
@@ -19,8 +20,8 @@ export class HiddenDirective {
   }
   public set hidden(value: boolean) {
     if (this._hidden !== value) {
-      this._hidden = value;
-      this._setHidden(value);
+      this._hidden = coerceBoolean(value);
+      this._setHidden(this._hidden);
     }
   }
   private _hidden: boolean;

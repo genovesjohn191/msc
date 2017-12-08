@@ -24,7 +24,8 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  coerceBoolean
 } from '../../utilities';
 /** List panel directives */
 import {
@@ -63,7 +64,7 @@ export class ListPanelComponent<T> implements OnInit,
   }
   public set searchMode(value: boolean) {
     if (this._searchMode !== value) {
-      this._searchMode = value;
+      this._searchMode = coerceBoolean(value);
       this._changeDetectorRef.markForCheck();
     }
   }

@@ -230,12 +230,12 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-  public getActiveNic(network: ServerNetwork): boolean {
+  public getActiveNic(network: ServerNetworkSummary): boolean {
     return !isNullOrEmpty(this.activeServerJob.clientReferenceObject) &&
       this.activeServerJob.clientReferenceObject.networkId === network.id;
   }
 
-  public getNetworkSummaryInformation(network: ServerNetwork): string {
+  public getNetworkSummaryInformation(network: ServerNetworkSummary): string {
     if (isNullOrEmpty(this.activeServerJob.clientReferenceObject)) { return ''; }
 
     return (this.activeServerJob.clientReferenceObject.networkId === network.id) ?

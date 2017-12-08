@@ -8,6 +8,7 @@ import {
   IterableChanges,
   SimpleChanges
 } from '@angular/core';
+import { coerceArray } from '../../../../utilities';
 
 @Directive({
   selector: '[mcsHeaderRowDef]'
@@ -22,7 +23,7 @@ export class HeaderRowDefDirective implements OnChanges {
     return this._columns;
   }
   public set columns(value: string[]) {
-    this._columns = value;
+    this._columns = coerceArray(value);
   }
   private _columns: string[];
 

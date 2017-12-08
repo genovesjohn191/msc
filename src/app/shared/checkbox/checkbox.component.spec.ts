@@ -46,9 +46,9 @@ describe('CheckboxComponent', () => {
   });
 
   describe('writeValue()', () => {
-    it('should set the value of isChecked to true', () => {
+    it('should set the value of checked to true', () => {
       component.writeValue(true);
-      expect(component.isChecked).toEqual(true);
+      expect(component.checked).toEqual(true);
     });
   });
 });
