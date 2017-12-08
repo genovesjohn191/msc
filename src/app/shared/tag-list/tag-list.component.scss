@@ -1,0 +1,85 @@
+@import "../../../styles/shared/base";
+
+// Tag item
+$tag-font-size: 12;
+$tag-padding: 2px $space-small;
+$tag-border-radius: $border-radius-small;
+$tag-box-shadow-transition-duration: 280ms;
+$tag-color: $color-white;
+$tag-bg-color: $color-primary-01;
+$tag-active-color: $color-white;
+$tag-active-bg-color: $color-primary-00;
+// Remove icon
+$tag-remove-icon-size: 12px;
+$tag-remove-icon-border-radius: 45%;
+$tag-remove-icon-bg-color: $tag-bg-color;
+$tag-remove-icon-active-bg-color: $tag-active-bg-color;
+
+.tag-list-wrapper {
+  @include display-flex(row);
+  @include flex-wrap(wrap);
+  @include align-items(baseline);
+  @include set-items-interval($space-xsmall, horizontal);
+  width: 100%;
+
+  input[class=tag-input-wrapper] {
+    width: auto;
+    margin: 0;
+    @include flex(1 1 auto);
+  }
+}
+
+.tag-wrapper {
+  @include flex(0 0 auto);
+  @include font-size($tag-font-size);
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: space-between;
+  white-space: nowrap;
+  outline: none;
+  cursor: default;
+  padding: $tag-padding;
+  color: $tag-color;
+  background-color: $tag-bg-color;
+  @include border-radius($tag-border-radius);
+  @include transition(
+    box-shadow $tag-box-shadow-transition-duration cubic-bezier(.4,0,.2,1)
+  );
+
+  &:focus {
+    @include box-shadow((
+      0 3px 3px -2px rgba(0,0,0,.2),
+      0 3px 4px 0 rgba(0,0,0,.14),
+      0 1px 8px 0 rgba(0,0,0,.12)
+    ));
+  }
+
+  &.tag-wrapper-selected {
+    color: $tag-active-color;
+    background-color: $tag-active-bg-color;
+
+    .remove-icon {
+      background-color: $tag-remove-icon-active-bg-color;
+    }
+  }
+
+  .remove-icon {
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: center;
+    cursor: pointer;
+    height: $tag-remove-icon-size;
+    width: $tag-remove-icon-size;
+    margin-left: $space-small;
+    overflow: hidden;
+    background-color: $tag-remove-icon-bg-color;
+
+    &:hover,
+    &:focus {
+      @include box-shadow((
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 1px 2px rgba(0, 0, 0, 0.05)
+      ));
+    }
+  }
+}

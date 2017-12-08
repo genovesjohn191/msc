@@ -23,10 +23,14 @@ import {
   TooltipColor
 } from './tooltip.component';
 
+// Contant declaration
+const TOUCHEND_HIDE_DELAY = 1500;
+
 @Directive({
   selector: '[mcsTooltip]',
   host: {
-    '(longpress)': 'show()'
+    '(longpress)': 'show()',
+    '(touchend)': 'hide(' + TOUCHEND_HIDE_DELAY + ')'
   },
   exportAs: 'mcsTooltip'
 })
@@ -210,7 +214,6 @@ export class TooltipDirective implements OnInit, OnDestroy {
    */
   private _registerEvents(): void {
     registerEvent(this._elementRef.nativeElement, 'touchstart', this._mouseEnterHandler);
-    registerEvent(this._elementRef.nativeElement, 'touchend', this._mouseLeaveHandler);
     registerEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
     registerEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
   }
@@ -220,7 +223,6 @@ export class TooltipDirective implements OnInit, OnDestroy {
    */
   private _unregisterEvents(): void {
     unregisterEvent(this._elementRef.nativeElement, 'touchstart', this._mouseEnterHandler);
-    unregisterEvent(this._elementRef.nativeElement, 'touchend', this._mouseLeaveHandler);
     unregisterEvent(this._elementRef.nativeElement, 'mouseenter', this._mouseEnterHandler);
     unregisterEvent(this._elementRef.nativeElement, 'mouseleave', this._mouseLeaveHandler);
   }
