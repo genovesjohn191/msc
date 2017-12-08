@@ -10,7 +10,7 @@
 **/
 
 // Validate we received values for the following key parameters
-if (!params.REGISTRY_LOCATION || !params.HOST_DOCKER_SOCK || !params.HOST_DOCKER_BIN || !params.HOST_KUBECTL_BIN || !params.HOST_DOCKER_GID) {
+if (!params.REGISTRY_LOCATION || !params.HOST_KUBECTL_BIN || (env.DEPLOYMENT_ENVIRONMENT == "LAB" && (!params.HOST_DOCKER_BIN || !params.HOST_DOCKER_SOCK ))) {
   error("You must provide all build parameters to run this job.")
 }
 
@@ -27,7 +27,8 @@ if (!params.REGISTRY_LOCATION) {
                 string(defaultValue: '/home/kubernetes/bin/kubectl', description: 'Location of the kubectl binary on the host operating system.', name: 'HOST_KUBECTL_BIN'),
                 booleanParam(defaultValue: true, description: 'Whether to utilise the Google Container Registry as part of this build. If so searches for Google Service credentials mounted as a json file. Otherwise assumes a local insecure registry.', name: 'GOOGLE_CONTAINER_REGISTRY'),
                 string(defaultValue: 'default', description: 'The namespace where kubernetes resources should be found and bound.', name: 'K8S_NAMESPACE'),
-                booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.')
+                booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.'),
+                string(defaultValue: 'latest', description: 'The image version to deploy.', name: 'IMAGE_VERSION')
             ]),
             pipelineTriggers([])
         ]
@@ -68,69 +69,82 @@ podTemplate(
         )
     ],
     namespace: params.K8S_NAMESPACE,
-    volumes: [
-        hostPathVolume(
-            hostPath: params.HOST_DOCKER_SOCK, // hook into the hosts' docker sock and mount it for use in building containers
-            mountPath: '/var/run/docker.sock'
-        ),
-        hostPathVolume(
-            hostPath: params.HOST_DOCKER_BIN, // hook into the hosts' docker bin
-            mountPath: '/usr/bin/docker'
-        ),
-        hostPathVolume(
-            hostPath: params.HOST_KUBECTL_BIN, // hook into the hosts' kubectl bin
-            mountPath: '/usr/bin/kubectl'
-        ),
-        /* Location of the google secret - must be present even if not used */
-        secretVolume(
-            secretName: 'gcr-service-acct',
-            mountPath: service_creds_location
-        )
-    ]
+    volumes: (env.DEPLOYMENT_ENVIRONMENT == "LAB") ?
+        [
+            hostPathVolume(
+                hostPath: params.HOST_DOCKER_SOCK, // hook into the hosts' docker sock and mount it for use in building containers
+                mountPath: '/var/run/docker.sock'
+            ),
+            hostPathVolume(
+                hostPath: params.HOST_DOCKER_BIN, // hook into the hosts' docker bin
+                mountPath: '/usr/bin/docker'
+            ),
+            hostPathVolume(
+                hostPath: params.HOST_KUBECTL_BIN, // hook into the hosts' kubectl bin
+                mountPath: '/usr/bin/kubectl'
+            ),
+            /* Location of the google secret - must be present even if not used */
+            secretVolume(
+                secretName: 'gcr-service-acct',
+                mountPath: service_creds_location
+            )
+        ] :
+        [
+            hostPathVolume(
+                hostPath: params.HOST_KUBECTL_BIN, // hook into the hosts' kubectl bin
+                mountPath: '/usr/bin/kubectl'
+            ),
+            /* Location of the google secret - must be present even if not used */
+            secretVolume(
+                secretName: 'gcr-service-acct',
+                mountPath: service_creds_location
+            )
+        ]
 ) {
 
     node (label) {
-
         try {
-            stage('Checkout code') {
-                checkout scm
-                // Retrieve git properties for use in notifications
-                commitSHA = sh(
-                        returnStdout: true,
-                        script: 'git rev-parse HEAD'
-                    ).trim()
-                commitSHAShort = commitSHA.take(6)
-                commitMsg = sh(
-                        returnStdout: true,
-                        script: "git --no-pager show HEAD --pretty=%B -q"
-                    ).trim()
-                commitAuthor = sh(
-                        returnStdout: true,
-                        script: "git --no-pager show -s --format='%an <%ae>' HEAD"
-                    ).trim()
-                image_version = commitSHAShort + "-" + System.currentTimeMillis()
-            }
-
-            echo "Building ${image_name} with version ${image_version}."
-
-            stage('Run tests & build docker image') {
-                sh "yarn install"
-                sh "npm run lint"
-                sh "CHROME_BIN=/usr/bin/google-chrome npm run test:prod" // Requires headless browser in the jnlp-slave container
-                sh "npm run build:aot:prod"
-                sh "docker build -t ${image_name}:${image_version} ."
-            }
-            stage('Publish the docker image') {
-                // See https://cloud.google.com/container-registry/docs/advanced-authentication
-                if (params.GOOGLE_REGISTRY) {
-                    echo "Authenticating to upstream docker repository."
-                    sh "set +x && docker login -u _json_key -p \"\$(cat ${service_creds_location}/${service_creds_file})\" https://gcr.io"
+            if (env.DEPLOYMENT_ENVIRONMENT == "LAB") {
+                stage('Checkout code') {
+                    checkout scm
+                    // Retrieve git properties for use in notifications
+                    commitSHA = sh(
+                            returnStdout: true,
+                            script: 'git rev-parse HEAD'
+                        ).trim()
+                    commitSHAShort = commitSHA.take(6)
+                    commitMsg = sh(
+                            returnStdout: true,
+                            script: "git --no-pager show HEAD --pretty=%B -q"
+                        ).trim()
+                    commitAuthor = sh(
+                            returnStdout: true,
+                            script: "git --no-pager show -s --format='%an <%ae>' HEAD"
+                        ).trim()
+                    image_version = commitSHAShort + "-" + System.currentTimeMillis()
                 }
-                sh "docker tag ${image_name}:${image_version} ${image_name}:latest"
-                sh "docker tag ${image_name}:${image_version} ${registry_location}/${image_name}:${image_version}"
-                sh "docker tag ${image_name}:${image_version} ${registry_location}/${image_name}:latest"
-                sh "docker push ${registry_location}/${image_name}:${image_version}"
-                sh "docker push ${registry_location}/${image_name}:latest"
+
+                echo "Building ${image_name} with version ${image_version}."
+
+                stage('Run tests & build docker image') {
+                    sh "yarn install"
+                    sh "npm run lint"
+                    sh "CHROME_BIN=/usr/bin/google-chrome npm run test:prod" // Requires headless browser in the jnlp-slave container
+                    sh "npm run build:aot:prod"
+                    sh "docker build -t ${image_name}:${image_version} ."
+                }
+                stage('Publish the docker image') {
+                    // See https://cloud.google.com/container-registry/docs/advanced-authentication
+                    if (params.GOOGLE_REGISTRY) {
+                        echo "Authenticating to upstream docker repository."
+                        sh "set +x && docker login -u _json_key -p \"\$(cat ${service_creds_location}/${service_creds_file})\" https://gcr.io"
+                    }
+                    sh "docker tag ${image_name}:${image_version} ${image_name}:latest"
+                    sh "docker tag ${image_name}:${image_version} ${registry_location}/${image_name}:${image_version}"
+                    sh "docker tag ${image_name}:${image_version} ${registry_location}/${image_name}:latest"
+                    sh "docker push ${registry_location}/${image_name}:${image_version}"
+                    sh "docker push ${registry_location}/${image_name}:latest"
+                }
             }
             stage('Deploy to k8s cluster') {
                 echo "Update the deployed image"
