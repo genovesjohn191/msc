@@ -1,6 +1,9 @@
 import { Observable } from 'rxjs/Rx';
 import { McsApiSuccessResponse } from '../../../core';
-import { Server } from '../models';
+import {
+  Server,
+  ServerResource
+} from '../models';
 
 export const mockServersService = {
 
@@ -16,4 +19,8 @@ export const mockServersService = {
 
     return Observable.of(mcsApiResponseMock);
   },
+  getResources(): Observable<ServerResource[]> {
+    let resources = new Array<ServerResource>();
+    return Observable.of(resources);
+  }
 };

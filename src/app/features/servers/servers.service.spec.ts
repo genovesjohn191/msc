@@ -13,7 +13,6 @@ import {
   ServerCommand,
   ServerPowerState,
   ServerPlatform,
-  ServerResource,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerNetworkSummary,
@@ -527,20 +526,18 @@ describe('ServersService', () => {
   });
 
   describe('getResources()', () => {
-    it('should get the resources data from API calls', () => {
+    it('should get the resources data', () => {
       serversService.getResources()
         .subscribe((response) => {
           expect(response).toBeDefined();
-          expect(response.status).toBe(200);
-          expect(response.totalCount).toBe(2);
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/resources`);
+      let mockRequest = httpMock.expectOne(`/servers/platforms`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerResource[]>();
+      let responseData = new McsApiSuccessResponse<ServerPlatform[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       mockRequest.flush(responseData);

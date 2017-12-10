@@ -135,7 +135,7 @@
             <!-- VDC -->
             <mcs-list-item>
               <span>{{ serverManagementTextContent.supportIdentifiers.vdc }}:</span>
-              <span>{{ server.environment?.resource?.name }}</span>
+              <span>{{ server.platform?.resourceName }}</span>
             </mcs-list-item>
             <!-- MacView Service ID -->
             <mcs-list-item>
@@ -153,7 +153,7 @@
     </div>
 
     <div *ngIf="isServerScale" class="server-performance-scale">
-      <div>
+      <div class="vertical-items-spacing-medium">
         <h3>Scaling {{ server.managementName }}</h3>
         <mcs-server-performance-scale *ngIf="remainingMemory && remainingCpu"
           [memoryMB]="server.compute?.memoryMB" [cpuCount]="server.compute?.cpuCount"
@@ -169,7 +169,6 @@
           </span>
         </mcs-server-performance-scale>
 
-        <br/>
         <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
           display-flex="row" align-items="center" justify-content="center">
           <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>

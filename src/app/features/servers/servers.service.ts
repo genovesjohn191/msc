@@ -668,22 +668,26 @@ export class ServersService {
   }
 
   /**
-   * Get Resources Data (MCS API Response)
+   * Get Resources Data
    */
-  public getResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/resources';
+  public getResources(): Observable<ServerResource[]> {
+    return this.getServerPlatforms().map((response) => {
+      let resources = new Array<ServerResource>();
 
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerResource[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerResource[]>>(
-          response,
-          this._responseReviverParser
-        );
-        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerResource[]>();
-      })
-      .catch(this._handleServerError);
+      if (!isNullOrEmpty(response) && !isNullOrEmpty(response.content)) {
+        let platforms = response.content;
+
+        platforms.forEach((platform) => {
+          platform.environments.forEach((environment) => {
+            environment.resources.forEach((resource) => {
+              resources.push(resource);
+            });
+          });
+        });
+      }
+
+      return resources;
+    });
   }
 
   /**

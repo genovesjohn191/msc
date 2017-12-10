@@ -23,19 +23,15 @@
 
     <!-- VCloud -->
     <div class="grid-column">
-      <div class="server-thumbnail">
-        <h3 class="thumbnail-title">{{ textContent.vcloud.title }}</h3>
-
-        <mcs-list>
-          <mcs-list-item *ngIf="isSelfManaged">
-            <mcs-button (onClick)="createNewServer(vdc.serviceType)">New Server</mcs-button>
-          </mcs-list-item>
-          <!-- TODO: Will ask orch to put back url property -->
-          <!-- <mcs-list-item *ngIf="vdc.url">
-            <a [href]="vdc.url" target="_blank">{{ textContent.vcloud.viewVcloud}}</a>
-          </mcs-list-item> -->
-        </mcs-list>
-      </div>
+      <h3 class="thumbnail-title">{{ textContent.vcloud.title }}</h3>
+      <mcs-list>
+        <mcs-list-item *ngIf="isSelfManaged">
+          <mcs-button (onClick)="createNewServer(vdc.serviceType)">New Server</mcs-button>
+        </mcs-list-item>
+        <mcs-list-item *ngIf="vdc.portalUrl">
+          <a [href]="vdc.portalUrl" target="_blank">{{ textContent.vcloud.viewVcloud}}</a>
+        </mcs-list-item>
+      </mcs-list>
     </div>
   </div>
 

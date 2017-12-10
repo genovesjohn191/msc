@@ -383,12 +383,12 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       .subscribe((resources) => {
         if (!isNullOrEmpty(resources)) {
           this._setServerResourceMap(resources);
+          this._setServerStorage();
+          this._setStorageProfiles();
         }
       });
 
     this.serverResourceSubscription.add(() => {
-      this._setServerStorage();
-      this._setStorageProfiles();
       this._changeDetectorRef.markForCheck();
     });
   }

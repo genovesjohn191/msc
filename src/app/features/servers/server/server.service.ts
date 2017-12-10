@@ -58,13 +58,6 @@ export class ServerService {
   }
 
   /**
-   * Get Resources Data (MCS API Response)
-   */
-  public getResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
-    return this._serversService.getResources();
-  }
-
-  /**
    * This method will set the CPU Size Scale based on the given data
    * @param id Server ID
    * @param cpuSizeScale CPU Size Scale of the server to be updated
