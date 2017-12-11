@@ -305,7 +305,7 @@
       },
       "deleteServerDialog": {
         "title": {
-          "single": "Delete {{server_name}} Server",
+          "single": "Delete Server {{server_name}}",
           "multiple": "Delete Servers"
         },
         "alert": {
@@ -328,7 +328,7 @@
         "errors": {
           "storageRequired": "Enter storage value.",
           "storageNumeric": "Please enter a valid number.",
-          "storageMin": "Minimum value can be entered is {{min_value}}.",
+          "storageMin": "The minimum value that can be entered is {{min_value}}.",
           "storageAvailable": "Storage size should not exceed {{available_storage}}."
         }
       },
@@ -344,13 +344,13 @@
         "errors": {
           "ramRequired": "Enter RAM value.",
           "ramNumeric": "Please enter a valid number.",
-          "ramMin": "Minimum value can be entered is {{min_value}}.",
+          "ramMin": "The minimum value that can be entered is {{min_value}}.",
           "ramInvalid": "Memory size must be a multiple of {{multiple}} MB.",
           "ramMax": "Memory should not exceed {{available_memory}}.",
           "cpuRequired": "Enter CPU count.",
           "cpuNumeric": "Please enter a valid number.",
-          "cpuMin": "Minimum value can be entered is {{min_value}}.",
-          "cpuMax": "Number of CPU should not exceed {{available_cpu}}."
+          "cpuMin": "The minimum value that can be entered is {{min_value}}.",
+          "cpuMax": "The number of vCPUs should not exceed {{available_cpu}}."
         }
       }
     }
@@ -647,7 +647,7 @@
       "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number",
       "minlength": "Minimum length {{min_length}}",
       "maxlength": "Maximum length {{max_length}}",
-      "min": "Minimum value can be entered is only {{min_value}}",
+      "min": "The minimum value that can be entered is {{min_value}}",
       "max": "Maximum value can be entered is upto {{max_value}}"
     },
     "wizard": {
