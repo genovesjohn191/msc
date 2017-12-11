@@ -16,7 +16,8 @@ import {
   Server,
   ServerPowerState,
   ServerCommand,
-  ServerServiceType
+  ServerServiceType,
+  ServerClientObject
 } from '../models';
 import {
   ResetPasswordDialogComponent,
@@ -39,7 +40,6 @@ import {
 import { ServersService } from '../servers.service';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
-import { ServerList } from 'app/features/servers';
 
 // Constant Definition
 const SERVER_LIST_GROUP_OTHERS = 'Others';
@@ -68,7 +68,6 @@ export class ServerComponent
   public serversTextContent: any;
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
-  public serverCommandList: ServerCommand[];
 
   private _serverId: any;
   private _activeServerSubscription: any;
@@ -119,8 +118,6 @@ export class ServerComponent
     super(_router, _activatedRoute);
     this.jobs = new Array<McsApiJob>();
     this.server = new Server();
-    this.serverCommandList = new Array();
-    this.serverCommand = ServerCommand.None;
   }
 
   public ngOnInit() {
@@ -230,34 +227,29 @@ export class ServerComponent
    * Return true if server is currently deleting and false if not
    * @param server Server to be check
    */
-  public getDeletingServer(serverListItem: ServerList): boolean {
+  public getDeletingServer(server: Server): boolean {
     let isDeleting = false;
 
-    if (!isNullOrEmpty(serverListItem)) {
-      let server = new Server();
-      server.id = serverListItem.id;
-      server.managementName = serverListItem.name;
-      server.powerState = serverListItem.powerState;
+    if (this.serverStatus.commandAction === ServerCommand.Delete) {
+      switch (this.serverStatus.notificationStatus) {
+        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+          this.serverListSource.removeDeletedServer(server);
 
-      let serverStatus = this._serversService.getServerStatus(server);
+        case CoreDefinition.NOTIFICATION_JOB_FAILED:
+          isDeleting = false;
+          break;
 
-      if (serverStatus.commandAction === ServerCommand.Delete) {
-        switch (serverStatus.notificationStatus) {
-          case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-            this.serverListSource.removeDeletedServer(server);
-
-          case CoreDefinition.NOTIFICATION_JOB_FAILED:
-            isDeleting = false;
-            break;
-
-          default:
-            isDeleting = true;
-            break;
-        }
+        default:
+          isDeleting = true;
+          break;
       }
     }
 
     return isDeleting;
+  }
+
+  public get serverStatus(): ServerClientObject {
+    return this._serversService.getServerStatus(this.server);
   }
 
   public onTabChanged(tab: any) {
@@ -306,61 +298,8 @@ export class ServerComponent
         } as McsListPanelItem;
 
         this._serverService.setSelectedServer(this.server);
-        this._setServerCommandList();
-        this._setServerCommand();
         this._changeDetectorRef.markForCheck();
       });
-  }
-
-  private _setServerCommandList(): void {
-    this.serverCommandList = [
-      ServerCommand.Start,
-      ServerCommand.Stop,
-      ServerCommand.Restart,
-      ServerCommand.Scale,
-      ServerCommand.Clone,
-      ServerCommand.ViewVCloud,
-      ServerCommand.ResetVmPassword
-    ];
-
-    if (this.server.serviceType === ServerServiceType.SelfManaged) {
-      this.serverCommandList.push(ServerCommand.Delete);
-      this.serverCommandList.sort(
-        (_first: ServerCommand, _second: ServerCommand) => {
-          return _first - _second;
-        }
-      );
-    }
-  }
-
-  private _setServerCommand(): void {
-    if (isNullOrEmpty(this.jobs) && isNullOrEmpty(this.server.powerState)) { return; }
-
-    let command: ServerCommand;
-    let activeServerJob = this.jobs.find((job) => {
-      return !isNullOrEmpty(job.clientReferenceObject) &&
-        job.clientReferenceObject.serverId === this._serverId;
-    });
-
-    if (!isNullOrEmpty(activeServerJob)) {
-      command = ServerCommand.None;
-    } else {
-      switch (this.server.powerState) {
-        case ServerPowerState.PoweredOn:
-          command = ServerCommand.Start;
-          break;
-
-        case ServerPowerState.PoweredOff:
-          command = ServerCommand.Stop;
-          break;
-
-        default:
-          command = ServerCommand.None;
-          break;
-      }
-    }
-
-    this.serverCommand = command;
   }
 
   /**
@@ -380,7 +319,6 @@ export class ServerComponent
     this._notificationsSubscription = this._notificationContextService.notificationsStream
       .subscribe((jobs) => {
         this.jobs = jobs;
-        this._setServerCommand();
       });
   }
 }

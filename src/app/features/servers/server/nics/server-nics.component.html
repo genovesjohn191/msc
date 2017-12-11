@@ -1,4 +1,4 @@
-<div class="limited-view vertical-items-spacing-medium" [ngStyle]="{'position': 'relative'}">
+<div class="limited-view vertical-items-spacing-medium">
   <div [mcsLoader]="[networksSubscription, serverResourceSubscription]">
     <h3 class="heading">{{ textContent.title }}</h3>
 
@@ -39,7 +39,7 @@
               <span>{{ network.name }}</span>
             </td>
             <td>
-              <mcs-icon *ngIf="network.isPrimary" [key]="checkIconKey"></mcs-icon>
+              <mcs-icon *ngIf="network.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
             </td>
             <td>
               <span>{{ getIpAllocationModeText(network.ipAllocationMode) }}</span>

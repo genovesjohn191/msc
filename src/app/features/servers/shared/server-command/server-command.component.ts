@@ -11,7 +11,12 @@ import {
   CoreDefinition,
   McsTextContentProvider
 } from '../../../../core';
-import { ServerCommand } from '../../models';
+import {
+  ServerCommand,
+  ServerClientObject,
+  ServerPowerState,
+  ServerServiceType
+} from '../../models';
 import { isNullOrEmpty } from '../../../../utilities';
 
 @Component({
@@ -21,10 +26,10 @@ import { isNullOrEmpty } from '../../../../utilities';
 })
 export class ServerCommandComponent implements OnInit {
   @Input()
-  public commandList: ServerCommand[];
+  public serverStatus: ServerClientObject;
 
   @Input()
-  public command: ServerCommand;
+  public excluded: ServerCommand[];
 
   @Output()
   public onClick: EventEmitter<ServerCommand> = new EventEmitter();
@@ -38,100 +43,67 @@ export class ServerCommandComponent implements OnInit {
     return CoreDefinition.ASSETS_SVG_COG;
   }
 
+  public get serverCommandEnum() {
+    return ServerCommand;
+  }
+
   constructor(private _textProvider: McsTextContentProvider) {
-    this.command = ServerCommand.Start;
+    this.excluded = new Array<ServerCommand>();
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.textContent = this._textProvider.content.servers;
-    this._setServerCommandList();
-  }
-
-  public getServerCommandLabel(value: ServerCommand): string {
-    let label: string;
-
-    switch (value) {
-      case ServerCommand.Start:
-        label = this.textContent.start;
-        break;
-
-      case ServerCommand.Restart:
-        label = this.textContent.restart;
-        break;
-
-      case ServerCommand.Stop:
-        label = this.textContent.stop;
-        break;
-
-      case ServerCommand.Scale:
-        label = this.textContent.scale;
-        break;
-
-      case ServerCommand.Clone:
-        label = this.textContent.clone;
-        break;
-
-      case ServerCommand.Delete:
-        label = this.textContent.delete;
-        break;
-
-      case ServerCommand.ViewVCloud:
-        label = this.textContent.vcloud;
-        break;
-
-      case ServerCommand.ResetVmPassword:
-        label = this.textContent.resetVmPassword;
-        break;
-
-      default:
-        label = '';
-        break;
-    }
-
-    return label;
   }
 
   public onExecuteCommand(command: ServerCommand) {
-    if (command === ServerCommand.Start ||
-      command === ServerCommand.Stop ||
-      command === ServerCommand.Restart) {
-      this.command = ServerCommand.None;
-    }
     if (this.popoverActionElement) {
       this.popoverActionElement.close();
     }
     this.onClick.emit(command);
   }
 
-  public disableAction(command: ServerCommand): boolean {
-    let disabled: boolean;
+  public getEnabledCommand(command: ServerCommand): boolean {
+    let enabled = true;
 
-    switch (this.command) {
+    switch (command) {
       case ServerCommand.Start:
-        disabled = command === ServerCommand.Start;
+        enabled = this.serverStatus.powerState === ServerPowerState.PoweredOff;
         break;
 
       case ServerCommand.Stop:
-        disabled = command === ServerCommand.Stop || command === ServerCommand.Restart;
+        enabled = this.serverStatus.powerState === ServerPowerState.PoweredOn;
         break;
 
-      case ServerCommand.None:
-        disabled = command !== ServerCommand.ViewVCloud;
+      case ServerCommand.Restart:
+        enabled = this.serverStatus.powerState === ServerPowerState.PoweredOn;
+        break;
+
+      case ServerCommand.Delete:
+        enabled = !isNullOrEmpty(this.serverStatus.powerState) &&
+          this.serverStatus.serviceType === ServerServiceType.SelfManaged;
+        break;
+
+      case ServerCommand.ViewVCloud:
+        enabled = this.serverStatus.commandAction !== ServerCommand.Delete;
         break;
 
       default:
-        disabled = false;
+        enabled = !isNullOrEmpty(this.serverStatus.powerState);
         break;
     }
 
-    return disabled;
+    return enabled;
   }
 
-  private _setServerCommandList(): void {
-    if (!isNullOrEmpty(this.commandList)) { return; }
+  public getIncludedCommand(command: ServerCommand): boolean {
+    let included = true;
 
-    let commands = Object.keys(ServerCommand);
+    if (!isNullOrEmpty(this.excluded)) {
+      included = isNullOrEmpty(this.excluded.find((excludedCommand) => {
+        return excludedCommand === command;
+      }));
+    }
 
-    this.commandList = commands.slice(0, commands.length / 2).map(Number);
+    return included;
   }
 }

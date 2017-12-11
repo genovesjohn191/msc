@@ -35,7 +35,7 @@
     "scale": "Scale",
     "clone": "Clone",
     "delete": "Delete",
-    "vcloud": "View in vCloud",
+    "viewVCloud": "View in vCloud",
     "resetVmPassword": "Reset VM Password",
     "filterColumn": "Filter Column",
     "tableSearch": "Table Search",

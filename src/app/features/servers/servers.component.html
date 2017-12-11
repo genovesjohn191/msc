@@ -188,8 +188,8 @@
             <!-- {{ columnSettings.action.text }} -->
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
-            <mcs-server-command [commandList]="setServerCommandList(row)"
-              [command]="getActionStatus(row)" stop-propagation
+            <mcs-server-command [serverStatus]="getServerStatus(row)"
+              [excluded]="excludedCommands" stop-propagation
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>
         </ng-container>
