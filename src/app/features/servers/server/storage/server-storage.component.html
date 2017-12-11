@@ -5,7 +5,8 @@
     <p>{{ serverStorageText.description }}</p>
 
     <div *ngIf="!expandStorage" class="vertical-items-spacing-large">
-      <table class="mcs-simple-table full-width">
+      <p *ngIf="!hasStorageDevice">{{ serverStorageText.noDisks }}</p>
+      <table *ngIf="hasStorageDevice" class="mcs-simple-table full-width">
         <thead>
           <tr>
             <td>

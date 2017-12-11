@@ -221,15 +221,15 @@ export class ServersService {
    * @param id Server identification
    * @param serverData Server data for the patch update
    */
-  public patchServer(
+  public updateServerCompute(
     id: any,
     serverData: ServerUpdate
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/compute`;
     mcsApiRequestParameter.recordData = JSON.stringify(serverData);
 
-    return this._mcsApiService.patch(mcsApiRequestParameter)
+    return this._mcsApiService.put(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
         serverResponse = JSON.parse(response,

@@ -324,8 +324,10 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
     // Update the Server CPU size scale
     this._scalingSubscription = this._serverService.setPerformanceScale(
-      this.server.id, this._serverPerformanceScale, this.server.powerState).subscribe();
-    this._router.navigate(['/servers/', this.server.id, 'management']);
+      this.server.id, this._serverPerformanceScale, this.server.powerState)
+      .subscribe(() => {
+        this._router.navigate(['/servers/', this.server.id, 'management']);
+      });
   }
 
   public cancelScale(): void {
@@ -527,6 +529,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
             !isNullOrEmpty(activeServerJob.clientReferenceObject)) {
             this.server.compute.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
             this.server.compute.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
+            this.isScaling = false;
           }
           break;
 

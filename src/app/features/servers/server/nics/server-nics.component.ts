@@ -50,7 +50,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
   public textContent: any;
   public resourceNetworks: ServerNetwork[];
   public server: Server;
-  public networks: ServerNetworkSummary[];
+  public nics: ServerNetworkSummary[];
   public ipAddress: ServerIpAddress;
 
   public serverResourceSubscription: Subscription;
@@ -70,8 +70,12 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
+  public get hasNics(): boolean {
+    return !isNullOrEmpty(this.nics);
+  }
+
   public get hasReachedNetworksLimit(): boolean {
-    return this.networks.length === STORAGE_MAXIMUM_NETWORKS;
+    return this.nics.length === STORAGE_MAXIMUM_NETWORKS;
   }
 
   public get hasAvailableResourceNetwork(): boolean {
@@ -176,7 +180,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     this._resourceMap = new Map<string, ServerResource>();
     this.resourceNetworks = new Array<ServerNetwork>();
     this.server = new Server();
-    this.networks = new Array<ServerNetworkSummary>();
+    this.nics = new Array<ServerNetworkSummary>();
     this.ipAddress = new ServerIpAddress();
     this.activeServerJob = new McsApiJob();
     this.selectedNic = new ServerNetworkSummary();
@@ -427,11 +431,11 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
    * This will get the server networks
    */
   private _getServerNetworks(): void {
-    if (isNullOrEmpty(this.server.id) || !isNullOrEmpty(this.networks)) { return; }
+    if (isNullOrEmpty(this.server.id) || !isNullOrEmpty(this.nics)) { return; }
 
     this.networksSubscription = this._serverService.getServerNetworks(this.server.id)
       .subscribe((response) => {
-        this.networks = response.content as ServerNetworkSummary[];
+        this.nics = response.content as ServerNetworkSummary[];
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -490,7 +494,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
 
               case McsJobType.CreateServerNetwork:
                 if (hasCompleted || hasFailed) {
-                  deleteArrayRecord(this.networks, (targetNetwork) => {
+                  deleteArrayRecord(this.nics, (targetNetwork) => {
                     return isNullOrEmpty(targetNetwork.id);
                   }, 1);
                 }
@@ -520,7 +524,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
                   }
                 }
 
-                addOrUpdateArrayRecord(this.networks, network, false,
+                addOrUpdateArrayRecord(this.nics, network, false,
                   (_first: any, _second: any) => {
                     return _first.id === _second.id;
                   });
@@ -529,12 +533,12 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
               case McsJobType.DeleteServerNetwork:
                 // Delete Network
                 if (hasCompleted) {
-                  network = this.networks.find((result) => {
+                  network = this.nics.find((result) => {
                     return result.id === activeServerJob.clientReferenceObject.networkId;
                   });
 
                   if (!isNullOrEmpty(network)) {
-                    deleteArrayRecord(this.networks, (targetNetwork) => {
+                    deleteArrayRecord(this.nics, (targetNetwork) => {
                       return network.id === targetNetwork.id;
                     });
                   }

@@ -1,11 +1,13 @@
-<div class="limited-view vertical-items-spacing-medium">
-  <div [mcsLoader]="[networksSubscription, serverResourceSubscription]">
+<div class="limited-view">
+  <div class="vertical-items-spacing-medium"
+    [mcsLoader]="[networksSubscription, serverResourceSubscription]">
     <h3 class="heading">{{ textContent.title }}</h3>
 
     <p>{{ textContent.description }}</p>
 
     <div [hidden]="isUpdate" class="vertical-items-spacing-large">
-      <table class="mcs-simple-table full-width">
+      <p *ngIf="!hasNics">{{ textContent.noNics }}</p>
+      <table *ngIf="hasNics" class="mcs-simple-table full-width">
         <thead>
           <tr>
             <td>
@@ -27,25 +29,25 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let network of networks">
+          <tr *ngFor="let nic of nics">
             <td>
-              <span *ngIf="!getActiveNic(network)">{{ network.index }}</span>
+              <span *ngIf="!getActiveNic(network)">{{ nic.index }}</span>
               <mcs-icon *ngIf="getActiveNic(network)" [key]="spinnerIconKey"
                 size="small" class="hidden-small"
                 [mcsTooltip]="getNetworkSummaryInformation(network)"
                 mcsTooltipPosition="right"></mcs-icon>
             </td>
             <td>
-              <span>{{ network.name }}</span>
+              <span>{{ nic.name }}</span>
             </td>
             <td>
-              <mcs-icon *ngIf="network.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
+              <mcs-icon *ngIf="nic.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
             </td>
             <td>
-              <span>{{ getIpAllocationModeText(network.ipAllocationMode) }}</span>
+              <span>{{ getIpAllocationModeText(nic.ipAllocationMode) }}</span>
             </td>
             <td>
-              <span>{{ network.ipAddress }}</span>
+              <span>{{ nic.ipAddress }}</span>
             </td>
             <td class="horizontal-items-spacing-medium">
               <span *mcsHasPermission="['VmNetworkEdit']">
@@ -113,8 +115,8 @@
           <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
             [placeholder]="textContent.networkSelect.placeholder">
             <mcs-select-item [value]="">-</mcs-select-item>
-            <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
-              {{ network.name }}
+            <mcs-select-item *ngFor="let network of resourceNetworks" [value]="nic.name">
+              {{ nic.name }}
             </mcs-select-item>
           </mcs-select>
         </div>

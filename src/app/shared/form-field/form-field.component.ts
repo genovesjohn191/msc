@@ -140,7 +140,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
    * Get the displayed message whether it should be error or a hint
    */
   public getDisplayedMessages(): 'error' | 'hint' {
-    return (this._errorChildren && this._errorChildren.length > 0 &&
+    return (!isNullOrEmpty(this._errorChildren) &&
       this._controlChild.errorState) ? 'error' : 'hint';
   }
 

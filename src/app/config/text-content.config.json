@@ -217,7 +217,8 @@
         "expandStorageHeading": "Expand Disk : ",
         "expandStorageLink": "Expand",
         "deleteStorageLink": "Delete",
-        "reachedStorageLimit": "You've reached the maximum number of disks for this server."
+        "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
+        "noDisks": "No disks are attached to this server."
       },
       "nics": {
         "label": "NICs",
@@ -237,13 +238,14 @@
         "primaryCheckbox": "Make this the primary NIC for this server",
         "networkSelect": {
           "header": "Networks",
-          "placeholder": "Select Network"
+          "placeholder": "Select a Network"
         },
         "ipAllocationMode": {
           "static": "Static - IP Pool",
           "dynamic": "Dynamic - IP Pool",
           "dhcp": "DHCP"
-        }
+        },
+        "noNics": "There are no NICs to display for this server."
       }
     },
     "shared": {
@@ -332,12 +334,12 @@
       },
       "performanceScale": {
         "sliderSwitch": "Select from slider",
-        "sliderMessage": "Select the RAM and CPU for this server from a slider.",
+        "sliderMessage": "Select the RAM and vCPU quantity for this server from a slider.",
         "customSwitch": "Enter custom size",
-        "customMessage": "Manually enter the size of RAM and CPU for this server.",
+        "customMessage": "Manually enter the RAM and vCPU quantity for this server.",
         "ramLabel": "RAM",
         "ramUnit": "MB",
-        "cpuLabel": "CPUs",
+        "cpuLabel": "vCPUs",
         "cpuUnit": "vCPU",
         "errors": {
           "ramRequired": "Enter RAM value.",
