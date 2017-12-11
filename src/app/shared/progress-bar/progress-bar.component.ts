@@ -9,6 +9,7 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
+import { coerceNumber } from '../../utilities';
 
 export const PERCENTAGE_OFFSET = -5;
 
@@ -28,7 +29,9 @@ export const PERCENTAGE_OFFSET = -5;
 
 export class ProgressBarComponent implements ControlValueAccessor {
   @Input()
-  public maxValue: number;
+  public get maxValue(): number { return this._maxValue; }
+  public set maxValue(value: number) { this._maxValue = coerceNumber(value); }
+  private _maxValue: number;
 
   /**
    * IsChecked Flag

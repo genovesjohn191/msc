@@ -10,6 +10,10 @@ import {
 import { McsPlatformService } from '../../core';
 import { RippleRenderer } from './factory/ripple-renderer';
 import { RippleConfig } from './factory/ripple-config';
+import {
+  coerceBoolean,
+  coerceNumber
+} from '../../utilities';
 
 @Directive({
   selector: '[mcsRipple]',
@@ -20,22 +24,30 @@ import { RippleConfig } from './factory/ripple-config';
 
 export class RippleDirective implements OnChanges, OnDestroy {
   @Input()
-  public rippleCentered: boolean;
-
-  @Input()
   public rippleColor: 'light' | 'dark';
 
   @Input()
   public rippleTrigger: HTMLElement;
 
   @Input()
-  public rippleSpeedFactor: number;
+  public get rippleCentered(): boolean { return this._rippleCentered; }
+  public set rippleCentered(value: boolean) { this._rippleCentered = coerceBoolean(value); }
+  private _rippleCentered: boolean;
 
   @Input()
-  public rippleRadius: number = 0;
+  public get rippleSpeedFactor(): number { return this._rippleSpeedFactor; }
+  public set rippleSpeedFactor(value: number) { this._rippleSpeedFactor = coerceNumber(value); }
+  private _rippleSpeedFactor: number;
 
   @Input()
-  public relativeParent: boolean = true;
+  public get rippleRadius(): number { return this._rippleRadius; }
+  public set rippleRadius(value: number) { this._rippleRadius = coerceNumber(value); }
+  private _rippleRadius: number = 0;
+
+  @Input()
+  public get relativeParent(): boolean { return this._relativeParent; }
+  public set relativeParent(value: boolean) { this._relativeParent = coerceBoolean(value); }
+  private _relativeParent: boolean = true;
 
   /**
    * Ripple renderer class instance

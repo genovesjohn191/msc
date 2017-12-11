@@ -16,7 +16,10 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  coerceBoolean
+} from '../../../utilities';
 import {
   AccordionPanelHeaderComponent
 } from '../accordion-panel-header/accordion-panel-header.component';
@@ -44,12 +47,6 @@ let nextUniqueId = 0;
 
 export class AccordionPanelComponent implements OnInit {
   public id: string = `mcs-option-${nextUniqueId++}`;
-
-  @Input()
-  public enableToggle: boolean;
-
-  @Input()
-  public expanded: boolean;
 
   @Output()
   public selectionChanged = new EventEmitter<any>();
@@ -83,6 +80,16 @@ export class AccordionPanelComponent implements OnInit {
       this._animateTrigger = value;
     }
   }
+
+  @Input()
+  public get enableToggle(): boolean { return this._enableToggle; }
+  public set enableToggle(value: boolean) { this._enableToggle = coerceBoolean(value); }
+  private _enableToggle: boolean;
+
+  @Input()
+  public get expanded(): boolean { return this._expanded; }
+  public set expanded(value: boolean) { this._expanded = coerceBoolean(value); }
+  private _expanded: boolean;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.enableToggle = true;

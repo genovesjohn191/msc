@@ -10,6 +10,7 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
+import { coerceNumber } from '../../utilities';
 
 @Component({
   selector: 'mcs-capacity-bar',
@@ -28,7 +29,9 @@ import {
 
 export class CapacityBarComponent implements ControlValueAccessor {
   @Input()
-  public max: number;
+  public get max(): number { return this._max; }
+  public set max(value: number) { this._max = coerceNumber(value); }
+  private _max: number;
 
   /**
    * IsChecked Flag

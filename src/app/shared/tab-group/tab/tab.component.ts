@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { McsPortalTemplate } from '../../../core';
 import { TabLabelDirective } from './tab-label.directive';
+import { coerceBoolean } from '../../../utilities';
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;
@@ -39,14 +40,16 @@ export class TabComponent implements AfterViewInit {
   @Input()
   public customClass: string;
 
-  @Input()
-  public canSelect: boolean;
-
   @ContentChild(TabLabelDirective)
   public labelTemplate: TabLabelDirective;
 
   @ViewChild(TemplateRef)
   private _content: TemplateRef<any>;
+
+  @Input()
+  public get canSelect(): boolean { return this._canSelect; }
+  public set canSelect(value: boolean) { this._canSelect = coerceBoolean(value); }
+  private _canSelect: boolean;
 
   constructor(private _viewContainerRef: ViewContainerRef) {
     this.canSelect = true;

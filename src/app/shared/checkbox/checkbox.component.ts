@@ -45,7 +45,9 @@ export class CheckboxComponent implements ControlValueAccessor {
   public label: string;
 
   @Input()
-  public indeterminate: boolean;
+  public get indeterminate(): boolean { return this._indeterminate; }
+  public set indeterminate(value: boolean) { this._indeterminate = coerceBoolean(value); }
+  private _indeterminate: boolean;
 
   @Input()
   public get checked(): boolean {
