@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { WizardActionPlacementDirective } from './wizard-action-placement.directive';
+import { coerceBoolean } from '../../../utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -33,15 +34,6 @@ export class WizardStepComponent {
   public stepTitle: string;
 
   @Input()
-  public hidden: boolean;
-
-  @Input()
-  public showNext: boolean;
-
-  @Input()
-  public showPrevious: boolean;
-
-  @Input()
   public customClass: string;
 
   @Output()
@@ -56,6 +48,21 @@ export class WizardStepComponent {
   public enabled: boolean;
   public isActive: boolean;
   public completed: boolean;
+
+  @Input()
+  public get hidden(): boolean { return this._hidden; }
+  public set hidden(value: boolean) { this._hidden = coerceBoolean(value); }
+  private _hidden: boolean;
+
+  @Input()
+  public get showNext(): boolean { return this._showNext; }
+  public set showNext(value: boolean) { this._showNext = coerceBoolean(value); }
+  private _showNext: boolean;
+
+  @Input()
+  public get showPrevious(): boolean { return this._showPrevious; }
+  public set showPrevious(value: boolean) { this._showPrevious = coerceBoolean(value); }
+  private _showPrevious: boolean;
 
   public constructor() {
     this.stepTitle = '';

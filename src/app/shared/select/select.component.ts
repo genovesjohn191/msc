@@ -34,7 +34,8 @@ import {
   unregisterEvent,
   ErrorStateMatcher,
   refreshView,
-  coerceBoolean
+  coerceBoolean,
+  coerceNumber
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
 
@@ -65,9 +66,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
 
   @Input()
-  public tabindex: number = 0;
-
-  @Input()
   public id: string = `mcs-select-${nextUniqueId++}`;
 
   @Input()
@@ -80,11 +78,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public size: 'default' | 'small';
 
   @Input()
-  public get required(): boolean { return this._required; }
-  public set required(value: boolean) { this._required = coerceBoolean(value); }
-  private _required: boolean = false;
-
-  @Input()
   public get disabled(): boolean {
     return this.ngControl ? this.ngControl.disabled : this._disabled;
   }
@@ -93,6 +86,16 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   @ContentChildren(SelectItemComponent, { descendants: true })
   private _items: QueryList<SelectItemComponent>;
+
+  @Input()
+  public get required(): boolean { return this._required; }
+  public set required(value: boolean) { this._required = coerceBoolean(value); }
+  private _required: boolean = false;
+
+  @Input()
+  public get tabindex(): number { return this._tabindex; }
+  public set tabindex(value: number) { this._tabindex = coerceNumber(value); }
+  private _tabindex: number = 0;
 
   /**
    * Base value implementation of value accessor

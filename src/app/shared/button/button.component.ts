@@ -12,6 +12,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { coerceBoolean } from '../../utilities';
 
 /** Providers */
 import {
@@ -46,9 +47,6 @@ export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoa
   @Input()
   public width: string;
 
-  @Input()
-  public disabled: boolean;
-
   @Output()
   public onClick: EventEmitter<any> = new EventEmitter();
 
@@ -61,6 +59,11 @@ export class ButtonComponent implements OnInit, OnChanges, AfterViewInit, McsLoa
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
+
+  @Input()
+  public get disabled(): boolean { return this._disabled; }
+  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
+  private _disabled: boolean;
 
   private _iconType: IconType;
   public get iconType(): IconType {

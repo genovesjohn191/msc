@@ -10,7 +10,10 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { startWith } from 'rxjs/operator/startWith';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  coerceBoolean
+} from '../../utilities';
 import { AccordionPanelComponent } from './accordion-panel/accordion-panel.component';
 
 @Component({
@@ -25,10 +28,6 @@ import { AccordionPanelComponent } from './accordion-panel/accordion-panel.compo
 })
 
 export class AccordionComponent implements AfterContentInit, OnDestroy {
-
-  @Input()
-  public multi: boolean;
-
   @ContentChildren(AccordionPanelComponent)
   public panelItems: QueryList<AccordionPanelComponent>;
 
@@ -42,6 +41,11 @@ export class AccordionComponent implements AfterContentInit, OnDestroy {
   public get itemsSelectionChanged(): Observable<AccordionPanelComponent> {
     return Observable.merge(...this.panelItems.map((item) => item.selectionChanged));
   }
+
+  @Input()
+  public get multi(): boolean { return this._multi; }
+  public set multi(value: boolean) { this._multi = coerceBoolean(value); }
+  private _multi: boolean;
 
   public ngAfterContentInit(): void {
     this._panelItemsSubscription = startWith.call(
