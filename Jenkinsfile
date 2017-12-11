@@ -147,6 +147,10 @@ podTemplate(
                 }
             }
             stage('Deploy to k8s cluster') {
+                if (env.DEPLOYMENT_ENVIRONMENT != "LAB") {
+                    image_version = params.IMAGE_VERSION
+                }
+                
                 echo "Update the deployed image"
                 sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
                 sh "kubectl rollout status deployment ${kube_deployment}"
@@ -156,9 +160,11 @@ podTemplate(
                     slackSend (
                         color: '#00ff00', //green
                         message: "BUILD SUCCESS: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
-                                "${commitSHAShort} ${commitAuthor}\n" +
-                                "Dkr Image Version: ${image_version}\n" +
-                                "> ${commitMsg}\n"
+                            ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ?
+                                "${commitSHAShort} ${commitAuthor}\n" :
+                                "") +
+                            "Dkr Image Version: ${image_version}\n" +
+                            ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ? "> ${commitMsg}\n" : "\n"
                     )
                 }
             }
@@ -169,11 +175,13 @@ podTemplate(
             slackSend (
                 color: '#ff0000', //red
                 message: "*BUILD FAILURE*: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
+                    ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ? 
                         "${commitSHAShort} ${commitAuthor}:\n" +
-                        "> Msg: ${commitMsg}\n" +
-                        "Error:\n" +
-                        "> ${e}\n" +
-                        "<${env.BUILD_URL}console|Jenkins Link>"
+                        "> Msg: ${commitMsg}\n" :
+                        "") +
+                    "Error:\n" +
+                    "> ${e}\n" +
+                    "<${env.BUILD_URL}console|Jenkins Link>" 
             )
             if (debug_sleep) {
                 stage('Debug failed build') {
