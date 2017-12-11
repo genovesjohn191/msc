@@ -14,7 +14,8 @@ import {
 } from '@angular/forms';
 import { coerceBoolean } from '../../utilities';
 
-let UNIQUE_ID: number = 0;
+// Unique Id that generates during runtime
+let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-checkbox',
@@ -22,16 +23,16 @@ let UNIQUE_ID: number = 0;
   styleUrls: ['./checkbox.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    'class': 'checkbox-wrapper'
-  },
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => CheckboxComponent),
       multi: true
     }
-  ]
+  ],
+  host: {
+    'class': 'checkbox-wrapper'
+  }
 })
 
 export class CheckboxComponent implements ControlValueAccessor {
@@ -39,10 +40,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   public onClick: EventEmitter<any> = new EventEmitter();
 
   @Input()
-  public id: string;
-
-  @Input()
-  public label: string;
+  public id: string = `mcs-checkbox-${nextUniqueId++}`;
 
   @Input()
   public get indeterminate(): boolean { return this._indeterminate; }
@@ -62,14 +60,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   }
   private _checked: boolean;
 
-  /**
-   * This will generate a new unique id if the id is not given
-   */
-  private _nextUniqueId: number = ++UNIQUE_ID;
-
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this.label = '';
-    this.id = `mcs-checkbox-${this._nextUniqueId}`;
   }
 
   public onClickEvent($event) {

@@ -8,8 +8,6 @@ import { SharedModule } from '../../shared';
 import { ticketsProviders } from './tickets.constants';
 /** Shared Components */
 import {
-  TicketServiceComponent,
-  TicketServicePipe,
   TicketActivityComponent,
   TicketNewCommentComponent
 } from './shared';
@@ -20,8 +18,6 @@ import { TicketCreateComponent } from './ticket-create';
   declarations: [
     TicketsComponent,
     TicketComponent,
-    TicketServiceComponent,
-    TicketServicePipe,
     TicketActivityComponent,
     TicketNewCommentComponent,
     TicketCreateComponent

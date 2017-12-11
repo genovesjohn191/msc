@@ -1,0 +1,65 @@
+@import "../../../styles/shared/base";
+
+$select-tag-max-height: 500px;
+$select-tag-trigger-selector-padding: $space-small $space-medium;
+$select-tag-main-items-min-width: 100px;
+$select-tag-main-items-padding: $space-small;
+
+.select-tag-wrapper {
+  @include display-flex(column);
+  @include set-items-interval($space-small);
+  max-height: $select-tag-max-height;
+}
+
+.select-tag-information-container {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+
+  .tags-container {
+    @include flex(1 1 auto);
+  }
+
+  .trigger-selector {
+    @include flex(0 0 auto);
+    display: block;
+    position: relative;
+    padding: $select-tag-trigger-selector-padding;
+    cursor: pointer;
+    height: 100%;
+
+    // Override ripple radius effect
+    .select-tag-ripple-container {
+      @include border-radius(50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+  }
+}
+
+.select-tag-content-container {
+  @include display-flex(row);
+
+  .select-tag-main-items-container {
+    @include flex(0 0 30%);
+    min-width: $select-tag-main-items-min-width;
+
+    .select-tag-main-item-wrapper {
+      display: block;
+
+      .select-tag-main-item-content {
+        position: relative;
+        @include display-flex(row);
+        @include align-items(center);
+        justify-content: space-between;
+        cursor: pointer;
+        padding-right: $select-tag-main-items-padding;
+      }
+    }
+  }
+
+  .select-tag-sub-items-container {
+    @include flex(1 1 auto);
+    @include display-flex(column);
+    padding-left: $space-medium;
+  }
+}

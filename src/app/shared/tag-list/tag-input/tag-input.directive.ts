@@ -98,9 +98,11 @@ export class TagInputDirective {
     }
 
     // Add the tag when some of the key codes is received
-    if (!_event || this.separatorKeyCodes.indexOf(_event.keyCode) > -1) {
+    let keyCodeReceived = isNullOrEmpty(_event) ||
+      this.separatorKeyCodes.indexOf(_event.keyCode) > -1;
+    if (keyCodeReceived) {
       this.mcsTagInputOnAdd.emit(this);
-      if (_event) {
+      if (!isNullOrEmpty(_event)) {
         _event.preventDefault();
       }
     }

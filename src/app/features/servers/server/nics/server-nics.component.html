@@ -120,9 +120,8 @@
         </div>
 
         <div class="field" *ngIf="networkName">
-          <mcs-checkbox [(ngModel)]="isPrimary"
-            [label]="textContent.primaryCheckbox"
-            [disabled]="selectedNic.isPrimary">
+          <mcs-checkbox [(ngModel)]="isPrimary" [disabled]="selectedNic.isPrimary">
+            {{ textContent.primaryCheckbox }}
           </mcs-checkbox>
         </div>
 

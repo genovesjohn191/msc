@@ -1,0 +1,39 @@
+<div class="select-tag-information-container">
+  <mcs-form-field class="tags-container">
+    <mcs-tag-list>
+      <!-- Tags -->
+      <mcs-tag *ngFor="let subItem of selectionSubModel.selected"
+        [selectable]="true" [removable]="true"
+        (removed)="removeSubSelection(subItem)">
+        {{ subItem.text }}
+      </mcs-tag>
+    </mcs-tag-list>
+  </mcs-form-field>
+
+  <!-- Icon trigger -->
+  <div class="trigger-selector" (click)="panelOpen = !panelOpen" #trigger>
+    <mcs-icon [key]="toggleIconKey"></mcs-icon>
+    <mcs-ripple class="select-tag-ripple-container"
+      mcsRipple
+      [rippleTrigger]="trigger"
+      [rippleCentered]="true">
+    </mcs-ripple>
+  </div>
+</div>
+
+<div [hidden]="!panelOpen" class="select-tag-content-container">
+  <!-- Main headers -->
+  <div scrollable class="select-tag-main-items-container">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Items of the main header are generated here -->
+  <div class="select-tag-sub-items-container">
+    <div class="search">
+      <mcs-search #search delayInSeconds="none"></mcs-search>
+    </div>
+    <div scrollable>
+      <ng-container mcsSelectTagSubItemPlaceholder></ng-container>
+    </div>
+  </div>
+</div>

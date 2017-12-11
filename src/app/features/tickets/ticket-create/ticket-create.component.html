@@ -85,21 +85,18 @@
           <div class="field">
             <label class="label" for="services">{{ textContent.services }}</label>
             <div class="item">
-              <div class="service-item">
-                <mcs-form-field>
-                  <input mcsInput [formControl]="fcService"
-                    [mcsContextualHelp]="contextualContent.services">
-                </mcs-form-field>
-                <div class="service-icon">
-                  <mcs-icon [key]="servicesIconKey" size="large"
-                    [mcsLoader]="servicesSubscription"
-                    (click)="openServices()"></mcs-icon>
-                </div>
-              </div>
+              <ng-container *ngIf="services">
+                <mcs-select-tag (selectionChanged)="serviceItemSelectionChanged($event)"
+                  [mcsContextualHelp]="contextualContent.services">
+                  <mcs-select-tag-main-item *ngFor="let service of services"
+                    [header]="service.serviceName">
 
-              <ng-container *ngIf="isServicesOpen">
-                <mcs-ticket-service [services]="services"
-                  (selectionChanged)="serviceItemSelectionChanged($event)"></mcs-ticket-service>
+                    <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
+                      [searchKey]="item.name" [value]="item.serviceId">
+                      {{ item.name }}
+                    </mcs-select-tag-sub-item>
+                  </mcs-select-tag-main-item>
+                </mcs-select-tag>
               </ng-container>
             </div>
           </div>
