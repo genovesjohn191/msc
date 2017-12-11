@@ -157,7 +157,7 @@ describe('ServersService', () => {
 
   describe('patchServer()', () => {
     it('should put the server command to process the server through API calls', () => {
-      serversService.patchServer(
+      serversService.updateServerCompute(
         requestOptions.id,
         new ServerUpdate()
       ).subscribe((response) => {
@@ -167,8 +167,8 @@ describe('ServersService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}`);
-      expect(mockRequest.request.method).toEqual('PATCH');
+      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/compute`);
+      expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
       let responseData = new McsApiSuccessResponse<McsApiJob>();

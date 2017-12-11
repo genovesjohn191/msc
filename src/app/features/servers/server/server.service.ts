@@ -70,7 +70,7 @@ export class ServerService {
     if (!cpuSizeScale) { return; }
 
     // Update scaling of server based on cpu size scale
-    return this._serversService.patchServer(
+    return this._serversService.updateServerCompute(
       id,
       {
         memoryMB: cpuSizeScale.memoryMB,
