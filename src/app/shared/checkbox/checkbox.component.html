@@ -1,7 +1,8 @@
-<input type="checkbox"
-  [id]="id"
+<input type="checkbox" [id]="id"
   [(ngModel)]="checked"
   [indeterminate]="indeterminate"
   (click)="onClickEvent($event)"
   (blur)="onBlur()">
-<label [for]="id">{{ label }}</label>
+<label [for]="id">
+  <ng-content></ng-content>
+</label>

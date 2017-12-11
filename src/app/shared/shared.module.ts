@@ -9,6 +9,8 @@ import {
 import { RippleModule } from './ripple/ripple.module';
 import { LayoutModule } from './layout/layout.module';
 import { ButtonModule } from './button/button.module';
+import { CheckboxModule } from './checkbox/checkbox.module';
+import { FilterSelectorModule } from './filter-selector/filter-selector.module';
 import { PopoverModule } from './popover/popover.module';
 import { ModalModule } from './modal/modal.module';
 import { IconModule } from './icon/icon.module';
@@ -35,9 +37,8 @@ import { InputModule } from './input/input.module';
 import { SearchModule } from './search/search.module';
 import { SliderModule } from './slider/slider.module';
 import { TagListModule } from './tag-list/tag-list.module';
+import { SelectTagModule } from './select-tag/select-tag.module';
 /** Components */
-import { CheckboxComponent } from './checkbox/checkbox.component';
-import { FilterSelectorComponent } from './filter-selector/filter-selector.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
@@ -46,8 +47,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
 
 @NgModule({
   declarations: [
-    CheckboxComponent,
-    FilterSelectorComponent,
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
@@ -64,6 +63,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ModalModule,
     IconModule,
     ButtonModule,
+    CheckboxModule,
+    FilterSelectorModule,
     ValidationMessageModule,
     TableModule,
     ListPanelModule,
@@ -86,11 +87,10 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     InputModule,
     SearchModule,
     SliderModule,
-    TagListModule
+    TagListModule,
+    SelectTagModule
   ],
   exports: [
-    CheckboxComponent,
-    FilterSelectorComponent,
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
@@ -105,6 +105,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ModalModule,
     IconModule,
     ButtonModule,
+    CheckboxModule,
+    FilterSelectorModule,
     ValidationMessageModule,
     TableModule,
     ListPanelModule,
@@ -127,7 +129,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     InputModule,
     SearchModule,
     SliderModule,
-    TagListModule
+    TagListModule,
+    SelectTagModule
   ]
 })
 

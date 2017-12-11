@@ -176,27 +176,16 @@ export class TicketCreateComponent implements
   }
 
   /**
-   * Set the flag of the service toggle if it is open or close
-   */
-  public openServices(): void {
-    this.isServicesOpen = !this.isServicesOpen;
-  }
-
-  /**
    * Set the value of the service text tag when the services is selected
    * @param event Event that return ticket service data
    */
-  public serviceItemSelectionChanged(event: TicketServiceData[]) {
-    this.selectedServiceItems = event;
-    this.fcService.setValue('');
-    if (!isNullOrEmpty(this.selectedServiceItems)) {
-      let servicesText: string = '';
+  public serviceItemSelectionChanged(_event: any[]) {
+    if (isNullOrEmpty(_event)) { return; }
 
-      this.selectedServiceItems.forEach((serviceItem) => {
-        servicesText += `${serviceItem.name}   `;
-      });
-      this.fcService.setValue(servicesText);
-    }
+    this.selectedServiceItems = [];
+    _event.forEach((service) => {
+      this.selectedServiceItems.push(service.value);
+    });
   }
 
   /**
@@ -314,6 +303,7 @@ export class TicketCreateComponent implements
 
     service.serviceName = 'Servers';
     servers.forEach((server) => {
+      if (isNullOrEmpty(server.serviceId)) { return; }
       let serviceData = new TicketServiceData();
 
       serviceData.name = `${server.managementName} (${server.serviceId})`;
@@ -321,7 +311,11 @@ export class TicketCreateComponent implements
       serviceData.serviceId = server.serviceId;
       service.serviceItems.push(serviceData);
     });
-    this.services.push(service);
+
+    // Do not include in the services when the service item is nothing
+    if (!isNullOrEmpty(service.serviceItems)) {
+      this.services.push(service);
+    }
   }
 
   /**
@@ -334,6 +328,7 @@ export class TicketCreateComponent implements
 
     service.serviceName = 'Firewalls';
     firewalls.forEach((firewall) => {
+      if (isNullOrEmpty(firewall.serviceId)) { return; }
       let serviceData = new TicketServiceData();
 
       serviceData.name = `${firewall.managementName} (${firewall.serviceId})`;
@@ -341,7 +336,11 @@ export class TicketCreateComponent implements
       serviceData.serviceId = firewall.serviceId;
       service.serviceItems.push(serviceData);
     });
-    this.services.push(service);
+
+    // Do not include in the services when the service item is nothing
+    if (!isNullOrEmpty(service.serviceItems)) {
+      this.services.push(service);
+    }
   }
 
   /**
