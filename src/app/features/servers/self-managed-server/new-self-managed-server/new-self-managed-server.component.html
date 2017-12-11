@@ -50,7 +50,7 @@
         [placeholder]="textContent.placeholder.image"
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
         <mcs-select-item>-</mcs-select-item>
-        <mcs-select-group [header]="textContent.headers.os">
+        <mcs-select-group *ngIf="serverOsItems" [header]="textContent.headers.os">
           <mcs-select-item *ngFor="let platform of serverOsItems">
             {{ platform.group }}
             <mcs-select-group sub-group>
@@ -61,7 +61,7 @@
           </mcs-select-item>
         </mcs-select-group>
 
-        <mcs-select-group [header]="textContent.headers.templates">
+        <mcs-select-group *ngIf="serverTemplateItems" [header]="textContent.headers.templates">
           <mcs-select-item *ngFor="let template of serverTemplateItems" [value]="template.value">
             {{ template.text }}
           </mcs-select-item>

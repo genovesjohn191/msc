@@ -190,14 +190,7 @@ export class CreateSelfManagedServersComponent implements
     ]).subscribe((data) => {
       this._setAllServers(data[0]);
       this._setServerOs(data[1]);
-    });
-
-    this.obtainDataSubscription.add(() => {
-      // Add server
       this._setResourcesData();
-      this._setVdcItems();
-      this.isLoading = false;
-      this.addServer();
     });
 
     // Listen to contextual helps and notifications
@@ -475,6 +468,11 @@ export class CreateSelfManagedServersComponent implements
           });
         }
       });
+
+    this._resourcesSubscription.add(() => {
+      this._initializeData();
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   /**
@@ -507,5 +505,12 @@ export class CreateSelfManagedServersComponent implements
 
       this._serversOs = serverGroupedOs;
     }
+  }
+
+  private _initializeData(): void {
+    // Add server
+    this._setVdcItems();
+    this.isLoading = false;
+    this.addServer();
   }
 }

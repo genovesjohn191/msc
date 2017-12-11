@@ -47,7 +47,6 @@ import {
   ServerCreateType,
   ServerImageType,
   ServerImage,
-  ServerCatalogType,
   ServerCatalogItemType
 } from '../../models';
 
@@ -279,8 +278,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     });
 
     this.resource.catalogItems.forEach((catalog) => {
-      if (catalog.type === ServerCatalogType.SelfManaged &&
-        catalog.itemType === ServerCatalogItemType.Template) {
+      if (catalog.itemType === ServerCatalogItemType.Template) {
         let serverImage = new ServerImage();
         serverImage.id = serverImageId;
         serverImage.imageType = ServerImageType.Template;
