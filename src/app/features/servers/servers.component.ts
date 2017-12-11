@@ -252,44 +252,33 @@ export class ServersComponent
    */
   public executeTopPanelAction(action: ServerCommand) {
     if (!this.selection.hasValue()) { return; }
+    let servers: Server[] = new Array();
 
-    let isDelete = action === ServerCommand.Delete;
-    let servers = new Array<Server>();
-
+    // Get server data based on serverID
     this.selection.selected.forEach((serverId) => {
       let selectedServer = this.dataSource.displayedRecord
         .find((data) => data.id === serverId);
-
-      if (isDelete) {
-         servers.push(selectedServer);
-      } else {
-        this.executeServerCommand(selectedServer, action);
-      }
+      servers.push(selectedServer);
     });
 
-    if (isDelete && !isNullOrEmpty(servers)) {
-      let dialogRef = this._dialogService.open(DeleteServerDialogComponent, {
-        data: servers,
-        size: 'medium'
-      });
-      dialogRef.afterClosed().subscribe((dialogResult) => {
-        if (dialogResult) {
-          servers.forEach((server) => {
-            this._serversService.executeServerCommand(server, action);
-          });
-        }
-      });
-    }
+    // Execute server command
+    this.executeServerCommand(servers, action);
   }
 
   /**
    * Execute the server command according to inputs
-   * @param server Server to process the action
+   * @param servers Servers to process the action
    * @param action Action to be execute
    */
-  public executeServerCommand(server: Server, action: ServerCommand): void {
+  public executeServerCommand(servers: Server | Server[], action: ServerCommand): void {
+    if (isNullOrEmpty(servers)) { return; }
+    let serverItems: Server[] = new Array();
     let dialogComponent = null;
 
+    // Set server items based on instance if it is single or multiple
+    !Array.isArray(servers) ? serverItems.push(servers) : serverItems = servers;
+
+    // Set dialog references in case of Reset Password, Delete Server, etc...
     switch (action) {
       case ServerCommand.ResetVmPassword:
         dialogComponent = ResetPasswordDialogComponent;
@@ -298,22 +287,25 @@ export class ServersComponent
         dialogComponent = DeleteServerDialogComponent;
         break;
       default:
-        // do nothing
-        break;
+        serverItems.forEach((server) => {
+          this._serversService.executeServerCommand(server, action);
+        });
+        return;
     }
 
+    // Check if the server action should be execute when the dialog result is true
     if (!isNullOrEmpty(dialogComponent)) {
       let dialogRef = this._dialogService.open(dialogComponent, {
-        data: server,
+        data: servers,
         size: 'medium'
       });
       dialogRef.afterClosed().subscribe((dialogResult) => {
         if (dialogResult) {
-          this._serversService.executeServerCommand(server, action);
+          serverItems.forEach((server) => {
+            this._serversService.executeServerCommand(server, action);
+          });
         }
       });
-    } else {
-      this._serversService.executeServerCommand(server, action);
     }
   }
 
@@ -447,16 +439,12 @@ export class ServersComponent
 
   public navigateToResource(server: Server): void {
     if (isNullOrEmpty(server.platform)) { return; }
-
     this._router.navigate(['/servers/vdc', server.platform.resourceId]);
   }
 
-  public toggleSelection(server: Server): void {
+  public navigateToServer(server: Server): void {
     if (isNullOrEmpty(server)) { return; }
-
-    if (!this.getDeletingServer(server)) {
-      this.selection.toggle(server.id);
-    }
+    this._router.navigate(['/servers/', server.id]);
   }
 
   /**

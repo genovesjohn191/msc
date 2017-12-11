@@ -84,8 +84,10 @@
           <mcs-data-cell *mcsDataCellDef="let row"
             [disabled]="getDeletingServer(row)"
             class="text-center action-cell hidden-small">
-            <mcs-checkbox (change)="selection.toggle(row.id)"
-              [checked]="selection.isSelected(row.id)">
+            <mcs-checkbox stop-propagation
+              [disabled]="!row.powerState"
+              [checked]="selection.isSelected(row.id)"
+              (change)="selection.toggle(row.id)">
             </mcs-checkbox>
           </mcs-data-cell>
         </ng-container>
@@ -210,8 +212,9 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          cursor="pointer"
           [ngClass]="{'active-row': selection.isSelected(row.id)}"
-          (click)="toggleSelection(row)"></mcs-data-row>
+          (click)="navigateToServer(row)"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->
