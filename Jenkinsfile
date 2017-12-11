@@ -164,7 +164,7 @@ podTemplate(
                                 "${commitSHAShort} ${commitAuthor}\n" :
                                 "") +
                             "Dkr Image Version: ${image_version}\n" +
-                            ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ? "> ${commitMsg}\n" : "\n"
+                            ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ? "> ${commitMsg}\n" : "\n")
                     )
                 }
             }
