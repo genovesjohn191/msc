@@ -126,7 +126,7 @@
             {{ columnSettings.catalog.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
-            {{ row.guestOs }}
+            {{ row.operatingSystem?.edition }}
           </mcs-data-cell>
         </ng-container>
 
@@ -167,7 +167,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
             <a (click)="navigateToResource(row)">
-              {{ row.environment?.resource?.name }}
+              {{ row.platform?.resourceName }}
             </a>
           </mcs-data-cell>
         </ng-container>

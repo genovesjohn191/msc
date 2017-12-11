@@ -15,7 +15,10 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   McsApiJob,
   CoreDefinition,
@@ -85,9 +88,10 @@ export class CreateSelfManagedServersComponent implements
   public deployingServers: boolean;
 
   // Others
-  public obtainDataSubscription: any;
-  private _contextulHelpSubscription: any;
-  private _notificationsSubscription: any;
+  public obtainDataSubscription: Subscription;
+  private _resourcesSubscription: Subscription;
+  private _contextulHelpSubscription: Subscription;
+  private _notificationsSubscription: Subscription;
   private _mainContextInformations: ContextualHelpDirective[];
 
   /**
@@ -182,14 +186,15 @@ export class CreateSelfManagedServersComponent implements
     // Get all the data from api in parallel
     this.obtainDataSubscription = Observable.forkJoin([
       this._createSelfManagedServices.getAllServers(),
-      this._createSelfManagedServices.getResources(),
       this._createSelfManagedServices.getServersOs()
     ]).subscribe((data) => {
       this._setAllServers(data[0]);
-      this._setResourcesData(data[1]);
-      this._setServerOs(data[2]);
+      this._setServerOs(data[1]);
+    });
 
+    this.obtainDataSubscription.add(() => {
       // Add server
+      this._setResourcesData();
       this._setVdcItems();
       this.isLoading = false;
       this.addServer();
@@ -214,6 +219,9 @@ export class CreateSelfManagedServersComponent implements
   public ngOnDestroy() {
     if (!isNullOrEmpty(this.obtainDataSubscription)) {
       this.obtainDataSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._resourcesSubscription)) {
+      this._resourcesSubscription.unsubscribe();
     }
     if (!isNullOrEmpty(this._notificationsSubscription)) {
       this._notificationsSubscription.unsubscribe();
@@ -455,18 +463,18 @@ export class CreateSelfManagedServersComponent implements
    * This will set the Platform data to platform mapping
    * for easily access across its chidren component
    *
-   * `@Note` This will execute together with the servers and os obtainment
-   * @param response Api response
    */
-  private _setResourcesData(response: any): void {
-    if (response && response.content) {
-      let serverResources = response.content as ServerResource[];
-      serverResources.forEach((resource) => {
-        if (resource.serviceType === ServerServiceType.SelfManaged) {
-          this._serverResourceMap.set(resource.name, resource);
+  private _setResourcesData(): void {
+    this._resourcesSubscription = this._createSelfManagedServices.getResources()
+      .subscribe((resources) => {
+        if (!isNullOrEmpty(resources)) {
+          resources.forEach((resource) => {
+            if (resource.serviceType === ServerServiceType.SelfManaged) {
+              this._serverResourceMap.set(resource.name, resource);
+            }
+          });
         }
       });
-    }
   }
 
   /**

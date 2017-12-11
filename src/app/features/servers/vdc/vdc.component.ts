@@ -200,9 +200,8 @@ export class VdcComponent
   }
 
   private _getVdcById(): void {
-    this.vdcSubscription = this._vdcService.getResources().subscribe((response) => {
-      if (!isNullOrEmpty(response) && !isNullOrEmpty(response.content)) {
-        let resources = response.content as ServerResource[];
+    this.vdcSubscription = this._vdcService.getResources().subscribe((resources) => {
+      if (!isNullOrEmpty(resources)) {
         this.vdc = resources.find((resource) => {
           return resource.id === this._resourceId;
         });

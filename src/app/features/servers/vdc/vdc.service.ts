@@ -5,7 +5,6 @@ import {
   BehaviorSubject
 } from 'rxjs/Rx';
 import { ServerResource } from '../models';
-import { McsApiSuccessResponse } from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class VdcService {
     this.selectedVdcStream = new BehaviorSubject<ServerResource>(undefined);
   }
 
-  public getResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
+  public getResources(): Observable<ServerResource[]> {
     return this._serversService.getResources();
   }
 

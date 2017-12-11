@@ -10,6 +10,7 @@ export class ServerResource {
   public name: string;
   public serviceType: ServerServiceType;
   public availabilityZone: string;
+  public portalUrl: string;
   public compute: ServerCompute;
   public storage: ServerStorage[];
   public networks: ServerNetwork[];
