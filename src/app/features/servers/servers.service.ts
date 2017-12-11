@@ -609,7 +609,7 @@ export class ServersService {
           serverPowerstate = activeServer.powerState;
         } else {
           serverPowerstate = activeServer.commandAction === ServerCommand.Stop ?
-            ServerPowerState.PoweredOff : ServerPowerState.PoweredOn ;
+            ServerPowerState.PoweredOff : ServerPowerState.PoweredOn;
         }
         break;
 

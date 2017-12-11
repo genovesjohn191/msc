@@ -45,7 +45,7 @@ export class ResetPasswordDialogComponent {
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.resetPasswordDialog;
-    this.server = this.dialogData as Server;
+    this.server = this.dialogData as Server[][0];
   }
 
   /**
