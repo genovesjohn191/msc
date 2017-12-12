@@ -14,7 +14,6 @@ import {
   ServerResource,
   ServerEnvironment,
   ServerStorage,
-  ServerCommand,
   ServerPowerState,
   ServerNetworkSummary,
   ServerManageNetwork,
@@ -230,15 +229,6 @@ export class ServerService {
   public setSelectedServer(server: Server): void {
     this.selectedServer = server;
     this.selectedServerStream.next(server);
-  }
-
-  /**
-   * Execute the server command according to inputs
-   * @param server Server to process the action
-   * @param action Action to be execute
-   */
-  public executeServerCommand(server: Server, action: ServerCommand) {
-    this._serversService.executeServerCommand(server, action);
   }
 
   public computeAvailableMemoryMB(resource: ServerResource): number {

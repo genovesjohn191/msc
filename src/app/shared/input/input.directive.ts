@@ -95,9 +95,8 @@ export class InputDirective extends McsFormFieldControlBase<any>
   /**
    * Base value implementation of value accessor
    */
-  public get value(): string {
-    return this._elementRef.nativeElement.value;
-  }
+  @Input()
+  public get value(): string { return this._elementRef.nativeElement.value; }
   public set value(value: string) {
     if (value !== this.value) {
       this._elementRef.nativeElement.value = value;

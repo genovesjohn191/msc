@@ -21,7 +21,8 @@ import {
 } from '../models';
 import {
   ResetPasswordDialogComponent,
-  DeleteServerDialogComponent
+  DeleteServerDialogComponent,
+  RenameServerDialogComponent
 } from '../shared';
 import {
   CoreDefinition,
@@ -149,6 +150,10 @@ export class ServerComponent
     }
   }
 
+  /**
+   * Event that emits when the server is selected
+   * @param serverId Server id of the selected server
+   */
   public onServerSelect(serverId: any) {
     if (isNullOrEmpty(serverId) || this._serverId === serverId) { return; }
 
@@ -161,9 +166,16 @@ export class ServerComponent
     );
   }
 
-  public executeServerCommand(server: Server, action: ServerCommand): void {
+  /**
+   * Execute the server command according to inputs
+   * @param servers Servers to process the action
+   * @param action Action to be execute
+   */
+  public executeServerCommand(serverItem: Server, action: ServerCommand): void {
+    if (isNullOrEmpty(serverItem)) { return; }
     let dialogComponent = null;
 
+    // Set dialog references in case of Reset Password, Delete Server, Rename Server etc...
     switch (action) {
       case ServerCommand.ResetVmPassword:
         dialogComponent = ResetPasswordDialogComponent;
@@ -171,26 +183,35 @@ export class ServerComponent
       case ServerCommand.Delete:
         dialogComponent = DeleteServerDialogComponent;
         break;
-      default:
-        // do nothing
+      case ServerCommand.Rename:
+        dialogComponent = RenameServerDialogComponent;
         break;
+      default:
+        this._serversService.executeServerCommand({ server: serverItem }, action);
+        return;
     }
 
+    // Check if the server action should be execute when the dialog result is true
     if (!isNullOrEmpty(dialogComponent)) {
       let dialogRef = this._dialogService.open(dialogComponent, {
-        data: server,
+        data: serverItem,
         size: 'medium'
       });
       dialogRef.afterClosed().subscribe((dialogResult) => {
         if (dialogResult) {
-          this._serversService.executeServerCommand(server, action);
+          this._serversService.executeServerCommand(
+            { server: serverItem, result: dialogResult },
+            action
+          );
         }
       });
-    } else {
-      this._serversService.executeServerCommand(server, action);
     }
   }
 
+  /**
+   * Return the status Icon key based on the status of the server
+   * @param state Server status
+   */
   public getStateIconKey(state: number): string {
     let stateIconKey: string = '';
 
@@ -215,53 +236,50 @@ export class ServerComponent
       default:
         stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
+
     }
     return stateIconKey;
   }
 
+  /**
+   * Return the active server tooltip information
+   * @param serverId Server ID
+   */
   public getActiveServerTooltip(serverId: any) {
     return this._serversService.getActiveServerInformation(serverId);
   }
 
   /**
-   * Return true if server is currently deleting and false if not
-   * @param server Server to be check
+   * Return true when the server is currently deleting, otherwise false
+   * @param server Server to be deleted
    */
-  public getDeletingServer(server: Server): boolean {
-    let isDeleting = false;
-
-    if (this.serverStatus.commandAction === ServerCommand.Delete) {
-      switch (this.serverStatus.notificationStatus) {
-        case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-          this.serverListSource.removeDeletedServer(server);
-
-        case CoreDefinition.NOTIFICATION_JOB_FAILED:
-          isDeleting = false;
-          break;
-
-        default:
-          isDeleting = true;
-          break;
-      }
-    }
-
-    return isDeleting;
+  public serverDeleting(server: Server): boolean {
+    return this._serversService.getServerStatus(server).commandAction === ServerCommand.Delete;
   }
 
+  /**
+   * Return the active server status
+   * @param server Server to be check
+   */
   public get serverStatus(): ServerClientObject {
     return this._serversService.getServerStatus(this.server);
   }
 
+  /**
+   * Event that emits when tab is changed
+   */
   public onTabChanged(tab: any) {
     if (isNullOrEmpty(this.server) || isNullOrEmpty(this.server.id)) { return; }
-
     // Navigate route based on current active tab
     this.router.navigate(['servers', this.server.id, tab.id]);
   }
 
+  /**
+   * Navigate to resources
+   * @param server Server to navigate from
+   */
   public navigateToResource(server: Server): void {
     if (isNullOrEmpty(server.platform)) { return; }
-
     this.router.navigate(['/servers/vdc', server.platform.resourceId]);
   }
 
@@ -273,6 +291,9 @@ export class ServerComponent
     this._initializeListsource();
   }
 
+  /**
+   * Initialize list source
+   */
   private _initializeListsource(): void {
     this.serverListSource = new ServersListSource(
       this._serversService,
@@ -281,6 +302,9 @@ export class ServerComponent
     this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Get the corresponding server by id
+   */
   private _getServerById(): void {
     this.serverSubscription = this._serverService.getServer(this._serverId)
       .subscribe((response) => {
@@ -307,7 +331,14 @@ export class ServerComponent
    */
   private _listenToActiveServers(): void {
     this._activeServerSubscription = this._serversService.activeServersStream
-      .subscribe(() => {
+      .subscribe((activeServers) => {
+        // Update the datasource of the table when job is completed
+        if (!isNullOrEmpty(activeServers)) {
+          activeServers.forEach((activeServer) => {
+            this._updateListsource(activeServer);
+          });
+        }
+        // Refresh the view
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -320,5 +351,30 @@ export class ServerComponent
       .subscribe((jobs) => {
         this.jobs = jobs;
       });
+  }
+
+  /**
+   * Update table datasource of the servers listing
+   * @param activeServer Active server to be served as the basis of the update
+   */
+  private _updateListsource(activeServer: ServerClientObject): void {
+    // Check if job is completed
+    let jobCompleted = !isNullOrEmpty(activeServer) &&
+      activeServer.notificationStatus === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+    if (!jobCompleted) { return; }
+
+    // Update datasource data
+    switch (activeServer.commandAction) {
+      case ServerCommand.Delete:
+        this.serverListSource.removeDeletedServer(activeServer.serverId);
+        break;
+      case ServerCommand.Rename:
+        this.serverListSource.renameServer(activeServer.serverId, activeServer.newName);
+        break;
+
+      default:
+        // Do nothing
+        break;
+    }
   }
 }

@@ -29,6 +29,7 @@ import {
   ServerPowerState,
   ServerThumbnail,
   ServerCreate,
+  ServerRename,
   ServerClone,
   ServerUpdate,
   ServerCommand,
@@ -216,6 +217,28 @@ export class ServersService {
   }
 
   /**
+   * Put server rename
+   * @param id Server identification
+   * @param referenceObject Reference object to obtain during subscribe
+   */
+  public renameServer(id: any, serverData: ServerRename):
+    Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/rename`;
+    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
+
+    return this._mcsApiService.put(mcsApiRequestParameter)
+      .map((response) => {
+        let serverResponse: McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response,
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+
+        return serverResponse;
+      })
+      .catch(this._handleServerError);
+  }
+
+  /**
    * Patch server data to process the scaling updates
    * *Note: This will send a job (notification)
    * @param id Server identification
@@ -303,8 +326,7 @@ export class ServersService {
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .map((response) => {
         let serverResponse: McsApiSuccessResponse<McsApiJob>;
-        serverResponse = JSON.parse(response.text(),
-          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+        serverResponse = JSON.parse(response, reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
       })
@@ -692,18 +714,21 @@ export class ServersService {
 
   /**
    * Execute the server command according to inputs
-   * @param server Server to process the action
+   * @param data Data of the server to process the action
    * @param action Action to be execute
    */
-  public executeServerCommand(server: Server, action: ServerCommand) {
+  public executeServerCommand(
+    data: { server: Server, result?: any },
+    action: ServerCommand
+  ) {
     switch (action) {
       case ServerCommand.ViewVCloud:
-        window.open(server.portalUrl);
+        window.open(data.server.portalUrl);
         break;
 
       case ServerCommand.Scale:
         this._router.navigate(
-          [`/servers/${server.id}/management`],
+          [`/servers/${data.server.id}/management`],
           { queryParams: { scale: true } }
         );
         break;
@@ -711,17 +736,17 @@ export class ServersService {
       case ServerCommand.Clone:
         this._router.navigate(
           [`/servers/create`],
-          { queryParams: { clone: server.id } }
+          { queryParams: { clone: data.server.id } }
         );
         break;
 
       case ServerCommand.ResetVmPassword:
-        this.resetVmPassowrd(server.id,
+        this.resetVmPassowrd(data.server.id,
           {
-            serverId: server.id,
+            serverId: data.server.id,
             userId: this._authIdentity.userId,
             commandAction: action,
-            powerState: server.powerState,
+            powerState: data.server.powerState,
           })
           .subscribe(() => {
             // Subscribe to execute the reset vm password
@@ -729,21 +754,37 @@ export class ServersService {
         break;
 
       case ServerCommand.Delete:
-        this.deleteServer(server.id,
+        this.deleteServer(data.server.id,
           {
-            serverId: server.id,
+            serverId: data.server.id,
             commandAction: action,
-            powerState: server.powerState
+            powerState: data.server.powerState
           })
           .subscribe();
         this._router.navigate(['/servers']);
         break;
 
-      default:
-        this.putServerCommand(server.id, action,
+      case ServerCommand.Rename:
+        this.renameServer(data.server.id,
           {
-            serverId: server.id,
-            powerState: server.powerState,
+            name: data.result,    // Server name
+            clientReferenceObject: {
+              serverId: data.server.id,
+              commandAction: action,
+              powerState: data.server.powerState,
+              newName: data.result
+            }
+          })
+          .subscribe(() => {
+            // Subscribe to execute the Rename server
+          });
+        break;
+
+      default:
+        this.putServerCommand(data.server.id, action,
+          {
+            serverId: data.server.id,
+            powerState: data.server.powerState,
             commandAction: action
           } as ServerClientObject)
           .subscribe(() => {
@@ -856,6 +897,7 @@ export class ServersService {
               serverId: notification.clientReferenceObject.serverId,
               powerState: notification.clientReferenceObject.powerState,
               commandAction: notification.clientReferenceObject.commandAction,
+              newName: notification.clientReferenceObject.newName,
               notificationStatus: notification.status,
               tooltipInformation: notification.summaryInformation
             } as ServerClientObject);

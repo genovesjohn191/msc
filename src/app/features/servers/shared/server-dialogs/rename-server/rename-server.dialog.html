@@ -1,0 +1,36 @@
+<mcs-dialog>
+  <mcs-dialog-header>
+    <h3>{{ textContent.title }}</h3>
+  </mcs-dialog-header>
+
+  <mcs-dialog-content>
+    <div display-flex="column" class="vertical-items-spacing-small">
+      <span>{{ textContent.information }}</span>
+      <mcs-form-field>
+        <input mcsInput #serverNameInput set-focus maxlength="15"
+          [formControl]="fcServerName">
+
+        <mcs-hint mcsHint align="start">
+          {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
+        </mcs-hint>
+        <mcs-hint mcsHint align="end">
+          {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
+        </mcs-hint>
+
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.required }}
+        </mcs-error>
+        <mcs-error mcsError errorState="invalidServerName">
+          <span [innerHTML]="textContent.errors.invalidServerName"></span>
+        </mcs-error>
+      </mcs-form-field>
+    </div>
+  </mcs-dialog-content>
+
+  <mcs-dialog-actions>
+    <a (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <mcs-button (click)="renameServer(serverNameInput)" size="small">
+      {{ textContent.rename }}
+    </mcs-button>
+  </mcs-dialog-actions>
+</mcs-dialog>

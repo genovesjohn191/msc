@@ -71,13 +71,11 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       case ServerCommand.Stop:
-        enabled = this.serverStatus.powerState === ServerPowerState.PoweredOn;
-        break;
-
       case ServerCommand.Restart:
         enabled = this.serverStatus.powerState === ServerPowerState.PoweredOn;
         break;
 
+      case ServerCommand.Rename:
       case ServerCommand.Delete:
         enabled = !isNullOrEmpty(this.serverStatus.powerState) &&
           this.serverStatus.serviceType === ServerServiceType.SelfManaged;

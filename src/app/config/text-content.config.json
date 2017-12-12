@@ -37,6 +37,7 @@
     "delete": "Delete",
     "viewVCloud": "View in vCloud",
     "resetVmPassword": "Reset VM Password",
+    "rename": "Rename",
     "filterColumn": "Filter Column",
     "tableSearch": "Table Search",
     "dataSingular": "Server",
@@ -264,6 +265,19 @@
           "ipAddressRequired": "Enter an IP address.",
           "ipAddressInvalid": "Please enter a valid IP Address.",
           "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})."
+        }
+      },
+      "renameServerDialog": {
+        "title": "Rename Server",
+        "information": "Specify the new name for this server:",
+        "cancel": "Cancel",
+        "rename": "Rename",
+        "hints": {
+          "serverNameMax": "Max of {{max_char}} characters"
+        },
+        "errors": {
+          "required": "Server name is required",
+          "invalidServerName": "Please ensure the new name meets the following criteria: <br/> • Different to the current name<br/> • Between 1 and 15 characters<br/> • No special characters or spaces except - or _"
         }
       },
       "resetPasswordDialog": {

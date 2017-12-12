@@ -155,6 +155,29 @@ describe('ServersService', () => {
     });
   });
 
+  describe('renameServer()', () => {
+    it('should rename the server through API calls', () => {
+      serversService.renameServer(
+        requestOptions.id,
+        { name: 'sample', clientReferenceObject: undefined }
+      ).subscribe((response) => {
+        expect(response).toBeDefined();
+        expect(response.status).toBe(200);
+        expect(response.totalCount).toBe(1);
+      });
+
+      // Create request to the backend and expect that the request happened
+      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/rename`);
+      expect(mockRequest.request.method).toEqual('PUT');
+
+      // Create response data and transmit, expect the result should go to subscribe callback
+      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      responseData.status = 200;
+      responseData.totalCount = 1;
+      mockRequest.flush(responseData);
+    });
+  });
+
   describe('patchServer()', () => {
     it('should put the server command to process the server through API calls', () => {
       serversService.updateServerCompute(

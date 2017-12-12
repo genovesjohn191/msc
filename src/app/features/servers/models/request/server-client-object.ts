@@ -7,6 +7,7 @@ export class ServerClientObject {
   public serviceType: ServerServiceType;
   public powerState: ServerPowerState;
   public commandAction: ServerCommand;
+  public newName: string;
   public notificationStatus: string;
   public tooltipInformation: string;
 }
