@@ -12,7 +12,7 @@
         <mcs-icon [key]="angleDoubleRightIconKey"></mcs-icon>
       </div>
       <div>
-        <h3>{{ server.managementName }}</h3>
+        <h3>{{ server.name }}</h3>
       </div>
     </div>
   </ng-container>
@@ -33,7 +33,7 @@
             </mcs-list-panel-header>
             <mcs-list-panel-item *mcsListPanelItemDef="let server"
               [itemId]="server.id" [groupName]="server.vdcName"
-              [disabled]="getDeletingServer(server)"
+              [disabled]="serverDeleting(server)"
               (click)="onServerSelect(server.id)">
               <mcs-icon *ngIf="server.powerState"
                 [key]="getStateIconKey(server.powerState)"></mcs-icon>

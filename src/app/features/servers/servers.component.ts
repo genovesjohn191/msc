@@ -21,7 +21,8 @@ import {
 /** Shared */
 import {
   ResetPasswordDialogComponent,
-  DeleteServerDialogComponent
+  DeleteServerDialogComponent,
+  RenameServerDialogComponent
 } from './shared';
 /** Core */
 import {
@@ -278,7 +279,7 @@ export class ServersComponent
     // Set server items based on instance if it is single or multiple
     !Array.isArray(servers) ? serverItems.push(servers) : serverItems = servers;
 
-    // Set dialog references in case of Reset Password, Delete Server, etc...
+    // Set dialog references in case of Reset Password, Delete Server, Rename Server etc...
     switch (action) {
       case ServerCommand.ResetVmPassword:
         dialogComponent = ResetPasswordDialogComponent;
@@ -286,9 +287,12 @@ export class ServersComponent
       case ServerCommand.Delete:
         dialogComponent = DeleteServerDialogComponent;
         break;
+      case ServerCommand.Rename:
+        dialogComponent = RenameServerDialogComponent;
+        break;
       default:
-        serverItems.forEach((server) => {
-          this._serversService.executeServerCommand(server, action);
+        serverItems.forEach((serverItem) => {
+          this._serversService.executeServerCommand({ server: serverItem }, action);
         });
         return;
     }
@@ -301,35 +305,15 @@ export class ServersComponent
       });
       dialogRef.afterClosed().subscribe((dialogResult) => {
         if (dialogResult) {
-          serverItems.forEach((server) => {
-            this._serversService.executeServerCommand(server, action);
+          serverItems.forEach((serverItem) => {
+            this._serversService.executeServerCommand(
+              { server: serverItem, result: dialogResult },
+              action
+            );
           });
         }
       });
     }
-  }
-
-  /**
-   * Return the action status of the server
-   * @param server Server to get the action to
-   */
-  public getActionStatus(server: Server): any {
-    let status: ServerCommand;
-
-    switch (server.powerState) {
-      case ServerPowerState.PoweredOn:
-        status = ServerCommand.Start;
-        break;
-
-      case ServerPowerState.PoweredOff:
-        status = ServerCommand.Stop;
-        break;
-
-      default:
-        status = ServerCommand.None;
-        break;
-    }
-    return status;
   }
 
   /**
@@ -390,13 +374,11 @@ export class ServersComponent
       case ServerServiceType.SelfManaged:
         serviceTypeText = CoreDefinition.SERVER_SELF_MANAGED;
         break;
-
       case ServerServiceType.Managed:
       default:
         serviceTypeText = CoreDefinition.SERVER_MANAGED;
         break;
     }
-
     return serviceTypeText;
   }
 
@@ -409,41 +391,37 @@ export class ServersComponent
   }
 
   /**
-   * Return true if server is currently deleting and false if not
-   * @param server Server to be check
+   * Return true when the server is currently deleting, otherwise false
+   * @param server Server to be deleted
    */
-  public getDeletingServer(server: Server): boolean {
-    let isDeleting = false;
-
-    if (!isNullOrEmpty(server)) {
-      let serverStatus = this.getServerStatus(server);
-
-      if (serverStatus.commandAction === ServerCommand.Delete) {
-        switch (serverStatus.notificationStatus) {
-          case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-            this.dataSource.removeDeletedServer(server);
-
-          case CoreDefinition.NOTIFICATION_JOB_FAILED:
-            isDeleting = false;
-            break;
-
-          default:
-            isDeleting = true;
-            break;
-        }
-      }
-    }
-
-    return isDeleting;
+  public serverDeleting(server: Server): boolean {
+    return this.getServerStatus(server).commandAction === ServerCommand.Delete;
   }
 
+  /**
+   * Return true when the server process is on-going and deleting
+   * @param server Server to be checked
+   */
+  public serverOngoing(server: Server): boolean {
+    return this.serverDeleting(server) || !server.powerState;
+  }
+
+  /**
+   * Navigate to server resouce page
+   * @param server Server to be used as the data of the page
+   */
   public navigateToResource(server: Server): void {
     if (isNullOrEmpty(server.platform)) { return; }
     this._router.navigate(['/servers/vdc', server.platform.resourceId]);
   }
 
+  /**
+   * Navigate to server details page
+   * @param server Server to checked the details
+   */
   public navigateToServer(server: Server): void {
-    if (isNullOrEmpty(server)) { return; }
+    // Do not navigate to server details when server is deleting
+    if (isNullOrEmpty(server) || this.serverDeleting(server)) { return; }
     this._router.navigate(['/servers/', server.id]);
   }
 
@@ -465,7 +443,14 @@ export class ServersComponent
    */
   private _listenToActiveServers(): void {
     this._activeServerSubscription = this._serversService.activeServersStream
-      .subscribe(() => {
+      .subscribe((activeServers) => {
+        // Update the datasource of the table when job is completed
+        if (!isNullOrEmpty(activeServers)) {
+          activeServers.forEach((activeServer) => {
+            this._updateDatasource(activeServer);
+          });
+        }
+        // Refresh the view
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -481,5 +466,30 @@ export class ServersComponent
 
         this.selection = new McsSelection<Server>(multipleSelection);
       });
+  }
+
+  /**
+   * Update table datasource of the servers listing
+   * @param activeServer Active server to be served as the basis of the update
+   */
+  private _updateDatasource(activeServer: ServerClientObject): void {
+    // Check if job is completed
+    let jobCompleted = !isNullOrEmpty(activeServer) &&
+      activeServer.notificationStatus === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+    if (!jobCompleted) { return; }
+
+    // Update datasource data
+    switch (activeServer.commandAction) {
+      case ServerCommand.Delete:
+        this.dataSource.removeDeletedServer(activeServer.serverId);
+        break;
+      case ServerCommand.Rename:
+        this.dataSource.renameServer(activeServer.serverId, activeServer.newName);
+        break;
+
+      default:
+        // Do nothing
+        break;
+    }
   }
 }

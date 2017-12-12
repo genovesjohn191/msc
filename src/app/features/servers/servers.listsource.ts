@@ -101,13 +101,34 @@ export class ServersListSource implements McsDataSource<ServerList> {
     this._search.showLoading(false);
   }
 
-  public removeDeletedServer(server: Server): void {
-    if (isNullOrEmpty(server)) { return; }
-
+  /**
+   * Remove the server from the datasource
+   * @param serverId Server to be renamed
+   */
+  public removeDeletedServer(serverId: string): void {
+    if (isNullOrEmpty(serverId)) { return; }
     refreshView(() => {
       this._serverList = deleteArrayRecord(this._serverList, (targetServer) => {
-        return targetServer.id === server.id;
+        return targetServer.id === serverId;
       });
+      this._serverListStream.next(this._serverList);
+    });
+  }
+
+  /**
+   * Rename the displayed server on the table itself
+   * @param serverId Server to be renamed
+   * @param newName New name of the server
+   */
+  public renameServer(serverId: string, newName: string): void {
+    if (isNullOrEmpty(serverId)) { return; }
+    refreshView(() => {
+      let renamedServer = this._serverList.find((serverItem) => {
+        return serverItem.id === serverId;
+      });
+      if (!isNullOrEmpty(renamedServer)) {
+        renamedServer.name = newName;
+      }
       this._serverListStream.next(this._serverList);
     });
   }
@@ -116,14 +137,14 @@ export class ServersListSource implements McsDataSource<ServerList> {
     if (isNullOrEmpty(servers)) { return; }
 
     servers.sort((first: Server, second: Server) => {
-      return compareStrings(first.managementName, second.managementName);
+      return compareStrings(first.name, second.name);
     });
 
     let serverList = new Array<ServerList>();
     servers.forEach((server) => {
       let serverListItem = new ServerList();
       serverListItem.id = server.id;
-      serverListItem.name = server.managementName;
+      serverListItem.name = server.name;
       serverListItem.powerState = this._getServerPowerState(server);
 
       let hasResourceName = !isNullOrEmpty(server.platform)

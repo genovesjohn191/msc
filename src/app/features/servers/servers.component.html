@@ -82,10 +82,9 @@
             </mcs-checkbox>
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
-            [disabled]="getDeletingServer(row)"
+            [disabled]="serverOngoing(row)"
             class="text-center action-cell hidden-small">
             <mcs-checkbox stop-propagation
-              [disabled]="!row.powerState"
               [checked]="selection.isSelected(row.id)"
               (change)="selection.toggle(row.id)">
             </mcs-checkbox>
@@ -102,12 +101,14 @@
               <div *ngIf="getServerStatus(row).powerState">
                 <mcs-icon [key]="getStateIconKey(row.powerState)" size="small"></mcs-icon>
               </div>
-              <div *ngIf="!getServerStatus(row).powerState" class="power-state-spinner">
+              <div *ngIf="!getServerStatus(row).powerState"
+                [ngStyle]="{'pointer-events': 'auto'}"
+                class="power-state-spinner">
                 <mcs-icon [key]="spinnerIconKey" size="small"
                   [mcsTooltip]="getActiveServerTooltip(row.id)"></mcs-icon>
               </div>
-              <a [disabled]="getDeletingServer(row)" [routerLink]="['/servers', row.id]">
-                {{ row.managementName }}</a>
+              <a (click)="navigateToServer(row)">
+                {{ row.name }}</a>
             </div>
           </mcs-data-cell>
         </ng-container>
@@ -213,6 +214,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           cursor="pointer"
+          [disabled]="serverDeleting(row)"
           [ngClass]="{'active-row': selection.isSelected(row.id)}"
           (click)="navigateToServer(row)"></mcs-data-row>
       </mcs-table>

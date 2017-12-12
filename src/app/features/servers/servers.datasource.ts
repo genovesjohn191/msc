@@ -51,24 +51,17 @@ export class ServersDataSource implements McsDataSource<Server> {
    * This will notify the stream of the table when there are changes on the servers data
    */
   private _serversStream: Subject<Server[]>;
-  public get serversStream(): Subject<Server[]> {
-    return this._serversStream;
-  }
-  public set serversStream(value: Subject<Server[]>) {
-    this._serversStream = value;
-  }
+  public get serversStream(): Subject<Server[]> { return this._serversStream; }
+  public set serversStream(value: Subject<Server[]>) { this._serversStream = value; }
 
   /**
    * All servers
    */
   private _servers: Server[];
-  public get servers(): Server[] {
-    return this._servers;
-  }
-  public set servers(value: Server[]) {
-    this._servers = value;
-  }
+  public get servers(): Server[] { return this._servers; }
+  public set servers(value: Server[]) { this._servers = value; }
 
+  // Others
   private _serversSubscription: Subscription;
   private _hasError: boolean;
 
@@ -123,13 +116,34 @@ export class ServersDataSource implements McsDataSource<Server> {
     this.displayedRecord = _record;
   }
 
-  public removeDeletedServer(server: Server): void {
-    if (isNullOrEmpty(server)) { return; }
-
+  /**
+   * Remove the server from the datasource
+   * @param serverId Server to be renamed
+   */
+  public removeDeletedServer(serverId: string): void {
+    if (isNullOrEmpty(serverId)) { return; }
     refreshView(() => {
       this.servers = deleteArrayRecord(this.servers, (targetServer) => {
-        return targetServer.id === server.id;
+        return targetServer.id === serverId;
       });
+      this._serversStream.next();
+    });
+  }
+
+  /**
+   * Rename the displayed server on the table itself
+   * @param serverId Server to be renamed
+   * @param newName New name of the server
+   */
+  public renameServer(serverId: string, newName: string): void {
+    if (isNullOrEmpty(serverId)) { return; }
+    refreshView(() => {
+      let renamedServer = this.servers.find((serverItem) => {
+        return serverItem.id === serverId;
+      });
+      if (!isNullOrEmpty(renamedServer)) {
+        renamedServer.name = newName;
+      }
       this._serversStream.next();
     });
   }
@@ -143,6 +157,10 @@ export class ServersDataSource implements McsDataSource<Server> {
     return this.displayedRecord.find((server) => server.id === serverId);
   }
 
+  /**
+   * Get all the servers from the api and notify the
+   * connect method that there are changes on the source data of the table
+   */
   private _getServers(): void {
     const displayDataChanges = [
       Observable.of(undefined), // Add undefined observable to make way of retry when error occured
@@ -167,7 +185,7 @@ export class ServersDataSource implements McsDataSource<Server> {
       })
       .catch((error) => {
         this._hasError = true;
-        this.serversStream.next(undefined);
+        this._serversStream.next(undefined);
         return Observable.throw(error);
       })
       .subscribe((servers) => {
