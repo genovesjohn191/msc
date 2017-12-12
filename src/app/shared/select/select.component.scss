@@ -23,6 +23,8 @@ $select-sub-group-bg-color: $color-white;
 $select-sub-group-border-color: $color-grey-03;
 $select-sub-group-box-shadow: $color-black;
 $select-sub-group-max-height: 500px;
+// Select sub-group mobile
+$select-sub-group-mobile-offset: $space-xlarge;
 
 .select-wrapper {
   position: relative;
@@ -114,6 +116,12 @@ $select-sub-group-max-height: 500px;
     border: 1px solid $select-sub-group-border-color;
     max-height: $select-sub-group-max-height;
     overflow-y: auto;
+
+    @include breakpoint(small) {
+      right: -$select-sub-group-mobile-offset;
+      top: $select-sub-group-mobile-offset;
+      left: auto;
+    }
 
     @include box-shadow((
       0 2px 4px -1px rgba($select-sub-group-box-shadow, 0.2),
