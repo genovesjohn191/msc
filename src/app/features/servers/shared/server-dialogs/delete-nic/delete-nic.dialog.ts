@@ -13,7 +13,7 @@ import {
   isNullOrEmpty,
   replacePlaceholder
 } from '../../../../../utilities';
-import { ServerNetwork } from '../../../models';
+import { ServerNetworkSummary } from '../../../models';
 
 @Component({
   selector: 'mcs-delete-nic-dialog',
@@ -26,15 +26,15 @@ import { ServerNetwork } from '../../../models';
 
 export class DeleteNicDialogComponent {
   public textContent: any;
-  public network: ServerNetwork;
+  public nic: ServerNetworkSummary;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<DeleteNicDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: ServerNetwork
+    @Inject(MCS_DIALOG_DATA) public dialogData: ServerNetworkSummary
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.deleteNicDialog;
-    this.network = this.dialogData;
+    this.nic = this.dialogData;
   }
 
   public get warningIconKey(): string {
@@ -52,18 +52,18 @@ export class DeleteNicDialogComponent {
    * This will close the dialog and set the dialog result to true
    */
   public deleteNic(): void {
-    this.dialogRef.close(this.network);
+    this.dialogRef.close(this.nic);
   }
 
   /**
    * Display dialog title
    */
   public get dialogTitle(): string {
-    if (isNullOrEmpty(this.network)) { return ''; }
+    if (isNullOrEmpty(this.nic)) { return ''; }
     return replacePlaceholder(
       this.textContent.title,
       'network_name',
-      this.network.name
+      this.nic.name
     );
   }
 
@@ -71,11 +71,11 @@ export class DeleteNicDialogComponent {
    * Display dialog alert message
    */
   public get dialogAlert(): string {
-    if (isNullOrEmpty(this.network)) { return ''; }
+    if (isNullOrEmpty(this.nic)) { return ''; }
     return replacePlaceholder(
       this.textContent.alert,
       'network_name',
-      this.network.name
+      this.nic.name
     );
   }
 }

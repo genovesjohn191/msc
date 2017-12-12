@@ -234,9 +234,9 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     return isValid;
   }
 
-  public getActiveNic(network: ServerNetworkSummary): boolean {
+  public getActiveNic(nic: ServerNetworkSummary): boolean {
     return !isNullOrEmpty(this.activeServerJob.clientReferenceObject) &&
-      this.activeServerJob.clientReferenceObject.networkId === network.id;
+      this.activeServerJob.clientReferenceObject.networkId === nic.id;
   }
 
   public getNetworkSummaryInformation(network: ServerNetworkSummary): string {
@@ -285,14 +285,14 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onUpdateNetwork(network: ServerNetworkSummary): void {
-    if (isNullOrEmpty(network)) { return; }
+  public onUpdateNetwork(nic: ServerNetworkSummary): void {
+    if (isNullOrEmpty(nic)) { return; }
 
-    this.selectedNic = network;
-    this.networkName = network.name;
-    this.ipAddress.ipAllocationMode = network.ipAllocationMode;
-    this.ipAddress.customIpAddress = network.ipAddress;
-    this.isPrimary = network.isPrimary;
+    this.selectedNic = nic;
+    this.networkName = nic.name;
+    this.ipAddress.ipAllocationMode = nic.ipAllocationMode;
+    this.ipAddress.customIpAddress = nic.ipAddress;
+    this.isPrimary = nic.isPrimary;
     this.isUpdate = true;
   }
 
@@ -301,15 +301,15 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     this.isUpdate = false;
   }
 
-  public onDeleteNetwork(network: ServerNetwork): void {
+  public onDeleteNetwork(nic: ServerNetworkSummary): void {
     let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
-      data: network,
+      data: nic,
       size: 'medium'
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.deleteNetwork(network);
+        this.deleteNetwork(nic);
       }
     });
   }
@@ -363,8 +363,8 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
       });
   }
 
-  public deleteNetwork(network: ServerNetwork): void {
-    if (isNullOrEmpty(network)) { return; }
+  public deleteNetwork(nic: ServerNetworkSummary): void {
+    if (isNullOrEmpty(nic)) { return; }
 
     this.isProcessing = true;
 
@@ -372,11 +372,11 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     networkValues.name = this.networkName;
     networkValues.clientReferenceObject = {
       serverId: this.server.id,
-      networkId: network.id,
+      networkId: nic.id,
       powerState: this.server.powerState
     };
 
-    this._serverService.deleteServerNetwork(this.server.id, network.id, networkValues).subscribe();
+    this._serverService.deleteServerNetwork(this.server.id, nic.id, networkValues).subscribe();
   }
 
   /**
@@ -431,7 +431,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
    * This will get the server networks
    */
   private _getServerNetworks(): void {
-    if (isNullOrEmpty(this.server.id) || !isNullOrEmpty(this.nics)) { return; }
+    if (isNullOrEmpty(this.server.id)) { return; }
 
     this.networksSubscription = this._serverService.getServerNetworks(this.server.id)
       .subscribe((response) => {
@@ -493,60 +493,28 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
                 if (!hasCompleted) { break; }
 
               case McsJobType.CreateServerNetwork:
-                if (hasCompleted || hasFailed) {
+                if (hasFailed) {
                   deleteArrayRecord(this.nics, (targetNetwork) => {
                     return isNullOrEmpty(targetNetwork.id);
                   }, 1);
+                  break;
                 }
-
-                if (hasFailed) { break; }
 
                 // Append Created Server Network / Update Network Data
                 network.name = activeServerJob.clientReferenceObject.networkName;
-
-                // Update the server network when completed
-                if (hasCompleted) {
-                  let clientReferenceObject = activeServerJob.clientReferenceObject;
-                  network.index = clientReferenceObject.networkIndex;
-                  network.isPrimary = clientReferenceObject.primaryNic;
-
-                  let ipAllocationMode: string = clientReferenceObject.ipAllocationMode;
-                  network.ipAllocationMode = ServerIpAllocationMode[ipAllocationMode];
-
-                  network.ipAddress = clientReferenceObject.ipAddress;
-
-                  if (isNullOrEmpty(network.id) && !isNullOrEmpty(activeServerJob.tasks)) {
-                    let referenceObject = activeServerJob.tasks[0].referenceObject;
-
-                    if (!isNullOrEmpty(referenceObject.resourceId)) {
-                      network.id = referenceObject.resourceId;
-                    }
-                  }
-                }
 
                 addOrUpdateArrayRecord(this.nics, network, false,
                   (_first: any, _second: any) => {
                     return _first.id === _second.id;
                   });
-                break;
 
               case McsJobType.DeleteServerNetwork:
-                // Delete Network
-                if (hasCompleted) {
-                  network = this.nics.find((result) => {
-                    return result.id === activeServerJob.clientReferenceObject.networkId;
-                  });
-
-                  if (!isNullOrEmpty(network)) {
-                    deleteArrayRecord(this.nics, (targetNetwork) => {
-                      return network.id === targetNetwork.id;
-                    });
-                  }
-                }
-                break;
+                // Wait for the result of the job
 
               default:
-                // Do nothing
+                if (hasCompleted) {
+                  this._getServerNetworks();
+                }
                 break;
             }
           }

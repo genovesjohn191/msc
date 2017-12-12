@@ -1,67 +1,72 @@
 <div class="limited-view">
-  <div class="vertical-items-spacing-medium"
-    [mcsLoader]="[networksSubscription, serverResourceSubscription]">
+  <div class="vertical-items-spacing-large" [mcsLoader]="serverResourceSubscription">
     <h3 class="heading">{{ textContent.title }}</h3>
 
-    <p>{{ textContent.description }}</p>
+    <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
     <div [hidden]="isUpdate" class="vertical-items-spacing-large">
-      <p *ngIf="!hasNics">{{ textContent.noNics }}</p>
-      <table *ngIf="hasNics" class="mcs-simple-table full-width">
-        <thead>
-          <tr>
-            <td>
-              <strong>{{ textContent.nic }}</strong>
-            </td>
-            <td>
-              <strong>{{ textContent.network }}</strong>
-            </td>
-            <td>
-              <strong>{{ textContent.primary }}</strong>
-            </td>
-            <td>
-              <strong>{{ textContent.ipMode }}</strong>
-            </td>
-            <td>
-              <strong>{{ textContent.ipAddress }}</strong>
-            </td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let nic of nics">
-            <td>
-              <span *ngIf="!getActiveNic(network)">{{ nic.index }}</span>
-              <mcs-icon *ngIf="getActiveNic(network)" [key]="spinnerIconKey"
-                size="small" class="hidden-small"
-                [mcsTooltip]="getNetworkSummaryInformation(network)"
-                mcsTooltipPosition="right"></mcs-icon>
-            </td>
-            <td>
-              <span>{{ nic.name }}</span>
-            </td>
-            <td>
-              <mcs-icon *ngIf="nic.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
-            </td>
-            <td>
-              <span>{{ getIpAllocationModeText(nic.ipAllocationMode) }}</span>
-            </td>
-            <td>
-              <span>{{ nic.ipAddress }}</span>
-            </td>
-            <td class="horizontal-items-spacing-medium">
-              <span *mcsHasPermission="['VmNetworkEdit']">
-                <a *ngIf="!isProcessing" (click)="onUpdateNetwork(network)">{{ textContent.editLink }}</a>
-              </span>
-              <span *mcsHasPermission="['VmNetworkEdit']">
-                <a *ngIf="!isProcessing" (click)="onDeleteNetwork(network)">
-                  {{ textContent.deleteLink }}
-                </a>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div [ngStyle]="{'position': 'relative'}">
+        <div [mcsLoader]="networksSubscription">
+          <p *ngIf="!hasNics">{{ textContent.noNics }}</p>
+          <table *ngIf="hasNics" class="mcs-simple-table full-width">
+            <thead>
+              <tr>
+                <td>
+                  <strong>{{ textContent.nic }}</strong>
+                </td>
+                <td>
+                  <strong>{{ textContent.network }}</strong>
+                </td>
+                <td>
+                  <strong>{{ textContent.primary }}</strong>
+                </td>
+                <td>
+                  <strong>{{ textContent.ipMode }}</strong>
+                </td>
+                <td>
+                  <strong>{{ textContent.ipAddress }}</strong>
+                </td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let nic of nics">
+                <td>
+                  <span *ngIf="!getActiveNic(nic)">{{ nic.index }}</span>
+                  <mcs-icon *ngIf="getActiveNic(nic)" [key]="spinnerIconKey"
+                    size="small" class="hidden-small"
+                    [mcsTooltip]="getNetworkSummaryInformation(nic)"
+                    mcsTooltipPosition="right"></mcs-icon>
+                </td>
+                <td>
+                  <span>{{ nic.name }}</span>
+                </td>
+                <td>
+                  <mcs-icon *ngIf="nic.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
+                </td>
+                <td>
+                  <span>{{ getIpAllocationModeText(nic.ipAllocationMode) }}</span>
+                </td>
+                <td>
+                  <span>{{ nic.ipAddress }}</span>
+                </td>
+                <td class="horizontal-items-spacing-medium">
+                  <span *mcsHasPermission="['VmNetworkEdit']">
+                    <a *ngIf="!isProcessing" (click)="onUpdateNetwork(nic)">
+                      {{ textContent.editLink }}
+                    </a>
+                  </span>
+                  <span *mcsHasPermission="['VmNetworkEdit']">
+                    <a *ngIf="!isProcessing && !nic.isPrimary" (click)="onDeleteNetwork(nic)">
+                      {{ textContent.deleteLink }}
+                    </a>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div *mcsHasPermission="['VmNetworkEdit']">
         <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
@@ -115,17 +120,18 @@
           <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
             [placeholder]="textContent.networkSelect.placeholder">
             <mcs-select-item [value]="">-</mcs-select-item>
-            <mcs-select-item *ngFor="let network of resourceNetworks" [value]="nic.name">
-              {{ nic.name }}
+            <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+              {{ network.name }}
             </mcs-select-item>
           </mcs-select>
         </div>
 
-        <div class="field" *ngIf="networkName">
+        <!-- TODO: Removed temporarily since our API doesn't support updating primary NIC -->
+        <!-- <div class="field" *ngIf="networkName">
           <mcs-checkbox [(ngModel)]="isPrimary" [disabled]="selectedNic.isPrimary">
             {{ textContent.primaryCheckbox }}
           </mcs-checkbox>
-        </div>
+        </div> -->
 
         <!-- IP Address setting -->
         <div class="field" *ngIf="networkName">
