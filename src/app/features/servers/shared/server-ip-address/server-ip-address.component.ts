@@ -24,7 +24,8 @@ import {
 } from '../../models';
 import {
   refreshView,
-  replacePlaceholder
+  replacePlaceholder,
+  isNullOrEmpty
 } from '../../../../utilities';
 
 // Require subnetting javscript class
@@ -119,7 +120,6 @@ export class ServerIpAddressComponent implements OnInit {
   private _initializeValues(): void {
     if (this.ipAllocationMode === ServerIpAllocationMode.Manual) {
       this.inputManageType = ServerInputManageType.Custom;
-      this.customIpAdrress = this.ipAddress;
     } else {
       this.inputManageType = ServerInputManageType.Buttons;
       this.ipAddressValue = this.ipAllocationMode;
@@ -150,8 +150,13 @@ export class ServerIpAddressComponent implements OnInit {
         'ipRange'
       )
     ]);
+
     this.fcIpdAdrress.valueChanges
       .subscribe(this.onCustomIpAddressChanged.bind(this));
+
+    if (!isNullOrEmpty(this.ipAddress)) {
+      this.fcIpdAdrress.setValue(this.ipAddress);
+    }
 
     // Create form group and bind the form controls
     this.formGroupIpAddress = new FormGroup({
