@@ -176,8 +176,7 @@ export class ServersDataSource implements McsDataSource<Server> {
         return this._serversService.getServers({
           page: undefined,
           perPage: displayedRecords,
-          searchKeyword: this._search.keyword,
-          notifyError: false
+          searchKeyword: this._search.keyword
         }).map((response) => {
           this._totalRecordCount = response.totalCount;
           return response.content;

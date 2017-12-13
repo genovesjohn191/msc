@@ -610,9 +610,21 @@
     "noNotifications": "No notifications to display.",
     "retry": "Try again shortly"
   },
-  "pageNotFound": {
-    "heading": "Page not found",
-    "linkText": "Click here to return to the Dashboard."
+  "pageHttpError": {
+    "notFound": {
+      "header": "404",
+      "summary": "The page you're looking for can't be found",
+      "description": "There isn't anything located at the specified address.",
+      "retry": "Please check the address and try again."
+    },
+    "serverError": {
+      "header": "500",
+      "summary": "Sorry, something’s not right",
+      "description": "We're experiencing internal server problem.",
+      "retry": "Please try again later."
+    },
+    "refresh": "Refresh the page",
+    "home": "Go to home page"
   },
   "accessDeniedPage": {
     "heading": "You don't have permission to access this page.",

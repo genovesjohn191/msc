@@ -56,8 +56,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
         return this._firewallsService.getFirewalls({
           page: undefined,
           perPage: displayedRecords,
-          searchKeyword: this._search.keyword,
-          notifyError: false
+          searchKeyword: this._search.keyword
         }).map((response) => {
           this._totalRecordCount = response.totalCount;
           return response.content;

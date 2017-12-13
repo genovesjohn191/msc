@@ -110,13 +110,11 @@ export class ServersService {
    * @param page Page Number
    * @param perPage Count per page
    * @param serverName Server name filter
-   * @param notifyError Notify global error flag
    */
   public getServers(args?: {
     page?: number,
     perPage?: number,
-    searchKeyword?: string,
-    notifyError?: boolean
+    searchKeyword?: string
   }): Observable<McsApiSuccessResponse<Server[]>> {
 
     // Set default values if null
@@ -130,7 +128,6 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
     mcsApiRequestParameter.searchParameters = searchParams;
-    mcsApiRequestParameter.notifyGlobalErrorHandler = args.notifyError ? args.notifyError : true;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {

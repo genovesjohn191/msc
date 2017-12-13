@@ -11,7 +11,10 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Subscription,
+  Observable
+} from 'rxjs/Rx';
 import {
   Server,
   ServerPowerState,
@@ -32,7 +35,8 @@ import {
   McsDialogService,
   McsApiJob,
   McsNotificationContextService,
-  McsRoutingTabBase
+  McsRoutingTabBase,
+  McsErrorHandlerService
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -114,7 +118,8 @@ export class ServerComponent
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _notificationContextService: McsNotificationContextService
+    private _notificationContextService: McsNotificationContextService,
+    private _errorHandlerService: McsErrorHandlerService
   ) {
     super(_router, _activatedRoute);
     this.jobs = new Array<McsApiJob>();
@@ -306,7 +311,13 @@ export class ServerComponent
    * Get the corresponding server by id
    */
   private _getServerById(): void {
-    this.serverSubscription = this._serverService.getServer(this._serverId)
+    this.serverSubscription = this._serverService
+      .getServer(this._serverId)
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
       .subscribe((response) => {
         this.server = response.content;
 

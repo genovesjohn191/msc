@@ -30,13 +30,11 @@ export class FirewallsService {
    * @param page Page Number
    * @param perPage Count per page
    * @param searchKeyword Search filter
-   * @param notifyError Notify global error flag
    */
   public getFirewalls(args?: {
     page?: number,
     perPage?: number,
-    searchKeyword?: string,
-    notifyError?: boolean
+    searchKeyword?: string
   }): Observable<McsApiSuccessResponse<Firewall[]>> {
 
     // Set default values if null
@@ -50,7 +48,6 @@ export class FirewallsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/firewalls';
     mcsApiRequestParameter.searchParameters = searchParams;
-    mcsApiRequestParameter.notifyGlobalErrorHandler = args.notifyError ? args.notifyError : true;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {

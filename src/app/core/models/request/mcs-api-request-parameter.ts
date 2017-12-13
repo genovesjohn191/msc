@@ -62,26 +62,11 @@ export class McsApiRequestParameter {
     this._responseType = value;
   }
 
-  /**
-   * This will notify the global error handler when set to true,
-   * otherwise false
-   *
-   * `@Note:` By default, this is TRUE
-   */
-  private _notifyGlobalErrorHandler: boolean;
-  public get notifyGlobalErrorHandler(): boolean {
-    return this._notifyGlobalErrorHandler;
-  }
-  public set notifyGlobalErrorHandler(value: boolean) {
-    this._notifyGlobalErrorHandler = value;
-  }
-
   constructor() {
     this._endPoint = '';
     this._recordData = undefined;
     this._optionalHeaders = new Map<string, any>();
     this._searchParameters = new Map<string, any>();
     this._responseType = 'text';
-    this._notifyGlobalErrorHandler = true;
   }
 }

@@ -49,13 +49,11 @@ export class TicketsService {
    * @param page Page index of the page to obtained
    * @param perPage Size of item per page
    * @param searchKeyword Keyword to be search during filtering
-   * @param notifyError Notify global error flag
    */
   public getTickets(args?: {
     page?: number,
     perPage?: number,
-    searchKeyword?: string,
-    notifyError?: boolean
+    searchKeyword?: string
   }): Observable<McsApiSuccessResponse<Ticket[]>> {
 
     // Set default values if null
@@ -69,7 +67,6 @@ export class TicketsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets';
     mcsApiRequestParameter.searchParameters = searchParams;
-    mcsApiRequestParameter.notifyGlobalErrorHandler = args.notifyError ? args.notifyError : true;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
@@ -97,8 +94,7 @@ export class TicketsService {
     return this._serversService.getServers({
       page: pageIdx,
       perPage: perPageCount,
-      searchKeyword: keyword,
-      notifyError: false
+      searchKeyword: keyword
     });
   }
 
@@ -115,8 +111,7 @@ export class TicketsService {
     return this._firewallsService.getFirewalls({
       page: pageIdx,
       perPage: perPageCount,
-      searchKeyword: keyword,
-      notifyError: false
+      searchKeyword: keyword
     });
   }
 

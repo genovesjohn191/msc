@@ -1,0 +1,19 @@
+<div display-flex="column" align-items="center"
+  class="text-center http-error-page-content vertical-items-spacing-medium">
+
+  <h1>{{ textContent?.header }}</h1>
+  <h4>{{ textContent?.summary }}</h4>
+  <div>
+    <span>{{ textContent?.description }}</span><br/>
+    <span>{{ textContent?.retry }}</span>
+  </div>
+
+  <div [ngSwitch]="errorCode" display-flex align-items="center" justify-content="space-between">
+    <div *ngSwitchCase="httpStatusCodeEnum.NotFound">
+      <mcs-button size="small" [routerLink]="['/servers']">{{ textContentAll.home }}</mcs-button>
+    </div>
+    <div *ngSwitchCase="httpStatusCodeEnum.InternalServerError">
+      <mcs-button size="small" (onClick)="refreshPage()">{{ textContentAll.refresh }}</mcs-button>
+    </div>
+  </div>
+</div>

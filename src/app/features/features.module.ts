@@ -7,7 +7,7 @@ import { CatalogModule } from './catalog/catalog.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
-import { PageNotFoundModule } from './page-not-found/page-not-found.module';
+import { HttpErrorPageModule } from './http-error-page/http-error-page.module';
 import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.module';
 
 @NgModule({
@@ -20,7 +20,7 @@ import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.
     CatalogModule,
     NotificationsModule,
     GadgetsModule,
-    PageNotFoundModule,
+    HttpErrorPageModule,
     AccessDeniedPageModule
   ]
 })

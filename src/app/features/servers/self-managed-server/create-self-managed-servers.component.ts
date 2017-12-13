@@ -26,7 +26,8 @@ import {
   McsComponentService,
   McsNotificationContextService,
   McsJobType,
-  McsSafeToNavigateAway
+  McsSafeToNavigateAway,
+  McsErrorHandlerService
 } from '../../../core';
 import {
   mergeArrays,
@@ -165,6 +166,7 @@ export class CreateSelfManagedServersComponent implements
     private _viewContainerRef: ViewContainerRef,
     private _renderer: Renderer2,
     private _notificationContextService: McsNotificationContextService,
+    private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.notifications = new Array();
@@ -187,7 +189,13 @@ export class CreateSelfManagedServersComponent implements
     this.obtainDataSubscription = Observable.forkJoin([
       this._createSelfManagedServices.getAllServers(),
       this._createSelfManagedServices.getServersOs()
-    ]).subscribe((data) => {
+    ])
+    .catch((error) => {
+      // Handle common error status code
+      this._errorHandlerService.handleHttpRedirectionError(error.status);
+      return Observable.throw(error);
+    })
+    .subscribe((data) => {
       this._setAllServers(data[0]);
       this._setServerOs(data[1]);
       this._setResourcesData();
