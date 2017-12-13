@@ -12,12 +12,14 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider,
   McsSearch,
   McsListPanelItem,
-  McsRoutingTabBase
+  McsRoutingTabBase,
+  McsErrorHandlerService
 } from '../../../../core';
 import {
   Firewall,
@@ -94,6 +96,7 @@ export class FirewallComponent
     _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
+    private _errorHandlerService: McsErrorHandlerService,
     private _firewallsService: FirewallsService,
     private _firewallService: FirewallService
   ) {
@@ -169,6 +172,11 @@ export class FirewallComponent
       .switchMap((params: ParamMap) => {
         let firewallId = params.get('id');
         return this._firewallService.getFirewall(firewallId);
+      })
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
       })
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {

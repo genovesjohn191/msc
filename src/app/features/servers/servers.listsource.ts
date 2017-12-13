@@ -165,7 +165,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
 
   private _getServers(): void {
     this.serverListSubscription = this._serversService
-      .getServers({ notifyError: false })
+      .getServers()
       .subscribe((response) => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         this._serverList = this._mapServerList(response.content);

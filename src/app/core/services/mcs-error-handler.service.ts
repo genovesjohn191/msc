@@ -12,8 +12,9 @@ import { isNullOrEmpty } from '../../utilities';
 export class McsErrorHandlerService {
 
   // Subscriptions
-  private _apiErrorResponseSubscription: any;
+  private _unauthorizedResponseSubscription: any;
   private _routerEventSubscription: any;
+  private _initialized: boolean = false;
 
   constructor(
     private _apiService: McsApiService,
@@ -23,18 +24,25 @@ export class McsErrorHandlerService {
 
   /**
    * Initialize all the error handlers to all the response
+   *
+   * `@Note:` This should be call once inside the APP component
    */
   public initializeErrorHandlers(): void {
-    this._listenToErrorApiResponse();
-    this._listenToRouterEvent();
+    if (!this._initialized) {
+      this._listenToUnauthorizedResponse();
+      this._listenToRouterEvent();
+      this._initialized = true;
+    }
   }
 
   /**
    * Disposes all the error handlers subscriptions
+   *
+   * `@Note:` This should be call once inside the APP component
    */
   public dispose(): void {
-    if (!isNullOrEmpty(this._apiErrorResponseSubscription)) {
-      this._apiErrorResponseSubscription.unsubscribe();
+    if (!isNullOrEmpty(this._unauthorizedResponseSubscription)) {
+      this._unauthorizedResponseSubscription.unsubscribe();
     }
     if (!isNullOrEmpty(this._routerEventSubscription)) {
       this._routerEventSubscription.unsubscribe();
@@ -42,31 +50,48 @@ export class McsErrorHandlerService {
   }
 
   /**
+   * Handle the common error for each HTTP request
+   * @param errorCode Error code of the corresponding request
+   * @param handleCodes Error codes to be handled/considered
+   */
+  public handleHttpRedirectionError(errorCode: number, handleCodes?: number[]): void {
+    let codeExist: boolean = true;
+
+    // Check if the error code is considered to be handle
+    if (!isNullOrEmpty(handleCodes)) {
+      let handleCode = handleCodes.find((err) => {
+        return err === errorCode;
+      });
+      codeExist = !!(!isNullOrEmpty(handleCode));
+    }
+
+    // Do nothing when the code is not exist
+    if (!codeExist) { return; }
+
+    switch (errorCode) {
+      case McsHttpStatusCode.InternalServerError:
+      case McsHttpStatusCode.NotFound:
+        this._router.navigate(['**'], {
+          skipLocationChange: true,
+          queryParams: { code: errorCode }
+        });
+        break;
+      default:
+      // Do nothing if its not HTTP request
+        break;
+    }
+  }
+
+  /**
    * Listen to error response from api
    */
-  private _listenToErrorApiResponse(): void {
-    this._apiErrorResponseSubscription = this._apiService.errorResponseStream
+  private _listenToUnauthorizedResponse(): void {
+    this._unauthorizedResponseSubscription = this._apiService.errorResponseStream
       .subscribe((errorResponse) => {
         if (!errorResponse) { return; }
-
         switch (errorResponse.status) {
           case McsHttpStatusCode.Unauthorized:
             this._authService.logIn();
-            break;
-
-          case McsHttpStatusCode.NotFound:
-            this._router.navigate(['**'], { skipLocationChange: true });
-            break;
-
-          case McsHttpStatusCode.Forbidden:
-            // TODO: Confirm if modal here or alert should be displayed
-            break;
-
-          case McsHttpStatusCode.InternalServerError:
-          case McsHttpStatusCode.ServiceUnavailable:
-          case McsHttpStatusCode.BadRequest:
-          case McsHttpStatusCode.Success:
-          default:
             break;
         }
       });
@@ -80,7 +105,7 @@ export class McsErrorHandlerService {
       .subscribe((event) => {
         if (event instanceof NavigationEnd) {
           // This will check the token if its not expired.
-          // If the token is expired it will redirect automatic to logout page
+          // If the token is expired it will redirect automatic to login page
           let authToken = this._authService.getAuthToken();
           if (isNullOrEmpty(authToken)) {
             this._authService.logIn();

@@ -66,7 +66,7 @@ export class McsApiService {
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
+      .catch((error) => this.handleServerError(error));
   }
 
   /**
@@ -83,7 +83,7 @@ export class McsApiService {
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
+      .catch((error) => this.handleServerError(error));
   }
 
   /**
@@ -101,7 +101,7 @@ export class McsApiService {
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
+      .catch((error) => this.handleServerError(error));
   }
 
   /**
@@ -117,7 +117,7 @@ export class McsApiService {
         headers: this._getHeaders(apiRequest.optionalHeaders),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
+      .catch((error) => this.handleServerError(error));
   }
 
   /**
@@ -134,7 +134,7 @@ export class McsApiService {
         body: apiRequest.recordData,
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error, apiRequest.notifyGlobalErrorHandler));
+      .catch((error) => this.handleServerError(error));
   }
 
   /**
@@ -159,9 +159,9 @@ export class McsApiService {
    * Handle Error Exception
    * @param {any} error Error Response
    */
-  public handleServerError(error: HttpResponse<any> | any, notifyError: boolean = true) {
+  public handleServerError(error: HttpResponse<any> | any) {
     // Rethrow to notify outside subscribers that an error occured
-    if (notifyError) { this._errorResponseStream.next(error); }
+    this._errorResponseStream.next(error);
     return Observable.throw(error);
   }
 

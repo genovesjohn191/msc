@@ -1,0 +1,27 @@
+@import '../../../styles/shared/base';
+
+$http-error-page-bg-color: $color-black;
+$http-error-page-color: $color-white;
+$http-error-page-header-font-size: 100;
+$http-error-page-header-color: $color-primary-01;
+
+:host,
+.http-error-page-wrapper {
+  @include display-flex(column);
+  @include align-items(center);
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $http-error-page-bg-color;
+  color: $http-error-page-color;
+}
+
+.http-error-page-content {
+  h1 {
+    @include font-size($http-error-page-header-font-size);
+    color: $http-error-page-header-color;
+  }
+}

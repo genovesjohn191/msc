@@ -93,7 +93,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
 
   private _setFirewallListData(): void {
     this._firewallsSubscription = this._firewallsService
-      .getFirewalls({ notifyError: false })
+      .getFirewalls()
       .subscribe((response) => {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
         this._firewallList = this._mapFirewallList(response.content);

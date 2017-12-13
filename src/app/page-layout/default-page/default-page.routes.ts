@@ -11,7 +11,7 @@ import {
   dashboardRoutes,
   catalogRoutes,
   accessDeniedPageRoutes,
-  pageNotFoundRoutes
+  httpErrorPageRoutes
 } from '../../features';
 
 export const routes: Routes = [
@@ -31,8 +31,8 @@ export const routes: Routes = [
       ...catalogRoutes,
       ...accessDeniedPageRoutes,
 
-      // New routes must be added on top for pageNotFoundRoutes
-      ...pageNotFoundRoutes
+      // New routes must be added on top of pageHttpErrorRoutes
+      ...httpErrorPageRoutes
     ]
   }
 ];

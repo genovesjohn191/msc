@@ -10,10 +10,12 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsAttachment
+  McsAttachment,
+  McsErrorHandlerService
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -143,6 +145,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _ticketsService: TicketsService,
     private _textContentProvider: McsTextContentProvider,
+    private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this._ticket = new Ticket();
@@ -306,6 +309,11 @@ export class TicketComponent implements OnInit, OnDestroy {
       .switchMap((params: ParamMap) => {
         let ticketId = params.get('id');
         return this._ticketsService.getTicket(ticketId);
+      })
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
       })
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
