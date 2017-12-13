@@ -73,19 +73,18 @@ export class RenameServerDialogComponent {
    */
   private _registerFormControl(): void {
     // Register Form Controls
-    this.fcServerName = new FormControl('', [
+    this.fcServerName = new FormControl(this.server.name, [
       CoreValidators.required,
       CoreValidators.custom(
         this._serverNameValidator.bind(this),
         'invalidServerName'
       )
     ]);
-    this.fcServerName.setValue(this.server.name);
   }
 
   /**
    * Returns a Boolean value of true that indicates the new server name
-   * is correct and not the same as the previous server name
+   * format is correct and not the same as the previous server name
    * @param inputValue New server name
    */
   private _serverNameValidator(inputValue: any): boolean {

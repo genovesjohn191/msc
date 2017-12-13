@@ -36,16 +36,16 @@
       {{ textContent.clone }}
     </a>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Delete)"
-      (click)="onExecuteCommand(serverCommandEnum.Delete)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Delete)">
-      {{ textContent.delete }}
-    </a>
-
     <a *ngIf="getIncludedCommand(serverCommandEnum.Rename)"
       (click)="onExecuteCommand(serverCommandEnum.Rename)"
       [disabled]="!getEnabledCommand(serverCommandEnum.Rename)">
       {{ textContent.rename }}
+    </a>
+
+    <a *ngIf="getIncludedCommand(serverCommandEnum.Delete)"
+      (click)="onExecuteCommand(serverCommandEnum.Delete)"
+      [disabled]="!getEnabledCommand(serverCommandEnum.Delete)">
+      {{ textContent.delete }}
     </a>
 
     <a *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)"
