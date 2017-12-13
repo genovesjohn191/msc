@@ -627,20 +627,12 @@ export class ServersService {
     // Get actual server status
     switch (activeServer.notificationStatus) {
       case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        switch (activeServer.commandAction) {
-          case ServerCommand.Stop:
-            serverPowerstate = ServerPowerState.PoweredOff;
-            break;
-
-          case ServerCommand.Start:
-          case ServerCommand.Restart:
-            serverPowerstate = ServerPowerState.PoweredOn;
-            break;
-
-          default:
-            serverPowerstate = activeServer.powerState;
-            break;
-        }
+        // Considered Stop as PoweredOff and Start/Restart as PoweredOn, otherwise
+        // set the original powerstate of the server
+        serverPowerstate = activeServer.commandAction === ServerCommand.Stop ?
+          ServerPowerState.PoweredOff : activeServer.commandAction === ServerCommand.Start ||
+            activeServer.commandAction === ServerCommand.Restart ?
+            ServerPowerState.PoweredOn : activeServer.powerState;
         break;
 
       case CoreDefinition.NOTIFICATION_JOB_ACTIVE:

@@ -369,6 +369,9 @@ export class ServerComponent
         this.serverListSource.removeDeletedServer(activeServer.serverId);
         break;
       case ServerCommand.Rename:
+        if (this.server.id === activeServer.serverId) {
+          this.server.name = activeServer.newName;
+        }
         this.serverListSource.renameServer(activeServer.serverId, activeServer.newName);
         break;
 
