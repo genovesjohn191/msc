@@ -7,7 +7,7 @@ import { McsNotificationContextService } from './services/mcs-notification-conte
 import { McsDialogService } from './services/mcs-dialog.service';
 import { McsOverlayService } from './services/mcs-overlay.service';
 import { McsScrollDispatcherService } from './services/mcs-scroll-dispatcher.service';
-import { McsViewportRulerService } from './services/mcs-viewport-ruler.service';
+import { McsViewportService } from './services/mcs-viewport.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsPlatformService } from './services/mcs-platform.service';
 /** Providers */
@@ -33,7 +33,7 @@ export const coreProviders: any[] = [
   McsOverlayService,
   McsDialogService,
   McsScrollDispatcherService,
-  McsViewportRulerService,
+  McsViewportService,
   McsErrorHandlerService,
   McsPlatformService,
   McsTextContentProvider,
