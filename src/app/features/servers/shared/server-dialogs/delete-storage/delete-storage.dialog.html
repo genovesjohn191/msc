@@ -1,12 +1,16 @@
 <mcs-dialog>
   <mcs-dialog-header>
-    <h3>{{ displayDialogTitle() }}</h3>
+    <h3>{{ dialogTitle }}</h3>
   </mcs-dialog-header>
 
   <mcs-dialog-content>
-    <mcs-alert type="warning" [title]="displayDialogAlertMessage()">
-      <span>{{ textContent.confirmation }}</span>
-    </mcs-alert>
+    <div class="labelled-icon">
+      <mcs-icon [key]="warningIconKey"></mcs-icon>
+      <div display-flex="column">
+        <span>{{ dialogAlertMessage }}</span>
+        <span>{{ textContent.confirmation }}</span>
+      </div>
+    </div>
   </mcs-dialog-content>
 
   <mcs-dialog-actions>

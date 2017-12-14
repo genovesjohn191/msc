@@ -222,9 +222,8 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     let isValid = false;
 
     if (this.isUpdate) {
-      isValid = this.ipAddress.valid && !isNullOrEmpty(this.networkName) &&
+      isValid = this.ipAddress.valid &&
         (this.networkName !== this.selectedNic.name ||
-        this.isPrimary !== this.selectedNic.isPrimary ||
         this.ipAddress.ipAllocationMode !== this.selectedNic.ipAllocationMode ||
         this.ipAddress.customIpAddress !== this.selectedNic.ipAddress);
     } else {
@@ -376,6 +375,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
       powerState: this.server.powerState
     };
 
+    this._resetNetworkValues();
     this._serverService.deleteServerNetwork(this.server.id, nic.id, networkValues).subscribe();
   }
 
@@ -392,7 +392,6 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
 
     this.serverResourceSubscription.add(() => {
       this._setResourceNetworks();
-      this._getServerNetworks();
       this._changeDetectorRef.markForCheck();
     });
   }
@@ -435,7 +434,9 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
 
     this.networksSubscription = this._serverService.getServerNetworks(this.server.id)
       .subscribe((response) => {
-        this.nics = response.content as ServerNetworkSummary[];
+        if (!isNullOrEmpty(response)) {
+          this.nics = response.content as ServerNetworkSummary[];
+        }
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -460,6 +461,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
         if (this.server.id !== server.id) {
           this.server = server;
           this._getResources();
+          this._getServerNetworks();
         }
       });
   }
@@ -485,36 +487,39 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
             this.isProcessing = !hasCompleted && !hasFailed;
             this.activeServerJob = (this.isProcessing) ? activeServerJob : new McsApiJob() ;
 
-            let network = new ServerNetworkSummary();
+            let nic = new ServerNetworkSummary();
 
             switch (activeServerJob.type) {
               case McsJobType.UpdateServerNetwork:
-                network.id = activeServerJob.clientReferenceObject.networkId;
-                if (!hasCompleted) { break; }
+                // Get the id of the NIC to be updated
+                nic.id = activeServerJob.clientReferenceObject.networkId;
+                if (this.isProcessing) { break; }
 
               case McsJobType.CreateServerNetwork:
-                if (hasFailed) {
+                if (this.isProcessing) {
+                  // Append Created Server Network / Update Network Data
+                  nic.name = activeServerJob.clientReferenceObject.networkName;
+                  addOrUpdateArrayRecord(this.nics, nic, false,
+                    (_first: any, _second: any) => {
+                      return _first.id === _second.id;
+                    });
+                }
+
+              case McsJobType.DeleteServerNetwork:
+                // Update NICs list once job has completed or failed
+                if (hasCompleted || hasFailed) {
                   deleteArrayRecord(this.nics, (targetNetwork) => {
                     return isNullOrEmpty(targetNetwork.id);
                   }, 1);
-                  break;
                 }
 
-                // Append Created Server Network / Update Network Data
-                network.name = activeServerJob.clientReferenceObject.networkName;
-
-                addOrUpdateArrayRecord(this.nics, network, false,
-                  (_first: any, _second: any) => {
-                    return _first.id === _second.id;
-                  });
-
-              case McsJobType.DeleteServerNetwork:
-                // Wait for the result of the job
-
-              default:
                 if (hasCompleted) {
                   this._getServerNetworks();
                 }
+                break;
+
+              default:
+                // Do nothing when the job is not related to NIC management
                 break;
             }
           }
