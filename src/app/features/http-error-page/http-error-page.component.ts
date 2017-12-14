@@ -77,13 +77,13 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
    */
   private _setTextContent(): void {
     switch (this.errorCode) {
-      case McsHttpStatusCode.NotFound:
-        this.textContent = this.textContentAll.notFound;
-        break;
       case McsHttpStatusCode.InternalServerError:
         this.textContent = this.textContentAll.serverError;
         break;
+
+      case McsHttpStatusCode.NotFound:
       default:
+        this.textContent = this.textContentAll.notFound;
         break;
     }
   }
