@@ -297,7 +297,7 @@
         "password": "Password:"
       },
       "deleteStorageDialog": {
-        "title": "Delete {{storage_name}} Storage",
+        "title": "Delete {{storage_name}}",
         "alert": "The data on {{storage_name}} will be lost forever.",
         "confirmation": "Are you sure you want to delete this volume?",
         "cancel": "Cancel",

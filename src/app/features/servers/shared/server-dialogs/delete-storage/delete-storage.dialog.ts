@@ -6,7 +6,8 @@ import {
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider
+  McsTextContentProvider,
+  CoreDefinition
 } from '../../../../../core';
 import {
   isNullOrEmpty,
@@ -36,6 +37,10 @@ export class DeleteStorageDialogComponent {
     this.storage = this.dialogData;
   }
 
+  public get warningIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_WARNING;
+  }
+
   /**
    * Close the displayed dialog
    */
@@ -53,7 +58,7 @@ export class DeleteStorageDialogComponent {
   /**
    * Display dialog title
    */
-  public displayDialogTitle(): string {
+  public get dialogTitle(): string {
     if (isNullOrEmpty(this.storage)) { return ''; }
     return replacePlaceholder(
       this.textContent.title,
@@ -65,7 +70,7 @@ export class DeleteStorageDialogComponent {
   /**
    * Display dialog alert message
    */
-  public displayDialogAlertMessage(): string {
+  public get dialogAlertMessage(): string {
     if (isNullOrEmpty(this.storage)) { return ''; }
     return replacePlaceholder(
       this.textContent.alert,
