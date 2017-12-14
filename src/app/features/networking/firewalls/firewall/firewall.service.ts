@@ -11,9 +11,7 @@ import {
   FirewallConfigurationStatus,
   FirewallDeviceStatus
 } from '../models';
-import {
-  McsApiSuccessResponse
-} from '../../../../core/';
+import { McsApiSuccessResponse } from '../../../../core/';
 
 @Injectable()
 export class FirewallService {
@@ -107,5 +105,4 @@ export class FirewallService {
 
     return this._firewallsService.getFirewallDeviceStatusIconKey(status);
   }
-
 }

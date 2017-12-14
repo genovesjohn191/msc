@@ -45,11 +45,11 @@ describe('NotificationsService', () => {
   /** Test Implementation */
   describe('getNotifications()', () => {
     it('should get all notifications from API calls', () => {
-      notificationsService.getNotifications(
-        requestOptions.page,
-        requestOptions.perPage,
-        undefined
-      ).subscribe((response) => {
+      notificationsService.getNotifications({
+        page: requestOptions.page,
+        perPage: requestOptions.perPage,
+        searchKeyword: undefined
+      }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
         expect(response.totalCount).toBe(2);

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Rx';
 import {
   McsApiService,
   McsApiSuccessResponse,
-  McsApiErrorResponse,
   McsApiRequestParameter
 } from '../../core';
 import {
@@ -77,8 +76,7 @@ export class TicketsService {
         );
 
         return apiResponse;
-      })
-      .catch(this._handleApiResponseError);
+      });
   }
 
   /**
@@ -125,13 +123,12 @@ export class TicketsService {
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let notificationsJobResponse: McsApiSuccessResponse<Ticket[]>;
+        let notificationsJobResponse: McsApiSuccessResponse<Ticket>;
         notificationsJobResponse = JSON.parse(response,
-          this._responseReviverParser) as McsApiSuccessResponse<Ticket[]>;
+          this._responseReviverParser) as McsApiSuccessResponse<Ticket>;
 
         return notificationsJobResponse;
-      })
-      .catch(this._handleApiResponseError);
+      });
   }
 
   /**
@@ -152,8 +149,7 @@ export class TicketsService {
           this._responseReviverParser) as McsApiSuccessResponse<TicketCreate>;
 
         return ticketResponse;
-      })
-      .catch(this._handleApiResponseError);
+      });
   }
 
   /**
@@ -174,8 +170,7 @@ export class TicketsService {
           this._responseReviverParser) as McsApiSuccessResponse<TicketComment>;
 
         return commentResponse;
-      })
-      .catch(this._handleApiResponseError);
+      });
   }
 
   /**
@@ -196,8 +191,7 @@ export class TicketsService {
           this._responseReviverParser) as McsApiSuccessResponse<TicketAttachment>;
 
         return attachmentResponse;
-      })
-      .catch(this._handleApiResponseError);
+      });
   }
 
   /**
@@ -213,26 +207,7 @@ export class TicketsService {
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         return response;
-      })
-      .catch(this._handleApiResponseError);
-  }
-
-  /**
-   * This will handle all error that correspond to HTTP request
-   * @param error Error obtained
-   */
-  private _handleApiResponseError(error: Response | any) {
-    let mcsApiErrorResponse: McsApiErrorResponse;
-
-    if (error instanceof Response) {
-      mcsApiErrorResponse = new McsApiErrorResponse();
-      mcsApiErrorResponse.message = error.statusText;
-      mcsApiErrorResponse.status = error.status;
-    } else {
-      mcsApiErrorResponse = error;
-    }
-
-    return Observable.throw(mcsApiErrorResponse);
+      });
   }
 
   /**
