@@ -15,7 +15,7 @@ export * from './services/mcs-notification-context.service';
 export * from './services/mcs-overlay.service';
 export * from './services/mcs-dialog.service';
 export * from './services/mcs-scroll-dispatcher.service';
-export * from './services/mcs-viewport-ruler.service';
+export * from './services/mcs-viewport.service';
 export * from './services/mcs-error-handler.service';
 export * from './services/mcs-platform.service';
 /** Providers */
