@@ -48,7 +48,7 @@ describe('NotificationsService', () => {
       notificationsService.getNotifications(
         requestOptions.page,
         requestOptions.perPage,
-        requestOptions.searchKeyword
+        undefined
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -56,7 +56,9 @@ describe('NotificationsService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let httpMockRequest = httpMock.expectOne('/jobs');
+      let httpMockRequest = httpMock.expectOne(
+        `/jobs?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
+      );
       expect(httpMockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback

@@ -4,8 +4,6 @@ import {
 } from '@angular/core';
 import {
   HttpClient,
-  HttpHeaders,
-  HttpParams,
   HttpResponse
 } from '@angular/common/http';
 import {
@@ -169,7 +167,7 @@ export class McsApiService {
    * Get Headers Value
    * @param {Headers} optHeaders Optional Header
    */
-  private _getHeaders(optHeaders?: Map<string, any>): HttpHeaders {
+  private _getHeaders(optHeaders?: Map<string, any>): any {
     let headers = new Map<string, any>();
 
     this._setDefaultHeaders(headers);
@@ -178,21 +176,16 @@ export class McsApiService {
     this._setOptionalHeaders(headers, optHeaders);
 
     // Return the converted headers
-    return new HttpHeaders(convertMapToJsonObject(headers));
+    return convertMapToJsonObject(headers);
   }
 
   /**
    * Returns the parameters based on HttpParams
    * @param params Param map to be converted
    */
-  private _getParams(params: Map<string, any>): HttpParams {
+  private _getParams(params: Map<string, any>): any {
     if (isNullOrEmpty(params)) { return undefined; }
-
-    let httpParams = new HttpParams();
-    params.forEach((value, key) => {
-      httpParams.set(value, key);
-    });
-    return httpParams;
+    return convertMapToJsonObject(params);
   }
 
   /**

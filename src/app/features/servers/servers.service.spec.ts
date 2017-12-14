@@ -68,7 +68,7 @@ describe('ServersService', () => {
       serversService.getServers({
         page: requestOptions.page,
         perPage: requestOptions.perPage,
-        searchKeyword: requestOptions.searchKeyword
+        searchKeyword: undefined
       }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -76,7 +76,9 @@ describe('ServersService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let httpRequest = httpMock.expectOne('/servers');
+      let httpRequest = httpMock.expectOne(
+        `/servers?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
+      );
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback

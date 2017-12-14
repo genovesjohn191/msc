@@ -54,7 +54,7 @@ describe('FirewallsService', () => {
       firewallsService.getFirewalls({
         page: requestOptions.page,
         perPage: requestOptions.perPage,
-        searchKeyword: requestOptions.searchKeyword
+        searchKeyword: undefined
       }).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -62,7 +62,9 @@ describe('FirewallsService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let httpRequest = httpMock.expectOne('/firewalls');
+      let httpRequest = httpMock.expectOne(
+        `/firewalls?page=${requestOptions.page}&per_page=${requestOptions.perPage}`
+      );
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -99,8 +101,8 @@ describe('FirewallsService', () => {
       firewallsService.getFirewallPolicies(
         requestOptions.id,
         requestOptions.page,
-        requestOptions.perPage,
-        requestOptions.searchKeyword
+        undefined,
+        undefined
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -108,7 +110,9 @@ describe('FirewallsService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let httpRequest = httpMock.expectOne(`/firewalls/${requestOptions.id}/policies`);
+      let httpRequest = httpMock.expectOne(
+        `/firewalls/${requestOptions.id}/policies?page=${requestOptions.page}`
+      );
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
