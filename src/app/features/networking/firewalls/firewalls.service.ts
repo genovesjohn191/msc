@@ -5,7 +5,6 @@ import {
   McsApiService,
   McsApiRequestParameter,
   McsApiSuccessResponse,
-  McsApiErrorResponse,
   CoreDefinition
 } from '../../../core/';
 import { isNullOrEmpty } from '../../../utilities';
@@ -56,8 +55,7 @@ export class FirewallsService {
           this._convertProperty) as McsApiSuccessResponse<Firewall[]>;
 
         return firewallsResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -75,8 +73,7 @@ export class FirewallsService {
           this._convertProperty) as McsApiSuccessResponse<Firewall>;
 
         return firewallResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -107,8 +104,7 @@ export class FirewallsService {
           this._convertProperty) as McsApiSuccessResponse<FirewallPolicy[]>;
 
         return firewallPoliciesResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -209,24 +205,6 @@ export class FirewallsService {
     }
 
     return iconKey;
-  }
-
-  /**
-   * Handle Error Exception
-   * @param {any} error Error Response
-   */
-  private _handleServerError(error: Response | any) {
-    let mcsApiErrorResponse: McsApiErrorResponse;
-
-    if (error instanceof Response) {
-      mcsApiErrorResponse = new McsApiErrorResponse();
-      mcsApiErrorResponse.message = error.statusText;
-      mcsApiErrorResponse.status = error.status;
-    } else {
-      mcsApiErrorResponse = error;
-    }
-
-    return Observable.throw(mcsApiErrorResponse);
   }
 
   private _convertProperty(key, value): any {

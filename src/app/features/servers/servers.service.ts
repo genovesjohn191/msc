@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import {
   McsApiService,
   McsApiSuccessResponse,
-  McsApiErrorResponse,
   McsApiRequestParameter,
   McsNotificationContextService,
   McsApiJob,
@@ -136,8 +135,7 @@ export class ServersService {
           this._responseReviverParser) as McsApiSuccessResponse<Server[]>;
 
         return serversResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -155,8 +153,7 @@ export class ServersService {
           this._responseReviverParser) as McsApiSuccessResponse<Server>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -185,8 +182,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -209,8 +205,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -231,8 +226,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -256,8 +250,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -277,8 +270,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -301,8 +293,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -326,8 +317,7 @@ export class ServersService {
         serverResponse = JSON.parse(response, reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -345,8 +335,7 @@ export class ServersService {
           this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerGroupedOs[]>();
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -364,8 +353,7 @@ export class ServersService {
           this._responseReviverParser
         );
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerStorageDevice[]>();
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -389,8 +377,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -416,8 +403,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -443,8 +429,7 @@ export class ServersService {
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -462,8 +447,7 @@ export class ServersService {
         serverResponse = JSON.parse(response) as McsApiSuccessResponse<ServerThumbnail>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -480,8 +464,7 @@ export class ServersService {
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetworkSummary[]>>(
           response, this._responseReviverParser);
         return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerNetworkSummary[]>();
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -505,8 +488,7 @@ export class ServersService {
           this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -532,8 +514,7 @@ export class ServersService {
           this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -558,8 +539,7 @@ export class ServersService {
           this._responseReviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -583,8 +563,7 @@ export class ServersService {
         serverResponse = JSON.parse(response) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -610,8 +589,7 @@ export class ServersService {
         serverResponse = JSON.parse(response) as McsApiSuccessResponse<McsApiJob>;
 
         return serverResponse;
-      })
-      .catch(this._handleServerError);
+      });
   }
 
   /**
@@ -676,14 +654,11 @@ export class ServersService {
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerPlatform>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerPlatform>>(
-          response,
-          this._responseReviverParser
-        );
-        return apiResponse ? apiResponse : new McsApiSuccessResponse<ServerPlatform>();
-      })
-      .catch(this._handleServerError);
+        let apiResponse: McsApiSuccessResponse<ServerPlatform[]>;
+        apiResponse = JSON.parse(response,
+          this._responseReviverParser) as McsApiSuccessResponse<ServerPlatform[]>;
+        return apiResponse;
+      });
   }
 
   /**
@@ -813,39 +788,45 @@ export class ServersService {
           }
         }
       }
-
       serverStatus.serviceType = server.serviceType;
     }
-
     return serverStatus;
   }
 
+  /**
+   * Calculate the available memory based on the given resource
+   * @param resource Resource where the calculation came from
+   */
   public computeAvailableMemoryMB(resource: ServerResource): number {
     let availableMemoryMB = 0;
 
     if (!isNullOrEmpty(resource)) {
       let resourceCompute = resource.compute;
-
       availableMemoryMB = !isNullOrEmpty(resourceCompute) ?
         resourceCompute.memoryLimitMB - resourceCompute.memoryUsedMB : 0;
     }
-
     return availableMemoryMB;
   }
 
+  /**
+   * Calculate the available cpu or core based on the given resource
+   * @param resource Resource where the calculation came from
+   */
   public computeAvailableCpu(resource: ServerResource): number {
     let availableCpu = 0;
 
     if (!isNullOrEmpty(resource)) {
       let resourceCompute = resource.compute;
-
       availableCpu = !isNullOrEmpty(resourceCompute) ?
         resourceCompute.cpuLimit - resourceCompute.cpuUsed : 0;
     }
-
     return availableCpu;
   }
 
+  /**
+   * Calculate the available storage as MB
+   * @param storage Storage to calculate
+   */
   public computeAvailableStorageMB(storage: ServerStorage): number {
     return !isNullOrEmpty(storage) ? storage.limitMB - storage.usedMB : 0;
   }
@@ -906,23 +887,6 @@ export class ServersService {
         this._activeServersStream.next(activeServers);
         this._jobsStream.next(updatedNotifications);
       });
-  }
-
-  /**
-   * Server error obtainment in API Handler
-   * @param error Error content from API
-   */
-  private _handleServerError(error: Response | any) {
-    let mcsApiErrorResponse: McsApiErrorResponse;
-
-    if (error instanceof Response) {
-      mcsApiErrorResponse = new McsApiErrorResponse();
-      mcsApiErrorResponse.message = error.statusText;
-      mcsApiErrorResponse.status = error.status;
-    } else {
-      mcsApiErrorResponse = error;
-    }
-    return Observable.throw(mcsApiErrorResponse);
   }
 
   /**

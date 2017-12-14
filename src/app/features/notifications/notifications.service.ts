@@ -4,11 +4,13 @@ import { Observable } from 'rxjs/Rx';
 import {
   McsApiService,
   McsApiSuccessResponse,
-  McsApiErrorResponse,
   McsApiRequestParameter,
   McsApiJob,
 } from '../../core';
-import { reviverParser } from '../../utilities';
+import {
+  reviverParser,
+  isNullOrEmpty
+} from '../../utilities';
 
 @Injectable()
 export class NotificationsService {
@@ -16,18 +18,24 @@ export class NotificationsService {
   constructor(private _mcsApiService: McsApiService) { }
 
   /**
-   *
-   * // TODO AP: get the actual notifications
+   * Get Notifications (MCS API Response)
+   * @param page Page Number
+   * @param perPage Count per page
+   * @param serverName Server name filter
    */
-  public getNotifications(
+  public getNotifications(args?: {
     page?: number,
     perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<McsApiJob[]>> {
+    searchKeyword?: string
+  }): Observable<McsApiSuccessResponse<McsApiJob[]>> {
+
+    // Set default values if null
+    if (isNullOrEmpty(args)) { args = {}; }
 
     let searchParams = new Map<string, any>();
-    searchParams.set('page', page ? page.toString() : undefined);
-    searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('search_keyword', searchKeyword);
+    searchParams.set('page', args.page ? args.page.toString() : undefined);
+    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
+    searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/jobs';
@@ -40,46 +48,24 @@ export class NotificationsService {
           reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
 
         return notificationsJobResponse;
-      })
-      .catch((error: Response | any) => {
-        let mcsApiErrorResponse: McsApiErrorResponse;
-
-        if (error instanceof Response) {
-          mcsApiErrorResponse = new McsApiErrorResponse();
-          mcsApiErrorResponse.message = error.statusText;
-          mcsApiErrorResponse.status = error.status;
-        } else {
-          mcsApiErrorResponse = error;
-        }
-
-        return Observable.throw(mcsApiErrorResponse);
       });
   }
 
+  /**
+   * Get notification by ID (MCS API Response)
+   * @param id Notification identification
+   */
   public getNotification(id: any): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/job/' + id;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let notificationsJobResponse: McsApiSuccessResponse<McsApiJob[]>;
+        let notificationsJobResponse: McsApiSuccessResponse<McsApiJob>;
         notificationsJobResponse = JSON.parse(response,
-          reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
+          reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
         return notificationsJobResponse;
-      })
-      .catch((error: Response | any) => {
-        let mcsApiErrorResponse: McsApiErrorResponse;
-
-        if (error instanceof Response) {
-          mcsApiErrorResponse = new McsApiErrorResponse();
-          mcsApiErrorResponse.message = error.statusText;
-          mcsApiErrorResponse.status = error.status;
-        } else {
-          mcsApiErrorResponse = error;
-        }
-
-        return Observable.throw(mcsApiErrorResponse);
       });
   }
 }
