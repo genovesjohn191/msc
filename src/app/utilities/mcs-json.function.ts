@@ -59,15 +59,23 @@ export function convertJsonStringToObject<T>(
 /**
  * Convert the map contents into JSON object
  * @param map Map to be converted as JSON
+ * @param removeNulls Remove null objects when this flag is true
  */
-export function convertMapToJsonObject(map: Map<any, any>): any {
+export function convertMapToJsonObject(
+  map: Map<any, any>,
+  removeNulls: boolean = true
+): any {
   // Check for null input parameter
   if (!map) { return undefined; }
   let obj = Object.create(null);
 
   // Append the value of map to object
   map.forEach((value, key) => {
-    obj[key] = value;
+    if (removeNulls) {
+      if (value !== undefined && value !== null) { obj[key] = value; }
+    } else {
+      obj[key] = value;
+    }
   });
   return obj;
 }
