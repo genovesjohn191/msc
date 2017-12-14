@@ -3,6 +3,7 @@ window.ENV_CONFIG = {
   apiHost: 'MCS_API_HOST',
   host: 'MCS_HOST',
   port: 'MCS_PORT',
+  gtmId: 'MCS_GTM_ID',
   sentryDsn: 'MCS_SENTRY_DSN',
   macquarieViewUrl: 'MCS_MACQUARIE_VIEW_URL',
   loginUrl: 'MCS_LOGIN_URL',
