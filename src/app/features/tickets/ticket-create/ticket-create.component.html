@@ -23,7 +23,7 @@
           <div class="field">
             <mcs-form-field>
               <mcs-select id="type" placeholder="Select the ticket type"
-                [formControl]="fcType" set-focus
+                [formControl]="fcType" set-focus required
                 [mcsContextualHelp]="contextualContent.type">
                 <mcs-select-item>--</mcs-select-item>
                 <mcs-select-group header="Ticket Type">
@@ -44,7 +44,7 @@
           <!-- Headline -->
           <div class="field">
             <mcs-form-field>
-              <input mcsInput #headlineInput
+              <input mcsInput #headlineInput required
                 placeholder="Enter headline" maxlength="80"
                 [formControl]="fcHeadline"
                 [mcsContextualHelp]="contextualContent.headline">
@@ -64,7 +64,7 @@
           <!-- Details -->
           <div class="field">
             <mcs-form-field>
-              <textarea mcsInput rows="3" #detailsInput
+              <textarea mcsInput rows="3" #detailsInput required
                 placeholder="Enter details" maxlength="4000"
                 [formControl]="fcDetails"
                 [mcsContextualHelp]="contextualContent.details"></textarea>

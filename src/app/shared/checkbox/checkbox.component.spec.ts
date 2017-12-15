@@ -39,9 +39,9 @@ describe('CheckboxComponent', () => {
   /** Test Implementation */
   describe('onClickEvent()', () => {
     it('should call the emit() of EventEmitter', () => {
-      spyOn(component.onClick, 'emit');
-      component.onClickEvent(null);
-      expect(component.onClick.emit).toHaveBeenCalledTimes(1);
+      spyOn(component.change, 'emit');
+      component.onClickEvent(new MouseEvent('click'));
+      expect(component.change.emit).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -121,7 +121,10 @@ export class CoreDefinition {
   public static ASSETS_FONT_CALENDAR = 'calendar';
   public static ASSETS_FONT_INFORMATION = 'info';
   public static ASSETS_FONT_BELL = 'bell';
+  public static ASSETS_FONT_SQUARE = 'square';
+  public static ASSETS_FONT_SQUARE_OPEN = 'square-open';
   public static ASSETS_FONT_CHECKBOX = 'check-box';
+  public static ASSETS_FONT_CHECKBOX_OPEN = 'check-box-open';
   public static ASSETS_FONT_EXCLAMATION = 'exclamation';
   public static ASSETS_FONT_MINUS = 'minus';
   public static ASSETS_FONT_PLUS = 'plus';
@@ -131,7 +134,6 @@ export class CoreDefinition {
   public static ASSETS_FONT_CARET_LEFT = 'caret-left';
   public static ASSETS_FONT_CARET_DOWN = 'caret-down';
   public static ASSETS_FONT_PLAY = 'play';
-  public static ASSETS_FONT_CHECKBOX_2 = 'check-box-2';
   public static ASSETS_FONT_CLOSE = 'close';
   public static ASSETS_FONT_CHEVRON_DOWN = 'chevron-down';
   public static ASSETS_FONT_CHEVRON_UP = 'chevron-up';

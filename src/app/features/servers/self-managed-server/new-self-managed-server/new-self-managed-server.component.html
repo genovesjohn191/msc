@@ -2,7 +2,7 @@
   <!-- Server Name Input -->
   <div class="field">
     <mcs-form-field>
-      <input mcsInput #serverNameInput set-focus
+      <input mcsInput #serverNameInput set-focus required
         placeholder="Enter a server name" maxlength="15"
         [formControl]="fcServerName"
         [mcsContextualHelp]="textHelpContent.serverNameField">
@@ -46,7 +46,7 @@
   <!-- Imges Selection -->
   <div class="field">
     <mcs-form-field>
-      <mcs-select [formControl]="fcImage"
+      <mcs-select [formControl]="fcImage" required
         [placeholder]="textContent.placeholder.image"
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
         <mcs-select-item>-</mcs-select-item>
@@ -109,7 +109,8 @@
   <div class="field">
     <span class="label">{{ textContent.networkLabel }}</span>
     <mcs-form-field>
-      <mcs-select [formControl]="fcNetwork" [placeholder]="textContent.placeholder.network"
+      <mcs-select [formControl]="fcNetwork" required
+        [placeholder]="textContent.placeholder.network"
         [mcsContextualHelp]="textHelpContent.networkField">
         <mcs-select-item>-</mcs-select-item>
         <mcs-select-group [header]="textContent.headers.network">

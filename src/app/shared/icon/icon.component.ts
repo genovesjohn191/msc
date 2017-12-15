@@ -38,7 +38,7 @@ export class IconComponent implements OnChanges {
   public size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
 
   @Input()
-  public color: 'white' | 'black' | 'green' | 'red' | 'blue';
+  public color: string;
 
   private _iconActualSize: number;
 
@@ -117,8 +117,6 @@ export class IconComponent implements OnChanges {
         // Set the sie of the Font Awesome icon based on the font-size
         this._renderer.setStyle(this.iconElement, 'font-size',
           `${this._iconActualSize}px`);
-        this._renderer.setStyle(this.iconElement, 'line-height',
-          `${this._iconActualSize * 1.5}px`);
         break;
 
       case IconType.Gif:

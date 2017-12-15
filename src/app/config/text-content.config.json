@@ -92,7 +92,7 @@
         "network": "Networks"
       },
       "placeholder": {
-        "vApp": "Select vApp (Optional)",
+        "vApp": "Select vApp",
         "image": "Select Image",
         "network": "Select Network",
         "server": "Select Server"

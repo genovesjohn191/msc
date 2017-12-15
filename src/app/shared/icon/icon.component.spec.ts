@@ -189,54 +189,44 @@ describe('IconComponent', () => {
       component.key = 'exclamation';
     }));
 
-    it('should set xtra small size to the font-size and line-height', () => {
+    it('should set xtra small size to the font-size', () => {
       component.size = 'xsmall';
       component.ngOnChanges();
 
       expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_XSMALL}px`);
-      expect(component.iconElement.style.lineHeight)
-        .toBe(`${CoreDefinition.ICON_SIZE_XSMALL * 1.5}px`);
     });
 
-    it('should set small size to the font-size and line-height', () => {
+    it('should set small size to the font-size', () => {
       component.size = 'small';
       component.ngOnChanges();
 
       expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_SMALL}px`);
-      expect(component.iconElement.style.lineHeight)
-        .toBe(`${CoreDefinition.ICON_SIZE_SMALL * 1.5}px`);
     });
 
-    it('should set medium size to the font-size and line-height', () => {
+    it('should set medium size to the font-size', () => {
       component.size = 'medium';
       component.ngOnChanges();
 
       expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM}px`);
-      expect(component.iconElement.style.lineHeight)
-        .toBe(`${CoreDefinition.ICON_SIZE_MEDIUM * 1.5}px`);
     });
 
-    it('should set large size to the font-size and line-height', () => {
+    it('should set large size to the font-size', () => {
       component.size = 'large';
       component.ngOnChanges();
 
       expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_LARGE}px`);
-      expect(component.iconElement.style.lineHeight)
-        .toBe(`${CoreDefinition.ICON_SIZE_LARGE * 1.5}px`);
     });
 
-    it('should set xlarge size to the font-size and line-height', () => {
+    it('should set xlarge size to the font-size', () => {
       component.size = 'xlarge';
       component.ngOnChanges();
 
       expect(component.iconElement.style.fontSize)
         .toBe(`${CoreDefinition.ICON_SIZE_XLARGE}px`);
-      expect(component.iconElement.style.lineHeight)
-        .toBe(`${CoreDefinition.ICON_SIZE_XLARGE * 1.5}px`);
     });
 
     it('should set the white class as color', () => {

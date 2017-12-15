@@ -12,7 +12,11 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { coerceBoolean } from '../../utilities';
+import { CoreDefinition } from '../../core';
+import {
+  coerceBoolean,
+  coerceNumber
+} from '../../utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -37,7 +41,7 @@ let nextUniqueId = 0;
 
 export class CheckboxComponent implements ControlValueAccessor {
   @Output()
-  public onClick: EventEmitter<any> = new EventEmitter();
+  public change: EventEmitter<CheckboxComponent> = new EventEmitter();
 
   @Input()
   public id: string = `mcs-checkbox-${nextUniqueId++}`;
@@ -46,6 +50,11 @@ export class CheckboxComponent implements ControlValueAccessor {
   public get indeterminate(): boolean { return this._indeterminate; }
   public set indeterminate(value: boolean) { this._indeterminate = coerceBoolean(value); }
   private _indeterminate: boolean;
+
+  @Input()
+  public get tabindex(): number { return this._tabindex; }
+  public set tabindex(value: number) { this._tabindex = coerceNumber(value); }
+  private _tabindex: number = 0;
 
   @Input()
   public get checked(): boolean {
@@ -58,17 +67,49 @@ export class CheckboxComponent implements ControlValueAccessor {
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _checked: boolean;
+  private _checked: boolean = false;
+
+  public get checkboxIconKey(): string {
+    return this.checked ? CoreDefinition.ASSETS_FONT_CHECKBOX :
+      CoreDefinition.ASSETS_FONT_SQUARE_OPEN;
+  }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
   }
 
-  public onClickEvent($event) {
-    this.onClick.emit($event);
+  /**
+   * Event that emits when checkbox is clicked
+   * @param _event Event that emitted
+   */
+  public onClickEvent(_event: MouseEvent) {
+    _event.stopPropagation();
+    this.toggle();
+    this.change.emit(this);
   }
 
+  /**
+   * Event that emits when change occur
+   * @param _event Event that emitted
+   */
+  public onChange(_event: Event) {
+    // We always have to stop propagation on the change event.
+    // Otherwise the change event, from the input element, will bubble up and
+    // emit its event object to the `change` output.
+    _event.stopPropagation();
+  }
+
+  /**
+   * Event that emits when checkbox removed focused
+   */
   public onBlur(): void {
     this._onTouched();
+  }
+
+  /**
+   * Toggle checkbox value
+   */
+  public toggle(): void {
+    this.checked = !this.checked;
   }
 
   /**
