@@ -29,4 +29,8 @@
   &.blue {
     color: $color-primary-00;
   }
+
+  &.inherit {
+    color: inherit;
+  }
 }

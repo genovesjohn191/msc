@@ -87,4 +87,12 @@ export abstract class McsFormFieldControlBase<T> {
       this.stateChanges.next();
     }
   }
+
+  /**
+   * Return the placeholder content and added *
+   * when the required field is true
+   */
+  public getPlaceholder(): string {
+    return this.required ? `${this.placeholder} *` : this.placeholder;
+  }
 }

@@ -46,7 +46,7 @@ const MCS_INPUT_INVALID_TYPES = [
   host: {
     'class': 'input-wrapper',
     '[attr.id]': 'id',
-    '[attr.placeholder]': 'placeholder',
+    '[attr.placeholder]': 'getPlaceholder()',
     '[disabled]': 'disabled',
     '[required]': 'required',
     '(blur)': 'focusChanged(false)',

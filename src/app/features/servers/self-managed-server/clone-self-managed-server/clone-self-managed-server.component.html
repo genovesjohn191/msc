@@ -2,7 +2,7 @@
   <!-- Server Name Input -->
   <div class="field">
     <mcs-form-field>
-      <input mcsInput #serverNameInput set-focus
+      <input mcsInput #serverNameInput set-focus required
         placeholder="Enter a server name" maxlength="15"
         [formControl]="fcServerName"
         [mcsContextualHelp]="textHelpContent.serverNameField">
@@ -26,7 +26,7 @@
   <!-- Server Selection -->
   <ng-container *ngIf="hasServers">
     <mcs-form-field>
-      <mcs-select [formControl]="fcTargetServer"
+      <mcs-select [formControl]="fcTargetServer" required
         [placeholder]="textContent.placeholder.server">
         <mcs-select-item>-</mcs-select-item>
         <mcs-select-group header="Servers">

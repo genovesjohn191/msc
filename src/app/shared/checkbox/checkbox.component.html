@@ -1,8 +1,30 @@
-<input type="checkbox" [id]="id"
-  [(ngModel)]="checked"
-  [indeterminate]="indeterminate"
-  (click)="onClickEvent($event)"
-  (blur)="onBlur()">
-<label [for]="id">
-  <ng-content></ng-content>
+<label [attr.for]="id" class="checkbox-layout-wrapper" #checkbox>
+  <div class="checkbox-inner-container">
+    <!-- Checkbox element -->
+    <input #inputElement hidden
+      type="checkbox"
+      [id]="id"
+      [attr.tabindex]="tabindex"
+      [indeterminate]="indeterminate"
+      (click)="onClickEvent($event)"
+      (change)="onChange($event)"
+      (blur)="onBlur()">
+
+    <!-- Ripple Effect -->
+    <mcs-ripple class="checkbox-ripple-wrapper"
+      mcsRipple [rippleTrigger]="checkbox" [rippleCentered]="true">
+    </mcs-ripple>
+
+    <!-- Checkbox Icon -->
+    <mcs-icon class="checkbox-icon"
+      [key]="checkboxIconKey" size="small"
+      [color]="checked ? 'blue' : 'inherit'"></mcs-icon>
+  </div>
+
+  <!-- Checkbox label -->
+  <span class="checkbox-label">
+    <!-- Add an invisible span so JAWS can read the label -->
+    <span style="display:none">&nbsp;</span>
+    <ng-content></ng-content>
+  </span>
 </label>
