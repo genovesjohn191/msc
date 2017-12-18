@@ -75,18 +75,13 @@ export class ServerCommandComponent implements OnInit {
         enabled = this.serverStatus.powerState === ServerPowerState.PoweredOn;
         break;
 
-      case ServerCommand.Rename:
-      case ServerCommand.Delete:
-        enabled = !isNullOrEmpty(this.serverStatus.powerState) &&
-          this.serverStatus.serviceType === ServerServiceType.SelfManaged;
-        break;
-
       case ServerCommand.ViewVCloud:
         enabled = this.serverStatus.commandAction !== ServerCommand.Delete;
         break;
 
       default:
-        enabled = !isNullOrEmpty(this.serverStatus.powerState);
+        enabled = !isNullOrEmpty(this.serverStatus.powerState) &&
+          this.serverStatus.serviceType === ServerServiceType.SelfManaged;
         break;
     }
 

@@ -40,7 +40,8 @@
   <form *ngIf="inputManageType == inputManageTypeEnum.Custom && hasAvailableStorageSpace"
     [formGroup]="formGroupServerStorage" class="custom-size-form">
 
-    <div animate trigger="fadeIn" display-flex class="horizontal-items-spacing-medium">
+    <div animate trigger="fadeIn" display-flex align-items="center"
+      class="horizontal-items-spacing-medium">
       <span class="label">{{ textContent.label }} : </span>
 
       <mcs-form-field [ngStyle]="{width: '150px'}">

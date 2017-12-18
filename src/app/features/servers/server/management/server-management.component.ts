@@ -25,7 +25,8 @@ import {
   ServerCatalogItem,
   ServerCatalogItemType,
   ServerMedia,
-  ServerManageMedia
+  ServerManageMedia,
+  ServerCommand
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -63,7 +64,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public primaryVolume: string;
   public secondaryVolumes: string;
   public otherStorage: ServerFileSystem[];
-  public serviceType: ServerServiceType;
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
@@ -76,19 +76,17 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public remainingMemory: number;
   public remainingCpu: number;
 
-  public serverSubscription: Subscription;
   public serverResourceSubscription: Subscription;
 
-  private _resourceMap: Map<string, ServerResource>;
-  private _serverPerformanceScale: ServerPerformanceScale;
-  private _deviceType: McsDeviceType;
-
-  private _hasServer: boolean;
-
+  private _serverSubscription: Subscription;
   private _scalingSubscription: Subscription;
   private _paramsSubscription: Subscription;
   private _notificationsSubscription: Subscription;
   private _deviceTypeSubscription: Subscription;
+
+  private _resourceMap: Map<string, ServerResource>;
+  private _serverPerformanceScale: ServerPerformanceScale;
+  private _deviceType: McsDeviceType;
 
   private _server: Server;
   public get server(): Server {
@@ -97,28 +95,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   public set server(value: Server) {
     this._server = value;
     this._changeDetectorRef.markForCheck();
-  }
-
-  private _isServerScale: boolean;
-  public get isServerScale(): boolean {
-    return this._isServerScale;
-  }
-  public set isServerScale(value: boolean) {
-    if (this._isServerScale !== value) {
-      this._isServerScale = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _isScaling: boolean;
-  public get isScaling(): boolean {
-    return this._isScaling;
-  }
-  public set isScaling(value: boolean) {
-    if (this._isScaling !== value) {
-      this._isScaling = value;
-      this._changeDetectorRef.markForCheck();
-    }
   }
 
   private _isProcessing: boolean;
@@ -154,19 +130,34 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  public get serverMemoryValue(): string {
+  public get isActiveScale(): boolean {
+    return !isNullOrEmpty(this.server.id) && this._hasScaleParam && !this.isManaged;
+  }
+
+  public get isScaling(): boolean {
+    return this.isProcessing && this.activeServerJob.type === McsJobType.UpdateServer;
+  }
+
+  public get serverMemoryMB(): number {
+    return !isNullOrEmpty(this.server.compute) ? this.server.compute.memoryMB : 0;
+  }
+
+  public get serverCpuCount(): number {
     return !isNullOrEmpty(this.server.compute) ?
-      appendUnitSuffix(this.server.compute.memoryMB, 'megabyte') : '' ;
+      this.server.compute.cpuCount * this.server.compute.coreCount : 0;
+  }
+
+  public get serverMemoryValue(): string {
+    return appendUnitSuffix(this.serverMemoryMB, 'megabyte');
   }
 
   public get serverCpuValue(): string {
-    return !isNullOrEmpty(this.server.compute) ?
-      appendUnitSuffix(this.server.compute.cpuCount, 'megabyte') : '' ;
+    return appendUnitSuffix(this.serverCpuCount, 'megabyte');
   }
 
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
-    return this.serviceType === ServerServiceType.Managed;
+    return this.server.serviceType === ServerServiceType.Managed;
   }
 
   public get consoleEnabled(): boolean {
@@ -212,6 +203,16 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     return !isNullOrEmpty(this.resourceMediaList);
   }
 
+  public get scalingIsDisabled(): boolean {
+    return this.isProcessing || this.isManaged;
+  }
+
+  public get mediaIsDisabled(): boolean {
+    return !this.hasAvailableMedia || this.isProcessing || this.isManaged;
+  }
+
+  private _hasScaleParam: boolean;
+
   constructor(
     private _textProvider: McsTextContentProvider,
     private _serverService: ServerService,
@@ -225,19 +226,16 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   ) {
     this.primaryVolume = '';
     this.secondaryVolumes = '';
-    this.serviceType = ServerServiceType.SelfManaged;
     this.resource = new ServerResource();
     this.server = new Server();
     this.jobs = new Array();
     this.activeServerJob = new McsApiJob();
     this._resourceMap = new Map<string, ServerResource>();
-    this._hasServer = false;
-    this.isServerScale = false;
-    this.isScaling = false;
     this.isAttachMedia = false;
     this.isProcessing = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
     this.resourceMediaList = new Array<ServerCatalogItem>();
+    this._hasScaleParam = false;
   }
 
   public ngOnInit(): void {
@@ -249,8 +247,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.serverSubscription) {
-      this.serverSubscription.unsubscribe();
+    if (this._serverSubscription) {
+      this._serverSubscription.unsubscribe();
     }
 
     if (this.serverResourceSubscription) {
@@ -307,32 +305,30 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
   }
 
-  public scaleServer(): void {
-    this._setResourceData();
-    this.isServerScale = true;
-  }
-
   public onScaleChanged(scale: ServerPerformanceScale) {
     this._serverPerformanceScale = scale;
   }
 
-  public onClickScale(): void {
-    if (!this._serverPerformanceScale || !this.hasUpdate) { return; }
+  public scaleServer(): void {
+    this._serverService.executeServerCommand({server: this.server}, ServerCommand.Scale);
+  }
 
-    this.isServerScale = false;
-    this.isScaling = true;
+  public onClickScale(): void {
+    if (!this._serverPerformanceScale.valid || !this.hasUpdate) { return; }
+
+    this.isProcessing = true;
 
     // Update the Server CPU size scale
     this._scalingSubscription = this._serverService.setPerformanceScale(
       this.server.id, this._serverPerformanceScale, this.server.powerState)
       .subscribe(() => {
-        this._router.navigate(['/servers/', this.server.id, 'management']);
+        this._routeToServerManagement();
       });
   }
 
   public cancelScale(): void {
     this._serverPerformanceScale = new ServerPerformanceScale();
-    this.isServerScale = false;
+    this._routeToServerManagement();
   }
 
   public getActiveMedia(media: ServerMedia): boolean {
@@ -347,6 +343,8 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public onAttachMedia(): void {
+    if (this.isManaged) { return; }
+
     this._setResourceData();
     this.isAttachMedia = true;
   }
@@ -408,7 +406,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   private _setServerData(): void {
-    this.serverSubscription = this._serverService.selectedServerStream
+    this._serverSubscription = this._serverService.selectedServerStream
       .subscribe((server) => {
         if (!isNullOrEmpty(server) && this.server.id !== server.id) {
           // Get server data
@@ -491,8 +489,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _getServerDetails(): void {
     if (isNullOrEmpty(this.server)) { return; }
 
-    this.serviceType = this.server.serviceType;
-
     if (this.hasStorage) {
       this.primaryVolume = appendUnitSuffix(this.server.fileSystem[0].capacityGB, 'gigabyte');
       this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
@@ -500,10 +496,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
       this.primaryVolume = '';
       this.secondaryVolumes = '';
     }
-
-    this._hasServer = true;
-    this.isServerScale = false;
-    this.isScaling = false;
   }
 
   private _getJobStatus(): void {
@@ -529,7 +521,6 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
             !isNullOrEmpty(activeServerJob.clientReferenceObject)) {
             this.server.compute.memoryMB = activeServerJob.clientReferenceObject.memoryMB;
             this.server.compute.cpuCount = activeServerJob.clientReferenceObject.cpuCount;
-            this.isScaling = false;
           }
           break;
 
@@ -642,10 +633,16 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   private _getScaleParam(): void {
     this._paramsSubscription = this._activatedRoute.queryParams
       .subscribe((params: ParamMap) => {
-        if (this._hasServer && params['scale']) {
-          this.scaleServer();
+        this._hasScaleParam = !isNullOrEmpty(params['scale']);
+
+        if (this._hasScaleParam) {
+          this._setResourceData();
         }
       });
+  }
+
+  private _routeToServerManagement(): void {
+    this._router.navigate(['/servers/', this.server.id, 'management']);
   }
 
   private _listenToNotificationsStream(): void {

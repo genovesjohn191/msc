@@ -14,6 +14,7 @@ import {
   ServerStorage,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
+  ServerServiceType
 } from '../../models';
 import {
   CoreDefinition,
@@ -95,6 +96,11 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
+  }
+
+  // Check if the current server's serverType is managed
+  public get isManaged(): boolean {
+    return this.server.serviceType === ServerServiceType.Managed;
   }
 
   public get hasStorageProfileList(): boolean {
@@ -226,6 +232,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
+    if (this.isProcessing || this.isManaged) { return; }
+
     this.selectedStorageDevice = storageDevice;
     this.expandStorage = true;
     this._setSelectedStorageSliderValues();
@@ -262,7 +270,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * This will process the adding of disk
    */
   public onClickAttach(): void {
-    if (!this.isValidStorageValues || !this.hasAvailableStorageSpace) { return; }
+    if (!this.isValidStorageValues || !this.hasAvailableStorageSpace || this.isManaged) { return; }
 
     this.isProcessing = true;
     this.mcsStorage.completed();
@@ -324,7 +332,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * @param storage Disk to be deleted
    */
   public onDeleteStorage(storage: ServerStorageDevice): void {
-    if (this.isProcessing) { return; }
+    if (this.isProcessing || this.isManaged) { return; }
 
     this.isProcessing = true;
     this.mcsStorage.completed();
