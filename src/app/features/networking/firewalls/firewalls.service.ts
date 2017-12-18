@@ -5,7 +5,8 @@ import {
   McsApiService,
   McsApiRequestParameter,
   McsApiSuccessResponse,
-  CoreDefinition
+  CoreDefinition,
+  McsLoggerService
 } from '../../../core/';
 import { isNullOrEmpty } from '../../../utilities';
 // Models
@@ -22,7 +23,10 @@ import {
 @Injectable()
 export class FirewallsService {
 
-  constructor(private _mcsApiService: McsApiService) { }
+  constructor(
+    private _mcsApiService: McsApiService,
+    private _loggerService: McsLoggerService
+  ) { }
 
   /**
    * Get Firewalls (MCS API Response)
@@ -48,13 +52,15 @@ export class FirewallsService {
     mcsApiRequestParameter.endPoint = '/firewalls';
     mcsApiRequestParameter.searchParameters = searchParams;
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let firewallsResponse: McsApiSuccessResponse<Firewall[]>;
-        firewallsResponse = JSON.parse(response,
+        let apiResponse: McsApiSuccessResponse<Firewall[]>;
+        apiResponse = JSON.parse(response,
           this._convertProperty) as McsApiSuccessResponse<Firewall[]>;
 
-        return firewallsResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
@@ -66,13 +72,15 @@ export class FirewallsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/firewalls/${id}`;
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let firewallResponse: McsApiSuccessResponse<Firewall>;
-        firewallResponse = JSON.parse(response,
+        let apiResponse: McsApiSuccessResponse<Firewall>;
+        apiResponse = JSON.parse(response,
           this._convertProperty) as McsApiSuccessResponse<Firewall>;
 
-        return firewallResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
@@ -97,13 +105,15 @@ export class FirewallsService {
     mcsApiRequestParameter.endPoint = `/firewalls/${id}/policies`;
     mcsApiRequestParameter.searchParameters = searchParams;
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let firewallPoliciesResponse: McsApiSuccessResponse<FirewallPolicy[]>;
-        firewallPoliciesResponse = JSON.parse(response,
+        let apiResponse: McsApiSuccessResponse<FirewallPolicy[]>;
+        apiResponse = JSON.parse(response,
           this._convertProperty) as McsApiSuccessResponse<FirewallPolicy[]>;
 
-        return firewallPoliciesResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
