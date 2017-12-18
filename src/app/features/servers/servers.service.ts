@@ -130,8 +130,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = '/servers';
     mcsApiRequestParameter.searchParameters = searchParams;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Server[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Server[]>>(
@@ -139,7 +141,9 @@ export class ServersService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -152,8 +156,10 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}`;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Server>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Server>>(
@@ -161,7 +167,9 @@ export class ServersService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -185,8 +193,10 @@ export class ServersService {
       clientReferenceObject: referenceObject
     });
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.put(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -194,7 +204,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -212,8 +224,10 @@ export class ServersService {
       clientReferenceObject: referenceObject
     });
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -221,7 +235,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -237,8 +253,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${id}/rename`;
     mcsApiRequestParameter.recordData = JSON.stringify(serverData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.put(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -246,7 +264,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -265,8 +285,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${id}/compute`;
     mcsApiRequestParameter.recordData = JSON.stringify(serverData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.put(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -274,7 +296,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -289,8 +313,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = '/servers';
     mcsApiRequestParameter.recordData = JSON.stringify(serverData, this._requestReviverParser);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -298,7 +324,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -316,8 +344,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${id}/clone`;
     mcsApiRequestParameter.recordData = JSON.stringify(serverData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -325,7 +355,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -345,8 +377,10 @@ export class ServersService {
       clientReferenceObject: referenceObject
     });
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.delete(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -354,7 +388,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -366,8 +402,10 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/os';
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerGroupedOs[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerGroupedOs[]>>(
@@ -375,7 +413,9 @@ export class ServersService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -387,8 +427,10 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks`;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerStorageDevice[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerStorageDevice[]>>(
@@ -396,7 +438,9 @@ export class ServersService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -415,8 +459,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks`;
     mcsApiRequestParameter.recordData = JSON.stringify(storageData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -424,7 +470,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -445,8 +493,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
     mcsApiRequestParameter.recordData = JSON.stringify(storageData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.put(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -454,7 +504,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -475,8 +527,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
     mcsApiRequestParameter.recordData = JSON.stringify(storageData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.delete(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -484,7 +538,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -498,8 +554,10 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/thumbnail`;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerThumbnail>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerThumbnail>>(
@@ -507,7 +565,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -520,8 +580,10 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerNetworkSummary[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetworkSummary[]>>(
@@ -529,7 +591,9 @@ export class ServersService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -548,8 +612,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
     mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -557,7 +623,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -578,8 +646,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
     mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.put(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -587,7 +657,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -607,8 +679,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
     mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.delete(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -616,7 +690,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -636,8 +712,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/media`;
     mcsApiRequestParameter.recordData = JSON.stringify(mediaData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -645,7 +723,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -667,8 +747,10 @@ export class ServersService {
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/media/${mediaId}`;
     mcsApiRequestParameter.recordData = JSON.stringify(mediaData);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.delete(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
@@ -676,7 +758,9 @@ export class ServersService {
           reviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -741,8 +825,10 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/platforms';
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<ServerPlatform[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerPlatform[]>>(
@@ -750,7 +836,9 @@ export class ServersService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }

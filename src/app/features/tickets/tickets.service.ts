@@ -69,8 +69,10 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = '/tickets';
     mcsApiRequestParameter.searchParameters = searchParams;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Ticket[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Ticket[]>>(
@@ -78,7 +80,9 @@ export class TicketsService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -125,8 +129,10 @@ export class TicketsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets/' + id;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Ticket>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Ticket>>(
@@ -134,7 +140,9 @@ export class TicketsService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -150,8 +158,10 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets`;
     mcsApiRequestParameter.recordData = JSON.stringify(ticketData, this._requestReviverParser);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<TicketCreate>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketCreate>>(
@@ -159,7 +169,9 @@ export class TicketsService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -175,8 +187,10 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/comments`;
     mcsApiRequestParameter.recordData = JSON.stringify(commentData, this._requestReviverParser);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<TicketComment>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketComment>>(
@@ -184,7 +198,9 @@ export class TicketsService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -200,8 +216,10 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments`;
     mcsApiRequestParameter.recordData = JSON.stringify(attachmentData, this._requestReviverParser);
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<TicketAttachment>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketAttachment>>(
@@ -209,7 +227,9 @@ export class TicketsService {
           this._responseReviverParser
         );
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -224,10 +244,14 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments/${attachmentId}/file`;
     mcsApiRequestParameter.responseType = 'blob';
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
-        this._loggerService.traceInfo(response);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, response);
         return response;
       });
   }

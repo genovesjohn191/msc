@@ -24,13 +24,17 @@ export class ToolsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/portals';
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Portal[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Portal[]>>(response);
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }

@@ -27,6 +27,9 @@ export class McsLoggerService {
 
   /**
    * Trace the current method execution and print it on the console
+   *
+   * `Note:` This should not be use when tracing async process like api calls
+   * because the timing of the response was undetermined
    * @param message Message to print
    * @param optionalParams Optional parameters
    */
@@ -43,6 +46,29 @@ export class McsLoggerService {
       console.log(message, ...optionalParams);
       this._saveMethodName = currentMethodName;
     }
+  }
+
+  /**
+   * Start the grouping of the trace based on the group title
+   * @param groupTitle Group title
+   */
+  public traceStart(groupTitle: string): void {
+    if (!this.logIsEnabled) { return; }
+
+    console.groupEnd();
+    console.group(groupTitle);
+  }
+
+  /**
+   * End the grouping of the trace and print it in the console
+   * @param message Message to print
+   * @param optionalParams Optional parameters
+   */
+  public traceEnd(message?: any, ...optionalParams: any[]): void {
+    if (!this.logIsEnabled) { return; }
+
+    console.log(message, ...optionalParams);
+    console.groupEnd();
   }
 
   /**
