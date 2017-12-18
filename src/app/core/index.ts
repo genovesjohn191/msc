@@ -70,6 +70,8 @@ export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';
 export * from './authentication/mcs-authentication.identity';
 export * from './authentication/mcs-route-permission.guard';
+/** Google Analytics */
+export * from './services/google-analytics-events.service';
 /** Factory */
 export * from './factory/dialog/mcs-dialog-ref';
 export * from './factory/dialog/mcs-dialog-config';
