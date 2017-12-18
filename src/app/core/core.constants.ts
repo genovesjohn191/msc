@@ -20,6 +20,8 @@ import { McsAuthenticationIdentity } from './authentication/mcs-authentication.i
 import { McsAuthenticationService } from './authentication/mcs-authentication.service';
 import { McsAuthenticationGuard } from './authentication/mcs-authentication.guard';
 import { McsRoutePermissionGuard } from './authentication/mcs-route-permission.guard';
+/** Google Analytics */
+import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
 /** Forms */
 import { McsNavigateAwayGuard } from './forms/mcs-navigate-away.guard';
 /**
@@ -45,5 +47,6 @@ export const coreProviders: any[] = [
   McsAuthenticationService,
   McsAuthenticationGuard,
   McsRoutePermissionGuard,
-  McsNavigateAwayGuard
+  McsNavigateAwayGuard,
+  GoogleAnalyticsEventsService
 ];

@@ -19,7 +19,8 @@ import {
 } from '@angular/router';
 import {
   McsRoutePermissionGuard,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  GoogleAnalyticsEventsService
 } from './core';
 import { isNullOrEmpty } from './utilities';
 
@@ -56,7 +57,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _ngZone: NgZone,
     private _routePermission: McsRoutePermissionGuard,
-    private _errorHandlerService: McsErrorHandlerService
+    private _errorHandlerService: McsErrorHandlerService,
+    // This will initialize the analytics when app starts
+    _googleAnalyticsEventsService: GoogleAnalyticsEventsService
   ) {
     this.isInitialDisplayed = true;
   }
