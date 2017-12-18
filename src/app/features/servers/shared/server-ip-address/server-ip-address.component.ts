@@ -183,14 +183,14 @@ export class ServerIpAddressComponent implements OnInit {
     // Set model data based on management type
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
-        ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : '';
+        ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : null;
         ipAddressData.ipAllocationMode = ServerIpAllocationMode.Manual;
         ipAddressData.valid = this.fcIpdAdrress.valid;
         break;
 
       case ServerInputManageType.Buttons:
       default:
-        ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : '';
+        ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : null;
         ipAddressData.ipAllocationMode = this.ipAddressValue;
         ipAddressData.valid = true;
         break;

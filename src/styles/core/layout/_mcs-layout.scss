@@ -131,6 +131,10 @@
   display: inline-block;
 }
 
+.valign-middle {
+  vertical-align: middle;
+}
+
 .full-width {
   width: 100%;
 }
@@ -163,8 +167,31 @@
 
 // Simple table
 table.mcs-simple-table {
+  @include breakpoint(small) {
+    border-collapse: separate;
+    border-spacing: 0 $space-small;
+  }
+
   td {
     padding-right: $space-small;
+    vertical-align: middle;
+
+    &:last-of-type {
+      padding-right: 0;
+    }
+
+    &.action-items {
+      @include set-items-interval($space-medium, horizontal);
+
+      @include breakpoint(small) {
+        @include set-items-interval(0, horizontal);
+        @include set-items-interval($space-xsmall, vertical);
+
+        > * {
+          display: block;
+        }
+      }
+    }
   }
 }
 

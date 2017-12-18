@@ -24,17 +24,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let storage of storageDevices; let i = index">
-                <td class="squishy-cell horizontal-items-spacing-xsmall"
-                  display-flex="row" align-items="center">
+              <tr *ngFor="let storage of storageDevices">
+                <td class="squishy-cell">
                   <mcs-icon *ngIf="!isActiveStorage(storage.id)"
-                    [key]="storageIconKey" size="small"
-                    class="hidden-small"></mcs-icon>
+                    [key]="storageIconKey" size="small" class="inline-block"></mcs-icon>
                   <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
-                    size="small" class="hidden-small"
-                    [mcsTooltip]="getStorageSummaryInformation(storage.id)"
-                    mcsTooltipPosition="right"></mcs-icon>
-                  <span>{{ storage.name }}</span>
+                    size="small" [mcsTooltip]="getStorageSummaryInformation(storage.id)"
+                    mcsTooltipPosition="right" class="inline-block"></mcs-icon>
+                  <span class="inline-block">{{ storage.name }}</span>
                 </td>
                 <td class="squishy-cell">
                   {{ storage.storageProfile }}
@@ -42,7 +39,7 @@
                 <td>
                   {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
                 </td>
-                <td class="horizontal-items-spacing-medium">
+                <td class="action-items">
                   <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="expand text-right">
                     <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
                   </span>
@@ -59,7 +56,7 @@
       </div>
 
       <div *mcsHasPermission="['VmEdit']">
-        <div *ngIf="!hasReachedDisksLimit" class="action-box">
+        <div *ngIf="!hasReachedDisksLimit && !isManaged" class="action-box">
           <mcs-server-manage-storage *ngIf="hasStorageProfileList" #mcsStorage
             [storageProfileList]="storageProfileList"
             [memoryMB]="memoryMB"

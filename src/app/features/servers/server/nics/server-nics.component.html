@@ -50,7 +50,7 @@
                 <td>
                   <span>{{ nic.ipAddress }}</span>
                 </td>
-                <td class="horizontal-items-spacing-medium">
+                <td class="action-items">
                   <span *mcsHasPermission="['VmNetworkEdit']">
                     <a *ngIf="!isProcessing" (click)="onUpdateNetwork(nic)">
                       {{ textContent.editLink }}
@@ -77,7 +77,6 @@
           <div class="field">
             <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
               [placeholder]="textContent.networkSelect.placeholder">
-              <mcs-select-item [value]="">-</mcs-select-item>
               <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
                 {{ network.name }}
               </mcs-select-item>

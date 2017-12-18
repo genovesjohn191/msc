@@ -17,7 +17,8 @@ import {
   ServerPowerState,
   ServerNetworkSummary,
   ServerManageNetwork,
-  ServerManageMedia
+  ServerManageMedia,
+  ServerCommand
 } from '../models';
 import { McsApiSuccessResponse } from '../../../core/';
 import { isNullOrEmpty } from '../../../utilities';
@@ -278,6 +279,18 @@ export class ServerService {
     }
 
     return serverResourceMap;
+  }
+
+  /**
+   * Execute the server command according to inputs
+   * @param data Data of the server to process the action
+   * @param action Action to be execute
+   */
+  public executeServerCommand(
+    data: { server: Server, result?: any },
+    action: ServerCommand
+  ) {
+    this._serversService.executeServerCommand(data, action);
   }
 
   /**

@@ -1,5 +1,7 @@
 @import "../../../../../styles/shared/base";
 
+$custom-size-field-wrapper-max-width: 200px;
+
 .server-performance-scale-container {
   @include display-flex(row);
   @include flex-wrap(wrap);
@@ -26,14 +28,13 @@
     }
   }
 
-  .custom-size-content {
-    min-height: 100px;
-
-    @include breakpoint(small) {
-      @include display-flex(column);
-      * {
-        margin-left: 0;
-      }
+  form {
+    .field-wrapper {
+      @include display-flex(row);
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: $custom-size-field-wrapper-max-width;
     }
   }
 

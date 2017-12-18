@@ -108,10 +108,6 @@ describe('ServerManagementComponent', () => {
       expect(component.server).toBeDefined();
     });
 
-    it('should set the value of serviceType', () => {
-      expect(component.serviceType).toBeDefined();
-    });
-
     it('should set the serverThumbnail value to undefined since the process is in progress', () => {
       expect(component.serverThumbnail).toBeUndefined();
     });

@@ -1,6 +1,6 @@
 <div class="limited-view">
   <div [mcsLoader]="serverResourceSubscription">
-    <div *ngIf="!isServerScale && !isAttachMedia" class="content-grid">
+    <div *ngIf="!isActiveScale && !isAttachMedia" class="content-grid">
       <div class="grid-row">
         <div class="grid-column">
           <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
@@ -20,7 +20,7 @@
               <span>{{ serverManagementTextContent.vmProperties.configuration }}:</span>
               <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
               <span *mcsHasPermission="['VmEdit']">
-                <a *ngIf="!isScaling" (click)="scaleServer()" [disabled]="isProcessing">
+                <a *ngIf="!isScaling" (click)="scaleServer()" [disabled]="scalingIsDisabled">
                 {{ serverManagementTextContent.performanceScale.scale }}</a>
               </span>
               <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
@@ -102,7 +102,7 @@
             <span [mcsTooltip]="serverManagementTextContent.media.noAvailableMedia"
               [mcsTooltipShow]="!hasAvailableMedia">
             <a flex="auto" *mcsHasPermission="['VmEdit']"
-              (click)="onAttachMedia()" [disabled]="!hasAvailableMedia || isProcessing">
+              (click)="onAttachMedia()" [disabled]="mediaIsDisabled">
               {{ serverManagementTextContent.media.attach }}
             </a>
           </span>
@@ -152,11 +152,11 @@
       </div>
     </div>
 
-    <div *ngIf="isServerScale" class="server-performance-scale">
+    <div *ngIf="isActiveScale" class="server-performance-scale">
       <div class="vertical-items-spacing-medium">
         <h3>Scaling {{ server.managementName }}</h3>
         <mcs-server-performance-scale *ngIf="remainingMemory && remainingCpu"
-          [memoryMB]="server.compute?.memoryMB" [cpuCount]="server.compute?.cpuCount"
+          [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
           [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
           (scaleChanged)="onScaleChanged($event)">
 
@@ -179,14 +179,14 @@
           <a class="text-underline" (click)="cancelScale()">
             {{ serverManagementTextContent.performanceScale.cancel }}</a>
           <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" class="scale"
-            [disabled]="!hasUpdate" (click)="onClickScale()">
+            [disabled]="!hasUpdate || isProcessing" (click)="onClickScale()">
               {{ serverManagementTextContent.performanceScale.scale }}</mcs-button>
         </div>
       </div>
     </div>
 
     <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
-      <div [mcsLoader]="resourceSubscription" class="vertical-items-spacing-medium" [disabled]="isProcessing">
+      <div class="vertical-items-spacing-medium" [disabled]="isProcessing">
         <h3>{{ serverManagementTextContent.media.attachHeading }}</h3>
         <mcs-select [(ngModel)]="selectedMedia"
           [placeholder]="serverManagementTextContent.media.mediaSelect.placeholder">
