@@ -1,20 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { convertJsonStringToObject } from '../../utilities';
-
-// Services Declarations
 import {
   McsApiService,
   McsApiSuccessResponse,
-  McsApiErrorResponse,
-  McsApiRequestParameter
+  McsApiRequestParameter,
+  McsLoggerService
 } from '../../core';
 import { Portal } from './portal';
 
 @Injectable()
 export class ToolsService {
 
-  constructor(private _mcsApiService: McsApiService) { }
+  constructor(
+    private _mcsApiService: McsApiService,
+    private _loggerService: McsLoggerService
+  ) { }
 
   /**
    * Get all the portals from the API
@@ -23,31 +24,14 @@ export class ToolsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/portals';
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Portal[]>;
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Portal[]>>(response);
 
+        this._loggerService.traceInfo(apiResponse);
         return apiResponse;
-      })
-      .catch(this._handleServerError);
-  }
-
-  /**
-   * This will handle all error that correspond to HTTP request
-   * @param error Error obtained
-   */
-  private _handleServerError(error: Response | any) {
-    let mcsApiErrorResponse: McsApiErrorResponse;
-
-    if (error instanceof Response) {
-      mcsApiErrorResponse = new McsApiErrorResponse();
-      mcsApiErrorResponse.message = error.statusText;
-      mcsApiErrorResponse.status = error.status;
-    } else {
-      mcsApiErrorResponse = error;
-    }
-
-    return Observable.throw(mcsApiErrorResponse);
+      });
   }
 }

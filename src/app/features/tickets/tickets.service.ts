@@ -4,7 +4,8 @@ import { Observable } from 'rxjs/Rx';
 import {
   McsApiService,
   McsApiSuccessResponse,
-  McsApiRequestParameter
+  McsApiRequestParameter,
+  McsLoggerService
 } from '../../core';
 import {
   reviverParser,
@@ -40,7 +41,8 @@ export class TicketsService {
   constructor(
     private _mcsApiService: McsApiService,
     private _serversService: ServersService,
-    private _firewallsService: FirewallsService
+    private _firewallsService: FirewallsService,
+    private _loggerService: McsLoggerService
   ) { }
 
   /**
@@ -67,6 +69,7 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = '/tickets';
     mcsApiRequestParameter.searchParameters = searchParams;
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<Ticket[]>;
@@ -75,6 +78,7 @@ export class TicketsService {
           this._responseReviverParser
         );
 
+        this._loggerService.traceInfo(apiResponse);
         return apiResponse;
       });
   }
@@ -121,13 +125,17 @@ export class TicketsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets/' + id;
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let notificationsJobResponse: McsApiSuccessResponse<Ticket>;
-        notificationsJobResponse = JSON.parse(response,
-          this._responseReviverParser) as McsApiSuccessResponse<Ticket>;
+        let apiResponse: McsApiSuccessResponse<Ticket>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Ticket>>(
+          response,
+          this._responseReviverParser
+        );
 
-        return notificationsJobResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
@@ -142,13 +150,17 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets`;
     mcsApiRequestParameter.recordData = JSON.stringify(ticketData, this._requestReviverParser);
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
-        let ticketResponse: McsApiSuccessResponse<TicketCreate>;
-        ticketResponse = JSON.parse(response,
-          this._responseReviverParser) as McsApiSuccessResponse<TicketCreate>;
+        let apiResponse: McsApiSuccessResponse<TicketCreate>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketCreate>>(
+          response,
+          this._responseReviverParser
+        );
 
-        return ticketResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
@@ -163,13 +175,17 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/comments`;
     mcsApiRequestParameter.recordData = JSON.stringify(commentData, this._requestReviverParser);
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
-        let commentResponse: McsApiSuccessResponse<TicketComment>;
-        commentResponse = JSON.parse(response,
-          this._responseReviverParser) as McsApiSuccessResponse<TicketComment>;
+        let apiResponse: McsApiSuccessResponse<TicketComment>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketComment>>(
+          response,
+          this._responseReviverParser
+        );
 
-        return commentResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
@@ -184,13 +200,17 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments`;
     mcsApiRequestParameter.recordData = JSON.stringify(attachmentData, this._requestReviverParser);
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.post(mcsApiRequestParameter)
       .map((response) => {
-        let attachmentResponse: McsApiSuccessResponse<TicketAttachment>;
-        attachmentResponse = JSON.parse(response,
-          this._responseReviverParser) as McsApiSuccessResponse<TicketAttachment>;
+        let apiResponse: McsApiSuccessResponse<TicketAttachment>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketAttachment>>(
+          response,
+          this._responseReviverParser
+        );
 
-        return attachmentResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
@@ -204,8 +224,10 @@ export class TicketsService {
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments/${attachmentId}/file`;
     mcsApiRequestParameter.responseType = 'blob';
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
+        this._loggerService.traceInfo(response);
         return response;
       });
   }

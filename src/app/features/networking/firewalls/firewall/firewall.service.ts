@@ -28,6 +28,9 @@ export class FirewallService {
     this._selectedFirewallStream = value;
   }
 
+  /**
+   * Selected Firewall property
+   */
   private _selectedFirewall: Firewall;
   public get selectedFirewall(): Firewall {
     return this._selectedFirewall;

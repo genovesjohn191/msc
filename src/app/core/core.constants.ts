@@ -10,6 +10,7 @@ import { McsScrollDispatcherService } from './services/mcs-scroll-dispatcher.ser
 import { McsViewportService } from './services/mcs-viewport.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsPlatformService } from './services/mcs-platform.service';
+import { McsLoggerService } from './services/mcs-logger.service';
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
@@ -36,6 +37,7 @@ export const coreProviders: any[] = [
   McsViewportService,
   McsErrorHandlerService,
   McsPlatformService,
+  McsLoggerService,
   McsTextContentProvider,
   McsAssetsProvider,
   McsFilterProvider,

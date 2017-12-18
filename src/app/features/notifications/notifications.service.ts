@@ -6,6 +6,7 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsApiJob,
+  McsLoggerService
 } from '../../core';
 import {
   reviverParser,
@@ -15,7 +16,10 @@ import {
 @Injectable()
 export class NotificationsService {
 
-  constructor(private _mcsApiService: McsApiService) { }
+  constructor(
+    private _mcsApiService: McsApiService,
+    private _loggerService: McsLoggerService
+  ) { }
 
   /**
    * Get Notifications (MCS API Response)
@@ -41,13 +45,15 @@ export class NotificationsService {
     mcsApiRequestParameter.endPoint = '/jobs';
     mcsApiRequestParameter.searchParameters = searchParams;
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let notificationsJobResponse: McsApiSuccessResponse<McsApiJob[]>;
-        notificationsJobResponse = JSON.parse(response,
+        let apiResponse: McsApiSuccessResponse<McsApiJob[]>;
+        apiResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
 
-        return notificationsJobResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 
@@ -59,13 +65,15 @@ export class NotificationsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/job/' + id;
 
+    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let notificationsJobResponse: McsApiSuccessResponse<McsApiJob>;
-        notificationsJobResponse = JSON.parse(response,
+        let apiResponse: McsApiSuccessResponse<McsApiJob>;
+        apiResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
-        return notificationsJobResponse;
+        this._loggerService.traceInfo(apiResponse);
+        return apiResponse;
       });
   }
 }
