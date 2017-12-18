@@ -45,14 +45,18 @@ export class NotificationsService {
     mcsApiRequestParameter.endPoint = '/jobs';
     mcsApiRequestParameter.searchParameters = searchParams;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob[]>;
         apiResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
@@ -65,14 +69,18 @@ export class NotificationsService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/job/' + id;
 
-    this._loggerService.trace(mcsApiRequestParameter);
     return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         let apiResponse: McsApiSuccessResponse<McsApiJob>;
         apiResponse = JSON.parse(response,
           reviverParser) as McsApiSuccessResponse<McsApiJob>;
 
-        this._loggerService.traceInfo(apiResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
   }
