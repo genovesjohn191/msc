@@ -47,7 +47,9 @@ import {
   ServerManageNetwork,
   ServerIpAllocationMode,
   ServerManageMedia,
-  ServerPlatformType
+  ServerPlatformType,
+  ServerRunningStatus,
+  ServerVersionStatus
 } from './models';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
@@ -971,6 +973,7 @@ export class ServersService {
         }
       }
       serverStatus.serviceType = server.serviceType;
+      serverStatus.isOperable = server.isOperable;
     }
     return serverStatus;
   }
@@ -1102,6 +1105,14 @@ export class ServersService {
 
       case 'ipAllocationMode':
         value = ServerIpAllocationMode[value];
+        break;
+
+      case 'runningStatus':
+        value = ServerRunningStatus[value];
+        break;
+
+      case 'versionStatus':
+        value = ServerVersionStatus[value];
         break;
 
       default:

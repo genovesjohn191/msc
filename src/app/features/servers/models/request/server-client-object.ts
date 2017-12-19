@@ -8,6 +8,7 @@ export class ServerClientObject {
   public powerState: ServerPowerState;
   public commandAction: ServerCommand;
   public newName: string;
+  public isOperable: boolean;
   public notificationStatus: string;
   public tooltipInformation: string;
 }

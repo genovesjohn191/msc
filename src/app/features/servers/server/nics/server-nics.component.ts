@@ -13,7 +13,8 @@ import {
   ServerNetworkSummary,
   ServerManageNetwork,
   ServerIpAddress,
-  ServerIpAllocationMode
+  ServerIpAllocationMode,
+  ServerServiceType
 } from '../../models';
 import {
   CoreDefinition,
@@ -157,6 +158,11 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
       this._isProcessing = value;
       this._changeDetectorRef.markForCheck();
     }
+  }
+
+  public get nicsScaleIsDisabled(): boolean {
+    return !this.server.isOperable || this.isProcessing ||
+      this.server.serviceType === ServerServiceType.Managed;
   }
 
   /**

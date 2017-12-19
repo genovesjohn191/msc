@@ -52,12 +52,14 @@
                 </td>
                 <td class="action-items">
                   <span *mcsHasPermission="['VmNetworkEdit']">
-                    <a *ngIf="!isProcessing" (click)="onUpdateNetwork(nic)">
+                    <a [disabled]="nicsScaleIsDisabled" (click)="onUpdateNetwork(nic)">
                       {{ textContent.editLink }}
                     </a>
                   </span>
                   <span *mcsHasPermission="['VmNetworkEdit']">
-                    <a *ngIf="!isProcessing && !nic.isPrimary" (click)="onDeleteNetwork(nic)">
+                    <a *ngIf="!nic.isPrimary"
+                      [disabled]="nicsScaleIsDisabled"
+                      (click)="onDeleteNetwork(nic)">
                       {{ textContent.deleteLink }}
                     </a>
                   </span>
@@ -70,7 +72,7 @@
 
       <div *mcsHasPermission="['VmNetworkEdit']">
         <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
-          class="action-box" [disabled]="isProcessing">
+          class="action-box" [disabled]="nicsScaleIsDisabled">
           <h4>{{ textContent.addHeading }}</h4>
 
           <!-- Network Selection -->

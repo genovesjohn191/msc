@@ -187,6 +187,10 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
   }
 
+  public get storageScaleIsDisabled(): boolean {
+    return !this.server.isOperable || this.isManaged || this.isProcessing;
+  }
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
@@ -232,7 +236,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
-    if (this.isProcessing || this.isManaged) { return; }
+    if (this.storageScaleIsDisabled) { return; }
 
     this.selectedStorageDevice = storageDevice;
     this.expandStorage = true;
@@ -240,12 +244,13 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public closeExpandStorageBox() {
-    if (this.isProcessing) { return; }
     this.selectedStorageDevice = new ServerStorageDevice();
     this.expandStorage = false;
   }
 
   public deleteStorage(storage: ServerStorageDevice): void {
+    if (this.storageScaleIsDisabled) { return; }
+
     let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
       data: storage,
       size: 'medium'
@@ -270,7 +275,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * This will process the adding of disk
    */
   public onClickAttach(): void {
-    if (!this.isValidStorageValues || !this.hasAvailableStorageSpace || this.isManaged) { return; }
+    if (!this.isValidStorageValues || !this.hasAvailableStorageSpace
+      || this.storageScaleIsDisabled) { return; }
 
     this.isProcessing = true;
     this.mcsStorage.completed();
@@ -297,7 +303,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * This will process the update for the selected disk
    */
   public onClickUpdate(): void {
-    if (!this.isValidStorageValues || this.expandingStorage) { return; }
+    if (!this.isValidStorageValues || this.expandingStorage
+      || this.storageScaleIsDisabled) { return; }
 
     this.expandingStorage = true;
     this.isProcessing = true;
@@ -332,7 +339,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * @param storage Disk to be deleted
    */
   public onDeleteStorage(storage: ServerStorageDevice): void {
-    if (this.isProcessing || this.isManaged) { return; }
+    if (this.storageScaleIsDisabled) { return; }
 
     this.isProcessing = true;
     this.mcsStorage.completed();
