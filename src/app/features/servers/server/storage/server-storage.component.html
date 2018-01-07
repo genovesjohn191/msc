@@ -41,10 +41,14 @@
                 </td>
                 <td class="action-items">
                   <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="expand text-right">
-                    <a (click)="onExpandStorage(storage)">{{ serverStorageText.expandStorageLink }}</a>
+                    <a [disabled]="storageScaleIsDisabled" (click)="onExpandStorage(storage)">
+                      {{ serverStorageText.expandStorageLink }}
+                    </a>
                   </span>
                   <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
-                    <a *ngIf="hasMultipleStorageDevice" (click)="deleteStorage(storage)">
+                    <a *ngIf="hasMultipleStorageDevice"
+                      [disabled]="storageScaleIsDisabled"
+                      (click)="deleteStorage(storage)">
                       {{ serverStorageText.deleteStorageLink }}
                     </a>
                   </span>
@@ -56,7 +60,7 @@
       </div>
 
       <div *mcsHasPermission="['VmEdit']">
-        <div *ngIf="!hasReachedDisksLimit && !isManaged" class="action-box">
+        <div *ngIf="!hasReachedDisksLimit" class="action-box">
           <mcs-server-manage-storage *ngIf="hasStorageProfileList" #mcsStorage
             [storageProfileList]="storageProfileList"
             [memoryMB]="memoryMB"
@@ -64,7 +68,7 @@
             [minimumMB]="minimumMB"
             [storageSliderValues]="newStorageSliderValues"
             (storageChanged)="onStorageChanged($event)"
-            [disabled]="isProcessing">
+            [disabled]="storageScaleIsDisabled">
             <!--Server manage storage contents on the left hand side (description)-->
             <div title>
               <h4>{{ serverStorageText.addStorageHeading }}</h4>
@@ -91,7 +95,7 @@
         [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
         [storageSliderValues]="selectedStorageSliderValues"
         (storageChanged)="onStorageChanged($event)"
-        [disabled]="isProcessing">
+        [disabled]="storageScaleIsDisabled">
         <!--Server manage storage contents on the left hand side (description)-->
         <div title>
           <h4>{{ serverStorageText.expandStorageHeading }}</h4>

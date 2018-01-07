@@ -6,6 +6,7 @@ import { ServerMedia } from './server-media';
 import { ServerFileSystem } from './server-file-system';
 import { ServerStorageDevice } from './server-storage-device';
 import { ServerNicSummary } from './server-nic-summary';
+import { ServerVmwareTools } from './server-vmware-tools';
 import { ServerPowerState } from '../enumerations/server-power-state.enum';
 import { ServerServiceType } from '../enumerations/server-service-type.enum';
 
@@ -35,4 +36,6 @@ export class Server {
   public vCloudId: string;
   public vCenterId: string;
   public isTemplate: boolean;
+  public isOperable: boolean;
+  public vmwareTools: ServerVmwareTools;
 }

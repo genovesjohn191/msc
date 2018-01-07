@@ -204,11 +204,12 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public get scalingIsDisabled(): boolean {
-    return this.isProcessing || this.isManaged;
+    return this.isProcessing || this.isManaged || !this.server.isOperable;
   }
 
   public get mediaIsDisabled(): boolean {
-    return !this.hasAvailableMedia || this.isProcessing || this.isManaged;
+    return !this.hasAvailableMedia || this.isProcessing
+      || this.isManaged || !this.server.isOperable;
   }
 
   private _hasScaleParam: boolean;
