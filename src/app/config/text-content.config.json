@@ -62,7 +62,8 @@
         },
         "vcloud": {
           "title": "vCloud Director Virtual Data Centre",
-          "viewVcloud": "View in VCloud"
+          "viewVcloud": "View in VCloud",
+          "newServer": "New Server"
         },
         "networkInformation": {
           "title": "Network Information",
@@ -214,6 +215,8 @@
         "storageProfile": "Storage Profile",
         "capacity": "Capacity",
         "diskName": "Hard disk",
+        "attachStorage": "Attach",
+        "updateStorage": "Update",
         "addStorageHeading": "Add New Disk",
         "expandStorageHeading": "Expand Disk : ",
         "expandStorageLink": "Expand",
@@ -234,6 +237,7 @@
         "deleteLink": "Delete",
         "addHeading": "Add NIC",
         "addButton": "Add",
+        "updateButton": "Update",
         "editHeading": "Edit NIC",
         "editButton": "Update",
         "primaryCheckbox": "Make this the primary NIC for this server",

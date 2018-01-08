@@ -98,9 +98,10 @@
           </div>
 
           <div [ngStyle]="{'text-align': 'right'}">
-            <mcs-button icon="arrow" [disabled]="!validate()" (click)="addNetwork()">
+            <button mcsButton id="btnAddNetwork" arrow="right"
+              [disabled]="!validate()" (click)="addNetwork()">
               {{ textContent.addButton }}
-            </mcs-button>
+            </button>
           </div>
         </div>
 
@@ -151,10 +152,12 @@
 
         <div display-flex="row" align-items="center" justify-content="space-between">
           <a (click)="closeUpdateWindow()" [disabled]="isProcessing">Cancel</a>
-          <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow"
+
+          <button *mcsHasPermission="['VmEdit']"
+            mcsButton id="btnUpdateNetwork" arrow="right"
             [disabled]="!validate() || isProcessing" (click)="updateNetwork()">
-            Update
-          </mcs-button>
+            {{ textContent.updateButton }}
+          </button>
         </div>
       </div>
     </div>

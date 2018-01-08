@@ -155,7 +155,7 @@ $step-disabled-color: $color-grey-02;
 
     .step-actions {
       @include display-flex(row);
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
       @include set-items-interval($space-xxlarge, horizontal);
     }

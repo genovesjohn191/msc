@@ -22,7 +22,6 @@ import {
   McsNotificationContextService,
   McsApiJob,
   McsJobType,
-  McsLoader,
   McsDialogService
 } from '../../../../core';
 import { ServerService } from '../server.service';
@@ -56,14 +55,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   @ViewChild('mcsStorage')
   public mcsStorage: McsStorage;
 
-  @ViewChild('attachButton')
-  public attachButton: McsLoader;
-
-  @ViewChild('updateButton')
-  public updateButton: McsLoader;
-
   public serverStorageText: any;
-
   public activeServerJob: McsApiJob;
   public serverStorage: ServerStorage[];
 
@@ -280,7 +272,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
     this.isProcessing = true;
     this.mcsStorage.completed();
-    this.attachButton.showLoader();
 
     this.usedMemoryMB = this.storageChangedValue.storageMB;
 
@@ -309,7 +300,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.expandingStorage = true;
     this.isProcessing = true;
     this.mcsStorage.completed();
-    this.updateButton.showLoader();
 
     this.usedMemoryMB = this.storageChangedValue.storageMB - this.selectedStorageDevice.sizeMB;
 
@@ -463,25 +453,20 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
             let hasFailed = serverJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
 
             this.isProcessing = !hasCompleted && !hasFailed;
-            this.activeServerJob = (this.isProcessing) ? serverJob : new McsApiJob() ;
+            this.activeServerJob = (this.isProcessing) ? serverJob : new McsApiJob();
 
             let disk = new ServerStorageDevice();
 
             switch (serverJob.type) {
               case McsJobType.UpdateServerDisk:
-                if (this.updateButton) {
-                  this.updateButton.hideLoader();
-                  this.expandingStorage = false;
-                  this.expandStorage = false;
-                }
+                this.expandingStorage = false;
+                this.expandStorage = false;
 
                 disk.id = serverJob.clientReferenceObject.diskId;
 
                 if (this.isProcessing) { break; }
 
               case McsJobType.CreateServerDisk:
-                if (this.attachButton) { this.attachButton.hideLoader(); }
-
                 if (this.isProcessing) {
                   // Append Create Server Disk / Update Disk Data
                   disk.name = serverJob.clientReferenceObject.name;

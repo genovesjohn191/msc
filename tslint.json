@@ -20,7 +20,6 @@
     /** Angular 5 */
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "component-selector": [true, "element", ["mcs"], "kebab-case"],
     "no-attribute-parameter-decorator": true,
     "no-empty-interface": false,
     "no-forward-ref": false,

@@ -1,21 +1,10 @@
-<button #mcsButton type="button" class="button-wrapper" (click)="emitEvent($event)"
-  mcsRipple rippleColor="light">
-  <div class="label">
-    <span class="text">
-      <ng-content></ng-content>
-    </span>
-    <span *ngIf="icon !== 'normal'" class="icon-right-wrapper">
-      <!--SVG Type of Icons-->
-      <mcs-icon *ngIf="iconType === iconTypeEnum.Svg && !showSpinner"
-        [key]="iconKey" size="xlarge" class="icon-right" color="white"></mcs-icon>
-
-      <!--Font Type of Icons-->
-      <mcs-icon *ngIf="iconType === iconTypeEnum.FontAwesome && !showSpinner"
-        [key]="iconKey" size="medium" class="icon-right" color="white"></mcs-icon>
-
-      <!--Spinner Icon-->
-      <mcs-icon *ngIf="showSpinner" [key]="spinnerIconKey"
-        size="medium" color="white"></mcs-icon>
-    </span>
-  </div>
-</button>
+<span class="button-text-wrapper">
+  <ng-content></ng-content>
+  <ng-container *ngIf="arrow">
+    <mcs-icon [key]="arrowIconKey" size="large"></mcs-icon>
+  </ng-container>
+</span>
+<mcs-ripple class="button-ripple-wrapper"
+  mcsRipple
+  [rippleTrigger]="hostElement"></mcs-ripple>
+<div class="button-focus-overlay"></div>

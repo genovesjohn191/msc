@@ -14,9 +14,10 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a (click)="closeDialog()">{{ textContent.cancel }}</a>
-    <mcs-button icon="arrow" size="small" (click)="deleteNic()">
+    <a id="btnCancel" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <button mcsButton id="btnConfirm" arrow="right"
+      size="small" (click)="deleteNic()">
       {{ textContent.confirm }}
-    </mcs-button>
+    </button>
   </mcs-dialog-actions>
 </mcs-dialog>
