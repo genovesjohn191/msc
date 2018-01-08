@@ -1,16 +1,26 @@
 import {
+  Component,
+  ViewChild
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { Renderer2 } from '@angular/core';
-
 import { ButtonComponent } from './button.component';
-import { CoreDefinition } from '../../core';
+import { ButtonModule } from './button.module';
+import { CoreTestingModule } from '../../core/testing';
+
+@Component({
+  selector: 'mcs-test-button',
+  template: ``
+})
+export class TestButtonComponent {
+  @ViewChild(ButtonComponent)
+  public buttonComponent: ButtonComponent;
+}
 
 describe('ButtonComponent', () => {
-
-  /** Stub Services/Components */
-  let component: ButtonComponent;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -19,72 +29,55 @@ describe('ButtonComponent', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
-        ButtonComponent
+        TestButtonComponent
       ],
-      providers: [
-        Renderer2
+      imports: [
+        FormsModule,
+        CoreTestingModule,
+        ButtonModule
       ]
     });
 
     /** Testbed Onverriding of Components */
-    TestBed.overrideComponent(ButtonComponent, {
+    TestBed.overrideComponent(TestButtonComponent, {
       set: {
         template: `
-          <div #mcsButton>ButtonComponent Template</div>
+        <button mcsButton id="btnFirst"
+          arrow="right"
+          type="basic"
+          size="small"
+          color="primary">First Button</button>primary
         `
       }
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      let fixture = TestBed.createComponent(ButtonComponent);
+      let fixture = TestBed.createComponent(TestButtonComponent);
       fixture.detectChanges();
-
-      component = fixture.componentInstance;
     });
   }));
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should set the calendar icon key definition in the iconKey variable', () => {
-      component.icon = 'calendar';
-      component.ngOnInit();
-      expect(component.iconKey).toBe(CoreDefinition.ASSETS_FONT_CALENDAR);
+    it(`should create the button element with the id of btnFirst`, () => {
+      let element = document.getElementById('btnFirst');
+      expect(element).not.toBe(null);
     });
 
-    it('should set the arrow right icon key definition in the iconKey variable', () => {
-      component.icon = 'arrow';
-      component.ngOnInit();
-      expect(component.iconKey).toBe(CoreDefinition.ASSETS_SVG_ARROW_RIGHT_WHITE);
+    it(`should set button type to basic`, () => {
+      let element = document.getElementById('btnFirst');
+      expect(element.classList.contains('basic')).toBeTruthy();
     });
 
-    it(`should set the iconKey variable to undefined in case the
-      inputted icon is normal or none`, () => {
-        component.icon = 'normal';
-        component.ngOnInit();
-        expect(component.iconKey).toBeUndefined();
-      });
-  });
-
-  describe('emitEvent()', () => {
-    it('should call the emit() of EventEmitter', () => {
-      spyOn(component.onClick, 'emit');
-      component.emitEvent(null);
-      expect(component.onClick.emit).toHaveBeenCalledTimes(1);
+    it(`should set button size to small`, () => {
+      let element = document.getElementById('btnFirst');
+      expect(element.classList.contains('small')).toBeTruthy();
     });
-  });
 
-  describe('showLoader()', () => {
-    it('should set to true the value of showSpinner', () => {
-      component.showLoader();
-      expect(component.showSpinner).toBeTruthy();
-    });
-  });
-
-  describe('hideLoader()', () => {
-    it('should set to false the value of showSpinner', () => {
-      component.hideLoader();
-      expect(component.showSpinner).toBeFalsy();
+    it(`should set button color to primary`, () => {
+      let element = document.getElementById('btnFirst');
+      expect(element.classList.contains('primary')).toBeTruthy();
     });
   });
 });

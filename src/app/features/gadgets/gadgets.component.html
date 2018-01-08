@@ -114,16 +114,16 @@
             <div class="content">
               <small><em>Hover me to display dark Popover</em></small> <br/>
               <ng-template #tipContent> Hello guys <br/> this is just a sample tooltip</ng-template>
-              <mcs-button mcsPopover
+              <button mcsButton mcsPopover
                 theme="dark" trigger="hover"
                 maxWidth="200px" [content]="tipContent"
-                placement="top" orientation="center">Dark</mcs-button><br/>
+                placement="top" orientation="center">Dark</button><br/>
 
               <small><em>Hover me to display light Popover</em></small> <br/>
-              <mcs-button mcsPopover
+              <button mcsButton mcsPopover
                 theme="light" trigger="hover"
                 maxWidth="200px" [content]="tipContent"
-                placement="bottom" orientation="center">Light</mcs-button><br/>
+                placement="bottom" orientation="center">Light</button><br/>
             </div>
           </div>
         </div>
@@ -139,14 +139,14 @@
             <h3 class="title">Popover Left and Right</h3>
             <div class="content">
               <small><em>Popover left placement and bottom orientation</em></small> <br/>
-              <mcs-button mcsPopover
+              <button mcsButton mcsPopover
                 theme="dark" trigger="manual" maxWidth="300px" [content]="popoverSideContent"
-                placement="left" orientation="bottom">LeftBottom</mcs-button><br/>
+                placement="left" orientation="bottom">LeftBottom</button><br/>
 
               <small><em>Popover right placement and top orientation</em></small> <br/>
-              <mcs-button mcsPopover
+              <button mcsButton mcsPopover
                 theme="light" trigger="manual" maxWidth="300px" [content]="popoverSideContent"
-                placement="right" orientation="top">RightTop</mcs-button><br/>
+                placement="right" orientation="top">RightTop</button><br/>
             </div>
           </div>
         </div>
@@ -157,21 +157,21 @@
               <mcs-form-field [ngStyle]="{width: '200px'}">
                 <input mcsInput placeholder="Type to search...">
               </mcs-form-field><br/>
-              <mcs-button size="small" width="200">Search</mcs-button>
+              <button mcsButton size="small" width="200">Search</button>
             </ng-template>
 
             <h3 class="title">Popover Top and Bottom</h3>
             <div class="content">
               <small><em>Popover top placement and left orientation</em></small> <br/>
-              <mcs-button mcsPopover
+              <button mcsButton mcsPopover
                 theme="dark" trigger="manual" maxWidth="300px" [content]="popoverContent"
-                placement="top" orientation="left">TopLeft</mcs-button><br/>
+                placement="top" orientation="left">TopLeft</button><br/>
 
               <small><em>Popover bottom placement and right orientation</em></small> <br/>
-              <mcs-button mcsPopover
+              <button mcsButton mcsPopover
                 theme="light" trigger="manual" maxWidth="300px"
                 [content]="popoverContent"
-                placement="bottom" orientation="right">BottomRight</mcs-button><br/>
+                placement="bottom" orientation="right">BottomRight</button><br/>
             </div>
           </div>
         </div>
@@ -249,9 +249,9 @@
       <div class="gadgets-container-item">
         <h3 class="title">LIGHTBOX</h3>
         <small><em>Lightbox with icon, title, subtitle</em></small> <br/>
-        <mcs-button [mcsModal]="modal1Content" #mcsModal1="mcsModal">
+        <button mcsButton [mcsModal]="modal1Content" #mcsModal1="mcsModal">
           Lightbox 1
-        </mcs-button><br/>
+        </button><br/>
         <ng-template #modal1Content>
           <div modal-title>
             <span>Lightbox 1</span>
@@ -265,14 +265,14 @@
               Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and more recently with desktop publishing
               software like Aldus PageMaker including versions of Lorem Ipsum.
             </p>
-            <mcs-button (click)="mcsModal1.close()">Close</mcs-button>
-            <mcs-button (click)="mcsModal1.close()">Save changes</mcs-button>
+            <button mcsButton (click)="mcsModal1.close()">Close</button>
+            <button mcsButton (click)="mcsModal1.close()">Save changes</button>
           </div>
         </ng-template>
 
-        <mcs-button [mcsModal]="modal2Content">
+        <button mcsButton [mcsModal]="modal2Content">
           Lightbox 2
-        </mcs-button><br/>
+        </button><br/>
         <ng-template #modal2Content>
           <div modal-title>
             <span>Lightbox 2</span>
@@ -289,9 +289,9 @@
           </div>
         </ng-template>
 
-        <mcs-button [mcsModal]="modal3Content" #mcsModal3="mcsModal">
+        <button mcsButton [mcsModal]="modal3Content" #mcsModal3="mcsModal">
           Lightbox 3
-        </mcs-button><br/>
+        </button><br/>
         <ng-template #modal3Content>
           <div modal-title>
             <span>Lightbox 3</span>
@@ -332,8 +332,8 @@
               Letraset sheets <small>Sample Small</small>.Lorem Ipsum passages, and morerecenwith desktop publishing
               software like Aldus PageMaker including versions of Lorem Ipsum.
             </p>
-            <mcs-button (click)="mcsModal3.close()">Close</mcs-button>
-            <mcs-button (click)="mcsModal3.close()">Save changes</mcs-button>
+            <button mcsButton (click)="mcsModal3.close()">Close</button>
+            <button mcsButton (click)="mcsModal3.close()">Save changes</button>
           </div>
         </ng-template>
       </div>
@@ -389,32 +389,70 @@
       <div class="gadgets-container-item">
         <h3 class="title">BUTTONS</h3>
 
-        <small><em>Regular Default Button</em></small> <br/>
-        <mcs-button>Add New Server</mcs-button> <br/>
-        <small><em>Regular Default Button w/ Custom Width</em></small> <br/>
-        <mcs-button width="200px">Add New Server</mcs-button> <br/>
-        <small><em>Disabled Regular Default Button</em></small> <br/>
-        <mcs-button [disabled]="disabled">Add New Server</mcs-button> <hr/>
+        <div class="vertical-items-spacing-medium">
+            <div>
+              <button mcsButton color="white">Basic</button>
+              <button mcsButton color="primary">Primary</button>
+              <button mcsButton color="success">Success</button>
+              <button mcsButton color="warning">Warning</button>
+              <button mcsButton color="danger">Danger</button>
+              <button mcsButton color="danger" disabled>disabled</button>
+            </div>
 
-        <small><em>Regular Delete Button</em></small> <br/>
-        <mcs-button type="danger">Delete Media</mcs-button> <br/>
-        <small><em>Disabled Regular Delete Button</em></small> <br/>
-        <mcs-button type="danger" [disabled]="disabled">Delete Media</mcs-button> <hr/>
+            <div>
+              <button mcsButton type="basic" color="white">Basic</button>
+              <button mcsButton type="basic" color="primary">Primary</button>
+              <button mcsButton type="basic" color="success">Success</button>
+              <button mcsButton type="basic" color="warning">Warning</button>
+              <button mcsButton type="basic" color="danger">Danger</button>
+              <button mcsButton type="basic" disabled>disabled</button>
+            </div>
 
-        <small><em>Small Default Button</em></small> <br/>
-        <mcs-button size="small">Manage</mcs-button> <br/>
-        <small><em>Small Default Button w/ Custom Width</em></small> <br/>
-        <mcs-button size="small" width="200px">Manage</mcs-button> <hr/>
+            <div>
+              <button mcsButton size="small" color="white">Basic</button>
+              <button mcsButton size="small" color="primary">Primary</button>
+              <button mcsButton size="small" color="success">Success</button>
+              <button mcsButton size="small" color="warning">Warning</button>
+              <button mcsButton size="small" color="danger">Danger</button>
+              <button mcsButton size="small" disabled>disabled</button>
+            </div>
 
-        <small><em>Regular Button w/ Icon</em></small> <br/>
-        <mcs-button icon="arrow">Create New Server</mcs-button> <br/>
-        <mcs-button icon="calendar">Create New Server</mcs-button> <br/>
-        <small><em>Regular Button w/ Icon and Custom Width</em></small> <br/>
-        <mcs-button icon="arrow" width="300px">Create New Server</mcs-button> <hr/>
+            <div>
+              <button mcsButton arrow="right" color="white">Basic</button>
+              <button mcsButton arrow="right" color="primary">Primary</button>
+              <button mcsButton arrow="right" color="success">Success</button>
+              <button mcsButton arrow="right" color="warning">Warning</button>
+              <button mcsButton arrow="right" color="danger">Danger</button>
+              <button mcsButton arrow="right" disabled>disabled</button>
+            </div>
 
-        <small><em>Regular Button w/ OnClick Event</em></small> <br/>
-        <mcs-button icon="arrow" width="100%" #mcsButton
-          (onClick)="onButtonClicked(mcsButton)">Submit</mcs-button>
+            <div>
+              <button mcsButton color="white">
+                Basic
+                <mcs-icon [key]="calendarIconKey" size="small"></mcs-icon>
+              </button>
+              <button mcsButton color="primary">
+                Primary
+                <mcs-icon [key]="calendarIconKey" size="small" color="white"></mcs-icon>
+              </button>
+              <button mcsButton color="success">
+                Success
+                <mcs-icon [key]="calendarIconKey" size="small" color="white"></mcs-icon>
+              </button>
+              <button mcsButton color="warning">
+                Warning
+                <mcs-icon [key]="calendarIconKey" size="small" color="white"></mcs-icon>
+              </button>
+              <button mcsButton color="danger">
+                Danger
+                <mcs-icon [key]="calendarIconKey" size="small" color="white"></mcs-icon>
+              </button>
+              <button mcsButton disabled>
+                disabled
+                <mcs-icon [key]="calendarIconKey" size="small" color="white"></mcs-icon>
+              </button>
+            </div>
+          </div>
       </div>
 
       <!-- Slider -->

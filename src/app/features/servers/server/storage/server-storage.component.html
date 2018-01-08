@@ -75,8 +75,11 @@
             </div>
           </mcs-server-manage-storage>
           <div [ngStyle]="{'text-align': 'right'}">
-            <mcs-button icon="arrow" #attachButton (click)="onClickAttach()"
-              [disabled]="!isValidStorageValues || !hasAvailableStorageSpace">Attach</mcs-button>
+            <button mcsButton id="btnStorageAttach" arrow="right"
+              [disabled]="!isValidStorageValues || !hasAvailableStorageSpace"
+              (click)="onClickAttach()">
+              {{ serverStorageText.attachStorage }}
+            </button>
           </div>
         </div>
 
@@ -112,8 +115,13 @@
       </mcs-server-manage-storage>
       <div display-flex="row" align-items="center" justify-content="space-between">
         <a (click)="closeExpandStorageBox()" [ngClass]="{'disabled': isProcessing}">Cancel</a>
-        <mcs-button *mcsHasPermission="['VmEdit']" icon="arrow" #updateButton (click)="onClickUpdate()"
-          [disabled]="!isValidStorageValues || expandingStorage">Update</mcs-button>
+
+        <button *mcsHasPermission="['VmEdit']"
+          mcsButton id="btnStorageUpdate" arrow="right"
+          [disabled]="!isValidStorageValues || expandingStorage"
+          (click)="onClickUpdate()">
+          {{ serverStorageText.updateStorage }}
+        </button>
       </div>
     </div>
   </div>

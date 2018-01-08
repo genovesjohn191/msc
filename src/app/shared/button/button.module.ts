@@ -3,10 +3,14 @@ import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
 import { RippleModule } from '../ripple/ripple.module';
 import { ButtonComponent } from './button.component';
+import { ButtonLinkComponent } from './button-link.component';
+import { ButtonDirective } from './button.directive';
 
 @NgModule({
   declarations: [
-    ButtonComponent
+    ButtonComponent,
+    ButtonLinkComponent,
+    ButtonDirective
   ],
   imports: [
     CommonModule,
@@ -16,7 +20,9 @@ import { ButtonComponent } from './button.component';
   exports: [
     IconModule,
     RippleModule,
-    ButtonComponent
+    ButtonComponent,
+    ButtonLinkComponent,
+    ButtonDirective
   ]
 })
 

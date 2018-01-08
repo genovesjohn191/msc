@@ -14,9 +14,10 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions align-items="space-between">
-    <a (click)="closeDialog()">{{ textContent.cancel }}</a>
-    <mcs-button (click)="deleteServer()" size="small">
-      <span>{{ textContent.confirm }}</span>
-    </mcs-button>
+    <a id="btnCancel" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <button mcsButton id="btnConfirm" arrow="right"
+      size="small" (click)="deleteServer()">
+      {{ textContent.confirm }}
+    </button>
   </mcs-dialog-actions>
 </mcs-dialog>

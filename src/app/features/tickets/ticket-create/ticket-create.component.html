@@ -115,12 +115,10 @@
           <div class="basic-action-bar">
             <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
 
-            <mcs-button
-              icon="arrow"
-              (onClick)="onLogTicket()"
-              [mcsLoader]="createTicketSubscription">
+            <button mcsButton id="btnNewTicket" arrow="right"
+              (click)="onLogTicket()" [mcsLoader]="createTicketSubscription">
               {{ textContent.newTicket }}
-            </mcs-button>
+            </button>
           </div>
         </form>
       </div>
