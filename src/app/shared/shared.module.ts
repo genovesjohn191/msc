@@ -12,7 +12,6 @@ import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { FilterSelectorModule } from './filter-selector/filter-selector.module';
 import { PopoverModule } from './popover/popover.module';
-import { ModalModule } from './modal/modal.module';
 import { IconModule } from './icon/icon.module';
 import { ValidationMessageModule } from './validation-message/validation-message.module';
 import { TableModule } from './table/table.module';
@@ -60,7 +59,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RippleModule,
     LayoutModule,
     PopoverModule,
-    ModalModule,
     IconModule,
     ButtonModule,
     CheckboxModule,
@@ -102,7 +100,6 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     RippleModule,
     LayoutModule,
     PopoverModule,
-    ModalModule,
     IconModule,
     ButtonModule,
     CheckboxModule,

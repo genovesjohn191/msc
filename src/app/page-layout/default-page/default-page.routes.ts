@@ -7,8 +7,6 @@ import {
   notificationsRoutes,
   networkingRoutes,
   toolsRoutes,
-  gadgetsRoutes,
-  dashboardRoutes,
   catalogRoutes,
   accessDeniedPageRoutes,
   httpErrorPageRoutes
@@ -26,8 +24,6 @@ export const routes: Routes = [
       ...notificationsRoutes,
       ...networkingRoutes,
       ...toolsRoutes,
-      ...gadgetsRoutes,
-      ...dashboardRoutes,
       ...catalogRoutes,
       ...accessDeniedPageRoutes,
 

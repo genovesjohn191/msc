@@ -6,8 +6,6 @@ $header-small-padding: $space-large $space-medium;
 header {
   z-index: $zindex-header;
   @include breakpoint(small) {
-    // TODO: Remove completely once fix is confirmed in mobile
-    // position: fixed;
     top: 0;
     width: 100%;
     padding-right: 0;
@@ -38,14 +36,6 @@ header {
       @include breakpoint(small) {
         height: 25px;
       }
-    }
-  }
-
-  // TODO: Move to specific folder of user panel component
-  .notification {
-    padding: 0 $space-xlarge;
-    @include breakpoint(small) {
-      padding: 0 $space-large;
     }
   }
 

@@ -13,7 +13,6 @@ import { Server } from '../servers/models';
 import {
   McsListItem,
   McsPaginator,
-  McsModal,
   McsSearch,
   CoreValidators,
   CoreDefinition
@@ -72,8 +71,6 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   @ViewChild('paginator')
   public paginator: McsPaginator;
 
-  @ViewChild('mcsModal1')
-  public mcsModal1: McsModal;
   // Search
   @ViewChild('search')
   public search: McsSearch;
@@ -261,11 +258,6 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
       console.log('done');
       button.hideLoader();
     }, 3000);
-  }
-
-  public closeModal1() {
-    if (!this.mcsModal1) { return; }
-    this.mcsModal1.close();
   }
 
   public get searchIconKey(): string {
