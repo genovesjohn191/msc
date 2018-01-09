@@ -303,8 +303,6 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Get Ticket based on the given ID in the provided parameter
    */
   private _getTicketById(): void {
-    // TODO: Add error handling in case the ticket ID is incorrect
-    // Should display the page-not-found
     this.ticketSubscription = this._activatedRoute.paramMap
       .switchMap((params: ParamMap) => {
         let ticketId = params.get('id');

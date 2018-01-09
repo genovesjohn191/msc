@@ -55,7 +55,6 @@ export * from './enumerations/mcs-company-status.enum';
 export * from './interfaces/mcs-data-source.interface';
 export * from './interfaces/mcs-paginator.interface';
 export * from './interfaces/mcs-loader.interface';
-export * from './interfaces/mcs-modal.interface';
 export * from './interfaces/mcs-search.interface';
 export * from './interfaces/mcs-component-type.interface';
 export * from './interfaces/mcs-scrollable.interface';
