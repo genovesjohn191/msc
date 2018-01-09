@@ -14,8 +14,8 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="btnCancel" (click)="closeDialog()">{{ textContent.cancel }}</a>
-    <button mcsButton id="btnConfirm" arrow="right"
+    <a id="ctaCloseDeleteStorageDialog" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <button mcsButton id="ctaDeleteStorage" arrow="right"
       size="small" (click)="deleteStorage()">
       {{ textContent.confirm }}
     </button>

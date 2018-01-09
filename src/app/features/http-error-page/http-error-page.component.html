@@ -10,12 +10,12 @@
 
   <div [ngSwitch]="errorCode" display-flex align-items="center" justify-content="space-between">
     <div *ngSwitchCase="httpStatusCodeEnum.NotFound">
-      <button mcsButton id="btnHome" size="small" [routerLink]="['/servers']">
+      <button mcsButton id="ctaReturnHome" size="small" [routerLink]="['/servers']">
         {{ textContentAll.home }}
       </button>
     </div>
     <div *ngSwitchCase="httpStatusCodeEnum.InternalServerError">
-      <button mcsButton id="btnRefresh" size="small" (onClick)="refreshPage()">
+      <button mcsButton id="ctaRefreshPage" size="small" (onClick)="refreshPage()">
         {{ textContentAll.refresh }}
       </button>
     </div>

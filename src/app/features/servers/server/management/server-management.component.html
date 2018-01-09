@@ -180,7 +180,7 @@
             {{ serverManagementTextContent.performanceScale.cancel }}</a>
 
           <button *mcsHasPermission="['VmEdit']" class="scale"
-            mcsButton id="btnServerScale" arrow="right"
+            mcsButton id="ctaScaleServer" arrow="right"
             [disabled]="!hasUpdate || isProcessing" (click)="onClickScale()">
               {{ serverManagementTextContent.performanceScale.scale }}
           </button>
@@ -205,7 +205,7 @@
           </a>
 
           <button *mcsHasPermission="['VmEdit']"
-            mcsButton id="btnAttachMedia" arrow="right" size="small"
+            mcsButton id="ctaAttachMedia" arrow="right" size="small"
             [disabled]="!selectedMedia || isProcessing" (onClick)="attachMedia()">
             {{ serverManagementTextContent.media.attach }}
           </button>

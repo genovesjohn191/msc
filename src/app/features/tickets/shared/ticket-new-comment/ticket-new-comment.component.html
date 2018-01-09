@@ -17,7 +17,7 @@
     <!-- Ticket comment/attachment creation -->
     <div class="field basic-action-bar">
       <a (click)="cancelComment()">{{ textContent.cancelActivity }}</a>
-      <button mcsButton id="btnAddActivity"
+      <button mcsButton id="ctaAddTicketActivity"
         [disabled]="!fgCreateComment.valid" (click)="createComment()">
         {{ textContent.addActivity }}
       </button>

@@ -13,14 +13,13 @@
     </mcs-dialog-content>
 
     <mcs-dialog-actions>
-      <button mcsButton id="btnOk"
+      <button mcsButton id="ctaCloseAttachment"
         size="small" (click)="errorDialogRef?.close()">
         {{ textContent.ok }}
       </button>
     </mcs-dialog-actions>
   </mcs-dialog>
 </ng-template>
-
 
 <!-- File Attachment Dropzone -->
 <div class="attachment-wrapper dropzone"
@@ -38,7 +37,7 @@
     </div>
 
     <!-- Selection zone -->
-    <button mcsButton id="btnChooseFile"
+    <button mcsButton id="ctaChooseFile"
       size="small" (click)="chooFileElement.click()">
       <input #chooFileElement type="file"
         ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
