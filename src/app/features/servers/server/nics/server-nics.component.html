@@ -98,7 +98,7 @@
           </div>
 
           <div [ngStyle]="{'text-align': 'right'}">
-            <button mcsButton id="btnAddNetwork" arrow="right"
+            <button mcsButton id="ctaAddServerNetwork" arrow="right"
               [disabled]="!validate()" (click)="addNetwork()">
               {{ textContent.addButton }}
             </button>
@@ -154,7 +154,7 @@
           <a (click)="closeUpdateWindow()" [disabled]="isProcessing">Cancel</a>
 
           <button *mcsHasPermission="['VmEdit']"
-            mcsButton id="btnUpdateNetwork" arrow="right"
+            mcsButton id="ctaUpdateServerNetwork" arrow="right"
             [disabled]="!validate() || isProcessing" (click)="updateNetwork()">
             {{ textContent.updateButton }}
           </button>

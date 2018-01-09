@@ -22,18 +22,18 @@
 <!-- Actions template declaration -->
 <ng-template #actionTemplate>
   <div class="step-actions">
-    <a id="btnCancel" (click)="onClickCancel()"
+    <a id="ctaCancelWizard" (click)="onClickCancel()"
       [hidden]="!enableCancel">{{ cancelTextContent }}</a>
 
-    <a id="btnPrevious" (click)="onClickPrevious()"
+    <a id="ctaPreviousStep" (click)="onClickPrevious()"
       [hidden]="!hasPreviousStep">{{ wizardTextContent.previous }}</a>
 
-    <button mcsButton id="btnNext" arrow="right"
+    <button mcsButton id="ctaNextStep" arrow="right"
       [hidden]="!hasNextStep" (click)="onClickNext()">
       {{ wizardTextContent.next }}
     </button>
 
-    <button mcsButton id="btnComplete" arrow="right"
+    <button mcsButton id="ctaCompleteStep" arrow="right"
       [hidden]="!enableCompletedStep" (click)="onClickCompleted()">
       {{ completedTextContent }}
     </button>

@@ -26,7 +26,7 @@
       <h3 class="thumbnail-title">{{ textContent.vcloud.title }}</h3>
       <mcs-list>
         <mcs-list-item *ngIf="isSelfManaged">
-          <button mcsButton id="btnNewServer"
+          <button mcsButton id="ctaVdcNewServer"
             (click)="createNewServer(vdc.serviceType)">
             {{ textContent.vcloud.newServer }}
           </button>

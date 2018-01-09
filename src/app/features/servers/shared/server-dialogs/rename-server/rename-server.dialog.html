@@ -28,8 +28,8 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="btnCancel" (click)="closeDialog()">{{ textContent.cancel }}</a>
-    <button mcsButton id="btnConfirm" arrow="right"
+    <a id="ctaCloseRenameServerDialog" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <button mcsButton id="ctaRenameServer" arrow="right"
       size="small" (click)="renameServer(serverNameInput)">
       {{ textContent.rename }}
     </button>
