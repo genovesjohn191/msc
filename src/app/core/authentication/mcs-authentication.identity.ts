@@ -18,6 +18,11 @@ export class McsAuthenticationIdentity {
     this._changeIdentityStream = value;
   }
 
+  private _hashedId: string;
+  public get hashedId(): string {
+    return this._hashedId;
+  }
+
   private _firstName: string;
   public get firstName(): string {
     return this._firstName;
@@ -69,6 +74,7 @@ export class McsAuthenticationIdentity {
     let identity = this._appState.get(CoreDefinition.APPSTATE_AUTH_IDENTITY);
     if (!identity) { return; }
 
+    this._hashedId = identity.hashedId;
     this._firstName = identity.firstName;
     this._lastName = identity.lastName;
     this._userId = identity.userId;

@@ -39,7 +39,7 @@ export class GoogleAnalyticsEventsService {
 
   private _setUser() {
     dataLayer.push({
-      'userID' : this._mcsAuthenticationIdentity.userId
+      'userID' : this._mcsAuthenticationIdentity.hashedId
     });
   }
 
