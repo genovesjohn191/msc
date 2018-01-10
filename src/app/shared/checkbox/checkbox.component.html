@@ -2,6 +2,7 @@
   <div class="checkbox-inner-container">
     <!-- Checkbox element -->
     <input #inputElement hidden
+      [ngStyle]="{position: 'absolute'}"
       type="checkbox"
       [id]="id"
       [attr.tabindex]="tabindex"

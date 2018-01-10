@@ -1,52 +1,54 @@
 @import "../../../styles/shared/base";
 
-// Radio button
-$radio-button-font-size: $font-size-default;
-$radio-button-padding: $space-xsmall 0;
-$radio-button-label-offset: 12px;
+$radio-button-icon-size: 13px;
+$radio-button-icon-margin: 8px;
+$radio-button-icon-ripple-size: 15px;
 
 .radio-button-group-wrapper {
-  display: block;
+  outline: none;
 
-  .radio-button-group-content {
-    &.horizontal {
-      @include display-flex(row);
-      justify-content: space-between;
-    }
+  &.horizontal {
+    @include display-flex(row);
+    @include align-items(center);
+    @include set-items-interval($space-small, horizontal);
+  }
 
-    &.vertical {
-      @include display-flex(column);
-      align-items: flex-start;
-      justify-content: center;
-    }
+  &.vertical {
+    @include display-flex(column);
+    justify-content: center;
+  }
+}
 
-    &:focus {
-      outline: none;
-    }
+.radio-button-wrapper {
+  @include display-flex(row);
+  position: relative;
+  white-space: nowrap;
+  cursor: inherit;
+}
 
-    .radio-button-wrapper {
-      position: relative;
-      display: inline-block;
-      padding: $radio-button-padding;
+.radio-button-layout-wrapper {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  @include align-items(center);
+  cursor: pointer;
 
-      label {
-        cursor: pointer;
-        @include font-size($radio-button-font-size);
-        @include display-flex(row);
-        align-items: center;
-        margin: 0;
-        white-space: nowrap;
+  .radio-button-inner-container {
+    @include display-flex(row);
+    @include align-items(center);
+    width: $radio-button-icon-size;
+    height: $radio-button-icon-size;
+    margin-right: $radio-button-icon-margin;
 
-        mcs-icon {
-          display: inline-block;
-          margin-right: $radio-button-label-offset;
-          cursor: pointer;
-        }
-
-        input[type="radio"] {
-          display: none;
-        }
-      }
+    // Override ripple radius effect
+    .radio-button-ripple-wrapper {
+      position: absolute;
+      left: -$radio-button-icon-ripple-size;
+      top: -$radio-button-icon-ripple-size;
+      right: -$radio-button-icon-ripple-size;
+      bottom: -$radio-button-icon-ripple-size;
+      @include border-radius(50%);
+      z-index: 1;
+      pointer-events: none;
     }
   }
 }

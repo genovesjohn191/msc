@@ -14,9 +14,7 @@ import {
 import {
   McsTextContentProvider,
   CoreDefinition,
-  CoreValidators,
-  McsList,
-  McsListItem
+  CoreValidators
 } from '../../../../core';
 import {
   ServerPerformanceScale,
@@ -52,9 +50,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public sliderTable: ServerPerformanceScale[];
 
   public customMemoryGBValue: number;
-  public customMemoryGBTable: McsList;
   public customCpuCountValue: number;
-  public customCpuCountTable: McsList;
   public invalidCustomMemoryMaxValueMessage: string;
   public invalidCustomMemoryValueMessage: string;
   public invalidCustomCpuMaxValueMessage: string;
@@ -114,8 +110,6 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this.availableCpuCount = 0;
     this.sliderTable = new Array();
     this.inputManageType = ServerInputManageType.Slider;
-    this.customMemoryGBTable = new McsList();
-    this.customCpuCountTable = new McsList();
     this.scaleChanged = new EventEmitter();
   }
 
@@ -130,7 +124,6 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
     // Set default table values
     this._setDefaultSliderTable();
-    this._setDefaultCustomSizeTable();
 
     // Set the minimum and maximum value of the progressbar based on the inputted data
     this._setMinMaxValue();
@@ -247,21 +240,6 @@ export class ServerPerformanceScaleComponent implements OnInit {
       'available_cpu',
       appendUnitSuffix(this.availableCpuCount, 'cpu')
     );
-  }
-
-  private _setDefaultCustomSizeTable(): void {
-    // Populate memory in gigabytes default table
-    this.customMemoryGBTable.push('RAM', new McsListItem(2048, '2048'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(4096, '4096'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(8192, '8192'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(16384, '16384'));
-    this.customMemoryGBTable.push('RAM', new McsListItem(32768, '32768'));
-
-    // Populate cpu count default table
-    this.customCpuCountTable.push('CPU Count', new McsListItem(1, '1'));
-    this.customCpuCountTable.push('CPU Count', new McsListItem(2, '2'));
-    this.customCpuCountTable.push('CPU Count', new McsListItem(4, '4'));
-    this.customCpuCountTable.push('CPU Count', new McsListItem(8, '8'));
   }
 
   private _setDefaultSliderTable(): void {

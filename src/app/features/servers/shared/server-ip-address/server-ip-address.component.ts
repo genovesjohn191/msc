@@ -15,7 +15,7 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   CoreValidators,
-  McsListItem
+  McsOption
 } from '../../../../core';
 import {
   ServerInputManageType,
@@ -59,7 +59,7 @@ export class ServerIpAddressComponent implements OnInit {
   public textContent: any;
 
   public ipAddressValue: any;
-  public ipAddressItems: McsListItem[];
+  public ipAddressItems: McsOption[];
   public customIpAdrress: string;
 
   // Form variables
@@ -171,9 +171,9 @@ export class ServerIpAddressComponent implements OnInit {
   }
 
   private _setIpAddressItems(): void {
-    this.ipAddressItems.push(new McsListItem(ServerIpAllocationMode.Dhcp, 'DHCP'));
+    this.ipAddressItems.push(new McsOption(ServerIpAllocationMode.Dhcp, 'DHCP'));
     this.ipAddressItems.push(
-      new McsListItem(ServerIpAllocationMode.Pool, 'Next in my static pool')
+      new McsOption(ServerIpAllocationMode.Pool, 'Next in my static pool')
     );
   }
 
