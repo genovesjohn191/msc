@@ -1,0 +1,31 @@
+<label [attr.for]="id" class="radio-button-layout-wrapper" #radioButton>
+  <div class="radio-button-inner-container">
+    <!-- Radio Button element -->
+    <input #inputElement hidden
+      [ngStyle]="{position: 'absolute'}"
+      type="radio"
+      [id]="id"
+      [attr.name]="name"
+      [checked]="checked"
+      (click)="onClickEvent($event)"
+      (change)="onChange($event)"
+      (blur)="onBlur()">
+
+    <!-- Ripple Effect -->
+    <mcs-ripple class="radio-button-ripple-wrapper"
+      mcsRipple [rippleTrigger]="radioButton" [rippleCentered]="true">
+    </mcs-ripple>
+
+    <!-- Radio Button Icon -->
+    <mcs-icon class="radio-button-icon"
+      [key]="radioButtonIconKey" size="small"
+      [color]="checked ? 'blue' : 'inherit'"></mcs-icon>
+  </div>
+
+  <!-- Radio Button label -->
+  <span class="radio-button-label">
+    <!-- Add an invisible span so JAWS can read the label -->
+    <span style="display:none">&nbsp;</span>
+    <ng-content></ng-content>
+  </span>
+</label>

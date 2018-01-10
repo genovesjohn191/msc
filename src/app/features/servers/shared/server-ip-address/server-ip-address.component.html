@@ -49,10 +49,12 @@
   <!--Radio Buttons content element-->
   <div *ngIf="inputManageType == inputManageTypeEnum.Buttons">
     <div animate [trigger]="fadeIn" class="radio-button-group">
-      <mcs-radio-button-group [items]="ipAddressItems"
-        [ngModel]="ipAddressValue"
-        (ngModelChange)="onRadioButtonChanged($event)"
-        orientation="vertical"></mcs-radio-button-group>
+       <mcs-radio-button-group orientation="vertical"
+          [ngModel]="ipAddressValue" (ngModelChange)="onRadioButtonChanged($event)">
+        <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value">
+         {{ item.text }}
+        </mcs-radio-button>
+       </mcs-radio-button-group>
     </div>
   </div>
 </div>

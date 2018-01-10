@@ -2,12 +2,12 @@ import {
   Component,
   forwardRef,
   Input,
-  Output,
-  EventEmitter,
-  ElementRef,
-  ViewChild,
-  OnChanges,
+  AfterContentInit,
   Renderer2,
+  ElementRef,
+  OnDestroy,
+  ContentChildren,
+  QueryList,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   ViewEncapsulation
@@ -16,15 +16,23 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
+import { Observable } from 'rxjs/Rx';
+import { merge } from 'rxjs/observable/merge';
+import { startWith } from 'rxjs/operator/startWith';
+import { Key } from '../../core';
 import {
-  McsListItem,
-  CoreDefinition,
-  Key
-} from '../../core';
+  coerceNumber,
+  isNullOrEmpty,
+  refreshView
+} from '../../utilities';
+import { RadioButtonComponent } from './radio-button/radio-button.component';
+
+// Unique Id that generates during runtime
+let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-radio-button-group',
-  templateUrl: './radio-button-group.component.html',
+  template: `<ng-content></ng-content>`,
   styleUrls: ['./radio-button-group.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,133 +44,119 @@ import {
     }
   ],
   host: {
-    'class': 'radio-button-group-wrapper'
+    'class': 'radio-button-group-wrapper',
+    '[class.horizontal]': '!orientation',
+    'role': 'radiogroup',
+    '[attr.tabindex]': 'tabindex',
+    '(keydown)': 'onKeyDown($event)'
   }
 })
 
-export class RadioButtonGroupComponent implements OnChanges, ControlValueAccessor {
-  @Input()
-  public items: McsListItem[];
+export class RadioButtonGroupComponent implements AfterContentInit,
+  ControlValueAccessor, OnDestroy {
 
   @Input()
-  public orientation: 'horizontal' | 'vertical';
+  public get orientation(): string { return this._orientation; }
+  public set orientation(value: string) {
+    this._orientation = value;
+    if (isNullOrEmpty(value)) { return; }
+    this._renderer.addClass(this._elementRef.nativeElement, value);
+  }
+  private _orientation: string;
 
-  @Output()
-  public onClick: EventEmitter<any> = new EventEmitter();
+  @Input()
+  public get tabindex(): number { return this._tabindex; }
+  public set tabindex(value: number) { this._tabindex = coerceNumber(value, this._tabindex); }
+  private _tabindex: number = 0;
 
-  @ViewChild('radioButtonGroupElement')
-  public radioButtonGroupElement: ElementRef;
-
-  public itemIndex: number;
+  @Input()
+  public get name(): string { return this._name; }
+  public set name(value: string) {
+    this._name = value;
+    this._updateRadioButtonNames();
+  }
+  private _name: string = `mcs-radio-button-group-${nextUniqueId++}`;
 
   /**
-   * Active Item (model binding)
+   * Model Value of the tag list (Two way binding)
    */
-  private _activeKeyItem: any;
-  public get activeKeyItem(): any {
-    return this._activeKeyItem;
-  }
-  public set activeKeyItem(value: any) {
-    if (value !== this._activeKeyItem) {
-      this._activeKeyItem = value;
-      this._onChanged(value);
+  @Input()
+  public get value() { return this._value; }
+  public set value(value: any) {
+    if (value !== this._value) {
+      this._value = value;
+      this._onChanged(this._value);
       this._changeDetectorRef.markForCheck();
     }
   }
+  private _value: any;
+
+  /**
+   * Radio buttons content
+   */
+  @ContentChildren(RadioButtonComponent, { descendants: true })
+  private _radioButtons: QueryList<RadioButtonComponent>;
+
+  // Other variables
+  private _selectedItemIndex: number;
+  private _itemsSubscripton: any;
+  private _selectionSubscription: any;
+
+  /**
+   * Combine stream of all the selected item child's change event
+   */
+  public get itemsSelectionChanged(): Observable<RadioButtonComponent> {
+    return merge(...this._radioButtons.map((item) => item.change));
+  }
 
   public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.itemIndex = 0;
-    this.items = new Array();
-    this.orientation = 'vertical';
+    private _elementRef: ElementRef
+  ) { }
+
+  public ngAfterContentInit() {
+    this._itemsSubscripton = startWith.call(this._radioButtons.changes, null)
+      .subscribe(() => {
+        this._listenToSelectionChanges();
+        this._updateRadioButtonNames();
+      });
+
+    // We need to execute this in a separate thread in order to
+    // update the value based on the model binding
+    refreshView(() => {
+      this._selectInitialItem();
+    });
   }
 
-  public ngOnChanges() {
-    if (this.orientation) {
-      this._renderer.addClass(this.radioButtonGroupElement.nativeElement,
-        this.orientation);
+  public ngOnDestroy() {
+    if (!isNullOrEmpty(this._itemsSubscripton)) {
+      this._itemsSubscripton.unsubscribe();
     }
-
-    // Get item index to get the current selected item in the list
-    for (let index = 0; index < this.items.length; ++index) {
-      if (this.items[index].key === this.activeKeyItem) {
-        this.itemIndex = index;
-        break;
-      }
-    }
   }
 
-  public onClickEvent(event: Event, item: McsListItem) {
-    if (item) { this.activeKeyItem = item.key; }
-    this.onClick.emit(event);
-  }
-
+  /**
+   * Event that emits when key is press
+   * @param event Keyboard event elements
+   */
   public onKeyDown(event: KeyboardEvent) {
-    let keyEnum = event.keyCode as Key;
-
-    // Filter arrow keys only
-    if (keyEnum !== Key.UpArrow &&
-      keyEnum !== Key.DownArrow &&
-      keyEnum !== Key.RightArrow &&
-      keyEnum !== Key.LeftArrow) {
-      return true;
-    }
-    let itemPosition = this.getItemPosition(keyEnum);
-
-    switch (itemPosition) {
-      case 'next':
-
-        if (this.itemIndex === (this.items.length - 1)) {
-          // Set to initial item if the index was greater than the length of the items
-          this.itemIndex = 0;
-        } else {
-          this.itemIndex += 1;
-        }
+    switch (event.keyCode) {
+      case Key.UpArrow:
+      case Key.RightArrow:
+        let nextTag = Math.min((this._radioButtons.length - 1),
+          this._selectedItemIndex + 1);
+        this._radioButtons.toArray()[nextTag].onClickEvent(null);
         break;
 
-      case 'previous':
-
-        if (this.itemIndex === 0) {
-          // Set to last index of the items when item index is less than zero
-          this.itemIndex = (this.items.length - 1);
-        } else {
-          this.itemIndex -= 1;
-        }
+      case Key.DownArrow:
+      case Key.LeftArrow:
+        let previousTag = Math.max(0, this._selectedItemIndex - 1);
+        this._radioButtons.toArray()[previousTag].onClickEvent(null);
         break;
 
       default:
-        return true;
-    }
-
-    // Get the target item based on the index and assign it
-    // to model binding to update the view and model bind
-    this.activeKeyItem = this.items[this.itemIndex].key;
-
-    // Return false to all cases of the arrow to remove the scrolling when
-    // clicking the arrow keys else true
-    return false;
-  }
-
-  public getItemPosition(key: Key): 'next' | 'previous' {
-    let itemPosition: 'next' | 'previous';
-
-    switch (this.orientation) {
-      case 'horizontal':
-        itemPosition = (key === Key.UpArrow ||
-          key === Key.RightArrow) ?
-          itemPosition = 'next' : itemPosition = 'previous';
-        break;
-
-      case 'vertical':
-      default:
-        itemPosition = (key === Key.DownArrow ||
-          key === Key.RightArrow) ?
-          itemPosition = 'next' : itemPosition = 'previous';
         break;
     }
-    return itemPosition;
   }
 
   /**
@@ -170,8 +164,7 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    this._activeKeyItem = value;
-    this._changeDetectorRef.markForCheck();
+    this.value = value;
   }
 
   /**
@@ -198,14 +191,68 @@ export class RadioButtonGroupComponent implements OnChanges, ControlValueAccesso
   }
 
   /**
-   * Get radio button svg icons key based on the checked flag,
-   * if it is checked the obtain svg icon is the checked
-   * else it is unchecked
+   * Select the initial item based on value
    */
-  public getRadioButtonIconKey(item: McsListItem): string {
-    return this._activeKeyItem === item.key ?
-      CoreDefinition.ASSETS_SVG_RADIO_CHECKED :
-      CoreDefinition.ASSETS_SVG_RADIO_UNCHECKED;
+  private _selectInitialItem(): void {
+    if (isNullOrEmpty(this.value)) {
+      this._radioButtons.first.onClickEvent(null);
+    } else {
+      let elementByValue = this._radioButtons.find((radio) => {
+        return radio.value === this.value;
+      });
+      if (isNullOrEmpty(elementByValue)) {
+        throw new Error('Specified value could not be found within the group.');
+      }
+      elementByValue.onClickEvent(null);
+    }
+  }
+
+  /**
+   * Update radio button names for groupings
+   */
+  private _updateRadioButtonNames(): void {
+    if (this._radioButtons) {
+      this._radioButtons.forEach((radio) => {
+        radio.name = this.name;
+      });
+    }
+  }
+
+  /**
+   * Listen to selection changes of each tag
+   */
+  private _listenToSelectionChanges(): void {
+    if (!isNullOrEmpty(this._selectionSubscription)) {
+      this._selectionSubscription.unsubscribe();
+    }
+    this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
+      this._selectItem(item);
+      this._selectedItemIndex = this._radioButtons.toArray().indexOf(item);
+    });
+  }
+
+  /**
+   * Select tag item and set it to the model value
+   * @param item Item to be selected
+   */
+  private _selectItem(item: RadioButtonComponent) {
+    if (isNullOrEmpty(item)) { return; }
+    this._clearItemSelection(item);
+    item.checkRadioButton();
+    this.value = item.value;
+  }
+
+  /**
+   * Clear all the selection
+   * @param selectedItem Selected tag component
+   */
+  private _clearItemSelection(selectedItem: RadioButtonComponent): void {
+    this._radioButtons.forEach((item) => {
+      if (item.id !== selectedItem.id) {
+        item.uncheckRadioButton();
+        item.markForCheck();
+      }
+    });
   }
 
   // View <-> Model callback methods

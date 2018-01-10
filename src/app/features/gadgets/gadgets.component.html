@@ -280,15 +280,23 @@
         <h3 class="title">RADIO BUTTON GROUP</h3>
 
         <span>Horizontal orientation</span>
-        <mcs-radio-button-group [items]="getRadioButtonGroup()"
+        <mcs-radio-button-group
           [(ngModel)]="radioButtonHorizontal"
-          orientation="horizontal"></mcs-radio-button-group><br/>
+          orientation="horizontal">
+          <mcs-radio-button *ngFor="let item of radioButtonGroups" [value]="item.value">
+            {{ item.text }}
+          </mcs-radio-button>
+        </mcs-radio-button-group><br/>
         <pre>Model value: {{ radioButtonHorizontal }}</pre>
 
         <span>Vertical orientation</span>
-        <mcs-radio-button-group [items]="getRadioButtonGroup()"
+        <mcs-radio-button-group
           [(ngModel)]="radioButtonVertical"
-          orientation="vertical"></mcs-radio-button-group><br/>
+          orientation="vertical">
+          <mcs-radio-button *ngFor="let item of radioButtonGroups" [value]="item.value">
+            {{ item.text }}
+          </mcs-radio-button>
+        </mcs-radio-button-group><br/>
         <pre>Model value: {{ radioButtonVertical }}</pre>
       </div>
 

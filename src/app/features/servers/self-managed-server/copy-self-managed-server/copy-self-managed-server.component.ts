@@ -14,8 +14,6 @@ import {
   FormControl
 } from '@angular/forms';
 import {
-  McsList,
-  McsListItem,
   McsTextContentProvider,
   CoreValidators
 } from '../../../../core';
@@ -28,10 +26,7 @@ import {
   ServerGroupedOs,
   ServerNetwork,
   Server,
-  ServerCreateType,
-  ServerCatalogType,
-  ServerCatalogItemType,
-  ServerImageType
+  ServerCreateType
 } from '../../models';
 import {
   refreshView,
@@ -91,8 +86,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   // Dropdowns
   public serverItems: any;
   public vAppItems: any;
-  public osItems: McsList;
-  public vTemplateItems: McsList;
   public networkItems: any;
   public storageItems: any;
 
@@ -132,8 +125,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     this.createType = ServerCreateType.Copy;
     this.serverItems = new Array();
     this.vAppItems = new Array();
-    this.osItems = new McsList();
-    this.vTemplateItems = new McsList();
     this.networkItems = new Array();
     this.storageItems = new Array();
     this.selectedNetwork = new ServerNetwork();
@@ -150,8 +141,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     if (this.resource) {
       this._setServersItems();
       this._setVAppItems();
-      this._setOsItems();
-      this._setVTemplateItems();
       this._setStorageItems();
       this._setNetworkItems();
       this._setAvailableMemoryMB();
@@ -253,26 +242,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
     if (!isNullOrEmpty(this.vAppItems) && !isNullOrEmpty(this.selectedServer.vApp)) {
       this.formControlVApp.setValue(this.selectedServer.vApp);
     }
-  }
-
-  private _setOsItems(): void {
-    this.serversOs.forEach((groupedOs) => {
-      groupedOs.os.forEach((os) => {
-        this.osItems.push(groupedOs.platform,
-          new McsListItem(ServerImageType.Os, os.name));
-      });
-    });
-  }
-
-  private _setVTemplateItems(): void {
-    if (isNullOrEmpty(this.resource.catalogItems)) { return; }
-
-    this.resource.catalogItems.forEach((catalog) => {
-      if (catalog.type === ServerCatalogType.SelfManaged) {
-        this.vTemplateItems.push(ServerCatalogItemType[catalog.itemType],
-          new McsListItem(ServerImageType.Template, catalog.itemName));
-      }
-    });
   }
 
   private _setNetworkItems(): void {

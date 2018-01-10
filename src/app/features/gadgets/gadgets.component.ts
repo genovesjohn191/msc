@@ -11,7 +11,7 @@ import { GadgetsDataSource } from './gadgets.datasource';
 import { GadgetsListSource } from './gadgets.listsource';
 import { Server } from '../servers/models';
 import {
-  McsListItem,
+  McsOption,
   McsPaginator,
   McsSearch,
   CoreValidators,
@@ -45,6 +45,7 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   public radioButtonVertical: any;
 
   public sliderValue: number = 0;
+  public radioButtonGroups: McsOption[];
 
   // Wizard variables
   public showSecretStep: boolean;
@@ -118,6 +119,7 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
     this.setGadgets();
     this.getAllIcons();
     this.disabled = true;
+    this.radioButtonGroups = this.getRadioButtonGroup();
 
     this.fcFirstName = new FormControl('', [
       CoreValidators.required
@@ -197,12 +199,12 @@ export class GadgetsComponent implements OnInit, AfterViewInit {
   /**
    * TODO: Remove this for official implementation
    */
-  public getRadioButtonGroup(): McsListItem[] {
-    let items: McsListItem[] = new Array();
+  public getRadioButtonGroup(): McsOption[] {
+    let items: McsOption[] = new Array();
 
-    items.push(new McsListItem('dhcp', 'DHCP'));
-    items.push(new McsListItem('next', 'Next in my static pool'));
-    items.push(new McsListItem('fishy', 'Fishy'));
+    items.push(new McsOption('dhcp', 'DHCP'));
+    items.push(new McsOption('next', 'Next in my static pool'));
+    items.push(new McsOption('fishy', 'Fishy'));
     return items;
   }
 

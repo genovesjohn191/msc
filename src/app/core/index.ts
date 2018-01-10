@@ -35,13 +35,12 @@ export * from './models/response/mcs-api-job';
 export * from './models/response/mcs-api-task';
 export * from './models/response/mcs-api-console';
 export * from './models/response/mcs-api-company';
-export * from './models/mcs-list';
-export * from './models/mcs-list-item';
 export * from './models/mcs-list-panel-item';
 export * from './models/mcs-size';
 export * from './models/mcs-selection';
 export * from './models/mcs-attachment';
 export * from './models/mcs-point';
+export * from './models/mcs-option';
 /** Enumerations */
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-user-type.enum';

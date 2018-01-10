@@ -3,6 +3,7 @@ $circular-pro-book: "Circular-Pro-Book";
 $circular-pro-bold: "Circular-Pro-Bold";
 $fontawesome: FontAwesome;
 
+// Fonts
 $base-font: $circular-pro-book;
 $base-font-bold: $circular-pro-bold;
 $font-icon: $fontawesome;
@@ -15,49 +16,6 @@ $font-size-default: 13;
 $line-height-default: 20;
 $font-size-small: 11;
 $line-height-small: 16;
-
-$caption-default-font: $base-font;
-$caption-default-font-size: 12;
-$caption-default-line-height: 14;
-$caption-small-font-size: 12;
-$caption-small-line-height: 14;
-$caption-xsmall-font-size: 10;
-$caption-xsmall-line-height: 13;
-
-$header-font: $base-font-bold;
-$h1-default-font-size: 24;
-$h1-default-line-height: 28;
-$h2-default-font-size: 20;
-$h2-default-line-height: 22;
-$h3-default-font-size: 18;
-$h3-default-line-height: 20;
-$h4-default-font-size: 16;
-$h4-default-line-height: 18;
-
-$h1-medium-font-size: 22;
-$h1-medium-line-height: 26;
-
-$h1-small-font-size: 22;
-$h1-small-line-height: 26;
-$h2-small-font-size: 20;
-$h2-small-line-height: 18;
-$h3-small-font-size: 18;
-$h3-small-line-height: 20;
-$h4-small-font-size: 16;
-$h4-small-line-height: 18;
-
-$link-font:  $base-font;
-$link-default-font-size: $font-size-default;
-$link-default-line-height: $line-height-default;
-$link-small-font-size: 12;
-$link-small-line-height: 14;
-
-$strong-font: $base-font-bold;
-$strong-font-weight: normal;
-
-$icon-large-font-size: 20;
-$icon-medium-font-size: 15;
-$icon-small-font-size: $font-size-default;
 
 // Color Palettes
 $color-black: #000;
@@ -126,6 +84,53 @@ $border-color-dark: $color-grey-01;
 // Border Radius
 $border-radius-small: 2px;
 $border-radius-medium: 4px;
+
+// Captions
+$caption-default-font: $base-font;
+$caption-default-font-size: 12;
+$caption-default-line-height: 14;
+$caption-small-font-size: 12;
+$caption-small-line-height: 14;
+$caption-xsmall-font-size: 10;
+$caption-xsmall-line-height: 13;
+
+// Headers
+$header-font: $base-font-bold;
+$h1-default-font-size: 24;
+$h1-default-line-height: 28;
+$h2-default-font-size: 20;
+$h2-default-line-height: 22;
+$h3-default-font-size: 18;
+$h3-default-line-height: 20;
+$h4-default-font-size: 16;
+$h4-default-line-height: 18;
+
+$h1-medium-font-size: 22;
+$h1-medium-line-height: 26;
+
+$h1-small-font-size: 22;
+$h1-small-line-height: 26;
+$h2-small-font-size: 20;
+$h2-small-line-height: 18;
+$h3-small-font-size: 18;
+$h3-small-line-height: 20;
+$h4-small-font-size: 16;
+$h4-small-line-height: 18;
+
+// Links
+$link-font:  $base-font;
+$link-default-font-size: $font-size-default;
+$link-default-line-height: $line-height-default;
+$link-small-font-size: 12;
+$link-small-line-height: 14;
+$link-hover-color: $color-primary-01;
+
+$strong-font: $base-font-bold;
+$strong-font-weight: normal;
+
+$icon-large-font-size: 20;
+$icon-medium-font-size: 15;
+$icon-small-font-size: $font-size-default;
 
 // Input
 $input-font: $base-font;
