@@ -1,4 +1,5 @@
 export class McsApiIdentity {
+  public hashedId: string;
   public firstName: string;
   public lastName: string;
   public userId: string;
