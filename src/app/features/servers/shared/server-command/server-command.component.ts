@@ -19,10 +19,16 @@ import {
 } from '../../models';
 import { isNullOrEmpty } from '../../../../utilities';
 
+// Unique Id that generates during runtime
+let nextUniqueId = 0;
+
 @Component({
   selector: 'mcs-server-command',
   templateUrl: './server-command.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[attr.id]': 'id'
+  }
 })
 export class ServerCommandComponent implements OnInit {
   @Input()
@@ -30,6 +36,9 @@ export class ServerCommandComponent implements OnInit {
 
   @Input()
   public excluded: ServerCommand[];
+
+  @Input()
+  public id: string;
 
   @Output()
   public onClick: EventEmitter<ServerCommand> = new EventEmitter();
@@ -53,6 +62,7 @@ export class ServerCommandComponent implements OnInit {
   }
 
   constructor(private _textProvider: McsTextContentProvider) {
+    this.id = `mcs-server-command-${nextUniqueId++}`;
     this.excluded = new Array<ServerCommand>();
   }
 

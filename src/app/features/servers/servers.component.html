@@ -4,7 +4,8 @@
 
     <!-- Server Creation -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-action-item (click)="onClickNewServerButton()">
+      <mcs-action-item id="ctaCreateNewServer"
+        (click)="onClickNewServerButton()">
         <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
         <span>{{ textContent.newServer }}</span>
       </mcs-action-item>
@@ -14,6 +15,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <mcs-action-item class="hidden-small"
+          id="ctaStartSelectedServer"
           [disabled]="!startable || !selection.hasValue()"
           (click)="executeTopPanelAction(serverCommand.Start)">
           <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
@@ -21,6 +23,7 @@
         </mcs-action-item>
 
         <mcs-action-item class="hidden-small"
+          id="ctaStopSelectedServer"
           [disabled]="!stoppable || !selection.hasValue()"
           (click)="executeTopPanelAction(serverCommand.Stop)">
           <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
@@ -28,6 +31,7 @@
         </mcs-action-item>
 
         <mcs-action-item class="hidden-small"
+          id="ctaRestartSelectedServer"
           [disabled]="!restartable || !selection.hasValue()"
           (click)="executeTopPanelAction(serverCommand.Restart)">
           <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
@@ -35,6 +39,7 @@
         </mcs-action-item>
 
         <mcs-action-item class="hidden-small"
+          id="ctaDeleteSelectedServer"
           [disabled]="!deletable || !selection.hasValue()"
           (click)="executeTopPanelAction(serverCommand.Delete)">
           <mcs-icon [key]="deleteIconKey" size="small"></mcs-icon>

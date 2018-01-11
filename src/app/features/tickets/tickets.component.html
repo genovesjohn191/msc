@@ -5,7 +5,8 @@
     <!-- Ticket Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <mcs-action-item (click)="onClickNewTicket($event)">
+        <mcs-action-item
+          (click)="onClickNewTicket($event)">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
           <span>{{ textContent.newTicket }}</span>
         </mcs-action-item>
