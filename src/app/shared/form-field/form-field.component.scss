@@ -93,11 +93,11 @@ $form-field-error-hint-color: rgba($color-black, 0.54);
   }
 
   .form-field-hint-wrapper {
-    margin-top: $form-field-message-top-offset;
     @include display-flex(row);
     @include align-items(center);
 
     .hint-wrapper {
+      margin-top: $form-field-message-top-offset;
       color: $form-field-error-hint-color;
       &.start {
         margin-right: auto;

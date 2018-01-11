@@ -417,7 +417,14 @@
       "errors": {
         "typeRequired": "You must select a ticket type.",
         "headlineRequired": "Headline must be entered.",
-        "detailsRequired": "Details must be entered."
+        "detailsRequired": "Details must be entered.",
+        "servicesRequired": "You must select a service."
+      },
+      "placeholders": {
+        "type": "Select the ticket type",
+        "headline": "Enter headline",
+        "details": "Enter details",
+        "services": "Select a service"
       },
       "contextualHelp": {
         "type": "Select the ticket type",

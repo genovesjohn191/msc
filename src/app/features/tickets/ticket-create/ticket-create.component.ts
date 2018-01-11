@@ -62,6 +62,7 @@ export class TicketCreateComponent implements
   public isServicesOpen: boolean;
   public textService: string;
   public subTypeEnumText: any;
+  public servicePanelOpen: boolean;
 
   @ViewChild(FormGroupDirective)
   public fgCreateDirective: FormGroupDirective;
@@ -133,6 +134,10 @@ export class TicketCreateComponent implements
 
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+  }
+
+  public get toggleIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
   public safeToNavigateAway(): boolean {
@@ -264,7 +269,7 @@ export class TicketCreateComponent implements
     ]);
 
     this.fcService = new FormControl('', [
-      // Add validators
+      CoreValidators.required
     ]);
 
     // Register Form Groups using binding

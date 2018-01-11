@@ -20,15 +20,10 @@ import { startWith } from 'rxjs/operator/startWith';
 import {
   McsSearch,
   McsSelection,
+  McsOption,
   CoreDefinition
 } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
-
-// Select tag type
-export type selectTagType = {
-  value: any,
-  text: string
-};
 
 // Child Items of the select tag
 import { SelectTagMainItemComponent } from './select-tag-main-item/select-tag-main-item.component';
@@ -49,7 +44,7 @@ import { SelectTagSubItemPlaceholderDirective } from './select-tag-sub-item-plac
 export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDestroy {
 
   @Output()
-  public selectionChanged: EventEmitter<selectTagType[]>;
+  public selectionChanged: EventEmitter<McsOption[]>;
 
   @ViewChild(SelectTagSubItemPlaceholderDirective)
   private _subItemsPlaceholder: SelectTagSubItemPlaceholderDirective;
@@ -69,20 +64,6 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   private _searchSubscripton: Subscription;
   private _selectionSubscription: Subscription;
   private _selectionSubSubscription: Subscription;
-
-  /**
-   * Returns true when the panel for selection of tag is opened
-   */
-  private _panelOpen: boolean;
-  public get panelOpen(): boolean {
-    return this._panelOpen;
-  }
-  public set panelOpen(value: boolean) {
-    if (this._panelOpen !== value) {
-      this._panelOpen = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
 
   /**
    * The instance of the selected main item
@@ -111,7 +92,7 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this.selectionChanged = new EventEmitter<selectTagType[]>();
+    this.selectionChanged = new EventEmitter<McsOption[]>();
     this._selectionSubModel = new McsSelection<SelectTagSubItemComponent>(true);
   }
 
@@ -220,10 +201,10 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
    */
   private _emitSubItemsSelectionChanged(): void {
     // Notify changes for every selection made
-    let selectedSubItems = new Array<selectTagType>();
+    let selectedSubItems = new Array<McsOption>();
     selectedSubItems = this._selectionSubModel.selected
       .map((selectedItem) => {
-        return { text: selectedItem.text, value: selectedItem.value } as selectTagType;
+        return { text: selectedItem.text, value: selectedItem.value } as McsOption;
       });
     this.selectionChanged.emit(selectedSubItems);
   }
