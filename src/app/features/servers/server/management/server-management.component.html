@@ -5,6 +5,11 @@
         <div class="grid-column">
           <h3>{{ serverManagementTextContent.vmProperties.title }}</h3>
           <mcs-list spacing="xsmall">
+            <!-- Status -->
+            <mcs-list-item>
+              <span>{{ serverManagementTextContent.vmProperties.status }}:</span>
+              <span>{{ serverStatusLabel }}</span>
+            </mcs-list-item>
             <!-- Image -->
             <mcs-list-item>
               <span>{{ serverManagementTextContent.vmProperties.image }}:</span>

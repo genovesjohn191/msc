@@ -149,6 +149,7 @@
         "label": "Management",
         "vmProperties": {
           "title": "VM Properties",
+          "status": "Status",
           "image": "Image",
           "zone": "Zone",
           "configuration": "Configuration"
@@ -204,6 +205,12 @@
           "scale": "Scale",
           "cancel": "Cancel",
           "scaling": "Scaling in Progress"
+        },
+        "status": {
+          "running": "Running",
+          "restarting": "Restarting",
+          "stopping": "Stopping",
+          "stopped": "Stopped"
         }
       },
       "storage": {

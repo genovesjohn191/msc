@@ -278,6 +278,40 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
     }
   }
 
+  public get serverStatusLabel(): string {
+    let status: string = this.serverManagementTextContent.status.running;
+
+    switch (this.server.powerState) {
+      case ServerPowerState.PoweredOn:
+        status = this.serverManagementTextContent.status.running;
+        break;
+
+      case ServerPowerState.PoweredOff:
+        status = this.serverManagementTextContent.status.stopped;
+        break;
+
+      default:
+        if (!isNullOrEmpty(this.activeServerJob.clientReferenceObject)) {
+          switch (this.activeServerJob.clientReferenceObject.commandAction) {
+            case ServerCommand.Stop:
+              status = this.serverManagementTextContent.status.stopping;
+              break;
+
+            case ServerCommand.Restart:
+              status = this.serverManagementTextContent.status.restarting;
+              break;
+
+            default:
+              // Do nothing
+              break;
+          }
+        }
+        break;
+    }
+
+    return status;
+  }
+
   public mergeIpAddresses(ipAddresses: string[]): string {
     if (!ipAddresses || ipAddresses.length === 0) { return ''; }
 

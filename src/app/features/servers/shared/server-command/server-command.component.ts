@@ -57,8 +57,11 @@ export class ServerCommandComponent implements OnInit {
   }
 
   public get isServerOperable(): boolean {
-    return !isNullOrEmpty(this.serverStatus.powerState) && this.serverStatus.isOperable
-      && this.serverStatus.serviceType === ServerServiceType.SelfManaged;
+    return !isNullOrEmpty(this.serverStatus.powerState) && this.serverStatus.isOperable;
+  }
+
+  public get isServerSelfManaged(): boolean {
+    return this.serverStatus.serviceType === ServerServiceType.SelfManaged;
   }
 
   constructor(private _textProvider: McsTextContentProvider) {
@@ -93,8 +96,7 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       case ServerCommand.Delete:
-        enabled = !isNullOrEmpty(this.serverStatus.powerState) &&
-          this.serverStatus.serviceType === ServerServiceType.SelfManaged;
+        enabled = !isNullOrEmpty(this.serverStatus.powerState) && this.isServerSelfManaged;
         break;
 
       case ServerCommand.ViewVCloud:
@@ -102,7 +104,7 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       default:
-        enabled = this.isServerOperable;
+        enabled = this.isServerOperable && this.isServerSelfManaged;
         break;
     }
 
