@@ -47,19 +47,19 @@ import { McsStorage } from '../mcs-storage.interface';
 
 export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy, McsStorage {
   @Input()
-  public memoryMB: number;
-
-  @Input()
-  public availableMemoryMB: number;
-
-  @Input()
   public minimumMB: number;
 
   @Input()
-  public storageProfileList: any;
+  public maximumMB: number;
 
   @Input()
-  public storageSliderValues: number[];
+  public step: number;
+
+  @Input()
+  public minValueMB: number;
+
+  @Input()
+  public storageProfileList: any;
 
   @Input()
   public disabled: boolean;
@@ -76,39 +76,32 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public invalidCustomStorageMessage: string;
 
-  public get memoryGB(): number {
-    return Math.floor(convertToGb(this.memoryMB));
-  }
-
-  public get availableMemoryGB(): number {
-    return Math.floor(convertToGb(this.availableMemoryMB));
+  public get warningIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_WARNING;
   }
 
   public get minimumGB(): number {
     return Math.floor(convertToGb(this.minimumMB));
   }
 
-  public get maximumMemoryGB(): number {
-    return this.memoryGB + this.availableMemoryGB;
+  public get maximumGB(): number {
+    return Math.floor(convertToGb(this.maximumMB));
   }
 
   public get currentMemory(): string {
-    return appendUnitSuffix(this.storageSliderValues[this.storageSliderValue], 'gigabyte');
+    return appendUnitSuffix(this.storageValue, 'gigabyte');
   }
 
   public get remainingMemory(): string {
-    return appendUnitSuffix(
-      this.storageSliderValues[this.maximum] - this.storageSliderValues[this.storageSliderValue],
-      'gigabyte'
-    );
+    return appendUnitSuffix(this.maximumGB - this.storageValue, 'gigabyte');
   }
 
   public get hasAvailableStorageSpace(): boolean {
-    return this.availableMemoryGB > 0;
+    return (this.maximumMB - this.minimumMB) > 0;
   }
 
-  public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_WARNING;
+  public get minValueGB(): number {
+    return convertToGb(this.minValueMB);
   }
 
   private _inputManageType: ServerInputManageType;
@@ -133,46 +126,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     }
   }
 
-  private _storageSliderValue: number;
-  public get storageSliderValue(): number {
-    return this._storageSliderValue;
+  private _storageValue: number;
+  public get storageValue(): number {
+    return this._storageValue;
   }
-  public set storageSliderValue(value: number) {
-    if (this._storageSliderValue !== value) {
-      this._storageSliderValue = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _customStorageValue: number;
-  public get customStorageValue(): number {
-    return this._customStorageValue;
-  }
-  public set customStorageValue(value: number) {
-    if (this._customStorageValue !== value) {
-      this._customStorageValue = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _minimum: number;
-  public get minimum(): number {
-    return this._minimum;
-  }
-  public set minimum(value: number) {
-    if (this._minimum !== value) {
-      this._minimum = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _maximum: number;
-  public get maximum(): number {
-    return this._maximum;
-  }
-  public set maximum(value: number) {
-    if (this._maximum !== value) {
-      this._maximum = value;
+  public set storageValue(value: number) {
+    if (this._storageValue !== value) {
+      this._storageValue = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -181,12 +141,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     private _textProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this.minimumMB = 1;
     this.storageProfileValue = '';
-    this.storageSliderValues = new Array();
-    this.storageSliderValue = 0;
-    this.minimum = 0;
-    this.maximum = 0;
+    this.storageValue = 0;
+    this.minimumMB = 0;
     this.inputManageType = ServerInputManageType.Slider;
     this.storageChanged = new EventEmitter<ServerManageStorage>();
     this.disabled = false;
@@ -197,16 +154,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
     // Register form group for custom storage
     this._registerFormGroup();
-
     this._initializeValues();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    let availableMemoryMBChanges = changes['availableMemoryMB'];
-    if (availableMemoryMBChanges) {
+    let maximumMBChanges = changes['maximumMB'];
+    if (maximumMBChanges) {
       this.inputManageType = ServerInputManageType.Slider;
-      this.storageSliderValue = 0;
-      this.maximum = this.storageSliderValues.length - 1;
       this._setCustomControlValidator();
     }
   }
@@ -220,20 +174,18 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onCustomStorageChanged(inputValue: number) {
-    this.customStorageValue = inputValue;
+    this.storageValue = inputValue;
     this._setCustomControlValidator();
     this._notifyStorageChanged();
   }
 
   public onStorageChanged(value: number) {
-    this.storageSliderValue = value;
+    this.storageValue = value;
     this._notifyStorageChanged();
   }
 
   public onStorageProfileChanged(value: any): void {
     this.storageProfileValue = value;
-    this.storageSliderValue = 0;
-    this.customStorageValue = 0;
     this._setCustomControlValidator();
     this._notifyStorageChanged();
   }
@@ -244,8 +196,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   public completed(): void {
     this.fcServerStorageCustom.reset();
-    this.storageSliderValue = 0;
-    this.customStorageValue = 0;
     this.onChangeInputManageType(ServerInputManageType.Slider);
   }
 
@@ -259,7 +209,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return replacePlaceholder(
       this.textContent.errors.storageAvailable,
       'available_storage',
-      appendUnitSuffix(this.maximumMemoryGB, 'gigabyte')
+      appendUnitSuffix(this.maximumGB, 'gigabyte')
     );
   }
 
@@ -267,15 +217,21 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return replacePlaceholder(
       this.textContent.errors.storageMin,
       'min_value',
-      this.minimumGB.toString()
+      appendUnitSuffix(this.minValueGB, 'gigabyte')
     );
   }
 
   private _initializeValues(): void {
     if (!isNullOrEmpty(this.storageProfileList)) {
-      this.onStorageProfileChanged(this.storageProfileList[0].value);
+      this.storageProfileValue = this.storageProfileList[0].value;
     }
-    this.onCustomStorageChanged(this.memoryGB);
+
+    if (isNullOrEmpty(this.minValueMB)) {
+      this.minValueMB = this.minimumMB;
+    }
+
+    this.onStorageProfileChanged(this.storageProfileValue);
+    this.storageValue = this.minimumGB;
   }
 
   private _registerFormGroup(): void {
@@ -299,7 +255,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this.fcServerStorageCustom.setValidators([
       CoreValidators.required,
       CoreValidators.numeric,
-      CoreValidators.min(this.minimumGB),
+      CoreValidators.min(this.minValueGB),
       CoreValidators.custom(
         this._customStorageValidator.bind(this),
         'storageAvailable'
@@ -308,7 +264,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   private _customStorageValidator(inputValue: any): boolean {
-    return inputValue <= this.maximumMemoryGB;
+    return inputValue <= this.maximumGB;
   }
 
   private _notifyStorageChanged() {
@@ -319,20 +275,14 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       // Set model data based on management type
       switch (this.inputManageType) {
         case ServerInputManageType.Custom:
-          serverStorage.storageMB = convertToMb(this.customStorageValue);
+          serverStorage.storageMB = convertToMb(this.storageValue);
           serverStorage.valid = this.fcServerStorageCustom.valid;
           break;
 
         case ServerInputManageType.Slider:
         default:
-          if (!isNullOrEmpty(this.storageSliderValues)) {
-            serverStorage.storageMB = convertToMb(
-              this.storageSliderValues[this.storageSliderValue]
-            );
-          } else {
-            serverStorage.storageMB = 0;
-          }
-          serverStorage.valid = true;
+          serverStorage.storageMB = convertToMb(this.storageValue);
+          serverStorage.valid = serverStorage.storageMB > this.minimumMB;
           break;
       }
 

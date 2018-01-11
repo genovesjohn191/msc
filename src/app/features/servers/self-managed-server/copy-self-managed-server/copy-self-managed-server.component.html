@@ -40,11 +40,8 @@
 
     <div class="storage-information" *ngIf="storageItems">
       <mcs-server-manage-storage
-        [memoryMB]="storageMemoryMB"
-        [availableMemoryMB]="storageAvailableMemoryMB"
         [minimumMB]="storageMemoryMB"
         [storageProfileList]="storageItems"
-        [storageSliderValues]="storageSliderValues"
         (storageChanged)="onStorageChanged($event)">
         <!--Server manage storage contents on the left hand side (title and description)-->
         <div title>

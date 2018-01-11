@@ -62,21 +62,21 @@
       <div *mcsHasPermission="['VmEdit']">
         <div *ngIf="!hasReachedDisksLimit" class="action-box">
           <mcs-server-manage-storage *ngIf="hasStorageProfileList" #mcsStorage
-            [storageProfileList]="storageProfileList"
-            [memoryMB]="memoryMB"
-            [availableMemoryMB]="availableMemoryMB"
-            [minimumMB]="minimumMB"
-            [storageSliderValues]="newStorageSliderValues"
-            (storageChanged)="onStorageChanged($event)"
-            [disabled]="storageScaleIsDisabled">
+            [storageProfileList]="storageProfileList" [minValueMB]="storageMinValueMB"
+            [minimumMB]="0" [maximumMB]="maximumMB" [step]="sliderStep"
+            (storageChanged)="onStorageChanged($event)" [disabled]="storageScaleIsDisabled">
             <!--Server manage storage contents on the left hand side (description)-->
             <div title>
               <h4>{{ serverStorageText.addStorageHeading }}</h4>
             </div>
+
+            <div server-storage-warning>
+              <span>{{ serverStorageText.fullStorageSpace }}</span>
+            </div>
           </mcs-server-manage-storage>
           <div [ngStyle]="{'text-align': 'right'}">
             <button mcsButton id="ctaAttachServerStorage" arrow="right"
-              [disabled]="!isValidStorageValues || !hasAvailableStorageSpace"
+              [disabled]="attachIsDisabled"
               (click)="onClickAttach()">
               {{ serverStorageText.attachStorage }}
             </button>
@@ -93,10 +93,10 @@
 
     <div *ngIf="expandStorage">
       <mcs-server-manage-storage #mcsStorage
-        [memoryMB]="selectedStorageDevice.sizeMB"
-        [availableMemoryMB]="getStorageAvailableMemory(selectedStorageDevice.storageProfile)"
-        [minimumMB]="selectedStorageDevice.sizeMB + minimumMB"
-        [storageSliderValues]="selectedStorageSliderValues"
+        [minimumMB]="selectedStorageDevice.sizeMB"
+        [maximumMB]="maximumMB"
+        [step]="sliderStep"
+        [minValueMB]="selectedStorageDevice.sizeMB + storageMinValueMB"
         (storageChanged)="onStorageChanged($event)"
         [disabled]="storageScaleIsDisabled">
         <!--Server manage storage contents on the left hand side (description)-->
@@ -105,8 +105,8 @@
         </div>
 
         <div details class="vertical-items-spacing-xsmall">
-          <p><strong>Storage Device : </strong> <span>{{ selectedStorageDevice.name}}</span></p>
-          <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile}}</span></p>
+          <p><strong>Storage Device : </strong> <span>{{ selectedStorageDevice.name }}</span></p>
+          <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile }}</span></p>
           <p>
             <strong>Current Size : </strong>
             <span>{{ appendGbUnit(convertStorageInGb(selectedStorageDevice.sizeMB)) }}</span>
@@ -118,7 +118,7 @@
 
         <button *mcsHasPermission="['VmEdit']"
           mcsButton id="ctaUpdateServerStorage" arrow="right"
-          [disabled]="!isValidStorageValues || expandingStorage"
+          [disabled]="expandIsDisabled"
           (click)="onClickUpdate()">
           {{ serverStorageText.updateStorage }}
         </button>
