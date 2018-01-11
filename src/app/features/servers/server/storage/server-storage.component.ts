@@ -64,13 +64,9 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public storageChangedValue: ServerManageStorage;
 
   public storageProfileList: any[];
-  public newStorageSliderValues: number[];
-  public memoryMB: number;
-  public minimumMB: number;
   public usedMemoryMB: number;
 
   public selectedStorageDevice: ServerStorageDevice;
-  public selectedStorageSliderValues: number[];
 
   public serverResourceSubscription: Subscription;
   public storageDeviceSubscription: Subscription;
@@ -88,6 +84,14 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
+  }
+
+  public get sliderStep(): number {
+    return STORAGE_SLIDER_STEP_DEFAULT;
+  }
+
+  public get storageMinValueMB(): number {
+    return STORAGE_MINIMUM_VALUE;
   }
 
   // Check if the current server's serverType is managed
@@ -112,7 +116,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   public get hasAvailableStorageSpace(): boolean {
-    return this.convertStorageInGb(this.availableMemoryMB) > 0;
+    return this.convertStorageInGb(this.maximumMB) > 0;
   }
 
   public get isValidStorageValues(): boolean {
@@ -124,13 +128,24 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    */
   private _serverResourceMap: Map<string, ServerResource>;
 
-  private _availableMemoryMB: number;
-  public get availableMemoryMB(): number {
-    return this._availableMemoryMB;
+  private _minimumMB: number;
+  public get minimumMB(): number {
+    return this._minimumMB;
   }
-  public set availableMemoryMB(value: number) {
-    if (this._availableMemoryMB !== value) {
-      this._availableMemoryMB = value;
+  public set minimumMB(value: number) {
+    if (this._minimumMB !== value) {
+      this._minimumMB = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  private _maximumMB: number;
+  public get maximumMB(): number {
+    return this._maximumMB;
+  }
+  public set maximumMB(value: number) {
+    if (this._maximumMB !== value) {
+      this._maximumMB = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -183,6 +198,20 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return !this.server.isOperable || this.isManaged || this.isProcessing;
   }
 
+  public get attachIsDisabled(): boolean {
+    return !this.isValidStorageValues
+      || !this.hasAvailableStorageSpace
+      || this.isProcessing;
+  }
+
+  public get expandIsDisabled(): boolean {
+    return !this.isValidStorageValues
+      || this.expandingStorage
+      || this.isProcessing;
+  }
+
+  private _storageProfile: string;
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
@@ -198,18 +227,15 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.deletingStorage = false;
     this.storageDevices = new Array<ServerStorageDevice>();
     this.selectedStorageDevice = new ServerStorageDevice();
-    this.newStorageSliderValues = new Array<number>();
-    this.memoryMB = 0;
-    this.availableMemoryMB = 0;
-    this.minimumMB = STORAGE_MINIMUM_VALUE;
     this.usedMemoryMB = 0;
-    this.selectedStorageSliderValues = new Array<number>();
+    this.minimumMB = 0;
     this.serverStorage = new Array<ServerStorage>();
     this.storageChangedValue = new ServerManageStorage();
     this.storageChangedValue.valid = false;
     this.activeServerJob = new McsApiJob();
     this._serverResourceMap = new Map<string, ServerResource>();
     this.storageProfileList = new Array();
+    this._storageProfile = '';
   }
 
   public ngOnInit() {
@@ -222,17 +248,21 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.storageChangedValue = serverStorage;
-    this.availableMemoryMB = this.getStorageAvailableMemory(serverStorage.storageProfile);
-    this._setNewStorageSliderValues();
-    this._setSelectedStorageSliderValues();
+
+    if (!isNullOrEmpty(serverStorage.storageProfile) &&
+      serverStorage.storageProfile !== this._storageProfile) {
+      this._storageProfile = serverStorage.storageProfile;
+      this.maximumMB = this.getStorageAvailableMemory(this._storageProfile);
+    }
   }
 
   public onExpandStorage(storageDevice: ServerStorageDevice) {
     if (this.storageScaleIsDisabled) { return; }
 
+    this.minimumMB = storageDevice.sizeMB;
+    this.maximumMB = this.getStorageAvailableMemory(storageDevice.storageProfile);
     this.selectedStorageDevice = storageDevice;
     this.expandStorage = true;
-    this._setSelectedStorageSliderValues();
   }
 
   public closeExpandStorageBox() {
@@ -353,7 +383,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   public getStorageAvailableMemory(storageProfile: string): number {
     let storage = this._getStorageByProfile(storageProfile);
 
-    return this._serverService.computeAvailableStorageMB(storage);
+    return storage.limitMB;
   }
 
   /**
@@ -397,24 +427,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     if (this._notificationsSubscription) {
       this._notificationsSubscription.unsubscribe();
     }
-  }
-
-  /**
-   * This will get the server resources
-   */
-  private _getServerResources(): void {
-    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
-      .subscribe((resources) => {
-        if (!isNullOrEmpty(resources)) {
-          this._setServerResourceMap(resources);
-          this._setServerStorage();
-          this._setStorageProfiles();
-        }
-      });
-
-    this.serverResourceSubscription.add(() => {
-      this._changeDetectorRef.markForCheck();
-    });
   }
 
   /**
@@ -537,6 +549,24 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * This will get the server resources
+   */
+  private _getServerResources(): void {
+    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
+      .subscribe((resources) => {
+        if (!isNullOrEmpty(resources)) {
+          this._setServerResourceMap(resources);
+          this._setServerStorage();
+          this._setStorageProfiles();
+        }
+      });
+
+    this.serverResourceSubscription.add(() => {
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  /**
    * This will set the Platform data to platform mapping
    *
    * @param resources Server Resources
@@ -596,60 +626,19 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    * @param profile Storage profile
    */
   private _getStorageByProfile(profile: string): ServerStorage {
-    if (isNullOrEmpty(this.serverStorage)) { return; }
+    let serverStorage = new ServerStorage();
 
-    return this.serverStorage.find((storage) => {
-      return storage.name === profile;
-    });
-  }
+    if (!isNullOrEmpty(this.serverStorage)) {
+      let targetStorage = this.serverStorage.find((storage) => {
+        return storage.name === profile;
+      });
 
-  /**
-   * This will return the slider values based
-   * on the memoryMB and availableMemory
-   * of the currently selected storage profile
-   *
-   * @param memoryMB Initial or Minimum value of the slider
-   * @param availableMemoryMB Available memory of the storage profile
-   */
-  private _getStorageSliderValues(memoryMB: number, availableMemoryMB: number): number[] {
-    let memoryGB = Math.floor(convertToGb(memoryMB));
-    let maximumMemoryGB = memoryGB + Math.floor(convertToGb(availableMemoryMB));
-    let storageSliderValues = new Array<number>();
-
-    storageSliderValues.push(memoryGB);
-    for (let value = memoryGB; value < maximumMemoryGB;) {
-      if ((value + STORAGE_SLIDER_STEP_DEFAULT) <= maximumMemoryGB) {
-        value += STORAGE_SLIDER_STEP_DEFAULT;
-      } else {
-        value = maximumMemoryGB;
+      if (!isNullOrEmpty(targetStorage)) {
+        serverStorage = targetStorage;
       }
-
-      storageSliderValues.push(value);
     }
 
-    return storageSliderValues;
-  }
-
-  /**
-   * This will set the slider values for
-   * the new storage to be added
-   */
-  private _setNewStorageSliderValues(): void {
-    if (isNullOrEmpty(this.availableMemoryMB)) { return; }
-    this.newStorageSliderValues = this._getStorageSliderValues(
-      this.memoryMB, this.availableMemoryMB
-    );
-  }
-
-  /**
-   * This will set the slider values for
-   * the storage to be expanded
-   */
-  private _setSelectedStorageSliderValues(): void {
-    if (isNullOrEmpty(this.availableMemoryMB)) { return; }
-    this.selectedStorageSliderValues = this._getStorageSliderValues(
-      this.selectedStorageDevice.sizeMB, this.availableMemoryMB
-    );
+    return serverStorage;
   }
 
   /**
@@ -662,7 +651,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       isValid = this.storageChangedValue.storageMB > this.selectedStorageDevice.sizeMB
         && this.storageChangedValue.valid;
     } else {
-      isValid = this.storageChangedValue.storageMB > this.memoryMB
+      isValid = this.storageChangedValue.storageMB > this.minimumMB
         && this.storageChangedValue.valid;
     }
 

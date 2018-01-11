@@ -46,7 +46,7 @@
 
       <mcs-form-field [ngStyle]="{width: '150px'}">
         <input mcsInput placeholder="Enter storage"
-          [ngModel]="customStorageValue"
+          [(ngModel)]="storageValue"
           [formControl]="fcServerStorageCustom">
         <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
 
@@ -71,9 +71,8 @@
     && hasAvailableStorageSpace" class="slider-content">
 
     <mcs-slider animate trigger="fadeIn"
-      [min]="minimum" [max]="maximum"
-      [disabled]="disabled"
-      [ngModel]="storageSliderValue"
+      [min]="minimumGB" [max]="maximumGB" [step]="step"
+      [ngModel]="storageValue" [disabled]="disabled"
       (ngModelChange)="onStorageChanged($event)"></mcs-slider>
     <span animate trigger="fadeIn" class="storage-label">
       {{ currentMemory }}
@@ -87,7 +86,9 @@
   <div *ngIf="storageProfileValue && !hasAvailableStorageSpace">
     <div animate trigger="fadeIn" class="storage-full-warning">
       <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-      <h4 class="squishy">{{ textContent.fullStorageSpace }}</h4>
+      <h4 class="squishy">
+        <ng-content select="[server-storage-warning]"></ng-content>
+      </h4>
     </div>
   </div>
 </div>

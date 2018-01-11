@@ -91,16 +91,19 @@
   <!-- Storage Management -->
   <div class="field" *ngIf="storageItems">
     <mcs-server-manage-storage
-      [memoryMB]="storageMemoryMB"
-      [availableMemoryMB]="storageAvailableMemoryMB"
       [minimumMB]="storageMemoryMB"
+      [maximumMB]="storageAvailableMemoryMB"
+      [step]="sliderStep"
       [storageProfileList]="storageItems"
-      [storageSliderValues]="storageSliderValues"
       [mcsContextualHelp]="textHelpContent.storageField"
       (storageChanged)="onStorageChanged($event)">
       <!--Server manage storage contents on the left hand side (title and description)-->
       <div title>
         <span class="label no-line-height">{{ textContent.storageLabel }}</span>
+      </div>
+
+      <div server-storage-warning>
+        <span>{{ storageWarning }}</span>
       </div>
     </mcs-server-manage-storage>
   </div>

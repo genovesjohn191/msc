@@ -47,8 +47,8 @@ describe('ServerManageStorageComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.memoryMB = 256000;
-      component.availableMemoryMB = 102400;
+      component.minimumMB = 0;
+      component.maximumMB = 102400;
 
       component.storageProfileList = new Array();
       component.storageProfileList.push({ value: 'storageProfile1', text: 'Storage 1' });
@@ -66,20 +66,12 @@ describe('ServerManageStorageComponent', () => {
         .toBe(component.storageProfileList[0].value);
     });
 
-    it(`should initialize the sliderValue`, fakeAsync(() => {
+    it(`should initialize the storageValue`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.ngOnInit();
-        expect(component.storageSliderValue).toBe(0);
+        expect(component.storageValue).toBe(0);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageChanged.next).toHaveBeenCalledTimes(2);
-      }));
-
-    it(`should initialize the customStorageValue`, fakeAsync(() => {
-        spyOn(component.storageChanged, 'next');
-        component.ngOnInit();
-        expect(component.customStorageValue).toBe(component.memoryGB);
-        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageChanged.next).toHaveBeenCalledTimes(2);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
       }));
   });
 
@@ -88,7 +80,7 @@ describe('ServerManageStorageComponent', () => {
       from the slider or custom inputs`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.onStorageChanged(250);
-        expect(component.storageSliderValue).toBe(250);
+        expect(component.storageValue).toBe(250);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
       }));

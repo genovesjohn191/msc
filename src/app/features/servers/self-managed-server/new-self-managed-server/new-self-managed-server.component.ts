@@ -29,7 +29,8 @@ import {
   isNullOrEmpty,
   convertToGb,
   isFormControlValid,
-  replacePlaceholder
+  replacePlaceholder,
+  appendUnitSuffix
 } from '../../../../utilities';
 import {
   ContextualHelpDirective,
@@ -127,6 +128,19 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     return Math.floor(convertToGb(this.storageAvailableMemoryMB));
   }
 
+  public get sliderStep(): number {
+    return NEW_SERVER_STORAGE_SLIDER_STEP;
+  }
+
+  public get storageWarning(): string {
+    this.storageAvailableMemoryMB = 20480;
+    return replacePlaceholder(
+      this.textContent.fullStorageSpace,
+      'remaining_memory',
+      appendUnitSuffix(this._maximumMemoryGB, 'gigabyte')
+    );
+  }
+
   public constructor(
     private _serverService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider,
@@ -199,15 +213,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public onStorageChanged(serverStorage: ServerManageStorage) {
     if (isNullOrEmpty(this.fcStorage) || isNullOrEmpty(this.resource)) { return; }
 
-    if (serverStorage.valid) {
-      this.fcStorage.setValue(serverStorage);
-      if (this.selectedStorage.storageProfile !== serverStorage.storageProfile) {
-        this.selectedStorage = serverStorage;
-        this._setStorageAvailableMemoryMB();
-        this._setStorageSliderValues();
-      }
-    } else {
-      this.fcStorage.reset();
+    this.fcStorage.setValue(serverStorage);
+    if (!isNullOrEmpty(serverStorage.storageProfile) &&
+      this.selectedStorage.storageProfile !== serverStorage.storageProfile) {
+      this.selectedStorage = serverStorage;
+      this._setStorageAvailableMemoryMB();
     }
   }
 
@@ -318,21 +328,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
         return resource.name === serverStorage.storageProfile;
       });
 
-    this.storageAvailableMemoryMB = this._serverService.computeAvailableStorageMB(resourceStorage);
-  }
-
-  private _setStorageSliderValues(): void {
-    if (isNullOrEmpty(this._memoryGB) || isNullOrEmpty(this._maximumMemoryGB)) { return; }
-
-    this.storageSliderValues.splice(0);
-    this.storageSliderValues.push(this._memoryGB);
-    for (let value = this._memoryGB; value < this._maximumMemoryGB;) {
-      if ((value + NEW_SERVER_STORAGE_SLIDER_STEP) <= this._maximumMemoryGB) {
-        value += NEW_SERVER_STORAGE_SLIDER_STEP;
-      } else {
-        value = this._maximumMemoryGB;
-      }
-      this.storageSliderValues.push(value);
+    if (!isNullOrEmpty(resourceStorage)) {
+      this.storageAvailableMemoryMB = resourceStorage.limitMB;
     }
   }
 
