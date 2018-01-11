@@ -175,7 +175,7 @@ module.exports = function (env) {
        * due to its concatenation method. .::. For more details: See the link below
        * https://github.com/webpack/webpack/issues/5992
        */
-      // new ModuleConcatenationPlugin(),
+      new ModuleConcatenationPlugin(),
 
       /**
        * Plugin: UglifyJsPlugin
