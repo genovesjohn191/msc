@@ -22,7 +22,7 @@
           <!-- Ticket Type -->
           <div class="field">
             <mcs-form-field>
-              <mcs-select id="type" placeholder="Select the ticket type"
+              <mcs-select id="type" [placeholder]="textContent.placeholders.type"
                 [formControl]="fcType" set-focus required
                 [mcsContextualHelp]="contextualContent.type">
                 <mcs-select-item>--</mcs-select-item>
@@ -45,7 +45,7 @@
           <div class="field">
             <mcs-form-field>
               <input mcsInput #headlineInput required
-                placeholder="Enter headline" maxlength="80"
+                [placeholder]="textContent.placeholders.headline" maxlength="80"
                 [formControl]="fcHeadline"
                 [mcsContextualHelp]="contextualContent.headline">
 
@@ -65,7 +65,7 @@
           <div class="field">
             <mcs-form-field>
               <textarea mcsInput rows="3" #detailsInput required
-                placeholder="Enter details" maxlength="4000"
+                [placeholder]="textContent.placeholders.details" maxlength="4000"
                 [formControl]="fcDetails"
                 [mcsContextualHelp]="contextualContent.details"></textarea>
 
@@ -86,8 +86,40 @@
             <label class="label" for="services">{{ textContent.services }}</label>
             <div class="item">
               <ng-container *ngIf="services">
-                <mcs-select-tag (selectionChanged)="serviceItemSelectionChanged($event)"
-                  [mcsContextualHelp]="contextualContent.services">
+
+                <div display-flex="row" align-items="flex-start">
+                  <!-- Tags -->
+                  <mcs-form-field flex="auto">
+                    <mcs-tag-list [placeholder]="textContent.placeholders.services"
+                      [formControl]="fcService" required>
+
+                      <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
+                        [selectable]="true" [removable]="true"
+                        (removed)="selectService.removeSubSelection(subItem)">
+                        {{ subItem.text }}
+                      </mcs-tag>
+                    </mcs-tag-list>
+
+                    <mcs-error mcsError errorState="required">
+                      {{ textContent.errors.servicesRequired }}
+                    </mcs-error>
+                  </mcs-form-field>
+
+                  <!-- Icon trigger -->
+                  <div cursor="pointer" id="ctaSelectService"
+                    class="space-left-small space-top-small" flex="none"
+                    (click)="servicePanelOpen = !servicePanelOpen" #trigger>
+                    <mcs-icon [key]="toggleIconKey"></mcs-icon>
+                    <mcs-ripple class="icon-ripple-wrapper"
+                      mcsRipple
+                      [rippleTrigger]="trigger"
+                      [rippleCentered]="true">
+                    </mcs-ripple>
+                  </div>
+                </div>
+
+                <mcs-select-tag #selectService [hidden]="!servicePanelOpen" class="vspace-small"
+                  (selectionChanged)="serviceItemSelectionChanged($event)">
                   <mcs-select-tag-main-item *ngFor="let service of services"
                     [header]="service.serviceName">
 

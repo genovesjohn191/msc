@@ -11,6 +11,8 @@ import {
   Optional,
   Self,
   AfterContentInit,
+  DoCheck,
+  OnChanges,
   OnDestroy
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
@@ -41,7 +43,7 @@ let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-tag-list',
-  template: `<ng-content></ng-content>`,
+  templateUrl: './tag-list.component.html',
   styleUrls: ['./tag-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -51,16 +53,16 @@ let nextUniqueId = 0;
   host: {
     'class': 'tag-list-wrapper',
     'role': 'listbox',
-    '(focus)': 'onFocus()',
-    '(blur)': 'onBlur()',
-    '(keydown)': 'onKeyDown($event)',
     '[attr.id]': 'id',
-    '[attr.tabindex]': 'tabindex'
+    '[attr.tabindex]': 'tabindex',
+    '(keydown)': 'onKeyDown($event)',
+    '(blur)': 'onBlur()',
+    '(focus)': 'onFocus()'
   }
 })
 
 export class TagListComponent extends McsFormFieldControlBase<any>
-  implements AfterContentInit, OnDestroy, ControlValueAccessor {
+  implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
 
   @Input()
   public id: string = `mcs-taglist-${nextUniqueId++}`;
@@ -93,7 +95,9 @@ export class TagListComponent extends McsFormFieldControlBase<any>
   public get value() { return this._value; }
   public set value(value: any) {
     if (value !== this._value) {
-      this._onChanged(this._value);
+      this._value = value;
+      this._onChanged(value);
+      this._changeDetectorRef.markForCheck();
     }
   }
   private _value: any;
@@ -125,6 +129,9 @@ export class TagListComponent extends McsFormFieldControlBase<any>
     @Optional() _parentFormGroup: FormGroupDirective
   ) {
     super(_elementRef.nativeElement, _parentFormGroup || _parentForm);
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
   }
 
   public ngOnDestroy() {
@@ -148,7 +155,18 @@ export class TagListComponent extends McsFormFieldControlBase<any>
       this._listenToFocusChanges();
       this._listenToSelectionChanges();
       this._listenToRemovedChanges();
+      this._setModelValue(this._items.length);
     });
+  }
+
+  public ngDoCheck(): void {
+    if (this.ngControl) {
+      this.updateErrorState();
+    }
+  }
+
+  public ngOnChanges(): void {
+    this.stateChanges.next();
   }
 
   /**
@@ -324,7 +342,6 @@ export class TagListComponent extends McsFormFieldControlBase<any>
     if (isNullOrEmpty(item)) { return; }
     this._clearItemSelection(item);
     item.select();
-    this.value = item.value;
     this.stateChanges.next();
   }
 
@@ -370,5 +387,16 @@ export class TagListComponent extends McsFormFieldControlBase<any>
         this._items.toArray()[inlineTagIndex].focus();
       }
     });
+  }
+
+  /**
+   * Set the model value
+   * @param tagsCount Tags count
+   */
+  private _setModelValue(tagsCount: number): void {
+    this.value = tagsCount === 0 ? undefined : tagsCount;
+    if (tagsCount > 0) { this._onTouched(); }
+    this.stateChanges.next();
+    this._changeDetectorRef.markForCheck();
   }
 }

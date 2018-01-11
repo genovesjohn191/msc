@@ -123,8 +123,8 @@ describe('TagListComponent', () => {
       expect(element).not.toBe(null);
     });
 
-    it(`should set the value to undefined`, () => {
-      expect(component.tagListComponent.value).toBeUndefined();
+    it(`should set the value to 3`, () => {
+      expect(component.tagListComponent.value).toBe(3);
     });
   });
 

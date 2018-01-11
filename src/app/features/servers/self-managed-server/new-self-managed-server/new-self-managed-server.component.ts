@@ -133,7 +133,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public get storageWarning(): string {
-    this.storageAvailableMemoryMB = 20480;
     return replacePlaceholder(
       this.textContent.fullStorageSpace,
       'remaining_memory',

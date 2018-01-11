@@ -1,5 +1,6 @@
 $ripple-dark-bg-color: rgba($color-black, 0.1);
 $ripple-light-bg-color: rgba($color-white, 0.3);
+$ripple-icon-size: 15px;
 
 .ripple-directive-wrapper {
   overflow: hidden;
@@ -29,4 +30,15 @@ $ripple-light-bg-color: rgba($color-white, 0.3);
   position: absolute;
   pointer-events: none;
   overflow: hidden;
+}
+
+.icon-ripple-wrapper {
+  position: absolute;
+  left: -$ripple-icon-size;
+  top: -$ripple-icon-size;
+  right: -$ripple-icon-size;
+  bottom: -$ripple-icon-size;
+  @include border-radius(50%);
+  z-index: 1;
+  pointer-events: none;
 }

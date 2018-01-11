@@ -1,0 +1,5 @@
+<ng-container *ngIf="isEmpty() && placeholder">
+  <span read-only animate trigger="fadeIn"
+    class="tag-placeholder">{{ getPlaceholder() }}</span>
+</ng-container>
+<ng-content></ng-content>

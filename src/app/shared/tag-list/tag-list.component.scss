@@ -2,6 +2,7 @@
 
 // Tag list
 $tag-list-padding: 0 $space-xsmall;
+$tag-list-placeholder-offset: $space-small;
 // Tag item
 $tag-font-size: 12;
 $tag-padding: 2px $space-small;
@@ -25,11 +26,19 @@ $tag-remove-icon-active-bg-color: $tag-active-bg-color;
   @include set-items-interval($space-xsmall, horizontal);
   width: 100%;
   padding: $tag-list-padding;
+  outline: none;
+  position: relative;
 
   input[class=tag-input-wrapper] {
     width: auto;
     margin: 0;
     @include flex(1 1 auto);
+  }
+
+  .tag-placeholder {
+    position: absolute;
+    top: -$tag-list-placeholder-offset;
+    left: $tag-list-placeholder-offset;
   }
 }
 
