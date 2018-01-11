@@ -38,8 +38,10 @@ export class GoogleAnalyticsEventsService {
   }
 
   private _setUser() {
+    let identity = this._mcsAuthenticationIdentity.hashedId.split('.');
     dataLayer.push({
-      'userID' : this._mcsAuthenticationIdentity.hashedId
+      'userID' : identity[0],
+      'companyGroup' : identity[1],
     });
   }
 
