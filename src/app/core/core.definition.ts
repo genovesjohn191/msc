@@ -162,6 +162,8 @@ export class CoreDefinition {
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
   public static REGEX_NUMERIC_PATTERN = /^[\d]+$/;
   public static REGEX_SERVER_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
+  public static REGEX_UUID_PATTERN
+    = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
 
   /** Job Types */
   public static JOB_TYPE_SERVER_START = 100001;

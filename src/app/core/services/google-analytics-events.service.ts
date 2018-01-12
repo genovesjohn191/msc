@@ -3,6 +3,7 @@ import {
   Router,
   NavigationEnd,
 } from '@angular/router';
+import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 
 declare let dataLayer: any;
@@ -48,9 +49,12 @@ export class GoogleAnalyticsEventsService {
   private _subscribeToNavigationEvents(): void {
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        // Mask URLs with UUIDs
+        let maskedUrl = event.urlAfterRedirects.replace(CoreDefinition.REGEX_UUID_PATTERN, '{id}');
+
         dataLayer.push({
           'event':'virtualPageView',
-          'virtualPageURL': event.urlAfterRedirects
+          'virtualPageURL': maskedUrl
         });
       }
     });
