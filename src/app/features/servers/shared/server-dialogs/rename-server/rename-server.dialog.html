@@ -20,6 +20,9 @@
         <mcs-error mcsError errorState="required">
           {{ textContent.errors.required }}
         </mcs-error>
+        <mcs-error mcsError errorState="minlength">
+          {{ textContent.errors.required }}
+        </mcs-error>
         <mcs-error mcsError errorState="invalidServerName">
           <span [innerHTML]="textContent.errors.invalidServerName"></span>
         </mcs-error>
@@ -29,7 +32,7 @@
 
   <mcs-dialog-actions>
     <a id="ctaCloseRenameServerDialog" (click)="closeDialog()">{{ textContent.cancel }}</a>
-    <button mcsButton id="ctaRenameServer" arrow="right"
+    <button mcsButton id="ctaRenameServer" arrow="right" [disabled]="disabledRenameButton"
       size="small" (click)="renameServer(serverNameInput)">
       {{ textContent.rename }}
     </button>

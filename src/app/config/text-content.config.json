@@ -103,6 +103,7 @@
       },
       "errors": {
         "serverNameRequired": "Enter a server name.",
+        "serverMinLength": "Minimum of {{min_char}} characters required.",
         "invalidServerName": "Server name can only contain letters, numbers or hypen.",
         "selectVappRequired": "Virtual application is required.",
         "selectImageRequired": "You must select an image.",
@@ -290,7 +291,7 @@
         },
         "errors": {
           "required": "Server name is required",
-          "invalidServerName": "Please ensure the new name meets the following criteria: <br/> • Different to the current name<br/> • Between 1 and 15 characters<br/> • No special characters or spaces except - or _"
+          "invalidServerName": "Please ensure the new name meets the following criteria: <br/> • Different to the current name<br/> • Between 4 and 15 characters<br/> • No special characters or spaces except - or _"
         }
       },
       "resetPasswordDialog": {

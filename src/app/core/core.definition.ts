@@ -41,8 +41,8 @@ export class CoreDefinition {
   public static QUERY_PARAM_BEARER = 'bearer';
 
   /** Server Page */
+  public static SERVER_NAME_MIN = 4;
   public static SERVER_NAME_MAX = 15;
-  public static SERVER_LIST_MAX_ITEM_PER_PAGE = 10;
 
   // TODO: Create Enumeration for Server Type
   public static SERVER_MANAGED = 'Managed';
