@@ -67,20 +67,29 @@ describe('ServerManageStorageComponent', () => {
     });
 
     it(`should initialize the storageValue`, fakeAsync(() => {
-        spyOn(component.storageChanged, 'next');
-        component.ngOnInit();
-        expect(component.storageValue).toBe(0);
-        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
-      }));
+      spyOn(component.storageChanged, 'next');
+      component.ngOnInit();
+      expect(component.storageValue).toBe(0);
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+      expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+    }));
   });
 
   describe('onStorageChanged()', () => {
     it(`should change the storageValue based on the input value
-      from the slider or custom inputs`, fakeAsync(() => {
+      if inputted value is not more than the maximum value`, fakeAsync(() => {
+        spyOn(component.storageChanged, 'next');
+        component.onStorageChanged(80);
+        expect(component.storageValue).toBe(80);
+        tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+        expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+      }));
+
+    it(`should change the storageValue based on the maximum value
+      if the inputted value is more than the maximum value`, fakeAsync(() => {
         spyOn(component.storageChanged, 'next');
         component.onStorageChanged(250);
-        expect(component.storageValue).toBe(250);
+        expect(component.storageValue).toBe(100);
         tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
       }));
