@@ -212,7 +212,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public onStorageChanged(serverStorage: ServerManageStorage) {
     if (isNullOrEmpty(this.fcStorage) || isNullOrEmpty(this.resource)) { return; }
 
-    this.fcStorage.setValue(serverStorage);
+    // Set the value of the storage if it is value
+    // otherwise, reset the form control to check on predeployment
+    serverStorage.valid ? this.fcStorage.setValue(serverStorage) :
+      this.fcStorage.reset();
+
     if (!isNullOrEmpty(serverStorage.storageProfile) &&
       this.selectedStorage.storageProfile !== serverStorage.storageProfile) {
       this.selectedStorage = serverStorage;
@@ -222,11 +226,12 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
   public onScaleChanged(serverScale: ServerPerformanceScale) {
     if (isNullOrEmpty(this.fcScale)) { return; }
-    if (serverScale.valid) {
-      this.fcScale.setValue(serverScale);
-    } else {
+
+    // Set the value of the scale if it is value
+    // otherwise, reset the form control to check on predeployment
+    serverScale.valid ? this.fcScale.setValue(serverScale) :
       this.fcScale.reset();
-    }
+    this._setStorageAvailableMemoryMB();
   }
 
   public onIpAddressChanged(ipAddress: ServerIpAddress): void {
@@ -240,10 +245,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
   public convertMaxCharText(text: string, maxchar: number): string {
     return replacePlaceholder(text, 'max_char', maxchar.toString());
-  }
-
-  public convertServerMinCharText(text: string): string {
-    return replacePlaceholder(text, 'min_char', CoreDefinition.SERVER_NAME_MIN.toString());
   }
 
   private _setAvailableMemoryMB(): void {
@@ -323,16 +324,24 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     });
   }
 
+  /**
+   * Set the available storage memory
+   *
+   * `@Note:` Total available storage - Currently selected RAM
+   */
   private _setStorageAvailableMemoryMB(): void {
-    let serverStorage = this.fcStorage.value as ServerManageStorage;
+    if (isNullOrEmpty(this.fcStorage.value)) { return; }
 
+    let serverStorage = this.fcStorage.value as ServerManageStorage;
     let resourceStorage = this.resource.storage
       .find((resource) => {
         return resource.name === serverStorage.storageProfile;
       });
 
     if (!isNullOrEmpty(resourceStorage)) {
-      this.storageAvailableMemoryMB = resourceStorage.limitMB;
+      let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
+      this.storageAvailableMemoryMB = this._serverService
+        .computeAvailableStorageMB(resourceStorage, currentSelectedScale);
     }
   }
 
@@ -340,7 +349,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     // Register Form Controls
     this.fcServerName = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.minLength(CoreDefinition.SERVER_NAME_MIN),
       CoreValidators.custom(
         this._customServerNameValidator.bind(this),
         'invalidServerName'
@@ -419,7 +427,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     newSelfManaged.performanceScale = this.fcScale.value;
     newSelfManaged.serverManageStorage = this.fcStorage.value;
     newSelfManaged.ipAddress = this.fcIpAddress.value;
-    newSelfManaged.isValid = this.fgCreateDirective.isValid();
+    newSelfManaged.isValid = this.fgCreateDirective.isValid() &&
+      this.fcStorage.valid && this.fcScale.valid;
 
     this.onOutputServerDetails.next(newSelfManaged);
   }

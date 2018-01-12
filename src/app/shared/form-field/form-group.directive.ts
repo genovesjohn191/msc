@@ -87,6 +87,10 @@ export class FormGroupDirective implements AfterContentInit {
 
   /**
    * Return true when all the form controls are valid, otherwise false
+   *
+   * `@Note:` All the form fields with [formControl] directive only
+   * are included in the checking. Other cases of form control declaration
+   * for such checking purposes are not included.
    */
   public isValid(): boolean {
     if (isNullOrEmpty(this._formFields)) { return false; }

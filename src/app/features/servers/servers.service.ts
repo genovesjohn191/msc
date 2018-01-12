@@ -1012,8 +1012,8 @@ export class ServersService {
    * Calculate the available storage as MB
    * @param storage Storage to calculate
    */
-  public computeAvailableStorageMB(storage: ServerStorage): number {
-    return !isNullOrEmpty(storage) ? storage.limitMB - storage.usedMB : 0;
+  public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
+    return !isNullOrEmpty(storage) ? (storage.limitMB - storage.usedMB) - memoryMB : 0;
   }
 
   /**

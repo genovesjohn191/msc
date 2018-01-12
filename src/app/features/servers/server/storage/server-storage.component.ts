@@ -382,8 +382,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
    */
   public getStorageAvailableMemory(storageProfile: string): number {
     let storage = this._getStorageByProfile(storageProfile);
-
-    return storage.limitMB;
+    return this._serverService.computeAvailableStorageMB(storage,
+      this.server.compute && this.server.compute.memoryMB);
   }
 
   /**

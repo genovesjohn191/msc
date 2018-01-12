@@ -38,15 +38,14 @@
 
   <!--Custom size content element-->
   <form *ngIf="inputManageType == inputManageTypeEnum.Custom && hasAvailableStorageSpace"
-    [formGroup]="formGroupServerStorage" class="custom-size-form">
+    [formGroup]="fgServerStorage" class="custom-size-form">
 
-    <div animate trigger="fadeIn" display-flex align-items="center"
+    <div animate trigger="fadeIn" display-flex align-items="flex-start"
       class="horizontal-items-spacing-medium">
       <span class="label">{{ textContent.label }} : </span>
 
       <mcs-form-field [ngStyle]="{width: '150px'}">
         <input mcsInput placeholder="Enter storage"
-          [(ngModel)]="storageValue"
           [formControl]="fcServerStorageCustom">
         <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
 
