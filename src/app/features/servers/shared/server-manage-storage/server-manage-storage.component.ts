@@ -67,14 +67,57 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   @Output()
   public storageChanged: EventEmitter<ServerManageStorage>;
 
-  public inputManageTypeEnum = ServerInputManageType;
-  public textContent: any;
-
-  public formGroupServerStorage: FormGroup;
+  // Form groups and controls
+  public fgServerStorage: FormGroup;
   public fcServerStorageCustom: FormControl;
   public formControlSubscription: any;
 
+  // Others
+  public inputManageTypeEnum = ServerInputManageType;
+  public textContent: any;
   public invalidCustomStorageMessage: string;
+
+  /**
+   * Input management type if it is Slider or Custom
+   */
+  private _inputManageType: ServerInputManageType;
+  public get inputManageType(): ServerInputManageType {
+    return this._inputManageType;
+  }
+  public set inputManageType(value: ServerInputManageType) {
+    if (this._inputManageType !== value) {
+      this._inputManageType = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  /**
+   * Storage profile value
+   */
+  private _storageProfileValue: string;
+  public get storageProfileValue(): string {
+    return this._storageProfileValue;
+  }
+  public set storageProfileValue(value: string) {
+    if (this._storageProfileValue !== value) {
+      this._storageProfileValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  /**
+   * Current storage value that updates real time
+   */
+  private _storageValue: number;
+  public get storageValue(): number {
+    return this._storageValue;
+  }
+  public set storageValue(value: number) {
+    if (this._storageValue !== value) {
+      this._storageValue = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
@@ -104,39 +147,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return convertToGb(this.minValueMB);
   }
 
-  private _inputManageType: ServerInputManageType;
-  public get inputManageType(): ServerInputManageType {
-    return this._inputManageType;
-  }
-  public set inputManageType(value: ServerInputManageType) {
-    if (this._inputManageType !== value) {
-      this._inputManageType = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _storageProfileValue: string;
-  public get storageProfileValue(): string {
-    return this._storageProfileValue;
-  }
-  public set storageProfileValue(value: string) {
-    if (this._storageProfileValue !== value) {
-      this._storageProfileValue = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _storageValue: number;
-  public get storageValue(): number {
-    return this._storageValue;
-  }
-  public set storageValue(value: number) {
-    if (this._storageValue !== value) {
-      this._storageValue = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef
@@ -160,7 +170,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public ngOnChanges(changes: SimpleChanges) {
     let maximumMBChanges = changes['maximumMB'];
     if (maximumMBChanges) {
-      this.inputManageType = ServerInputManageType.Slider;
+      this._setStorageValue(this.storageValue);
       this._setCustomControlValidator();
     }
   }
@@ -174,13 +184,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onCustomStorageChanged(inputValue: number) {
-    this.storageValue = inputValue;
+    this._setStorageValue(inputValue);
     this._setCustomControlValidator();
     this._notifyStorageChanged();
   }
 
   public onStorageChanged(value: number) {
-    this.storageValue = value;
+    this._setStorageValue(value);
     this._notifyStorageChanged();
   }
 
@@ -221,6 +231,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     );
   }
 
+  /**
+   * Initializes the values of storage profiles and contents
+   */
   private _initializeValues(): void {
     if (!isNullOrEmpty(this.storageProfileList)) {
       this.storageProfileValue = this.storageProfileList[0].value;
@@ -234,21 +247,37 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this.storageValue = this.minimumGB;
   }
 
+  /**
+   * This will set the storage value according not
+   * exceeding the maximum value
+   * @param currentValue Current value to set the storage
+   */
+  private _setStorageValue(currentValue: number) {
+    this.storageValue = Math.min(currentValue, convertToGb(this.maximumMB));
+  }
+
+  /**
+   * Register form group elements for custom type
+   */
   private _registerFormGroup(): void {
     // Create custom storage control and register the listener
     this.fcServerStorageCustom = new FormControl(
-      { disabled: this.disabled },
+      { value: this.minimumGB, disabled: this.disabled },
       [CoreValidators.required]
     );
     this.formControlSubscription = this.fcServerStorageCustom.valueChanges
       .subscribe(this.onCustomStorageChanged.bind(this));
 
     // Bind server storage form control to the main form
-    this.formGroupServerStorage = new FormGroup({
+    this.fgServerStorage = new FormGroup({
       formControlServerStorageCustom: this.fcServerStorageCustom
     });
   }
 
+  /**
+   * Dynamically set the custom validator whenever
+   * the maximum value is changed
+   */
   private _setCustomControlValidator(): void {
     if (!this.fcServerStorageCustom) { return; }
 
@@ -263,10 +292,17 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     ]);
   }
 
+  /**
+   * The maximum value custom validator
+   * @param inputValue Input value to check
+   */
   private _customStorageValidator(inputValue: any): boolean {
     return inputValue <= this.maximumGB;
   }
 
+  /**
+   * Event that emits whenever the storage data is changed
+   */
   private _notifyStorageChanged() {
     let serverStorage = new ServerManageStorage();
     serverStorage.storageProfile = this.storageProfileValue;
@@ -282,10 +318,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
         case ServerInputManageType.Slider:
         default:
           serverStorage.storageMB = convertToMb(this.storageValue);
-          serverStorage.valid = serverStorage.storageMB > this.minimumMB;
+          serverStorage.valid = true;
           break;
       }
-
       this.storageChanged.next(serverStorage);
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }

@@ -279,7 +279,8 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
         return resource.name === serverStorage.storageProfile;
       });
 
-    this.storageAvailableMemoryMB = this._serverService.computeAvailableStorageMB(resourceStorage);
+    this.storageAvailableMemoryMB = this._serverService
+      .computeAvailableStorageMB(resourceStorage, this.formControlTargetServer.value);
   }
 
   private _setStorageSliderValues(): void {

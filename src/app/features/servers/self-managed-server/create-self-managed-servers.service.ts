@@ -70,8 +70,8 @@ export class CreateSelfManagedServersService {
     return this._serversService.computeAvailableCpu(resource);
   }
 
-  public computeAvailableStorageMB(storage: ServerStorage): number {
-    return this._serversService.computeAvailableStorageMB(storage);
+  public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
+    return this._serversService.computeAvailableStorageMB(storage, memoryMB);
   }
 
   /**

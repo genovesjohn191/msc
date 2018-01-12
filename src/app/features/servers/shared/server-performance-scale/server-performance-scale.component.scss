@@ -28,16 +28,6 @@ $custom-size-field-wrapper-max-width: 200px;
     }
   }
 
-  form {
-    .field-wrapper {
-      @include display-flex(row);
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: $custom-size-field-wrapper-max-width;
-    }
-  }
-
   .scale {
     min-height: 100px;
     > .scale-label,

@@ -240,8 +240,9 @@ export class ServerService {
     return this._serversService.computeAvailableCpu(resource);
   }
 
-  public computeAvailableStorageMB(storage: ServerStorage): number {
-    return this._serversService.computeAvailableStorageMB(storage);
+  public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
+    return this._serversService.computeAvailableStorageMB(storage,
+      isNullOrEmpty(memoryMB) ? 0 : memoryMB);
   }
 
   public getServerResources(server: Server): Observable<ServerResource[]> {
@@ -254,7 +255,7 @@ export class ServerService {
         });
       }
 
-      return !isNullOrEmpty(serverPlatform) ? serverPlatform : new ServerPlatform() ;
+      return !isNullOrEmpty(serverPlatform) ? serverPlatform : new ServerPlatform();
     }).map((platform) => {
       let serverEnvironment: ServerEnvironment;
 
@@ -265,7 +266,7 @@ export class ServerService {
       }
 
       return !isNullOrEmpty(serverEnvironment) ?
-        serverEnvironment.resources : new Array<ServerResource>() ;
+        serverEnvironment.resources : new Array<ServerResource>();
     });
   }
 

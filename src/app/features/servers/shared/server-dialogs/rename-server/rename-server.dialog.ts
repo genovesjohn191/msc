@@ -97,7 +97,6 @@ export class RenameServerDialogComponent {
    */
   private _serverNameValidator(inputValue: any): boolean {
     return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue) &&
-      inputValue.length >= CoreDefinition.SERVER_NAME_MIN &&
       (this.server && this.server.name !== inputValue);
   }
 }

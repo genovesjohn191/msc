@@ -130,15 +130,10 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
     return replacePlaceholder(text, 'max_char', maxchar.toString());
   }
 
-  public convertServerMinCharText(text: string): string {
-    return replacePlaceholder(text, 'min_char', CoreDefinition.SERVER_NAME_MIN.toString());
-  }
-
   private _registerFormGroup(): void {
     // Register Form Controls
     this.fcServerName = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.minLength(CoreDefinition.SERVER_NAME_MIN),
       CoreValidators.custom(
         this._customServerNameValidator.bind(this),
         this.textContent.invalidServerName

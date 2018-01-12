@@ -1,24 +1,39 @@
-$label-spacer: 40;
+// Form Field
+$field-bottom-margin: $space-medium;
+
+// Label
+$label-font: $base-font-bold;
+$label-font-size: $font-size-large;
+$label-line-height: 45;
+$label-min-width: 70px;
 
 .basic-form, form {
   .field {
-    margin-bottom: $space-medium;
+    margin-bottom: $field-bottom-margin;
+  }
 
-    span.label, label.label {
-      margin: 0;
-      font-family: $base-font-bold;
-      @include font-size($font-size-large, 45);
+  .inline-field {
+    @include display-flex(row);
+    @include align-items(flex-start);
+    @include set-items-interval($space-large, horizontal);
+    margin-bottom: $field-bottom-margin;
+  }
 
-      &.no-line-height {
-        line-height: 0;
-      }
+  span.label, label.label {
+    margin: 0;
+    font-family: $label-font;
+    min-width: $label-min-width;
+    @include font-size($label-font-size, $label-line-height);
+
+    &.no-line-height {
+      line-height: 0;
     }
   }
 
   .basic-action-bar {
     @include display-flex(row);
     align-items: center;
-    margin-top: $space-medium;
+    margin-top: $field-bottom-margin;
     justify-content: space-between;
   }
 }

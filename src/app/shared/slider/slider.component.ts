@@ -126,6 +126,9 @@ export class SliderComponent {
   public get max() { return this._max; }
   public set max(value: number) {
     this._max = coerceNumber(value, this._max);
+
+    // Set the actual value to max in case the maximum amount was changed
+    this.value = Math.min(this._value, this._max);
     this._percent = this._calculatePercentage(this._value);
     this._changeDetectorRef.markForCheck();
   }
