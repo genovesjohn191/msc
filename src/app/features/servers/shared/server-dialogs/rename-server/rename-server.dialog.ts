@@ -30,6 +30,7 @@ export class RenameServerDialogComponent {
   public textContent: any;
   public server: Server;
   public fcServerName: FormControl;
+  public disabledRenameButton: boolean;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
@@ -38,6 +39,7 @@ export class RenameServerDialogComponent {
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.renameServerDialog;
     this.server = this.dialogData as Server[][0];
+    this.disabledRenameButton = true;
     this._registerFormControl();
   }
 
@@ -80,15 +82,22 @@ export class RenameServerDialogComponent {
         'invalidServerName'
       )
     ]);
+    this.fcServerName.valueChanges.subscribe((inputValue) => {
+      this.disabledRenameButton = !!(isNullOrEmpty(inputValue) ||
+        this.server.name === inputValue);
+    });
   }
 
   /**
    * Returns a Boolean value of true that indicates the new server name
    * format is correct and not the same as the previous server name
+   * including the pattern and minimum length the user can enter for the
+   * server name
    * @param inputValue New server name
    */
   private _serverNameValidator(inputValue: any): boolean {
     return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue) &&
+      inputValue.length >= CoreDefinition.SERVER_NAME_MIN &&
       (this.server && this.server.name !== inputValue);
   }
 }

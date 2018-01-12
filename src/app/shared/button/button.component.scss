@@ -164,6 +164,9 @@ $button-color-disabled: $color-grey-02;
 }
 
 .button-text-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+
  .icon-wrapper {
    padding-left: $space-small;
  }

@@ -17,6 +17,9 @@
       <mcs-error mcsError errorState="required">
         {{ textContent.errors.serverNameRequired }}
       </mcs-error>
+      <mcs-error mcsError errorState="minlength">
+        {{ convertServerMinCharText(textContent.errors.serverMinLength) }}
+      </mcs-error>
       <mcs-error mcsError errorState="invalidServerName">
         {{ textContent.errors.invalidServerName }}
       </mcs-error>
