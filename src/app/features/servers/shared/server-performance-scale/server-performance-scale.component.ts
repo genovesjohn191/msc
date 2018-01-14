@@ -25,7 +25,8 @@ import {
   replacePlaceholder,
   appendUnitSuffix,
   isFormControlValid,
-  isNullOrEmpty
+  isNullOrEmpty,
+  coerceNumber
 } from '../../../../utilities';
 
 const CUSTOM_MEMORY_MULTIPLE = 4;
@@ -59,20 +60,28 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public serverScaleCustomRam: FormControl;
   public serverScaleCustomCpu: FormControl;
 
-  @Input()
-  public memoryMB: number;
-
-  @Input()
-  public cpuCount: number;
-
-  @Input()
-  public availableMemoryMB: number;
-
-  @Input()
-  public availableCpuCount: number;
-
   @Output()
   public scaleChanged: EventEmitter<ServerPerformanceScale>;
+
+  @Input()
+  public get memoryMB(): number { return this._memoryMB; }
+  public set memoryMB(value: number) { this._memoryMB = coerceNumber(value); }
+  private _memoryMB: number;
+
+  @Input()
+  public get cpuCount(): number { return this._cpuCount; }
+  public set cpuCount(value: number) { this._cpuCount = coerceNumber(value); }
+  private _cpuCount: number;
+
+  @Input()
+  public get availableMemoryMB(): number { return this._availableMemoryMB; }
+  public set availableMemoryMB(value: number) { this._availableMemoryMB = coerceNumber(value); }
+  private _availableMemoryMB: number;
+
+  @Input()
+  public get availableCpuCount(): number { return this._availableCpuCount; }
+  public set availableCpuCount(value: number) { this._availableCpuCount = coerceNumber(value); }
+  private _availableCpuCount: number;
 
   private _sliderValue: number;
   public get sliderValue(): number {

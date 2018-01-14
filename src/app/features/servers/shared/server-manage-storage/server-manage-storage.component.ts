@@ -26,7 +26,9 @@ import {
   replacePlaceholder,
   appendUnitSuffix,
   isFormControlValid,
-  isNullOrEmpty
+  isNullOrEmpty,
+  coerceNumber,
+  coerceBoolean
 } from '../../../../utilities';
 import {
   FormGroup,
@@ -46,27 +48,6 @@ import { McsStorage } from '../mcs-storage.interface';
 })
 
 export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy, McsStorage {
-  @Input()
-  public minimumMB: number;
-
-  @Input()
-  public maximumMB: number;
-
-  @Input()
-  public step: number;
-
-  @Input()
-  public minValueMB: number;
-
-  @Input()
-  public storageProfileList: any;
-
-  @Input()
-  public disabled: boolean;
-
-  @Output()
-  public storageChanged: EventEmitter<ServerManageStorage>;
-
   // Form groups and controls
   public fgServerStorage: FormGroup;
   public fcServerStorageCustom: FormControl;
@@ -76,6 +57,37 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public inputManageTypeEnum = ServerInputManageType;
   public textContent: any;
   public invalidCustomStorageMessage: string;
+
+  @Output()
+  public storageChanged: EventEmitter<ServerManageStorage>;
+
+  @Input()
+  public storageProfileList: any;
+
+  @Input()
+  public get minimumMB(): number { return this._minimumMB; }
+  public set minimumMB(value: number) { this._minimumMB = coerceNumber(value); }
+  private _minimumMB: number;
+
+  @Input()
+  public get maximumMB(): number { return this._maximumMB; }
+  public set maximumMB(value: number) { this._maximumMB = coerceNumber(value); }
+  private _maximumMB: number;
+
+  @Input()
+  public get step(): number { return this._step; }
+  public set step(value: number) { this._step = coerceNumber(value); }
+  private _step: number;
+
+  @Input()
+  public get minValueMB(): number { return this._minValueMB; }
+  public set minValueMB(value: number) { this._minValueMB = coerceNumber(value); }
+  private _minValueMB: number;
+
+  @Input()
+  public get disabled(): boolean { return this._disabled; }
+  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
+  private _disabled: boolean;
 
   /**
    * Input management type if it is Slider or Custom

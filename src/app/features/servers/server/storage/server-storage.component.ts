@@ -55,7 +55,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   @ViewChild('mcsStorage')
   public mcsStorage: McsStorage;
 
-  public serverStorageText: any;
+  public textContent: any;
   public activeServerJob: McsApiJob;
   public serverStorage: ServerStorage[];
 
@@ -240,7 +240,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     // OnInit
-    this.serverStorageText = this._textProvider.content.servers.server.storage;
+    this.textContent = this._textProvider.content.servers.server.storage;
 
     this._listenToSelectedServerStream();
     this._listenToNotificationsStream();
@@ -310,7 +310,7 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     storageData.sizeMB = this.storageChangedValue.storageMB;
     storageData.clientReferenceObject = {
       serverId: this.server.id,
-      name: `${this.serverStorageText.diskName} ${this.storageDevices.length + 1}`,
+      name: `${this.textContent.diskName} ${this.storageDevices.length + 1}`,
       storageProfile: this.storageChangedValue.storageProfile,
       sizeMB: this.storageChangedValue.storageMB,
       powerState: this.server.powerState

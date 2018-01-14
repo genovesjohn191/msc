@@ -60,7 +60,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   @ViewChild('thumbnailElement')
   public thumbnailElement: ElementRef;
 
-  public serverManagementTextContent: any;
+  public textContent: any;
   public primaryVolume: string;
   public secondaryVolumes: string;
   public otherStorage: ServerFileSystem[];
@@ -240,7 +240,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.serverManagementTextContent = this._textProvider.content.servers.server.management;
+    this.textContent = this._textProvider.content.servers.server.management;
     this._setServerData();
     this._getScaleParam();
     this._listenToNotificationsStream();
@@ -279,26 +279,26 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
   }
 
   public get serverStatusLabel(): string {
-    let status: string = this.serverManagementTextContent.status.running;
+    let status: string = this.textContent.status.running;
 
     switch (this.server.powerState) {
       case ServerPowerState.PoweredOn:
-        status = this.serverManagementTextContent.status.running;
+        status = this.textContent.status.running;
         break;
 
       case ServerPowerState.PoweredOff:
-        status = this.serverManagementTextContent.status.stopped;
+        status = this.textContent.status.stopped;
         break;
 
       default:
         if (!isNullOrEmpty(this.activeServerJob.clientReferenceObject)) {
           switch (this.activeServerJob.clientReferenceObject.commandAction) {
             case ServerCommand.Stop:
-              status = this.serverManagementTextContent.status.stopping;
+              status = this.textContent.status.stopping;
               break;
 
             case ServerCommand.Restart:
-              status = this.serverManagementTextContent.status.restarting;
+              status = this.textContent.status.restarting;
               break;
 
             default:
@@ -456,7 +456,7 @@ export class ServerManagementComponent implements OnInit, OnDestroy {
 
           refreshView(() => {
             if (!this.consoleEnabled) {
-              // this._hideThumbnail();
+              this._hideThumbnail();
             }
           }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
         }

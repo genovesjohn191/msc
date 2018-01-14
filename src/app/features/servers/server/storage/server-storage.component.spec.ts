@@ -108,7 +108,7 @@ describe('ServerStorageComponent', () => {
     });
 
     it('should define the value of serverStorageText', () => {
-      expect(component.serverStorageText).toBeDefined();
+      expect(component.textContent).toBeDefined();
     });
   });
 });
