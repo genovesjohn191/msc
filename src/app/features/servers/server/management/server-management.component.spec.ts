@@ -101,7 +101,7 @@ describe('ServerManagementComponent', () => {
     }));
 
     it('should define the text content values to serverManagementTextContent', () => {
-      expect(component.serverManagementTextContent).toBeDefined();
+      expect(component.textContent).toBeDefined();
     });
 
     it('should set the value of server', () => {

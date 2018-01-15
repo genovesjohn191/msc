@@ -1,24 +1,24 @@
 <div class="limited-view">
   <div class="vertical-items-spacing-medium" [mcsLoader]="serverResourceSubscription">
-    <h3 class="heading">{{ serverStorageText.title }}</h3>
+    <h3 class="heading">{{ textContent.title }}</h3>
 
-    <p>{{ serverStorageText.description }}</p>
+    <p>{{ textContent.description }}</p>
 
     <div *ngIf="!expandStorage" class="vertical-items-spacing-large">
       <div [ngStyle]="{'position': 'relative'}">
         <div [mcsLoader]="storageDeviceSubscription">
-          <p *ngIf="!hasStorageDevice">{{ serverStorageText.noDisks }}</p>
+          <p *ngIf="!hasStorageDevice">{{ textContent.noDisks }}</p>
           <table *ngIf="hasStorageDevice" class="mcs-simple-table full-width">
             <thead>
               <tr>
                 <td>
-                  <strong>{{ serverStorageText.storageDevice }}</strong>
+                  <strong>{{ textContent.storageDevice }}</strong>
                 </td>
                 <td>
-                  <strong>{{ serverStorageText.storageProfile }}</strong>
+                  <strong>{{ textContent.storageProfile }}</strong>
                 </td>
                 <td>
-                  <strong>{{ serverStorageText.capacity }}</strong>
+                  <strong>{{ textContent.capacity }}</strong>
                 </td>
                 <td></td>
               </tr>
@@ -42,14 +42,14 @@
                 <td class="action-items">
                   <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="expand text-right">
                     <a [disabled]="storageScaleIsDisabled" (click)="onExpandStorage(storage)">
-                      {{ serverStorageText.expandStorageLink }}
+                      {{ textContent.expandStorageLink }}
                     </a>
                   </span>
                   <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
                     <a *ngIf="hasMultipleStorageDevice"
                       [disabled]="storageScaleIsDisabled"
                       (click)="deleteStorage(storage)">
-                      {{ serverStorageText.deleteStorageLink }}
+                      {{ textContent.deleteStorageLink }}
                     </a>
                   </span>
                 </td>
@@ -67,18 +67,18 @@
             (storageChanged)="onStorageChanged($event)" [disabled]="storageScaleIsDisabled">
             <!--Server manage storage contents on the left hand side (description)-->
             <div title>
-              <h4>{{ serverStorageText.addStorageHeading }}</h4>
+              <h4>{{ textContent.addStorageHeading }}</h4>
             </div>
 
             <div server-storage-warning>
-              <span>{{ serverStorageText.fullStorageSpace }}</span>
+              <span>{{ textContent.fullStorageSpace }}</span>
             </div>
           </mcs-server-manage-storage>
           <div [ngStyle]="{'text-align': 'right'}">
             <button mcsButton id="ctaAttachServerStorage" arrow="right"
               [disabled]="attachIsDisabled"
               (click)="onClickAttach()">
-              {{ serverStorageText.attachStorage }}
+              {{ textContent.attachStorage }}
             </button>
           </div>
         </div>
@@ -86,7 +86,7 @@
         <div *ngIf="hasReachedDisksLimit" class="horizontal-items-spacing-xsmall"
           display-flex="row" align-items="center" justify-content="center">
           <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-          <h4>{{ serverStorageText.reachedStorageLimit }}</h4>
+          <h4>{{ textContent.reachedStorageLimit }}</h4>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@
         [disabled]="storageScaleIsDisabled">
         <!--Server manage storage contents on the left hand side (description)-->
         <div title>
-          <h4>{{ serverStorageText.expandStorageHeading }}</h4>
+          <h4>{{ textContent.expandStorageHeading }}</h4>
         </div>
 
         <div details class="vertical-items-spacing-xsmall">
@@ -120,7 +120,7 @@
           mcsButton id="ctaUpdateServerStorage" arrow="right"
           [disabled]="expandIsDisabled"
           (click)="onClickUpdate()">
-          {{ serverStorageText.updateStorage }}
+          {{ textContent.updateStorage }}
         </button>
       </div>
     </div>
