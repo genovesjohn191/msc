@@ -11,6 +11,7 @@ import { McsApiRequestParameter } from '../models/request/mcs-api-request-parame
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
+import { McsLoggerService } from '../services/mcs-logger.service';
 import { AppState } from '../../app.service';
 import {
   reviverParser,
@@ -30,6 +31,7 @@ export class McsAuthenticationService {
     private _cookieService: CookieService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
+    private _loggerService: McsLoggerService,
     private _locationService: Location,
     private _coreConfig: CoreConfig
   ) {
@@ -129,10 +131,16 @@ export class McsAuthenticationService {
    * @param requiredPermissions list of required permissions
    */
   public hasPermission(requiredPermissions: string[]): boolean {
-    let hasPermission: boolean = false;
+    this._loggerService.traceInfo(
+      `Checking if user has required permission...`,
+      requiredPermissions);
+
+    let hasPermission: boolean = isNullOrEmpty(requiredPermissions);
     let identity: McsApiIdentity = this._appState.get(CoreDefinition.APPSTATE_AUTH_IDENTITY);
 
-    if (!isNullOrEmpty(identity) && !isNullOrEmpty(identity.permissions)) {
+    this._loggerService.traceInfo(`User identity:`, identity);
+
+    if (!hasPermission && !isNullOrEmpty(identity) && !isNullOrEmpty(identity.permissions)) {
       let permissions: string[] = identity.permissions;
       hasPermission = true;
 
@@ -145,6 +153,8 @@ export class McsAuthenticationService {
         }
       }
     }
+
+    this._loggerService.traceInfo(`User has permission:`, hasPermission);
 
     return hasPermission;
   }
