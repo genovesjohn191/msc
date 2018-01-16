@@ -85,7 +85,6 @@ export class CreateSelfManagedServersComponent implements
 
   public notifications: McsApiJob[];
   public newServers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
-  public isLoading: boolean;
   public deployingServers: boolean;
 
   // Others
@@ -172,7 +171,6 @@ export class CreateSelfManagedServersComponent implements
     this.notifications = new Array();
     this.newServers = new Array();
     this.vdcList = new Array();
-    this.isLoading = true;
 
     this._mainContextInformations = new Array();
     this._serversOs = new Array();
@@ -188,17 +186,24 @@ export class CreateSelfManagedServersComponent implements
     // Get all the data from api in parallel
     this.obtainDataSubscription = Observable.forkJoin([
       this._createSelfManagedServices.getAllServers(),
-      this._createSelfManagedServices.getServersOs()
+      this._createSelfManagedServices.getServersOs(),
+      this._createSelfManagedServices.getResources()
     ])
-    .catch((error) => {
-      // Handle common error status code
-      this._errorHandlerService.handleHttpRedirectionError(error.status);
-      return Observable.throw(error);
-    })
-    .subscribe((data) => {
-      this._setAllServers(data[0]);
-      this._setServerOs(data[1]);
-      this._setResourcesData();
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
+      .subscribe((data) => {
+        this._setAllServers(data[0]);
+        this._setServerOs(data[1]);
+        this._setResourcesData(data[2]);
+      });
+
+    // Initialize all object data
+    this.obtainDataSubscription.add(() => {
+      this._initializeData();
+      this._changeDetectorRef.markForCheck();
     });
 
     // Listen to contextual helps and notifications
@@ -465,22 +470,15 @@ export class CreateSelfManagedServersComponent implements
    * for easily access across its chidren component
    *
    */
-  private _setResourcesData(): void {
-    this._resourcesSubscription = this._createSelfManagedServices.getResources()
-      .subscribe((resources) => {
-        if (!isNullOrEmpty(resources)) {
-          resources.forEach((resource) => {
-            if (resource.serviceType === ServerServiceType.SelfManaged) {
-              this._serverResourceMap.set(resource.name, resource);
-            }
-          });
+  private _setResourcesData(response: any): void {
+    if (response) {
+      let resources = response as ServerResource[];
+      resources.forEach((resource) => {
+        if (resource.serviceType === ServerServiceType.SelfManaged) {
+          this._serverResourceMap.set(resource.name, resource);
         }
       });
-
-    this._resourcesSubscription.add(() => {
-      this._initializeData();
-      this._changeDetectorRef.markForCheck();
-    });
+    }
   }
 
   /**
@@ -518,7 +516,6 @@ export class CreateSelfManagedServersComponent implements
   private _initializeData(): void {
     // Add server
     this._setVdcItems();
-    this.isLoading = false;
     this.addServer();
   }
 }

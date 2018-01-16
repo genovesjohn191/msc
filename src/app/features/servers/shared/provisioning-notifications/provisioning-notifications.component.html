@@ -1,7 +1,7 @@
 <section class="provisioning-notifications-container">
   <!-- Progress Information -->
-  <div class="progress-container">
-    <h3 class="title">{{ getTitle() }}</h3>
+  <div class="vertical-items-spacing-medium">
+    <h4 class="title">{{ getTitle() }}</h4>
     <mcs-progress-bar *ngIf="progressBarVisibility" animate [trigger]="animateTrigger"
       [(ngModel)]="progressValue" [maxValue]="progressMax"></mcs-progress-bar>
   </div>
@@ -9,7 +9,7 @@
   <!-- Job Details -->
   <div class="jobs-container">
     <div *ngFor="let job of jobs">
-      <h3 *ngIf="isMultiJobs">{{ job.description }}</h3>
+      <h4 *ngIf="isMultiJobs">{{ job.description }}</h4>
 
       <!-- Tasks content -->
       <div class="task-content" *ngIf="job.tasks">
@@ -31,7 +31,7 @@
             [key]="getStatusIcon('Completed').key"
             [color]="getStatusIcon('Completed').color"
             size="small"></mcs-icon>
-          <span class="bold">{{ textContent.deploymentCompleted }}</span>
+          <span class="font-bold">{{ textContent.deploymentCompleted }}</span>
         </div>
         <a *ngIf="isJobSuccessful(job)" (click)="onViewServerPage()"
           class="link">{{ textContent.viewServerLink }}</a>

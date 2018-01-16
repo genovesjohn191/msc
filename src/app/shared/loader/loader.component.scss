@@ -1,12 +1,14 @@
 @import "../../../styles/shared/base";
 
+$loader-offset: $space-xsmall;
+
 .loader-wrapper {
   background: $color-white;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: -$loader-offset;
+  left: -$loader-offset;
+  right: -$loader-offset;
+  bottom: -$loader-offset;
   @include display-flex(row);
   align-items: center;
   justify-content: center;

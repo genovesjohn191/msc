@@ -4,30 +4,22 @@
 $provisioning-details-font-size: 18;
 $provisioning-details-font: $circular-pro-book;
 $provisioning-details-font-bold: $circular-pro-bold;
-
 // Colors
 $job-active-color: $color-grey-02;
 $job-failed-color: $color-red-00;
 $job-completed-color: $color-primary-01;
-
 // Space
 $job-server-link-left-offset: 25px;
 
 .provisioning-notifications-container {
   @include display-flex(column);
-  @include set-items-interval($space-xxlarge);
-
-  .progress-container {
-    @include set-items-interval($space-large);
-  }
+  @include set-items-interval($space-medium);
 
   .jobs-container {
     @include display-flex(column);
     @include set-items-interval($space-xxlarge);
 
     .job-completed {
-      font-family: $provisioning-details-font-bold;
-      @include font-size($provisioning-details-font-size);
       @include display-flex(column);
       align-items: flex-start;
 
@@ -38,30 +30,24 @@ $job-server-link-left-offset: 25px;
       }
     }
   }
+}
 
-  .status-details {
-    margin: $space-xsmall 0;
-    font-family: $provisioning-details-font;
-    @include display-flex(row);
-    align-items: center;
-    @include font-size($provisioning-details-font-size);
-    @include set-items-interval($space-small, horizontal);
+.status-details {
+  @include display-flex(row);
+  @include align-items(center);
+  @include set-items-interval($space-small, horizontal);
+  margin: $space-xsmall 0;
 
-    .active {
+  .active {
+    color: $job-active-color;
+    + span {
       color: $job-active-color;
-      + span {
-        color: $job-active-color;
-      }
     }
-    .failed {
-      color: $job-failed-color;
-    }
-    .completed {
-      color: $job-completed-color;
-    }
-
-    .bold {
-      font-family: $provisioning-details-font-bold;
-    }
+  }
+  .failed {
+    color: $job-failed-color;
+  }
+  .completed {
+    color: $job-completed-color;
   }
 }

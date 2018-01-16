@@ -1,7 +1,9 @@
 @import "../../../styles/shared/base";
 
 .icon-wrapper {
-  display: inline-block;
+  @include display-inline-flex(row);
+  @include align-items(center);
+  justify-content: center;
   vertical-align: middle;
 }
 

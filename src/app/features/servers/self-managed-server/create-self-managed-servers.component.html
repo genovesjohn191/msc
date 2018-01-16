@@ -1,11 +1,11 @@
-<mcs-wizard [hidden]="!hasResources" [header]="createServerTextContent.header"
-  (onCancel)="gotoServers()" (onComplete)="onDeployServer()"
-  [mcsLoader]="obtainDataSubscription">
+<mcs-wizard [header]="createServerTextContent.header"
+  (onCancel)="gotoServers()" (onComplete)="onDeployServer()">
   <!-- Step 1 -->
   <mcs-wizard-step stepTitle="1. Server Details" customClass="limited-view"
     (onNext)="onPreDeployServer($event)">
-    <div class="contextual-help-page-wrapper">
+    <div [mcsLoader]="obtainDataSubscription"></div>
 
+    <div class="contextual-help-page-wrapper">
       <div class="page-information-wrapper">
         <mcs-form-field>
           <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC"
@@ -38,7 +38,7 @@
 
   <!-- Step 2  -->
   <mcs-wizard-step stepTitle="2. Go!">
-    <div class="jobs-progress" *ngIf="hasNotifications">
+    <div class="limited-view" *ngIf="hasNotifications">
       <mcs-provisioning-notifications [jobs]="notifications"
         [mcsContextualHelp]="contextualTextContent.provisioningNotifications">
       </mcs-provisioning-notifications>

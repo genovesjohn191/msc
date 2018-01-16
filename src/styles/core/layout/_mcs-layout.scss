@@ -185,34 +185,6 @@ table.mcs-simple-table {
   @include set-items-interval($space-small, horizontal);
 }
 
-.horizontal-items-spacing-xsmall {
-  @include set-items-interval($space-xsmall, horizontal);
-}
-
-.horizontal-items-spacing-small {
-  @include set-items-interval($space-small, horizontal);
-}
-
-.horizontal-items-spacing-medium {
-  @include set-items-interval($space-medium, horizontal);
-}
-
-.vertical-items-spacing-xsmall {
-  @include set-items-interval($space-xsmall, vertical);
-}
-
-.vertical-items-spacing-small {
-  @include set-items-interval($space-small, vertical);
-}
-
-.vertical-items-spacing-medium {
-  @include set-items-interval($space-medium, vertical);
-}
-
-.vertical-items-spacing-large {
-  @include set-items-interval($space-large, vertical);
-}
-
 // Text settings
 .text-center {
   text-align: center;

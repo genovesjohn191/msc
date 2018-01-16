@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  Input
+  Input,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Rx';
@@ -19,7 +21,8 @@ import {
 @Component({
   selector: 'mcs-provisioning-notifications',
   templateUrl: './provisioning-notifications.component.html',
-  styleUrls: ['./provisioning-notifications.component.scss']
+  styleUrls: ['./provisioning-notifications.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
@@ -36,7 +39,8 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
 
   public constructor(
     private _router: Router,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.progressValue = 0;
     this.progressMax = 0;
@@ -159,6 +163,7 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
           } else if (time <= this.progressMax) {
             this.progressValue = time;
           }
+          this._changeDetectorRef.markForCheck();
         });
     }
   }
