@@ -79,6 +79,7 @@ export class IconComponent implements OnChanges {
   private _setActualSize() {
     if (!this.icon) { return; }
 
+    // Set size for the icon variables
     switch (this.size) {
       case 'xlarge':
         this._iconActualSize = CoreDefinition.ICON_SIZE_XLARGE;
@@ -101,6 +102,12 @@ export class IconComponent implements OnChanges {
         this._iconActualSize = CoreDefinition.ICON_SIZE_MEDIUM;
         break;
     }
+
+    // Set size for the icon wrapper
+    this._renderer.setStyle(this._elementRef.nativeElement, 'min-width',
+      `${this._iconActualSize}px`);
+    this._renderer.setStyle(this._elementRef.nativeElement, 'min-height',
+      `${this._iconActualSize}px`);
   }
 
   private _setIconStyles() {

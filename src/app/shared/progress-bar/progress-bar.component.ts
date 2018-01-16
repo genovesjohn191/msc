@@ -2,6 +2,7 @@ import {
   Component,
   forwardRef,
   Input,
+  ViewEncapsulation,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -11,12 +12,11 @@ import {
 } from '@angular/forms';
 import { coerceNumber } from '../../utilities';
 
-export const PERCENTAGE_OFFSET = -5;
-
 @Component({
   selector: 'mcs-progress-bar',
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -24,7 +24,10 @@ export const PERCENTAGE_OFFSET = -5;
       useExisting: forwardRef(() => ProgressBarComponent),
       multi: true
     }
-  ]
+  ],
+  host: {
+    'class': 'progress-bar-wrapper'
+  }
 })
 
 export class ProgressBarComponent implements ControlValueAccessor {
@@ -34,18 +37,18 @@ export class ProgressBarComponent implements ControlValueAccessor {
   private _maxValue: number;
 
   /**
-   * IsChecked Flag
+   * Model Value of the Progressbar (Two way binding)
    */
-  private _value: number;
-  public get value(): number {
-    return this._value;
-  }
-  public set value(updatedValue: number) {
-    if (updatedValue !== this._value) {
-      this._value = updatedValue;
-      this._onChanged(updatedValue);
+  @Input()
+  public get value() { return this._value; }
+  public set value(value: any) {
+    if (value !== this._value) {
+      this._value = value;
+      this._onChanged(value);
+      this._changeDetectorRef.markForCheck();
     }
   }
+  private _value: any;
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.maxValue = 0;
@@ -57,10 +60,7 @@ export class ProgressBarComponent implements ControlValueAccessor {
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (value !== this._value) {
-      this._value = value;
-      this._changeDetectorRef.markForCheck();
-    }
+    this.value = value;
   }
 
   /**

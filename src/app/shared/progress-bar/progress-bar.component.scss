@@ -1,45 +1,56 @@
 @import "../../../styles/shared/base";
 
 // Progress Bar
-$progress-bar-height: 20px;
-$progress-bar-font-size: 16;
+$progress-bar-height: 17px;
 $progress-bar-border-radius: 10px;
 $progress-bar-bg-color: $color-primary-02;
 $progress-bg-color: $color-primary-01;
-$progress-bar-label-color: $color-white;
-$progressbar-percentage-offset-height: -($progress-bar-height + 1px);
+// Common for text
+$progress-bar-text-font-size: 13;
+$progress-bar-text-line-height: 17; // Same as height
+$progress-bar-text-offset: $space-small;
+// Static Text
+$progress-bar-static-text-color: $color-black;
+// Responsive Text
+$progress-bar-responsive-text-color: $color-white;
 
-:host {
+.progress-bar-wrapper {
   display: block;
+  position: relative;
+  min-height: $progress-bar-height;
 }
 
 .progress-bar-container {
+  position: absolute;
+  width: 100%;
   height: $progress-bar-height;
   background-color: $progress-bar-bg-color;
-  border-radius: $progress-bar-border-radius;
+  @include border-radius($progress-bar-border-radius);
 
-  .progress-container {
-    border-radius: inherit;
-    background-color: $progress-bg-color;
-    overflow: hidden;
-    height: inherit;
-    @include transition(.4s linear);
-    @include display-flex(row);
-    align-items: center;
-    justify-content: flex-end;
-  }
-
-  span {
+  span.static-text {
     display: block;
-    text-align: right;
-    position: relative;
-    top: $progressbar-percentage-offset-height;
-    @include font-size($progress-bar-font-size);
-    @include transition(.4s linear);
-    color: $progress-bar-label-color;
+    position: absolute;
+    text-align: left;
+    @include font-size($progress-bar-text-font-size, $progress-bar-text-line-height);
+    color: $progress-bar-static-text-color;
+    padding-left: $progress-bar-text-offset;
   }
 }
 
-.percentage {
+.progress-container {
+  position: absolute;
+  overflow: hidden;
+  height: $progress-bar-height;
+  background-color: $progress-bg-color;
+  @include border-radius($progress-bar-border-radius);
   @include transition(.4s linear);
+
+  span.responsive-text {
+    display: block;
+    position: relative;
+    text-align: right;
+    @include font-size($progress-bar-text-font-size, $progress-bar-text-line-height);
+    color: $progress-bar-responsive-text-color;
+    padding: 0 $progress-bar-text-offset;
+  }
 }
