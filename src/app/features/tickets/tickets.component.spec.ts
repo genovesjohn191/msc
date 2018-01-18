@@ -70,11 +70,7 @@ describe('TicketsComponent', () => {
   });
 
   describe('totalRecordCount()', () => {
-    it('should get the totalRecordCount from the datasource', () => {
-      expect(component.totalRecordCount).toBe(component.dataSource.totalRecordCount);
-    });
-
-    it('should get 0 to totalRecordCount when datasource is undefined', () => {
+    it('should get 0 to totalRecordCount', () => {
       component.dataSource = undefined;
       expect(component.totalRecordCount).toBe(0);
     });
@@ -108,7 +104,7 @@ describe('TicketsComponent', () => {
         pageIndex: 0,
         pageSize: 10,
         totalCount: 100,
-        pageCompleted() { return; }
+        showLoading() { return; }
       } as McsPaginator;
 
       component.search = {
@@ -133,14 +129,14 @@ describe('TicketsComponent', () => {
     });
 
     it('should set the paginator completed when onCompleted method is called', () => {
-      spyOn(component.paginator, 'pageCompleted');
+      spyOn(component.paginator, 'showLoading');
       component.dataSource.onCompletion(McsDataStatus.Success);
-      expect(component.paginator.pageCompleted).toHaveBeenCalledTimes(1);
+      expect(component.paginator.showLoading).toHaveBeenCalledTimes(1);
     });
 
     it('should set the totalRecordCount to 0 when disconnect method is called', () => {
       component.dataSource.disconnect();
-      expect(component.dataSource.totalRecordCount).toBe(0);
+      expect(component.totalRecordCount).toBe(0);
     });
   });
 });

@@ -5,6 +5,7 @@ import { TicketComponent } from './ticket/ticket.component';
 import { TicketCreateComponent } from './ticket-create';
 /** Services */
 import { TicketsService } from './tickets.service';
+import { TicketsRepository } from './tickets.repository';
 import { TicketCreateService } from './ticket-create';
 import { ServersService } from '../servers';
 import { FirewallsService } from '../networking';
@@ -16,6 +17,7 @@ import { McsNavigateAwayGuard } from '../../core';
  */
 export const ticketsProviders: any[] = [
   TicketsService,
+  TicketsRepository,
   TicketCreateService,
   ServersService,
   FirewallsService

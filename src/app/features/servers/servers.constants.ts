@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { ServerService } from './server/';
 import { CreateSelfManagedServersService } from './self-managed-server';
 import { ServersService } from './servers.service';
+import { ServersRepository } from './servers.repository';
 /** Components */
 import { ServersComponent } from './servers.component';
 import {
@@ -27,6 +28,7 @@ import {
 export const serversProviders: any[] = [
   ServersService,
   ServerService,
+  ServersRepository,
   CreateSelfManagedServersService,
   VdcService
 ];

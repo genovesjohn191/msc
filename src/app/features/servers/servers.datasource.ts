@@ -1,7 +1,6 @@
 import {
   Observable,
-  Subject,
-  Subscription
+  Subject
 } from 'rxjs/Rx';
 import {
   McsDataSource,
@@ -9,13 +8,9 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
-import {
-  isNullOrEmpty,
-  deleteArrayRecord,
-  refreshView
-} from '../../utilities';
+import { isNullOrEmpty } from '../../utilities';
 import { Server } from './models';
-import { ServersService } from './servers.service';
+import { ServersRepository } from './servers.repository';
 
 export class ServersDataSource implements McsDataSource<Server> {
   /**
@@ -23,57 +18,12 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public dataLoadingStream: Subject<McsDataStatus>;
 
-  /**
-   * It will populate the data when the obtainment is completed
-   */
-  private _totalRecordCount: number;
-  public get totalRecordCount(): number {
-    return this._totalRecordCount;
-  }
-  public set totalRecordCount(value: number) {
-    this._totalRecordCount = value;
-  }
-
-  /**
-   * Current displayed record on the table listing
-   */
-  private _displayedRecord: Server[];
-  public get displayedRecord(): Server[] {
-    return this._displayedRecord;
-  }
-  public set displayedRecord(value: Server[]) {
-    if (this._displayedRecord !== value) {
-      this._displayedRecord = value;
-    }
-  }
-
-  /**
-   * This will notify the stream of the table when there are changes on the servers data
-   */
-  private _serversStream: Subject<Server[]>;
-  public get serversStream(): Subject<Server[]> { return this._serversStream; }
-  public set serversStream(value: Subject<Server[]>) { this._serversStream = value; }
-
-  /**
-   * All servers
-   */
-  private _servers: Server[];
-  public get servers(): Server[] { return this._servers; }
-  public set servers(value: Server[]) { this._servers = value; }
-
-  // Others
-  private _serversSubscription: Subscription;
-  private _hasError: boolean;
-
   constructor(
-    private _serversService: ServersService,
+    private _serversRepository: ServersRepository,
     private _paginator: McsPaginator,
     private _search: McsSearch
   ) {
-    this._totalRecordCount = 0;
     this.dataLoadingStream = new Subject<McsDataStatus>();
-    this.serversStream = new Subject<Server[]>();
-    this._getServers();
   }
 
   /**
@@ -82,15 +32,27 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public connect(): Observable<Server[]> {
     const displayDataChanges = [
-      this.serversStream
+      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
+      this._serversRepository.dataRecordsChanged,
+      this._paginator.pageChangedStream,
+      this._search.searchChangedStream,
     ];
 
     return Observable.merge(...displayDataChanges)
-      .map(() => {
-        if (this._hasError) {
-          throw Observable.throw(new Error(''));
-        }
-        return this.servers;
+      .switchMap(() => {
+        // Notify the table that a process is currently in-progress
+        this.dataLoadingStream.next(McsDataStatus.InProgress);
+
+        // Find all records based on settings provided in the input
+        return this._serversRepository.findAllRecords(
+          this._paginator, this._search,
+          (_item: Server) => {
+            return _item.name
+              + _item.serviceType
+              + _item.operatingSystem && _item.operatingSystem.edition
+              + _item.managementIpAddress
+              + _item.platform && _item.platform.resourceName;
+          });
       });
   }
 
@@ -99,10 +61,7 @@ export class ServersDataSource implements McsDataSource<Server> {
    * and return all the record to its original value
    */
   public disconnect() {
-    this._totalRecordCount = 0;
-    if (!isNullOrEmpty(this._serversSubscription)) {
-      this._serversSubscription.unsubscribe();
-    }
+    // Release all resources
   }
 
   /**
@@ -112,8 +71,7 @@ export class ServersDataSource implements McsDataSource<Server> {
   public onCompletion(_status: McsDataStatus, _record: Server[]): void {
     // Execute all data from completion
     this._search.showLoading(false);
-    this._paginator.pageCompleted();
-    this.displayedRecord = _record;
+    this._paginator.showLoading(false);
   }
 
   /**
@@ -122,12 +80,7 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public removeDeletedServer(serverId: string): void {
     if (isNullOrEmpty(serverId)) { return; }
-    refreshView(() => {
-      this.servers = deleteArrayRecord(this.servers, (targetServer) => {
-        return targetServer.id === serverId;
-      });
-      this._serversStream.next();
-    });
+    this._serversRepository.deleteRecordById(serverId);
   }
 
   /**
@@ -137,15 +90,14 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public renameServer(serverId: string, newName: string): void {
     if (isNullOrEmpty(serverId)) { return; }
-    refreshView(() => {
-      let renamedServer = this.servers.find((serverItem) => {
+    let renamedServer = this._serversRepository.dataRecords
+      .find((serverItem) => {
         return serverItem.id === serverId;
       });
-      if (!isNullOrEmpty(renamedServer)) {
-        renamedServer.name = newName;
-      }
-      this._serversStream.next();
-    });
+    if (!isNullOrEmpty(renamedServer)) {
+      renamedServer.name = newName;
+    }
+    this._serversRepository.updateRecord(renamedServer);
   }
 
   /**
@@ -153,43 +105,8 @@ export class ServersDataSource implements McsDataSource<Server> {
    * @param serverId Server Id to obtained
    */
   public getDisplayedServerById(serverId: any): Server {
-    if (isNullOrEmpty(this.displayedRecord)) { return; }
-    return this.displayedRecord.find((server) => server.id === serverId);
-  }
-
-  /**
-   * Get all the servers from the api and notify the
-   * connect method that there are changes on the source data of the table
-   */
-  private _getServers(): void {
-    const displayDataChanges = [
-      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
-      this._paginator.pageChangedStream,
-      this._search.searchChangedStream
-    ];
-
-    this._serversSubscription = Observable.merge(...displayDataChanges)
-      .switchMap(() => {
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
-        let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
-
-        return this._serversService.getServers({
-          page: undefined,
-          perPage: displayedRecords,
-          searchKeyword: this._search.keyword
-        }).map((response) => {
-          this._totalRecordCount = response.totalCount;
-          return response.content;
-        });
-      })
-      .catch((error) => {
-        this._hasError = true;
-        this._serversStream.next(undefined);
-        return Observable.throw(error);
-      })
-      .subscribe((servers) => {
-        this.servers = servers;
-        this._serversStream.next();
-      });
+    if (isNullOrEmpty(this._serversRepository.dataRecords)) { return; }
+    return this._serversRepository.dataRecords
+      .find((server) => server.id === serverId);
   }
 }

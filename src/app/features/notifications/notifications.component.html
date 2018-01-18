@@ -44,12 +44,14 @@
             {{ columnSettings.notification.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
-            <mcs-icon [key]="getStatusIconKey(row.status)" class="top-align"
-              [color]="getStatusIconColor(row.status)" size="small"></mcs-icon>
-            <span class="inline-block">
-              {{ row.description }}<br/>
-              {{ row.summaryInformation }}
-            </span>
+            <div class="inline-items-small">
+              <mcs-icon [key]="getStatusIconKey(row.status)" class="top-align"
+                [color]="getStatusIconColor(row.status)" size="small"></mcs-icon>
+              <span class="inline-block">
+                {{ row.description }}<br/>
+                {{ row.summaryInformation }}
+              </span>
+            </div>
           </mcs-data-cell>
         </ng-container>
 

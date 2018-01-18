@@ -1,0 +1,55 @@
+// Inline Items
+%inline-items {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  align-items: center;
+}
+
+.inline-items-small {
+  @extend %inline-items;
+  @include set-items-interval($space-small, horizontal);
+}
+
+.inline-items-medium {
+  @extend %inline-items;
+  @include set-items-interval($space-medium, horizontal);
+}
+
+.inline-items-large {
+  @extend %inline-items;
+  @include set-items-interval($space-large, horizontal);
+}
+
+// Block Items
+%block-items {
+  @include flex(0 0 auto);
+  @include display-flex(column);
+}
+
+.block-items-small {
+  @extend %block-items;
+  @include set-items-interval($space-small);
+}
+
+.block-items-medium {
+  @extend %block-items;
+  @include set-items-interval($space-medium);
+}
+
+.block-items-large {
+  @extend %block-items;
+  @include set-items-interval($space-large);
+}
+
+// Others (Individual)
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.valign-middle {
+  vertical-align: middle;
+}

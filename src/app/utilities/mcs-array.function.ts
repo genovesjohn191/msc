@@ -121,6 +121,17 @@ export function deleteArrayRecord<T>(
 }
 
 /**
+ * Clear the values and reference of the array records
+ * @param source Array source to be cleared
+ */
+export function clearArrayRecord<T>(source: T[]): void {
+  // Clears out the array reference and values
+  for (let i = source.length; i > 0; i--) {
+    source.pop();
+  }
+}
+
+/**
  * Compare 2 array record based on predicate definition
  * 1 = First array is greater than second array
  * 0 = Both arrays are the same

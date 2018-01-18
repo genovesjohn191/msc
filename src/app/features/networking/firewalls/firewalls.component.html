@@ -40,9 +40,11 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.firewall.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="emphasize squishy-cell">
-            <mcs-icon [key]="getConnectionStatusIconKey(row.connectionStatus)" size="small"></mcs-icon>
-            <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
+          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
+            <div class="inline-items-small">
+              <mcs-icon [key]="getConnectionStatusIconKey(row.connectionStatus)" size="small"></mcs-icon>
+              <a [routerLink]="['/networking/firewalls', row.id]">{{ row.managementName }}</a>
+            </div>
           </mcs-data-cell>
         </ng-container>
 

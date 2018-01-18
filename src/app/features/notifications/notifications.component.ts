@@ -8,10 +8,9 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 /** Services */
-import { NotificationsService } from './notifications.service';
+import { NotificationsRepository } from './notifications.repository';
 import { NotificationsDataSource } from './notifications.datasource';
 import {
-  McsNotificationContextService,
   McsTextContentProvider,
   CoreDefinition,
   McsSearch,
@@ -55,7 +54,8 @@ export class NotificationsComponent
   }
 
   public get totalRecordCount(): number {
-    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
+    return isNullOrEmpty(this._notificationsRepository) ? 0 :
+      this._notificationsRepository.totalRecordsCount;
   }
 
   public get columnSettingsKey(): string {
@@ -66,8 +66,7 @@ export class NotificationsComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _notificationsService: NotificationsService,
-    private _notificationContextService: McsNotificationContextService
+    private _notificationsRepository: NotificationsRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
@@ -111,8 +110,7 @@ export class NotificationsComponent
   protected initializeDatasource(): void {
     // Set datasource
     this.dataSource = new NotificationsDataSource(
-      this._notificationContextService,
-      this._notificationsService,
+      this._notificationsRepository,
       this.paginator,
       this.search
     );

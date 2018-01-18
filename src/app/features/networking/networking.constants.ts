@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { NetworkingService } from './networking.service';
 /** Components/Services */
 import {
   FirewallsComponent,
@@ -6,15 +7,18 @@ import {
   FirewallOverviewComponent,
   FirewallPoliciesComponent,
   FirewallsService,
-  FirewallService
+  FirewallService,
+  FirewallsRepository
 } from './firewalls';
 
 /**
  * List of services for the main module
  */
 export const networkingProviders: any[] = [
+  NetworkingService,
   FirewallsService,
-  FirewallService
+  FirewallService,
+  FirewallsRepository
 ];
 
 /**

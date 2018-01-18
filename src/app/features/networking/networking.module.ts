@@ -3,15 +3,13 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared';
 /** Networking Components/Services */
 import { NetworkingComponent } from './networking.component';
-import { NetworkingService } from './networking.service';
+import { networkingProviders } from './networking.constants';
 /** Firewalls Components/Services */
 import {
   FirewallsComponent,
   FirewallComponent,
   FirewallOverviewComponent,
-  FirewallPoliciesComponent,
-  FirewallsService,
-  FirewallService
+  FirewallPoliciesComponent
 } from './firewalls';
 
 @NgModule({
@@ -27,9 +25,7 @@ import {
     SharedModule
   ],
   providers: [
-    NetworkingService,
-    FirewallsService,
-    FirewallService
+    ...networkingProviders
   ]
 })
 

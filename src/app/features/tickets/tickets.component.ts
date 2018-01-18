@@ -23,7 +23,7 @@ import {
   refreshView,
   getRecordCountLabel
 } from '../../utilities';
-import { TicketsService } from './tickets.service';
+import { TicketsRepository } from './tickets.repository';
 import { TicketsDataSource } from './tickets.datasource';
 import { TicketStatus } from './models';
 
@@ -56,7 +56,8 @@ export class TicketsComponent
   }
 
   public get totalRecordCount(): number {
-    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
+    return isNullOrEmpty(this._ticketsRepository) ? 0 :
+      this._ticketsRepository.totalRecordsCount;
   }
 
   public get columnSettingsKey(): string {
@@ -71,7 +72,7 @@ export class TicketsComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _ticketsService: TicketsService,
+    private _ticketsRepository: TicketsRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
@@ -112,7 +113,7 @@ export class TicketsComponent
   protected initializeDatasource(): void {
     // Set datasource
     this.dataSource = new TicketsDataSource(
-      this._ticketsService,
+      this._ticketsRepository,
       this.paginator,
       this.search
     );

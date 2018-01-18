@@ -1,4 +1,5 @@
-<a *ngIf="!loading && hasNextPage" (click)="nextPage()" mcsRipple>
-  {{ textContent.nextPage }}
+<div *ngIf="!loading && hasNextPage" class="load-more-container" (click)="nextPage()" mcsRipple>
+  <span>{{ textContent.nextPage }}</span>
   <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
-</a>
+</div>
+<mcs-icon *ngIf="enableLoader && loading" [key]="spinnerIconKey" size="medium"></mcs-icon>

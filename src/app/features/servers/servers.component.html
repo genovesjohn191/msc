@@ -102,7 +102,7 @@
             {{ columnSettings.name.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
-            <div class="emphasize">
+            <div class="inline-items-small">
               <div *ngIf="getServerStatus(row).powerState">
                 <mcs-icon [key]="getStateIconKey(row.powerState)" size="small"></mcs-icon>
               </div>

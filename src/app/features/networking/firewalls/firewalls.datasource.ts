@@ -9,7 +9,7 @@ import {
   McsDataStatus
 } from '../../../core';
 import { Firewall } from './models';
-import { FirewallsService } from './firewalls.service';
+import { FirewallsRepository } from './firewalls.repository';
 
 export class FirewallsDataSource implements McsDataSource<Firewall> {
   /**
@@ -17,23 +17,11 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
    */
   public dataLoadingStream: Subject<McsDataStatus>;
 
-  /**
-   * It will populate the data when the obtainment is completed
-   */
-  private _totalRecordCount: number;
-  public get totalRecordCount(): number {
-    return this._totalRecordCount;
-  }
-  public set totalRecordCount(value: number) {
-    this._totalRecordCount = value;
-  }
-
   constructor(
-    private _firewallsService: FirewallsService,
+    private _firewallsRepository: FirewallsRepository,
     private _paginator: McsPaginator,
     private _search: McsSearch
   ) {
-    this._totalRecordCount = 0;
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
 
@@ -50,17 +38,19 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
 
     return Observable.merge(...displayDataChanges)
       .switchMap(() => {
+        // Notify the table that a process is currently in-progress
         this.dataLoadingStream.next(McsDataStatus.InProgress);
-        let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
-        return this._firewallsService.getFirewalls({
-          page: undefined,
-          perPage: displayedRecords,
-          searchKeyword: this._search.keyword
-        }).map((response) => {
-          this._totalRecordCount = response.totalCount;
-          return response.content;
-        });
+        // Find all records based on settings provided in the input
+        return this._firewallsRepository.findAllRecords(
+          this._paginator, this._search,
+          (_item: Firewall) => {
+            return _item.managementName
+              + _item.serialNumber
+              + _item.osVendor
+              + _item.osRelease
+              + _item.serviceId;
+          });
       });
   }
 
@@ -69,7 +59,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
    * and return all the record to its original value
    */
   public disconnect() {
-    this._totalRecordCount = 0;
+    // Release resources
   }
 
   /**
@@ -79,6 +69,6 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
   public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
     this._search.showLoading(false);
-    this._paginator.pageCompleted();
+    this._paginator.showLoading(false);
   }
 }
