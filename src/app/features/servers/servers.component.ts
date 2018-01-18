@@ -54,6 +54,7 @@ export class ServersComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
+  public enumDefinition: any;
   public selection: McsSelection<Server>;
 
   @ViewChild('search')
@@ -63,7 +64,6 @@ export class ServersComponent
   public paginator: McsPaginator;
 
   // Subscription
-  private _activeServerSubscription: any;
   private _selectionModeSubscription: any;
 
   public get serverCommand() {
@@ -129,21 +129,18 @@ export class ServersComponent
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers;
+    this.enumDefinition = this._textProvider.content.enumerations;
   }
 
   public ngAfterViewInit() {
     refreshView(() => {
       this.initializeDatasource();
-      this._listenToActiveServers();
       this._listenToSelectionModeChange();
     });
   }
 
   public ngOnDestroy() {
     this.dispose();
-    if (!isNullOrEmpty(this._activeServerSubscription)) {
-      this._activeServerSubscription.unsubscribe();
-    }
     if (!isNullOrEmpty(this._selectionModeSubscription)) {
       this._selectionModeSubscription.unsubscribe();
     }
@@ -367,25 +364,6 @@ export class ServersComponent
   }
 
   /**
-   * Return the server type according to status
-   * @param serviceType Service type of the server
-   */
-  public getServiceTypeText(serviceType: ServerServiceType): string {
-    let serviceTypeText = '';
-
-    switch (serviceType) {
-      case ServerServiceType.SelfManaged:
-        serviceTypeText = CoreDefinition.SERVER_SELF_MANAGED;
-        break;
-      case ServerServiceType.Managed:
-      default:
-        serviceTypeText = CoreDefinition.SERVER_MANAGED;
-        break;
-    }
-    return serviceTypeText;
-  }
-
-  /**
    * Return the active server status
    * @param server Server to be check
    */
@@ -435,27 +413,11 @@ export class ServersComponent
     // Set datasource instance
     this.dataSource = new ServersDataSource(
       this._serversRepository,
+      this.textContent.enumerations,
       this.paginator,
       this.search
     );
     this.changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Listener to all the active servers to refresh the view when data is being changed
-   */
-  private _listenToActiveServers(): void {
-    this._activeServerSubscription = this._serversService.activeServersStream
-      .subscribe((activeServers) => {
-        // Update the datasource of the table when job is completed
-        if (!isNullOrEmpty(activeServers)) {
-          activeServers.forEach((activeServer) => {
-            this._updateDatasource(activeServer);
-          });
-        }
-        // Refresh the view
-        this.changeDetectorRef.markForCheck();
-      });
   }
 
   /**
@@ -469,30 +431,5 @@ export class ServersComponent
 
         this.selection = new McsSelection<Server>(multipleSelection);
       });
-  }
-
-  /**
-   * Update table datasource of the servers listing
-   * @param activeServer Active server to be served as the basis of the update
-   */
-  private _updateDatasource(activeServer: ServerClientObject): void {
-    // Check if job is completed
-    let jobCompleted = !isNullOrEmpty(activeServer) &&
-      activeServer.notificationStatus === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-    if (!jobCompleted) { return; }
-
-    // Update datasource data
-    switch (activeServer.commandAction) {
-      case ServerCommand.Delete:
-        this.dataSource.removeDeletedServer(activeServer.serverId);
-        break;
-      case ServerCommand.Rename:
-        this.dataSource.renameServer(activeServer.serverId, activeServer.newName);
-        break;
-
-      default:
-        // Do nothing
-        break;
-    }
   }
 }

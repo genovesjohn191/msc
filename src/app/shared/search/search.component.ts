@@ -64,7 +64,8 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
     // @ the given amount of time
     this._searchSubscription = Observable.concat(this._searchSubject)
       .debounceTime(isNullOrEmpty(this.delayInSeconds) ?
-        CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000))
+        CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000)
+      )
       .distinctUntilChanged()
       .subscribe((searchTerm) => {
         this.keyword = searchTerm;
@@ -79,6 +80,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   }
 
   public onChangeKeyEvent(key: any): void {
+    this.showLoading(true);
     this._searchSubject.next(key);
   }
 

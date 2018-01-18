@@ -38,6 +38,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   private _registerJobEvents(): void {
     this._notificationEvents.createServerEvent.subscribe(this._onCreateServer.bind(this));
     this._notificationEvents.cloneServerEvent.subscribe(this._onCreateServer.bind(this));
+    this._notificationEvents.renameServerEvent.subscribe(this._onRenameServer.bind(this));
     this._notificationEvents.deleteServerEvent.subscribe(this._onDeleteServer.bind(this));
   }
 
@@ -57,5 +58,21 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   private _onDeleteServer(job: McsApiJob): void {
     if (isNullOrEmpty(job) || job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { return; }
     this.deleteRecordById(job.clientReferenceObject.serverId);
+  }
+
+  /**
+   * Event that emits when server is renamed
+   * @param job Emitted job content
+   */
+  private _onRenameServer(job: McsApiJob): void {
+    if (isNullOrEmpty(job) || job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { return; }
+    let renamedServer = this.dataRecords
+      .find((serverItem) => {
+        return serverItem.id === job.clientReferenceObject.serverId;
+      });
+    if (!isNullOrEmpty(renamedServer)) {
+      renamedServer.name = job.clientReferenceObject.newName;
+    }
+    this.updateRecord(renamedServer);
   }
 }

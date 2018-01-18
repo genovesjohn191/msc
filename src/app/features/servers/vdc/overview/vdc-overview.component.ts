@@ -35,6 +35,7 @@ const VDC_STORAGE_LOW_PERCENTAGE = 85;
 export class VdcOverviewComponent implements OnInit, OnDestroy {
 
   public textContent: any;
+  public enumDefinition: any;
 
   private _vdcSubscription: Subscription;
 
@@ -81,6 +82,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.servers.vdc.overview;
+    this.enumDefinition = this._textContentProvider.content.enumerations;
     this._setVdcData();
   }
 
@@ -88,27 +90,6 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     if (!isNullOrEmpty(this._vdcSubscription)) {
       this._vdcSubscription.unsubscribe();
     }
-  }
-
-  /**
-   * Return the server type according to status
-   * @param serviceType Service type of the server
-   */
-  public getServiceTypeText(serviceType: ServerServiceType): string {
-    let serviceTypeText = '';
-
-    switch (serviceType) {
-      case ServerServiceType.SelfManaged:
-        serviceTypeText = CoreDefinition.SERVER_SELF_MANAGED;
-        break;
-
-      case ServerServiceType.Managed:
-      default:
-        serviceTypeText = CoreDefinition.SERVER_MANAGED;
-        break;
-    }
-
-    return serviceTypeText;
   }
 
   public getStorageStatusIconKey(storage: ServerStorage): string {

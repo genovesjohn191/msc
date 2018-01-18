@@ -46,7 +46,9 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
         return this._notificationsRepository.findAllRecords(
           this._paginator, this._search,
           (_item: McsApiJob) => {
-            return _item.description + _item.summaryInformation + _item.ownerName;
+            return _item.description
+              + _item.summaryInformation
+              + _item.ownerName;
           });
       });
   }

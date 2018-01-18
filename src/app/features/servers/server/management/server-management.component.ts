@@ -116,7 +116,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get isScaling(): boolean {
-    return this.isProcessing && this._serverJobType === McsJobType.UpdateServer;
+    return this.isProcessing && this._serverJobType === McsJobType.UpdateServerCompute;
   }
 
   public get serverMemoryMB(): number {
@@ -412,7 +412,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     this._serverJobCommandAction = selectedServerJob.clientReferenceObject.commandAction;
 
     switch (selectedServerJob.type) {
-      case McsJobType.UpdateServer:
+      case McsJobType.UpdateServerCompute:
         if (this.hasCompletedJob && !isNullOrEmpty(this.server.compute) &&
           !isNullOrEmpty(selectedServerJob.clientReferenceObject)) {
           this.server.compute.memoryMB = selectedServerJob.clientReferenceObject.memoryMB;
