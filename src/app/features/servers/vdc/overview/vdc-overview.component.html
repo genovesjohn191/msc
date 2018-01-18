@@ -5,7 +5,8 @@
       <mcs-list>
         <!-- Service Type -->
         <mcs-list-item>
-          {{ textContent.vdcProperties.serviceType }}: {{ getServiceTypeText(vdc.serviceType) }}
+          {{ textContent.vdcProperties.serviceType }}:
+          {{ enumDefinition.serverServiceType(vdc.serviceType) }}
         </mcs-list-item>
         <!-- Zone -->
         <mcs-list-item>

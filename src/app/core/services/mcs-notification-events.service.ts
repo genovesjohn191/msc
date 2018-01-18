@@ -13,13 +13,16 @@ import {
 @Injectable()
 export class McsNotificationEventsService {
 
-  /** Event that emits when create server ended */
+  /** Event that emits when create server executed */
   public createServerEvent = new EventEmitter<McsApiJob>();
 
-  /** Event that emits when clone server ended */
+  /** Event that emits when clone server executed */
   public cloneServerEvent = new EventEmitter<McsApiJob>();
 
-  /** Event that emits when delete server ended */
+  /** Event that emits when rename server executed */
+  public renameServerEvent = new EventEmitter<McsApiJob>();
+
+  /** Event that emits when delete server executed */
   public deleteServerEvent = new EventEmitter<McsApiJob>();
 
   /** Event that emits all jobs */
@@ -60,6 +63,10 @@ export class McsNotificationEventsService {
 
         case McsJobType.CloneServer:
           this.createServerEvent.emit(notification);
+          break;
+
+        case McsJobType.RenameServer:
+          this.renameServerEvent.emit(notification);
           break;
 
         case McsJobType.DeleteServer:

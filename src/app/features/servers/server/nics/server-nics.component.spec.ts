@@ -9,7 +9,6 @@ import {
   McsNotificationContextService,
   McsApiJob
 } from '../../../../core';
-import { ServerService } from '../server.service';
 import { ServersTestingModule } from '../../testing';
 import {
   ServerIpAddress,
@@ -19,7 +18,6 @@ import {
 describe('ServerNicsComponent', () => {
   /** Stub Services/Components */
   let component: ServerNicsComponent;
-  let serverService: ServerService;
   let notificationContextService: McsNotificationContextService;
   let mockServerDetails = {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
@@ -78,7 +76,6 @@ describe('ServerNicsComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      serverService = getTestBed().get(ServerService);
       notificationContextService = getTestBed().get(McsNotificationContextService);
     });
   }));

@@ -24,6 +24,7 @@ import {
 import {
   McsTextContentProvider,
   McsAttachment,
+  McsOption,
   CoreValidators,
   CoreDefinition
 } from '../../../core';
@@ -57,12 +58,12 @@ export class TicketCreateComponent implements
   McsSafeToNavigateAway {
 
   public textContent: any;
+  public enumDefinition: any;
   public contextualContent: any;
   public services: TicketService[];
   public contextualHelp: ContextualHelpDirective[];
   public isServicesOpen: boolean;
   public textService: string;
-  public subTypeEnumText: any;
   public servicePanelOpen: boolean;
 
   @ViewChild(FormGroupDirective)
@@ -83,8 +84,7 @@ export class TicketCreateComponent implements
   public details: string;
 
   // Ticket Type Dropdown
-  public ticketTypeValue: any;
-  public ticketTypeList: any;
+  public ticketTypeList: McsOption[];
 
   // others
   public servicesSubscription: any;
@@ -152,9 +152,9 @@ export class TicketCreateComponent implements
   }
 
   public ngOnInit() {
+    this.enumDefinition = this._textContentProvider.content.enumerations;
     this.textContent = this._textContentProvider.content.tickets.createTicket;
     this.contextualContent = this.textContent.contextualHelp;
-    this.subTypeEnumText = this._textContentProvider.content.tickets.enumerations.subType;
 
     this._registerFormGroup();
     this._setTicketType();
@@ -355,15 +355,13 @@ export class TicketCreateComponent implements
    * Set ticket type based on selection
    */
   private _setTicketType(): void {
-    if (isNullOrEmpty(this.subTypeEnumText)) { return; }
+    if (isNullOrEmpty(this.enumDefinition)) { return; }
 
-    this.ticketTypeList.push({
-      'value': TicketSubType.Enquiry,
-      'text': this.subTypeEnumText[TicketSubType.Enquiry]
-    });
-    this.ticketTypeList.push({
-      'value': TicketSubType.TroubleTicket,
-      'text': this.subTypeEnumText[TicketSubType.TroubleTicket]
-    });
+    this.ticketTypeList.push(new McsOption(TicketSubType.Enquiry,
+      this.enumDefinition.ticketSubType[TicketSubType.Enquiry])
+    );
+    this.ticketTypeList.push(new McsOption(TicketSubType.TroubleTicket,
+      this.enumDefinition.ticketSubType[TicketSubType.TroubleTicket])
+    );
   }
 }

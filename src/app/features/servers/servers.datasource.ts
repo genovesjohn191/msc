@@ -20,6 +20,7 @@ export class ServersDataSource implements McsDataSource<Server> {
 
   constructor(
     private _serversRepository: ServersRepository,
+    private _enumDefinition: any,
     private _paginator: McsPaginator,
     private _search: McsSearch
   ) {
@@ -48,10 +49,10 @@ export class ServersDataSource implements McsDataSource<Server> {
           this._paginator, this._search,
           (_item: Server) => {
             return _item.name
-              + _item.serviceType
-              + _item.operatingSystem && _item.operatingSystem.edition
+              + this._enumDefinition.serverServiceType[_item.serviceType]
+              + _item.operatingSystem.edition
               + _item.managementIpAddress
-              + _item.platform && _item.platform.resourceName;
+              + _item.platform.resourceName;
           });
       });
   }
@@ -72,32 +73,6 @@ export class ServersDataSource implements McsDataSource<Server> {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);
-  }
-
-  /**
-   * Remove the server from the datasource
-   * @param serverId Server to be renamed
-   */
-  public removeDeletedServer(serverId: string): void {
-    if (isNullOrEmpty(serverId)) { return; }
-    this._serversRepository.deleteRecordById(serverId);
-  }
-
-  /**
-   * Rename the displayed server on the table itself
-   * @param serverId Server to be renamed
-   * @param newName New name of the server
-   */
-  public renameServer(serverId: string, newName: string): void {
-    if (isNullOrEmpty(serverId)) { return; }
-    let renamedServer = this._serversRepository.dataRecords
-      .find((serverItem) => {
-        return serverItem.id === serverId;
-      });
-    if (!isNullOrEmpty(renamedServer)) {
-      renamedServer.name = newName;
-    }
-    this._serversRepository.updateRecord(renamedServer);
   }
 
   /**

@@ -1,8 +1,12 @@
 export enum McsJobType {
+  Undefined = 0,
+
+  // Jobs for "/servers" endpoint must use prefix 100XXX followed by 3 digit number
   CreateServer = 100001,
-  UpdateServer = 100002,
+  UpdateServerCompute = 100002,
   DeleteServer = 100003,
   CloneServer = 100004,
+  RenameServer = 100005,
 
   // Server Snapshot
   CreateServerSnapshot = 100051,
