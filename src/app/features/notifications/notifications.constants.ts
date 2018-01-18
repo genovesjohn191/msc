@@ -3,12 +3,14 @@ import { Routes } from '@angular/router';
 import { NotificationsComponent } from './notifications.component';
 /** Services */
 import { NotificationsService } from './notifications.service';
+import { NotificationsRepository } from './notifications.repository';
 
 /**
  * List of services for the main module
  */
 export const notificationsProviders: any[] = [
-  NotificationsService
+  NotificationsService,
+  NotificationsRepository
 ];
 
 /**

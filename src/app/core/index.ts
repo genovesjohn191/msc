@@ -12,6 +12,7 @@ export * from './services/mcs-component.service';
 export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
+export * from './services/mcs-notification-events.service';
 export * from './services/mcs-overlay.service';
 export * from './services/mcs-dialog.service';
 export * from './services/mcs-scroll-dispatcher.service';
@@ -63,6 +64,7 @@ export * from './interfaces/mcs-property-type.interface';
 export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-table-listing.base';
 export * from './base/mcs-form-field-control.base';
+export * from './base/mcs-repository.base';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';

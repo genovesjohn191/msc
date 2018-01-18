@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServersService } from './servers.service';
+import { ServersRepository } from './servers.repository';
 import { ServersDataSource } from './servers.datasource';
 /** Models */
 import {
@@ -81,7 +82,8 @@ export class ServersComponent
   }
 
   public get totalRecordCount(): number {
-    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
+    return isNullOrEmpty(this._serversRepository) ? 0 :
+      this._serversRepository.totalRecordsCount;
   }
 
   public get columnSettingsKey(): string {
@@ -118,6 +120,7 @@ export class ServersComponent
     private _dialogService: McsDialogService,
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
+    private _serversRepository: ServersRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
@@ -152,7 +155,7 @@ export class ServersComponent
   public isAllSelected(): boolean {
     if (isNullOrEmpty(this.dataSource)) { return false; }
     if (!this.selection.hasValue()) { return false; }
-    return this.selection.selected.length === this.dataSource.displayedRecord.length;
+    return this.selection.selected.length === this._serversRepository.filteredRecords.length;
   }
 
   /**
@@ -164,7 +167,7 @@ export class ServersComponent
     if (this.isAllSelected()) {
       this.selection.clear();
     } else {
-      this.dataSource.displayedRecord.forEach((record) => {
+      this._serversRepository.filteredRecords.forEach((record) => {
         this.selection.select(record.id);
       });
     }
@@ -257,7 +260,7 @@ export class ServersComponent
 
     // Get server data based on serverID
     this.selection.selected.forEach((serverId) => {
-      let selectedServer = this.dataSource.displayedRecord
+      let selectedServer = this._serversRepository.filteredRecords
         .find((data) => data.id === serverId);
       servers.push(selectedServer);
     });
@@ -431,7 +434,7 @@ export class ServersComponent
   protected initializeDatasource(): void {
     // Set datasource instance
     this.dataSource = new ServersDataSource(
-      this._serversService,
+      this._serversRepository,
       this.paginator,
       this.search
     );

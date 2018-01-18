@@ -8,6 +8,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { FirewallsService } from './firewalls.service';
+import { FirewallsRepository } from './firewalls.repository';
 import { FirewallsDataSource } from './firewalls.datasource';
 /** Models */
 import { FirewallConnectionStatus } from './models';
@@ -53,7 +54,8 @@ export class FirewallsComponent
   }
 
   public get totalRecordCount(): number {
-    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
+    return isNullOrEmpty(this._firewallsRepository) ? 0 :
+      this._firewallsRepository.totalRecordsCount;
   }
 
   public get columnSettingsKey(): string {
@@ -72,7 +74,8 @@ export class FirewallsComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _firewallsService: FirewallsService
+    private _firewallsService: FirewallsService,
+    private _firewallsRepository: FirewallsRepository
   ) {
     super(_browserService, _changeDetectorRef);
   }
@@ -109,7 +112,7 @@ export class FirewallsComponent
   protected initializeDatasource(): void {
     // Set datasource
     this.dataSource = new FirewallsDataSource(
-      this._firewallsService,
+      this._firewallsRepository,
       this.paginator,
       this.search
     );

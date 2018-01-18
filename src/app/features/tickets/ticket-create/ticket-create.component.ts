@@ -38,6 +38,7 @@ import {
   TicketServiceData,
   TicketSubType
 } from '../models';
+import { TicketsRepository } from '../tickets.repository';
 import { TicketCreateService } from './ticket-create.service';
 import { Server } from '../../servers';
 import { Firewall } from '../../networking';
@@ -119,7 +120,8 @@ export class TicketCreateComponent implements
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
     private _ticketCreateService: TicketCreateService,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _ticketsRepository: TicketsRepository
   ) {
     this.ticketTypeList = new Array();
     this.services = new Array();
@@ -247,6 +249,7 @@ export class TicketCreateComponent implements
       .createTicket(ticket)
       .subscribe(() => {
         this.fgCreateDirective.resetAllControls();
+        this._ticketsRepository.refreshRecords();
         this._router.navigate(['/tickets']);
       });
   }

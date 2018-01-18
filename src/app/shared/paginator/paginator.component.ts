@@ -11,7 +11,10 @@ import {
   McsTextContentProvider,
   McsPaginator
 } from '../../core';
-import { coerceNumber } from '../../utilities';
+import {
+  coerceNumber,
+  coerceBoolean
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-paginator',
@@ -54,6 +57,14 @@ export class PaginatorComponent implements McsPaginator {
   }
   private _totalCount: number;
 
+  @Input()
+  public get enableLoader(): boolean { return this._enableLoader; }
+  public set enableLoader(value: boolean) {
+    this._enableLoader = coerceBoolean(value);
+    this._changeDetectorRef.markForCheck();
+  }
+  private _enableLoader: boolean;
+
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider
@@ -85,6 +96,10 @@ export class PaginatorComponent implements McsPaginator {
     return CoreDefinition.ASSETS_FONT_CHEVRON_DOWN;
   }
 
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
   public nextPage() {
     if (!this.hasNextPage) { return; }
     this.pageIndex++;
@@ -97,8 +112,8 @@ export class PaginatorComponent implements McsPaginator {
     this._onPageChanged();
   }
 
-  public pageCompleted() {
-    this.loading = false;
+  public showLoading(showLoading: boolean) {
+    this.loading = showLoading;
     this._changeDetectorRef.markForCheck();
   }
 

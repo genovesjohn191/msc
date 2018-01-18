@@ -2,6 +2,7 @@ import {
   mergeArrays,
   addOrUpdateArrayRecord,
   deleteArrayRecord,
+  clearArrayRecord,
   compareArrays
 } from './mcs-array.function';
 
@@ -150,6 +151,19 @@ describe('ARRAY Functions', () => {
         return record.value === 'hello1';
       }, 2);
       expect(listItems.length).toEqual(1);
+    });
+  });
+
+  describe('clearArrayRecord()', () => {
+    it(`should clear the array records`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello1'));
+      listItems.push(new TestStructure('3', 'hello2'));
+
+      clearArrayRecord(listItems);
+      expect(listItems.length).toEqual(0);
     });
   });
 

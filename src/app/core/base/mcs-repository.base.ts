@@ -1,0 +1,198 @@
+import {
+  Subject,
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
+import { McsPaginator } from '../interfaces/mcs-paginator.interface';
+import { McsSearch } from '../interfaces/mcs-search.interface';
+import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
+import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
+import {
+  isNullOrEmpty,
+  addOrUpdateArrayRecord,
+  deleteArrayRecord,
+  clearArrayRecord,
+  mergeArrays
+} from '../../utilities';
+
+export abstract class McsRepositoryBase<T> {
+  /**
+   * Get or Set the total records count of the entity
+   */
+  public get totalRecordsCount(): number { return this._totalRecordsCount; }
+  public set totalRecordsCount(value: number) { this._totalRecordsCount = value; }
+  private _totalRecordsCount: number = 0;
+
+  /**
+   * Get or Set the data status of the data record obtainment
+   */
+  public get dataStatus(): McsDataStatus { return this._dataStatus; }
+  public set dataStatus(value: McsDataStatus) { this._dataStatus = value; }
+  private _dataStatus: McsDataStatus = McsDataStatus.Success;
+
+  /**
+   * Get the Data records from the API
+   */
+  public get dataRecords(): T[] { return this._dataRecords; }
+  private _dataRecords: T[] = new Array();
+
+  /**
+   * Return the currently filtered records
+   */
+  public get filteredRecords(): T[] { return this._filteredRecords; }
+  private _filteredRecords: T[] = new Array();
+
+  /**
+   * Stream that emits when record changes
+   */
+  public get dataRecordsChanged(): Subject<T[]> { return this._dataRecordsChanged; }
+  private _dataRecordsChanged: Subject<T[]> = new Subject<T[]>();
+
+  /**
+   * Data records obtainment subscription
+   */
+  private _getDataRecordsSubscription: Subscription;
+
+  /**
+   * Dispose all the resources of the management based such as
+   * Stream, Array records, etc...
+   */
+  public disposeManagerBase(): void {
+    if (!isNullOrEmpty(this._dataRecords)) {
+      this._dataRecords.splice(0);
+      this._dataRecords = undefined;
+    }
+    if (!isNullOrEmpty(this._getDataRecordsSubscription)) {
+      this._getDataRecordsSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Update data record based on ID
+   *
+   * `@Note`: Make sure the data records has id property
+   * @param record Record to be updated
+   */
+  public updateRecord(record: T): void {
+    if (isNullOrEmpty(record)) { return; }
+    addOrUpdateArrayRecord(this._dataRecords, record, true,
+      (_first: any, _second: any) => {
+        return _first.id === _second.id;
+      });
+    this._notifyDataRecordsChanged();
+  }
+
+  /**
+   * Delete record based on record content
+   *
+   * `@Note`: Make sure the data records has id property
+   * @param record Record to be deleted it can be the whole record or Id
+   */
+  public deleteRecordById(recordId: string): void {
+    if (isNullOrEmpty(recordId)) { return; }
+    deleteArrayRecord(this._dataRecords, (_record: any) => {
+      return recordId === _record.id;
+    });
+    this._notifyDataRecordsChanged();
+  }
+
+  /**
+   * Add record to the data record list
+   * @param record Record to be added
+   */
+  public addRecord(record: T): void {
+    if (isNullOrEmpty(record)) { return; }
+    addOrUpdateArrayRecord(this._dataRecords, record, false);
+    this._notifyDataRecordsChanged();
+  }
+
+  /**
+   * Merge the provided records with the original records and updated the total record count
+   * @param records Records to be merged
+   */
+  public mergeRecords(records: T[]): void {
+    if (isNullOrEmpty(records)) { return; }
+    let mergedArrays = mergeArrays(this.dataRecords, records,
+      (_first: any, _second: any) => {
+        return _first.id === _second.id;
+      });
+    this.totalRecordsCount += mergedArrays.length - this._dataRecords.length;
+    this._dataRecords = mergedArrays;
+    this._notifyDataRecordsChanged();
+  }
+
+  /**
+   * Clears out the data records of the repository
+   */
+  public clearRecords(): void {
+    clearArrayRecord(this._dataRecords);
+    this._totalRecordsCount = 0;
+    this._notifyDataRecordsChanged();
+  }
+
+  /**
+   * Refresh the data records
+   */
+  public refreshRecords(): void {
+    this.clearRecords();
+  }
+
+  /**
+   * Sort Records based on predicate definition
+   * @param predicate Predicate definition to be the method of sorting
+   */
+  public sortRecords(predicate: (first: T, second: T) => number) {
+    this._dataRecords.sort(predicate);
+    this._notifyDataRecordsChanged();
+  }
+
+  /**
+   * This will find all the records based on the paging and searching method
+   * if the content is not found, the API will trigger
+   * @param page Page settings where the data returned are based on page index and size
+   * @param search Search method settings where the data returned are based on keyword
+   * @param searchContent Search content delegate for the search method
+   */
+  public findAllRecords(
+    page: McsPaginator, search: McsSearch,
+    searchContent: (_recordItem: T) => string): Observable<T[]> {
+    let displayedRecords = page.pageSize * (page.pageIndex + 1);
+    let requestRecords = !!(displayedRecords > this.dataRecords.length)
+      && !!(this._totalRecordsCount !== this.dataRecords.length)
+      || this._totalRecordsCount === 0;
+
+    if (requestRecords) {
+      // Get all records from API calls implemented under inherited class
+      return this.getAllRecords(displayedRecords).map((data) => {
+        this._totalRecordsCount = data.totalCount;
+        this._dataRecords = data.content;
+        this._filteredRecords = data.content;
+        return data.content;
+      });
+    } else {
+      // We need to mock the data to pageData
+      // so that we wont touch the original record
+      let pageData = this._dataRecords.slice();
+      let actualData = pageData.splice(0, displayedRecords);
+      return Observable.of(actualData.slice().filter((item: T) => {
+        let searchStr = searchContent(item).toLowerCase();
+        return searchStr.indexOf(search.keyword.toLowerCase()) !== -1;
+      })).map((data) => {
+        this._filteredRecords = data;
+        return data;
+      });
+    }
+  }
+
+  /**
+   * Get all records based on type
+   */
+  protected abstract getAllRecords(recordCount: number): Observable<McsApiSuccessResponse<T[]>>;
+
+  /**
+   * Notify the data records changed event
+   */
+  private _notifyDataRecordsChanged(): void {
+    this.dataRecordsChanged.next(this._dataRecords);
+  }
+}

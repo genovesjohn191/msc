@@ -3,9 +3,7 @@ import {
   FormGroupDirective,
   FormControl
 } from '@angular/forms';
-import {
-  Subject
-} from 'rxjs/Rx';
+import { Subject } from 'rxjs/Rx';
 import { NgControl } from '@angular/forms';
 import {
   isNullOrEmpty,

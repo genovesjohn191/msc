@@ -117,10 +117,10 @@ describe('PaginatorComponent', () => {
     });
   });
 
-  describe('pageCompleted()', () => {
+  describe('showLoading()', () => {
     it(`should return false to loading flag`, () => {
       component.loading = true;
-      component.pageCompleted();
+      component.showLoading(false);
       expect(component.loading).toBeFalsy();
     });
   });

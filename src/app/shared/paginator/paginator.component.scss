@@ -5,9 +5,10 @@
   align-items: center;
   justify-content: center;
 
-  a {
-    @include font-size($font-size-default);
-    text-decoration: underline;
-    position: relative;
+  .load-more-container {
+    @include display-flex(row);
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 1px solid $color-black;
   }
 }

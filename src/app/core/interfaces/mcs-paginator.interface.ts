@@ -23,7 +23,7 @@ export interface McsPaginator {
   pageChangedStream: EventEmitter<any>;
 
   /**
-   * Call this method when the paging is completed
+   * Show or hide the loader of the paginator
    */
-  pageCompleted(): void;
+  showLoading(showLoading: boolean): void;
 }

@@ -23,12 +23,6 @@ $action-cell-width: 55px;
     }
   }
 
-  .emphasize {
-    @include set-items-interval($space-small, horizontal);
-    @include display-flex(row);
-    align-items: center;
-  }
-
   .action-cell {
     width: $action-cell-width;
     max-width: $action-cell-width;

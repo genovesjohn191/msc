@@ -206,7 +206,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
         }
         this.displayedCompanies = result;
         this.search.showLoading(false);
-        this.paginator.pageCompleted();
+        this.paginator.showLoading(false);
         this._changeDetectorRef.markForCheck();
       });
   }

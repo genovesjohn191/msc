@@ -87,6 +87,6 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
   public onCompletion(_status: McsDataStatus): void {
     // Execute all data from completion
     this._search.showLoading(false);
-    this._paginator.pageCompleted();
+    this._paginator.showLoading(false);
   }
 }

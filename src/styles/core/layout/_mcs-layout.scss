@@ -106,18 +106,6 @@
 }
 
 // Layout classes
-.block {
-  display: block;
-}
-
-.inline-block {
-  display: inline-block;
-}
-
-.valign-middle {
-  vertical-align: middle;
-}
-
 .full-width {
   width: 100%;
 }
@@ -230,4 +218,13 @@ table.mcs-simple-table {
 // Outlines
 .outline-none {
   outline: none;
+}
+
+// Word Wrapping
+.word-wrap {
+  white-space: normal;
+}
+
+.word-nowrap {
+  white-space: nowrap;
 }
