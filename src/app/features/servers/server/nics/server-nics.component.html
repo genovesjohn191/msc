@@ -32,11 +32,15 @@
             <tbody>
               <tr *ngFor="let nic of nics">
                 <td>
-                  <span *ngIf="!getActiveNic(nic)">{{ nic.index }}</span>
-                  <mcs-icon *ngIf="getActiveNic(nic)" [key]="spinnerIconKey"
-                    size="small" class="hidden-small"
-                    [mcsTooltip]="getNetworkSummaryInformation(nic)"
-                    mcsTooltipPosition="right"></mcs-icon>
+                  <ng-container *ngIf="activeNicId === nic.id; else nicIndex">
+                    <mcs-icon [key]="spinnerIconKey"
+                      size="small" class="hidden-small"
+                      [mcsTooltip]="jobSummaryInfo"
+                      mcsTooltipPosition="right"></mcs-icon>
+                  </ng-container>
+                  <ng-template #nicIndex>
+                    <span>{{ nic.index }}</span>
+                  </ng-template>
                 </td>
                 <td>
                   <span>{{ nic.name }}</span>

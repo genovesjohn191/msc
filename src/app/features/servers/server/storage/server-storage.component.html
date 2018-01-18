@@ -26,11 +26,13 @@
             <tbody>
               <tr *ngFor="let storage of storageDevices">
                 <td class="squishy-cell">
-                  <mcs-icon *ngIf="!isActiveStorage(storage.id)"
-                    [key]="storageIconKey" size="small" class="inline-block"></mcs-icon>
-                  <mcs-icon *ngIf="isActiveStorage(storage.id)" [key]="spinnerIconKey"
-                    size="small" [mcsTooltip]="getStorageSummaryInformation(storage.id)"
-                    mcsTooltipPosition="right" class="inline-block"></mcs-icon>
+                  <ng-container *ngIf="activeStorageId === storage.id; else defaultStorageIcon">
+                    <mcs-icon class="inline-block" [key]="spinnerIconKey" size="small"
+                      [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
+                  </ng-container>
+                  <ng-template #defaultStorageIcon>
+                    <mcs-icon class="inline-block" [key]="storageIconKey" size="small"></mcs-icon>
+                  </ng-template>
                   <span class="inline-block">{{ storage.name }}</span>
                 </td>
                 <td class="squishy-cell">

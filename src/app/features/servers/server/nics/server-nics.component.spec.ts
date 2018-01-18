@@ -12,7 +12,6 @@ import {
 import { ServerService } from '../server.service';
 import { ServersTestingModule } from '../../testing';
 import {
-  ServerNetworkSummary,
   ServerIpAddress,
   ServerIpAllocationMode
 } from '../../models';
@@ -99,18 +98,6 @@ describe('ServerNicsComponent', () => {
       notificationContextService.notificationsStream.next(notifications);
     }));
 
-    it('should call the subscribe() of ServerService selectedServiceStream', () => {
-      spyOn(serverService.selectedServerStream, 'subscribe');
-      component.ngOnInit();
-      expect(serverService.selectedServerStream.subscribe).toHaveBeenCalled();
-    });
-
-    it('should call the subscribe() of notificationContextService notificationsStream', () => {
-      spyOn(notificationContextService.notificationsStream, 'subscribe');
-      component.ngOnInit();
-      expect(notificationContextService.notificationsStream.subscribe).toHaveBeenCalled();
-    });
-
     it('should define the value of textContent', () => {
       expect(component.textContent).toBeDefined();
     });
@@ -163,32 +150,6 @@ describe('ServerNicsComponent', () => {
       component.selectedNic.name = 'Customer_100320-V1012-Web-M1VLN27117001';
 
       expect(component.validate()).toBeFalsy();
-    });
-  });
-
-  describe('getActiveNic()', () => {
-    it('should return true if clientReferenceObject.networkId matches the id of a network', () => {
-      component.activeServerJob = new McsApiJob();
-      component.activeServerJob.clientReferenceObject = {
-        networkId: mockServerNetworks[0].id
-      };
-
-      expect(component.getActiveNic(mockServerNetworks[0] as ServerNetworkSummary)).toBeTruthy();
-    });
-  });
-
-  describe('getNetworkSummaryInformation()', () => {
-    it('should return the summary information of job', () => {
-      let summaryInformation = 'Adding Network';
-
-      component.activeServerJob = new McsApiJob();
-      component.activeServerJob.summaryInformation = summaryInformation;
-      component.activeServerJob.clientReferenceObject = {
-        networkId: mockServerNetworks[0].id
-      };
-
-      expect(component.getNetworkSummaryInformation(mockServerNetworks[0] as ServerNetworkSummary))
-        .toBe(summaryInformation);
     });
   });
 
