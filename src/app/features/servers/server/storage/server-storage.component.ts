@@ -8,9 +8,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import {
-  Server,
   ServerManageStorage,
-  ServerResource,
   ServerStorage,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
@@ -22,7 +20,8 @@ import {
   McsNotificationContextService,
   McsApiJob,
   McsJobType,
-  McsDialogService
+  McsDialogService,
+  McsOption
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import {
@@ -31,8 +30,8 @@ import {
   isNullOrEmpty,
   deleteArrayRecord
 } from '../../../../utilities';
-
 import {
+  ServerDetailsBase,
   McsStorage,
   DeleteStorageDialogComponent
 } from '../../shared';
@@ -51,28 +50,18 @@ const PRIMARY_STORAGE_NAME = 'Hard disk 1';
   }
 })
 
-export class ServerStorageComponent implements OnInit, OnDestroy {
+export class ServerStorageComponent extends ServerDetailsBase
+  implements OnInit, OnDestroy {
   @ViewChild('mcsStorage')
   public mcsStorage: McsStorage;
 
   public textContent: any;
-  public activeServerJob: McsApiJob;
-  public serverStorage: ServerStorage[];
-
-  public server: Server;
   public storageDevices: ServerStorageDevice[];
   public storageChangedValue: ServerManageStorage;
-
-  public storageProfileList: any[];
   public usedMemoryMB: number;
-
   public selectedStorageDevice: ServerStorageDevice;
 
-  public serverResourceSubscription: Subscription;
   public storageDeviceSubscription: Subscription;
-
-  private _serverSubscription: Subscription;
-  private _notificationsSubscription: Subscription;
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
@@ -123,10 +112,16 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     return this._validateStorageChangedValues();
   }
 
-  /**
-   * Server resource data mapping
-   */
-  private _serverResourceMap: Map<string, ServerResource>;
+  private _activeStorageId: string;
+  public get activeStorageId(): string {
+    return this._activeStorageId;
+  }
+  public set activeStorageId(value: string) {
+    if (this._activeStorageId !== value) {
+      this._activeStorageId = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
 
   private _minimumMB: number;
   public get minimumMB(): number {
@@ -183,17 +178,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _isProcessing: boolean;
-  public get isProcessing(): boolean {
-    return this._isProcessing;
-  }
-  public set isProcessing(value: boolean) {
-    if (this._isProcessing !== value) {
-      this._isProcessing = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   public get storageScaleIsDisabled(): boolean {
     return !this.server.isOperable || this.isManaged || this.isProcessing;
   }
@@ -210,17 +194,33 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       || this.isProcessing;
   }
 
+  public get storageProfileList(): any[] {
+    let storageProfileList = new Array<McsOption>();
+
+    if (!isNullOrEmpty(this.resourceStorage)) {
+      this.resourceStorage.forEach((storage) => {
+        storageProfileList.push({ value: storage.name, text: storage.name });
+      });
+    }
+
+    return storageProfileList;
+  }
+
   private _storageProfile: string;
 
   constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
+    _notificationContextService: McsNotificationContextService,
+    _serverService: ServerService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _serverService: ServerService,
-    private _notificationContextService: McsNotificationContextService,
     private _dialogService: McsDialogService
   ) {
     // Constructor
-    this.server = new Server();
+    super(
+      _notificationContextService,
+      _serverService,
+      _changeDetectorRef
+    );
     this.isProcessing = false;
     this.expandStorage = false;
     this.expandingStorage = false;
@@ -229,21 +229,22 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
     this.selectedStorageDevice = new ServerStorageDevice();
     this.usedMemoryMB = 0;
     this.minimumMB = 0;
-    this.serverStorage = new Array<ServerStorage>();
     this.storageChangedValue = new ServerManageStorage();
     this.storageChangedValue.valid = false;
-    this.activeServerJob = new McsApiJob();
-    this._serverResourceMap = new Map<string, ServerResource>();
-    this.storageProfileList = new Array();
     this._storageProfile = '';
   }
 
   public ngOnInit() {
     // OnInit
     this.textContent = this._textProvider.content.servers.server.storage;
+  }
 
-    this._listenToSelectedServerStream();
-    this._listenToNotificationsStream();
+  public ngOnDestroy() {
+    this.dispose();
+
+    if (!isNullOrEmpty(this.storageDeviceSubscription)) {
+      this.storageDeviceSubscription.unsubscribe();
+    }
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -386,196 +387,97 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
       this.server.compute && this.server.compute.memoryMB);
   }
 
-  /**
-   * This will identify if the provided disk id is active
-   * or it has an ongoing storage management job
-   *
-   * @param diskId Disk identification
-   */
-  public isActiveStorage(diskId: string): boolean {
-    return !isNullOrEmpty(this.activeServerJob.clientReferenceObject) &&
-      this.activeServerJob.clientReferenceObject.diskId === diskId;
-  }
-
-  /**
-   * This will get the job summary information if the disk id
-   * from client reference object matches the provided id
-   *
-   * @param diskId Disk identification
-   */
-  public getStorageSummaryInformation(diskId: string) {
-    if (isNullOrEmpty(this.activeServerJob.clientReferenceObject)) { return; }
-
-    if (this.activeServerJob.clientReferenceObject.diskId === diskId) {
-      return this.activeServerJob.summaryInformation;
-    }
-  }
-
   public isPrimaryStorage(storage: ServerStorageDevice): boolean {
     return storage.name === PRIMARY_STORAGE_NAME;
   }
 
-  public ngOnDestroy() {
-    if (this._serverSubscription) {
-      this._serverSubscription.unsubscribe();
-    }
-
-    if (this.serverResourceSubscription) {
-      this.serverResourceSubscription.unsubscribe();
-    }
-
-    if (this._notificationsSubscription) {
-      this._notificationsSubscription.unsubscribe();
-    }
+  protected serverSelectionChanged(): void {
+    this._setServerStorageDevices();
   }
 
-  /**
-   * This will listen to the selected server
-   * and set values for storage management
-   */
-  private _listenToSelectedServerStream(): void {
-    this._serverSubscription = this._serverService.selectedServerStream
-      .subscribe((server) => {
-        if (!isNullOrEmpty(server) && this.server.id !== server.id) {
-          this.server = server;
-          this._getServerResources();
-          this._setServerStorageDevices();
-        }
-      });
-  }
+  protected serverJobStatusChanged(selectedServerJob: McsApiJob): void {
+    let isStorageJob = selectedServerJob.type === McsJobType.CreateServerDisk
+      || selectedServerJob.type === McsJobType.UpdateServerDisk
+      || selectedServerJob.type === McsJobType.DeleteServerDisk;
 
-  /**
-   * This will listen to the ongoing jobs and will update
-   * the UI based on the executed storage action/s
-   */
-  private _listenToNotificationsStream(): void {
-    this._notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((notifications) => {
-        if (notifications && this.server) {
-          let serverJob = notifications.find((job) => {
-            return job.clientReferenceObject &&
-              job.clientReferenceObject.serverId === this.server.id;
-          });
+    if (isStorageJob) {
+      let disk = new ServerStorageDevice();
 
-          if (!isNullOrEmpty(serverJob)) {
-            let isStorageJob = serverJob.type === McsJobType.CreateServerDisk
-              || serverJob.type === McsJobType.UpdateServerDisk
-              || serverJob.type === McsJobType.DeleteServerDisk;
-            let hasCompleted = serverJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-            let hasFailed = serverJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
+      this.activeStorageId = selectedServerJob.clientReferenceObject.diskId;
 
-            this.isProcessing = !hasCompleted && !hasFailed;
-            this.activeServerJob = (this.isProcessing) ? serverJob : new McsApiJob();
+      switch (selectedServerJob.type) {
+        case McsJobType.UpdateServerDisk:
+          this.expandingStorage = false;
+          this.expandStorage = false;
 
-            let disk = new ServerStorageDevice();
+          disk.id = this.activeStorageId;
 
-            switch (serverJob.type) {
-              case McsJobType.UpdateServerDisk:
-                this.expandingStorage = false;
-                this.expandStorage = false;
+          if (this.isProcessing) { break; }
 
-                disk.id = serverJob.clientReferenceObject.diskId;
-
-                if (this.isProcessing) { break; }
-
-              case McsJobType.CreateServerDisk:
-                if (this.isProcessing) {
-                  // Append Create Server Disk / Update Disk Data
-                  disk.name = serverJob.clientReferenceObject.name;
-                  disk.sizeMB = serverJob.clientReferenceObject.sizeMB;
-                  addOrUpdateArrayRecord(this.storageDevices, disk, false,
-                    (_first: any, _second: any) => {
-                      return _first.id === _second.id;
-                    });
-                }
-
-                disk.storageProfile = serverJob.clientReferenceObject.storageProfile;
-
-                // Update disks once job has completed or failed
-                if (hasCompleted || hasFailed) {
-                  deleteArrayRecord(this.storageDevices, (targetNic) => {
-                    return isNullOrEmpty(targetNic.id);
-                  }, 1);
-                }
-
-                if (hasCompleted) {
-                  // Update resource values
-                  let resourceStorage = this._getStorageByProfile(disk.storageProfile);
-                  if (!isNullOrEmpty(resourceStorage)) {
-                    resourceStorage.usedMB += this.usedMemoryMB;
-                  }
-                }
-                break;
-
-              case McsJobType.DeleteServerDisk:
-                if (hasCompleted) {
-                  // Get the disk to be deleted
-                  disk = this.storageDevices.find((targetStorage) => {
-                    return targetStorage.id === serverJob.clientReferenceObject.diskId;
-                  });
-
-                  if (!isNullOrEmpty(disk)) {
-                    // Update resource values
-                    let resourceStorage = this._getStorageByProfile(disk.storageProfile);
-                    if (!isNullOrEmpty(resourceStorage)) {
-                      resourceStorage.usedMB -= disk.sizeMB;
-                    }
-                  }
-                }
-                break;
-
-              default:
-                // Do nothing
-                break;
-            }
-
-            // Reset form and update data when job has completed
-            if (hasCompleted && isStorageJob) {
-              let storage = new ServerManageStorage();
-              storage.storageProfile = disk.storageProfile;
-              storage.storageMB = 0;
-              storage.valid = false;
-              this.onStorageChanged(storage);
-              this.usedMemoryMB = 0;
-
-              // Refresh storage devices list
-              this._setServerStorageDevices();
-            }
+        case McsJobType.CreateServerDisk:
+          if (this.isProcessing) {
+            // Append Create Server Disk / Update Disk Data
+            disk.name = selectedServerJob.clientReferenceObject.name;
+            disk.sizeMB = selectedServerJob.clientReferenceObject.sizeMB;
+            addOrUpdateArrayRecord(this.storageDevices, disk, false,
+              (_first: any, _second: any) => {
+                return _first.id === _second.id;
+              });
           }
 
-          this._changeDetectorRef.markForCheck();
-        }
-      });
-  }
+          disk.storageProfile = selectedServerJob.clientReferenceObject.storageProfile;
 
-  /**
-   * This will get the server resources
-   */
-  private _getServerResources(): void {
-    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
-      .subscribe((resources) => {
-        if (!isNullOrEmpty(resources)) {
-          this._setServerResourceMap(resources);
-          this._setServerStorage();
-          this._setStorageProfiles();
-        }
-      });
+          // Update disks once job has completed or failed
+          if (this.hasCompletedJob || this.hasFailedJob) {
+            deleteArrayRecord(this.storageDevices, (targetNic) => {
+              return isNullOrEmpty(targetNic.id);
+            }, 1);
+          }
 
-    this.serverResourceSubscription.add(() => {
-      this._changeDetectorRef.markForCheck();
-    });
-  }
+          if (this.hasCompletedJob) {
+            // Update resource values
+            let resourceStorage = this._getStorageByProfile(disk.storageProfile);
+            if (!isNullOrEmpty(resourceStorage)) {
+              resourceStorage.usedMB += this.usedMemoryMB;
+            }
+          }
+          break;
 
-  /**
-   * This will set the Platform data to platform mapping
-   *
-   * @param resources Server Resources
-   */
-  private _setServerResourceMap(resources: ServerResource[]): void {
-    if (!isNullOrEmpty(resources)) {
-      resources.forEach((resource) => {
-        this._serverResourceMap.set(resource.name, resource);
-      });
+        case McsJobType.DeleteServerDisk:
+          if (this.hasCompletedJob) {
+            // Get the disk to be deleted
+            disk = this.storageDevices.find((targetStorage) => {
+              return targetStorage.id === this.activeStorageId;
+            });
+
+            if (!isNullOrEmpty(disk)) {
+              // Update resource values
+              let resourceStorage = this._getStorageByProfile(disk.storageProfile);
+              if (!isNullOrEmpty(resourceStorage)) {
+                resourceStorage.usedMB -= disk.sizeMB;
+              }
+            }
+          }
+          break;
+
+        default:
+          // Do nothing
+          break;
+      }
+
+      // Reset form and update data when job has completed or failed
+      if (this.hasCompletedJob || this.hasFailedJob) {
+        let storage = new ServerManageStorage();
+        storage.storageProfile = disk.storageProfile;
+        storage.storageMB = 0;
+        storage.valid = false;
+        this.onStorageChanged(storage);
+        this.usedMemoryMB = 0;
+        this.activeStorageId = '';
+
+        // Refresh storage devices list
+        this._setServerStorageDevices();
+      }
     }
   }
 
@@ -595,31 +497,6 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * This will set the storage from the platform data
-   */
-  private _setServerStorage(): void {
-    if (isNullOrEmpty(this.server.platform)) { return; }
-
-    let resourceName = this.server.platform.resourceName;
-
-    if (this._serverResourceMap.has(resourceName)) {
-      let serverResource = this._serverResourceMap.get(resourceName);
-      this.serverStorage = serverResource.storage;
-    }
-  }
-
-  /**
-   * This will set the storage profiles for storage management
-   */
-  private _setStorageProfiles(): void {
-    if (isNullOrEmpty(this.serverStorage)) { return; }
-
-    this.serverStorage.forEach((storage) => {
-      this.storageProfileList.push({ value: storage.name, text: storage.name });
-    });
-  }
-
-  /**
    * This will return the resource storage
    * where the provided storage profile belongs
    *
@@ -628,8 +505,8 @@ export class ServerStorageComponent implements OnInit, OnDestroy {
   private _getStorageByProfile(profile: string): ServerStorage {
     let serverStorage = new ServerStorage();
 
-    if (!isNullOrEmpty(this.serverStorage)) {
-      let targetStorage = this.serverStorage.find((storage) => {
+    if (!isNullOrEmpty(this.resourceStorage)) {
+      let targetStorage = this.resourceStorage.find((storage) => {
         return storage.name === profile;
       });
 

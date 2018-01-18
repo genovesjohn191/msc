@@ -91,18 +91,6 @@ describe('ServerStorageComponent', () => {
       notificationContextService.notificationsStream.next(notifications);
     }));
 
-    it('should call the subscribe() of ServerService selectedServiceStream', () => {
-      spyOn(serverService.selectedServerStream, 'subscribe');
-      component.ngOnInit();
-      expect(serverService.selectedServerStream.subscribe).toHaveBeenCalled();
-    });
-
-    it('should call the subscribe() of notificationContextService notificationsStream', () => {
-      spyOn(notificationContextService.notificationsStream, 'subscribe');
-      component.ngOnInit();
-      expect(notificationContextService.notificationsStream.subscribe).toHaveBeenCalled();
-    });
-
     it('should set the storage icon key', () => {
       expect(component.storageIconKey).toEqual(CoreDefinition.ASSETS_SVG_STORAGE);
     });

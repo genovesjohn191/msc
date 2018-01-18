@@ -7,8 +7,6 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import {
-  ServerResource,
-  Server,
   ServerNetwork,
   ServerNetworkSummary,
   ServerManageNetwork,
@@ -30,8 +28,8 @@ import {
   isNullOrEmpty,
   deleteArrayRecord
 } from '../../../../utilities';
-
 import {
+  ServerDetailsBase,
   DeleteNicDialogComponent
 } from '../../shared';
 
@@ -46,18 +44,15 @@ const STORAGE_MAXIMUM_NETWORKS = 10;
   }
 })
 
-export class ServerNicsComponent implements OnInit, OnDestroy {
+export class ServerNicsComponent extends ServerDetailsBase
+  implements OnInit, OnDestroy {
 
   public textContent: any;
   public resourceNetworks: ServerNetwork[];
-  public server: Server;
   public nics: ServerNetworkSummary[];
   public ipAddress: ServerIpAddress;
 
-  public serverResourceSubscription: Subscription;
   public networksSubscription: Subscription;
-
-  public activeServerJob: McsApiJob;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -81,6 +76,17 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
 
   public get hasAvailableResourceNetwork(): boolean {
     return !isNullOrEmpty(this.resourceNetworks);
+  }
+
+  private _activeNicId: string;
+  public get activeNicId(): string {
+    return this._activeNicId;
+  }
+  public set activeNicId(value: string) {
+    if (this._activeNicId !== value) {
+      this._activeNicId = value;
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   private _networkName: string;
@@ -149,72 +155,41 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _isProcessing: boolean;
-  public get isProcessing(): boolean {
-    return this._isProcessing;
-  }
-  public set isProcessing(value: boolean) {
-    if (this._isProcessing !== value) {
-      this._isProcessing = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   public get nicsScaleIsDisabled(): boolean {
     return !this.server.isOperable || this.isProcessing ||
       this.server.serviceType === ServerServiceType.Managed;
   }
 
-  /**
-   * Server resource data mapping
-   */
-  private _resourceMap: Map<string, ServerResource>;
-
-  private _serverSubscription: Subscription;
-  private _notificationsSubscription: Subscription;
-
   constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
+    _notificationContextService: McsNotificationContextService,
+    _serverService: ServerService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _serverService: ServerService,
-    private _notificationContextService: McsNotificationContextService,
     private _dialogService: McsDialogService
   ) {
     // Constructor
+    super(
+      _notificationContextService,
+      _serverService,
+      _changeDetectorRef
+    );
     this.isProcessing = false;
     this.isUpdate = false;
-    this._resourceMap = new Map<string, ServerResource>();
-    this.resourceNetworks = new Array<ServerNetwork>();
-    this.server = new Server();
     this.nics = new Array<ServerNetworkSummary>();
     this.ipAddress = new ServerIpAddress();
-    this.activeServerJob = new McsApiJob();
     this.selectedNic = new ServerNetworkSummary();
   }
 
   public ngOnInit() {
     // OnInit
     this.textContent = this._textProvider.content.servers.server.nics;
-
-    this._listenToSelectedServerStream();
-    this._listenToNotificationsStream();
   }
 
   public ngOnDestroy() {
-    if (this.serverResourceSubscription) {
-      this.serverResourceSubscription.unsubscribe();
-    }
+    this.dispose();
 
-    if (this.networksSubscription) {
+    if (!isNullOrEmpty(this.networksSubscription)) {
       this.networksSubscription.unsubscribe();
-    }
-
-    if (this._serverSubscription) {
-      this._serverSubscription.unsubscribe();
-    }
-
-    if (this._notificationsSubscription) {
-      this._notificationsSubscription.unsubscribe();
     }
   }
 
@@ -230,25 +205,13 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     if (this.isUpdate) {
       isValid = this.ipAddress.valid &&
         (this.networkName !== this.selectedNic.name ||
-        this.ipAddress.ipAllocationMode !== this.selectedNic.ipAllocationMode ||
-        this.ipAddress.customIpAddress !== this.selectedNic.ipAddress);
+          this.ipAddress.ipAllocationMode !== this.selectedNic.ipAllocationMode ||
+          this.ipAddress.customIpAddress !== this.selectedNic.ipAddress);
     } else {
       isValid = !isNullOrEmpty(this.networkName) && this.ipAddress.valid;
     }
 
     return isValid;
-  }
-
-  public getActiveNic(nic: ServerNetworkSummary): boolean {
-    return !isNullOrEmpty(this.activeServerJob.clientReferenceObject) &&
-      this.activeServerJob.clientReferenceObject.networkId === nic.id;
-  }
-
-  public getNetworkSummaryInformation(network: ServerNetworkSummary): string {
-    if (isNullOrEmpty(this.activeServerJob.clientReferenceObject)) { return ''; }
-
-    return (this.activeServerJob.clientReferenceObject.networkId === network.id) ?
-      this.activeServerJob.summaryInformation : '';
   }
 
   public getIpAllocationModeText(ipAllocationMode: ServerIpAllocationMode): string {
@@ -351,7 +314,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     networkValues.ipAddress = this.ipAddress.customIpAddress;
     networkValues.clientReferenceObject = {
       serverId: this.server.id,
-      networkId: this.selectedNic.id,
+      nicId: this.selectedNic.id,
       networkIndex: this.selectedNic.index,
       networkName: this.networkName,
       ipAllocationMode: this.ipAddress.ipAllocationMode,
@@ -377,7 +340,7 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     networkValues.name = this.networkName;
     networkValues.clientReferenceObject = {
       serverId: this.server.id,
-      networkId: nic.id,
+      nicId: nic.id,
       powerState: this.server.powerState
     };
 
@@ -385,50 +348,51 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     this._serverService.deleteServerNetwork(this.server.id, nic.id, networkValues).subscribe();
   }
 
-  /**
-   * This will get the server resources
-   */
-  private _getResources(): void {
-    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
-    .subscribe((resources) => {
-      if (!isNullOrEmpty(resources)) {
-        this._setResourceMap(resources);
-      }
-    });
-
-    this.serverResourceSubscription.add(() => {
-      this._setResourceNetworks();
-      this._changeDetectorRef.markForCheck();
-    });
+  protected serverSelectionChanged(): void {
+    this._getServerNetworks();
   }
 
-  /**
-   * This will set the Platform data to platform mapping
-   *
-   * @param resources Server Resources
-   */
-  private _setResourceMap(resources: ServerResource[]): void {
-    if (!isNullOrEmpty(resources)) {
-      resources.forEach((resource) => {
-        this._resourceMap.set(resource.name, resource);
-      });
+  protected serverJobStatusChanged(selectedServerJob: McsApiJob): void {
+    let nic = new ServerNetworkSummary();
 
-      this._changeDetectorRef.markForCheck();
+    this.activeNicId = selectedServerJob.clientReferenceObject.nicId;
+
+    switch (selectedServerJob.type) {
+      case McsJobType.UpdateServerNetwork:
+        // Get the id of the NIC to be updated
+        nic.id = this.activeNicId;
+        if (this.isProcessing) { break; }
+
+      case McsJobType.CreateServerNetwork:
+        if (this.isProcessing) {
+          // Append Created Server Network / Update Network Data
+          nic.name = selectedServerJob.clientReferenceObject.networkName;
+          addOrUpdateArrayRecord(this.nics, nic, false,
+            (_first: any, _second: any) => {
+              return _first.id === _second.id;
+            });
+        }
+
+      case McsJobType.DeleteServerNetwork:
+        // Update NICs list once job has completed or failed
+        if (this.hasCompletedJob || this.hasFailedJob) {
+          deleteArrayRecord(this.nics, (targetNetwork) => {
+            return isNullOrEmpty(targetNetwork.id);
+          }, 1);
+        }
+
+        if (this.hasCompletedJob) {
+          this._getServerNetworks();
+        }
+        break;
+
+      default:
+        // Do nothing when the job is not related to NIC management
+        break;
     }
-  }
 
-  /**
-   * This will set the resource networks
-   */
-  private _setResourceNetworks(): void {
-    if (this.server.platform) {
-      let resourceName = this.server.platform.resourceName;
-
-      if (!isNullOrEmpty(resourceName) && this._resourceMap.has(resourceName)) {
-        let resource = this._resourceMap.get(resourceName);
-        this.resourceNetworks = resource.networks;
-        this._changeDetectorRef.markForCheck();
-      }
+    if (this.hasCompletedJob || this.hasFailedJob) {
+      this.activeNicId = '';
     }
   }
 
@@ -453,85 +417,5 @@ export class ServerNicsComponent implements OnInit, OnDestroy {
     this.networkGateway = undefined;
     this.networkNetmask = undefined;
     this.isPrimary = false;
-  }
-
-  /**
-   * This will listen to the selected server
-   * and set values for storage management
-   */
-  private _listenToSelectedServerStream(): void {
-    this._serverSubscription = this._serverService.selectedServerStream
-      .subscribe((server) => {
-        if (isNullOrEmpty(server)) { return; }
-
-        if (this.server.id !== server.id) {
-          this.server = server;
-          this._getResources();
-          this._getServerNetworks();
-        }
-      });
-  }
-
-  /**
-   * This will listen to the ongoing jobs and will update
-   * the UI based on the executed storage action/s
-   */
-  private _listenToNotificationsStream(): void {
-    this._notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((notifications) => {
-        if (!isNullOrEmpty(notifications) && !isNullOrEmpty(this.server.id)) {
-
-          let activeServerJob = notifications.find((job) => {
-            return job.clientReferenceObject &&
-              job.clientReferenceObject.serverId === this.server.id;
-          });
-
-          if (!isNullOrEmpty(activeServerJob)) {
-            let hasCompleted = activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-            let hasFailed = activeServerJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
-
-            this.isProcessing = !hasCompleted && !hasFailed;
-            this.activeServerJob = (this.isProcessing) ? activeServerJob : new McsApiJob() ;
-
-            let nic = new ServerNetworkSummary();
-
-            switch (activeServerJob.type) {
-              case McsJobType.UpdateServerNetwork:
-                // Get the id of the NIC to be updated
-                nic.id = activeServerJob.clientReferenceObject.networkId;
-                if (this.isProcessing) { break; }
-
-              case McsJobType.CreateServerNetwork:
-                if (this.isProcessing) {
-                  // Append Created Server Network / Update Network Data
-                  nic.name = activeServerJob.clientReferenceObject.networkName;
-                  addOrUpdateArrayRecord(this.nics, nic, false,
-                    (_first: any, _second: any) => {
-                      return _first.id === _second.id;
-                    });
-                }
-
-              case McsJobType.DeleteServerNetwork:
-                // Update NICs list once job has completed or failed
-                if (hasCompleted || hasFailed) {
-                  deleteArrayRecord(this.nics, (targetNetwork) => {
-                    return isNullOrEmpty(targetNetwork.id);
-                  }, 1);
-                }
-
-                if (hasCompleted) {
-                  this._getServerNetworks();
-                }
-                break;
-
-              default:
-                // Do nothing when the job is not related to NIC management
-                break;
-            }
-          }
-
-          this._changeDetectorRef.markForCheck();
-        }
-      });
   }
 }

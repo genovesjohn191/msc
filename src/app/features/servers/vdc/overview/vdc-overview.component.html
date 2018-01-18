@@ -68,7 +68,7 @@
 
       <div class="vertical-items-spacing-medium">
         <span *ngIf="hasLowCapacityStorage">{{ displayStorageSummary() }}</span>
-        <mcs-accordion>
+        <mcs-accordion [multi]="true">
           <mcs-accordion-panel *ngFor="let storage of vdc.storage; let i = index" [expanded]="i === 0">
             <mcs-accordion-panel-header panel-header-def>
               <mcs-icon [key]="getStorageStatusIconKey(storage)"></mcs-icon>

@@ -121,13 +121,18 @@
               <div display-flex="row" class="horizontal-items-spacing-xsmall">
                 <span>{{ media.name }}</span>
                 <span *mcsHasPermission="['VmEdit']">
-                  <a *ngIf="hasMedia && !getActiveMedia(media)" (click)="onDetachMedia(media)"
-                    [disabled]="isProcessing">{{ textContent.media.detach }}</a>
-
-                  <mcs-icon *ngIf="getActiveMedia(media)" [key]="spinnerIconKey"
-                    size="small" class="hidden-small"
-                    [mcsTooltip]="getMediaSummaryInformation(media)"
-                    mcsTooltipPosition="right"></mcs-icon>
+                  <ng-container *ngIf="activeMediaId === media.id; else detachMedia">
+                    <mcs-icon [key]="spinnerIconKey"
+                      size="small" class="hidden-small"
+                      [mcsTooltip]="jobSummaryInfo"
+                      mcsTooltipPosition="right"></mcs-icon>
+                  </ng-container>
+                  <ng-template #detachMedia>
+                    <a (click)="onDetachMedia(media)"
+                      [disabled]="isProcessing">
+                      {{ textContent.media.detach }}
+                    </a>
+                  </ng-template>
                 </span>
               </div>
             </mcs-list-item>
@@ -160,9 +165,9 @@
     <div *ngIf="isActiveScale" class="server-performance-scale">
       <div class="vertical-items-spacing-medium">
         <h3>Scaling {{ server.managementName }}</h3>
-        <mcs-server-performance-scale *ngIf="remainingMemory && remainingCpu"
+        <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
           [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
-          [availableMemoryMB]="remainingMemory" [availableCpuCount]="remainingCpu"
+          [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
           (scaleChanged)="onScaleChanged($event)">
 
           <!--Performance scale container-->
@@ -211,7 +216,7 @@
 
           <button *mcsHasPermission="['VmEdit']"
             mcsButton id="ctaAttachMedia" arrow="right" size="small"
-            [disabled]="!selectedMedia || isProcessing" (onClick)="attachMedia()">
+            [disabled]="!selectedMedia || isProcessing" (click)="attachMedia()">
             {{ textContent.media.attach }}
           </button>
         </div>
