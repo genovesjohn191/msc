@@ -65,6 +65,7 @@ export class ServersComponent
 
   // Subscription
   private _selectionModeSubscription: any;
+  private _notificationsChangeSubscription: any;
 
   public get serverCommand() {
     return ServerCommand;
@@ -136,6 +137,7 @@ export class ServersComponent
     refreshView(() => {
       this.initializeDatasource();
       this._listenToSelectionModeChange();
+      this._listenToNotificationsChange();
     });
   }
 
@@ -143,6 +145,9 @@ export class ServersComponent
     this.dispose();
     if (!isNullOrEmpty(this._selectionModeSubscription)) {
       this._selectionModeSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
+      this._notificationsChangeSubscription.unsubscribe();
     }
   }
 
@@ -413,7 +418,7 @@ export class ServersComponent
     // Set datasource instance
     this.dataSource = new ServersDataSource(
       this._serversRepository,
-      this.textContent.enumerations,
+      this.enumDefinition,
       this.paginator,
       this.search
     );
@@ -430,6 +435,16 @@ export class ServersComponent
           deviceType === McsDeviceType.MobilePortrait);
 
         this.selection = new McsSelection<Server>(multipleSelection);
+      });
+  }
+
+  /**
+   * Listen to notifications changes
+   */
+  private _listenToNotificationsChange(): void {
+    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+      .subscribe(() => {
+        this.changeDetectorRef.markForCheck();
       });
   }
 }

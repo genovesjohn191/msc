@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import {
+  Injectable,
+  EventEmitter
+} from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {
   McsRepositoryBase,
@@ -13,6 +16,9 @@ import { isNullOrEmpty } from 'app/utilities';
 
 @Injectable()
 export class ServersRepository extends McsRepositoryBase<Server> {
+
+  /** Event that emits when notifications job changes */
+  public notificationsChanged = new EventEmitter<any>();
 
   constructor(
     private _serversApiService: ServersService,
@@ -36,6 +42,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
+    this._notificationEvents.notificationsEvent.subscribe(this._onNotificationsChanged.bind(this));
     this._notificationEvents.createServerEvent.subscribe(this._onCreateServer.bind(this));
     this._notificationEvents.cloneServerEvent.subscribe(this._onCreateServer.bind(this));
     this._notificationEvents.renameServerEvent.subscribe(this._onRenameServer.bind(this));
@@ -74,5 +81,13 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       renamedServer.name = job.clientReferenceObject.newName;
     }
     this.updateRecord(renamedServer);
+  }
+
+  /**
+   * Event that emits when any notifications changes
+   * @param jobs Emitted jobs content
+   */
+  private _onNotificationsChanged(jobs: McsApiJob[]): void {
+    this.notificationsChanged.emit(jobs);
   }
 }
