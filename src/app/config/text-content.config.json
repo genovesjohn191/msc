@@ -86,6 +86,13 @@
       "storageLabel": "Storage",
       "networkLabel": "Network",
       "ipAddressLabel": "IP Address",
+      "serverDetailsStep" : {
+        "title": "1. Server Details",
+        "loading": "Obtaining server data, this may take a few minutes."
+      },
+      "serverGoStep": {
+        "title": "2. Go!"
+      },
       "headers": {
         "vApp": "Virtual Applications",
         "os": "Operating System",
@@ -417,6 +424,7 @@
       "backToTickets": "Back To Tickets",
       "newTicket": "Log Ticket",
       "cancelActivity": "Cancel",
+      "creatingTicket": "Creating ticket, this may take a few minutes.",
       "hints": {
         "headline": "Max of {{max_char}} characters",
         "details": "Max of {{max_char}} characters"
@@ -610,6 +618,12 @@
       "summary": "Sorry, something’s not right",
       "description": "We're experiencing internal server problem.",
       "retry": "Please try again later."
+    },
+    "unprocessable": {
+      "header": "422",
+      "summary": "The changes you wanted was rejected",
+      "description": "Some your inputs was not right.",
+      "retry": "Please double check your inputs and try again."
     },
     "refresh": "Refresh the page",
     "home": "Go to home page"

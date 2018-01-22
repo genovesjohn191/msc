@@ -274,8 +274,10 @@ export class TagListComponent extends McsFormFieldControlBase<any>
    * Write value implementation of ControlValueAccessor
    * @param value Model binding value
    */
-  public writeValue(value: any) {
-    this.value = value;
+  public writeValue(_value: any) {
+    if (!isNullOrEmpty(_value)) {
+      this.value = _value;
+    }
   }
 
   /**

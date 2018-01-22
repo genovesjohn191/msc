@@ -4,6 +4,7 @@ import {
   AfterViewInit
 } from '@angular/core';
 import { refreshView } from '../../utilities';
+import { CoreDefinition } from '../../core';
 
 @Directive({
   selector: '[set-focus]'
@@ -17,6 +18,6 @@ export class SetFocusDirective implements AfterViewInit {
     // Set focus to element
     refreshView(() => {
       this._elementRef.nativeElement.focus();
-    });
+    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 }

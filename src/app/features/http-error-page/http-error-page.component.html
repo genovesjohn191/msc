@@ -14,8 +14,8 @@
         {{ textContentAll.home }}
       </button>
     </div>
-    <div *ngSwitchCase="httpStatusCodeEnum.InternalServerError">
-      <button mcsButton id="ctaRefreshPage" size="small" (onClick)="refreshPage()">
+    <div *ngSwitchDefault>
+      <button mcsButton id="ctaRefreshPage" size="small" (click)="refreshPage()">
         {{ textContentAll.refresh }}
       </button>
     </div>

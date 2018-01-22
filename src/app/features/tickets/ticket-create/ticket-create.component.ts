@@ -7,8 +7,7 @@ import {
   QueryList,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  HostListener
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   FormGroup,
@@ -25,6 +24,7 @@ import {
   McsTextContentProvider,
   McsAttachment,
   McsOption,
+  McsErrorHandlerService,
   CoreValidators,
   CoreDefinition
 } from '../../../core';
@@ -65,6 +65,7 @@ export class TicketCreateComponent implements
   public isServicesOpen: boolean;
   public textService: string;
   public servicePanelOpen: boolean;
+  public creatingTicket: boolean;
 
   @ViewChild(FormGroupDirective)
   public fgCreateDirective: FormGroupDirective;
@@ -121,7 +122,8 @@ export class TicketCreateComponent implements
     private _textContentProvider: McsTextContentProvider,
     private _ticketCreateService: TicketCreateService,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsRepository: TicketsRepository
+    private _ticketsRepository: TicketsRepository,
+    private _errorHandlerService: McsErrorHandlerService
   ) {
     this.ticketTypeList = new Array();
     this.services = new Array();
@@ -142,13 +144,14 @@ export class TicketCreateComponent implements
     return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
+  /**
+   * Event that triggers when navigating away from the current page
+   * and all the inputted setting on the form are checked
+   */
   public safeToNavigateAway(): boolean {
-    return this.fgCreateDirective && !this.fgCreateDirective.hasDirtyFormControls();
-  }
-
-  @HostListener('window:beforeunload')
-  public navigateAwayGuard() {
-    return false;
+    return this.fgCreateDirective &&
+      !this.fgCreateDirective.hasDirtyFormControls() ||
+      this.creatingTicket;
   }
 
   public ngOnInit() {
@@ -247,9 +250,19 @@ export class TicketCreateComponent implements
     // Create ticket
     this.createTicketSubscription = this._ticketCreateService
       .createTicket(ticket)
-      .subscribe(() => {
+      .finally(() => {
         this.fgCreateDirective.resetAllControls();
         this._ticketsRepository.refreshRecords();
+        this.creatingTicket = true;
+      })
+      .catch((error) => {
+        this.createTicketSubscription.unsubscribe();
+        this._changeDetectorRef.markForCheck();
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
+      .subscribe(() => {
         this._router.navigate(['/tickets']);
       });
   }
@@ -272,7 +285,7 @@ export class TicketCreateComponent implements
     ]);
 
     this.fcService = new FormControl('', [
-      CoreValidators.required
+      // No checking for services since user can raise a ticket without service
     ]);
 
     // Register Form Groups using binding

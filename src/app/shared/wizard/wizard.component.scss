@@ -149,6 +149,8 @@ $step-disabled-color: $color-grey-02;
     @include flex(1 1 auto);
     @include set-items-interval($space-xxlarge);
     padding: $wizard-content-panel-large-padding;
+    position: relative;
+
     @include breakpoint(small) {
       padding: $wizard-content-panel-small-padding;
     }

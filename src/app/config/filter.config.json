@@ -84,10 +84,6 @@
     "completed": {
       "text": "Completed",
       "value": true
-    },
-    "vdc": {
-      "text": "VDC",
-      "value": true
     }
   },
   "ticketsListingFilter": {

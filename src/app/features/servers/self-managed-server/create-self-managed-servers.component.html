@@ -1,16 +1,21 @@
-<mcs-wizard [header]="createServerTextContent.header"
+<mcs-wizard [header]="textContent.header"
   (onCancel)="gotoServers()" (onComplete)="onDeployServer()">
   <!-- Step 1 -->
-  <mcs-wizard-step stepTitle="1. Server Details" customClass="limited-view"
+  <mcs-wizard-step [stepTitle]="textContent.serverDetailsStep.title" customClass="limited-view"
     (onNext)="onPreDeployServer($event)">
-    <div [mcsLoader]="obtainDataSubscription"></div>
 
-    <div class="contextual-help-page-wrapper">
+    <!-- Loader settings -->
+    <div [mcsLoader]="obtainDataSubscription"
+      [mcsLoaderHideElement]="serverDetailsStep"
+      [mcsLoaderText]="textContent.serverDetailsStep.loading"
+      mcsLoaderOrientation="top"></div>
+
+    <div class="contextual-help-page-wrapper" #serverDetailsStep>
       <div class="page-information-wrapper">
         <mcs-form-field>
           <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC"
             [mcsContextualHelp]="contextualTextContent.vdcField">
-            <mcs-select-group [header]="createServerTextContent.vdcDropdownList.name">
+            <mcs-select-group [header]="textContent.vdcDropdownList.name">
               <mcs-select-item *ngFor="let vdc of vdcList" [value]="vdc.value">
                 {{ vdc.text }}
               </mcs-select-item>
@@ -37,7 +42,7 @@
   </mcs-wizard-step>
 
   <!-- Step 2  -->
-  <mcs-wizard-step stepTitle="2. Go!">
+  <mcs-wizard-step [stepTitle]="textContent.serverGoStep.title">
     <div class="limited-view" *ngIf="hasNotifications">
       <mcs-provisioning-notifications [jobs]="notifications"
         [mcsContextualHelp]="contextualTextContent.provisioningNotifications">

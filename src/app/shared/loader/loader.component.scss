@@ -1,16 +1,41 @@
 @import "../../../styles/shared/base";
 
-$loader-offset: $space-xsmall;
+$loader-offset: 100px;
 
 .loader-wrapper {
   background: $color-white;
-  position: absolute;
-  top: -$loader-offset;
-  left: -$loader-offset;
-  right: -$loader-offset;
-  bottom: -$loader-offset;
+  position: relative;
+  @include display-flex(0 0 auto);
   @include display-flex(row);
   align-items: center;
   justify-content: center;
   z-index: $zindex-loader;
+
+  &.expanded {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  &.top-orientation {
+    @include align-items(flex-start);
+    margin-top: $loader-offset;
+  }
+
+  &.left-orientation {
+    justify-content: flex-start;
+    margin-left: $loader-offset;
+  }
+
+  &.right-orientation {
+    justify-content: flex-end;
+    margin-right: $loader-offset;
+  }
+
+  &.bottom-orientation {
+    @include align-items(flex-end);
+    margin-bottom: $loader-offset;
+  }
 }
