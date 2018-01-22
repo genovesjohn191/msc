@@ -12,7 +12,14 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="contextual-help-page-wrapper">
+
+    <!-- Loader settings -->
+    <div [mcsLoader]="createTicketSubscription"
+      [mcsLoaderHideElement]="createContent"
+      [mcsLoaderText]="textContent.creatingTicket"
+      mcsLoaderOrientation="top"></div>
+
+    <div class="contextual-help-page-wrapper" #createContent>
       <!-- Create ticket details -->
       <div class="page-information-wrapper ticket-create-information limited-view">
         <p [innerHTML]="textContent.description"></p>
@@ -91,7 +98,7 @@
                   <!-- Tags -->
                   <mcs-form-field flex="auto">
                     <mcs-tag-list [placeholder]="textContent.placeholders.services"
-                      [formControl]="fcService" required>
+                      [formControl]="fcService">
 
                       <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
                         [selectable]="true" [removable]="true"
@@ -147,8 +154,7 @@
           <div class="basic-action-bar">
             <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
 
-            <button mcsButton id="ctaNewTicket" arrow="right"
-              (click)="onLogTicket()" [mcsLoader]="createTicketSubscription">
+            <button mcsButton id="ctaNewTicket" arrow="right" (click)="onLogTicket()">
               {{ textContent.newTicket }}
             </button>
           </div>

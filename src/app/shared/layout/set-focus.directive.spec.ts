@@ -11,6 +11,7 @@ import {
   ElementRef
 } from '@angular/core';
 import { SetFocusDirective } from './set-focus.directive';
+import { CoreDefinition } from '../../core';
 
 @Component({
   selector: 'mcs-test',
@@ -66,7 +67,7 @@ describe('SetFocusDirective', () => {
     it(`should call the focus method of the host element`, fakeAsync(() => {
       spyOn(component.testElement.nativeElement, 'focus');
       component.directive.ngAfterViewInit();
-      tick();
+      tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       expect(component.testElement.nativeElement.focus).toHaveBeenCalled();
     }));
   });

@@ -81,6 +81,10 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         this.textContent = this.textContentAll.serverError;
         break;
 
+      case McsHttpStatusCode.Unprocessable:
+        this.textContent = this.textContentAll.unprocessable;
+        break;
+
       case McsHttpStatusCode.NotFound:
       default:
         this.textContent = this.textContentAll.notFound;

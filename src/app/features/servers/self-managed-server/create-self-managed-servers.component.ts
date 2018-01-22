@@ -81,7 +81,7 @@ export class CreateSelfManagedServersComponent implements
   public vdcList: any;
 
   public contextualTextContent: any;
-  public createServerTextContent: any;
+  public textContent: any;
 
   public notifications: McsApiJob[];
   public newServers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
@@ -179,9 +179,9 @@ export class CreateSelfManagedServersComponent implements
   }
 
   public ngOnInit() {
-    this.createServerTextContent = this._textContentProvider.content
+    this.textContent = this._textContentProvider.content
       .servers.createSelfManagedServer;
-    this.contextualTextContent = this.createServerTextContent.contextualHelp;
+    this.contextualTextContent = this.textContent.contextualHelp;
 
     // Get all the data from api in parallel
     this.obtainDataSubscription = Observable.forkJoin([
@@ -388,7 +388,7 @@ export class CreateSelfManagedServersComponent implements
     // Populate vdc list dropdown list
     this._serverResourceMap.forEach((value, key) => {
       let prefix = replacePlaceholder(
-        this.createServerTextContent.vdcDropdownList.prefix,
+        this.textContent.vdcDropdownList.prefix,
         'availability_zone',
         value.availabilityZone
       );
