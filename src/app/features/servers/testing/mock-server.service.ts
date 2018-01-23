@@ -215,7 +215,7 @@ export const mockServerService = {
 
     return Observable.of(mcsApiResponseMock);
   },
-  setResourceMap(_resources: ServerResource[]): Map<string, ServerResource> {
+  convertResourceToMap(_resources: ServerResource[]): Map<string, ServerResource> {
     return new Map<string, ServerResource>();
   },
   computeAvailableMemoryMB(_resource: ServerResource): number {

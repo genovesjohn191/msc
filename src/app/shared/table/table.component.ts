@@ -184,8 +184,11 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   public ngOnDestroy() {
-    if (this._dataSourceSubscription) {
+    if (!isNullOrEmpty(this._dataSourceSubscription)) {
       this._dataSourceSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._dataLoadingSubscription)) {
+      this._dataLoadingSubscription.unsubscribe();
     }
   }
 

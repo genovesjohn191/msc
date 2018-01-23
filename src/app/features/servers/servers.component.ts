@@ -16,8 +16,7 @@ import {
   Server,
   ServerPowerState,
   ServerCommand,
-  ServerServiceType,
-  ServerClientObject
+  ServerServiceType
 } from './models';
 /** Shared */
 import {
@@ -202,35 +201,33 @@ export class ServersComponent
   }
 
   /**
-   * Return true when Start button on the top panel is disabled
+   * Return true when Start button on the top panel is enabled
    *
    * `@Note`: All selected servers must be powered OFF
    */
   public get startable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      let serverStatus = this.getServerStatus(server);
-      let state = serverStatus.powerState;
-      return state !== ServerPowerState.PoweredOff;
+      return server.powerState !== ServerPowerState.PoweredOff &&
+        server.isProcessing === false;
     }).length === 0;
   }
 
   /**
-   * Return true when Stop button on the top panel is disabled
+   * Return true when Stop button on the top panel is enabled
    *
    * `@Note`: All selected servers must be powered ON
    */
   public get stoppable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      let serverStatus = this.getServerStatus(server);
-      let state = serverStatus.powerState;
-      return state !== ServerPowerState.PoweredOn;
+      return server.powerState !== ServerPowerState.PoweredOn &&
+        server.isProcessing === false;
     }).length === 0;
   }
 
   /**
-   * Return true when Restart button on the top panel is disabled
+   * Return true when Restart button on the top panel is enabled
    *
    * `@Note`: All selected servers must be powered ON
    */
@@ -239,16 +236,15 @@ export class ServersComponent
   }
 
   /**
-   * Return true when Delete button on the top panel is disabled
+   * Return true when Delete button on the top panel is enabled
    *
    * `@Note`: All selected servers should not processing any request
    */
   public get deletable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      let serverStatus = this.getServerStatus(server);
-      let state = serverStatus.powerState;
-      return isNullOrEmpty(state) || server.serviceType === ServerServiceType.Managed;
+      return server.serviceType === ServerServiceType.Managed &&
+        server.isProcessing === false;
     }).length === 0;
   }
 
@@ -361,35 +357,11 @@ export class ServersComponent
   }
 
   /**
-   * Return the active server tooltip information
-   * @param serverId Server ID
-   */
-  public getActiveServerTooltip(serverId: any) {
-    return this._serversService.getActiveServerInformation(serverId);
-  }
-
-  /**
-   * Return the active server status
-   * @param server Server to be check
-   */
-  public getServerStatus(server: Server): ServerClientObject {
-    return this._serversService.getServerStatus(server);
-  }
-
-  /**
    * Return true when the server is currently deleting, otherwise false
    * @param server Server to be deleted
    */
   public serverDeleting(server: Server): boolean {
-    return this.getServerStatus(server).commandAction === ServerCommand.Delete;
-  }
-
-  /**
-   * Return true when the server process is on-going and deleting
-   * @param server Server to be checked
-   */
-  public serverOngoing(server: Server): boolean {
-    return this.serverDeleting(server) || !server.powerState;
+    return server.commandAction === ServerCommand.Delete && server.isProcessing;
   }
 
   /**

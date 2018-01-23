@@ -1,7 +1,5 @@
-import {
-  Injectable,
-  EventEmitter
-} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/Rx';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsJobType } from '../enumerations/mcs-job-type.enum';
@@ -14,19 +12,25 @@ import {
 export class McsNotificationEventsService {
 
   /** Event that emits when create server executed */
-  public createServerEvent = new EventEmitter<McsApiJob>();
+  public createServerEvent = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits when clone server executed */
-  public cloneServerEvent = new EventEmitter<McsApiJob>();
+  public cloneServerEvent = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits when rename server executed */
-  public renameServerEvent = new EventEmitter<McsApiJob>();
+  public renameServerEvent = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits when delete server executed */
-  public deleteServerEvent = new EventEmitter<McsApiJob>();
+  public deleteServerEvent = new BehaviorSubject<McsApiJob>(undefined);
+
+  /** Event that emits when reset server password is executed */
+  public resetServerPasswordEvent = new BehaviorSubject<McsApiJob>(undefined);
+
+  /** Event that emits when power state is executed on server  */
+  public changeServerPowerStateEvent = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits all jobs */
-  public notificationsEvent = new EventEmitter<McsApiJob[]>();
+  public notificationsEvent = new BehaviorSubject<McsApiJob[]>(undefined);
 
   constructor(private _notificationsContext: McsNotificationContextService) {
     this._listenToNotificationsChanged();
@@ -38,12 +42,11 @@ export class McsNotificationEventsService {
   private _listenToNotificationsChanged(): void {
     this._notificationsContext.notificationsStream
       .subscribe((updatedNotifications) => {
-        this.notificationsEvent.emit(updatedNotifications);
+        this.notificationsEvent.next(updatedNotifications);
         updatedNotifications.sort(
           (_first: McsApiJob, _second: McsApiJob) => {
             return compareNumbers(_first.type, _second.type);
           });
-
         this._notifyEventListeners(updatedNotifications);
       });
   }
@@ -58,19 +61,27 @@ export class McsNotificationEventsService {
     notifications.forEach((notification) => {
       switch (notification.type) {
         case McsJobType.CreateServer:
-          this.createServerEvent.emit(notification);
+          this.createServerEvent.next(notification);
           break;
 
         case McsJobType.CloneServer:
-          this.createServerEvent.emit(notification);
+          this.createServerEvent.next(notification);
           break;
 
         case McsJobType.RenameServer:
-          this.renameServerEvent.emit(notification);
+          this.renameServerEvent.next(notification);
           break;
 
         case McsJobType.DeleteServer:
-          this.deleteServerEvent.emit(notification);
+          this.deleteServerEvent.next(notification);
+          break;
+
+        case McsJobType.ResetServerPassword:
+          this.resetServerPasswordEvent.next(notification);
+          break;
+
+        case McsJobType.ChangeServerPowerState:
+          this.changeServerPowerStateEvent.next(notification);
           break;
 
         default:

@@ -2,7 +2,7 @@
 <ng-container mcsListItemsPlaceholder></ng-container>
 
 <!-- List Items Loading -->
-<ng-container *ngIf="listSource === dataStatusEnum.InProgress">
+<ng-container *ngIf="listStatus === dataStatusEnum.InProgress">
   <mcs-icon class="mcs-data-loading" [key]="spinnerIconKey" size="large"></mcs-icon>
 </ng-container>
 

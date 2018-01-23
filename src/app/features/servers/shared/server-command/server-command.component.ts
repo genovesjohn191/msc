@@ -13,7 +13,7 @@ import {
 } from '../../../../core';
 import {
   ServerCommand,
-  ServerClientObject,
+  Server,
   ServerPowerState,
   ServerServiceType
 } from '../../models';
@@ -32,7 +32,7 @@ let nextUniqueId = 0;
 })
 export class ServerCommandComponent implements OnInit {
   @Input()
-  public serverStatus: ServerClientObject;
+  public server: Server;
 
   @Input()
   public excluded: ServerCommand[];
@@ -57,11 +57,11 @@ export class ServerCommandComponent implements OnInit {
   }
 
   public get isServerOperable(): boolean {
-    return !isNullOrEmpty(this.serverStatus.powerState) && this.serverStatus.isOperable;
+    return isNullOrEmpty(this.server.isProcessing) && this.server.isOperable;
   }
 
   public get isServerSelfManaged(): boolean {
-    return this.serverStatus.serviceType === ServerServiceType.SelfManaged;
+    return this.server.serviceType === ServerServiceType.SelfManaged;
   }
 
   constructor(private _textProvider: McsTextContentProvider) {
@@ -86,21 +86,21 @@ export class ServerCommandComponent implements OnInit {
     switch (command) {
       case ServerCommand.Start:
         enabled = this.isServerOperable &&
-          this.serverStatus.powerState === ServerPowerState.PoweredOff;
+          this.server.powerState === ServerPowerState.PoweredOff;
         break;
 
       case ServerCommand.Stop:
       case ServerCommand.Restart:
         enabled = this.isServerOperable &&
-          this.serverStatus.powerState === ServerPowerState.PoweredOn;
+          this.server.powerState === ServerPowerState.PoweredOn;
         break;
 
       case ServerCommand.Delete:
-        enabled = !isNullOrEmpty(this.serverStatus.powerState) && this.isServerSelfManaged;
+        enabled = isNullOrEmpty(this.server.isProcessing) && this.isServerSelfManaged;
         break;
 
       case ServerCommand.ViewVCloud:
-        enabled = this.serverStatus.commandAction !== ServerCommand.Delete;
+        enabled = this.server.commandAction !== ServerCommand.Delete;
         break;
 
       default:

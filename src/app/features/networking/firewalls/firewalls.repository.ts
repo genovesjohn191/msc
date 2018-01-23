@@ -23,4 +23,13 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
       perPage: recordCount
     });
   }
+
+  /**
+   * This will be automatically called in the repoistory based class
+   * to populate the data obtained using record id given when finding individual record
+   * @param recordId Record id to find
+   */
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Firewall>> {
+    return this._firewallsService.getFirewall(recordId);
+  }
 }

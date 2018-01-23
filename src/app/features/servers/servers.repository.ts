@@ -11,7 +11,11 @@ import {
   CoreDefinition
 } from '../../core';
 import { ServersService } from './servers.service';
-import { Server } from './models';
+import {
+  Server,
+  ServerCommand,
+  ServerPowerState
+} from './models';
 import { isNullOrEmpty } from 'app/utilities';
 
 @Injectable()
@@ -19,13 +23,13 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
+  private _initial: boolean = true;
 
   constructor(
     private _serversApiService: ServersService,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super();
-    this._registerJobEvents();
   }
 
   /**
@@ -35,7 +39,23 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   protected getAllRecords(recordCount: number): Observable<McsApiSuccessResponse<Server[]>> {
     return this._serversApiService.getServers({
       perPage: recordCount
+    }).finally(() => {
+      // We need to register the events after obtaining the data so that
+      // we will get notified by the jobs when data is obtained
+      if (this._initial === true) {
+        this._registerJobEvents();
+        this._initial = false;
+      }
     });
+  }
+
+  /**
+   * This will be automatically called in the repoistory based class
+   * to populate the data obtained using record id given when finding individual record
+   * @param recordId Record id to find
+   */
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Server>> {
+    return this._serversApiService.getServer(recordId);
   }
 
   /**
@@ -47,6 +67,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     this._notificationEvents.cloneServerEvent.subscribe(this._onCreateServer.bind(this));
     this._notificationEvents.renameServerEvent.subscribe(this._onRenameServer.bind(this));
     this._notificationEvents.deleteServerEvent.subscribe(this._onDeleteServer.bind(this));
+    this._notificationEvents.resetServerPasswordEvent
+      .subscribe(this._onResetServerPassword.bind(this));
+    this._notificationEvents.changeServerPowerStateEvent
+      .subscribe(this._onPowerStateServer.bind(this));
   }
 
   /**
@@ -63,8 +87,16 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @param job Emitted job content
    */
   private _onDeleteServer(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { return; }
-    this.deleteRecordById(job.clientReferenceObject.serverId);
+    if (isNullOrEmpty(job)) { return; }
+    let deletedServer = this.dataRecords.find((serverItem) => {
+      return serverItem.id === job.clientReferenceObject.serverId;
+    });
+    if (!isNullOrEmpty(deletedServer)) {
+      this._setServerProcessDetails(deletedServer, job);
+      if (job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+        this.deleteRecordById(job.clientReferenceObject.serverId);
+      }
+    }
   }
 
   /**
@@ -72,15 +104,56 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @param job Emitted job content
    */
   private _onRenameServer(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { return; }
-    let renamedServer = this.dataRecords
-      .find((serverItem) => {
-        return serverItem.id === job.clientReferenceObject.serverId;
-      });
+    if (isNullOrEmpty(job)) { return; }
+    let renamedServer = this.dataRecords.find((serverItem) => {
+      return serverItem.id === job.clientReferenceObject.serverId;
+    });
     if (!isNullOrEmpty(renamedServer)) {
-      renamedServer.name = job.clientReferenceObject.newName;
+      this._setServerProcessDetails(renamedServer, job);
+      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+        renamedServer.name = job.clientReferenceObject.newName;
+      }
     }
     this.updateRecord(renamedServer);
+  }
+
+  /**
+   * Event that emits when the server command is executed
+   * @param job Emitted job content
+   */
+  private _onPowerStateServer(job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+    let activeServer = this.dataRecords.find((serverItem) => {
+      return serverItem.id === job.clientReferenceObject.serverId;
+    });
+    if (!isNullOrEmpty(activeServer)) {
+      activeServer.isProcessing = !!(job.status === CoreDefinition.NOTIFICATION_JOB_PENDING)
+        || !!(job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+      activeServer.commandAction = job.clientReferenceObject.commandAction;
+      activeServer.processingText = job.summaryInformation;
+
+      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+        activeServer.powerState = activeServer.commandAction === ServerCommand.Stop ?
+          ServerPowerState.PoweredOff : activeServer.commandAction === ServerCommand.Start ||
+            activeServer.commandAction === ServerCommand.Restart ?
+            ServerPowerState.PoweredOn : activeServer.powerState;
+      }
+      this.updateRecord(activeServer);
+    }
+  }
+
+  /**
+   * Event that emits when the server reset password command is executed
+   * @param job Emitted job content
+   */
+  private _onResetServerPassword(job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+    let activeServer = this.dataRecords.find((serverItem) => {
+      return serverItem.id === job.clientReferenceObject.serverId;
+    });
+    if (!isNullOrEmpty(activeServer)) {
+      this._setServerProcessDetails(activeServer, job);
+    }
   }
 
   /**
@@ -89,5 +162,17 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    */
   private _onNotificationsChanged(jobs: McsApiJob[]): void {
     this.notificationsChanged.emit(jobs);
+  }
+
+  /**
+   * Set the server process details to display in the view
+   * @param job Emitted job content
+   */
+  private _setServerProcessDetails(activeServer: Server, job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+    activeServer.isProcessing = !!(job.status === CoreDefinition.NOTIFICATION_JOB_PENDING)
+      || !!(job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+    activeServer.commandAction = job.clientReferenceObject.commandAction;
+    activeServer.processingText = job.summaryInformation;
   }
 }

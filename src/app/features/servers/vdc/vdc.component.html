@@ -1,36 +1,27 @@
-<!-- Popover server status for server list panel -->
-<ng-template #loadingContent>
-  <span class="loading-content-popover">
-    {{ getActiveServerTooltip(server.id) }}
-  </span>
-</ng-template>
-
 <mcs-page [header]="vdc.name">
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.vdc.leftPanelHeader">
     <!-- listing panel -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.vdc.panel"
-    [mcsLoader]="vdcSubscription">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.vdc.panel">
       <div class="listing-panel-wrapper">
-        <mcs-search #search delayInSeconds="none"></mcs-search>
-        <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem"
-          [searchMode]="serverListSource?.searchMode">
+        <mcs-search #search></mcs-search>
+        <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem">
           <ng-container mcsListPanelDef>
             <mcs-list-panel-header *mcsListPanelHeaderDef="let vdc; propertyName: 'vdcName';"
               [groupName]="vdc">
               <span>{{ vdc }}</span>
             </mcs-list-panel-header>
-            <mcs-list-panel-item *mcsListPanelItemDef="let server"
-              [itemId]="server.id" [groupName]="server.vdcName"
-              (click)="onServerSelect(server.id)">
+            <mcs-list-panel-item *mcsListPanelItemDef="let serverPanel"
+              [itemId]="serverPanel.server.id" [groupName]="serverPanel.vdcName"
+              (click)="onServerSelect(serverPanel.server.id)">
+              <mcs-icon *ngIf="!serverPanel.server.isProcessing"
+                [key]="getStateIconKey(serverPanel.server.powerState)"></mcs-icon>
 
-              <mcs-icon *ngIf="server.powerState"
-                [key]="getStateIconKey(server.powerState)"></mcs-icon>
-              <mcs-icon *ngIf="!server.powerState" [key]="spinnerIconKey"
-                mcsPopover trigger="hover" maxWidth="250px" padding="narrow"
-                [content]="loadingContent"></mcs-icon>
+              <mcs-icon *ngIf="serverPanel.server.isProcessing" [key]="spinnerIconKey"
+                [mcsTooltip]="serverPanel.server.processingText"
+                mcsTooltipPosition="right"></mcs-icon>
 
-              <a>{{ server.name }}</a>
+              <a>{{ serverPanel.server.name }}</a>
             </mcs-list-panel-item>
           </ng-container>
 

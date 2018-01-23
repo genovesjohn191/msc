@@ -39,7 +39,6 @@ export class ServerService {
   constructor(private _serversService: ServersService) {
     this.selectedServerStream = new BehaviorSubject<Server>(undefined);
     this.selectedServer = new Server();
-    this._listenToActiveServers();
   }
 
   /**
@@ -245,6 +244,10 @@ export class ServerService {
       isNullOrEmpty(memoryMB) ? 0 : memoryMB);
   }
 
+  /**
+   * Get the server resource based on server details
+   * @param server Server to get the resource from
+   */
   public getServerResources(server: Server): Observable<ServerResource[]> {
     return this.getServerPlatforms().map((response) => {
       let serverPlatform: ServerPlatform;
@@ -270,15 +273,16 @@ export class ServerService {
     });
   }
 
-  public setResourceMap(resources: ServerResource[]): Map<string, ServerResource> {
+  /**
+   * Return the corresponding resouce array to map
+   */
+  public convertResourceToMap(resources: ServerResource[]): Map<string, ServerResource> {
     let serverResourceMap = new Map<string, ServerResource>();
-
     if (resources) {
       resources.forEach((resource) => {
         serverResourceMap.set(resource.name, resource);
       });
     }
-
     return serverResourceMap;
   }
 
@@ -292,33 +296,5 @@ export class ServerService {
     action: ServerCommand
   ) {
     this._serversService.executeServerCommand(data, action);
-  }
-
-  /**
-   * Listener for the active server of the servers services
-   *
-   * `@Note`: This should be included since we want to make sure that any changes
-   * on the server data should notify the selectedServer subscribers
-   */
-  private _listenToActiveServers(): void {
-    // Listener for the active servers
-    this.activeServerSubscription = this._serversService.activeServersStream
-      .subscribe((activeServers) => {
-        if (activeServers) {
-          let selectedServer: Server;
-
-          selectedServer = this.selectedServerStream.getValue();
-          if (selectedServer) {
-            for (let activeServer of activeServers) {
-
-              if (selectedServer.id === activeServer.serverId) {
-                selectedServer.powerState = this._serversService
-                  .getActiveServerPowerState(activeServer);
-                this.selectedServerStream.next(selectedServer);
-              }
-            }
-          }
-        }
-      });
   }
 }

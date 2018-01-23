@@ -34,6 +34,15 @@ export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
   }
 
   /**
+   * This will be automatically called in the repoistory based class
+   * to populate the data obtained using record id given when finding individual record
+   * @param recordId Record id to find
+   */
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsApiJob>> {
+    return this._notificationsApiService.getNotification(recordId);
+  }
+
+  /**
    * Listen to every notifications to get the updated job and reflect it to the list
    */
   private _listenToNotifications(): void {

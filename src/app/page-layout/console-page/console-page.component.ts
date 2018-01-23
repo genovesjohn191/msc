@@ -9,15 +9,18 @@ import {
   NgZone
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { refreshView, isNullOrEmpty } from '../../utilities';
 import {
+  refreshView,
+  isNullOrEmpty
+} from '../../utilities';
+import {
+  McsNotificationEventsService,
   McsTextContentProvider,
+  McsApiJob,
   CoreDefinition,
   Key
 } from '../../core';
-import { ServersService } from '../../features/servers';
-import { ServerPowerState } from '../../features/servers/models';
-
+import { ServerCommand } from '../../features/servers';
 import { ConsolePageService } from './console-page.service';
 
 // JQuery script implementation
@@ -58,18 +61,22 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   public consoleIsConnected: boolean;
   public consoleDisconnecting: boolean;
 
+  public get poweredOn(): boolean { return this._poweredOn; }
+  private _poweredOn: boolean;
+
   private _vmConsole: any;
   private _vmConsoleDialog: any;
   private _url: string;
   private _vmx: string;
   private _routeSubscription: any;
   private _zoneSubscription: any;
+  private _notificationsSubscription: any;
   private _serverId: string;
 
   public constructor(
     private _consoleService: ConsolePageService,
     private _textContentProvider: McsTextContentProvider,
-    private _serversService: ServersService,
+    private _notificationsEventService: McsNotificationEventsService,
     private _activatedRoute: ActivatedRoute,
     private _zone: NgZone
   ) {
@@ -85,6 +92,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
         this._serverId = params['id'];
         this._setupVmConsole(this._serverId);
       });
+    this._listenToActiveServer();
 
     // Subscribe to the angular zone to check weather the console
     // is already displayed and adjust the screensize of the vm console
@@ -105,11 +113,14 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._routeSubscription) {
+    if (!isNullOrEmpty(this._routeSubscription)) {
       this._routeSubscription.unsubscribe();
     }
-    if (this._zoneSubscription) {
+    if (!isNullOrEmpty(this._zoneSubscription)) {
       this._zoneSubscription.unsubscribe();
+    }
+    if (!isNullOrEmpty(this._notificationsSubscription)) {
+      this._notificationsSubscription.unsubscribe();
     }
   }
 
@@ -120,36 +131,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       Key.Alt,
       Key.Delete
     ]);
-  }
-
-  /**
-   * Return the server powerstate based on the active server status
-   * @param server Server to be check
-   */
-  public isServerPoweredOn(): boolean {
-    let serverPowerstate = ServerPowerState.PoweredOn;
-
-    if (!isNullOrEmpty(this._serversService.activeServers)) {
-      for (let active of this._serversService.activeServers) {
-        if (active.serverId === this._serverId) {
-          // Update the powerstate of the corresponding server based on the row
-          serverPowerstate = this._serversService.getActiveServerPowerState(active);
-          break;
-        }
-      }
-    }
-
-    let isPoweredOn = serverPowerstate === ServerPowerState.PoweredOn;
-
-    if (!isPoweredOn) {
-      this._disconnectVmConsole();
-    }
-
-    if (isPoweredOn && this.consoleDisconnecting) {
-      this._reconnectVmConsole();
-    }
-
-    return isPoweredOn;
   }
 
   private _disconnectVmConsole(): void {
@@ -215,6 +196,25 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
         modal: true,
         closeText: '',
         position: { my: 'left top', at: 'left top' }
+      });
+  }
+
+  private _listenToActiveServer(): void {
+    this._notificationsSubscription = this._notificationsEventService
+      .changeServerPowerStateEvent
+      .subscribe((job: McsApiJob) => {
+        if (isNullOrEmpty(job)) { return; }
+
+        if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED &&
+          job.clientReferenceObject.serverId === this._serverId) {
+          this._poweredOn = !!(job.clientReferenceObject.commandAction === ServerCommand.Start);
+        }
+        if (!this._poweredOn) {
+          this._disconnectVmConsole();
+        }
+        if (this._poweredOn && this.consoleDisconnecting) {
+          this._reconnectVmConsole();
+        }
       });
   }
 }

@@ -10,8 +10,8 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsNotificationContextService,
+  McsNotificationEventsService,
   McsApiJob,
-  McsJobType,
   CoreDefinition,
   McsDialogService,
   McsAuthenticationIdentity,
@@ -82,27 +82,16 @@ export class ServersService {
     this._activeServersStream = value;
   }
 
-  /**
-   * Subscribe to get notify when job is ended or ongoing
-   */
-  private _jobsStream: BehaviorSubject<McsApiJob[]>;
-  public get jobsStream(): BehaviorSubject<McsApiJob[]> {
-    return this._jobsStream;
-  }
-  public set jobsStream(value: BehaviorSubject<McsApiJob[]>) {
-    this._jobsStream = value;
-  }
-
   constructor(
     private _mcsApiService: McsApiService,
     private _loggerService: McsLoggerService,
     private _dialogService: McsDialogService,
     private _authIdentity: McsAuthenticationIdentity,
     private _notificationContextService: McsNotificationContextService,
+    private _notificationEventService: McsNotificationEventsService,
     private _router: Router
   ) {
     this._activeServers = new Array();
-    this._jobsStream = new BehaviorSubject(undefined);
     this._activeServersStream = new BehaviorSubject(undefined);
     this._listenToResetPassword();
     this._listenToNotificationUpdate();
@@ -802,25 +791,6 @@ export class ServersService {
   }
 
   /**
-   * Get the active server information based on job status
-   *
-   * `@Note` This will be use in tooltip to display the on-going process information
-   * @param serverId Server ID to be display
-   */
-  public getActiveServerInformation(serverId: any): string {
-    let activeServer = this._activeServers
-      .find((severInformations) => {
-        return severInformations.serverId === serverId;
-      });
-
-    if (activeServer) {
-      return activeServer.tooltipInformation;
-    } else {
-      return 'This instance is being processed';
-    }
-  }
-
-  /**
    * Get Platform Data (MCS API Response)
    */
   public getServerPlatforms(): Observable<McsApiSuccessResponse<ServerPlatform[]>> {
@@ -951,34 +921,6 @@ export class ServersService {
   }
 
   /**
-   * Return the active server status
-   * @param server Server to be check
-   */
-  public getServerStatus(server: Server): ServerClientObject {
-    let serverStatus = new ServerClientObject();
-
-    if (!isNullOrEmpty(server)) {
-      serverStatus.powerState = server.powerState;
-      serverStatus.commandAction = ServerCommand.None;
-
-      if (!isNullOrEmpty(this.activeServers)) {
-        for (let active of this.activeServers) {
-          if (active.serverId === server.id) {
-            // Update the powerstate of the corresponding server based on the row
-            serverStatus = active;
-            serverStatus.powerState = this.getActiveServerPowerState(active);
-            server.powerState = serverStatus.powerState;
-            break;
-          }
-        }
-      }
-      serverStatus.serviceType = server.serviceType;
-      serverStatus.isOperable = server.isOperable;
-    }
-    return serverStatus;
-  }
-
-  /**
    * Calculate the available memory based on the given resource
    * @param resource Resource where the calculation came from
    */
@@ -1020,25 +962,21 @@ export class ServersService {
    * Listener to all servers that reset their password
    */
   private _listenToResetPassword(): void {
-    this.jobsStream.subscribe((updatedJobs) => {
-      if (isNullOrEmpty(updatedJobs)) { return; }
+    this._notificationEventService.resetServerPasswordEvent.subscribe((updatedJob) => {
+      if (isNullOrEmpty(updatedJob)) { return; }
 
-      let resettedPasswords = updatedJobs.filter((job) => {
-        return job.clientReferenceObject &&
-          job.clientReferenceObject.userId === this._authIdentity.userId &&
-          job.type === McsJobType.ResetServerPassword &&
-          !isNullOrEmpty(job.tasks[0].referenceObject);
-      });
-      if (!isNullOrEmpty(resettedPasswords)) {
-        resettedPasswords.forEach((resettedPassword) => {
-          let credentialObject = resettedPassword.tasks[0].referenceObject.credential;
+      // Check whether the user has the same identity
+      let resetPassword = !!(updatedJob.clientReferenceObject.userId ===
+        this._authIdentity.userId && !isNullOrEmpty(updatedJob.tasks[0].referenceObject));
 
-          // Display dialog
-          this._dialogService.open(ResetPasswordFinishedDialogComponent, {
-            data: credentialObject,
-            size: 'medium',
-            disableClose: true
-          });
+      // Display dialog
+      if (resetPassword) {
+        let credentialObject = updatedJob.tasks[0].referenceObject.credential;
+        // Display dialog
+        this._dialogService.open(ResetPasswordFinishedDialogComponent, {
+          data: credentialObject,
+          size: 'medium',
+          disableClose: true
         });
       }
     });
@@ -1062,7 +1000,7 @@ export class ServersService {
               commandAction: notification.clientReferenceObject.commandAction,
               newName: notification.clientReferenceObject.newName,
               notificationStatus: notification.status,
-              tooltipInformation: notification.summaryInformation
+              processingText: notification.summaryInformation
             } as ServerClientObject);
           }
         });
@@ -1070,7 +1008,6 @@ export class ServersService {
         // Set active servers to property
         this._activeServers = activeServers;
         this._activeServersStream.next(activeServers);
-        this._jobsStream.next(updatedNotifications);
       });
   }
 

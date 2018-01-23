@@ -1,0 +1,9 @@
+version: '3'
+services:
+  mcs.portal.frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcs.portal.frontend
+    ports:
+      - '8080:80'

@@ -14,7 +14,10 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
 /** Core / Utilities */
 import {
   CoreDefinition,
@@ -24,8 +27,7 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  refreshView,
-  coerceBoolean
+  refreshView
 } from '../../utilities';
 /** List panel directives */
 import {
@@ -40,6 +42,10 @@ import { ListPanelService } from './list-panel.service';
 import { ListItemsStatusDefDirective } from './list-items-status';
 
 const NO_GROUP_ITEMS = 'no_group_items';
+// type ListPanelGroupItem = {
+//   groupName: string;
+//   data: any;
+// };
 
 @Component({
   selector: 'mcs-list-panel',
@@ -54,21 +60,6 @@ const NO_GROUP_ITEMS = 'no_group_items';
 
 export class ListPanelComponent<T> implements OnInit,
   AfterContentChecked, OnDestroy {
-
-  /**
-   * A search mode flag that triggers when searching from the datasource
-   */
-  @Input()
-  public get searchMode(): boolean {
-    return this._searchMode;
-  }
-  public set searchMode(value: boolean) {
-    if (this._searchMode !== value) {
-      this._searchMode = coerceBoolean(value);
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-  private _searchMode: boolean;
 
   /**
    * The selected list item from the datasource
@@ -105,13 +96,14 @@ export class ListPanelComponent<T> implements OnInit,
   }
   public set listSource(value: McsDataSource<T>) {
     if (this._listSource !== value) {
+      this._listenToDataLoading(value);
       this._switchListSource(value);
       this._listSource = value;
-      this._changeDetectorRef.markForCheck();
     }
   }
   private _listSource: McsDataSource<T>;
   private _listSourceSubscription: any;
+  private _listLoadingSubscription: any;
   private _listItems: NgIterable<T>;
   private _listDiffer: IterableDiffer<T>;
   private _listMap: Map<string, T[]>;
@@ -127,6 +119,7 @@ export class ListPanelComponent<T> implements OnInit,
     if (this._listStatus !== value) {
       this._listStatus = value;
       this._switchListStatus(value);
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -139,10 +132,11 @@ export class ListPanelComponent<T> implements OnInit,
   @ViewChild(ListItemsStatusPlaceholderDirective)
   private _listItemsStatusPlaceholder: ListItemsStatusPlaceholderDirective;
 
-  /** Columns */
+  /** Template of the list definition directives */
   @ContentChild(ListPanelDefDirective)
   private _listDefinition: ListPanelDefDirective;
 
+  /** Template of the data status directives */
   @ContentChild(ListItemsStatusDefDirective)
   private _listItemsStatusDefinition: ListItemsStatusDefDirective;
 
@@ -174,16 +168,18 @@ export class ListPanelComponent<T> implements OnInit,
     if (!isNullOrEmpty(this._listItems)) {
       this._renderItemGroups();
     }
-
     if (this.listSource && !this._listSourceSubscription) {
       this._getListsource();
     }
   }
 
   public ngOnDestroy() {
-    if (this._listSourceSubscription) {
+    if (!isNullOrEmpty(this._listSourceSubscription)) {
       this._listSourceSubscription.unsubscribe();
       this.listSource.disconnect();
+    }
+    if (!isNullOrEmpty(this._listLoadingSubscription)) {
+      this._listLoadingSubscription.unsubscribe();
     }
   }
 
@@ -232,6 +228,23 @@ export class ListPanelComponent<T> implements OnInit,
       default:
         break;
     }
+  }
+
+  /**
+   * Listener when data is loading from the datasource
+   * @param newDatasource New datasource to listen
+   */
+  private _listenToDataLoading(newDatasource: McsDataSource<T>) {
+    if (!isNullOrEmpty(this._listLoadingSubscription)) {
+      this._listLoadingSubscription.unsubscribe();
+    }
+
+    // Subscribe to data loading process
+    if (isNullOrEmpty(newDatasource.dataLoadingStream)) {
+      newDatasource.dataLoadingStream = new Subject<any>();
+    }
+    this._listLoadingSubscription = newDatasource.dataLoadingStream
+      .subscribe((status) => this.listStatus = status);
   }
 
   /**
@@ -306,10 +319,8 @@ export class ListPanelComponent<T> implements OnInit,
    * element based on the datasource
    */
   private _reselectListItem(): void {
-    if (!this.searchMode) {
-      this._listPanelService.selectItem(this._listPanelService.selectedItem);
-      this._changeDetectorRef.markForCheck();
-    }
+    this._listPanelService.selectItem(this._listPanelService.selectedItem);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

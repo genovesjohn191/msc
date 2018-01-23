@@ -3,7 +3,7 @@
   <span>{{ consolePageTextContent.loading }}</span>
 </div>
 
-<div *ngIf="!isServerPoweredOn()" class="console-message">
+<div *ngIf="!poweredOn" class="console-message">
   <span>{{ consolePageTextContent.disconnectedMessage }}</span>
 </div>
 
