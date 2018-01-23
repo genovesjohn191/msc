@@ -5,7 +5,8 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  IterableDiffers
 } from '@angular/core';
 import {
   Router,
@@ -18,9 +19,7 @@ import {
 import {
   Server,
   ServerPowerState,
-  ServerCommand,
-  ServerServiceType,
-  ServerClientObject
+  ServerCommand
 } from '../models';
 import {
   ResetPasswordDialogComponent,
@@ -33,8 +32,6 @@ import {
   McsListPanelItem,
   McsSearch,
   McsDialogService,
-  McsApiJob,
-  McsNotificationContextService,
   McsRoutingTabBase,
   McsErrorHandlerService
 } from '../../../core';
@@ -42,6 +39,7 @@ import {
   isNullOrEmpty,
   refreshView
 } from '../../../utilities';
+import { ServersRepository } from '../servers.repository';
 import { ServersService } from '../servers.service';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
@@ -67,7 +65,6 @@ export class ServerComponent
   @ViewChild('search')
   public search: McsSearch;
 
-  public jobs: McsApiJob[];
   public server: Server;
   public serverSubscription: Subscription;
   public serversTextContent: any;
@@ -75,13 +72,7 @@ export class ServerComponent
   public serverListSource: ServersListSource | null;
 
   private _serverId: any;
-  private _activeServerSubscription: any;
-  private _notificationsSubscription: any;
-
-  // Check if the current server's serverType is managed
-  public get isManaged(): boolean {
-    return this.server && this.server.serviceType === ServerServiceType.Managed;
-  }
+  private _notificationsChangeSubscription: any;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -91,6 +82,10 @@ export class ServerComponent
     return CoreDefinition.ASSETS_FONT_ANGLE_DOUBLE_RIGHT;
   }
 
+  /**
+   * Selected item on the list, this will set everytime
+   * the user select one of the item in item list panel
+   */
   private _selectedItem: McsListPanelItem;
   public get selectedItem(): McsListPanelItem {
     return this._selectedItem;
@@ -99,30 +94,19 @@ export class ServerComponent
     this._selectedItem = value;
   }
 
-  private _serverCommand: ServerCommand;
-  public get serverCommand(): ServerCommand {
-    return this._serverCommand;
-  }
-  public set serverCommand(value: ServerCommand) {
-    if (this.serverCommand !== value) {
-      this._serverCommand = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   constructor(
     _router: Router,
     _activatedRoute: ActivatedRoute,
+    private _differs: IterableDiffers,
     private _dialogService: McsDialogService,
+    private _serversRepository: ServersRepository,
     private _serversService: ServersService,
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _notificationContextService: McsNotificationContextService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
     super(_router, _activatedRoute);
-    this.jobs = new Array<McsApiJob>();
     this.server = new Server();
   }
 
@@ -131,27 +115,20 @@ export class ServerComponent
     this.serverTextContent = this._textContentProvider.content.servers.server;
     this._serverId = this.activatedRoute.snapshot.paramMap.get('id');
 
+    this._listenToNotificationsChange();
     this._getServerById();
-    this._listenToNotificationsStream();
   }
 
   public ngAfterViewInit() {
     refreshView(() => {
       this._initializeListsource();
-      this._listenToActiveServers();
     });
   }
 
   public ngOnDestroy() {
     super.dispose();
-    if (!isNullOrEmpty(this.serverSubscription)) {
-      this.serverSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._activeServerSubscription)) {
-      this._activeServerSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._notificationsSubscription)) {
-      this._notificationsSubscription.unsubscribe();
+    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
+      this._notificationsChangeSubscription.unsubscribe();
     }
   }
 
@@ -247,27 +224,11 @@ export class ServerComponent
   }
 
   /**
-   * Return the active server tooltip information
-   * @param serverId Server ID
-   */
-  public getActiveServerTooltip(serverId: any) {
-    return this._serversService.getActiveServerInformation(serverId);
-  }
-
-  /**
    * Return true when the server is currently deleting, otherwise false
    * @param server Server to be deleted
    */
   public serverDeleting(server: Server): boolean {
-    return this._serversService.getServerStatus(server).commandAction === ServerCommand.Delete;
-  }
-
-  /**
-   * Return the active server status
-   * @param server Server to be check
-   */
-  public get serverStatus(): ServerClientObject {
-    return this._serversService.getServerStatus(this.server);
+    return server.commandAction === ServerCommand.Delete && server.isProcessing;
   }
 
   /**
@@ -301,8 +262,9 @@ export class ServerComponent
    */
   private _initializeListsource(): void {
     this.serverListSource = new ServersListSource(
-      this._serversService,
-      this.search
+      this._serversRepository,
+      this.search,
+      this._differs
     );
     this._changeDetectorRef.markForCheck();
   }
@@ -311,15 +273,15 @@ export class ServerComponent
    * Get the corresponding server by id
    */
   private _getServerById(): void {
-    this.serverSubscription = this._serverService
-      .getServer(this._serverId)
+    this.serverSubscription = this._serversRepository
+      .findRecordById(this._serverId)
       .catch((error) => {
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
       })
-      .subscribe((response) => {
-        this.server = response.content;
+      .subscribe((record) => {
+        this.server = record;
 
         let hasResourceName = !isNullOrEmpty(this.server.platform)
           && !isNullOrEmpty(this.server.platform.resourceName);
@@ -338,57 +300,12 @@ export class ServerComponent
   }
 
   /**
-   * Listener to all the active servers to refresh the view when data is being changed
+   * Listen to notifications changes
    */
-  private _listenToActiveServers(): void {
-    this._activeServerSubscription = this._serversService.activeServersStream
-      .subscribe((activeServers) => {
-        // Update the datasource of the table when job is completed
-        if (!isNullOrEmpty(activeServers)) {
-          activeServers.forEach((activeServer) => {
-            this._updateListsource(activeServer);
-          });
-        }
-        // Refresh the view
+  private _listenToNotificationsChange(): void {
+    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+      .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
-  }
-
-  /**
-   * Listener for notifications changed
-   */
-  private _listenToNotificationsStream(): void {
-    this._notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((jobs) => {
-        this.jobs = jobs;
-      });
-  }
-
-  /**
-   * Update table datasource of the servers listing
-   * @param activeServer Active server to be served as the basis of the update
-   */
-  private _updateListsource(activeServer: ServerClientObject): void {
-    // Check if job is completed
-    let jobCompleted = !isNullOrEmpty(activeServer) &&
-      activeServer.notificationStatus === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-    if (!jobCompleted) { return; }
-
-    // Update datasource data
-    switch (activeServer.commandAction) {
-      case ServerCommand.Delete:
-        this.serverListSource.removeDeletedServer(activeServer.serverId);
-        break;
-      case ServerCommand.Rename:
-        if (this.server.id === activeServer.serverId) {
-          this.server.name = activeServer.newName;
-        }
-        this.serverListSource.renameServer(activeServer.serverId, activeServer.newName);
-        break;
-
-      default:
-        // Do nothing
-        break;
-    }
   }
 }

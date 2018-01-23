@@ -15,6 +15,8 @@ import {
   mergeArrays
 } from '../../utilities';
 
+const MAX_DISPLAY_RECORD = 200;
+
 export abstract class McsRepositoryBase<T> {
   /**
    * Get or Set the total records count of the entity
@@ -156,7 +158,8 @@ export abstract class McsRepositoryBase<T> {
   public findAllRecords(
     page: McsPaginator, search: McsSearch,
     searchContent: (_recordItem: T) => string): Observable<T[]> {
-    let displayedRecords = page.pageSize * (page.pageIndex + 1);
+    let displayedRecords = isNullOrEmpty(page) ? MAX_DISPLAY_RECORD :
+      page.pageSize * (page.pageIndex + 1);
     let requestRecords = !!(displayedRecords > this.dataRecords.length)
       && !!(this._totalRecordsCount !== this.dataRecords.length)
       || this._totalRecordsCount === 0;
@@ -185,14 +188,40 @@ export abstract class McsRepositoryBase<T> {
   }
 
   /**
+   * Find any record using id for its comparison method.
+   * And return the record as observable<T>
+   * @param id Id to be based as comparison
+   */
+  public findRecordById(id: string): Observable<T> {
+    // Find record to data records
+    let recordFound = this.dataRecords.find((data) => {
+      return (data as any).id === id;
+    });
+
+    // Call the API if the record has not yet found
+    if (isNullOrEmpty(recordFound)) {
+      return this.getRecordById(id).map((record) => {
+        return record.content;
+      });
+    }
+    return recordFound ? Observable.of(recordFound) : Observable.empty();
+  }
+
+  /**
    * Get all records based on type
    */
   protected abstract getAllRecords(recordCount: number): Observable<McsApiSuccessResponse<T[]>>;
 
   /**
+   * Get the corresponding record by ID
+   * @param recordId Record id to find
+   */
+  protected abstract getRecordById(recordId: string): Observable<McsApiSuccessResponse<T>>;
+
+  /**
    * Notify the data records changed event
    */
   private _notifyDataRecordsChanged(): void {
-    this.dataRecordsChanged.next(this._dataRecords);
+    this._dataRecordsChanged.next(this._dataRecords);
   }
 }

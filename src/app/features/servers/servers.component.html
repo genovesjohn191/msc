@@ -87,7 +87,7 @@
             </mcs-checkbox>
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
-            [disabled]="serverOngoing(row)"
+            [disabled]="row.isProcessing"
             class="text-center action-cell hidden-small">
             <mcs-checkbox stop-propagation
               [checked]="selection.isSelected(row.id)"
@@ -103,14 +103,14 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
             <div class="inline-items-small">
-              <div *ngIf="getServerStatus(row).powerState">
+              <div *ngIf="!row.isProcessing">
                 <mcs-icon [key]="getStateIconKey(row.powerState)" size="small"></mcs-icon>
               </div>
-              <div *ngIf="!getServerStatus(row).powerState"
+              <div *ngIf="row.isProcessing"
                 [ngStyle]="{'pointer-events': 'auto'}"
                 class="power-state-spinner">
                 <mcs-icon [key]="spinnerIconKey" size="small"
-                  [mcsTooltip]="getActiveServerTooltip(row.id)"></mcs-icon>
+                  [mcsTooltip]="row.processingText"></mcs-icon>
               </div>
               <a (click)="navigateToServer(row)">
                 {{ row.name }}</a>
@@ -196,8 +196,8 @@
             <!-- {{ columnSettings.action.text }} -->
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
-            <mcs-server-command [serverStatus]="getServerStatus(row)"
-              [excluded]="excludedCommands" stop-propagation
+            <mcs-server-command [server]="row" stop-propagation
+              [excluded]="excludedCommands"
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>
         </ng-container>

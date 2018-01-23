@@ -1,7 +1,10 @@
 import {
+  IterableDiffer,
+  IterableDiffers
+} from '@angular/core';
+import {
   Observable,
-  Subject,
-  BehaviorSubject
+  Subject
 } from 'rxjs/Rx';
 import {
   McsDataSource,
@@ -10,15 +13,12 @@ import {
 } from '../../core';
 import {
   Server,
-  ServerList,
-  ServerClientObject
+  ServerList
 } from './models';
-import { ServersService } from './servers.service';
+import { ServersRepository } from './servers.repository';
 import {
   isNullOrEmpty,
-  compareStrings,
-  deleteArrayRecord,
-  refreshView
+  compareStrings
 } from '../../utilities';
 
 const SERVER_LIST_GROUP_OTHERS = 'Others';
@@ -29,196 +29,95 @@ export class ServersListSource implements McsDataSource<ServerList> {
    */
   public dataLoadingStream: Subject<McsDataStatus>;
 
-  private _activeServerSubscription: any;
+  // Server list information
   private _serverList: ServerList[];
-  private _serverListStream: BehaviorSubject<ServerList[]>;
-
-  private _searchMode: boolean;
-  public get searchMode(): boolean {
-    return this._searchMode;
-  }
-  public set searchMode(value: boolean) {
-    this._searchMode = value;
-  }
-
-  private _serverListSubscription: any;
-  public get serverListSubscription(): any {
-    return this._serverListSubscription;
-  }
-  public set serverListSubscription(value: any) {
-    this._serverListSubscription = value;
-  }
+  private _serverDiffer: IterableDiffer<Server>;
 
   constructor(
-    private _serversService: ServersService,
-    private _search: McsSearch
+    private _serversRepository: ServersRepository,
+    private _search: McsSearch,
+    private _differs: IterableDiffers
   ) {
-    this._serverList = new Array<ServerList>();
-    this._serverListStream = new BehaviorSubject<ServerList[]>(this._serverList);
-    this._getServers();
-    this._listenToActiveServers();
+    this._serverDiffer = this._differs.find([]).create(null);
+    this._serverList = new Array();
     this.dataLoadingStream = new Subject<McsDataStatus>();
-    this._searchMode = false;
   }
 
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+  /**
+   * Connect function called by the table to retrieve
+   * one stream containing the data to render.
+   */
   public connect(): Observable<ServerList[]> {
     const displayDataChanges = [
+      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
+      this._serversRepository.dataRecordsChanged,
       this._search.searchChangedStream,
-      this._serverListStream
     ];
 
     return Observable.merge(...displayDataChanges)
-      .map(() => {
+      .switchMap(() => {
+        // Notify the table that a process is currently in-progress
         this.dataLoadingStream.next(McsDataStatus.InProgress);
-        let serverList = new Array<ServerList>();
-        this._searchMode = (this._search.keyword) ? true : false;
 
-        if (!isNullOrEmpty(this._serverList)) {
-          serverList = this._serverList.slice().filter((server: ServerList) => {
-            let searchStr = (server.name + server.vdcName).toLowerCase();
-            return searchStr.indexOf(this._search.keyword.toLowerCase()) !== -1;
+        // Find all records based on settings provided in the input
+        return this._serversRepository.findAllRecords(
+          undefined, this._search,
+          (_item: Server) => {
+            return _item.name
+              + _item.platform.resourceName;
+          }).map((content) => {
+            this._mapToServerList(content);
+            return this._serverList;
           });
-        }
-
-        return serverList;
       });
   }
 
+  /**
+   * Destroy all objects from the current connection
+   * and return all the record to its original value
+   */
   public disconnect() {
-    // Disconnect all resources
-    if (this.serverListSubscription) {
-      this.serverListSubscription.unsubscribe();
-    }
-
-    if (this._activeServerSubscription) {
-      this._activeServerSubscription.unsubscribe();
-    }
+    // Release all resources
   }
 
+  /**
+   * This will invoke when the data obtainment is completed
+   * @param _status Status of the data obtainment
+   */
   public onCompletion(_status: McsDataStatus): void {
     // Do all the completion of pagination, filtering, etc... here
     this._search.showLoading(false);
   }
 
   /**
-   * Remove the server from the datasource
-   * @param serverId Server to be renamed
+   * Map servers to server list to display in list-panel
+   * @param servers Servers to map
    */
-  public removeDeletedServer(serverId: string): void {
-    if (isNullOrEmpty(serverId)) { return; }
-    refreshView(() => {
-      this._serverList = deleteArrayRecord(this._serverList, (targetServer) => {
-        return targetServer.id === serverId;
-      });
-      this._serverListStream.next(this._serverList);
-    });
-  }
+  private _mapToServerList(servers: Server[]): ServerList[] {
+    if (isNullOrEmpty(servers)) { return new Array(); }
 
-  /**
-   * Rename the displayed server on the table itself
-   * @param serverId Server to be renamed
-   * @param newName New name of the server
-   */
-  public renameServer(serverId: string, newName: string): void {
-    if (isNullOrEmpty(serverId)) { return; }
-    refreshView(() => {
-      let renamedServer = this._serverList.find((serverItem) => {
-        return serverItem.id === serverId;
-      });
-      if (!isNullOrEmpty(renamedServer)) {
-        renamedServer.name = newName;
-      }
-      this._serverListStream.next(this._serverList);
-    });
-  }
+    // Check for changes in record
+    let changes = this._serverDiffer.diff(servers);
+    if (!changes) { return this._serverList; }
 
-  private _mapServerList(servers: Server[]): ServerList[] {
-    if (isNullOrEmpty(servers)) { return; }
-
-    servers.sort((first: Server, second: Server) => {
-      return compareStrings(first.name, second.name);
-    });
-
-    let serverList = new Array<ServerList>();
+    this._serverList = new Array<ServerList>();
     servers.forEach((server) => {
-      let serverListItem = new ServerList();
-      serverListItem.id = server.id;
-      serverListItem.name = server.name;
-      serverListItem.powerState = this._getServerPowerState(server);
-
       let hasResourceName = !isNullOrEmpty(server.platform)
         && !isNullOrEmpty(server.platform.resourceName);
 
+      let serverListItem = new ServerList();
       serverListItem.vdcName = (hasResourceName) ?
         server.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
+      serverListItem.server = server;
 
-      serverList.push(serverListItem);
+      this._serverList.push(serverListItem);
     });
 
-    serverList.sort((first: ServerList, second: ServerList) => {
+    // Sort record based on VDC name
+    this._serverList.sort((first: ServerList, second: ServerList) => {
       return compareStrings(first.vdcName, second.vdcName);
     });
 
-    return serverList;
-  }
-
-  private _getServers(): void {
-    this.serverListSubscription = this._serversService
-      .getServers()
-      .subscribe((response) => {
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
-        this._serverList = this._mapServerList(response.content);
-        this._serverListStream.next(this._serverList);
-      });
-  }
-
-  /**
-   * Return the server powerstate based on the active server status
-   * @param server Server to be check
-   */
-  private _getServerPowerState(server: Server): number {
-    let serverPowerstate = server.powerState;
-
-    if (!isNullOrEmpty(this._serversService.activeServers)) {
-      for (let active of this._serversService.activeServers) {
-        if (active.serverId === server.id) {
-          // Update the powerstate of the corresponding server based on the row
-          serverPowerstate = this._serversService.getActiveServerPowerState(active);
-          server.powerState = serverPowerstate;
-          break;
-        }
-      }
-    }
-
-    return serverPowerstate;
-  }
-
-  /**
-   * Listener to all the active servers for real time update of status
-   *
-   * `@Note`: This should be listen to the servers service since their powerstate
-   * status should be synchronise
-   */
-  private _listenToActiveServers(): void {
-    this._activeServerSubscription = this._serversService.activeServersStream
-      .subscribe((activeServers) => {
-        this._updateServerBasedOnActive(activeServers);
-      });
-  }
-
-  private _updateServerBasedOnActive(activeServers: ServerClientObject[]): void {
-    if (!activeServers || !this._serverList) { return; }
-
-    // This will update the server list based on the active servers
-    activeServers.forEach((activeServer) => {
-      // Update server list
-      for (let server of this._serverList) {
-        if (server.id === activeServer.serverId) {
-          server.powerState = this._serversService.getActiveServerPowerState(activeServer);
-          break;
-        }
-      }
-    });
+    return this._serverList;
   }
 }

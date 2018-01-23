@@ -6,7 +6,7 @@
         <!-- Service Type -->
         <mcs-list-item>
           {{ textContent.vdcProperties.serviceType }}:
-          {{ enumDefinition.serverServiceType(vdc.serviceType) }}
+          {{ enumDefinition.serverServiceType[vdc.serviceType] }}
         </mcs-list-item>
         <!-- Zone -->
         <mcs-list-item>

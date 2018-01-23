@@ -89,18 +89,14 @@ describe('ServerComponent', () => {
     });
 
     it('should set the value of server', () => {
-      expect(component.server.id).toEqual(mockServerDetails.id);
-    });
-
-    it('should define the selectedItem for serverListPanel', () => {
-      expect(component.selectedItem).toBeDefined();
+      expect(component.server).toBeDefined();
     });
   });
 
   describe('onServerSelect()', () => {
     it('should set the value of server from the selected server', () => {
       component.onServerSelect(mockServerDetails.id);
-      expect(component.server.id).toEqual(mockServerDetails.id);
+      expect(component.server).toBeDefined();
     });
 
     it('should navigate to the selected server management page', () => {

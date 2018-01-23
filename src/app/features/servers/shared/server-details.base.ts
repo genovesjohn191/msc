@@ -222,7 +222,7 @@ export abstract class ServerDetailsBase {
     this.serverResourceSubscription = this._serverService.getServerResources(this.server)
       .subscribe((resources) => {
         if (!isNullOrEmpty(resources)) {
-          this._resourceMap = this._serverService.setResourceMap(resources);
+          this._resourceMap = this._serverService.convertResourceToMap(resources);
           this._setResourceData();
         }
       });

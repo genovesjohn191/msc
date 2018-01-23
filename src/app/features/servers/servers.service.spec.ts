@@ -656,21 +656,4 @@ describe('ServersService', () => {
       expect(serverState).toBe(previousPowerState);
     });
   });
-
-  describe('getActiveServerInformation()', () => {
-
-    it('should return the tooltip information of the active server', () => {
-      let serverClient = new ServerClientObject();
-
-      serverClient.commandAction = ServerCommand.Start;
-      serverClient.notificationStatus = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
-      serverClient.tooltipInformation = 'Sample';
-      serverClient.serverId = '12345';
-
-      serversService.activeServers.push(serverClient);
-      let serverInformation = serversService.getActiveServerInformation('12345');
-
-      expect(serverInformation).toBe('Sample');
-    });
-  });
 });

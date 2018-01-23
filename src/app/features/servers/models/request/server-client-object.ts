@@ -10,5 +10,5 @@ export class ServerClientObject {
   public newName: string;
   public isOperable: boolean;
   public notificationStatus: string;
-  public tooltipInformation: string;
+  public processingText: string;
 }

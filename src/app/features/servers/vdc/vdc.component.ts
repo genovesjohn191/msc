@@ -5,7 +5,8 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  IterableDiffers
 } from '@angular/core';
 import {
   Router,
@@ -13,9 +14,7 @@ import {
 } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import {
-  Server,
   ServerPowerState,
-  ServerCommand,
   ServerResource
 } from '../models';
 import {
@@ -29,7 +28,7 @@ import {
   isNullOrEmpty,
   refreshView
 } from '../../../utilities';
-import { ServersService } from '../servers.service';
+import { ServersRepository } from '../servers.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 
@@ -82,9 +81,10 @@ export class VdcComponent
   constructor(
     _router: Router,
     _activatedRoute: ActivatedRoute,
+    private _differs: IterableDiffers,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _serversService: ServersService,
+    private _serversRepository: ServersRepository,
     private _vdcService: VdcService
   ) {
     super(_router, _activatedRoute);
@@ -130,27 +130,6 @@ export class VdcComponent
     }
   }
 
-  public getActionStatus(server: Server): any {
-    if (!server) { return undefined; }
-    let status: ServerCommand;
-
-    switch (server.powerState) {
-      case ServerPowerState.PoweredOn:
-        status = ServerCommand.Start;
-        break;
-
-      case ServerPowerState.PoweredOff:
-        status = ServerCommand.Stop;
-        break;
-
-      default:
-        status = ServerCommand.None;
-        break;
-    }
-
-    return status;
-  }
-
   public getStateIconKey(state: number): string {
     let stateIconKey: string = '';
 
@@ -179,10 +158,6 @@ export class VdcComponent
     return stateIconKey;
   }
 
-  public getActiveServerTooltip(serverId: any) {
-    return this._serversService.getActiveServerInformation(serverId);
-  }
-
   /**
    * Retry to obtain the source from API
    */
@@ -193,26 +168,29 @@ export class VdcComponent
 
   private _initializeListsource(): void {
     this.serverListSource = new ServersListSource(
-      this._serversService,
-      this.search
+      this._serversRepository,
+      this.search,
+      this._differs
     );
     this._changeDetectorRef.markForCheck();
   }
 
   private _getVdcById(): void {
-    this.vdcSubscription = this._vdcService.getResources().subscribe((resources) => {
-      if (!isNullOrEmpty(resources)) {
-        this.vdc = resources.find((resource) => {
-          return resource.id === this._resourceId;
-        });
+    this.vdcSubscription = this._vdcService
+      .getResources()
+      .subscribe((resources) => {
+        if (!isNullOrEmpty(resources)) {
+          this.vdc = resources.find((resource) => {
+            return resource.id === this._resourceId;
+          });
 
-        this.selectedItem = {
-          itemId: '',
-          groupName: this.vdc.name
-        } as McsListPanelItem;
+          this.selectedItem = {
+            itemId: '',
+            groupName: this.vdc.name
+          } as McsListPanelItem;
 
-        this._vdcService.setSelectedVdc(this.vdc);
-      }
-    });
+          this._vdcService.setSelectedVdc(this.vdc);
+        }
+      });
   }
 }
