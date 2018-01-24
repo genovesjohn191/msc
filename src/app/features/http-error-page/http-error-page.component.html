@@ -14,10 +14,18 @@
         {{ textContentAll.home }}
       </button>
     </div>
-    <div *ngSwitchDefault>
-      <button mcsButton id="ctaRefreshPage" size="small" (click)="refreshPage()">
-        {{ textContentAll.refresh }}
-      </button>
+    <div *ngSwitchCase="httpStatusCodeEnum.InternalServerError">
+      <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
+    </div>
+    <div *ngSwitchCase="httpStatusCodeEnum.Unprocessable">
+      <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
     </div>
   </div>
 </div>
+
+<!-- Refresh button -->
+<ng-template #refreshButtonTemplate>
+  <button mcsButton id="ctaRefreshPage" size="small" (click)="refreshPage()">
+    {{ textContentAll.refresh }}
+  </button>
+</ng-template>

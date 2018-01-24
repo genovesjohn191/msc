@@ -1,0 +1,31 @@
+@import "../../../styles/shared/base";
+
+// Comment
+$comment-action-padding: $space-xsmall 0;
+$comment-bg-color: $color-grey-08;
+
+.comment-box-wrapper {
+  @include display-flex(column);
+  @include set-items-interval($space-small);
+}
+
+.comment-box-area-wrapper {
+  @include display-flex(column);
+
+  .comment-action {
+    padding: $comment-action-padding;
+    background-color: $comment-bg-color;
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: space-between;
+
+    .comment-attach-file-area {
+      @include display-flex(row);
+      @include set-items-interval($space-xsmall, horizontal);
+
+      input[type="file"] {
+        display: none;
+      }
+    }
+  }
+}

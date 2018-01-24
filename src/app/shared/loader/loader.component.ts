@@ -14,6 +14,9 @@ import { LoaderService } from './loader.service';
   selector: 'mcs-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.scss'],
+  host: {
+    'class': 'block'
+  }
 })
 
 export class LoaderComponent implements AfterViewInit {

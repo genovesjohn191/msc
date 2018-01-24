@@ -10,7 +10,9 @@
   <div class="information-wrapper">
     <div class="header">
       <strong>{{ activity.header }}</strong>
-      <span class="right-align hidden-small">{{ convertDateTimeToString(activity.date) }}</span>
+      <span class="right-align hidden-small" read-only>
+        {{ convertDateTimeToString(activity.date) }}
+      </span>
     </div>
 
     <div class="content">

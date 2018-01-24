@@ -25,11 +25,13 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="content-wrapper limited-view">
+    <div class="limited-view block-items-large">
       <!-- Ticket Content -->
-      <div>
-        <h4>{{ ticket.shortDescription }}</h4>
-        <span class="metadata">{{ getSubTypeString(ticket.subType) }}</span>
+      <div class="block-items-medium">
+        <div display-flex="row" justify-content="space-between">
+          <h4>{{ ticket.shortDescription }}</h4>
+          <span class="metadata">{{ getSubTypeString(ticket.subType) }}</span>
+        </div>
         <p>
           <span>{{ requestor }}</span>
           <span>{{ convertDateToString(ticket.createdOn) }}</span>
@@ -38,10 +40,12 @@
       </div>
 
       <!-- Ticket Meta Data -->
-      <div class="hidden-small horizontal-items-spacing-medium" display-flex="row">
-        <div>
+      <div class="hidden-small" display-flex="row">
+        <div flex="equal">
           <h4>{{ textContent.services }}</h4>
-          <span *ngIf="missingServices" class="missing-data-info">{{ textContent.missingServicesLabel }}</span>
+          <span *ngIf="missingServices" class="missing-data-info">
+            {{ textContent.missingServicesLabel }}
+          </span>
           <ul class="inline-list">
             <li *ngFor="let service of ticket.serviceId; trackBy: trackByFn">
               {{ service }}
@@ -50,9 +54,11 @@
         </div>
 
         <!-- Ticket Attachments -->
-        <div>
+        <div flex="equal">
           <h4>{{ textContent.attachments }}</h4>
-          <span *ngIf="missingAttachments" class="missing-data-info">{{ textContent.missingAttachmentsLabel }}</span>
+          <span *ngIf="missingAttachments" class="missing-data-info">
+            {{ textContent.missingAttachmentsLabel }}
+          </span>
           <ul class="inline-list rollover">
             <li *ngFor="let attachment of ticket.attachments; trackBy: trackByFn">
               <mcs-icon [key]="attachmentIconKey" size="small"></mcs-icon>
@@ -63,23 +69,36 @@
       </div>
 
       <!-- Ticket Activities -->
-      <div>
-        <div class="vspace-large">
-          <h4>{{ textContent.activity }}</h4>
-          <div class="text-center">
-            <ng-container [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]">
-            </ng-container>
-            <a (click)="newComment()" [hidden]="showCommentBox">{{ textContent.newActivity }}</a>
+      <div display-flex="column" class="vertical-items-spacing-medium">
+        <div display-flex="row">
+          <div flex="equal">
+            <h4>{{ textContent.activity }}</h4>
+            <span *ngIf="missingActivities" class="missing-data-info">
+              {{ textContent.missingActivitiesLabel }}
+            </span>
+          </div>
+          <!-- <div flex="equal"> -->
+            <!-- <a (click)="newComment()"
+              [hidden]="showCommentBox">{{ textContent.newActivity }}</a>
+          </div> -->
+        </div>
+
+        <div class="position-relative">
+          <div [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]"
+            [mcsLoaderHideElement]="commentBox"
+            [mcsLoaderPreserveHeight]="true"
+            [mcsLoaderText]="textContent.creatingComment">
+          </div>
+          <div #commentBox>
+            <mcs-comment-box attachedLimit="single"
+              [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
+              (onAddComment)="createComment($event)">
+            </mcs-comment-box>
           </div>
         </div>
-        <ng-container *ngIf="showCommentBox">
-          <mcs-ticket-new-comment
-            (onCancelComment)="cancelComment($event)"
-            (onCreateComment)="createComment($event)">
-          </mcs-ticket-new-comment>
-        </ng-container>
-        <span *ngIf="missingActivities" class="missing-data-info">{{ textContent.missingActivitiesLabel }}</span>
-        <mcs-ticket-activity [ticketId]="ticket.id" *ngFor="let activity of activities; trackBy: trackByFn"
+
+        <mcs-ticket-activity [ticketId]="ticket.id"
+          *ngFor="let activity of activities; trackBy: trackByFn"
           [activity]="activity">
         </mcs-ticket-activity>
       </div>

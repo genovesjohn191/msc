@@ -16,6 +16,10 @@
   @include flex(0 0 auto);
 }
 
+.flex-equal {
+  @include flex(1 1 0%);
+}
+
 // Align Items
 .align-items-flex-start {
   @include align-items(flex-start);
@@ -227,4 +231,13 @@ table.mcs-simple-table {
 
 .word-nowrap {
   white-space: nowrap;
+}
+
+// Position
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
 }
