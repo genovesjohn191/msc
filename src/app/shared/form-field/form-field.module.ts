@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { LayoutModule } from '../layout/layout.module';
 import { FormFieldComponent } from './form-field.component';
 import { FormGroupDirective } from './form-group.directive';
@@ -22,7 +26,9 @@ import {
   ],
   imports: [
     CommonModule,
-    LayoutModule
+    LayoutModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     FormFieldComponent,
@@ -31,7 +37,9 @@ import {
     HintComponent,
     PrefixComponent,
     SuffixComponent,
-    LayoutModule
+    LayoutModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 

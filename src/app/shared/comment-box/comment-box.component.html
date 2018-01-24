@@ -1,0 +1,80 @@
+<!-- File Attachment error dialog -->
+<ng-template #errorDialogTemplate let-message="data.message">
+  <mcs-dialog>
+    <mcs-dialog-header [dialogRefTemplate]="errorDialogRef">
+      <h3>{{ textContent.errorCaption }}</h3>
+    </mcs-dialog-header>
+
+    <mcs-dialog-content>
+      <div class="labelled-icon">
+        <mcs-icon [key]="errorIconKey" color="red"></mcs-icon>
+        <p>{{ message }}</p>
+      </div>
+    </mcs-dialog-content>
+
+    <mcs-dialog-actions>
+      <button mcsButton id="ctaCloseAttachment"
+        size="small" (click)="errorDialogRef?.close()">
+        {{ textContent.ok }}
+      </button>
+    </mcs-dialog-actions>
+  </mcs-dialog>
+</ng-template>
+
+<!-- Comment Area -->
+<div class="comment-box-area-wrapper dropzone"
+  ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
+  (fileOver)="onFileOver($event)"
+  [uploader]="fileUploader">
+
+  <!-- Comment Zone -->
+  <form [formGroup]="fgComment">
+    <mcs-form-field>
+      <textarea mcsInput rows="3"
+        [placeholder]="textContent.commentPlaceholder" maxlength="4000"
+        [formControl]="fcComment"></textarea>
+
+      <mcs-error mcsError errorState="required">
+        {{ textContent.errors.commentRequired }}
+      </mcs-error>
+    </mcs-form-field>
+  </form>
+
+  <!-- Selection zone -->
+  <div class="comment-action">
+    <div *ngIf="showAttachButton"
+      animate trigger="fadeIn" class="comment-attach-file-area"
+      cursor="pointer" (click)="chooFileElement.click()">
+      <mcs-icon [key]="attachmentIconKey">
+        <input #chooFileElement type="file"
+          ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
+      </mcs-icon>
+      <span>{{ textContent.chooseFile }}</span>
+    </div>
+
+    <div *ngIf="!showAttachButton"
+      animate trigger="fadeIn" class="comment-attach-file-area">
+      <mcs-icon [key]="closeIconKey" cursor="pointer"
+        (click)="removeAttachment(attachedFiles[0])"></mcs-icon>
+      <span>{{ attachedFiles[0]?.file.name }}</span>
+    </div>
+
+    <div>
+      <button mcsButton (click)="addComment()" size="small">
+        {{ textContent.addComment }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Attached files -->
+<div class="comment-box-attached-files-wrapper"
+  *ngIf="hasAttachment && allowMultiple">
+  <mcs-list spacing="xsmall">
+    <mcs-list-item *ngFor="let attachedItem of attachedFiles">
+      <mcs-icon [key]="closeIconKey" size="small" cursor="pointer"
+        (click)="removeAttachment(attachedItem)"></mcs-icon>
+      <span>{{ attachedItem?.file.name }}</span>
+    </mcs-list-item>
+  </mcs-list>
+</div>

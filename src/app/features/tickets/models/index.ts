@@ -19,6 +19,5 @@ export * from './enumerations/ticket-comment-category';
 
 /** Others */
 export * from './ticket-activity';
-export * from './ticket-new-comment';
 export * from './ticket-service';
 export * from './ticket-service-data';

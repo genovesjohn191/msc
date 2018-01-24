@@ -37,6 +37,7 @@ import { SearchModule } from './search/search.module';
 import { SliderModule } from './slider/slider.module';
 import { TagListModule } from './tag-list/tag-list.module';
 import { SelectTagModule } from './select-tag/select-tag.module';
+import { CommentBoxModule } from './comment-box/comment-box.module';
 /** Components */
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
@@ -86,7 +87,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     SearchModule,
     SliderModule,
     TagListModule,
-    SelectTagModule
+    SelectTagModule,
+    CommentBoxModule
   ],
   exports: [
     ProgressBarComponent,
@@ -127,7 +129,8 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     SearchModule,
     SliderModule,
     TagListModule,
-    SelectTagModule
+    SelectTagModule,
+    CommentBoxModule
   ]
 })
 

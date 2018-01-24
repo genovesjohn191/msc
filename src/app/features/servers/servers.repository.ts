@@ -93,7 +93,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     });
     if (!isNullOrEmpty(deletedServer)) {
       this._setServerProcessDetails(deletedServer, job);
-      if (job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
         this.deleteRecordById(job.clientReferenceObject.serverId);
       }
     }

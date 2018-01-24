@@ -7,10 +7,7 @@ import { SharedModule } from '../../shared';
 /** Providers List */
 import { ticketsProviders } from './tickets.constants';
 /** Shared Components */
-import {
-  TicketActivityComponent,
-  TicketNewCommentComponent
-} from './shared';
+import { TicketActivityComponent } from './shared';
 /** Create Ticket */
 import { TicketCreateComponent } from './ticket-create';
 
@@ -19,7 +16,6 @@ import { TicketCreateComponent } from './ticket-create';
     TicketsComponent,
     TicketComponent,
     TicketActivityComponent,
-    TicketNewCommentComponent,
     TicketCreateComponent
   ],
   imports: [

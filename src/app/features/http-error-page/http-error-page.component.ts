@@ -55,6 +55,12 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
     this._routeSubscription = this._activatedRoute.queryParamMap
       .subscribe((params) => {
         this.errorCode = +params.get('code');
+
+        // We need to set manually the notFound error since there
+        // are no parameter code in that case
+        if (this.errorCode === 0) {
+         this.errorCode = McsHttpStatusCode.NotFound;
+        }
         this._setTextContent();
       });
   }

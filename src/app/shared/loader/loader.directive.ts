@@ -9,9 +9,9 @@ import {
   Input,
   Output,
   EventEmitter,
+  ElementRef,
   ComponentRef,
-  Renderer2,
-  ElementRef
+  Renderer2
 } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { LoaderService } from './loader.service';
@@ -22,6 +22,9 @@ import {
   coerceBoolean
 } from '../../utilities';
 import { LoaderComponent } from './loader.component';
+
+// Target Element Type
+type TargetElementType = ElementRef | HTMLElement;
 
 @Directive({
   selector: '[mcsLoader]',
@@ -63,25 +66,20 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
   private _expanded: boolean = true;
 
   /**
-   * Set the parent to relative position in case of true, otherwise it is false
-   */
-  @Input('mcsLoaderRelativeParent')
-  public get relativeParent(): boolean { return this._relativeParent; }
-  public set relativeParent(value: boolean) {
-    this._relativeParent = coerceBoolean(value);
-    if (this._relativeParent) {
-      this._renderer.setStyle(this._elementRef.nativeElement, 'position', 'relative');
-    }
-  }
-  private _relativeParent: boolean = true;
-
-  /**
    * Hide the given element when activated
    */
   @Input('mcsLoaderHideElement')
-  public get hideElement(): HTMLElement { return this._hideElement; }
-  public set hideElement(value: HTMLElement) { this._hideElement = value; }
-  private _hideElement: HTMLElement;
+  public get hideElement(): TargetElementType { return this._hideElement; }
+  public set hideElement(value: TargetElementType) { this._hideElement = value; }
+  private _hideElement: TargetElementType;
+
+  /**
+   * Flag that determine whether the height of the loader should be preserve
+   */
+  @Input('mcsLoaderPreserveHeight')
+  public get preserveHeight(): boolean { return this._preserveHeight; }
+  public set preserveHeight(value: boolean) { this._preserveHeight = coerceBoolean(value); }
+  private _preserveHeight: boolean;
 
   /**
    * Input size for the loader to set
@@ -112,8 +110,7 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
     private _injector: Injector,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
-    private _renderer: Renderer2,
-    private _elementRef: ElementRef
+    private _renderer: Renderer2
   ) {
     this._subscriptions = new Array();
   }
@@ -154,7 +151,7 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
       this.componentRef.instance.size = this.size;
       this.componentRef.instance.text = this.text;
       this.componentRef.instance.orientation = this.orientation;
-      this._showHideTargetElement(false);
+      this._hideTargetElement(true);
     }
   }
 
@@ -170,19 +167,30 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
         this.componentRef = null;
       }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
       this.mcsLoaderEnded.emit(true);
-      this._showHideTargetElement(true);
+      this._hideTargetElement(false);
     }
   }
 
   /**
-   * Show or Hide target element when loader ended
-   * @param show
+   * Hide target element based on the given input
+   * @param hide Hide flag to be determine whether the target element is hidden
    */
-  private _showHideTargetElement(show: boolean): void {
+  private _hideTargetElement(hide: boolean): void {
     if (isNullOrEmpty(this._hideElement)) { return; }
 
+    // Set target element based on type
+    let targetElement: HTMLElement = this._hideElement instanceof ElementRef ?
+      this._hideElement.nativeElement : this._hideElement;
+
+    // Set the mock size of the element
+    if (this.preserveHeight) {
+      let targetElementHeight = targetElement.clientHeight;
+      this._renderer.setStyle(this.componentRef.location.nativeElement,
+        'height', `${targetElementHeight}px`);
+    }
+
     // Show to hide the target element based on flag
-    !show ? this._renderer.addClass(this._hideElement, 'hide-element') :
-      this._renderer.removeClass(this._hideElement, 'hide-element');
+    hide ? this._renderer.addClass(targetElement, 'hide-element') :
+      this._renderer.removeClass(targetElement, 'hide-element');
   }
 }

@@ -411,6 +411,7 @@
       "missingServicesLabel": "No services found",
       "missingAttachmentsLabel": "No attachments found",
       "missingActivitiesLabel": "No activities yet",
+      "creatingComment": "Creating your comment, this may take a few minutes.",
       "backToTickets": "Back To Tickets",
       "addActivity": "Add",
       "cancelActivity": "Cancel"
@@ -450,10 +451,6 @@
       }
     },
     "shared": {
-      "ticketNewComment": {
-        "selectFile": "File attachments (select or drag & drop)",
-        "dragDropZone": "Choose File"
-      },
       "ticketAttachment": {
         "chooseFile": "Choose File",
         "dragDropZone": "File attachments (select or drag & drop)"
@@ -698,6 +695,19 @@
       "errorCaption": "Selection error",
       "errorFileType": "Invalid file type selected.",
       "errorGeneral": "Unexpected error occured."
+    },
+    "commentBox": {
+      "chooseFile": "Attach file",
+      "addComment": "Add comment",
+      "dragDropZone": "File attachments (select or drag & drop)",
+      "ok": "OK",
+      "errorCaption": "Selection error",
+      "errorFileType": "Invalid file type selected.",
+      "errorGeneral": "Unexpected error occured.",
+      "commentPlaceholder": "Enter your comment here.",
+      "errors": {
+        "commentRequired": "Please enter a comment."
+      }
     }
   },
   "enumerations": {

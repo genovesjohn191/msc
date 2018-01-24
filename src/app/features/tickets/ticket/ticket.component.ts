@@ -15,6 +15,7 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsAttachment,
+  McsComment,
   McsErrorHandlerService
 } from '../../../core';
 import {
@@ -30,7 +31,6 @@ import {
   TicketSubType,
   TicketAttachment,
   TicketActivity,
-  TicketNewComment,
   TicketCommentCategory,
   TicketCommentType,
   TicketCreateComment,
@@ -51,7 +51,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   public ticketSubscription: any;
   public createCommentSubscription: any;
   public createAttachmentSubscription: any;
-  public subTypeEnumText: any;
+  public enumDefinition: any;
 
   /**
    * An observable ticket data that obtained based on the given id
@@ -86,14 +86,6 @@ export class TicketComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Comment box flag
-   */
-  private _showCommentBox: boolean;
-  public get showCommentBox(): boolean {
-    return this._showCommentBox;
-  }
-
   public get ticketResolved(): boolean {
     return isNullOrEmpty(this.ticket) ? false : this.ticket.state === TicketStatus.Resolved;
   }
@@ -103,7 +95,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
     if (isNullOrEmpty(subTypeEnumValue)) { return ''; }
 
-    let enumTextValue = this.subTypeEnumText[subTypeEnumValue];
+    let enumTextValue = this.enumDefinition.ticketSubType[subTypeEnumValue];
     let ticketTypeValue = isNullOrEmpty(enumTextValue) ?
       '' : replacePlaceholder(this.textContent.header, 'ticketType', enumTextValue);
 
@@ -154,7 +146,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.tickets.ticket;
-    this.subTypeEnumText = this._textContentProvider.content.tickets.enumerations.subType;
+    this.enumDefinition = this._textContentProvider.content.enumerations;
     // Get ticket data by ID
     this._getTicketById();
   }
@@ -207,20 +199,6 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * New comment to display the comment box
-   */
-  public newComment() {
-    this._showCommentBox = true;
-  }
-
-  /**
-   * Cancel comment to hide the comment box
-   */
-  public cancelComment(_event: any) {
-    this._showCommentBox = false;
-  }
-
-  /**
    * Download the file attachment based on the blob
    * @param attachment Attachment information of the file to download
    */
@@ -237,17 +215,18 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Create the whole comment including attachment
    * @param comment Comment information details
    */
-  public createComment(comment: TicketNewComment) {
+  public createComment(comment: McsComment) {
     if (isNullOrEmpty(comment)) { return; }
 
     // Create comment
-    this._createCommentContent(comment.comment);
+    this._createCommentContent(comment.message);
 
     // Create attachment
-    this._createAttachment(comment.attachedFile);
-
-    // Close create new attachment box
-    this._showCommentBox = false;
+    if (!isNullOrEmpty(comment.attachments)) {
+      comment.attachments.forEach((attachment) => {
+        this._createAttachment(attachment);
+      });
+    }
   }
 
   private _createCommentContent(content: string) {
