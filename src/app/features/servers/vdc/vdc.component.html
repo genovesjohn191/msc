@@ -13,6 +13,7 @@
             </mcs-list-panel-header>
             <mcs-list-panel-item *mcsListPanelItemDef="let serverPanel"
               [itemId]="serverPanel.server.id" [groupName]="serverPanel.vdcName"
+              [disabled]="serverDeleting(serverPanel.server)"
               (click)="onServerSelect(serverPanel.server.id)">
               <mcs-icon *ngIf="!serverPanel.server.isProcessing"
                 [key]="getStateIconKey(serverPanel.server.powerState)"></mcs-icon>
