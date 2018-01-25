@@ -15,12 +15,13 @@ const commonConfig = require('./webpack.common.js');
  */
 const SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HashedModuleIdsPlugin = require('webpack/lib/HashedModuleIdsPlugin')
 const PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin;
 const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-function getUglifyOptions (supportES2015) {
+function getUglifyOptions(supportES2015) {
   const uglifyCompressOptions = {
     pure_getters: true, /* buildOptimizer */
     // PURE comments work best with 3 passes.
@@ -165,6 +166,16 @@ module.exports = function (env) {
        * See: https://github.com/webpack/extract-text-webpack-plugin
        */
       new ExtractTextPlugin('[name].[contenthash].css'),
+
+      /**
+       * Optimze CSS Assets to minimize their bundlings
+       */
+      new OptimizeCssAssetsPlugin({
+        assetNameRegExp: /\.(css|scss)$/g,
+        cssProcessor: require('cssnano'),
+        cssProcessorOptions: { discardComments: { removeAll: true } },
+        canPrint: true
+      }),
 
       new PurifyPlugin(), /* buildOptimizer */
 
