@@ -19,6 +19,11 @@ const MAX_DISPLAY_RECORD = 200;
 
 export abstract class McsRepositoryBase<T> {
   /**
+   * ID list of the updated element that was searched when getRecorById called
+   */
+  private _obtainedByIdList: string[] = new Array();
+
+  /**
    * Get or Set the total records count of the entity
    */
   public get totalRecordsCount(): number { return this._totalRecordsCount; }
@@ -39,7 +44,9 @@ export abstract class McsRepositoryBase<T> {
   private _dataRecords: T[] = new Array();
 
   /**
-   * Return the currently filtered records
+   * Return the currently filtered records base on filtering method
+   *
+   * `@Note:` These hold the record that was filtered when FindAllRecords method was called
    */
   public get filteredRecords(): T[] { return this._filteredRecords; }
   private _filteredRecords: T[] = new Array();
@@ -113,7 +120,8 @@ export abstract class McsRepositoryBase<T> {
    * @param records Records to be merged
    */
   public mergeRecords(records: T[]): void {
-    if (isNullOrEmpty(records)) { return; }
+    let noRecords = isNullOrEmpty(records) || isNullOrEmpty(this._dataRecords);
+    if (noRecords) { return; }
     let mergedArrays = mergeArrays(this.dataRecords, records,
       (_first: any, _second: any) => {
         return _first.id === _second.id;
@@ -198,9 +206,14 @@ export abstract class McsRepositoryBase<T> {
       return (data as any).id === id;
     });
 
-    // Call the API if the record has not yet found
-    if (isNullOrEmpty(recordFound)) {
+    // Call the API if the record has not yet found and not yet updated
+    let recordIsOutdated = isNullOrEmpty(recordFound) ||
+      !!(this._obtainedByIdList.indexOf(id) < 0);
+    if (recordIsOutdated) {
       return this.getRecordById(id).map((record) => {
+        // Update record content
+        this.updateRecord(record.content);
+        this._obtainedByIdList.push((id));
         return record.content;
       });
     }
