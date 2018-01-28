@@ -5,10 +5,11 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Rx';
 import {
   ServerNetwork,
-  ServerNetworkSummary,
+  ServerNicSummary,
   ServerManageNetwork,
   ServerIpAddress,
   ServerIpAllocationMode,
@@ -17,17 +18,11 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsNotificationContextService,
-  McsApiJob,
-  McsJobType,
-  McsDialogService
+  McsDialogService,
 } from '../../../../core';
 import { ServerService } from '../server.service';
-import {
-  addOrUpdateArrayRecord,
-  isNullOrEmpty,
-  deleteArrayRecord
-} from '../../../../utilities';
+import { ServersRepository } from '../../servers.repository';
+import { isNullOrEmpty } from '../../../../utilities';
 import {
   ServerDetailsBase,
   DeleteNicDialogComponent
@@ -49,10 +44,14 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public textContent: any;
   public resourceNetworks: ServerNetwork[];
-  public nics: ServerNetworkSummary[];
+  public nics: ServerNicSummary[];
   public ipAddress: ServerIpAddress;
 
+  public fcNetwork: FormControl;
+
   public networksSubscription: Subscription;
+
+  private _notificationsChangeSubscription: Subscription;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -67,11 +66,11 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   public get hasNics(): boolean {
-    return !isNullOrEmpty(this.nics);
+    return !isNullOrEmpty(this.server.nics);
   }
 
   public get hasReachedNetworksLimit(): boolean {
-    return this.nics.length === STORAGE_MAXIMUM_NETWORKS;
+    return this.hasNics && this.server.nics.length === STORAGE_MAXIMUM_NETWORKS;
   }
 
   public get hasAvailableResourceNetwork(): boolean {
@@ -122,11 +121,11 @@ export class ServerNicsComponent extends ServerDetailsBase
     }
   }
 
-  private _selectedNic: ServerNetworkSummary;
-  public get selectedNic(): ServerNetworkSummary {
+  private _selectedNic: ServerNicSummary;
+  public get selectedNic(): ServerNicSummary {
     return this._selectedNic;
   }
-  public set selectedNic(value: ServerNetworkSummary) {
+  public set selectedNic(value: ServerNicSummary) {
     if (this._selectedNic !== value) {
       this._selectedNic = value;
       this._changeDetectorRef.markForCheck();
@@ -156,37 +155,41 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   public get nicsScaleIsDisabled(): boolean {
-    return !this.server.isOperable || this.isProcessing ||
+    return !this.server.isOperable || this.isProcessingJob ||
       this.server.serviceType === ServerServiceType.Managed;
   }
 
   constructor(
-    _notificationContextService: McsNotificationContextService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _dialogService: McsDialogService
+    private _dialogService: McsDialogService,
+    private _serversRepository: ServersRepository
   ) {
     // Constructor
     super(
-      _notificationContextService,
       _serverService,
       _changeDetectorRef
     );
-    this.isProcessing = false;
     this.isUpdate = false;
-    this.nics = new Array<ServerNetworkSummary>();
+    this.nics = new Array<ServerNicSummary>();
     this.ipAddress = new ServerIpAddress();
-    this.selectedNic = new ServerNetworkSummary();
+    this.selectedNic = new ServerNicSummary();
   }
 
   public ngOnInit() {
     // OnInit
     this.textContent = this._textProvider.content.servers.server.nics;
+    this._registerFormGroup();
+    this._listenToNotificationsChange();
   }
 
   public ngOnDestroy() {
     this.dispose();
+
+    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
+      this._notificationsChangeSubscription.unsubscribe();
+    }
 
     if (!isNullOrEmpty(this.networksSubscription)) {
       this.networksSubscription.unsubscribe();
@@ -238,22 +241,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     return text;
   }
 
-  public onNetworkSelect(networkName: string): void {
-    this.networkName = networkName;
-
-    if (!isNullOrEmpty(networkName)) {
-      let targetNetwork = this.resourceNetworks.find((result) => {
-        return result.name === networkName;
-      });
-
-      if (!isNullOrEmpty(targetNetwork)) {
-        this.networkNetmask = targetNetwork.netmask;
-        this.networkGateway = targetNetwork.gateway;
-      }
-    }
-  }
-
-  public onUpdateNetwork(nic: ServerNetworkSummary): void {
+  public onUpdateNetwork(nic: ServerNicSummary): void {
     if (isNullOrEmpty(nic)) { return; }
 
     this.selectedNic = nic;
@@ -269,7 +257,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     this.isUpdate = false;
   }
 
-  public onDeleteNetwork(nic: ServerNetworkSummary): void {
+  public onDeleteNetwork(nic: ServerNicSummary): void {
     let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
       data: nic,
       size: 'medium'
@@ -284,8 +272,6 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public addNetwork(): void {
     if (!this.validate()) { return; }
-
-    this.isProcessing = true;
 
     let networkValues = new ServerManageNetwork();
     networkValues.name = this.networkName;
@@ -305,8 +291,6 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public updateNetwork(): void {
     if (!this.validate()) { return; }
-
-    this.isProcessing = true;
 
     let networkValues = new ServerManageNetwork();
     networkValues.name = this.networkName;
@@ -331,10 +315,8 @@ export class ServerNicsComponent extends ServerDetailsBase
       });
   }
 
-  public deleteNetwork(nic: ServerNetworkSummary): void {
+  public deleteNetwork(nic: ServerNicSummary): void {
     if (isNullOrEmpty(nic)) { return; }
-
-    this.isProcessing = true;
 
     let networkValues = new ServerManageNetwork();
     networkValues.name = this.networkName;
@@ -349,73 +331,56 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   protected serverSelectionChanged(): void {
-    this._getServerNetworks();
-  }
-
-  protected serverJobStatusChanged(selectedServerJob: McsApiJob): void {
-    let nic = new ServerNetworkSummary();
-
-    this.activeNicId = selectedServerJob.clientReferenceObject.nicId;
-
-    switch (selectedServerJob.type) {
-      case McsJobType.UpdateServerNetwork:
-        // Get the id of the NIC to be updated
-        nic.id = this.activeNicId;
-        if (this.isProcessing) { break; }
-
-      case McsJobType.CreateServerNetwork:
-        if (this.isProcessing) {
-          // Append Created Server Network / Update Network Data
-          nic.name = selectedServerJob.clientReferenceObject.networkName;
-          addOrUpdateArrayRecord(this.nics, nic, false,
-            (_first: any, _second: any) => {
-              return _first.id === _second.id;
-            });
-        }
-
-      case McsJobType.DeleteServerNetwork:
-        // Update NICs list once job has completed or failed
-        if (this.hasCompletedJob || this.hasFailedJob) {
-          deleteArrayRecord(this.nics, (targetNetwork) => {
-            return isNullOrEmpty(targetNetwork.id);
-          }, 1);
-        }
-
-        if (this.hasCompletedJob) {
-          this._getServerNetworks();
-        }
-        break;
-
-      default:
-        // Do nothing when the job is not related to NIC management
-        break;
-    }
-
-    if (this.hasCompletedJob || this.hasFailedJob) {
-      this.activeNicId = '';
+    if (!isNullOrEmpty(this._serversRepository)) {
+      this._serversRepository.setServerNics(this.server);
     }
   }
 
   /**
-   * This will get the server networks
+   * Set network name, netmask and gateway on network select
+   *
+   * @param networkName Network name selected
    */
-  private _getServerNetworks(): void {
-    if (isNullOrEmpty(this.server.id)) { return; }
+  private _onNetworkSelect(networkName: string): void {
+    this.networkName = networkName;
 
-    this.networksSubscription = this._serverService.getServerNetworks(this.server.id)
-      .subscribe((response) => {
-        if (!isNullOrEmpty(response)) {
-          this.nics = response.content as ServerNetworkSummary[];
-        }
-        this._changeDetectorRef.markForCheck();
+    if (!isNullOrEmpty(networkName)) {
+      let targetNetwork = this.resourceNetworks.find((result) => {
+        return result.name === networkName;
       });
+
+      if (!isNullOrEmpty(targetNetwork)) {
+        this.networkNetmask = targetNetwork.netmask;
+        this.networkGateway = targetNetwork.gateway;
+      }
+    }
+  }
+
+  /**
+   * Register form group controls
+   */
+  private _registerFormGroup(): void {
+    this.fcNetwork = new FormControl('', []);
+    this.fcNetwork.valueChanges.subscribe(this._onNetworkSelect.bind(this));
   }
 
   private _resetNetworkValues(): void {
-    this.networkName = undefined;
+    this.fcNetwork.setValue('');
+    this.networkName = '';
     this.ipAddress = new ServerIpAddress();
-    this.networkGateway = undefined;
-    this.networkNetmask = undefined;
+    this.networkGateway = '';
+    this.networkNetmask = '';
     this.isPrimary = false;
+    this.activeNicId = '';
+  }
+
+  /**
+   * Listen to notifications changes
+   */
+  private _listenToNotificationsChange(): void {
+    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

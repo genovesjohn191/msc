@@ -15,7 +15,7 @@ import {
   ServerPlatform,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
-  ServerNetworkSummary,
+  ServerNicSummary,
   ServerManageNetwork,
   ServerManageMedia,
   ServerCreate,
@@ -398,7 +398,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerNetworkSummary[]>();
+      let responseData = new McsApiSuccessResponse<ServerNicSummary[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       mockRequest.flush(responseData);
