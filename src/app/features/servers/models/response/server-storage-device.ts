@@ -11,4 +11,8 @@ export class ServerStorageDevice {
   public vendor: string;
   public remoteHost: string;
   public remotePath: string;
+
+  // Additional flag not related to API response
+  public isProcessing: boolean;
+  public processingText: string;
 }

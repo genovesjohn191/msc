@@ -9,11 +9,6 @@ import {
   ServerNetwork
 } from '../models';
 import { ServerService } from '../server/server.service';
-import {
-  McsNotificationContextService,
-  McsApiJob,
-  CoreDefinition,
-} from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
 
 export abstract class ServerDetailsBase {
@@ -33,16 +28,6 @@ export abstract class ServerDetailsBase {
   private _resource: ServerResource;
 
   /**
-   * List of jobs from the selected server
-   */
-  private _jobs: McsApiJob[];
-
-  /**
-   * Current job of the selected server
-   */
-  private _selectedServerJob: McsApiJob;
-
-  /**
    * Selected Server
    */
   private _server: Server;
@@ -52,20 +37,6 @@ export abstract class ServerDetailsBase {
   public set server(value: Server) {
     if (this._server !== value) {
       this._server = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * Flag for ongoing jobs of the selected server
-   */
-  private _isProcessing: boolean;
-  public get isProcessing(): boolean {
-    return this._isProcessing;
-  }
-  public set isProcessing(value: boolean) {
-    if (this._isProcessing !== value) {
-      this._isProcessing = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -132,36 +103,34 @@ export abstract class ServerDetailsBase {
   }
 
   /**
-   * Flag for completed job of selected server
+   * Flag for ongoing job of selected server
    */
-  public get hasCompletedJob(): boolean {
-    return this._selectedServerJob.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+  public get isProcessingJob(): boolean {
+    return this.server.isProcessing;
   }
 
   /**
-   * Flag for failed job of selected server
+   * Selected server job summary information
    */
-  public get hasFailedJob(): boolean {
-    return this._selectedServerJob.status === CoreDefinition.NOTIFICATION_JOB_FAILED;
-  }
-
   public get jobSummaryInfo(): string {
-    return this._selectedServerJob.summaryInformation;
+    return this.server.processingText;
   }
 
   constructor(
-    protected _notificationContextService: McsNotificationContextService,
     protected _serverService: ServerService,
-    protected _changeDetectorRef: ChangeDetectorRef
+    protected _changeDetectorRef: ChangeDetectorRef,
   ) {
     this.server = new Server();
     this._resourceMap = new Map<string, ServerResource>();
     this._resource = new ServerResource();
-    this._jobs = new Array<McsApiJob>();
-    this._selectedServerJob = new McsApiJob();
     this._listenToSelectedServerStream();
-    this._listenToNotificationsStream();
   }
+
+  /**
+   * Contains all the methods you need to execute
+   * when the selected server changes
+   */
+  protected abstract serverSelectionChanged(): void;
 
   /**
    * Dispose all of the resource from the datasource including all the subscription
@@ -179,40 +148,6 @@ export abstract class ServerDetailsBase {
     if (!isNullOrEmpty(this._notificationsSubscription)) {
       this._notificationsSubscription.unsubscribe();
     }
-  }
-
-  /**
-   * Contains all the methods you need to execute
-   * when the selected server changes
-   */
-  protected abstract serverSelectionChanged(): void;
-
-  /**
-   * Contains all the methods you need to execute
-   * when the active server job status changed
-   */
-  protected abstract serverJobStatusChanged(selectedServerJob: McsApiJob): void;
-
-  /**
-   * Get the ongoing job of the currently selected server
-   */
-  private _getActiveServerJob(): void {
-    if (isNullOrEmpty(this._jobs) || isNullOrEmpty(this.server.id)) { return; }
-
-    let selectedServerJob = this._jobs.find((job) => {
-      return !isNullOrEmpty(job.clientReferenceObject) &&
-        job.clientReferenceObject.serverId === this.server.id;
-    });
-
-    if (!isNullOrEmpty(selectedServerJob)) {
-      this.isProcessing = selectedServerJob.status === CoreDefinition.NOTIFICATION_JOB_PENDING
-        || selectedServerJob.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE;
-
-      this._selectedServerJob = selectedServerJob;
-      this.serverJobStatusChanged(this._selectedServerJob);
-    }
-
-    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -256,19 +191,7 @@ export abstract class ServerDetailsBase {
           this.server = server;
           this.serverSelectionChanged();
           this._getServerResources();
-          this._getActiveServerJob();
         }
-      });
-  }
-
-  /**
-   * Listens to any updates from notifications
-   */
-  private _listenToNotificationsStream(): void {
-    this._notificationsSubscription = this._notificationContextService.notificationsStream
-      .subscribe((jobs) => {
-        this._jobs = jobs;
-        this._getActiveServerJob();
       });
   }
 }

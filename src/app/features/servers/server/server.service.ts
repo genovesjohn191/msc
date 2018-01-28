@@ -15,7 +15,7 @@ import {
   ServerEnvironment,
   ServerStorage,
   ServerPowerState,
-  ServerNetworkSummary,
+  ServerNicSummary,
   ServerManageNetwork,
   ServerManageMedia,
   ServerCommand
@@ -153,7 +153,7 @@ export class ServerService {
    * @param serverId Server Identification
    */
   public getServerNetworks(
-    serverId: any): Observable<McsApiSuccessResponse<ServerNetworkSummary[]>> {
+    serverId: any): Observable<McsApiSuccessResponse<ServerNicSummary[]>> {
     return this._serversService.getServerNetworks(serverId);
   }
 

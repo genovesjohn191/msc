@@ -30,9 +30,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let nic of nics">
+              <tr *ngFor="let nic of server.nics">
                 <td>
-                  <ng-container *ngIf="activeNicId === nic.id; else nicIndex">
+                  <ng-container *ngIf="!nic.id || activeNicId === nic.id; else nicIndex">
                     <mcs-icon [key]="spinnerIconKey"
                       size="small" class="hidden-small"
                       [mcsTooltip]="jobSummaryInfo"
@@ -80,14 +80,15 @@
           <h4>{{ textContent.addHeading }}</h4>
 
           <!-- Network Selection -->
-          <div class="field">
-            <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
+          <mcs-form-field>
+            <mcs-select [formControl]="fcNetwork"
               [placeholder]="textContent.networkSelect.placeholder">
+              <mcs-select-item value="">-</mcs-select-item>
               <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
                 {{ network.name }}
               </mcs-select-item>
             </mcs-select>
-          </div>
+          </mcs-form-field>
 
           <!-- IP Address setting -->
           <div class="field" *ngIf="networkName">
@@ -123,13 +124,15 @@
 
         <!-- Network Selection -->
         <div class="field">
-          <mcs-select [ngModel]="networkName" (ngModelChange)="onNetworkSelect($event)"
-            [placeholder]="textContent.networkSelect.placeholder">
-            <mcs-select-item [value]="">-</mcs-select-item>
-            <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
-              {{ network.name }}
-            </mcs-select-item>
-          </mcs-select>
+          <mcs-form-field>
+            <mcs-select [formControl]="fcNetwork"
+              [placeholder]="textContent.networkSelect.placeholder">
+              <mcs-select-item value="">-</mcs-select-item>
+              <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+                {{ network.name }}
+              </mcs-select-item>
+            </mcs-select>
+          </mcs-form-field>
         </div>
 
         <!-- TODO: Removed temporarily since our API doesn't support updating primary NIC -->

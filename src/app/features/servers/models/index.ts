@@ -26,7 +26,7 @@ export * from './response/server-os';
 export * from './response/server-guest-os';
 export * from './response/server-credential';
 export * from './response/server-compute-summary';
-export * from './response/server-network-summary';
+export * from './response/server-nic-summary';
 
 /** Other Models that are use inside server component */
 export * from './server-performance-scale';

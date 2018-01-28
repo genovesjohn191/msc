@@ -88,12 +88,10 @@
           </div>
           <mcs-list spacing="xsmall">
             <!-- Server NICs -->
-            <mcs-list-item *ngFor="let nic of server.nics; let i = index">
+            <mcs-list-item *ngFor="let nic of server.nics">
               <div display-flex="row" class="horizontal-items-spacing-xsmall">
-                <span>{{ textContent.nics.interface }} {{ i }}:</span>
-                <mcs-list spacing="xsmall">
-                  <mcs-list-item *ngFor="let ip of nic.ipAddress">{{ ip }}</mcs-list-item>
-                </mcs-list>
+                <span>{{ textContent.nics.interface }} {{ nic.index }}: </span>
+                <span>{{ nic.ipAddress }}</span>
               </div>
             </mcs-list-item>
           </mcs-list>
@@ -107,7 +105,7 @@
             <span [mcsTooltip]="textContent.media.noAvailableMedia"
               [mcsTooltipShow]="!hasAvailableMedia">
             <a flex="auto" *mcsHasPermission="['VmEdit']"
-              (click)="onAttachMedia()" [disabled]="mediaIsDisabled">
+              (click)="onAttachMedia()" [disabled]="mediaIsDisabled || !hasAvailableMedia">
               {{ textContent.media.attach }}
             </a>
           </span>
@@ -121,7 +119,7 @@
               <div display-flex="row" class="horizontal-items-spacing-xsmall">
                 <span>{{ media.name }}</span>
                 <span *mcsHasPermission="['VmEdit']">
-                  <ng-container *ngIf="activeMediaId === media.id; else detachMedia">
+                  <ng-container *ngIf="media.isProcessing; else detachMedia">
                     <mcs-icon [key]="spinnerIconKey"
                       size="small" class="hidden-small"
                       [mcsTooltip]="jobSummaryInfo"
@@ -129,7 +127,7 @@
                   </ng-container>
                   <ng-template #detachMedia>
                     <a (click)="onDetachMedia(media)"
-                      [disabled]="isProcessing">
+                      [disabled]="mediaIsDisabled">
                       {{ textContent.media.detach }}
                     </a>
                   </ng-template>
@@ -191,7 +189,7 @@
 
           <button *mcsHasPermission="['VmEdit']" class="scale"
             mcsButton id="ctaScaleServer" arrow="right"
-            [disabled]="!hasUpdate || isProcessing" (click)="onClickScale()">
+            [disabled]="!hasUpdate || isProcessingJob" (click)="onClickScale()">
               {{ textContent.performanceScale.scale }}
           </button>
         </div>
@@ -199,7 +197,7 @@
     </div>
 
     <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
-      <div class="vertical-items-spacing-medium" [disabled]="isProcessing">
+      <div class="vertical-items-spacing-medium" [disabled]="isProcessingJob">
         <h3>{{ textContent.media.attachHeading }}</h3>
         <mcs-select [(ngModel)]="selectedMedia"
           [placeholder]="textContent.media.mediaSelect.placeholder">
@@ -216,7 +214,7 @@
 
           <button *mcsHasPermission="['VmEdit']"
             mcsButton id="ctaAttachMedia" arrow="right" size="small"
-            [disabled]="!selectedMedia || isProcessing" (click)="attachMedia()">
+            [disabled]="!selectedMedia || isProcessingJob" (click)="attachMedia()">
             {{ textContent.media.attach }}
           </button>
         </div>

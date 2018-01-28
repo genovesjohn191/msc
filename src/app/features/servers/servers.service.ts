@@ -43,7 +43,7 @@ import {
   ServerImageType,
   ServerCatalogType,
   ServerCatalogItemType,
-  ServerNetworkSummary,
+  ServerNicSummary,
   ServerManageNetwork,
   ServerIpAllocationMode,
   ServerManageMedia,
@@ -567,7 +567,7 @@ export class ServersService {
    * This will get the server networks from the API
    */
   public getServerNetworks(
-    serverId: any): Observable<McsApiSuccessResponse<ServerNetworkSummary[]>> {
+    serverId: any): Observable<McsApiSuccessResponse<ServerNicSummary[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
 
@@ -576,8 +576,8 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerNetworkSummary[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetworkSummary[]>>(
+        let apiResponse: McsApiSuccessResponse<ServerNicSummary[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNicSummary[]>>(
           response,
           this._responseReviverParser
         );

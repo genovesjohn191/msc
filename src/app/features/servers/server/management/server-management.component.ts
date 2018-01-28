@@ -27,10 +27,8 @@ import {
 import {
   McsTextContentProvider,
   CoreDefinition,
-  McsNotificationContextService,
   McsBrowserService,
   McsDeviceType,
-  McsApiJob,
   McsJobType,
   McsDialogService
 } from '../../../../core';
@@ -38,11 +36,10 @@ import {
   getEncodedUrl,
   refreshView,
   appendUnitSuffix,
-  isNullOrEmpty,
-  addOrUpdateArrayRecord,
-  deleteArrayRecord
+  isNullOrEmpty
 } from '../../../../utilities';
 import { ServerService } from '../server.service';
+import { ServersRepository } from '../../servers.repository';
 import {
   ServerDetailsBase,
   DetachMediaDialogComponent
@@ -68,6 +65,9 @@ export class ServerManagementComponent extends ServerDetailsBase
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
 
+  private _hasScaleParam: boolean;
+
+  private _notificationsChangeSubscription: Subscription;
   private _scalingSubscription: Subscription;
   private _paramsSubscription: Subscription;
   private _deviceTypeSubscription: Subscription;
@@ -77,17 +77,6 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   private _serverJobType: McsJobType;
   private _serverJobCommandAction: ServerCommand;
-
-  private _activeMediaId: string;
-  public get activeMediaId(): string {
-    return this._activeMediaId;
-  }
-  public set activeMediaId(value: string) {
-    if (this._activeMediaId !== value) {
-      this._activeMediaId = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
 
   private _isAttachMedia: boolean;
   public get isAttachMedia(): boolean {
@@ -116,7 +105,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get isScaling(): boolean {
-    return this.isProcessing && this._serverJobType === McsJobType.UpdateServerCompute;
+    return this.isProcessingJob && this._serverJobType === McsJobType.UpdateServerCompute;
   }
 
   public get serverMemoryMB(): number {
@@ -185,18 +174,14 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get scalingIsDisabled(): boolean {
-    return this.isProcessing || this.isManaged || !this.server.isOperable;
+    return this.isProcessingJob || this.isManaged || !this.server.isOperable;
   }
 
   public get mediaIsDisabled(): boolean {
-    return !this.hasAvailableMedia || this.isProcessing
-      || this.isManaged || !this.server.isOperable;
+    return this.isProcessingJob || this.isManaged || !this.server.isOperable;
   }
 
-  private _hasScaleParam: boolean;
-
   constructor(
-    _notificationContextService: McsNotificationContextService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
@@ -204,17 +189,16 @@ export class ServerManagementComponent extends ServerDetailsBase
     private _browserService: McsBrowserService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _dialogService: McsDialogService
+    private _dialogService: McsDialogService,
+    private _serversRepository: ServersRepository
   ) {
     super(
-      _notificationContextService,
       _serverService,
       _changeDetectorRef
     );
     this.primaryVolume = '';
     this.secondaryVolumes = '';
     this.isAttachMedia = false;
-    this.isProcessing = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
     this._hasScaleParam = false;
   }
@@ -222,26 +206,31 @@ export class ServerManagementComponent extends ServerDetailsBase
   public ngOnInit(): void {
     this.textContent = this._textProvider.content.servers.server.management;
     this._getScaleParam();
+    this._listenToNotificationsChange();
     this._listenToDeviceChange();
   }
 
   public ngOnDestroy(): void {
     this.dispose();
 
-    if (this._scalingSubscription) {
+    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
+      this._notificationsChangeSubscription.unsubscribe();
+    }
+
+    if (!isNullOrEmpty(this._scalingSubscription)) {
       this._scalingSubscription.unsubscribe();
     }
 
-    if (this._deviceTypeSubscription) {
+    if (!isNullOrEmpty(this._deviceTypeSubscription)) {
       this._deviceTypeSubscription.unsubscribe();
 
     }
 
-    if (this._paramsSubscription) {
+    if (!isNullOrEmpty(this._paramsSubscription)) {
       this._paramsSubscription.unsubscribe();
     }
 
-    if (this._serverPerformanceScale) {
+    if (!isNullOrEmpty(this._serverPerformanceScale)) {
       this._serverPerformanceScale = undefined;
     }
   }
@@ -317,8 +306,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   public onClickScale(): void {
     if (!this._serverPerformanceScale.valid || !this.hasUpdate) { return; }
 
-    this.isProcessing = true;
-
     // Update the Server CPU size scale
     this._scalingSubscription = this._serverService.setPerformanceScale(
       this.server.id, this._serverPerformanceScale, this.server.powerState)
@@ -359,8 +346,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   public attachMedia(): void {
     if (isNullOrEmpty(this.selectedMedia)) { return; }
 
-    this.isProcessing = true;
-
     let mediaValues = new ServerManageMedia();
     mediaValues.name = this.selectedMedia;
     mediaValues.clientReferenceObject = {
@@ -381,8 +366,6 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public detachMedia(media: ServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
-
-    this.isProcessing = true;
 
     let mediaValues = new ServerManageMedia();
     mediaValues.clientReferenceObject = {
@@ -405,70 +388,6 @@ export class ServerManagementComponent extends ServerDetailsBase
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
-  protected serverJobStatusChanged(selectedServerJob: McsApiJob): void {
-    let media = new ServerMedia();
-    this.activeMediaId = selectedServerJob.clientReferenceObject.mediaId;
-    this._serverJobType = selectedServerJob.type;
-    this._serverJobCommandAction = selectedServerJob.clientReferenceObject.commandAction;
-
-    switch (selectedServerJob.type) {
-      case McsJobType.UpdateServerCompute:
-        if (this.hasCompletedJob && !isNullOrEmpty(this.server.compute) &&
-          !isNullOrEmpty(selectedServerJob.clientReferenceObject)) {
-          this.server.compute.memoryMB = selectedServerJob.clientReferenceObject.memoryMB;
-          this.server.compute.cpuCount = selectedServerJob.clientReferenceObject.cpuCount;
-        }
-        break;
-
-      case McsJobType.AttachServerMedia:
-        if (this.hasCompletedJob || this.hasFailedJob) {
-          deleteArrayRecord(this.server.media, (targetMedia) => {
-            return isNullOrEmpty(targetMedia.id);
-          }, 1);
-        }
-
-        if (this.hasFailedJob) { break; }
-
-        if (!isNullOrEmpty(selectedServerJob.clientReferenceObject)) {
-          media.name = selectedServerJob.clientReferenceObject.mediaName;
-        }
-
-        if (this.hasCompletedJob) {
-          let referenceObject = selectedServerJob.tasks[0].referenceObject;
-
-          if (!isNullOrEmpty(referenceObject.resourceId)) {
-            media.id = referenceObject.resourceId;
-          }
-        }
-
-        addOrUpdateArrayRecord(this.server.media, media, false,
-          (_first: any, _second: any) => {
-            return _first.id === _second.id;
-          });
-        break;
-
-      case McsJobType.DetachServerMedia:
-        if (this.hasCompletedJob) {
-          if (!isNullOrEmpty(selectedServerJob.clientReferenceObject)) {
-            media = this.server.media.find((result) => {
-              return result.id === this.activeMediaId;
-            });
-          }
-
-          if (!isNullOrEmpty(media)) {
-            deleteArrayRecord(this.server.media, (targetMedia) => {
-              return media.id === targetMedia.id;
-            });
-          }
-        }
-        break;
-
-      default:
-        // do nothing
-        break;
-    }
-  }
-
   private _getScaleParam(): void {
     this._paramsSubscription = this._activatedRoute.queryParams
       .subscribe((params: ParamMap) => {
@@ -481,8 +400,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   private _setServerFileSystem(): void {
-    if (isNullOrEmpty(this.server)) { return; }
-
     if (this.hasStorage) {
       this.primaryVolume = appendUnitSuffix(this.server.fileSystem[0].capacityGB, 'gigabyte');
       this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
@@ -540,6 +457,16 @@ export class ServerManagementComponent extends ServerDetailsBase
       this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'none');
       this._renderer.removeAttribute(this.thumbnailElement.nativeElement, 'src');
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+  }
+
+  /**
+   * Listen to notifications changes
+   */
+  private _listenToNotificationsChange(): void {
+    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   private _listenToDeviceChange(): void {

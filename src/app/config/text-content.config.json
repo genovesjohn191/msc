@@ -238,7 +238,7 @@
         "deleteStorageLink": "Delete",
         "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
         "noDisks": "No disks are attached to this server.",
-        "fullStorageSpace": "You can’t add additional disks to this server because there is insufficient storage capacity (0 GB remaining)."
+        "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
       },
       "nics": {
         "label": "NICs",

@@ -24,7 +24,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let storage of storageDevices">
+              <tr *ngFor="let storage of server.storageDevice">
                 <td class="squishy-cell">
                   <ng-container *ngIf="activeStorageId === storage.id; else defaultStorageIcon">
                     <mcs-icon class="inline-block" [key]="spinnerIconKey" size="small"
