@@ -4,7 +4,8 @@ import {
   replacePlaceholder,
   getEnumString,
   getRecordCountLabel,
-  compareStrings
+  compareStrings,
+  containsString
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -77,6 +78,18 @@ describe('STRING Functions', () => {
     it(`return 1 if firstString > secondString`, () => {
       let result = compareStrings('Beta', 'Alpha');
       expect(result).toBe(1);
+    });
+  });
+
+  describe('containsString()', () => {
+    it(`return true when source text contains target text.`, () => {
+      let result = containsString('Something to check', 'check');
+      expect(result).toBeTruthy();
+    });
+
+    it(`return false when source text does not contain target text.`, () => {
+      let result = containsString('Something to check', 'hello');
+      expect(result).toBeFalsy();
     });
   });
 });

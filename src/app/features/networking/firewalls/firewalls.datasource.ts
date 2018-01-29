@@ -8,6 +8,7 @@ import {
   McsSearch,
   McsDataStatus
 } from '../../../core';
+import { containsString } from '../../../utilities';
 import { Firewall } from './models';
 import { FirewallsRepository } from './firewalls.repository';
 
@@ -43,13 +44,14 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
 
         // Find all records based on settings provided in the input
         return this._firewallsRepository.findAllRecords(
-          this._paginator, this._search,
+          this._paginator,
           (_item: Firewall) => {
-            return _item.managementName
+            return containsString(
+              _item.managementName
               + _item.serialNumber
               + _item.osVendor
               + _item.osRelease
-              + _item.serviceId;
+              + _item.serviceId, this._search.keyword);
           });
       });
   }

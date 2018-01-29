@@ -9,6 +9,7 @@ import {
   McsSearch,
   McsApiJob
 } from '../../core';
+import { containsString } from '../../utilities';
 import { NotificationsRepository } from './notifications.repository';
 
 export class NotificationsDataSource implements McsDataSource<McsApiJob> {
@@ -44,11 +45,12 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
 
         // Find all records based on settings provided in the input
         return this._notificationsRepository.findAllRecords(
-          this._paginator, this._search,
+          this._paginator,
           (_item: McsApiJob) => {
-            return _item.description
+            return containsString(
+              _item.description
               + _item.summaryInformation
-              + _item.ownerName;
+              + _item.ownerName, this._search.keyword);
           });
       });
   }

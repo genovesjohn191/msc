@@ -4,7 +4,6 @@ import {
   Subscription
 } from 'rxjs/Rx';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
-import { McsSearch } from '../interfaces/mcs-search.interface';
 import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 import {
@@ -160,12 +159,11 @@ export abstract class McsRepositoryBase<T> {
    * This will find all the records based on the paging and searching method
    * if the content is not found, the API will trigger
    * @param page Page settings where the data returned are based on page index and size
-   * @param search Search method settings where the data returned are based on keyword
-   * @param searchContent Search content delegate for the search method
+   * @param whereClause Where clause delegate for filtering condition
    */
   public findAllRecords(
-    page: McsPaginator, search: McsSearch,
-    searchContent: (_recordItem: T) => string): Observable<T[]> {
+    page: McsPaginator,
+    whereClause: (_recordItem: T) => boolean): Observable<T[]> {
     let displayedRecords = isNullOrEmpty(page) ? MAX_DISPLAY_RECORD :
       page.pageSize * (page.pageIndex + 1);
     let requestRecords = !!(displayedRecords > this.dataRecords.length)
@@ -186,8 +184,7 @@ export abstract class McsRepositoryBase<T> {
       let pageData = this._dataRecords.slice();
       let actualData = pageData.splice(0, displayedRecords);
       return Observable.of(actualData.slice().filter((item: T) => {
-        let searchStr = searchContent(item).toLowerCase();
-        return searchStr.indexOf(search.keyword.toLowerCase()) !== -1;
+        return whereClause(item);
       })).map((data) => {
         this._filteredRecords = data;
         return data;

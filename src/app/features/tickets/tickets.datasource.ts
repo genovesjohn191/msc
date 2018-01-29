@@ -8,6 +8,7 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
+import { containsString } from '../../utilities';
 import { Ticket } from './models';
 import { TicketsRepository } from './tickets.repository';
 
@@ -44,12 +45,13 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
 
         // Find all records based on settings provided in the input
         return this._ticketRepository.findAllRecords(
-          this._paginator, this._search,
+          this._paginator,
           (_item: Ticket) => {
-            return _item.description
+            return containsString(
+              _item.description
               + _item.crispTicketNumber
               + _item.shortDescription
-              + _item.requestor;
+              + _item.requestor, this._search.keyword);
           });
       });
   }

@@ -8,7 +8,10 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  containsString
+} from '../../utilities';
 import { Server } from './models';
 import { ServersRepository } from './servers.repository';
 
@@ -46,13 +49,14 @@ export class ServersDataSource implements McsDataSource<Server> {
 
         // Find all records based on settings provided in the input
         return this._serversRepository.findAllRecords(
-          this._paginator, this._search,
+          this._paginator,
           (_item: Server) => {
-            return _item.name
+            return containsString(
+              _item.name
               + this._enumDefinition.serverServiceType[_item.serviceType]
               + _item.operatingSystem.edition
               + _item.managementIpAddress
-              + _item.platform.resourceName;
+              + _item.platform.resourceName, this._search.keyword);
           });
       });
   }
