@@ -90,6 +90,20 @@ export function compareStrings(firstString: string, secondString: string): numbe
   if (a === b) {
     return 0;
   } else {
-    return (a < b) ? -1 : 1 ;
+    return (a < b) ? -1 : 1;
   }
+}
+
+/**
+ * Returns true when the target text found in source text.
+ * @param source Source text where the target string be compared
+ * @param target Target text to be compared
+ */
+export function containsString(source: string, target: string): boolean {
+  if (!source) { source = ''; }
+  if (!target) { target = ''; }
+
+  let sourceString = source.toLowerCase();
+  let targetString = target.toLowerCase();
+  return sourceString.indexOf(targetString) !== -1;
 }

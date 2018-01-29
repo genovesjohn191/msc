@@ -173,7 +173,7 @@ module.exports = function (env) {
       new OptimizeCssAssetsPlugin({
         assetNameRegExp: /\.(css|scss)$/g,
         cssProcessor: require('cssnano'),
-        cssProcessorOptions: { discardComments: { removeAll: true } },
+        cssProcessorOptions: { safe: true, discardComments: { removeAll: true } },
         canPrint: true
       }),
 
