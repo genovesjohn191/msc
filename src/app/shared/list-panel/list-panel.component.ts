@@ -27,7 +27,8 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  unsubscribeSafely
 } from '../../utilities';
 /** List panel directives */
 import {
@@ -174,13 +175,9 @@ export class ListPanelComponent<T> implements OnInit,
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this._listSourceSubscription)) {
-      this._listSourceSubscription.unsubscribe();
-      this.listSource.disconnect();
-    }
-    if (!isNullOrEmpty(this._listLoadingSubscription)) {
-      this._listLoadingSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._listSourceSubscription);
+    unsubscribeSafely(this._listLoadingSubscription);
+    this.listSource.disconnect();
   }
 
   /**
@@ -195,10 +192,7 @@ export class ListPanelComponent<T> implements OnInit,
     if (newListsource) {
       this.listSource.disconnect();
     }
-    if (this._listSourceSubscription) {
-      this._listSourceSubscription.unsubscribe();
-      this._listSourceSubscription = null;
-    }
+    unsubscribeSafely(this._listSourceSubscription);
 
     if (!newListsource) {
       this._listItemsPlaceholder.viewContainer.clear();
@@ -235,9 +229,7 @@ export class ListPanelComponent<T> implements OnInit,
    * @param newDatasource New datasource to listen
    */
   private _listenToDataLoading(newDatasource: McsDataSource<T>) {
-    if (!isNullOrEmpty(this._listLoadingSubscription)) {
-      this._listLoadingSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._listLoadingSubscription);
 
     // Subscribe to data loading process
     if (isNullOrEmpty(newDatasource.dataLoadingStream)) {

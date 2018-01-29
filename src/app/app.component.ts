@@ -22,7 +22,7 @@ import {
   McsErrorHandlerService,
   GoogleAnalyticsEventsService
 } from './core';
-import { isNullOrEmpty } from './utilities';
+import { unsubscribeSafely } from './utilities';
 
 /*
  * App Component
@@ -71,9 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this.routerSubscription)) {
-      this.routerSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.routerSubscription);
     this._routePermission.dispose();
     this._errorHandlerService.dispose();
   }

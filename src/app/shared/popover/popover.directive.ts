@@ -24,7 +24,8 @@ import {
   registerEvent,
   isNullOrEmpty,
   unregisterEvent,
-  getElementOffset
+  getElementOffset,
+  unsubscribeSafely
 } from '../../utilities';
 import { PopoverComponent } from './popover.component';
 import { PopoverService } from './popover.service';
@@ -122,9 +123,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
   public ngOnDestroy() {
     this._unregisterEvents();
     this.close();
-    if (this.zoneSubscription) {
-      this.zoneSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.zoneSubscription);
   }
 
   public open() {

@@ -18,7 +18,8 @@ import { Router } from '@angular/router';
 import {
   isNullOrEmpty,
   refreshView,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSafely
 } from '../../../utilities';
 import {
   McsTextContentProvider,
@@ -176,9 +177,7 @@ export class TicketCreateComponent implements
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this.servicesSubscription)) {
-      this.servicesSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.servicesSubscription);
   }
 
   public convertMaxCharText(text: string, maxchar: number): string {
@@ -256,7 +255,7 @@ export class TicketCreateComponent implements
         this.creatingTicket = true;
       })
       .catch((error) => {
-        this.createTicketSubscription.unsubscribe();
+        unsubscribeSafely(this.createTicketSubscription);
         this._changeDetectorRef.markForCheck();
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);

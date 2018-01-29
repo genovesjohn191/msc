@@ -26,7 +26,8 @@ import {
 } from '../../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  unsubscribeSafely
 } from '../../../utilities';
 import { ServersRepository } from '../servers.repository';
 import { ServersListSource } from '../servers.listsource';
@@ -105,9 +106,7 @@ export class VdcComponent
 
   public ngOnDestroy() {
     super.dispose();
-    if (!isNullOrEmpty(this.vdcSubscription)) {
-      this.vdcSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.vdcSubscription);
   }
 
   public onServerSelect(serverId: any) {

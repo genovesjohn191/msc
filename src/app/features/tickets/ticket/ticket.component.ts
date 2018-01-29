@@ -23,7 +23,8 @@ import {
   getEnumString,
   convertDateToStandardString,
   compareDates,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSafely
 } from '../../../utilities';
 import {
   Ticket,
@@ -62,9 +63,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
   public set ticket(value: Ticket) {
     if (this._ticket !== value) {
-      if (this.ticketSubscription) {
-        this.ticketSubscription.unsubscribe();
-      }
+      unsubscribeSafely(this.ticketSubscription);
 
       this._ticket = value;
       this._setActivities(this._ticket);
@@ -153,9 +152,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     // We just want to make sure that the subscription is empty
-    if (this.ticketSubscription) {
-      this.ticketSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.ticketSubscription);
   }
 
   /**

@@ -6,7 +6,7 @@
 
     <div [hidden]="isUpdate" class="vertical-items-spacing-large">
       <div [ngStyle]="{'position': 'relative'}">
-        <div [mcsLoader]="networksSubscription">
+        <div>
           <p *ngIf="!hasNics">{{ textContent.noNics }}</p>
           <table *ngIf="hasNics" class="mcs-simple-table full-width">
             <thead>

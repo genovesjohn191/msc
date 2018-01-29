@@ -11,7 +11,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   refreshView,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '../../utilities';
 import {
   McsNotificationEventsService,
@@ -113,15 +114,9 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this._routeSubscription)) {
-      this._routeSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._zoneSubscription)) {
-      this._zoneSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._notificationsSubscription)) {
-      this._notificationsSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._routeSubscription);
+    unsubscribeSafely(this._zoneSubscription);
+    unsubscribeSafely(this._notificationsSubscription);
   }
 
   public onClickCtrlAltDelete() {

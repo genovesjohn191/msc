@@ -13,6 +13,7 @@ import {
   McsNotificationJobService,
   CoreDefinition
 } from '../../../core';
+import { unsubscribeSafely } from '../../../utilities';
 import { CoreLayoutTestingModule } from '../../testing';
 
 describe('StateChangeNotificationComponent', () => {
@@ -132,7 +133,7 @@ describe('StateChangeNotificationComponent', () => {
             .subscribe((notifications) => {
               expect(notifications.length).toBe(0);
             });
-          if (subscription) { subscription.unsubscribe(); }
+          unsubscribeSafely(subscription);
         }));
   });
 
@@ -164,7 +165,7 @@ describe('StateChangeNotificationComponent', () => {
             .subscribe((notifications) => {
               expect(notifications.length).toBe(0);
             });
-          if (subscription) { subscription.unsubscribe(); }
+          unsubscribeSafely(subscription);
         }));
   });
 

@@ -30,7 +30,8 @@ import {
   convertToGb,
   isFormControlValid,
   replacePlaceholder,
-  appendUnitSuffix
+  appendUnitSuffix,
+  unsubscribeSafely
 } from '../../../../utilities';
 import {
   ContextualHelpDirective,
@@ -200,9 +201,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public ngOnDestroy() {
-    if (this.fgSubscription) {
-      this.fgSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.fgSubscription);
   }
 
   public isControlValid(control: any): boolean {

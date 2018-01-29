@@ -36,7 +36,8 @@ import {
   getEncodedUrl,
   refreshView,
   appendUnitSuffix,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '../../../../utilities';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
@@ -212,23 +213,10 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public ngOnDestroy(): void {
     this.dispose();
-
-    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
-      this._notificationsChangeSubscription.unsubscribe();
-    }
-
-    if (!isNullOrEmpty(this._scalingSubscription)) {
-      this._scalingSubscription.unsubscribe();
-    }
-
-    if (!isNullOrEmpty(this._deviceTypeSubscription)) {
-      this._deviceTypeSubscription.unsubscribe();
-
-    }
-
-    if (!isNullOrEmpty(this._paramsSubscription)) {
-      this._paramsSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._notificationsChangeSubscription);
+    unsubscribeSafely(this._scalingSubscription);
+    unsubscribeSafely(this._deviceTypeSubscription);
+    unsubscribeSafely(this._paramsSubscription);
 
     if (!isNullOrEmpty(this._serverPerformanceScale)) {
       this._serverPerformanceScale = undefined;

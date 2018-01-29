@@ -10,7 +10,10 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { CoreDefinition } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../../utilities';
 import { ListPanelService } from '../list-panel.service';
 
 @Component({
@@ -62,9 +65,7 @@ export class ListPanelHeaderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this._itemChangedStreamSubscription) {
-      this._itemChangedStreamSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._itemChangedStreamSubscription);
   }
 
   public onHeaderClick(): void {

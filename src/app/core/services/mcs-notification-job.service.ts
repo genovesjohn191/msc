@@ -4,7 +4,8 @@ import { McsApiJob } from '../models/response/mcs-api-job';
 import { CoreDefinition } from '../core.definition';
 import {
   reviverParser,
-  refreshView
+  refreshView,
+  unsubscribeSafely
 } from '../../utilities';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiService } from './mcs-api.service';
@@ -60,12 +61,8 @@ export class McsNotificationJobService {
    * Destroy all instance of websocket and webstomp including subscription
    */
   public destroy() {
-    if (this._websocketClient) {
-      this._websocketClient.unsubscribe();
-    }
-    if (this._apiSubscription) {
-      this._apiSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._websocketClient);
+    unsubscribeSafely(this._apiSubscription);
   }
 
   private _onErrorConnection() {

@@ -1,3 +1,5 @@
+import { Subscription } from 'rxjs/Rx';
+
 /**
  * This will check if the inputted object is null/undefined or empty,
  * `@Note` This will return true if the object is null/empty otherwise false
@@ -10,5 +12,15 @@ export function isNullOrEmpty<T>(data: T): boolean {
     return !(data ? data.length > 0 : false);
   } else {
     return !data;
+  }
+}
+
+/**
+ * This will safely unsubscribe a subscription
+ * @param subscription subscription to unsubscribe
+ */
+export function unsubscribeSafely(subscription: Subscription): void {
+  if (!isNullOrEmpty(subscription)) {
+    subscription.unsubscribe();
   }
 }

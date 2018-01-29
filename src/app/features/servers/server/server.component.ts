@@ -37,7 +37,8 @@ import {
 } from '../../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  unsubscribeSafely
 } from '../../../utilities';
 import { ServersRepository } from '../servers.repository';
 import { ServersService } from '../servers.service';
@@ -127,9 +128,7 @@ export class ServerComponent
 
   public ngOnDestroy() {
     super.dispose();
-    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
-      this._notificationsChangeSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._notificationsChangeSubscription);
   }
 
   /**

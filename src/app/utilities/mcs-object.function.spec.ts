@@ -1,4 +1,8 @@
-import { isNullOrEmpty } from './mcs-object.function';
+import { Subscription } from 'rxjs/Rx';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from './mcs-object.function';
 
 describe('OBJECT Functions', () => {
   describe('isNullOrEmpty()', () => {
@@ -43,6 +47,15 @@ describe('OBJECT Functions', () => {
       let stringObject: string = 'angular';
       let isEmpty = isNullOrEmpty(stringObject);
       expect(isEmpty).toBeFalsy();
+    });
+  });
+
+  describe('unsubscribeSafely()', () => {
+    it('should close the subscription', () => {
+      let subscription = new Subscription();
+      expect(subscription.closed).toBeFalsy();
+      unsubscribeSafely(subscription);
+      expect(subscription.closed).toBeTruthy();
     });
   });
 });

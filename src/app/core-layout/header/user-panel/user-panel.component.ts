@@ -24,7 +24,8 @@ import {
 import { SwitchAccountService } from '../../shared';
 import {
   refreshView,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '../../../utilities';
 
 @Component({
@@ -107,18 +108,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this._notificationsStreamSubscription)) {
-      this._notificationsStreamSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._notificationsConnectionSubscription)) {
-      this._notificationsConnectionSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._browserSubscription)) {
-      this._browserSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._activeAccountSubscription)) {
-      this._activeAccountSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._notificationsStreamSubscription);
+    unsubscribeSafely(this._notificationsConnectionSubscription);
+    unsubscribeSafely(this._browserSubscription);
+    unsubscribeSafely(this._activeAccountSubscription);
   }
 
   public viewNotificationsPage(): void {

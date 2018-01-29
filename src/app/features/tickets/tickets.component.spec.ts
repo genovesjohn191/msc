@@ -16,6 +16,7 @@ import {
 import { TicketStatus } from './models';
 import { TicketsComponent } from './tickets.component';
 import { TicketsService } from './tickets.service';
+import { unsubscribeSafely } from '../../utilities';
 
 describe('TicketsComponent', () => {
 
@@ -125,7 +126,7 @@ describe('TicketsComponent', () => {
           expect(data).not.toBeNull();
           expect(data.length).toBe(2);
         });
-      if (dataSubscription) { dataSubscription.unsubscribe(); }
+      unsubscribeSafely(dataSubscription);
     });
 
     it('should set the paginator completed when onCompleted method is called', () => {

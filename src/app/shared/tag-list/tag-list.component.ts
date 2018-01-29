@@ -33,7 +33,8 @@ import {
   refreshView,
   coerceNumber,
   coerceBoolean,
-  ErrorStateMatcher
+  ErrorStateMatcher,
+  unsubscribeSafely
 } from '../../utilities';
 import { TagComponent } from './tag/tag.component';
 import { TagInputDirective } from './tag-input/tag-input.directive';
@@ -135,18 +136,10 @@ export class TagListComponent extends McsFormFieldControlBase<any>
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this._selectionSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._removedSubscription)) {
-      this._removedSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._focusedSubscription)) {
-      this._focusedSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._itemsSubscripton)) {
-      this._itemsSubscripton.unsubscribe();
-    }
+    unsubscribeSafely(this._selectionSubscription);
+    unsubscribeSafely(this._removedSubscription);
+    unsubscribeSafely(this._focusedSubscription);
+    unsubscribeSafely(this._itemsSubscripton);
     this.stateChanges.complete();
   }
 
@@ -304,9 +297,7 @@ export class TagListComponent extends McsFormFieldControlBase<any>
    * Listen to selection changes of each tag
    */
   private _listenToSelectionChanges(): void {
-    if (!isNullOrEmpty(this._selectionSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._selectionSubscription);
     this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
       this._selectItem(item);
     });
@@ -316,9 +307,7 @@ export class TagListComponent extends McsFormFieldControlBase<any>
    * Listen to removed changes of each tag
    */
   private _listenToRemovedChanges(): void {
-    if (!isNullOrEmpty(this._removedSubscription)) {
-      this._removedSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._removedSubscription);
     this._removedSubscription = this.itemRemoveChanged.subscribe((item) => {
       this._setFocusToInlineTag(item);
     });
@@ -328,9 +317,7 @@ export class TagListComponent extends McsFormFieldControlBase<any>
    * Listen to focus changes of each tag
    */
   private _listenToFocusChanges(): void {
-    if (!isNullOrEmpty(this._focusedSubscription)) {
-      this._focusedSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._focusedSubscription);
     this._focusedSubscription = this.itemFocusChanged.subscribe((item) => {
       this._activeTagIndex = this._items.toArray().indexOf(item);
     });

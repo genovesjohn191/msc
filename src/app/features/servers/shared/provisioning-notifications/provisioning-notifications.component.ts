@@ -15,7 +15,8 @@ import {
 } from '../../../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  unsubscribeSafely
 } from '../../../../utilities';
 
 @Component({
@@ -60,9 +61,7 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._timerSubscription) {
-      this._timerSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._timerSubscription);
   }
 
   public getTitle(): string {
@@ -178,8 +177,6 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
 
   private _endTimer(progressValue: number): void {
     this.progressValue = progressValue;
-    if (this._timerSubscription) {
-      this._timerSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._timerSubscription);
   }
 }

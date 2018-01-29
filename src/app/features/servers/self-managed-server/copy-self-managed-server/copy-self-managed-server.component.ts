@@ -32,7 +32,8 @@ import {
   refreshView,
   mergeArrays,
   isNullOrEmpty,
-  convertToGb
+  convertToGb,
+  unsubscribeSafely
 } from '../../../../utilities';
 import { ContextualHelpDirective } from '../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
@@ -163,9 +164,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   public ngOnDestroy() {
-    if (this.formGroupSubscription) {
-      this.formGroupSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.formGroupSubscription);
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {

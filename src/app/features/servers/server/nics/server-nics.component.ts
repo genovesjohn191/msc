@@ -22,7 +22,10 @@ import {
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
-import { isNullOrEmpty } from '../../../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../../../utilities';
 import {
   ServerDetailsBase,
   DeleteNicDialogComponent
@@ -48,8 +51,6 @@ export class ServerNicsComponent extends ServerDetailsBase
   public ipAddress: ServerIpAddress;
 
   public fcNetwork: FormControl;
-
-  public networksSubscription: Subscription;
 
   private _notificationsChangeSubscription: Subscription;
 
@@ -186,14 +187,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public ngOnDestroy() {
     this.dispose();
-
-    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
-      this._notificationsChangeSubscription.unsubscribe();
-    }
-
-    if (!isNullOrEmpty(this.networksSubscription)) {
-      this.networksSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._notificationsChangeSubscription);
   }
 
   public onIpAddressChanged(ipAddress: ServerIpAddress): void {

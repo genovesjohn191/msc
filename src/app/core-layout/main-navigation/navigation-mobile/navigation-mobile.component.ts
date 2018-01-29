@@ -30,10 +30,10 @@ import {
 } from '../../../core';
 import { SwitchAccountService } from '../../shared';
 import {
-  isNullOrEmpty,
   resolveEnvVar,
   registerEvent,
-  unregisterEvent
+  unregisterEvent,
+  unsubscribeSafely
 } from '../../../utilities';
 
 @Component({
@@ -154,12 +154,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this._routerSubscription)) {
-      this._routerSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._activeAccountSubscription)) {
-      this._activeAccountSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._routerSubscription);
+    unsubscribeSafely(this._activeAccountSubscription);
     unregisterEvent(document, 'click', this._clickOutsideHandler);
   }
 

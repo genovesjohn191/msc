@@ -16,6 +16,7 @@ import {
 } from 'rxjs/Rx';
 import { LoaderDirective } from './loader.directive';
 import { LoaderModule } from './loader.module';
+import { unsubscribeSafely } from '../../utilities';
 
 @Component({
   selector: 'mcs-test-loader',
@@ -36,9 +37,7 @@ export class TestLoaderComponent {
   }
 
   public endSubscription() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    unsubscribeSafely(this.subscription);
   }
 }
 

@@ -30,7 +30,8 @@ import { FirewallService } from './firewall.service';
 import { FirewallListSource } from './firewall.listsource';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  unsubscribeSafely
 } from '../../../../utilities';
 
 // Add another group type in here if you have addition tab
@@ -73,9 +74,7 @@ export class FirewallComponent
   }
   public set firewall(value: Firewall) {
     if (this._firewall !== value) {
-      if (this.subscription) {
-        this.subscription.unsubscribe();
-      }
+      unsubscribeSafely(this.subscription);
 
       this._firewall = value;
       this._changeDetectorRef.markForCheck();
@@ -118,9 +117,7 @@ export class FirewallComponent
 
   public ngOnDestroy() {
     super.dispose();
-    if (!isNullOrEmpty(this.subscription)) {
-      this.subscription.unsubscribe();
-    }
+    unsubscribeSafely(this.subscription);
   }
 
   /**

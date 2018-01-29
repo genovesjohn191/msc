@@ -11,8 +11,8 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { startWith } from 'rxjs/operator/startWith';
 import {
-  isNullOrEmpty,
-  coerceBoolean
+  coerceBoolean,
+  unsubscribeSafely
 } from '../../utilities';
 import { AccordionPanelComponent } from './accordion-panel/accordion-panel.component';
 
@@ -57,12 +57,8 @@ export class AccordionComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this._selectionSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._panelItemsSubscription)) {
-      this._panelItemsSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._selectionSubscription);
+    unsubscribeSafely(this._panelItemsSubscription);
   }
 
   /**

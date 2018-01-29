@@ -8,6 +8,7 @@ import { McsNotificationJobService } from './mcs-notification-job.service';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { CoreTestingModule } from '../testing';
+import { unsubscribeSafely } from '../../utilities';
 
 describe('McsNotificationContextService', () => {
 
@@ -57,7 +58,7 @@ describe('McsNotificationContextService', () => {
       expect(updatedNotifications[0].id).toBe(initId);
       expect(updatedNotifications[0].description).toBe(initDescription);
 
-      if (subscriber) { subscriber.unsubscribe(); }
+      unsubscribeSafely(subscriber);
     });
 
     it(`should update the notification data on the list
@@ -79,7 +80,7 @@ describe('McsNotificationContextService', () => {
         expect(updatedNotifications[0].id).toBe(initId);
         expect(updatedNotifications[0].description).toBe(updatedDescription);
 
-        if (subscriber) { subscriber.unsubscribe(); }
+        unsubscribeSafely(subscriber);
       });
 
     it(`should add the notification item to the list
@@ -103,7 +104,7 @@ describe('McsNotificationContextService', () => {
         expect(updatedNotifications[1].id).toBe(initId);
         expect(updatedNotifications[1].description).toBe(initDescription);
 
-        if (subscriber) { subscriber.unsubscribe(); }
+        unsubscribeSafely(subscriber);
       });
   });
 
@@ -130,7 +131,7 @@ describe('McsNotificationContextService', () => {
       expect(updatedNotifications[0].id).toBe(initId);
       expect(updatedNotifications[0].description).toBe(initDescription);
 
-      if (subscriber) { subscriber.unsubscribe(); }
+      unsubscribeSafely(subscriber);
     });
   });
 
@@ -143,7 +144,7 @@ describe('McsNotificationContextService', () => {
             expect(status).toBe(McsConnectionStatus.Success);
           });
 
-        if (subscriber) { subscriber.unsubscribe(); }
+        unsubscribeSafely(subscriber);
       });
   });
 });
