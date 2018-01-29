@@ -26,7 +26,8 @@ import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
 import {
   convertToGb,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
@@ -232,14 +233,8 @@ export class ServerStorageComponent extends ServerDetailsBase
   public ngOnDestroy() {
     this.dispose();
     this._unregisterJobEvents();
-
-    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
-      this._notificationsChangeSubscription.unsubscribe();
-    }
-
-    if (!isNullOrEmpty(this.storageDeviceSubscription)) {
-      this.storageDeviceSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._notificationsChangeSubscription);
+    unsubscribeSafely(this.storageDeviceSubscription);
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -441,17 +436,9 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Unregister jobs/notifications events
    */
   private _unregisterJobEvents(): void {
-    if (!isNullOrEmpty(this._createServerDiskSubscription)) {
-      this._createServerDiskSubscription.unsubscribe();
-    }
-
-    if (!isNullOrEmpty(this._updateServerDiskSubscription)) {
-      this._updateServerDiskSubscription.unsubscribe();
-    }
-
-    if (!isNullOrEmpty(this._deleteServerDiskSubscription)) {
-      this._deleteServerDiskSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._createServerDiskSubscription);
+    unsubscribeSafely(this._updateServerDiskSubscription);
+    unsubscribeSafely(this._deleteServerDiskSubscription);
   }
 
   /**

@@ -23,7 +23,8 @@ import {
 } from 'rxjs/Rx';
 import {
   isNullOrEmpty,
-  getEnumString
+  getEnumString,
+  unsubscribeSafely
 } from '../../../utilities';
 import { SwitchAccountService } from './switch-account.service';
 
@@ -102,15 +103,9 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this.companiesSubscription)) {
-      this.companiesSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this.recentCompaniesSubscription)) {
-      this.recentCompaniesSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this.activeAccountSubscription)) {
-      this.activeAccountSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.companiesSubscription);
+    unsubscribeSafely(this.recentCompaniesSubscription);
+    unsubscribeSafely(this.activeAccountSubscription);
   }
 
   public getUserIconKey(status: McsCompanyStatus) {

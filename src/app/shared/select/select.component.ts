@@ -35,7 +35,8 @@ import {
   ErrorStateMatcher,
   refreshView,
   coerceBoolean,
-  coerceNumber
+  coerceNumber,
+  unsubscribeSafely
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
 
@@ -185,12 +186,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   public ngOnDestroy(): void {
     unregisterEvent(document, 'click', this._closeOutsideHandler);
-    if (!isNullOrEmpty(this._selectionSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._itemsSubscripton)) {
-      this._itemsSubscripton.unsubscribe();
-    }
+    unsubscribeSafely(this._selectionSubscription);
+    unsubscribeSafely(this._itemsSubscripton);
     this.stateChanges.complete();
   }
 

@@ -13,7 +13,10 @@ import {
   McsNotificationContextService,
   CoreDefinition
 } from '../../core';
-import { refreshView } from '../../utilities';
+import {
+  refreshView,
+  unsubscribeSafely
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-state-change-notifications',
@@ -63,9 +66,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.notificationsSubscription) {
-      this.notificationsSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.notificationsSubscription);
   }
 
   public setPlacement() {

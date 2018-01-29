@@ -20,7 +20,10 @@ import {
   CoreDefinition,
   McsViewportService
 } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../../utilities';
 import { TabHeaderItemComponent } from './tab-header-item/tab-header-item.component';
 import { TabBorderBarComponent } from '../tab-border-bar/tab-border-bar.component';
 
@@ -114,12 +117,8 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this._selectionSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._viewportChangeSubscription)) {
-      this._viewportChangeSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._selectionSubscription);
+    unsubscribeSafely(this._viewportChangeSubscription);
   }
 
   /**

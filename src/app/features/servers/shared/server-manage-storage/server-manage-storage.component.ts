@@ -28,7 +28,8 @@ import {
   isFormControlValid,
   isNullOrEmpty,
   coerceNumber,
-  coerceBoolean
+  coerceBoolean,
+  unsubscribeSafely
 } from '../../../../utilities';
 import {
   FormGroup,
@@ -222,9 +223,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnDestroy() {
-    if (this.formControlSubscription) {
-      this.formControlSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.formControlSubscription);
   }
 
   public get storageAvailableText(): string {

@@ -6,7 +6,10 @@ import {
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsApiService } from './mcs-api.service';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../utilities';
 
 @Injectable()
 export class McsErrorHandlerService {
@@ -41,12 +44,8 @@ export class McsErrorHandlerService {
    * `@Note:` This should be call once inside the APP component
    */
   public dispose(): void {
-    if (!isNullOrEmpty(this._unauthorizedResponseSubscription)) {
-      this._unauthorizedResponseSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._routerEventSubscription)) {
-      this._routerEventSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._unauthorizedResponseSubscription);
+    unsubscribeSafely(this._routerEventSubscription);
   }
 
   /**

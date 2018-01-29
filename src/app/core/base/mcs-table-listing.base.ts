@@ -5,7 +5,8 @@ import {
 } from '../services/mcs-browser.service';
 import {
   isNullOrEmpty,
-  convertDateToStandardString
+  convertDateToStandardString,
+  unsubscribeSafely
 } from '../../utilities';
 
 export abstract class McsTableListingBase<T> {
@@ -97,9 +98,7 @@ export abstract class McsTableListingBase<T> {
       this.dataColumns = [];
       this.dataColumns = null;
     }
-    if (!isNullOrEmpty(this.browserServiceSubscription)) {
-      this.browserServiceSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.browserServiceSubscription);
   }
 
   /**

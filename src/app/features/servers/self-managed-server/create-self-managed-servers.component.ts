@@ -34,7 +34,8 @@ import {
   addOrUpdateArrayRecord,
   refreshView,
   isNullOrEmpty,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSafely
 } from '../../../utilities';
 import { ContextualHelpDirective } from '../../../shared';
 import {
@@ -223,18 +224,10 @@ export class CreateSelfManagedServersComponent implements
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this.obtainDataSubscription)) {
-      this.obtainDataSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._resourcesSubscription)) {
-      this._resourcesSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._notificationsSubscription)) {
-      this._notificationsSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._contextulHelpSubscription)) {
-      this._contextulHelpSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.obtainDataSubscription);
+    unsubscribeSafely(this._resourcesSubscription);
+    unsubscribeSafely(this._notificationsSubscription);
+    unsubscribeSafely(this._contextulHelpSubscription);
   }
 
   /**

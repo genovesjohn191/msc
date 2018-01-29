@@ -20,7 +20,8 @@ import {
   reviverParser,
   formatDate,
   compareDates,
-  getExpiryLabel
+  getExpiryLabel,
+  unsubscribeSafely
 } from '../../../../../utilities';
 
 @Component({
@@ -93,9 +94,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    unsubscribeSafely(this.subscription);
   }
 
   private _initializeFirewallData(): void {

@@ -39,7 +39,8 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
-  getRecordCountLabel
+  getRecordCountLabel,
+  unsubscribeSafely
 } from '../../utilities';
 
 @Component({
@@ -142,12 +143,8 @@ export class ServersComponent
 
   public ngOnDestroy() {
     this.dispose();
-    if (!isNullOrEmpty(this._selectionModeSubscription)) {
-      this._selectionModeSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._notificationsChangeSubscription)) {
-      this._notificationsChangeSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._selectionModeSubscription);
+    unsubscribeSafely(this._notificationsChangeSubscription);
   }
 
   /**

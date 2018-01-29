@@ -11,7 +11,8 @@ import {
 import {
   registerEvent,
   unregisterEvent,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '../../../utilities';
 import { ListPanelService } from '../list-panel.service';
 import { McsListPanelItem } from '../../../core';
@@ -54,9 +55,7 @@ export class ListPanelItemComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     unregisterEvent(this.elementRef.nativeElement, 'click', this._clickEventHandler);
-    if (this._itemChangedStreamSubscription) {
-      this._itemChangedStreamSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._itemChangedStreamSubscription);
   }
 
   public onClickItem(): void {

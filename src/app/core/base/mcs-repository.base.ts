@@ -11,7 +11,8 @@ import {
   addOrUpdateArrayRecord,
   deleteArrayRecord,
   clearArrayRecord,
-  mergeArrays
+  mergeArrays,
+  unsubscribeSafely
 } from '../../utilities';
 
 const MAX_DISPLAY_RECORD = 200;
@@ -70,9 +71,7 @@ export abstract class McsRepositoryBase<T> {
       this._dataRecords.splice(0);
       this._dataRecords = undefined;
     }
-    if (!isNullOrEmpty(this._getDataRecordsSubscription)) {
-      this._getDataRecordsSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._getDataRecordsSubscription);
   }
 
   /**

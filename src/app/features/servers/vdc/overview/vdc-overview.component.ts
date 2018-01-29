@@ -21,7 +21,8 @@ import {
   isNullOrEmpty,
   appendUnitSuffix,
   convertToGb,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSafely
 } from '../../../../utilities';
 
 const VDC_STORAGE_LOW_PERCENTAGE = 85;
@@ -87,9 +88,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this._vdcSubscription)) {
-      this._vdcSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._vdcSubscription);
   }
 
   public getStorageStatusIconKey(storage: ServerStorage): string {

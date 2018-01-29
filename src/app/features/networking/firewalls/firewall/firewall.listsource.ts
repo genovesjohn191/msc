@@ -15,7 +15,8 @@ import {
 import { FirewallsService } from '../firewalls.service';
 import {
   isNullOrEmpty,
-  compareStrings
+  compareStrings,
+  unsubscribeSafely
 } from '../../../../utilities';
 
 export class FirewallListSource implements McsDataSource<FirewallList> {
@@ -77,13 +78,8 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
 
   public disconnect() {
     // Disconnect all resources
-    if (this._firewallsSubscription) {
-      this._firewallsSubscription.unsubscribe();
-    }
-
-    if (this._activeFirewallSubscription) {
-      this._activeFirewallSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._firewallsSubscription);
+    unsubscribeSafely(this._activeFirewallSubscription);
   }
 
   public onCompletion(_status: McsDataStatus): void {

@@ -14,6 +14,8 @@ import { BreadcrumbsService } from './breadcrumbs.service';
 /** Models */
 import { Breadcrumb } from './breadcrumb';
 
+import { unsubscribeSafely } from '../../utilities';
+
 @Component({
   selector: 'mcs-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
@@ -49,12 +51,8 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this._breadcrumbEventHandler) {
-      this._breadcrumbEventHandler.unsubscribe();
-    }
-    if (this._routerEventHandler) {
-      this._routerEventHandler.unsubscribe();
-    }
+    unsubscribeSafely(this._breadcrumbEventHandler);
+    unsubscribeSafely(this._routerEventHandler);
   }
 
   public onNavigateTo(url: string): void {

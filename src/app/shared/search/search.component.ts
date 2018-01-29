@@ -17,7 +17,10 @@ import {
   McsSearch,
   McsTextContentProvider
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-search',
@@ -74,9 +77,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   }
 
   public ngOnDestroy(): void {
-    if (this._searchSubscription) {
-      this._searchSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._searchSubscription);
   }
 
   public onChangeKeyEvent(key: any): void {

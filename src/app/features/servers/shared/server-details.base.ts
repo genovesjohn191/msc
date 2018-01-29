@@ -9,7 +9,10 @@ import {
   ServerNetwork
 } from '../models';
 import { ServerService } from '../server/server.service';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../../utilities';
 
 export abstract class ServerDetailsBase {
   // Subscriptions
@@ -138,16 +141,9 @@ export abstract class ServerDetailsBase {
    * `@Note`: This should be call inside the destroy of the component
    */
   protected dispose(): void {
-    if (!isNullOrEmpty(this.serverResourceSubscription)) {
-      this.serverResourceSubscription.unsubscribe();
-    }
-
-    if (!isNullOrEmpty(this._serverSubscription)) {
-      this._serverSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._notificationsSubscription)) {
-      this._notificationsSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this.serverResourceSubscription);
+    unsubscribeSafely(this._serverSubscription);
+    unsubscribeSafely(this._notificationsSubscription);
   }
 
   /**

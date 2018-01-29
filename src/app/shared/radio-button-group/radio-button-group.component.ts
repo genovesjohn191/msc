@@ -23,7 +23,8 @@ import { Key } from '../../core';
 import {
   coerceNumber,
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  unsubscribeSafely
 } from '../../utilities';
 import { RadioButtonComponent } from './radio-button/radio-button.component';
 
@@ -130,9 +131,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this._itemsSubscripton)) {
-      this._itemsSubscripton.unsubscribe();
-    }
+    unsubscribeSafely(this._itemsSubscripton);
   }
 
   /**
@@ -222,9 +221,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    * Listen to selection changes of each tag
    */
   private _listenToSelectionChanges(): void {
-    if (!isNullOrEmpty(this._selectionSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._selectionSubscription);
     this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
       this._selectItem(item);
       this._selectedItemIndex = this._radioButtons.toArray().indexOf(item);

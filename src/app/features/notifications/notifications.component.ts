@@ -21,7 +21,8 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  getRecordCountLabel
+  getRecordCountLabel,
+  unsubscribeSafely
 } from '../../utilities';
 
 @Component({
@@ -83,9 +84,7 @@ export class NotificationsComponent
 
   public ngOnDestroy() {
     this.dispose();
-    if (!isNullOrEmpty(this._notificationsSubscription)) {
-      this._notificationsSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._notificationsSubscription);
   }
 
   /**

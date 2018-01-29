@@ -23,7 +23,10 @@ import {
   McsOption,
   CoreDefinition
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../utilities';
 
 // Child Items of the select tag
 import { SelectTagMainItemComponent } from './select-tag-main-item/select-tag-main-item.component';
@@ -119,21 +122,11 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this._searchSubscripton)) {
-      this._searchSubscripton.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._selectionSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._selectionSubSubscription)) {
-      this._selectionSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._itemsSubscripton)) {
-      this._itemsSubscripton.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._itemsSubSubscripton)) {
-      this._itemsSubSubscripton.unsubscribe();
-    }
+    unsubscribeSafely(this._searchSubscripton);
+    unsubscribeSafely(this._selectionSubscription);
+    unsubscribeSafely(this._selectionSubSubscription);
+    unsubscribeSafely(this._itemsSubscripton);
+    unsubscribeSafely(this._itemsSubSubscripton);
   }
 
   /**

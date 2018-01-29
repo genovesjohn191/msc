@@ -6,7 +6,10 @@ import { Injectable } from '@angular/core';
 import {
   McsAuthenticationService
 } from './mcs-authentication.service';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../utilities';
 import { McsLoggerService } from '../services/mcs-logger.service';
 
 @Injectable()
@@ -39,9 +42,7 @@ export class McsRoutePermissionGuard {
   }
 
   public dispose(): void {
-    if (!isNullOrEmpty(this._routerEventHandler)) {
-      this._routerEventHandler.unsubscribe();
-    }
+    unsubscribeSafely(this._routerEventHandler);
   }
 
   public onNavigateEnd(navStart: NavigationEnd) {

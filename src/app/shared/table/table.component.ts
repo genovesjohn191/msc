@@ -31,7 +31,10 @@ import {
   McsDataStatus,
   CoreDefinition
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../utilities';
 /** Shared Directives */
 import {
   CellOutletDirective,
@@ -184,12 +187,8 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   public ngOnDestroy() {
-    if (!isNullOrEmpty(this._dataSourceSubscription)) {
-      this._dataSourceSubscription.unsubscribe();
-    }
-    if (!isNullOrEmpty(this._dataLoadingSubscription)) {
-      this._dataLoadingSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._dataSourceSubscription);
+    unsubscribeSafely(this._dataLoadingSubscription);
   }
 
   private _setColumnDefinitionsMap(): void {
@@ -211,11 +210,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     if (newDatasource) {
       this.dataSource.disconnect();
     }
-    if (this._dataSourceSubscription) {
-      this._dataSourceSubscription.unsubscribe();
-      this._dataSourceSubscription = null;
-    }
-
+    unsubscribeSafely(this._dataSourceSubscription);
     if (!newDatasource) {
       this._dataPlaceholder.viewContainer.clear();
     }
@@ -251,9 +246,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * @param newDatasource New datasource to listen
    */
   private _listenToDataLoading(newDatasource: McsDataSource<T>) {
-    if (!isNullOrEmpty(this._dataLoadingSubscription)) {
-      this._dataLoadingSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._dataLoadingSubscription);
 
     // Subscribe to data loading process
     if (isNullOrEmpty(newDatasource.dataLoadingStream)) {

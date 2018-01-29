@@ -11,7 +11,7 @@ import {
   McsTextContentProvider,
   McsHttpStatusCode
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { unsubscribeSafely } from '../../utilities';
 
 @Component({
   selector: 'mcs-http-error-page',
@@ -66,9 +66,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (!isNullOrEmpty(this._routeSubscription)) {
-      this._routeSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._routeSubscription);
   }
 
   /**

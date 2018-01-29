@@ -15,7 +15,8 @@ import {
   reviverParser,
   getTimeDifference,
   addOrUpdateArrayRecord,
-  convertJsonStringToObject
+  convertJsonStringToObject,
+  unsubscribeSafely
 } from '../../utilities';
 
 /**
@@ -81,12 +82,8 @@ export class McsNotificationContextService {
    * Destroy all instance of notification job service including its subscription
    */
   public destroy() {
-    if (this._notificationServiceSubscription) {
-      this._notificationServiceSubscription.unsubscribe();
-    }
-    if (this._connectionStatusSubscription) {
-      this._connectionStatusSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._notificationServiceSubscription);
+    unsubscribeSafely(this._connectionStatusSubscription);
   }
 
   /**

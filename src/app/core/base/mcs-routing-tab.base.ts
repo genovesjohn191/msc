@@ -4,7 +4,8 @@ import {
   NavigationEnd
 } from '@angular/router';
 import {
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '../../utilities';
 
 export abstract class McsRoutingTabBase<T> {
@@ -31,9 +32,7 @@ export abstract class McsRoutingTabBase<T> {
    * `@Note`: This should be call inside the destroy of the component
    */
   protected dispose(): void {
-    if (!isNullOrEmpty(this._routerSubscription)) {
-      this._routerSubscription.unsubscribe();
-    }
+    unsubscribeSafely(this._routerSubscription);
   }
 
   /**
