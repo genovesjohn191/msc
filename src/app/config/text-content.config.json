@@ -88,7 +88,7 @@
       "ipAddressLabel": "IP Address",
       "serverDetailsStep" : {
         "title": "1. Server Details",
-        "loading": "Obtaining server data, this may take a few minutes."
+        "loading": "Loading server data, this may take a few minutes."
       },
       "serverGoStep": {
         "title": "2. Go!"
@@ -154,6 +154,7 @@
       "panel": "Listing Panel",
       "management": {
         "label": "Management",
+        "loading": "Loading management resources.",
         "vmProperties": {
           "title": "VM Properties",
           "status": "Status",
@@ -222,6 +223,7 @@
       },
       "storage": {
         "label": "Storage",
+        "loading": "Loading storage resources.",
         "title": "Manage Disks",
         "description": "Manage the disks attached to your server. You can add new, delete or expand existing disks.",
         "primary": "Primary",
@@ -242,6 +244,7 @@
       },
       "nics": {
         "label": "NICs",
+        "loading": "Loading NICs resources.",
         "title": "Manage NICs",
         "description": "",
         "nic": "NIC",

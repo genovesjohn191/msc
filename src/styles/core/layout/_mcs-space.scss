@@ -12,6 +12,10 @@
   @include set-items-interval($space-medium, horizontal);
 }
 
+.horizontal-items-spacing-large {
+  @include set-items-interval($space-large, horizontal);
+}
+
 .vertical-items-spacing-xsmall {
   @include set-items-interval($space-xsmall, vertical);
 }

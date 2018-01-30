@@ -45,7 +45,7 @@ module.exports = {
      /** <link> tag for cross browser favicon **/
      {
       rel: 'shortcut icon',
-      type: 'image/x-icon',
+      type: 'image/png',
       href: '/assets/icon/icon-normal.png'
     },
 
