@@ -29,8 +29,8 @@
       <mcs-select [formControl]="fcVApp"
         [mcsContextualHelp]="textHelpContent.vAppField"
         [placeholder]="textContent.placeholder.vApp">
-        <mcs-select-item>-</mcs-select-item>
         <mcs-select-group [header]="textContent.headers.vApp">
+          <mcs-select-item>-</mcs-select-item>
           <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
             {{ vApp.text }}
           </mcs-select-item>
@@ -49,7 +49,6 @@
       <mcs-select [formControl]="fcImage" required
         [placeholder]="textContent.placeholder.image"
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
-        <mcs-select-item>-</mcs-select-item>
         <mcs-select-group *ngIf="serverOsItems" [header]="textContent.headers.os">
           <mcs-select-item *ngFor="let platform of serverOsItems">
             {{ platform.group }}
@@ -115,7 +114,6 @@
       <mcs-select [formControl]="fcNetwork" required
         [placeholder]="textContent.placeholder.network"
         [mcsContextualHelp]="textHelpContent.networkField">
-        <mcs-select-item>-</mcs-select-item>
         <mcs-select-group [header]="textContent.headers.network">
           <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
             {{ network.text }}

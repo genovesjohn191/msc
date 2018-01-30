@@ -28,7 +28,6 @@
     <mcs-form-field>
       <mcs-select [formControl]="fcTargetServer" required
         [placeholder]="textContent.placeholder.server">
-        <mcs-select-item>-</mcs-select-item>
         <mcs-select-group header="Servers">
           <mcs-select-item *ngFor="let server of servers" [value]="server.id">
             {{ server.managementName }}
