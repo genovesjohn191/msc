@@ -14,8 +14,10 @@ import {
 } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import {
+  Server,
   ServerPowerState,
-  ServerResource
+  ServerResource,
+  ServerCommand
 } from '../models';
 import {
   CoreDefinition,
@@ -113,6 +115,14 @@ export class VdcComponent
     if (isNullOrEmpty(serverId)) { return; }
 
     this.router.navigate(['/servers', serverId]);
+  }
+
+  /**
+   * Return true when the server is currently deleting, otherwise false
+   * @param server Server to be deleted
+   */
+  public serverDeleting(server: Server): boolean {
+    return server.commandAction === ServerCommand.Delete && server.isProcessing;
   }
 
   /**

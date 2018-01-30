@@ -32,7 +32,6 @@
               <mcs-select id="type" [placeholder]="textContent.placeholders.type"
                 [formControl]="fcType" set-focus required
                 [mcsContextualHelp]="contextualContent.type">
-                <mcs-select-item>--</mcs-select-item>
                 <mcs-select-group header="Ticket Type">
                   <mcs-select-item *ngFor="let ticketType of ticketTypeList"
                     [value]="ticketType.value">
