@@ -1,11 +1,18 @@
 <div class="limited-view">
-  <div class="vertical-items-spacing-medium" [mcsLoader]="serverResourceSubscription">
-    <h3 class="heading">{{ textContent.title }}</h3>
+  <!-- Loader settings -->
+  <div [mcsLoader]="serverResourceSubscription"
+    [mcsLoaderHideElement]="storageContent"
+    [mcsLoaderText]="textContent.loading"
+    mcsLoaderOrientation="top"></div>
 
-    <p>{{ textContent.description }}</p>
+  <div class="vertical-items-spacing-medium" #storageContent>
+    <div class="grid-column">
+      <h3 class="grid-content-header">{{ textContent.title }}</h3>
+      <p>{{ textContent.description }}</p>
+    </div>
 
-    <div *ngIf="!expandStorage" class="vertical-items-spacing-large">
-      <div [ngStyle]="{'position': 'relative'}">
+    <div *ngIf="!expandStorage" class="vertical-items-spacing-large grid-column">
+      <div>
         <div [mcsLoader]="storageDeviceSubscription">
           <p *ngIf="!hasStorageDevice">{{ textContent.noDisks }}</p>
           <table *ngIf="hasStorageDevice" class="mcs-simple-table full-width">
@@ -93,7 +100,7 @@
       </div>
     </div>
 
-    <div *ngIf="expandStorage">
+    <div class="grid-column" *ngIf="expandStorage">
       <mcs-server-manage-storage #mcsStorage
         [minimumMB]="selectedStorageDevice.sizeMB"
         [maximumMB]="maximumMB"

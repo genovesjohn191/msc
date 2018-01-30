@@ -7,42 +7,14 @@ $server-text-color: $color-black;
 $server-vm-console-enabled-color: $server-text-color;
 $server-vm-console-disabled-color: $color-grey-02;
 
-:host {
-  display: block;
-  position: relative;
 
-  .server-thumbnail {
-    margin-bottom: $space-small;
-    @include display-inline-flex(column);
-    justify-content: center;
+.thumbnail-container {
+  min-height: $server-thumbnail-height;
+  min-width: $server-thumbnail-width;
+  background: $server-thumbnail-bg-color;
 
-    .view-console {
-      @include display-inline-flex(column);
-      justify-content: center;
-      align-items: flex-start;
-      cursor: pointer;
-      @include set-items-interval(5px, vertical);
-
-      &.disabled {
-        text-decoration: none;
-        cursor: default;
-        * {
-          text-decoration: none;
-          cursor: default;
-          color: $server-vm-console-disabled-color;
-        }
-      }
-
-      .thumbnail-container {
-        min-height: $server-thumbnail-height;
-        min-width: $server-thumbnail-width;
-        background: $server-thumbnail-bg-color;
-
-        .thumbnail {
-          max-height: $server-thumbnail-height;
-          min-width: $server-thumbnail-width;
-        }
-      }
-    }
+  .thumbnail {
+    max-height: $server-thumbnail-height;
+    min-width: $server-thumbnail-width;
   }
 }

@@ -1,10 +1,16 @@
 <div class="limited-view">
-  <div [mcsLoader]="serverResourceSubscription">
+  <!-- Loader settings -->
+  <div [mcsLoader]="serverResourceSubscription"
+    [mcsLoaderHideElement]="managementContent"
+    [mcsLoaderText]="textContent.loading"
+    mcsLoaderOrientation="top"></div>
+
+  <div #managementContent>
     <div *ngIf="!isActiveScale && !isAttachMedia" class="content-grid">
       <div class="grid-row">
         <div class="grid-column">
-          <h3>{{ textContent.vmProperties.title }}</h3>
-          <mcs-list spacing="xsmall">
+          <h3 class="grid-content-header">{{ textContent.vmProperties.title }}</h3>
+          <mcs-list spacing="xsmall" class="grid-content-body">
             <!-- Status -->
             <mcs-list-item>
               <span>{{ textContent.vmProperties.status }}:</span>
@@ -36,110 +42,115 @@
 
         <!-- Console -->
         <div class="grid-column">
-          <div class="server-thumbnail">
-            <h3 class="thumbnail-title">{{ textContent.vmConsole.title }}</h3>
-            <div (click)="onClickViewConsole()" class="view-console"
-                [ngClass]="{'enabled': consoleEnabled, 'disabled': !consoleEnabled }">
-                <div class="thumbnail-container">
-                  <img #thumbnailElement class="thumbnail"/>
-                </div>
-              <a>{{ textContent.vmConsole.link }}</a>
+          <h3 class="grid-content-header">{{ textContent.vmConsole.title }}</h3>
+          <div display-flex="column" align-items="flex-start"
+            (click)="onClickViewConsole()" [disabled]="!consoleEnabled">
+            <div class="thumbnail-container">
+              <img #thumbnailElement class="thumbnail"/>
             </div>
+            <a>{{ textContent.vmConsole.link }}</a>
           </div>
         </div>
       </div>
 
       <div class="grid-row">
         <div class="grid-column">
-          <h3>{{ textContent.storage.title }}
+          <h3 class="grid-content-header">{{ textContent.storage.title }}
             <a *mcsHasPermission="['VmEdit']" [routerLink]="['../storage']">
               {{ textContent.storage.manage }}
             </a>
           </h3>
-          <div *ngIf="!hasStorageInformation">
-            <span class="missing-data-info">{{ textContent.storage.noContentMessage }}</span>
+          <div class="grid-content-body">
+            <div *ngIf="!hasStorageInformation">
+              <span class="missing-data-info">{{ textContent.storage.noContentMessage }}</span>
+            </div>
+            <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
+              <!-- Primary Volume -->
+              <mcs-list-item>
+                <span>{{ textContent.storage.primaryVolume }}:</span>
+                <span>{{ primaryVolume }}</span>
+              </mcs-list-item>
+              <!-- Secondary Volume -->
+              <mcs-list-item *ngIf="secondaryVolumes">
+                <span>{{ textContent.storage.secondaryVolumes }}:</span>
+                <span>{{ secondaryVolumes }}</span>
+              </mcs-list-item>
+              <!-- Storage Policy -->
+              <!-- TODO: Will confirm to Orch API where to pull this data -->
+              <!-- <mcs-list-item *ngIf="server.environment?.resource?.storage?.name">
+                <span>{{ textContent.storage.storagePolicy }}:</span>
+                <span>{{ server.environment?.resource?.storage?.name }}</span>
+              </mcs-list-item> -->
+            </mcs-list>
           </div>
-          <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
-            <!-- Primary Volume -->
-            <mcs-list-item>
-              <span>{{ textContent.storage.primaryVolume }}:</span>
-              <span>{{ primaryVolume }}</span>
-            </mcs-list-item>
-            <!-- Secondary Volume -->
-            <mcs-list-item *ngIf="secondaryVolumes">
-              <span>{{ textContent.storage.secondaryVolumes }}:</span>
-              <span>{{ secondaryVolumes }}</span>
-            </mcs-list-item>
-            <!-- Storage Policy -->
-            <!-- TODO: Will confirm to Orch API where to pull this data -->
-            <!-- <mcs-list-item *ngIf="server.environment?.resource?.storage?.name">
-              <span>{{ textContent.storage.storagePolicy }}:</span>
-              <span>{{ server.environment?.resource?.storage?.name }}</span>
-            </mcs-list-item> -->
-          </mcs-list>
         </div>
 
         <div class="grid-column">
-          <h3>{{ textContent.nics.title }}</h3>
-          <div *ngIf="!hasNics">
-            <span class="missing-data-info">
-              {{ textContent.nics.noContentMessage }}
-            </span>
+          <h3 class="grid-content-header">{{ textContent.nics.title }}</h3>
+          <div class="grid-content-body">
+            <div *ngIf="!hasNics">
+              <span class="missing-data-info">
+                {{ textContent.nics.noContentMessage }}
+              </span>
+            </div>
+            <mcs-list spacing="xsmall">
+              <!-- Server NICs -->
+              <mcs-list-item *ngFor="let nic of server.nics">
+                <div display-flex="row" class="horizontal-items-spacing-xsmall">
+                  <span>{{ textContent.nics.interface }} {{ nic.index }}: </span>
+                  <span>{{ nic.ipAddress }}</span>
+                </div>
+              </mcs-list-item>
+            </mcs-list>
           </div>
-          <mcs-list spacing="xsmall">
-            <!-- Server NICs -->
-            <mcs-list-item *ngFor="let nic of server.nics">
-              <div display-flex="row" class="horizontal-items-spacing-xsmall">
-                <span>{{ textContent.nics.interface }} {{ nic.index }}: </span>
-                <span>{{ nic.ipAddress }}</span>
-              </div>
-            </mcs-list-item>
-          </mcs-list>
         </div>
       </div>
 
       <div class="grid-row">
         <div class="grid-column">
-          <h3>
+          <h3 class="grid-content-header">
             {{ textContent.media.title }}
             <span [mcsTooltip]="textContent.media.noAvailableMedia"
               [mcsTooltipShow]="!hasAvailableMedia">
-            <a flex="auto" *mcsHasPermission="['VmEdit']"
-              (click)="onAttachMedia()" [disabled]="mediaIsDisabled || !hasAvailableMedia">
-              {{ textContent.media.attach }}
-            </a>
-          </span>
+              <a flex="auto" *mcsHasPermission="['VmEdit']"
+                (click)="onAttachMedia()" [disabled]="mediaIsDisabled || !hasAvailableMedia">
+                {{ textContent.media.attach }}
+              </a>
+            </span>
           </h3>
-          <div *ngIf="!hasMedia">
-            <span class="missing-data-info">{{ textContent.media.noContentMessage }}</span>
+
+          <div class="grid-content-body">
+            <div *ngIf="!hasMedia">
+              <span class="missing-data-info">{{ textContent.media.noContentMessage }}</span>
+            </div>
+            <mcs-list *ngIf="hasMedia" spacing="xsmall">
+              <!-- Media Items -->
+              <mcs-list-item *ngFor="let media of server.media">
+                <div display-flex="row" class="horizontal-items-spacing-xsmall">
+                  <span>{{ media.name }}</span>
+                  <span *mcsHasPermission="['VmEdit']">
+                    <ng-container *ngIf="media.isProcessing; else detachMedia">
+                      <mcs-icon [key]="spinnerIconKey"
+                        size="small" class="hidden-small"
+                        [mcsTooltip]="jobSummaryInfo"
+                        mcsTooltipPosition="right"></mcs-icon>
+                    </ng-container>
+                    <ng-template #detachMedia>
+                      <a (click)="onDetachMedia(media)"
+                        [disabled]="mediaIsDisabled">
+                        {{ textContent.media.detach }}
+                      </a>
+                    </ng-template>
+                  </span>
+                </div>
+              </mcs-list-item>
+            </mcs-list>
           </div>
-          <mcs-list *ngIf="hasMedia" spacing="xsmall">
-            <!-- Media Items -->
-            <mcs-list-item *ngFor="let media of server.media">
-              <div display-flex="row" class="horizontal-items-spacing-xsmall">
-                <span>{{ media.name }}</span>
-                <span *mcsHasPermission="['VmEdit']">
-                  <ng-container *ngIf="media.isProcessing; else detachMedia">
-                    <mcs-icon [key]="spinnerIconKey"
-                      size="small" class="hidden-small"
-                      [mcsTooltip]="jobSummaryInfo"
-                      mcsTooltipPosition="right"></mcs-icon>
-                  </ng-container>
-                  <ng-template #detachMedia>
-                    <a (click)="onDetachMedia(media)"
-                      [disabled]="mediaIsDisabled">
-                      {{ textContent.media.detach }}
-                    </a>
-                  </ng-template>
-                </span>
-              </div>
-            </mcs-list-item>
-          </mcs-list>
         </div>
 
         <div class="grid-column">
-          <h3>{{ textContent.supportIdentifiers.title }}</h3>
-          <mcs-list spacing="xsmall">
+          <h3 class="grid-content-header">{{ textContent.supportIdentifiers.title }}</h3>
+          <mcs-list spacing="xsmall" class="grid-content-body">
             <!-- VDC -->
             <mcs-list-item>
               <span>{{ textContent.supportIdentifiers.vdc }}:</span>
@@ -162,7 +173,7 @@
 
     <div *ngIf="isActiveScale" class="server-performance-scale">
       <div class="vertical-items-spacing-medium">
-        <h3>Scaling {{ server.managementName }}</h3>
+        <h3 class="grid-content-header">Scaling {{ server.managementName }}</h3>
         <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
           [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
           [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
@@ -198,7 +209,7 @@
 
     <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
       <div class="vertical-items-spacing-medium" [disabled]="isProcessingJob">
-        <h3>{{ textContent.media.attachHeading }}</h3>
+        <h3 class="grid-content-header">{{ textContent.media.attachHeading }}</h3>
         <mcs-select [(ngModel)]="selectedMedia"
           [placeholder]="textContent.media.mediaSelect.placeholder">
           <mcs-select-group [header]="textContent.media.mediaSelect.header">
