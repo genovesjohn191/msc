@@ -12,8 +12,8 @@
     </div>
 
     <div [hidden]="isUpdate" class="vertical-items-spacing-large grid-column">
-      <div [ngStyle]="{'position': 'relative'}">
-        <div>
+      <div class="position-relative">
+        <div [mcsLoader]="updateNicsSubscription">
           <p *ngIf="!hasNics">{{ textContent.noNics }}</p>
           <table *ngIf="hasNics" class="mcs-simple-table full-width">
             <thead>
@@ -39,7 +39,7 @@
             <tbody>
               <tr *ngFor="let nic of server.nics">
                 <td>
-                  <ng-container *ngIf="!nic.id || activeNicId === nic.id; else nicIndex">
+                  <ng-container *ngIf="nic.isProcessing; else nicIndex">
                     <mcs-icon [key]="spinnerIconKey"
                       size="small" class="hidden-small"
                       [mcsTooltip]="jobSummaryInfo"
@@ -63,13 +63,13 @@
                 </td>
                 <td class="action-items">
                   <span *mcsHasPermission="['VmNetworkEdit']">
-                    <a [disabled]="nicsScaleIsDisabled" (click)="onUpdateNetwork(nic)">
+                    <a [disabled]="nicEditIsDisabled" (click)="onUpdateNetwork(nic)">
                       {{ textContent.editLink }}
                     </a>
                   </span>
                   <span *mcsHasPermission="['VmNetworkEdit']">
                     <a *ngIf="!nic.isPrimary"
-                      [disabled]="nicsScaleIsDisabled"
+                      [disabled]="nicAddOrDeleteIsDisabled"
                       (click)="onDeleteNetwork(nic)">
                       {{ textContent.deleteLink }}
                     </a>
@@ -83,7 +83,7 @@
 
       <div *mcsHasPermission="['VmNetworkEdit']">
         <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
-          class="action-box" [disabled]="nicsScaleIsDisabled">
+          class="action-box" [disabled]="nicAddOrDeleteIsDisabled">
           <h4>{{ textContent.addHeading }}</h4>
 
           <!-- Network Selection -->

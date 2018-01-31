@@ -185,7 +185,7 @@ export abstract class ServerDetailsBase {
       .subscribe((server) => {
         if (!isNullOrEmpty(server) && this.server.id !== server.id) {
           this.server = server;
-          this.serverSelectionChanged();
+          this.serverSelectionChanged.bind(this);
           this._getServerResources();
         }
       });

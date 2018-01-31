@@ -6,7 +6,7 @@
     </div>
 
     <div flex="none" display-flex justify-content="flex-end"
-      [disabled]="disabled || !hasAvailableStorageSpace">
+      [disabled]="!hasAvailableStorageSpace">
       <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
         (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
           {{ textContent.customSwitch }}</a>
@@ -25,7 +25,8 @@
   <div *ngIf="storageProfileList" animate trigger="fadeIn">
     <mcs-form-field>
       <mcs-select [(ngModel)]="storageProfileValue"
-        placeholder="Select storage profile">
+        placeholder="Select storage profile"
+        [disabled]="!hasAvailableStorageSpace">
         <mcs-select-group header="Storage Profiles">
           <mcs-select-item *ngFor="let storageProfile of storageProfileList"
             [value]="storageProfile.value">
@@ -71,7 +72,7 @@
 
     <mcs-slider animate trigger="fadeIn"
       [min]="minimumGB" [max]="maximumGB" [step]="step"
-      [ngModel]="storageValue" [disabled]="disabled"
+      [ngModel]="storageValue" [disabled]="!hasAvailableStorageSpace"
       (ngModelChange)="onStorageChanged($event)"></mcs-slider>
     <span animate trigger="fadeIn" class="storage-label">
       {{ currentMemory }}

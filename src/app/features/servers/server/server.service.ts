@@ -64,7 +64,8 @@ export class ServerService {
   public setPerformanceScale(
     id: any,
     cpuSizeScale: ServerPerformanceScale,
-    serverPowerState: ServerPowerState
+    serverPowerState: ServerPowerState,
+    command: ServerCommand
   ) {
     if (!cpuSizeScale) { return; }
 
@@ -79,6 +80,7 @@ export class ServerService {
           memoryMB: cpuSizeScale.memoryMB,
           cpuCount: cpuSizeScale.cpuCount,
           powerState: serverPowerState,
+          commandAction: command
         }
       } as ServerUpdate
     );

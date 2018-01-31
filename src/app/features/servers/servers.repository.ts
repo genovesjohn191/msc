@@ -2,7 +2,10 @@ import {
   Injectable,
   EventEmitter
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse,
@@ -28,6 +31,10 @@ import {
 @Injectable()
 export class ServersRepository extends McsRepositoryBase<Server> {
 
+  /** Subscriptions */
+  public updateDisksSubscription: Subscription;
+  public updateNicsSubscription: Subscription;
+
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
   private _initial: boolean = true;
@@ -41,26 +48,28 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
   /**
    * This will obtain the server disks values from API
-   * and set those to the specific server on the repository
+   * and update the storage device of the active server
    * @param activeServer Active server to set storage device
    */
-  public setServerDisks(activeServer: Server): void {
-    this._serversApiService.getServerStorage(activeServer.id).subscribe((response) => {
-      activeServer.storageDevice = response.content as ServerStorageDevice[];
-      this.updateRecord(activeServer);
-    });
+  public updateServerDisks(activeServer: Server): void {
+    this.updateDisksSubscription = this._serversApiService.getServerStorage(activeServer.id)
+      .subscribe((response) => {
+        activeServer.storageDevice = response.content as ServerStorageDevice[];
+        this.updateRecord(activeServer);
+      });
   }
 
   /**
    * This will obtain the server nics values from API
-   * and set those to the specific server on the repository
+   * and update the nics of the active server
    * @param activeServer Active server to set storage device
    */
-  public setServerNics(activeServer: Server): void {
-    this._serversApiService.getServerNetworks(activeServer.id).subscribe((response) => {
-      activeServer.nics = response.content as ServerNicSummary[];
-      this.updateRecord(activeServer);
-    });
+  public updateServerNics(activeServer: Server): void {
+    this.updateNicsSubscription = this._serversApiService.getServerNetworks(activeServer.id)
+      .subscribe((response) => {
+        activeServer.nics = response.content as ServerNicSummary[];
+        this.updateRecord(activeServer);
+      });
   }
 
   /**
@@ -149,8 +158,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
         renamedServer.name = job.clientReferenceObject.newName;
       }
+      this.updateRecord(renamedServer);
     }
-    this.updateRecord(renamedServer);
   }
 
   /**
@@ -162,6 +171,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
+
+      if (activeServer.isProcessing) {
+        activeServer.powerState = undefined;
+      }
 
       if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
         activeServer.powerState = activeServer.commandAction === ServerCommand.Stop ?
@@ -276,9 +289,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
           });
         }
       }
-    }
 
-    this.updateRecord(activeServer);
+      this.updateRecord(activeServer);
+    }
   }
 
   /**
@@ -313,11 +326,11 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       }
 
       if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-        this.setServerDisks(activeServer);
+        this.updateServerDisks(activeServer);
       }
-    }
 
-    this.updateRecord(activeServer);
+      this.updateRecord(activeServer);
+    }
   }
 
   /**
@@ -332,20 +345,22 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      let disk = activeServer.storageDevice.find((result) => {
-        return result.id === job.clientReferenceObject.diskId;
-      });
+      if (!isNullOrEmpty(activeServer.storageDevice)) {
+        let disk = activeServer.storageDevice.find((result) => {
+          return result.id === job.clientReferenceObject.diskId;
+        });
 
-      if (!isNullOrEmpty(disk)) {
-        disk.isProcessing = activeServer.isProcessing;
+        if (!isNullOrEmpty(disk)) {
+          disk.isProcessing = activeServer.isProcessing;
 
-        if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-          this.setServerDisks(activeServer);
+          if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+            this.updateServerDisks(activeServer);
+          }
         }
       }
-    }
 
-    this.updateRecord(activeServer);
+      this.updateRecord(activeServer);
+    }
   }
 
   /**
@@ -372,11 +387,11 @@ export class ServersRepository extends McsRepositoryBase<Server> {
             return _first.id === _second.id;
           });
       } else {
-        this.setServerNics(activeServer);
+        this.updateServerNics(activeServer);
       }
-    }
 
-    this.updateRecord(activeServer);
+      this.updateRecord(activeServer);
+    }
   }
 
   /**
@@ -399,12 +414,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         nic.isProcessing = activeServer.isProcessing;
 
         if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-          this.setServerNics(activeServer);
+          this.updateServerNics(activeServer);
         }
       }
-    }
 
-    this.updateRecord(activeServer);
+      this.updateRecord(activeServer);
+    }
   }
 
   /**
