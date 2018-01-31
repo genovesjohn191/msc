@@ -28,7 +28,6 @@ import {
   isFormControlValid,
   isNullOrEmpty,
   coerceNumber,
-  coerceBoolean,
   unsubscribeSafely
 } from '../../../../utilities';
 import {
@@ -84,11 +83,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public get minValueMB(): number { return this._minValueMB; }
   public set minValueMB(value: number) { this._minValueMB = coerceNumber(value); }
   private _minValueMB: number;
-
-  @Input()
-  public get disabled(): boolean { return this._disabled; }
-  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
-  private _disabled: boolean;
 
   /**
    * Input management type if it is Slider or Custom
@@ -169,7 +163,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this.minimumMB = 0;
     this.inputManageType = ServerInputManageType.Slider;
     this.storageChanged = new EventEmitter<ServerManageStorage>();
-    this.disabled = false;
   }
 
   public ngOnInit() {
@@ -189,7 +182,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
-    if (this.disabled) { return; }
+    if (!this.hasAvailableStorageSpace) { return; }
     refreshView(() => {
       this.inputManageType = inputManageType;
       this._notifyStorageChanged();
@@ -256,6 +249,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
     this.onStorageProfileChanged(this.storageProfileValue);
     this.storageValue = this.minimumGB;
+    this.fcServerStorageCustom.setValue(this.minimumGB);
   }
 
   /**
@@ -272,10 +266,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    */
   private _registerFormGroup(): void {
     // Create custom storage control and register the listener
-    this.fcServerStorageCustom = new FormControl(
-      { value: this.minimumGB, disabled: this.disabled },
-      [CoreValidators.required]
-    );
+    this.fcServerStorageCustom = new FormControl('', [CoreValidators.required]);
     this.formControlSubscription = this.fcServerStorageCustom.valueChanges
       .subscribe(this.onCustomStorageChanged.bind(this));
 

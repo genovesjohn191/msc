@@ -71,7 +71,7 @@ describe('ServerManageStorageComponent', () => {
       component.ngOnInit();
       expect(component.storageValue).toBe(0);
       tick(CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-      expect(component.storageChanged.next).toHaveBeenCalledTimes(1);
+      expect(component.storageChanged.next).toHaveBeenCalledTimes(2);
     }));
   });
 

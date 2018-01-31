@@ -29,7 +29,6 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsDeviceType,
-  McsJobType,
   McsDialogService
 } from '../../../../core';
 import {
@@ -76,9 +75,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   private _serverPerformanceScale: ServerPerformanceScale;
   private _deviceType: McsDeviceType;
 
-  private _serverJobType: McsJobType;
-  private _serverJobCommandAction: ServerCommand;
-
   private _isAttachMedia: boolean;
   public get isAttachMedia(): boolean {
     return this._isAttachMedia;
@@ -106,7 +102,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get isScaling(): boolean {
-    return this.isProcessingJob && this._serverJobType === McsJobType.UpdateServerCompute;
+    return this.isProcessingJob && this.server.commandAction === ServerCommand.Scale;
   }
 
   public get serverMemoryMB(): number {
@@ -236,7 +232,7 @@ export class ServerManagementComponent extends ServerDetailsBase
         break;
 
       default:
-        switch (this._serverJobCommandAction) {
+        switch (this.server.commandAction) {
           case ServerCommand.Stop:
             status = this.textContent.status.stopping;
             break;
@@ -296,10 +292,13 @@ export class ServerManagementComponent extends ServerDetailsBase
 
     // Update the Server CPU size scale
     this._scalingSubscription = this._serverService.setPerformanceScale(
-      this.server.id, this._serverPerformanceScale, this.server.powerState)
-      .subscribe(() => {
-        this._routeToServerManagement();
-      });
+      this.server.id,
+      this._serverPerformanceScale,
+      this.server.powerState,
+      ServerCommand.Scale
+    ).subscribe(() => {
+      this._routeToServerManagement();
+    });
   }
 
   public cancelScale(): void {

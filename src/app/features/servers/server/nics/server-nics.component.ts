@@ -52,8 +52,6 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public fcNetwork: FormControl;
 
-  private _notificationsChangeSubscription: Subscription;
-
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
@@ -78,15 +76,8 @@ export class ServerNicsComponent extends ServerDetailsBase
     return !isNullOrEmpty(this.resourceNetworks);
   }
 
-  private _activeNicId: string;
-  public get activeNicId(): string {
-    return this._activeNicId;
-  }
-  public set activeNicId(value: string) {
-    if (this._activeNicId !== value) {
-      this._activeNicId = value;
-      this._changeDetectorRef.markForCheck();
-    }
+  public get updateNicsSubscription(): Subscription {
+    return this._serversRepository.updateNicsSubscription;
   }
 
   private _networkName: string;
@@ -155,10 +146,16 @@ export class ServerNicsComponent extends ServerDetailsBase
     }
   }
 
-  public get nicsScaleIsDisabled(): boolean {
+  public get nicAddOrDeleteIsDisabled(): boolean {
+    return !this.server.isOperable || this.isProcessingJob;
+  }
+
+  public get nicEditIsDisabled(): boolean {
     return !this.server.isOperable || this.isProcessingJob ||
       this.server.serviceType === ServerServiceType.Managed;
   }
+
+  private _notificationsChangeSubscription: Subscription;
 
   constructor(
     _serverService: ServerService,
@@ -325,9 +322,7 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   protected serverSelectionChanged(): void {
-    if (!isNullOrEmpty(this._serversRepository)) {
-      this._serversRepository.setServerNics(this.server);
-    }
+    this._serversRepository.updateServerNics(this.server);
   }
 
   /**
@@ -365,7 +360,6 @@ export class ServerNicsComponent extends ServerDetailsBase
     this.networkGateway = '';
     this.networkNetmask = '';
     this.isPrimary = false;
-    this.activeNicId = '';
   }
 
   /**

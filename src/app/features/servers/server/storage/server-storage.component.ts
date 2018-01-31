@@ -38,7 +38,6 @@ import {
 const STORAGE_SLIDER_STEP_DEFAULT = 25;
 const STORAGE_MAXIMUM_DISKS = 14;
 const STORAGE_MINIMUM_VALUE = 1024;
-const PRIMARY_STORAGE_NAME = 'Hard disk 1';
 
 @Component({
   selector: 'mcs-server-storage',
@@ -57,8 +56,6 @@ export class ServerStorageComponent extends ServerDetailsBase
   public textContent: any;
   public storageChangedValue: ServerManageStorage;
   public selectedStorageDevice: ServerStorageDevice;
-
-  public storageDeviceSubscription: Subscription;
 
   private _notificationsChangeSubscription: Subscription;
   private _createServerDiskSubscription: Subscription;
@@ -112,6 +109,10 @@ export class ServerStorageComponent extends ServerDetailsBase
 
   public get isValidStorageValues(): boolean {
     return this._validateStorageChangedValues();
+  }
+
+  public get updateDisksSubscription(): Subscription {
+    return this._serversRepository.updateDisksSubscription;
   }
 
   private _minimumMB: number;
@@ -234,7 +235,6 @@ export class ServerStorageComponent extends ServerDetailsBase
     this.dispose();
     this._unregisterJobEvents();
     unsubscribeSafely(this._notificationsChangeSubscription);
-    unsubscribeSafely(this.storageDeviceSubscription);
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -262,7 +262,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   }
 
   public deleteStorage(storage: ServerStorageDevice): void {
-    if (this.storageScaleIsDisabled) { return; }
+    if (this.server.isProcessing) { return; }
 
     let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
       data: storage,
@@ -345,7 +345,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * @param storage Disk to be deleted
    */
   public onDeleteStorage(storage: ServerStorageDevice): void {
-    if (this.storageScaleIsDisabled) { return; }
+    if (this.server.isProcessing) { return; }
 
     this.mcsStorage.completed();
 
@@ -371,14 +371,8 @@ export class ServerStorageComponent extends ServerDetailsBase
       this.server.compute && this.server.compute.memoryMB);
   }
 
-  public isPrimaryStorage(storage: ServerStorageDevice): boolean {
-    return storage.name === PRIMARY_STORAGE_NAME;
-  }
-
   protected serverSelectionChanged(): void {
-    if (!isNullOrEmpty(this._serversRepository)) {
-      this._serversRepository.setServerDisks(this.server);
-    }
+    this._serversRepository.updateServerDisks(this.server);
   }
 
   /**

@@ -156,12 +156,12 @@ export class ServerPerformanceScaleComponent implements OnInit {
   }
 
   public onMemoryChanged(inputValue: number) {
-    this.customMemoryGBValue = inputValue;
+    this.customMemoryGBValue = coerceNumber(inputValue);
     this._notifyCpuSizeScale();
   }
 
   public onCpuCountChanged(inputValue: number) {
-    this.customCpuCountValue = inputValue;
+    this.customCpuCountValue = coerceNumber(inputValue);
     this._notifyCpuSizeScale();
   }
 

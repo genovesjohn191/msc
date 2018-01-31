@@ -12,8 +12,8 @@
     </div>
 
     <div *ngIf="!expandStorage" class="vertical-items-spacing-large grid-column">
-      <div>
-        <div [mcsLoader]="storageDeviceSubscription">
+      <div class="position-relative">
+        <div [mcsLoader]="updateDisksSubscription">
           <p *ngIf="!hasStorageDevice">{{ textContent.noDisks }}</p>
           <table *ngIf="hasStorageDevice" class="mcs-simple-table full-width">
             <thead>
@@ -33,7 +33,7 @@
             <tbody>
               <tr *ngFor="let storage of server.storageDevice">
                 <td class="squishy-cell">
-                  <ng-container *ngIf="activeStorageId === storage.id; else defaultStorageIcon">
+                  <ng-container *ngIf="storage.isProcessing; else defaultStorageIcon">
                     <mcs-icon class="inline-block" [key]="spinnerIconKey" size="small"
                       [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
                   </ng-container>
@@ -49,14 +49,14 @@
                   {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
                 </td>
                 <td class="action-items">
-                  <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="expand text-right">
+                  <span *mcsHasPermission="['VmEdit']" class="expand text-right">
                     <a [disabled]="storageScaleIsDisabled" (click)="onExpandStorage(storage)">
                       {{ textContent.expandStorageLink }}
                     </a>
                   </span>
-                  <span *mcsHasPermission="['VmEdit']" [hidden]="isProcessing" class="delete text-right">
+                  <span *mcsHasPermission="['VmEdit']" class="delete text-right">
                     <a *ngIf="hasMultipleStorageDevice"
-                      [disabled]="storageScaleIsDisabled"
+                      [disabled]="server.isProcessing"
                       (click)="deleteStorage(storage)">
                       {{ textContent.deleteStorageLink }}
                     </a>
@@ -73,7 +73,7 @@
           <mcs-server-manage-storage *ngIf="hasStorageProfileList" #mcsStorage
             [storageProfileList]="storageProfileList" [minValueMB]="storageMinValueMB"
             [minimumMB]="0" [maximumMB]="maximumMB" [step]="sliderStep"
-            (storageChanged)="onStorageChanged($event)" [disabled]="storageScaleIsDisabled">
+            (storageChanged)="onStorageChanged($event)" [disabled]="server.isProcessing">
             <!--Server manage storage contents on the left hand side (description)-->
             <div title>
               <h4>{{ textContent.addStorageHeading }}</h4>
