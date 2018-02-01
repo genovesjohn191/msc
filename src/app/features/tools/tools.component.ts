@@ -26,10 +26,20 @@ export class ToolsComponent implements OnInit {
   ) {
     this.textContent = this._textContentProvider.content.tools;
     this._initializeToolDescriptionMap();
-    this.dataColumns = ['name','resourceSpecific', 'portalAccess'];
+    this.dataColumns = ['name', 'resourceSpecific', 'portalAccess'];
   }
 
   public ngOnInit(): void {
+    this._initiliazeDatasource();
+  }
+
+  /**
+   * Retry obtaining datasource from tools
+   */
+  public retryDatasource(): void {
+    // We need to initialize again the datasource in order for the
+    // observable merge work as expected, since it is closing the
+    // subscription when error occured.
     this._initiliazeDatasource();
   }
 

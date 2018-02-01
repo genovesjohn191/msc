@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
   ChangeDetectionStrategy
@@ -13,8 +12,6 @@ import { NotificationsDataSource } from './notifications.datasource';
 import {
   McsTextContentProvider,
   CoreDefinition,
-  McsSearch,
-  McsPaginator,
   McsBrowserService,
   McsTableListingBase
 } from '../../core';
@@ -37,12 +34,6 @@ export class NotificationsComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  @ViewChild('search')
-  public search: McsSearch;
-
-  @ViewChild('paginator')
-  public paginator: McsPaginator;
 
   // Subscription
   private _notificationsSubscription: any;
@@ -101,6 +92,16 @@ export class NotificationsComponent
    */
   public getStatusIconColor(status: string): string {
     return this._getStatusIcon(status).color;
+  }
+
+  /**
+   * Retry obtaining datasource from notifications
+   */
+  public retryDatasource(): void {
+    // We need to initialize again the datasource in order for the
+    // observable merge work as expected, since it is closing the
+    // subscription when error occured.
+    this.initializeDatasource();
   }
 
   /**

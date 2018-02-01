@@ -24,6 +24,9 @@ $table-data-hover-background-color: $color-grey-07;
 $table-cell-divider-color: $color-white;
 $table-cell-divider-opacity: 0.70;
 
+// Table information
+$table-information-border-color: $color-grey-05;
+
 %cell-style {
   display: table-cell;
   border-right: 1px solid rgba($table-cell-divider-color, $table-cell-divider-opacity);
@@ -35,7 +38,6 @@ $table-cell-divider-opacity: 0.70;
 // Host Component Element
 mcs-table {
   display: block;
-  @include set-items-interval($space-large);
 }
 
 .mcs-table-wrapper {
@@ -88,13 +90,21 @@ mcs-table {
 }
 
 .mcs-table-footer-wrapper {
-
   mcs-data-empty,
   mcs-data-error,
   .mcs-data-loading, {
+    margin-top: $space-large;
     @include display-flex(row);
-    align-items: center;
+    @include align-items(center);
     justify-content: center;
     min-height: $space-xlarge;
+  }
+
+  mcs-data-empty,
+  mcs-data-error {
+    margin-top: 0;
+    padding-top: $space-medium;
+    padding-bottom: $space-medium;
+    border: 1px solid $table-information-border-color;
   }
 }

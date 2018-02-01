@@ -1,4 +1,7 @@
-import { ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ViewChild
+} from '@angular/core';
 import {
   McsBrowserService,
   McsDeviceType
@@ -8,8 +11,16 @@ import {
   convertDateToStandardString,
   unsubscribeSafely
 } from '../../utilities';
+import { McsSearch } from '../interfaces/mcs-search.interface';
+import { McsPaginator } from '../interfaces/mcs-paginator.interface';
 
 export abstract class McsTableListingBase<T> {
+
+  @ViewChild('search')
+  public search: McsSearch;
+
+  @ViewChild('paginator')
+  public paginator: McsPaginator;
 
   // Subscription
   public browserServiceSubscription: any;
@@ -99,6 +110,14 @@ export abstract class McsTableListingBase<T> {
       this.dataColumns = null;
     }
     unsubscribeSafely(this.browserServiceSubscription);
+  }
+
+  /**
+   * Returns true when search box is currently processing
+   */
+  protected get isSearching(): boolean {
+    return isNullOrEmpty(this.search) ? false :
+      this.search.keyword.length > 0;
   }
 
   /**

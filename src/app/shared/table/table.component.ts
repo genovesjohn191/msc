@@ -210,7 +210,12 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     if (newDatasource) {
       this.dataSource.disconnect();
     }
+
+    // We need to set the subscription into null in order
+    // for the datasource to be renewed based on new data settings
     unsubscribeSafely(this._dataSourceSubscription);
+    this._dataSourceSubscription = null;
+
     if (!newDatasource) {
       this._dataPlaceholder.viewContainer.clear();
     }

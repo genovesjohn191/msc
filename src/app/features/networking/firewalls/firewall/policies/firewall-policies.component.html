@@ -182,6 +182,7 @@
 
     <!-- Paginator -->
     <mcs-paginator #paginator
+      [hidden]="isSearching"
       [totalCount]="totalRecordCount"
       [pageIndex]="0"
       [pageSize]="10">

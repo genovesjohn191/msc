@@ -146,6 +146,10 @@ html {
       }
     }
 
+    p {
+      margin-bottom: $space-medium;
+    }
+
     input::-ms-clear{
       display: none;
     }

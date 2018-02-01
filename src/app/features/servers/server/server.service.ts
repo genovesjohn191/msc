@@ -34,11 +34,8 @@ export class ServerService {
    */
   public selectedServerStream: BehaviorSubject<Server>;
 
-  public selectedServer: Server;
-
   constructor(private _serversService: ServersService) {
     this.selectedServerStream = new BehaviorSubject<Server>(undefined);
-    this.selectedServer = new Server();
   }
 
   /**
@@ -229,7 +226,6 @@ export class ServerService {
    * @param server Server to be selected
    */
   public setSelectedServer(server: Server): void {
-    this.selectedServer = server;
     this.selectedServerStream.next(server);
   }
 

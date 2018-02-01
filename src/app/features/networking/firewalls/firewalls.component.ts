@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
   ChangeDetectionStrategy
@@ -16,8 +15,6 @@ import { FirewallConnectionStatus } from './models';
 import {
   McsTextContentProvider,
   CoreDefinition,
-  McsSearch,
-  McsPaginator,
   McsBrowserService,
   McsTableListingBase
 } from '../../../core';
@@ -39,12 +36,6 @@ export class FirewallsComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  @ViewChild('search')
-  public search: McsSearch;
-
-  @ViewChild('paginator')
-  public paginator: McsPaginator;
 
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
@@ -99,10 +90,12 @@ export class FirewallsComponent
   }
 
   /**
-   * Retry to obtain the source from API
+   * Retry obtaining datasource from firewalls
    */
   public retryDatasource(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
+    // We need to initialize again the datasource in order for the
+    // observable merge work as expected, since it is closing the
+    // subscription when error occured.
     this.initializeDatasource();
   }
 
