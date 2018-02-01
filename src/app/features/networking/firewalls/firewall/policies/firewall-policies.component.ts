@@ -3,15 +3,12 @@ import {
   OnInit,
   AfterViewInit,
   OnDestroy,
-  ViewChild,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsPaginator,
-  McsSearch,
   McsBrowserService,
   McsTableListingBase
 } from '../../../../../core';
@@ -40,12 +37,6 @@ const FIREWALL_POLICY_SEQUENCE_PLACEHOLDER = 'sequence';
 export class FirewallPoliciesComponent
   extends McsTableListingBase<FirewallPoliciesDataSource>
   implements OnInit, AfterViewInit, OnDestroy {
-
-  @ViewChild('search')
-  public search: McsSearch;
-
-  @ViewChild('paginator')
-  public paginator: McsPaginator;
 
   public firewallPoliciesTextContent: any;
   public firewallPolicyTextContent: any;
@@ -196,10 +187,12 @@ export class FirewallPoliciesComponent
   }
 
   /**
-   * Retry to obtain the source from API
+   * Retry obtaining datasource from firewall policies
    */
   public retryDatasource(): void {
-    if (isNullOrEmpty(this.dataSource)) { return; }
+    // We need to initialize again the datasource in order for the
+    // observable merge work as expected, since it is closing the
+    // subscription when error occured.
     this.initializeDatasource();
   }
 

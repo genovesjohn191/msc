@@ -190,7 +190,13 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
     }
 
     // Show to hide the target element based on flag
-    hide ? this._renderer.addClass(targetElement, 'hide-element') :
+    let parentElement = targetElement.parentElement || targetElement;
+    if (hide) {
+      this._renderer.addClass(targetElement, 'hide-element');
+      this._renderer.addClass(parentElement, 'position-relative');
+    } else {
       this._renderer.removeClass(targetElement, 'hide-element');
+      this._renderer.removeClass(parentElement, 'position-relative');
+    }
   }
 }

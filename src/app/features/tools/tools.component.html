@@ -1,10 +1,10 @@
 <mcs-page [header]="textContent.header">
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="listing-table-wrapper limited-view">
-      <!-- Description -->
-      <p>{{ textContent.description }}</p>
+    <!-- Description -->
+    <p>{{ textContent.description }}</p>
 
+    <div class="listing-table-wrapper limited-view">
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
         <!-- Service Column -->

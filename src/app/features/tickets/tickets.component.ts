@@ -2,15 +2,12 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
 /** Services */
 import {
-  McsPaginator,
-  McsSearch,
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
@@ -41,12 +38,6 @@ export class TicketsComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  @ViewChild('search')
-  public search: McsSearch;
-
-  @ViewChild('paginator')
-  public paginator: McsPaginator;
 
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
@@ -105,6 +96,16 @@ export class TicketsComponent
    */
   public getStatusString(status: TicketStatus) {
     return getEnumString(TicketStatus, status);
+  }
+
+  /**
+   * Retry obtaining datasource from tickets
+   */
+  public retryDatasource(): void {
+    // We need to initialize again the datasource in order for the
+    // observable merge work as expected, since it is closing the
+    // subscription when error occured.
+    this.initializeDatasource();
   }
 
   /**

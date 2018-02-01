@@ -47,7 +47,9 @@ export class LoaderService {
 
     // Add subscribers to all subscriptions
     this._subscriptions.forEach((item) => {
-      item.add(() => this._onCompletion(item));
+      if (item instanceof Subscription) {
+        item.add(() => this._onCompletion(item));
+      }
     });
   }
 

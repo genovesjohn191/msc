@@ -36,7 +36,7 @@ $action-cell-width: 55px;
 .listing-action-wrapper {
   @include flex(1 1 auto);
   @include display-flex(row);
-  align-items: center;
+  @include align-items(center);
 
   .total-record-count {
     margin-right: $space-large;
@@ -45,5 +45,6 @@ $action-cell-width: 55px;
 
 .listing-status-wrapper {
   @include display-flex(row);
-  @include set-items-interval($space-small, horizontal);
+  @include align-items(center);
+  @include set-items-interval($space-xsmall, horizontal);
 }

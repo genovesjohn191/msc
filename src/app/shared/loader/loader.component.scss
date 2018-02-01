@@ -21,21 +21,21 @@ $loader-offset: 100px;
 
   &.top-orientation {
     @include align-items(flex-start);
-    margin-top: $loader-offset;
+    padding-top: $loader-offset;
   }
 
   &.left-orientation {
     justify-content: flex-start;
-    margin-left: $loader-offset;
+    padding-left: $loader-offset;
   }
 
   &.right-orientation {
     justify-content: flex-end;
-    margin-right: $loader-offset;
+    padding-right: $loader-offset;
   }
 
   &.bottom-orientation {
     @include align-items(flex-end);
-    margin-bottom: $loader-offset;
+    padding-bottom: $loader-offset;
   }
 }

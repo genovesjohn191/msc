@@ -43,10 +43,6 @@ import { ListPanelService } from './list-panel.service';
 import { ListItemsStatusDefDirective } from './list-items-status';
 
 const NO_GROUP_ITEMS = 'no_group_items';
-// type ListPanelGroupItem = {
-//   groupName: string;
-//   data: any;
-// };
 
 @Component({
   selector: 'mcs-list-panel',
@@ -192,7 +188,11 @@ export class ListPanelComponent<T> implements OnInit,
     if (newListsource) {
       this.listSource.disconnect();
     }
+
+    // We need to set the subscription into null in order
+    // for the datasource to be renewed based on new data settings
     unsubscribeSafely(this._listSourceSubscription);
+    this._listSourceSubscription = null;
 
     if (!newListsource) {
       this._listItemsPlaceholder.viewContainer.clear();

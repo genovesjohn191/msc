@@ -45,7 +45,7 @@
           <h3 class="grid-content-header">{{ textContent.vmConsole.title }}</h3>
           <div display-flex="column" align-items="flex-start"
             (click)="onClickViewConsole()" [disabled]="!consoleEnabled">
-            <div class="thumbnail-container">
+            <div class="thumbnail-container" cursor="pointer">
               <img #thumbnailElement class="thumbnail"/>
             </div>
             <a>{{ textContent.vmConsole.link }}</a>

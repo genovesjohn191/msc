@@ -4,9 +4,6 @@ $server-thumbnail-height: 96px;
 $server-thumbnail-width: 128px;
 $server-thumbnail-bg-color: $color-black;
 $server-text-color: $color-black;
-$server-vm-console-enabled-color: $server-text-color;
-$server-vm-console-disabled-color: $color-grey-02;
-
 
 .thumbnail-container {
   min-height: $server-thumbnail-height;

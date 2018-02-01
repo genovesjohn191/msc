@@ -28,10 +28,10 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="listing-table-wrapper">
-      <!-- Description -->
-      <p>{{ textContent.description }}</p>
+    <!-- Description -->
+    <p>{{ textContent.description }}</p>
 
+    <div class="listing-table-wrapper">
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search></mcs-search>
 
@@ -105,6 +105,7 @@
 
       <!-- Paginator -->
       <mcs-paginator #paginator
+        [hidden]="isSearching"
         [totalCount]="totalRecordCount"
         [pageIndex]="0"
         [pageSize]="25">

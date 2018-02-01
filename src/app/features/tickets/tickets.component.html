@@ -6,7 +6,7 @@
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
         <mcs-action-item
-          (click)="onClickNewTicket($event)">
+          (click)="onClickNewTicket()">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
           <span>{{ textContent.newTicket }}</span>
         </mcs-action-item>
@@ -34,10 +34,10 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="listing-table-wrapper">
-      <!-- Description -->
-      <p>{{ textContent.description }}</p>
+    <!-- Description -->
+    <p>{{ textContent.description }}</p>
 
+    <div class="listing-table-wrapper">
       <!-- Search -->
       <mcs-search *ngIf="isMobile" #search></mcs-search>
 
@@ -106,7 +106,14 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.noRecordsFoundMessage }}</span>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.noRecordsFoundMessage }} </span>
+              <span>
+                <!-- We need to hardcode this instead of putting in the text-config
+                    since it is using link -->
+                Click <a (click)="onClickNewTicket()">here</a> to create new ticket.
+              </span>
+            </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
@@ -123,6 +130,7 @@
 
       <!-- Paginator -->
       <mcs-paginator #paginator
+        [hidden]="isSearching"
         [totalCount]="totalRecordCount"
         [pageIndex]="0"
         [pageSize]="25">

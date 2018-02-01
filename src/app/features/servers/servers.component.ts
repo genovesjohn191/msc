@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
   ChangeDetectionStrategy
@@ -28,8 +27,6 @@ import {
 import {
   McsTextContentProvider,
   CoreDefinition,
-  McsSearch,
-  McsPaginator,
   McsBrowserService,
   McsDeviceType,
   McsSelection,
@@ -56,12 +53,6 @@ export class ServersComponent
   public textContent: any;
   public enumDefinition: any;
   public selection: McsSelection<Server>;
-
-  @ViewChild('search')
-  public search: McsSearch;
-
-  @ViewChild('paginator')
-  public paginator: McsPaginator;
 
   // Subscription
   private _selectionModeSubscription: any;
@@ -378,6 +369,16 @@ export class ServersComponent
     // Do not navigate to server details when server is deleting
     if (isNullOrEmpty(server) || this.serverDeleting(server)) { return; }
     this._router.navigate(['/servers/', server.id]);
+  }
+
+  /**
+   * Retry obtaining datasource from server
+   */
+  public retryDatasource(): void {
+    // We need to initialize again the datasource in order for the
+    // observable merge work as expected, since it is closing the
+    // subscription when error occured.
+    this.initializeDatasource();
   }
 
   /**
