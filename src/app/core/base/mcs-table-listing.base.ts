@@ -53,6 +53,14 @@ export abstract class McsTableListingBase<T> {
   }
 
   /**
+   * Returns true when search box is currently processing
+   */
+  public get isSearching(): boolean {
+    return isNullOrEmpty(this.search) ? false :
+      this.search.keyword.length > 0;
+  }
+
+  /**
    * This will initialize the datasource from the derived class
    *
    * `@Note` This should be called inside AfterViewInit to make sure the
@@ -110,14 +118,6 @@ export abstract class McsTableListingBase<T> {
       this.dataColumns = null;
     }
     unsubscribeSafely(this.browserServiceSubscription);
-  }
-
-  /**
-   * Returns true when search box is currently processing
-   */
-  protected get isSearching(): boolean {
-    return isNullOrEmpty(this.search) ? false :
-      this.search.keyword.length > 0;
   }
 
   /**
