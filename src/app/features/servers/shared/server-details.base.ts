@@ -17,7 +17,6 @@ import {
 export abstract class ServerDetailsBase {
   // Subscriptions
   public serverResourceSubscription: Subscription;
-  private _notificationsSubscription: Subscription;
   private _serverSubscription: Subscription;
 
   /**
@@ -143,7 +142,6 @@ export abstract class ServerDetailsBase {
   protected dispose(): void {
     unsubscribeSafely(this.serverResourceSubscription);
     unsubscribeSafely(this._serverSubscription);
-    unsubscribeSafely(this._notificationsSubscription);
   }
 
   /**

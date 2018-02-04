@@ -219,38 +219,6 @@ export class ServerManagementComponent extends ServerDetailsBase
     }
   }
 
-  public get serverStatusLabel(): string {
-    let status: string = this.textContent.status.running;
-
-    switch (this.server.powerState) {
-      case ServerPowerState.PoweredOn:
-        status = this.textContent.status.running;
-        break;
-
-      case ServerPowerState.PoweredOff:
-        status = this.textContent.status.stopped;
-        break;
-
-      default:
-        switch (this.server.commandAction) {
-          case ServerCommand.Stop:
-            status = this.textContent.status.stopping;
-            break;
-
-          case ServerCommand.Restart:
-            status = this.textContent.status.restarting;
-            break;
-
-          default:
-            // Do nothing
-            break;
-        }
-        break;
-    }
-
-    return status;
-  }
-
   public mergeIpAddresses(ipAddresses: string[]): string {
     if (!ipAddresses || ipAddresses.length === 0) { return ''; }
 

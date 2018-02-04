@@ -57,6 +57,8 @@ export class ServerStorageComponent extends ServerDetailsBase
   public storageChangedValue: ServerManageStorage;
   public selectedStorageDevice: ServerStorageDevice;
 
+  // Subscriptions
+  public updateDisksSubscription: Subscription;
   private _notificationsChangeSubscription: Subscription;
   private _createServerDiskSubscription: Subscription;
   private _updateServerDiskSubscription: Subscription;
@@ -109,10 +111,6 @@ export class ServerStorageComponent extends ServerDetailsBase
 
   public get isValidStorageValues(): boolean {
     return this._validateStorageChangedValues();
-  }
-
-  public get updateDisksSubscription(): Subscription {
-    return this._serversRepository.updateDisksSubscription;
   }
 
   private _minimumMB: number;
@@ -228,13 +226,11 @@ export class ServerStorageComponent extends ServerDetailsBase
     // OnInit
     this.textContent = this._textProvider.content.servers.server.storage;
     this._registerJobEvents();
-    this._listenToNotificationsChange();
   }
 
   public ngOnDestroy() {
     this.dispose();
     this._unregisterJobEvents();
-    unsubscribeSafely(this._notificationsChangeSubscription);
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -372,7 +368,10 @@ export class ServerStorageComponent extends ServerDetailsBase
   }
 
   protected serverSelectionChanged(): void {
-    this._serversRepository.updateServerDisks(this.server);
+    this.updateDisksSubscription = this._serversRepository.findServerDisks(this.server)
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /**
@@ -418,6 +417,8 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
+    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+      .subscribe(() => { this._changeDetectorRef.markForCheck(); });
     this._createServerDiskSubscription = this._notificationEvents.createServerDisk
       .subscribe(this._onCreateServerDisk.bind(this));
     this._updateServerDiskSubscription = this._notificationEvents.updateServerDisk
@@ -430,6 +431,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Unregister jobs/notifications events
    */
   private _unregisterJobEvents(): void {
+    unsubscribeSafely(this._notificationsChangeSubscription);
     unsubscribeSafely(this._createServerDiskSubscription);
     unsubscribeSafely(this._updateServerDiskSubscription);
     unsubscribeSafely(this._deleteServerDiskSubscription);
@@ -448,6 +450,9 @@ export class ServerStorageComponent extends ServerDetailsBase
       if (!isNullOrEmpty(resourceStorage)) {
         resourceStorage.usedMB += job.clientReferenceObject.sizeMB;
       }
+
+      // Update server disks
+      this.serverSelectionChanged();
     }
   }
 
@@ -464,6 +469,9 @@ export class ServerStorageComponent extends ServerDetailsBase
       if (!isNullOrEmpty(resourceStorage)) {
         resourceStorage.usedMB -= job.clientReferenceObject.sizeMB;
       }
+
+      // Update server disks
+      this.serverSelectionChanged();
     }
   }
 
@@ -474,15 +482,5 @@ export class ServerStorageComponent extends ServerDetailsBase
     storage.storageMB = 0;
     storage.valid = false;
     this.onStorageChanged(storage);
-  }
-
-  /**
-   * Listen to notifications changes
-   */
-  private _listenToNotificationsChange(): void {
-    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
   }
 }

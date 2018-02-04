@@ -196,8 +196,9 @@ export class ServersComponent
   public get startable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      return server.powerState !== ServerPowerState.PoweredOff &&
-        server.isProcessing === false;
+      return !server.isOperable
+        || server.powerState !== ServerPowerState.PoweredOff
+        || server.isProcessing;
     }).length === 0;
   }
 
@@ -209,8 +210,9 @@ export class ServersComponent
   public get stoppable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      return server.powerState !== ServerPowerState.PoweredOn &&
-        server.isProcessing === false;
+      return !server.isOperable
+        || server.powerState !== ServerPowerState.PoweredOn
+        || server.isProcessing;
     }).length === 0;
   }
 
@@ -231,8 +233,7 @@ export class ServersComponent
   public get deletable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      return server.serviceType === ServerServiceType.Managed &&
-        server.isProcessing === false;
+      return server.serviceType === ServerServiceType.Managed || server.isProcessing;
     }).length === 0;
   }
 

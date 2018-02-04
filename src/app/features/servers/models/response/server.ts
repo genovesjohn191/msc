@@ -44,4 +44,5 @@ export class Server {
   public isProcessing: boolean;
   public commandAction: ServerCommand;
   public processingText: string;
+  public statusLabel: string;
 }

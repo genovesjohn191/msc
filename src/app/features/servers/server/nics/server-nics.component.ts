@@ -19,6 +19,8 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsDialogService,
+  McsApiJob,
+  McsNotificationEventsService
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
@@ -52,6 +54,13 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public fcNetwork: FormControl;
 
+  // Subscriptions
+  public updateNicsSubscription: Subscription;
+  private _notificationsChangeSubscription: Subscription;
+  private _createServerNicSubscription: Subscription;
+  private _updateServerNicSubscription: Subscription;
+  private _deleteServerNicSubscription: Subscription;
+
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
@@ -74,10 +83,6 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public get hasAvailableResourceNetwork(): boolean {
     return !isNullOrEmpty(this.resourceNetworks);
-  }
-
-  public get updateNicsSubscription(): Subscription {
-    return this._serversRepository.updateNicsSubscription;
   }
 
   private _networkName: string;
@@ -155,14 +160,13 @@ export class ServerNicsComponent extends ServerDetailsBase
       this.server.serviceType === ServerServiceType.Managed;
   }
 
-  private _notificationsChangeSubscription: Subscription;
-
   constructor(
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _dialogService: McsDialogService,
-    private _serversRepository: ServersRepository
+    private _serversRepository: ServersRepository,
+    private _notificationEvents: McsNotificationEventsService
   ) {
     // Constructor
     super(
@@ -179,12 +183,12 @@ export class ServerNicsComponent extends ServerDetailsBase
     // OnInit
     this.textContent = this._textProvider.content.servers.server.nics;
     this._registerFormGroup();
-    this._listenToNotificationsChange();
+    this._registerJobEvents();
   }
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSafely(this._notificationsChangeSubscription);
+    this._unregisterJobEvents();
   }
 
   public onIpAddressChanged(ipAddress: ServerIpAddress): void {
@@ -322,7 +326,10 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   protected serverSelectionChanged(): void {
-    this._serversRepository.updateServerNics(this.server);
+    this.updateNicsSubscription = this._serversRepository.findServerNics(this.server)
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /**
@@ -363,12 +370,52 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   /**
-   * Listen to notifications changes
+   * Register jobs/notifications events
    */
-  private _listenToNotificationsChange(): void {
+  private _registerJobEvents(): void {
     this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
+      .subscribe(() => { this._changeDetectorRef.markForCheck(); });
+    this._createServerNicSubscription = this._notificationEvents.createServerNetwork
+      .subscribe(this._onCreateServerNetwork.bind(this));
+    this._updateServerNicSubscription = this._notificationEvents.updateServerNetwork
+      .subscribe(this._onModifyServerNetwork.bind(this));
+    this._deleteServerNicSubscription = this._notificationEvents.deleteServerNetwork
+      .subscribe(this._onModifyServerNetwork.bind(this));
+  }
+
+  /**
+   * Unregister jobs/notifications events
+   */
+  private _unregisterJobEvents(): void {
+    unsubscribeSafely(this._notificationsChangeSubscription);
+    unsubscribeSafely(this._createServerNicSubscription);
+    unsubscribeSafely(this._updateServerNicSubscription);
+    unsubscribeSafely(this._deleteServerNicSubscription);
+  }
+
+  /**
+   * Event that emits when adding a server nic
+   * @param job Emitted job content
+   */
+  private _onCreateServerNetwork(job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+
+    if (!this.server.isProcessing) {
+      // Update the server nics
+      this.serverSelectionChanged();
+    }
+  }
+
+  /**
+   * Event that emits when either updating or deleting a server nic
+   * @param job Emitted job content
+   */
+  private _onModifyServerNetwork(job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+
+    if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+      // Update the server nics
+      this.serverSelectionChanged();
+    }
   }
 }
