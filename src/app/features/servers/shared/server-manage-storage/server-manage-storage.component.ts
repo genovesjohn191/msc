@@ -147,7 +147,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get hasAvailableStorageSpace(): boolean {
-    return (this.maximumMB - this.minimumMB) > 0;
+    return (this.maximumGB - this.minimumGB) > 0;
   }
 
   public get minValueGB(): number {

@@ -2,16 +2,14 @@ import {
   Injectable,
   EventEmitter
 } from '@angular/core';
-import {
-  Observable,
-  Subscription
-} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse,
   McsNotificationEventsService,
   McsApiJob,
-  CoreDefinition
+  CoreDefinition,
+  McsTextContentProvider
 } from '../../core';
 import { ServersService } from './servers.service';
 import {
@@ -25,25 +23,26 @@ import {
 import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
-  deleteArrayRecord
+  deleteArrayRecord,
+  getEnumString
 } from 'app/utilities';
 
 @Injectable()
 export class ServersRepository extends McsRepositoryBase<Server> {
 
-  /** Subscriptions */
-  public updateDisksSubscription: Subscription;
-  public updateNicsSubscription: Subscription;
-
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
   private _initial: boolean = true;
 
+  private _serverStatusMap = new Map<string, string>();
+
   constructor(
     private _serversApiService: ServersService,
-    private _notificationEvents: McsNotificationEventsService
+    private _notificationEvents: McsNotificationEventsService,
+    private _textProvider: McsTextContentProvider
   ) {
     super();
+    this._setServerStatusMap();
   }
 
   /**
@@ -51,11 +50,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * and update the storage device of the active server
    * @param activeServer Active server to set storage device
    */
-  public updateServerDisks(activeServer: Server): void {
-    this.updateDisksSubscription = this._serversApiService.getServerStorage(activeServer.id)
-      .subscribe((response) => {
-        activeServer.storageDevice = response.content as ServerStorageDevice[];
+  public findServerDisks(activeServer: Server): Observable<ServerStorageDevice[]> {
+    return this._serversApiService.getServerStorage(activeServer.id)
+      .map((response) => {
+        activeServer.storageDevice = response.content;
         this.updateRecord(activeServer);
+        return response.content;
       });
   }
 
@@ -64,11 +64,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * and update the nics of the active server
    * @param activeServer Active server to set storage device
    */
-  public updateServerNics(activeServer: Server): void {
-    this.updateNicsSubscription = this._serversApiService.getServerNetworks(activeServer.id)
-      .subscribe((response) => {
-        activeServer.nics = response.content as ServerNicSummary[];
+  public findServerNics(activeServer: Server): Observable<ServerNicSummary[]> {
+    return this._serversApiService.getServerNetworks(activeServer.id)
+      .map((response) => {
+        activeServer.nics = response.content;
         this.updateRecord(activeServer);
+        return response.content;
       });
   }
 
@@ -95,7 +96,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Server>> {
-    return this._serversApiService.getServer(recordId);
+    return this._serversApiService.getServer(recordId).map((response) => {
+      this._updateServerStatusLabel(response.content);
+      return response;
+    });
   }
 
   /**
@@ -172,16 +176,11 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      if (activeServer.isProcessing) {
-        activeServer.powerState = undefined;
+      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+        this._updateServerPowerState(activeServer);
       }
 
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-        activeServer.powerState = activeServer.commandAction === ServerCommand.Stop ?
-          ServerPowerState.PoweredOff : activeServer.commandAction === ServerCommand.Start ||
-            activeServer.commandAction === ServerCommand.Restart ?
-            ServerPowerState.PoweredOn : activeServer.powerState;
-      }
+      this._updateServerStatusLabel(activeServer);
       this.updateRecord(activeServer);
     }
   }
@@ -325,10 +324,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         }, 1);
       }
 
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-        this.updateServerDisks(activeServer);
-      }
-
       this.updateRecord(activeServer);
     }
   }
@@ -352,10 +347,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
         if (!isNullOrEmpty(disk)) {
           disk.isProcessing = activeServer.isProcessing;
-
-          if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-            this.updateServerDisks(activeServer);
-          }
         }
       }
 
@@ -386,8 +377,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
           (_first: any, _second: any) => {
             return _first.id === _second.id;
           });
-      } else {
-        this.updateServerNics(activeServer);
       }
 
       this.updateRecord(activeServer);
@@ -412,10 +401,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
       if (!isNullOrEmpty(nic)) {
         nic.isProcessing = activeServer.isProcessing;
-
-        if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-          this.updateServerNics(activeServer);
-        }
       }
 
       this.updateRecord(activeServer);
@@ -440,6 +425,75 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       || !!(job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
     activeServer.commandAction = job.clientReferenceObject.commandAction;
     activeServer.processingText = job.summaryInformation;
+  }
+
+  /**
+   * This will update the status label of the active server
+   * @param activeServer Active server to update status label
+   */
+  private _updateServerStatusLabel(activeServer: Server): void {
+    if (isNullOrEmpty(this._serverStatusMap.size)) { return; }
+
+    // Status key to find in the mapping
+    let statusKey = activeServer.isProcessing ?
+      getEnumString(ServerCommand, activeServer.commandAction) :
+      getEnumString(ServerPowerState, activeServer.powerState) ;
+
+    activeServer.statusLabel = this._serverStatusMap.has(statusKey) ?
+      this._serverStatusMap.get(statusKey) : '' ;
+  }
+
+  /**
+   * This will populate the values for serverStatusMap
+   * @param activeServer Active server
+   */
+  private _setServerStatusMap(): void {
+    let textContent = this._textProvider.content.servers.server.management.status;
+
+    this._serverStatusMap.set(
+      getEnumString(ServerPowerState, ServerPowerState.PoweredOn),
+      textContent.running
+    );
+    this._serverStatusMap.set(
+      getEnumString(ServerPowerState, ServerPowerState.PoweredOff),
+      textContent.stopped
+    );
+    this._serverStatusMap.set(
+      getEnumString(ServerCommand, ServerCommand.Start),
+      textContent.starting
+    );
+    this._serverStatusMap.set(
+      getEnumString(ServerCommand, ServerCommand.Stop),
+      textContent.stopping
+    );
+    this._serverStatusMap.set(
+      getEnumString(ServerCommand, ServerCommand.Restart),
+      textContent.restarting
+    );
+  }
+
+  /**
+   * This will update the server power state
+   * based on the command action
+   * @param activeServer Active server
+   */
+  private _updateServerPowerState(activeServer: Server): void {
+    if (isNullOrEmpty(activeServer)) { return; }
+
+    switch (activeServer.commandAction) {
+      case ServerCommand.Start:
+      case ServerCommand.Restart:
+        activeServer.powerState = ServerPowerState.PoweredOn;
+        break;
+
+      case ServerCommand.Stop:
+        activeServer.powerState = ServerPowerState.PoweredOff;
+        break;
+
+      default:
+        // Do nothing
+        break;
+    }
   }
 
   /**

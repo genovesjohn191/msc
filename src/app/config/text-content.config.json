@@ -215,6 +215,7 @@
           "scaling": "Scaling in Progress"
         },
         "status": {
+          "starting": "Starting",
           "running": "Running",
           "restarting": "Restarting",
           "stopping": "Stopping",
