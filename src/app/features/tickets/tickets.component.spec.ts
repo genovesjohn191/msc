@@ -113,7 +113,8 @@ describe('TicketsComponent', () => {
         showLoading: () => {
           // Dummy content
         },
-        searchChangedStream: new EventEmitter()
+        searchChangedStream: new EventEmitter(),
+        searching: false
       } as McsSearch;
 
       component.ngAfterViewInit();
