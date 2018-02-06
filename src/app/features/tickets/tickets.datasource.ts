@@ -8,7 +8,7 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
-import { containsString } from '../../utilities';
+import { isNullOrEmpty } from '../../utilities';
 import { Ticket } from './models';
 import { TicketsRepository } from './tickets.repository';
 
@@ -39,20 +39,17 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap(() => {
+      .switchMap((instance) => {
         // Notify the table that a process is currently in-progress
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
+        // if the user is not searching because the filtering has already a loader
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataLoadingStream.next(McsDataStatus.InProgress);
+        }
 
         // Find all records based on settings provided in the input
-        return this._ticketRepository.findAllRecords(
-          this._paginator,
-          (_item: Ticket) => {
-            return containsString(
-              _item.description
-              + _item.crispTicketNumber
-              + _item.shortDescription
-              + _item.requestor, this._search.keyword);
-          });
+        return this._ticketRepository.findAllRecords(this._paginator, this._search);
       });
   }
 

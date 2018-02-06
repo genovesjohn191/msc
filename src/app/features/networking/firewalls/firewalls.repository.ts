@@ -18,9 +18,13 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
    * This will be automatically called in the repoistory based class
    * to populate the data inbound
    */
-  protected getAllRecords(recordCount: number): Observable<McsApiSuccessResponse<Firewall[]>> {
+  protected getAllRecords(
+    recordCount: number,
+    keyword: string
+  ): Observable<McsApiSuccessResponse<Firewall[]>> {
     return this._firewallsService.getFirewalls({
-      perPage: recordCount
+      perPage: recordCount,
+      searchKeyword: keyword
     });
   }
 

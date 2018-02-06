@@ -1,7 +1,10 @@
 /** Services */
 import { CoreLayoutService } from './core-layout.services';
 import { BreadcrumbsService } from './breadcrumbs/breadcrumbs.service';
-import { SwitchAccountService } from './shared';
+import {
+  SwitchAccountService,
+  SwitchAccountRepository
+} from './shared';
 
 /**
  * Array of services/providers
@@ -9,5 +12,6 @@ import { SwitchAccountService } from './shared';
 export const coreLayoutProviders: any[] = [
   CoreLayoutService,
   BreadcrumbsService,
-  SwitchAccountService
+  SwitchAccountService,
+  SwitchAccountRepository
 ];

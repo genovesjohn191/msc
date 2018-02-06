@@ -101,7 +101,7 @@ export function addOrUpdateArrayRecord<T>(
 export function deleteArrayRecord<T>(
   sourceArray: T[],
   predicate: (_predicate: T) => boolean,
-  itemCount: number = 1): T[] {
+  itemCount: number = -1): T[] {
 
   // Initialize for undefined and null record
   if (!sourceArray) { sourceArray = new Array(); }
@@ -110,7 +110,10 @@ export function deleteArrayRecord<T>(
   for (let index = 0; index < sourceArray.length; index++) {
     if (predicate(sourceArray[index])) {
       indexes.push(index);
-      if (indexes.length >= itemCount) { break; }
+
+      // Target count of the item to be deleted
+      let targetCount = itemCount > 0 && indexes.length >= itemCount;
+      if (targetCount) { break; }
     }
   }
   indexes.forEach((index) => {

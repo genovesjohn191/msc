@@ -18,8 +18,7 @@ import {
 import { ServersRepository } from './servers.repository';
 import {
   isNullOrEmpty,
-  compareStrings,
-  containsString
+  compareStrings
 } from '../../utilities';
 
 const SERVER_LIST_GROUP_OTHERS = 'Others';
@@ -61,13 +60,8 @@ export class ServersListSource implements McsDataSource<ServerList> {
         this.dataLoadingStream.next(McsDataStatus.InProgress);
 
         // Find all records based on settings provided in the input
-        return this._serversRepository.findAllRecords(
-          undefined,
-          (_item: Server) => {
-            return containsString(
-              _item.name
-              + _item.platform.resourceName, this._search.keyword);
-          }).map((content) => {
+        return this._serversRepository.findAllRecords(undefined, this._search)
+          .map((content) => {
             this._mapToServerList(content);
             return this._serverList;
           });

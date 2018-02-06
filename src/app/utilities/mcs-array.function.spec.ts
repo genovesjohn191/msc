@@ -137,7 +137,7 @@ describe('ARRAY Functions', () => {
       deleteArrayRecord(listItems, (record) => {
         return record.value === 'hello1';
       });
-      expect(listItems.length).toEqual(2);
+      expect(listItems.length).toEqual(1);
     });
 
     it(`should delete the record from the array list based on predicate and item count`, () => {
@@ -149,8 +149,8 @@ describe('ARRAY Functions', () => {
 
       deleteArrayRecord(listItems, (record) => {
         return record.value === 'hello1';
-      }, 2);
-      expect(listItems.length).toEqual(1);
+      }, 1);
+      expect(listItems.length).toEqual(2);
     });
   });
 

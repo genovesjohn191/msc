@@ -44,19 +44,25 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
    */
   public connect(): Observable<FirewallPolicy[]> {
     const displayDataChanges = [
+      Observable.of(undefined),
       this._firewallService.selectedFirewallStream,
       this._paginator.pageChangedStream,
       this._search.searchChangedStream
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap((firewall) => {
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
+      .switchMap((instance) => {
+        // Notify the table that a process is currently in-progress
+        // if the user is not searching because the filtering has already a loader
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataLoadingStream.next(McsDataStatus.InProgress);
+        }
 
         let firewallId = this._firewallService.selectedFirewall.id;
         let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
 
-        if (isNullOrEmpty(firewall)) {
+        if (isNullOrEmpty(instance)) {
           return Observable.of(undefined);
         }
 

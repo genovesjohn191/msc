@@ -77,9 +77,13 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * This will be automatically called in the repoistory based class
    * to populate the data obtained
    */
-  protected getAllRecords(recordCount: number): Observable<McsApiSuccessResponse<Server[]>> {
+  protected getAllRecords(
+    recordCount: number,
+    keyword: string
+  ): Observable<McsApiSuccessResponse<Server[]>> {
     return this._serversApiService.getServers({
-      perPage: recordCount
+      perPage: recordCount,
+      searchKeyword: keyword
     }).finally(() => {
       // We need to register the events after obtaining the data so that
       // we will get notified by the jobs when data is obtained
@@ -210,7 +214,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       this._setServerProcessDetails(activeServer, job);
 
       if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED
-       && !isNullOrEmpty(activeServer.compute)) {
+        && !isNullOrEmpty(activeServer.compute)) {
         activeServer.compute.memoryMB = job.clientReferenceObject.memoryMB;
         activeServer.compute.cpuCount = job.clientReferenceObject.cpuCount;
       }

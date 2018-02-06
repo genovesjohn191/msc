@@ -11,5 +11,13 @@ export interface McsSearch {
    */
   searchChangedStream: EventEmitter<any>;
 
+  /**
+   * Returns true when user is currently searching, otherwise false
+   */
+  searching: boolean;
+
+  /**
+   * Show or hide the loader of search component
+   */
   showLoading(showLoading: boolean): void;
 }
