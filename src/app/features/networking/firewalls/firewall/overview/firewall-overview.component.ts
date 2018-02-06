@@ -31,7 +31,7 @@ import {
 })
 
 export class FirewallOverviewComponent implements OnInit, OnDestroy {
-  public firewallOverviewTextContent: any;
+  public textContent: any;
   public firewall: Firewall;
   public subscription: any;
   public firewallCpu: string;
@@ -53,6 +53,17 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     return FirewallConfigurationStatus;
   }
 
+  public get hasUtmInformation(): boolean {
+    return !isNullOrEmpty(this.firewall.utm) &&
+      (!isNullOrEmpty(this.firewall.utm.avExpiryDate) ||
+      !isNullOrEmpty(this.firewall.utm.emailExpiryDate) ||
+      !isNullOrEmpty(this.firewall.utm.webExpiryDate));
+  }
+
+  public get hasTopologyInformation(): boolean {
+    return !isNullOrEmpty(this.firewall.haRole) || !isNullOrEmpty(this.firewall.haGroupName);
+  }
+
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _firewallService: FirewallService
@@ -67,7 +78,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     // OnInit
-    this.firewallOverviewTextContent =
+    this.textContent =
       this._textContentProvider.content.firewalls.firewall.overview;
 
     this._initializeFirewallData();
@@ -77,8 +88,8 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     let convertedDate = reviverParser('expiry', expiry);
 
     let license = this._validateLicense(convertedDate) ?
-      this.firewallOverviewTextContent.utmServices.licensed :
-      this.firewallOverviewTextContent.utmServices.invalidLicense;
+      this.textContent.utmServices.licensed :
+      this.textContent.utmServices.invalidLicense;
     let expires = getExpiryLabel(convertedDate);
     let expiryDate = formatDate(convertedDate, 'YYYY-MM-DD');
 
@@ -98,8 +109,8 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   private _initializeFirewallData(): void {
-    let cpuUnit = this.firewallOverviewTextContent.properties.cpuUnit;
-    let ramUnit = this.firewallOverviewTextContent.properties.ramUnit;
+    let cpuUnit = this.textContent.properties.cpuUnit;
+    let ramUnit = this.textContent.properties.ramUnit;
 
     this.subscription = this._firewallService.selectedFirewallStream
       .subscribe((firewall) => {

@@ -233,6 +233,14 @@ export class ServerStorageComponent extends ServerDetailsBase
     this._unregisterJobEvents();
   }
 
+  /**
+   * Check if the storage value is valid
+   * @param memoryMB Storage value to check
+   */
+  public isValidStorageValue(memoryMB: number): boolean {
+    return convertToGb(memoryMB) > 0;
+  }
+
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.storageChangedValue = serverStorage;
 

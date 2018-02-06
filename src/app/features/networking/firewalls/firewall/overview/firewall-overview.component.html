@@ -1,95 +1,118 @@
 <div class="limited-view content-grid">
   <div class="grid-row">
     <div class="grid-column">
-      <h3>{{ firewallOverviewTextContent.properties.title }}</h3>
-      <ul class="unstyled-list">
-        <li>
-          <span>{{ firewallOverviewTextContent.properties.model }}:</span>
+      <h3 class="grid-content-header">{{ textContent.properties.title }}</h3>
+      <mcs-list spacing="xsmall" class="grid-content-body">
+        <!-- Model -->
+        <mcs-list-item>
+          <span>{{ textContent.properties.model }}:</span>
           <span>{{ firewall.model }}</span>
-        </li>
-        <li>
-          <span>{{ firewallOverviewTextContent.properties.cpu }}:</span>
+        </mcs-list-item>
+        <!-- CPU -->
+        <mcs-list-item>
+          <span>{{ textContent.properties.cpu }}:</span>
           <span>{{ firewallCpu }}</span>
-        </li>
-        <li>
-          <span>{{ firewallOverviewTextContent.properties.ram }}:</span>
+        </mcs-list-item>
+        <!-- RAM -->
+        <mcs-list-item>
+          <span>{{ textContent.properties.ram }}:</span>
           <span>{{ firewallMemory }}</span>
-        </li>
-      </ul>
+        </mcs-list-item>
+      </mcs-list>
     </div>
 
     <div class="grid-column">
-      <h3>{{ firewallOverviewTextContent.supportIdentifiers.title }}</h3>
-      <ul class="unstyled-list icons-list">
-        <li>
-          <span>{{ firewallOverviewTextContent.supportIdentifiers.service }}:</span>
+      <h3 class="grid-content-header">{{ textContent.supportIdentifiers.title }}</h3>
+      <mcs-list spacing="xsmall" class="grid-content-body">
+        <!-- Service -->
+        <mcs-list-item>
+          <span>{{ textContent.supportIdentifiers.service }}:</span>
           <span>{{ firewall.serviceId }}</span>
-        </li>
-        <li>
-          <span>{{ firewallOverviewTextContent.supportIdentifiers.serial }}:</span>
+        </mcs-list-item>
+        <!-- Serial -->
+        <mcs-list-item>
+          <span>{{ textContent.supportIdentifiers.serial }}:</span>
           <span>{{ firewall.serialNumber }}</span>
-        </li>
-      </ul>
+        </mcs-list-item>
+      </mcs-list>
     </div>
   </div>
 
   <div class="grid-row">
     <div class="grid-column">
-      <h3>{{ firewallOverviewTextContent.status.title }}</h3>
-      <ul class="unstyled-list icons-list">
-        <li>
+      <h3 class="grid-content-header">{{ textContent.status.title }}</h3>
+      <mcs-list spacing="xsmall" class="grid-content-body">
+        <!-- Device Status -->
+        <mcs-list-item>
           <mcs-icon [key]="deviceStatusIconKey"></mcs-icon>
-          <span>{{ firewallOverviewTextContent.status.deviceStatus }}:</span>
+          <span>{{ textContent.status.deviceStatus }}:</span>
           <span>{{ deviceStatus[firewall.deviceStatus] }}</span>
-        </li>
-        <li>
+        </mcs-list-item>
+        <!-- Connection Status -->
+        <mcs-list-item>
           <mcs-icon [key]="connectionStatusIconKey"></mcs-icon>
-          <span>{{ firewallOverviewTextContent.status.connectionStatus }}:</span>
+          <span>{{ textContent.status.connectionStatus }}:</span>
           <span>{{ connectionStatus[firewall.connectionStatus] }}</span>
-        </li>
-        <li>
+        </mcs-list-item>
+        <!-- Configuration Status -->
+        <mcs-list-item>
           <mcs-icon [key]="configurationStatusIconKey"></mcs-icon>
-          <span>{{ firewallOverviewTextContent.status.configurationStatus }}:</span>
+          <span>{{ textContent.status.configurationStatus }}:</span>
           <span>{{ configurationStatus[firewall.configurationStatus] }}</span>
-        </li>
-      </ul>
+        </mcs-list-item>
+      </mcs-list>
     </div>
 
     <div class="grid-column">
-      <h3>{{ firewallOverviewTextContent.utmServices.title }}</h3>
-      <ul *ngIf="firewall.utm" class="unstyled-list">
-        <li *ngIf="firewall.utm.avExpiryDate">
-          <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.avExpiryDate)"></mcs-icon>
-          <span>{{ firewallOverviewTextContent.utmServices.antivirus }}:</span>
-          <span>{{ getLicenseDetails(firewall.utm.avExpiryDate) }}</span>
-        </li>
-        <li *ngIf="firewall.utm.webExpiryDate">
-          <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.webExpiryDate)"></mcs-icon>
-          <span>{{ firewallOverviewTextContent.utmServices.webFiltering }}:</span>
-          <span>{{ getLicenseDetails(firewall.utm.webExpiryDate) }}</span>
-        </li>
-        <li *ngIf="firewall.utm.emailExpiryDate">
-          <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.emailExpiryDate)"></mcs-icon>
-          <span>{{ firewallOverviewTextContent.utmServices.emailFiltering }}:</span>
-          <span>{{ getLicenseDetails(firewall.utm.emailExpiryDate) }}</span>
-        </li>
-      </ul>
+      <h3 class="grid-content-header">{{ textContent.utmServices.title }}</h3>
+      <ng-container *ngIf="hasUtmInformation; else noUtmInfo">
+        <mcs-list spacing="xsmall" class="grid-content-body">
+          <!-- AV Expiry Date -->
+          <mcs-list-item *ngIf="firewall.utm.avExpiryDate">
+            <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.avExpiryDate)"></mcs-icon>
+            <span>{{ textContent.utmServices.antivirus }}:</span>
+            <span>{{ getLicenseDetails(firewall.utm.avExpiryDate) }}</span>
+          </mcs-list-item>
+          <!-- Web Expiry Date -->
+          <mcs-list-item *ngIf="firewall.utm.webExpiryDate">
+            <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.webExpiryDate)"></mcs-icon>
+            <span>{{ textContent.utmServices.webFiltering }}:</span>
+            <span>{{ getLicenseDetails(firewall.utm.webExpiryDate) }}</span>
+          </mcs-list-item>
+          <!-- Email Expiry Date -->
+          <mcs-list-item *ngIf="firewall.utm.emailExpiryDate">
+            <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.emailExpiryDate)"></mcs-icon>
+            <span>{{ textContent.utmServices.emailFiltering }}:</span>
+            <span>{{ getLicenseDetails(firewall.utm.emailExpiryDate) }}</span>
+          </mcs-list-item>
+        </mcs-list>
+      </ng-container>
+      <ng-template #noUtmInfo>
+        <span class="missing-data-info">{{ textContent.utmServices.noContentMessage }}</span>
+      </ng-template>
     </div>
   </div>
 
   <div class="grid-row">
     <div class="grid-column">
-      <h3>{{ firewallOverviewTextContent.topology.title }}</h3>
-      <ul class="unstyled-list">
-        <li *ngIf="firewall.haRole">
-          <span>{{ firewallOverviewTextContent.topology.role }}:</span>
-          <span>{{ firewall.haRole }}</span>
-        </li>
-        <li *ngIf="firewall.haGroupName">
-          <span>{{ firewallOverviewTextContent.topology.haGroupName }}:</span>
-          <span>{{ firewall.haGroupName }}</span>
-        </li>
-      </ul>
+      <h3 class="grid-content-header">{{ textContent.topology.title }}</h3>
+      <ng-container *ngIf="hasTopologyInformation; else noTopologyInfo">
+        <mcs-list spacing="xsmall" class="grid-content-body">
+          <!-- HA Role -->
+          <mcs-list-item *ngIf="firewall.haRole">
+            <span>{{ textContent.topology.role }}:</span>
+            <span>{{ firewall.haRole }}</span>
+          </mcs-list-item>
+          <!-- HA Groupname -->
+          <mcs-list-item *ngIf="firewall.haGroupName;">
+            <span>{{ textContent.topology.haGroupName }}:</span>
+            <span>{{ firewall.haGroupName }}</span>
+          </mcs-list-item>
+        </mcs-list>
+      </ng-container>
+      <ng-template #noTopologyInfo>
+        <span class="missing-data-info">{{ textContent.topology.noContentMessage }}</span>
+      </ng-template>
     </div>
   </div>
 </div>

@@ -51,7 +51,7 @@ describe('FirewallOverviewComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should define the text content value to firewallOverviewTextContent', () => {
-      expect(component.firewallOverviewTextContent).toBeDefined();
+      expect(component.textContent).toBeDefined();
     });
 
     it('should call the subscribe() of FirewallService selectedFirewallStream', () => {

@@ -241,7 +241,8 @@
         "deleteStorageLink": "Delete",
         "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
         "noDisks": "No disks are attached to this server.",
-        "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
+        "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining).",
+        "invalidStorage": "Unknown"
       },
       "nics": {
         "label": "NICs",
@@ -505,12 +506,14 @@
           "emailFiltering": "Email Filtering",
           "licensed": "Licensed",
           "invalidLicense": "Invalid License",
-          "expires": "Expires"
+          "expires": "Expires",
+          "noContentMessage": "UTM Services information is unavailable."
         },
         "topology": {
           "title": "Topology",
           "role": "Role",
-          "haGroupName": "HA Group Name"
+          "haGroupName": "HA Group Name",
+          "noContentMessage": "Topology information is unavailable."
         }
       },
       "policies": {

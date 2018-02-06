@@ -9,7 +9,7 @@ import {
 import { resolveEnvVar } from '../../utilities';
 import { Portal } from './portal';
 import { PortalAccess } from './portal.access';
-import { ToolsService } from './tools.service';
+import { ToolsRepository } from './tools.repository';
 
 export class ToolsDataSource implements McsDataSource<Portal> {
   /**
@@ -17,20 +17,7 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    */
   public dataLoadingStream: Subject<McsDataStatus>;
 
-  /**
-   * It will populate the data when the obtainment is completed
-   */
-  private _totalRecordCount: number;
-  public get totalRecordCount(): number {
-    return this._totalRecordCount;
-  }
-  public set totalRecordCount(value: number) {
-    this._totalRecordCount = value;
-  }
-
-  constructor(private _toolsService: ToolsService) {
-    this._totalRecordCount = 0;
-  }
+  constructor(private _toolsRepository: ToolsRepository) { }
 
   /**
    * Connect function called by the table to retrieve
@@ -38,10 +25,8 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    */
   public connect(): Observable<Portal[]> {
     this.dataLoadingStream.next(McsDataStatus.InProgress);
-    return this._toolsService.getPortals()
-      .map((response) => {
-        this._totalRecordCount = response.totalCount;
-
+    return this._toolsRepository.findAllRecords(undefined, undefined)
+      .map((portals) => {
         let partnerPortals: Portal[] = [];
         let otherServices: Portal[] = [];
 
@@ -55,15 +40,15 @@ export class ToolsDataSource implements McsDataSource<Portal> {
         partnerPortals.push(macquarieView);
 
         // Map portals to respective locations
-        for (let portal of response.content) {
+        for (let portal of portals) {
           portal.resourceSpecific
             ? partnerPortals.push(portal)
             : otherServices.push(portal);
         }
 
-        response.content = partnerPortals;
+        portals = partnerPortals;
 
-        return response.content;
+        return portals;
       });
   }
 
@@ -72,7 +57,7 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    * and return all the record to its original value
    */
   public disconnect() {
-    this._totalRecordCount = 0;
+    // Release resources
   }
 
   /**

@@ -12,7 +12,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ textContent.table.header.name }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+          <mcs-data-cell *mcsDataCellDef="let row" class="top-align">
             {{ row.name}}
           </mcs-data-cell>
         </ng-container>
@@ -22,7 +22,7 @@
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ textContent.table.header.description }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small top-align">
             {{ toolDescription.get(row.name) }}
           </mcs-data-cell>
         </ng-container>
@@ -32,9 +32,9 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ textContent.table.header.access }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row">
+          <mcs-data-cell *mcsDataCellDef="let row" class="top-align">
             <div *ngFor="let access of row.portalAccess" class="access-link-wrapper">
-              <a [href]="access.url" target="_blank">{{ access.name }} <br />(requires login)</a>
+              <a [href]="access.url" target="_blank">{{ access.name }}</a>
             </div>
           </mcs-data-cell>
         </ng-container>
