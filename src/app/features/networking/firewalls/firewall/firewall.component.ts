@@ -128,10 +128,7 @@ export class FirewallComponent
   public onFirewallSelect(firewallId: any): void {
     if (isNullOrEmpty(firewallId)) { return; }
 
-    this.router.navigate(
-      ['/networking/firewalls', firewallId],
-      { relativeTo: this.activatedRoute }
-    );
+    this.router.navigate(['/networking/firewalls', firewallId]);
   }
 
   public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
@@ -147,13 +144,9 @@ export class FirewallComponent
   }
 
   public onTabChanged(tab: any) {
-    if (isNullOrEmpty(this.firewall) || isNullOrEmpty(this.firewall.id)) { return; }
+    if (isNullOrEmpty(this.firewall.id)) { return; }
     // Navigate route based on current active tab
-    if (tab.id === 'overview') {
-      this.router.navigate([`networking/firewalls/${this.firewall.id}/overview`]);
-    } else {
-      this.router.navigate([`networking/firewalls/${this.firewall.id}/policies`]);
-    }
+    this.router.navigate([`networking/firewalls/${this.firewall.id}/${tab.id}`]);
   }
 
   private _initializeListsource(): void {

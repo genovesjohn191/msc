@@ -46,7 +46,12 @@
                   {{ storage.storageProfile }}
                 </td>
                 <td>
-                  {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
+                  <ng-container *ngIf="isValidStorageValue(storage.sizeMB); else invalidStorage">
+                    {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
+                  </ng-container>
+                  <ng-template #invalidStorage>
+                    {{ textContent.invalidStorage }}
+                  </ng-template>
                 </td>
                 <td class="action-items">
                   <span *mcsHasPermission="['VmEdit']" class="expand text-right">

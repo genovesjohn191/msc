@@ -3,12 +3,14 @@ import { Routes } from '@angular/router';
 import { ToolsComponent } from './tools.component';
 /** Services */
 import { ToolsService } from './tools.service';
+import { ToolsRepository } from './tools.repository';
 
 /**
  * List of services for the main module
  */
 export const toolsProviders: any[] = [
-  ToolsService
+  ToolsService,
+  ToolsRepository
 ];
 
 /**

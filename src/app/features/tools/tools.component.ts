@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 /** Services */
 import { McsTextContentProvider } from '../../core';
-import { ToolsService } from './tools.service';
+import { ToolsRepository } from './tools.repository';
 import { ToolsDataSource } from './tools.datasource';
 
 @Component({
@@ -22,7 +22,7 @@ export class ToolsComponent implements OnInit {
 
   public constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _toolsService: ToolsService
+    private _toolsRepository: ToolsRepository
   ) {
     this.textContent = this._textContentProvider.content.tools;
     this._initializeToolDescriptionMap();
@@ -48,7 +48,7 @@ export class ToolsComponent implements OnInit {
    */
   private _initiliazeDatasource(): void {
     // Set datasource
-    this.dataSource = new ToolsDataSource(this._toolsService);
+    this.dataSource = new ToolsDataSource(this._toolsRepository);
   }
 
   private _initializeToolDescriptionMap(): void {
