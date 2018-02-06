@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  Observable,
   BehaviorSubject
 } from 'rxjs/Rx';
 import { CookieService } from 'ngx-cookie';
@@ -74,29 +73,17 @@ export class SwitchAccountService {
   }
 
   /**
-   * Initializes the companies data only once
+   * Get all the companies from the API
+   * @param page Page index of the page to obtained
+   * @param perPage Size of item per page
+   * @param searchKeyword Keyword to be search during filtering
    */
-  public getCompanies(): void {
-    this.companiesStatus = McsDataStatus.InProgress;
-
-    this._coreLayoutService.getCompanies()
-      .catch((error) => {
-        this.companiesStatus = McsDataStatus.Error;
-        this.companiesStream.next(undefined);
-        return Observable.throw(error);
-      })
-      .subscribe((response) => {
-        if (response) {
-          this.companiesStatus = response.content ?
-            McsDataStatus.Empty : McsDataStatus.Success;
-          // Remove default company and currenlty active account in the list
-          this.companies = response.content.filter((account) => {
-            return (this.defaultAccount && this.defaultAccount.id !== account.id) &&
-              (this._activeAccount && this._activeAccount.id !== account.id);
-          });
-          this.companiesStream.next(response.content);
-        }
-      });
+  public getCompanies(args?: {
+    page?: number,
+    perPage?: number,
+    searchKeyword?: string
+  }) {
+    return this._coreLayoutService.getCompanies(args);
   }
 
   /**

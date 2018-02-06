@@ -4,6 +4,7 @@ import {
   Subscription
 } from 'rxjs/Rx';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
+import { McsSearch } from '../interfaces/mcs-search.interface';
 import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 import {
@@ -160,9 +161,12 @@ export abstract class McsRepositoryBase<T> {
    * @param page Page settings where the data returned are based on page index and size
    * @param whereClause Where clause delegate for filtering condition
    */
-  public findAllRecords(
-    page: McsPaginator,
-    whereClause: (_recordItem: T) => boolean): Observable<T[]> {
+  public findAllRecords(page: McsPaginator, search: McsSearch): Observable<T[]> {
+    // We need to clear the records when the flag for caching is set to false
+    if (search.searching) {
+      this._totalRecordsCount = 0;
+    }
+
     let displayedRecords = isNullOrEmpty(page) ? MAX_DISPLAY_RECORD :
       page.pageSize * (page.pageIndex + 1);
     let requestRecords = !!(displayedRecords > this.dataRecords.length)
@@ -171,20 +175,19 @@ export abstract class McsRepositoryBase<T> {
 
     if (requestRecords) {
       // Get all records from API calls implemented under inherited class
-      return this.getAllRecords(displayedRecords).map((data) => {
-        this._totalRecordsCount = data.totalCount;
-        this._dataRecords = data.content;
-        this._filteredRecords = data.content;
-        return data.content;
-      });
+      return this.getAllRecords(displayedRecords, search.keyword)
+        .map((data) => {
+          this._totalRecordsCount = data.totalCount;
+          this._dataRecords = data.content;
+          this._filteredRecords = data.content;
+          return data.content;
+        });
     } else {
       // We need to mock the data to pageData
       // so that we wont touch the original record
       let pageData = this._dataRecords.slice();
       let actualData = pageData.splice(0, displayedRecords);
-      return Observable.of(actualData.slice().filter((item: T) => {
-        return whereClause(item);
-      })).map((data) => {
+      return Observable.of(actualData).map((data) => {
         this._filteredRecords = data;
         return data;
       });
@@ -219,7 +222,10 @@ export abstract class McsRepositoryBase<T> {
   /**
    * Get all records based on type
    */
-  protected abstract getAllRecords(recordCount: number): Observable<McsApiSuccessResponse<T[]>>;
+  protected abstract getAllRecords(
+    recordCount: number,
+    keyword: string
+  ): Observable<McsApiSuccessResponse<T[]>>;
 
   /**
    * Get the corresponding record by ID

@@ -24,9 +24,12 @@ import {
 import {
   isNullOrEmpty,
   getEnumString,
-  unsubscribeSafely
+  unsubscribeSafely,
+  deleteArrayRecord,
+  compareStrings
 } from '../../../utilities';
 import { SwitchAccountService } from './switch-account.service';
+import { SwitchAccountRepository } from './switch-account.repository';
 
 @Component({
   selector: 'mcs-switch-account',
@@ -61,11 +64,25 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   public get companies(): McsApiCompany[] {
     return this._switchAccountService.companies;
   }
-  public get dataStatus(): McsDataStatus {
-    return this._switchAccountService.companiesStatus;
+
+  /**
+   * Data status
+   */
+  private _dataStatus: McsDataStatus;
+  public get dataStatus(): McsDataStatus { return this._dataStatus; }
+  public set dataStatus(value: McsDataStatus) {
+    if (value !== this._dataStatus) {
+      this._dataStatus = value;
+    }
   }
+
   public get dataStatusEnum(): any {
     return McsDataStatus;
+  }
+
+  public get totalRecordCount(): number {
+    return isNullOrEmpty(this._switchAccountRepository) ? 0 :
+      this._switchAccountRepository.totalRecordsCount;
   }
 
   // Icons
@@ -87,6 +104,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private _switchAccountService: SwitchAccountService,
+    private _switchAccountRepository: SwitchAccountRepository,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider
   ) {
@@ -176,32 +194,36 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
    */
   private _listenToCompanies(): void {
     const displayDataChanges = [
+      Observable.of(undefined),
       this._switchAccountService.companiesStream,
       this.paginator.pageChangedStream,
       this.search.searchChangedStream
     ];
 
     this.companiesSubscription = Observable.merge(...displayDataChanges)
-      .map(() => {
-        // Get all record by page settings
-        let pageData = this.companies.slice();
-        let displayedCount = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
-
-        // Get all record by filter settings and return them
-        let actualData = pageData.slice(0, displayedCount);
-        return actualData.slice().filter((item: McsApiCompany) => {
-          let searchStr = (item.name + item.id).toLowerCase();
-          return searchStr.indexOf(this.search.keyword.toLowerCase()) !== -1;
-        });
-      })
-      .subscribe((result) => {
-        if (this._switchAccountService.companiesStatus !== McsDataStatus.Error) {
-          this._switchAccountService.companiesStatus = isNullOrEmpty(result) ?
-            McsDataStatus.Empty : McsDataStatus.Success;
+      .switchMap((instance) => {
+        // Notify the component that a process is currently in-progress
+        // if the user is not searching because the filtering has already a loader
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataStatus = McsDataStatus.InProgress;
         }
-        this.displayedCompanies = result;
+
+        // Find all records based on settings provided in the input
+        return this._switchAccountRepository.findAllRecords(this.paginator, this.search);
+      })
+      .catch((error) => {
+        this.dataStatus = McsDataStatus.Error;
+        return Observable.throw(error);
+      })
+      .subscribe((response) => {
+        this.displayedCompanies = response.slice();
+        this._removeActiveDefaultAccounts();
+        this.dataStatus = isNullOrEmpty(this.displayedCompanies) ?
+          McsDataStatus.Empty : McsDataStatus.Success;
+
         this.search.showLoading(false);
-        this.paginator.showLoading(false);
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -224,7 +246,23 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     this.activeAccountSubscription = this._switchAccountService.activeAccountStream
       .subscribe((active) => {
         this.activeAccount = active;
+        this._removeActiveDefaultAccounts();
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  /**
+   * Remove the active account and default account from displayed records
+   */
+  private _removeActiveDefaultAccounts(): void {
+    this.displayedCompanies = deleteArrayRecord(this.displayedCompanies, (_item) => {
+      let isActive = !!(!isNullOrEmpty(this.activeAccount) &&
+        compareStrings(this.activeAccount.id, _item.id) === 0);
+      let isDefault = !!(!isNullOrEmpty(this.defaultAccount) &&
+        compareStrings(this.defaultAccount.id, _item.id) === 0);
+      return isActive || isDefault;
+    });
+    this.dataStatus = isNullOrEmpty(this.displayedCompanies) ?
+      McsDataStatus.Empty : McsDataStatus.Success;
   }
 }

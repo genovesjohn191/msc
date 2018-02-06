@@ -83,6 +83,10 @@
   margin-bottom: $space-large;
 }
 
+.space-bottom-xlarge {
+  margin-bottom: $space-xlarge;
+}
+
 // Spacing Top
 .space-top-xsmall {
   margin-top: $space-xsmall;
@@ -98,6 +102,10 @@
 
 .space-top-large {
   margin-top: $space-large;
+}
+
+.space-top-xlarge {
+  margin-top: $space-xlarge;
 }
 
 // Spacing Left
@@ -117,6 +125,10 @@
   margin-left: $space-large;
 }
 
+.space-left-xlarge {
+  margin-left: $space-xlarge;
+}
+
 // Spacing Right
 .space-right-xsmall {
   margin-right: $space-xsmall;
@@ -132,4 +144,8 @@
 
 .space-right-large {
   margin-right: $space-large;
+}
+
+.space-right-xlarge {
+  margin-right: $space-xlarge;
 }

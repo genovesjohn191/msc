@@ -7,7 +7,7 @@
     <!-- Default account -->
     <mcs-list header="Default">
       <mcs-list-item>
-        <div class="labelled-icon account-action"
+        <div class="account-action"
           (click)="selectAccount(defaultAccount)" cursor="pointer">
 
           <mcs-icon [key]="arrowUpBueIconKey" size="small"></mcs-icon>
@@ -18,7 +18,7 @@
   </div>
 
   <!-- Companies -->
-  <div class="companies-panel-content" scrollable="dark" scrollbarSize="small">
+  <div class="companies-panel-content">
     <!-- Recent companies -->
     <!-- TODO: not included in PH 1.0 -->
     <!-- <mcs-list header="Recently accessed company accounts">
@@ -36,11 +36,11 @@
 
     <!-- Company list -->
     <div class="company-list-wrapper">
-      <mcs-search #search delayInSeconds="none"></mcs-search>
+      <mcs-search #search></mcs-search>
 
       <mcs-list header="Company Accounts" class="company-list">
         <mcs-list-item *ngFor="let item of displayedCompanies; trackBy: trackByFn">
-          <div class="labelled-icon account-action" (click)="selectAccount(item)" cursor="pointer"
+          <div class="account-action" (click)="selectAccount(item)" cursor="pointer"
             [mcsTooltip]="getStatusText(item.status)" mcsTooltipColor="light">
 
             <mcs-icon color="white" [key]="getUserIconKey(item.status)" size="small"></mcs-icon>
@@ -64,9 +64,9 @@
         </div>
       </div>
 
+      <!-- Paginator that displays when data obtainment was success -->
       <mcs-paginator #paginator
-        [hidden]="dataStatus !== dataStatusEnum.Success"
-        [totalCount]="companies?.length"
+        [totalCount]="totalRecordCount"
         [pageIndex]="0"
         [pageSize]="5">
       </mcs-paginator>

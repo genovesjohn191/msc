@@ -8,7 +8,7 @@ import {
   McsSearch,
   McsDataStatus
 } from '../../../core';
-import { containsString } from '../../../utilities';
+import { isNullOrEmpty } from '../../../utilities';
 import { Firewall } from './models';
 import { FirewallsRepository } from './firewalls.repository';
 
@@ -38,21 +38,17 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap(() => {
+      .switchMap((instance) => {
         // Notify the table that a process is currently in-progress
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
+        // if the user is not searching because the filtering has already a loader
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataLoadingStream.next(McsDataStatus.InProgress);
+        }
 
         // Find all records based on settings provided in the input
-        return this._firewallsRepository.findAllRecords(
-          this._paginator,
-          (_item: Firewall) => {
-            return containsString(
-              _item.managementName
-              + _item.serialNumber
-              + _item.osVendor
-              + _item.osRelease
-              + _item.serviceId, this._search.keyword);
-          });
+        return this._firewallsRepository.findAllRecords(this._paginator, this._search);
       });
   }
 

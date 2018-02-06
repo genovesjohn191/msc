@@ -10,7 +10,8 @@ import {
 } from '../core';
 import {
   convertJsonStringToObject,
-  reviverParser
+  reviverParser,
+  isNullOrEmpty
 } from '../utilities';
 
 @Injectable()
@@ -20,10 +21,27 @@ export class CoreLayoutService {
 
   /**
    * Get all the companies from the API
+   * @param page Page index of the page to obtained
+   * @param perPage Size of item per page
+   * @param searchKeyword Keyword to be search during filtering
    */
-  public getCompanies(): Observable<McsApiSuccessResponse<McsApiCompany[]>> {
+  public getCompanies(args?: {
+    page?: number,
+    perPage?: number,
+    searchKeyword?: string
+  }): Observable<McsApiSuccessResponse<McsApiCompany[]>> {
+
+    // Set default values if null
+    if (isNullOrEmpty(args)) { args = {}; }
+
+    let searchParams = new Map<string, any>();
+    searchParams.set('page', args.page ? args.page.toString() : undefined);
+    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
+    searchParams.set('search_keyword', args.searchKeyword);
+
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/companies';
+    mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .map((response) => {
@@ -52,7 +70,6 @@ export class CoreLayoutService {
     } else {
       mcsApiErrorResponse = error;
     }
-
     return Observable.throw(mcsApiErrorResponse);
   }
 

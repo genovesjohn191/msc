@@ -9,7 +9,7 @@ import {
   McsSearch,
   McsApiJob
 } from '../../core';
-import { containsString } from '../../utilities';
+import { isNullOrEmpty } from '../../utilities';
 import { NotificationsRepository } from './notifications.repository';
 
 export class NotificationsDataSource implements McsDataSource<McsApiJob> {
@@ -39,19 +39,17 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap(() => {
+      .switchMap((instance) => {
         // Notify the table that a process is currently in-progress
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
+        // if the user is not searching because the filtering has already a loader
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataLoadingStream.next(McsDataStatus.InProgress);
+        }
 
         // Find all records based on settings provided in the input
-        return this._notificationsRepository.findAllRecords(
-          this._paginator,
-          (_item: McsApiJob) => {
-            return containsString(
-              _item.description
-              + _item.summaryInformation
-              + _item.ownerName, this._search.keyword);
-          });
+        return this._notificationsRepository.findAllRecords(this._paginator, this._search);
       });
   }
 

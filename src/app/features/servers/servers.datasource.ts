@@ -8,10 +8,7 @@ import {
   McsPaginator,
   McsSearch
 } from '../../core';
-import {
-  isNullOrEmpty,
-  containsString
-} from '../../utilities';
+import { isNullOrEmpty } from '../../utilities';
 import { Server } from './models';
 import { ServersRepository } from './servers.repository';
 
@@ -23,7 +20,6 @@ export class ServersDataSource implements McsDataSource<Server> {
 
   constructor(
     private _serversRepository: ServersRepository,
-    private _enumDefinition: any,
     private _paginator: McsPaginator,
     private _search: McsSearch
   ) {
@@ -39,25 +35,21 @@ export class ServersDataSource implements McsDataSource<Server> {
       Observable.of(undefined), // Add undefined observable to make way of retry when error occured
       this._serversRepository.dataRecordsChanged,
       this._paginator.pageChangedStream,
-      this._search.searchChangedStream,
+      this._search.searchChangedStream
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap(() => {
+      .switchMap((instance) => {
         // Notify the table that a process is currently in-progress
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
+        // if the user is not searching because the filtering has already a loader
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataLoadingStream.next(McsDataStatus.InProgress);
+        }
 
         // Find all records based on settings provided in the input
-        return this._serversRepository.findAllRecords(
-          this._paginator,
-          (_item: Server) => {
-            return containsString(
-              _item.name
-              + this._enumDefinition.serverServiceType[_item.serviceType]
-              + _item.operatingSystem.edition
-              + _item.managementIpAddress
-              + _item.platform.resourceName, this._search.keyword);
-          });
+        return this._serversRepository.findAllRecords(this._paginator, this._search);
       });
   }
 

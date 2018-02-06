@@ -20,14 +20,27 @@ $switch-account-content-min-height: 100px;
   padding-right: $space-small;
 
   @include breakpoint(small) {
+    // We need to force overflow hidden in mobile since the scrollable directive is
+    // forcing the parent element to overflow auto.
+    overflow: hidden !important;
     max-height: $switch-account-mobile-max-height;
   }
 
   .account-action {
+    @include display-flex(row);
+    @include align-items(center);
+    @include set-items-interval($space-small, horizontal);
+
     &:hover {
       color: $color-primary-01;
     }
+
+    span {
+      word-break: break-word;
+    }
+
     .arrow-right {
+      @include flex(0 0 auto);
       margin-left: auto;
       padding-left: $space-medium;
     }

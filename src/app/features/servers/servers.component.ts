@@ -389,7 +389,6 @@ export class ServersComponent
     // Set datasource instance
     this.dataSource = new ServersDataSource(
       this._serversRepository,
-      this.enumDefinition,
       this.paginator,
       this.search
     );

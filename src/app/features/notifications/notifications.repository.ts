@@ -27,9 +27,13 @@ export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
    * This will be automatically called in the repoistory based class
    * to populate the data inbound
    */
-  protected getAllRecords(recordCount: number): Observable<McsApiSuccessResponse<McsApiJob[]>> {
+  protected getAllRecords(
+    recordCount: number,
+    keyword: string
+  ): Observable<McsApiSuccessResponse<McsApiJob[]>> {
     return this._notificationsApiService.getNotifications({
-      perPage: recordCount
+      perPage: recordCount,
+      searchKeyword: keyword
     });
   }
 

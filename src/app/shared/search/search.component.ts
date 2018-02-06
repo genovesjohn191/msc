@@ -10,17 +10,15 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsSearch,
   McsTextContentProvider
 } from '../../core';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '../../utilities';
+import { unsubscribeSafely } from '../../utilities';
 
 @Component({
   selector: 'mcs-search',
@@ -36,11 +34,12 @@ import {
 export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
   @Input()
-  public delayInSeconds: number | 'none';
+  public delayInSeconds: number | 'none' = 'none';
   public textContent: any;
 
   /** Interface implementation */
   public keyword: string;
+  public searching: boolean;
   public searchChangedStream: EventEmitter<any>;
 
   // Others
@@ -48,7 +47,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
   /** Search subscription */
   private _searchSubject: Subject<string>;
-  private _searchSubscription: any;
+  private _searchSubscription: Subscription;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -62,18 +61,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.shared.search;
-    // Register stream event for the filtering,
-    // This will invoke once the previous keyword and new keyword is not the same
-    // @ the given amount of time
-    this._searchSubscription = Observable.concat(this._searchSubject)
-      .debounceTime(isNullOrEmpty(this.delayInSeconds) ?
-        CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000)
-      )
-      .distinctUntilChanged()
-      .subscribe((searchTerm) => {
-        this.keyword = searchTerm;
-        this._onSearchChanged();
-      });
+    this._createSearchSubscription();
   }
 
   public ngOnDestroy(): void {
@@ -81,16 +69,23 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   }
 
   public onChangeKeyEvent(key: any): void {
-    this.showLoading(true);
+    // Register the event for the searching when it is closed already
+    if (this._searchSubscription.closed) {
+      this._createSearchSubscription();
+    }
     this._searchSubject.next(key);
   }
 
   public onEnterKeyUpEvent(key: any): void {
+    // We need to unsubcribed to the current subject in order for the
+    // event not to trigger anymore
+    unsubscribeSafely(this._searchSubscription);
     this.keyword = key;
     this._onSearchChanged();
   }
 
   public showLoading(showLoading: boolean): void {
+    this.searching = showLoading;
     this.iconKey = showLoading ?
       CoreDefinition.ASSETS_GIF_SPINNER :
       CoreDefinition.ASSETS_FONT_SEARCH;
@@ -101,5 +96,20 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
     this.showLoading(true);
     this.searchChangedStream.next(this);
     this._changeDetectorRef.markForCheck();
+  }
+
+  private _createSearchSubscription(): void {
+    // Register stream event for the filtering,
+    // This will invoke once the previous keyword and new keyword is not the same
+    // @ the given amount of time
+    this._searchSubscription = Observable.concat(this._searchSubject)
+      .debounceTime(this.delayInSeconds === 'none' ?
+        CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000)
+      )
+      .distinctUntilChanged()
+      .subscribe((searchTerm) => {
+        this.keyword = searchTerm;
+        this._onSearchChanged();
+      });
   }
 }
