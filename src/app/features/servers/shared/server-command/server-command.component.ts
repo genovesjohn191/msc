@@ -96,7 +96,7 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       case ServerCommand.Delete:
-        enabled = this.server.isProcessing && this.isServerSelfManaged;
+        enabled = !this.server.isProcessing && this.isServerSelfManaged;
         break;
 
       case ServerCommand.ViewVCloud:
