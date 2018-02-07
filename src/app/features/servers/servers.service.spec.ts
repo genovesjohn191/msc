@@ -393,7 +393,7 @@ describe('ServersService', () => {
         });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/networks`);
+      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics`);
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -416,7 +416,7 @@ describe('ServersService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/networks`);
+      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics`);
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -442,7 +442,7 @@ describe('ServersService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/networks/${networkId}`);
+      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics/${networkId}`);
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
@@ -468,7 +468,7 @@ describe('ServersService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/networks/${networkId}`);
+      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/nics/${networkId}`);
       expect(mockRequest.request.method).toEqual('DELETE');
 
       // Create response data and transmit, expect the result should go to subscribe callback

@@ -66,14 +66,9 @@
             </div>
             <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
               <!-- Primary Volume -->
-              <mcs-list-item>
-                <span>{{ textContent.storage.primaryVolume }}:</span>
-                <span>{{ primaryVolume }}</span>
-              </mcs-list-item>
-              <!-- Secondary Volume -->
-              <mcs-list-item *ngIf="secondaryVolumes">
-                <span>{{ textContent.storage.secondaryVolumes }}:</span>
-                <span>{{ secondaryVolumes }}</span>
+              <mcs-list-item *ngFor="let storage of server.storageDevice">
+                <span>{{ storage.name }}:</span>
+                <span>{{ appendUnitGB(storage.sizeMB) }}</span>
               </mcs-list-item>
               <!-- Storage Policy -->
               <!-- TODO: Will confirm to Orch API where to pull this data -->
