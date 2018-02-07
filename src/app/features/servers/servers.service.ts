@@ -572,7 +572,7 @@ export class ServersService {
   public getServerNetworks(
     serverId: any): Observable<McsApiSuccessResponse<ServerNicSummary[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .finally(() => {
@@ -603,7 +603,7 @@ export class ServersService {
     networkData: ServerManageNetwork
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks`;
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
     mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -637,7 +637,7 @@ export class ServersService {
     networkData: ServerManageNetwork
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${networkId}`;
     mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
@@ -670,7 +670,7 @@ export class ServersService {
     networkData: ServerManageNetwork
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/networks/${networkId}`;
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${networkId}`;
     mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)

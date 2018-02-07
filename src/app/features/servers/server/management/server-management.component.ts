@@ -34,6 +34,7 @@ import {
 import {
   getEncodedUrl,
   refreshView,
+  convertToGb,
   appendUnitSuffix,
   isNullOrEmpty,
   unsubscribeSafely
@@ -59,8 +60,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   public thumbnailElement: ElementRef;
 
   public textContent: any;
-  public primaryVolume: string;
-  public secondaryVolumes: string;
   public otherStorage: ServerFileSystem[];
 
   public serverThumbnail: ServerThumbnail;
@@ -163,8 +162,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get hasStorageInformation(): boolean {
-    return !isNullOrEmpty(this.primaryVolume)
-      || !isNullOrEmpty(this.secondaryVolumes);
+    return !isNullOrEmpty(this.server.storageDevice);
   }
 
   public get hasAvailableMedia(): boolean {
@@ -196,8 +194,6 @@ export class ServerManagementComponent extends ServerDetailsBase
       _serversResourcesRepository,
       _changeDetectorRef
     );
-    this.primaryVolume = '';
-    this.secondaryVolumes = '';
     this.isAttachMedia = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
     this._hasScaleParam = false;
@@ -335,8 +331,11 @@ export class ServerManagementComponent extends ServerDetailsBase
     this._serverService.detachServerMedia(this.server.id, media.id, mediaValues).subscribe();
   }
 
+  public appendUnitGB(sizeMB: number): string {
+    return appendUnitSuffix(convertToGb(sizeMB), 'gigabyte');
+  }
+
   protected serverSelectionChanged(): void {
-    this._setServerFileSystem();
     this._getServerCompute();
     this._getServerThumbnail();
 
@@ -356,16 +355,6 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   private _routeToServerManagement(): void {
     this._router.navigate(['/servers/', this.server.id, 'management']);
-  }
-
-  private _setServerFileSystem(): void {
-    if (this.hasStorage) {
-      this.primaryVolume = appendUnitSuffix(this.server.fileSystem[0].capacityGB, 'gigabyte');
-      this.secondaryVolumes = this.getSecondaryVolumes(this.server.fileSystem);
-    } else {
-      this.primaryVolume = '';
-      this.secondaryVolumes = '';
-    }
   }
 
   private _getServerThumbnail(): void {
