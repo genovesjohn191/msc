@@ -24,6 +24,7 @@ import {
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
+import { ServersResourcesRespository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
   unsubscribeSafely
@@ -48,7 +49,6 @@ export class ServerNicsComponent extends ServerDetailsBase
   implements OnInit, OnDestroy {
 
   public textContent: any;
-  public resourceNetworks: ServerNetwork[];
   public nics: ServerNicSummary[];
   public ipAddress: ServerIpAddress;
 
@@ -56,6 +56,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   // Subscriptions
   public updateNicsSubscription: Subscription;
+  public networksSubscription: Subscription;
   private _notificationsChangeSubscription: Subscription;
   private _createServerNicSubscription: Subscription;
   private _updateServerNicSubscription: Subscription;
@@ -83,6 +84,11 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   public get hasAvailableResourceNetwork(): boolean {
     return !isNullOrEmpty(this.resourceNetworks);
+  }
+
+  public get resourceNetworks(): ServerNetwork[] {
+    return !isNullOrEmpty(this.serverResource.networks) ?
+      this.serverResource.networks : new Array();
   }
 
   private _networkName: string;
@@ -162,6 +168,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   constructor(
     _serverService: ServerService,
+    _serversResourcesRepository: ServersResourcesRespository,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _dialogService: McsDialogService,
@@ -171,6 +178,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     // Constructor
     super(
       _serverService,
+      _serversResourcesRepository,
       _changeDetectorRef
     );
     this.isUpdate = false;
@@ -189,6 +197,7 @@ export class ServerNicsComponent extends ServerDetailsBase
   public ngOnDestroy() {
     this.dispose();
     this._unregisterJobEvents();
+    unsubscribeSafely(this.networksSubscription);
   }
 
   public onIpAddressChanged(ipAddress: ServerIpAddress): void {
@@ -325,8 +334,14 @@ export class ServerNicsComponent extends ServerDetailsBase
     this._serverService.deleteServerNetwork(this.server.id, nic.id, networkValues).subscribe();
   }
 
+  /**
+   * Event that emits when the server selection was changed
+   * `@Note:` Base implementation
+   */
   protected serverSelectionChanged(): void {
-    this.updateNicsSubscription = this._serversRepository.findServerNics(this.server)
+    this._getResourceNetworks();
+    this.updateNicsSubscription = this._serversRepository
+      .findServerNics(this.server)
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
@@ -360,6 +375,9 @@ export class ServerNicsComponent extends ServerDetailsBase
     this.fcNetwork.valueChanges.subscribe(this._onNetworkSelect.bind(this));
   }
 
+  /**
+   * Reset network form values to initial
+   */
   private _resetNetworkValues(): void {
     this.fcNetwork.setValue('');
     this.networkName = '';
@@ -417,5 +435,16 @@ export class ServerNicsComponent extends ServerDetailsBase
       // Update the server nics
       this.serverSelectionChanged();
     }
+  }
+
+  /**
+   * Get the resource networks from the server
+   */
+  private _getResourceNetworks(): void {
+    this.networksSubscription = this._serversResourcesRespository
+      .findResourceNetworks(this.serverResource)
+      .subscribe(() => {
+        // Subscribe to update the networks to server resource
+      });
   }
 }

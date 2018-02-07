@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ServersService } from '../servers.service';
-import {
-  Observable,
-  BehaviorSubject
-} from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/Rx';
 import { ServerResource } from '../models';
 import { isNullOrEmpty } from '../../../utilities';
 
@@ -16,12 +12,8 @@ export class VdcService {
    */
   public selectedVdcStream: BehaviorSubject<ServerResource>;
 
-  constructor(private _serversService: ServersService) {
+  constructor() {
     this.selectedVdcStream = new BehaviorSubject<ServerResource>(undefined);
-  }
-
-  public getResources(): Observable<ServerResource[]> {
-    return this._serversService.getResources();
   }
 
   /**
@@ -31,8 +23,6 @@ export class VdcService {
    */
   public setSelectedVdc(selectedVdc: ServerResource): void {
     if (isNullOrEmpty(selectedVdc)) { return; }
-
     this.selectedVdcStream.next(selectedVdc);
   }
-
 }

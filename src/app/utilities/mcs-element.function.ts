@@ -172,3 +172,14 @@ export function getElementPositionFromHost(
 
   return targetElementPosition;
 }
+
+/**
+ * Remove all children of the specified element
+ * @param element Element where the children will be removed
+ */
+export function removeAllChildren(element: HTMLElement): void {
+  if (!element) { return; }
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+}

@@ -4,30 +4,19 @@ import {
   Server,
   ServerResource,
   ServerCatalogItem,
-  ServerCatalogItemType,
-  ServerStorage,
-  ServerNetwork
+  ServerCatalogItemType
 } from '../models';
 import { ServerService } from '../server/server.service';
+import { ServersResourcesRespository } from '../servers-resources.repository';
 import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '../../../utilities';
 
 export abstract class ServerDetailsBase {
-  // Subscriptions
+  public serverResource: ServerResource;
   public serverResourceSubscription: Subscription;
   private _serverSubscription: Subscription;
-
-  /**
-   * Selected server resource map
-   */
-  private _resourceMap: Map<string, ServerResource>;
-
-  /**
-   * Resource of the the selected server
-   */
-  private _resource: ServerResource;
 
   /**
    * Selected Server
@@ -47,14 +36,14 @@ export abstract class ServerDetailsBase {
    * Selected server resource available memory
    */
   public get availableMemoryMB(): number {
-    return this._serverService.computeAvailableMemoryMB(this._resource);
+    return this._serverService.computeAvailableMemoryMB(this.serverResource);
   }
 
   /**
    * Selected server resource available cpu
    */
   public get availableCpu(): number {
-    return this._serverService.computeAvailableCpu(this._resource);
+    return this._serverService.computeAvailableCpu(this.serverResource);
   }
 
   /**
@@ -63,8 +52,8 @@ export abstract class ServerDetailsBase {
   public get resourceMediaList(): ServerCatalogItem[] {
     let resourceMediaList = new Array<ServerCatalogItem>();
 
-    if (!isNullOrEmpty(this._resource.catalogItems)) {
-      this._resource.catalogItems.forEach((catalog) => {
+    if (!isNullOrEmpty(this.serverResource.catalogItems)) {
+      this.serverResource.catalogItems.forEach((catalog) => {
         if (catalog.itemType === ServerCatalogItemType.Media) {
           let resourceMedia = new ServerCatalogItem();
 
@@ -91,20 +80,6 @@ export abstract class ServerDetailsBase {
   }
 
   /**
-   * Selected server resource storage
-   */
-  public get resourceStorage(): ServerStorage[] {
-    return this._resource.storage;
-  }
-
-  /**
-   * Selected server resource networks
-   */
-  public get resourceNetworks(): ServerNetwork[] {
-    return this._resource.networks;
-  }
-
-  /**
    * Flag for ongoing job of selected server
    */
   public get isProcessingJob(): boolean {
@@ -120,11 +95,11 @@ export abstract class ServerDetailsBase {
 
   constructor(
     protected _serverService: ServerService,
+    protected _serversResourcesRespository: ServersResourcesRespository,
     protected _changeDetectorRef: ChangeDetectorRef,
   ) {
     this.server = new Server();
-    this._resourceMap = new Map<string, ServerResource>();
-    this._resource = new ServerResource();
+    this.serverResource = new ServerResource();
     this._listenToSelectedServerStream();
   }
 
@@ -148,30 +123,15 @@ export abstract class ServerDetailsBase {
    * Obtain server resources and set resource map
    */
   private _getServerResources(): void {
-    this.serverResourceSubscription = this._serverService.getServerResources(this.server)
-      .subscribe((resources) => {
-        if (!isNullOrEmpty(resources)) {
-          this._resourceMap = this._serverService.convertResourceToMap(resources);
-          this._setResourceData();
-        }
+    this.serverResourceSubscription = this._serversResourcesRespository
+      .findRecordById(this.server.platform.resourceId)
+      .subscribe((resource) => {
+        this.serverResource = resource;
       });
 
     this.serverResourceSubscription.add(() => {
       this._changeDetectorRef.markForCheck();
     });
-  }
-
-  /**
-   * Set the resource data based on selected server
-   */
-  private _setResourceData(): void {
-    if (isNullOrEmpty(this.server.platform)) { return; }
-
-    let resourceName = this.server.platform.resourceName;
-
-    if (this._resourceMap.has(resourceName)) {
-      this._resource = this._resourceMap.get(resourceName);
-    }
   }
 
   /**

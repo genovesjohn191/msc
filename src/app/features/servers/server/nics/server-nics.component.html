@@ -1,6 +1,6 @@
 <div class="limited-view">
   <!-- Loader settings -->
-  <div [mcsLoader]="serverResourceSubscription"
+  <div [mcsLoader]="[serverResourceSubscription, networksSubscription]"
     [mcsLoaderHideElement]="nicsContent"
     [mcsLoaderText]="textContent.loading"
     mcsLoaderOrientation="top"></div>

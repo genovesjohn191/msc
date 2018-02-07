@@ -12,12 +12,9 @@ import {
   Server,
   ServerPowerState,
   ServerThumbnail,
-  ServerPlatform,
-  ServerEnvironment,
   ServerResource,
   ServerServiceType,
   ServerStorageDeviceUpdate,
-  ServerPlatformType,
   ServerManageNetwork
 } from '../models';
 
@@ -65,17 +62,7 @@ export const mockServerService = {
       } as ServerThumbnail
     });
   },
-  getPlatformData() {
-    let mcsApiResponseMock = new McsApiSuccessResponse<ServerPlatform>();
-    mcsApiResponseMock.status = 200;
-    mcsApiResponseMock.totalCount = 2;
-    mcsApiResponseMock.content = {
-      type: ServerPlatformType.VCloud,
-      environments: new Array<ServerEnvironment>()
-    };
 
-    return Observable.of(mcsApiResponseMock);
-  },
   getServerResources() {
     let mcsApiResponseMock = new McsApiSuccessResponse<ServerResource[]>();
     mcsApiResponseMock.status = 200;

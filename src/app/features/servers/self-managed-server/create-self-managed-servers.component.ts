@@ -27,7 +27,8 @@ import {
   McsNotificationContextService,
   McsJobType,
   McsSafeToNavigateAway,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsOption
 } from '../../../core';
 import {
   mergeArrays,
@@ -55,6 +56,9 @@ import { CreateSelfManagedServersService } from './create-self-managed-servers.s
 import {
   CreateSelfManagedServerComponent
 } from './create-self-managed-server/create-self-managed-server.component';
+import { ServersRepository } from '../servers.repository';
+import { ServersResourcesRespository } from '../servers-resources.repository';
+import { removeAllChildren } from '../../../utilities';
 
 @Component({
   selector: 'mcs-create-self-managed-servers',
@@ -78,18 +82,28 @@ export class CreateSelfManagedServersComponent implements
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives;
 
-  public vdcValue: any;
-  public vdcList: any;
-
   public contextualTextContent: any;
   public textContent: any;
-
+  public obtainDataSubscription: Subscription;
+  public resourceSubscription: Subscription;
   public notifications: McsApiJob[];
   public newServers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
   public deployingServers: boolean;
 
+  /**
+   * VDC name selection field
+   */
+  public vdcList: McsOption[];
+  public get vdcValue(): string { return this._vdcValue; }
+  public set vdcValue(value: string) {
+    if (value !== this._vdcValue) {
+      this._vdcValue = value;
+      this._updateResourceRecord(value);
+    }
+  }
+  private _vdcValue: string;
+
   // Others
-  public obtainDataSubscription: Subscription;
   private _resourcesSubscription: Subscription;
   private _contextulHelpSubscription: Subscription;
   private _notificationsSubscription: Subscription;
@@ -159,6 +173,8 @@ export class CreateSelfManagedServersComponent implements
 
   public constructor(
     private _createSelfManagedServices: CreateSelfManagedServersService,
+    private _serversRepository: ServersRepository,
+    private _serversResourceRepository: ServersResourcesRespository,
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
     private _injector: Injector,
@@ -186,9 +202,9 @@ export class CreateSelfManagedServersComponent implements
 
     // Get all the data from api in parallel
     this.obtainDataSubscription = Observable.forkJoin([
-      this._createSelfManagedServices.getAllServers(),
+      this._serversRepository.findAllRecords(),
       this._createSelfManagedServices.getServersOs(),
-      this._createSelfManagedServices.getResources()
+      this._serversResourceRepository.findAllRecords()
     ])
       .catch((error) => {
         // Handle common error status code
@@ -247,7 +263,7 @@ export class CreateSelfManagedServersComponent implements
    * Add new server instance that supports multiple servers creation
    */
   public addServer(): void {
-    if (!this.selfManagedServersElement) { return; }
+    if (isNullOrEmpty(this.selfManagedServersElement)) { return; }
 
     // Initialize new instance of component service
     let componentService: McsComponentService<CreateSelfManagedServerComponent>;
@@ -375,8 +391,8 @@ export class CreateSelfManagedServersComponent implements
   /**
    * Set the VDC items to dropdown
    */
-  private _setVdcItems(): void {
-    if (!this._serverResourceMap) { return; }
+  private _setVdcItems(): Promise<void> {
+    if (isNullOrEmpty(this._serverResourceMap)) { return; }
 
     // Populate vdc list dropdown list
     this._serverResourceMap.forEach((value, key) => {
@@ -440,22 +456,21 @@ export class CreateSelfManagedServersComponent implements
    * @param response Api response
    */
   private _setAllServers(response: any): void {
-    if (response && response.content) {
-      let servers = response.content as Server[];
-      servers.forEach((server) => {
-        let serversRecord: Server[] = new Array();
-        if (server.serviceType !== ServerServiceType.SelfManaged) { return; }
+    if (isNullOrEmpty(response)) { return; }
+    let servers = response as Server[];
+    servers.forEach((server) => {
+      let serversRecord: Server[] = new Array();
+      if (server.serviceType !== ServerServiceType.SelfManaged) { return; }
 
-        if (!isNullOrEmpty(server.platform)) {
-          let resourceName = server.platform.resourceName;
-          if (this._serverListMap.has(resourceName)) {
-            serversRecord = this._serverListMap.get(resourceName);
-          }
-          serversRecord.push(server);
-          this._serverListMap.set(resourceName, serversRecord);
+      if (!isNullOrEmpty(server.platform)) {
+        let resourceName = server.platform.resourceName;
+        if (this._serverListMap.has(resourceName)) {
+          serversRecord = this._serverListMap.get(resourceName);
         }
-      });
-    }
+        serversRecord.push(server);
+        this._serverListMap.set(resourceName, serversRecord);
+      }
+    });
   }
 
   /**
@@ -464,14 +479,13 @@ export class CreateSelfManagedServersComponent implements
    *
    */
   private _setResourcesData(response: any): void {
-    if (response) {
-      let resources = response as ServerResource[];
-      resources.forEach((resource) => {
-        if (resource.serviceType === ServerServiceType.SelfManaged) {
-          this._serverResourceMap.set(resource.name, resource);
-        }
-      });
-    }
+    if (isNullOrEmpty(response)) { return; }
+    let resources = response as ServerResource[];
+    resources.forEach((resource) => {
+      if (resource.serviceType === ServerServiceType.SelfManaged) {
+        this._serverResourceMap.set(resource.name, resource);
+      }
+    });
   }
 
   /**
@@ -506,9 +520,29 @@ export class CreateSelfManagedServersComponent implements
     }
   }
 
+  /**
+   * Initializes the data and set the corresponding vdc/resource
+   */
   private _initializeData(): void {
-    // Add server
     this._setVdcItems();
-    this.addServer();
+  }
+
+  /**
+   * Updates the resource record in the repository based on the resource id
+   * @param resourceName Resource name to be updated
+   */
+  private _updateResourceRecord(resourceName: string): void {
+    if (isNullOrEmpty(resourceName)) { return; }
+    this.resourceSubscription = this._serversResourceRepository
+      .findRecordById(this._serverResourceMap.get(resourceName).id)
+      .finally(() => {
+        removeAllChildren(this.selfManagedServersElement.nativeElement);
+        this.addServer();
+      })
+      .subscribe((updatedResource) => {
+        // Subscribe to get the updated record of the resource and
+        // automatically reflect the changes to repository cache
+        this._serverResourceMap.set(updatedResource.name, updatedResource);
+      });
   }
 }

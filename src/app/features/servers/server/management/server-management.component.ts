@@ -40,6 +40,7 @@ import {
 } from '../../../../utilities';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
+import { ServersResourcesRespository } from '../../servers-resources.repository';
 import {
   ServerDetailsBase,
   DetachMediaDialogComponent
@@ -65,8 +66,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
 
-  private _hasScaleParam: boolean;
-
+  public computeSubscription: Subscription;
   private _notificationsChangeSubscription: Subscription;
   private _scalingSubscription: Subscription;
   private _paramsSubscription: Subscription;
@@ -74,6 +74,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   private _serverPerformanceScale: ServerPerformanceScale;
   private _deviceType: McsDeviceType;
+  private _hasScaleParam: boolean;
 
   private _isAttachMedia: boolean;
   public get isAttachMedia(): boolean {
@@ -180,6 +181,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   constructor(
     _serverService: ServerService,
+    _serversResourcesRepository: ServersResourcesRespository,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _renderer: Renderer2,
@@ -191,6 +193,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   ) {
     super(
       _serverService,
+      _serversResourcesRepository,
       _changeDetectorRef
     );
     this.primaryVolume = '';
@@ -334,6 +337,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   protected serverSelectionChanged(): void {
     this._setServerFileSystem();
+    this._getServerCompute();
     this._getServerThumbnail();
 
     refreshView(() => {
@@ -429,6 +433,17 @@ export class ServerManagementComponent extends ServerDetailsBase
       .subscribe((deviceType) => {
         this._deviceType = deviceType;
         this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  /**
+   * Get the server resource compute
+   */
+  private _getServerCompute(): void {
+    this.computeSubscription = this._serversResourcesRespository
+      .findResourceCompute(this.serverResource)
+      .subscribe(() => {
+        // Subscribe to update the compute of the selected server resource
       });
   }
 }

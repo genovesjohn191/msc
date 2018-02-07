@@ -12,7 +12,10 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   Server,
   ServerPowerState,
@@ -32,6 +35,7 @@ import {
   unsubscribeSafely
 } from '../../../utilities';
 import { ServersRepository } from '../servers.repository';
+import { ServersResourcesRespository } from '../servers-resources.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 
@@ -88,6 +92,7 @@ export class VdcComponent
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversRepository: ServersRepository,
+    private _serversResourceRepository: ServersResourcesRespository,
     private _vdcService: VdcService
   ) {
     super(_router, _activatedRoute);
@@ -185,21 +190,20 @@ export class VdcComponent
   }
 
   private _getVdcById(): void {
-    this.vdcSubscription = this._vdcService
-      .getResources()
-      .subscribe((resources) => {
-        if (!isNullOrEmpty(resources)) {
-          this.vdc = resources.find((resource) => {
-            return resource.id === this._resourceId;
-          });
-
-          this.selectedItem = {
-            itemId: '',
-            groupName: this.vdc.name
-          } as McsListPanelItem;
-
-          this._vdcService.setSelectedVdc(this.vdc);
-        }
+    this.vdcSubscription = this._serversResourceRepository
+      .findRecordById(this._resourceId)
+      .catch((error) => {
+        // Handle common error status code
+        // this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
+      .subscribe((record) => {
+        this.vdc = record;
+        this.selectedItem = {
+          itemId: '',
+          groupName: this.vdc.name
+        } as McsListPanelItem;
+        this._vdcService.setSelectedVdc(this.vdc);
       });
   }
 }
