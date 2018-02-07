@@ -96,11 +96,15 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       case ServerCommand.Delete:
-        enabled = isNullOrEmpty(this.server.isProcessing) && this.isServerSelfManaged;
+        enabled = this.server.isProcessing && this.isServerSelfManaged;
         break;
 
       case ServerCommand.ViewVCloud:
         enabled = this.server.commandAction !== ServerCommand.Delete;
+        break;
+
+      case ServerCommand.ResetVmPassword:
+        enabled = !this.server.isProcessing;
         break;
 
       default:

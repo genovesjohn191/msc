@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import {
   Router,
-  ActivatedRoute
+  ActivatedRoute,
+  ParamMap
 } from '@angular/router';
 import {
   Subscription,
@@ -72,7 +73,6 @@ export class ServerComponent
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
 
-  private _serverId: any;
   private _notificationsChangeSubscription: any;
 
   public get spinnerIconKey(): string {
@@ -114,7 +114,6 @@ export class ServerComponent
   public ngOnInit() {
     this.serversTextContent = this._textContentProvider.content.servers;
     this.serverTextContent = this._textContentProvider.content.servers.server;
-    this._serverId = this.activatedRoute.snapshot.paramMap.get('id');
 
     this._listenToNotificationsChange();
     this._getServerById();
@@ -129,6 +128,7 @@ export class ServerComponent
   public ngOnDestroy() {
     super.dispose();
     unsubscribeSafely(this._notificationsChangeSubscription);
+    unsubscribeSafely(this.serverSubscription);
   }
 
   /**
@@ -136,15 +136,10 @@ export class ServerComponent
    * @param serverId Server id of the selected server
    */
   public onServerSelect(serverId: any) {
-    if (isNullOrEmpty(serverId) || this._serverId === serverId) { return; }
+    if (isNullOrEmpty(serverId)) { return; }
 
-    this._serverId = serverId;
+    this.router.navigate(['/servers', serverId]);
     this._getServerById();
-
-    this.router.navigate(
-      ['/servers', serverId],
-      { relativeTo: this.activatedRoute }
-    );
   }
 
   /**
@@ -272,8 +267,11 @@ export class ServerComponent
    * Get the corresponding server by id
    */
   private _getServerById(): void {
-    this.serverSubscription = this._serversRepository
-      .findRecordById(this._serverId)
+    this.serverSubscription = this.activatedRoute.paramMap
+      .switchMap((params: ParamMap) => {
+        let serverId = params.get('id');
+        return  this._serversRepository.findRecordById(serverId);
+      })
       .catch((error) => {
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);
@@ -295,6 +293,7 @@ export class ServerComponent
 
         this._serverService.setSelectedServer(this.server);
         this._changeDetectorRef.markForCheck();
+        unsubscribeSafely(this.serverSubscription);
       });
   }
 

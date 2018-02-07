@@ -4,10 +4,7 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { ServerComponent } from './server.component';
-import {
-  Router,
-  ActivatedRoute
-} from '@angular/router';
+import { Router } from '@angular/router';
 import {
   ServersTestingModule,
   mockServerService
@@ -23,15 +20,6 @@ describe('ServerComponent', () => {
   /** Stub Services/Components */
   let component: ServerComponent;
   let router: Router;
-  let mockActivatedRoute = {
-    snapshot: {
-      paramMap: {
-        get(_property: any) {
-          return true;
-        }
-      }
-    }
-  };
   let mockServerDetails = {
     id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
     managementName: 'contoso-lin01',
@@ -54,9 +42,6 @@ describe('ServerComponent', () => {
       ],
       imports: [
         ServersTestingModule
-      ],
-      providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ]
     });
 

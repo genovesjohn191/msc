@@ -28,6 +28,7 @@ import {
 import { FirewallsService } from '../firewalls.service';
 import { FirewallService } from './firewall.service';
 import { FirewallListSource } from './firewall.listsource';
+import { FirewallsRepository } from '../firewalls.repository';
 import {
   isNullOrEmpty,
   refreshView,
@@ -97,7 +98,8 @@ export class FirewallComponent
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _firewallsService: FirewallsService,
-    private _firewallService: FirewallService
+    private _firewallService: FirewallService,
+    private _firewallsRepository: FirewallsRepository
   ) {
     super(_router, _activatedRoute);
     this.firewall = new Firewall();
@@ -129,6 +131,7 @@ export class FirewallComponent
     if (isNullOrEmpty(firewallId)) { return; }
 
     this.router.navigate(['/networking/firewalls', firewallId]);
+    this._getFirewallById();
   }
 
   public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
@@ -161,16 +164,16 @@ export class FirewallComponent
     this.subscription = this.activatedRoute.paramMap
       .switchMap((params: ParamMap) => {
         let firewallId = params.get('id');
-        return this._firewallService.getFirewall(firewallId);
+        return this._firewallsRepository.findRecordById(firewallId);
       })
       .catch((error) => {
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
       })
-      .subscribe((response) => {
-        if (!isNullOrEmpty(response)) {
-          this.firewall = response.content;
+      .subscribe((firewall) => {
+        if (!isNullOrEmpty(firewall)) {
+          this.firewall = firewall;
           this.selectedItem = {
             itemId: this.firewall.id,
             groupName: this.firewall.haGroupName
