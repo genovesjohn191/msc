@@ -24,6 +24,7 @@ import {
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
+import { ServersResourcesRespository } from '../../servers-resources.repository';
 import {
   convertToGb,
   isNullOrEmpty,
@@ -59,6 +60,7 @@ export class ServerStorageComponent extends ServerDetailsBase
 
   // Subscriptions
   public updateDisksSubscription: Subscription;
+  public storageSubscription: Subscription;
   private _notificationsChangeSubscription: Subscription;
   private _createServerDiskSubscription: Subscription;
   private _updateServerDiskSubscription: Subscription;
@@ -111,6 +113,11 @@ export class ServerStorageComponent extends ServerDetailsBase
 
   public get isValidStorageValues(): boolean {
     return this._validateStorageChangedValues();
+  }
+
+  public get resourceStorage(): ServerStorage[] {
+    return !isNullOrEmpty(this.serverResource.storage) ?
+      this.serverResource.storage : new Array();
   }
 
   private _minimumMB: number;
@@ -193,23 +200,23 @@ export class ServerStorageComponent extends ServerDetailsBase
         storageProfileList.push({ value: storage.name, text: storage.name });
       });
     }
-
     return storageProfileList;
   }
 
   private _storageProfile: string;
 
   constructor(
+    _serversResourcesRepository: ServersResourcesRespository,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService,
-    private _serversRepository: ServersRepository
+    private _serversRepository: ServersRepository,
   ) {
-    // Constructor
     super(
       _serverService,
+      _serversResourcesRepository,
       _changeDetectorRef
     );
     this.expandStorage = false;
@@ -231,6 +238,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   public ngOnDestroy() {
     this.dispose();
     this._unregisterJobEvents();
+    unsubscribeSafely(this.storageSubscription);
   }
 
   /**
@@ -375,8 +383,14 @@ export class ServerStorageComponent extends ServerDetailsBase
       this.server.compute && this.server.compute.memoryMB);
   }
 
+  /**
+   * Event that emits when the server selection was changed
+   * `@Note:` Base implementation
+   */
   protected serverSelectionChanged(): void {
-    this.updateDisksSubscription = this._serversRepository.findServerDisks(this.server)
+    this._getResourceStorage();
+    this.updateDisksSubscription = this._serversRepository
+      .findServerDisks(this.server)
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
@@ -490,5 +504,16 @@ export class ServerStorageComponent extends ServerDetailsBase
     storage.storageMB = 0;
     storage.valid = false;
     this.onStorageChanged(storage);
+  }
+
+  /**
+   * Get the resource storage to the selected server
+   */
+  private _getResourceStorage(): void {
+    this.storageSubscription = this._serversResourcesRespository
+      .findResourceStorage(this.serverResource)
+      .subscribe(() => {
+        // Subscribe to update the storage to server resource
+      });
   }
 }

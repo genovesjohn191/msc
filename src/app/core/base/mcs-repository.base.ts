@@ -161,9 +161,10 @@ export abstract class McsRepositoryBase<T> {
    * @param page Page settings where the data returned are based on page index and size
    * @param whereClause Where clause delegate for filtering condition
    */
-  public findAllRecords(page: McsPaginator, search: McsSearch): Observable<T[]> {
+  public findAllRecords(page?: McsPaginator, search?: McsSearch): Observable<T[]> {
     // We need to clear the records when the flag for caching is set to false
-    if (search.searching) {
+    let isSearching = !isNullOrEmpty(search) && search.searching;
+    if (isSearching) {
       this._totalRecordsCount = 0;
     }
 
@@ -175,7 +176,7 @@ export abstract class McsRepositoryBase<T> {
 
     if (requestRecords) {
       // Get all records from API calls implemented under inherited class
-      return this.getAllRecords(displayedRecords, search.keyword)
+      return this.getAllRecords(displayedRecords, !isNullOrEmpty(search) ? search.keyword : '')
         .map((data) => {
           this._totalRecordsCount = data.totalCount;
           this._dataRecords = data.content;

@@ -19,11 +19,14 @@ export class LoaderService {
 
   /**
    * List of subscription to monitor by the loader
+   *
+   * `@Note:` We need to use Set in order for the instance
+   * of the previous subscription not to be added again
    */
-  private _subscriptions: Subscription[];
+  private _subscriptions: Set<Subscription>;
 
   constructor() {
-    this._subscriptions = new Array();
+    this._subscriptions = new Set();
   }
 
   /**
@@ -38,11 +41,16 @@ export class LoaderService {
 
     // Filter subscribtions
     if (Array.isArray(subscriptions)) {
-      this._subscriptions = subscriptions.filter((subscription) => {
+      let filtered = subscriptions.filter((subscription) => {
         return !isNullOrEmpty(subscription);
       });
+      if (!isNullOrEmpty(filtered)) {
+        filtered.forEach((sub) => {
+          this._subscriptions.add(sub);
+        });
+      }
     } else {
-      this._subscriptions.push(subscriptions);
+      this._subscriptions.add(subscriptions);
     }
 
     // Add subscribers to all subscriptions
@@ -57,7 +65,7 @@ export class LoaderService {
    * Determine whether the loader/subscriptions are still ongoing
    */
   public isActive(): boolean {
-    if (isNullOrEmpty(this._subscriptions)) {
+    if (isNullOrEmpty(this._subscriptions) || this._subscriptions.size === 0) {
       this.fadeOut = 'fadeOut';
       return false;
     }
@@ -70,9 +78,6 @@ export class LoaderService {
    * @param subscription Subscription to monitor the process
    */
   private _onCompletion(subscription: Subscription) {
-    let subsIndex = this._subscriptions.indexOf(subscription);
-    if (subsIndex === -1) { return; }
-
-    this._subscriptions.splice(subsIndex, 1);
+    this._subscriptions.delete(subscription);
   }
 }

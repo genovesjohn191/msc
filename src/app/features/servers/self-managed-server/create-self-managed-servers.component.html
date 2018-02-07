@@ -5,7 +5,7 @@
     (onNext)="onPreDeployServer($event)">
 
     <!-- Loader settings -->
-    <div [mcsLoader]="obtainDataSubscription"
+    <div [mcsLoader]="[obtainDataSubscription, resourceSubscription]"
       [mcsLoaderHideElement]="serverDetailsStep"
       [mcsLoaderText]="textContent.serverDetailsStep.loading"
       mcsLoaderOrientation="top"></div>
@@ -22,6 +22,7 @@
             </mcs-select-group>
           </mcs-select>
         </mcs-form-field>
+
         <div class="new-servers-container" #selfManagedServersElement></div>
         <ng-container mcsWizardActionPlacement></ng-container>
 

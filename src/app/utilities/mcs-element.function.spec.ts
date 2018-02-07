@@ -4,7 +4,8 @@ import {
   getElementPosition,
   getElementPositionFromHost,
   getElementStyle,
-  getOffsetParent
+  getOffsetParent,
+  removeAllChildren
 } from './mcs-element.function';
 
 describe('McsElementFunction', () => {
@@ -264,6 +265,19 @@ describe('McsElementFunction', () => {
 
       expect(position.top).toBe(300);
       expect(position.left).toBe(450);
+    });
+  });
+
+  describe('removeAllChildren()', () => {
+    it('should remove all the children element of the specified element', () => {
+      let parentElement = createElement(1, 1, 2, 3);
+      let childElement1 = createElement(1, 1, 2, 3);
+      let childElement2 = createElement(1, 1, 2, 3);
+      parentElement.appendChild(childElement1);
+      parentElement.appendChild(childElement2);
+      expect(parentElement.children.length).toBe(2);
+      removeAllChildren(parentElement);
+      expect(parentElement.children.length).toBe(0);
     });
   });
 });

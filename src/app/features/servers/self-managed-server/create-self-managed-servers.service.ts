@@ -34,20 +34,6 @@ export class CreateSelfManagedServersService {
   }
 
   /**
-   * This will get the resources data from the servers service
-   */
-  public getResources() {
-    return this._serversService.getResources();
-  }
-
-  /**
-   * This will get all the servers from the servers service
-   */
-  public getAllServers() {
-    return this._serversService.getServers();
-  }
-
-  /**
    * This will get the server templates data from the API
    */
   public getServersOs() {

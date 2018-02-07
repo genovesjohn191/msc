@@ -10,9 +10,7 @@ import {
   ServerUpdate,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
-  ServerPlatform,
   ServerResource,
-  ServerEnvironment,
   ServerStorage,
   ServerPowerState,
   ServerNicSummary,
@@ -44,13 +42,6 @@ export class ServerService {
    */
   public getServer(id: any): Observable<McsApiSuccessResponse<Server>> {
     return this._serversService.getServer(id);
-  }
-
-  /**
-   * Get Platform Data (MCS API Response)
-   */
-  public getServerPlatforms(): Observable<McsApiSuccessResponse<ServerPlatform[]>> {
-    return this._serversService.getServerPlatforms();
   }
 
   /**
@@ -240,35 +231,6 @@ export class ServerService {
   public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
     return this._serversService.computeAvailableStorageMB(storage,
       isNullOrEmpty(memoryMB) ? 0 : memoryMB);
-  }
-
-  /**
-   * Get the server resource based on server details
-   * @param server Server to get the resource from
-   */
-  public getServerResources(server: Server): Observable<ServerResource[]> {
-    return this.getServerPlatforms().map((response) => {
-      let serverPlatform: ServerPlatform;
-
-      if (!isNullOrEmpty(response) && !isNullOrEmpty(response.content)) {
-        serverPlatform = response.content.find((targetPlatform) => {
-          return targetPlatform.type === server.platform.type;
-        });
-      }
-
-      return !isNullOrEmpty(serverPlatform) ? serverPlatform : new ServerPlatform();
-    }).map((platform) => {
-      let serverEnvironment: ServerEnvironment;
-
-      if (!isNullOrEmpty(platform) && !isNullOrEmpty(platform.environments)) {
-        serverEnvironment = platform.environments.find((targetEnvironment) => {
-          return targetEnvironment.name === server.platform.environmentName;
-        });
-      }
-
-      return !isNullOrEmpty(serverEnvironment) ?
-        serverEnvironment.resources : new Array<ServerResource>();
-    });
   }
 
   /**

@@ -38,7 +38,7 @@ import {
   VdcComponent,
   VdcOverviewComponent
 } from './vdc';
-/** Services and Resolvers */
+/** Services */
 import { serversProviders } from './servers.constants';
 /** Modules */
 import { SharedModule } from '../../shared';
