@@ -119,7 +119,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get serverCpuValue(): string {
-    return appendUnitSuffix(this.serverCpuCount, 'megabyte');
+    return appendUnitSuffix(this.serverCpuCount, 'cpu');
   }
 
   // Check if the current server's serverType is managed
