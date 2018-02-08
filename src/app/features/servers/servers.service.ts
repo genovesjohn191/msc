@@ -52,7 +52,9 @@ import {
   ServerManageMedia,
   ServerPlatformType,
   ServerRunningStatus,
-  ServerVersionStatus
+  ServerVersionStatus,
+  ServerSnapshot,
+  ServerCreateSnapshot
 } from './models';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
@@ -178,7 +180,7 @@ export class ServersService {
   public putServerCommand(
     id: any,
     action: ServerCommand,
-    referenceObject: any
+    referenceObject: ServerClientObject
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/power`;
@@ -210,7 +212,7 @@ export class ServersService {
    * @param id Server identification
    * @param referenceObject Reference object to obtain during subscribe
    */
-  public resetVmPassowrd(id: any, referenceObject: any):
+  public resetVmPassowrd(id: any, referenceObject: ServerClientObject):
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/password/reset`;
@@ -363,7 +365,7 @@ export class ServersService {
    */
   public deleteServer(
     id: string,
-    referenceObject: any
+    referenceObject: ServerClientObject
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}`;
@@ -809,6 +811,133 @@ export class ServersService {
         apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerResource[]>>(
           response,
           this._responseReviverParser
+        );
+
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
+        return apiResponse;
+      });
+  }
+
+  /**
+   * Get server snapshots from API
+   * @param id Server identification
+   */
+  public getServerSnapshots(serverId: any): Observable<McsApiSuccessResponse<ServerSnapshot[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/snapshot`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<ServerSnapshot>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerSnapshot>>(
+          response,
+          this._responseReviverParser
+        );
+
+        // Convert the response to array so that it is ready for extension
+        let convertedResponse: McsApiSuccessResponse<ServerSnapshot[]>;
+        convertedResponse.status = apiResponse.status;
+        convertedResponse.totalCount = apiResponse.totalCount;
+        convertedResponse.content = new Array(apiResponse.content);
+
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, convertedResponse);
+        return convertedResponse;
+      });
+  }
+
+  /**
+   * Create the server snapshot
+   * *Note: This will send a job (notification)
+   * @param id Server identification
+   * @param createSnapshot Snapshot model to be created
+   */
+  public createServerSnapshot(id: any, createSnapshot: ServerCreateSnapshot):
+    Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshot`;
+    mcsApiRequestParameter.recordData = JSON.stringify(createSnapshot);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<McsApiJob>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
+          response,
+          reviverParser
+        );
+
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
+        return apiResponse;
+      });
+  }
+
+  /**
+   * Restore the server snapshot
+   * *Note: This will send a job (notification)
+   * @param id Server identification
+   * @param referenceObject Reference object of the server client to determine the status of job
+   */
+  public restoreServerSnapshot(id: any, referenceObject: ServerClientObject):
+    Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshot/restore`;
+    mcsApiRequestParameter.recordData = JSON.stringify({
+      clientReferenceObject: referenceObject
+    });
+
+    return this._mcsApiService.put(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<McsApiJob>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
+          response,
+          reviverParser
+        );
+
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
+        return apiResponse;
+      });
+  }
+
+  /**
+   * This will delete the existing server snapshot
+   * @param id Server id to where the snapshot will be deleted
+   * @param referenceObject Reference object
+   */
+  public deleteServerSnapshot(
+    id: string,
+    referenceObject: ServerClientObject
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshot`;
+    mcsApiRequestParameter.recordData = JSON.stringify({
+      clientReferenceObject: referenceObject
+    });
+
+    return this._mcsApiService.delete(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
+      .map((response) => {
+        let apiResponse: McsApiSuccessResponse<McsApiJob>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
+          response,
+          reviverParser
         );
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);

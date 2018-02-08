@@ -55,9 +55,14 @@ export class ServersListSource implements McsDataSource<ServerList> {
     ];
 
     return Observable.merge(...displayDataChanges)
-      .switchMap(() => {
+      .switchMap((instance) => {
         // Notify the table that a process is currently in-progress
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
+        // if the user is not searching because the filtering has already a loader
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataLoadingStream.next(McsDataStatus.InProgress);
+        }
 
         // Find all records based on settings provided in the input
         return this._serversRepository.findAllRecords(undefined, this._search)
@@ -94,8 +99,14 @@ export class ServersListSource implements McsDataSource<ServerList> {
 
     // Check for changes in record
     let changes = this._serverDiffer.diff(servers);
-    if (!changes) { return this._serverList; }
+    if (isNullOrEmpty(changes)) { return this._serverList; }
 
+    // We need to check again if there are added or deleted since
+    // the changes will trigger if their are changes on the data only
+    let hasChangesOnCount = servers.length !== this._serverList.length;
+    if (!hasChangesOnCount) { return this._serverList;}
+
+    // Remap the content for the listing source
     this._serverList = new Array<ServerList>();
     servers.forEach((server) => {
       let hasResourceName = !isNullOrEmpty(server.platform)
@@ -113,7 +124,6 @@ export class ServersListSource implements McsDataSource<ServerList> {
     this._serverList.sort((first: ServerList, second: ServerList) => {
       return compareStrings(first.vdcName, second.vdcName);
     });
-
     return this._serverList;
   }
 }

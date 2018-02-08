@@ -20,3 +20,7 @@ export * from './server-dialogs/delete-storage/delete-storage.dialog';
 export * from './server-dialogs/delete-nic/delete-nic.dialog';
 export * from './server-dialogs/detach-media/detach-media.dialog';
 export * from './server-dialogs/delete-server/delete-server.dialog';
+export * from './server-dialogs/create-snapshot/create-snapshot.dialog';
+export * from './server-dialogs/delete-snapshot/delete-snapshot.dialog';
+export * from './server-dialogs/insufficient-storage-snapshot/insufficient-storage-snapshot.dialog';
+export * from './server-dialogs/restore-snapshot/restore-snapshot.dialog';

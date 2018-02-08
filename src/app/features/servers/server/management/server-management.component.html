@@ -1,6 +1,6 @@
 <div class="limited-view">
   <!-- Loader settings -->
-  <div [mcsLoader]="[serverResourceSubscription, computeSubscription]"
+  <div [mcsLoader]="serverResourceSubscription"
     [mcsLoaderHideElement]="managementContent"
     [mcsLoaderText]="textContent.loading"
     mcsLoaderOrientation="top"></div>
@@ -8,9 +8,9 @@
   <div #managementContent>
     <div *ngIf="!isActiveScale && !isAttachMedia" class="content-grid">
       <div class="grid-row">
-        <div class="grid-column">
-          <h3 class="grid-content-header">{{ textContent.vmProperties.title }}</h3>
-          <mcs-list spacing="xsmall" class="grid-content-body">
+        <div class="grid-column container-wrapper break-on-small">
+          <h3 class="container-header">{{ textContent.vmProperties.title }}</h3>
+          <mcs-list spacing="xsmall">
             <!-- Status -->
             <mcs-list-item>
               <span>{{ textContent.vmProperties.status }}:</span>
@@ -41,8 +41,8 @@
         </div>
 
         <!-- Console -->
-        <div class="grid-column">
-          <h3 class="grid-content-header">{{ textContent.vmConsole.title }}</h3>
+        <div class="grid-column container-wrapper break-on-small">
+          <h3 flex="none" class="container-header">{{ textContent.vmConsole.title }}</h3>
           <div display-flex="column" align-items="flex-start"
             (click)="onClickViewConsole()" [disabled]="!consoleEnabled">
             <div class="thumbnail-container" cursor="pointer">
@@ -54,13 +54,13 @@
       </div>
 
       <div class="grid-row">
-        <div class="grid-column">
-          <h3 class="grid-content-header">{{ textContent.storage.title }}
+        <div class="grid-column container-wrapper break-on-small">
+          <h3 class="container-header">{{ textContent.storage.title }}
             <a *mcsHasPermission="['VmEdit']" [routerLink]="['../storage']">
               {{ textContent.storage.manage }}
             </a>
           </h3>
-          <div class="grid-content-body">
+          <div>
             <div *ngIf="!hasStorageInformation">
               <span class="missing-data-info">{{ textContent.storage.noContentMessage }}</span>
             </div>
@@ -80,9 +80,9 @@
           </div>
         </div>
 
-        <div class="grid-column">
-          <h3 class="grid-content-header">{{ textContent.nics.title }}</h3>
-          <div class="grid-content-body">
+        <div class="grid-column container-wrapper break-on-small">
+          <h3 class="container-header">{{ textContent.nics.title }}</h3>
+          <div>
             <div *ngIf="!hasNics">
               <span class="missing-data-info">
                 {{ textContent.nics.noContentMessage }}
@@ -102,8 +102,8 @@
       </div>
 
       <div class="grid-row">
-        <div class="grid-column">
-          <h3 class="grid-content-header">
+        <div class="grid-column container-wrapper break-on-small">
+          <h3 class="container-header">
             {{ textContent.media.title }}
             <span [mcsTooltip]="textContent.media.noAvailableMedia"
               [mcsTooltipShow]="!hasAvailableMedia">
@@ -114,7 +114,7 @@
             </span>
           </h3>
 
-          <div class="grid-content-body">
+          <div>
             <div *ngIf="!hasMedia">
               <span class="missing-data-info">{{ textContent.media.noContentMessage }}</span>
             </div>
@@ -143,9 +143,9 @@
           </div>
         </div>
 
-        <div class="grid-column">
-          <h3 class="grid-content-header">{{ textContent.supportIdentifiers.title }}</h3>
-          <mcs-list spacing="xsmall" class="grid-content-body">
+        <div class="grid-column container-wrapper break-on-small">
+          <h3 class="container-header">{{ textContent.supportIdentifiers.title }}</h3>
+          <mcs-list spacing="xsmall">
             <!-- VDC -->
             <mcs-list-item>
               <span>{{ textContent.supportIdentifiers.vdc }}:</span>
@@ -167,8 +167,8 @@
     </div>
 
     <div *ngIf="isActiveScale" class="server-performance-scale">
-      <div class="vertical-items-spacing-medium">
-        <h3 class="grid-content-header">Scaling {{ server.managementName }}</h3>
+      <div class="container-wrapper">
+        <h3 class="container-header">Scaling {{ server.managementName }}</h3>
         <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
           [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
           [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
@@ -203,8 +203,8 @@
     </div>
 
     <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
-      <div class="vertical-items-spacing-medium" [disabled]="isProcessingJob">
-        <h3 class="grid-content-header">{{ textContent.media.attachHeading }}</h3>
+      <div class="container-wrapper" [disabled]="isProcessingJob">
+        <h3 class="container-header">{{ textContent.media.attachHeading }}</h3>
         <mcs-select [(ngModel)]="selectedMedia"
           [placeholder]="textContent.media.mediaSelect.placeholder">
           <mcs-select-group [header]="textContent.media.mediaSelect.header">

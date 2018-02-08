@@ -68,11 +68,14 @@ export class ServerComponent
   public search: McsSearch;
 
   public server: Server;
-  public serverSubscription: Subscription;
+  public selectedGroupName: string;
+  public selectedServerName: string;
   public serversTextContent: any;
-  public serverTextContent: any;
+  public textContent: any;
   public serverListSource: ServersListSource | null;
+  public serverSubscription: Subscription;
 
+  private _parameterSubscription: Subscription;
   private _notificationsChangeSubscription: any;
 
   public get spinnerIconKey(): string {
@@ -113,10 +116,10 @@ export class ServerComponent
 
   public ngOnInit() {
     this.serversTextContent = this._textContentProvider.content.servers;
-    this.serverTextContent = this._textContentProvider.content.servers.server;
+    this.textContent = this._textContentProvider.content.servers.server;
 
     this._listenToNotificationsChange();
-    this._getServerById();
+    this._listenToParamChange();
   }
 
   public ngAfterViewInit() {
@@ -129,17 +132,18 @@ export class ServerComponent
     super.dispose();
     unsubscribeSafely(this._notificationsChangeSubscription);
     unsubscribeSafely(this.serverSubscription);
+    unsubscribeSafely(this._parameterSubscription);
   }
 
   /**
    * Event that emits when the server is selected
-   * @param serverId Server id of the selected server
+   * @param _server Selected server instance
    */
-  public onServerSelect(serverId: any) {
-    if (isNullOrEmpty(serverId)) { return; }
+  public onServerSelect(_server: Server) {
+    if (isNullOrEmpty(_server)) { return; }
 
-    this.router.navigate(['/servers', serverId]);
-    this._getServerById();
+    this._setSelectedServerInfo(_server);
+    this.router.navigate(['/servers', _server.id]);
   }
 
   /**
@@ -264,36 +268,22 @@ export class ServerComponent
   }
 
   /**
-   * Get the corresponding server by id
+   * This will set the active server when data was obtained from repository
+   * @param serverId Server ID to be the basis of the server
    */
-  private _getServerById(): void {
-    this.serverSubscription = this.activatedRoute.paramMap
-      .switchMap((params: ParamMap) => {
-        let serverId = params.get('id');
-        return  this._serversRepository.findRecordById(serverId);
-      })
+  private _getServerById(serverId: string): void {
+    this.serverSubscription = this._serversRepository
+      .findRecordById(serverId)
       .catch((error) => {
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
       })
-      .subscribe((record) => {
-        this.server = record;
-
-        let hasResourceName = !isNullOrEmpty(this.server.platform)
-          && !isNullOrEmpty(this.server.platform.resourceName);
-
-        let resourceName = (hasResourceName) ?
-          this.server.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
-
-        this.selectedItem = {
-          itemId: this.server.id,
-          groupName: resourceName
-        } as McsListPanelItem;
-
+      .subscribe((response) => {
+        this.server = response;
+        this._setSelectedServerInfo(response);
         this._serverService.setSelectedServer(this.server);
         this._changeDetectorRef.markForCheck();
-        unsubscribeSafely(this.serverSubscription);
       });
   }
 
@@ -305,5 +295,39 @@ export class ServerComponent
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  /**
+   * Listen to every change of the parameter
+   */
+  private _listenToParamChange(): void {
+    this._parameterSubscription = this.activatedRoute.paramMap
+      .subscribe((params: ParamMap) => {
+        let serverId = params.get('id');
+        this._getServerById(serverId);
+      });
+  }
+
+  /**
+   * This will set the selected server details every selection
+   */
+  private _setSelectedServerInfo(selectedServer: Server): void {
+    if (isNullOrEmpty(selectedServer)) { return; }
+
+    this.selectedServerName = selectedServer.name;
+    let hasResourceName = !isNullOrEmpty(selectedServer.platform)
+      && !isNullOrEmpty(selectedServer.platform.resourceName);
+
+    let resourceName = (hasResourceName) ?
+      selectedServer.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
+    this.selectedGroupName = resourceName;
+
+    // Initially set the selected item in the list source
+    if (isNullOrEmpty(this.selectedItem)) {
+      this.selectedItem = {
+        itemId: selectedServer.id,
+        groupName: resourceName
+      } as McsListPanelItem;
+    }
   }
 }

@@ -70,7 +70,7 @@ describe('ServerComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it('should define the text content value to serverManagementTextContent', () => {
-      expect(component.serverTextContent).toBeDefined();
+      expect(component.textContent).toBeDefined();
     });
 
     it('should set the value of server', () => {
@@ -80,13 +80,13 @@ describe('ServerComponent', () => {
 
   describe('onServerSelect()', () => {
     it('should set the value of server from the selected server', () => {
-      component.onServerSelect(mockServerDetails.id);
+      component.onServerSelect(mockServerDetails);
       expect(component.server).toBeDefined();
     });
 
     it('should navigate to the selected server management page', () => {
       spyOn(router, 'navigate');
-      component.onServerSelect(mockServerDetails.id);
+      component.onServerSelect(mockServerDetails);
       expect(router.navigate).toHaveBeenCalled();
     });
   });

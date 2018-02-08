@@ -40,7 +40,10 @@ describe('ServersService', () => {
     searchKeyword: 'Arrian',
     id: 459,
     action: ServerCommand.Start,
-    referenceObject: { command: 1, clientReferenceObject: undefined }
+    referenceObject: {
+      commandAction: 1,
+      processingText: 'process'
+    } as ServerClientObject
   };
 
   beforeEach(async(() => {

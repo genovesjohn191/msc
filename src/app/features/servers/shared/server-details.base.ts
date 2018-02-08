@@ -130,6 +130,7 @@ export abstract class ServerDetailsBase {
       });
 
     this.serverResourceSubscription.add(() => {
+      this.serverSelectionChanged();
       this._changeDetectorRef.markForCheck();
     });
   }
@@ -143,7 +144,6 @@ export abstract class ServerDetailsBase {
       .subscribe((server) => {
         if (!isNullOrEmpty(server) && this.server.id !== server.id) {
           this.server = server;
-          this.serverSelectionChanged.bind(this);
           this._getServerResources();
         }
       });

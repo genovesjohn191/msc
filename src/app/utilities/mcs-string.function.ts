@@ -29,11 +29,30 @@ export function getEncodedUrl(file: string, fileType: string, encoding: string):
  */
 export function replacePlaceholder(
   fullString: string,
-  placeholderName: string,
-  placeholderValue: string
+  placeholderNames: string | string[],
+  placeholderValues: string | string[]
 ): string {
   if (!fullString) { return undefined; }
-  return fullString.replace(`{{${placeholderName}}}`, placeholderValue);
+
+  let placeholders: string[];
+  let values: string[];
+
+  // Set values based on parameters input
+  placeholders = Array.isArray(placeholderNames) ? placeholderNames
+    : new Array<string>(placeholderNames);
+  values = Array.isArray(placeholderValues) ? placeholderValues
+    : new Array<string>(placeholderValues);
+  if (placeholders.length !== values.length) {
+    throw new Error('Count of placeholders and values are not the same');
+  }
+
+  // Replace each string (immutable)
+  let replacedString: string = fullString;
+  for (let index = 0; index < placeholders.length; index++) {
+    replacedString = replacedString
+      .replace(`{{${placeholders[index]}}}`, values[index]);
+  }
+  return replacedString;
 }
 
 /**

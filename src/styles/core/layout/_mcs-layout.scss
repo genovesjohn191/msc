@@ -37,10 +37,6 @@
   @include align-items(stretch);
 }
 
-.text-center {
-  text-align: center;
-}
-
 // Justify Content
 .justify-content-flex-start {
   justify-content: flex-start;

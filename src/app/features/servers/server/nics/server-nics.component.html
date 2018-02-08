@@ -1,17 +1,15 @@
 <div class="limited-view">
   <!-- Loader settings -->
-  <div [mcsLoader]="[serverResourceSubscription, networksSubscription]"
+  <div [mcsLoader]="serverResourceSubscription"
     [mcsLoaderHideElement]="nicsContent"
     [mcsLoaderText]="textContent.loading"
     mcsLoaderOrientation="top"></div>
 
-  <div class="vertical-items-spacing-large" #nicsContent>
-    <div class="grid-column">
-      <h3 class="grid-content-header">{{ textContent.title }}</h3>
-      <p *ngIf="textContent.description">{{ textContent.description }}</p>
-    </div>
+  <div class="vertical-items-spacing-large container-wrapper" #nicsContent>
+    <h3 class="container-header">{{ textContent.title }}</h3>
+    <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
-    <div [hidden]="isUpdate" class="vertical-items-spacing-large grid-column">
+    <div [hidden]="isUpdate" class="vertical-items-spacing-large">
       <div class="position-relative">
         <div [mcsLoader]="updateNicsSubscription">
           <p *ngIf="!hasNics">{{ textContent.noNics }}</p>
@@ -125,7 +123,7 @@
       </div>
     </div>
 
-    <div *ngIf="isUpdate" class="vertical-items-spacing-large grid-column">
+    <div *ngIf="isUpdate" class="vertical-items-spacing-large">
       <div *ngIf="hasAvailableResourceNetwork" class="action-box" [disabled]="isProcessing">
         <h4>{{ textContent.editHeading }} {{ selectedNic.index }}</h4>
 

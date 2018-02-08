@@ -2,6 +2,10 @@
 .grid-row {
   @include display-flex(row);
   @include flex-wrap(wrap);
+
+  + .grid-row {
+    margin-top: $space-large;
+  }
 }
 
 .grid-column {
@@ -12,26 +16,20 @@
   padding-left: $space-medium;
   padding-right: $space-medium;
 
+  &.right-orientation {
+    @include display-flex(row);
+    @include align-items(flex-start);
+    justify-content: flex-end;
+  }
+
   @include breakpoint(xsmall) {
-    @include flex(1 1 100%);
-    padding-top: $space-medium;
-    padding-bottom: $space-medium;
     padding-left: 0;
     padding-right: 0;
+
+    &.break-on-small {
+      @include flex(1 1 100%);
+      padding-top: $space-medium;
+      padding-bottom: $space-medium;
+    }
   }
-}
-
-.grid-content-header {
-  position: relative;
-  margin-bottom: $space-medium;
-  max-width: 100%;
-  min-height: 1px;
-  outline: none;
-}
-
-.grid-content-body {
-  position: relative;
-  max-width: 100%;
-  min-height: 1px;
-  outline: none;
 }

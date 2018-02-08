@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  deleteArrayRecord,
+  clearArrayRecord
+} from '../../utilities';
 
 @Injectable()
 export class LoaderService {
@@ -19,14 +23,11 @@ export class LoaderService {
 
   /**
    * List of subscription to monitor by the loader
-   *
-   * `@Note:` We need to use Set in order for the instance
-   * of the previous subscription not to be added again
    */
-  private _subscriptions: Set<Subscription>;
+  private _subscriptions: Subscription[];
 
   constructor() {
-    this._subscriptions = new Set();
+    this._subscriptions = new Array();
   }
 
   /**
@@ -38,6 +39,7 @@ export class LoaderService {
    */
   public setSubscribers(subscriptions: Subscription | Subscription[]) {
     if (isNullOrEmpty(subscriptions)) { return; }
+    clearArrayRecord(this._subscriptions);
 
     // Filter subscribtions
     if (Array.isArray(subscriptions)) {
@@ -46,11 +48,11 @@ export class LoaderService {
       });
       if (!isNullOrEmpty(filtered)) {
         filtered.forEach((sub) => {
-          this._subscriptions.add(sub);
+          this._subscriptions.push(sub);
         });
       }
     } else {
-      this._subscriptions.add(subscriptions);
+      this._subscriptions.push(subscriptions);
     }
 
     // Add subscribers to all subscriptions
@@ -65,7 +67,7 @@ export class LoaderService {
    * Determine whether the loader/subscriptions are still ongoing
    */
   public isActive(): boolean {
-    if (isNullOrEmpty(this._subscriptions) || this._subscriptions.size === 0) {
+    if (isNullOrEmpty(this._subscriptions) || this._subscriptions.length === 0) {
       this.fadeOut = 'fadeOut';
       return false;
     }
@@ -77,7 +79,9 @@ export class LoaderService {
    * This method will get notified when the subscription is finished
    * @param subscription Subscription to monitor the process
    */
-  private _onCompletion(subscription: Subscription) {
-    this._subscriptions.delete(subscription);
+  private _onCompletion(_subscription: Subscription) {
+    deleteArrayRecord(this._subscriptions, (_sub) => {
+      return _sub.closed === true;
+    });
   }
 }
