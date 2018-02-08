@@ -3,12 +3,13 @@ import { ServerPowerState } from '../enumerations/server-power-state.enum';
 import { ServerCommand } from '../enumerations/server-command.enum';
 
 export class ServerClientObject {
-  public serverId: any;
-  public serviceType: ServerServiceType;
-  public powerState: ServerPowerState;
-  public commandAction: ServerCommand;
-  public newName: string;
-  public isOperable: boolean;
-  public notificationStatus: string;
-  public processingText: string;
+  public serverId?: any;
+  public userId?: string;
+  public serviceType?: ServerServiceType;
+  public powerState?: ServerPowerState;
+  public commandAction?: ServerCommand;
+  public newName?: string;
+  public isOperable?: boolean;
+  public notificationStatus?: string;
+  public processingText?: string;
 }

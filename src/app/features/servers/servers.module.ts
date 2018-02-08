@@ -14,7 +14,11 @@ import {
   DeleteNicDialogComponent,
   DetachMediaDialogComponent,
   DeleteServerDialogComponent,
-  RenameServerDialogComponent
+  RenameServerDialogComponent,
+  CreateSnapshotDialogComponent,
+  DeleteSnapshotDialogComponent,
+  InsufficientStorageSnapshotDialogComponent,
+  RestoreSnapshotDialogComponent
 } from './shared';
 /** Server */
 import {
@@ -52,6 +56,10 @@ import { SharedModule } from '../../shared';
     DetachMediaDialogComponent,
     DeleteServerDialogComponent,
     RenameServerDialogComponent,
+    CreateSnapshotDialogComponent,
+    DeleteSnapshotDialogComponent,
+    InsufficientStorageSnapshotDialogComponent,
+    RestoreSnapshotDialogComponent,
     CreateSelfManagedServerComponent
   ],
   declarations: [
@@ -80,7 +88,11 @@ import { SharedModule } from '../../shared';
     DeleteNicDialogComponent,
     DetachMediaDialogComponent,
     DeleteServerDialogComponent,
-    RenameServerDialogComponent
+    RenameServerDialogComponent,
+    CreateSnapshotDialogComponent,
+    DeleteSnapshotDialogComponent,
+    InsufficientStorageSnapshotDialogComponent,
+    RestoreSnapshotDialogComponent
   ],
   imports: [
     SharedModule

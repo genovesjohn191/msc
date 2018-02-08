@@ -1,0 +1,20 @@
+<mcs-dialog>
+  <mcs-dialog-header>
+    <h3>{{ textContent.title }}</h3>
+  </mcs-dialog-header>
+
+  <mcs-dialog-content>
+    <div class="labelled-icon">
+      <mcs-icon [key]="warningIconKey"></mcs-icon>
+      <div class="block-items-large">
+        <span>{{ textContent.alert }}</span>
+        <span [innerHTML]="confirmationMessage"></span>
+      </div>
+    </div>
+  </mcs-dialog-content>
+
+  <mcs-dialog-actions>
+    <a id="ctaCloseInsufficientStorageSnapshotDialog"
+      (click)="closeDialog()">{{ textContent.cancel }}</a>
+  </mcs-dialog-actions>
+</mcs-dialog>

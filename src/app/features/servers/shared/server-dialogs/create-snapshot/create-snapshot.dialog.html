@@ -1,0 +1,24 @@
+<mcs-dialog>
+  <mcs-dialog-header>
+    <h3>{{ textContent.title }}</h3>
+  </mcs-dialog-header>
+
+  <mcs-dialog-content>
+    <div class="labelled-icon">
+      <mcs-icon [key]="warningIconKey"></mcs-icon>
+      <div class="block-items-medium">
+        <span>{{ textContent.alert }}</span>
+        <span [innerHTML]="confirmationMessage"></span>
+      </div>
+    </div>
+  </mcs-dialog-content>
+
+  <mcs-dialog-actions>
+    <a id="ctaCloseCreateSnapshotDialog"
+      (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <button mcsButton id="ctaCreateSnapshot" arrow="right"
+      size="small" (click)="createSnapshot()">
+      {{ textContent.confirm }}
+    </button>
+  </mcs-dialog-actions>
+</mcs-dialog>

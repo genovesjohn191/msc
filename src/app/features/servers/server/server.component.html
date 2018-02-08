@@ -1,26 +1,25 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <div class="horizontal-items-spacing-small"
-    display-flex="row" align-items="center">
+    <div class="horizontal-items-spacing-small" display-flex="row" align-items="center">
       <div>
         <a (click)="navigateToResource(server)">
-          <h3>{{ server.platform?.resourceName }}</h3>
+          <h3>{{ selectedGroupName }}</h3>
         </a>
       </div>
-      <div>
+      <div *ngIf="selectedItem">
         <mcs-icon [key]="angleDoubleRightIconKey"></mcs-icon>
       </div>
       <div>
-        <h3>{{ server.name }}</h3>
+        <h3>{{ selectedServerName }}</h3>
       </div>
     </div>
   </ng-container>
 
   <!-- Left Panel -->
-  <mcs-left-panel *mcsLeftPanelDef="serverTextContent.leftPanelHeader">
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- listing panel -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="serverTextContent.panel">
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.panel">
       <div class="listing-panel-wrapper">
         <mcs-search #search></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem">
@@ -32,7 +31,7 @@
             <mcs-list-panel-item *mcsListPanelItemDef="let serverPanel"
               [itemId]="serverPanel.server.id" [groupName]="serverPanel.vdcName"
               [disabled]="serverDeleting(serverPanel.server)"
-              (click)="onServerSelect(serverPanel.server.id)">
+              (click)="onServerSelect(serverPanel.server)">
               <mcs-icon *ngIf="!serverPanel.server.isProcessing"
                 [key]="getStateIconKey(serverPanel.server.powerState)"></mcs-icon>
 
@@ -61,19 +60,24 @@
     </mcs-left-panel-item>
   </mcs-left-panel>
 
-  <mcs-content-panel *mcsContentPanelDef [mcsLoader]="serverSubscription">
+  <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper">
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Management Tab -->
-        <mcs-tab [label]="serverTextContent.management.label" id="management">
+        <mcs-tab [label]="textContent.management.label" id="management">
         </mcs-tab>
 
         <!-- Storage Tab -->
-        <mcs-tab [label]="serverTextContent.storage.label" id="storage">
+        <mcs-tab [label]="textContent.storage.label" id="storage">
+        </mcs-tab>
+
+        <!-- Backup Tab -->
+        <mcs-tab [label]="textContent.backups.label" id="backups"
+          *mcsHasPermission="['SnapshotAccess']">
         </mcs-tab>
 
         <!-- Networks Tab -->
-        <mcs-tab [label]="serverTextContent.nics.label" id="nics">
+        <mcs-tab [label]="textContent.nics.label" id="nics">
         </mcs-tab>
 
         <!-- Action tab -->
@@ -88,8 +92,14 @@
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
-      <div class="routing-tab-content-wrapper">
-        <router-outlet></router-outlet>
+      <div class="routing-tab-content-wrapper position-relative">
+        <!-- Loader settings -->
+        <div [mcsLoader]="serverSubscription"
+          [mcsLoaderHideElement]="tabContent"
+          [mcsLoaderText]="textContent.loading"
+          mcsLoaderOrientation="top"></div>
+
+        <router-outlet #tabContent></router-outlet>
       </div>
     </div>
   </mcs-content-panel>

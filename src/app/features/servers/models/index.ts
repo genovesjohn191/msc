@@ -7,6 +7,7 @@ export * from './request/server-clone';
 export * from './request/server-create-storage';
 export * from './request/server-create-network';
 export * from './request/server-client-object';
+export * from './request/server-create-snapshot';
 
 export * from './response/server';
 export * from './response/server-vmware-tools';
@@ -31,6 +32,7 @@ export * from './response/server-compute';
 export * from './response/server-compute-summary';
 export * from './response/server-catalog-item';
 export * from './response/server-platform-summary';
+export * from './response/server-snapshot';
 
 /** Other Models that are use inside server component */
 export * from './server-performance-scale';
@@ -41,6 +43,7 @@ export * from './server-ip-address';
 export * from './server-create-self-managed';
 export * from './server-list';
 export * from './server-image';
+export * from './server-snapshot-dialog-content';
 
 /** Enumerations */
 export * from './enumerations/server-command.enum';

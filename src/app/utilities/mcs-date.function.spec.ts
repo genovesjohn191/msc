@@ -86,7 +86,7 @@ describe('DATE Functions', () => {
       let date = new Date('2017-04-26 01:10:45');
 
       let convertedDate = convertDateToStandardString(date);
-      expect(convertedDate).toBe(formatDate(date, 'LTS, ddd DD MMM, YYYY'));
+      expect(convertedDate).toBe(formatDate(date, 'ddd, DD MMM YYYY, LT'));
     });
   });
 

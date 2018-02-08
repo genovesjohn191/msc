@@ -18,7 +18,8 @@ import {
   ServerPowerState,
   ServerMedia,
   ServerStorageDevice,
-  ServerNicSummary
+  ServerNicSummary,
+  ServerSnapshot
 } from './models';
 import {
   isNullOrEmpty,
@@ -33,7 +34,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
   private _initial: boolean = true;
-
   private _serverStatusMap = new Map<string, string>();
 
   constructor(
@@ -53,7 +53,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   public findServerDisks(activeServer: Server): Observable<ServerStorageDevice[]> {
     return this._serversApiService.getServerStorage(activeServer.id)
       .map((response) => {
-        activeServer.storageDevice = response.content;
+        activeServer.storageDevice = !isNullOrEmpty(response.content) ?
+          response.content : new Array();
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -67,7 +68,22 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   public findServerNics(activeServer: Server): Observable<ServerNicSummary[]> {
     return this._serversApiService.getServerNetworks(activeServer.id)
       .map((response) => {
-        activeServer.nics = response.content;
+        activeServer.nics = !isNullOrEmpty(response.content) ?
+          response.content : new Array();
+        this.updateRecord(activeServer);
+        return response.content;
+      });
+  }
+
+  /**
+   * Find all related snapshots from the server
+   * @param serverId Server id where to get the snapshots
+   */
+  public findAllSnapshots(activeServer: Server): Observable<ServerSnapshot[]> {
+    return this._serversApiService.getServerSnapshots(activeServer.id)
+      .map((response) => {
+        activeServer.snapshots = !isNullOrEmpty(response.content) ?
+          response.content : new Array();
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -292,7 +308,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
           });
         }
       }
-
       this.updateRecord(activeServer);
     }
   }
@@ -441,10 +456,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     // Status key to find in the mapping
     let statusKey = activeServer.isProcessing ?
       getEnumString(ServerCommand, activeServer.commandAction) :
-      getEnumString(ServerPowerState, activeServer.powerState) ;
+      getEnumString(ServerPowerState, activeServer.powerState);
 
     activeServer.statusLabel = this._serverStatusMap.has(statusKey) ?
-      this._serverStatusMap.get(statusKey) : '' ;
+      this._serverStatusMap.get(statusKey) : '';
   }
 
   /**

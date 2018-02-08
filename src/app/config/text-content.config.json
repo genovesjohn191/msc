@@ -150,11 +150,12 @@
     },
     "server": {
       "header": "Servers",
+      "loading": "Loading server details.",
       "leftPanelHeader": "Server Filter",
       "panel": "Listing Panel",
       "management": {
         "label": "Management",
-        "loading": "Loading management resources.",
+        "loading": "Loading server properties.",
         "vmProperties": {
           "title": "VM Properties",
           "status": "Status",
@@ -224,7 +225,7 @@
       },
       "storage": {
         "label": "Storage",
-        "loading": "Loading storage resources.",
+        "loading": "Loading storage information.",
         "title": "Manage Disks",
         "description": "Manage the disks attached to your server. You can add new, delete or expand existing disks.",
         "primary": "Primary",
@@ -244,9 +245,23 @@
         "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining).",
         "invalidStorage": "Unknown"
       },
+      "backups": {
+        "label": "Backups",
+        "loading": "Loading snapshots & backups information.",
+        "snapshotHeader": "VM Snapshot",
+        "snapshotDescription": "Snapshots are point-in-time VM-level restore points.<br/>Restoring a snapshot is not reversible, so restore carefully.",
+        "snapshots": "Snapshots",
+        "noSnapshots": "No snapshots to display.",
+        "createSnapshot": "Snapshot now",
+        "restoreSnapshot": "Restore",
+        "deleteSnapshot": "Delete",
+        "serverBackups": "Server Backups",
+        "serverBackupsDescription": "If something's not quite right with your server and you urgently need a restore, we can look into restoring a server-level backup for you.",
+        "requestRestore": "Request a restore"
+      },
       "nics": {
         "label": "NICs",
-        "loading": "Loading NICs resources.",
+        "loading": "Loading NICs.",
         "title": "Manage NICs",
         "description": "",
         "nic": "NIC",
@@ -354,6 +369,33 @@
         "confirmation": "Are you sure you wish to continue?",
         "cancel": "Cancel",
         "confirm": "Delete"
+      },
+      "restoreSnapshotDialog": {
+        "title": "Restore VM Snapshot",
+        "alert": "Restoring a snapshot replaces data on the VM and cannot be undone. The server will be unavailable until this process is complete.",
+        "confirmation": "Are you sure you wish to restore <strong>{{snapshot_name}}</strong> to <strong>{{server_name}}</strong>?",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      },
+      "deleteSnapshotDialog": {
+        "title": "Delete {{snapshot_name}}",
+        "alert": "Deleting a snapshot cannot be undone.",
+        "confirmation": "Are you sure you wish to continue?",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      },
+      "insufficientStorageSnapshotDialog": {
+        "title": "Insufficient Storage",
+        "alert": "The VDC {{vdc_name}} does not have enough storage space available in order to capture a snapshot.",
+        "confirmation": "Please remove any unneeded servers or snapshots and then try again.",
+        "cancel": "Cancel"
+      },
+      "createSnapshotDialog": {
+        "title": "New VM Snapshot",
+        "alert": "Capturing a new snapshot will replace any existing snapshots for this VM.",
+        "confirmation": "Are you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
       },
       "storageScale": {
         "label": "Storage",

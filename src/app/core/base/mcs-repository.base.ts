@@ -178,9 +178,11 @@ export abstract class McsRepositoryBase<T> {
       // Get all records from API calls implemented under inherited class
       return this.getAllRecords(displayedRecords, !isNullOrEmpty(search) ? search.keyword : '')
         .map((data) => {
-          this._totalRecordsCount = data.totalCount;
-          this._dataRecords = data.content;
-          this._filteredRecords = data.content;
+          if (!isNullOrEmpty(data.totalCount)) {
+            this._totalRecordsCount = data.totalCount;
+            this._dataRecords = data.content;
+            this._filteredRecords = data.content;
+          }
           return data.content;
         });
     } else {

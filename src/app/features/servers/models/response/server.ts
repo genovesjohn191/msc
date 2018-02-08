@@ -7,6 +7,7 @@ import { ServerFileSystem } from './server-file-system';
 import { ServerStorageDevice } from './server-storage-device';
 import { ServerNicSummary } from './server-nic-summary';
 import { ServerVmwareTools } from './server-vmware-tools';
+import { ServerSnapshot } from './server-snapshot';
 import { ServerPowerState } from '../enumerations/server-power-state.enum';
 import { ServerServiceType } from '../enumerations/server-service-type.enum';
 import { ServerCommand } from '../enumerations/server-command.enum';
@@ -32,6 +33,7 @@ export class Server {
   public fileSystem: ServerFileSystem[];
   public storageDevice: ServerStorageDevice[];
   public media: ServerMedia[];
+  public snapshots: ServerSnapshot[];
   public vApp: string;
   public portalUrl: string;
   public vCloudId: string;

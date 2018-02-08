@@ -73,7 +73,7 @@ export function compareDates(firstDate: Date, secondDate: Date): number {
 export function convertDateToStandardString(date: Date) {
   let convertedString: string = '';
   if (date) {
-    convertedString = formatDate(date, 'LTS, ddd DD MMM, YYYY');
+    convertedString = formatDate(date, 'ddd, DD MMM YYYY, LT');
   }
   return convertedString;
 }
