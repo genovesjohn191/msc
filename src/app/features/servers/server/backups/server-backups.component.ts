@@ -75,19 +75,25 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   constructor(
-    _serverService: ServerService,
     _serversResourcesRepository: ServersResourcesRespository,
+    _serversService: ServersService,
+    _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    _textProvider: McsTextContentProvider,
     private _dialogService: McsDialogService,
     private _serversRepository: ServersRepository,
-    private _serversService: ServersService
   ) {
-    super(_serverService, _serversResourcesRepository, _changeDetectorRef);
+    super(
+      _serversResourcesRepository,
+      _serversService,
+      _serverService,
+      _changeDetectorRef,
+      _textProvider
+    );
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.server.backups;
+    this.textContent = this._textProvider.content.servers.server.backups;
   }
 
   public ngOnDestroy() {

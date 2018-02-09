@@ -1,4 +1,8 @@
 import {
+  IterableDiffer,
+  IterableDiffers
+} from '@angular/core';
+import {
   Observable,
   Subject,
   BehaviorSubject
@@ -12,7 +16,7 @@ import {
   Firewall,
   FirewallList
 } from '../models';
-import { FirewallsService } from '../firewalls.service';
+import { FirewallsRepository } from '../firewalls.repository';
 import {
   isNullOrEmpty,
   compareStrings,
@@ -30,6 +34,8 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
   private _firewallListStream: BehaviorSubject<FirewallList[]>;
   private _firewallList: FirewallList[];
 
+  private _firewallDiffer: IterableDiffer<Firewall>;
+
   private _searchMode: boolean;
   public get searchMode(): boolean {
     return this._searchMode;
@@ -43,36 +49,42 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
   }
 
   constructor(
-    private _firewallsService: FirewallsService,
-    private _search: McsSearch
+    private _firewallsRepository: FirewallsRepository,
+    private _search: McsSearch,
+    private _differs: IterableDiffers
   ) {
     this._searchMode = false;
     this._firewallListStream = new BehaviorSubject<FirewallList[]>([]);
-    this._setFirewallListData();
+    this._firewallList = new Array<FirewallList>();
     this.dataLoadingStream = new Subject<McsDataStatus>();
+    this._firewallDiffer = this._differs.find([]).create(null);
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   public connect(): Observable<FirewallList[]> {
     const displayDataChanges = [
-      this._search.searchChangedStream,
-      this._firewallListStream
+      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
+      this._firewallsRepository.dataRecordsChanged,
+      this._search.searchChangedStream
     ];
 
     return Observable.merge(...displayDataChanges)
-      .map(() => {
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
-        let firewallList = new Array<FirewallList>();
-        this._searchMode = (this._search.keyword) ? true : false;
-
-        if (!isNullOrEmpty(this._firewallList)) {
-          firewallList = this._firewallList.slice().filter((firewall: FirewallList) => {
-            let searchStr = (firewall.name + firewall.haGroupName).toLowerCase();
-            return searchStr.indexOf(this._search.keyword.toLowerCase()) !== -1;
-          });
+      .switchMap((instance) => {
+        // Notify the table that a process is currently in-progress
+        // if the user is not searching because the filtering has already a loader
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        if (!isSearching) {
+          this.dataLoadingStream.next(McsDataStatus.InProgress);
         }
 
-        return firewallList;
+        // Find all records based on settings provided in the input
+        return this._firewallsRepository.findAllRecords(undefined, this._search)
+          .map((content) => {
+            this._firewallList = this._mapFirewallList(content);
+            this._firewallListStream.next(this._firewallList);
+            return this._firewallList;
+          });
       });
   }
 
@@ -87,18 +99,17 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     this._search.showLoading(false);
   }
 
-  private _setFirewallListData(): void {
-    this._firewallsSubscription = this._firewallsService
-      .getFirewalls()
-      .subscribe((response) => {
-        this.dataLoadingStream.next(McsDataStatus.InProgress);
-        this._firewallList = this._mapFirewallList(response.content);
-        this._firewallListStream.next(this._firewallList);
-      });
-  }
-
   private _mapFirewallList(firewalls: Firewall[]): FirewallList[] {
-    if (isNullOrEmpty(firewalls)) { return; }
+    if (isNullOrEmpty(firewalls)) { return new Array<FirewallList>(); }
+
+    // Check for changes in record
+    let changes = this._firewallDiffer.diff(firewalls);
+    if (isNullOrEmpty(changes)) { return this._firewallList; }
+
+    // We need to check again if there are added or deleted since
+    // the changes will trigger if their are changes on the data only
+    let hasChangesOnCount = firewalls.length !== this._firewallList.length;
+    if (!hasChangesOnCount) { return this._firewallList;}
 
     firewalls.sort((first: Firewall, second: Firewall) => {
       return compareStrings(first.managementName, second.managementName);
@@ -108,8 +119,9 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     firewalls.forEach((firewall) => {
       let firewallListItem = new FirewallList();
       firewallListItem.id = firewall.id;
-      firewallListItem.name = firewall.managementName;
+      firewallListItem.managementName = firewall.managementName;
       firewallListItem.haGroupName = firewall.haGroupName;
+      firewallListItem.haRole = firewall.haRole;
       firewallListItem.connectionStatus = firewall.connectionStatus;
 
       firewallList.push(firewallListItem);

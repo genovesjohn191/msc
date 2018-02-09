@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import {
   Router,
-  ActivatedRoute
+  ActivatedRoute,
+  ParamMap
 } from '@angular/router';
 import {
   Observable,
@@ -57,12 +58,13 @@ export class VdcComponent
   @ViewChild('search')
   public search: McsSearch;
 
-  public vdcSubscription: Subscription;
   public textContent: any;
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
 
-  private _resourceId: any;
+  // Subscription
+  public vdcSubscription: Subscription;
+  private _parameterSubscription: Subscription;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -101,8 +103,7 @@ export class VdcComponent
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers;
-    this._resourceId = this.activatedRoute.snapshot.paramMap.get('id');
-    this._getVdcById();
+    this._listenToParamChange();
   }
 
   public ngAfterViewInit() {
@@ -114,9 +115,10 @@ export class VdcComponent
   public ngOnDestroy() {
     super.dispose();
     unsubscribeSafely(this.vdcSubscription);
+    unsubscribeSafely(this._parameterSubscription);
   }
 
-  public onServerSelect(serverId: any) {
+  public onServerSelect(serverId: string) {
     if (isNullOrEmpty(serverId)) { return; }
 
     this.router.navigate(['/servers', serverId]);
@@ -135,13 +137,9 @@ export class VdcComponent
    * @param tab Active tab
    */
   public onTabChanged(tab: any) {
-    if (isNullOrEmpty(this.vdc) || isNullOrEmpty(this.vdc.id)) { return; }
+    if (isNullOrEmpty(this.vdc.id)) { return; }
     // Navigate route based on current active tab
-    if (tab.id === 'overview') {
-      this.router.navigate([`servers/vdc/${this.vdc.id}/overview`]);
-    } else {
-      // Add navigation of other tab here
-    }
+    this.router.navigate([`servers/vdc/${tab.id}/overview`]);
   }
 
   public getStateIconKey(state: number): string {
@@ -189,21 +187,37 @@ export class VdcComponent
     this._changeDetectorRef.markForCheck();
   }
 
-  private _getVdcById(): void {
+  /**
+   * This will set the active vdc when data was obtained from repository
+   * @param vdcId VDC identification
+   */
+  private _getVdcById(vdcId: string): void {
     this.vdcSubscription = this._serversResourceRepository
-      .findRecordById(this._resourceId)
+      .findRecordById(vdcId)
       .catch((error) => {
         // Handle common error status code
         // this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
       })
-      .subscribe((record) => {
-        this.vdc = record;
+      .subscribe((vdc) => {
+        this.vdc = vdc;
         this.selectedItem = {
           itemId: '',
-          groupName: this.vdc.name
+          groupName: vdc.name
         } as McsListPanelItem;
         this._vdcService.setSelectedVdc(this.vdc);
+        this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  /**
+   * Listen to every change of the parameter
+   */
+  private _listenToParamChange(): void {
+    this._parameterSubscription = this.activatedRoute.paramMap
+      .subscribe((params: ParamMap) => {
+        let vdcId = params.get('id');
+        this._getVdcById(vdcId);
       });
   }
 }

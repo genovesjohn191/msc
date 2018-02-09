@@ -1,7 +1,7 @@
 <div class="limited-view content-grid">
   <div class="grid-row">
-    <div class="grid-column">
-      <h3 class="grid-content-header">{{ textContent.properties.title }}</h3>
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ textContent.properties.title }}</h3>
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Model -->
         <mcs-list-item>
@@ -21,8 +21,8 @@
       </mcs-list>
     </div>
 
-    <div class="grid-column">
-      <h3 class="grid-content-header">{{ textContent.supportIdentifiers.title }}</h3>
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ textContent.supportIdentifiers.title }}</h3>
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Service -->
         <mcs-list-item>
@@ -39,8 +39,8 @@
   </div>
 
   <div class="grid-row">
-    <div class="grid-column">
-      <h3 class="grid-content-header">{{ textContent.status.title }}</h3>
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ textContent.status.title }}</h3>
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Device Status -->
         <mcs-list-item>
@@ -63,8 +63,8 @@
       </mcs-list>
     </div>
 
-    <div class="grid-column">
-      <h3 class="grid-content-header">{{ textContent.utmServices.title }}</h3>
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ textContent.utmServices.title }}</h3>
       <ng-container *ngIf="hasUtmInformation; else noUtmInfo">
         <mcs-list spacing="xsmall" class="grid-content-body">
           <!-- AV Expiry Date -->
@@ -94,8 +94,8 @@
   </div>
 
   <div class="grid-row">
-    <div class="grid-column">
-      <h3 class="grid-content-header">{{ textContent.topology.title }}</h3>
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ textContent.topology.title }}</h3>
       <ng-container *ngIf="hasTopologyInformation; else noTopologyInfo">
         <mcs-list spacing="xsmall" class="grid-content-body">
           <!-- HA Role -->
@@ -114,5 +114,6 @@
         <span class="missing-data-info">{{ textContent.topology.noContentMessage }}</span>
       </ng-template>
     </div>
+    <div class="grid-column container-wrapper break-on-small"></div>
   </div>
 </div>

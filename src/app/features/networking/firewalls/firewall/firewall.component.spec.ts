@@ -3,8 +3,9 @@ import {
   TestBed,
   getTestBed
 } from '@angular/core/testing';
-import { FirewallComponent } from './firewall.component';
 import { Router } from '@angular/router';
+import { FirewallComponent } from './firewall.component';
+import { Firewall } from '../models';
 import { NetworkingTestingModule } from '../../testing';
 
 describe('FirewallComponent', () => {
@@ -15,7 +16,7 @@ describe('FirewallComponent', () => {
     id: 'b88892a1-9332-48da-a49c-10edbc8f807b',
     serviceId: 'M1VFW27117001',
     managementName: 'contoso-fw01'
-  };
+  } as Firewall;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -64,7 +65,7 @@ describe('FirewallComponent', () => {
   describe('onFirewallSelect()', () => {
     it('should navigate to the selected firewall overview page', () => {
       spyOn(router, 'navigate');
-      component.onFirewallSelect(mockFirewallDetails.id);
+      component.onFirewallSelect(mockFirewallDetails);
       expect(router.navigate).toHaveBeenCalled();
     });
   });

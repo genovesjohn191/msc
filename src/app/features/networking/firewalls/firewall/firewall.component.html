@@ -13,9 +13,9 @@
             </mcs-list-panel-header>
             <mcs-list-panel-item *mcsListPanelItemDef="let firewall"
               [itemId]="firewall.id" [groupName]="firewall.haGroupName"
-              (click)="onFirewallSelect(firewall.id)">
+              (click)="onFirewallSelect(firewall)">
               <mcs-icon [key]="getConnectionStatusIconKey(firewall.connectionStatus)"></mcs-icon>
-              <a>{{ firewall.name }}</a>
+              <a>{{ firewall.managementName }}</a>
             </mcs-list-panel-item>
           </ng-container>
 

@@ -47,7 +47,7 @@ import {
   ServerCatalogType,
   ServerCatalogItemType,
   ServerNicSummary,
-  ServerManageNetwork,
+  ServerManageNic,
   ServerIpAllocationMode,
   ServerManageMedia,
   ServerPlatformType,
@@ -571,7 +571,7 @@ export class ServersService {
   /**
    * This will get the server networks from the API
    */
-  public getServerNetworks(
+  public getServerNics(
     serverId: any): Observable<McsApiSuccessResponse<ServerNicSummary[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
@@ -595,18 +595,18 @@ export class ServersService {
   }
 
   /**
-   * Adding server network
+   * Adding server nic
    * *Note: This will send a job (notification)
    * @param serverId Server identification
-   * @param networkData Server network data
+   * @param nicData Server nic data
    */
-  public addServerNetwork(
+  public addServerNic(
     serverId: any,
-    networkData: ServerManageNetwork
+    nicData: ServerManageNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
-    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = JSON.stringify(nicData, this._requestReviverParser);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
@@ -627,20 +627,20 @@ export class ServersService {
   }
 
   /**
-   * Updating server network
+   * Updating server nic
    * *Note: This will send a job (notification)
    * @param serverId Server identification
-   * @param networkId Network identification
-   * @param networkData Server network data
+   * @param nicId NIC identification
+   * @param nicData Server network data
    */
-  public updateServerNetwork(
+  public updateServerNic(
     serverId: any,
-    networkId: any,
-    networkData: ServerManageNetwork
+    nicId: any,
+    nicData: ServerManageNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${networkId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
+    mcsApiRequestParameter.recordData = JSON.stringify(nicData, this._requestReviverParser);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
       .finally(() => {
@@ -661,19 +661,20 @@ export class ServersService {
   }
 
   /**
-   * Deleting server network
+   * Deleting server nic
    * *Note: This will send a job (notification)
    * @param serverId Server identification
-   * @param networkId Network identification
+   * @param nicId Network identification
+   * @param nicData Server network data
    */
-  public deleteServerNetwork(
+  public deleteServerNic(
     serverId: any,
-    networkId: any,
-    networkData: ServerManageNetwork
+    nicId: any,
+    nicData: ServerManageNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${networkId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(networkData, this._requestReviverParser);
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
+    mcsApiRequestParameter.recordData = JSON.stringify(nicData, this._requestReviverParser);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .finally(() => {

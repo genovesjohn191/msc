@@ -44,12 +44,7 @@
                   {{ storage.storageProfile }}
                 </td>
                 <td>
-                  <ng-container *ngIf="isValidStorageValue(storage.sizeMB); else invalidStorage">
-                    {{ appendGbUnit(convertStorageInGb(storage.sizeMB)) }}
-                  </ng-container>
-                  <ng-template #invalidStorage>
-                    {{ textContent.invalidStorage }}
-                  </ng-template>
+                  {{ appendUnitGB(convertDiskToGB(storage.sizeMB)) }}
                 </td>
                 <td class="action-items">
                   <span *mcsHasPermission="['VmEdit']" class="expand text-right">
@@ -59,7 +54,7 @@
                   </span>
                   <span *mcsHasPermission="['VmEdit']" class="delete text-right">
                     <a *ngIf="hasMultipleStorageDevice"
-                      [disabled]="server.isProcessing"
+                      [disabled]="storageDeleteLinkIsDisabled"
                       (click)="deleteStorage(storage)">
                       {{ textContent.deleteStorageLink }}
                     </a>

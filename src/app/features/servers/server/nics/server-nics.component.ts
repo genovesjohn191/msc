@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs/Rx';
 import {
   ServerNetwork,
   ServerNicSummary,
-  ServerManageNetwork,
+  ServerManageNic,
   ServerIpAddress,
   ServerIpAllocationMode,
   ServerServiceType
@@ -22,6 +22,7 @@ import {
   McsApiJob,
   McsNotificationEventsService
 } from '../../../../core';
+import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRespository } from '../../servers-resources.repository';
@@ -167,19 +168,22 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   constructor(
-    _serverService: ServerService,
     _serversResourcesRepository: ServersResourcesRespository,
+    _serversService: ServersService,
+    _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textProvider: McsTextContentProvider,
+    _textProvider: McsTextContentProvider,
     private _dialogService: McsDialogService,
     private _serversRepository: ServersRepository,
     private _notificationEvents: McsNotificationEventsService
   ) {
     // Constructor
     super(
-      _serverService,
       _serversResourcesRepository,
-      _changeDetectorRef
+      _serversService,
+      _serverService,
+      _changeDetectorRef,
+      _textProvider
     );
     this.isUpdate = false;
     this.nics = new Array<ServerNicSummary>();
@@ -254,6 +258,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     this.ipAddress.customIpAddress = nic.ipAddress;
     this.isPrimary = nic.isPrimary;
     this.isUpdate = true;
+    this.fcNetwork.setValue(this.networkName);
   }
 
   public closeUpdateWindow(): void {
@@ -277,40 +282,37 @@ export class ServerNicsComponent extends ServerDetailsBase
   public addNetwork(): void {
     if (!this.validate()) { return; }
 
-    let networkValues = new ServerManageNetwork();
-    networkValues.name = this.networkName;
-    networkValues.ipAllocationMode = this.ipAddress.ipAllocationMode;
-    networkValues.ipAddress = this.ipAddress.customIpAddress;
-    networkValues.clientReferenceObject = {
+    let nicValues = new ServerManageNic();
+    nicValues.name = this.networkName;
+    nicValues.ipAllocationMode = this.ipAddress.ipAllocationMode;
+    nicValues.ipAddress = this.ipAddress.customIpAddress;
+    nicValues.clientReferenceObject = {
       serverId: this.server.id,
       networkName: this.networkName,
       ipAllocationMode: this.ipAddress.ipAllocationMode,
-      ipAddress: this.ipAddress.customIpAddress,
-      powerState: this.server.powerState
+      ipAddress: this.ipAddress.customIpAddress
     };
 
     this._resetNetworkValues();
-    this._serverService.addServerNetwork(this.server.id, networkValues).subscribe();
+    this._serversService.addServerNic(this.server.id, nicValues).subscribe();
   }
 
   public updateNetwork(): void {
     if (!this.validate()) { return; }
 
-    let networkValues = new ServerManageNetwork();
-    networkValues.name = this.networkName;
-    networkValues.ipAllocationMode = this.ipAddress.ipAllocationMode;
-    networkValues.ipAddress = this.ipAddress.customIpAddress;
-    networkValues.clientReferenceObject = {
+    let nicValues = new ServerManageNic();
+    nicValues.name = this.networkName;
+    nicValues.ipAllocationMode = this.ipAddress.ipAllocationMode;
+    nicValues.ipAddress = this.ipAddress.customIpAddress;
+    nicValues.clientReferenceObject = {
       serverId: this.server.id,
       nicId: this.selectedNic.id,
-      networkIndex: this.selectedNic.index,
       networkName: this.networkName,
       ipAllocationMode: this.ipAddress.ipAllocationMode,
-      ipAddress: this.ipAddress.customIpAddress,
-      powerState: this.server.powerState
+      ipAddress: this.ipAddress.customIpAddress
     };
 
-    this._serverService.updateServerNetwork(this.server.id, this.selectedNic.id, networkValues)
+    this._serversService.updateServerNic(this.server.id, this.selectedNic.id, nicValues)
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
           this.isUpdate = false;
@@ -322,16 +324,15 @@ export class ServerNicsComponent extends ServerDetailsBase
   public deleteNetwork(nic: ServerNicSummary): void {
     if (isNullOrEmpty(nic)) { return; }
 
-    let networkValues = new ServerManageNetwork();
-    networkValues.name = this.networkName;
-    networkValues.clientReferenceObject = {
+    let nicValues = new ServerManageNic();
+    nicValues.name = this.networkName;
+    nicValues.clientReferenceObject = {
       serverId: this.server.id,
-      nicId: nic.id,
-      powerState: this.server.powerState
+      nicId: nic.id
     };
 
     this._resetNetworkValues();
-    this._serverService.deleteServerNetwork(this.server.id, nic.id, networkValues).subscribe();
+    this._serversService.deleteServerNic(this.server.id, nic.id, nicValues).subscribe();
   }
 
   /**
@@ -340,6 +341,13 @@ export class ServerNicsComponent extends ServerDetailsBase
    */
   protected serverSelectionChanged(): void {
     this._getResourceNetworks();
+    this._updateServerNics();
+  }
+
+  /**
+   * This will update the list of server nics
+   */
+  private _updateServerNics(): void {
     this.updateNicsSubscription = this._serversRepository
       .findServerNics(this.server)
       .subscribe(() => {
@@ -420,7 +428,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
     if (!this.server.isProcessing) {
       // Update the server nics
-      this.serverSelectionChanged();
+      this._updateServerNics();
     }
   }
 
@@ -433,7 +441,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
     if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
       // Update the server nics
-      this.serverSelectionChanged();
+      this._updateServerNics();
     }
   }
 

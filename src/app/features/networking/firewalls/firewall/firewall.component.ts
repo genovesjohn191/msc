@@ -5,14 +5,18 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  IterableDiffers
 } from '@angular/core';
 import {
   Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -25,7 +29,6 @@ import {
   Firewall,
   FirewallConnectionStatus
 } from '../models';
-import { FirewallsService } from '../firewalls.service';
 import { FirewallService } from './firewall.service';
 import { FirewallListSource } from './firewall.listsource';
 import { FirewallsRepository } from '../firewalls.repository';
@@ -53,9 +56,12 @@ export class FirewallComponent
 
   public firewallsTextContent: any;
   public firewallTextContent: any;
-  public subscription: any;
   public firewallListSource: FirewallListSource | null;
   public header: string;
+
+  // Subscription
+  public subscription: Subscription;
+  private _parameterSubscription: Subscription;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -97,9 +103,9 @@ export class FirewallComponent
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
-    private _firewallsService: FirewallsService,
     private _firewallService: FirewallService,
-    private _firewallsRepository: FirewallsRepository
+    private _firewallsRepository: FirewallsRepository,
+    private _differs: IterableDiffers,
   ) {
     super(_router, _activatedRoute);
     this.firewall = new Firewall();
@@ -108,7 +114,7 @@ export class FirewallComponent
   public ngOnInit() {
     this.firewallsTextContent = this._textContentProvider.content.firewalls;
     this.firewallTextContent = this._textContentProvider.content.firewalls.firewall;
-    this._getFirewallById();
+    this._listenToParamChange();
   }
 
   public ngAfterViewInit() {
@@ -120,18 +126,18 @@ export class FirewallComponent
   public ngOnDestroy() {
     super.dispose();
     unsubscribeSafely(this.subscription);
+    unsubscribeSafely(this._parameterSubscription);
   }
 
   /**
    * Navigate on the selected firewall overview page and
    * set the selected firewall to update selectedFirewallStream
-   * @param firewallId
+   * @param firewall Selected firewall instance
    */
-  public onFirewallSelect(firewallId: any): void {
-    if (isNullOrEmpty(firewallId)) { return; }
-
-    this.router.navigate(['/networking/firewalls', firewallId]);
-    this._getFirewallById();
+  public onFirewallSelect(firewall: Firewall): void {
+    if (isNullOrEmpty(firewall)) { return; }
+    this._setSelectedFirewallInfo(firewall);
+    this.router.navigate(['/networking/firewalls', firewall.id]);
   }
 
   public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
@@ -154,18 +160,20 @@ export class FirewallComponent
 
   private _initializeListsource(): void {
     this.firewallListSource = new FirewallListSource(
-      this._firewallsService,
-      this._listSearch
+      this._firewallsRepository,
+      this._listSearch,
+      this._differs
     );
     this._changeDetectorRef.markForCheck();
   }
 
-  private _getFirewallById(): void {
-    this.subscription = this.activatedRoute.paramMap
-      .switchMap((params: ParamMap) => {
-        let firewallId = params.get('id');
-        return this._firewallsRepository.findRecordById(firewallId);
-      })
+  /**
+   * This will set the active firewall when data was obtained from repository
+   * @param firewallId Firewall identification
+   */
+  private _getFirewallById(firewallId: string): void {
+    this.subscription = this._firewallsRepository
+      .findRecordById(firewallId)
       .catch((error) => {
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);
@@ -174,14 +182,34 @@ export class FirewallComponent
       .subscribe((firewall) => {
         if (!isNullOrEmpty(firewall)) {
           this.firewall = firewall;
-          this.selectedItem = {
-            itemId: this.firewall.id,
-            groupName: this.firewall.haGroupName
-          } as McsListPanelItem;
-          this.header = `${this.firewall.managementName} (${this.firewall.haRole})`;
+          this._setSelectedFirewallInfo(firewall);
           this._firewallService.setSelectedFirewall(this.firewall);
           this._changeDetectorRef.markForCheck();
         }
       });
+  }
+
+  /**
+   * Listen to every change of the parameter
+   */
+  private _listenToParamChange(): void {
+    this._parameterSubscription = this.activatedRoute.paramMap
+      .subscribe((params: ParamMap) => {
+        let serverId = params.get('id');
+        this._getFirewallById(serverId);
+      });
+  }
+
+  /**
+   * This will set the selected firewall details every selection
+   */
+  private _setSelectedFirewallInfo(selectedFirewall: Firewall): void {
+    if (isNullOrEmpty(selectedFirewall)) { return; }
+
+    this.selectedItem = {
+      itemId: selectedFirewall.id,
+      groupName: selectedFirewall.haGroupName
+    } as McsListPanelItem;
+    this.header = `${selectedFirewall.managementName} (${selectedFirewall.haRole})`;
   }
 }
