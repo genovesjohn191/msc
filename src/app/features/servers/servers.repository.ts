@@ -66,7 +66,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @param activeServer Active server to set storage device
    */
   public findServerNics(activeServer: Server): Observable<ServerNicSummary[]> {
-    return this._serversApiService.getServerNetworks(activeServer.id)
+    return this._serversApiService.getServerNics(activeServer.id)
       .map((response) => {
         activeServer.nics = !isNullOrEmpty(response.content) ?
           response.content : new Array();
@@ -414,7 +414,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      let nic = activeServer.storageDevice.find((result) => {
+      let nic = activeServer.nics.find((result) => {
         return result.id === job.clientReferenceObject.nicId;
       });
 
@@ -451,7 +451,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @param activeServer Active server to update status label
    */
   private _updateServerStatusLabel(activeServer: Server): void {
-    if (isNullOrEmpty(this._serverStatusMap.size)) { return; }
+    if (isNullOrEmpty(activeServer) || isNullOrEmpty(this._serverStatusMap.size)) { return; }
 
     // Status key to find in the mapping
     let statusKey = activeServer.isProcessing ?

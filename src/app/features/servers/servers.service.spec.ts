@@ -15,7 +15,7 @@ import {
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerNicSummary,
-  ServerManageNetwork,
+  ServerManageNic,
   ServerManageMedia,
   ServerCreate,
   ServerClone,
@@ -388,7 +388,7 @@ describe('ServersService', () => {
 
   describe('getServerNetworks()', () => {
     it('should get the server networks based on ID from API calls', () => {
-      serversService.getServerNetworks(requestOptions.id)
+      serversService.getServerNics(requestOptions.id)
         .subscribe((response) => {
           expect(response).toBeDefined();
           expect(response.status).toBe(200);
@@ -409,9 +409,9 @@ describe('ServersService', () => {
 
   describe('addServerNetwork()', () => {
     it('should add the server network through API calls', () => {
-      serversService.addServerNetwork(
+      serversService.addServerNic(
         requestOptions.id,
-        new ServerManageNetwork()
+        new ServerManageNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -434,10 +434,10 @@ describe('ServersService', () => {
     it('should update the server network through API calls', () => {
       let networkId = '12345';
 
-      serversService.updateServerNetwork(
+      serversService.updateServerNic(
         requestOptions.id,
         networkId,
-        new ServerManageNetwork()
+        new ServerManageNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -460,10 +460,10 @@ describe('ServersService', () => {
     it('should delete the server network through API calls', () => {
       let networkId = '12345';
 
-      serversService.deleteServerNetwork(
+      serversService.deleteServerNic(
         requestOptions.id,
         networkId,
-        new ServerManageNetwork()
+        new ServerManageNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);

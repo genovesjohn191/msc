@@ -6,11 +6,14 @@ import {
   ServerCatalogItem,
   ServerCatalogItemType
 } from '../models';
-import { ServerService } from '../server/server.service';
 import { ServersResourcesRespository } from '../servers-resources.repository';
+import { ServersService } from '../servers.service';
+import { ServerService } from '../server/server.service';
+import { McsTextContentProvider } from '../../../core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  convertToGb
 } from '../../../utilities';
 
 export abstract class ServerDetailsBase {
@@ -93,10 +96,19 @@ export abstract class ServerDetailsBase {
     return this.server.processingText;
   }
 
+  /**
+   * Invalid storage text
+   */
+  public get invalidStorageText(): string {
+    return this._textProvider.content.servers.shared.storageScale.invalidStorage;
+  }
+
   constructor(
-    protected _serverService: ServerService,
     protected _serversResourcesRespository: ServersResourcesRespository,
+    protected _serversService: ServersService,
+    protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
+    protected _textProvider: McsTextContentProvider
   ) {
     this.server = new Server();
     this.serverResource = new ServerResource();
@@ -117,6 +129,24 @@ export abstract class ServerDetailsBase {
   protected dispose(): void {
     unsubscribeSafely(this.serverResourceSubscription);
     unsubscribeSafely(this._serverSubscription);
+  }
+
+  /**
+   * Will convert MB value to GB
+   * and will round down to whole number
+   * @param value Disk value to convert
+   */
+  protected convertDiskToGB(memoryMB: number): number {
+    return (memoryMB > 0) ? Math.floor(convertToGb(memoryMB)) : 0 ;
+  }
+
+  /**
+   * Will append the GB unit in the provided value
+   * @param value value where to append GB unit
+   */
+  protected appendUnitGB(value: number): string {
+    let textContent = this._textProvider.content.servers.shared.storageScale;
+    return (value > 0) ? `${value} ${textContent.unit}` : textContent.invalidStorage ;
   }
 
   /**

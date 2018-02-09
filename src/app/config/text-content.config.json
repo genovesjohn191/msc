@@ -242,8 +242,7 @@
         "deleteStorageLink": "Delete",
         "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
         "noDisks": "No disks are attached to this server.",
-        "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining).",
-        "invalidStorage": "Unknown"
+        "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
       },
       "backups": {
         "label": "Backups",
@@ -410,7 +409,8 @@
           "storageNumeric": "Please enter a valid number.",
           "storageMin": "The minimum value that can be entered is {{min_value}}.",
           "storageAvailable": "Storage size should not exceed {{available_storage}}."
-        }
+        },
+        "invalidStorage": "Unknown"
       },
       "performanceScale": {
         "sliderSwitch": "Select from slider",

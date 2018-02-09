@@ -34,11 +34,11 @@ import {
 import {
   getEncodedUrl,
   refreshView,
-  convertToGb,
   appendUnitSuffix,
   isNullOrEmpty,
   unsubscribeSafely
 } from '../../../../utilities';
+import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRespository } from '../../servers-resources.repository';
@@ -139,6 +139,10 @@ export class ServerManagementComponent extends ServerDetailsBase
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
+  public get invalidStorage(): string {
+    return this._textProvider.content.servers.shared.storageScale.invalidStorage;
+  }
+
   public get hasStorage(): boolean {
     return !isNullOrEmpty(this.server.fileSystem);
   }
@@ -178,10 +182,11 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   constructor(
-    _serverService: ServerService,
     _serversResourcesRepository: ServersResourcesRespository,
+    _serversService: ServersService,
+    _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textProvider: McsTextContentProvider,
+    _textProvider: McsTextContentProvider,
     private _renderer: Renderer2,
     private _browserService: McsBrowserService,
     private _router: Router,
@@ -190,9 +195,11 @@ export class ServerManagementComponent extends ServerDetailsBase
     private _serversRepository: ServersRepository
   ) {
     super(
-      _serverService,
       _serversResourcesRepository,
-      _changeDetectorRef
+      _serversService,
+      _serverService,
+      _changeDetectorRef,
+      _textProvider
     );
     this.isAttachMedia = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
@@ -251,7 +258,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public scaleServer(): void {
-    this._serverService.executeServerCommand({ server: this.server }, ServerCommand.Scale);
+    this._serversService.executeServerCommand({ server: this.server }, ServerCommand.Scale);
   }
 
   public onClickScale(): void {
@@ -310,7 +317,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
     this.selectedMedia = undefined;
 
-    this._serverService.attachServerMedia(this.server.id, mediaValues)
+    this._serversService.attachServerMedia(this.server.id, mediaValues)
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
           this.isAttachMedia = false;
@@ -328,11 +335,7 @@ export class ServerManagementComponent extends ServerDetailsBase
       powerState: this.server.powerState
     };
 
-    this._serverService.detachServerMedia(this.server.id, media.id, mediaValues).subscribe();
-  }
-
-  public appendUnitGB(sizeMB: number): string {
-    return appendUnitSuffix(convertToGb(sizeMB), 'gigabyte');
+    this._serversService.detachServerMedia(this.server.id, media.id, mediaValues).subscribe();
   }
 
   protected serverSelectionChanged(): void {
@@ -364,7 +367,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     this._hideThumbnail();
 
     // Get the server thumbnail to be encoded and display in the image
-    this._serverService.getServerThumbnail(this.server.id)
+    this._serversService.getServerThumbnail(this.server.id)
       .subscribe((response) => {
         this.serverThumbnail = response.content;
 

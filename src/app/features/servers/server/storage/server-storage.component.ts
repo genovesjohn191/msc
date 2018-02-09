@@ -23,10 +23,10 @@ import {
   McsOption
 } from '../../../../core';
 import { ServerService } from '../server.service';
+import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRespository } from '../../servers-resources.repository';
 import {
-  convertToGb,
   isNullOrEmpty,
   unsubscribeSafely
 } from '../../../../utilities';
@@ -108,7 +108,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   }
 
   public get hasAvailableStorageSpace(): boolean {
-    return this.convertStorageInGb(this.maximumMB) > 0;
+    return this.convertDiskToGB(this.maximumMB) > 0;
   }
 
   public get isValidStorageValues(): boolean {
@@ -180,6 +180,10 @@ export class ServerStorageComponent extends ServerDetailsBase
       this.isProcessingJob || !this.hasAvailableStorageSpace;
   }
 
+  public get storageDeleteLinkIsDisabled(): boolean {
+    return this.isManaged || this.isProcessingJob;
+  }
+
   public get attachIsDisabled(): boolean {
     return !this.isValidStorageValues
       || !this.hasAvailableStorageSpace
@@ -207,17 +211,20 @@ export class ServerStorageComponent extends ServerDetailsBase
 
   constructor(
     _serversResourcesRepository: ServersResourcesRespository,
+    _serversService: ServersService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textProvider: McsTextContentProvider,
+    _textProvider: McsTextContentProvider,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService,
     private _serversRepository: ServersRepository,
   ) {
     super(
-      _serverService,
       _serversResourcesRepository,
-      _changeDetectorRef
+      _serversService,
+      _serverService,
+      _changeDetectorRef,
+      _textProvider
     );
     this.expandStorage = false;
     this.expandingStorage = false;
@@ -239,14 +246,6 @@ export class ServerStorageComponent extends ServerDetailsBase
     this.dispose();
     this._unregisterJobEvents();
     unsubscribeSafely(this.storageSubscription);
-  }
-
-  /**
-   * Check if the storage value is valid
-   * @param memoryMB Storage value to check
-   */
-  public isValidStorageValue(memoryMB: number): boolean {
-    return convertToGb(memoryMB) > 0;
   }
 
   public onStorageChanged(serverStorage: ServerManageStorage) {
@@ -288,14 +287,6 @@ export class ServerStorageComponent extends ServerDetailsBase
     });
   }
 
-  public convertStorageInGb(value: number): number {
-    return Math.floor(convertToGb(value));
-  }
-
-  public appendGbUnit(value: number): string {
-    return `${value} ${this._textProvider.content.servers.shared.storageScale.unit}`;
-  }
-
   /**
    * This will process the adding of disk
    */
@@ -317,7 +308,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     };
 
     this._resetDiskValues();
-    this._serverService.createServerStorage(this.server.id, storageData).subscribe();
+    this._serversService.createServerStorage(this.server.id, storageData).subscribe();
   }
 
   /**
@@ -344,7 +335,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     };
 
     this._resetDiskValues();
-    this._serverService.updateServerStorage(
+    this._serversService.updateServerStorage(
       this.server.id,
       this.selectedStorageDevice.id,
       storageData
@@ -368,7 +359,7 @@ export class ServerStorageComponent extends ServerDetailsBase
       powerState: this.server.powerState
     };
 
-    this._serverService.deleteServerStorage(this.server.id, storage.id, storageData).subscribe();
+    this._serversService.deleteServerStorage(this.server.id, storage.id, storageData).subscribe();
   }
 
   /**
@@ -389,6 +380,13 @@ export class ServerStorageComponent extends ServerDetailsBase
    */
   protected serverSelectionChanged(): void {
     this._getResourceStorage();
+    this._updateServerDisks();
+  }
+
+  /**
+   * This will update the list of server disks
+   */
+  private _updateServerDisks(): void {
     this.updateDisksSubscription = this._serversRepository
       .findServerDisks(this.server)
       .subscribe(() => {
@@ -474,7 +472,7 @@ export class ServerStorageComponent extends ServerDetailsBase
       }
 
       // Update server disks
-      this.serverSelectionChanged();
+      this._updateServerDisks();
     }
   }
 
@@ -493,7 +491,7 @@ export class ServerStorageComponent extends ServerDetailsBase
       }
 
       // Update server disks
-      this.serverSelectionChanged();
+      this._updateServerDisks();
     }
   }
 
