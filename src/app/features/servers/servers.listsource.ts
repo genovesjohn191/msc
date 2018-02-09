@@ -101,11 +101,6 @@ export class ServersListSource implements McsDataSource<ServerList> {
     let changes = this._serverDiffer.diff(servers);
     if (isNullOrEmpty(changes)) { return this._serverList; }
 
-    // We need to check again if there are added or deleted since
-    // the changes will trigger if their are changes on the data only
-    let hasChangesOnCount = servers.length !== this._serverList.length;
-    if (!hasChangesOnCount) { return this._serverList;}
-
     // Remap the content for the listing source
     this._serverList = new Array<ServerList>();
     servers.forEach((server) => {

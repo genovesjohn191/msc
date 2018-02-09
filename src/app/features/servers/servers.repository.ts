@@ -233,6 +233,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         && !isNullOrEmpty(activeServer.compute)) {
         activeServer.compute.memoryMB = job.clientReferenceObject.memoryMB;
         activeServer.compute.cpuCount = job.clientReferenceObject.cpuCount;
+        activeServer.compute.coreCount = 1;
       }
 
       this.updateRecord(activeServer);

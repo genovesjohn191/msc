@@ -106,11 +106,6 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     let changes = this._firewallDiffer.diff(firewalls);
     if (isNullOrEmpty(changes)) { return this._firewallList; }
 
-    // We need to check again if there are added or deleted since
-    // the changes will trigger if their are changes on the data only
-    let hasChangesOnCount = firewalls.length !== this._firewallList.length;
-    if (!hasChangesOnCount) { return this._firewallList;}
-
     firewalls.sort((first: Firewall, second: Firewall) => {
       return compareStrings(first.managementName, second.managementName);
     });
