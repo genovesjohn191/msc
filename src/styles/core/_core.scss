@@ -93,8 +93,8 @@ html {
 
     a {
       font-family: $link-font;
+      color: inherit;
       text-decoration: underline;
-      color: $color-black;
       @include font-size($link-default-font-size, $link-default-line-height);
       @include breakpoint(small) {
         @include font-size($font-size-small, $line-height-small);

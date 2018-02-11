@@ -9,6 +9,15 @@ export class CoreConfig {
     this._apiHost = value;
   }
 
+  /** Encryption public Key */
+  private _saltKey: string;
+  public get saltKey(): string {
+    return this._saltKey;
+  }
+  public set saltKey(value: string) {
+    this._saltKey = value;
+  }
+
   /** Login Url for Authentication */
   private _loginUrl: string;
   public get loginUrl(): string {

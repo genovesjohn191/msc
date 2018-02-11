@@ -26,7 +26,7 @@ import {
   getEnumString,
   unsubscribeSafely,
   deleteArrayRecord,
-  compareStrings
+  getArrayCount
 } from '../../../utilities';
 import { SwitchAccountService } from './switch-account.service';
 import { SwitchAccountRepository } from './switch-account.repository';
@@ -73,6 +73,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   public set dataStatus(value: McsDataStatus) {
     if (value !== this._dataStatus) {
       this._dataStatus = value;
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -83,6 +84,10 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   public get totalRecordCount(): number {
     return isNullOrEmpty(this._switchAccountRepository) ? 0 :
       this._switchAccountRepository.totalRecordsCount;
+  }
+
+  public get filteredRecordCount(): number {
+    return getArrayCount(this.displayedCompanies);
   }
 
   // Icons
@@ -136,8 +141,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
         break;
 
       case McsCompanyStatus.Cancelling:
-        // TODO: This should be color yellow icon
-        userIcon = CoreDefinition.ASSETS_SVG_PERSON_BLUE;
+        userIcon = CoreDefinition.ASSETS_SVG_PERSON_YELLOW;
         break;
 
       case McsCompanyStatus.Cancelled:
@@ -160,7 +164,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
 
   public getTextFormat(company: McsApiCompany): string {
     if (isNullOrEmpty(company)) { return ''; }
-    return `${company.name}(${company.id})`;
+    return `${company.name} (${company.id})`;
   }
 
   /**
@@ -185,7 +189,8 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
    * Retry getting the companies
    */
   public retry(): void {
-    this._switchAccountService.getCompanies();
+    unsubscribeSafely(this.companiesSubscription);
+    this._listenToCompanies();
   }
 
   /**
@@ -195,7 +200,6 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   private _listenToCompanies(): void {
     const displayDataChanges = [
       Observable.of(undefined),
-      this._switchAccountService.companiesStream,
       this.paginator.pageChangedStream,
       this.search.searchChangedStream
     ];
@@ -219,12 +223,11 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
       })
       .subscribe((response) => {
         this.displayedCompanies = response.slice();
-        this._removeActiveDefaultAccounts();
+
+        this._switchAccountService.setActiveAccount(this.displayedCompanies);
+        this.search.showLoading(false);
         this.dataStatus = isNullOrEmpty(this.displayedCompanies) ?
           McsDataStatus.Empty : McsDataStatus.Success;
-
-        this.search.showLoading(false);
-        this._changeDetectorRef.markForCheck();
       });
   }
 
@@ -244,8 +247,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
    */
   private _listenToActiveCompany(): void {
     this.activeAccountSubscription = this._switchAccountService.activeAccountStream
-      .subscribe((active) => {
-        this.activeAccount = active;
+      .subscribe(() => {
         this._removeActiveDefaultAccounts();
         this._changeDetectorRef.markForCheck();
       });
@@ -255,14 +257,13 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
    * Remove the active account and default account from displayed records
    */
   private _removeActiveDefaultAccounts(): void {
-    this.displayedCompanies = deleteArrayRecord(this.displayedCompanies, (_item) => {
-      let isActive = !!(!isNullOrEmpty(this.activeAccount) &&
-        compareStrings(this.activeAccount.id, _item.id) === 0);
-      let isDefault = !!(!isNullOrEmpty(this.defaultAccount) &&
-        compareStrings(this.defaultAccount.id, _item.id) === 0);
+    deleteArrayRecord(this.displayedCompanies, (_item) => {
+      let isActive = this._switchAccountService.activeAccount.id === _item.id;
+      let isDefault = this.defaultAccount.id === _item.id;
+
+      // Se tthe actual count based on deduction from active and default account
+      this._switchAccountRepository.totalRecordsCount -= isActive || isDefault ? 1 : 0;
       return isActive || isDefault;
     });
-    this.dataStatus = isNullOrEmpty(this.displayedCompanies) ?
-      McsDataStatus.Empty : McsDataStatus.Success;
   }
 }

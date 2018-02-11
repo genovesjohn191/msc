@@ -1,2 +1,9 @@
-<span read-only *ngIf="header">{{ header }}</span>
+<!-- Add header or template header -->
+<ng-container *ngIf="headerTemplate">
+  <ng-container *ngTemplateOutlet="headerTemplate.templateRef"></ng-container>
+</ng-container>
+<ng-container *ngIf="!headerTemplate">
+  <span read-only *ngIf="header">{{ header }}</span>
+</ng-container>
+
 <ng-content></ng-content>

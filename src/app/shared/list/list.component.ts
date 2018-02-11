@@ -5,8 +5,11 @@ import {
   ViewEncapsulation,
   ElementRef,
   Renderer2,
-  AfterViewInit
+  AfterViewInit,
+  ContentChild,
+  TemplateRef
 } from '@angular/core';
+import { ListHeaderDirective } from './list-header.directive';
 
 @Component({
   selector: 'mcs-list',
@@ -25,6 +28,9 @@ export class ListComponent implements AfterViewInit {
 
   @Input()
   public spacing: 'xsmall' | 'small' | 'medium';
+
+  @ContentChild(ListHeaderDirective)
+  public headerTemplate: TemplateRef<any>;
 
   public constructor(
     private _elementRef: ElementRef,

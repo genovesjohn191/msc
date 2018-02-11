@@ -48,7 +48,7 @@ export class CoreDefinition {
   public static NOTIFICATION_MAX_ITEM_PER_PAGE = 10;
 
   /** Others */
-  public static SEARCH_TIME = 2000;
+  public static SEARCH_TIME = 1000;
   public static INPUT_TIME = 1000;
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
   public static DEFAULT_INITIAL_PAGE = 'servers';
@@ -87,6 +87,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_PERSON_BLUE = 'person-blue';
   public static ASSETS_SVG_PERSON_GREEN = 'person-green';
   public static ASSETS_SVG_PERSON_RED = 'person-red';
+  public static ASSETS_SVG_PERSON_YELLOW = 'person-yellow';
   public static ASSETS_SVG_ARROW_RIGHT_WHITE = 'arrow-right-white';
   public static ASSETS_SVG_ARROW_RIGHT_BLUE = 'arrow-right-blue';
   public static ASSETS_SVG_ARROW_UP_WHITE = 'arrow-up-white';

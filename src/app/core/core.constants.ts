@@ -1,6 +1,7 @@
 /** Services */
 import { McsApiService } from './services/mcs-api.service';
 import { McsStorageService } from './services/mcs-storage.service';
+import { McsCookieService } from './services/mcs-cookie.service';
 import { McsBrowserService } from './services/mcs-browser.service';
 import { McsNotificationJobService } from './services/mcs-notification-job.service';
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
@@ -31,6 +32,7 @@ import { McsNavigateAwayGuard } from './forms/mcs-navigate-away.guard';
 export const coreProviders: any[] = [
   McsApiService,
   McsStorageService,
+  McsCookieService,
   McsBrowserService,
   McsNotificationJobService,
   McsNotificationContextService,

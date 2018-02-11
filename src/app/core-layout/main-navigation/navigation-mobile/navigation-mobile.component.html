@@ -44,7 +44,7 @@
         <mcs-icon [@indicatorIcon]="switchAccountAnimation"
           [key]="caretDownIconKey" color="white"></mcs-icon>
       </div>
-      <small read-only>{{ getActiveAccount()?.name }}</small>
+      <small read-only>{{ activeAccount?.name }}</small>
     </div>
     <div [@bodyExpansion]="switchAccountAnimation" class="switch-account-panel">
       <div class="account-details">

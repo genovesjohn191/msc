@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Params } from '@angular/router';
-import { CookieService } from 'ngx-cookie';
 import { Observable } from 'rxjs/Rx';
 
 import { CoreDefinition } from '../core.definition';
 import { CoreConfig } from '../core.config';
+import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsApiService } from '../services/mcs-api.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
@@ -28,7 +28,7 @@ export class McsAuthenticationService {
 
   constructor(
     private _appState: AppState,
-    private _cookieService: CookieService,
+    private _cookieService: McsCookieService,
     private _apiService: McsApiService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _loggerService: McsLoggerService,
@@ -78,7 +78,7 @@ export class McsAuthenticationService {
     }
 
     // Return the token from the cookie
-    authToken = this._cookieService.get(this._jwtCookieName);
+    authToken = this._cookieService.getItem<string>(this._jwtCookieName);
     if (authToken) { return authToken; }
   }
 
@@ -97,10 +97,9 @@ export class McsAuthenticationService {
   public deleteCookieContent(): void {
     // Delete the token from Appstate and Cookie
     if (this._enablePassingJwtInUrl) {
-      this._cookieService.remove(this._jwtCookieName);
+      this._cookieService.removeItem(this._jwtCookieName);
     }
-
-    this._cookieService.remove(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    this._cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
   }
 
   /**
@@ -213,7 +212,7 @@ export class McsAuthenticationService {
     if (!expiration && !authentication) { return; }
 
     // Set cookie with expiration date
-    this._cookieService.put(
+    this._cookieService.setItem(
       this._jwtCookieName,
       authentication,
       { expires: expiration }

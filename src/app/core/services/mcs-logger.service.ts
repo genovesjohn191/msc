@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie';
+import { McsCookieService } from './mcs-cookie.service';
 
 // Constant declaration
 const LOGGING_ENABLE_DEF = '_enableMcsObserver';
@@ -21,7 +21,7 @@ export class McsLoggerService {
    */
   private _saveMethodName: string = '';
 
-  constructor(private _cookieService: CookieService) {
+  constructor(private _cookieService: McsCookieService) {
     this._setup();
   }
 
@@ -117,7 +117,7 @@ export class McsLoggerService {
    */
   private _setup(): void {
     // Get the logging flag in the
-    if (this._cookieService.get(LOGGING_ENABLE_DEF)) {
+    if (this._cookieService.getItem<string>(LOGGING_ENABLE_DEF)) {
       this._logIsEnabled = true;
     }
   }

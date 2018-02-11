@@ -164,15 +164,12 @@ export abstract class McsRepositoryBase<T> {
   public findAllRecords(page?: McsPaginator, search?: McsSearch): Observable<T[]> {
     // We need to clear the records when the flag for caching is set to false
     let isSearching = !isNullOrEmpty(search) && search.searching;
-    if (isSearching) {
-      this._totalRecordsCount = 0;
-    }
 
     let displayedRecords = isNullOrEmpty(page) ? MAX_DISPLAY_RECORD :
       page.pageSize * (page.pageIndex + 1);
     let requestRecords = !!(displayedRecords > this.dataRecords.length)
       && !!(this._totalRecordsCount !== this.dataRecords.length)
-      || this._totalRecordsCount === 0;
+      || this._totalRecordsCount === 0 || isSearching;
 
     if (requestRecords) {
       // Get all records from API calls implemented under inherited class

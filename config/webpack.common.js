@@ -182,6 +182,7 @@ module.exports = function (options) {
         'LOGOUT_URL': JSON.stringify(METADATA.LOGOUT_URL),
         'IMAGE_URL': JSON.stringify(METADATA.IMAGE_URL),
         'ICON_URL': JSON.stringify(METADATA.ICON_URL),
+        'SALT_KEY': JSON.stringify(METADATA.SALT_KEY),
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
@@ -191,7 +192,8 @@ module.exports = function (options) {
           'LOGIN_URL': JSON.stringify(METADATA.LOGIN_URL),
           'LOGOUT_URL': JSON.stringify(METADATA.LOGOUT_URL),
           'IMAGE_URL': JSON.stringify(METADATA.IMAGE_URL),
-          'ICON_URL': JSON.stringify(METADATA.ICON_URL)
+          'ICON_URL': JSON.stringify(METADATA.ICON_URL),
+          'SALT_KEY': JSON.stringify(METADATA.SALT_KEY)
         }
       }),
 

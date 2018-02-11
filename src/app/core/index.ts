@@ -8,6 +8,7 @@ export * from './forms/mcs-navigate-away.guard';
 /** Services */
 export * from './services/mcs-api.service';
 export * from './services/mcs-storage.service';
+export * from './services/mcs-cookie.service';
 export * from './services/mcs-component.service';
 export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
