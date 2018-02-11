@@ -10,7 +10,6 @@ import {
   Observable,
   Subject
 } from 'rxjs/Rx';
-import { CookieService } from 'ngx-cookie';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import {
@@ -20,6 +19,8 @@ import {
   convertMapToJsonObject
 } from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { McsApiCompany } from '../models/response/mcs-api-company';
+import { McsCookieService } from './mcs-cookie.service';
 
 /**
  * Macquarie Portal Api Service class
@@ -44,7 +45,7 @@ export class McsApiService {
 
   constructor(
     private _httpClient: HttpClient,
-    private _cookieService: CookieService,
+    private _cookieService: McsCookieService,
     @Optional() private _config: CoreConfig
   ) {
     this._errorResponseStream = new Subject<Response | any>();
@@ -205,9 +206,10 @@ export class McsApiService {
    * @param headers Header Instance
    */
   private _setAccountHeader(headers: Map<string, any>) {
-    let activeAccount = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    if (activeAccount) {
-      headers.set(CoreDefinition.HEADER_COMPANY_ID, JSON.parse(activeAccount).id);
+    let activeAccountId = this._cookieService
+      .getEncryptedItem<McsApiCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    if (activeAccountId) {
+      headers.set(CoreDefinition.HEADER_COMPANY_ID, activeAccountId);
     }
   }
 
@@ -220,7 +222,7 @@ export class McsApiService {
    * @param {Headers} headers Header Instance
    */
   private _setAuthorizationHeader(headers: Map<string, any>) {
-    let authToken = this._cookieService.get(this._jwtCookieName);
+    let authToken = this._cookieService.getItem(this._jwtCookieName);
     if (authToken) {
       headers.set(CoreDefinition.HEADER_AUTHORIZATION,
         `${CoreDefinition.HEADER_BEARER} ${authToken}`);

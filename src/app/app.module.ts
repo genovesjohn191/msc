@@ -76,7 +76,8 @@ export function coreConfig(): CoreConfig {
     loginUrl: resolveEnvVar('LOGIN_URL', LOGIN_URL),
     logoutUrl: resolveEnvVar('LOGOUT_URL', LOGOUT_URL),
     imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
-    iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL)
+    iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL),
+    saltKey: resolveEnvVar('SALT_KEY', SALT_KEY)
   } as CoreConfig;
 }
 

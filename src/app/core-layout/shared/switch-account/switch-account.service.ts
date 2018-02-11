@@ -1,51 +1,48 @@
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject
-} from 'rxjs/Rx';
-import { CookieService } from 'ngx-cookie';
+import { BehaviorSubject } from 'rxjs/Rx';
 import { CoreLayoutService } from '../../core-layout.services';
 import {
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsApiCompany,
   CoreDefinition,
-  McsDataStatus
+  McsDataStatus,
+  McsCookieService,
+  McsApiSuccessResponse
 } from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class SwitchAccountService {
 
   // Streams for data events
-  public companiesStream: BehaviorSubject<McsApiCompany[]>;
   public recentCompaniesStream: BehaviorSubject<McsApiCompany[]>;
   public activeAccountStream: BehaviorSubject<McsApiCompany>;
 
   // Company List
   public companies: McsApiCompany[];
-  public obtainedSuccessfully: boolean;
+  public loadingAccount: boolean = true;
   public companiesStatus: McsDataStatus;
 
   // Others
   private _activeAccount: McsApiCompany;
+  private _hasPermission: boolean;
 
   constructor(
     private _coreLayoutService: CoreLayoutService,
     private _authIdentity: McsAuthenticationIdentity,
     private _authService: McsAuthenticationService,
-    private _cookieService: CookieService
+    private _cookieService: McsCookieService
   ) {
     // Initialize member variables
     this.companies = new Array();
-    this.companiesStream = new BehaviorSubject(undefined);
     this.recentCompaniesStream = new BehaviorSubject(undefined);
     this.activeAccountStream = new BehaviorSubject(undefined);
-    this._activeAccount = new McsApiCompany();
 
     // Initialize companies
     if (this._authService.hasPermission(['CompanyView'])) {
-      this.getCompanies();
-      this._getActiveAccount();
+      this._hasPermission = true;
     }
   }
 
@@ -60,12 +57,19 @@ export class SwitchAccountService {
   }
 
   /**
+   * Active account
+   */
+  public get activeAccount(): McsApiCompany {
+    return isNullOrEmpty(this._activeAccount) ? this.defaultAccount : this._activeAccount;
+  }
+
+  /**
    * Select the company to be switched and notify the stream
    */
   public switchAccount(company: McsApiCompany) {
     if (isNullOrEmpty(company)) { return; }
     this._activeAccount = company;
-    this._setActiveAccount();
+    this._saveAccountIdToCookie();
     this.activeAccountStream.next(company);
 
     // Refresh the page
@@ -83,32 +87,42 @@ export class SwitchAccountService {
     perPage?: number,
     searchKeyword?: string
   }) {
-    return this._coreLayoutService.getCompanies(args);
+    let emptyResponse = new McsApiSuccessResponse<McsApiCompany[]>();
+    emptyResponse.content = [];
+    return !this._hasPermission ? Observable.of(emptyResponse) :
+      this._coreLayoutService.getCompanies(args);
   }
 
   /**
    * Get the active account from cookie
    */
-  private _getActiveAccount(): void {
-    let selectedAccount = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    if (selectedAccount) {
-      this._activeAccount = JSON.parse(selectedAccount);
-      this.activeAccountStream.next(this._activeAccount);
+  public setActiveAccount(_content: McsApiCompany[]): void {
+    let selectedAccountId = this._cookieService
+      .getEncryptedItem<McsApiCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    if (!isNullOrEmpty(selectedAccountId)) {
+      let accountFound = _content.find((company) => {
+        return company.id === selectedAccountId;
+      });
+      if (!isNullOrEmpty(accountFound)) {
+        this._activeAccount = accountFound;
+      }
     }
+    this.loadingAccount = false;
+    this.activeAccountStream.next(this._activeAccount);
   }
 
   /**
    * Set Active account to cookie and App state
    */
-  private _setActiveAccount(): void {
+  private _saveAccountIdToCookie(): void {
     if (this.defaultAccount.id !== this._activeAccount.id) {
-      this._cookieService.put(
+      this._cookieService.setEncryptedItem(
         CoreDefinition.COOKIE_ACTIVE_ACCOUNT,
-        JSON.stringify(this._activeAccount),
+        this._activeAccount.id,
         { expires: this._authIdentity.expiry }
       );
     } else {
-      this._cookieService.remove(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      this._cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
     }
   }
 }

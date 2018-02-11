@@ -45,10 +45,6 @@
   @include display-flex(row);
   @include flex-wrap(wrap);
   justify-content: space-between;
-
-  > * {
-    @include flex(1 1 0);
-  }
 }
 
 .space-between-block-items {

@@ -23,15 +23,15 @@
     <div class="notifications-content-wrapper">
       <div class="notification-item font-bold"
         display-flex justify-content="flex-start" align-items="center">
-        <span>{{ notificationTextContent.title }}</span>
+        <span>{{ textContent.title }}</span>
       </div>
 
       <div class="notification-item" *ngIf="!hasNotification && !hasConnectionError">
-        <span>{{ notificationTextContent.noRecord }}</span>
+        <span>{{ textContent.noRecord }}</span>
       </div>
 
       <div class="notification-item text-error" *ngIf="hasConnectionError">
-        <span>{{ notificationTextContent.connectionError }}</span>
+        <span>{{ textContent.connectionError }}</span>
       </div>
 
       <div class="notification-item"
@@ -41,7 +41,7 @@
 
       <div class="notification-item" display-flex justify-content="center" align-items="center">
         <a (click)="viewNotificationsPage()">
-          {{ notificationTextContent.viewMore }}
+          {{ textContent.viewMore }}
         </a>
       </div>
     </div>
@@ -73,7 +73,14 @@
       (click)="clickUser()" stop-propagation>
       <mcs-icon class="user-icon" [key]="userIconKey" size="medium"></mcs-icon>
       <span class="hidden-small text-light">{{ firstName }} {{ lastName }}</span>
-      <small class="user-info" read-only>{{ getActiveAccount()?.name }}</small>
+
+      <small *ngIf="!loadingAccount" class="user-info" read-only>{{ activeAccount?.name }}</small>
+      <small *ngIf="loadingAccount" class="user-info" read-only>
+        <div class="inline-items-small">
+          <mcs-icon [key]="spinnerIconKey" size="xsmall"></mcs-icon>
+          <span>{{ textContent.loadingCompany }}</span>
+        </div>
+      </small>
     </a>
 
     <!-- Popover will display here -->

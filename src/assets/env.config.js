@@ -11,5 +11,6 @@ window.ENV_CONFIG = {
   enablePassingJwtInUrl: 'MCS_ENABLE_PASSING_JWT_IN_URL',
   jwtCookieName: 'MCS_JWT_COOKIE_NAME',
   imageRoot: 'MCS_IMAGE_ROOT',
-  iconRoot: 'MCS_ICON_ROOT'
+  iconRoot: 'MCS_ICON_ROOT',
+  saltKey: 'MCS_SALT_KEY'
 };

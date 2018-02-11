@@ -7,7 +7,6 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie';
 /** Services/Providers */
 import {
   McsTextContentProvider,
@@ -39,7 +38,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsApiJob[];
   public hasConnectionError: boolean;
   public statusIconClass: string;
-  public notificationTextContent: any;
+  public textContent: any;
   public deviceType: McsDeviceType;
 
   public get hasNotification(): boolean {
@@ -52,6 +51,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
 
   public get userIconKey(): string {
     return CoreDefinition.ASSETS_SVG_USER_WHITE;
+  }
+
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
   public get caretDownIconKey(): string {
@@ -68,6 +71,14 @@ export class UserPanelComponent implements OnInit, OnDestroy {
 
   public get lastName(): string {
     return this._authenticationIdentity.lastName;
+  }
+
+  public get activeAccount(): McsApiCompany {
+    return this._switchAccountService.activeAccount;
+  }
+
+  public get loadingAccount(): boolean {
+    return this._switchAccountService.loadingAccount;
   }
 
   @ViewChild('notificationsPopover')
@@ -89,7 +100,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
-    private _cookieService: CookieService,
     private _switchAccountService: SwitchAccountService
   ) {
     this.hasConnectionError = false;
@@ -99,7 +109,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.notificationTextContent = this._textContent.content.header.userPanel.notifications;
+    this.textContent = this._textContent.content.header.userPanel.notifications;
 
     // Listen to events
     this._listenToNotificationsStatus();
@@ -144,15 +154,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
       this.userPopover.toggle();
       this._changeDetectorRef.markForCheck();
     });
-  }
-
-  public getActiveAccount(): McsApiCompany {
-    let activeAccount: McsApiCompany;
-    let cookieContent: string;
-    cookieContent = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    activeAccount = cookieContent ? JSON.parse(cookieContent) :
-      this._switchAccountService.defaultAccount;
-    return activeAccount;
   }
 
   /**
@@ -202,6 +203,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   private _listenToSwitchAccount(): void {
     this._activeAccountSubscription = this._switchAccountService.activeAccountStream
       .subscribe(() => {
+        // Refresh the page when account is selected
         this._changeDetectorRef.markForCheck();
       });
   }

@@ -9,11 +9,9 @@ type environmentName =
   'SENTRY_DSN' |
   'IMAGE_ROOT' |
   'ICON_ROOT' |
-  'MACQUARIE_VIEW_URL';
-
-import {
-  isNullOrEmpty
-} from '.';
+  'MACQUARIE_VIEW_URL' |
+  'SALT_KEY';
+import { isNullOrEmpty } from './mcs-object.function';
 
 export function resolveEnvVar(envName: environmentName, defaultValue: string = ''): string {
   if (isNullOrEmpty(window['ENV_CONFIG'])) {
@@ -53,8 +51,11 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
     case 'ICON_ROOT':
       overrideValue = window['ENV_CONFIG'].iconRoot;
       break;
-      case 'MACQUARIE_VIEW_URL':
+    case 'MACQUARIE_VIEW_URL':
       overrideValue = window['ENV_CONFIG'].macquarieViewUrl;
+      break;
+    case 'SALT_KEY':
+      overrideValue = window['ENV_CONFIG'].saltKey;
       break;
     default:
       return defaultValue;

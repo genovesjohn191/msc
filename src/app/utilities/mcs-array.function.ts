@@ -105,19 +105,20 @@ export function deleteArrayRecord<T>(
 
   // Initialize for undefined and null record
   if (!sourceArray) { sourceArray = new Array(); }
-  let indexes: number[] = new Array();
+  let instancesToDelete: T[] = new Array();
 
-  for (let index = 0; index < sourceArray.length; index++) {
-    if (predicate(sourceArray[index])) {
-      indexes.push(index);
-
+  sourceArray.forEach((_item) => {
+    if (predicate(_item)) {
       // Target count of the item to be deleted
-      let targetCount = itemCount > 0 && indexes.length >= itemCount;
-      if (targetCount) { break; }
+      let targetCount = itemCount > 0 && instancesToDelete.length >= itemCount;
+      if (targetCount) { return; }
+
+      instancesToDelete.push(_item);
     }
-  }
-  indexes.forEach((index) => {
-    sourceArray.splice(index, 1);
+  });
+
+  instancesToDelete.forEach((instance) => {
+    sourceArray.splice(sourceArray.indexOf(instance), 1);
   });
 
   return sourceArray;
@@ -170,4 +171,12 @@ export function compareArrays<T>(
     }
   }
   return contentType;
+}
+
+/**
+ * Returns the array count. If the array is undefined, it will return 0
+ * @param sourceArray Array source to get the count
+ */
+export function getArrayCount<T>(sourceArray: T[]): number {
+  return !sourceArray ? 0 : sourceArray.length;
 }

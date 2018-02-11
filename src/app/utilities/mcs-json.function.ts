@@ -79,3 +79,16 @@ export function convertMapToJsonObject(
   });
   return obj;
 }
+
+/**
+ * Returns true when the object is JSON, otherwise false
+ * @param content String to checked
+ */
+export function isJson(content: string | any): boolean {
+  try {
+    JSON.parse(content);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}

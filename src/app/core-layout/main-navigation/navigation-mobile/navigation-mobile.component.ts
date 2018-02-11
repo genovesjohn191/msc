@@ -20,7 +20,6 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { CookieService } from 'ngx-cookie';
 /** Providers / Services */
 import {
   CoreDefinition,
@@ -79,6 +78,13 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Get the currently active account
+   */
+  public get activeAccount(): McsApiCompany {
+    return this._switchAccountService.activeAccount;
+  }
+
   private _accountPanelOpen: boolean;
   public get accountPanelOpen(): boolean {
     return this._accountPanelOpen;
@@ -133,7 +139,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _cookieService: CookieService,
     private _switchAccountService: SwitchAccountService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService
@@ -186,18 +191,10 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getActiveAccount(): McsApiCompany {
-    let activeAccount: McsApiCompany;
-    let cookieContent: string;
-    cookieContent = this._cookieService.get(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    activeAccount = cookieContent ? JSON.parse(cookieContent) :
-      this._switchAccountService.defaultAccount;
-    return activeAccount;
-  }
-
   private _listenToSwitchAccount(): void {
     this._activeAccountSubscription = this._switchAccountService.activeAccountStream
       .subscribe(() => {
+        // Refresh the page when account is selected
         this._changeDetectorRef.markForCheck();
       });
   }

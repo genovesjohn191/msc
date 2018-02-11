@@ -693,6 +693,7 @@
     "userPanel": {
       "notifications": {
         "title": "Notifications",
+        "loadingCompany": "Loading company details",
         "noRecord": "Nothing new to report",
         "connectionError": "Notification server connection error",
         "viewMore": "View More"
