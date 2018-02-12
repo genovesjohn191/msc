@@ -3,7 +3,8 @@ import {
   addOrUpdateArrayRecord,
   deleteArrayRecord,
   clearArrayRecord,
-  compareArrays
+  compareArrays,
+  getArrayCount
 } from './mcs-array.function';
 
 // Dummy class
@@ -247,6 +248,23 @@ describe('ARRAY Functions', () => {
         return _first.key === _second.key;
       });
       expect(comparisonResult).toEqual(-2);
+    });
+  });
+
+  describe('getArrayCount()', () => {
+    it(`should return the array records count`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello1'));
+      listItems.push(new TestStructure('3', 'hello2'));
+
+      expect(getArrayCount(listItems)).toEqual(3);
+    });
+
+    it(`should return 0 when the array is undefined`, () => {
+      let listItems: TestStructure[];
+      expect(getArrayCount(listItems)).toBe(0);
     });
   });
 });

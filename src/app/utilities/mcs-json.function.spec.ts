@@ -1,11 +1,10 @@
-import {
-  async
-} from '@angular/core/testing';
+import { async } from '@angular/core/testing';
 import {
   reviverParser,
   convertJsonStringToObject,
   convertObjectToJsonString,
-  convertMapToJsonObject
+  convertMapToJsonObject,
+  isJson
 } from './mcs-json.function';
 
 // Dummy test object class
@@ -88,6 +87,20 @@ describe('JSON Functions', () => {
       expect(convertedObject).toBeDefined();
       expect(convertedObject.first).toBe('value1');
       expect(convertedObject.second).toBe('value2');
+    });
+  });
+
+  describe('isJson()', () => {
+    it(`should return true when the object is convertible to JSON`, () => {
+      let testObject = { name: 'sample' };
+      let jsonObject = isJson(JSON.stringify(testObject));
+      expect(jsonObject).toBeTruthy();
+    });
+
+    it(`should return false when the object is not convertible to JSON`, () => {
+      let testObject = 'sample';
+      let jsonObject = isJson(testObject);
+      expect(jsonObject).toBeFalsy();
     });
   });
 });
