@@ -116,7 +116,7 @@
           <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile }}</span></p>
           <p>
             <strong>Current Size : </strong>
-            <span>{{ appendGbUnit(convertStorageInGb(selectedStorageDevice.sizeMB)) }}</span>
+            <span>{{ appendUnitGB(convertDiskToGB(selectedStorageDevice.sizeMB)) }}</span>
           </p>
         </div>
       </mcs-server-manage-storage>
