@@ -207,7 +207,7 @@
     <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
       <div class="container-wrapper" [disabled]="isProcessingJob">
         <h3 class="container-header">{{ textContent.media.attachHeading }}</h3>
-        <mcs-select [(ngModel)]="selectedMedia"
+        <mcs-select [(ngModel)]="selectedMedia" class="space-bottom-large"
           [placeholder]="textContent.media.mediaSelect.placeholder">
           <mcs-select-group [header]="textContent.media.mediaSelect.header">
             <mcs-select-item *ngFor="let media of resourceMediaList" [value]="media.itemName">

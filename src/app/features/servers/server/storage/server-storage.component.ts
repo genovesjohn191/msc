@@ -153,17 +153,6 @@ export class ServerStorageComponent extends ServerDetailsBase
     }
   }
 
-  private _expandingStorage: boolean;
-  public get expandingStorage(): boolean {
-    return this._expandingStorage;
-  }
-  public set expandingStorage(value: boolean) {
-    if (this._expandingStorage !== value) {
-      this._expandingStorage = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   private _deletingStorage: boolean;
   public get deletingStorage(): boolean {
     return this._deletingStorage;
@@ -191,9 +180,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   }
 
   public get expandIsDisabled(): boolean {
-    return !this.isValidStorageValues
-      || this.expandingStorage
-      || this.isProcessingJob;
+    return !this.isValidStorageValues || this.isProcessingJob;
   }
 
   public get storageProfileList(): any[] {
@@ -227,7 +214,6 @@ export class ServerStorageComponent extends ServerDetailsBase
       _textProvider
     );
     this.expandStorage = false;
-    this.expandingStorage = false;
     this.deletingStorage = false;
     this.selectedStorageDevice = new ServerStorageDevice();
     this.minimumMB = 0;
@@ -303,8 +289,7 @@ export class ServerStorageComponent extends ServerDetailsBase
       serverId: this.server.id,
       name: `${this.textContent.diskName} ${this.server.storageDevice.length + 1}`,
       storageProfile: this.storageChangedValue.storageProfile,
-      sizeMB: this.storageChangedValue.storageMB,
-      powerState: this.server.powerState
+      sizeMB: this.storageChangedValue.storageMB
     };
 
     this._resetDiskValues();
@@ -315,10 +300,8 @@ export class ServerStorageComponent extends ServerDetailsBase
    * This will process the update for the selected disk
    */
   public onClickUpdate(): void {
-    if (!this.isValidStorageValues || this.expandingStorage
-      || this.storageScaleIsDisabled) { return; }
+    if (this.expandIsDisabled) { return; }
 
-    this.expandingStorage = true;
     this.mcsStorage.completed();
 
     let storageData = new ServerStorageDeviceUpdate();
@@ -330,8 +313,7 @@ export class ServerStorageComponent extends ServerDetailsBase
       diskId: this.selectedStorageDevice.id,
       name: this.selectedStorageDevice.name,
       storageProfile: this.selectedStorageDevice.storageProfile,
-      sizeMB: this.storageChangedValue.storageMB,
-      powerState: this.server.powerState
+      sizeMB: this.storageChangedValue.storageMB
     };
 
     this._resetDiskValues();
@@ -339,7 +321,9 @@ export class ServerStorageComponent extends ServerDetailsBase
       this.server.id,
       this.selectedStorageDevice.id,
       storageData
-    ).subscribe();
+    ).subscribe(() => {
+      this.expandStorage = false;
+    });
   }
 
   /**
@@ -356,7 +340,8 @@ export class ServerStorageComponent extends ServerDetailsBase
     storageData.clientReferenceObject = {
       serverId: this.server.id,
       diskId: storage.id,
-      powerState: this.server.powerState
+      storageProfile: storage.storageProfile,
+      sizeMB: storage.sizeMB
     };
 
     this._serversService.deleteServerStorage(this.server.id, storage.id, storageData).subscribe();
@@ -467,8 +452,10 @@ export class ServerStorageComponent extends ServerDetailsBase
     if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
       // Update resource values
       let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
+
       if (!isNullOrEmpty(resourceStorage)) {
         resourceStorage.usedMB += job.clientReferenceObject.sizeMB;
+        this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
       }
 
       // Update server disks
@@ -488,6 +475,7 @@ export class ServerStorageComponent extends ServerDetailsBase
       let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
       if (!isNullOrEmpty(resourceStorage)) {
         resourceStorage.usedMB -= job.clientReferenceObject.sizeMB;
+        this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
       }
 
       // Update server disks
