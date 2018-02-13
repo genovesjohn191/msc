@@ -72,7 +72,11 @@
         </mcs-tab>
 
         <!-- Backup Tab -->
-        <mcs-tab [label]="textContent.backups.label" id="backups"
+        <!-- TODO: Since the backups was not yet finished,
+          use the "Snapshot" on the backups tab first
+          instead of textContent.backups.label
+         -->
+        <mcs-tab label="Snapshots" id="backups"
           *mcsHasPermission="['SnapshotAccess']">
         </mcs-tab>
 

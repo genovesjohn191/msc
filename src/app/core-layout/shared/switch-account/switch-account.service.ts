@@ -22,7 +22,7 @@ export class SwitchAccountService {
 
   // Company List
   public companies: McsApiCompany[];
-  public loadingAccount: boolean = true;
+  public loadingAccount: boolean = false;
   public companiesStatus: McsDataStatus;
 
   // Others
@@ -43,6 +43,7 @@ export class SwitchAccountService {
     // Initialize companies
     if (this._authService.hasPermission(['CompanyView'])) {
       this._hasPermission = true;
+      this.loadingAccount = true;
     }
   }
 

@@ -171,6 +171,7 @@
           "title": "NICs",
           "publicIp": "Public IP",
           "interface": "NIC",
+          "ipAddresses": "IP Addresses",
           "noContentMessage": "There are no NICs for this server."
         },
         "storage": {
@@ -246,7 +247,7 @@
       },
       "backups": {
         "label": "Backups",
-        "loading": "Loading snapshots & backups information.",
+        "loading": "Loading snapshots information.",
         "snapshotHeader": "VM Snapshot",
         "snapshotDescription": "Snapshots are point-in-time VM-level restore points.<br/>Restoring a snapshot is not reversible, so restore carefully.",
         "snapshots": "Snapshots",

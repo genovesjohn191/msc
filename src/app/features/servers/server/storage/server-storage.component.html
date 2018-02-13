@@ -48,14 +48,15 @@
                 </td>
                 <td class="action-items">
                   <span *mcsHasPermission="['VmEdit']" class="expand text-right">
-                    <a [disabled]="storageScaleIsDisabled" (click)="onExpandStorage(storage)">
+                    <a [disabled]="storageScaleIsDisabled"
+                      (click)="showExpandStorageBox(storage)">
                       {{ textContent.expandStorageLink }}
                     </a>
                   </span>
                   <span *mcsHasPermission="['VmEdit']" class="delete text-right">
                     <a *ngIf="hasMultipleStorageDevice"
                       [disabled]="storageDeleteLinkIsDisabled"
-                      (click)="deleteStorage(storage)">
+                      (click)="onDeleteStorage(storage)">
                       {{ textContent.deleteStorageLink }}
                     </a>
                   </span>
@@ -126,7 +127,7 @@
         <button *mcsHasPermission="['VmEdit']"
           mcsButton id="ctaUpdateServerStorage" arrow="right"
           [disabled]="expandIsDisabled"
-          (click)="onClickUpdate()">
+          (click)="onExpandStorage()">
           {{ textContent.updateStorage }}
         </button>
       </div>

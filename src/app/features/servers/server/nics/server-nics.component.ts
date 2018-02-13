@@ -6,7 +6,10 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   ServerNetwork,
   ServerNicSummary,
@@ -20,7 +23,8 @@ import {
   McsTextContentProvider,
   McsDialogService,
   McsApiJob,
-  McsNotificationEventsService
+  McsNotificationEventsService,
+  McsErrorHandlerService
 } from '../../../../core';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
@@ -35,7 +39,7 @@ import {
   DeleteNicDialogComponent
 } from '../../shared';
 
-const STORAGE_MAXIMUM_NETWORKS = 10;
+const SERVER_MAXIMUM_NICS = 10;
 
 @Component({
   selector: 'mcs-server-nics',
@@ -80,7 +84,7 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   public get hasReachedNetworksLimit(): boolean {
-    return this.hasNics && this.server.nics.length === STORAGE_MAXIMUM_NETWORKS;
+    return this.hasNics && this.server.nics.length === SERVER_MAXIMUM_NICS;
   }
 
   public get hasAvailableResourceNetwork(): boolean {
@@ -169,17 +173,19 @@ export class ServerNicsComponent extends ServerDetailsBase
 
   constructor(
     _serversResourcesRepository: ServersResourcesRespository,
+    _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
+    private _errorHandlerService: McsErrorHandlerService,
     private _dialogService: McsDialogService,
-    private _serversRepository: ServersRepository,
     private _notificationEvents: McsNotificationEventsService
   ) {
     // Constructor
     super(
       _serversResourcesRepository,
+      _serversRepository,
       _serversService,
       _serverService,
       _changeDetectorRef,
@@ -214,10 +220,16 @@ export class ServerNicsComponent extends ServerDetailsBase
     let isValid = false;
 
     if (this.isUpdate) {
+      let ipAddressExist: string;
+      if (!isNullOrEmpty(this.selectedNic.ipAddress)) {
+        ipAddressExist = this.selectedNic.ipAddress.find((ip) => {
+          return ip !== this.ipAddress.customIpAddress;
+        });
+      }
       isValid = this.ipAddress.valid &&
         (this.networkName !== this.selectedNic.name ||
           this.ipAddress.ipAllocationMode !== this.selectedNic.ipAllocationMode ||
-          this.ipAddress.customIpAddress !== this.selectedNic.ipAddress);
+          isNullOrEmpty(ipAddressExist));
     } else {
       isValid = !isNullOrEmpty(this.networkName) && this.ipAddress.valid;
     }
@@ -253,9 +265,15 @@ export class ServerNicsComponent extends ServerDetailsBase
     if (isNullOrEmpty(nic)) { return; }
 
     this.selectedNic = nic;
+    // TODO: Remove this when the nics endpoint and the ipaddress is array in API are available
+    if (!isNullOrEmpty(this.selectedNic)) {
+      this.selectedNic.ipAddress = Array.isArray(this.selectedNic.ipAddress) ?
+        this.selectedNic.ipAddress : new Array(this.selectedNic.ipAddress);
+    }
     this.networkName = nic.name;
     this.ipAddress.ipAllocationMode = nic.ipAllocationMode;
-    this.ipAddress.customIpAddress = nic.ipAddress;
+    this.ipAddress.customIpAddress = isNullOrEmpty(nic) ? '' : nic.ipAddress[0];
+
     this.isPrimary = nic.isPrimary;
     this.isUpdate = true;
     this.fcNetwork.setValue(this.networkName);
@@ -312,6 +330,7 @@ export class ServerNicsComponent extends ServerDetailsBase
       ipAddress: this.ipAddress.customIpAddress
     };
 
+    this._serversService.setServerExecutionStatus(this.server, this.selectedNic);
     this._serversService.updateServerNic(this.server.id, this.selectedNic.id, nicValues)
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
@@ -424,7 +443,7 @@ export class ServerNicsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onCreateServerNetwork(job: McsApiJob): void {
-    if (isNullOrEmpty(job)) { return; }
+    if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
     if (!this.server.isProcessing) {
       // Update the server nics
@@ -437,10 +456,10 @@ export class ServerNicsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onModifyServerNetwork(job: McsApiJob): void {
-    if (isNullOrEmpty(job)) { return; }
+    if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
+    // Update the server nics
     if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-      // Update the server nics
       this._updateServerNics();
     }
   }
@@ -451,6 +470,11 @@ export class ServerNicsComponent extends ServerDetailsBase
   private _getResourceNetworks(): void {
     this.networksSubscription = this._serversResourcesRespository
       .findResourceNetworks(this.serverResource)
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
       .subscribe(() => {
         // Subscribe to update the networks to server resource
       });

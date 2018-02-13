@@ -17,31 +17,43 @@
       </div>
       <div>
         <strong class="space-bottom-small block">{{ textContent.snapshots }}</strong>
+
+        <!-- Loader settings -->
+        <div class="position-relative">
+          <div [mcsLoader]="serverSnapshotsSubscription"
+            [mcsLoaderHideElement]="snapshotsContent"></div>
+        </div>
+
         <!-- Snapshots -->
-        <div *ngIf="hasSnapshot" class="space-between-inline-items">
-          <ng-container *ngFor="let item of snapshots">
-            <span>{{ convertDateToString(item.createdOn) }}</span>
+        <div #snapshotsContent>
+          <div *ngIf="hasSnapshot" class="space-between-inline-items">
+            <div class="inline-items-xsmall">
+              <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
+                size="small" [mcsTooltip]="server.processingText"></mcs-icon>
+              <span>{{ convertDateToString(server.snapshot.createdOn) }}</span>
+            </div>
             <div [disabled]="!enabledActions" class="text-right">
-              <a (click)="restoreSnapshot(item)">
+              <a (click)="restoreSnapshot(server.snapshot)">
                 {{ textContent.restoreSnapshot }}
               </a>
-              <a (click)="deleteSnapshot(item)" class="space-left-small">
+              <a (click)="deleteSnapshot(server.snapshot)" class="space-left-small">
                 {{ textContent.deleteSnapshot }}
               </a>
             </div>
-          </ng-container>
-        </div>
+          </div>
 
-        <!-- Warning icon when no snapshots found -->
-        <div *ngIf="!hasSnapshot" class="inline-items-small">
-          <mcs-icon [key]="warningIconKey"></mcs-icon>
-          <span>{{ textContent.noSnapshots }}</span>
+          <!-- Warning icon when no snapshots found -->
+          <div *ngIf="!hasSnapshot" class="inline-items-small">
+            <mcs-icon [key]="warningIconKey"></mcs-icon>
+            <span>{{ textContent.noSnapshots }}</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Server Backups -->
-    <div class="container-wrapper">
+    <!-- TODO: Remove ngIf when Backups is working -->
+    <div *ngIf="false" class="container-wrapper">
       <h3 class="container-header">{{ textContent.serverBackups }}</h3>
       <p>{{ textContent.serverBackupsDescription }}</p>
       <div>
