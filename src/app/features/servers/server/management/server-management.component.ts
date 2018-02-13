@@ -13,7 +13,10 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   ServerFileSystem,
   ServerPerformanceScale,
@@ -29,7 +32,8 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsDeviceType,
-  McsDialogService
+  McsDialogService,
+  McsErrorHandlerService
 } from '../../../../core';
 import {
   getEncodedUrl,
@@ -162,7 +166,10 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get hasNics(): boolean {
-    return !isNullOrEmpty(this.server.nics);
+    return !isNullOrEmpty(this.server.nics) && !isNullOrEmpty(
+      this.server.nics.find((nic) => {
+        return !isNullOrEmpty(nic.ipAddress);
+      }));
   }
 
   public get hasStorageInformation(): boolean {
@@ -183,19 +190,21 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   constructor(
     _serversResourcesRepository: ServersResourcesRespository,
+    _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
+    private _errorHandlerService: McsErrorHandlerService,
     private _renderer: Renderer2,
     private _browserService: McsBrowserService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _dialogService: McsDialogService,
-    private _serversRepository: ServersRepository
+    private _dialogService: McsDialogService
   ) {
     super(
       _serversResourcesRepository,
+      _serversRepository,
       _serversService,
       _serverService,
       _changeDetectorRef,
@@ -265,6 +274,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     if (!this._serverPerformanceScale.valid || !this.hasUpdate) { return; }
 
     // Update the Server CPU size scale
+    this._serversService.setServerExecutionStatus(this.server);
     this._scalingSubscription = this._serverService.setPerformanceScale(
       this.server.id,
       this._serverPerformanceScale,
@@ -299,6 +309,8 @@ export class ServerManagementComponent extends ServerDetailsBase
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        // Set initial server status so that the spinner will show up immediately
+        this._serversService.setServerExecutionStatus(this.server, media);
         this.detachMedia(media);
       }
     });
@@ -317,6 +329,8 @@ export class ServerManagementComponent extends ServerDetailsBase
 
     this.selectedMedia = undefined;
 
+    // Set initial server status so that the spinner will show up immediately
+    this._serversService.setServerExecutionStatus(this.server);
     this._serversService.attachServerMedia(this.server.id, mediaValues)
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
@@ -434,6 +448,11 @@ export class ServerManagementComponent extends ServerDetailsBase
   private _getServerCompute(): void {
     this.computeSubscription = this._serversResourcesRespository
       .findResourceCompute(this.serverResource)
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
       .subscribe(() => {
         // Subscribe to update the compute of the selected server resource
       });

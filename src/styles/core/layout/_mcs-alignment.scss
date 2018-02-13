@@ -5,6 +5,11 @@
   align-items: center;
 }
 
+.inline-items-xsmall {
+  @extend %inline-items;
+  @include set-items-interval($space-xsmall, horizontal);
+}
+
 .inline-items-small {
   @extend %inline-items;
   @include set-items-interval($space-small, horizontal);
@@ -23,6 +28,11 @@
 // Block Items
 %block-items {
   @include display-flex(column);
+}
+
+.block-items-xsmall {
+  @extend %block-items;
+  @include set-items-interval($space-xsmall);
 }
 
 .block-items-small {

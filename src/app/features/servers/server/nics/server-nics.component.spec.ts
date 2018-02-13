@@ -142,7 +142,7 @@ describe('ServerNicsComponent', () => {
     it('should return false if there are no changes in editing NIC', () => {
       component.isUpdate = true;
       component.networkName = 'Customer_100320-V1012-Web-M1VLN27117001';
-      component.ipAddress.valid = true;
+      component.ipAddress.valid = false;
 
       component.selectedNic.name = 'Customer_100320-V1012-Web-M1VLN27117001';
 

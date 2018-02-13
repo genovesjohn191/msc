@@ -6,7 +6,10 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   ServerManageStorage,
   ServerStorage,
@@ -20,7 +23,8 @@ import {
   McsNotificationEventsService,
   McsApiJob,
   McsDialogService,
-  McsOption
+  McsOption,
+  McsErrorHandlerService
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
@@ -198,16 +202,18 @@ export class ServerStorageComponent extends ServerDetailsBase
 
   constructor(
     _serversResourcesRepository: ServersResourcesRespository,
+    _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
+    private _errorHandlerService: McsErrorHandlerService,
     private _dialogService: McsDialogService,
-    private _notificationEvents: McsNotificationEventsService,
-    private _serversRepository: ServersRepository,
+    private _notificationEvents: McsNotificationEventsService
   ) {
     super(
       _serversResourcesRepository,
+      _serversRepository,
       _serversService,
       _serverService,
       _changeDetectorRef,
@@ -244,31 +250,38 @@ export class ServerStorageComponent extends ServerDetailsBase
     }
   }
 
-  public onExpandStorage(storageDevice: ServerStorageDevice) {
-    if (this.storageScaleIsDisabled) { return; }
-
-    this.minimumMB = storageDevice.sizeMB;
-    this.maximumMB = this.getStorageAvailableMemory(storageDevice.storageProfile);
-    this.selectedStorageDevice = storageDevice;
-    this.expandStorage = true;
-  }
-
   public closeExpandStorageBox() {
     this.selectedStorageDevice = new ServerStorageDevice();
     this.expandStorage = false;
   }
 
-  public deleteStorage(storage: ServerStorageDevice): void {
+  /**
+   * Event that emits when user clicked on expand link
+   * @param storageDevice Storage to be expanded
+   */
+  public showExpandStorageBox(storage: ServerStorageDevice) {
+    if (this.storageScaleIsDisabled) { return; }
+
+    this.minimumMB = storage.sizeMB;
+    this.maximumMB = this.getStorageAvailableMemory(storage.storageProfile);
+    this.selectedStorageDevice = storage;
+    this.expandStorage = true;
+  }
+
+  /**
+   * Event that emits when user deleted a storage
+   * @param storage Storage to be deleted
+   */
+  public onDeleteStorage(storage: ServerStorageDevice): void {
     if (this.server.isProcessing) { return; }
 
     let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
       data: storage,
       size: 'medium'
     });
-
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.onDeleteStorage(storage);
+        this._executeDeleteStorage(storage);
       }
     });
   }
@@ -299,9 +312,8 @@ export class ServerStorageComponent extends ServerDetailsBase
   /**
    * This will process the update for the selected disk
    */
-  public onClickUpdate(): void {
+  public onExpandStorage(): void {
     if (this.expandIsDisabled) { return; }
-
     this.mcsStorage.completed();
 
     let storageData = new ServerStorageDeviceUpdate();
@@ -316,6 +328,7 @@ export class ServerStorageComponent extends ServerDetailsBase
       sizeMB: this.storageChangedValue.storageMB
     };
 
+    this._serversService.setServerExecutionStatus(this.server, this.selectedStorageDevice);
     this._resetDiskValues();
     this._serversService.updateServerStorage(
       this.server.id,
@@ -324,27 +337,6 @@ export class ServerStorageComponent extends ServerDetailsBase
     ).subscribe(() => {
       this.expandStorage = false;
     });
-  }
-
-  /**
-   * This will process the deletion of the selected disk
-   *
-   * @param storage Disk to be deleted
-   */
-  public onDeleteStorage(storage: ServerStorageDevice): void {
-    if (this.server.isProcessing) { return; }
-
-    this.mcsStorage.completed();
-
-    let storageData = new ServerStorageDeviceUpdate();
-    storageData.clientReferenceObject = {
-      serverId: this.server.id,
-      diskId: storage.id,
-      storageProfile: storage.storageProfile,
-      sizeMB: storage.sizeMB
-    };
-
-    this._serversService.deleteServerStorage(this.server.id, storage.id, storageData).subscribe();
   }
 
   /**
@@ -366,6 +358,25 @@ export class ServerStorageComponent extends ServerDetailsBase
   protected serverSelectionChanged(): void {
     this._getResourceStorage();
     this._updateServerDisks();
+  }
+
+  /**
+   * This will process the deletion of the selected disk
+   *
+   * @param storage Disk to be deleted
+   */
+  private _executeDeleteStorage(storage: ServerStorageDevice): void {
+    if (this.server.isProcessing) { return; }
+    this.mcsStorage.completed();
+
+    let storageData = new ServerStorageDeviceUpdate();
+    storageData.clientReferenceObject = {
+      serverId: this.server.id,
+      diskId: storage.id,
+      powerState: this.server.powerState
+    };
+    this._serversService.setServerExecutionStatus(this.server, storage);
+    this._serversService.deleteServerStorage(this.server.id, storage.id, storageData).subscribe();
   }
 
   /**
@@ -397,7 +408,6 @@ export class ServerStorageComponent extends ServerDetailsBase
         serverStorage = targetStorage;
       }
     }
-
     return serverStorage;
   }
 
@@ -498,6 +508,11 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _getResourceStorage(): void {
     this.storageSubscription = this._serversResourcesRespository
       .findResourceStorage(this.serverResource)
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
       .subscribe(() => {
         // Subscribe to update the storage to server resource
       });

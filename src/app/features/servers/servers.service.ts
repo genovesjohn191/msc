@@ -825,7 +825,7 @@ export class ServersService {
    * Get server snapshots from API
    * @param id Server identification
    */
-  public getServerSnapshots(serverId: any): Observable<McsApiSuccessResponse<ServerSnapshot[]>> {
+  public getServerSnapshot(serverId: any): Observable<McsApiSuccessResponse<ServerSnapshot>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/snapshot`;
 
@@ -840,16 +840,10 @@ export class ServersService {
           this._responseReviverParser
         );
 
-        // Convert the response to array so that it is ready for extension
-        let convertedResponse: McsApiSuccessResponse<ServerSnapshot[]>;
-        convertedResponse.status = apiResponse.status;
-        convertedResponse.totalCount = apiResponse.totalCount;
-        convertedResponse.content = new Array(apiResponse.content);
-
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, convertedResponse);
-        return convertedResponse;
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
+        return apiResponse;
       });
   }
 
@@ -1113,6 +1107,7 @@ export class ServersService {
     data: { server: Server, result?: any },
     action: ServerCommand
   ) {
+
     switch (action) {
       case ServerCommand.ViewVCloud:
         window.open(data.server.portalUrl);
@@ -1133,6 +1128,7 @@ export class ServersService {
         break;
 
       case ServerCommand.ResetVmPassword:
+        this.setServerExecutionStatus(data.server);
         this.resetVmPassowrd(data.server.id,
           {
             serverId: data.server.id,
@@ -1146,6 +1142,7 @@ export class ServersService {
         break;
 
       case ServerCommand.Delete:
+        this.setServerExecutionStatus(data.server);
         this.deleteServer(data.server.id,
           {
             serverId: data.server.id,
@@ -1157,6 +1154,7 @@ export class ServersService {
         break;
 
       case ServerCommand.Rename:
+        this.setServerExecutionStatus(data.server);
         this.renameServer(data.server.id,
           {
             name: data.result,    // Server name
@@ -1173,6 +1171,7 @@ export class ServersService {
         break;
 
       default:
+        this.setServerExecutionStatus(data.server);
         this.putServerCommand(data.server.id, action,
           {
             serverId: data.server.id,
@@ -1222,6 +1221,30 @@ export class ServersService {
    */
   public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
     return !isNullOrEmpty(storage) ? (storage.limitMB - storage.usedMB) - memoryMB : 0;
+  }
+
+  /**
+   * Set the server execution status initially in order for the
+   * server to load first while waiting for the corresponding job
+   * @param server Server to be set as processing
+   * @param classes Additional classed to set their isProcessing flag
+   */
+  public setServerExecutionStatus(server: Server, ...classes: any[]): void {
+    if (isNullOrEmpty(server)) { return; }
+    server.isProcessing = true;
+    server.processingText = 'Processing request.';
+
+    // Additional instance to set the process flag
+    if (!isNullOrEmpty(classes)) {
+      classes.forEach((param) => {
+        if (isNullOrEmpty(param)) {
+          param = Object.create(param);
+          param.isProcessing = true;
+        } else {
+          param.isProcessing = true;
+        }
+      });
+    }
   }
 
   /**
@@ -1319,6 +1342,7 @@ export class ServersService {
         break;
 
       default:
+        value = reviverParser(key, value);
         break;
     }
 
@@ -1345,7 +1369,6 @@ export class ServersService {
       default:
         break;
     }
-
     return value;
   }
 }

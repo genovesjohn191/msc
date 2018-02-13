@@ -16,6 +16,11 @@
   padding-left: $space-medium;
   padding-right: $space-medium;
 
+  &.no-gutter {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   &.right-orientation {
     @include display-flex(row);
     @include align-items(flex-start);

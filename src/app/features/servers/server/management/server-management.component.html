@@ -90,15 +90,22 @@
                 {{ textContent.nics.noContentMessage }}
               </span>
             </div>
-            <mcs-list spacing="xsmall">
-              <!-- Server NICs -->
-              <mcs-list-item *ngFor="let nic of server.nics">
-                <div display-flex="row" class="horizontal-items-spacing-xsmall">
-                  <span>{{ textContent.nics.interface }} {{ nic.index }}: </span>
-                  <span>{{ nic.ipAddress }}</span>
+
+            <!-- Server NICs -->
+            <mcs-accordion *ngIf="hasNics" [multi]="true">
+              <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
+                [expanded]="i === 0" [hidden]="!nic.ipAddress">
+                <mcs-accordion-panel-header panel-header-def>
+                  <h4>{{ nic.name }}</h4>
+                </mcs-accordion-panel-header>
+                <div class="block-items-xsmall">
+                  <h4 class="space-bottom-small">{{ textContent.nics.ipAddresses }}:</h4>
+                  <ng-container *ngFor="let item of nic.ipAddress">
+                    <span class="break-word-all">{{ item }}</span>
+                  </ng-container>
                 </div>
-              </mcs-list-item>
-            </mcs-list>
+              </mcs-accordion-panel>
+            </mcs-accordion>
           </div>
         </div>
       </div>

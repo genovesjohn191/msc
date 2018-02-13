@@ -8,6 +8,7 @@ import {
 } from '../models';
 import { ServersResourcesRespository } from '../servers-resources.repository';
 import { ServersService } from '../servers.service';
+import { ServersRepository } from '../servers.repository';
 import { ServerService } from '../server/server.service';
 import { McsTextContentProvider } from '../../../core';
 import {
@@ -20,6 +21,7 @@ export abstract class ServerDetailsBase {
   public serverResource: ServerResource;
   public serverResourceSubscription: Subscription;
   private _serverSubscription: Subscription;
+  private _notificationsSubscription: Subscription;
 
   /**
    * Selected Server
@@ -105,6 +107,7 @@ export abstract class ServerDetailsBase {
 
   constructor(
     protected _serversResourcesRespository: ServersResourcesRespository,
+    protected _serversRepository: ServersRepository,
     protected _serversService: ServersService,
     protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
@@ -113,6 +116,7 @@ export abstract class ServerDetailsBase {
     this.server = new Server();
     this.serverResource = new ServerResource();
     this._listenToSelectedServerStream();
+    this._listenToNotificationsChanged();
   }
 
   /**
@@ -129,6 +133,7 @@ export abstract class ServerDetailsBase {
   protected dispose(): void {
     unsubscribeSafely(this.serverResourceSubscription);
     unsubscribeSafely(this._serverSubscription);
+    unsubscribeSafely(this._notificationsSubscription);
   }
 
   /**
@@ -137,7 +142,7 @@ export abstract class ServerDetailsBase {
    * @param value Disk value to convert
    */
   protected convertDiskToGB(memoryMB: number): number {
-    return (memoryMB > 0) ? Math.floor(convertToGb(memoryMB)) : 0 ;
+    return (memoryMB > 0) ? Math.floor(convertToGb(memoryMB)) : 0;
   }
 
   /**
@@ -146,7 +151,7 @@ export abstract class ServerDetailsBase {
    */
   protected appendUnitGB(value: number): string {
     let textContent = this._textProvider.content.servers.shared.storageScale;
-    return (value > 0) ? `${value} ${textContent.unit}` : textContent.invalidStorage ;
+    return (value > 0) ? `${value} ${textContent.unit}` : textContent.invalidStorage;
   }
 
   /**
@@ -176,6 +181,17 @@ export abstract class ServerDetailsBase {
           this.server = server;
           this._getServerResources();
         }
+      });
+  }
+
+  /**
+   * Listen to each notifications changed in server
+   * so that we could refresh the view of the corresponding component
+   */
+  private _listenToNotificationsChanged(): void {
+    this._notificationsSubscription = this._serversRepository.notificationsChanged
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
       });
   }
 }

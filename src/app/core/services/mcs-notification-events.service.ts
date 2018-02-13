@@ -56,6 +56,15 @@ export class McsNotificationEventsService {
   /** Event that emits when delete server network executed */
   public deleteServerNetwork = new BehaviorSubject<McsApiJob>(undefined);
 
+  /** Event that emits when create server snapshot executed */
+  public createServerSnapshot = new BehaviorSubject<McsApiJob>(undefined);
+
+  /** Event that emits when apply server snapshot executed */
+  public applyServerSnapshot = new BehaviorSubject<McsApiJob>(undefined);
+
+  /** Event that emits when delete server snapshot executed */
+  public deleteServerSnapshot = new BehaviorSubject<McsApiJob>(undefined);
+
   /** Event that emits all jobs */
   public notificationsEvent = new BehaviorSubject<McsApiJob[]>(undefined);
 
@@ -145,6 +154,18 @@ export class McsNotificationEventsService {
 
         case McsJobType.DeleteServerNetwork:
           this.deleteServerNetwork.next(notification);
+          break;
+
+        case McsJobType.CreateServerSnapshot:
+          this.createServerSnapshot.next(notification);
+          break;
+
+        case McsJobType.ApplyServerSnapshot:
+          this.applyServerSnapshot.next(notification);
+          break;
+
+        case McsJobType.DeleteServerSnapshot:
+          this.deleteServerSnapshot.next(notification);
           break;
 
         default:

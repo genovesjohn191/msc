@@ -27,12 +27,19 @@ export class McsCookieService {
   public setEncryptedItem<T>(key: string, value: T, options?: CookieOptions): void {
     // Encrypt the value
     let encrypted: string;
-    if (isJson(value)) {
-      encrypted = cryptoJS.AES.encrypt(
-        JSON.stringify(value),
-        this._coreConfig.saltKey);
-    } else {
-      encrypted = cryptoJS.AES.encrypt(value, this._coreConfig.saltKey);
+
+    try {
+      if (isJson(value)) {
+        encrypted = cryptoJS.AES.encrypt(
+          JSON.stringify(value),
+          this._coreConfig.saltKey);
+      } else {
+        encrypted = cryptoJS.AES.encrypt(value, this._coreConfig.saltKey);
+      }
+    } catch (error) {
+      // Set the normal cookie content when conversion to UTF has error
+      this.setItem(key, value, options);
+      return;
     }
 
     // Save the encrypted data to cookie
@@ -44,21 +51,25 @@ export class McsCookieService {
    * @param key Key of the cookie to decrypt
    */
   public getEncryptedItem<T>(key: string): T {
+    let decryptedData: any;
     let cookieData = this._cookieService.get(key);
     if (isNullOrEmpty(cookieData)) { return undefined; }
 
-    // Decrypt the cookie content as object
-    let bytes = cryptoJS.AES.decrypt(
-      cookieData.toString(),
-      this._coreConfig.saltKey);
+    try {
+      // Decrypt the cookie content as object
+      let bytes = cryptoJS.AES.decrypt(
+        cookieData.toString(),
+        this._coreConfig.saltKey);
 
-    let decryptedData: any;
-    if (isJson(bytes)) {
-      decryptedData = JSON.parse(bytes.toString(cryptoJS.enc.Utf8));
-    } else {
-      decryptedData = bytes.toString(cryptoJS.enc.Utf8);
+      if (isJson(bytes)) {
+        decryptedData = JSON.parse(bytes.toString(cryptoJS.enc.Utf8));
+      } else {
+        decryptedData = bytes.toString(cryptoJS.enc.Utf8);
+      }
+    } catch (error) {
+      // Get the normal cookie content when conversion to UTF has error
+      decryptedData = this.getItem(key);
     }
-
     return decryptedData as T;
   }
 

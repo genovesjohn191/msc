@@ -265,6 +265,7 @@ export class ServersComponent
     if (isNullOrEmpty(servers)) { return; }
     let serverItems: Server[] = new Array();
     let dialogComponent = null;
+    this.selection.clear();
 
     // Set server items based on instance if it is single or multiple
     !Array.isArray(servers) ? serverItems.push(servers) : serverItems = servers;
@@ -283,6 +284,7 @@ export class ServersComponent
       default:
         serverItems.forEach((serverItem) => {
           this._serversService.executeServerCommand({ server: serverItem }, action);
+          this.changeDetectorRef.markForCheck();
         });
         return;
     }
@@ -300,6 +302,7 @@ export class ServersComponent
               { server: serverItem, result: dialogResult },
               action
             );
+            this.changeDetectorRef.markForCheck();
           });
         }
       });

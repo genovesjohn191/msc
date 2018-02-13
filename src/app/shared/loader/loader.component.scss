@@ -1,6 +1,7 @@
 @import "../../../styles/shared/base";
 
 $loader-offset: 100px;
+$loader-size: $space-xxlarge;
 
 .loader-wrapper {
   background: $color-white;
@@ -10,6 +11,7 @@ $loader-offset: 100px;
   align-items: center;
   justify-content: center;
   z-index: $zindex-loader;
+  min-height: $loader-size;
 
   &.expanded {
     position: absolute;
