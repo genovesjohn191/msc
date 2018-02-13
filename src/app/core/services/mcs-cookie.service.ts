@@ -32,9 +32,9 @@ export class McsCookieService {
       if (isJson(value)) {
         encrypted = cryptoJS.AES.encrypt(
           JSON.stringify(value),
-          this._coreConfig.saltKey);
+          this._coreConfig.enryptionKey);
       } else {
-        encrypted = cryptoJS.AES.encrypt(value, this._coreConfig.saltKey);
+        encrypted = cryptoJS.AES.encrypt(value, this._coreConfig.enryptionKey);
       }
     } catch (error) {
       // Set the normal cookie content when conversion to UTF has error
@@ -59,7 +59,7 @@ export class McsCookieService {
       // Decrypt the cookie content as object
       let bytes = cryptoJS.AES.decrypt(
         cookieData.toString(),
-        this._coreConfig.saltKey);
+        this._coreConfig.enryptionKey);
 
       if (isJson(bytes)) {
         decryptedData = JSON.parse(bytes.toString(cryptoJS.enc.Utf8));

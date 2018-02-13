@@ -9,13 +9,18 @@ export class CoreConfig {
     this._apiHost = value;
   }
 
-  /** Encryption public Key */
-  private _saltKey: string;
-  public get saltKey(): string {
-    return this._saltKey;
+  /**
+   * Encryption public Key
+   *
+   * `@Note:` This should be used only for those information
+   * that should be encrypted in the storage or cookie
+   */
+  private _encryptionKey: string;
+  public get enryptionKey(): string {
+    return this._encryptionKey;
   }
-  public set saltKey(value: string) {
-    this._saltKey = value;
+  public set enryptionKey(value: string) {
+    this._encryptionKey = value;
   }
 
   /** Login Url for Authentication */

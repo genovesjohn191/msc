@@ -10,7 +10,7 @@ type environmentName =
   'IMAGE_ROOT' |
   'ICON_ROOT' |
   'MACQUARIE_VIEW_URL' |
-  'SALT_KEY';
+  'EK';
 import { isNullOrEmpty } from './mcs-object.function';
 
 export function resolveEnvVar(envName: environmentName, defaultValue: string = ''): string {
@@ -54,8 +54,8 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
     case 'MACQUARIE_VIEW_URL':
       overrideValue = window['ENV_CONFIG'].macquarieViewUrl;
       break;
-    case 'SALT_KEY':
-      overrideValue = window['ENV_CONFIG'].saltKey;
+    case 'EK':
+      overrideValue = window['ENV_CONFIG'].ek;
       break;
     default:
       return defaultValue;
