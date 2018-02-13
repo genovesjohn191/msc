@@ -12,5 +12,5 @@ window.ENV_CONFIG = {
   jwtCookieName: 'MCS_JWT_COOKIE_NAME',
   imageRoot: 'MCS_IMAGE_ROOT',
   iconRoot: 'MCS_ICON_ROOT',
-  saltKey: 'MCS_SALT_KEY'
+  ek: 'MCS_EK'
 };

@@ -11,5 +11,5 @@ s,MCS_ENABLE_PASSING_JWT_IN_URL,'"${MCS_ENABLE_PASSING_JWT_IN_URL}"',g
 s,MCS_JWT_COOKIE_NAME,'"${MCS_JWT_COOKIE_NAME}"',g
 s,MCS_IMAGE_ROOT,'"${MCS_IMAGE_ROOT}"',g
 s,MCS_ICON_ROOT,'"${MCS_ICON_ROOT}"',g
-s,MCS_SALT_KEY,'"${MCS_SALT_KEY}"',g' assets/env.config.js;
+s,MCS_EK,'"${MCS_EK}"',g' assets/env.config.js;
 nginx -g 'daemon off;'

@@ -66,7 +66,7 @@ declare var LOGIN_URL: string;
 declare var LOGOUT_URL: string;
 declare var IMAGE_URL: string;
 declare var ICON_URL: string;
-declare var SALT_KEY: string;
+declare var EK: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -83,7 +83,7 @@ interface GlobalEnvironment {
   LOGOUT_URL: string;
   IMAGE_URL: string;
   ICON_URL: string;
-  SALT_KEY: string;
+  EK: string;
 }
 
 interface Es6PromiseLoader {

@@ -25,7 +25,7 @@ module.exports = function (options) {
   const LOGOUT_URL = process.env.MCS_LOGOUT_URL || undefined;
   const IMAGE_URL = process.env.MCS_IMAGE_URL || undefined;
   const ICON_URL = process.env.MCS_ICON_URL || undefined;
-  const SALT_KEY = process.env.MCS_SALT_KEY || undefined;
+  const EK = process.env.MCS_EK || undefined;
 
   const METADATA = Object.assign({}, buildUtils.DEFAULT_METADATA, {
     host: HOST,
@@ -37,7 +37,7 @@ module.exports = function (options) {
     LOGOUT_URL: LOGOUT_URL,
     IMAGE_URL: IMAGE_URL,
     ICON_URL: ICON_URL,
-    SALT_KEY: SALT_KEY,
+    EK: EK,
     HMR: helpers.hasProcessFlag('hot'),
     PUBLIC: process.env.PUBLIC_DEV || HOST + ':' + PORT
   });
