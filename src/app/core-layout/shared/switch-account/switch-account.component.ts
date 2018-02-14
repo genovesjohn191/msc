@@ -224,8 +224,9 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
       .subscribe((response) => {
         this.displayedCompanies = response.slice();
 
-        this._switchAccountService.setActiveAccount(this.displayedCompanies);
+        this._removeActiveDefaultAccounts();
         this.search.showLoading(false);
+        this.paginator.showLoading(false);
         this.dataStatus = isNullOrEmpty(this.displayedCompanies) ?
           McsDataStatus.Empty : McsDataStatus.Success;
       });

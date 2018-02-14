@@ -158,16 +158,14 @@ export abstract class ServerDetailsBase {
    * Obtain server resources and set resource map
    */
   private _getServerResources(): void {
+    unsubscribeSafely(this.serverResourceSubscription);
     this.serverResourceSubscription = this._serversResourcesRespository
       .findRecordById(this.server.platform.resourceId)
       .subscribe((resource) => {
         this.serverResource = resource;
+        this.serverSelectionChanged();
+        this._changeDetectorRef.markForCheck();
       });
-
-    this.serverResourceSubscription.add(() => {
-      this.serverSelectionChanged();
-      this._changeDetectorRef.markForCheck();
-    });
   }
 
   /**

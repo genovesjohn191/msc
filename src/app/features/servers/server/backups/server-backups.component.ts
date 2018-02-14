@@ -69,8 +69,16 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   public get enabledActions(): boolean {
-    return this.server.serviceType === ServerServiceType.SelfManaged &&
-      !this.snapshotProcessing;
+    return this.server.serviceType === ServerServiceType.SelfManaged
+      && !this.snapshotProcessing
+      || !this.server.isProcessing;
+  }
+
+  private _snapshotProcessing: boolean = false;
+  public get snapshotProcessing(): boolean {
+    return !this.hasSnapshot ? false :
+      this.server.snapshot.isProcessing ||
+      this._snapshotProcessing;
   }
 
   public get warningIconKey(): string {
@@ -79,12 +87,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
-  }
-
-  private _snapshotProcessing: boolean = false;
-  public get snapshotProcessing(): boolean {
-    return !this.hasSnapshot ? false :
-      this.server.snapshot.isProcessing || this._snapshotProcessing;
   }
 
   constructor(
@@ -258,6 +260,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
       if (dialogResult) {
         // Set initial server status so that the spinner will show up immediately
         this._serversService.setServerExecutionStatus(this.server, this.server.snapshot);
+        this._changeDetectorRef.markForCheck();
         // Invoke function pointer for the corresponding action
         dialogCallback();
       }
