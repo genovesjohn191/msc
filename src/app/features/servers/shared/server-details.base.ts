@@ -4,7 +4,8 @@ import {
   Server,
   ServerResource,
   ServerCatalogItem,
-  ServerCatalogItemType
+  ServerCatalogItemType,
+  ServerPowerState
 } from '../models';
 import { ServersResourcesRespository } from '../servers-resources.repository';
 import { ServersService } from '../servers.service';
@@ -82,6 +83,15 @@ export abstract class ServerDetailsBase {
     }
 
     return resourceMediaList;
+  }
+
+  /**
+   * Flag for operable selected server
+   */
+  // TODO: Needs to refactor to have just one logic for this one
+  public get serverIsOperable(): boolean {
+    return this.server.isOperable &&
+      this.server.powerState !== ServerPowerState.Suspended;
   }
 
   /**

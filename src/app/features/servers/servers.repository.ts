@@ -534,6 +534,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       textContent.stopped
     );
     this._serverStatusMap.set(
+      getEnumString(ServerPowerState, ServerPowerState.Suspended),
+      textContent.suspended
+    );
+    this._serverStatusMap.set(
       getEnumString(ServerCommand, ServerCommand.Start),
       textContent.starting
     );
@@ -544,6 +548,14 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     this._serverStatusMap.set(
       getEnumString(ServerCommand, ServerCommand.Restart),
       textContent.restarting
+    );
+    this._serverStatusMap.set(
+      getEnumString(ServerCommand, ServerCommand.Suspend),
+      textContent.suspending
+    );
+    this._serverStatusMap.set(
+      getEnumString(ServerCommand, ServerCommand.Resume),
+      textContent.resuming
     );
   }
 

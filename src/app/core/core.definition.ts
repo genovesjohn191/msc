@@ -82,6 +82,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_STATE_RESTARTING = 'state-restarting';
   public static ASSETS_SVG_STATE_RUNNING = 'state-running';
   public static ASSETS_SVG_STATE_STOPPED = 'state-stopped';
+  public static ASSETS_SVG_STATE_SUSPENDED = 'state-suspended';
   public static ASSETS_SVG_COLUMNS_BLACK = 'columns-black';
   public static ASSETS_SVG_PERSON_WHITE = 'person-white';
   public static ASSETS_SVG_PERSON_BLUE = 'person-blue';
@@ -99,6 +100,8 @@ export class CoreDefinition {
   public static ASSETS_SVG_START = 'start';
   public static ASSETS_SVG_RESTART = 'restart';
   public static ASSETS_SVG_STOP = 'stop';
+  public static ASSETS_SVG_SUSPEND = 'suspend';
+  public static ASSETS_SVG_RESUME = 'resume';
   public static ASSETS_SVG_LOGOUT_WHITE = 'logout-white';
   public static ASSETS_SVG_USER_WHITE = 'user-white';
   public static ASSETS_SVG_CIRCLE_INFO_BLACK = 'circle-info-black';

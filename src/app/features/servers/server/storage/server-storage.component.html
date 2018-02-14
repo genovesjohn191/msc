@@ -48,14 +48,13 @@
                 </td>
                 <td class="action-items">
                   <span *mcsHasPermission="['VmEdit']" class="expand text-right">
-                    <a [disabled]="storageScaleIsDisabled"
-                      (click)="showExpandStorageBox(storage)">
+                    <a [disabled]="storageExpandLinkIsDisabled" (click)="showExpandStorageBox(storage)">
                       {{ textContent.expandStorageLink }}
                     </a>
                   </span>
                   <span *mcsHasPermission="['VmEdit']" class="delete text-right">
                     <a *ngIf="hasMultipleStorageDevice"
-                      [disabled]="storageDeleteLinkIsDisabled"
+                      [disabled]="storageScaleIsDisabled"
                       (click)="onDeleteStorage(storage)">
                       {{ textContent.deleteStorageLink }}
                     </a>
@@ -72,7 +71,7 @@
           <mcs-server-manage-storage *ngIf="hasStorageProfileList" #mcsStorage
             [storageProfileList]="storageProfileList" [minValueMB]="storageMinValueMB"
             [minimumMB]="0" [maximumMB]="maximumMB" [step]="sliderStep"
-            (storageChanged)="onStorageChanged($event)" [disabled]="server.isProcessing">
+            (storageChanged)="onStorageChanged($event)" [disabled]="storageScaleIsDisabled">
             <!--Server manage storage contents on the left hand side (description)-->
             <div title>
               <h4>{{ textContent.addStorageHeading }}</h4>
@@ -126,7 +125,7 @@
 
         <button *mcsHasPermission="['VmEdit']"
           mcsButton id="ctaUpdateServerStorage" arrow="right"
-          [disabled]="expandIsDisabled"
+          [disabled]="attachIsDisabled"
           (click)="onExpandStorage()">
           {{ textContent.updateStorage }}
         </button>

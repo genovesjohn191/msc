@@ -56,8 +56,10 @@ export class ServerCommandComponent implements OnInit {
     return ServerCommand;
   }
 
+  // TODO: Needs to refactor to have just one logic for this one
   public get isServerOperable(): boolean {
-    return isNullOrEmpty(this.server.isProcessing) && this.server.isOperable;
+    return !this.server.isProcessing && this.server.isOperable
+      && this.server.powerState !== ServerPowerState.Suspended;
   }
 
   public get isServerSelfManaged(): boolean {
@@ -91,12 +93,13 @@ export class ServerCommandComponent implements OnInit {
 
       case ServerCommand.Stop:
       case ServerCommand.Restart:
+      case ServerCommand.Suspend:
         enabled = this.isServerOperable &&
           this.server.powerState === ServerPowerState.PoweredOn;
         break;
 
       case ServerCommand.Delete:
-        enabled = !this.server.isProcessing && this.isServerSelfManaged;
+        enabled = this.isServerOperable && this.isServerSelfManaged;
         break;
 
       case ServerCommand.ViewVCloud:
@@ -104,7 +107,11 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       case ServerCommand.ResetVmPassword:
-        enabled = !this.server.isProcessing;
+        enabled = this.isServerOperable && !this.server.isProcessing;
+        break;
+
+      case ServerCommand.Resume:
+        enabled = !this.isServerOperable;
         break;
 
       default:

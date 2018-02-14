@@ -46,6 +46,22 @@
           <span>{{ textContent.delete }}</span>
         </mcs-action-item>
 
+        <mcs-action-item class="hidden-small"
+          id="ctaSuspendSelectedServer"
+          [disabled]="!suspendable || !selection.hasValue()"
+          (click)="executeTopPanelAction(serverCommand.Suspend)">
+          <mcs-icon [key]="suspendIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.suspend }}</span>
+        </mcs-action-item>
+
+        <mcs-action-item class="hidden-small"
+          id="ctaResumeSelectedServer"
+          [disabled]="!resumable || !selection.hasValue()"
+          (click)="executeTopPanelAction(serverCommand.Resume)">
+          <mcs-icon [key]="resumeIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.resume }}</span>
+        </mcs-action-item>
+
         <div class="total-record-count right-align">
           <span>{{ recordsFoundLabel }}</span>
         </div>

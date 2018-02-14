@@ -21,7 +21,9 @@ import {
 import {
   ResetPasswordDialogComponent,
   DeleteServerDialogComponent,
-  RenameServerDialogComponent
+  RenameServerDialogComponent,
+  SuspendServerDialogComponent,
+  ResumeServerDialogComponent
 } from './shared';
 /** Core */
 import {
@@ -106,6 +108,14 @@ export class ServersComponent
     return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
   }
 
+  public get suspendIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_SUSPEND;
+  }
+
+  public get resumeIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_RESUME;
+  }
+
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
@@ -163,32 +173,6 @@ export class ServersComponent
   }
 
   /**
-   * Set command list for each server
-   */
-  public setServerCommandList(server: Server): ServerCommand[] {
-    if (isNullOrEmpty(server)) { return new Array<ServerCommand>(); }
-
-    let serverCommandList = [
-      ServerCommand.Start,
-      ServerCommand.Stop,
-      ServerCommand.Restart,
-      ServerCommand.ViewVCloud,
-      ServerCommand.ResetVmPassword
-    ];
-
-    if (server.serviceType === ServerServiceType.SelfManaged) {
-      serverCommandList.push(ServerCommand.Delete);
-      serverCommandList.sort(
-        (_first: ServerCommand, _second: ServerCommand) => {
-          return _first - _second;
-        }
-      );
-    }
-
-    return serverCommandList;
-  }
-
-  /**
    * Return true when Start button on the top panel is enabled
    *
    * `@Note`: All selected servers must be powered OFF
@@ -233,7 +217,34 @@ export class ServersComponent
   public get deletable(): boolean {
     return this.selection.selected.filter((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      return server.serviceType === ServerServiceType.Managed || server.isProcessing;
+      return server.serviceType === ServerServiceType.Managed ||
+        server.isProcessing || server.powerState === ServerPowerState.Suspended;
+    }).length === 0;
+  }
+
+  /**
+   * Return true when Suspend button on the top panel is enabled
+   *
+   * `@Note`: All selected servers should not processing any request and should be powered on
+   */
+  public get suspendable(): boolean {
+    return this.selection.selected.filter((serverId) => {
+      let server = this.dataSource.getDisplayedServerById(serverId);
+      return !server.isOperable || server.isProcessing ||
+        server.powerState !== ServerPowerState.PoweredOn;
+    }).length === 0;
+  }
+
+  /**
+   * Return true when Resume button on the top panel is enabled
+   *
+   * `@Note`: All selected servers should not processing any request and should be powered suspended
+   */
+  public get resumable(): boolean {
+    return this.selection.selected.filter((serverId) => {
+      let server = this.dataSource.getDisplayedServerById(serverId);
+      return !server.isOperable || server.isProcessing ||
+        server.powerState !== ServerPowerState.Suspended;
     }).length === 0;
   }
 
@@ -275,12 +286,23 @@ export class ServersComponent
       case ServerCommand.ResetVmPassword:
         dialogComponent = ResetPasswordDialogComponent;
         break;
+
       case ServerCommand.Delete:
         dialogComponent = DeleteServerDialogComponent;
         break;
+
       case ServerCommand.Rename:
         dialogComponent = RenameServerDialogComponent;
         break;
+
+      case ServerCommand.Suspend:
+        dialogComponent = SuspendServerDialogComponent;
+        break;
+
+      case ServerCommand.Resume:
+        dialogComponent = ResumeServerDialogComponent;
+        break;
+
       default:
         serverItems.forEach((serverItem) => {
           this._serversService.executeServerCommand({ server: serverItem }, action);
@@ -314,31 +336,7 @@ export class ServersComponent
    * @param state Server status
    */
   public getStateIconKey(state: number): string {
-    let stateIconKey: string = '';
-
-    switch (state as ServerPowerState) {
-      case ServerPowerState.Unresolved:   // Red
-      case ServerPowerState.Deployed:
-      case ServerPowerState.Suspended:
-      case ServerPowerState.Unknown:
-      case ServerPowerState.Unrecognised:
-      case ServerPowerState.PoweredOff:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-
-      case ServerPowerState.Resolved:   // Amber
-      case ServerPowerState.WaitingForInput:
-      case ServerPowerState.InconsistentState:
-      case ServerPowerState.Mixed:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
-        break;
-
-      case ServerPowerState.PoweredOn:  // Green
-      default:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-    }
-    return stateIconKey;
+    return this._serversService.getStateIconKey(state);
   }
 
   /**
