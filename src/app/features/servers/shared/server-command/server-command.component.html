@@ -47,17 +47,21 @@
       {{ textContent.delete }}
     </a>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Suspend)"
+    <!-- TODO: Temporarily hidden for release -->
+    <!-- Waiting for Orch API updates -->
+    <!-- <a *ngIf="getIncludedCommand(serverCommandEnum.Suspend)"
       (click)="onExecuteCommand(serverCommandEnum.Suspend)"
       [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)">
       {{ textContent.suspend }}
-    </a>
+    </a> -->
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Resume)"
+    <!-- TODO: Temporarily hidden for release -->
+    <!-- Waiting for Orch API updates -->
+    <!-- <a *ngIf="getIncludedCommand(serverCommandEnum.Resume)"
       (click)="onExecuteCommand(serverCommandEnum.Resume)"
       [disabled]="!getEnabledCommand(serverCommandEnum.Resume)">
       {{ textContent.resume }}
-    </a>
+    </a> -->
 
     <a *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)"
       (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
