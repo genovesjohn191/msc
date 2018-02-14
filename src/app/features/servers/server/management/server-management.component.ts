@@ -181,11 +181,11 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get scalingIsDisabled(): boolean {
-    return this.isProcessingJob || this.isManaged || !this.server.isOperable;
+    return this.isProcessingJob || this.isManaged || !this.serverIsOperable;
   }
 
   public get mediaIsDisabled(): boolean {
-    return this.isProcessingJob || this.isManaged || !this.server.isOperable;
+    return this.isProcessingJob || this.isManaged || !this.serverIsOperable;
   }
 
   constructor(

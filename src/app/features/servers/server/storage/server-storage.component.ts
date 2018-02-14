@@ -169,22 +169,15 @@ export class ServerStorageComponent extends ServerDetailsBase
   }
 
   public get storageScaleIsDisabled(): boolean {
-    return !this.server.isOperable || this.isManaged ||
-      this.isProcessingJob || !this.hasAvailableStorageSpace;
+    return this.isManaged || this.isProcessingJob || !this.serverIsOperable;
   }
 
-  public get storageDeleteLinkIsDisabled(): boolean {
-    return this.isManaged || this.isProcessingJob;
+  public get storageExpandLinkIsDisabled(): boolean {
+    return this.storageScaleIsDisabled || !this.hasAvailableStorageSpace;
   }
 
   public get attachIsDisabled(): boolean {
-    return !this.isValidStorageValues
-      || !this.hasAvailableStorageSpace
-      || this.isProcessingJob;
-  }
-
-  public get expandIsDisabled(): boolean {
-    return !this.isValidStorageValues || this.isProcessingJob;
+    return !this.isValidStorageValues || this.storageExpandLinkIsDisabled;
   }
 
   public get storageProfileList(): any[] {
@@ -313,7 +306,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * This will process the update for the selected disk
    */
   public onExpandStorage(): void {
-    if (this.expandIsDisabled) { return; }
+    if (this.attachIsDisabled) { return; }
     this.mcsStorage.completed();
 
     let storageData = new ServerStorageDeviceUpdate();

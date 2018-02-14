@@ -9,7 +9,9 @@ export enum ServerCommand {
   Rename = 7,
   Delete = 8,
   AttachMedia = 9,
-  ViewVCloud = 10,
+  Suspend = 10,
+  Resume = 11,
+  ViewVCloud = 12,
 
   // Addition commands for server that is not included on the commandlist of API
   ResetVmPassword = 100

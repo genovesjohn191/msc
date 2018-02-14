@@ -16,15 +16,15 @@ import {
 } from '../../../../../utilities';
 
 @Component({
-  selector: 'mcs-delete-server-dialog',
-  templateUrl: './delete-server.dialog.html',
+  selector: 'mcs-suspend-server-dialog',
+  templateUrl: './suspend-server.dialog.html',
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'delete-server-dialog-wrapper'
+    'class': 'suspend-server-dialog-wrapper'
   }
 })
 
-export class DeleteServerDialogComponent {
+export class SuspendServerDialogComponent {
   public textContent: any;
   public servers: Server[];
 
@@ -42,7 +42,7 @@ export class DeleteServerDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    public dialogRef: McsDialogRef<DeleteServerDialogComponent>,
+    public dialogRef: McsDialogRef<SuspendServerDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this._initialize();
@@ -58,7 +58,7 @@ export class DeleteServerDialogComponent {
   /**
    * This will close the dialog and set the dialog result to true
    */
-  public deleteServer(): void {
+  public suspendServer(): void {
     this.dialogRef.close(true);
   }
 
@@ -82,7 +82,7 @@ export class DeleteServerDialogComponent {
   }
 
   private _initialize(): void {
-    this.textContent = this._textContentProvider.content.servers.shared.deleteServerDialog;
+    this.textContent = this._textContentProvider.content.servers.shared.suspendServerDialog;
     this.servers = new Array<Server>();
 
     if (Array.isArray(this.dialogData)) {

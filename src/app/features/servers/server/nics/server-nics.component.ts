@@ -163,11 +163,11 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   public get nicAddOrDeleteIsDisabled(): boolean {
-    return !this.server.isOperable || this.isProcessingJob;
+    return !this.serverIsOperable || this.isProcessingJob;
   }
 
   public get nicEditIsDisabled(): boolean {
-    return !this.server.isOperable || this.isProcessingJob ||
+    return !this.serverIsOperable || this.isProcessingJob ||
       this.server.serviceType === ServerServiceType.Managed;
   }
 

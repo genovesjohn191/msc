@@ -24,3 +24,5 @@ export * from './server-dialogs/create-snapshot/create-snapshot.dialog';
 export * from './server-dialogs/delete-snapshot/delete-snapshot.dialog';
 export * from './server-dialogs/insufficient-storage-snapshot/insufficient-storage-snapshot.dialog';
 export * from './server-dialogs/restore-snapshot/restore-snapshot.dialog';
+export * from './server-dialogs/suspend-server/suspend-server.dialog';
+export * from './server-dialogs/resume-server/resume-server.dialog';

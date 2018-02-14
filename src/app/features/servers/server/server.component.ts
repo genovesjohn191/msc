@@ -19,13 +19,14 @@ import {
 } from 'rxjs/Rx';
 import {
   Server,
-  ServerPowerState,
   ServerCommand
 } from '../models';
 import {
   ResetPasswordDialogComponent,
   DeleteServerDialogComponent,
-  RenameServerDialogComponent
+  RenameServerDialogComponent,
+  SuspendServerDialogComponent,
+  ResumeServerDialogComponent
 } from '../shared';
 import {
   CoreDefinition,
@@ -160,12 +161,23 @@ export class ServerComponent
       case ServerCommand.ResetVmPassword:
         dialogComponent = ResetPasswordDialogComponent;
         break;
+
       case ServerCommand.Delete:
         dialogComponent = DeleteServerDialogComponent;
         break;
+
       case ServerCommand.Rename:
         dialogComponent = RenameServerDialogComponent;
         break;
+
+      case ServerCommand.Suspend:
+        dialogComponent = SuspendServerDialogComponent;
+        break;
+
+      case ServerCommand.Resume:
+        dialogComponent = ResumeServerDialogComponent;
+        break;
+
       default:
         this._serversService.executeServerCommand({ server: serverItem }, action);
         return;
@@ -193,32 +205,7 @@ export class ServerComponent
    * @param state Server status
    */
   public getStateIconKey(state: number): string {
-    let stateIconKey: string = '';
-
-    switch (state as ServerPowerState) {
-      case ServerPowerState.Unresolved:   // Red
-      case ServerPowerState.Deployed:
-      case ServerPowerState.Suspended:
-      case ServerPowerState.Unknown:
-      case ServerPowerState.Unrecognised:
-      case ServerPowerState.PoweredOff:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-
-      case ServerPowerState.Resolved:   // Amber
-      case ServerPowerState.WaitingForInput:
-      case ServerPowerState.InconsistentState:
-      case ServerPowerState.Mixed:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
-        break;
-
-      case ServerPowerState.PoweredOn:  // Green
-      default:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-    }
-    return stateIconKey;
+    return this._serversService.getStateIconKey(state);
   }
 
   /**

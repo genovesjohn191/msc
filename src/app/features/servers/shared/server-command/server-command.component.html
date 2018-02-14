@@ -47,6 +47,18 @@
       {{ textContent.delete }}
     </a>
 
+    <a *ngIf="getIncludedCommand(serverCommandEnum.Suspend)"
+      (click)="onExecuteCommand(serverCommandEnum.Suspend)"
+      [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)">
+      {{ textContent.suspend }}
+    </a>
+
+    <a *ngIf="getIncludedCommand(serverCommandEnum.Resume)"
+      (click)="onExecuteCommand(serverCommandEnum.Resume)"
+      [disabled]="!getEnabledCommand(serverCommandEnum.Resume)">
+      {{ textContent.resume }}
+    </a>
+
     <a *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)"
       (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
       [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)">
