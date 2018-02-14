@@ -24,9 +24,15 @@ export class McsCookieService {
    * @param value Value of the cookie
    * @param options Options for the cookie
    */
-  public setEncryptedItem<T>(key: string, value: T, options?: CookieOptions): void {
+  public setEncryptedItem<T>(
+    key: string,
+    value: T,
+    options: CookieOptions = { secure: true }
+  ): void {
     // Encrypt the value
     let encrypted: string;
+    let securedCookieOptions: CookieOptions = options;
+    securedCookieOptions.secure = true;
 
     try {
       if (isJson(value)) {
@@ -38,12 +44,12 @@ export class McsCookieService {
       }
     } catch (error) {
       // Set the normal cookie content when conversion to UTF has error
-      this.setItem(key, value, options);
+      this.setItem(key, value, securedCookieOptions);
       return;
     }
 
     // Save the encrypted data to cookie
-    this._cookieService.put(key, encrypted.toString(), options);
+    this._cookieService.put(key, encrypted.toString(), securedCookieOptions);
   }
 
   /**
@@ -79,9 +85,15 @@ export class McsCookieService {
    * @param value Value of the cookie
    * @param options Options for the cookie
    */
-  public setItem<T>(key: string, value: T, options?: CookieOptions): void {
+  public setItem<T>(
+    key: string,
+    value: T,
+    options: CookieOptions = { secure: true }
+  ): void {
+    let securedCookieOptions: CookieOptions = options;
+    securedCookieOptions.secure = true;
     let objectValue = isJson(value) ? JSON.stringify(value) : value;
-    this._cookieService.put(key, objectValue.toString(), options);
+    this._cookieService.put(key, objectValue.toString(), securedCookieOptions);
   }
 
   /**

@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
-import { CoreLayoutService } from '../../core-layout.services';
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs/Rx';
 import {
   McsAuthenticationIdentity,
-  McsAuthenticationService,
   McsApiCompany,
   CoreDefinition,
   McsDataStatus,
   McsCookieService,
-  McsApiSuccessResponse
+  McsAuthenticationService
 } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
-import { Observable } from 'rxjs/Observable';
+import {
+  isNullOrEmpty,
+  refreshView
+} from '../../../utilities';
+import { SwitchAccountRepository } from './switch-account.repository';
 
 @Injectable()
 export class SwitchAccountService {
@@ -30,21 +34,24 @@ export class SwitchAccountService {
   private _hasPermission: boolean;
 
   constructor(
-    private _coreLayoutService: CoreLayoutService,
     private _authIdentity: McsAuthenticationIdentity,
     private _authService: McsAuthenticationService,
-    private _cookieService: McsCookieService
+    private _cookieService: McsCookieService,
+    private _accountRepository: SwitchAccountRepository
   ) {
     // Initialize member variables
     this.companies = new Array();
     this.recentCompaniesStream = new BehaviorSubject(undefined);
     this.activeAccountStream = new BehaviorSubject(undefined);
 
-    // Initialize companies
     if (this._authService.hasPermission(['CompanyView'])) {
       this._hasPermission = true;
-      this.loadingAccount = true;
     }
+
+    // Initialize companies
+    refreshView(() => {
+      this.setActiveAccount();
+    });
   }
 
   /**
@@ -71,45 +78,44 @@ export class SwitchAccountService {
     if (isNullOrEmpty(company)) { return; }
     this._activeAccount = company;
     this._saveAccountIdToCookie();
-    this.activeAccountStream.next(company);
 
     // Refresh the page
     location.reload();
   }
 
   /**
-   * Get all the companies from the API
-   * @param page Page index of the page to obtained
-   * @param perPage Size of item per page
-   * @param searchKeyword Keyword to be search during filtering
-   */
-  public getCompanies(args?: {
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string
-  }) {
-    let emptyResponse = new McsApiSuccessResponse<McsApiCompany[]>();
-    emptyResponse.content = [];
-    return !this._hasPermission ? Observable.of(emptyResponse) :
-      this._coreLayoutService.getCompanies(args);
-  }
-
-  /**
    * Get the active account from cookie
    */
-  public setActiveAccount(_content: McsApiCompany[]): void {
+  public setActiveAccount(): void {
     let selectedAccountId = this._cookieService
-      .getEncryptedItem<McsApiCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    if (!isNullOrEmpty(selectedAccountId)) {
-      let accountFound = _content.find((company) => {
-        return company.id === selectedAccountId;
-      });
-      if (!isNullOrEmpty(accountFound)) {
-        this._activeAccount = accountFound;
-      }
+      .getEncryptedItem<string>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+
+    // Set default account function pointer
+    let setDefaultAccount: () => void = () => {
+      this.loadingAccount = false;
+      this._activeAccount = this.defaultAccount;
+      this.activeAccountStream.next(this._activeAccount);
+    };
+
+    let hasSelectedAccount = !isNullOrEmpty(selectedAccountId) && this._hasPermission;
+    if (hasSelectedAccount) {
+      // Get the active account based on cookie when user has admin access
+      this.loadingAccount = true;
+      this._accountRepository
+        .findRecordById(selectedAccountId)
+        .catch((error) => {
+          setDefaultAccount();
+          return Observable.throw(error);
+        })
+        .subscribe((account) => {
+          this.loadingAccount = false;
+          this._activeAccount = account;
+          this.activeAccountStream.next(this._activeAccount);
+        });
+    } else {
+      // Set the default account in case the user doesnt have admin access
+      setDefaultAccount();
     }
-    this.loadingAccount = false;
-    this.activeAccountStream.next(this._activeAccount);
   }
 
   /**
@@ -117,7 +123,7 @@ export class SwitchAccountService {
    */
   private _saveAccountIdToCookie(): void {
     if (this.defaultAccount.id !== this._activeAccount.id) {
-      this._cookieService.setEncryptedItem(
+      this._cookieService.setEncryptedItem<string>(
         CoreDefinition.COOKIE_ACTIVE_ACCOUNT,
         this._activeAccount.id,
         { expires: this._authIdentity.expiry }

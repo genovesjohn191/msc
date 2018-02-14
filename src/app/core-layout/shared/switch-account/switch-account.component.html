@@ -60,21 +60,24 @@
       </mcs-list>
 
       <!-- Data obtainment status -->
-      <div [ngSwitch]="dataStatus" display-flex align-items="center" justify-content="center">
-        <div *ngSwitchCase="dataStatusEnum.InProgress">
-          <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+      <ng-container *ngIf="dataStatus !== dataStatusEnum.Success">
+        <div [ngSwitch]="dataStatus" display-flex align-items="center" justify-content="center">
+          <div *ngSwitchCase="dataStatusEnum.InProgress">
+            <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+          </div>
+          <div *ngSwitchCase="dataStatusEnum.Empty">
+            <span>{{ textContent.noCompanies }}</span>
+          </div>
+          <div *ngSwitchCase="dataStatusEnum.Error">
+            <span>{{ textContent.errorMessage }}</span>
+            <a (click)="retry()">{{ textContent.retry }}</a>
+          </div>
         </div>
-        <div *ngSwitchCase="dataStatusEnum.Empty">
-          <span>{{ textContent.noCompanies }}</span>
-        </div>
-        <div *ngSwitchCase="dataStatusEnum.Error">
-          <span>{{ textContent.errorMessage }}</span>
-          <a (click)="retry()">{{ textContent.retry }}</a>
-        </div>
-      </div>
+      </ng-container>
 
       <!-- Paginator that displays when data obtainment was success -->
       <mcs-paginator #paginator
+        [hidden]="dataStatus !== dataStatusEnum.Success"
         [totalCount]="totalRecordCount"
         [pageIndex]="0"
         [pageSize]="20">

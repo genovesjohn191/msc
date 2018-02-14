@@ -2,17 +2,25 @@ import { Injectable } from '@angular/core';
 import {
   McsRepositoryBase,
   McsApiCompany,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsAuthenticationService
 } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
 import { Observable } from 'rxjs/Rx';
-import { SwitchAccountService } from './switch-account.service';
+import { CoreLayoutService } from '../../core-layout.services';
 
 @Injectable()
 export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
 
-  constructor(private _switchAccountService: SwitchAccountService) {
+  private _hasPermission: boolean;
+
+  constructor(
+    private _coreLayoutService: CoreLayoutService,
+    private _authService: McsAuthenticationService
+  ) {
     super();
+    if (this._authService.hasPermission(['CompanyView'])) {
+      this._hasPermission = true;
+    }
   }
 
   /**
@@ -23,10 +31,13 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
     recordCount: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<McsApiCompany[]>> {
-    return this._switchAccountService.getCompanies({
-      perPage: recordCount,
-      searchKeyword: keyword
-    });
+    let emptyResponse = new McsApiSuccessResponse<McsApiCompany[]>();
+    emptyResponse.content = [];
+    return !this._hasPermission ? Observable.of(emptyResponse) :
+      this._coreLayoutService.getCompanies({
+        perPage: recordCount,
+        searchKeyword: keyword
+      });
   }
 
   /**
@@ -35,14 +46,9 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsApiCompany>> {
-    let apiRecord = new McsApiSuccessResponse<McsApiCompany>();
-    let companyRecord = this.dataRecords.find((data) => {
-      return data.id === recordId;
+    return this._coreLayoutService.getCompany(recordId
+    ).map((response) => {
+      return response;
     });
-    if (!isNullOrEmpty(companyRecord)) {
-      apiRecord.content = companyRecord;
-      apiRecord.totalCount = 1;
-    }
-    return Observable.of(apiRecord);
   }
 }

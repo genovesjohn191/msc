@@ -441,8 +441,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         snapshot.isProcessing = activeServer.isProcessing;
         activeServer.snapshot = snapshot;
       } else {
-        activeServer.snapshot.isProcessing =
-          !(job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED);
+        activeServer.snapshot.isProcessing = this._getProcessingFlagByJob(job);
       }
 
       this.updateRecord(activeServer);
@@ -459,8 +458,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      activeServer.snapshot.isProcessing =
-        !(job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED);
+      activeServer.snapshot.isProcessing = this._getProcessingFlagByJob(job);
       this.updateRecord(activeServer);
     }
   }
@@ -477,11 +475,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       this._setServerProcessDetails(activeServer, job);
 
       // Clear the snapshot as mock data on the repository in case of completion
+      activeServer.snapshot.isProcessing = this._getProcessingFlagByJob(job);
       if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-        activeServer.snapshot.isProcessing = false;
         activeServer.snapshot = undefined;
-      } else {
-        activeServer.snapshot.isProcessing = true;
       }
       this.updateRecord(activeServer);
     }
@@ -501,8 +497,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    */
   private _setServerProcessDetails(activeServer: Server, job: McsApiJob): void {
     if (isNullOrEmpty(job)) { return; }
-    activeServer.isProcessing = !!(job.status === CoreDefinition.NOTIFICATION_JOB_PENDING)
-      || !!(job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+    activeServer.isProcessing = this._getProcessingFlagByJob(job);
     activeServer.commandAction = job.clientReferenceObject.commandAction;
     activeServer.processingText = job.summaryInformation;
   }
@@ -585,5 +580,14 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       return !isNullOrEmpty(job) && !isNullOrEmpty(job.clientReferenceObject)
         && serverItem.id === job.clientReferenceObject.serverId;
     });
+  }
+
+  /**
+   * Returns the processing flag based on job status
+   */
+  private _getProcessingFlagByJob(job: McsApiJob): boolean {
+    if (isNullOrEmpty(job)) { return false; }
+    return job.status === CoreDefinition.NOTIFICATION_JOB_PENDING
+      || job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE;
   }
 }

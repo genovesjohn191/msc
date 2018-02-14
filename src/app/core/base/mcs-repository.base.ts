@@ -165,6 +165,11 @@ export abstract class McsRepositoryBase<T> {
     // We need to clear the records when the flag for caching is set to false
     let isSearching = !isNullOrEmpty(search) && search.searching;
 
+    // We need to reset the page in order to get the data from initial page
+    if (isSearching && !isNullOrEmpty(page)) {
+      page.pageIndex = 0;
+    }
+
     let displayedRecords = isNullOrEmpty(page) ? MAX_DISPLAY_RECORD :
       page.pageSize * (page.pageIndex + 1);
     let requestRecords = !!(displayedRecords > this.dataRecords.length)
