@@ -24,6 +24,7 @@ import {
   McsDialogService,
   McsApiJob,
   McsNotificationEventsService,
+  McsDataStatusFactory,
   McsErrorHandlerService
 } from '../../../../core';
 import { ServersService } from '../../servers.service';
@@ -58,6 +59,7 @@ export class ServerNicsComponent extends ServerDetailsBase
   public ipAddress: ServerIpAddress;
 
   public fcNetwork: FormControl;
+  public dataStatusFactory: McsDataStatusFactory<ServerNetwork[]>;
 
   // Subscriptions
   public updateNicsSubscription: Subscription;
@@ -330,8 +332,13 @@ export class ServerNicsComponent extends ServerDetailsBase
       ipAddress: this.ipAddress.customIpAddress
     };
 
-    this._serversService.setServerExecutionStatus(this.server, this.selectedNic);
-    this._serversService.updateServerNic(this.server.id, this.selectedNic.id, nicValues)
+    this._serversService.setServerSpinner(this.server, this.selectedNic);
+    this._serversService
+      .updateServerNic(this.server.id, this.selectedNic.id, nicValues)
+      .catch((error) => {
+        this._serversService.clearServerSpinner(this.server, this.selectedNic);
+        return Observable.throw(error);
+      })
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
           this.isUpdate = false;
@@ -360,18 +367,7 @@ export class ServerNicsComponent extends ServerDetailsBase
    */
   protected serverSelectionChanged(): void {
     this._getResourceNetworks();
-    this._updateServerNics();
-  }
-
-  /**
-   * This will update the list of server nics
-   */
-  private _updateServerNics(): void {
-    this.updateNicsSubscription = this._serversRepository
-      .findServerNics(this.server)
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
+    this._getServerNics();
   }
 
   /**
@@ -446,8 +442,8 @@ export class ServerNicsComponent extends ServerDetailsBase
     if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
     if (!this.server.isProcessing) {
-      // Update the server nics
-      this._updateServerNics();
+      // Get and update the server nics
+      this._getServerNics();
     }
   }
 
@@ -458,16 +454,42 @@ export class ServerNicsComponent extends ServerDetailsBase
   private _onModifyServerNetwork(job: McsApiJob): void {
     if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
-    // Update the server nics
+    // Get and update the server nics
     if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-      this._updateServerNics();
+      this._getServerNics();
     }
+  }
+
+  /**
+   * This will get and update the list of server nics
+   */
+  private _getServerNics(): void {
+    unsubscribeSafely(this.updateNicsSubscription);
+    // We need to check the datastatus factory if its not undefined
+    // because it was called under base class and for any reason, the instance is undefined.
+    if (isNullOrEmpty(this.dataStatusFactory)) {
+      this.dataStatusFactory = new McsDataStatusFactory();
+    }
+
+    this.dataStatusFactory.setInProgress();
+    this.updateNicsSubscription = this._serversRepository
+      .findServerNics(this.server)
+      .catch((error) => {
+        // Handle common error status code
+        this.dataStatusFactory.setError();
+        return Observable.throw(error);
+      })
+      .subscribe((response) => {
+        this.dataStatusFactory.setSuccesfull(response);
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /**
    * Get the resource networks from the server
    */
   private _getResourceNetworks(): void {
+    unsubscribeSafely(this.networksSubscription);
     this.networksSubscription = this._serversResourcesRespository
       .findResourceNetworks(this.serverResource)
       .catch((error) => {
@@ -476,7 +498,8 @@ export class ServerNicsComponent extends ServerDetailsBase
         return Observable.throw(error);
       })
       .subscribe(() => {
-        // Subscribe to update the networks to server resource
+        // Subscribe to update the snapshots in server instance
+        this._changeDetectorRef.markForCheck();
       });
   }
 }

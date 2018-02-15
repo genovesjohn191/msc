@@ -130,7 +130,7 @@
                     [header]="service.serviceName">
 
                     <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
-                      [searchKey]="item.name" [value]="item.serviceId">
+                      [searchKey]="item.name" [value]="item">
                       {{ item.name }}
                     </mcs-select-tag-sub-item>
                   </mcs-select-tag-main-item>

@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnDestroy,
   ElementRef,
   Renderer2,
   ChangeDetectionStrategy,
@@ -8,10 +9,15 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import {
+  McsDataStatusFactory,
   McsDataStatus,
   CoreDefinition
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../utilities';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mcs-data-status',
@@ -24,19 +30,27 @@ import { isNullOrEmpty } from '../../utilities';
   }
 })
 
-export class DataStatusComponent {
+export class DataStatusComponent implements OnDestroy {
 
   @Input()
-  public get dataStatus(): McsDataStatus {
-    return this._dataStatus;
-  }
-  public set dataStatus(value: McsDataStatus) {
-    if (this._dataStatus !== value) {
-      this._dataStatus = value;
-      this._changeDetectorRef.markForCheck();
+  public get dataStatusFactory(): McsDataStatusFactory<any> { return this._dataStatusFactory; }
+  public set dataStatusFactory(value: McsDataStatusFactory<any>) {
+    if (this._dataStatusFactory !== value) {
+      this._dataStatusFactory = value;
+      this._listenToStatusChanged();
     }
   }
-  private _dataStatus: McsDataStatus;
+  private _dataStatusFactory: McsDataStatusFactory<any>;
+
+  private _statusChangedSubscription: Subscription;
+
+  /**
+   * Returns the data status based on the factory class
+   */
+  public get dataStatus(): McsDataStatus {
+    return isNullOrEmpty(this.dataStatusFactory) ?
+      McsDataStatus.Success : this.dataStatusFactory.dataStatus;
+  }
 
   @Input()
   public set alignment(value: string) {
@@ -49,6 +63,10 @@ export class DataStatusComponent {
     private _elementRef: ElementRef,
     private _renderer: Renderer2
   ) { }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this._statusChangedSubscription);
+  }
 
   public get dataStatusEnum(): any {
     return McsDataStatus;
@@ -67,5 +85,16 @@ export class DataStatusComponent {
   // Returns the error icon key
   public get errorIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ERROR;
+  }
+
+  /**
+   * Listen for every status changed of the factory
+   */
+  private _listenToStatusChanged(): void {
+    if (isNullOrEmpty(this.dataStatusFactory)) { return; }
+    this._statusChangedSubscription = this.dataStatusFactory.statusChanged
+      .subscribe(() => {
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

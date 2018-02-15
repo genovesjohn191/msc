@@ -274,15 +274,20 @@ export class ServerManagementComponent extends ServerDetailsBase
     if (!this._serverPerformanceScale.valid || !this.hasUpdate) { return; }
 
     // Update the Server CPU size scale
-    this._serversService.setServerExecutionStatus(this.server);
+    this._serversService.setServerSpinner(this.server);
     this._scalingSubscription = this._serverService.setPerformanceScale(
       this.server.id,
       this._serverPerformanceScale,
       this.server.powerState,
       ServerCommand.Scale
-    ).subscribe(() => {
-      this._routeToServerManagement();
-    });
+    )
+      .catch((error) => {
+        this._serversService.clearServerSpinner(this.server);
+        return Observable.throw(error);
+      })
+      .subscribe(() => {
+        this._routeToServerManagement();
+      });
   }
 
   public cancelScale(): void {
@@ -309,8 +314,6 @@ export class ServerManagementComponent extends ServerDetailsBase
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Set initial server status so that the spinner will show up immediately
-        this._serversService.setServerExecutionStatus(this.server, media);
         this.detachMedia(media);
       }
     });
@@ -330,8 +333,12 @@ export class ServerManagementComponent extends ServerDetailsBase
     this.selectedMedia = undefined;
 
     // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerExecutionStatus(this.server);
+    this._serversService.setServerSpinner(this.server);
     this._serversService.attachServerMedia(this.server.id, mediaValues)
+      .catch((error) => {
+        this._serversService.clearServerSpinner(this.server);
+        return Observable.throw(error);
+      })
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
           this.isAttachMedia = false;
@@ -349,7 +356,15 @@ export class ServerManagementComponent extends ServerDetailsBase
       powerState: this.server.powerState
     };
 
-    this._serversService.detachServerMedia(this.server.id, media.id, mediaValues).subscribe();
+    // Set initial server status so that the spinner will show up immediately
+    this._serversService.setServerSpinner(this.server);
+    this._serversService
+      .detachServerMedia(this.server.id, media.id, mediaValues)
+      .catch((error) => {
+        this._serversService.clearServerSpinner(this.server);
+        return Observable.throw(error);
+      })
+      .subscribe();
   }
 
   protected serverSelectionChanged(): void {

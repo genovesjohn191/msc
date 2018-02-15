@@ -112,9 +112,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_NOTIFICATION_BELL = 'notification-bell';
   public static ASSETS_SVG_RELOAD = 'reload';
   public static ASSETS_SVG_WARNING = 'warning-svg';
-
-  // TODO: Waiting for the actual icon for the error case
-  public static ASSETS_SVG_ERROR = 'exclamation';
+  public static ASSETS_SVG_ERROR = 'error-svg';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';

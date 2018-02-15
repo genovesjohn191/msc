@@ -28,4 +28,19 @@ $data-status-size: 30px;
   @include align-items(center);
   @include set-items-interval($space-small, horizontal);
   min-height: $data-status-size;
+
+  &.center {
+    justify-content: center;
+  }
+
+  .data-status-empty-wrapper,
+  .data-status-error-wrapper,
+  .data-status-in-progress-wrapper{
+    display: block;
+  }
+
+  .data-status-success-wrapper {
+    display: block;
+    width: 100%;
+  }
 }

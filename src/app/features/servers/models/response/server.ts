@@ -33,7 +33,7 @@ export class Server {
   public fileSystem: ServerFileSystem[];
   public storageDevice: ServerStorageDevice[];
   public media: ServerMedia[];
-  public snapshot: ServerSnapshot;
+  public snapshots: ServerSnapshot[];
   public vApp: string;
   public portalUrl: string;
   public vCloudId: string;

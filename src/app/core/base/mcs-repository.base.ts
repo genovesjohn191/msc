@@ -22,7 +22,8 @@ export abstract class McsRepositoryBase<T> {
   /**
    * ID list of the updated element that was searched when getRecorById called
    */
-  private _obtainedByIdList: string[] = new Array();
+  private _obtainedByIdList: Set<string> = new Set<string>();
+  private _dataRecordsObtained: boolean = false;
 
   /**
    * Get or Set the total records count of the entity
@@ -165,6 +166,7 @@ export abstract class McsRepositoryBase<T> {
     // We need to clear the records when the flag for caching is set to false
     let isSearching = !isNullOrEmpty(search) && search.searching;
     this._dataStatus = McsDataStatus.InProgress;
+    this._dataRecordsObtained = true;
 
     // We need to reset the page in order to get the data from initial page
     if (isSearching && !isNullOrEmpty(page)) {
@@ -190,6 +192,7 @@ export abstract class McsRepositoryBase<T> {
             this._dataRecords = data.content;
             this._filteredRecords = data.content;
             this._dataStatus = McsDataStatus.Success;
+            this._obtainedByIdList.clear();
           } else {
             this._dataStatus = McsDataStatus.Empty;
           }
@@ -226,15 +229,21 @@ export abstract class McsRepositoryBase<T> {
     });
 
     // Call the API if the record has not yet found and not yet updated
-    let recordIsOutdated = isNullOrEmpty(recordFound) ||
-      !!(this._obtainedByIdList.indexOf(id) < 0);
+    let recordIsOutdated = isNullOrEmpty(recordFound) || !this._obtainedByIdList.has(id);
+
     if (recordIsOutdated) {
-      return this.getRecordById(id).map((record) => {
-        // Update record content
-        this.updateRecord(record.content);
-        this._obtainedByIdList.push((id));
-        return record.content;
-      });
+      return this.getRecordById(id)
+        .map((record) => {
+          // Update record content
+          this.updateRecord(record.content);
+          this._obtainedByIdList.add((id));
+
+          // We need to save manually the data when findAllRecords was not yet invoke
+          if (!this._dataRecordsObtained) {
+            this.dataRecords.push(record.content);
+          }
+          return record.content;
+        });
     }
     return recordFound ? Observable.of(recordFound) : Observable.empty();
   }

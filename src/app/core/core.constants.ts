@@ -24,8 +24,8 @@ import { McsAuthenticationGuard } from './authentication/mcs-authentication.guar
 import { McsRoutePermissionGuard } from './authentication/mcs-route-permission.guard';
 /** Google Analytics */
 import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
-/** Forms */
-import { McsNavigateAwayGuard } from './forms/mcs-navigate-away.guard';
+/** Guards */
+import { McsNavigateAwayGuard } from './guards/mcs-navigate-away.guard';
 /**
  * Array coverage for the core modules
  */

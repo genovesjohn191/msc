@@ -7,7 +7,7 @@ import {
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
-import { McsDataStatus } from '../../core';
+import { McsDataStatusFactory } from '../../core';
 import { CoreTestingModule } from '../../core/testing';
 import { DataStatusComponent } from './data-status.component';
 import { DataStatusModule } from './data-status.module';
@@ -19,7 +19,7 @@ import { DataStatusModule } from './data-status.module';
 export class TestDataStatusComponent {
   @ViewChild(DataStatusComponent)
   public dataStatusComponent: DataStatusComponent;
-  public dataStatus: McsDataStatus = McsDataStatus.InProgress;
+  public dataStatus = new McsDataStatusFactory<any>();
 }
 
 describe('DataStatusComponent', () => {
@@ -46,10 +46,14 @@ describe('DataStatusComponent', () => {
     TestBed.overrideComponent(TestDataStatusComponent, {
       set: {
         template: `
-        <mcs-data-status [dataStatus]="dataStatus">
+        <mcs-data-status [dataStatusFactory]="dataStatus">
           <mcs-data-status-in-progress mcsDataInProgress>
             <span>Obtaining data</span>
           </mcs-data-status-in-progress>
+
+          <mcs-data-status-success mcsDataSuccess>
+            <span>Success messages</span>
+          </mcs-data-status-success>
 
           <mcs-data-status-empty mcsDataEmpty>
             <span>Empty data</span>
@@ -79,21 +83,30 @@ describe('DataStatusComponent', () => {
     });
 
     it(`should create the mcs-data-status-in-progress element`, () => {
+      component.dataStatus.setInProgress();
+      fixture.autoDetectChanges(true);
       let element = document.querySelector('mcs-data-status-in-progress');
       expect(element).not.toBe(null);
     });
 
     it(`should create the mcs-data-status-error element in case of error`, () => {
-      component.dataStatus = McsDataStatus.Error;
+      component.dataStatus.setError();
       fixture.autoDetectChanges(true);
       let element = document.querySelector('mcs-data-status-error');
       expect(element).not.toBe(null);
     });
 
     it(`should create the mcs-data-status-empty element in case of no records`, () => {
-      component.dataStatus = McsDataStatus.Empty;
+      component.dataStatus.setSuccesfull();
       fixture.autoDetectChanges(true);
       let element = document.querySelector('mcs-data-status-empty');
+      expect(element).not.toBe(null);
+    });
+
+    it(`should create the mcs-data-status-success element in case of no records`, () => {
+      component.dataStatus.setSuccesfull(['test']);
+      fixture.autoDetectChanges(true);
+      let element = document.querySelector('mcs-data-status-success');
       expect(element).not.toBe(null);
     });
   });

@@ -24,7 +24,8 @@ import {
   McsApiJob,
   McsDialogService,
   McsOption,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsDataStatusFactory
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
@@ -61,6 +62,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   public textContent: any;
   public storageChangedValue: ServerManageStorage;
   public selectedStorageDevice: ServerStorageDevice;
+  public dataStatusFactory: McsDataStatusFactory<ServerStorageDevice[]>;
 
   // Subscriptions
   public updateDisksSubscription: Subscription;
@@ -321,15 +323,19 @@ export class ServerStorageComponent extends ServerDetailsBase
       sizeMB: this.storageChangedValue.storageMB
     };
 
-    this._serversService.setServerExecutionStatus(this.server, this.selectedStorageDevice);
+    this._serversService.setServerSpinner(this.server, this.selectedStorageDevice);
     this._resetDiskValues();
     this._serversService.updateServerStorage(
       this.server.id,
       this.selectedStorageDevice.id,
-      storageData
-    ).subscribe(() => {
-      this.expandStorage = false;
-    });
+      storageData)
+      .catch((error) => {
+        this._serversService.clearServerSpinner(this.server, this.selectedStorageDevice);
+        return Observable.throw(error);
+      })
+      .subscribe(() => {
+        this.expandStorage = false;
+      });
   }
 
   /**
@@ -350,7 +356,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    */
   protected serverSelectionChanged(): void {
     this._getResourceStorage();
-    this._updateServerDisks();
+    this._getServerDisks();
   }
 
   /**
@@ -368,19 +374,14 @@ export class ServerStorageComponent extends ServerDetailsBase
       diskId: storage.id,
       powerState: this.server.powerState
     };
-    this._serversService.setServerExecutionStatus(this.server, storage);
-    this._serversService.deleteServerStorage(this.server.id, storage.id, storageData).subscribe();
-  }
-
-  /**
-   * This will update the list of server disks
-   */
-  private _updateServerDisks(): void {
-    this.updateDisksSubscription = this._serversRepository
-      .findServerDisks(this.server)
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
+    this._serversService.setServerSpinner(this.server, storage);
+    this._serversService
+      .deleteServerStorage(this.server.id, storage.id, storageData)
+      .catch((error) => {
+        this._serversService.clearServerSpinner(this.server, this.selectedStorageDevice);
+        return Observable.throw(error);
+      })
+      .subscribe();
   }
 
   /**
@@ -461,8 +462,8 @@ export class ServerStorageComponent extends ServerDetailsBase
         this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
       }
 
-      // Update server disks
-      this._updateServerDisks();
+      // Get and update server disks
+      this._getServerDisks();
     }
   }
 
@@ -481,11 +482,14 @@ export class ServerStorageComponent extends ServerDetailsBase
         this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
       }
 
-      // Update server disks
-      this._updateServerDisks();
+      // Get and update server disks
+      this._getServerDisks();
     }
   }
 
+  /**
+   * This will reset the disks values
+   */
   private _resetDiskValues(): void {
     this.storageChangedValue = new ServerManageStorage();
     let storage = new ServerManageStorage();
@@ -493,6 +497,30 @@ export class ServerStorageComponent extends ServerDetailsBase
     storage.storageMB = 0;
     storage.valid = false;
     this.onStorageChanged(storage);
+  }
+
+  /**
+   * This will update the list of server disks
+   */
+  private _getServerDisks(): void {
+    unsubscribeSafely(this.updateDisksSubscription);
+    // We need to check the datastatus factory if its not undefined
+    // because it was called under base class and for any reason, the instance is undefined.
+    if (isNullOrEmpty(this.dataStatusFactory)) {
+      this.dataStatusFactory = new McsDataStatusFactory();
+    }
+    this.dataStatusFactory.setInProgress();
+    this.updateDisksSubscription = this._serversRepository
+      .findServerDisks(this.server)
+      .catch((error) => {
+        // Handle common error status code
+        this.dataStatusFactory.setError();
+        return Observable.throw(error);
+      })
+      .subscribe((response) => {
+        this.dataStatusFactory.setSuccesfull(response);
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /**

@@ -3,8 +3,8 @@ export * from './core.module';
 export * from './core.config';
 export * from './core.definition';
 export * from './core.validators';
-/** Forms */
-export * from './forms/mcs-navigate-away.guard';
+/** Guards */
+export * from './guards/mcs-navigate-away.guard';
 /** Services */
 export * from './services/mcs-api.service';
 export * from './services/mcs-storage.service';
@@ -81,3 +81,4 @@ export * from './factory/overlay/mcs-overlay-ref';
 export * from './factory/overlay/mcs-overlay-state';
 export * from './factory/portal/mcs-portal-component';
 export * from './factory/portal/mcs-portal-template';
+export * from './factory/data-status/mcs-data-status-factory';

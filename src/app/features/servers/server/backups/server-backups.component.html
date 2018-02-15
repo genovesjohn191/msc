@@ -8,7 +8,7 @@
   <div #snapshotContent>
     <div class="container-wrapper">
       <h3 class="container-header">{{ textContent.snapshotHeader }}</h3>
-      <div class="space-between-inline-items">
+      <div class="vspace-medium space-between-inline-items">
         <p [innerHTML]="textContent.snapshotDescription"></p>
         <div>
           <button mcsButton size="small" [disabled]="!enabledActions"
@@ -18,36 +18,38 @@
       <div>
         <strong class="space-bottom-small block">{{ textContent.snapshots }}</strong>
 
-        <!-- Loader settings -->
-        <div class="position-relative">
-          <div [mcsLoader]="serverSnapshotsSubscription"
-            [mcsLoaderHideElement]="snapshotsContent"></div>
-        </div>
-
         <!-- Snapshots -->
-        <div #snapshotsContent>
-          <div *ngIf="hasSnapshot" class="space-between-inline-items">
-            <div class="inline-items-xsmall">
-              <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
-                size="small" [mcsTooltip]="server.processingText"></mcs-icon>
-              <span>{{ convertDateToString(server.snapshot.createdOn) }}</span>
+        <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+          <mcs-data-status-success mcsDataSuccess>
+            <div class="space-between-inline-items">
+              <div class="inline-items-xsmall">
+                <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
+                  size="small" [mcsTooltip]="server.processingText"></mcs-icon>
+                <span>{{ convertDateToString(snapshot.createdOn) }}</span>
+              </div>
+              <div [disabled]="!enabledActions" class="inline-items-medium text-right">
+                <a (click)="restoreSnapshot(snapshot)">
+                  {{ textContent.restoreSnapshot }}
+                </a>
+                <a (click)="deleteSnapshot(snapshot)" class="space-left-small">
+                  {{ textContent.deleteSnapshot }}
+                </a>
+              </div>
             </div>
-            <div [disabled]="!enabledActions" class="text-right">
-              <a (click)="restoreSnapshot(server.snapshot)">
-                {{ textContent.restoreSnapshot }}
-              </a>
-              <a (click)="deleteSnapshot(server.snapshot)" class="space-left-small">
-                {{ textContent.deleteSnapshot }}
-              </a>
-            </div>
-          </div>
+          </mcs-data-status-success>
 
-          <!-- Warning icon when no snapshots found -->
-          <div *ngIf="!hasSnapshot" class="inline-items-small">
-            <mcs-icon [key]="warningIconKey"></mcs-icon>
+          <mcs-data-status-in-progress mcsDataInProgress>
+            <span>{{ textContent.loadingContent }}</span>
+          </mcs-data-status-in-progress>
+
+          <mcs-data-status-empty mcsDataEmpty>
             <span>{{ textContent.noSnapshots }}</span>
-          </div>
-        </div>
+          </mcs-data-status-empty>
+
+          <mcs-data-status-error mcsDataError>
+            <span>{{ textContent.errorGettingSnapshots }}</span>
+          </mcs-data-status-error>
+        </mcs-data-status>
       </div>
     </div>
 
