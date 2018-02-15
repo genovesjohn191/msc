@@ -1,0 +1,31 @@
+@import "../../../styles/shared/base";
+
+$data-status-size: 30px;
+
+.data-status-wrapper {
+  display: block;
+  &.left {
+    .data-status-content-wrapper {
+      justify-content: flex-start;
+    }
+  }
+
+  &.center {
+    .data-status-content-wrapper {
+      justify-content: center;
+    }
+  }
+
+  &.right {
+    .data-status-content-wrapper {
+      justify-content: flex-end;
+    }
+  }
+}
+
+.data-status-content-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  @include set-items-interval($space-small, horizontal);
+  min-height: $data-status-size;
+}

@@ -23,28 +23,45 @@
     </mcs-form-field>
   </div>
 
-  <!-- Server Selection -->
-  <ng-container *ngIf="hasServers">
-    <mcs-form-field>
-      <mcs-select [formControl]="fcTargetServer" required
-        [placeholder]="textContent.placeholder.server">
-        <mcs-select-group header="Servers">
-          <mcs-select-item *ngFor="let server of servers" [value]="server.id">
-            {{ server.managementName }}
-          </mcs-select-item>
-        </mcs-select-group>
-      </mcs-select>
+  <div class="position-relative">
+    <!-- Loader settings -->
+    <div [mcsLoader]="serversSubscription"
+      [mcsLoaderHideElement]="serversContent"
+      [mcsLoaderText]="textContent.loadingServers"></div>
 
-      <mcs-error mcsError errorState="required">
-        {{ textContent.errors.selectServerRequired }}
-      </mcs-error>
-    </mcs-form-field>
-  </ng-container>
+    <div #serversContent>
+      <!-- Server Selection -->
+      <ng-container *ngIf="hasServers">
+        <mcs-form-field>
+          <mcs-select [formControl]="fcTargetServer" required
+            [placeholder]="textContent.placeholder.server">
+            <mcs-select-group header="Servers">
+              <mcs-select-item *ngFor="let server of servers" [value]="server.id">
+                {{ server.name }}
+              </mcs-select-item>
+            </mcs-select-group>
+          </mcs-select>
 
-  <!-- Warning icon when no servers found -->
-  <div *ngIf="!hasServers" class="horizontal-items-spacing-small"
-    display-flex="row" align-items="center">
-    <mcs-icon [key]="warningIconKey"></mcs-icon>
-    <span>{{ textContent.noServers }}</span>
+          <mcs-error mcsError errorState="required">
+            {{ textContent.errors.selectServerRequired }}
+          </mcs-error>
+        </mcs-form-field>
+      </ng-container>
+
+      <!-- Data status of the servers -->
+      <mcs-data-status [dataStatus]="serversStatus">
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingServers }}</span>
+        </mcs-data-status-in-progress>
+
+        <mcs-data-status-empty mcsDataEmpty>
+          <span>{{ textContent.noServers }}</span>
+        </mcs-data-status-empty>
+
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorMessageServers }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
+    </div>
   </div>
 </form>

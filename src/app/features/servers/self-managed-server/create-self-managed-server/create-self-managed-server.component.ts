@@ -68,7 +68,6 @@ export class CreateSelfManagedServerComponent implements OnInit {
   public serverName: string;
   public serverCreateTypeEnum = ServerCreateType;
   public paramSubscription: Subscription;
-  public targetServerId: string;
 
   /**
    * Get the current creation type of the server
@@ -114,8 +113,7 @@ export class CreateSelfManagedServerComponent implements OnInit {
     this.textContent = this._textContentProvider.content
       .servers.createSelfManagedServer;
     this.contextualTextContent = this.textContent.contextualHelp;
-
-    this._setTargetServer();
+    this._setCreationType();
   }
 
   /**
@@ -171,11 +169,11 @@ export class CreateSelfManagedServerComponent implements OnInit {
   /**
    * Set the target server
    */
-  private _setTargetServer(): void {
+  private _setCreationType(): void {
     this.paramSubscription = this._activatedRoute.queryParams
       .subscribe((params: ParamMap) => {
-        this.targetServerId = params['clone'];
-        if (this.targetServerId) {
+        let serverId = params['clone'];
+        if (!isNullOrEmpty(serverId)) {
           this._serverCreateType = ServerCreateType.Clone;
         }
       });

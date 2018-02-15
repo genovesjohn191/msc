@@ -40,7 +40,6 @@ import {
 } from '../../../utilities';
 import { ContextualHelpDirective } from '../../../shared';
 import {
-  Server,
   ServerGroupedOs,
   ServerOperatingSystem,
   ServerResource,
@@ -56,7 +55,6 @@ import { CreateSelfManagedServersService } from './create-self-managed-servers.s
 import {
   CreateSelfManagedServerComponent
 } from './create-self-managed-server/create-self-managed-server.component';
-import { ServersRepository } from '../servers.repository';
 import { ServersResourcesRespository } from '../servers-resources.repository';
 import { removeAllChildren } from '../../../utilities';
 
@@ -118,14 +116,6 @@ export class CreateSelfManagedServersComponent implements
   }
 
   /**
-   * Server list data mapping
-   */
-  private _serverListMap: Map<string, Server[]>;
-  public get serverListMap(): Map<string, Server[]> {
-    return this._serverListMap;
-  }
-
-  /**
    * Server VApp list
    */
   private _serverVApp: ServerVApp[];
@@ -173,7 +163,6 @@ export class CreateSelfManagedServersComponent implements
 
   public constructor(
     private _createSelfManagedServices: CreateSelfManagedServersService,
-    private _serversRepository: ServersRepository,
     private _serversResourceRepository: ServersResourcesRespository,
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
@@ -191,7 +180,6 @@ export class CreateSelfManagedServersComponent implements
 
     this._mainContextInformations = new Array();
     this._serversOs = new Array();
-    this._serverListMap = new Map<string, Server[]>();
     this._serverResourceMap = new Map<string, ServerResource>();
   }
 
@@ -202,7 +190,6 @@ export class CreateSelfManagedServersComponent implements
 
     // Get all the data from api in parallel
     this.obtainDataSubscription = Observable.forkJoin([
-      this._serversRepository.findAllRecords(),
       this._createSelfManagedServices.getServersOs(),
       this._serversResourceRepository.findAllRecords()
     ])
@@ -212,9 +199,8 @@ export class CreateSelfManagedServersComponent implements
         return Observable.throw(error);
       })
       .subscribe((data) => {
-        this._setAllServers(data[0]);
-        this._setServerOs(data[1]);
-        this._setResourcesData(data[2]);
+        this._setServerOs(data[0]);
+        this._setResourcesData(data[1]);
       });
 
     // Initialize all object data
@@ -279,7 +265,6 @@ export class CreateSelfManagedServersComponent implements
     // Set Component Input Parameters
     componentService.componentRef.instance.vdcName = this.vdcValue;
     componentService.componentRef.instance.resource = this._serverResourceMap.get(this.vdcValue);
-    componentService.componentRef.instance.servers = this._serverListMap.get(this.vdcValue);
     componentService.componentRef.instance.serversOs = this.serversOs;
     componentService.appendComponentTo(this.selfManagedServersElement.nativeElement);
 
@@ -446,31 +431,6 @@ export class CreateSelfManagedServersComponent implements
       subContextualHelpStream.subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
-  }
-
-  /**
-   * This will set all the servers to the servers mapping
-   * for easily access across its chidren component
-   *
-   * `@Note` This will execute together with the platform and os obtainment
-   * @param response Api response
-   */
-  private _setAllServers(response: any): void {
-    if (isNullOrEmpty(response)) { return; }
-    let servers = response as Server[];
-    servers.forEach((server) => {
-      let serversRecord: Server[] = new Array();
-      if (server.serviceType !== ServerServiceType.SelfManaged) { return; }
-
-      if (!isNullOrEmpty(server.platform)) {
-        let resourceName = server.platform.resourceName;
-        if (this._serverListMap.has(resourceName)) {
-          serversRecord = this._serverListMap.get(resourceName);
-        }
-        serversRecord.push(server);
-        this._serverListMap.set(resourceName, serversRecord);
-      }
-    });
   }
 
   /**

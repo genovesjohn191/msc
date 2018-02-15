@@ -20,6 +20,7 @@ import {
 } from '@angular/forms';
 import {
   McsTextContentProvider,
+  McsOption,
   CoreValidators,
   CoreDefinition
 } from '../../../../core';
@@ -108,11 +109,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public serverImageData: ServerImage[];
 
   // Dropdowns
-  public vAppItems: any;
+  public vAppItems: McsOption[];
   public serverOsItems: any;
-  public serverTemplateItems: any;
-  public networkItems: any;
-  public storageItems: any;
+  public serverTemplateItems: McsOption[];
+  public networkItems: McsOption[];
+  public storageItems: McsOption[];
 
   // Others
   public createType: ServerCreateType;
@@ -120,10 +121,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   public textHelpContent: any;
   public availableMemoryMB: number;
   public availableCpuCount: number;
-
-  private get _memoryGB(): number {
-    return Math.floor(convertToGb(this.storageMemoryMB));
-  }
 
   private get _maximumMemoryGB(): number {
     return Math.floor(convertToGb(this.storageAvailableMemoryMB));
@@ -156,11 +153,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     this.storageAvailableMemoryMB = 0;
     this.selectedStorage = new ServerManageStorage();
     this.serverImageData = new Array<ServerImage>();
-    this.vAppItems = new Array();
-    this.serverOsItems = new Array();
-    this.serverTemplateItems = new Array();
-    this.networkItems = new Array();
-    this.storageItems = new Array();
     this.selectedNetwork = new ServerNetwork();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
   }
@@ -255,9 +247,12 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setVAppItems(): void {
-    if (isNullOrEmpty(this.resource)) { return; }
+    // Check the vAppsData
+    let hasVapps: boolean = !isNullOrEmpty(this.resource) && !isNullOrEmpty(this.resource.vApps);
+    if (!hasVapps) { return; }
 
     // Populate dropdown list
+    this.vAppItems = new Array();
     this.resource.vApps.forEach((vApp) => {
       this.vAppItems.push({ value: vApp.name, text: vApp.name });
     });
@@ -266,6 +261,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   private _setServerImageItems(): void {
     let serverImageId = 1;
 
+    // Set the server image
+    this.serverOsItems = new Array();
     this.serversOs.forEach((groupedOs) => {
       groupedOs.os.forEach((os) => {
         let serverImage = new ServerImage();
@@ -285,11 +282,15 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
         } else {
           this.serverOsItems.push({ group: groupedOs.platform, items: [osItem] });
         }
-
         serverImageId++;
       });
     });
 
+    // Check the Catalog items
+    let hasCatalogs: boolean = !isNullOrEmpty(this.resource) &&
+      !isNullOrEmpty(this.resource.catalogItems);
+    if (!hasCatalogs) { return; }
+    this.serverTemplateItems = new Array();
     this.resource.catalogItems.forEach((catalog) => {
       if (catalog.itemType === ServerCatalogItemType.Template) {
         let serverImage = new ServerImage();
@@ -299,25 +300,32 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
         this.serverImageData.push(serverImage);
         this.serverTemplateItems.push({ value: serverImage.id, text: serverImage.image });
-
         serverImageId++;
       }
     });
   }
 
   private _setNetworkItems(): void {
-    if (isNullOrEmpty(this.resource)) { return; }
+    // Check the Networks
+    let hasNetworks: boolean = !isNullOrEmpty(this.resource) &&
+      !isNullOrEmpty(this.resource.networks);
+    if (!hasNetworks) { return; }
 
     // Populate dropdown list
+    this.networkItems = new Array();
     this.resource.networks.forEach((network) => {
       this.networkItems.push({ value: network.name, text: network.name });
     });
   }
 
   private _setStorageItems(): void {
-    if (isNullOrEmpty(this.resource)) { return; }
+    // Check the Storage
+    let hasStorage: boolean = !isNullOrEmpty(this.resource) &&
+      !isNullOrEmpty(this.resource.storage);
+    if (!hasStorage) { return; }
 
     // Populate select with storage profiles
+    this.storageItems = new Array();
     this.resource.storage.forEach((storage) => {
       this.storageItems.push({ value: storage.name, text: storage.name });
     });

@@ -164,6 +164,7 @@ export abstract class McsRepositoryBase<T> {
   public findAllRecords(page?: McsPaginator, search?: McsSearch): Observable<T[]> {
     // We need to clear the records when the flag for caching is set to false
     let isSearching = !isNullOrEmpty(search) && search.searching;
+    this._dataStatus = McsDataStatus.InProgress;
 
     // We need to reset the page in order to get the data from initial page
     if (isSearching && !isNullOrEmpty(page)) {
@@ -179,11 +180,18 @@ export abstract class McsRepositoryBase<T> {
     if (requestRecords) {
       // Get all records from API calls implemented under inherited class
       return this.getAllRecords(displayedRecords, !isNullOrEmpty(search) ? search.keyword : '')
+        .catch((error) => {
+          this._dataStatus = McsDataStatus.Error;
+          return Observable.throw(error);
+        })
         .map((data) => {
           if (!isNullOrEmpty(data.totalCount)) {
             this._totalRecordsCount = data.totalCount;
             this._dataRecords = data.content;
             this._filteredRecords = data.content;
+            this._dataStatus = McsDataStatus.Success;
+          } else {
+            this._dataStatus = McsDataStatus.Empty;
           }
           return data.content;
         });
@@ -192,10 +200,17 @@ export abstract class McsRepositoryBase<T> {
       // so that we wont touch the original record
       let pageData = this._dataRecords.slice();
       let actualData = pageData.splice(0, displayedRecords);
-      return Observable.of(actualData).map((data) => {
-        this._filteredRecords = data;
-        return data;
-      });
+      return Observable.of(actualData)
+        .catch((error) => {
+          this._dataStatus = McsDataStatus.Error;
+          return Observable.throw(error);
+        })
+        .map((data) => {
+          this._filteredRecords = data;
+          this._dataStatus = !isNullOrEmpty(data) ?
+            McsDataStatus.Success : McsDataStatus.Empty;
+          return data;
+        });
     }
   }
 
