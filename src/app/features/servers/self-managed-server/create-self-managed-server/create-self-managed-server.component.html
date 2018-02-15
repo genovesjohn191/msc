@@ -12,7 +12,6 @@
   <mcs-tab [label]="textContent.cloneServer" [id]="serverCreateTypeEnum.Clone">
     <p class="space-bottom-medium">{{ textContent.cloneServerDescription }}</p>
     <mcs-clone-self-managed-server #createServerInstance
-      [servers]="servers" [targetServer]="targetServerId"
       (onOutputServerDetails)="setServerDetails($event)">
     </mcs-clone-self-managed-server>
   </mcs-tab>

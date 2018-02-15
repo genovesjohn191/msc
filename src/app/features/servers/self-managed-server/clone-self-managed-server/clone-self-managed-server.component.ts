@@ -1,7 +1,7 @@
 import {
   Component,
   OnInit,
-  Input,
+  OnDestroy,
   Output,
   EventEmitter,
   AfterViewInit,
@@ -9,7 +9,8 @@ import {
   ViewChildren,
   QueryList,
   ViewEncapsulation,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   FormGroup,
@@ -17,7 +18,12 @@ import {
   FormControlDirective
 } from '@angular/forms';
 import {
+  ActivatedRoute,
+  ParamMap
+} from '@angular/router';
+import {
   McsTextContentProvider,
+  McsDataStatus,
   CoreValidators,
   CoreDefinition
 } from '../../../../core';
@@ -31,13 +37,16 @@ import {
   mergeArrays,
   isNullOrEmpty,
   isFormControlValid,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSafely
 } from '../../../../utilities';
 import {
   ContextualHelpDirective,
   FormGroupDirective
 } from '../../../../shared';
+import { ServersRepository } from '../../servers.repository';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
+import { Subscription } from 'rxjs/Rx';
 
 @Component({
   selector: 'mcs-clone-self-managed-server',
@@ -49,12 +58,7 @@ import { CreateSelfManagedServersService } from '../create-self-managed-servers.
   }
 })
 
-export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
-  @Input()
-  public targetServer: string;
-
-  @Input()
-  public servers: Server[];
+export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -78,6 +82,15 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
   public textContent: any;
   public textHelpContent: any;
 
+  // Servers
+  public targetServerId: string;
+  public servers: Server[];
+  public serversSubscription: Subscription;
+  public serversStatus: McsDataStatus;
+
+  // Parameters
+  private _parameterSubscription: Subscription;
+
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
   }
@@ -86,9 +99,16 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
     return !isNullOrEmpty(this.servers);
   }
 
+  public get dataStatusEnum(): any {
+    return McsDataStatus;
+  }
+
   public constructor(
     private _managedServerService: CreateSelfManagedServersService,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _serversRespository: ServersRepository,
+    private _activatedRoute: ActivatedRoute,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.createType = ServerCreateType.Clone;
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
@@ -102,9 +122,8 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
     // Register forms
     this._registerFormGroup();
-    if (isNullOrEmpty(this.targetServer) && this.hasServers) {
-      this.targetServer = this.servers[0].id;
-    }
+    this._getAllServers();
+    this._listenToParamChange();
   }
 
   public ngAfterViewInit() {
@@ -120,6 +139,11 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
           mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
       }
     });
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSafely(this.serversSubscription);
+    unsubscribeSafely(this._parameterSubscription);
   }
 
   public isControlValid(control: any): boolean {
@@ -168,5 +192,41 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit {
 
   private _customServerNameValidator(inputValue: any): boolean {
     return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue);
+  }
+
+  /**
+   * Get all servers from repository service
+   */
+  private _getAllServers(): void {
+    this.serversSubscription = this._serversRespository
+      .findAllRecords()
+      .subscribe((response) => {
+        this.servers = response;
+        this._setTargetServerById();
+      });
+    this.serversSubscription.add(() => {
+      this.serversStatus = this._serversRespository.dataStatus;
+      this._changeDetectorRef.markForCheck();
+    });
+  }
+
+  /**
+   * Listen to every change of the parameter
+   */
+  private _listenToParamChange(): void {
+    this._parameterSubscription = this._activatedRoute.paramMap
+      .subscribe((params: ParamMap) => {
+        this.targetServerId = params.get('clone');
+        this._setTargetServerById();
+      });
+  }
+
+  /**
+   * This will set the target server based on ID provided by parameters
+   */
+  private _setTargetServerById(): void {
+    let hasServers = !isNullOrEmpty(this.targetServerId) && !isNullOrEmpty(this.servers);
+    if (!hasServers) { return; }
+    this.fcTargetServer.setValue(this.targetServerId);
   }
 }
