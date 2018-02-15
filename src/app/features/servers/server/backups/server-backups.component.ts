@@ -14,7 +14,7 @@ import {
   McsTextContentProvider,
   McsNotificationEventsService,
   McsApiJob,
-  McsErrorHandlerService,
+  McsDataStatusFactory,
   CoreDefinition
 } from '../../../../core';
 import {
@@ -55,6 +55,8 @@ enum SnapshotDialogType {
 export class ServerBackupsComponent extends ServerDetailsBase
   implements OnInit, OnDestroy {
 
+  public dataStatusFactory: McsDataStatusFactory<ServerSnapshot[]>;
+
   public textContent: any;
   public serverSnapshotsSubscription: Subscription;
   public createSnapshotSubscription: Subscription;
@@ -65,19 +67,26 @@ export class ServerBackupsComponent extends ServerDetailsBase
   public deleteJobSnapshotSubscription: Subscription;
 
   public get hasSnapshot(): boolean {
-    return !isNullOrEmpty(this.server.snapshot);
+    return !isNullOrEmpty(this.server.snapshots);
+  }
+
+  public get snapshot(): ServerSnapshot {
+    return this.hasSnapshot ?
+      this.server.snapshots[0] : new ServerSnapshot();
   }
 
   public get enabledActions(): boolean {
     return this.server.serviceType === ServerServiceType.SelfManaged
       && !this.snapshotProcessing
-      || !this.server.isProcessing;
+      && !this.server.isProcessing
+      && (!isNullOrEmpty(this.serverSnapshotsSubscription)
+        && this.serverSnapshotsSubscription.closed);
   }
 
   private _snapshotProcessing: boolean = false;
   public get snapshotProcessing(): boolean {
     return !this.hasSnapshot ? false :
-      this.server.snapshot.isProcessing ||
+      this.server.snapshots[0].isProcessing ||
       this._snapshotProcessing;
   }
 
@@ -96,7 +105,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
-    private _errorHandlerService: McsErrorHandlerService,
     private _notificationsEventService: McsNotificationEventsService,
     private _dialogService: McsDialogService
   ) {
@@ -157,6 +165,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
             serverId: this.server.id
           }
         })
+        .catch((error) => {
+          this._serversService.clearServerSpinner(this.server, this.snapshot);
+          return Observable.throw(error);
+        })
         .subscribe(() => {
           // Subscribe to execute the service
         });
@@ -175,6 +187,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
         .restoreServerSnapshot(this.server.id, {
           serverId: this.server.id
         })
+        .catch((error) => {
+          this._serversService.clearServerSpinner(this.server, this.snapshot);
+          return Observable.throw(error);
+        })
         .subscribe(() => {
           // Subscribe to execute the service
         });
@@ -192,6 +208,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
       this.deleteSnapshotSubscription = this._serversService
         .deleteServerSnapshot(this.server.id, {
           serverId: this.server.id
+        })
+        .catch((error) => {
+          this._serversService.clearServerSpinner(this.server, this.snapshot);
+          return Observable.throw(error);
         })
         .subscribe(() => {
           // Subscribe to execute the service
@@ -259,7 +279,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     dialogRef.afterClosed().subscribe((dialogResult) => {
       if (dialogResult) {
         // Set initial server status so that the spinner will show up immediately
-        this._serversService.setServerExecutionStatus(this.server, this.server.snapshot);
+        this._serversService.setServerSpinner(this.server, this.snapshot);
         this._changeDetectorRef.markForCheck();
         // Invoke function pointer for the corresponding action
         dialogCallback();
@@ -292,15 +312,23 @@ export class ServerBackupsComponent extends ServerDetailsBase
    */
   private _getServerSnapshots(): void {
     unsubscribeSafely(this.serverSnapshotsSubscription);
+    // We need to check the datastatus factory if its not undefined
+    // because it was called under base class and for any reason, the instance is undefined.
+    if (isNullOrEmpty(this.dataStatusFactory)) {
+      this.dataStatusFactory = new McsDataStatusFactory();
+    }
+
+    this.dataStatusFactory.setInProgress();
     this.serverSnapshotsSubscription = this._serversRepository
-      .findSnapshot(this.server)
+      .findSnapshots(this.server)
       .catch((error) => {
         // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this.dataStatusFactory.setError();
         return Observable.throw(error);
       })
-      .subscribe(() => {
+      .subscribe((response) => {
         // Subscribe to update the snapshots in server instance
+        this.dataStatusFactory.setSuccesfull(response);
         this._changeDetectorRef.markForCheck();
       });
   }

@@ -138,7 +138,7 @@ describe('ServersService', () => {
 
   describe('resetVmPassowrd()', () => {
     it('should reset the VM server through API calls', () => {
-      serversService.resetVmPassowrd(
+      serversService.resetVmPassword(
         requestOptions.id,
         requestOptions.referenceObject
       ).subscribe((response) => {

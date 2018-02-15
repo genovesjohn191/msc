@@ -10,10 +10,10 @@
     <p>{{ textContent.description }}</p>
 
     <div *ngIf="!expandStorage" class="vertical-items-spacing-large">
-      <div class="position-relative">
-        <div [mcsLoader]="updateDisksSubscription">
-          <p *ngIf="!hasStorageDevice">{{ textContent.noDisks }}</p>
-          <table *ngIf="hasStorageDevice" class="mcs-simple-table full-width">
+      <!-- Disks -->
+      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <table class="mcs-simple-table full-width">
             <thead>
               <tr>
                 <td>
@@ -63,8 +63,20 @@
               </tr>
             </tbody>
           </table>
-        </div>
-      </div>
+        </mcs-data-status-success>
+
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingContent }}</span>
+        </mcs-data-status-in-progress>
+
+        <mcs-data-status-empty mcsDataEmpty>
+          <span>{{ textContent.noDisks }}</span>
+        </mcs-data-status-empty>
+
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorGettingDisks }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
 
       <div *mcsHasPermission="['VmEdit']">
         <div *ngIf="!hasReachedDisksLimit" class="action-box">

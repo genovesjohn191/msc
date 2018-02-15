@@ -212,7 +212,7 @@ export class ServersService {
    * @param id Server identification
    * @param referenceObject Reference object to obtain during subscribe
    */
-  public resetVmPassowrd(id: any, referenceObject: ServerClientObject):
+  public resetVmPassword(id: any, referenceObject: ServerClientObject):
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/password/reset`;
@@ -825,17 +825,17 @@ export class ServersService {
    * Get server snapshots from API
    * @param id Server identification
    */
-  public getServerSnapshot(serverId: any): Observable<McsApiSuccessResponse<ServerSnapshot>> {
+  public getServerSnapshots(serverId: any): Observable<McsApiSuccessResponse<ServerSnapshot[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${serverId}/snapshot`;
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/snapshots`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerSnapshot>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerSnapshot>>(
+        let apiResponse: McsApiSuccessResponse<ServerSnapshot[]>;
+        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerSnapshot[]>>(
           response,
           this._responseReviverParser
         );
@@ -856,7 +856,7 @@ export class ServersService {
   public createServerSnapshot(id: any, createSnapshot: ServerCreateSnapshot):
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshot`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
     mcsApiRequestParameter.recordData = JSON.stringify(createSnapshot);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -886,7 +886,7 @@ export class ServersService {
   public restoreServerSnapshot(id: any, referenceObject: ServerClientObject):
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshot/restore`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots/restore`;
     mcsApiRequestParameter.recordData = JSON.stringify({
       clientReferenceObject: referenceObject
     });
@@ -919,7 +919,7 @@ export class ServersService {
     referenceObject: ServerClientObject
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshot`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
     mcsApiRequestParameter.recordData = JSON.stringify({
       clientReferenceObject: referenceObject
     });
@@ -1163,13 +1163,17 @@ export class ServersService {
         break;
 
       case ServerCommand.ResetVmPassword:
-        this.setServerExecutionStatus(data.server);
-        this.resetVmPassowrd(data.server.id,
+        this.setServerSpinner(data.server);
+        this.resetVmPassword(data.server.id,
           {
             serverId: data.server.id,
             userId: this._authIdentity.userId,
             commandAction: action,
             powerState: data.server.powerState,
+          })
+          .catch((error) => {
+            this.clearServerSpinner(data.server);
+            return Observable.throw(error);
           })
           .subscribe(() => {
             // Subscribe to execute the reset vm password
@@ -1177,19 +1181,23 @@ export class ServersService {
         break;
 
       case ServerCommand.Delete:
-        this.setServerExecutionStatus(data.server);
+        this.setServerSpinner(data.server);
         this.deleteServer(data.server.id,
           {
             serverId: data.server.id,
             commandAction: action,
             powerState: data.server.powerState
           })
+          .catch((error) => {
+            this.clearServerSpinner(data.server);
+            return Observable.throw(error);
+          })
           .subscribe();
         this._router.navigate(['/servers']);
         break;
 
       case ServerCommand.Rename:
-        this.setServerExecutionStatus(data.server);
+        this.setServerSpinner(data.server);
         this.renameServer(data.server.id,
           {
             name: data.result,    // Server name
@@ -1200,19 +1208,27 @@ export class ServersService {
               newName: data.result
             }
           })
+          .catch((error) => {
+            this.clearServerSpinner(data.server);
+            return Observable.throw(error);
+          })
           .subscribe(() => {
             // Subscribe to execute the Rename server
           });
         break;
 
       default:
-        this.setServerExecutionStatus(data.server);
+        this.setServerSpinner(data.server);
         this.putServerCommand(data.server.id, action,
           {
             serverId: data.server.id,
             powerState: data.server.powerState,
             commandAction: action
           } as ServerClientObject)
+          .catch((error) => {
+            this.clearServerSpinner(data.server);
+            return Observable.throw(error);
+          })
           .subscribe(() => {
             // Subscribe to execute the command post
           });
@@ -1259,14 +1275,36 @@ export class ServersService {
   }
 
   /**
-   * Set the server execution status initially in order for the
+   * Set the server status to inprogress to display the spinner of corresponding server
+   * @param server Server to be set as processing
+   * @param classes Additional classed to set their isProcessing flag
+   */
+  public setServerSpinner(server: Server, ...classes: any[]): void {
+    this._setServerExecutionStatus(server, true, ...classes);
+  }
+
+  /**
+   * Clear the server status to hide the spinner of corresponding server
+   * @param server Server to be set as processing
+   * @param classes Additional classed to set their isProcessing flag
+   */
+  public clearServerSpinner(server: Server, ...classes: any[]): void {
+    this._setServerExecutionStatus(server, false, ...classes);
+  }
+
+  /**
+   * Set the server execution based on status in order for the
    * server to load first while waiting for the corresponding job
    * @param server Server to be set as processing
    * @param classes Additional classed to set their isProcessing flag
    */
-  public setServerExecutionStatus(server: Server, ...classes: any[]): void {
+  private _setServerExecutionStatus(
+    server: Server,
+    status: boolean = true,
+    ...classes: any[]
+  ): void {
     if (isNullOrEmpty(server)) { return; }
-    server.isProcessing = true;
+    server.isProcessing = status;
     server.processingText = 'Processing request.';
 
     // Additional instance to set the process flag
@@ -1274,9 +1312,9 @@ export class ServersService {
       classes.forEach((param) => {
         if (isNullOrEmpty(param)) {
           param = Object.create(param);
-          param.isProcessing = true;
+          param.isProcessing = status;
         } else {
-          param.isProcessing = true;
+          param.isProcessing = status;
         }
       });
     }

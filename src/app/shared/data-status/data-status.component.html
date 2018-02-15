@@ -1,24 +1,31 @@
 <ng-container [ngSwitch]="dataStatus">
   <!-- In Progress status -->
   <div *ngSwitchCase="dataStatusEnum.InProgress">
-    <div class="data-status-content-wrapper">
+    <div class="data-status-content-wrapper center">
       <mcs-icon [key]="spinnerIconKey"></mcs-icon>
       <ng-content select="[mcsDataInProgress]"></ng-content>
     </div>
   </div>
 
+  <!-- Successfull status -->
+  <div *ngSwitchCase="dataStatusEnum.Success">
+    <div class="data-status-content-wrapper">
+      <ng-content select="[mcsDataSuccess]"></ng-content>
+    </div>
+  </div>
+
   <!-- Empty records status -->
   <div *ngSwitchCase="dataStatusEnum.Empty">
-    <div class="data-status-content-wrapper">
-      <mcs-icon [key]="warningIconKey"></mcs-icon>
+    <div read-only class="data-status-content-wrapper center">
+      <mcs-icon read-only [key]="warningIconKey"></mcs-icon>
       <ng-content select="[mcsDataEmpty]"></ng-content>
     </div>
   </div>
 
   <!-- Error obtainment status -->
   <div *ngSwitchCase="dataStatusEnum.Error">
-    <div class="data-status-content-wrapper">
-      <mcs-icon [key]="errorIconKey"></mcs-icon>
+    <div read-only class="data-status-content-wrapper center">
+      <mcs-icon read-only [key]="errorIconKey"></mcs-icon>
       <ng-content select="[mcsDataError]"></ng-content>
     </div>
   </div>

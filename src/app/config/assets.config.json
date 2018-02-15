@@ -77,7 +77,8 @@
     "next-arrow": "next-arrow.svg",
     "notification-bell": "notification-bell.svg",
     "reload": "reload.svg",
-    "warning-svg": "warning.svg"
+    "warning-svg": "warning.svg",
+    "error-svg": "error.svg"
   },
   "gifIcons": {
     "spinner": "spinner.gif"

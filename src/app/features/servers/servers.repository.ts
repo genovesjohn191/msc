@@ -79,11 +79,11 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Find all related snapshots from the server
    * @param serverId Server id where to get the snapshots
    */
-  public findSnapshot(activeServer: Server): Observable<ServerSnapshot> {
-    return this._serversApiService.getServerSnapshot(activeServer.id)
+  public findSnapshots(activeServer: Server): Observable<ServerSnapshot[]> {
+    return this._serversApiService.getServerSnapshots(activeServer.id)
       .map((response) => {
-        activeServer.snapshot = !isNullOrEmpty(response.content) ?
-          response.content : new ServerSnapshot();
+        activeServer.snapshots = !isNullOrEmpty(response.content) ?
+          response.content : new Array();
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -433,15 +433,15 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      if (isNullOrEmpty(activeServer.snapshot)) {
+      if (isNullOrEmpty(activeServer.snapshots)) {
         // We need to fake the date in order for us to check
         // when the snapshot is currently creating
         let snapshot = new ServerSnapshot();
         snapshot.createdOn = new Date();
         snapshot.isProcessing = activeServer.isProcessing;
-        activeServer.snapshot = snapshot;
+        activeServer.snapshots.push(snapshot);
       } else {
-        activeServer.snapshot.isProcessing = this._getProcessingFlagByJob(job);
+        activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
       }
 
       this.updateRecord(activeServer);
@@ -458,7 +458,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      activeServer.snapshot.isProcessing = this._getProcessingFlagByJob(job);
+      if (!isNullOrEmpty(activeServer.snapshots)) {
+        activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
+      }
       this.updateRecord(activeServer);
     }
   }
@@ -475,9 +477,11 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       this._setServerProcessDetails(activeServer, job);
 
       // Clear the snapshot as mock data on the repository in case of completion
-      activeServer.snapshot.isProcessing = this._getProcessingFlagByJob(job);
+      if (!isNullOrEmpty(activeServer.snapshots)) {
+        activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
+      }
       if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
-        activeServer.snapshot = undefined;
+        activeServer.snapshots = undefined;
       }
       this.updateRecord(activeServer);
     }

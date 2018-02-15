@@ -10,10 +10,10 @@
     <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
     <div [hidden]="isUpdate" class="vertical-items-spacing-large">
-      <div class="position-relative">
-        <div [mcsLoader]="updateNicsSubscription">
-          <p *ngIf="!hasNics">{{ textContent.noNics }}</p>
-          <table *ngIf="hasNics" class="mcs-simple-table full-width">
+      <!-- Nics -->
+      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <table class="mcs-simple-table full-width">
             <thead>
               <tr>
                 <td>
@@ -76,8 +76,20 @@
               </tr>
             </tbody>
           </table>
-        </div>
-      </div>
+        </mcs-data-status-success>
+
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingContent }}</span>
+        </mcs-data-status-in-progress>
+
+        <mcs-data-status-empty mcsDataEmpty>
+          <span>{{ textContent.noNics }}</span>
+        </mcs-data-status-empty>
+
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorGettingNics }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
 
       <div *mcsHasPermission="['VmNetworkEdit']">
         <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"

@@ -120,7 +120,7 @@
       },
       "contextualHelp": {
         "vdcField": "Virtual Data Center to deploy your server. You can deploy your server to any Virtual Data Center available in this list.",
-        "serverNameField": "Choose a friendly name for your server. The server name must be 15 characters or less and contain letters, numbers and hyphens.",
+        "serverNameField": "Choose a friendly name for your server. The server name must be 15 characters or less and can contain letters, numbers and hyphens.",
         "vAppField": "A vApp houses one or more servers. By default we create a vApp for each of your servers.",
         "intellicentre": "Virtual Data Centre to deploy this Server in.",
         "serverTemplateField": "Select the operating system or your own custom template to create this server from.",
@@ -234,6 +234,7 @@
       "storage": {
         "label": "Storage",
         "loading": "Loading storage information.",
+        "loadingContent": "Loading disks.",
         "title": "Manage Disks",
         "description": "Manage the disks attached to your server. You can add new, delete or expand existing disks.",
         "primary": "Primary",
@@ -250,15 +251,18 @@
         "deleteStorageLink": "Delete",
         "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
         "noDisks": "No disks are attached to this server.",
+        "errorGettingDisks":"Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
         "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
       },
       "backups": {
         "label": "Backups",
         "loading": "Loading snapshots information.",
+        "loadingContent": "Loading snapshots.",
         "snapshotHeader": "VM Snapshot",
         "snapshotDescription": "Snapshots are point-in-time VM-level restore points.<br/>Restoring a snapshot is not reversible, so restore carefully.",
         "snapshots": "Snapshots",
-        "noSnapshots": "No snapshots to display.",
+        "noSnapshots": "There are no Snapshots to display for this server.",
+        "errorGettingSnapshots":"Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
         "createSnapshot": "Snapshot now",
         "restoreSnapshot": "Restore",
         "deleteSnapshot": "Delete",
@@ -268,7 +272,8 @@
       },
       "nics": {
         "label": "NICs",
-        "loading": "Loading NICs.",
+        "loading": "Loading NICs information.",
+        "loadingContent": "Loading NICs.",
         "title": "Manage NICs",
         "description": "",
         "nic": "NIC",
@@ -293,7 +298,8 @@
           "dynamic": "Dynamic - IP Pool",
           "dhcp": "DHCP"
         },
-        "noNics": "There are no NICs to display for this server."
+        "noNics": "There are no NICs to display for this server.",
+        "errorGettingNics":"Sorry, something’s not right. We weren’t able to retrieve the list of NICs."
       }
     },
     "shared": {
@@ -637,7 +643,7 @@
           "description": "Manage company contacts, users, invoices and monitor your infrastructure."
         },
         "vCloud": {
-          "name": "Vcloud Director",
+          "name": "vCloud Director",
           "description": "Manage your Virtual Machines and Virtual Data Centers."
         },
         "vSphere": {
@@ -758,6 +764,9 @@
       "maxlength": "Maximum length {{max_length}}",
       "min": "The minimum value that can be entered is {{min_value}}",
       "max": "Maximum value can be entered is upto {{max_value}}"
+    },
+    "safeToNavigateAway" : {
+      "message": "Your changes may not be saved. Are you sure you want to leave this page?"
     },
     "wizard": {
       "previous": "Back",
