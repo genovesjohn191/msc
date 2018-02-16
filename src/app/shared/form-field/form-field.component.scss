@@ -66,8 +66,15 @@ $form-field-error-hint-color: rgba($color-black, 0.54);
     .select-trigger {
       border: none;
       width: 100%;
+      max-width: 100%;
       padding-left: $form-field-content-spacing-size;
       padding-right: $form-field-content-spacing-size;
+    }
+
+    textarea {
+      min-height: $form-field-content-min-height;
+      resize: vertical;
+      overflow: auto;
     }
 
     > *:nth-child(n+2):last-child {

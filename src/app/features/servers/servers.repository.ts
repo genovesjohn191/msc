@@ -25,7 +25,9 @@ import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
   deleteArrayRecord,
-  getEnumString
+  getEnumString,
+  compareNumbers,
+  compareStrings
 } from 'app/utilities';
 
 @Injectable()
@@ -55,6 +57,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       .map((response) => {
         activeServer.storageDevice = !isNullOrEmpty(response.content) ?
           response.content : new Array();
+
+        // TODO: Sort this temporary by name since the disk doesnt have index field
+        activeServer.storageDevice
+          .sort((_first: ServerStorageDevice, _second: ServerStorageDevice) => {
+            return compareStrings(_first.name, _second.name);
+          });
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -70,6 +78,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       .map((response) => {
         activeServer.nics = !isNullOrEmpty(response.content) ?
           response.content : new Array();
+        activeServer.nics.sort((_first: ServerNicSummary, _second: ServerNicSummary) => {
+          return compareNumbers(_first.index, _second.index);
+        });
         this.updateRecord(activeServer);
         return response.content;
       });
