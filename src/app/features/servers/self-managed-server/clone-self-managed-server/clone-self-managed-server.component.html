@@ -24,14 +24,9 @@
   </div>
 
   <div class="position-relative">
-    <!-- Loader settings -->
-    <div [mcsLoader]="serversSubscription"
-      [mcsLoaderHideElement]="serversContent"
-      [mcsLoaderText]="textContent.loadingServers"></div>
-
-    <div #serversContent>
-      <!-- Server Selection -->
-      <ng-container *ngIf="hasServers">
+    <!-- Servers -->
+    <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+      <mcs-data-status-success mcsDataSuccess>
         <mcs-form-field>
           <mcs-select [formControl]="fcTargetServer" required
             [placeholder]="textContent.placeholder.server">
@@ -46,7 +41,19 @@
             {{ textContent.errors.selectServerRequired }}
           </mcs-error>
         </mcs-form-field>
-      </ng-container>
-    </div>
+      </mcs-data-status-success>
+
+      <mcs-data-status-in-progress mcsDataInProgress>
+        <span>{{ textContent.loadingServers }}</span>
+      </mcs-data-status-in-progress>
+
+      <mcs-data-status-empty mcsDataEmpty>
+        <span>{{ textContent.noServers }}</span>
+      </mcs-data-status-empty>
+
+      <mcs-data-status-error mcsDataError>
+        <span>{{ textContent.errorMessageServers }}</span>
+      </mcs-data-status-error>
+    </mcs-data-status>
   </div>
 </form>

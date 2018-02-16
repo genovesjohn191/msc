@@ -63,7 +63,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   public consoleDisconnecting: boolean;
 
   public get poweredOn(): boolean { return this._poweredOn; }
-  private _poweredOn: boolean;
+  private _poweredOn: boolean = true;
 
   private _vmConsole: any;
   private _vmConsoleDialog: any;

@@ -21,9 +21,11 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 import {
   McsTextContentProvider,
   McsDataStatus,
+  McsDataStatusFactory,
   CoreValidators,
   CoreDefinition
 } from '../../../../core';
@@ -86,17 +88,13 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, O
   public targetServerId: string;
   public servers: Server[];
   public serversSubscription: Subscription;
-  public serversStatus: McsDataStatus;
+  public dataStatusFactory: McsDataStatusFactory<Server[]>;
 
   // Parameters
   private _parameterSubscription: Subscription;
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
-  }
-
-  public get hasServers(): boolean {
-    return !isNullOrEmpty(this.servers);
   }
 
   public get dataStatusEnum(): any {
@@ -198,14 +196,27 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, O
    * Get all servers from repository service
    */
   private _getAllServers(): void {
+    unsubscribeSafely(this.serversSubscription);
+    // We need to check the datastatus factory if its not undefined
+    // because it was called under base class and for any reason, the instance is undefined.
+    if (isNullOrEmpty(this.dataStatusFactory)) {
+      this.dataStatusFactory = new McsDataStatusFactory();
+    }
+
+    this.dataStatusFactory.setInProgress();
     this.serversSubscription = this._serversRespository
       .findAllRecords()
+      .catch((error) => {
+        // Handle common error status code
+        this.dataStatusFactory.setError();
+        return Observable.throw(error);
+      })
       .subscribe((response) => {
         this.servers = response;
+        this.dataStatusFactory.setSuccesfull(response);
         this._setTargetServerById();
       });
     this.serversSubscription.add(() => {
-      this.serversStatus = this._serversRespository.dataStatus;
       this._changeDetectorRef.markForCheck();
     });
   }
