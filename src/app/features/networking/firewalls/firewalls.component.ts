@@ -6,11 +6,15 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { FirewallsService } from './firewalls.service';
 import { FirewallsRepository } from './firewalls.repository';
 import { FirewallsDataSource } from './firewalls.datasource';
 /** Models */
-import { FirewallConnectionStatus } from './models';
+import {
+  Firewall,
+  FirewallConnectionStatus
+} from './models';
 /** Core */
 import {
   McsTextContentProvider,
@@ -66,7 +70,8 @@ export class FirewallsComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
     private _firewallsService: FirewallsService,
-    private _firewallsRepository: FirewallsRepository
+    private _firewallsRepository: FirewallsRepository,
+    private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
   }
@@ -87,6 +92,15 @@ export class FirewallsComponent
 
   public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
     return this._firewallsService.getFirewallConnectionStatusIconKey(status);
+  }
+
+  /**
+   * Navigate to firewall details page
+   * @param firewall Firewall to view the details
+   */
+  public navigateToFirewall(firewall: Firewall): void {
+    if (isNullOrEmpty(firewall)) { return; }
+    this._router.navigate(['/networking/firewalls/', firewall.id]);
   }
 
   /**

@@ -101,7 +101,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     }
   }
 
-  public get isActiveScale(): boolean {
+  public get isVisibleScaleOption(): boolean {
     return !isNullOrEmpty(this.server.id) && this._hasScaleParam && !this.isManaged;
   }
 
@@ -266,7 +266,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     this._serverPerformanceScale = scale;
   }
 
-  public scaleServer(): void {
+  public showScaleOption(): void {
     this._serversService.executeServerCommand({ server: this.server }, ServerCommand.Scale);
   }
 
@@ -382,6 +382,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     this._paramsSubscription = this._activatedRoute.queryParams
       .subscribe((params: ParamMap) => {
         this._hasScaleParam = !isNullOrEmpty(params['scale']);
+        this._changeDetectorRef.markForCheck();
       });
   }
 

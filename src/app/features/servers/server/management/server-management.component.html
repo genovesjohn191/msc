@@ -6,7 +6,7 @@
     mcsLoaderOrientation="top"></div>
 
   <div #managementContent>
-    <div *ngIf="!isActiveScale && !isAttachMedia" class="content-grid">
+    <div *ngIf="!isVisibleScaleOption && !isAttachMedia">
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
           <h3 class="container-header">{{ textContent.vmProperties.title }}</h3>
@@ -31,7 +31,7 @@
               <span>{{ textContent.vmProperties.configuration }}:</span>
               <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
               <span *mcsHasPermission="['VmEdit']">
-                <a *ngIf="!isScaling" (click)="scaleServer()" [disabled]="scalingIsDisabled">
+                <a *ngIf="!isScaling" (click)="showScaleOption()" [disabled]="scalingIsDisabled">
                 {{ textContent.performanceScale.scale }}</a>
               </span>
               <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
@@ -175,7 +175,7 @@
       </div>
     </div>
 
-    <div *ngIf="isActiveScale" class="server-performance-scale">
+    <div *ngIf="isVisibleScaleOption" class="server-performance-scale">
       <div class="container-wrapper">
         <h3 class="container-header">Scaling {{ server.managementName }}</h3>
         <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"

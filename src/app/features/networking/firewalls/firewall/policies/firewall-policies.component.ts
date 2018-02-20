@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -94,7 +95,8 @@ export class FirewallPoliciesComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _firewallService: FirewallService
+    private _firewallService: FirewallService,
+    private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
     this.dataColumns = new Array();
@@ -134,6 +136,15 @@ export class FirewallPoliciesComponent
         this.dataColumns.push(column);
       });
     }
+  }
+
+  /**
+   * Navigate to firewall policy details page
+   * @param policy Firewall policy to view the details
+   */
+  public navigateToServer(policy: FirewallPolicy): void {
+    if (isNullOrEmpty(policy)) { return; }
+    this._router.navigate(['/firewalls/', policy.id]);
   }
 
   /**

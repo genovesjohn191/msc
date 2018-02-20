@@ -27,7 +27,7 @@ export class ListComponent implements AfterViewInit {
   public header: string;
 
   @Input()
-  public spacing: 'xsmall' | 'small' | 'medium';
+  public spacing: 'none' | 'xsmall' | 'small' | 'medium';
 
   @ContentChild(ListHeaderDirective)
   public headerTemplate: TemplateRef<any>;
