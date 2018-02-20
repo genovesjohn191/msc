@@ -225,9 +225,9 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, O
    * Listen to every change of the parameter
    */
   private _listenToParamChange(): void {
-    this._parameterSubscription = this._activatedRoute.paramMap
+    this._parameterSubscription = this._activatedRoute.queryParams
       .subscribe((params: ParamMap) => {
-        this.targetServerId = params.get('clone');
+        this.targetServerId = params['clone'];
         this._setTargetServerById();
       });
   }

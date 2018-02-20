@@ -12,16 +12,6 @@ $routing-routing-tab-content-min-height: 300px;
     position: relative;
     min-height: $routing-routing-tab-content-min-height;
 
-    .content-grid {
-      @include set-items-interval($grid-row-spacing, vertical);
-      @include breakpoint(small) {
-        @include set-items-interval($space-xxlarge, vertical);
-      }
-      @include breakpoint(xsmall) {
-        @include set-items-interval(0, vertical);
-      }
-    }
-
     .action-box {
       @include set-items-interval($space-medium, vertical);
       border: 1px solid $action-box-border-color;

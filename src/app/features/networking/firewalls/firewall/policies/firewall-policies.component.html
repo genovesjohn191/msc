@@ -177,7 +177,8 @@
       </ng-container>
 
       <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-      <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+        cursor="pointer" (click)="showFirewallPolicyDetails(row)"></mcs-data-row>
     </mcs-table>
 
     <!-- Paginator -->
@@ -190,8 +191,9 @@
   </div>
 </div>
 
-<div [hidden]="!isViewMode" class="limited-view content-grid">
-  <div class="grid-row" align-items="center">
+<div *ngIf="isViewMode" class="limited-view content-grid">
+  <div display-flex="row" align-items="center"
+    class="space-bottom-xlarge space-left-medium space-right-medium">
     <h2>{{ firewallPolicyTitle }}</h2>
     <mcs-icon [key]="closeIconKey" size="large"
       (click)="hideFirewallPolicyDetails()"
@@ -199,60 +201,65 @@
   </div>
 
   <div class="grid-row">
-    <div class="grid-column">
-      <h3>{{ firewallPolicyTextContent.source }}</h3>
-      <div>
-        <span>{{ firewallPolicyTextContent.address }} : </span>
-        <ul class="listing">
-          <li *ngFor="let sourceAddress of selectedFirewallPolicy.sourceAddresses">
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ firewallPolicyTextContent.source }}</h3>
+      <mcs-list spacing="xsmall">
+        <!-- Source Address -->
+        <mcs-list-item>
+          <span>{{ firewallPolicyTextContent.address }}:</span>
+          <mcs-list spacing="none" *ngFor="let sourceAddress of selectedFirewallPolicy.sourceAddresses">
             <span>{{ sourceAddress }}</span>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <span>{{ firewallPolicyTextContent.interface }} : </span>
-        <ul class="listing">
-          <li *ngFor="let sourceInterfaces of selectedFirewallPolicy.sourceInterfaces">
+          </mcs-list>
+        </mcs-list-item>
+        <!-- Source Interface -->
+        <mcs-list-item>
+          <span>{{ firewallPolicyTextContent.interface }}:</span>
+          <mcs-list spacing="none" *ngFor="let sourceInterfaces of selectedFirewallPolicy.sourceInterfaces">
             <span>{{ sourceInterfaces }}</span>
-          </li>
-        </ul>
-      </div>
+          </mcs-list>
+        </mcs-list-item>
+      </mcs-list>
     </div>
 
-    <div class="grid-column">
-      <h3>{{ firewallPolicyTextContent.destination }}</h3>
-      <div>
-        <span>{{ firewallPolicyTextContent.address }} : </span>
-        <ul class="listing">
-          <li *ngFor="let destinationAddress of selectedFirewallPolicy.destinationAddresses">
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ firewallPolicyTextContent.destination }}</h3>
+      <mcs-list spacing="xsmall">
+        <!-- Destination Address -->
+        <mcs-list-item>
+          <span>{{ firewallPolicyTextContent.address }}:</span>
+          <mcs-list spacing="none"
+            *ngFor="let destinationAddress of selectedFirewallPolicy.destinationAddresses">
             <span>{{ destinationAddress }}</span>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <span>{{ firewallPolicyTextContent.interface }} : </span>
-        <ul class="listing">
-          <li *ngFor="let destinationInterface of selectedFirewallPolicy.destinationInterfaces">
+          </mcs-list>
+        </mcs-list-item>
+        <!-- Destination Interface -->
+        <mcs-list-item>
+          <span>{{ firewallPolicyTextContent.interface }}:</span>
+          <mcs-list spacing="none"
+            *ngFor="let destinationInterface of selectedFirewallPolicy.destinationInterfaces">
             <span>{{ destinationInterface }}</span>
-          </li>
-        </ul>
-      </div>
+          </mcs-list>
+        </mcs-list-item>
+      </mcs-list>
     </div>
   </div>
 
   <div class="grid-row">
-    <div class="grid-column">
-      <h3>{{ firewallPolicyTextContent.details }}</h3>
-      <ul class="unstyled-list">
-        <li>
-          <span>{{ firewallPolicyTextContent.service }} : </span>
+    <div class="grid-column container-wrapper break-on-small">
+      <h3 class="container-header">{{ firewallPolicyTextContent.details }}</h3>
+      <mcs-list spacing="xsmall">
+        <!-- Service -->
+        <mcs-list-item>
+          <span>{{ firewallPolicyTextContent.service }}:</span>
           <span>{{ selectedFirewallPolicy.service }}</span>
-        </li>
-        <li>
-          <span>{{ firewallPolicyTextContent.action }} : </span>
+        </mcs-list-item>
+        <!-- Action -->
+        <mcs-list-item>
+          <span>{{ firewallPolicyTextContent.action }}:</span>
           <span>{{ getActionEnumString(selectedFirewallPolicy.action) }}</span>
-        </li>
-      </ul>
+        </mcs-list-item>
+      </mcs-list>
     </div>
+    <div class="grid-column container-wrapper break-on-small"></div>
   </div>
 </div>

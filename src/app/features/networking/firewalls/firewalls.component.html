@@ -100,7 +100,7 @@
         <ng-container mcsColumnDef="action">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small"></mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
-            <mcs-icon class="action" [key]="cogIconKey" size="medium"
+            <mcs-icon class="action" stop-propagation [key]="cogIconKey" size="medium"
               mcsPopover placement="bottom" orientation="left" theme="light"
               padding="none" [content]="actionContent" cursor="pointer">
             </mcs-icon>
@@ -129,7 +129,8 @@
 
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          cursor="pointer" (click)="navigateToFirewall(row)"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

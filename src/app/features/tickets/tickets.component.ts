@@ -22,7 +22,10 @@ import {
 } from '../../utilities';
 import { TicketsRepository } from './tickets.repository';
 import { TicketsDataSource } from './tickets.datasource';
-import { TicketStatus } from './models';
+import {
+  Ticket,
+  TicketStatus
+} from './models';
 
 @Component({
   selector: 'mcs-tickets',
@@ -81,6 +84,15 @@ export class TicketsComponent
 
   public ngOnDestroy(): void {
     this.dispose();
+  }
+
+  /**
+   * Navigate to ticket details page
+   * @param ticket Ticket to view the details
+   */
+  public navigateToTicket(ticket: Ticket): void {
+    if (isNullOrEmpty(ticket)) { return; }
+    this._router.navigate(['/tickets/', ticket.id]);
   }
 
   /**
