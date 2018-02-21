@@ -490,6 +490,7 @@
     "dataPlural": "Tickets",
     "ticket": {
       "header": "{{ticketType}} #",
+      "status": "Status",
       "services": "Services",
       "attachments": "Attachments",
       "activity": "Activity",
@@ -498,7 +499,7 @@
       "missingServicesLabel": "No services found",
       "missingAttachmentsLabel": "No attachments found",
       "missingActivitiesLabel": "No activities yet",
-      "creatingComment": "Creating your comment, this may take a few minutes.",
+      "creatingComment": "Adding comment...",
       "backToTickets": "Back To Tickets",
       "addActivity": "Add",
       "cancelActivity": "Cancel"
@@ -545,7 +546,7 @@
     }
   },
   "firewalls": {
-    "title": "Macquarie Cloud Services: Networking",
+    "title": "Macquarie Cloud Services: Firewalls",
     "header": "Firewalls",
     "description": "View details of your firewalls and firewall policies. Firewalls prevent malicious traffic from accessing services deployed in your environment.",
     "leftPanelHeader": "Firewall Filter",

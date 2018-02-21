@@ -79,6 +79,8 @@ export class ServerComponent
   private _parameterSubscription: Subscription;
   private _notificationsChangeSubscription: any;
 
+  private _serverId: string;
+
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
@@ -113,6 +115,7 @@ export class ServerComponent
   ) {
     super(_router, _activatedRoute);
     this.server = new Server();
+    this._serverId = '';
   }
 
   public ngOnInit() {
@@ -220,9 +223,9 @@ export class ServerComponent
    * Event that emits when tab is changed
    */
   public onTabChanged(tab: any) {
-    if (isNullOrEmpty(this.server) || isNullOrEmpty(this.server.id)) { return; }
+    if (isNullOrEmpty(this._serverId)) { return; }
     // Navigate route based on current active tab
-    this.router.navigate(['servers', this.server.id, tab.id]);
+    this.router.navigate(['servers', this._serverId, tab.id]);
   }
 
   /**
@@ -290,8 +293,8 @@ export class ServerComponent
   private _listenToParamChange(): void {
     this._parameterSubscription = this.activatedRoute.paramMap
       .subscribe((params: ParamMap) => {
-        let serverId = params.get('id');
-        this._getServerById(serverId);
+        this._serverId = params.get('id');
+        this._getServerById(this._serverId);
       });
   }
 

@@ -171,6 +171,7 @@ export class ListPanelComponent<T> implements OnInit,
   }
 
   public ngOnDestroy() {
+    this._listPanelService.selectedItemChangedStream.next(undefined);
     unsubscribeSafely(this._listSourceSubscription);
     unsubscribeSafely(this._listLoadingSubscription);
     this.listSource.disconnect();
