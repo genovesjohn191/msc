@@ -39,6 +39,14 @@
         <p>{{ ticket.description }}</p>
       </div>
 
+      <!-- Ticket Status -->
+      <div class="hidden-small" display-flex="row">
+        <div flex="equal">
+          <h4>{{ textContent.status }}</h4>
+          <span>{{ getStateString(ticket.state) }}</span>
+        </div>
+      </div>
+
       <!-- Ticket Meta Data -->
       <div class="hidden-small" display-flex="row">
         <div flex="equal">

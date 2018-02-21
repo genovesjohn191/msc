@@ -51,7 +51,7 @@ export class ListPanelHeaderComponent implements OnInit, OnDestroy {
     public changeDetectionRef: ChangeDetectorRef,
     public listPanelService: ListPanelService
   ) {
-    this.collapse = false;
+    this.collapse = true;
   }
 
   public get caretIconKey(): string {
