@@ -5,13 +5,11 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  IterableDiffers
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   Router,
-  ActivatedRoute,
-  ParamMap
+  ActivatedRoute
 } from '@angular/router';
 import {
   Observable,
@@ -64,7 +62,6 @@ export class VdcComponent
 
   // Subscription
   public vdcSubscription: Subscription;
-  private _parameterSubscription: Subscription;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -90,7 +87,6 @@ export class VdcComponent
   constructor(
     _router: Router,
     _activatedRoute: ActivatedRoute,
-    private _differs: IterableDiffers,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversRepository: ServersRepository,
@@ -103,7 +99,7 @@ export class VdcComponent
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers;
-    this._listenToParamChange();
+    super.onInit();
   }
 
   public ngAfterViewInit() {
@@ -113,9 +109,8 @@ export class VdcComponent
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    super.onDestroy();
     unsubscribeSafely(this.vdcSubscription);
-    unsubscribeSafely(this._parameterSubscription);
   }
 
   public onServerSelect(serverId: string) {
@@ -130,16 +125,6 @@ export class VdcComponent
    */
   public serverDeleting(server: Server): boolean {
     return server.commandAction === ServerCommand.Delete && server.isProcessing;
-  }
-
-  /**
-   * Event that emits when the tab is changed in the routing tabgroup
-   * @param tab Active tab
-   */
-  public onTabChanged(tab: any) {
-    if (isNullOrEmpty(this.vdc.id)) { return; }
-    // Navigate route based on current active tab
-    this.router.navigate([`servers/vdc/${tab.id}/overview`]);
   }
 
   public getStateIconKey(state: number): string {
@@ -178,11 +163,30 @@ export class VdcComponent
     this._initializeListsource();
   }
 
+  /**
+   * Event that emits when the tab is changed in the routing tabgroup
+   * @param tab Active tab
+   */
+  protected onTabChanged(tab: any) {
+    // Navigate route based on current active tab
+    this.router.navigate(['servers/vdc/', this.paramId, tab.id]);
+  }
+
+  /**
+   * Event that emits when the parameter id is changed
+   * @param id Id of the parameter
+   */
+  protected onParamIdChanged(id: string): void {
+    this._getVdcById(id);
+  }
+
+  /**
+   * Initialize list source
+   */
   private _initializeListsource(): void {
     this.serverListSource = new ServersListSource(
       this._serversRepository,
-      this.search,
-      this._differs
+      this.search
     );
     this._changeDetectorRef.markForCheck();
   }
@@ -207,17 +211,6 @@ export class VdcComponent
         } as McsListPanelItem;
         this._vdcService.setSelectedVdc(this.vdc);
         this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * Listen to every change of the parameter
-   */
-  private _listenToParamChange(): void {
-    this._parameterSubscription = this.activatedRoute.paramMap
-      .subscribe((params: ParamMap) => {
-        let vdcId = params.get('id');
-        this._getVdcById(vdcId);
       });
   }
 }

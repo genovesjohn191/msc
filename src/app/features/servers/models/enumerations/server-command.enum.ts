@@ -1,3 +1,5 @@
+import { McsEnumSerializationBase } from '../../../../core';
+
 export enum ServerCommand {
   None = 0,
   Start = 1,
@@ -15,4 +17,11 @@ export enum ServerCommand {
 
   // Addition commands for server that is not included on the commandlist of API
   ResetVmPassword = 100
+}
+
+/**
+ * Enumeration serializer and deserializer methods
+ */
+export class ServerCommandSerialization extends McsEnumSerializationBase<ServerCommand> {
+  constructor() { super(ServerCommand); }
 }

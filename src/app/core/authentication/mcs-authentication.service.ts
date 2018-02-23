@@ -14,7 +14,6 @@ import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { McsLoggerService } from '../services/mcs-logger.service';
 import { AppState } from '../../app.service';
 import {
-  reviverParser,
   resolveEnvVar,
   isNullOrEmpty
 } from '../../utilities';
@@ -174,12 +173,12 @@ export class McsAuthenticationService {
 
     return this._apiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let identityResponse: McsApiSuccessResponse<McsApiIdentity>;
-        identityResponse = JSON.parse(response,
-          reviverParser) as McsApiSuccessResponse<McsApiIdentity>;
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiIdentity>(McsApiIdentity, response);
 
-        if (identityResponse && identityResponse.content) {
-          this._setUserIdentity(authToken, identityResponse.content);
+        if (apiResponse && apiResponse.content) {
+          this._setUserIdentity(authToken, apiResponse.content);
           return true;
         }
         return false;

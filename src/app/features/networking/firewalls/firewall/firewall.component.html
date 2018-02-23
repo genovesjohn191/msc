@@ -11,10 +11,13 @@
               *mcsListPanelHeaderDef="let haGroup; propertyName: 'haGroupName';">
               <span>{{ haGroup }}</span>
             </mcs-list-panel-header>
-            <mcs-list-panel-item *mcsListPanelItemDef="let firewall"
-              [itemId]="firewall.id" [groupName]="firewall.haGroupName"
-              (click)="onFirewallSelect(firewall)">
-              <mcs-icon [key]="getConnectionStatusIconKey(firewall.connectionStatus)"></mcs-icon>
+            <mcs-list-panel-item *mcsListPanelItemDef="let firewallPanel"
+              [itemId]="firewallPanel.firewall.id"
+              [groupName]="firewallPanel.haGroupName"
+              (click)="onFirewallSelect(firewallPanel.firewall)">
+              <mcs-icon
+                [key]="getConnectionStatusIconKey(firewallPanel.firewall?.connectionStatus)">
+              </mcs-icon>
               <a>{{ firewall.managementName }}</a>
             </mcs-list-panel-item>
           </ng-container>

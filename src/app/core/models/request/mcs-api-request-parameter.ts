@@ -52,7 +52,7 @@ export class McsApiRequestParameter {
   /**
    * Response type parameters
    *
-   * `@Note:` By default, this is TEXT Type
+   * `@Note:` By default, this is JSON Type
    */
   private _responseType: any;
   public get responseType(): any {
@@ -67,6 +67,6 @@ export class McsApiRequestParameter {
     this._recordData = undefined;
     this._optionalHeaders = new Map<string, any>();
     this._searchParameters = new Map<string, any>();
-    this._responseType = 'text';
+    this._responseType = 'json';
   }
 }

@@ -1,3 +1,5 @@
+import { ObjectMapper } from 'json-object-mapper';
+
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
 /**
@@ -14,42 +16,44 @@ export function reviverParser(_key, value): any {
 }
 
 /**
- * Convert object to JSON string, if error occured during the conversion,
- * undefined value will returned and error will be printed in the console.
- * @param obj Object value to be converted
+ * Serialize object to json using json-object-mapper
+ * @param object Object that will be converted to json
  */
-export function convertObjectToJsonString<T>(obj: T): any {
-  let jsonResult: any;
+export function serializeObjectToJson<T>(object: T): string {
+  let convertedJson: string;
 
   // Check for null input parameter
-  if (!obj) { return undefined; }
+  if (!object) { return undefined; }
 
   try {
-    // Try to convert object to JSON
-    jsonResult = JSON.stringify(obj);
+    // Try to convert JSON to Object
+    convertedJson = ObjectMapper.serialize(object) as string;
   } catch (error) {
-    jsonResult = undefined;
+    convertedJson = undefined;
   }
-  return jsonResult;
+  return convertedJson;
 }
 
 /**
- * Convert JSON String to object, if error occured during the conversion,
- * undefined value will returned and error will be printed in the console
- * @param json JSON object to be converted
- * @param reviver Reviver parser during the conversion
+ * Deserialize json content to object based on "T" type
+ * @param classType Class type to get the instance from
+ * @param json JSON content to be converted as type "T"
  */
-export function convertJsonStringToObject<T>(
-  json: any,
-  reviver?: (key: any, value: any) => any): T {
-  let convertedObject: T;
+export function deserializeJsonToObject<T>(
+  classType: new () => T,
+  json: any): T {
+  let convertedObject: any;
 
   // Check for null input parameter
   if (!json) { return undefined; }
 
   try {
-    // Try to convert JSON to Object
-    convertedObject = JSON.parse(json, reviver);
+    if (Array.isArray(json)) {
+      convertedObject = ObjectMapper.deserializeArray(classType, json);
+    } else {
+      convertedObject = ObjectMapper.deserialize(classType, json) as T;
+    }
+
   } catch (error) {
     convertedObject = undefined;
   }

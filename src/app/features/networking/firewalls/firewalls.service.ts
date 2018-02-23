@@ -15,9 +15,7 @@ import {
   FirewallDeviceStatus,
   FirewallConfigurationStatus,
   FirewallConnectionStatus,
-  FirewallPolicy,
-  FirewallPolicyAction,
-  FirewallPolicyNat
+  FirewallPolicy
 } from './models';
 
 @Injectable()
@@ -57,9 +55,9 @@ export class FirewallsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<Firewall[]>;
-        apiResponse = JSON.parse(response,
-          this._convertProperty) as McsApiSuccessResponse<Firewall[]>;
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<Firewall[]>(Firewall, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -81,9 +79,9 @@ export class FirewallsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<Firewall>;
-        apiResponse = JSON.parse(response,
-          this._convertProperty) as McsApiSuccessResponse<Firewall>;
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<Firewall>(Firewall, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -118,9 +116,9 @@ export class FirewallsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<FirewallPolicy[]>;
-        apiResponse = JSON.parse(response,
-          this._convertProperty) as McsApiSuccessResponse<FirewallPolicy[]>;
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<FirewallPolicy[]>(FirewallPolicy, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -227,46 +225,5 @@ export class FirewallsService {
     }
 
     return iconKey;
-  }
-
-  private _convertProperty(key, value): any {
-
-    switch (key) {
-      // Convert firewall deviceStatus to enumeration
-      case 'deviceStatus':
-        value = FirewallDeviceStatus[value];
-        break;
-
-      // Convert firewall configurationStatus to enumeration
-      case 'configurationStatus':
-        value = FirewallConfigurationStatus[value];
-        break;
-
-      // Convert firewall policy action to enumeration
-      case 'connectionStatus':
-        value = FirewallConnectionStatus[value];
-        break;
-
-      // Convert firewall policy action to enumeration
-      case 'haMode':
-        value = FirewallDeviceStatus[value];
-        break;
-
-      // Convert firewall policy action to enumeration
-      case 'action':
-        value = FirewallPolicyAction[value];
-        break;
-
-      // Convert firewall policy nat to enumeration
-      case 'nat':
-        value = FirewallPolicyNat[value];
-        break;
-
-      default:
-        // do nothing
-        break;
-    }
-
-    return value;
   }
 }

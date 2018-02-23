@@ -1,11 +1,6 @@
 import {
-  IterableDiffer,
-  IterableDiffers
-} from '@angular/core';
-import {
   Observable,
-  Subject,
-  BehaviorSubject
+  Subject
 } from 'rxjs/Rx';
 import {
   McsDataSource,
@@ -30,34 +25,14 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
   public dataLoadingStream: Subject<McsDataStatus>;
 
   private _activeFirewallSubscription: any;
-  private _firewallsSubscription: any;
-  private _firewallListStream: BehaviorSubject<FirewallList[]>;
   private _firewallList: FirewallList[];
-
-  private _firewallDiffer: IterableDiffer<Firewall>;
-
-  private _searchMode: boolean;
-  public get searchMode(): boolean {
-    return this._searchMode;
-  }
-  public set searchMode(value: boolean) {
-    this._searchMode = value;
-  }
-
-  public get firewallsSubscription(): any {
-    return this._firewallsSubscription;
-  }
 
   constructor(
     private _firewallsRepository: FirewallsRepository,
-    private _search: McsSearch,
-    private _differs: IterableDiffers
+    private _search: McsSearch
   ) {
-    this._searchMode = false;
-    this._firewallListStream = new BehaviorSubject<FirewallList[]>([]);
     this._firewallList = new Array<FirewallList>();
     this.dataLoadingStream = new Subject<McsDataStatus>();
-    this._firewallDiffer = this._differs.find([]).create(null);
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
@@ -82,7 +57,6 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
         return this._firewallsRepository.findAllRecords(undefined, this._search)
           .map((content) => {
             this._firewallList = this._mapFirewallList(content);
-            this._firewallListStream.next(this._firewallList);
             return this._firewallList;
           });
       });
@@ -90,7 +64,6 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
 
   public disconnect() {
     // Disconnect all resources
-    unsubscribeSafely(this._firewallsSubscription);
     unsubscribeSafely(this._activeFirewallSubscription);
   }
 
@@ -99,30 +72,35 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
     this._search.showLoading(false);
   }
 
+  /**
+   * Map firewalls to firewall list to display in list-panel
+   * @param firewalls Firewalls to map
+   */
   private _mapFirewallList(firewalls: Firewall[]): FirewallList[] {
-    if (isNullOrEmpty(firewalls)) { return new Array<FirewallList>(); }
+    if (isNullOrEmpty(firewalls)) { return new Array(); }
 
-    // Check for changes in record
-    let changes = this._firewallDiffer.diff(firewalls);
-    if (isNullOrEmpty(changes)) { return this._firewallList; }
+    // We need to check again if there are added or deleted
+    // to notify the list panel that a data should be refreshed
+    let hasChangesOnCount = firewalls.length !== this._firewallList.length;
+    if (isNullOrEmpty(this._firewallList) || hasChangesOnCount) {
+      // Set the iterator of the firewalls so that we have reference on the instance itself
+      this._firewallList = new Array<FirewallList>();
+      firewalls.forEach((firewall) => {
+        let firewallListItem = new FirewallList();
+        firewallListItem.haGroupName = firewall.haGroupName;
+        firewallListItem.firewall = firewall;
+        this._firewallList.push(firewallListItem);
+      });
 
-    firewalls.sort((first: Firewall, second: Firewall) => {
-      return compareStrings(first.managementName, second.managementName);
-    });
-
-    let firewallList = new Array<FirewallList>();
-    firewalls.forEach((firewall) => {
-      let firewallListItem = new FirewallList();
-      firewallListItem.id = firewall.id;
-      firewallListItem.managementName = firewall.managementName;
-      firewallListItem.haGroupName = firewall.haGroupName;
-      firewallListItem.haRole = firewall.haRole;
-      firewallListItem.connectionStatus = firewall.connectionStatus;
-
-      firewallList.push(firewallListItem);
-    });
-
-    return firewallList;
+      // Sort record based on haGroup name
+      this._firewallList.sort((first: FirewallList, second: FirewallList) => {
+        return compareStrings(first.haGroupName, second.haGroupName);
+      });
+    } else {
+      for (let index = 0; index < firewalls.length; ++index) {
+        this._firewallList[index].firewall = firewalls[index];
+      }
+    }
+    return this._firewallList;
   }
-
 }

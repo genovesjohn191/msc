@@ -4,4 +4,10 @@ export class Portal {
   public name: string;
   public resourceSpecific: boolean;
   public portalAccess: PortalAccess[];
+
+  constructor() {
+    this.name = undefined;
+    this.resourceSpecific = undefined;
+    this.portalAccess = undefined;
+  }
 }

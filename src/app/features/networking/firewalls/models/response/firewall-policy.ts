@@ -1,12 +1,17 @@
-import { FirewallPolicyAction } from '../enumerations/firewall-policy-action.enum';
-import { FirewallPolicyNat } from '../enumerations/firewall-policy-nat.enum';
+import {
+  FirewallPolicyAction,
+  FirewallPolicyActionSerialization
+} from '../enumerations/firewall-policy-action.enum';
+import {
+  FirewallPolicyNat,
+  FirewallPolicyNatSerialization
+} from '../enumerations/firewall-policy-nat.enum';
+import { JsonProperty } from 'json-object-mapper';
 
 export class FirewallPolicy {
   public id: any;
   public policyId: number;
   public objectSequence: number;
-  public action: FirewallPolicyAction;
-  public nat: FirewallPolicyNat;
   public natIpAddresses: string[];
   public sourceAddresses: string[];
   public sourceInterfaces: string[];
@@ -15,4 +20,34 @@ export class FirewallPolicy {
   public label: string;
   public service: string[];
   public schedule: string[];
+
+  @JsonProperty({
+    type: FirewallPolicyAction,
+    serializer: FirewallPolicyActionSerialization,
+    deserializer: FirewallPolicyActionSerialization
+  })
+  public action: FirewallPolicyAction;
+
+  @JsonProperty({
+    type: FirewallPolicyNat,
+    serializer: FirewallPolicyNatSerialization,
+    deserializer: FirewallPolicyNatSerialization
+  })
+  public nat: FirewallPolicyNat;
+
+  constructor() {
+    this.id = undefined;
+    this.policyId = undefined;
+    this.objectSequence = undefined;
+    this.natIpAddresses = undefined;
+    this.sourceAddresses = undefined;
+    this.sourceInterfaces = undefined;
+    this.destinationAddresses = undefined;
+    this.destinationInterfaces = undefined;
+    this.label = undefined;
+    this.service = undefined;
+    this.schedule = undefined;
+    this.action = undefined;
+    this.nat = undefined;
+  }
 }

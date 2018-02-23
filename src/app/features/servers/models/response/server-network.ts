@@ -5,4 +5,13 @@ export class ServerNetwork {
   public vlanId: number;
   public netmask: string;
   public gateway: string;
+
+  constructor() {
+    this.id = undefined;
+    this.name = undefined;
+    this.serviceId = undefined;
+    this.vlanId = undefined;
+    this.netmask = undefined;
+    this.gateway = undefined;
+  }
 }

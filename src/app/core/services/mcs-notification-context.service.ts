@@ -12,10 +12,8 @@ import { McsApiRequestParameter } from '../models/request/mcs-api-request-parame
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 import { McsApiErrorResponse } from '../models/response/mcs-api-error-response';
 import {
-  reviverParser,
   getTimeDifference,
   addOrUpdateArrayRecord,
-  convertJsonStringToObject,
   unsubscribeSafely
 } from '../../utilities';
 
@@ -124,9 +122,9 @@ export class McsNotificationContextService {
 
     return this._apiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob[]>>(response,
-          reviverParser);
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob[]>(McsApiJob, response);
         return apiResponse ? apiResponse : new McsApiSuccessResponse<McsApiJob[]>();
       })
       .catch((error) => {

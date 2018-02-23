@@ -1,9 +1,6 @@
-import { FirewallConnectionStatus } from './enumerations/firewall-connection-status.enum';
+import { Firewall } from '../models';
 
 export class FirewallList {
-  public id: any;
-  public managementName: string;
   public haGroupName: string;
-  public haRole: string;
-  public connectionStatus: FirewallConnectionStatus;
+  public firewall: Firewall;
 }

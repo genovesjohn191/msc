@@ -4072,6 +4072,10 @@ json-loader@^0.5.4:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
 
+json-object-mapper@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/json-object-mapper/-/json-object-mapper-1.5.2.tgz#c843d27ff1227ba7d92c21f3d0bfefc82b1b7901"
+
 json-parse-better-errors@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.1.tgz#50183cd1b2d25275de069e9e71b467ac9eab973a"

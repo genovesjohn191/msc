@@ -8,9 +8,16 @@ import { ServerStorageDevice } from './server-storage-device';
 import { ServerNicSummary } from './server-nic-summary';
 import { ServerVmwareTools } from './server-vmware-tools';
 import { ServerSnapshot } from './server-snapshot';
-import { ServerPowerState } from '../enumerations/server-power-state.enum';
-import { ServerServiceType } from '../enumerations/server-service-type.enum';
+import {
+  ServerPowerState,
+  ServerPowerStateSerialization
+} from '../enumerations/server-power-state.enum';
+import {
+  ServerServiceType,
+  ServerServiceTypeSerialization
+} from '../enumerations/server-service-type.enum';
 import { ServerCommand } from '../enumerations/server-command.enum';
+import { JsonProperty } from 'json-object-mapper';
 
 export class Server {
   public id: any;
@@ -18,6 +25,12 @@ export class Server {
   public hostname: string;
   public managementName: string;
   public serviceId: string;
+
+  @JsonProperty({
+    type: ServerServiceType,
+    serializer: ServerServiceTypeSerialization,
+    deserializer: ServerServiceTypeSerialization
+  })
   public serviceType: ServerServiceType;
   public availabilityZone: string;
   public companyId: string;
@@ -27,6 +40,12 @@ export class Server {
   public operatingSystem: ServerOperatingSystemSummary;
   public hardware: ServerHardware;
   public compute: ServerComputeSummary;
+
+  @JsonProperty({
+    type: ServerPowerState,
+    serializer: ServerPowerStateSerialization,
+    deserializer: ServerPowerStateSerialization
+  })
   public powerState: ServerPowerState;
   public platform: ServerPlatformSummary;
   public nics: ServerNicSummary[];
@@ -47,4 +66,44 @@ export class Server {
   public commandAction: ServerCommand;
   public processingText: string;
   public statusLabel: string;
+
+  constructor() {
+    this.id = undefined;
+    this.name = undefined;
+    this.hostname = undefined;
+    this.managementName = undefined;
+    this.serviceId = undefined;
+    this.serviceType = undefined;
+    this.availabilityZone = undefined;
+    this.companyId = undefined;
+    this.managementIpAddress = undefined;
+    this.ipAddress = undefined;
+    this.instanceId = undefined;
+    this.operatingSystem = undefined;
+    this.hardware = undefined;
+    this.compute = undefined;
+    this.powerState = undefined;
+    this.platform = undefined;
+    this.nics = undefined;
+    this.fileSystem = undefined;
+    this.storageDevice = undefined;
+    this.media = undefined;
+    this.snapshots = undefined;
+    this.vApp = undefined;
+    this.portalUrl = undefined;
+    this.vCloudId = undefined;
+    this.vCenterId = undefined;
+    this.isTemplate = undefined;
+    this.isOperable = undefined;
+    this.vmwareTools = undefined;
+  }
+
+  /**
+   * Return true when server is executable
+   */
+  public get executable(): boolean {
+    return this.isOperable
+      && !this.isProcessing
+      && this.powerState !== ServerPowerState.Suspended;
+  }
 }

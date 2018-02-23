@@ -18,8 +18,7 @@ import {
   McsLoggerService
 } from '../../core/';
 import {
-  reviverParser,
-  convertJsonStringToObject,
+  serializeObjectToJson,
   isNullOrEmpty,
   getEnumString
 } from '../../utilities';
@@ -42,17 +41,9 @@ import {
   ServerGroupedOs,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
-  ServerServiceType,
-  ServerImageType,
-  ServerCatalogType,
-  ServerCatalogItemType,
   ServerNicSummary,
   ServerManageNic,
-  ServerIpAllocationMode,
   ServerManageMedia,
-  ServerPlatformType,
-  ServerRunningStatus,
-  ServerVersionStatus,
   ServerSnapshot,
   ServerCreateSnapshot
 } from './models';
@@ -131,11 +122,9 @@ export class ServersService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<Server[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Server[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<Server[]>(Server, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -152,16 +141,16 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}`;
 
+    mcsApiRequestParameter.responseType = 'json';
+
     return this._mcsApiService.get(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<Server>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Server>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<Server>(Server, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -184,7 +173,7 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/power`;
-    mcsApiRequestParameter.recordData = JSON.stringify({
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
       command: getEnumString(ServerCommand, action),
       clientReferenceObject: referenceObject
     });
@@ -194,11 +183,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -216,7 +203,7 @@ export class ServersService {
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/password/reset`;
-    mcsApiRequestParameter.recordData = JSON.stringify({
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
       clientReferenceObject: referenceObject
     });
 
@@ -225,11 +212,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -247,18 +232,16 @@ export class ServersService {
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/rename`;
-    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -279,18 +262,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/compute`;
-    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -307,18 +288,16 @@ export class ServersService {
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers';
-    mcsApiRequestParameter.recordData = JSON.stringify(serverData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -338,18 +317,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/clone`;
-    mcsApiRequestParameter.recordData = JSON.stringify(serverData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -369,7 +346,7 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}`;
-    mcsApiRequestParameter.recordData = JSON.stringify({
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
       clientReferenceObject: referenceObject
     });
 
@@ -378,11 +355,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -403,11 +378,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerGroupedOs[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerGroupedOs[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerGroupedOs[]>(ServerGroupedOs, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -428,11 +401,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerStorageDevice[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerStorageDevice[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerStorageDevice[]>(ServerStorageDevice, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -453,18 +424,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks`;
-    mcsApiRequestParameter.recordData = JSON.stringify(storageData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(storageData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -487,18 +456,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(storageData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(storageData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -521,18 +488,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/disks/${storageId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(storageData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(storageData);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -555,11 +520,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerThumbnail>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerThumbnail>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerThumbnail>(ServerThumbnail, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -581,11 +544,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerNicSummary[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNicSummary[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerNicSummary[]>(ServerNicSummary, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -606,18 +567,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
-    mcsApiRequestParameter.recordData = JSON.stringify(nicData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(nicData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -640,18 +599,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(nicData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(nicData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -674,18 +631,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(nicData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(nicData);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -707,18 +662,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/media`;
-    mcsApiRequestParameter.recordData = JSON.stringify(mediaData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(mediaData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -742,18 +695,16 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/media/${mediaId}`;
-    mcsApiRequestParameter.recordData = JSON.stringify(mediaData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(mediaData);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -808,11 +759,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerResource[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerResource[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerResource[]>(ServerResource, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -834,11 +783,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerSnapshot[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerSnapshot[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerSnapshot[]>(ServerSnapshot, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -857,18 +804,16 @@ export class ServersService {
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
-    mcsApiRequestParameter.recordData = JSON.stringify(createSnapshot);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(createSnapshot);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -887,7 +832,7 @@ export class ServersService {
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots/restore`;
-    mcsApiRequestParameter.recordData = JSON.stringify({
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
       clientReferenceObject: referenceObject
     });
 
@@ -896,11 +841,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -920,7 +863,7 @@ export class ServersService {
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/snapshots`;
-    mcsApiRequestParameter.recordData = JSON.stringify({
+    mcsApiRequestParameter.recordData = serializeObjectToJson({
       clientReferenceObject: referenceObject
     });
 
@@ -929,11 +872,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiJob>>(
-          response,
-          reviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -955,11 +896,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerResource>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerResource>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerResource>(ServerResource, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -981,11 +920,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerCompute>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerCompute>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerCompute>(ServerCompute, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -1007,11 +944,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerStorage[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerStorage[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerStorage[]>(ServerStorage, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -1033,11 +968,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerNetwork[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerNetwork[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerNetwork[]>(ServerNetwork, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -1059,11 +992,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerCatalogItem[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerCatalogItem[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerCatalogItem[]>(ServerCatalogItem, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -1085,11 +1016,9 @@ export class ServersService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<ServerVApp[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<ServerVApp[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerVApp[]>(ServerVApp, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -1371,77 +1300,5 @@ export class ServersService {
         this._activeServers = activeServers;
         this._activeServersStream.next(activeServers);
       });
-  }
-
-  /**
-   * Convert the json object to corresponding object as response
-   * by comparing its key
-   * @param key Property name of the object to be change
-   * @param value Value of the item
-   */
-  private _responseReviverParser(key, value): any {
-
-    switch (key) {
-      case 'powerState':
-        value = ServerPowerState[value];
-        break;
-
-      case 'serviceType':
-        value = ServerServiceType[value];
-        break;
-
-      case 'imageType':
-        value = ServerImageType[value];
-        break;
-
-      case 'type':
-        value = ServerCatalogType[value] || ServerPlatformType[value];
-        break;
-
-      case 'itemType':
-        value = ServerCatalogItemType[value];
-        break;
-
-      case 'ipAllocationMode':
-        value = ServerIpAllocationMode[value];
-        break;
-
-      case 'runningStatus':
-        value = ServerRunningStatus[value];
-        break;
-
-      case 'versionStatus':
-        value = ServerVersionStatus[value];
-        break;
-
-      default:
-        value = reviverParser(key, value);
-        break;
-    }
-
-    return value;
-  }
-
-  /**
-   * Convert the json object to corresponding object as request
-   * by comparing its key
-   * @param key Property name of the object to be change
-   * @param value Value of the item
-   */
-  private _requestReviverParser(key, value): any {
-
-    switch (key) {
-      case 'imageType':
-        value = getEnumString(ServerImageType, value);
-        break;
-
-      case 'ipAllocationMode':
-        value = getEnumString(ServerIpAllocationMode, value);
-        break;
-
-      default:
-        break;
-    }
-    return value;
   }
 }

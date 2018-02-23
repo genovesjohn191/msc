@@ -1,9 +1,9 @@
 import { async } from '@angular/core/testing';
 import {
   reviverParser,
-  convertJsonStringToObject,
-  convertObjectToJsonString,
   convertMapToJsonObject,
+  serializeObjectToJson,
+  deserializeJsonToObject,
   isJson
 } from './mcs-json.function';
 
@@ -11,6 +11,11 @@ import {
 export class TestObject {
   public name: string;
   public id: string;
+
+  constructor() {
+    this.name = undefined;
+    this.id = undefined;
+  }
 }
 
 describe('JSON Functions', () => {
@@ -31,46 +36,33 @@ describe('JSON Functions', () => {
     });
   });
 
-  describe('convertObjectToJson()', () => {
-    let testObject: TestObject;
-    beforeEach(async(() => {
-      testObject = new TestObject();
+  describe('serializeObjectToJson()', () => {
+    it(`should convert object to JSON when no error occured`, () => {
+      let testObject = new TestObject();
       testObject.id = 'F500120501';
       testObject.name = 'arrian';
-    }));
-
-    it(`should convert object to JSON when no error occured`, () => {
-      let convertedJson = convertObjectToJsonString<TestObject>(testObject);
+      let convertedJson = serializeObjectToJson<TestObject>(testObject);
       expect(convertedJson).toBeDefined();
     });
 
     it(`should return undefined when there error occured in conversion`, () => {
-      let convertedJson = convertObjectToJsonString<TestObject>(undefined);
+      let convertedJson = serializeObjectToJson<TestObject>(undefined);
       expect(convertedJson).toBeUndefined();
     });
   });
 
-  describe('convertJsonToObject()', () => {
-    let testObject: TestObject;
-    beforeEach(async(() => {
-      testObject = new TestObject();
-      testObject.id = 'F500120501';
-      testObject.name = 'arrian';
-    }));
-
+  describe('deserializeJsonToObject()', () => {
     it(`should convert JSON to object when no error occured`, () => {
-      let json = `{ "name": "${testObject.name}", "id": "${testObject.id}" }`;
-
-      let convertedObject = convertJsonStringToObject<TestObject>(json);
+      let convertedObject = deserializeJsonToObject<TestObject>(TestObject,
+        { id: 'F500120501', name: 'arrian' });
       expect(convertedObject).toBeDefined();
-      expect(convertedObject.id).toBe(testObject.id);
-      expect(convertedObject.name).toBe(testObject.name);
+      expect(convertedObject.id).toBe('F500120501');
+      expect(convertedObject.name).toBe('arrian');
     });
 
     it(`should return undefined when error occured in conversion`, () => {
-      let json = `{ "name": "${testObject.name}", "id: "${testObject.id}" }`; // ID format is wrong
-
-      let convertedObject = convertJsonStringToObject<TestObject>(json);
+      let json = serializeObjectToJson(undefined);
+      let convertedObject = deserializeJsonToObject<TestObject>(TestObject, json);
       expect(convertedObject).toBeUndefined();
     });
   });

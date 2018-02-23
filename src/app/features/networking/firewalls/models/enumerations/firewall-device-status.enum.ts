@@ -1,3 +1,5 @@
+import { McsEnumSerializationBase } from '../../../../../core';
+
 export enum FirewallDeviceStatus {
   None = -1,
   Unknown = 0,
@@ -15,4 +17,12 @@ export enum FirewallDeviceStatus {
   Timeout = 12,
   Reverted = 13,
   AutoUpdated = 14
+}
+
+/**
+ * Enumeration serializer and deserializer methods
+ */
+export class FirewallDeviceStatusSerialization
+  extends McsEnumSerializationBase<FirewallDeviceStatus> {
+  constructor() { super(FirewallDeviceStatus); }
 }

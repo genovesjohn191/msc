@@ -1,8 +1,18 @@
-import { FirewallDeviceStatus } from '../enumerations/firewall-device-status.enum';
-import { FirewallConfigurationStatus } from '../enumerations/firewall-configuration-status.enum';
-import { FirewallConnectionStatus } from '../enumerations/firewall-connection-status.enum';
+import {
+  FirewallDeviceStatus,
+  FirewallDeviceStatusSerialization
+} from '../enumerations/firewall-device-status.enum';
+import {
+  FirewallConfigurationStatus,
+  FirewallConfigurationStatusSerialization
+} from '../enumerations/firewall-configuration-status.enum';
+import {
+  FirewallConnectionStatus,
+  FirewallConnectionStatusSerialization
+} from '../enumerations/firewall-connection-status.enum';
 import { FirewallHaMode } from '../enumerations/firewall-ha-mode.enum';
 import { FirewallUtm } from '../response/firewall-utm';
+import { JsonProperty } from 'json-object-mapper';
 
 export class Firewall {
   public id: any;
@@ -20,14 +30,60 @@ export class Firewall {
   public osVersion: string;
   public serialNumber: string;
   public model: string;
-  public deviceStatus: FirewallDeviceStatus;
-  public configurationStatus: FirewallConfigurationStatus;
-  public connectionStatus: FirewallConnectionStatus;
   public companyId: string;
   public snmpVersion: string;
   public haGroupName: string;
-  public haMode: FirewallHaMode;
   public haRole: string;
   public url: string;
   public utm: FirewallUtm;
+
+  @JsonProperty({
+    type: FirewallDeviceStatus,
+    serializer: FirewallDeviceStatusSerialization,
+    deserializer: FirewallDeviceStatusSerialization
+  })
+  public deviceStatus: FirewallDeviceStatus;
+
+  @JsonProperty({
+    type: FirewallConfigurationStatus,
+    serializer: FirewallConfigurationStatusSerialization,
+    deserializer: FirewallConfigurationStatusSerialization
+  })
+  public configurationStatus: FirewallConfigurationStatus;
+
+  @JsonProperty({
+    type: FirewallConnectionStatus,
+    serializer: FirewallConnectionStatusSerialization,
+    deserializer: FirewallConnectionStatusSerialization
+  })
+  public connectionStatus: FirewallConnectionStatus;
+  public haMode: FirewallHaMode;
+
+  constructor() {
+    this.id = undefined;
+    this.serviceId = undefined;
+    this.availabilityZone = undefined;
+    this.managementName = undefined;
+    this.managementIpAddress = undefined;
+    this.active = undefined;
+    this.hardwareVendor = undefined;
+    this.cpuCount = undefined;
+    this.memoryMB = undefined;
+    this.osType = undefined;
+    this.osVendor = undefined;
+    this.osRelease = undefined;
+    this.osVersion = undefined;
+    this.serialNumber = undefined;
+    this.model = undefined;
+    this.companyId = undefined;
+    this.snmpVersion = undefined;
+    this.haGroupName = undefined;
+    this.haRole = undefined;
+    this.url = undefined;
+    this.utm = undefined;
+    this.deviceStatus = undefined;
+    this.configurationStatus = undefined;
+    this.connectionStatus = undefined;
+    this.haMode = undefined;
+  }
 }

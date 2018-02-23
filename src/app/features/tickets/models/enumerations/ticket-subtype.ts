@@ -1,3 +1,5 @@
+import { McsEnumSerializationBase } from '../../../../core';
+
 export enum TicketSubType {
   None = 0,
   AdminTask,
@@ -26,4 +28,12 @@ export enum TicketSubType {
   Storage,
   System,
   TroubleTicket
+}
+
+/**
+ * Enumeration serializer and deserializer methods
+ */
+export class TicketSubTypeSerialization
+  extends McsEnumSerializationBase<TicketSubType> {
+  constructor() { super(TicketSubType); }
 }

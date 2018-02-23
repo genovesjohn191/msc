@@ -187,7 +187,7 @@ export abstract class McsRepositoryBase<T> {
           return Observable.throw(error);
         })
         .map((data) => {
-          if (!isNullOrEmpty(data.totalCount)) {
+          if (!isNullOrEmpty(data)) {
             this._totalRecordsCount = data.totalCount;
             this._dataRecords = data.content;
             this._filteredRecords = data.content;
@@ -196,7 +196,7 @@ export abstract class McsRepositoryBase<T> {
           } else {
             this._dataStatus = McsDataStatus.Empty;
           }
-          return data.content;
+          return isNullOrEmpty(data) ? new Array() : data.content;
         });
     } else {
       // We need to mock the data to pageData

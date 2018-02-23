@@ -5,13 +5,11 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  IterableDiffers
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   Router,
-  ActivatedRoute,
-  ParamMap
+  ActivatedRoute
 } from '@angular/router';
 import {
   Observable,
@@ -61,7 +59,6 @@ export class FirewallComponent
 
   // Subscription
   public subscription: Subscription;
-  private _parameterSubscription: Subscription;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -104,8 +101,7 @@ export class FirewallComponent
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _firewallService: FirewallService,
-    private _firewallsRepository: FirewallsRepository,
-    private _differs: IterableDiffers,
+    private _firewallsRepository: FirewallsRepository
   ) {
     super(_router, _activatedRoute);
     this.firewall = new Firewall();
@@ -114,7 +110,7 @@ export class FirewallComponent
   public ngOnInit() {
     this.firewallsTextContent = this._textContentProvider.content.firewalls;
     this.firewallTextContent = this._textContentProvider.content.firewalls.firewall;
-    this._listenToParamChange();
+    super.onInit();
   }
 
   public ngAfterViewInit() {
@@ -124,9 +120,8 @@ export class FirewallComponent
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    super.onDestroy();
     unsubscribeSafely(this.subscription);
-    unsubscribeSafely(this._parameterSubscription);
   }
 
   /**
@@ -152,17 +147,30 @@ export class FirewallComponent
     this._initializeListsource();
   }
 
-  public onTabChanged(tab: any) {
-    if (isNullOrEmpty(this.firewall.id)) { return; }
+  /**
+   * Event that emits when the tab is changed in the routing tabgroup
+   * @param tab Active tab
+   */
+  protected onTabChanged(tab: any) {
     // Navigate route based on current active tab
-    this.router.navigate([`networking/firewalls/${this.firewall.id}/${tab.id}`]);
+    this.router.navigate(['networking/firewalls', this.paramId, tab.id]);
   }
 
+  /**
+   * Event that emits when the parameter id is changed
+   * @param id Id of the parameter
+   */
+  protected onParamIdChanged(id: string): void {
+    this._getFirewallById(id);
+  }
+
+  /**
+   * Initialize list source
+   */
   private _initializeListsource(): void {
     this.firewallListSource = new FirewallListSource(
       this._firewallsRepository,
-      this._listSearch,
-      this._differs
+      this._listSearch
     );
     this._changeDetectorRef.markForCheck();
   }
@@ -186,17 +194,6 @@ export class FirewallComponent
           this._firewallService.setSelectedFirewall(this.firewall);
           this._changeDetectorRef.markForCheck();
         }
-      });
-  }
-
-  /**
-   * Listen to every change of the parameter
-   */
-  private _listenToParamChange(): void {
-    this._parameterSubscription = this.activatedRoute.paramMap
-      .subscribe((params: ParamMap) => {
-        let serverId = params.get('id');
-        this._getFirewallById(serverId);
       });
   }
 

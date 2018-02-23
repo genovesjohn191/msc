@@ -1,8 +1,4 @@
 import {
-  IterableDiffer,
-  IterableDiffers
-} from '@angular/core';
-import {
   Observable,
   Subject
 } from 'rxjs/Rx';
@@ -31,14 +27,10 @@ export class ServersListSource implements McsDataSource<ServerList> {
 
   // Server list information
   private _serverList: ServerList[];
-  private _serverDiffer: IterableDiffer<Server>;
 
   constructor(
     private _serversRepository: ServersRepository,
-    private _search: McsSearch,
-    private _differs: IterableDiffers
-  ) {
-    this._serverDiffer = this._differs.find([]).create(null);
+    private _search: McsSearch) {
     this._serverList = new Array();
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
@@ -97,28 +89,33 @@ export class ServersListSource implements McsDataSource<ServerList> {
   private _mapToServerList(servers: Server[]): ServerList[] {
     if (isNullOrEmpty(servers)) { return new Array(); }
 
-    // Check for changes in record
-    let changes = this._serverDiffer.diff(servers);
-    if (isNullOrEmpty(changes)) { return this._serverList; }
+    // We need to check again if there are added or deleted
+    // to notify the list panel that a data should be refreshed
+    let hasChangesOnCount = servers.length !== this._serverList.length;
+    if (isNullOrEmpty(this._serverList) || hasChangesOnCount) {
+      // Set the iterator of the server so that we have reference on the instance itself
+      this._serverList = new Array<ServerList>();
+      servers.forEach((server) => {
+        let hasResourceName = !isNullOrEmpty(server.platform)
+          && !isNullOrEmpty(server.platform.resourceName);
 
-    // Remap the content for the listing source
-    this._serverList = new Array<ServerList>();
-    servers.forEach((server) => {
-      let hasResourceName = !isNullOrEmpty(server.platform)
-        && !isNullOrEmpty(server.platform.resourceName);
-
-      let serverListItem = new ServerList();
-      serverListItem.vdcName = (hasResourceName) ?
+        let serverListItem = new ServerList();
+        serverListItem.vdcName = (hasResourceName) ?
         server.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
-      serverListItem.server = server;
+        serverListItem.server = server;
+        this._serverList.push(serverListItem);
+      });
 
-      this._serverList.push(serverListItem);
-    });
+      // Sort record based on VDC name
+      this._serverList.sort((first: ServerList, second: ServerList) => {
+        return compareStrings(first.vdcName, second.vdcName);
+      });
+    } else {
+      for (let index = 0; index < servers.length; ++index) {
+        this._serverList[index].server = servers[index];
+      }
+    }
 
-    // Sort record based on VDC name
-    this._serverList.sort((first: ServerList, second: ServerList) => {
-      return compareStrings(first.vdcName, second.vdcName);
-    });
     return this._serverList;
   }
 }
