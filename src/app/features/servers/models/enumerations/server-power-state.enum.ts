@@ -1,3 +1,5 @@
+import { McsEnumSerializationBase } from '../../../../core';
+
 export enum ServerPowerState {
   Unresolved = 1,
   Resolved = 2,
@@ -10,4 +12,12 @@ export enum ServerPowerState {
   PoweredOff = 9,
   InconsistentState = 10,
   Mixed = 11
+}
+
+/**
+ * Enumeration serializer and deserializer methods
+ */
+export class ServerPowerStateSerialization
+  extends McsEnumSerializationBase<ServerPowerState> {
+  constructor() { super(ServerPowerState); }
 }

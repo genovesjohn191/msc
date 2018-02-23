@@ -15,4 +15,21 @@ export class ServerStorageDevice {
   // Additional flag not related to API response
   public isProcessing: boolean;
   public processingText: string;
+
+  constructor() {
+    this.id = undefined;
+    this.name = undefined;
+    this.sizeMB = undefined;
+    this.storageDeviceType = undefined;
+    this.storageDeviceInterfaceType = undefined;
+    this.backingVCenter = undefined;
+    this.backingId = undefined;
+    this.storageProfile = undefined;
+    this.wwn = undefined;
+    this.vendor = undefined;
+    this.remoteHost = undefined;
+    this.remotePath = undefined;
+    this.isProcessing = undefined;
+    this.processingText = undefined;
+  }
 }

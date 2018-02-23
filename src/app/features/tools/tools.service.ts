@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { convertJsonStringToObject } from '../../utilities';
 import {
   McsApiService,
   McsApiSuccessResponse,
@@ -29,8 +28,9 @@ export class ToolsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<Portal[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Portal[]>>(response);
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<Portal[]>(Portal, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

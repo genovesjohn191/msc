@@ -1,3 +1,5 @@
+import { McsEnumSerializationBase } from '../factory/serialization/mcs-enum-serialization-base';
+
 export enum McsJobType {
   Undefined = 0,
 
@@ -32,4 +34,12 @@ export enum McsJobType {
   // Server Media Management
   AttachServerMedia = 100301,
   DetachServerMedia = 100302
+}
+
+/**
+ * Enumeration serializer and deserializer methods
+ */
+export class McsJobTypeStatusSerialization
+  extends McsEnumSerializationBase<McsJobType> {
+  constructor() { super(McsJobType); }
 }

@@ -5,13 +5,11 @@ import {
   ViewChild,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy,
-  IterableDiffers
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   Router,
-  ActivatedRoute,
-  ParamMap
+  ActivatedRoute
 } from '@angular/router';
 import {
   Subscription,
@@ -76,10 +74,7 @@ export class ServerComponent
   public serverListSource: ServersListSource | null;
   public serverSubscription: Subscription;
 
-  private _parameterSubscription: Subscription;
   private _notificationsChangeSubscription: any;
-
-  private _serverId: string;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -104,7 +99,6 @@ export class ServerComponent
   constructor(
     _router: Router,
     _activatedRoute: ActivatedRoute,
-    private _differs: IterableDiffers,
     private _dialogService: McsDialogService,
     private _serversRepository: ServersRepository,
     private _serversService: ServersService,
@@ -115,15 +109,15 @@ export class ServerComponent
   ) {
     super(_router, _activatedRoute);
     this.server = new Server();
-    this._serverId = '';
   }
 
   public ngOnInit() {
     this.serversTextContent = this._textContentProvider.content.servers;
     this.textContent = this._textContentProvider.content.servers.server;
 
+    // Initialize base class
+    super.onInit();
     this._listenToNotificationsChange();
-    this._listenToParamChange();
   }
 
   public ngAfterViewInit() {
@@ -133,10 +127,9 @@ export class ServerComponent
   }
 
   public ngOnDestroy() {
-    super.dispose();
+    super.onDestroy();
     unsubscribeSafely(this._notificationsChangeSubscription);
     unsubscribeSafely(this.serverSubscription);
-    unsubscribeSafely(this._parameterSubscription);
   }
 
   /**
@@ -220,15 +213,6 @@ export class ServerComponent
   }
 
   /**
-   * Event that emits when tab is changed
-   */
-  public onTabChanged(tab: any) {
-    if (isNullOrEmpty(this._serverId)) { return; }
-    // Navigate route based on current active tab
-    this.router.navigate(['servers', this._serverId, tab.id]);
-  }
-
-  /**
    * Navigate to resources
    * @param server Server to navigate from
    */
@@ -246,13 +230,40 @@ export class ServerComponent
   }
 
   /**
+   * Event that emits when the tab is changed in the routing tabgroup
+   * @param tab Active tab
+   */
+  protected onTabChanged(tab: any) {
+    // Navigate route based on current active tab
+    this.router.navigate(['servers', this.paramId, tab.id]);
+  }
+
+  /**
+   * Event that emits when the parameter id is changed
+   * @param id Id of the parameter
+   */
+  protected onParamIdChanged(id: string) {
+    if (isNullOrEmpty(id)) { return; }
+    this._getServerById(id);
+
+    // Set the selection iniatially when no selected item
+    // in order for the header to show it immediately
+    if (isNullOrEmpty(this.selectedItem)) {
+      let serverExist = this._serversRepository.dataRecords
+        .find((server) => {
+          return server.id === this.paramId;
+        });
+      this._setSelectedServerInfo(serverExist);
+    }
+  }
+
+  /**
    * Initialize list source
    */
   private _initializeListsource(): void {
     this.serverListSource = new ServersListSource(
       this._serversRepository,
-      this.search,
-      this._differs
+      this.search
     );
     this._changeDetectorRef.markForCheck();
   }
@@ -284,17 +295,6 @@ export class ServerComponent
     this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * Listen to every change of the parameter
-   */
-  private _listenToParamChange(): void {
-    this._parameterSubscription = this.activatedRoute.paramMap
-      .subscribe((params: ParamMap) => {
-        this._serverId = params.get('id');
-        this._getServerById(this._serverId);
       });
   }
 

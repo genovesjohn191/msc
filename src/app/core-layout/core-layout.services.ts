@@ -6,14 +6,9 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsApiErrorResponse,
-  McsCompanyStatus,
   McsLoggerService
 } from '../core';
-import {
-  convertJsonStringToObject,
-  reviverParser,
-  isNullOrEmpty
-} from '../utilities';
+import { isNullOrEmpty } from '../utilities';
 
 @Injectable()
 export class CoreLayoutService {
@@ -52,11 +47,9 @@ export class CoreLayoutService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiCompany[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiCompany[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiCompany[]>(McsApiCompany, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -79,11 +72,9 @@ export class CoreLayoutService {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiCompany>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<McsApiCompany>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiCompany>(McsApiCompany, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -107,23 +98,5 @@ export class CoreLayoutService {
       mcsApiErrorResponse = error;
     }
     return Observable.throw(mcsApiErrorResponse);
-  }
-
-  /**
-   * Property conversion reviver in JSON format
-   * @param key Key of the object
-   * @param value Value of the object
-   */
-  private _responseReviverParser(key, value): any {
-    switch (key) {
-      case 'status':
-        value = McsCompanyStatus[value];
-        break;
-
-      default:
-        value = reviverParser(key, value);
-        break;
-    }
-    return value;
   }
 }

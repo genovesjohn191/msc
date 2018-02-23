@@ -4,17 +4,18 @@ import { Observable } from 'rxjs/Rx';
 import {
   McsApiService,
   McsApiSuccessResponse,
-  McsApiErrorResponse,
   McsApiRequestParameter,
-  McsApiConsole
+  McsApiConsole,
+  McsLoggerService
 } from '../../core';
 
 @Injectable()
 export class ConsolePageService {
 
-  constructor(private _apiService: McsApiService) {
-    // Get User ID from AppState
-  }
+  constructor(
+    private _apiService: McsApiService,
+    private _loggerService: McsLoggerService,
+  ) { }
 
   /**
    * Get the server console for the commands to be executed
@@ -26,26 +27,18 @@ export class ConsolePageService {
     mcsApiRequestParameter.endPoint = `/servers/${id}/console`;
 
     return this._apiService.get(mcsApiRequestParameter)
-      .map((response) => {
-        let serverResponse: McsApiSuccessResponse<McsApiConsole>;
-        serverResponse = JSON.parse(response) as McsApiSuccessResponse<McsApiConsole>;
-
-        return serverResponse;
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
-      .catch(this._handleServerError);
-  }
+      .map((response) => {
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiConsole>(McsApiConsole, response);
 
-  private _handleServerError(error: Response | any) {
-    let mcsApiErrorResponse: McsApiErrorResponse;
-
-    if (error instanceof Response) {
-      mcsApiErrorResponse = new McsApiErrorResponse();
-      mcsApiErrorResponse.message = error.statusText;
-      mcsApiErrorResponse.status = error.status;
-    } else {
-      mcsApiErrorResponse = error;
-    }
-
-    return Observable.throw(mcsApiErrorResponse);
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
+        return apiResponse;
+      });
   }
 }

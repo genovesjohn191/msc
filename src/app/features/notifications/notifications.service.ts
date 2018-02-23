@@ -8,10 +8,7 @@ import {
   McsApiJob,
   McsLoggerService
 } from '../../core';
-import {
-  reviverParser,
-  isNullOrEmpty
-} from '../../utilities';
+import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()
 export class NotificationsService {
@@ -50,9 +47,9 @@ export class NotificationsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob[]>;
-        apiResponse = JSON.parse(response,
-          reviverParser) as McsApiSuccessResponse<McsApiJob[]>;
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob[]>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -74,9 +71,9 @@ export class NotificationsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<McsApiJob>;
-        apiResponse = JSON.parse(response,
-          reviverParser) as McsApiSuccessResponse<McsApiJob>;
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJob>(McsApiJob, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

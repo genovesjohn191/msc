@@ -109,7 +109,7 @@ export class McsNotificationJobService {
   }
 
   private _getHeaders(): any {
-    let headers = { login: '', passcode: ''};
+    let headers = { login: '', passcode: '' };
     let credentials = this._decodeString(this._jobConnection.destinationKey);
     headers.login = credentials.username;
     headers.passcode = credentials.password;
@@ -142,11 +142,11 @@ export class McsNotificationJobService {
 
     this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
       .map((response) => {
-        let jobConnection: McsApiSuccessResponse<McsApiJobConnection>;
-        jobConnection = JSON.parse(response,
-          reviverParser) as McsApiSuccessResponse<McsApiJobConnection>;
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<McsApiJobConnection>(McsApiJobConnection, response);
 
-        return jobConnection;
+        return apiResponse;
       })
       .subscribe((details) => {
         this._jobConnection = details.content;

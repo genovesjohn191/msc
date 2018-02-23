@@ -1,3 +1,5 @@
+import { McsEnumSerializationBase } from '../../../../core';
+
 export enum TicketStatus {
   Undefined = 0,
   New,
@@ -7,4 +9,12 @@ export enum TicketStatus {
   Closed,
   WaitForRfo,
   WaitingForTaskCompletion
+}
+
+/**
+ * Enumeration serializer and deserializer methods
+ */
+export class TicketStatusSerialization
+  extends McsEnumSerializationBase<TicketStatus> {
+  constructor() { super(TicketStatus); }
 }

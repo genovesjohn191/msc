@@ -8,22 +8,15 @@ import {
   McsLoggerService
 } from '../../core';
 import {
-  reviverParser,
-  convertJsonStringToObject,
-  getEnumString,
-  isNullOrEmpty
+  isNullOrEmpty,
+  serializeObjectToJson
 } from '../../utilities';
 import {
   Ticket,
-  TicketPriority,
-  TicketStatus,
-  TicketSubType,
   TicketCreateAttachment,
-  TicketCommentCategory,
   TicketAttachment,
   TicketCreate,
   TicketCreateComment,
-  TicketCommentType,
   TicketComment,
 } from './models';
 import {
@@ -74,11 +67,9 @@ export class TicketsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<Ticket[]>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Ticket[]>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<Ticket[]>(Ticket, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -134,11 +125,9 @@ export class TicketsService {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<Ticket>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<Ticket>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<Ticket>(Ticket, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -156,18 +145,16 @@ export class TicketsService {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets`;
-    mcsApiRequestParameter.recordData = JSON.stringify(ticketData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(ticketData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<TicketCreate>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketCreate>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<TicketCreate>(TicketCreate, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -185,18 +172,16 @@ export class TicketsService {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/comments`;
-    mcsApiRequestParameter.recordData = JSON.stringify(commentData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(commentData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<TicketComment>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketComment>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<TicketComment>(TicketComment, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -214,18 +199,16 @@ export class TicketsService {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments`;
-    mcsApiRequestParameter.recordData = JSON.stringify(attachmentData, this._requestReviverParser);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(attachmentData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
       })
       .map((response) => {
-        let apiResponse: McsApiSuccessResponse<TicketAttachment>;
-        apiResponse = convertJsonStringToObject<McsApiSuccessResponse<TicketAttachment>>(
-          response,
-          this._responseReviverParser
-        );
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<TicketAttachment>(TicketAttachment, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -254,61 +237,5 @@ export class TicketsService {
         this._loggerService.traceInfo(`converted response:`, response);
         return response;
       });
-  }
-
-  /**
-   * Convert the json object to corresponding object as response
-   * by comparing its key
-   * @param key Property name of the object to be change
-   * @param value Value of the item
-   */
-  private _responseReviverParser(key, value): any {
-    switch (key) {
-      case 'subType':
-        value = TicketSubType[value];
-        break;
-
-      case 'state':
-        value = TicketStatus[value];
-        break;
-
-      case 'priority':
-        value = TicketPriority[value];
-        break;
-
-      case 'category':
-        value = TicketCommentCategory[value];
-        break;
-
-      default:
-        value = reviverParser(key, value);
-        break;
-    }
-    return value;
-  }
-
-  /**
-   * Convert the json object to corresponding object as request
-   * by comparing its key
-   * @param key Property name of the object to be change
-   * @param value Value of the item
-   */
-  private _requestReviverParser(key, value): any {
-    switch (key) {
-      case 'category':
-        value = getEnumString(TicketCommentCategory, value);
-        break;
-
-      case 'type':
-        value = getEnumString(TicketCommentType, value);
-        break;
-
-      case 'subType':
-        value = getEnumString(TicketSubType, value);
-        break;
-      default:
-        break;
-    }
-    return value;
   }
 }
