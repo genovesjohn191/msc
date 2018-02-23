@@ -101,7 +101,7 @@ export class ServersListSource implements McsDataSource<ServerList> {
 
         let serverListItem = new ServerList();
         serverListItem.vdcName = (hasResourceName) ?
-        server.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
+          server.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
         serverListItem.server = server;
         this._serverList.push(serverListItem);
       });
@@ -111,11 +111,17 @@ export class ServersListSource implements McsDataSource<ServerList> {
         return compareStrings(first.vdcName, second.vdcName);
       });
     } else {
-      for (let index = 0; index < servers.length; ++index) {
-        this._serverList[index].server = servers[index];
-      }
+      // Update the corresponding server instance so that the
+      // Iterable differ in the list panel will not determine it as changed.
+      servers.forEach((server) => {
+        let existingRecord = this._serverList.find((listItem) => {
+          return listItem.server.id === server.id;
+        });
+        if (!isNullOrEmpty(existingRecord)) {
+          existingRecord.server = server;
+        }
+      });
     }
-
     return this._serverList;
   }
 }

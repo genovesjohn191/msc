@@ -97,9 +97,16 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
         return compareStrings(first.haGroupName, second.haGroupName);
       });
     } else {
-      for (let index = 0; index < firewalls.length; ++index) {
-        this._firewallList[index].firewall = firewalls[index];
-      }
+      // Update the corresponding firewall instance so that the
+      // Iterable differ in the list panel will not determine it as changed.
+      firewalls.forEach((firewall) => {
+        let existingRecord = this._firewallList.find((listItem) => {
+          return listItem.firewall.id === firewall.id;
+        });
+        if (!isNullOrEmpty(existingRecord)) {
+          existingRecord.firewall = firewall;
+        }
+      });
     }
     return this._firewallList;
   }
