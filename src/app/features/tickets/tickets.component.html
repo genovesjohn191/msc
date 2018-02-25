@@ -5,7 +5,7 @@
     <!-- Ticket Action -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <div class="listing-action-wrapper">
-        <mcs-action-item
+        <mcs-action-item *mcsExclusiveForAccount="'default'"
           (click)="onClickNewTicket()">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
           <span>{{ textContent.newTicket }}</span>
@@ -106,7 +106,7 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.noRecordsFoundMessage }} </span>
-              <span>
+              <span *mcsExclusiveForAccount="'default'">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
                 Click <a (click)="onClickNewTicket()">here</a> to create new ticket.

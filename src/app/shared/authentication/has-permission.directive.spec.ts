@@ -64,7 +64,7 @@ describe('HasPermissionDirective', () => {
     });
   }));
 
-  describe('ngOnDestroy()', () => {
+  describe('mcsHasPermission()', () => {
     it(`should render the element`, fakeAsync(() => {
       let userIdentity = new McsApiIdentity();
       userIdentity.permissions = ['VmAccess', 'VmEdit'];
