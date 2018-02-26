@@ -45,12 +45,14 @@ import { AlertComponent } from './alert/alert.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
 /** Directives */
 import { HasPermissionDirective } from './authentication/has-permission.directive';
+import { ExclusiveForAccountDirective } from './authentication/exclusive-for-account.directive';
 
 @NgModule({
   declarations: [
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
+    ExclusiveForAccountDirective,
     CapacityBarComponent
   ],
   imports: [
@@ -96,6 +98,7 @@ import { HasPermissionDirective } from './authentication/has-permission.directiv
     ProgressBarComponent,
     AlertComponent,
     HasPermissionDirective,
+    ExclusiveForAccountDirective,
     CapacityBarComponent,
     CommonModule,
     RouterModule,

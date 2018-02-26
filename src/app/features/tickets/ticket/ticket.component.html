@@ -91,7 +91,7 @@
           </div> -->
         </div>
 
-        <div class="position-relative">
+        <div *mcsExclusiveForAccount="'default'" class="position-relative">
           <div [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]"
             [mcsLoaderHideElement]="commentBox"
             [mcsLoaderPreserveHeight]="true"
