@@ -1,3 +1,4 @@
+import { isArray } from './mcs-array.function';
 import { ObjectMapper } from 'json-object-mapper';
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
@@ -48,8 +49,8 @@ export function deserializeJsonToObject<T>(
   if (!json) { return undefined; }
 
   try {
-    if (Array.isArray(json)) {
-      convertedObject = ObjectMapper.deserializeArray(classType, json);
+    if (isArray(json)) {
+      convertedObject = ObjectMapper.deserializeArray(classType, json) as T[];
     } else {
       convertedObject = ObjectMapper.deserialize(classType, json) as T;
     }

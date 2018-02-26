@@ -4,7 +4,8 @@ import {
   deleteArrayRecord,
   clearArrayRecord,
   compareArrays,
-  getArrayCount
+  getArrayCount,
+  isArray
 } from './mcs-array.function';
 
 // Dummy class
@@ -265,6 +266,23 @@ describe('ARRAY Functions', () => {
     it(`should return 0 when the array is undefined`, () => {
       let listItems: TestStructure[];
       expect(getArrayCount(listItems)).toBe(0);
+    });
+  });
+
+  describe('isArray()', () => {
+    it(`should return true when supplied object is an array`, () => {
+      let listItems: TestStructure[] = new Array();
+
+      listItems.push(new TestStructure('1', 'hello1'));
+      listItems.push(new TestStructure('2', 'hello1'));
+      listItems.push(new TestStructure('3', 'hello2'));
+
+      expect(isArray(listItems)).toBeTruthy();
+    });
+
+    it(`should return false when supplied object is not an array`, () => {
+      let listItems: TestStructure;
+      expect(isArray(listItems)).toBeFalsy();
     });
   });
 });

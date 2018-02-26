@@ -180,3 +180,11 @@ export function compareArrays<T>(
 export function getArrayCount<T>(sourceArray: T[]): number {
   return !sourceArray ? 0 : sourceArray.length;
 }
+
+/**
+ * Returns true when the representation object is an array, otherwise false
+ * @param object Object to be checked
+ */
+export function isArray(object: any): boolean {
+  return Object.prototype.toString.call(object) === '[object Array]';
+}
