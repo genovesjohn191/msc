@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum FirewallConfigurationStatus {
   Unknown,
@@ -9,6 +10,7 @@ export enum FirewallConfigurationStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('FirewallConfigurationStatusSerialization')
 export class FirewallConfigurationStatusSerialization
   extends McsEnumSerializationBase<FirewallConfigurationStatus> {
   constructor() { super(FirewallConfigurationStatus); }

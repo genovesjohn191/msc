@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum TicketStatus {
   Undefined = 0,
@@ -14,6 +15,7 @@ export enum TicketStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('TicketStatusSerialization')
 export class TicketStatusSerialization
   extends McsEnumSerializationBase<TicketStatus> {
   constructor() { super(TicketStatus); }

@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum TicketPriority {
   Unresolved = 0,
@@ -11,6 +12,7 @@ export enum TicketPriority {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('TicketPrioritySerialization')
 export class TicketPrioritySerialization
   extends McsEnumSerializationBase<TicketPriority> {
   constructor() { super(TicketPriority); }

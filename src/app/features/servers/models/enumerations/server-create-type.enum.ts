@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerCreateType {
   New = 0,
@@ -9,6 +10,7 @@ export enum ServerCreateType {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('ServerCreateTypeSerialization')
 export class ServerCreateTypeSerialization
   extends McsEnumSerializationBase<ServerCreateType> {
   constructor() { super(ServerCreateType); }

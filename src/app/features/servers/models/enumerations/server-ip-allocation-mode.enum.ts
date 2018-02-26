@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerIpAllocationMode {
   None = 0,
@@ -10,6 +11,7 @@ export enum ServerIpAllocationMode {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('ServerIpAllocationModeSerialization')
 export class ServerIpAllocationModeSerialization
   extends McsEnumSerializationBase<ServerIpAllocationMode> {
   constructor() { super(ServerIpAllocationMode); }

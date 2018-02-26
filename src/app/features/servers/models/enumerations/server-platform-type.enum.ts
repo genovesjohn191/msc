@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerPlatformType {
   VCloud = 0,
@@ -9,6 +10,7 @@ export enum ServerPlatformType {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('ServerPlatformTypeSerialization')
 export class ServerPlatformTypeSerialization
   extends McsEnumSerializationBase<ServerPlatformType> {
   constructor() { super(ServerPlatformType); }

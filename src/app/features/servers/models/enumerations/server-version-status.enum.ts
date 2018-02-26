@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerVersionStatus {
   Unmanaged = 0,
@@ -12,6 +13,7 @@ export enum ServerVersionStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('ServerVersionStatusSerialization')
 export class ServerVersionStatusSerialization
   extends McsEnumSerializationBase<ServerVersionStatus> {
   constructor() { super(ServerVersionStatus); }

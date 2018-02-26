@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../factory/serialization/mcs-enum-serialization-base';
+import { CacheKey } from 'json-object-mapper';
 
 export enum McsHttpStatusCode {
   Success = 200,
@@ -14,6 +15,7 @@ export enum McsHttpStatusCode {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('McsHttpStatusCodeSerialization')
 export class McsHttpStatusCodeSerialization
   extends McsEnumSerializationBase<McsHttpStatusCode> {
   constructor() { super(McsHttpStatusCode); }

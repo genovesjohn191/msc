@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerImageType {
   Os = 0,
@@ -8,6 +9,7 @@ export enum ServerImageType {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('ServerImageTypeSerialization')
 export class ServerImageTypeSerialization
   extends McsEnumSerializationBase<ServerImageType> {
   constructor() { super(ServerImageType); }

@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../factory/serialization/mcs-enum-serialization-base';
+import { CacheKey } from 'json-object-mapper';
 
 export enum McsDataStatus {
   Error = -1,
@@ -10,6 +11,7 @@ export enum McsDataStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('McsDataStatusSerialization')
 export class McsDataStatusSerialization
   extends McsEnumSerializationBase<McsDataStatus> {
   constructor() { super(McsDataStatus); }
