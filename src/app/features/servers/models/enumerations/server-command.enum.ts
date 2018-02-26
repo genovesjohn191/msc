@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerCommand {
   None = 0,
@@ -22,6 +23,8 @@ export enum ServerCommand {
 /**
  * Enumeration serializer and deserializer methods
  */
-export class ServerCommandSerialization extends McsEnumSerializationBase<ServerCommand> {
+@CacheKey('ServerCommandSerialization')
+export class ServerCommandSerialization
+  extends McsEnumSerializationBase<ServerCommand> {
   constructor() { super(ServerCommand); }
 }

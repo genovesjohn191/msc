@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum TicketCommentType {
   Comments = 0,
@@ -13,6 +14,7 @@ export enum TicketCommentType {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('TicketCommentTypeSerialization')
 export class TicketCommentTypeSerialization
   extends McsEnumSerializationBase<TicketCommentType> {
   constructor() { super(TicketCommentType); }

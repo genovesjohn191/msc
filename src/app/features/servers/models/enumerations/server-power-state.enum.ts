@@ -18,7 +18,7 @@ export enum ServerPowerState {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsEnumSerializationBase')
+@CacheKey('ServerPowerStateSerialization')
 export class ServerPowerStateSerialization
   extends McsEnumSerializationBase<ServerPowerState> {
   constructor() { super(ServerPowerState); }

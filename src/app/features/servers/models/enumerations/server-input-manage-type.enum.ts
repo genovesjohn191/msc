@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerInputManageType {
   Slider = 0,
@@ -9,6 +10,7 @@ export enum ServerInputManageType {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('ServerInputManageTypeSerialization')
 export class ServerInputManageTypeSerialization
   extends McsEnumSerializationBase<ServerInputManageType> {
   constructor() { super(ServerInputManageType); }

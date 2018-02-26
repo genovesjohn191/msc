@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../factory/serialization/mcs-enum-serialization-base';
+import { CacheKey } from 'json-object-mapper';
 
 export enum McsCompanyStatus {
   Internal = 0,
@@ -13,6 +14,7 @@ export enum McsCompanyStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('McsCompanyStatusSerialization')
 export class McsCompanyStatusSerialization
   extends McsEnumSerializationBase<McsCompanyStatus> {
   constructor() { super(McsCompanyStatus); }
