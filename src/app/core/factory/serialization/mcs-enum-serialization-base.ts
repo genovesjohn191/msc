@@ -17,7 +17,7 @@ export class McsEnumSerializationBase<T> implements Serializer, Deserializer {
   /**
    * Deserialize the enumeration based on type provided on the enum type
    */
-  public deserialize(value: string) {
+  public deserialize(value: string): T {
     return this.enumType[value];
   }
 }

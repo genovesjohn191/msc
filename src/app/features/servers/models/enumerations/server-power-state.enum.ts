@@ -1,4 +1,5 @@
 import { McsEnumSerializationBase } from '../../../../core';
+import { CacheKey } from 'json-object-mapper';
 
 export enum ServerPowerState {
   Unresolved = 1,
@@ -17,6 +18,7 @@ export enum ServerPowerState {
 /**
  * Enumeration serializer and deserializer methods
  */
+@CacheKey('McsEnumSerializationBase')
 export class ServerPowerStateSerialization
   extends McsEnumSerializationBase<ServerPowerState> {
   constructor() { super(ServerPowerState); }
