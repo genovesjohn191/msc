@@ -13,6 +13,18 @@ export class ServerCreate {
   public name: string;
   public cpuCount: number;
   public memoryMB: number;
+  public image: string;
+  public target: string;
+  public serviceId: string;
+
+  @JsonProperty({ type: ServerCreateStorage })
+  public storage: ServerCreateStorage;
+
+  @JsonProperty({ type: ServerCreateNetwork })
+  public network: ServerCreateNetwork;
+
+  @JsonProperty({ type: ServerClientObject })
+  public clientReferenceObject: ServerClientObject;
 
   @JsonProperty({
     type: ServerImageType,
@@ -20,12 +32,6 @@ export class ServerCreate {
     deserializer: ServerImageTypeSerialization
   })
   public imageType: ServerImageType;
-  public image: string;
-  public target: string;
-  public serviceId: string;
-  public storage: ServerCreateStorage;
-  public network: ServerCreateNetwork;
-  public clientReferenceObject: ServerClientObject;
 
   constructor() {
     this.platform = undefined;

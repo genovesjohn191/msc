@@ -5,15 +5,16 @@ import {
 import { JsonProperty } from 'json-object-mapper';
 
 export class ServerPlatformSummary {
+  public resourceId: string;
+  public resourceName: string;
+  public environmentName: string;
+
   @JsonProperty({
     type: ServerPlatformType,
     serializer: ServerPlatformTypeSerialization,
     deserializer: ServerPlatformTypeSerialization
   })
   public type: ServerPlatformType;
-  public resourceId: string;
-  public resourceName: string;
-  public environmentName: string;
 
   constructor() {
     this.type = undefined;

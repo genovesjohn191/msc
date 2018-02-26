@@ -6,6 +6,7 @@ import { JsonProperty } from 'json-object-mapper';
 
 export class ServerCreateNetwork {
   public name: string;
+  public ipAddress: string;
 
   @JsonProperty({
     type: ServerIpAllocationMode,
@@ -13,7 +14,6 @@ export class ServerCreateNetwork {
     deserializer: ServerIpAllocationModeSerialization
   })
   public ipAllocationMode: ServerIpAllocationMode;
-  public ipAddress: string;
 
   constructor() {
     this.name = undefined;

@@ -1,22 +1,33 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsDateSerialization } from '../../factory/serialization/mcs-date-serialization';
 import { McsApiTask } from './mcs-api-task';
-import { McsJobType } from '../../enumerations/mcs-job-type.enum';
+import {
+  McsJobType,
+  McsJobTypeSerialization
+} from '../../enumerations/mcs-job-type.enum';
 
 // TODO: Set the jobtype to its corresponding enum type instead of string
 // this a major modification and needs alot of effort. :)
 export class McsApiJob {
   public id: string;
-  public type: McsJobType;
   public ownerName: string;
   public description: string;
   public summaryInformation: string;
   public errorMessage: string;
   public durationInSeconds: number;
   public ectInSeconds: number;
-  public tasks: McsApiTask[];
   public clientReferenceObject: any;
   public status: string;
+
+  @JsonProperty({ type: McsApiTask })
+  public tasks: McsApiTask[];
+
+  @JsonProperty({
+    type: McsApiTask,
+    serializer: McsJobTypeSerialization,
+    deserializer: McsJobTypeSerialization
+  })
+  public type: McsJobType;
 
   @JsonProperty({
     type: Date,

@@ -9,6 +9,7 @@ export class McsApiIdentity {
   public email: string;
   public companyId: string;
   public companyName: string;
+  public permissions: string[];
 
   @JsonProperty({
     type: Date,
@@ -16,7 +17,6 @@ export class McsApiIdentity {
     deserializer: McsDateSerialization
   })
   public expiry: Date;
-  public permissions: string[];
 
   constructor() {
     this.hashedId = undefined;

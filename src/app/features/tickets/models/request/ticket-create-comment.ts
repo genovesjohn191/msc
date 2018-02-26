@@ -9,6 +9,8 @@ import {
 import { JsonProperty } from 'json-object-mapper';
 
 export class TicketCreateComment {
+  public value: string;
+
   @JsonProperty({
     type: TicketCommentCategory,
     serializer: TicketCommentTypeSerialization,
@@ -22,7 +24,6 @@ export class TicketCreateComment {
     deserializer: TicketCommentCategorySerialization
   })
   public type: TicketCommentType;
-  public value: string;
 
   constructor() {
     this.category = undefined;

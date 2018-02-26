@@ -15,13 +15,17 @@ import { JsonProperty } from 'json-object-mapper';
 export class ServerClientObject {
   public serverId?: any;
   public userId?: string;
+  public newName?: string;
+  public isOperable?: boolean;
+  public notificationStatus?: string;
+  public processingText?: string;
 
   @JsonProperty({
-    type: ServerServiceType,
-    serializer: ServerServiceTypeSerialization,
-    deserializer: ServerServiceTypeSerialization
+    type: ServerCommand,
+    serializer: ServerCommandSerialization,
+    deserializer: ServerCommandSerialization
   })
-  public serviceType?: ServerServiceType;
+  public commandAction?: ServerCommand;
 
   @JsonProperty({
     type: ServerPowerState,
@@ -31,15 +35,11 @@ export class ServerClientObject {
   public powerState?: ServerPowerState;
 
   @JsonProperty({
-    type: ServerCommand,
-    serializer: ServerCommandSerialization,
-    deserializer: ServerCommandSerialization
+    type: ServerServiceType,
+    serializer: ServerServiceTypeSerialization,
+    deserializer: ServerServiceTypeSerialization
   })
-  public commandAction?: ServerCommand;
-  public newName?: string;
-  public isOperable?: boolean;
-  public notificationStatus?: string;
-  public processingText?: string;
+  public serviceType?: ServerServiceType;
 
   constructor() {
     this.serverId = undefined;

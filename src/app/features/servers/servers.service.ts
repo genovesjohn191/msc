@@ -1192,6 +1192,7 @@ export class ServersService {
       availableCpu = !isNullOrEmpty(resourceCompute) ?
         resourceCompute.cpuLimit - resourceCompute.cpuUsed : 0;
     }
+    availableCpu = Math.max(0, availableCpu);
     return availableCpu;
   }
 
@@ -1200,7 +1201,7 @@ export class ServersService {
    * @param storage Storage to calculate
    */
   public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
-    return !isNullOrEmpty(storage) ? (storage.limitMB - storage.usedMB) - memoryMB : 0;
+    return !isNullOrEmpty(storage) ? Math.max(0, (storage.limitMB - storage.usedMB) - memoryMB) : 0;
   }
 
   /**

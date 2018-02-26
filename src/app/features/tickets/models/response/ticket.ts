@@ -30,9 +30,17 @@ export class Ticket {
   public assignedTo: string;
   public queue: string;
   public updatedBy: string;
+
+  @JsonProperty({ type: TicketClosureInformation })
   public closureInformation: TicketClosureInformation;
+
+  @JsonProperty({ type: TicketAttachment })
   public attachments: TicketAttachment[];
+
+  @JsonProperty({ type: TicketComment })
   public comments: TicketComment[];
+
+  @JsonProperty({ type: Ticket })
   public childTickets: Ticket[];
 
   @JsonProperty({
