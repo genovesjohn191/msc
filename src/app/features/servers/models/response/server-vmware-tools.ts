@@ -9,13 +9,14 @@ import {
 import { JsonProperty } from 'json-object-mapper';
 
 export class ServerVmwareTools {
+  public version: string;
+
   @JsonProperty({
     type: ServerRunningStatus,
     serializer: ServerRunningStatusSerialization,
     deserializer: ServerRunningStatusSerialization
   })
   public runningStatus: ServerRunningStatus;
-  public version: string;
 
   @JsonProperty({
     type: ServerVersionStatus,

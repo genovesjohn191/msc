@@ -90,7 +90,7 @@
       "ipAddressLabel": "IP Address",
       "serverDetailsStep" : {
         "title": "1. Server Details",
-        "loading": "Loading server data, this may take a few minutes."
+        "loading": "Loading server data, this may take a few moments."
       },
       "serverGoStep": {
         "title": "2. Go!"
@@ -513,7 +513,7 @@
       "backToTickets": "Back To Tickets",
       "newTicket": "Log Ticket",
       "cancelActivity": "Cancel",
-      "creatingTicket": "Creating ticket, this may take a few minutes.",
+      "creatingTicket": "Creating ticket, this may take a few moments.",
       "hints": {
         "headline": "Max of {{max_char}} characters",
         "details": "Max of {{max_char}} characters"

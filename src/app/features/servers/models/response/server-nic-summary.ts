@@ -46,8 +46,5 @@ export class ServerNicSummary {
     this.index = undefined;
     this.isPrimary = undefined;
     this.ipAllocationMode = undefined;
-
-    // Additional flag not related to API response
-    this.isProcessing = undefined;
   }
 }

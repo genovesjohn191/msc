@@ -97,11 +97,11 @@
       [mcsContextualHelp]="textHelpContent.storageField"
       (storageChanged)="onStorageChanged($event)">
       <!--Server manage storage contents on the left hand side (title and description)-->
-      <div title>
+      <div mcsStorageTitle>
         <span class="label no-line-height">{{ textContent.storageLabel }}</span>
       </div>
 
-      <div server-storage-warning>
+      <div mcsStorageWarning>
         <span>{{ storageWarning }}</span>
       </div>
     </mcs-server-manage-storage>

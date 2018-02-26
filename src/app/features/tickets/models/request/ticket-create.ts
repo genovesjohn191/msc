@@ -6,6 +6,12 @@ import { TicketCreateAttachment } from '../request/ticket-create-attachment';
 import { JsonProperty } from 'json-object-mapper';
 
 export class TicketCreate {
+  public shortDescription: string;
+  public description: string;
+  public serviceId: string[];
+
+  @JsonProperty({ type: TicketCreateAttachment })
+  public attachments: TicketCreateAttachment[];
 
   @JsonProperty({
     type: TicketSubType,
@@ -13,10 +19,6 @@ export class TicketCreate {
     deserializer: TicketSubTypeSerialization
   })
   public subType: TicketSubType;
-  public shortDescription: string;
-  public description: string;
-  public serviceId: string[];
-  public attachments: TicketCreateAttachment[];
 
   constructor() {
     this.subType = undefined;

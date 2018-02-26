@@ -25,20 +25,46 @@ export class Server {
   public hostname: string;
   public managementName: string;
   public serviceId: string;
-
-  @JsonProperty({
-    type: ServerServiceType,
-    serializer: ServerServiceTypeSerialization,
-    deserializer: ServerServiceTypeSerialization
-  })
-  public serviceType: ServerServiceType;
   public availabilityZone: string;
   public companyId: string;
   public managementIpAddress: string;
   public ipAddress: string;
   public instanceId: string;
+  public vApp: string;
+  public portalUrl: string;
+  public vCloudId: string;
+  public vCenterId: string;
+  public isTemplate: boolean;
+  public isOperable: boolean;
+
+  @JsonProperty({ type: ServerVmwareTools })
+  public vmwareTools: ServerVmwareTools;
+
+  @JsonProperty({ type: ServerPlatformSummary })
+  public platform: ServerPlatformSummary;
+
+  @JsonProperty({ type: ServerNicSummary })
+  public nics: ServerNicSummary[];
+
+  @JsonProperty({ type: ServerFileSystem })
+  public fileSystem: ServerFileSystem[];
+
+  @JsonProperty({ type: ServerStorageDevice })
+  public storageDevice: ServerStorageDevice[];
+
+  @JsonProperty({ type: ServerMedia })
+  public media: ServerMedia[];
+
+  @JsonProperty({ type: ServerSnapshot })
+  public snapshots: ServerSnapshot[];
+
+  @JsonProperty({ type: ServerOperatingSystemSummary })
   public operatingSystem: ServerOperatingSystemSummary;
+
+  @JsonProperty({ type: ServerHardware })
   public hardware: ServerHardware;
+
+  @JsonProperty({ type: ServerComputeSummary })
   public compute: ServerComputeSummary;
 
   @JsonProperty({
@@ -47,19 +73,13 @@ export class Server {
     deserializer: ServerPowerStateSerialization
   })
   public powerState: ServerPowerState;
-  public platform: ServerPlatformSummary;
-  public nics: ServerNicSummary[];
-  public fileSystem: ServerFileSystem[];
-  public storageDevice: ServerStorageDevice[];
-  public media: ServerMedia[];
-  public snapshots: ServerSnapshot[];
-  public vApp: string;
-  public portalUrl: string;
-  public vCloudId: string;
-  public vCenterId: string;
-  public isTemplate: boolean;
-  public isOperable: boolean;
-  public vmwareTools: ServerVmwareTools;
+
+  @JsonProperty({
+    type: ServerServiceType,
+    serializer: ServerServiceTypeSerialization,
+    deserializer: ServerServiceTypeSerialization
+  })
+  public serviceType: ServerServiceType;
 
   // Additional flag not related to API response
   public isProcessing: boolean;

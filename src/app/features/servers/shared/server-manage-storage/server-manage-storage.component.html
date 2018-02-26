@@ -1,8 +1,8 @@
 <div class="server-manage-storage-container">
   <div display-flex flex="auto">
     <div display-flex="column" flex="auto" class="vertical-items-spacing-small">
-      <ng-content select="[title]"></ng-content>
-      <ng-content select="[details]"></ng-content>
+      <ng-content select="[mcsStorageTitle]"></ng-content>
+      <ng-content select="[mcsStorageDetails]"></ng-content>
     </div>
 
     <div flex="none" display-flex justify-content="flex-end"
@@ -87,7 +87,7 @@
     <div animate trigger="fadeIn" class="storage-full-warning">
       <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
       <h4 class="squishy">
-        <ng-content select="[server-storage-warning]"></ng-content>
+        <ng-content select="[mcsStorageWarning]"></ng-content>
       </h4>
     </div>
   </div>

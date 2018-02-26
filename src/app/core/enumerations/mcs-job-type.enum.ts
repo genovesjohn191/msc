@@ -39,7 +39,7 @@ export enum McsJobType {
 /**
  * Enumeration serializer and deserializer methods
  */
-export class McsJobTypeStatusSerialization
+export class McsJobTypeSerialization
   extends McsEnumSerializationBase<McsJobType> {
   constructor() { super(McsJobType); }
 }

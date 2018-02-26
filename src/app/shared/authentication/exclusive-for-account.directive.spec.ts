@@ -2,8 +2,7 @@ import {
   async,
   TestBed,
   getTestBed,
-  ComponentFixture,
-  fakeAsync
+  ComponentFixture
 } from '@angular/core/testing';
 import {
   Component,
@@ -49,7 +48,7 @@ describe('ExclusiveForAccountDirective', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <div *mcsExclusiveForAccount="'default'">Hello World</div>
+        <div id="mcsAccount" *mcsExclusiveForAccount="'default'">Hello World</div>
         `
       }
     });
@@ -65,23 +64,13 @@ describe('ExclusiveForAccountDirective', () => {
 
   describe('mcsExclusiveForAccount()', () => {
     it(`should render the element if the provided account type
-      and active account type are the same`, fakeAsync(() => {
-      spyOn(component.exclusiveForAccount.viewContainer, 'clear');
-      component.exclusiveForAccount.mcsExclusiveForAccount = 'default';
-      cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-      expect(component.exclusiveForAccount.viewContainer.clear)
-        .toHaveBeenCalledTimes(1);
-    }));
+      and active account type are the same`, () => {
+        component.exclusiveForAccount.mcsExclusiveForAccount = 'default';
+        cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
 
-    it(`should not render the element if the provided account type
-      and active account type are different`, fakeAsync(() => {
-      spyOn(component.exclusiveForAccount.viewContainer, 'createEmbeddedView');
-      component.exclusiveForAccount.mcsExclusiveForAccount = 'default';
-      cookieService.setEncryptedItem<string>(
-        CoreDefinition.COOKIE_ACTIVE_ACCOUNT,
-        '61477cfb66ba4cee8a6a18c17b40e30f');
-      expect(component.exclusiveForAccount.viewContainer.createEmbeddedView)
-        .toHaveBeenCalledTimes(1);
-    }));
-  });
+        fixtureInstance.changeDetectorRef.markForCheck();
+        let element = document.getElementById('mcsAccount');
+        expect(element).not.toBe(null);
+      });
+    });
 });

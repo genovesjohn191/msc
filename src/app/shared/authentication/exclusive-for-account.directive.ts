@@ -30,15 +30,15 @@ export class ExclusiveForAccountDirective {
 
   constructor(
     private _cookieService: McsCookieService,
-    public templateRef: TemplateRef<any>,
-    public viewContainer: ViewContainerRef
+    private _templateRef: TemplateRef<any>,
+    private _viewContainer: ViewContainerRef
   ) { }
 
   private _createViewForAccount(account: accountType): void {
     if (this._activeAccountType === account) {
-      this.viewContainer.createEmbeddedView(this.templateRef);
+      this._viewContainer.createEmbeddedView(this._templateRef);
     } else {
-      this.viewContainer.clear();
+      this._viewContainer.clear();
     }
   }
 }

@@ -14,21 +14,26 @@ import {
 import { JsonProperty } from 'json-object-mapper';
 
 export class ServerResource {
-  public compute: ServerCompute;
-  public storage: ServerStorage[];
-  public networks: ServerNetwork[];
-  public catalogItems: ServerCatalogItem[];
-  public vApps: ServerVApp[];
   public id: string;
   public name: string;
-
-  @JsonProperty({
-    type: ServerPlatformType,
-    serializer: ServerPlatformTypeSerialization,
-    deserializer: ServerPlatformTypeSerialization
-  })
-  public platform: ServerPlatformType;
   public environmentName: string;
+  public availabilityZone: string;
+  public portalUrl: string;
+
+  @JsonProperty({ type: ServerCompute })
+  public compute: ServerCompute;
+
+  @JsonProperty({ type: ServerStorage })
+  public storage: ServerStorage[];
+
+  @JsonProperty({ type: ServerNetwork })
+  public networks: ServerNetwork[];
+
+  @JsonProperty({ type: ServerCatalogItem })
+  public catalogItems: ServerCatalogItem[];
+
+  @JsonProperty({ type: ServerVApp })
+  public vApps: ServerVApp[];
 
   @JsonProperty({
     type: ServerServiceType,
@@ -36,8 +41,13 @@ export class ServerResource {
     deserializer: ServerServiceTypeSerialization
   })
   public serviceType: ServerServiceType;
-  public availabilityZone: string;
-  public portalUrl: string;
+
+  @JsonProperty({
+    type: ServerPlatformType,
+    serializer: ServerPlatformTypeSerialization,
+    deserializer: ServerPlatformTypeSerialization
+  })
+  public platform: ServerPlatformType;
 
   constructor() {
     this.compute = undefined;

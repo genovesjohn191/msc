@@ -85,11 +85,11 @@
             [minimumMB]="0" [maximumMB]="maximumMB" [step]="sliderStep"
             (storageChanged)="onStorageChanged($event)" [disabled]="storageScaleIsDisabled">
             <!--Server manage storage contents on the left hand side (description)-->
-            <div title>
+            <div mcsStorageTitle>
               <h4>{{ textContent.addStorageHeading }}</h4>
             </div>
 
-            <div server-storage-warning>
+            <div mcsStorageWarning>
               <span>{{ textContent.fullStorageSpace }}</span>
             </div>
           </mcs-server-manage-storage>
@@ -119,11 +119,11 @@
         (storageChanged)="onStorageChanged($event)"
         [disabled]="storageScaleIsDisabled">
         <!--Server manage storage contents on the left hand side (description)-->
-        <div title>
+        <div mcsStorageTitle>
           <h4>{{ textContent.expandStorageHeading }}</h4>
         </div>
 
-        <div details class="vertical-items-spacing-xsmall">
+        <div mcsStorageDetails class="vertical-items-spacing-xsmall">
           <p><strong>Storage Device : </strong> <span>{{ selectedStorageDevice.name }}</span></p>
           <p><strong>Storage Profile : </strong> <span>{{ selectedStorageDevice.storageProfile }}</span></p>
           <p>

@@ -11,6 +11,7 @@ import { JsonProperty } from 'json-object-mapper';
 export class ServerCatalogItem {
   public id: any;
   public name: string;
+  public itemName: string;
 
   @JsonProperty({
     type: ServerCatalogType,
@@ -25,7 +26,6 @@ export class ServerCatalogItem {
     deserializer: ServerCatalogItemTypeSerialization
   })
   public itemType: ServerCatalogItemType;
-  public itemName: string;
 
   constructor() {
     this.id = undefined;

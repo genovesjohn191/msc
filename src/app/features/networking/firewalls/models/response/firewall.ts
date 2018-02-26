@@ -35,6 +35,11 @@ export class Firewall {
   public haGroupName: string;
   public haRole: string;
   public url: string;
+
+  @JsonProperty({ type: FirewallHaMode })
+  public haMode: FirewallHaMode;
+
+  @JsonProperty({ type: FirewallUtm })
   public utm: FirewallUtm;
 
   @JsonProperty({
@@ -57,7 +62,6 @@ export class Firewall {
     deserializer: FirewallConnectionStatusSerialization
   })
   public connectionStatus: FirewallConnectionStatus;
-  public haMode: FirewallHaMode;
 
   constructor() {
     this.id = undefined;
