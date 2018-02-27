@@ -7,8 +7,9 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServersService } from './servers.service';
+import { ServersResourcesRespository } from './servers-resources.repository';
 import { ServersRepository } from './servers.repository';
+import { ServersService } from './servers.service';
 import { ServersDataSource } from './servers.datasource';
 /** Models */
 import {
@@ -55,6 +56,7 @@ export class ServersComponent
   public textContent: any;
   public enumDefinition: any;
   public selection: McsSelection<Server>;
+  public hasSelfManagedResource: boolean;
 
   // Subscription
   private _selectionModeSubscription: any;
@@ -123,6 +125,7 @@ export class ServersComponent
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _serversRepository: ServersRepository,
+    private _serversResourceRepository: ServersResourcesRespository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
@@ -137,6 +140,7 @@ export class ServersComponent
   public ngAfterViewInit() {
     refreshView(() => {
       this.initializeDatasource();
+      this._setSelfManagedFlag();
       this._listenToSelectionModeChange();
       this._listenToNotificationsChange();
     });
@@ -394,6 +398,18 @@ export class ServersComponent
       this.search
     );
     this.changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Initialize the server resources based on repository cache
+   * and check whether the resource has self managed type
+   */
+  private _setSelfManagedFlag(): void {
+    this._serversResourceRepository.hasSelfManagedServer()
+      .subscribe((response) => {
+        this.hasSelfManagedResource = response;
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   /**

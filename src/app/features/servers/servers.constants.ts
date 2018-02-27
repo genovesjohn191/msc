@@ -1,7 +1,10 @@
 import { Routes } from '@angular/router';
 /** Services */
 import { ServerService } from './server/';
-import { CreateSelfManagedServersService } from './self-managed-server';
+import {
+  CreateSelfManagedServersService,
+  CreateSelfManagedServerResolver
+} from './self-managed-server';
 import { ServersService } from './servers.service';
 import { ServersRepository } from './servers.repository';
 import { ServersResourcesRespository } from './servers-resources.repository';
@@ -31,6 +34,7 @@ export const serversProviders: any[] = [
   ServerService,
   ServersRepository,
   ServersResourcesRespository,
+  CreateSelfManagedServerResolver,
   CreateSelfManagedServersService,
   VdcService
 ];
@@ -45,7 +49,8 @@ export const serversRoutes: Routes = [
   {
     path: 'servers/create',
     component: CreateSelfManagedServersComponent,
-    canDeactivate:[McsNavigateAwayGuard]
+    resolve: { CreateSelfManagedServerResolver },
+    canDeactivate: [McsNavigateAwayGuard]
   },
   {
     path: 'servers/:id',
