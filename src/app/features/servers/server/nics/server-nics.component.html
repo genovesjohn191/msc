@@ -60,14 +60,16 @@
                   <span>{{ nic.ipAddress }}</span>
                 </td>
                 <td class="action-items">
-                  <span *mcsHasPermission="['VmNetworkEdit']">
-                    <a [disabled]="nicEditIsDisabled" (click)="onUpdateNetwork(nic)">
-                      {{ textContent.editLink }}
-                    </a>
-                  </span>
+                  <ng-container *mcsHasPermission="['VmNetworkEdit']">
+                    <span *mcsIsSelfManagedServer="server">
+                      <a [disabled]="!server.executable" (click)="onUpdateNetwork(nic)">
+                        {{ textContent.editLink }}
+                      </a>
+                    </span>
+                  </ng-container>
                   <span *mcsHasPermission="['VmNetworkEdit']">
                     <a *ngIf="!nic.isPrimary"
-                      [disabled]="nicAddOrDeleteIsDisabled"
+                      [disabled]="!server.executable"
                       (click)="onDeleteNetwork(nic)">
                       {{ textContent.deleteLink }}
                     </a>
@@ -93,7 +95,7 @@
 
       <div *mcsHasPermission="['VmNetworkEdit']">
         <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
-          class="action-box" [disabled]="nicAddOrDeleteIsDisabled">
+          class="action-box" [disabled]="!server.executable">
           <h4>{{ textContent.addHeading }}</h4>
 
           <!-- Network Selection -->
@@ -121,7 +123,7 @@
 
           <div [ngStyle]="{'text-align': 'right'}">
             <button mcsButton id="ctaAddServerNetwork" arrow="right"
-              [disabled]="!validate()" (click)="addNetwork()">
+              [disabled]="scaleNicIsDisabled" (click)="addNetwork()">
               {{ textContent.addButton }}
             </button>
           </div>
@@ -135,55 +137,57 @@
       </div>
     </div>
 
-    <div *ngIf="isUpdate" class="vertical-items-spacing-large">
-      <div *ngIf="hasAvailableResourceNetwork" class="action-box" [disabled]="isProcessing">
-        <h4>{{ textContent.editHeading }} {{ selectedNic.index }}</h4>
+    <ng-container *mcsIsSelfManagedServer="server">
+      <div *ngIf="isUpdate" class="vertical-items-spacing-large">
+        <div *ngIf="hasAvailableResourceNetwork" class="action-box" [disabled]="!server.executable">
+          <h4>{{ textContent.editHeading }} {{ selectedNic.index }}</h4>
 
-        <!-- Network Selection -->
-        <div class="field">
-          <mcs-form-field>
-            <mcs-select [formControl]="fcNetwork"
-              [placeholder]="textContent.networkSelect.placeholder">
-              <mcs-select-item value="">-</mcs-select-item>
-              <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
-                {{ network.name }}
-              </mcs-select-item>
-            </mcs-select>
-          </mcs-form-field>
-        </div>
+          <!-- Network Selection -->
+          <div class="field">
+            <mcs-form-field>
+              <mcs-select [formControl]="fcNetwork"
+                [placeholder]="textContent.networkSelect.placeholder">
+                <mcs-select-item value="">-</mcs-select-item>
+                <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
+                  {{ network.name }}
+                </mcs-select-item>
+              </mcs-select>
+            </mcs-form-field>
+          </div>
 
-        <!-- TODO: Removed temporarily since our API doesn't support updating primary NIC -->
-        <!-- <div class="field" *ngIf="networkName">
-          <mcs-checkbox [(ngModel)]="isPrimary" [disabled]="selectedNic.isPrimary">
-            {{ textContent.primaryCheckbox }}
-          </mcs-checkbox>
-        </div> -->
+          <!-- TODO: Removed temporarily since our API doesn't support updating primary NIC -->
+          <!-- <div class="field" *ngIf="networkName">
+            <mcs-checkbox [(ngModel)]="isPrimary" [disabled]="selectedNic.isPrimary">
+              {{ textContent.primaryCheckbox }}
+            </mcs-checkbox>
+          </div> -->
 
-        <!-- IP Address setting -->
-        <div class="field" *ngIf="networkName">
-          <mcs-server-ip-address
-            [ipAllocationMode]="ipAddress.ipAllocationMode"
-            [ipAddress]="ipAddress.customIpAddress"
-            [gateway]="networkGateway"
-            [subnetMask]="networkNetmask"
-            (ipAddressChanged)="onIpAddressChanged($event)">
-            <!--Ip address contents on the left hand side (title and description)-->
-            <div title>
-              <span class="label no-line-height">{{ textContent.ipAddress }}</span>
-            </div>
-          </mcs-server-ip-address>
-        </div>
+          <!-- IP Address setting -->
+          <div class="field" *ngIf="networkName">
+            <mcs-server-ip-address
+              [ipAllocationMode]="ipAddress.ipAllocationMode"
+              [ipAddress]="ipAddress.customIpAddress"
+              [gateway]="networkGateway"
+              [subnetMask]="networkNetmask"
+              (ipAddressChanged)="onIpAddressChanged($event)">
+              <!--Ip address contents on the left hand side (title and description)-->
+              <div title>
+                <span class="label no-line-height">{{ textContent.ipAddress }}</span>
+              </div>
+            </mcs-server-ip-address>
+          </div>
 
-        <div display-flex="row" align-items="center" justify-content="space-between">
-          <a (click)="closeUpdateWindow()" [disabled]="isProcessing">Cancel</a>
+          <div display-flex="row" align-items="center" justify-content="space-between">
+            <a (click)="closeUpdateWindow()">Cancel</a>
 
-          <button *mcsHasPermission="['VmEdit']"
-            mcsButton id="ctaUpdateServerNetwork" arrow="right"
-            [disabled]="!validate() || isProcessing" (click)="updateNetwork()">
-            {{ textContent.updateButton }}
-          </button>
+            <button *mcsHasPermission="['VmEdit']"
+              mcsButton id="ctaUpdateServerNetwork" arrow="right"
+              [disabled]="scaleNicIsDisabled" (click)="updateNetwork()">
+              {{ textContent.updateButton }}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>

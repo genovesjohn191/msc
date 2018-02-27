@@ -101,14 +101,6 @@ export class ServerManagementComponent extends ServerDetailsBase
     }
   }
 
-  public get isVisibleScaleOption(): boolean {
-    return !isNullOrEmpty(this.server.id) && this._hasScaleParam && !this.isManaged;
-  }
-
-  public get isScaling(): boolean {
-    return this.isProcessingJob && this.server.commandAction === ServerCommand.Scale;
-  }
-
   public get serverMemoryMB(): number {
     return !isNullOrEmpty(this.server.compute) ? this.server.compute.memoryMB : 0;
   }
@@ -147,6 +139,14 @@ export class ServerManagementComponent extends ServerDetailsBase
     return this._textProvider.content.servers.shared.storageScale.invalidStorage;
   }
 
+  public get ScaleOptionIsVisible(): boolean {
+    return !isNullOrEmpty(this.server.id) && this._hasScaleParam && !this.isManaged;
+  }
+
+  public get isScaling(): boolean {
+    return this.server.executable && this.server.commandAction === ServerCommand.Scale;
+  }
+
   public get hasStorage(): boolean {
     return !isNullOrEmpty(this.server.fileSystem);
   }
@@ -180,12 +180,8 @@ export class ServerManagementComponent extends ServerDetailsBase
     return !isNullOrEmpty(this.resourceMediaList);
   }
 
-  public get scalingIsDisabled(): boolean {
-    return this.isProcessingJob || this.isManaged || !this.serverIsOperable;
-  }
-
-  public get mediaIsDisabled(): boolean {
-    return this.isProcessingJob || this.isManaged || !this.serverIsOperable;
+  public get attachMediaIsDisabled(): boolean {
+    return !this.server.executable || !this.hasAvailableMedia;
   }
 
   constructor(
@@ -320,7 +316,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public attachMedia(): void {
-    if (isNullOrEmpty(this.selectedMedia)) { return; }
+    if (this.attachMediaIsDisabled || isNullOrEmpty(this.selectedMedia)) { return; }
 
     let mediaValues = new ServerManageMedia();
     mediaValues.name = this.selectedMedia;

@@ -6,7 +6,7 @@
     mcsLoaderOrientation="top"></div>
 
   <div #managementContent>
-    <div *ngIf="!isVisibleScaleOption && !isAttachMedia">
+    <div *ngIf="!ScaleOptionIsVisible && !isAttachMedia" class="content-grid">
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
           <h3 class="container-header">{{ textContent.vmProperties.title }}</h3>
@@ -31,8 +31,10 @@
               <span>{{ textContent.vmProperties.configuration }}:</span>
               <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
               <span *mcsHasPermission="['VmEdit']">
-                <a *ngIf="!isScaling" (click)="showScaleOption()" [disabled]="scalingIsDisabled">
-                {{ textContent.performanceScale.scale }}</a>
+                <ng-container *mcsIsSelfManagedServer="server">
+                  <a *ngIf="!isScaling" (click)="showScaleOption()" [disabled]="!server.executable">
+                    {{ textContent.performanceScale.scale }}</a>
+                </ng-container>
               </span>
               <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
                 [mcsTooltip]="textContent.performanceScale.scaling"></mcs-icon>
@@ -56,9 +58,13 @@
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
           <h3 class="container-header">{{ textContent.storage.title }}
-            <a *mcsHasPermission="['VmEdit']" [routerLink]="['../storage']">
-              {{ textContent.storage.manage }}
-            </a>
+            <ng-container *mcsHasPermission="['VmEdit']">
+              <a *mcsIsSelfManagedServer="server"
+                [disabled]="!server.executable"
+                [routerLink]="['../storage']">
+                {{ textContent.storage.manage }}
+              </a>
+            </ng-container>
           </h3>
           <div>
             <div *ngIf="!hasStorageInformation">
@@ -116,40 +122,39 @@
             {{ textContent.media.title }}
             <span [mcsTooltip]="textContent.media.noAvailableMedia"
               [mcsTooltipShow]="!hasAvailableMedia">
-              <a flex="auto" *mcsHasPermission="['VmEdit']"
-                (click)="onAttachMedia()" [disabled]="mediaIsDisabled || !hasAvailableMedia">
-                {{ textContent.media.attach }}
-              </a>
+              <ng-container *mcsHasPermission="['VmEdit']">
+                <a flex="auto" *mcsIsSelfManagedServer="server" (click)="onAttachMedia()"
+                  [disabled]="attachMediaIsDisabled">
+                  {{ textContent.media.attach }}
+                </a>
+              </ng-container>
             </span>
           </h3>
 
-          <div>
-            <div *ngIf="!hasMedia">
-              <span class="missing-data-info">{{ textContent.media.noContentMessage }}</span>
-            </div>
-            <mcs-list *ngIf="hasMedia" spacing="xsmall">
-              <!-- Media Items -->
-              <mcs-list-item *ngFor="let media of server.media">
-                <div display-flex="row" class="horizontal-items-spacing-xsmall">
-                  <span>{{ media.name }}</span>
-                  <span *mcsHasPermission="['VmEdit']">
+          <div *ngIf="!hasMedia">
+            <span class="missing-data-info">{{ textContent.media.noContentMessage }}</span>
+          </div>
+          <mcs-list *ngIf="hasMedia" spacing="xsmall">
+            <!-- Media Items -->
+            <mcs-list-item *ngFor="let media of server.media">
+              <div display-flex="row" class="horizontal-items-spacing-xsmall">
+                <span>{{ media.name }}</span>
+                <span *mcsHasPermission="['VmEdit']">
+                  <ng-container *mcsIsSelfManagedServer="server">
                     <ng-container *ngIf="media.isProcessing; else detachMedia">
-                      <mcs-icon [key]="spinnerIconKey"
-                        size="small" class="hidden-small"
-                        [mcsTooltip]="jobSummaryInfo"
-                        mcsTooltipPosition="right"></mcs-icon>
+                      <mcs-icon [key]="spinnerIconKey" size="small" class="hidden-small"
+                        [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
                     </ng-container>
                     <ng-template #detachMedia>
-                      <a (click)="onDetachMedia(media)"
-                        [disabled]="mediaIsDisabled">
+                      <a (click)="onDetachMedia(media)" [disabled]="!server.executable">
                         {{ textContent.media.detach }}
                       </a>
                     </ng-template>
-                  </span>
-                </div>
-              </mcs-list-item>
-            </mcs-list>
-          </div>
+                  </ng-container>
+                </span>
+              </div>
+            </mcs-list-item>
+          </mcs-list>
         </div>
 
         <div class="grid-column container-wrapper break-on-small">
@@ -175,65 +180,67 @@
       </div>
     </div>
 
-    <div *ngIf="isVisibleScaleOption" class="server-performance-scale">
-      <div class="container-wrapper">
-        <h3 class="container-header">Scaling {{ server.managementName }}</h3>
-        <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
-          [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
-          [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
-          (scaleChanged)="onScaleChanged($event)">
+    <ng-container *mcsHasPermission="['VmEdit']">
+      <ng-container *mcsIsSelfManagedServer="server">
+        <div *ngIf="ScaleOptionIsVisible" class="server-performance-scale">
+          <div class="container-wrapper" [disabled]="!server.executable">
+            <h3 class="container-header">Scaling {{ server.managementName }}</h3>
+            <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
+              [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
+              [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
+              (scaleChanged)="onScaleChanged($event)">
 
-          <!--Performance scale container-->
-          <span slider-details>
-            {{ textContent.performanceScale.sliderMessage }}
-          </span>
-          <span custom-details>
-            {{ textContent.performanceScale.customMessage }}
-          </span>
-        </mcs-server-performance-scale>
+              <!--Performance scale container-->
+              <span slider-details>
+                {{ textContent.performanceScale.sliderMessage }}
+              </span>
+              <span custom-details>
+                {{ textContent.performanceScale.customMessage }}
+              </span>
+            </mcs-server-performance-scale>
 
-        <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
-          display-flex="row" align-items="center" justify-content="center">
-          <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
-          <span>{{ textContent.performanceScale.warning }}</span>
-        </p>
+            <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
+              display-flex="row" align-items="center" justify-content="center">
+              <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
+              <span>{{ textContent.performanceScale.warning }}</span>
+            </p>
 
-        <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
-          <a class="text-underline" (click)="cancelScale()">
-            {{ textContent.performanceScale.cancel }}</a>
+            <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
+              <a class="text-underline" (click)="cancelScale()">
+                {{ textContent.performanceScale.cancel }}</a>
 
-          <button *mcsHasPermission="['VmEdit']" class="scale"
-            mcsButton id="ctaScaleServer" arrow="right"
-            [disabled]="!hasUpdate || isProcessingJob" (click)="onClickScale()">
-              {{ textContent.performanceScale.scale }}
-          </button>
+                <button class="scale" mcsButton id="ctaScaleServer" arrow="right"
+                  [disabled]="!hasUpdate" (click)="onClickScale()">
+                    {{ textContent.performanceScale.scale }}
+                </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
-      <div class="container-wrapper" [disabled]="isProcessingJob">
-        <h3 class="container-header">{{ textContent.media.attachHeading }}</h3>
-        <mcs-select [(ngModel)]="selectedMedia" class="space-bottom-large"
-          [placeholder]="textContent.media.mediaSelect.placeholder">
-          <mcs-select-group [header]="textContent.media.mediaSelect.header">
-            <mcs-select-item *ngFor="let media of resourceMediaList" [value]="media.itemName">
-              {{ media.itemName }}
-            </mcs-select-item>
-          </mcs-select-group>
-        </mcs-select>
-        <div display-flex="row" align-items="center" justify-content="space-between">
-          <a class="text-underline" (click)="cancelAttachMedia()">
-            {{ textContent.media.cancel }}
-          </a>
+        <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
+          <div class="container-wrapper" [disabled]="attachMediaIsDisabled">
+            <h3 class="container-header">{{ textContent.media.attachHeading }}</h3>
+            <mcs-select [(ngModel)]="selectedMedia" class="space-bottom-large"
+              [placeholder]="textContent.media.mediaSelect.placeholder">
+              <mcs-select-group [header]="textContent.media.mediaSelect.header">
+                <mcs-select-item *ngFor="let media of resourceMediaList" [value]="media.itemName">
+                  {{ media.itemName }}
+                </mcs-select-item>
+              </mcs-select-group>
+            </mcs-select>
+            <div display-flex="row" align-items="center" justify-content="space-between">
+              <a class="text-underline" (click)="cancelAttachMedia()">
+                {{ textContent.media.cancel }}
+              </a>
 
-          <button *mcsHasPermission="['VmEdit']"
-            mcsButton id="ctaAttachMedia" arrow="right" size="small"
-            [disabled]="!selectedMedia || isProcessingJob" (click)="attachMedia()">
-            {{ textContent.media.attach }}
-          </button>
+              <button mcsButton id="ctaAttachMedia" arrow="right" size="small"
+                [disabled]="!selectedMedia" (click)="attachMedia()">
+                {{ textContent.media.attach }}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </ng-container>
+    </ng-container>
   </div>
 </div>

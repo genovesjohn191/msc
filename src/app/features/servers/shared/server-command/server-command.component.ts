@@ -14,8 +14,7 @@ import {
 import {
   ServerCommand,
   Server,
-  ServerPowerState,
-  ServerServiceType
+  ServerPowerState
 } from '../../models';
 import { isNullOrEmpty } from '../../../../utilities';
 
@@ -56,16 +55,6 @@ export class ServerCommandComponent implements OnInit {
     return ServerCommand;
   }
 
-  // TODO: Needs to refactor to have just one logic for this one
-  public get isServerOperable(): boolean {
-    return !this.server.isProcessing && this.server.isOperable
-      && this.server.powerState !== ServerPowerState.Suspended;
-  }
-
-  public get isServerSelfManaged(): boolean {
-    return this.server.serviceType === ServerServiceType.SelfManaged;
-  }
-
   constructor(private _textProvider: McsTextContentProvider) {
     this.id = `mcs-server-command-${nextUniqueId++}`;
     this.excluded = new Array<ServerCommand>();
@@ -83,39 +72,35 @@ export class ServerCommandComponent implements OnInit {
   }
 
   public getEnabledCommand(command: ServerCommand): boolean {
-    let enabled = true;
+    let enabled: boolean;
 
     switch (command) {
       case ServerCommand.Start:
-        enabled = this.isServerOperable &&
+        enabled = this.server.executable &&
           this.server.powerState === ServerPowerState.PoweredOff;
         break;
 
       case ServerCommand.Stop:
       case ServerCommand.Restart:
       case ServerCommand.Suspend:
-        enabled = this.isServerOperable &&
+        enabled = this.server.executable &&
           this.server.powerState === ServerPowerState.PoweredOn;
-        break;
-
-      case ServerCommand.Delete:
-        enabled = this.isServerOperable && this.isServerSelfManaged;
         break;
 
       case ServerCommand.ViewVCloud:
         enabled = this.server.commandAction !== ServerCommand.Delete;
         break;
 
-      case ServerCommand.ResetVmPassword:
-        enabled = this.isServerOperable && !this.server.isProcessing;
+      case ServerCommand.Resume:
+        enabled = this.server.resumable;
         break;
 
-      case ServerCommand.Resume:
-        enabled = !this.isServerOperable;
+      case ServerCommand.Delete:
+        enabled = !this.server.isProcessing && !this.server.resumable;
         break;
 
       default:
-        enabled = this.isServerOperable && this.isServerSelfManaged;
+        enabled = this.server.executable;
         break;
     }
 

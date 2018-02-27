@@ -15,8 +15,7 @@ import {
   ServerNicSummary,
   ServerManageNic,
   ServerIpAddress,
-  ServerIpAllocationMode,
-  ServerServiceType
+  ServerIpAllocationMode
 } from '../../models';
 import {
   CoreDefinition,
@@ -93,6 +92,10 @@ export class ServerNicsComponent extends ServerDetailsBase
     return !isNullOrEmpty(this.resourceNetworks);
   }
 
+  public get scaleNicIsDisabled(): boolean {
+    return !this.server.executable || !this.validate();
+  }
+
   public get resourceNetworks(): ServerNetwork[] {
     return !isNullOrEmpty(this.serverResource.networks) ?
       this.serverResource.networks : new Array();
@@ -162,15 +165,6 @@ export class ServerNicsComponent extends ServerDetailsBase
       this._isUpdate = value;
       this._changeDetectorRef.markForCheck();
     }
-  }
-
-  public get nicAddOrDeleteIsDisabled(): boolean {
-    return !this.serverIsOperable || this.isProcessingJob;
-  }
-
-  public get nicEditIsDisabled(): boolean {
-    return !this.serverIsOperable || this.isProcessingJob ||
-      this.server.serviceType === ServerServiceType.Managed;
   }
 
   constructor(
