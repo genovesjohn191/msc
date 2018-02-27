@@ -5,74 +5,93 @@
 
 <ng-template #cogContent>
   <div class="cog-container">
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Start)"
-      (click)="onExecuteCommand(serverCommandEnum.Start)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Start)">
-      {{ textContent.start }}
-    </a>
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Start)">
+      <a (click)="onExecuteCommand(serverCommandEnum.Start)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Start)">
+        {{ textContent.start }}
+      </a>
+    </ng-container>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Stop)"
-      (click)="onExecuteCommand(serverCommandEnum.Stop)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Stop)">
-      {{ textContent.stop }}
-    </a>
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Stop)">
+      <a (click)="onExecuteCommand(serverCommandEnum.Stop)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Stop)">
+        {{ textContent.stop }}
+      </a>
+    </ng-container>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Restart)"
-      (click)="onExecuteCommand(serverCommandEnum.Restart)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Restart)">
-      {{ textContent.restart }}
-    </a>
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Restart)">
+      <a (click)="onExecuteCommand(serverCommandEnum.Restart)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Restart)">
+        {{ textContent.restart }}
+      </a>
+    </ng-container>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Scale)"
-      (click)="onExecuteCommand(serverCommandEnum.Scale)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Scale)">
-      {{ textContent.scale }}
-    </a>
+    <ng-container *mcsIsSelfManagedServer="server">
+      <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
+        <a (click)="onExecuteCommand(serverCommandEnum.Scale)"
+          [disabled]="!getEnabledCommand(serverCommandEnum.Scale)">
+          {{ textContent.scale }}
+        </a>
+      </ng-container>
+    </ng-container>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Clone)"
-      (click)="onExecuteCommand(serverCommandEnum.Clone)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Clone)">
-      {{ textContent.clone }}
-    </a>
+    <ng-container *mcsIsSelfManagedServer="server">
+      <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Clone)">
+        <a (click)="onExecuteCommand(serverCommandEnum.Clone)"
+          [disabled]="!getEnabledCommand(serverCommandEnum.Clone)">
+          {{ textContent.clone }}
+        </a>
+      </ng-container>
+    </ng-container>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Rename)"
-      (click)="onExecuteCommand(serverCommandEnum.Rename)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Rename)">
-      {{ textContent.rename }}
-    </a>
+    <ng-container *mcsIsSelfManagedServer="server">
+      <a (click)="onExecuteCommand(serverCommandEnum.Rename)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Rename)">
+        {{ textContent.rename }}
+      </a>
+    </ng-container>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.Delete)"
-      (click)="onExecuteCommand(serverCommandEnum.Delete)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Delete)">
-      {{ textContent.delete }}
-    </a>
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Delete)">
+      <ng-container *mcsIsSelfManagedServer="server">
+        <a (click)="onExecuteCommand(serverCommandEnum.Delete)"
+          [disabled]="!getEnabledCommand(serverCommandEnum.Delete)">
+          {{ textContent.delete }}
+        </a>
+      </ng-container>
+    </ng-container>
 
     <!-- TODO: Temporarily hidden for release -->
     <!-- Waiting for Orch API updates -->
-    <!-- <a *ngIf="getIncludedCommand(serverCommandEnum.Suspend)"
-      (click)="onExecuteCommand(serverCommandEnum.Suspend)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)">
-      {{ textContent.suspend }}
-    </a> -->
+    <!-- <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
+      <div [serverIsOperable]="server">
+        <a (click)="onExecuteCommand(serverCommandEnum.Suspend)"
+          [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)">
+          {{ textContent.suspend }}
+        </a>
+      </div>
+    </ng-container> -->
 
     <!-- TODO: Temporarily hidden for release -->
     <!-- Waiting for Orch API updates -->
-    <!-- <a *ngIf="getIncludedCommand(serverCommandEnum.Resume)"
-      (click)="onExecuteCommand(serverCommandEnum.Resume)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.Resume)">
-      {{ textContent.resume }}
-    </a> -->
+    <!-- <div *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
+      <a (click)="onExecuteCommand(serverCommandEnum.Resume)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Resume)">
+        {{ textContent.resume }}
+      </a>
+    </div> -->
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)"
-      (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)">
-      {{ textContent.viewVCloud }}
-    </a>
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
+      <a (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)">
+        {{ textContent.viewVCloud }}
+      </a>
+    </ng-container>
 
-    <a *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)"
-      (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
-      [disabled]="!getEnabledCommand(serverCommandEnum.ResetVmPassword)">
-      {{ textContent.resetVmPassword }}
-    </a>
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ResetVmPassword)">
+      <a (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.ResetVmPassword)">
+        {{ textContent.resetVmPassword }}
+      </a>
+    </ng-container>
   </div>
 </ng-template>

@@ -485,7 +485,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-      this._setServerProcessDetails(activeServer, job);
 
       // Clear the snapshot as mock data on the repository in case of completion
       if (!isNullOrEmpty(activeServer.snapshots)) {

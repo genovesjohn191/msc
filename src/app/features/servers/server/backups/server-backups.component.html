@@ -10,7 +10,7 @@
       <h3 class="container-header">{{ textContent.snapshotHeader }}</h3>
       <div class="vspace-medium space-between-inline-items">
         <p [innerHTML]="textContent.snapshotDescription"></p>
-        <div>
+        <div *mcsIsSelfManagedServer="server">
           <button mcsButton size="small" [disabled]="!enabledActions"
             (click)="createSnapshot()">{{ textContent.createSnapshot }}</button>
         </div>

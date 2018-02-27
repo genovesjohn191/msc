@@ -33,6 +33,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
   public connect(): Observable<Firewall[]> {
     const displayDataChanges = [
       Observable.of(undefined), // Add undefined observable to make way of retry when error occured
+      this._firewallsRepository.dataRecordsChanged,
       this._paginator.pageChangedStream,
       this._search.searchChangedStream
     ];

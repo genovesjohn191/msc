@@ -20,7 +20,8 @@ import {
   InsufficientStorageSnapshotDialogComponent,
   RestoreSnapshotDialogComponent,
   SuspendServerDialogComponent,
-  ResumeServerDialogComponent
+  ResumeServerDialogComponent,
+  IsSelfManagedServerDirective
 } from './shared';
 /** Server */
 import {
@@ -99,7 +100,8 @@ import { SharedModule } from '../../shared';
     InsufficientStorageSnapshotDialogComponent,
     RestoreSnapshotDialogComponent,
     SuspendServerDialogComponent,
-    ResumeServerDialogComponent
+    ResumeServerDialogComponent,
+    IsSelfManagedServerDirective
   ],
   imports: [
     SharedModule

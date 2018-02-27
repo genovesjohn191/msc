@@ -126,4 +126,13 @@ export class Server {
       && !this.isProcessing
       && this.powerState !== ServerPowerState.Suspended;
   }
+
+  /**
+   * Return true when server is resumable
+   */
+  public get resumable(): boolean {
+    return this.isOperable
+      && !this.isProcessing
+      && this.powerState === ServerPowerState.Suspended;
+  }
 }

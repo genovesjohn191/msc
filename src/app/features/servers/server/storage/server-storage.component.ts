@@ -121,6 +121,10 @@ export class ServerStorageComponent extends ServerDetailsBase
     return this._validateStorageChangedValues();
   }
 
+  public get hasDiskStorageProfile(): boolean {
+    return !isNullOrEmpty(this.selectedStorageDevice.storageProfile);
+  }
+
   public get resourceStorage(): ServerStorage[] {
     return !isNullOrEmpty(this.serverResource.storage) ?
       this.serverResource.storage : new Array();
@@ -170,16 +174,9 @@ export class ServerStorageComponent extends ServerDetailsBase
     }
   }
 
-  public get storageScaleIsDisabled(): boolean {
-    return this.isManaged || this.isProcessingJob || !this.serverIsOperable;
-  }
-
-  public get storageExpandLinkIsDisabled(): boolean {
-    return this.storageScaleIsDisabled || !this.hasAvailableStorageSpace;
-  }
-
-  public get attachIsDisabled(): boolean {
-    return !this.isValidStorageValues || this.storageExpandLinkIsDisabled;
+  public get attachStorageIsDisabled(): boolean {
+    return !this.server.executable || !this.isValidStorageValues
+      || !this.hasAvailableStorageSpace;
   }
 
   public get storageProfileList(): any[] {
@@ -255,7 +252,8 @@ export class ServerStorageComponent extends ServerDetailsBase
    * @param storageDevice Storage to be expanded
    */
   public showExpandStorageBox(storage: ServerStorageDevice) {
-    if (this.storageScaleIsDisabled) { return; }
+    if (!this.server.executable || this.server.isProcessing
+        || isNullOrEmpty(storage.storageProfile)) { return; }
 
     this.minimumMB = storage.sizeMB;
     this.maximumMB = this.getStorageAvailableMemory(storage.storageProfile);
@@ -268,7 +266,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * @param storage Storage to be deleted
    */
   public onDeleteStorage(storage: ServerStorageDevice): void {
-    if (this.server.isProcessing) { return; }
+    if (!this.server.executable || this.server.isProcessing) { return; }
 
     let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
       data: storage,
@@ -285,8 +283,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * This will process the adding of disk
    */
   public onClickAttach(): void {
-    if (!this.isValidStorageValues || !this.hasAvailableStorageSpace
-      || this.storageScaleIsDisabled) { return; }
+    if (this.attachStorageIsDisabled) { return; }
 
     this.mcsStorage.completed();
 
@@ -308,7 +305,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * This will process the update for the selected disk
    */
   public onExpandStorage(): void {
-    if (this.attachIsDisabled) { return; }
+    if (this.attachStorageIsDisabled) { return; }
     this.mcsStorage.completed();
 
     let storageData = new ServerStorageDeviceUpdate();
@@ -348,6 +345,16 @@ export class ServerStorageComponent extends ServerDetailsBase
     let storage = this._getStorageByProfile(storageProfile);
     return this._serverService.computeAvailableStorageMB(storage,
       this.server.compute && this.server.compute.memoryMB);
+  }
+
+  /**
+   * This will identify if expand disk is disabled or enabled
+   *
+   * @param disk Server disk
+   */
+  public expandDiskIsDisabled(disk: ServerStorageDevice): boolean {
+    return !this.server.executable || !this.hasAvailableStorageSpace
+      || isNullOrEmpty(disk.storageProfile);
   }
 
   /**
