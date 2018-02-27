@@ -28,8 +28,8 @@ export class McsApiSuccessResponse<T> {
 
   // Memeber Fields
   public status: number;
-  public content: T;
   public totalCount: number;
+  public content: T;
 
   constructor() {
     this.status = undefined;

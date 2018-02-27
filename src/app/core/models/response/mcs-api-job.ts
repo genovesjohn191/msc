@@ -23,7 +23,7 @@ export class McsApiJob {
   public tasks: McsApiTask[];
 
   @JsonProperty({
-    type: McsApiTask,
+    type: McsJobType,
     serializer: McsJobTypeSerialization,
     deserializer: McsJobTypeSerialization
   })

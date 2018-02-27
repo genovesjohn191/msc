@@ -51,6 +51,12 @@ import 'core-js/es7/reflect';
  */
 import 'web-animations-js';
 
+/**
+ * Added reflect-metadata for the json-object-mapper
+ * to work properly
+ */
+import 'reflect-metadata';
+
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
  */
