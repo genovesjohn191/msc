@@ -10,7 +10,10 @@ import {
   FirewallConnectionStatus,
   FirewallConnectionStatusSerialization
 } from '../enumerations/firewall-connection-status.enum';
-import { FirewallHaMode } from '../enumerations/firewall-ha-mode.enum';
+import {
+  FirewallHaMode,
+  FirewallHaModeSerialization
+} from '../enumerations/firewall-ha-mode.enum';
 import { FirewallUtm } from '../response/firewall-utm';
 import { JsonProperty } from 'json-object-mapper';
 
@@ -36,11 +39,15 @@ export class Firewall {
   public haRole: string;
   public url: string;
 
-  @JsonProperty({ type: FirewallHaMode })
-  public haMode: FirewallHaMode;
-
   @JsonProperty({ type: FirewallUtm })
   public utm: FirewallUtm;
+
+  @JsonProperty({
+    type: FirewallHaMode,
+    serializer: FirewallHaModeSerialization,
+    deserializer: FirewallHaModeSerialization
+  })
+  public haMode: FirewallHaMode;
 
   @JsonProperty({
     type: FirewallDeviceStatus,
