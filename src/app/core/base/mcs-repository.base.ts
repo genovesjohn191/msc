@@ -175,8 +175,9 @@ export abstract class McsRepositoryBase<T> {
 
     let displayedRecords = isNullOrEmpty(page) ? MAX_DISPLAY_RECORD :
       page.pageSize * (page.pageIndex + 1);
-    let requestRecords = !!(displayedRecords > this.dataRecords.length)
-      && !!(this._totalRecordsCount !== this.dataRecords.length)
+    let dataRecordsLength = isNullOrEmpty(this.dataRecords) ? 0 : this.dataRecords.length;
+    let requestRecords = !!(displayedRecords > dataRecordsLength)
+      && !!(this._totalRecordsCount !== dataRecordsLength)
       || this._totalRecordsCount === 0 || isSearching;
 
     if (requestRecords) {
