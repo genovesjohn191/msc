@@ -3,7 +3,7 @@
   <mcs-top-panel *mcsTopPanelDef [active]="selection.hasValue()">
 
     <!-- Server Creation -->
-    <mcs-top-panel-item *mcsTopPanelItemDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef [disabled]="!hasSelfManagedResource">
       <mcs-action-item id="ctaCreateNewServer"
         (click)="onClickNewServerButton()">
         <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
@@ -224,8 +224,8 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.noServers }} </span>
-              <span>
+              <span *ngIf="!hasSelfManagedResource">{{ textContent.noServers }} </span>
+              <span *ngIf="hasSelfManagedResource">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
                 Click <a (click)="onClickNewServerButton()">here</a> to create new server.
