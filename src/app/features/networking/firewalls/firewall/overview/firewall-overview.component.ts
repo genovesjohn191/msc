@@ -44,7 +44,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   public get firewallMemory(): string {
-    return `${convertToGb(this.firewall.memoryMb)} ${this.textContent.properties.ramUnit}`;
+    return `${convertToGb(this.firewall.memoryMB)} ${this.textContent.properties.ramUnit}`;
   }
 
   public get deviceStatus()  {

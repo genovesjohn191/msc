@@ -84,6 +84,10 @@ export class McsApiJob {
     this.endedOn = undefined;
   }
 
+  /**
+   * Returns the job data status if in progress,
+   * success or error based on the job status
+   */
   public get dataStatus(): McsDataStatus {
     let dataStatus: McsDataStatus;
 

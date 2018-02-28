@@ -26,7 +26,7 @@ export class Firewall {
   public active: boolean;
   public hardwareVendor: string;
   public cpuCount: number;
-  public memoryMb: number;
+  public memoryMB: number;
   public osType: string;
   public osVendor: string;
   public osRelease: string;
@@ -79,7 +79,7 @@ export class Firewall {
     this.active = undefined;
     this.hardwareVendor = undefined;
     this.cpuCount = undefined;
-    this.memoryMb = undefined;
+    this.memoryMB = undefined;
     this.osType = undefined;
     this.osVendor = undefined;
     this.osRelease = undefined;
