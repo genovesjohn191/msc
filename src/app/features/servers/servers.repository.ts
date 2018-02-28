@@ -8,8 +8,8 @@ import {
   McsApiSuccessResponse,
   McsNotificationEventsService,
   McsApiJob,
-  CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsDataStatus
 } from '../../core';
 import { ServersService } from './servers.service';
 import {
@@ -168,7 +168,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @param job Emitted job content
    */
   private _onCreateServer(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || job.status !== CoreDefinition.NOTIFICATION_JOB_COMPLETED) { return; }
+    if (isNullOrEmpty(job) || job.dataStatus !== McsDataStatus.Success) { return; }
     this.refreshRecords();
   }
 
@@ -181,7 +181,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let deletedServer = this._getServerByJob(job);
     if (!isNullOrEmpty(deletedServer)) {
       this._setServerProcessDetails(deletedServer, job);
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+      if (job.dataStatus === McsDataStatus.Success) {
         this.deleteRecordById(job.clientReferenceObject.serverId);
       }
     }
@@ -196,7 +196,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let renamedServer = this._getServerByJob(job);
     if (!isNullOrEmpty(renamedServer)) {
       this._setServerProcessDetails(renamedServer, job);
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+      if (job.dataStatus === McsDataStatus.Success) {
         renamedServer.name = job.clientReferenceObject.newName;
       }
       this.updateRecord(renamedServer);
@@ -213,7 +213,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+      if (job.dataStatus === McsDataStatus.Success) {
         this._updateServerPowerState(activeServer);
       }
 
@@ -245,8 +245,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED
-        && !isNullOrEmpty(activeServer.compute)) {
+      if (job.dataStatus === McsDataStatus.Success && !isNullOrEmpty(activeServer.compute)) {
         activeServer.compute.memoryMB = job.clientReferenceObject.memoryMB;
         activeServer.compute.cpuCount = job.clientReferenceObject.cpuCount;
         activeServer.compute.coreCount = 1;
@@ -277,10 +276,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
           return isNullOrEmpty(targetMedia.id);
         }, 1);
 
-        if (job.status === CoreDefinition.NOTIFICATION_JOB_FAILED) { return; }
+        if (job.dataStatus === McsDataStatus.Error) { return; }
       }
 
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+      if (job.dataStatus === McsDataStatus.Success) {
         let referenceObject = job.tasks[0].referenceObject;
 
         if (!isNullOrEmpty(referenceObject.resourceId)) {
@@ -317,7 +316,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       if (!isNullOrEmpty(media)) {
         media.isProcessing = activeServer.isProcessing;
 
-        if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+        if (job.dataStatus === McsDataStatus.Success) {
           deleteArrayRecord(activeServer.media, (targetMedia) => {
             return media.id === targetMedia.id;
           });
@@ -490,7 +489,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       if (!isNullOrEmpty(activeServer.snapshots)) {
         activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
       }
-      if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+      if (job.dataStatus === McsDataStatus.Success) {
         activeServer.snapshots = undefined;
       }
       this.updateRecord(activeServer);
@@ -613,7 +612,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    */
   private _getProcessingFlagByJob(job: McsApiJob): boolean {
     if (isNullOrEmpty(job)) { return false; }
-    return job.status === CoreDefinition.NOTIFICATION_JOB_PENDING
-      || job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+    return job.dataStatus === McsDataStatus.InProgress;
   }
 }

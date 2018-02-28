@@ -9,6 +9,7 @@ import {
 /** Services/Providers */
 import {
   McsApiJob,
+  McsDataStatus,
   McsNotificationContextService,
   CoreDefinition
 } from '../../../core';
@@ -38,6 +39,10 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
   private _timeStart: any;
   private _timeRemaining: any;
   private _timeOut: number;
+
+  public get displayErrorMessage(): boolean {
+    return this.attribute.dataStatus === McsDataStatus.Error;
+  }
 
   public constructor(
     private _ngZone: NgZone,
@@ -92,36 +97,25 @@ export class StateChangeNotificationComponent implements OnInit, OnChanges {
     this._removeNotification(0);
   }
 
-  public displayErrorMessage(status: string): boolean {
-    let isError: boolean = false;
-
-    if (status) {
-      isError = status.localeCompare(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT) === 0 ||
-        status.localeCompare(CoreDefinition.NOTIFICATION_JOB_FAILED) === 0 ||
-        status.localeCompare(CoreDefinition.NOTIFICATION_JOB_CANCELLED) === 0;
-    }
-    return isError;
-  }
-
   private _setIconAndTimeOut(notification: McsApiJob): void {
-    switch (notification.status) {
-      case CoreDefinition.NOTIFICATION_JOB_PENDING:
-      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+    switch (notification.dataStatus) {
+      case McsDataStatus.InProgress:
         this.iconStatusKey = CoreDefinition.ASSETS_GIF_SPINNER;
         this.iconStatusColor = 'black';
         break;
-      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
-      case CoreDefinition.NOTIFICATION_JOB_FAILED:
-      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
+
+      case McsDataStatus.Error:
         this.iconStatusKey = CoreDefinition.ASSETS_FONT_CLOSE;
         this.iconStatusColor = 'red';
         this._timeOut = CoreDefinition.NOTIFICATION_FAILED_TIMEOUT;
         break;
-      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+
+      case McsDataStatus.Success:
         this.iconStatusKey = CoreDefinition.ASSETS_FONT_CHECK;
         this.iconStatusColor = 'green';
         this._timeOut = CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT;
         break;
+
       default:
         break;
     }

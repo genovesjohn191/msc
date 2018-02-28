@@ -15,9 +15,9 @@
       <div class="task-content" *ngIf="job.tasks">
         <div *ngFor="let task of job.tasks" class="status-details">
 
-          <mcs-icon [ngClass]="getStatusIcon(task.status).class"
-            [key]="getStatusIcon(task.status).key"
-            [color]="getStatusIcon(task.status).color"
+          <mcs-icon [ngClass]="getStatusIcon(task.dataStatus).class"
+            [key]="getStatusIcon(task.dataStatus).key"
+            [color]="getStatusIcon(task.dataStatus).color"
             size="small"></mcs-icon>
           <span>{{ task.description }}</span>
         </div>
@@ -27,9 +27,9 @@
       <div *ngIf="isJobCompleted(job)" class="job-completed">
         <!-- In case of success -->
         <div *ngIf="isJobSuccessful(job)" class="status-details">
-          <mcs-icon [ngClass]="getStatusIcon('Completed').class"
-            [key]="getStatusIcon('Completed').key"
-            [color]="getStatusIcon('Completed').color"
+          <mcs-icon [ngClass]="getStatusIcon(job.dataStatus).class"
+            [key]="getStatusIcon(job.dataStatus).key"
+            [color]="getStatusIcon(job.dataStatus).color"
             size="small"></mcs-icon>
           <span class="font-bold">{{ textContent.deploymentCompleted }}</span>
         </div>

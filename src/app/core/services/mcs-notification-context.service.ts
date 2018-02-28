@@ -4,6 +4,7 @@ import {
   BehaviorSubject
 } from 'rxjs/Rx';
 import { McsApiJob } from '../models/response/mcs-api-job';
+import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { CoreDefinition } from '../core.definition';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
@@ -91,8 +92,7 @@ export class McsNotificationContextService {
     if (this._notifications) {
       // Filter jobs and tasks by Active
       this._notifications = this._notifications.filter((notification) => {
-        return notification.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE ||
-          notification.status === CoreDefinition.NOTIFICATION_JOB_PENDING;
+        return notification.dataStatus === McsDataStatus.InProgress;
       });
       this._notificationsStream.next(this._notifications);
     }
@@ -146,15 +146,12 @@ export class McsNotificationContextService {
             let jobIncluded = false;
 
             // Filtered all the notification based on the status type and time duration
-            switch (notification.status) {
-              case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-              case CoreDefinition.NOTIFICATION_JOB_PENDING:
+            switch (notification.dataStatus) {
+              case McsDataStatus.InProgress:
                 jobIncluded = true;
                 break;
 
-              case CoreDefinition.NOTIFICATION_JOB_FAILED:
-              case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
-              case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
+              case McsDataStatus.Error:
                 if (notification.endedOn &&
                   getTimeDifference(notification.endedOn, new Date()) <
                   CoreDefinition.NOTIFICATION_FAILED_TIMEOUT) {
@@ -162,7 +159,7 @@ export class McsNotificationContextService {
                 }
                 break;
 
-              case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+              case McsDataStatus.Success:
               default:
                 if (notification.endedOn &&
                   getTimeDifference(notification.endedOn, new Date()) <

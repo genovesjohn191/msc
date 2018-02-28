@@ -9,8 +9,11 @@ import { ProvisioningNotificationsComponent } from './provisioning-notifications
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsApiJob
+  McsApiJob,
+  McsJobStatus,
+  McsDataStatus
 } from '../../../../core';
+import { getEnumString } from '../../../../utilities';
 
 describe('ProvisioningNotificationsComponent', () => {
 
@@ -19,11 +22,11 @@ describe('ProvisioningNotificationsComponent', () => {
   let component: ProvisioningNotificationsComponent;
 
   // Creation of notification based on id and status
-  let createNotification = (notificationId: string, notificationStatus: string) => {
+  let createNotification = (notificationId: string, notificationStatus: McsJobStatus) => {
     let notification: McsApiJob = new McsApiJob();
 
     notification.id = notificationId;
-    notification.errorMessage = notificationStatus;
+    notification.errorMessage = getEnumString(McsJobStatus, notificationStatus);
     notification.createdOn = new Date('2017-04-26T01:51:34Z');
     notification.startedOn = new Date('2017-04-26T01:51:34Z');
     notification.updatedOn = new Date('2017-04-26T01:55:12Z');
@@ -71,9 +74,9 @@ describe('ProvisioningNotificationsComponent', () => {
 
       component = fixture.componentInstance;
 
-      component.jobs.push(createNotification('12345', CoreDefinition.NOTIFICATION_JOB_ACTIVE));
-      component.jobs.push(createNotification('12346', CoreDefinition.NOTIFICATION_JOB_FAILED));
-      component.jobs.push(createNotification('12347', CoreDefinition.NOTIFICATION_JOB_COMPLETED));
+      component.jobs.push(createNotification('12345', McsJobStatus.Active));
+      component.jobs.push(createNotification('12346', McsJobStatus.Failed));
+      component.jobs.push(createNotification('12347', McsJobStatus.Completed));
     });
   }));
 
@@ -135,34 +138,34 @@ describe('ProvisioningNotificationsComponent', () => {
 
   describe('isJobCompleted()', () => {
     it(`should return false when job is active`, () => {
-      let jobCompleted = component.isJobCompleted(createNotification('12348',
-        CoreDefinition.NOTIFICATION_JOB_ACTIVE));
+      let jobCompleted = component.isJobCompleted(
+        createNotification('12348', McsJobStatus.Active));
       expect(jobCompleted).toBeFalsy();
     });
 
     it(`should return false when job is pending`, () => {
-      let jobCompleted = component.isJobCompleted(createNotification('12348',
-        CoreDefinition.NOTIFICATION_JOB_PENDING));
+      let jobCompleted = component.isJobCompleted(
+        createNotification('12348', McsJobStatus.Pending));
       expect(jobCompleted).toBeFalsy();
     });
 
     it(`should return true when job is not active | pending`, () => {
-      let jobCompleted = component.isJobCompleted(createNotification('12348',
-        CoreDefinition.NOTIFICATION_JOB_COMPLETED));
+      let jobCompleted = component.isJobCompleted(
+        createNotification('12348', McsJobStatus.Completed));
       expect(jobCompleted).toBeTruthy();
     });
   });
 
   describe('isJobError()', () => {
     it(`should return true when job is completed/successful`, () => {
-      let jobSuccess = component.isJobSuccessful(createNotification('12348',
-        CoreDefinition.NOTIFICATION_JOB_COMPLETED));
+      let jobSuccess = component.isJobSuccessful(
+        createNotification('12348', McsJobStatus.Completed));
       expect(jobSuccess).toBeTruthy();
     });
 
     it(`should return false when job is not completed/successful`, () => {
-      let jobSuccess = component.isJobSuccessful(createNotification('12348',
-        CoreDefinition.NOTIFICATION_JOB_FAILED));
+      let jobSuccess = component.isJobSuccessful(
+        createNotification('12348', McsJobStatus.Failed));
       expect(jobSuccess).toBeFalsy();
     });
   });
@@ -170,7 +173,7 @@ describe('ProvisioningNotificationsComponent', () => {
   describe('getStatusIcon()', () => {
     it(`should return the iconKey to spinner, iconColor to black, iconClass to active
     when the job status is active`, () => {
-      let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+      let jobStatus = component.getStatusIcon(McsDataStatus.InProgress);
       expect(jobStatus.key).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
       expect(jobStatus.color).toBe('black');
       expect(jobStatus.class).toBe('active');
@@ -178,7 +181,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
     it(`should return the iconKey to spinner, iconColor to black, iconClass to active
     when the job status is pending`, () => {
-      let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_PENDING);
+      let jobStatus = component.getStatusIcon(McsDataStatus.InProgress);
       expect(jobStatus.key).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
       expect(jobStatus.color).toBe('black');
       expect(jobStatus.class).toBe('active');
@@ -186,7 +189,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
     it(`should return the iconKey to close, iconColor to red, iconClass to failed
     when the job status is timedout`, () => {
-      let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT);
+      let jobStatus = component.getStatusIcon(McsDataStatus.Error);
       expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
       expect(jobStatus.color).toBe('red');
       expect(jobStatus.class).toBe('failed');
@@ -194,7 +197,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
     it(`should return the iconKey to close, iconColor to red, iconClass to failed
     when the job status is cancelled`, () => {
-      let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_CANCELLED);
+      let jobStatus = component.getStatusIcon(McsDataStatus.Error);
       expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
       expect(jobStatus.color).toBe('red');
       expect(jobStatus.class).toBe('failed');
@@ -202,7 +205,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
     it(`should return the iconKey to close, iconColor to red, iconClass to failed
     when the job status is failed`, () => {
-      let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_FAILED);
+      let jobStatus = component.getStatusIcon(McsDataStatus.Error);
       expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
       expect(jobStatus.color).toBe('red');
       expect(jobStatus.class).toBe('failed');
@@ -210,7 +213,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
     it(`should return the iconKey to check, iconColor to green, iconClass to completed
     when the job status is completed`, () => {
-      let jobStatus = component.getStatusIcon(CoreDefinition.NOTIFICATION_JOB_COMPLETED);
+      let jobStatus = component.getStatusIcon(McsDataStatus.Success);
       expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CHECK);
       expect(jobStatus.color).toBe('green');
       expect(jobStatus.class).toBe('completed');

@@ -34,12 +34,18 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   public textContent: any;
   public firewall: Firewall;
   public subscription: any;
-  public firewallCpu: string;
-  public firewallMemory: string;
 
   public deviceStatusIconKey: string;
   public connectionStatusIconKey: string;
   public configurationStatusIconKey: string;
+
+  public get firewallCpu(): string {
+    return `${this.firewall.cpuCount} ${this.textContent.properties.cpuUnit}`;
+  }
+
+  public get firewallMemory(): string {
+    return `${convertToGb(this.firewall.memoryMb)} ${this.textContent.properties.ramUnit}`;
+  }
 
   public get deviceStatus()  {
     return FirewallDeviceStatus;
@@ -69,8 +75,6 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     private _firewallService: FirewallService
   ) {
     this.firewall = new Firewall();
-    this.firewallCpu = '';
-    this.firewallMemory = '';
     this.deviceStatusIconKey = '';
     this.connectionStatusIconKey = '';
     this.configurationStatusIconKey = '';
@@ -109,17 +113,10 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   private _initializeFirewallData(): void {
-    let cpuUnit = this.textContent.properties.cpuUnit;
-    let ramUnit = this.textContent.properties.ramUnit;
-
     this.subscription = this._firewallService.selectedFirewallStream
       .subscribe((firewall) => {
         if (isNullOrEmpty(firewall)) { return; }
-
         this.firewall = firewall;
-        this.firewallCpu = `${firewall.cpuCount} ${cpuUnit}`;
-        this.firewallMemory = `${convertToGb(firewall.memoryMB)} ${ramUnit}`;
-
         this._setDeviceStatusIconKey();
         this._setConnectionStatusIconKey();
         this._setConfigurationStatusIconKey();

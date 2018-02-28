@@ -34,10 +34,10 @@
                 <ng-container *mcsIsSelfManagedServer="server">
                   <a *ngIf="!isScaling" (click)="showScaleOption()" [disabled]="!server.executable">
                     {{ textContent.performanceScale.scale }}</a>
+                  <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
+                    [mcsTooltip]="textContent.performanceScale.scaling"></mcs-icon>
                 </ng-container>
               </span>
-              <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
-                [mcsTooltip]="textContent.performanceScale.scaling"></mcs-icon>
             </mcs-list-item>
           </mcs-list>
         </div>

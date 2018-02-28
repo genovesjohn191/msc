@@ -25,7 +25,8 @@ import {
   McsDialogService,
   McsOption,
   McsErrorHandlerService,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsDataStatus
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
@@ -460,7 +461,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _onCreateServerDisk(job: McsApiJob): void {
     if (isNullOrEmpty(job) || isNullOrEmpty(job.clientReferenceObject)) { return; }
 
-    if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+    if (job.dataStatus === McsDataStatus.Success) {
       // Update resource values
       let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
 
@@ -481,7 +482,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _onDeleteServerDisk(job: McsApiJob): void {
     if (isNullOrEmpty(job) || isNullOrEmpty(job.clientReferenceObject)) { return; }
 
-    if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+    if (job.dataStatus === McsDataStatus.Success) {
       // Update resource values
       let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
       if (!isNullOrEmpty(resourceStorage)) {

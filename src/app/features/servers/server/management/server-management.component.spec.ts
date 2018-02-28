@@ -11,7 +11,8 @@ import {
 import {
   CoreDefinition,
   McsNotificationContextService,
-  McsApiJob
+  McsApiJob,
+  McsJobStatus
 } from '../../../../core';
 import { ServerService } from '../server.service';
 import {
@@ -90,7 +91,7 @@ describe('ServerManagementComponent', () => {
       let notifications: McsApiJob[] = new Array();
       let notificationActive = new McsApiJob();
       notificationActive.id = '5';
-      notificationActive.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+      notificationActive.status = McsJobStatus.Active;
       notificationActive.clientReferenceObject = {
         activeServerId: mockServerDetails.id
       };

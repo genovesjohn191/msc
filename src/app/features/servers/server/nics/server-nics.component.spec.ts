@@ -5,9 +5,9 @@ import {
 } from '@angular/core/testing';
 import { ServerNicsComponent } from './server-nics.component';
 import {
-  CoreDefinition,
   McsNotificationContextService,
-  McsApiJob
+  McsApiJob,
+  McsJobStatus
 } from '../../../../core';
 import { ServersTestingModule } from '../../testing';
 import {
@@ -86,7 +86,7 @@ describe('ServerNicsComponent', () => {
       let notifications: McsApiJob[] = new Array();
       let notificationActive = new McsApiJob();
       notificationActive.id = '5';
-      notificationActive.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+      notificationActive.status = McsJobStatus.Active;
       notificationActive.clientReferenceObject = {
         serverId: mockServerDetails.id,
         networkId: mockServerNetworks[0].id

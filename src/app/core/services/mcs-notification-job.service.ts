@@ -3,9 +3,9 @@ import { BehaviorSubject } from 'rxjs/Rx';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { CoreDefinition } from '../core.definition';
 import {
-  reviverParser,
   refreshView,
-  unsubscribeSafely
+  unsubscribeSafely,
+  deserializeJsonToObject
 } from '../../utilities';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiService } from './mcs-api.service';
@@ -131,7 +131,7 @@ export class McsNotificationJobService {
   private _updateNotification(bodyContent: any) {
     if (bodyContent) {
       let updatedNotification: McsApiJob;
-      updatedNotification = JSON.parse(bodyContent, reviverParser) as McsApiJob;
+      updatedNotification = deserializeJsonToObject(McsApiJob, JSON.parse(bodyContent));
       this._notificationStream.next(updatedNotification);
     }
   }
