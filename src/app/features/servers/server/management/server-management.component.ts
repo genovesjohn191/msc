@@ -144,7 +144,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get isScaling(): boolean {
-    return this.server.executable && this.server.commandAction === ServerCommand.Scale;
+    return this.server.isProcessing && this.server.commandAction === ServerCommand.Scale;
   }
 
   public get hasStorage(): boolean {

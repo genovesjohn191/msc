@@ -19,7 +19,8 @@ import {
   McsTextContentProvider,
   McsApiJob,
   CoreDefinition,
-  Key
+  Key,
+  McsDataStatus
 } from '../../core';
 import { ServerCommand } from '../../features/servers';
 import { ConsolePageService } from './console-page.service';
@@ -200,7 +201,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((job: McsApiJob) => {
         if (isNullOrEmpty(job)) { return; }
 
-        if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED &&
+        if (job.dataStatus === McsDataStatus.Success &&
           job.clientReferenceObject.serverId === this._serverId) {
           this._poweredOn = !!(job.clientReferenceObject.commandAction === ServerCommand.Start);
         }

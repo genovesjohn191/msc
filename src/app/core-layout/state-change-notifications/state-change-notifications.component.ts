@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import {
   McsApiJob,
+  McsDataStatus,
   McsNotificationContextService,
   CoreDefinition
 } from '../../core';
@@ -51,10 +52,8 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
       .subscribe((updatedNotifications) => {
         // Obtain error notification only
         this.notifications = updatedNotifications.filter((notification) => {
-          return notification.status === CoreDefinition.NOTIFICATION_JOB_CANCELLED ||
-            notification.status === CoreDefinition.NOTIFICATION_JOB_TIMEDOUT ||
-            notification.status === CoreDefinition.NOTIFICATION_JOB_FAILED ||
-            notification.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+          return notification.dataStatus === McsDataStatus.Error
+            || notification.dataStatus === McsDataStatus.Success;
         });
         refreshView(() => {
           this._changeDetectorRef.detectChanges();

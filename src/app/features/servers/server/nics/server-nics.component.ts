@@ -24,7 +24,8 @@ import {
   McsApiJob,
   McsNotificationEventsService,
   McsDataStatusFactory,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsDataStatus
 } from '../../../../core';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
@@ -449,7 +450,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
     // Get and update the server nics
-    if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+    if (job.dataStatus === McsDataStatus.Success) {
       this._getServerNics();
     }
   }

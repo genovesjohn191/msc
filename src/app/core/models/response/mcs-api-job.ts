@@ -5,9 +5,12 @@ import {
   McsJobType,
   McsJobTypeSerialization
 } from '../../enumerations/mcs-job-type.enum';
+import {
+  McsJobStatus,
+  McsJobStatusSerialization
+} from '../../enumerations/mcs-job-status.enum';
+import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 
-// TODO: Set the jobtype to its corresponding enum type instead of string
-// this a major modification and needs alot of effort. :)
 export class McsApiJob {
   public id: string;
   public ownerName: string;
@@ -17,7 +20,6 @@ export class McsApiJob {
   public durationInSeconds: number;
   public ectInSeconds: number;
   public clientReferenceObject: any;
-  public status: string;
 
   @JsonProperty({ type: McsApiTask })
   public tasks: McsApiTask[];
@@ -28,6 +30,13 @@ export class McsApiJob {
     deserializer: McsJobTypeSerialization
   })
   public type: McsJobType;
+
+  @JsonProperty({
+    type: McsJobStatus,
+    serializer: McsJobStatusSerialization,
+    deserializer: McsJobStatusSerialization
+  })
+  public status: McsJobStatus;
 
   @JsonProperty({
     type: Date,
@@ -73,5 +82,29 @@ export class McsApiJob {
     this.updatedOn = undefined;
     this.startedOn = undefined;
     this.endedOn = undefined;
+  }
+
+  public get dataStatus(): McsDataStatus {
+    let dataStatus: McsDataStatus;
+
+    switch (this.status) {
+      case McsJobStatus.Timedout:
+      case McsJobStatus.Failed:
+      case McsJobStatus.Cancelled:
+        dataStatus = McsDataStatus.Error;
+        break;
+
+      case McsJobStatus.Completed:
+        dataStatus = McsDataStatus.Success;
+        break;
+
+      case McsJobStatus.Pending:
+      case McsJobStatus.Active:
+      default:
+        dataStatus = McsDataStatus.InProgress;
+        break;
+    }
+
+    return dataStatus;
   }
 }

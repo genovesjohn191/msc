@@ -12,6 +12,7 @@ import {
 import { StateChangeNotificationsComponent } from './state-change-notifications.component';
 import {
   McsApiJob,
+  McsJobStatus,
   McsNotificationContextService,
   CoreDefinition
 } from '../../core';
@@ -107,15 +108,15 @@ describe('StateChangeNotificationsComponent', () => {
           let notifications: McsApiJob[] = new Array();
 
           let job = new McsApiJob();
-          job.status = CoreDefinition.NOTIFICATION_JOB_FAILED;
+          job.status = McsJobStatus.Failed;
           notifications.push(job);
 
           job = new McsApiJob();
-          job.status = CoreDefinition.NOTIFICATION_JOB_TIMEDOUT;
+          job.status = McsJobStatus.Timedout;
           notifications.push(job);
 
           job = new McsApiJob();
-          job.status = CoreDefinition.NOTIFICATION_JOB_CANCELLED;
+          job.status = McsJobStatus.Cancelled;
           notifications.push(job);
 
           notificationContextService.notificationsStream.next(notifications);

@@ -9,12 +9,6 @@ export class CoreDefinition {
   public static MOBILE_PORTRAIT_MIN_WIDTH = 320;
 
   /** Notifications */
-  public static NOTIFICATION_JOB_PENDING = 'Pending';
-  public static NOTIFICATION_JOB_ACTIVE = 'Active';
-  public static NOTIFICATION_JOB_TIMEDOUT = 'Timedout';
-  public static NOTIFICATION_JOB_FAILED = 'Failed';
-  public static NOTIFICATION_JOB_CANCELLED = 'Cancelled';
-  public static NOTIFICATION_JOB_COMPLETED = 'Completed';
   public static NOTIFICATION_RUNNING_MAX_DISPLAY = 3;
   public static NOTIFICATION_STATE_CHANGE_MAX_DISPLAY = 2;
   public static NOTIFICATION_ANIMATION_DELAY = 310;

@@ -10,7 +10,8 @@ import {
   McsApiJob,
   McsNotificationContextService,
   CoreDefinition,
-  McsConnectionStatus
+  McsConnectionStatus,
+  McsJobStatus
 } from '../../../core';
 import { CoreLayoutTestingModule } from '../../testing';
 
@@ -80,7 +81,7 @@ describe('UserPanelComponent', () => {
 
           let notificationActive = new McsApiJob();
           notificationActive.id = '5';
-          notificationActive.status = CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+          notificationActive.status = McsJobStatus.Active;
           notifications.push(notificationActive);
 
           notificationContextService.notificationsStream.next(notifications);
@@ -97,7 +98,7 @@ describe('UserPanelComponent', () => {
 
           let notificationPending = new McsApiJob();
           notificationPending.id = '5';
-          notificationPending.status = CoreDefinition.NOTIFICATION_JOB_PENDING;
+          notificationPending.status = McsJobStatus.Pending;
           notifications.push(notificationPending);
 
           notificationContextService.notificationsStream.next(notifications);
@@ -114,7 +115,7 @@ describe('UserPanelComponent', () => {
 
           let notificationFailed = new McsApiJob();
           notificationFailed.id = '5';
-          notificationFailed.status = CoreDefinition.NOTIFICATION_JOB_FAILED;
+          notificationFailed.status = McsJobStatus.Failed;
           notifications.push(notificationFailed);
 
           notificationContextService.notificationsStream.next(notifications);
@@ -131,7 +132,7 @@ describe('UserPanelComponent', () => {
 
           let notificationFailed = new McsApiJob();
           notificationFailed.id = '5';
-          notificationFailed.status = CoreDefinition.NOTIFICATION_JOB_TIMEDOUT;
+          notificationFailed.status = McsJobStatus.Timedout;
           notifications.push(notificationFailed);
 
           notificationContextService.notificationsStream.next(notifications);
@@ -148,7 +149,7 @@ describe('UserPanelComponent', () => {
 
           let notificationFailed = new McsApiJob();
           notificationFailed.id = '5';
-          notificationFailed.status = CoreDefinition.NOTIFICATION_JOB_CANCELLED;
+          notificationFailed.status = McsJobStatus.Cancelled;
           notifications.push(notificationFailed);
 
           notificationContextService.notificationsStream.next(notifications);
@@ -165,7 +166,7 @@ describe('UserPanelComponent', () => {
 
           let notificationCompleted = new McsApiJob();
           notificationCompleted.id = '5';
-          notificationCompleted.status = CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+          notificationCompleted.status = McsJobStatus.Completed;
           notifications.push(notificationCompleted);
 
           notificationContextService.notificationsStream.next(notifications);

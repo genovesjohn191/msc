@@ -11,7 +11,8 @@ import { Observable } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsApiJob
+  McsApiJob,
+  McsDataStatus
 } from '../../../../core';
 import {
   isNullOrEmpty,
@@ -76,34 +77,30 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
   }
 
   public isJobCompleted(job: McsApiJob): boolean {
-    return job.status !== CoreDefinition.NOTIFICATION_JOB_PENDING &&
-      job.status !== CoreDefinition.NOTIFICATION_JOB_ACTIVE;
+    return job.dataStatus !== McsDataStatus.InProgress;
   }
 
   public isJobSuccessful(job: McsApiJob): boolean {
-    return job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED;
+    return job.dataStatus === McsDataStatus.Success;
   }
 
-  public getStatusIcon(status: string): { key, color, class } {
+  public getStatusIcon(dataStatus: McsDataStatus): { key, color, class } {
     let iconKey: string;
     let iconColor: string;
     let iconClass: string;
 
-    switch (status) {
-      case CoreDefinition.NOTIFICATION_JOB_PENDING:
-      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+    switch (dataStatus) {
+      case McsDataStatus.InProgress:
         iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
         iconColor = 'black';
         iconClass = 'active';
         break;
-      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
-      case CoreDefinition.NOTIFICATION_JOB_FAILED:
-      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
+      case McsDataStatus.Error:
         iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
         iconColor = 'red';
         iconClass = 'failed';
         break;
-      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+      case McsDataStatus.Success:
         iconKey = CoreDefinition.ASSETS_FONT_CHECK;
         iconColor = 'green';
         iconClass = 'completed';
@@ -139,15 +136,12 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
 
           // Find active jobs (in case there are) and exit timer in case of completion
           let activeJobExists = this.jobs.find((job) => {
-            return job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE ||
-              job.status === CoreDefinition.NOTIFICATION_JOB_PENDING;
+            return job.dataStatus === McsDataStatus.InProgress;
           });
           if (!activeJobExists) {
             // Find error jobs and roll back the progressbar
             let errorJobExists = this.jobs.find((job) => {
-              return job.status === CoreDefinition.NOTIFICATION_JOB_FAILED ||
-                job.status === CoreDefinition.NOTIFICATION_JOB_CANCELLED ||
-                job.status === CoreDefinition.NOTIFICATION_JOB_TIMEDOUT;
+              return job.dataStatus === McsDataStatus.Error;
             });
             if (errorJobExists) {
               this._endTimer(0);

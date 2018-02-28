@@ -9,11 +9,15 @@ import {
 import { StateChangeNotificationComponent } from './state-change-notification.component';
 import {
   McsApiJob,
+  McsJobStatus,
   McsNotificationContextService,
   McsNotificationJobService,
   CoreDefinition
 } from '../../../core';
-import { unsubscribeSafely } from '../../../utilities';
+import {
+  unsubscribeSafely,
+  getEnumString
+} from '../../../utilities';
 import { CoreLayoutTestingModule } from '../../testing';
 
 describe('StateChangeNotificationComponent', () => {
@@ -57,11 +61,11 @@ describe('StateChangeNotificationComponent', () => {
   }));
 
   // Creation of notification based on id and status
-  let createNotification = (notificationId: string, notificationStatus: string) => {
+  let createNotification = (notificationId: string, notificationStatus: McsJobStatus) => {
     let notification: McsApiJob = new McsApiJob();
 
     notification.id = notificationId;
-    notification.errorMessage = notificationStatus;
+    notification.errorMessage = getEnumString(McsJobStatus, notificationStatus);
     notification.createdOn = new Date('2017-04-26T01:51:34Z');
     notification.startedOn = new Date('2017-04-26T01:51:34Z');
     notification.updatedOn = new Date('2017-04-26T01:55:12Z');
@@ -80,7 +84,7 @@ describe('StateChangeNotificationComponent', () => {
     let notification: McsApiJob;
     beforeEach(async(() => {
       notification = new McsApiJob();
-      notification = createNotification('1', 'Active');
+      notification = createNotification('1', McsJobStatus.Active);
 
       mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
@@ -109,7 +113,7 @@ describe('StateChangeNotificationComponent', () => {
     let notification: McsApiJob;
     beforeEach(fakeAsync(() => {
       notification = new McsApiJob();
-      notification = createNotification('1', 'Failed');
+      notification = createNotification('1', McsJobStatus.Failed);
 
       mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
@@ -141,7 +145,7 @@ describe('StateChangeNotificationComponent', () => {
     let notification: McsApiJob;
     beforeEach(fakeAsync(() => {
       notification = new McsApiJob();
-      notification = createNotification('1', 'Completed');
+      notification = createNotification('1', McsJobStatus.Completed);
 
       mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
@@ -173,7 +177,7 @@ describe('StateChangeNotificationComponent', () => {
     let notification: McsApiJob;
     beforeEach(fakeAsync(() => {
       notification = new McsApiJob();
-      notification = createNotification('1', 'Completed');
+      notification = createNotification('1', McsJobStatus.Completed);
 
       mcsNotificationJobService.notificationStream.next(notification);
       component.attribute = notification;
@@ -196,37 +200,43 @@ describe('StateChangeNotificationComponent', () => {
   describe('displayErrorMessage()', () => {
     it('should return true in case of failed', () => {
       let isDisplayed: boolean;
-      isDisplayed = component.displayErrorMessage(CoreDefinition.NOTIFICATION_JOB_FAILED);
+      component.attribute.status = McsJobStatus.Failed;
+      isDisplayed = component.displayErrorMessage;
       expect(isDisplayed).toBe(true);
     });
 
     it('should return true in case of timedout', () => {
       let isDisplayed: boolean;
-      isDisplayed = component.displayErrorMessage(CoreDefinition.NOTIFICATION_JOB_TIMEDOUT);
+      component.attribute.status = McsJobStatus.Timedout;
+      isDisplayed = component.displayErrorMessage;
       expect(isDisplayed).toBe(true);
     });
 
     it('should return true in case of cancelled', () => {
       let isDisplayed: boolean;
-      isDisplayed = component.displayErrorMessage(CoreDefinition.NOTIFICATION_JOB_CANCELLED);
+      component.attribute.status = McsJobStatus.Cancelled;
+      isDisplayed = component.displayErrorMessage;
       expect(isDisplayed).toBe(true);
     });
 
     it('should return false in case of completed', () => {
       let isDisplayed: boolean;
-      isDisplayed = component.displayErrorMessage(CoreDefinition.NOTIFICATION_JOB_COMPLETED);
+      component.attribute.status = McsJobStatus.Completed;
+      isDisplayed = component.displayErrorMessage;
       expect(isDisplayed).toBe(false);
     });
 
     it('should return false in case of active', () => {
       let isDisplayed: boolean;
-      isDisplayed = component.displayErrorMessage(CoreDefinition.NOTIFICATION_JOB_ACTIVE);
+      component.attribute.status = McsJobStatus.Active;
+      isDisplayed = component.displayErrorMessage;
       expect(isDisplayed).toBe(false);
     });
 
     it('should return false in case of pending', () => {
       let isDisplayed: boolean;
-      isDisplayed = component.displayErrorMessage(CoreDefinition.NOTIFICATION_JOB_PENDING);
+      component.attribute.status = McsJobStatus.Pending;
+      isDisplayed = component.displayErrorMessage;
       expect(isDisplayed).toBe(false);
     });
   });

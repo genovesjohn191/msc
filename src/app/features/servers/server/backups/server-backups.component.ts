@@ -15,7 +15,8 @@ import {
   McsNotificationEventsService,
   McsApiJob,
   McsDataStatusFactory,
-  CoreDefinition
+  CoreDefinition,
+  McsDataStatus
 } from '../../../../core';
 import {
   convertDateToStandardString,
@@ -298,11 +299,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
     // We need to set the processing flag manually here in order to cater
     // from moving one server to another
-    this._snapshotProcessing = job.status === CoreDefinition.NOTIFICATION_JOB_ACTIVE ||
-      job.status === CoreDefinition.NOTIFICATION_JOB_PENDING;
+    this._snapshotProcessing = job.dataStatus === McsDataStatus.InProgress;
 
     // Update the server snapshot
-    if (job.status === CoreDefinition.NOTIFICATION_JOB_COMPLETED) {
+    if (job.dataStatus === McsDataStatus.Success) {
       this._getServerSnapshots();
     }
   }

@@ -714,40 +714,6 @@ export class ServersService {
   }
 
   /**
-   * Get the active server power state based on job status
-   * @param server Corresponding server to be checked
-   */
-  public getActiveServerPowerState(activeServer: ServerClientObject): number {
-    let serverPowerstate: number = 0;
-
-    // Get actual server status
-    switch (activeServer.notificationStatus) {
-      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
-        // Considered Stop as PoweredOff and Start/Restart as PoweredOn, otherwise
-        // set the original powerstate of the server
-        serverPowerstate = activeServer.commandAction === ServerCommand.Stop ?
-          ServerPowerState.PoweredOff : activeServer.commandAction === ServerCommand.Start ||
-            activeServer.commandAction === ServerCommand.Restart ?
-            ServerPowerState.PoweredOn : activeServer.powerState;
-        break;
-
-      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
-      case CoreDefinition.NOTIFICATION_JOB_PENDING:
-        serverPowerstate = undefined;
-        break;
-
-      case CoreDefinition.NOTIFICATION_JOB_FAILED:
-      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
-      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
-        serverPowerstate = activeServer.powerState;
-      default:
-        break;
-    }
-
-    return serverPowerstate;
-  }
-
-  /**
    * Get Server Resources (MCS API Response)
    */
   public getServerResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {

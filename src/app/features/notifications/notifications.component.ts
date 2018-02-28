@@ -13,7 +13,8 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
-  McsTableListingBase
+  McsTableListingBase,
+  McsDataStatus
 } from '../../core';
 import {
   refreshView,
@@ -80,18 +81,18 @@ export class NotificationsComponent
 
   /**
    * Get the status icon key based on job
-   * @param status Status that serve as the basis
+   * @param dataStatus Status that serve as the basis
    */
-  public getStatusIconKey(status: string): string {
-    return this._getStatusIcon(status).key;
+  public getStatusIconKey(dataStatus: McsDataStatus): string {
+    return this._getStatusIcon(dataStatus).key;
   }
 
   /**
    * Get the status icon color based on job
-   * @param status Status that serve as the basis
+   * @param dataStatus Status that serve as the basis
    */
-  public getStatusIconColor(status: string): string {
-    return this._getStatusIcon(status).color;
+  public getStatusIconColor(dataStatus: McsDataStatus): string {
+    return this._getStatusIcon(dataStatus).color;
   }
 
   /**
@@ -119,25 +120,22 @@ export class NotificationsComponent
 
   /**
    * Get the status icon key based on the job
-   * @param status Status that serve as the basis
+   * @param dataStatus Status that serve as the basis
    */
-  private _getStatusIcon(status: string): { key, color } {
+  private _getStatusIcon(dataStatus: McsDataStatus): { key, color } {
     let iconKey: string;
     let iconColor: string;
 
-    switch (status) {
-      case CoreDefinition.NOTIFICATION_JOB_PENDING:
-      case CoreDefinition.NOTIFICATION_JOB_ACTIVE:
+    switch (dataStatus) {
+      case McsDataStatus.InProgress:
         iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
         iconColor = 'black';
         break;
-      case CoreDefinition.NOTIFICATION_JOB_TIMEDOUT:
-      case CoreDefinition.NOTIFICATION_JOB_FAILED:
-      case CoreDefinition.NOTIFICATION_JOB_CANCELLED:
+      case McsDataStatus.Error:
         iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
         iconColor = 'red';
         break;
-      case CoreDefinition.NOTIFICATION_JOB_COMPLETED:
+      case McsDataStatus.Success:
         iconKey = CoreDefinition.ASSETS_FONT_CHECK;
         iconColor = 'green';
         break;

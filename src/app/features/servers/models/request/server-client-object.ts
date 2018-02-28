@@ -10,6 +10,10 @@ import {
   ServerCommand,
   ServerCommandSerialization
 } from '../enumerations/server-command.enum';
+import {
+  McsJobStatus,
+  McsJobStatusSerialization
+} from '../../../../core';
 import { JsonProperty } from 'json-object-mapper';
 
 export class ServerClientObject {
@@ -17,7 +21,6 @@ export class ServerClientObject {
   public userId?: string;
   public newName?: string;
   public isOperable?: boolean;
-  public notificationStatus?: string;
   public processingText?: string;
 
   @JsonProperty({
@@ -40,6 +43,13 @@ export class ServerClientObject {
     deserializer: ServerServiceTypeSerialization
   })
   public serviceType?: ServerServiceType;
+
+  @JsonProperty({
+    type: McsJobStatus,
+    serializer: McsJobStatusSerialization,
+    deserializer: McsJobStatusSerialization
+  })
+  public notificationStatus?: McsJobStatus;
 
   constructor() {
     this.serverId = undefined;
