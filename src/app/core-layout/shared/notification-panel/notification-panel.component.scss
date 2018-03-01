@@ -1,0 +1,65 @@
+@import "../../../../styles/shared/base";
+
+// Main panel settings
+$notification-panel-max-width: 400px;
+$notification-panel-content-margin-size: 7px;
+// Notification panel state change settings
+$notification-panel-statechange-bg-color: rgba($color-black, 0.87);
+$notification-panel-statechange-border-color: $color-grey-05;
+$notification-panel-statechange-color: $dark-bg-text-color;
+// Notification panel running settings
+$notification-panel-running-bg-color: $color-white;
+$notification-panel-running-color: $light-bg-text-color;
+
+.notification-panel-wrapper {
+  display: block;
+  width: 100%;
+  max-width: $notification-panel-max-width;
+  position: relative;
+
+  &.notification-running-wrapper {
+    .notification-panel-content-wrapper {
+      color: $notification-panel-running-color;
+      background-color: $notification-panel-running-bg-color;
+    }
+  }
+
+  &.notification-statechange-wrapper {
+    .notification-panel-content-wrapper {
+      color: $notification-panel-statechange-color;
+      border: 1px solid $notification-panel-statechange-border-color;
+      background-color: $notification-panel-statechange-bg-color;
+    }
+  }
+}
+
+.notification-panel-content-wrapper {
+  @include display-flex(row);
+
+  .notification-panel-details {
+    @include flex(1 1 auto);
+    @include display-flex(row);
+    padding: $space-small;
+
+    .notification-panel-status-icon {
+      margin-top: $space-small;
+    }
+
+    .notification-panel-content {
+      margin-left: $space-small;
+      @include display-flex(column);
+      @include set-items-interval($space-xsmall);
+
+      .notification-panel-message {
+        display: block;
+        margin-bottom: $notification-panel-content-margin-size;
+      }
+    }
+  }
+
+  .notification-panel-close {
+    @include flex(0 0 auto);
+    padding: $space-small $space-medium;
+    margin-top: $space-xsmall;
+  }
+}

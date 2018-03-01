@@ -149,3 +149,54 @@
 .space-right-xlarge {
   margin-right: $space-xlarge;
 }
+
+// Rounded Padding
+.padding-xsmall {
+  padding: $space-xsmall;
+}
+
+.padding-small {
+  padding: $space-small;
+}
+
+.padding-medium {
+  padding: $space-medium;
+}
+
+.padding-large {
+  padding: $space-large;
+}
+
+// Horizontal Padding
+.hpadding-xsmall {
+  padding: 0 $space-xsmall;
+}
+
+.hpadding-small {
+  padding: 0 $space-small;
+}
+
+.hpadding-medium {
+  padding: 0 $space-medium;
+}
+
+.hpadding-large {
+  padding: 0 $space-large;
+}
+
+// Vertical Padding
+.vpadding-xsmall {
+  padding: $space-xsmall 0;
+}
+
+.vpadding-small {
+  padding: $space-small 0;
+}
+
+.vpadding-medium {
+  padding: $space-medium 0;
+}
+
+.vpadding-large {
+  padding: $space-large 0;
+}

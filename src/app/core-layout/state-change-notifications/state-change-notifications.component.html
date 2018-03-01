@@ -1,9 +1,12 @@
 <div *ngIf="visible" #stateChangeNotificationsElement
   class="state-change-notifications-container">
   <ul class="unstyled-list">
-    <li *ngFor="let notification of (notifications | mcsStateChangeNotificationMaxDisplayPipe)">
-      <mcs-state-change-notification [attribute]="notification">
-      </mcs-state-change-notification>
+    <li *ngFor="let notification of (notifications | mcsNotificationPanelMaxPipe)">
+      <mcs-notification-panel
+        type="statechange"
+        [notification]="notification"
+        (remove)="removeNotification($event)">
+      </mcs-notification-panel>
     </li>
   </ul>
 </div>

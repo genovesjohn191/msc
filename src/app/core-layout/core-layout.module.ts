@@ -5,11 +5,7 @@ import { FormsModule } from '@angular/forms';
 /** Modules */
 import { SharedModule } from '../shared';
 /** Multiple Components */
-import {
-  StateChangeNotificationsComponent,
-  StateChangeNotificationComponent,
-  StateChangeNotificationMaxDisplayPipe
-} from './state-change-notifications';
+import { StateChangeNotificationsComponent } from './state-change-notifications';
 import {
   MainNavigationComponent,
   NavigationDesktopComponent,
@@ -23,12 +19,12 @@ import { FooterComponent } from './footer/footer.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import {
   HeaderComponent,
-  UserPanelComponent,
-  RunningNotificationComponent,
-  RunningNotificationMaxDisplayPipe
+  UserPanelComponent
 } from './header';
 import {
   AccountPanelComponent,
+  NotificationPanelComponent,
+  NotificationPanelMaxPipe,
   SwitchAccountComponent,
   RecentCompaniesMaxPipe
 } from './shared';
@@ -39,22 +35,20 @@ import { coreLayoutProviders } from './core-layout.constants';
   declarations: [
     BreadcrumbsComponent,
     AccountPanelComponent,
+    NotificationPanelMaxPipe,
+    NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
     ContentComponent,
     FooterComponent,
     HeaderComponent,
-    RunningNotificationComponent,
     UserPanelComponent,
-    StateChangeNotificationComponent,
     StateChangeNotificationsComponent,
     MainNavigationComponent,
     NavigationDesktopComponent,
     NavigationMobileComponent,
     NavigationDesktopItemsDirective,
-    NavigationMobileItemsDirective,
-    RunningNotificationMaxDisplayPipe,
-    StateChangeNotificationMaxDisplayPipe
+    NavigationMobileItemsDirective
   ],
   imports: [
     CommonModule,
@@ -64,22 +58,20 @@ import { coreLayoutProviders } from './core-layout.constants';
   ],
   exports: [
     AccountPanelComponent,
+    NotificationPanelMaxPipe,
+    NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
     ContentComponent,
     FooterComponent,
     HeaderComponent,
-    RunningNotificationComponent,
     UserPanelComponent,
-    StateChangeNotificationComponent,
     StateChangeNotificationsComponent,
     MainNavigationComponent,
     NavigationDesktopComponent,
     NavigationMobileComponent,
     NavigationDesktopItemsDirective,
     NavigationMobileItemsDirective,
-    RunningNotificationMaxDisplayPipe,
-    StateChangeNotificationMaxDisplayPipe,
     CommonModule,
     RouterModule,
     FormsModule

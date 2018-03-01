@@ -9,23 +9,27 @@ import {
 import { Router } from '@angular/router';
 /** Services/Providers */
 import {
+  CoreDefinition,
   McsTextContentProvider,
   McsApiJob,
-  McsNotificationContextService,
-  CoreDefinition,
+  McsNotificationEventsService,
   McsBrowserService,
   McsDeviceType,
   McsConnectionStatus,
   McsAuthenticationIdentity,
   McsAuthenticationService,
-  McsApiCompany
+  McsApiCompany,
+  McsDataStatus
 } from '../../../core';
 import { SwitchAccountService } from '../../shared';
 import {
   refreshView,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  addOrUpdateArrayRecord,
+  deleteArrayRecord
 } from '../../../utilities';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mcs-user-panel',
@@ -37,7 +41,6 @@ import {
 export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsApiJob[];
   public hasConnectionError: boolean;
-  public statusIconClass: string;
   public textContent: any;
   public deviceType: McsDeviceType;
 
@@ -87,7 +90,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   @ViewChild('userPopover')
   public userPopover: any;
 
-  private _notificationsStreamSubscription: any;
+  private _notificationsSubscription: Subscription;
   private _notificationsConnectionSubscription: any;
   private _browserSubscription: any;
   private _activeAccountSubscription: any;
@@ -95,7 +98,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public constructor(
     private _textContent: McsTextContentProvider,
     private _router: Router,
-    private _notificationContextService: McsNotificationContextService,
+    private _notificationEvents: McsNotificationEventsService,
     private _browserService: McsBrowserService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
@@ -103,7 +106,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     private _switchAccountService: SwitchAccountService
   ) {
     this.hasConnectionError = false;
-    this.statusIconClass = '';
     this.notifications = new Array();
     this.deviceType = McsDeviceType.Desktop;
   }
@@ -112,18 +114,22 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this.textContent = this._textContent.content.header.userPanel.notifications;
 
     // Listen to events
-    this._listenToNotificationsStatus();
+    this._listenToConnectionStatusChanged();
+    this._listenToCurrentUserJob();
     this._listenToBrowserResize();
     this._listenToSwitchAccount();
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this._notificationsStreamSubscription);
+    unsubscribeSafely(this._notificationsSubscription);
     unsubscribeSafely(this._notificationsConnectionSubscription);
     unsubscribeSafely(this._browserSubscription);
     unsubscribeSafely(this._activeAccountSubscription);
   }
 
+  /**
+   * Navigate to notifications page to see all the jobs
+   */
   public viewNotificationsPage(): void {
     if (this.notificationsPopover) { this.notificationsPopover.close(); }
     refreshView(() => {
@@ -131,22 +137,17 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
   }
 
-  public onOpenNotificationPanel(): void {
-    if (this.notificationsPopover &&
-      !this.hasNotification || this.deviceType !== McsDeviceType.Desktop) {
-      this.viewNotificationsPage();
-    }
-  }
-
-  public onCloseNotificationPanel(): void {
-    this._notificationContextService.clearNonActiveNotifications();
-  }
-
+  /**
+   * Event that emits when user logged out
+   */
   public logout(event): void {
     event.preventDefault();
     this._authenticationService.logOut();
   }
 
+  /**
+   * Event that emits when user click on user panel
+   */
   public clickUser(): void {
     if (isNullOrEmpty(this.userPopover)) { return; }
     refreshView(() => {
@@ -157,29 +158,63 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Track by function to help determine the view which data has beed modified
-   * @param index Index of the current loop
-   * @param _item Item of the loop
+   * Event that emits when notification panel is opened
    */
-  public trackByFn(index: any, _item: any) {
-    return index;
+  public onOpenNotificationPanel(): void {
+    if (this.notificationsPopover &&
+      !this.hasNotification || this.deviceType !== McsDeviceType.Desktop) {
+      this.viewNotificationsPage();
+    }
   }
 
-  private _listenToNotificationsStatus(): void {
-    // Subscribe to notification changes
-    this._notificationsStreamSubscription = this._notificationContextService
-      .notificationsStream
-      .subscribe((updatedNotifications) => {
-        this.notifications = updatedNotifications;
-        if (!this.hasNotification && this.notificationsPopover) {
-          this.notificationsPopover.close();
-        }
+  /**
+   * Event that emits when notification panel was closed
+   */
+  public onCloseNotificationPanel(): void {
+    // Remove all non-active jobs
+    deleteArrayRecord(this.notifications, (notification: McsApiJob) => {
+      return notification.dataStatus !== McsDataStatus.InProgress;
+    });
+  }
+
+  /**
+   * Event that emits when notification is removed
+   * @param _job Job to be removed
+   */
+  public removeNotification(_job: McsApiJob): void {
+    if (isNullOrEmpty(_job)) { return; }
+    deleteArrayRecord(this.notifications, (notification: McsApiJob) => {
+      return notification.id === _job.id;
+    });
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Listen to current user job triggered
+   */
+  private _listenToCurrentUserJob(): void {
+    this._notificationsSubscription = this._notificationEvents
+      .currentUserJob
+      .subscribe((notification) => {
+        if (isNullOrEmpty(notification)) { return; }
+
+        // Update or add the new notification based on job ID
+        this.notifications = addOrUpdateArrayRecord(
+          this.notifications,
+          notification,
+          false, (_first: McsApiJob, _second: McsApiJob) => {
+            return _first.id === _second.id;
+          });
         this._changeDetectorRef.markForCheck();
       });
+  }
 
-    // Subscribe to connection status stream to check for possible errors
-    this._notificationsConnectionSubscription = this._notificationContextService
-      .connectionStatusStream
+  /**
+   * Listen to connection status changed of the notifications
+   */
+  private _listenToConnectionStatusChanged(): void {
+    this._notificationsConnectionSubscription = this._notificationEvents
+      .connectionStatusChanged
       .subscribe((status) => {
         if (status === McsConnectionStatus.Success) {
           this.hasConnectionError = false;
@@ -191,6 +226,9 @@ export class UserPanelComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Listener for browser resize
+   */
   private _listenToBrowserResize(): void {
     // Subscribe to browser service
     this._browserSubscription = this._browserService.deviceTypeStream
@@ -200,8 +238,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Listen when user switch account to update the company name under user name
+   */
   private _listenToSwitchAccount(): void {
-    this._activeAccountSubscription = this._switchAccountService.activeAccountStream
+    this._activeAccountSubscription = this._switchAccountService
+      .activeAccountStream
       .subscribe(() => {
         // Refresh the page when account is selected
         this._changeDetectorRef.markForCheck();

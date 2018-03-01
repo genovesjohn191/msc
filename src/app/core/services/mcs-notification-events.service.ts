@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/Rx';
 import { McsNotificationContextService } from './mcs-notification-context.service';
+import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsJobType } from '../enumerations/mcs-job-type.enum';
+import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import {
   compareNumbers,
   isNullOrEmpty
@@ -65,20 +67,43 @@ export class McsNotificationEventsService {
   /** Event that emits when delete server snapshot executed */
   public deleteServerSnapshot = new BehaviorSubject<McsApiJob>(undefined);
 
+  /** Event that emits only when current user triggered a job */
+  public currentUserJob = new BehaviorSubject<McsApiJob>(undefined);
+
   /** Event that emits all jobs */
   public notificationsEvent = new BehaviorSubject<McsApiJob[]>(undefined);
 
-  constructor(private _notificationsContext: McsNotificationContextService) {
-    this._listenToNotificationsChanged();
+  /** Event that emits when the connection to socket is changed */
+  public connectionStatusChanged = new BehaviorSubject<McsConnectionStatus>(undefined);
+
+  constructor(
+    private _notificationsContext: McsNotificationContextService,
+    private _authenticationIdentity: McsAuthenticationIdentity
+  ) {
+    this._listenToStatusUpdate();
+    this._listenToNotificationsUpdate();
   }
 
   /**
-   * Listen to notifications changed stream
+   * Listens to notifications status changed stream
    */
-  private _listenToNotificationsChanged(): void {
+  private _listenToStatusUpdate(): void {
+    this._notificationsContext.connectionStatusStream
+      .subscribe((status) => {
+        this.connectionStatusChanged.next(status);
+      });
+  }
+
+  /**
+   * Listens to notifications changed stream
+   */
+  private _listenToNotificationsUpdate(): void {
     this._notificationsContext.notificationsStream
       .subscribe((updatedNotifications) => {
+        // Notify general notifications
         this.notificationsEvent.next(updatedNotifications);
+
+        // Notify Individual Notifications
         updatedNotifications.sort(
           (_first: McsApiJob, _second: McsApiJob) => {
             return compareNumbers(_first.type, _second.type);
@@ -95,6 +120,10 @@ export class McsNotificationEventsService {
     if (isNullOrEmpty(notifications)) { return; }
 
     notifications.forEach((notification) => {
+      // Notify the current user for its specific job
+      this._notifyUser(notification);
+
+      // Notify job per type
       switch (notification.type) {
         case McsJobType.CreateServer:
           this.createServerEvent.next(notification);
@@ -172,5 +201,18 @@ export class McsNotificationEventsService {
           break;
       }
     });
+  }
+
+  /**
+   * Notify the current user for its specific job
+   * @param _job JOB to be notified
+   */
+  private _notifyUser(_job: McsApiJob): void {
+    if (isNullOrEmpty(_job)) { return; }
+
+    let userStartedTheJob = _job.ownerId === this._authenticationIdentity.userId;
+    if (userStartedTheJob) {
+      this.currentUserJob.next(_job);
+    }
   }
 }

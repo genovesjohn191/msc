@@ -86,33 +86,6 @@ export class McsNotificationContextService {
   }
 
   /**
-   * Clear non-active notifications including pendings and notify the stream
-   */
-  public clearNonActiveNotifications() {
-    if (this._notifications) {
-      // Filter jobs and tasks by Active
-      this._notifications = this._notifications.filter((notification) => {
-        return notification.dataStatus === McsDataStatus.InProgress;
-      });
-      this._notificationsStream.next(this._notifications);
-    }
-  }
-
-  /**
-   * Delete notification based on JOB ID
-   * @param id Job ID
-   */
-  public deleteNotificationById(id: string) {
-    // Delete notification based on id given
-    if (id) {
-      this._notifications = this._notifications.filter((notification) => {
-        return notification.id !== id;
-      });
-      this._notificationsStream.next(this._notifications);
-    }
-  }
-
-  /**
    * TODO: This must be refactored once more filtering option is available on the API.
    * We're looking to add filters for status and dates
    */
@@ -154,7 +127,7 @@ export class McsNotificationContextService {
               case McsDataStatus.Error:
                 if (notification.endedOn &&
                   getTimeDifference(notification.endedOn, new Date()) <
-                  CoreDefinition.NOTIFICATION_FAILED_TIMEOUT) {
+                  CoreDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS) {
                   jobIncluded = true;
                 }
                 break;
@@ -163,7 +136,7 @@ export class McsNotificationContextService {
               default:
                 if (notification.endedOn &&
                   getTimeDifference(notification.endedOn, new Date()) <
-                  CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT) {
+                  CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS) {
                   jobIncluded = true;
                 }
                 break;

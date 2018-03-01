@@ -13,7 +13,10 @@ import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 
 export class McsApiJob {
   public id: string;
+  public ownerId: string;
   public ownerName: string;
+  public ownerCompanyId: string;
+  public ownerCompanyName: string;
   public description: string;
   public summaryInformation: string;
   public errorMessage: string;
@@ -69,7 +72,10 @@ export class McsApiJob {
   constructor() {
     this.id = undefined;
     this.type = undefined;
+    this.ownerId = undefined;
     this.ownerName = undefined;
+    this.ownerCompanyId = undefined;
+    this.ownerCompanyName = undefined;
     this.description = undefined;
     this.summaryInformation = undefined;
     this.errorMessage = undefined;
