@@ -34,7 +34,9 @@ import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRespository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  addOrUpdateArrayRecord,
+  deleteArrayRecord
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
@@ -129,6 +131,17 @@ export class ServerStorageComponent extends ServerDetailsBase
   public get resourceStorage(): ServerStorage[] {
     return !isNullOrEmpty(this.serverResource.storage) ?
       this.serverResource.storage : new Array();
+  }
+
+  private _serverDisks: ServerStorageDevice[];
+  public get serverDisks(): ServerStorageDevice[] {
+    return this._serverDisks;
+  }
+  public set serverDisks(value: ServerStorageDevice[]) {
+    if (this._serverDisks !== value) {
+      this._serverDisks = value;
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   private _minimumMB: number;
@@ -380,7 +393,8 @@ export class ServerStorageComponent extends ServerDetailsBase
     storageData.clientReferenceObject = {
       serverId: this.server.id,
       diskId: storage.id,
-      powerState: this.server.powerState
+      storageProfile: storage.storageProfile,
+      sizeMB: storage.sizeMB
     };
     this._serversService.setServerSpinner(this.server, storage);
     this._serversService
@@ -461,17 +475,27 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _onCreateServerDisk(job: McsApiJob): void {
     if (isNullOrEmpty(job) || isNullOrEmpty(job.clientReferenceObject)) { return; }
 
-    if (job.dataStatus === McsDataStatus.Success) {
-      // Update resource values
-      let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
+    switch (job.dataStatus) {
+      case McsDataStatus.InProgress:
+        this._onAddingDisk(job);
+        break;
 
-      if (!isNullOrEmpty(resourceStorage)) {
-        resourceStorage.usedMB += job.clientReferenceObject.sizeMB;
-        this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
-      }
+      case McsDataStatus.Success:
+        this._hasCompletedAddingDisk(job);
+        break;
 
-      // Get and update server disks
-      this._getServerDisks();
+      case McsDataStatus.Error:
+      default:
+        // Remove appended mock disk record
+        deleteArrayRecord(this.serverDisks, (targetNic) => {
+          return isNullOrEmpty(targetNic.id);
+        }, 1);
+        break;
+    }
+
+    // Update data status if in progress or failed
+    if (job.dataStatus !== McsDataStatus.Success) {
+      this.dataStatusFactory.setSuccesfull(this.serverDisks);
     }
   }
 
@@ -493,6 +517,46 @@ export class ServerStorageComponent extends ServerDetailsBase
       // Get and update server disks
       this._getServerDisks();
     }
+  }
+
+  /**
+   * Will trigger if currently adding a disk
+   * @param job Emitted job content
+   */
+  private _onAddingDisk(job): void {
+    if (isNullOrEmpty(job)) { return; }
+
+    // Mock disk data based on job response
+    let disk = new ServerStorageDevice();
+    disk.name = job.clientReferenceObject.name;
+    disk.sizeMB = job.clientReferenceObject.sizeMB;
+    disk.storageProfile = job.clientReferenceObject.storageProfile;
+    disk.isProcessing = this.server.isProcessing;
+
+    // Append a mock disk record while job is processing
+    addOrUpdateArrayRecord(this.serverDisks, disk, false,
+      (_first: ServerStorageDevice, _second: ServerStorageDevice) => {
+        return _first.id === _second.id;
+      });
+  }
+
+  /**
+   * Will trigger once a disk was added successfully
+   * @param job Emitted job content
+   */
+  private _hasCompletedAddingDisk(job): void {
+    if (isNullOrEmpty(job)) { return; }
+
+    // Update resource values
+    let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
+
+    if (!isNullOrEmpty(resourceStorage)) {
+      resourceStorage.usedMB += job.clientReferenceObject.sizeMB;
+      this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
+    }
+
+    // Get and update server disks
+    this._getServerDisks();
   }
 
   /**
@@ -526,6 +590,7 @@ export class ServerStorageComponent extends ServerDetailsBase
         return Observable.throw(error);
       })
       .subscribe((response) => {
+        this.serverDisks = this.server.storageDevice;
         this.dataStatusFactory.setSuccesfull(response);
         this._changeDetectorRef.markForCheck();
       });
