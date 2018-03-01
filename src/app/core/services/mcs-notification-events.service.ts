@@ -50,13 +50,13 @@ export class McsNotificationEventsService {
   public deleteServerDisk = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits when create server network executed */
-  public createServerNetwork = new BehaviorSubject<McsApiJob>(undefined);
+  public createServerNic = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits when update server network executed */
-  public updateServerNetwork = new BehaviorSubject<McsApiJob>(undefined);
+  public updateServerNic = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits when delete server network executed */
-  public deleteServerNetwork = new BehaviorSubject<McsApiJob>(undefined);
+  public deleteServerNic = new BehaviorSubject<McsApiJob>(undefined);
 
   /** Event that emits when create server snapshot executed */
   public createServerSnapshot = new BehaviorSubject<McsApiJob>(undefined);
@@ -174,15 +174,15 @@ export class McsNotificationEventsService {
           break;
 
         case McsJobType.CreateServerNetwork:
-          this.createServerNetwork.next(notification);
+          this.createServerNic.next(notification);
           break;
 
         case McsJobType.UpdateServerNetwork:
-          this.updateServerNetwork.next(notification);
+          this.updateServerNic.next(notification);
           break;
 
         case McsJobType.DeleteServerNetwork:
-          this.deleteServerNetwork.next(notification);
+          this.deleteServerNic.next(notification);
           break;
 
         case McsJobType.CreateServerSnapshot:

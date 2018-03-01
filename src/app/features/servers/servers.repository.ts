@@ -152,9 +152,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     this._notificationEvents.createServerDisk.subscribe(this._onCreateServerDisk.bind(this));
     this._notificationEvents.updateServerDisk.subscribe(this._onModifyServerDisk.bind(this));
     this._notificationEvents.deleteServerDisk.subscribe(this._onModifyServerDisk.bind(this));
-    this._notificationEvents.createServerNetwork.subscribe(this._onCreateServerNetwork.bind(this));
-    this._notificationEvents.updateServerNetwork.subscribe(this._onModifyServerNetwork.bind(this));
-    this._notificationEvents.deleteServerNetwork.subscribe(this._onModifyServerNetwork.bind(this));
+    this._notificationEvents.createServerNic.subscribe(this._onCreateServerNic.bind(this));
+    this._notificationEvents.updateServerNic.subscribe(this._onModifyServerNic.bind(this));
+    this._notificationEvents.deleteServerNic.subscribe(this._onModifyServerNic.bind(this));
     this._notificationEvents.createServerSnapshot
       .subscribe(this._onCreateServerSnapshot.bind(this));
     this._notificationEvents.applyServerSnapshot
@@ -336,26 +336,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      let disk = new ServerStorageDevice();
-      disk.name = job.clientReferenceObject.name;
-      disk.sizeMB = job.clientReferenceObject.sizeMB;
-      disk.storageProfile = job.clientReferenceObject.storageProfile;
-      disk.isProcessing = activeServer.isProcessing;
-
-      // Append a mock disk record while job is processing
-      // Or delete the mocked disk record when job has completed or failed
-      if (disk.isProcessing) {
-        addOrUpdateArrayRecord(activeServer.storageDevice, disk, false,
-          (_first: any, _second: any) => {
-            return _first.id === _second.id;
-          });
-      } else {
-        deleteArrayRecord(activeServer.storageDevice, (targetNic) => {
-          return isNullOrEmpty(targetNic.id);
-        }, 1);
-      }
-
       this.updateRecord(activeServer);
     }
   }
@@ -387,26 +367,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when adding a server nic
    * @param job Emitted job content
    */
-  private _onCreateServerNetwork(job: McsApiJob): void {
+  private _onCreateServerNic(job: McsApiJob): void {
     if (isNullOrEmpty(job)) { return; }
     let activeServer = this._getServerByJob(job);
 
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      let nic = new ServerNicSummary();
-      nic.name = job.clientReferenceObject.networkName;
-      nic.isProcessing = activeServer.isProcessing;
-
-      // Append a mock nic record while job is processing
-      // Or refresh the list using api call when job has completed or failed
-      if (nic.isProcessing) {
-        addOrUpdateArrayRecord(activeServer.nics, nic, false,
-          (_first: any, _second: any) => {
-            return _first.id === _second.id;
-          });
-      }
-
       this.updateRecord(activeServer);
     }
   }
@@ -415,7 +381,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when either updating or deleting a server nic
    * @param job Emitted job content
    */
-  private _onModifyServerNetwork(job: McsApiJob): void {
+  private _onModifyServerNic(job: McsApiJob): void {
     if (isNullOrEmpty(job)) { return; }
     let activeServer = this._getServerByJob(job);
 

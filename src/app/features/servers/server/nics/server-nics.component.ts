@@ -33,7 +33,9 @@ import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRespository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  addOrUpdateArrayRecord,
+  deleteArrayRecord
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
@@ -59,7 +61,7 @@ export class ServerNicsComponent extends ServerDetailsBase
   public ipAddress: ServerIpAddress;
 
   public fcNetwork: FormControl;
-  public dataStatusFactory: McsDataStatusFactory<ServerNetwork[]>;
+  public dataStatusFactory: McsDataStatusFactory<ServerNicSummary[]>;
 
   // Subscriptions
   public updateNicsSubscription: Subscription;
@@ -85,7 +87,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     return !isNullOrEmpty(this.server.nics);
   }
 
-  public get hasReachedNetworksLimit(): boolean {
+  public get hasReachedNicsLimit(): boolean {
     return this.hasNics && this.server.nics.length === SERVER_MAXIMUM_NICS;
   }
 
@@ -100,6 +102,17 @@ export class ServerNicsComponent extends ServerDetailsBase
   public get resourceNetworks(): ServerNetwork[] {
     return !isNullOrEmpty(this.serverResource.networks) ?
       this.serverResource.networks : new Array();
+  }
+
+  private _serverNics: ServerNicSummary[];
+  public get serverNics(): ServerNicSummary[] {
+    return this._serverNics;
+  }
+  public set serverNics(value: ServerNicSummary[]) {
+    if (this._serverNics !== value) {
+      this._serverNics = value;
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   private _networkName: string;
@@ -411,12 +424,12 @@ export class ServerNicsComponent extends ServerDetailsBase
   private _registerJobEvents(): void {
     this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
       .subscribe(() => { this._changeDetectorRef.markForCheck(); });
-    this._createServerNicSubscription = this._notificationEvents.createServerNetwork
-      .subscribe(this._onCreateServerNetwork.bind(this));
-    this._updateServerNicSubscription = this._notificationEvents.updateServerNetwork
-      .subscribe(this._onModifyServerNetwork.bind(this));
-    this._deleteServerNicSubscription = this._notificationEvents.deleteServerNetwork
-      .subscribe(this._onModifyServerNetwork.bind(this));
+    this._createServerNicSubscription = this._notificationEvents.createServerNic
+      .subscribe(this._onCreateServerNic.bind(this));
+    this._updateServerNicSubscription = this._notificationEvents.updateServerNic
+      .subscribe(this._onModifyServerNic.bind(this));
+    this._deleteServerNicSubscription = this._notificationEvents.deleteServerNic
+      .subscribe(this._onModifyServerNic.bind(this));
   }
 
   /**
@@ -433,12 +446,31 @@ export class ServerNicsComponent extends ServerDetailsBase
    * Event that emits when adding a server nic
    * @param job Emitted job content
    */
-  private _onCreateServerNetwork(job: McsApiJob): void {
+  private _onCreateServerNic(job: McsApiJob): void {
     if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
-    if (!this.server.isProcessing) {
-      // Get and update the server nics
-      this._getServerNics();
+    switch (job.dataStatus) {
+      case McsDataStatus.InProgress:
+        this._onAddingNic(job);
+        break;
+
+      case McsDataStatus.Success:
+        // Get and update the server nics
+        this._getServerNics();
+        break;
+
+      case McsDataStatus.Error:
+      default:
+        // Remove appended mock disk record
+        deleteArrayRecord(this.serverNics, (targetNic) => {
+          return isNullOrEmpty(targetNic.id);
+        }, 1);
+        break;
+    }
+
+    // Update data status if in progress or failed
+    if (job.dataStatus !== McsDataStatus.Success) {
+      this.dataStatusFactory.setSuccesfull(this.serverNics);
     }
   }
 
@@ -446,13 +478,33 @@ export class ServerNicsComponent extends ServerDetailsBase
    * Event that emits when either updating or deleting a server nic
    * @param job Emitted job content
    */
-  private _onModifyServerNetwork(job: McsApiJob): void {
+  private _onModifyServerNic(job: McsApiJob): void {
     if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
     // Get and update the server nics
     if (job.dataStatus === McsDataStatus.Success) {
       this._getServerNics();
     }
+  }
+
+  /**
+   * Will trigger if currently adding a NIC
+   * @param job Emitted job content
+   */
+  private _onAddingNic(job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+
+    // Mock NIC data based on job response
+    let nic = new ServerNicSummary();
+    nic.networkName = job.clientReferenceObject.networkName;
+    nic.ipAllocationMode = job.clientReferenceObject.ipAllocationMode;
+    nic.isProcessing = this.server.isProcessing;
+
+    // Append a mock nic record while job is processing
+    addOrUpdateArrayRecord(this.serverNics, nic, false,
+      (_first: ServerNicSummary, _second: ServerNicSummary) => {
+        return _first.id === _second.id;
+      });
   }
 
   /**
@@ -475,6 +527,7 @@ export class ServerNicsComponent extends ServerDetailsBase
         return Observable.throw(error);
       })
       .subscribe((response) => {
+        this.serverNics = this.server.nics;
         this.dataStatusFactory.setSuccesfull(response);
         this._changeDetectorRef.markForCheck();
       });

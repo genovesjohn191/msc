@@ -34,9 +34,9 @@
                 <td></td>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let nic of server.nics">
-                <td>
+            <tbody class="vertical-items-spacing-xsmall">
+              <tr *ngFor="let nic of serverNics">
+                <td class="top-align">
                   <ng-container *ngIf="nic.isProcessing; else nicIndex">
                     <mcs-icon [key]="spinnerIconKey"
                       size="small" class="hidden-small"
@@ -47,19 +47,23 @@
                     <span>{{ nic.index }}</span>
                   </ng-template>
                 </td>
-                <td>
-                  <span>{{ nic.name }}</span>
+                <td class="top-align">
+                  <span>{{ nic.networkName }}</span>
                 </td>
-                <td>
+                <td class="top-align">
                   <mcs-icon *ngIf="nic.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
                 </td>
-                <td>
+                <td class="top-align">
                   <span>{{ getIpAllocationModeText(nic.ipAllocationMode) }}</span>
                 </td>
-                <td>
-                  <span>{{ nic.ipAddress }}</span>
+                <td class="top-align">
+                  <mcs-list spacing="none">
+                    <mcs-list-item *ngFor="let ipAddress of nic.ipAddress">
+                      {{ ipAddress }}
+                    </mcs-list-item>
+                  </mcs-list>
                 </td>
-                <td class="action-items">
+                <td class="action-items top-align">
                   <ng-container *mcsHasPermission="['VmNetworkEdit']">
                     <span *mcsIsSelfManagedServer="server">
                       <a [disabled]="!server.executable" (click)="onUpdateNetwork(nic)">
@@ -94,7 +98,7 @@
       </mcs-data-status>
 
       <div *mcsHasPermission="['VmNetworkEdit']">
-        <div *ngIf="hasAvailableResourceNetwork && !hasReachedNetworksLimit"
+        <div *ngIf="hasAvailableResourceNetwork && !hasReachedNicsLimit"
           class="action-box" [disabled]="!server.executable">
           <h4>{{ textContent.addHeading }}</h4>
 
@@ -129,7 +133,7 @@
           </div>
         </div>
 
-        <div *ngIf="hasReachedNetworksLimit" class="horizontal-items-spacing-xsmall"
+        <div *ngIf="hasReachedNicsLimit" class="horizontal-items-spacing-xsmall"
           display-flex="row" align-items="center" justify-content="center">
           <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
           <h4>{{ textContent.reachedNetworksLimit }}</h4>
