@@ -114,7 +114,6 @@ export class McsApiJob {
         dataStatus = McsDataStatus.InProgress;
         break;
     }
-
     return dataStatus;
   }
 }

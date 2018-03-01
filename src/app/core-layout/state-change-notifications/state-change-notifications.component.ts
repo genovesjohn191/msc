@@ -17,7 +17,6 @@ import {
 import {
   unsubscribeSafely,
   addOrUpdateArrayRecord,
-  deleteArrayRecord,
   isNullOrEmpty
 } from '../../utilities';
 
@@ -40,8 +39,20 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
 
   // Notifications variable
   public notifications: McsApiJob[];
+  public closedNotifications: McsApiJob[];
   public notificationsSubscription: any;
   public visible: boolean;
+
+  /**
+   * Returns the displayed notifications and ignore those who are already closed
+   */
+  public get displayedNotifications(): McsApiJob[] {
+    return this.notifications.filter((job) => {
+      let jobClosed = this.closedNotifications
+        .find((closedJob) => job.id === closedJob.id);
+      return !jobClosed;
+    });
+  }
 
   public constructor(
     private _notificationEvents: McsNotificationEventsService,
@@ -50,6 +61,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   ) {
     this.placement = 'left';
     this.notifications = new Array();
+    this.closedNotifications = new Array();
     this.visible = true;
   }
 
@@ -71,9 +83,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
    */
   public removeNotification(_job: McsApiJob): void {
     if (isNullOrEmpty(_job)) { return; }
-    deleteArrayRecord(this.notifications, (notification: McsApiJob) => {
-      return notification.id === _job.id;
-    });
+    this.closedNotifications.push(_job);
     this._changeDetectorRef.markForCheck();
   }
 
