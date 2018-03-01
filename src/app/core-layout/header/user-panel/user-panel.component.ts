@@ -18,7 +18,8 @@ import {
   McsConnectionStatus,
   McsAuthenticationIdentity,
   McsAuthenticationService,
-  McsApiCompany
+  McsApiCompany,
+  McsDataStatus
 } from '../../../core';
 import { SwitchAccountService } from '../../shared';
 import {
@@ -197,8 +198,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public removeNotification(_job: McsApiJob): void {
     if (isNullOrEmpty(_job)) { return; }
-    this.closedNotifications.push(_job);
-    this._changeDetectorRef.markForCheck();
+
+    let jobIsEnded = _job.dataStatus !== McsDataStatus.InProgress;
+    if (jobIsEnded) {
+      this.closedNotifications.push(_job);
+      this._changeDetectorRef.markForCheck();
+    }
   }
 
   /**
