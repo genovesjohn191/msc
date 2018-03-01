@@ -34,9 +34,14 @@
         <span>{{ textContent.connectionError }}</span>
       </div>
 
-      <div class="notification-item"
-        *ngFor="let notification of (notifications | mcsRunningNotificationMaxDisplayPipe); trackBy: trackByFn">
-        <mcs-running-notification [attribute]="notification"></mcs-running-notification>
+      <!-- Jobs -->
+      <div class="hpadding-xsmall"
+        *ngFor="let notification of (notifications | mcsNotificationPanelMaxPipe)">
+        <mcs-notification-panel
+          type="running"
+          [notification]="notification"
+          (remove)="removeNotification($event)">
+        </mcs-notification-panel>
       </div>
 
       <div class="notification-item" display-flex justify-content="center" align-items="center">

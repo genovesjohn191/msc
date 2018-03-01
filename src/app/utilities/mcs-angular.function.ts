@@ -10,5 +10,5 @@ export function refreshView(predicate: () => void, refreshTime?: number) {
   // Settime out to process the function pointer into separate thread
   // or outside the angular zone so that when it came back to angular
   // the change detection will triggered
-  setTimeout(() => { predicate(); }, refreshTime);
+  return setTimeout(() => { predicate(); }, refreshTime);
 }

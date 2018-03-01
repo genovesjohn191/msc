@@ -1,21 +1,12 @@
 import {
   async,
-  inject,
   TestBed,
-  fakeAsync,
-  tick
 } from '@angular/core/testing';
 import {
   Component,
   Input
 } from '@angular/core';
 import { StateChangeNotificationsComponent } from './state-change-notifications.component';
-import {
-  McsApiJob,
-  McsJobStatus,
-  McsNotificationContextService,
-  CoreDefinition
-} from '../../core';
 import { CoreLayoutTestingModule } from '../testing';
 
 @Component({
@@ -56,8 +47,7 @@ describe('StateChangeNotificationsComponent', () => {
         <div #stateChangeNotificationsElement class="state-change-notifications-container">
           <ul class="unstyled-list">
             <li *ngFor="let notification of notifications">
-              <mcs-state-change-notification [attribute]="notification">
-              </mcs-state-change-notification>
+              <div>{{ notification }}</div>
             </li>
           </ul>
         </div>
@@ -98,32 +88,6 @@ describe('StateChangeNotificationsComponent', () => {
       component.setPlacement();
       expect(component.stateChangeNotificationsElement.nativeElement.style.right).toContain('px');
     });
-  });
-
-  describe('notificationsStream()', () => {
-    it('should get the notifications from the notification context service',
-      fakeAsync((inject([McsNotificationContextService],
-        (notificationContextService: McsNotificationContextService) => {
-
-          let notifications: McsApiJob[] = new Array();
-
-          let job = new McsApiJob();
-          job.status = McsJobStatus.Failed;
-          notifications.push(job);
-
-          job = new McsApiJob();
-          job.status = McsJobStatus.Timedout;
-          notifications.push(job);
-
-          job = new McsApiJob();
-          job.status = McsJobStatus.Cancelled;
-          notifications.push(job);
-
-          notificationContextService.notificationsStream.next(notifications);
-          tick(CoreDefinition.NOTIFICATION_ANIMATION_DELAY);
-          expect(component.notifications).toBeDefined();
-          expect(component.notifications.length).toBe(3);
-        }))));
   });
 
   describe('ngOnDestroy()', () => {

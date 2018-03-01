@@ -1,0 +1,26 @@
+<div class="notification-panel-content-wrapper" animate [trigger]="animationTrigger">
+  <div class="notification-panel-details">
+    <!-- Notification Status Icon -->
+    <div class="notification-panel-status-icon">
+      <mcs-icon [key]="iconStatusKey" [color]="iconStatusColor"></mcs-icon>
+    </div>
+
+    <!-- Notification content -->
+    <div class="notification-panel-content">
+      <span class="font-bold">{{ notification.description }}</span>
+      <small class="notification-panel-message">{{ notification.summaryInformation }}</small>
+      <ng-container *ngIf="notification.errorMessage">
+        <small class="notification-panel-message">{{ notification.errorMessage }}</small>
+      </ng-container>
+      <small read-only>{{ startTimeText }}</small>
+    </div>
+  </div>
+
+  <!-- Close button -->
+  <ng-container *ngIf="type === 'statechange'">
+    <div class="notification-panel-close">
+      <mcs-icon cursor="pointer" (click)="removeNotification()"
+        [key]="closeIconKey" size="small"></mcs-icon>
+    </div>
+  </ng-container>
+</div>

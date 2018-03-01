@@ -34,6 +34,7 @@ export class IconComponent implements OnChanges {
   @Input()
   public key: string;
 
+  // TODO: Create enumeration to all of the "type" instance
   @Input()
   public size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
 
