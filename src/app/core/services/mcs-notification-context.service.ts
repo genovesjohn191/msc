@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Observable,
-  BehaviorSubject
-} from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/Rx';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 import { McsNotificationJobService } from './mcs-notification-job.service';
@@ -11,7 +8,6 @@ import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum'
 import { McsApiService } from './mcs-api.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
-import { McsApiErrorResponse } from '../models/response/mcs-api-error-response';
 import {
   getTimeDifference,
   addOrUpdateArrayRecord,
@@ -65,13 +61,15 @@ export class McsNotificationContextService {
     this.getAllActiveJobs();
 
     // Subscribe to RabbitMQ for real-time update
-    this._notificationServiceSubscription = this._notificationJobService.notificationStream
+    this._notificationServiceSubscription = this._notificationJobService
+      .notificationStream
       .subscribe((updatedNotification) => {
         this._updateNotifications(updatedNotification);
       });
 
     // Subscribe to RabbitMQ connection status to get the error state
-    this._connectionStatusSubscription = this._notificationJobService.connectionStatusStream
+    this._connectionStatusSubscription = this._notificationJobService
+      .connectionStatusStream
       .subscribe((status) => {
         this._notifyForConnectionStatus(status);
       });
@@ -86,8 +84,8 @@ export class McsNotificationContextService {
   }
 
   /**
-   * TODO: This must be refactored once more filtering option is available on the API.
-   * We're looking to add filters for status and dates
+   * Get all the current active jobs from API including all the completed
+   * job that is not yet past on their due dates
    */
   public getAllActiveJobs() {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
@@ -99,19 +97,6 @@ export class McsNotificationContextService {
         let apiResponse = McsApiSuccessResponse
           .deserializeResponse<McsApiJob[]>(McsApiJob, response);
         return apiResponse ? apiResponse : new McsApiSuccessResponse<McsApiJob[]>();
-      })
-      .catch((error) => {
-        let mcsApiErrorResponse: McsApiErrorResponse;
-
-        if (error instanceof Response) {
-          mcsApiErrorResponse = new McsApiErrorResponse();
-          mcsApiErrorResponse.message = error.statusText;
-          mcsApiErrorResponse.status = error.status;
-        } else {
-          mcsApiErrorResponse = error;
-        }
-
-        return Observable.throw(mcsApiErrorResponse);
       })
       .subscribe((mcsApiResponse) => {
         if (mcsApiResponse.content) {
@@ -148,6 +133,11 @@ export class McsNotificationContextService {
       });
   }
 
+  /**
+   * Updates all the incoming jobs to notify all the subscribers that
+   * there are new job or a job was ended
+   * @param updatedNotification Updated notifications (jobs) to update
+   */
   private _updateNotifications(updatedNotification: McsApiJob) {
     if (updatedNotification && updatedNotification.id) {
       let jobsComparer = (firstRecord: McsApiJob, secondRecord: McsApiJob) => {
@@ -162,6 +152,10 @@ export class McsNotificationContextService {
     }
   }
 
+  /**
+   * Notify listeners of connection status
+   * @param status Status to be invoke
+   */
   private _notifyForConnectionStatus(status: any): void {
     this._connectionStatusStream.next(status);
   }

@@ -36,7 +36,7 @@
 
       <!-- Jobs -->
       <div class="hpadding-xsmall"
-        *ngFor="let notification of (notifications | mcsNotificationPanelMaxPipe)">
+        *ngFor="let notification of (displayedNotifications | mcsNotificationPanelMaxPipe)">
         <mcs-notification-panel
           type="running"
           [notification]="notification"
@@ -67,7 +67,7 @@
 
       <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
       <span *ngIf="hasNotification" display-flex align-items="center" justify-content="center">
-        {{ notifications.length }}
+        {{ displayedNotifications.length }}
       </span>
     </a>
   </div>

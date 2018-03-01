@@ -18,16 +18,14 @@ import {
   McsConnectionStatus,
   McsAuthenticationIdentity,
   McsAuthenticationService,
-  McsApiCompany,
-  McsDataStatus
+  McsApiCompany
 } from '../../../core';
 import { SwitchAccountService } from '../../shared';
 import {
   refreshView,
   isNullOrEmpty,
   unsubscribeSafely,
-  addOrUpdateArrayRecord,
-  deleteArrayRecord
+  addOrUpdateArrayRecord
 } from '../../../utilities';
 import { Subscription } from 'rxjs';
 
@@ -40,12 +38,38 @@ import { Subscription } from 'rxjs';
 
 export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsApiJob[];
+  public closedNotifications: McsApiJob[];
   public hasConnectionError: boolean;
   public textContent: any;
   public deviceType: McsDeviceType;
 
+  @ViewChild('notificationsPopover')
+  public notificationsPopover: any;
+
+  @ViewChild('userPopover')
+  public userPopover: any;
+
+  private _notificationsSubscription: Subscription;
+  private _notificationsConnectionSubscription: any;
+  private _browserSubscription: any;
+  private _activeAccountSubscription: any;
+
+  /**
+   * Returns the displayed notifications and ignore those who are already closed
+   */
+  public get displayedNotifications(): McsApiJob[] {
+    return this.notifications.filter((job) => {
+      let jobClosed = this.closedNotifications
+        .find((closedJob) => job.id === closedJob.id);
+      return !jobClosed;
+    });
+  }
+
+  /**
+   * Returns true when there are active job to be displayed, otherwise false
+   */
   public get hasNotification(): boolean {
-    return this.notifications && this.notifications.length > 0;
+    return this.displayedNotifications && this.displayedNotifications.length > 0;
   }
 
   public get bellIconKey(): string {
@@ -84,17 +108,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     return this._switchAccountService.loadingAccount;
   }
 
-  @ViewChild('notificationsPopover')
-  public notificationsPopover: any;
-
-  @ViewChild('userPopover')
-  public userPopover: any;
-
-  private _notificationsSubscription: Subscription;
-  private _notificationsConnectionSubscription: any;
-  private _browserSubscription: any;
-  private _activeAccountSubscription: any;
-
   public constructor(
     private _textContent: McsTextContentProvider,
     private _router: Router,
@@ -107,6 +120,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   ) {
     this.hasConnectionError = false;
     this.notifications = new Array();
+    this.closedNotifications = new Array();
     this.deviceType = McsDeviceType.Desktop;
   }
 
@@ -172,8 +186,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public onCloseNotificationPanel(): void {
     // Remove all non-active jobs
-    deleteArrayRecord(this.notifications, (notification: McsApiJob) => {
-      return notification.dataStatus !== McsDataStatus.InProgress;
+    this.notifications.forEach((notification) => {
+      this.removeNotification(notification);
     });
   }
 
@@ -183,9 +197,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public removeNotification(_job: McsApiJob): void {
     if (isNullOrEmpty(_job)) { return; }
-    deleteArrayRecord(this.notifications, (notification: McsApiJob) => {
-      return notification.id === _job.id;
-    });
+    this.closedNotifications.push(_job);
     this._changeDetectorRef.markForCheck();
   }
 
