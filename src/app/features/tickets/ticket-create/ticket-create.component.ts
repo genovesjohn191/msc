@@ -77,7 +77,7 @@ export class TicketCreateComponent implements
   // Form variables
   public fgCreateTicket: FormGroup;
   public fcType: FormControl;
-  public fcHeadline: FormControl;
+  public fcSummary: FormControl;
   public fcDetails: FormControl;
   public fcService: FormControl;
 
@@ -224,7 +224,7 @@ export class TicketCreateComponent implements
 
     // Set ticket data information
     ticket.subType = this.fcType.value;
-    ticket.shortDescription = this.fcHeadline.value;
+    ticket.shortDescription = this.fcSummary.value;
     ticket.description = this.fcDetails.value;
     // Set Converted File Attachments
     if (!isNullOrEmpty(this.fileAttachments)) {
@@ -275,7 +275,7 @@ export class TicketCreateComponent implements
       CoreValidators.required
     ]);
 
-    this.fcHeadline = new FormControl('', [
+    this.fcSummary = new FormControl('', [
       CoreValidators.required
     ]);
 
@@ -290,7 +290,7 @@ export class TicketCreateComponent implements
     // Register Form Groups using binding
     this.fgCreateTicket = new FormGroup({
       fcType: this.fcType,
-      fcHeadline: this.fcHeadline,
+      fcSummary: this.fcSummary,
       fcDetails: this.fcDetails,
       fcService: this.fcService
     });

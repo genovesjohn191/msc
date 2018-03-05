@@ -1,4 +1,4 @@
-<mcs-page [header]="ticketHeader" [mcsLoader]="ticketSubscription">
+<mcs-page [header]="ticketHeader">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
 
@@ -25,35 +25,50 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-    <div class="limited-view block-items-large">
-      <!-- Ticket Content -->
-      <div class="block-items-medium">
-        <div display-flex="row" justify-content="space-between">
-          <h4>{{ ticket.shortDescription }}</h4>
-          <span class="metadata">{{ getSubTypeString(ticket.subType) }}</span>
+
+    <!-- Loader settings -->
+    <div [mcsLoader]="ticketSubscription"
+      [mcsLoaderHideElement]="ticketDetailsContent"
+      [mcsLoaderText]="textContent.loading"
+      mcsLoaderOrientation="top"></div>
+
+    <div class="limited-view" #ticketDetailsContent>
+
+      <!-- Ticket details -->
+      <div class="container-wrapper">
+        <h3 class="container-header" [innerHTML]="ticket.shortDescription | mcsNewLines"></h3>
+        <div class="grid-row vspace-medium">
+          <div class="grid-column">
+            <div class="inline-items-xsmall">
+              <mcs-icon size="small" [key]="userIconKey"></mcs-icon>
+              <strong>{{ requestor }}</strong>
+            </div>
+            <span read-only>{{ convertDateToString(ticket.createdOn) }}</span>
+          </div>
+
+          <div class="grid-column">
+            <strong>{{ textContent.status }}</strong><br/>
+            <span read-only>{{ getStateString(ticket.state) }}</span>
+          </div>
+
+          <div class="grid-column">
+            <strong>{{ textContent.type }}</strong><br/>
+            <span read-only>{{ getSubTypeString(ticket.subType) }}</span>
+          </div>
         </div>
-        <p>
-          <span>{{ requestor }}</span>
-          <span>{{ convertDateToString(ticket.createdOn) }}</span>
-        </p>
-        <p>{{ ticket.description }}</p>
+        <div>
+          <div class="divider"></div>
+          <p [innerHTML]="ticket.description | mcsNewLines"></p>
+        </div>
       </div>
 
-      <!-- Ticket Status -->
-      <div class="hidden-small" display-flex="row">
-        <div flex="equal">
-          <h4>{{ textContent.status }}</h4>
-          <span>{{ getStateString(ticket.state) }}</span>
-        </div>
-      </div>
-
-      <!-- Ticket Meta Data -->
-      <div class="hidden-small" display-flex="row">
-        <div flex="equal">
-          <h4>{{ textContent.services }}</h4>
-          <span *ngIf="missingServices" class="missing-data-info">
+      <!-- Ticket Services and Attachments -->
+      <div class="grid-row">
+        <div class="container-wrapper grid-column break-on-small">
+          <h3 class="container-header">{{ textContent.services }}</h3>
+          <p *ngIf="missingServices" class="missing-data-info">
             {{ textContent.missingServicesLabel }}
-          </span>
+          </p>
           <ul class="inline-list">
             <li *ngFor="let service of ticket.serviceId; trackBy: trackByFn">
               {{ service }}
@@ -61,12 +76,11 @@
           </ul>
         </div>
 
-        <!-- Ticket Attachments -->
-        <div flex="equal">
-          <h4>{{ textContent.attachments }}</h4>
-          <span *ngIf="missingAttachments" class="missing-data-info">
+        <div class="container-wrapper grid-column break-on-small">
+          <h3 class="container-header">{{ textContent.attachments }}</h3>
+          <p *ngIf="missingAttachments" class="missing-data-info">
             {{ textContent.missingAttachmentsLabel }}
-          </span>
+          </p>
           <ul class="inline-list rollover">
             <li *ngFor="let attachment of ticket.attachments; trackBy: trackByFn">
               <mcs-icon [key]="attachmentIconKey" size="small"></mcs-icon>
@@ -77,20 +91,13 @@
       </div>
 
       <!-- Ticket Activities -->
-      <div display-flex="column" class="vertical-items-spacing-medium">
-        <div display-flex="row">
-          <div flex="equal">
-            <h4>{{ textContent.activity }}</h4>
-            <span *ngIf="missingActivities" class="missing-data-info">
-              {{ textContent.missingActivitiesLabel }}
-            </span>
-          </div>
-          <!-- <div flex="equal"> -->
-            <!-- <a (click)="newComment()"
-              [hidden]="showCommentBox">{{ textContent.newActivity }}</a>
-          </div> -->
-        </div>
-
+      <div class="container-wrapper">
+        <h3 class="container-header">{{ textContent.activity }}</h3>
+        <p *ngIf="missingActivities" class="missing-data-info">
+          {{ textContent.missingActivitiesLabel }}
+        </p>
+      </div>
+      <div class="block-items-medium">
         <div *mcsExclusiveForAccount="'default'" class="position-relative">
           <div [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]"
             [mcsLoaderHideElement]="commentBox"
@@ -105,10 +112,12 @@
           </div>
         </div>
 
-        <mcs-ticket-activity [ticketId]="ticket.id"
-          *ngFor="let activity of activities; trackBy: trackByFn"
-          [activity]="activity">
-        </mcs-ticket-activity>
+        <div>
+          <mcs-ticket-activity [ticketId]="ticket.id"
+            *ngFor="let activity of activities; trackBy: trackByFn"
+            [activity]="activity">
+          </mcs-ticket-activity>
+        </div>
       </div>
     </div>
   </mcs-content-panel>

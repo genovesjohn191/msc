@@ -245,3 +245,9 @@ table.mcs-simple-table {
 .position-absolute {
   position: absolute;
 }
+
+// Divider
+.divider {
+  border-bottom: 1px solid $color-grey-04;
+  margin: $space-medium 0;
+}

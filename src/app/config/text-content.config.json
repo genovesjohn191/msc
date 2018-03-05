@@ -491,9 +491,11 @@
     "ticket": {
       "header": "{{ticketType}} #",
       "status": "Status",
+      "type": "Type",
       "services": "Services",
       "attachments": "Attachments",
       "activity": "Activity",
+      "loading": "Loading ticket details.",
       "newActivity": "New Comment/Attachment",
       "missingRequestorLabel": "Unknown Requestor",
       "missingServicesLabel": "No services found",
@@ -515,24 +517,24 @@
       "cancelActivity": "Cancel",
       "creatingTicket": "Creating ticket, this may take a few moments.",
       "hints": {
-        "headline": "Max of {{max_char}} characters",
+        "summary": "Max of {{max_char}} characters",
         "details": "Max of {{max_char}} characters"
       },
       "errors": {
         "typeRequired": "You must select a ticket type.",
-        "headlineRequired": "Headline must be entered.",
-        "detailsRequired": "Details must be entered.",
+        "summaryRequired": "Ticket summary must be entered.",
+        "detailsRequired": "Ticket details must be entered.",
         "servicesRequired": "You must select a service."
       },
       "placeholders": {
         "type": "Select the ticket type",
-        "headline": "Enter headline",
-        "details": "Enter details",
+        "summary": "Enter ticket summary",
+        "details": "Enter ticket details",
         "services": "Select a service"
       },
       "contextualHelp": {
         "type": "Select the ticket type",
-        "headline": "A short title that describes this ticket.",
+        "summary": "A short title that describes this ticket.",
         "details": "Please provide as much information as you can and describe any attempts made to remedy the problem",
         "services": "Choose the service type this ticket relates to.",
         "attachments": "Optionally attach screenshots or other files to this support ticket by dragging and dropping into this area from your computer (limit 1 file)."
@@ -734,7 +736,7 @@
     "userPanel": {
       "notifications": {
         "title": "Notifications",
-        "loadingCompany": "Loading company details",
+        "loadingCompany": "Loading company details.",
         "noRecord": "Nothing new to report",
         "connectionError": "Notification server connection error",
         "viewMore": "View More"

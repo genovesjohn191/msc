@@ -39,6 +39,7 @@ import { TagListModule } from './tag-list/tag-list.module';
 import { SelectTagModule } from './select-tag/select-tag.module';
 import { CommentBoxModule } from './comment-box/comment-box.module';
 import { DataStatusModule } from './data-status/data-status.module';
+import { PipesModule } from './pipes';
 /** Components */
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { AlertComponent } from './alert/alert.component';
@@ -60,6 +61,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    PipesModule,
     RippleModule,
     LayoutModule,
     PopoverModule,
@@ -104,6 +106,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    PipesModule,
     RippleModule,
     LayoutModule,
     PopoverModule,

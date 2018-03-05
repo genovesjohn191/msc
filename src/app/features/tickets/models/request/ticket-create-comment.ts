@@ -13,15 +13,15 @@ export class TicketCreateComment {
 
   @JsonProperty({
     type: TicketCommentCategory,
-    serializer: TicketCommentTypeSerialization,
-    deserializer: TicketCommentTypeSerialization
+    serializer: TicketCommentCategorySerialization,
+    deserializer: TicketCommentCategorySerialization
   })
   public category: TicketCommentCategory;
 
   @JsonProperty({
     type: TicketCommentType,
-    serializer: TicketCommentCategorySerialization,
-    deserializer: TicketCommentCategorySerialization
+    serializer: TicketCommentTypeSerialization,
+    deserializer: TicketCommentTypeSerialization
   })
   public type: TicketCommentType;
 
