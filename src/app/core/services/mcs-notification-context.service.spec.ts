@@ -38,11 +38,13 @@ describe('McsNotificationContextService', () => {
   describe('NotificationsStream() | _updateNotifications()', () => {
     let initId = '0001';
     let initDescription = 'Server01';
+    let summary = 'Summarry Information 01';
 
     beforeEach(async(() => {
       let notification = new McsApiJob();
       notification.id = initId;
       notification.description = initDescription;
+      notification.summaryInformation = summary;
       mcsNotifcationsJobService.notificationStream.next(notification);
     }));
 
@@ -51,13 +53,11 @@ describe('McsNotificationContextService', () => {
       let subscriber = mcsNotificationContextService.notificationsStream
         .subscribe((notifications) => {
           updatedNotifications = notifications;
+          expect(updatedNotifications).toBeDefined();
+          expect(updatedNotifications.length).toBe(1);
+          expect(updatedNotifications[0].id).toBe(initId);
+          expect(updatedNotifications[0].description).toBe(initDescription);
         });
-
-      expect(updatedNotifications).toBeDefined();
-      expect(updatedNotifications.length).toBe(1);
-      expect(updatedNotifications[0].id).toBe(initId);
-      expect(updatedNotifications[0].description).toBe(initDescription);
-
       unsubscribeSafely(subscriber);
     });
 
@@ -74,12 +74,10 @@ describe('McsNotificationContextService', () => {
         let subscriber = mcsNotificationContextService.notificationsStream
           .subscribe((notifications) => {
             updatedNotifications = notifications;
+            expect(updatedNotifications.length).toBe(1);
+            expect(updatedNotifications[0].id).toBe(initId);
+            expect(updatedNotifications[0].description).toBe(updatedDescription);
           });
-
-        expect(updatedNotifications.length).toBe(1);
-        expect(updatedNotifications[0].id).toBe(initId);
-        expect(updatedNotifications[0].description).toBe(updatedDescription);
-
         unsubscribeSafely(subscriber);
       });
 
@@ -96,14 +94,12 @@ describe('McsNotificationContextService', () => {
         let subscriber = mcsNotificationContextService.notificationsStream
           .subscribe((notifications) => {
             updatedNotifications = notifications;
+            expect(updatedNotifications.length).toBe(2);
+            expect(updatedNotifications[0].id).toBe(newId);
+            expect(updatedNotifications[0].description).toBe(newDescription);
+            expect(updatedNotifications[1].id).toBe(initId);
+            expect(updatedNotifications[1].description).toBe(initDescription);
           });
-
-        expect(updatedNotifications.length).toBe(2);
-        expect(updatedNotifications[0].id).toBe(newId);
-        expect(updatedNotifications[0].description).toBe(newDescription);
-        expect(updatedNotifications[1].id).toBe(initId);
-        expect(updatedNotifications[1].description).toBe(initDescription);
-
         unsubscribeSafely(subscriber);
       });
   });
@@ -124,13 +120,11 @@ describe('McsNotificationContextService', () => {
       let subscriber = mcsNotificationContextService.notificationsStream
         .subscribe((notifications) => {
           updatedNotifications = notifications;
+          expect(updatedNotifications).toBeDefined();
+          expect(updatedNotifications.length).toBe(1);
+          expect(updatedNotifications[0].id).toBe(initId);
+          expect(updatedNotifications[0].description).toBe(initDescription);
         });
-
-      expect(updatedNotifications).toBeDefined();
-      expect(updatedNotifications.length).toBe(1);
-      expect(updatedNotifications[0].id).toBe(initId);
-      expect(updatedNotifications[0].description).toBe(initDescription);
-
       unsubscribeSafely(subscriber);
     });
   });
@@ -143,7 +137,6 @@ describe('McsNotificationContextService', () => {
           .subscribe((status) => {
             expect(status).toBe(McsConnectionStatus.Success);
           });
-
         unsubscribeSafely(subscriber);
       });
   });
