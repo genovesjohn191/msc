@@ -4,7 +4,9 @@
   @include flex-wrap(wrap);
 
   + .grid-row {
-    margin-top: $space-large;
+    > .grid-column {
+      margin-top: $space-xlarge;
+    }
   }
 }
 
@@ -16,8 +18,12 @@
   padding-left: $space-medium;
   padding-right: $space-medium;
 
-  &.no-gutter {
+  &:first-child {
+    padding-right: $space-medium;
     padding-left: 0;
+  }
+  &:last-child {
+    padding-left: $space-medium;
     padding-right: 0;
   }
 
@@ -30,11 +36,14 @@
   @include breakpoint(xsmall) {
     padding-left: 0;
     padding-right: 0;
+    &:first-child,
+    &:last-child {
+      padding-left: 0;
+      padding-right: 0;
+    }
 
     &.break-on-small {
       @include flex(1 1 100%);
-      padding-top: $space-medium;
-      padding-bottom: $space-medium;
     }
   }
 }

@@ -47,22 +47,22 @@
           </div>
 
 
-          <!-- Headline -->
+          <!-- Summary -->
           <div class="field">
             <mcs-form-field>
-              <input mcsInput #headlineInput required
-                [placeholder]="textContent.placeholders.headline" maxlength="80"
-                [formControl]="fcHeadline"
-                [mcsContextualHelp]="contextualContent.headline">
+              <input mcsInput #summaryInput required
+                [placeholder]="textContent.placeholders.summary" maxlength="80"
+                [formControl]="fcSummary"
+                [mcsContextualHelp]="contextualContent.summary">
 
                 <mcs-hint mcsHint align="start">
-                  {{ convertMaxCharText(textContent.hints.headline, headlineInput.maxLength) }}
+                  {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
                 </mcs-hint>
                 <mcs-hint mcsHint align="end">
-                  {{ headlineInput.value.length }} / {{ headlineInput.maxLength }}
+                  {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
                 </mcs-hint>
                 <mcs-error mcsError errorState="required">
-                  {{ textContent.errors.headlineRequired }}
+                  {{ textContent.errors.summaryRequired }}
                 </mcs-error>
             </mcs-form-field>
           </div>

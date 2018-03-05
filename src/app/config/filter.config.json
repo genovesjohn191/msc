@@ -95,8 +95,8 @@
       "text": "Status",
       "value": true
     },
-    "headline": {
-      "text": "Headline",
+    "summary": {
+      "text": "Summary",
       "value": true,
       "exclude": true
     },

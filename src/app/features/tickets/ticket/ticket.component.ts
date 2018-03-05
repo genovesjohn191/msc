@@ -105,6 +105,10 @@ export class TicketComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
+  public get userIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_USER;
+  }
+
   public get attachmentIconKey(): string {
     return CoreDefinition.ASSETS_FONT_ATTACHMENT;
   }
@@ -115,8 +119,8 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public get requestor(): string {
     return isNullOrEmpty(this.ticket) || isNullOrEmpty(this.ticket.requestor)
-      ? `${this.textContent.missingRequestorLabel} - `
-      : `${this.ticket.requestor} - `;
+      ? `${this.textContent.missingRequestorLabel}`
+      : `${this.ticket.requestor}`;
   }
 
   public get missingServices(): boolean {

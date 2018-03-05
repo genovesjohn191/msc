@@ -2,7 +2,7 @@
 
 // Comment
 $comment-action-padding: $space-xsmall 0;
-$comment-bg-color: $color-grey-08;
+$comment-bg-color: $color-white;
 
 .comment-box-wrapper {
   @include display-flex(column);

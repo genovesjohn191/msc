@@ -61,10 +61,10 @@
           </mcs-data-cell>
         </ng-container>
 
-        <!-- Headline Column -->
-        <ng-container mcsColumnDef="headline">
+        <!-- Summary Column -->
+        <ng-container mcsColumnDef="summary">
           <mcs-header-cell *mcsHeaderCellDef>
-            {{ columnSettings.headline.text }}
+            {{ columnSettings.summary.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell word-wrap">
             <a (click)="navigateToTicket(row)">{{ row.shortDescription }}</a>
