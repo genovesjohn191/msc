@@ -191,6 +191,6 @@ export class McsNotificationContextService {
         _job.dataStatus === updatedJob.dataStatus &&
         _job.summaryInformation === updatedJob.summaryInformation;
     });
-    return isNullOrEmpty(jobExists);
+    return !isNullOrEmpty(jobExists);
   }
 }
