@@ -137,28 +137,60 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    this._notificationEvents.notificationsEvent.subscribe(this._onNotificationsChanged.bind(this));
-    this._notificationEvents.createServerEvent.subscribe(this._onCreateServer.bind(this));
-    this._notificationEvents.cloneServerEvent.subscribe(this._onCreateServer.bind(this));
-    this._notificationEvents.renameServerEvent.subscribe(this._onRenameServer.bind(this));
-    this._notificationEvents.deleteServerEvent.subscribe(this._onDeleteServer.bind(this));
+    this._notificationEvents.notificationsEvent
+      .subscribe(this._onNotificationsChanged.bind(this));
+
+    this._notificationEvents.createServerEvent
+      .subscribe(this._onCreateServer.bind(this));
+
+    this._notificationEvents.cloneServerEvent
+      .subscribe(this._onCreateServer.bind(this));
+
+    this._notificationEvents.renameServerEvent
+      .subscribe(this._onRenameServer.bind(this));
+
+    this._notificationEvents.deleteServerEvent
+      .subscribe(this._onDeleteServer.bind(this));
+
     this._notificationEvents.resetServerPasswordEvent
       .subscribe(this._onResetServerPassword.bind(this));
+
     this._notificationEvents.changeServerPowerStateEvent
       .subscribe(this._onPowerStateServer.bind(this));
-    this._notificationEvents.scaleServerEvent.subscribe(this._onScaleServer.bind(this));
-    this._notificationEvents.attachServerMediaEvent.subscribe(this._onAttachServerMedia.bind(this));
-    this._notificationEvents.detachServerMediaEvent.subscribe(this._onDetachServerMedia.bind(this));
-    this._notificationEvents.createServerDisk.subscribe(this._onCreateServerDisk.bind(this));
-    this._notificationEvents.updateServerDisk.subscribe(this._onModifyServerDisk.bind(this));
-    this._notificationEvents.deleteServerDisk.subscribe(this._onModifyServerDisk.bind(this));
-    this._notificationEvents.createServerNic.subscribe(this._onCreateServerNic.bind(this));
-    this._notificationEvents.updateServerNic.subscribe(this._onModifyServerNic.bind(this));
-    this._notificationEvents.deleteServerNic.subscribe(this._onModifyServerNic.bind(this));
+
+    this._notificationEvents.scaleServerEvent
+      .subscribe(this._onScaleServer.bind(this));
+
+    this._notificationEvents.attachServerMediaEvent
+      .subscribe(this._onAttachServerMedia.bind(this));
+
+    this._notificationEvents.detachServerMediaEvent
+      .subscribe(this._onDetachServerMedia.bind(this));
+
+    this._notificationEvents.createServerDisk
+      .subscribe(this._onCreateServerDisk.bind(this));
+
+    this._notificationEvents.updateServerDisk
+      .subscribe(this._onModifyServerDisk.bind(this));
+
+    this._notificationEvents.deleteServerDisk
+      .subscribe(this._onModifyServerDisk.bind(this));
+
+    this._notificationEvents.createServerNic
+      .subscribe(this._onCreateServerNic.bind(this));
+
+    this._notificationEvents.updateServerNic
+      .subscribe(this._onModifyServerNic.bind(this));
+
+    this._notificationEvents.deleteServerNic
+      .subscribe(this._onModifyServerNic.bind(this));
+
     this._notificationEvents.createServerSnapshot
       .subscribe(this._onCreateServerSnapshot.bind(this));
+
     this._notificationEvents.applyServerSnapshot
       .subscribe(this._onApplyServerSnapshot.bind(this));
+
     this._notificationEvents.deleteServerSnapshot
       .subscribe(this._onDeleteServerSnapshot.bind(this));
   }

@@ -11,7 +11,9 @@ import { McsApiSuccessResponse } from '../models/response/mcs-api-success-respon
 import {
   getTimeDifference,
   addOrUpdateArrayRecord,
-  unsubscribeSafely
+  unsubscribeSafely,
+  deleteArrayRecord,
+  isNullOrEmpty
 } from '../../utilities';
 
 /**
@@ -65,6 +67,11 @@ export class McsNotificationContextService {
       .notificationStream
       .subscribe((updatedNotification) => {
         this._updateNotifications(updatedNotification);
+
+        // We need to call this function after notifying all the
+        // subscribers so that on the next job, all the completed jobs
+        // will not be included.
+        this._removeCompletedJobs();
       });
 
     // Subscribe to RabbitMQ connection status to get the error state
@@ -140,6 +147,9 @@ export class McsNotificationContextService {
    */
   private _updateNotifications(updatedNotification: McsApiJob) {
     if (updatedNotification && updatedNotification.id) {
+      if (this._isSameJobReceived(updatedNotification)) { return; }
+
+      // Comparer method for the jobs
       let jobsComparer = (firstRecord: McsApiJob, secondRecord: McsApiJob) => {
         return firstRecord.id === secondRecord.id;
       };
@@ -158,5 +168,29 @@ export class McsNotificationContextService {
    */
   private _notifyForConnectionStatus(status: any): void {
     this._connectionStatusStream.next(status);
+  }
+
+  /**
+   * This will remove all completed jobs after emitting the original one
+   */
+  private _removeCompletedJobs(): void {
+    deleteArrayRecord(this._notifications, (job: McsApiJob) => {
+      return job.dataStatus !== McsDataStatus.InProgress;
+    });
+  }
+
+  /**
+   * Returns true when the same job including summary information and status is inputted
+   *
+   * `@Note:` This is needed in order for the notifications
+   * not blinking when the same job is received
+   */
+  private _isSameJobReceived(updatedJob: McsApiJob): boolean {
+    let jobExists = this._notifications.find((_job) => {
+      return _job.id === updatedJob.id &&
+        _job.dataStatus === updatedJob.dataStatus &&
+        _job.summaryInformation === updatedJob.summaryInformation;
+    });
+    return isNullOrEmpty(jobExists);
   }
 }
