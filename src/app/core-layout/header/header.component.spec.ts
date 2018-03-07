@@ -1,11 +1,9 @@
 import {
   async,
-  inject,
   TestBed
 } from '@angular/core/testing';
+import { CoreDefinition } from '../../core';
 import { HeaderComponent } from './header.component';
-import { McsAssetsProvider } from '../../core';
-import { CoreLayoutTestingModule } from '../testing';
 
 describe('HeaderComponent', () => {
 
@@ -20,9 +18,6 @@ describe('HeaderComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         HeaderComponent
-      ],
-      imports: [
-        CoreLayoutTestingModule
       ]
     });
 
@@ -44,18 +39,8 @@ describe('HeaderComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it('should call the getImagePath() of AssetsProvider',
-      inject([McsAssetsProvider], (assetsProvider: McsAssetsProvider) => {
-        spyOn(assetsProvider, 'getImagePath');
-        component.ngOnInit();
-        expect(assetsProvider.getImagePath).toHaveBeenCalled();
-      }));
-
-    it('mcsLogo variable should not be equal to undefined, null, or empty',
-      inject([McsAssetsProvider], (_assetsProvider: McsAssetsProvider) => {
-        expect(component.mcsLogo).not.toEqual(undefined);
-        expect(component.mcsLogo).not.toEqual(null);
-        expect(component.mcsLogo).not.toEqual('');
-      }));
+    it('should call the getImagePath() of AssetsProvider', () => {
+      expect(component.lightLogoIconKey).toBe(CoreDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG);
+    });
   });
 });
