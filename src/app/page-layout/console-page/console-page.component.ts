@@ -10,6 +10,10 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  Subscription,
+  Observable
+} from 'rxjs/Rx';
+import {
   refreshView,
   isNullOrEmpty,
   unsubscribeSafely
@@ -20,7 +24,8 @@ import {
   McsApiJob,
   CoreDefinition,
   Key,
-  McsDataStatus
+  McsDataStatus,
+  McsErrorHandlerService
 } from '../../core';
 import { ServerCommand } from '../../features/servers';
 import { ConsolePageService } from './console-page.service';
@@ -70,9 +75,9 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private _vmConsoleDialog: any;
   private _url: string;
   private _vmx: string;
-  private _routeSubscription: any;
-  private _zoneSubscription: any;
-  private _notificationsSubscription: any;
+  private _routeSubscription: Subscription;
+  private _zoneSubscription: Subscription;
+  private _notificationsSubscription: Subscription;
   private _serverId: string;
 
   public constructor(
@@ -80,7 +85,8 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _textContentProvider: McsTextContentProvider,
     private _notificationsEventService: McsNotificationEventsService,
     private _activatedRoute: ActivatedRoute,
-    private _zone: NgZone
+    private _zone: NgZone,
+    private _errorHandlerService: McsErrorHandlerService
   ) {
     this.consoleDisconnecting = false;
     this.consoleIsConnecting = false;
@@ -146,6 +152,11 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consoleIsConnecting = true;
 
     this._consoleService.getServerConsole(serverId)
+      .catch((error) => {
+        // Handle common error status code
+        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        return Observable.throw(error);
+      })
       .subscribe((consoleData) => {
         if (consoleData && consoleData.content) {
           this._url = consoleData.content.url;

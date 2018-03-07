@@ -207,6 +207,7 @@ export class FirewallComponent
       itemId: selectedFirewall.id,
       groupName: selectedFirewall.haGroupName
     } as McsListPanelItem;
-    this.header = `${selectedFirewall.managementName} (${selectedFirewall.haRole})`;
+
+    this.header = selectedFirewall.managementName;
   }
 }
