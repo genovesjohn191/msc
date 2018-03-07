@@ -108,6 +108,9 @@ export abstract class ServerDetailsBase {
   ) {
     this.server = new Server();
     this.serverResource = new ServerResource();
+  }
+
+  protected initialize(): void {
     this._listenToSelectedServerStream();
     this._listenToNotificationsChanged();
   }

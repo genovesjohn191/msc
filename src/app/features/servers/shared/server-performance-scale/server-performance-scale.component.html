@@ -65,6 +65,9 @@
             <mcs-error mcsError errorState="numeric">
               {{ textContent.errors.cpuNumeric }}
             </mcs-error>
+            <mcs-error mcsError errorState="invalidCpu">
+              {{ invalidCustomCpuValueMessage }}
+            </mcs-error>
             <mcs-error mcsError errorState="maxCpuError">
               {{ invalidCustomCpuMaxValueMessage }}
             </mcs-error>

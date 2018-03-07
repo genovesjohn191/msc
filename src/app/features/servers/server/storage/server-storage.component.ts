@@ -237,6 +237,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   public ngOnInit() {
     // OnInit
     this.textContent = this._textProvider.content.servers.server.storage;
+    this.initialize();
     this._registerJobEvents();
   }
 

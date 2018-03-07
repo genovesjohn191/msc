@@ -4,6 +4,10 @@ import {
   McsJobStatus,
   McsJobStatusSerialization
 } from '../../enumerations/mcs-job-status.enum';
+import {
+  McsTaskType,
+  McsTaskTypeSerialization
+} from '../../enumerations/mcs-task-type.enum';
 import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 
 export class McsApiTask {
@@ -13,6 +17,13 @@ export class McsApiTask {
   public errorMessage: string;
   public referenceObject: any;
   public durationInSeconds: number;
+
+  @JsonProperty({
+    type: McsTaskType,
+    serializer: McsTaskTypeSerialization,
+    deserializer: McsTaskTypeSerialization
+  })
+  public type: McsTaskType;
 
   @JsonProperty({
     type: McsJobStatus,
@@ -54,6 +65,7 @@ export class McsApiTask {
     this.description = undefined;
     this.summaryInformation = undefined;
     this.errorMessage = undefined;
+    this.type = undefined;
     this.status = undefined;
     this.referenceObject = undefined;
     this.durationInSeconds = undefined;

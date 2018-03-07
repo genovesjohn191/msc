@@ -12,6 +12,8 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsApiJob,
+  McsApiTask,
+  McsTaskType,
   McsDataStatus
 } from '../../../../core';
 import {
@@ -111,8 +113,22 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     return { key: iconKey, color: iconColor, class: iconClass };
   }
 
-  public onViewServerPage(): void {
-    this._router.navigate(['/servers']);
+  public onViewServerPage(tasks: McsApiTask[]): void {
+    let serverId = this._getCreatedServerId(tasks);
+    this._router.navigate(['/servers', serverId]);
+  }
+
+  private _getCreatedServerId(tasks: McsApiTask[]): string {
+    if (isNullOrEmpty(tasks)) { return ''; }
+
+    let completedTask = tasks.find((task) => {
+      return task.type === McsTaskType.CreateServer &&
+        task.dataStatus === McsDataStatus.Success &&
+        !isNullOrEmpty(task.referenceObject);
+    });
+
+    return !isNullOrEmpty(completedTask) ?
+      completedTask.referenceObject.resourceId : '';
   }
 
   private _updateProgressbar(): void {

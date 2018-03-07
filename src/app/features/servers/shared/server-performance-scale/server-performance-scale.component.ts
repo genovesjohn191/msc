@@ -29,7 +29,8 @@ import {
   coerceNumber
 } from '../../../../utilities';
 
-const CUSTOM_MEMORY_MULTIPLE = 4;
+const CUSTOM_MEMORY_MULTIPLE = 2048;
+const CUSTOM_CPU_MULTIPLE = 2;
 
 @Component({
   selector: 'mcs-server-performance-scale',
@@ -55,6 +56,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
   public invalidCustomMemoryMaxValueMessage: string;
   public invalidCustomMemoryValueMessage: string;
   public invalidCustomCpuMaxValueMessage: string;
+  public invalidCustomCpuValueMessage: string;
 
   public serverScaleForm: FormGroup;
   public serverScaleCustomRam: FormControl;
@@ -217,6 +219,10 @@ export class ServerPerformanceScaleComponent implements OnInit {
       CoreValidators.min(this.cpuCount),
       CoreValidators.numeric,
       CoreValidators.custom(
+        this._customCpuValidatorAcceptableValue.bind(this),
+        'invalidCpu'
+      ),
+      CoreValidators.custom(
         this._customCpuValidatorMaxValue.bind(this),
         'maxCpuError'
       )
@@ -249,12 +255,18 @@ export class ServerPerformanceScaleComponent implements OnInit {
       'available_cpu',
       appendUnitSuffix(this.availableCpuCount, 'cpu')
     );
+
+    this.invalidCustomCpuValueMessage = replacePlaceholder(
+      this.textContent.errors.cpuInvalid,
+      'multiple',
+      CUSTOM_CPU_MULTIPLE.toString()
+    );
   }
 
   private _setDefaultSliderTable(): void {
     // Add the table definition
     let table = new Array<ServerPerformanceScale>();
-    table.push({ memoryMB: 2048, cpuCount: 1 } as ServerPerformanceScale);
+    table.push({ memoryMB: 2048, cpuCount: 2 } as ServerPerformanceScale);
     table.push({ memoryMB: 4096, cpuCount: 2 } as ServerPerformanceScale);
     table.push({ memoryMB: 8192, cpuCount: 4 } as ServerPerformanceScale);
     table.push({ memoryMB: 16384, cpuCount: 4 } as ServerPerformanceScale);
@@ -361,6 +373,10 @@ export class ServerPerformanceScaleComponent implements OnInit {
 
   private _customCpuValidatorMaxValue(inputValue: any): boolean {
     return inputValue <= this.availableCpuCount;
+  }
+
+  private _customCpuValidatorAcceptableValue(inputValue: any): boolean {
+    return inputValue % CUSTOM_CPU_MULTIPLE === 0;
   }
 
   private _validateScaleValues(scale: ServerPerformanceScale): boolean {

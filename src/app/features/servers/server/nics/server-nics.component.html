@@ -97,7 +97,7 @@
         </mcs-data-status-error>
       </mcs-data-status>
 
-      <div *mcsHasPermission="['VmNetworkEdit']">
+      <div *mcsHasPermission="['VmNicEdit']">
         <div *ngIf="hasAvailableResourceNetwork && !hasReachedNicsLimit"
           class="action-box" [disabled]="!server.executable">
           <h4>{{ textContent.addHeading }}</h4>

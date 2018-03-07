@@ -140,6 +140,7 @@ export class ServerComponent
     if (isNullOrEmpty(_server)) { return; }
 
     this._setSelectedServerInfo(_server);
+    this._changeDetectorRef.markForCheck();
     this.router.navigate(['/servers', _server.id]);
   }
 
@@ -303,6 +304,8 @@ export class ServerComponent
    */
   private _setSelectedServerInfo(selectedServer: Server): void {
     if (isNullOrEmpty(selectedServer)) { return; }
+
+    this.server = selectedServer;
 
     this.selectedServerName = selectedServer.name;
     let hasResourceName = !isNullOrEmpty(selectedServer.platform)

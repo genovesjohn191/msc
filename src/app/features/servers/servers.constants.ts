@@ -25,6 +25,7 @@ import {
   VdcOverviewComponent,
   VdcService
 } from './vdc';
+import { CanActivateSelfManagedServer } from './guards';
 
 /**
  * List of services for the main module
@@ -36,7 +37,8 @@ export const serversProviders: any[] = [
   ServersResourcesRespository,
   CreateSelfManagedServerResolver,
   CreateSelfManagedServersService,
-  VdcService
+  VdcService,
+  CanActivateSelfManagedServer
 ];
 
 /**
@@ -61,7 +63,11 @@ export const serversRoutes: Routes = [
       { path: 'services', component: ServerServicesComponent },
       { path: 'storage', component: ServerStorageComponent },
       { path: 'nics', component: ServerNicsComponent },
-      { path: 'backups', component: ServerBackupsComponent }
+      {
+        path: 'backups', component:
+        ServerBackupsComponent,
+        canActivate: [CanActivateSelfManagedServer]
+      }
     ]
   },
   {

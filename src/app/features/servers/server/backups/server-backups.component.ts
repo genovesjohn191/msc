@@ -130,6 +130,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     this.deleteJobSnapshotSubscription = this._notificationsEventService
       .deleteServerSnapshot
       .subscribe(this._onUpdateServerSnapshot.bind(this));
+    this.initialize();
   }
 
   public ngOnDestroy() {

@@ -213,6 +213,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public ngOnInit(): void {
     this.textContent = this._textProvider.content.servers.server.management;
+    this.initialize();
     this._getScaleParam();
     this._listenToNotificationsChange();
     this._listenToDeviceChange();
