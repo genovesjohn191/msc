@@ -1,20 +1,30 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
+import { HttpClient } from '@angular/common/http';
 
 /** Core Configuration */
 import { CoreConfig } from '../core.config';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  createSvgElement
+} from '../../utilities';
 
 @Injectable()
 export class McsAssetsProvider {
   private _images: Map<string, string>;
   private _fontIcons: Map<string, string>;
   private _svgIcons: Map<string, string>;
+  private _svgElements: Map<string, SVGElement>;
   private _gifIcons: Map<string, string>;
   private _config: any;
 
-  constructor(private _coreConfig: CoreConfig) {
+  constructor(
+    private _coreConfig: CoreConfig,
+    private _httpClient: HttpClient
+  ) {
     this._fontIcons = new Map<string, string>();
     this._svgIcons = new Map<string, string>();
+    this._svgElements = new Map<string, SVGElement>();
     this._images = new Map<string, string>();
     this._gifIcons = new Map<string, string>();
     this.load();
@@ -97,6 +107,26 @@ export class McsAssetsProvider {
 
     // Return value (image path)
     return `${this._coreConfig.imageRoot}/${value}`;
+  }
+
+  /**
+   * Returns the svg element based on the given URL
+   */
+  public getSvgElement(url: string): Observable<SVGElement> {
+    if (isNullOrEmpty(url)) { return Observable.of(undefined); }
+
+    // Check the svg in the cache and return it immediately.
+    let svgExist = this._svgElements.has(url);
+    if (svgExist) {
+      return Observable.of(this._svgElements.get(url));
+    }
+
+    return this._httpClient.get(url, { responseType: 'text' })
+      .map((response) => {
+        let svgElement = createSvgElement(response);
+        this._svgElements.set(url, svgElement);
+        return svgElement;
+      });
   }
 
   /**

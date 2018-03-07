@@ -58,6 +58,13 @@ export class CoreDefinition {
   public static ICON_SIZE_LARGE = 25;
   public static ICON_SIZE_XLARGE = 30;
 
+  /** Images */
+  public static IMAGE_SIZE_XSMALL = 100;
+  public static IMAGE_SIZE_SMALL = 150;
+  public static IMAGE_SIZE_MEDIUM = 200;
+  public static IMAGE_SIZE_LARGE = 250;
+  public static IMAGE_SIZE_XLARGE = 300;
+
   /** Assets Provider Key Definitions */
   // GIF Icons
   public static ASSETS_GIF_SPINNER = 'spinner';
@@ -142,6 +149,11 @@ export class CoreDefinition {
   public static ASSETS_FONT_NAVBAR = 'navbar';
   public static ASSETS_FONT_ANGLE_DOUBLE_RIGHT = 'angle-double-right';
   public static ASSETS_FONT_TRASH = 'trash-o';
+
+  // Images
+  public static ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG = 'light-mcs-logo-svg';
+  public static ASSETS_IMAGE_MCS_LIGHT_LOGO = 'light-mcs-logo';
+  public static ASSETS_IMAGE_MCS_DARK_LOGO = 'dark-mcs-logo';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serversListingFilter';

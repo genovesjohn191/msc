@@ -1,6 +1,7 @@
 /** Modules, Configuration, and Definition */
 export * from './core.module';
 export * from './core.config';
+export * from './core.types';
 export * from './core.definition';
 export * from './core.validators';
 /** Guards */

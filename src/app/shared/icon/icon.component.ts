@@ -8,7 +8,11 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '../../core';
+import {
+  CoreDefinition,
+  McsSizeType,
+  McsColorType
+} from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 import {
   IconType,
@@ -34,12 +38,11 @@ export class IconComponent implements OnChanges {
   @Input()
   public key: string;
 
-  // TODO: Create enumeration to all of the "type" instance
   @Input()
-  public size: 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
+  public size: McsSizeType;
 
   @Input()
-  public color: string;
+  public color: McsColorType;
 
   private _iconActualSize: number;
 

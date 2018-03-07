@@ -13,6 +13,7 @@ import { CheckboxModule } from './checkbox/checkbox.module';
 import { FilterSelectorModule } from './filter-selector/filter-selector.module';
 import { PopoverModule } from './popover/popover.module';
 import { IconModule } from './icon/icon.module';
+import { ImageModule } from './image/image.module';
 import { ValidationMessageModule } from './validation-message/validation-message.module';
 import { TableModule } from './table/table.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
@@ -66,6 +67,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     LayoutModule,
     PopoverModule,
     IconModule,
+    ImageModule,
     ButtonModule,
     CheckboxModule,
     FilterSelectorModule,
@@ -111,6 +113,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     LayoutModule,
     PopoverModule,
     IconModule,
+    ImageModule,
     ButtonModule,
     CheckboxModule,
     FilterSelectorModule,

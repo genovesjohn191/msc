@@ -1,0 +1,14 @@
+@import "../../../styles/shared/base";
+
+.image-wrapper {
+  @include display-inline-flex(row);
+  @include align-items(center);
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.image-container {
+  @include display-flex(row);
+  align-items: center;
+  background-repeat: no-repeat;
+}
