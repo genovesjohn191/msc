@@ -84,8 +84,8 @@
     "spinner": "spinner.gif"
   },
   "images": {
-    "header-logo": "cloud-services-header-logo.png",
-    "footer-logo": "cloud-services-footer-logo.png",
-    "loader": "spinner.gif"
+    "light-mcs-logo-svg": "light-mcs-logo.svg",
+    "light-mcs-logo": "light-mcs-logo.png",
+    "dark-mcs-logo": "dark-mcs-logo.png"
   }
 }

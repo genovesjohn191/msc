@@ -1,9 +1,9 @@
 @import '../../../styles/shared/base';
 
-$http-error-page-bg-color: $color-black;
-$http-error-page-color: $color-white;
-$http-error-page-header-font-size: 100;
+$http-error-page-bg-color: $color-white;
+$http-error-page-color: $color-black;
 $http-error-page-header-color: $color-primary-01;
+$http-error-page-header-font-size: 100;
 
 :host,
 .http-error-page-wrapper {

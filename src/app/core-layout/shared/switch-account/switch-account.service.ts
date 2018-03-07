@@ -79,8 +79,8 @@ export class SwitchAccountService {
     this._activeAccount = company;
     this._saveAccountIdToCookie();
 
-    // Refresh the page
-    location.reload();
+    // Navigate to home page and refresh.
+    location.href = '';
   }
 
   /**

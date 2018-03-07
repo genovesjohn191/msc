@@ -183,3 +183,26 @@ export function removeAllChildren(element: HTMLElement): void {
     element.removeChild(element.firstChild);
   }
 }
+
+/**
+ * Creates the SVG Element based on the given content
+ * @param svgContent SVG content to be created
+ */
+export function createSvgElement(svgContent: string): SVGElement {
+  let div = document.createElement('DIV');
+  div.innerHTML = svgContent;
+
+  let svg = div.querySelector('svg') as SVGElement;
+  if (!svg) { throw Error('<svg> tag not found'); }
+
+  if (!svg.getAttribute('xmlns')) {
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  }
+  svg.setAttribute('fit', '');
+  svg.setAttribute('title', '');
+  svg.setAttribute('height', '100%');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  svg.setAttribute('focusable', 'false'); // Disable IE11 default behavior to make SVGs focusable.
+  return svg;
+}

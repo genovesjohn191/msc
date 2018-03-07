@@ -5,7 +5,8 @@ import {
   getElementPositionFromHost,
   getElementStyle,
   getOffsetParent,
-  removeAllChildren
+  removeAllChildren,
+  createSvgElement
 } from './mcs-element.function';
 
 describe('McsElementFunction', () => {
@@ -278,6 +279,13 @@ describe('McsElementFunction', () => {
       expect(parentElement.children.length).toBe(2);
       removeAllChildren(parentElement);
       expect(parentElement.children.length).toBe(0);
+    });
+  });
+
+  describe('createSvgElement()', () => {
+    it('should create an SVG Element based on content provided', () => {
+      let svgElement = createSvgElement(`<svg><title>SVG Title</title></svg>`);
+      expect(svgElement).toBeDefined();
     });
   });
 });

@@ -1,10 +1,5 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-
-/** Providers */
-import { McsAssetsProvider } from '../../core';
+import { Component } from '@angular/core';
+import { CoreDefinition } from '../../core';
 
 @Component({
   selector: 'mcs-header',
@@ -12,13 +7,9 @@ import { McsAssetsProvider } from '../../core';
   styleUrls: ['./header.component.scss']
 })
 
-export class HeaderComponent implements OnInit {
-  public mcsLogo: string;
+export class HeaderComponent {
 
-  public constructor(private _assetsProvider: McsAssetsProvider) {
-  }
-
-  public ngOnInit() {
-    this.mcsLogo = this._assetsProvider.getImagePath('header-logo');
+  public get lightLogoIconKey(): string {
+    return CoreDefinition.ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG;
   }
 }

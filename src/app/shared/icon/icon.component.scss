@@ -28,7 +28,8 @@
     color: $color-white;
   }
 
-  &.blue {
+  &.blue,
+  &.primary {
     color: $color-primary-00;
   }
 
