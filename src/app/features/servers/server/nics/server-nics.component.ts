@@ -210,6 +210,7 @@ export class ServerNicsComponent extends ServerDetailsBase
   public ngOnInit() {
     // OnInit
     this.textContent = this._textProvider.content.servers.server.nics;
+    this.initialize();
     this._registerFormGroup();
     this._registerJobEvents();
   }

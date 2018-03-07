@@ -22,6 +22,7 @@ $job-server-link-left-offset: 25px;
     .job-completed {
       @include display-flex(column);
       align-items: flex-start;
+      margin-top: $space-medium;
 
       .link {
         display: inline-block;

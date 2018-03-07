@@ -28,7 +28,7 @@ import {
   getEnumString,
   compareNumbers,
   compareStrings
-} from 'app/utilities';
+} from '../../utilities';
 
 @Injectable()
 export class ServersRepository extends McsRepositoryBase<Server> {

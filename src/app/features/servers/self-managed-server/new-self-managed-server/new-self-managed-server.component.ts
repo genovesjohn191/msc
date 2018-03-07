@@ -54,7 +54,7 @@ import {
 } from '../../models';
 
 const RAM_MINIMUM_VALUE = 2048;
-const CPU_MINIMUM_VALUE = 1;
+const CPU_MINIMUM_VALUE = 2;
 const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
 const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MULTIPLIER;
 

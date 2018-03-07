@@ -76,9 +76,11 @@
           use the "Snapshot" on the backups tab first
           instead of textContent.backups.label
          -->
-        <mcs-tab label="Snapshots" id="backups"
-          *mcsHasPermission="['SnapshotAccess']">
-        </mcs-tab>
+        <ng-container *mcsHasPermission="['SnapshotAccess']">
+          <mcs-tab *mcsIsSelfManagedServer="server"
+            label="Snapshots" id="backups">
+          </mcs-tab>
+        </ng-container>
 
         <!-- Networks Tab -->
         <mcs-tab [label]="textContent.nics.label" id="nics">

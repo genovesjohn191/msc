@@ -51,6 +51,7 @@ export * from './enumerations/mcs-http-status-code.enum';
 export * from './enumerations/mcs-key.enum';
 export * from './enumerations/mcs-job-type.enum';
 export * from './enumerations/mcs-job-status.enum';
+export * from './enumerations/mcs-task-type.enum';
 export * from './enumerations/mcs-data-status.enum';
 export * from './enumerations/mcs-company-status.enum';
 /** Interfaces */

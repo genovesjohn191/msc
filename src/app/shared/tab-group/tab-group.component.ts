@@ -59,6 +59,9 @@ export class TabGroupComponent implements AfterContentInit {
   }
 
   public ngAfterContentInit(): void {
+    this.tabs.changes.subscribe(() => {
+      this._changeDetectorRef.markForCheck();
+    });
     refreshView(() => {
       this._setActiveTab(this.selectedTabId);
     });

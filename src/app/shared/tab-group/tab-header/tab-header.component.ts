@@ -93,9 +93,12 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
   ) { }
 
   public ngAfterContentInit(): void {
-    if (this.headerItems) {
+    // We need to listen to changes on header
+    // in order to cater the scenarios of dynamic adding of tab
+    if (this.headerItems) { this._listenToSelectionChange(); }
+    this.headerItems.changes.subscribe(() => {
       this._listenToSelectionChange();
-    }
+    });
     this._listenToViewportChange();
   }
 

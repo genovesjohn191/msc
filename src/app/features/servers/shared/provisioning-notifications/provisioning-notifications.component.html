@@ -33,8 +33,11 @@
             size="small"></mcs-icon>
           <span class="font-bold">{{ textContent.deploymentCompleted }}</span>
         </div>
-        <a *ngIf="isJobSuccessful(job)" (click)="onViewServerPage()"
-          class="link">{{ textContent.viewServerLink }}</a>
+        <button *ngIf="isJobSuccessful(job)"
+          mcsButton id="ctaViewServer" arrow="right"
+          size="small" (click)="onViewServerPage(job.tasks)">
+          {{ textContent.viewServerLink }}
+        </button>
 
         <!-- In case of Error -->
         <div *ngIf="!isJobSuccessful(job)" class="status-details">
