@@ -236,7 +236,7 @@
         "loading": "Loading storage information.",
         "loadingContent": "Loading disks.",
         "title": "Manage Disks",
-        "description": "Manage the disks attached to your server. You can add new, delete or expand existing disks.",
+        "description": "Manage the disks attached to your server. You can delete or expand existing disks, or you can add a new disk.",
         "primary": "Primary",
         "other": "Other",
         "storageDevice": "Storage Device",
