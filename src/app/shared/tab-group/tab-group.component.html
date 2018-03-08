@@ -1,6 +1,7 @@
 <!-- Tab header -->
-<mcs-tab-header>
+<mcs-responsive-panel class="tab-header-wrapper">
   <mcs-tab-header-item
+    mcsResponsivePanelItem
     mcsRipple
     *ngFor="let tab of tabs"
     [active]="activeTab?.id === tab.id"
@@ -14,7 +15,7 @@
       <h4>{{ tab.label }}</h4>
     </ng-container>
   </mcs-tab-header-item>
-</mcs-tab-header>
+</mcs-responsive-panel>
 
 <!-- Tab body where the content is generated -->
 <div class="tab-group-body-wrapper">

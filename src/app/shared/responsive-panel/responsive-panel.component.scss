@@ -1,0 +1,77 @@
+@import "../../../styles/shared/base";
+
+// Responsive panel item
+$responsive-panel-item-min-width: 100px;
+$responsive-panel-item-pagination-min-width: 32px;
+$responsive-panel-item-active-color: $color-black;
+// Responsive panel bar
+$responsive-panel-bar-bg-color: $color-black;
+$responsive-panel-bar-thickness: 2px;
+$responsive-panel-bar-animation-duration: 500ms;
+$responsive-panel-bar-transition-style: cubic-bezier(0.35, 0, 0.25, 1);
+
+.responsive-panel-wrapper {
+  position: relative;
+  overflow: hidden;
+  @include flex(1);
+  @include display-flex(row);
+
+  &.responsive-panel-pagination-controls-enabled {
+    .responsive-panel-pagination-before,
+    .responsive-panel-pagination-after {
+      @include display-flex(row);
+    }
+  }
+
+  .responsive-panel-pagination-before,
+  .responsive-panel-pagination-after {
+    position: relative;
+    display: none;
+    @include align-items(center);
+    justify-content: center;
+    min-width: $responsive-panel-item-pagination-min-width;
+    cursor: pointer;
+
+    &.responsive-panel-pagination-disabled {
+      box-shadow: none;
+      cursor: default;
+    }
+  }
+
+  .responsive-panel-labels-container {
+    @include display-flex(row);
+    @include flex(1 1 auto);
+    overflow: hidden;
+
+    .responsive-panel-action-list {
+      position: relative;
+      @include flex(1 1 auto);
+      @include transition(transform .5s cubic-bezier(.35,0,.25,1));
+
+      .responsive-panel-labels-wrapper {
+        @include display-flex(row);
+        @include align-items(center);
+        height: 100%;
+
+        .responsive-panel-item-wrapper {
+          min-width: $responsive-panel-item-min-width;
+
+          &.active {
+            color: $responsive-panel-item-active-color;
+          }
+        }
+      }
+
+      .responsive-panel-bar-wrapper {
+        background-color: $responsive-panel-bar-bg-color;
+        position: absolute;
+        bottom: 0;
+        height: $responsive-panel-bar-thickness;
+        @include transition(
+          $responsive-panel-bar-animation-duration
+          $responsive-panel-bar-transition-style
+        );
+      }
+    }
+  }
+}

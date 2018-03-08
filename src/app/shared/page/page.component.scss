@@ -128,6 +128,7 @@ $left-panel-navigation-collapse-padding: 6px;
         @include flex(1 1 auto);
         @include display-flex(row);
         align-items: center;
+        overflow: hidden;
 
         .top-panel-item-wrapper {
           @include display-flex(row);
