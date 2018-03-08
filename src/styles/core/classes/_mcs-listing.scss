@@ -36,10 +36,12 @@ $action-cell-width: 55px;
 .listing-action-wrapper {
   @include flex(1 1 auto);
   @include display-flex(row);
-  @include align-items(center);
+  overflow: auto;
 
   .total-record-count {
-    margin-right: $space-large;
+    @include display-flex(row);
+    @include align-items(center);
+    margin: 0 $space-large;
   }
 }
 

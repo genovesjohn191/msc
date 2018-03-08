@@ -4,16 +4,9 @@
 $tab-group-border: $border-color-light;
 // Tab header
 $tab-header-item-min-width: 100px;
-$tab-header-item-pagination-min-width: 32px;
 $tab-header-item-color: $color-grey-02;
 $tab-header-item-active-color: $color-black;
-$tab-header-item-active-bg-color: $color-grey-08;
 $tab-header-item-padding: $space-small $space-medium;
-// Tab border bar
-$tab-border-bar-bg-color: $color-black;
-$tab-border-bar-thickness: 2px;
-$tab-border-bar-animation-duration: 500ms;
-$tab-border-bar-transition-style: cubic-bezier(0.35, 0, 0.25, 1);
 // Tab body
 $tab-body-padding: $space-medium 0;
 
@@ -22,78 +15,26 @@ $tab-body-padding: $space-medium 0;
 }
 
 .tab-header-wrapper {
-  position: relative;
-  @include display-flex(row);
   border-bottom: 1px solid $tab-group-border;
+}
 
-  &.tab-header-pagination-controls-enabled {
-    .tab-header-pagination-before,
-    .tab-header-pagination-after {
-      display: flex;
-    }
+.tab-header-item-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: center;
+  min-width: $tab-header-item-min-width;
+  padding: $tab-header-item-padding;
+  color: $tab-header-item-color;
+  cursor: pointer;
+  position: relative;
+
+  &.active {
+    color: $tab-header-item-active-color;
   }
-
-  .tab-header-pagination-before,
-  .tab-header-pagination-after {
-    position: relative;
-    display: none;
-    @include align-items(center);
-    justify-content: center;
-    min-width: $tab-header-item-pagination-min-width;
-    cursor: pointer;
-
-    &.tab-header-pagination-disabled {
-      box-shadow: none;
-      cursor: default;
-    }
-  }
-
-  .tab-header-labels-container {
-    @include display-flex(row);
-    @include flex(1 1 auto);
-    overflow: hidden;
-
-    .tab-header-tab-list {
-      position: relative;
-      @include flex(1 1 auto);
-      @include transition(transform .5s cubic-bezier(.35,0,.25,1));
-
-      .tab-header-labels-wrapper {
-        @include display-flex(row);
-        @include align-items(center);
-
-        .tab-header-item-wrapper {
-          @include display-flex(row);
-          @include align-items(center);
-          justify-content: center;
-          min-width: $tab-header-item-min-width;
-          padding: $tab-header-item-padding;
-          color: $tab-header-item-color;
-          cursor: pointer;
-          position: relative;
-
-          &.active {
-            color: $tab-header-item-active-color;
-          }
-          &.custom-tab {
-            cursor: default;
-            min-width: 0;
-            color: $tab-header-item-active-color;
-          }
-        }
-      }
-
-      .tab-border-bar-wrapper {
-        background-color: $tab-border-bar-bg-color;
-        position: absolute;
-        bottom: 0;
-        height: $tab-border-bar-thickness;
-        @include transition(
-          $tab-border-bar-animation-duration
-          $tab-border-bar-transition-style
-        );
-      }
-    }
+  &.custom-tab {
+    cursor: default;
+    min-width: 0;
+    color: $tab-header-item-active-color;
   }
 }
 

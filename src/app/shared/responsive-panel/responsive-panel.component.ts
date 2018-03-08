@@ -1,59 +1,75 @@
 import {
   Component,
-  ViewChild,
-  ContentChildren,
+  Input,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  ElementRef,
+  ChangeDetectorRef,
+  Renderer2,
   AfterContentInit,
   AfterContentChecked,
   OnDestroy,
+  ContentChildren,
   QueryList,
-  ChangeDetectorRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ElementRef,
-  Renderer2
+  ViewChild
 } from '@angular/core';
 import {
   Observable,
   Subscription
-} from 'rxjs/Rx';
+} from 'rxjs';
 import {
   CoreDefinition,
   McsViewportService
-} from '../../../core';
+} from '../../core';
 import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '../../../utilities';
-import { TabHeaderItemComponent } from './tab-header-item/tab-header-item.component';
-import { TabBorderBarComponent } from '../tab-border-bar/tab-border-bar.component';
+  unsubscribeSafely,
+  isNullOrEmpty
+} from '../../utilities';
+import {
+  ResponsivePanelBarComponent
+} from './responsive-panel-bar/responsive-panel-bar.component';
+import {
+  ResponsivePanelItemDirective
+} from './responsive-panel-item/responsive-panel-item.directive';
 
 // Constants
 const SCROLL_OFFSET = 60;
 
+// Unique Id that generates during runtime
+let nextUniqueId = 0;
+
 @Component({
-  selector: 'mcs-tab-header',
-  templateUrl: './tab-header.component.html',
-  encapsulation: ViewEncapsulation.None,
+  selector: 'mcs-responsive-panel',
+  templateUrl: './responsive-panel.component.html',
+  styleUrls: ['./responsive-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'tab-header-wrapper',
-    '[class.tab-header-pagination-controls-enabled]': 'showPaginationControls'
+    'class': 'responsive-panel-wrapper',
+    '[class.responsive-panel-pagination-controls-enabled]': 'showPaginationControls',
+    '[attr.id]': 'id'
   }
 })
 
-export class TabHeaderComponent implements AfterContentInit, AfterContentChecked, OnDestroy {
+export class ResponsivePanelComponent implements AfterContentInit, AfterContentChecked, OnDestroy {
 
-  @ViewChild(TabBorderBarComponent)
-  public tabBorderBar: TabBorderBarComponent;
+  @Input()
+  public id: string = `mcs-responsive-panel-${nextUniqueId++}`;
 
-  @ViewChild('tabListContainer')
-  public tabListContainer: ElementRef;
+  @Input()
+  public showBorderBar: boolean = true;
 
-  @ViewChild('tabList')
-  public tabList: ElementRef;
+  @ViewChild('panelItemsMainContainer')
+  public panelItemsMainContainer: ElementRef;
 
-  @ContentChildren(TabHeaderItemComponent)
-  public headerItems: QueryList<TabHeaderItemComponent>;
+  @ViewChild('panelItemsSubContainer')
+  public panelItemsSubContainer: ElementRef;
+
+  @ViewChild(ResponsivePanelBarComponent)
+  public panelBorderBar: ResponsivePanelBarComponent;
+
+  @ContentChildren(ResponsivePanelItemDirective)
+  public panelItems: QueryList<ResponsivePanelItemDirective>;
 
   public disableScrollAfter: boolean = true;
   public disableScrollBefore: boolean = true;
@@ -62,7 +78,15 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
   private _selectionSubscription: Subscription;
   private _viewportChangeSubscription: Subscription;
   private _scrollDistanceChanged: boolean;
-  private _tabLabelCount: number;
+  private _actionItemCount: number;
+
+  public get chevronRightKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_RIGHT;
+  }
+
+  public get chevronLeftKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+  }
 
   /**
    * Scroll distance to set when pagination is activated
@@ -77,12 +101,11 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
     this._setPaginationControlStatus();
   }
 
-  public get chevronRightKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_RIGHT;
-  }
-
-  public get chevronLeftKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
+  /**
+   * Combine stream of all the selected item child's change event
+   */
+  public get itemsSelectionChanged(): Observable<ResponsivePanelItemDirective> {
+    return Observable.merge(...this.panelItems.map((item) => item.select));
   }
 
   constructor(
@@ -95,18 +118,18 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
   public ngAfterContentInit(): void {
     // We need to listen to changes on header
     // in order to cater the scenarios of dynamic adding of tab
-    if (this.headerItems) { this._listenToSelectionChange(); }
-    this.headerItems.changes.subscribe(() => {
+    if (this.panelItems) { this._listenToSelectionChange(); }
+    this.panelItems.changes.subscribe(() => {
       this._listenToSelectionChange();
     });
     this._listenToViewportChange();
   }
 
   public ngAfterContentChecked(): void {
-    // If the number of tab labels have changed, check if scrolling should be enabled
-    if (this._tabLabelCount !== this.headerItems.length) {
+    // If the number of action items have changed, check if scrolling should be enabled
+    if (this._actionItemCount !== this.panelItems.length) {
       this._updatePagination();
-      this._tabLabelCount = this.headerItems.length;
+      this._actionItemCount = this.panelItems.length;
       this._changeDetectorRef.markForCheck();
     }
 
@@ -129,16 +152,9 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
    * @param direction Direction to set the scroll
    */
   public scrollHeader(direction: 'before' | 'after'): void {
-    let viewLength = this.tabListContainer.nativeElement.offsetWidth;
+    let viewLength = this.panelItemsMainContainer.nativeElement.offsetWidth;
     // Move the scroll distance one-third the length of the tab list's viewport.
     this.scrollDistance += (direction === 'before' ? -1 : 1) * viewLength / 3;
-  }
-
-  /**
-   * Combine stream of all the selected item child's change event
-   */
-  public get itemsSelectionChanged(): Observable<TabHeaderItemComponent> {
-    return Observable.merge(...this.headerItems.map((item) => item.selectionChanged));
   }
 
   /**
@@ -146,8 +162,8 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
    * is equal to the difference in width between the tab list container and tab header container.
    */
   private _getMaxScrollDistance(): number {
-    const lengthOfTabList = this.tabList.nativeElement.scrollWidth;
-    const viewLength = this.tabListContainer.nativeElement.offsetWidth;
+    const lengthOfTabList = this.panelItemsSubContainer.nativeElement.scrollWidth;
+    const viewLength = this.panelItemsMainContainer.nativeElement.offsetWidth;
     return (lengthOfTabList - viewLength) || 0;
   }
 
@@ -155,7 +171,7 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
    * Update the tab scroll position based on scroll distance
    */
   private _updateTabScrollPosition(): void {
-    this._renderer.setStyle(this.tabList.nativeElement, 'transform',
+    this._renderer.setStyle(this.panelItemsSubContainer.nativeElement, 'transform',
       `translate3d(${-this.scrollDistance}px, 0, 0)`);
   }
 
@@ -163,8 +179,8 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
    * Set the pagination status if it is enabled or disabled
    */
   private _setPaginationStatus() {
-    let isEnabled =
-      this.tabList.nativeElement.scrollWidth > this._elementRef.nativeElement.offsetWidth;
+    let isEnabled = this.panelItemsSubContainer.nativeElement.scrollWidth >
+      this._elementRef.nativeElement.offsetWidth;
 
     if (!isEnabled) { this.scrollDistance = 0; }
     if (isEnabled !== this.showPaginationControls) {
@@ -196,14 +212,14 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
    * Scroll tab header based on selected tab item
    * @param item Item to be scrolled
    */
-  private _scrollToTabItem(item: TabHeaderItemComponent): void {
+  private _scrollToElement(item: ResponsivePanelItemDirective): void {
     if (isNullOrEmpty(item)) { return; }
     let labelBeforePos: number;
     let labelAfterPos: number;
 
-    let viewLength = this.tabListContainer.nativeElement.offsetWidth;
-    labelBeforePos = item.elementRef.nativeElement.offsetLeft;
-    labelAfterPos = labelBeforePos + item.elementRef.nativeElement.offsetWidth;
+    let viewLength = this.panelItemsMainContainer.nativeElement.offsetWidth;
+    labelBeforePos = item.elementRef.offsetLeft;
+    labelAfterPos = labelBeforePos + item.elementRef.offsetWidth;
 
     let beforeVisiblePos = this.scrollDistance;
     let afterVisiblePos = this.scrollDistance + viewLength;
@@ -222,9 +238,9 @@ export class TabHeaderComponent implements AfterContentInit, AfterContentChecked
   private _listenToSelectionChange(): void {
     this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
       if (this.showPaginationControls) {
-        this._scrollToTabItem(item);
+        this._scrollToElement(item);
       }
-      this.tabBorderBar.alignToElement(item.elementRef.nativeElement);
+      this.panelBorderBar.alignToElement(item.elementRef);
       this._changeDetectorRef.markForCheck();
     });
   }

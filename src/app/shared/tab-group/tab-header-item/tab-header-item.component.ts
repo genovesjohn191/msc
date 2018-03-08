@@ -7,7 +7,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { coerceBoolean } from '../../../../utilities';
+import { coerceBoolean } from '../../../utilities';
 
 @Component({
   selector: 'mcs-tab-header-item',

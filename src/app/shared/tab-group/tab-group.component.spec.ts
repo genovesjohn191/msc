@@ -19,7 +19,7 @@ export class TabGroupTestComponent {
   public tabGroupComponent: TabGroupComponent;
 }
 
-describe('SelectComponent', () => {
+describe('TabGroupComponent', () => {
 
   /** Stub Services/Components */
   let component: TabGroupTestComponent;
@@ -75,11 +75,6 @@ describe('SelectComponent', () => {
   describe('ngOnInit()', () => {
     it(`should create the mcs-tab-group element`, () => {
       let element = document.querySelector('mcs-tab-group');
-      expect(element).not.toBe(null);
-    });
-
-    it(`should create the mcs-tab-header element`, () => {
-      let element = document.querySelector('mcs-tab-header');
       expect(element).not.toBe(null);
     });
 

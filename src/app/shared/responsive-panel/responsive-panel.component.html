@@ -1,0 +1,25 @@
+<!-- Before Pagination -->
+<div class="responsive-panel-pagination-before"
+  mcsRipple [disabled]="disableScrollBefore"
+  [class.responsive-panel-pagination-disabled]="disableScrollBefore"
+  (click)="scrollHeader('before')">
+  <mcs-icon [key]="chevronLeftKey"></mcs-icon>
+</div>
+
+<!-- Action group items -->
+<div class="responsive-panel-labels-container" #panelItemsMainContainer>
+  <div class="responsive-panel-action-list" #panelItemsSubContainer>
+    <div class="responsive-panel-labels-wrapper">
+      <ng-content></ng-content>
+    </div>
+    <mcs-responsive-panel-bar *ngIf="showBorderBar"></mcs-responsive-panel-bar>
+  </div>
+</div>
+
+<!-- After Pagination -->
+<div class="responsive-panel-pagination-after"
+  mcsRipple [disabled]="disableScrollAfter"
+  [class.responsive-panel-pagination-disabled]="disableScrollAfter"
+  (click)="scrollHeader('after')">
+  <mcs-icon [key]="chevronRightKey"></mcs-icon>
+</div>
