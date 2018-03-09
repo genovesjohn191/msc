@@ -573,7 +573,8 @@
           "cpu": "CPU",
           "ram": "RAM",
           "cpuUnit": "CPU",
-          "ramUnit": "GB"
+          "ramUnit": "GB",
+          "unknown": "Unknown"
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
