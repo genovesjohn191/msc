@@ -25,6 +25,7 @@ import {
   McsNotificationEventsService,
   McsDataStatusFactory,
   McsErrorHandlerService,
+  McsHttpStatusCode,
   McsDataStatus
 } from '../../../../core';
 import { ServersService } from '../../servers.service';
@@ -188,7 +189,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
-    private _errorHandlerService: McsErrorHandlerService,
+    _errorHandlerService: McsErrorHandlerService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
   ) {
@@ -199,7 +200,8 @@ export class ServerNicsComponent extends ServerDetailsBase
       _serversService,
       _serverService,
       _changeDetectorRef,
-      _textProvider
+      _textProvider,
+      _errorHandlerService
     );
     this.isUpdate = false;
     this.nics = new Array<ServerNicSummary>();
@@ -543,7 +545,7 @@ export class ServerNicsComponent extends ServerDetailsBase
       .findResourceNetworks(this.serverResource)
       .catch((error) => {
         // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
         return Observable.throw(error);
       })
       .subscribe(() => {

@@ -71,6 +71,7 @@ export class McsErrorHandlerService {
       case McsHttpStatusCode.InternalServerError:
       case McsHttpStatusCode.NotFound:
       case McsHttpStatusCode.Unprocessable:
+      case McsHttpStatusCode.ServiceUnavailable:
         this._router.navigate(['**'], {
           skipLocationChange: true,
           queryParams: { code: errorCode }

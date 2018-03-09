@@ -25,6 +25,7 @@ import {
   McsDialogService,
   McsOption,
   McsErrorHandlerService,
+  McsHttpStatusCode,
   McsDataStatusFactory,
   McsDataStatus
 } from '../../../../core';
@@ -213,7 +214,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
-    private _errorHandlerService: McsErrorHandlerService,
+    _errorHandlerService: McsErrorHandlerService,
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
   ) {
@@ -223,7 +224,8 @@ export class ServerStorageComponent extends ServerDetailsBase
       _serversService,
       _serverService,
       _changeDetectorRef,
-      _textProvider
+      _textProvider,
+      _errorHandlerService
     );
     this.expandStorage = false;
     this.deletingStorage = false;
@@ -601,11 +603,12 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Get the resource storage to the selected server
    */
   private _getResourceStorage(): void {
+    if (isNullOrEmpty(this.serverResource)) { return; }
+
     this.storageSubscription = this._serversResourcesRespository
       .findResourceStorage(this.serverResource)
       .catch((error) => {
-        // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
         return Observable.throw(error);
       })
       .subscribe(() => {

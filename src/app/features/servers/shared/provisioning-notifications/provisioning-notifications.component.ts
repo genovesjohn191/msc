@@ -115,16 +115,22 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
 
   public onViewServerPage(tasks: McsApiTask[]): void {
     let serverId = this._getCreatedServerId(tasks);
-    this._router.navigate(['/servers', serverId]);
+    let route = !isNullOrEmpty(serverId) ? `/servers/${serverId}` : '/servers';
+    this._router.navigate([route]);
+  }
+
+  public getRedirectionLinkText(tasks: McsApiTask[]): string {
+    let serverId = this._getCreatedServerId(tasks);
+    return !isNullOrEmpty(serverId) ?
+      this.textContent.viewServerLink : this.textContent.viewServersLink;
   }
 
   private _getCreatedServerId(tasks: McsApiTask[]): string {
     if (isNullOrEmpty(tasks)) { return ''; }
 
     let completedTask = tasks.find((task) => {
-      return task.type === McsTaskType.CreateServer &&
-        task.dataStatus === McsDataStatus.Success &&
-        !isNullOrEmpty(task.referenceObject);
+      return (task.type === McsTaskType.CreateServer || task.type === McsTaskType.CloneServer)
+        && task.dataStatus === McsDataStatus.Success && !isNullOrEmpty(task.referenceObject);
     });
 
     return !isNullOrEmpty(completedTask) ?

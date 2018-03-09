@@ -307,7 +307,8 @@
         "deployMultiple": "Deploy Servers",
         "deploymentCompleted": "Deployment Completed",
         "deploymentFailed": "Deployment Failed",
-        "viewServerLink": "View your servers"
+        "viewServersLink": "View your servers",
+        "viewServerLink": "View your server"
       },
       "serverIpAddress": {
         "custom": "Enter a custom IP Address",
@@ -714,6 +715,12 @@
       "summary": "The changes you wanted was rejected",
       "description": "Some your inputs was not right.",
       "retry": "Please double check your inputs and try again."
+    },
+    "serviceUnavailable": {
+      "header": "Oops",
+      "summary": "Unfortunately an error has occured",
+      "description": "We're unable to proccess your request right now.",
+      "retry": "Our team has been notified. Please try again later."
     },
     "refresh": "Refresh the page",
     "home": "Go to home page"

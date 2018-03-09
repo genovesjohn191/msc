@@ -33,11 +33,12 @@
             size="small"></mcs-icon>
           <span class="font-bold">{{ textContent.deploymentCompleted }}</span>
         </div>
-        <button *ngIf="isJobSuccessful(job)"
-          mcsButton id="ctaViewServer" arrow="right"
-          size="small" (click)="onViewServerPage(job.tasks)">
-          {{ textContent.viewServerLink }}
-        </button>
+        <div class="space-top-medium">
+          <button *ngIf="isJobSuccessful(job)" mcsButton id="ctaViewServer"
+            arrow="right" size="small" (click)="onViewServerPage(job.tasks)">
+            {{ getRedirectionLinkText(job.tasks) }}
+          </button>
+        </div>
 
         <!-- In case of Error -->
         <div *ngIf="!isJobSuccessful(job)" class="status-details">

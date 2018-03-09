@@ -10,9 +10,10 @@
 
   <div [ngSwitch]="errorCode" display-flex align-items="center" justify-content="space-between">
     <div *ngSwitchCase="httpStatusCodeEnum.NotFound">
-      <button mcsButton id="ctaReturnHome" size="small" [routerLink]="['/servers']">
-        {{ textContentAll.home }}
-      </button>
+      <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
+    </div>
+    <div *ngSwitchCase="httpStatusCodeEnum.ServiceUnavailable">
+      <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
     </div>
     <div *ngSwitchCase="httpStatusCodeEnum.InternalServerError">
       <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
@@ -22,6 +23,13 @@
     </div>
   </div>
 </div>
+
+<!-- Home button -->
+<ng-template #homeButtonTemplate>
+  <button mcsButton id="ctaReturnHome" size="small" [routerLink]="['/servers']">
+    {{ textContentAll.home }}
+  </button>
+</ng-template>
 
 <!-- Refresh button -->
 <ng-template #refreshButtonTemplate>
