@@ -72,7 +72,7 @@ export class McsStorageService {
 
     // Create Key
     localStorageKey = !isNullOrEmpty(this._authIdentity) ?
-      `${this._authIdentity.userId}_${key}` : key;
+      `${this._authIdentity.user.userId}_${key}` : key;
     return localStorageKey;
   }
 }

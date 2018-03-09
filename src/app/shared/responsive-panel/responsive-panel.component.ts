@@ -78,7 +78,7 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   private _selectionSubscription: Subscription;
   private _viewportChangeSubscription: Subscription;
   private _scrollDistanceChanged: boolean;
-  private _actionItemCount: number;
+  private _panelItemsCount: number;
 
   public get chevronRightKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_RIGHT;
@@ -127,9 +127,9 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
 
   public ngAfterContentChecked(): void {
     // If the number of action items have changed, check if scrolling should be enabled
-    if (this._actionItemCount !== this.panelItems.length) {
+    if (this._panelItemsCount !== this.panelItems.length) {
       this._updatePagination();
-      this._actionItemCount = this.panelItems.length;
+      this._panelItemsCount = this.panelItems.length;
       this._changeDetectorRef.markForCheck();
     }
 

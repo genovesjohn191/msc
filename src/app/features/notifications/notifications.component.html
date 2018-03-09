@@ -58,7 +58,10 @@
             {{ columnSettings.user.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-              {{ row.ownerName }}
+            <span>{{ row.ownerName }}</span><br/>
+            <span read-only *ngIf="row.ownerCompanyId !== activeCompany.id">
+              {{ textContent.account }}
+            </span>
           </mcs-data-cell>
         </ng-container>
 

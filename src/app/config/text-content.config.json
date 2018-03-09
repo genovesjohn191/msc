@@ -683,6 +683,7 @@
     "description": "Notifications play back and track activity within the portal.",
     "filterColumn": "Filter Column",
     "tableSearch": "Table Search",
+    "account": "(Maquarie)",
     "dataSingular": "Notification",
     "dataPlural": "Notifications",
     "tableHeader": {

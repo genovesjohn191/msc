@@ -141,14 +141,14 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
         break;
 
       case McsCompanyStatus.Cancelling:
-        userIcon = CoreDefinition.ASSETS_SVG_PERSON_YELLOW;
+        userIcon = CoreDefinition.ASSETS_SVG_PERSON_RED;
         break;
 
       case McsCompanyStatus.Cancelled:
       case McsCompanyStatus.Prospect:
       case McsCompanyStatus.NoLonger:
       default:
-        userIcon = CoreDefinition.ASSETS_SVG_PERSON_RED;
+        userIcon = CoreDefinition.ASSETS_SVG_PERSON_YELLOW;
         break;
     }
     return userIcon;

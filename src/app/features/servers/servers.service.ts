@@ -1062,7 +1062,7 @@ export class ServersService {
         this.resetVmPassword(data.server.id,
           {
             serverId: data.server.id,
-            userId: this._authIdentity.userId,
+            userId: this._authIdentity.user.userId,
             commandAction: action,
             powerState: data.server.powerState,
           })
@@ -1225,7 +1225,7 @@ export class ServersService {
 
       // Check whether the user has the same identity
       let resetPassword = !!(updatedJob.clientReferenceObject.userId ===
-        this._authIdentity.userId && !isNullOrEmpty(updatedJob.tasks[0].referenceObject));
+        this._authIdentity.user.userId && !isNullOrEmpty(updatedJob.tasks[0].referenceObject));
 
       // Display dialog
       if (resetPassword) {

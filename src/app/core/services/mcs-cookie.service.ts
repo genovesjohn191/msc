@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import {
+  Injectable,
+  isDevMode
+} from '@angular/core';
 import {
   CookieService,
   CookieOptions
@@ -13,10 +16,14 @@ let cryptoJS = require('crypto-js');
 @Injectable()
 export class McsCookieService {
 
+  public secured: boolean = false;
+
   constructor(
     private _cookieService: CookieService,
     private _coreConfig: CoreConfig
-  ) { }
+  ) {
+    this._setSecuredFlag();
+  }
 
   /**
    * Set the cookie item as encrypted content
@@ -32,7 +39,7 @@ export class McsCookieService {
     // Encrypt the value
     let encrypted: string;
     let securedCookieOptions: CookieOptions = options;
-    securedCookieOptions.secure = true;
+    securedCookieOptions.secure = this.secured;
 
     try {
       if (isJson(value)) {
@@ -91,7 +98,7 @@ export class McsCookieService {
     options: CookieOptions = { secure: true }
   ): void {
     let securedCookieOptions: CookieOptions = options;
-    securedCookieOptions.secure = true;
+    securedCookieOptions.secure = this.secured;
     let objectValue = isJson(value) ? JSON.stringify(value) : value;
     this._cookieService.put(key, objectValue.toString(), securedCookieOptions);
   }
@@ -112,5 +119,12 @@ export class McsCookieService {
    */
   public removeItem(key: string, options?: CookieOptions): void {
     this._cookieService.remove(key, options);
+  }
+
+  /**
+   * Sets the secured flag based on mode (Development/Production)
+   */
+  private _setSecuredFlag(): void {
+    this.secured = !isDevMode;
   }
 }
