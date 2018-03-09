@@ -2,7 +2,7 @@
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="firewallTextContent.leftPanelHeader">
     <!-- listing panel -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="firewallTextContent.panel">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
         <mcs-search #listSearch delayInSeconds="none"></mcs-search>
         <mcs-list-panel [listSource]="firewallListSource" [selectedListItem]="selectedItem">

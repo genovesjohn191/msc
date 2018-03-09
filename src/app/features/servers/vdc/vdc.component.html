@@ -2,7 +2,7 @@
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.vdc.leftPanelHeader">
     <!-- listing panel -->
-    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.vdc.panel">
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
         <mcs-search #search></mcs-search>
         <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem">

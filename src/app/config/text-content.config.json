@@ -51,7 +51,6 @@
     },
     "vdc": {
       "leftPanelHeader": "Server Filter",
-      "panel": "Listing Panel",
       "overview": {
         "label": "Overview",
         "vdcProperties": {
@@ -156,7 +155,6 @@
       "header": "Servers",
       "loading": "Loading server details.",
       "leftPanelHeader": "Server Filter",
-      "panel": "Listing Panel",
       "management": {
         "label": "Management",
         "loading": "Loading server properties.",
@@ -564,7 +562,6 @@
     "firewall": {
       "header": "Firewall",
       "leftPanelHeader": "Firewall Filter",
-      "panel": "Listing Panel",
       "overview": {
         "label": "Overview",
         "properties": {
