@@ -39,12 +39,21 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   public connectionStatusIconKey: string;
   public configurationStatusIconKey: string;
 
+  public get firewallModel(): string {
+    return !isNullOrEmpty(this.firewall.model) ?
+      this.firewall.model : this.textContent.properties.unknown;
+  }
+
   public get firewallCpu(): string {
-    return `${this.firewall.cpuCount} ${this.textContent.properties.cpuUnit}`;
+    return !isNullOrEmpty(this.firewall.cpuCount) ?
+      `${this.firewall.cpuCount} ${this.textContent.properties.cpuUnit}` :
+      this.textContent.properties.unknown;
   }
 
   public get firewallMemory(): string {
-    return `${convertToGb(this.firewall.memoryMB)} ${this.textContent.properties.ramUnit}`;
+    return !isNullOrEmpty(this.firewall.memoryMB) ?
+      `${convertToGb(this.firewall.memoryMB)} ${this.textContent.properties.ramUnit}` :
+      this.textContent.properties.unknown;
   }
 
   public get deviceStatus()  {
