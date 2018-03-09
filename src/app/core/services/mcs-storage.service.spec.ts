@@ -28,8 +28,10 @@ describe('McsStorageService', () => {
     /** Testbed Override Provider */
     TestBed.overrideProvider(McsStorageService, {
       useValue: new McsStorageService({
-        companyId: '12345',
-        userId: 'F500120501'
+        user: {
+          companyId: '12345',
+          userId: 'F500120501'
+        }
       } as McsAuthenticationIdentity)
     });
 

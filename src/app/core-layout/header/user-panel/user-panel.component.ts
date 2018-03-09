@@ -94,11 +94,11 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public get firstName(): string {
-    return this._authenticationIdentity.firstName;
+    return this._authenticationIdentity.user.firstName;
   }
 
   public get lastName(): string {
-    return this._authenticationIdentity.lastName;
+    return this._authenticationIdentity.user.lastName;
   }
 
   public get activeAccount(): McsApiCompany {

@@ -27,7 +27,6 @@ import {
   McsAuthenticationIdentity,
   McsAuthenticationService
 } from '../../../core';
-import { SwitchAccountService } from '../../shared';
 import {
   resolveEnvVar,
   registerEvent,
@@ -82,7 +81,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    * Get the currently active account
    */
   public get activeAccount(): McsApiCompany {
-    return this._switchAccountService.activeAccount;
+    return this._authenticationIdentity.activeAccount;
   }
 
   private _accountPanelOpen: boolean;
@@ -122,11 +121,11 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public get firstName(): string {
-    return this._authenticationIdentity.firstName;
+    return this._authenticationIdentity.user.firstName;
   }
 
   public get lastName(): string {
-    return this._authenticationIdentity.lastName;
+    return this._authenticationIdentity.user.lastName;
   }
 
   /**
@@ -139,7 +138,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _renderer: Renderer2,
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _switchAccountService: SwitchAccountService,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService
   ) {
@@ -192,7 +190,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   private _listenToSwitchAccount(): void {
-    this._activeAccountSubscription = this._switchAccountService.activeAccountStream
+    this._activeAccountSubscription = this._authenticationIdentity
+      .activeAccountChanged
       .subscribe(() => {
         // Refresh the page when account is selected
         this._changeDetectorRef.markForCheck();

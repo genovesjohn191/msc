@@ -117,13 +117,13 @@ export class AppModule {
    * Set the user settings of RAVEN for each changes of the identity
    */
   public setRavenUserSettings(): void {
-    this.authIdentityService.changeIdentityStream
+    this.authIdentityService.userChanged
       .subscribe((isChanged) => {
         if (isChanged) {
           setUserIdentity(
-            this.authIdentityService.userId,
-            `${this.authIdentityService.firstName} ${this.authIdentityService.lastName}`,
-            this.authIdentityService.email
+            this.authIdentityService.user.userId,
+            `${this.authIdentityService.user.firstName} ${this.authIdentityService.user.lastName}`,
+            this.authIdentityService.user.email
           );
         }
       });

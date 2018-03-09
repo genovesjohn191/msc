@@ -14,7 +14,9 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  McsDataStatus
+  McsDataStatus,
+  McsAuthenticationIdentity,
+  McsApiCompany
 } from '../../core';
 import {
   refreshView,
@@ -22,6 +24,7 @@ import {
   getRecordCountLabel,
   unsubscribeSafely
 } from '../../utilities';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mcs-notifications',
@@ -37,7 +40,8 @@ export class NotificationsComponent
   public textContent: any;
 
   // Subscription
-  private _notificationsSubscription: any;
+  private _notificationsSubscription: Subscription;
+  private _accountSubscription: Subscription;
 
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
@@ -55,9 +59,14 @@ export class NotificationsComponent
     return CoreDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
   }
 
+  public get activeCompany(): McsApiCompany {
+    return this._authenticationIdentity.activeAccount;
+  }
+
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _authenticationIdentity: McsAuthenticationIdentity,
     private _textContentProvider: McsTextContentProvider,
     private _notificationsRepository: NotificationsRepository
   ) {
@@ -66,6 +75,7 @@ export class NotificationsComponent
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.notifications;
+    this._listenToAccountUpdate();
   }
 
   public ngAfterViewInit() {
@@ -76,6 +86,7 @@ export class NotificationsComponent
 
   public ngOnDestroy() {
     this.dispose();
+    unsubscribeSafely(this._accountSubscription);
     unsubscribeSafely(this._notificationsSubscription);
   }
 
@@ -144,5 +155,16 @@ export class NotificationsComponent
     }
 
     return { key: iconKey, color: iconColor };
+  }
+
+  /**
+   * Listener for the account update to refresh the view
+   */
+  private _listenToAccountUpdate(): void {
+    this._accountSubscription = this._authenticationIdentity
+      .activeAccountChanged
+      .subscribe(() => {
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }

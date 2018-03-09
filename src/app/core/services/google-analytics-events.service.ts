@@ -17,32 +17,35 @@ export class GoogleAnalyticsEventsService {
     this._initializeAnalytics();
   }
 
-  public emitEvent(_eventCategory: string,
-                   _eventAction: string,
-                   _eventLabel: string = null,
-                   _eventValue: number = null) {
+  public emitEvent(
+    _eventCategory: string,
+    _eventAction: string,
+    _eventLabel: string = null,
+    _eventValue: number = null) {
     dataLayer.push({
       'event': 'customEvent',
       'eventCategory': _eventCategory,
       'eventAction': _eventAction,
       'eventLabel': _eventLabel,
       'eventValue': _eventValue
-      });
+    });
   }
 
   private _initializeAnalytics(): void {
-    this._mcsAuthenticationIdentity.changeIdentityStream.subscribe(( updated ) => {
-      if (updated) {
-        this._setUser();
-        this._subscribeToNavigationEvents();
-      }});
+    this._mcsAuthenticationIdentity.userChanged
+      .subscribe((updated) => {
+        if (updated) {
+          this._setUser();
+          this._subscribeToNavigationEvents();
+        }
+      });
   }
 
   private _setUser() {
-    let identity = this._mcsAuthenticationIdentity.hashedId.split('.');
+    let identity = this._mcsAuthenticationIdentity.user.hashedId.split('.');
     dataLayer.push({
-      'userID' : identity[0],
-      'companyGroup' : identity[1],
+      'userID': identity[0],
+      'companyGroup': identity[1],
     });
   }
 
@@ -53,7 +56,7 @@ export class GoogleAnalyticsEventsService {
         let maskedUrl = event.urlAfterRedirects.replace(CoreDefinition.REGEX_UUID_PATTERN, '{id}');
 
         dataLayer.push({
-          'event':'virtualPageView',
+          'event': 'virtualPageView',
           'virtualPageURL': maskedUrl
         });
       }

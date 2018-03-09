@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { McsApiCompany } from '../models/response/mcs-api-company';
+import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { AppState } from '../../app.service';
 import { CoreDefinition } from '../core.definition';
 import { BehaviorSubject } from 'rxjs/Rx';
@@ -7,64 +9,36 @@ import { BehaviorSubject } from 'rxjs/Rx';
 export class McsAuthenticationIdentity {
 
   /**
-   * This will notify the subscribers when changes
-   * has been made in the identity
+   * Event that triggers when the identity applied or changed
    */
-  private _changeIdentityStream: BehaviorSubject<boolean>;
-  public get changeIdentityStream(): BehaviorSubject<boolean> {
-    return this._changeIdentityStream;
-  }
-  public set changeIdentityStream(value: BehaviorSubject<boolean>) {
-    this._changeIdentityStream = value;
+  private _userChanged: BehaviorSubject<McsApiIdentity>;
+  public get userChanged(): BehaviorSubject<McsApiIdentity> { return this._userChanged; }
+
+  /**
+   * Event that triggers when the active account was found or set
+   */
+  private _activeAccountChanged: BehaviorSubject<McsApiCompany>;
+  public get activeAccountChanged(): BehaviorSubject<McsApiCompany> {
+    return this._activeAccountChanged;
   }
 
-  private _hashedId: string;
-  public get hashedId(): string {
-    return this._hashedId;
-  }
+  /**
+   * Identity of the user logged in
+   */
+  private _user: McsApiIdentity;
+  public get user(): McsApiIdentity { return this._user; }
 
-  private _firstName: string;
-  public get firstName(): string {
-    return this._firstName;
-  }
-
-  private _lastName: string;
-  public get lastName(): string {
-    return this._lastName;
-  }
-
-  private _userId: string;
-  public get userId(): string {
-    return this._userId;
-  }
-
-  private _email: string;
-  public get email(): string {
-    return this._email;
-  }
-
-  private _companyId: string;
-  public get companyId(): string {
-    return this._companyId;
-  }
-
-  private _companyName: string;
-  public get companyName(): string {
-    return this._companyName;
-  }
-
-  private _expiry: Date;
-  public get expiry(): Date {
-    return this._expiry;
-  }
-
-  private _permissions: string[];
-  public get permission(): string[] {
-    return this._permissions;
-  }
+  /**
+   * Currently active account (switched account)
+   */
+  private _activeAccount: McsApiCompany;
+  public get activeAccount(): McsApiCompany { return this._activeAccount; }
 
   constructor(private _appState: AppState) {
-    this._changeIdentityStream = new BehaviorSubject(false);
+    this._activeAccountChanged = new BehaviorSubject(undefined);
+    this._userChanged = new BehaviorSubject(undefined);
+    this._user = new McsApiIdentity();
+    this._activeAccount = new McsApiCompany();
   }
 
   /**
@@ -73,16 +47,16 @@ export class McsAuthenticationIdentity {
   public applyIdentity(): void {
     let identity = this._appState.get(CoreDefinition.APPSTATE_AUTH_IDENTITY);
     if (!identity) { return; }
+    this._user = identity;
+    this._userChanged.next(this._user);
+  }
 
-    this._hashedId = identity.hashedId;
-    this._firstName = identity.firstName;
-    this._lastName = identity.lastName;
-    this._userId = identity.userId;
-    this._email = identity.email;
-    this._companyId = identity.companyId;
-    this._companyName = identity.companyName;
-    this._expiry = identity.expiry;
-    this._permissions = identity.permissions;
-    this._changeIdentityStream.next(true);
+  /**
+   * Sets the active acount on the identity
+   * @param company The company to be active
+   */
+  public setActiveAccount(company: McsApiCompany): void {
+    this._activeAccount = company;
+    this._activeAccountChanged.next(company);
   }
 }

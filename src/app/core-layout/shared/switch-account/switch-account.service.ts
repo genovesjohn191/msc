@@ -59,8 +59,8 @@ export class SwitchAccountService {
    */
   public get defaultAccount(): McsApiCompany {
     return {
-      id: this._authIdentity.companyId,
-      name: this._authIdentity.companyName
+      id: this._authIdentity.user.companyId,
+      name: this._authIdentity.user.companyName
     } as McsApiCompany;
   }
 
@@ -101,6 +101,8 @@ export class SwitchAccountService {
     if (hasSelectedAccount) {
       // Get the active account based on cookie when user has admin access
       this.loadingAccount = true;
+      this.activeAccountStream.next(this._activeAccount);
+
       this._accountRepository
         .findRecordById(selectedAccountId)
         .catch((error) => {
@@ -110,11 +112,13 @@ export class SwitchAccountService {
         .subscribe((account) => {
           this.loadingAccount = false;
           this._activeAccount = account;
+          this._authIdentity.setActiveAccount(this._activeAccount);
           this.activeAccountStream.next(this._activeAccount);
         });
     } else {
       // Set the default account in case the user doesnt have admin access
       setDefaultAccount();
+      this._authIdentity.setActiveAccount(this.defaultAccount);
     }
   }
 
@@ -126,7 +130,7 @@ export class SwitchAccountService {
       this._cookieService.setEncryptedItem<string>(
         CoreDefinition.COOKIE_ACTIVE_ACCOUNT,
         this._activeAccount.id,
-        { expires: this._authIdentity.expiry }
+        { expires: this._authIdentity.user.expiry }
       );
     } else {
       this._cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
