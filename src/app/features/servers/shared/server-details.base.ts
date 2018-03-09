@@ -1,5 +1,8 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Observable,
+  Subscription
+} from 'rxjs/Rx';
 import {
   Server,
   ServerResource,
@@ -10,7 +13,11 @@ import { ServersResourcesRespository } from '../servers-resources.repository';
 import { ServersService } from '../servers.service';
 import { ServersRepository } from '../servers.repository';
 import { ServerService } from '../server/server.service';
-import { McsTextContentProvider } from '../../../core';
+import {
+  McsTextContentProvider,
+  McsErrorHandlerService,
+  McsHttpStatusCode
+} from '../../../core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -104,7 +111,8 @@ export abstract class ServerDetailsBase {
     protected _serversService: ServersService,
     protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
-    protected _textProvider: McsTextContentProvider
+    protected _textProvider: McsTextContentProvider,
+    protected _errorHandlerService: McsErrorHandlerService
   ) {
     this.server = new Server();
     this.serverResource = new ServerResource();
@@ -157,6 +165,10 @@ export abstract class ServerDetailsBase {
     unsubscribeSafely(this.serverResourceSubscription);
     this.serverResourceSubscription = this._serversResourcesRespository
       .findRecordById(this.server.platform.resourceId)
+      .catch((error) => {
+        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
+        return Observable.throw(error);
+      })
       .subscribe((resource) => {
         this.serverResource = resource;
         this.serverSelectionChanged();

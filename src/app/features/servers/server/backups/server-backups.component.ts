@@ -16,7 +16,8 @@ import {
   McsApiJob,
   McsDataStatusFactory,
   CoreDefinition,
-  McsDataStatus
+  McsDataStatus,
+  McsErrorHandlerService
 } from '../../../../core';
 import {
   convertDateToStandardString,
@@ -106,6 +107,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
+    _errorHandlerService: McsErrorHandlerService,
     private _notificationsEventService: McsNotificationEventsService,
     private _dialogService: McsDialogService
   ) {
@@ -115,7 +117,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
       _serversService,
       _serverService,
       _changeDetectorRef,
-      _textProvider
+      _textProvider,
+      _errorHandlerService
     );
   }
 

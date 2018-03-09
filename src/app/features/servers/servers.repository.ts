@@ -526,7 +526,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       getEnumString(ServerPowerState, activeServer.powerState);
 
     activeServer.statusLabel = this._serverStatusMap.has(statusKey) ?
-      this._serverStatusMap.get(statusKey) : '';
+      this._serverStatusMap.get(statusKey) :
+      getEnumString(ServerPowerState, activeServer.powerState);
   }
 
   /**
@@ -581,11 +582,16 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     switch (activeServer.commandAction) {
       case ServerCommand.Start:
       case ServerCommand.Restart:
+      case ServerCommand.Resume:
         activeServer.powerState = ServerPowerState.PoweredOn;
         break;
 
       case ServerCommand.Stop:
         activeServer.powerState = ServerPowerState.PoweredOff;
+        break;
+
+      case ServerCommand.Suspend:
+        activeServer.powerState = ServerPowerState.Suspended;
         break;
 
       default:

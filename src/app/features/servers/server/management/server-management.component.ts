@@ -33,7 +33,8 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsDialogService,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsHttpStatusCode
 } from '../../../../core';
 import {
   getEncodedUrl,
@@ -191,7 +192,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
-    private _errorHandlerService: McsErrorHandlerService,
+    _errorHandlerService: McsErrorHandlerService,
     private _renderer: Renderer2,
     private _browserService: McsBrowserService,
     private _router: Router,
@@ -204,7 +205,8 @@ export class ServerManagementComponent extends ServerDetailsBase
       _serversService,
       _serverService,
       _changeDetectorRef,
-      _textProvider
+      _textProvider,
+      _errorHandlerService
     );
     this.isAttachMedia = false;
     this._serverPerformanceScale = new ServerPerformanceScale();
@@ -463,7 +465,7 @@ export class ServerManagementComponent extends ServerDetailsBase
       .findResourceCompute(this.serverResource)
       .catch((error) => {
         // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
         return Observable.throw(error);
       })
       .subscribe(() => {

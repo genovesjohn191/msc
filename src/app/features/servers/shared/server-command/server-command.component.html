@@ -60,25 +60,19 @@
       </ng-container>
     </ng-container>
 
-    <!-- TODO: Temporarily hidden for release -->
-    <!-- Waiting for Orch API updates -->
-    <!-- <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
-      <div [serverIsOperable]="server">
-        <a (click)="onExecuteCommand(serverCommandEnum.Suspend)"
-          [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)">
-          {{ textContent.suspend }}
-        </a>
-      </div>
-    </ng-container> -->
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
+      <a (click)="onExecuteCommand(serverCommandEnum.Suspend)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)">
+        {{ textContent.suspend }}
+      </a>
+    </ng-container>
 
-    <!-- TODO: Temporarily hidden for release -->
-    <!-- Waiting for Orch API updates -->
-    <!-- <div *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
       <a (click)="onExecuteCommand(serverCommandEnum.Resume)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Resume)">
         {{ textContent.resume }}
       </a>
-    </div> -->
+    </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
       <a (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
