@@ -2,6 +2,7 @@
 <mcs-responsive-panel class="tab-header-wrapper">
   <mcs-tab-header-item
     mcsResponsivePanelItem
+    [mcsResponsivePanelItemSelectable]="tab.canSelect"
     mcsRipple
     *ngFor="let tab of tabs"
     [active]="activeTab?.id === tab.id"
