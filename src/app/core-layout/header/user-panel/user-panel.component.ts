@@ -39,7 +39,6 @@ import { Subscription } from 'rxjs';
 
 export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsApiJob[];
-  public closedNotifications: McsApiJob[];
   public hasConnectionError: boolean;
   public textContent: any;
   public deviceType: McsDeviceType;
@@ -60,9 +59,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public get displayedNotifications(): McsApiJob[] {
     return this.notifications.filter((job) => {
-      let jobClosed = this.closedNotifications
-        .find((closedJob) => job.id === closedJob.id);
-      return !jobClosed;
+      return job.dataStatus === McsDataStatus.InProgress;
     });
   }
 
@@ -121,7 +118,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   ) {
     this.hasConnectionError = false;
     this.notifications = new Array();
-    this.closedNotifications = new Array();
     this.deviceType = McsDeviceType.Desktop;
   }
 
@@ -179,30 +175,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     if (this.notificationsPopover &&
       !this.hasNotification || this.deviceType !== McsDeviceType.Desktop) {
       this.viewNotificationsPage();
-    }
-  }
-
-  /**
-   * Event that emits when notification panel was closed
-   */
-  public onCloseNotificationPanel(): void {
-    // Remove all non-active jobs
-    this.notifications.forEach((notification) => {
-      this.removeNotification(notification);
-    });
-  }
-
-  /**
-   * Event that emits when notification is removed
-   * @param _job Job to be removed
-   */
-  public removeNotification(_job: McsApiJob): void {
-    if (isNullOrEmpty(_job)) { return; }
-
-    let jobIsEnded = _job.dataStatus !== McsDataStatus.InProgress;
-    if (jobIsEnded) {
-      this.closedNotifications.push(_job);
-      this._changeDetectorRef.markForCheck();
     }
   }
 
