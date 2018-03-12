@@ -55,11 +55,11 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   public findServerDisks(activeServer: Server): Observable<ServerStorageDevice[]> {
     return this._serversApiService.getServerStorage(activeServer.id)
       .map((response) => {
-        activeServer.storageDevice = !isNullOrEmpty(response.content) ?
+        activeServer.storageDevices = !isNullOrEmpty(response.content) ?
           response.content : new Array();
 
         // TODO: Sort this temporary by name since the disk doesnt have index field
-        activeServer.storageDevice
+        activeServer.storageDevices
           .sort((_first: ServerStorageDevice, _second: ServerStorageDevice) => {
             return compareStrings(_first.name, _second.name);
           });
@@ -384,8 +384,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
 
-      if (!isNullOrEmpty(activeServer.storageDevice)) {
-        let disk = activeServer.storageDevice.find((result) => {
+      if (!isNullOrEmpty(activeServer.storageDevices)) {
+        let disk = activeServer.storageDevices.find((result) => {
           return result.id === job.clientReferenceObject.diskId;
         });
         if (!isNullOrEmpty(disk)) {

@@ -176,15 +176,15 @@ export class McsNotificationEventsService {
           this.deleteServerDisk.next(notification);
           break;
 
-        case McsJobType.CreateServerNetwork:
+        case McsJobType.CreateServerNic:
           this.createServerNic.next(notification);
           break;
 
-        case McsJobType.UpdateServerNetwork:
+        case McsJobType.UpdateServerNic:
           this.updateServerNic.next(notification);
           break;
 
-        case McsJobType.DeleteServerNetwork:
+        case McsJobType.DeleteServerNic:
           this.deleteServerNic.next(notification);
           break;
 

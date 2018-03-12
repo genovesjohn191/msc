@@ -18,7 +18,6 @@ import {
   Subscription
 } from 'rxjs/Rx';
 import {
-  ServerFileSystem,
   ServerPerformanceScale,
   ServerThumbnail,
   ServerPowerState,
@@ -65,7 +64,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   public thumbnailElement: ElementRef;
 
   public textContent: any;
-  public otherStorage: ServerFileSystem[];
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
@@ -148,10 +146,6 @@ export class ServerManagementComponent extends ServerDetailsBase
     return this.server.isProcessing && this.server.commandAction === ServerCommand.Scale;
   }
 
-  public get hasStorage(): boolean {
-    return !isNullOrEmpty(this.server.fileSystem);
-  }
-
   public get hasMedia(): boolean {
     return !isNullOrEmpty(this.server.media);
   }
@@ -174,7 +168,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get hasStorageInformation(): boolean {
-    return !isNullOrEmpty(this.server.storageDevice);
+    return !isNullOrEmpty(this.server.storageDevices);
   }
 
   public get hasAvailableMedia(): boolean {
@@ -236,17 +230,6 @@ export class ServerManagementComponent extends ServerDetailsBase
     if (!ipAddresses || ipAddresses.length === 0) { return ''; }
 
     return ipAddresses.join(', ');
-  }
-
-  public getSecondaryVolumes(serverfileSystem: ServerFileSystem[]) {
-    let storage = new Array();
-    let secondaryVolumes = serverfileSystem.slice(1);
-
-    for (let fileSystem of secondaryVolumes) {
-      storage.push(appendUnitSuffix(fileSystem.capacityGB, 'gigabyte'));
-    }
-
-    return storage.join(', ');
   }
 
   public onClickViewConsole() {

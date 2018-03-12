@@ -72,7 +72,7 @@
             </div>
             <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
               <!-- Primary Volume -->
-              <mcs-list-item *ngFor="let storage of server.storageDevice">
+              <mcs-list-item *ngFor="let storage of server.storageDevices">
                 <span>{{ storage.name }}:</span>
                 <span>
                   {{ appendUnitGB(convertDiskToGB(storage.sizeMB)) }}

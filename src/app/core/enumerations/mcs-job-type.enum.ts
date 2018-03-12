@@ -28,9 +28,9 @@ export enum McsJobType {
   ResetServerPassword = 100201,
 
   // Server Network Management
-  CreateServerNetwork = 100251,
-  UpdateServerNetwork = 100252,
-  DeleteServerNetwork = 100253,
+  CreateServerNic = 100251,
+  UpdateServerNic = 100252,
+  DeleteServerNic = 100253,
 
   // Server Media Management
   AttachServerMedia = 100301,

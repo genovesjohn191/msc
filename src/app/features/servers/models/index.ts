@@ -25,7 +25,6 @@ export * from './response/server-media';
 export * from './response/server-hardware';
 export * from './response/server-guest-os';
 export * from './response/server-grouped-os';
-export * from './response/server-file-system';
 export * from './response/server-environment';
 export * from './response/server-credential';
 export * from './response/server-compute';
