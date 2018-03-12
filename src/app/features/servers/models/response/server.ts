@@ -3,7 +3,6 @@ import { ServerHardware } from './server-hardware';
 import { ServerComputeSummary } from './server-compute-summary';
 import { ServerPlatformSummary } from './server-platform-summary';
 import { ServerMedia } from './server-media';
-import { ServerFileSystem } from './server-file-system';
 import { ServerStorageDevice } from './server-storage-device';
 import { ServerNicSummary } from './server-nic-summary';
 import { ServerVmwareTools } from './server-vmware-tools';
@@ -46,11 +45,8 @@ export class Server {
   @JsonProperty({ type: ServerNicSummary })
   public nics: ServerNicSummary[];
 
-  @JsonProperty({ type: ServerFileSystem })
-  public fileSystem: ServerFileSystem[];
-
   @JsonProperty({ type: ServerStorageDevice })
-  public storageDevice: ServerStorageDevice[];
+  public storageDevices: ServerStorageDevice[];
 
   @JsonProperty({ type: ServerMedia })
   public media: ServerMedia[];
@@ -105,8 +101,7 @@ export class Server {
     this.powerState = undefined;
     this.platform = undefined;
     this.nics = undefined;
-    this.fileSystem = undefined;
-    this.storageDevice = undefined;
+    this.storageDevices = undefined;
     this.media = undefined;
     this.snapshots = undefined;
     this.vApp = undefined;

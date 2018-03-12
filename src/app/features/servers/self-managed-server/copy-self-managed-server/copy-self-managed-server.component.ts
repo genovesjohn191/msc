@@ -299,9 +299,9 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   private _setStorageMemoryMB(): void {
-    if (isNullOrEmpty(this.selectedServer.storageDevice)) { return; }
+    if (isNullOrEmpty(this.selectedServer.storageDevices)) { return; }
 
-    this.storageMemoryMB = this.selectedServer.storageDevice[0].sizeMB;
+    this.storageMemoryMB = this.selectedServer.storageDevices[0].sizeMB;
   }
 
   private _registerFormGroup(): void {

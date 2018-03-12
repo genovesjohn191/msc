@@ -106,15 +106,15 @@ export class ServerStorageComponent extends ServerDetailsBase
   }
 
   public get hasStorageDevice(): boolean {
-    return !isNullOrEmpty(this.server.storageDevice);
+    return !isNullOrEmpty(this.server.storageDevices);
   }
 
   public get hasMultipleStorageDevice(): boolean {
-    return this.hasStorageDevice && this.server.storageDevice.length > 1;
+    return this.hasStorageDevice && this.server.storageDevices.length > 1;
   }
 
   public get hasReachedDisksLimit(): boolean {
-    return this.hasStorageDevice && this.server.storageDevice.length >= STORAGE_MAXIMUM_DISKS;
+    return this.hasStorageDevice && this.server.storageDevices.length >= STORAGE_MAXIMUM_DISKS;
   }
 
   public get hasAvailableStorageSpace(): boolean {
@@ -309,7 +309,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     storageData.sizeMB = this.storageChangedValue.storageMB;
     storageData.clientReferenceObject = {
       serverId: this.server.id,
-      name: `${this.textContent.diskName} ${this.server.storageDevice.length + 1}`,
+      name: `${this.textContent.diskName} ${this.server.storageDevices.length + 1}`,
       storageProfile: this.storageChangedValue.storageProfile,
       sizeMB: this.storageChangedValue.storageMB
     };
@@ -593,7 +593,7 @@ export class ServerStorageComponent extends ServerDetailsBase
         return Observable.throw(error);
       })
       .subscribe((response) => {
-        this.serverDisks = this.server.storageDevice;
+        this.serverDisks = this.server.storageDevices;
         this.dataStatusFactory.setSuccesfull(response);
         this._changeDetectorRef.markForCheck();
       });
