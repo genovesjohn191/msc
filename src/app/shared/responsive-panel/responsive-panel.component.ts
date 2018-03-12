@@ -56,9 +56,6 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   @Input()
   public id: string = `mcs-responsive-panel-${nextUniqueId++}`;
 
-  @Input()
-  public showBorderBar: boolean = true;
-
   @ViewChild('panelItemsMainContainer')
   public panelItemsMainContainer: ElementRef;
 
@@ -240,7 +237,9 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
       if (this.showPaginationControls) {
         this._scrollToElement(item);
       }
-      this.panelBorderBar.alignToElement(item.elementRef);
+      if (item.selectable) {
+        this.panelBorderBar.alignToElement(item.elementRef);
+      }
       this._changeDetectorRef.markForCheck();
     });
   }

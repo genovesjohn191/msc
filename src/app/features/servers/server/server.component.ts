@@ -293,7 +293,8 @@ export class ServerComponent
    * Listen to notifications changes
    */
   private _listenToNotificationsChange(): void {
-    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+    this._notificationsChangeSubscription = this._serversRepository
+      .notificationsChanged
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });

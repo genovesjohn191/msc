@@ -195,7 +195,8 @@ export abstract class ServerDetailsBase {
    * so that we could refresh the view of the corresponding component
    */
   private _listenToNotificationsChanged(): void {
-    this._notificationsSubscription = this._serversRepository.notificationsChanged
+    this._notificationsSubscription = this._serversRepository
+      .notificationsChanged
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });

@@ -128,6 +128,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Server>> {
     return this._serversApiService.getServer(recordId).map((response) => {
+      this._updateServerFromCache(response.content);
       this._updateServerStatusLabel(response.content);
       return response;
     });
@@ -514,7 +515,30 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   }
 
   /**
+   * Update the corresponding server based on cache date considering all
+   * the current status of the server
+   *
+   * `@Note:` This is needed since the obtained server doesn't have yet the
+   * local properties settings in which the basis of the server if it has
+   * an on-going job.
+   * @param record Record to be updated
+   */
+  private _updateServerFromCache(record: Server): void {
+    if (isNullOrEmpty(this.dataRecords)) { return; }
+
+    let recordFound = this.dataRecords.find((server) => {
+      return record.id === server.id;
+    });
+    if (isNullOrEmpty(recordFound)) { return; }
+    record.isProcessing = recordFound.isProcessing;
+    record.processingText = recordFound.processingText;
+    record.commandAction = recordFound.commandAction;
+  }
+
+  /**
    * This will update the status label of the active server
+   * @deprecated Use the property inside the server model.
+   * TODO: Create a property inside the server model considering all the mapping
    * @param activeServer Active server to update status label
    */
   private _updateServerStatusLabel(activeServer: Server): void {
@@ -532,6 +556,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
   /**
    * This will populate the values for serverStatusMap
+   * @deprecated This will be moved to Server model instead.
    * @param activeServer Active server
    */
   private _setServerStatusMap(): void {

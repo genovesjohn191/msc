@@ -15,6 +15,7 @@ let nextUniqueId = 0;
   host: {
     'class': 'responsive-panel-item-wrapper',
     '[class.active]': 'active',
+    '[class.selectable]': 'selectable',
     '(click)': 'onClick()',
     '[attr.id]': 'id'
   }
@@ -28,6 +29,13 @@ export class ResponsivePanelItemDirective {
 
   @Input()
   public id: string = `mcs-responsive-panel-item-${nextUniqueId++}`;
+
+  @Input('mcsResponsivePanelItemSelectable')
+  public get selectable(): boolean { return this._selectable; }
+  public set selectable(value: boolean) {
+    this._selectable = coerceBoolean(value);
+  }
+  private _selectable: boolean = false;
 
   /**
    * Tab header item flag to determine if the tab is selected

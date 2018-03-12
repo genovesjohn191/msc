@@ -217,7 +217,6 @@ export class ServerManagementComponent extends ServerDetailsBase
     this.textContent = this._textProvider.content.servers.server.management;
     this.initialize();
     this._getScaleParam();
-    this._listenToNotificationsChange();
     this._listenToDeviceChange();
   }
 
@@ -437,16 +436,6 @@ export class ServerManagementComponent extends ServerDetailsBase
       this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'none');
       this._renderer.removeAttribute(this.thumbnailElement.nativeElement, 'src');
     }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-  }
-
-  /**
-   * Listen to notifications changes
-   */
-  private _listenToNotificationsChange(): void {
-    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
   }
 
   private _listenToDeviceChange(): void {

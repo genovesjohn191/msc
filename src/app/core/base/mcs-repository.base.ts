@@ -84,25 +84,10 @@ export abstract class McsRepositoryBase<T> {
    */
   public updateRecord(record: T): void {
     if (isNullOrEmpty(record)) { return; }
-    // Find the corresponding record
-    let existingRecord = this._dataRecords.find((_item) => {
-      return (_item as any).id === (record as any).id;
-    });
-
-    // TODO: Add common method for this to be used also in the constructor of models
-    if (!isNullOrEmpty(existingRecord)) {
-      // Update only the fields of updated record from API response
-      for (let property in record) {
-        if (existingRecord.hasOwnProperty(property)) {
-          existingRecord[property] = record[property];
-        }
-      }
-    }
-    let updatedRecord = isNullOrEmpty(existingRecord) ? record : existingRecord;
 
     // Update the record
     addOrUpdateArrayRecord(this._dataRecords,
-      updatedRecord, true,
+      record, true,
       (_first: any, _second: any) => {
         return _first.id === _second.id;
       });
