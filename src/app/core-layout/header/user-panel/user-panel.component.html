@@ -39,8 +39,7 @@
         *ngFor="let notification of (displayedNotifications | mcsNotificationPanelMaxPipe)">
         <mcs-notification-panel
           type="running"
-          [notification]="notification"
-          (remove)="removeNotification($event)">
+          [notification]="notification">
         </mcs-notification-panel>
       </div>
 
@@ -59,7 +58,6 @@
     <a display-flex align-items="center" class="icon-content"
 
       mcsPopover #notificationsPopover="mcsPopover"
-      (onClose)="onCloseNotificationPanel()"
       (onOpen)="onOpenNotificationPanel()"
       maxWidth="350px" padding="none"
       placement="bottom" orientation="left" theme="light" priority="high"
