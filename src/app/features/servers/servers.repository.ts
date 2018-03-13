@@ -8,7 +8,6 @@ import {
   McsApiSuccessResponse,
   McsNotificationEventsService,
   McsApiJob,
-  McsTextContentProvider,
   McsDataStatus
 } from '../../core';
 import { ServersService } from './servers.service';
@@ -25,7 +24,6 @@ import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
   deleteArrayRecord,
-  getEnumString,
   compareNumbers,
   compareStrings
 } from '../../utilities';
@@ -36,15 +34,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
   private _initial: boolean = true;
-  private _serverStatusMap = new Map<string, string>();
 
   constructor(
     private _serversApiService: ServersService,
-    private _notificationEvents: McsNotificationEventsService,
-    private _textProvider: McsTextContentProvider
+    private _notificationEvents: McsNotificationEventsService
   ) {
     super();
-    this._setServerStatusMap();
   }
 
   /**
@@ -129,7 +124,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Server>> {
     return this._serversApiService.getServer(recordId).map((response) => {
       this._updateServerFromCache(response.content);
-      this._updateServerStatusLabel(response.content);
       return response;
     });
   }
@@ -250,7 +244,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         this._updateServerPowerState(activeServer);
       }
 
-      this._updateServerStatusLabel(activeServer);
       this.updateRecord(activeServer);
     }
   }
@@ -533,67 +526,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     record.isProcessing = recordFound.isProcessing;
     record.processingText = recordFound.processingText;
     record.commandAction = recordFound.commandAction;
-  }
-
-  /**
-   * This will update the status label of the active server
-   * @deprecated Use the property inside the server model.
-   * TODO: Create a property inside the server model considering all the mapping
-   * @param activeServer Active server to update status label
-   */
-  private _updateServerStatusLabel(activeServer: Server): void {
-    if (isNullOrEmpty(activeServer) || isNullOrEmpty(this._serverStatusMap.size)) { return; }
-
-    // Status key to find in the mapping
-    let statusKey = activeServer.isProcessing ?
-      getEnumString(ServerCommand, activeServer.commandAction) :
-      getEnumString(ServerPowerState, activeServer.powerState);
-
-    activeServer.statusLabel = this._serverStatusMap.has(statusKey) ?
-      this._serverStatusMap.get(statusKey) :
-      getEnumString(ServerPowerState, activeServer.powerState);
-  }
-
-  /**
-   * This will populate the values for serverStatusMap
-   * @deprecated This will be moved to Server model instead.
-   * @param activeServer Active server
-   */
-  private _setServerStatusMap(): void {
-    let textContent = this._textProvider.content.servers.server.management.status;
-
-    this._serverStatusMap.set(
-      getEnumString(ServerPowerState, ServerPowerState.PoweredOn),
-      textContent.running
-    );
-    this._serverStatusMap.set(
-      getEnumString(ServerPowerState, ServerPowerState.PoweredOff),
-      textContent.stopped
-    );
-    this._serverStatusMap.set(
-      getEnumString(ServerPowerState, ServerPowerState.Suspended),
-      textContent.suspended
-    );
-    this._serverStatusMap.set(
-      getEnumString(ServerCommand, ServerCommand.Start),
-      textContent.starting
-    );
-    this._serverStatusMap.set(
-      getEnumString(ServerCommand, ServerCommand.Stop),
-      textContent.stopping
-    );
-    this._serverStatusMap.set(
-      getEnumString(ServerCommand, ServerCommand.Restart),
-      textContent.restarting
-    );
-    this._serverStatusMap.set(
-      getEnumString(ServerCommand, ServerCommand.Suspend),
-      textContent.suspending
-    );
-    this._serverStatusMap.set(
-      getEnumString(ServerCommand, ServerCommand.Resume),
-      textContent.resuming
-    );
   }
 
   /**

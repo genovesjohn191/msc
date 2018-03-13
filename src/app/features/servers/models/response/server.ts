@@ -9,13 +9,17 @@ import { ServerVmwareTools } from './server-vmware-tools';
 import { ServerSnapshot } from './server-snapshot';
 import {
   ServerPowerState,
-  ServerPowerStateSerialization
+  ServerPowerStateSerialization,
+  serverPowerStateText
 } from '../enumerations/server-power-state.enum';
 import {
   ServerServiceType,
   ServerServiceTypeSerialization
 } from '../enumerations/server-service-type.enum';
-import { ServerCommand } from '../enumerations/server-command.enum';
+import {
+  ServerCommand,
+  serverCommandActiveText
+} from '../enumerations/server-command.enum';
 import { JsonProperty } from 'json-object-mapper';
 
 export class Server {
@@ -81,7 +85,6 @@ export class Server {
   public isProcessing: boolean;
   public commandAction: ServerCommand;
   public processingText: string;
-  public statusLabel: string;
 
   constructor() {
     this.id = undefined;
@@ -129,5 +132,15 @@ export class Server {
     return this.isOperable
       && !this.isProcessing
       && this.powerState === ServerPowerState.Suspended;
+  }
+
+  /**
+   * Returns the status label of the server
+   * based on its power state or command executed
+   */
+  public get statusLabel(): string {
+    return (this.isProcessing) ?
+      serverCommandActiveText[this.commandAction] :
+      serverPowerStateText[this.powerState];
   }
 }

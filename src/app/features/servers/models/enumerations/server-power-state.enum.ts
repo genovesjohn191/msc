@@ -15,6 +15,20 @@ export enum ServerPowerState {
   Mixed = 11
 }
 
+export const serverPowerStateText = {
+  [ServerPowerState.Unresolved]: 'Unresolved',
+  [ServerPowerState.Resolved]: 'Resolved',
+  [ServerPowerState.Deployed]: 'Deployed',
+  [ServerPowerState.Suspended]: 'Suspended',
+  [ServerPowerState.PoweredOn]: 'Running',
+  [ServerPowerState.WaitingForInput]: 'Waiting For Input',
+  [ServerPowerState.Unknown]: 'Unknown',
+  [ServerPowerState.Unrecognised]: 'Unrecognised',
+  [ServerPowerState.PoweredOff]: 'Stopped',
+  [ServerPowerState.InconsistentState]: 'Inconsistent State',
+  [ServerPowerState.Mixed]: 'Mixed'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

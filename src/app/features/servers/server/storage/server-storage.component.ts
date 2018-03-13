@@ -456,7 +456,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     this._createServerDiskSubscription = this._notificationEvents.createServerDisk
       .subscribe(this._onCreateServerDisk.bind(this));
     this._updateServerDiskSubscription = this._notificationEvents.updateServerDisk
-      .subscribe(this._onCreateServerDisk.bind(this));
+      .subscribe(this._onUpdateServerDisk.bind(this));
     this._deleteServerDiskSubscription = this._notificationEvents.deleteServerDisk
       .subscribe(this._onDeleteServerDisk.bind(this));
   }
@@ -484,7 +484,8 @@ export class ServerStorageComponent extends ServerDetailsBase
         break;
 
       case McsDataStatus.Success:
-        this._hasCompletedAddingDisk(job);
+        this._updateResourceStorageUsedMB(job);
+        this._getServerDisks();
         break;
 
       case McsDataStatus.Error:
@@ -496,9 +497,22 @@ export class ServerStorageComponent extends ServerDetailsBase
         break;
     }
 
-    // Update data status if in progress or failed
-    if (job.dataStatus !== McsDataStatus.Success) {
+    // Update data status if server disks is not empty
+    if (!isNullOrEmpty(this.serverDisks)) {
       this.dataStatusFactory.setSuccesfull(this.serverDisks);
+    }
+  }
+
+  /**
+   * Event that emits when updating a server disk
+   * @param job Emitted job content
+   */
+  private _onUpdateServerDisk(job: McsApiJob): void {
+    if (isNullOrEmpty(job) || isNullOrEmpty(job.clientReferenceObject)) { return; }
+
+    if (job.dataStatus === McsDataStatus.Success) {
+      this._updateResourceStorageUsedMB(job);
+      this._getServerDisks();
     }
   }
 
@@ -547,7 +561,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Will trigger once a disk was added successfully
    * @param job Emitted job content
    */
-  private _hasCompletedAddingDisk(job): void {
+  private _updateResourceStorageUsedMB(job): void {
     if (isNullOrEmpty(job)) { return; }
 
     // Update resource values
@@ -557,9 +571,6 @@ export class ServerStorageComponent extends ServerDetailsBase
       resourceStorage.usedMB += job.clientReferenceObject.sizeMB;
       this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
     }
-
-    // Get and update server disks
-    this._getServerDisks();
   }
 
   /**
