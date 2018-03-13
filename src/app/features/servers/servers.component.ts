@@ -178,7 +178,7 @@ export class ServersComponent
 
   /**
    * Return true when Start button on the top panel is enabled
-   *
+   * @deprecated Use the property of the server model instead
    * `@Note`: All selected servers must be powered OFF
    */
   public get startable(): boolean {
@@ -192,7 +192,7 @@ export class ServersComponent
 
   /**
    * Return true when Stop button on the top panel is enabled
-   *
+   * @deprecated Use the property of the server model instead
    * `@Note`: All selected servers must be powered ON
    */
   public get stoppable(): boolean {
@@ -206,7 +206,7 @@ export class ServersComponent
 
   /**
    * Return true when Restart button on the top panel is enabled
-   *
+   * @deprecated Use the property of the server model instead
    * `@Note`: All selected servers must be powered ON
    */
   public get restartable(): boolean {
@@ -215,7 +215,7 @@ export class ServersComponent
 
   /**
    * Return true when Delete button on the top panel is enabled
-   *
+   * @deprecated Use the property of the server model instead
    * `@Note`: All selected servers should not processing any request
    */
   public get deletable(): boolean {
@@ -228,7 +228,7 @@ export class ServersComponent
 
   /**
    * Return true when Suspend button on the top panel is enabled
-   *
+   * @deprecated Use the property of the server model instead
    * `@Note`: All selected servers should not processing any request and should be powered on
    */
   public get suspendable(): boolean {
@@ -241,7 +241,7 @@ export class ServersComponent
 
   /**
    * Return true when Resume button on the top panel is enabled
-   *
+   * @deprecated Use the property of the server model instead
    * `@Note`: All selected servers should not processing any request and should be powered suspended
    */
   public get resumable(): boolean {

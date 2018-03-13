@@ -117,6 +117,20 @@ export class Server {
   }
 
   /**
+   * Returns true when the server is powered on
+   */
+  public get isPoweredOn(): boolean {
+    return this.powerState === ServerPowerState.PoweredOn;
+  }
+
+  /**
+   * Returns true when the server is powered off
+   */
+  public get isPoweredOff(): boolean {
+    return this.powerState === ServerPowerState.PoweredOff;
+  }
+
+  /**
    * Return true when server is executable
    */
   public get executable(): boolean {
@@ -142,5 +156,30 @@ export class Server {
     return (this.isProcessing) ?
       serverCommandActiveText[this.commandAction] :
       serverPowerStateText[this.powerState];
+  }
+
+  /**
+   * Return true when server is startable
+   */
+  public get startable(): boolean {
+    return this.isOperable
+      && !this.isProcessing
+      && this.powerState === ServerPowerState.PoweredOff;
+  }
+
+  /**
+   * Return true when server is stopable
+   */
+  public get stopable(): boolean {
+    return this.isOperable
+      && !this.isProcessing
+      && this.powerState === ServerPowerState.PoweredOn;
+  }
+
+  /**
+   * Return true when server is restartable
+   */
+  public get restartable(): boolean {
+    return this.stopable;
   }
 }

@@ -33,7 +33,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
-  private _initial: boolean = true;
 
   constructor(
     private _serversApiService: ServersService,
@@ -106,13 +105,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     return this._serversApiService.getServers({
       perPage: recordCount,
       searchKeyword: keyword
-    }).finally(() => {
-      // We need to register the events after obtaining the data so that
-      // we will get notified by the jobs when data is obtained
-      if (this._initial === true) {
-        this._registerJobEvents();
-        this._initial = false;
-      }
     });
   }
 
@@ -126,6 +118,16 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       this._updateServerFromCache(response.content);
       return response;
     });
+  }
+
+  /**
+   * This will be automatically called when data was obtained in getAllRecords or getRecordById
+   *
+   * `@Note:` We need to register the events after obtaining the data so that
+   * we will get notified by the jobs when data is obtained
+   */
+  protected afterDataObtained(): void {
+    this._registerJobEvents();
   }
 
   /**
@@ -239,7 +241,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
       if (job.dataStatus === McsDataStatus.Success) {
         this._updateServerPowerState(activeServer);
       }

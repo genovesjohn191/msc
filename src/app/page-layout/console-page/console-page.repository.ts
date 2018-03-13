@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {
   McsRepositoryBase,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsApiConsole
 } from '../../core';
-import { TicketsService } from './tickets.service';
-import { Ticket } from './models';
+import { ConsolePageService } from './console-page.service';
 
 @Injectable()
-export class TicketsRepository extends McsRepositoryBase<Ticket> {
+export class ConsolePageRepository extends McsRepositoryBase<McsApiConsole> {
 
-  constructor(private _ticketsApiService: TicketsService) {
+  constructor(private _consoleApiService: ConsolePageService) {
     super();
   }
 
@@ -18,14 +18,8 @@ export class TicketsRepository extends McsRepositoryBase<Ticket> {
    * This will be automatically called in the repoistory based class
    * to populate the data obtained
    */
-  protected getAllRecords(
-    recordCount: number,
-    keyword: string
-  ): Observable<McsApiSuccessResponse<Ticket[]>> {
-    return this._ticketsApiService.getTickets({
-      perPage: recordCount,
-      searchKeyword: keyword
-    });
+  protected getAllRecords(): Observable<McsApiSuccessResponse<McsApiConsole[]>> {
+    return Observable.of(undefined);
   }
 
   /**
@@ -33,8 +27,8 @@ export class TicketsRepository extends McsRepositoryBase<Ticket> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Ticket>> {
-    return this._ticketsApiService.getTicket(recordId);
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsApiConsole>> {
+    return this._consoleApiService.getServerConsole(recordId);
   }
 
   /**

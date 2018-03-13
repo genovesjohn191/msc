@@ -63,6 +63,7 @@ export abstract class McsRepositoryBase<T> {
    * Data records obtainment subscription
    */
   private _getDataRecordsSubscription: Subscription;
+  private _isInitialized: boolean = false;
 
   /**
    * Dispose all the resources of the management based such as
@@ -186,6 +187,7 @@ export abstract class McsRepositoryBase<T> {
     if (requestRecords) {
       // Get all records from API calls implemented under inherited class
       return this.getAllRecords(displayedRecords, !isNullOrEmpty(search) ? search.keyword : '')
+        .finally(() => this._notifyAfterDataObtained())
         .catch((error) => {
           this._dataStatus = McsDataStatus.Error;
           return Observable.throw(error);
@@ -237,15 +239,16 @@ export abstract class McsRepositoryBase<T> {
 
     if (recordIsOutdated) {
       return this.getRecordById(id)
+        .finally(() => this._notifyAfterDataObtained())
         .map((record) => {
-          // Update record content
-          this.updateRecord(record.content);
-          this._obtainedByIdList.add((id));
-
           // We need to save manually the data when findAllRecords was not yet invoke
           if (!this._dataRecordsObtained) {
             this.dataRecords.push(record.content);
           }
+
+          // Update record content
+          this.updateRecord(record.content);
+          this._obtainedByIdList.add((id));
           return record.content;
         });
     }
@@ -267,9 +270,24 @@ export abstract class McsRepositoryBase<T> {
   protected abstract getRecordById(recordId: string): Observable<McsApiSuccessResponse<T>>;
 
   /**
+   * Event that emits after the data obtained in getting all records or getting individual records
+   */
+  protected abstract afterDataObtained(): void;
+
+  /**
    * Notify the data records changed event
    */
   private _notifyDataRecordsChanged(): void {
     this._dataRecordsChanged.next(this._dataRecords);
+  }
+
+  /**
+   * Notify after data obtained abstract method
+   */
+  private _notifyAfterDataObtained(): void {
+    if (!this._isInitialized) {
+      this.afterDataObtained();
+      this._isInitialized = true;
+    }
   }
 }

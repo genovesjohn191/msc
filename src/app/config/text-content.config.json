@@ -2,7 +2,10 @@
   "consolePage": {
     "loading": "Loading VM Console...",
     "sendCtrlAltDelete": "Send ctrl+alt+del",
-    "disconnectedMessage": "Console got disconnected. We will try to reconnect once the server is back."
+    "start": "Start",
+    "stop": "Stop",
+    "restart": "Restart",
+    "disconnectedMessage": "VM Console gets disconnected. We will try to reconnect once the server is back."
   },
   "navigation": {
     "home": "Home",
