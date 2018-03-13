@@ -217,16 +217,6 @@
           "scale": "Scale",
           "cancel": "Cancel",
           "scaling": "Scaling in Progress"
-        },
-        "status": {
-          "starting": "Starting",
-          "running": "Running",
-          "restarting": "Restarting",
-          "suspending": "Suspending",
-          "resuming": "Resuming",
-          "stopping": "Stopping",
-          "stopped": "Stopped",
-          "suspended": "Suspended"
         }
       },
       "storage": {

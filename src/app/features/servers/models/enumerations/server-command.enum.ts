@@ -20,6 +20,30 @@ export enum ServerCommand {
   ResetVmPassword = 100
 }
 
+export const serverCommandText = {
+  [ServerCommand.None]: 'None',
+  [ServerCommand.Start]: 'Start',
+  [ServerCommand.Stop]: 'Stop',
+  [ServerCommand.Restart]: 'Restart',
+  [ServerCommand.Snapshot]: 'Snapshot',
+  [ServerCommand.Scale]: 'Scale',
+  [ServerCommand.Clone]: 'Clone',
+  [ServerCommand.Rename]: 'Rename',
+  [ServerCommand.Delete]: 'Delete',
+  [ServerCommand.AttachMedia]: 'AttachMedia',
+  [ServerCommand.Suspend]: 'Suspend',
+  [ServerCommand.Resume]: 'Resume',
+  [ServerCommand.ViewVCloud]: 'ViewVCloud'
+};
+
+export const serverCommandActiveText = {
+  [ServerCommand.Start]: 'Starting',
+  [ServerCommand.Stop]: 'Stopping',
+  [ServerCommand.Restart]: 'Restarting',
+  [ServerCommand.Suspend]: 'Suspending',
+  [ServerCommand.Resume]: 'Resuming'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

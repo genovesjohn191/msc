@@ -32,19 +32,7 @@ describe('ServerManagementComponent', () => {
       environmentName: 'Macquarie_Telecom_Contoso_100320',
       resourceName: 'M1VDC27117001'
     },
-    serviceType: ServerServiceType.Managed,
-    fileSystem: [
-      {
-        path: '/',
-        capacityGB: 49,
-        freeSpaceGB: 48
-      },
-      {
-        path: '/boot',
-        capacityGB: 1,
-        freeSpaceGB: 1
-      }
-    ],
+    serviceType: ServerServiceType.Managed
   };
 
   beforeEach(async(() => {
