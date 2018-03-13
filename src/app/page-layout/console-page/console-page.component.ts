@@ -6,7 +6,8 @@ import {
   ElementRef,
   ViewChild,
   ViewEncapsulation,
-  NgZone
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -19,42 +20,61 @@ import {
   unsubscribeSafely
 } from '../../utilities';
 import {
-  McsNotificationEventsService,
   McsTextContentProvider,
-  McsApiJob,
   CoreDefinition,
   Key,
-  McsDataStatus,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsApiConsole
 } from '../../core';
-import { ServerCommand } from '../../features/servers';
-import { ConsolePageService } from './console-page.service';
+import {
+  Server,
+  ServersRepository,
+  ServersService,
+  ServerCommand,
+  ServerPowerState
+} from '../../features/servers';
+import { ConsolePageRepository } from './console-page.repository';
 
 // JQuery script implementation
 require('script-loader!../../../assets/scripts/jquery/jquery-1.7.2.min.js');
 require('script-loader!../../../assets/scripts/jquery/jquery-ui.1.8.16.min.js');
 require('script-loader!../../../assets/scripts/vcloud-js/wmks.min.js');
 declare var $: any;
-declare var WMKS: any;
 
-// JQeuryUI dialog
-const DIALOG_HEADER_SIZE = 35;
+const OTHER_ELEMENT_WIDTH = 0;
+const OTHER_ELEMENT_HEIGHT = 44;
+const BROWSER_WIDTH = 18;
+const BROWSER_HEIGHT = 60;
+
+enum VmConsoleStatus {
+  Error = -1,
+  None = 0,
+  Connecting = 1,
+  Connected = 2,
+  Disconnected = 3
+}
 
 @Component({
   selector: 'mcs-console-page',
   templateUrl: './console-page.component.html',
   styleUrls: ['./console-page.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'console-page-wrapper',
+    '[class.console-disconnected]': 'consoleStatus === vmConsoleStatusEnum.Disconnected',
+    '[class.console-connecting]': 'consoleStatus === vmConsoleStatusEnum.Connecting',
+  }
 })
 
 export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  public textContent: any;
+
   @ViewChild('consoleUiElement')
   public consoleUiElement: ElementRef;
 
-  @ViewChild('consoleDialogElement')
-  public consoleDialogElement: ElementRef;
-
+  // Icons key variables
   public get keyboardIconKey(): string {
     return CoreDefinition.ASSETS_SVG_KEYBOARD;
   }
@@ -63,71 +83,86 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public consolePageTextContent: any;
-  public consoleIsConnecting: boolean;
-  public consoleIsConnected: boolean;
-  public consoleDisconnecting: boolean;
+  public get startIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_START;
+  }
 
-  public get poweredOn(): boolean { return this._poweredOn; }
-  private _poweredOn: boolean = true;
+  public get restartIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_RESTART;
+  }
 
+  public get stopIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_STOP;
+  }
+
+  /**
+   * Server console status based on progress of the VMWare
+   */
+  private _consoleStatus: VmConsoleStatus;
+  public get consoleStatus(): VmConsoleStatus { return this._consoleStatus; }
+  public set consoleStatus(value: VmConsoleStatus) {
+    this._consoleStatus = value;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * VM console server
+   */
+  private _server: Server;
+  public get server(): Server { return this._server; }
+  public set server(value: Server) {
+    this._server = value;
+    this._serverStatusChanged();
+  }
+
+  // Other variables
   private _vmConsole: any;
-  private _vmConsoleDialog: any;
-  private _url: string;
-  private _vmx: string;
-  private _routeSubscription: Subscription;
-  private _zoneSubscription: Subscription;
-  private _notificationsSubscription: Subscription;
   private _serverId: string;
+  private _paramChangedSubscription: Subscription;
+  private _serverChangedSubscription: Subscription;
+
+  public get vmConsoleStatusEnum() {
+    return VmConsoleStatus;
+  }
+
+  public get serverCommandEnum() {
+    return ServerCommand;
+  }
 
   public constructor(
-    private _consoleService: ConsolePageService,
+    private _consoleRepository: ConsolePageRepository,
     private _textContentProvider: McsTextContentProvider,
-    private _notificationsEventService: McsNotificationEventsService,
+    private _serversRepository: ServersRepository,
+    private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
-    private _zone: NgZone,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _errorHandlerService: McsErrorHandlerService
   ) {
-    this.consoleDisconnecting = false;
-    this.consoleIsConnecting = false;
-    this.consoleIsConnected = false;
+    this.consoleStatus = VmConsoleStatus.None;
   }
 
   public ngOnInit() {
-    this.consolePageTextContent = this._textContentProvider.content.consolePage;
-    this._routeSubscription = this._activatedRoute.params
-      .subscribe((params) => {
-        this._serverId = params['id'];
-        this._setupVmConsole(this._serverId);
-      });
-    this._listenToActiveServer();
-
-    // Subscribe to the angular zone to check weather the console
-    // is already displayed and adjust the screensize of the vm console
-    this._zoneSubscription = this._zone.onStable.subscribe(() => {
-      this._resizeConsoleScreen(window.innerHeight, window.innerWidth);
-    });
+    this.textContent = this._textContentProvider.content.consolePage;
+    this._listenToParamChanged();
+    this._listenToServerChanged();
   }
 
   public ngAfterViewInit() {
     refreshView(() => {
-      if (this.consoleUiElement) {
-        this._vmConsole = $(this.consoleUiElement.nativeElement).wmks({
-          enableUint8Utf8: true,
-          position: WMKS.CONST.Position.LEFT_TOP
-        });
-      }
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+      this._configureVmConsole();
+      this._registerVmConsoleEvents();
+    });
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._routeSubscription);
-    unsubscribeSafely(this._zoneSubscription);
-    unsubscribeSafely(this._notificationsSubscription);
+    unsubscribeSafely(this._paramChangedSubscription);
+    unsubscribeSafely(this._serverChangedSubscription);
   }
 
+  /**
+   * Event that emits when send request for control + alt + delete is clicked
+   */
   public onClickCtrlAltDelete() {
-    // TODO: Set the corresponding key to power on the server
     this._sendKeyCodes([
       Key.Ctrl,
       Key.Alt,
@@ -135,93 +170,188 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     ]);
   }
 
-  private _disconnectVmConsole(): void {
-    this.consoleIsConnected = false;
-    this.consoleDisconnecting = true;
+  /**
+   * Execute the server power state based on action provided
+   * @param action Action to be invoked
+   */
+  public executeServerCommand(action: ServerCommand): void {
+    if (isNullOrEmpty(action)) { return; }
+    this._serversService.executeServerCommand({ server: this.server }, action);
   }
 
-  private _reconnectVmConsole(): void {
-    this.consoleDisconnecting = false;
-    this.consoleIsConnecting = false;
-    this.consoleIsConnected = false;
-    this._setupVmConsole(this._serverId);
+  /**
+   * Configure vm console settings
+   */
+  private _configureVmConsole(): void {
+    if (isNullOrEmpty(this.consoleUiElement)) { return; }
+    this._vmConsole = $(this.consoleUiElement.nativeElement).wmks({
+      useVNCHandshake: false,
+      enableUint8Utf8: true,
+      rescale: true
+    });
   }
 
-  private _setupVmConsole(serverId: any) {
-    if (!serverId || this.consoleIsConnecting) { return; }
-    this.consoleIsConnecting = true;
+  /**
+   * Register VM Console events for wmks element
+   */
+  private _registerVmConsoleEvents(): void {
+    if (isNullOrEmpty(this._vmConsole)) { return; }
+    this._vmConsole.bind('wmksconnecting', this._vmConnecting.bind(this));
+    this._vmConsole.bind('wmksconnected', this._vmConnected.bind(this));
+    this._vmConsole.bind('wmksdisconnected', this._vmDisconnected.bind(this));
+    this._vmConsole.bind('wmkserror', this._vmError.bind(this));
+    this._vmConsole.bind('wmksresolutionchanged', this._vmResolutionChanged.bind(this));
+  }
 
-    this._consoleService.getServerConsole(serverId)
+  /**
+   * Event that emits when VM console is connecting
+   */
+  private _vmConnecting(): void {
+    this.consoleStatus = VmConsoleStatus.Connecting;
+  }
+
+  /**
+   * Event that emits when VM console is connected
+   */
+  private _vmConnected(): void {
+    this._vmConsole.wmks('option', 'allowMobileKeyboardInput', false);
+    this._vmConsole.wmks('option', 'fitToParent', false);
+    this.consoleStatus = VmConsoleStatus.Connected;
+  }
+
+  /**
+   * Event that emits when VM console gets disconnected
+   */
+  private _vmDisconnected(): void {
+    this.consoleStatus = VmConsoleStatus.Disconnected;
+  }
+
+  /**
+   * Event that emits when VM console has error while connecting
+   */
+  private _vmError(): void {
+    this.consoleStatus = VmConsoleStatus.Error;
+  }
+
+  /**
+   * Event that emits when VM console resolution has changed
+   */
+  private _vmResolutionChanged(): void {
+    this._fitToScreen();
+  }
+
+  /**
+   * Connect to VM console based on server ID
+   * @param serverId ServerID of the server to open the console
+   */
+  private _connectVmConsole(serverId: any) {
+    if (isNullOrEmpty(serverId)) { return; }
+
+    this.consoleStatus = VmConsoleStatus.Connecting;
+    this._consoleRepository.findRecordById(serverId)
       .catch((error) => {
         // Handle common error status code
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
       })
-      .subscribe((consoleData) => {
-        if (consoleData && consoleData.content) {
-          this._url = consoleData.content.url;
-          this._vmx = consoleData.content.vmx;
-
-          this._connectConsole();
-          this.consoleIsConnected = true;
-          this.consoleIsConnecting = false;
-          this._createDialog();
-          this._displayConsole();
-        }
+      .subscribe((response: McsApiConsole) => {
+        if (isNullOrEmpty(response)) { return; }
+        this._vmConsole.wmks('option', 'VCDProxyHandshakeVmxPath', response.vmx);
+        this._vmConsole.wmks('connect', response.url);
       });
   }
 
-  private _connectConsole() {
-    // Connect to vm console
-    this._vmConsole.wmks('option', 'VCDProxyHandshakeVmxPath', this._vmx);
-    this._vmConsole.wmks('connect', this._url);
+  /**
+   * Reconnect VM Console when it gets disconnected
+   */
+  private _reconnectVmConsole(): void {
+    let consoleIsDisconnected = this.server.isPoweredOn &&
+      this.consoleStatus === VmConsoleStatus.Disconnected;
+    if (!consoleIsDisconnected) { return; }
+
+    this.consoleStatus = VmConsoleStatus.Connecting;
+    this._connectVmConsole(this._serverId);
   }
 
+  /**
+   * Send the corresponding keycodes to the VM Console
+   */
   private _sendKeyCodes(keyCodes: number[]) {
     if (!keyCodes) { return; }
     this._vmConsole.wmks('sendKeyCodes', keyCodes);
   }
 
-  private _displayConsole(): void {
-    // Display console dialog and set the visibility flag to true
-    this._vmConsoleDialog.dialog('open');
+  /**
+   * Fit the Console based on the offset height and width of the VM
+   */
+  private _fitToScreen(): void {
+    let mainCanvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
+    if (isNullOrEmpty(mainCanvas)) { return; }
+    let consoleWidth = mainCanvas.width;
+    let consoleHeight = mainCanvas.height;
+
+    // values to pass to resize
+    let displayWidth = consoleWidth + OTHER_ELEMENT_WIDTH + BROWSER_WIDTH;
+    let displayHeight = consoleHeight + OTHER_ELEMENT_HEIGHT + BROWSER_HEIGHT;
+
+    // Fit elements to screen
+    let consoleContainer = this.consoleUiElement.nativeElement as HTMLElement;
+    if (!isNullOrEmpty(consoleContainer)) {
+      consoleContainer.style.width = `${consoleWidth}px`;
+      consoleContainer.style.height = `${consoleHeight}px`;
+    }
+    window.resizeTo(displayWidth, displayHeight);
+    this._changeDetectorRef.markForCheck();
   }
 
-  private _resizeConsoleScreen(height: number, width: number) {
-    let mainCanvasElement = document.getElementById('mainCanvas');
-    if (!mainCanvasElement) { return; }
-
-    mainCanvasElement.style.height = (height - DIALOG_HEADER_SIZE) + 'px';
-    mainCanvasElement.style.width = width + 'px';
-  }
-
-  private _createDialog(): void {
-    this._vmConsoleDialog = $(this.consoleDialogElement.nativeElement)
-      .dialog({
-        autoOpen: false,
-        width: 'auto',
-        modal: true,
-        closeText: '',
-        position: { my: 'left top', at: 'left top' }
+  /**
+   * Get server details by id provided
+   * @param serverId Server id to get the server details
+   */
+  private _getServerById(serverId: any): void {
+    if (isNullOrEmpty(this._serverId)) { return; }
+    this._serversRepository.findRecordById(serverId)
+      .subscribe((response) => {
+        this.server = response;
+        this._changeDetectorRef.markForCheck();
       });
   }
 
-  private _listenToActiveServer(): void {
-    this._notificationsSubscription = this._notificationsEventService
-      .changeServerPowerStateEvent
-      .subscribe((job: McsApiJob) => {
-        if (isNullOrEmpty(job)) { return; }
+  /**
+   * Event that emits when server status has been changed
+   */
+  private _serverStatusChanged(): void {
+    if (isNullOrEmpty(this.server)) { return; }
+    // Set disconnected when server is powered of
+    if (!this.server.isPoweredOn) {
+      this.consoleStatus = VmConsoleStatus.Disconnected;
+    }
 
-        if (job.dataStatus === McsDataStatus.Success &&
-          job.clientReferenceObject.serverId === this._serverId) {
-          this._poweredOn = !!(job.clientReferenceObject.commandAction === ServerCommand.Start);
-        }
-        if (!this._poweredOn) {
-          this._disconnectVmConsole();
-        }
-        if (this._poweredOn && this.consoleDisconnecting) {
-          this._reconnectVmConsole();
-        }
+    // Reconnect vm console when server is disconnected
+    this._reconnectVmConsole();
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Listen to servers data change in the repository
+   */
+  private _listenToServerChanged(): void {
+    this._serverChangedSubscription = this._serversRepository
+      .dataRecordsChanged
+      .subscribe(() => {
+        this._getServerById(this._serverId);
+      });
+  }
+
+  /**
+   * Listen to parameter change event of the router
+   */
+  private _listenToParamChanged(): void {
+    this._paramChangedSubscription = this._activatedRoute.params
+      .subscribe((params) => {
+        this._serverId = params['id'];
+        this._getServerById(this._serverId);
+        this._connectVmConsole(this._serverId);
       });
   }
 }

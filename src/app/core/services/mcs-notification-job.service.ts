@@ -9,6 +9,7 @@ import {
 } from '../../utilities';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiService } from './mcs-api.service';
+import { McsLoggerService } from './mcs-logger.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
@@ -49,7 +50,10 @@ export class McsNotificationJobService {
   private _apiSubscription: any;
   private _jobConnection: McsApiJobConnection;
 
-  constructor(private _apiService: McsApiService) {
+  constructor(
+    private _apiService: McsApiService,
+    private _loggerService: McsLoggerService
+  ) {
     this._notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
     this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
       (McsConnectionStatus.Success);
@@ -120,9 +124,11 @@ export class McsNotificationJobService {
     this._connecting = false;
     this._websocketClient.subscribe(this._jobConnection.destinationRoute,
       this._onMessage.bind(this));
+    this._loggerService.trace(`Web socket connected.`);
   }
 
   private _onMessage(message) {
+    this._loggerService.trace(`Rabbitmq Message Received`, message);
     if (message.body) {
       this._updateNotification(message.body);
     }
@@ -141,11 +147,17 @@ export class McsNotificationJobService {
     mcsApiRequestParameter.endPoint = '/jobs/connection';
 
     this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
       .map((response) => {
         // Deserialize json reponse
         let apiResponse = McsApiSuccessResponse
           .deserializeResponse<McsApiJobConnection>(McsApiJobConnection, response);
 
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       })
       .subscribe((details) => {

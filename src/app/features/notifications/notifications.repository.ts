@@ -47,6 +47,13 @@ export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
   }
 
   /**
+   * This will be automatically called when data was obtained in getAllRecords or getRecordById
+   */
+  protected afterDataObtained(): void {
+    // Implement initialization of events here
+  }
+
+  /**
    * Listen to every notifications to get the updated job and reflect it to the list
    */
   private _listenToNotifications(): void {

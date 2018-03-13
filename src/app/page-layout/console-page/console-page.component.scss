@@ -1,58 +1,63 @@
 @import "../../../styles/shared/base";
 
-$console-menu-bar-height: 40px;
-$console-menu-bar-offset: 20px;
-
-:host {
-  overflow: hidden;
-}
+// Console wrapper
+$console-page-wrapper-bg-color: $color-black;
+// Console menu bar
+$console-menu-height: 35px;
+$console-menu-bg-color: $color-white;
+// Console menu bar buttons
+$console-menu-button-border-color: $color-grey-04;
 
 body {
   margin: 0 !important;
   padding: 0 !important;
-  background-color: $color-black;
 }
 
-.console-message {
-  @include display-flex(row);
-  padding: 10px;
-  align-items: center;
+.console-page-wrapper {
+  @include display-flex(column);
+  @include align-items(center);
+  background-color: $console-page-wrapper-bg-color;
   justify-content: center;
-  background-color: $color-white;
-  border-bottom: 1px solid $color-grey-06;
-  @include set-items-interval($space-small, horizontal);
-}
+  overflow: auto;
+  width: 100%;
+  height: 100%;
 
-.console-page-dialog {
-  .menu-header {
-    top: 40px;
-    position: absolute;
-    width: 100%;
-    background-color: $color-white;
-    border: 1px solid $color-grey-06;
-    @include display-flex(row);
-    @include set-items-interval($space-large, horizontal);
-    min-height: $console-menu-bar-height;
-
-    div {
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      @include display-flex(row);
-      align-items: center;
-
-      &:hover {
-        border-bottom-color: $color-primary-00;
-      }
-
-      &:first-child {
-        margin-left: $console-menu-bar-offset;
-      }
+  &.console-disconnected,
+  &.console-connecting {
+    .console-ui-wrapper {
+      opacity: 0.5;
     }
   }
+}
 
-  .console-ui {
-    top: 80px;
-    position: absolute;
-    display: block;
+.console-page-menu-wrapper {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  @include align-items(center);
+  @include set-items-interval($space-small, horizontal);
+  width: 100%;
+  height: $console-menu-height;
+  background-color: $console-menu-bg-color;
+  padding: 0 $space-medium;
+
+  .console-message {
+    margin: auto;
   }
+
+  .console-buttons {
+    @include set-items-interval($space-large, horizontal);
+
+    .console-button-command-action {
+      border-right: 1px solid $console-menu-button-border-color;
+      padding-right: $space-large;
+      @include display-flex(row);
+      @include align-items(center);
+      @include set-items-interval($space-large, horizontal);
+    }
+  }
+}
+
+.console-ui-wrapper {
+  @include flex(1 1 auto);
+  position: relative;
 }

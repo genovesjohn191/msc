@@ -1,21 +1,68 @@
-<div *ngIf="consoleIsConnecting" class="console-message">
-  <mcs-icon [key]="loadingIconKey" size="medium"></mcs-icon>
-  <span>{{ consolePageTextContent.loading }}</span>
+<!-- Menu header -->
+<div class="console-page-menu-wrapper">
+  <ng-container [ngSwitch]="consoleStatus">
+    <!-- Connecting state -->
+    <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connecting">
+      <div class="inline-items-small console-message">
+        <mcs-icon [key]="loadingIconKey"></mcs-icon>
+        <span>{{ textContent.loading }}</span>
+      </div>
+    </ng-container>
+
+    <!-- Disconnected state -->
+    <ng-container *ngSwitchCase="vmConsoleStatusEnum.Disconnected">
+      <div class="console-message">
+        <span>{{ textContent.disconnectedMessage }}</span>
+      </div>
+    </ng-container>
+
+    <!-- Connected state -->
+    <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connected">
+      <div class="left-align">
+        <span>{{ server?.name }}</span>
+      </div>
+
+      <div class="inline-items-small console-buttons right-align">
+
+        <div class="console-button-command-action">
+          <!-- Start -->
+          <mcs-icon [key]="startIconKey" size="small"
+            [disabled]="!server?.startable"
+            [mcsTooltip]="textContent.start"
+            mcsTooltipPosition="left"
+            cursor="pointer"
+            (click)="executeServerCommand(serverCommandEnum.Start)"></mcs-icon>
+
+          <!-- Stop -->
+          <mcs-icon [key]="stopIconKey" size="small"
+            [disabled]="!server?.stopable"
+            [mcsTooltip]="textContent.stop"
+            mcsTooltipPosition="left"
+            cursor="pointer"
+            (click)="executeServerCommand(serverCommandEnum.Stop)"></mcs-icon>
+
+          <!-- Restart -->
+          <mcs-icon [key]="restartIconKey" size="small"
+            [disabled]="!server?.restartable"
+            [mcsTooltip]="textContent.restart"
+            mcsTooltipPosition="left"
+            cursor="pointer"
+            (click)="executeServerCommand(serverCommandEnum.Restart)"></mcs-icon>
+        </div>
+
+        <!-- Ctrl + Alt + Del -->
+        <mcs-icon [key]="keyboardIconKey"
+          [mcsTooltip]="textContent.sendCtrlAltDelete"
+          mcsTooltipPosition="left"
+          cursor="pointer"
+          (click)="onClickCtrlAltDelete()">
+        </mcs-icon>
+      </div>
+    </ng-container>
+  </ng-container>
 </div>
 
-<div *ngIf="!poweredOn" class="console-message">
-  <span>{{ consolePageTextContent.disconnectedMessage }}</span>
-</div>
-
-<div #consoleDialogElement class="console-page-dialog">
-  <div class="menu-header" [hidden]="!consoleIsConnected">
-    <div mcsPopover trigger="hover" maxWidth="200px"
-        [content]="sendCtrlAltDelTooltip" orientation="right" padding="narrow">
-      <mcs-icon (click)="onClickCtrlAltDelete()" [key]="keyboardIconKey" size="medium"></mcs-icon>
-      <ng-template #sendCtrlAltDelTooltip>
-        {{ consolePageTextContent.sendCtrlAltDelete }}
-      </ng-template>
-    </div>
-  </div>
-  <div [hidden]="!consoleIsConnected" id="wmksContainer" #consoleUiElement class="console-ui"></div>
-</div>
+<!-- VM Console container -->
+<div id="wmksContainer" #consoleUiElement
+  [disabled]="consoleStatus !== vmConsoleStatusEnum.Connected"
+  class="console-ui-wrapper"></div>
