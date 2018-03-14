@@ -6,7 +6,10 @@ import {
 @Component({
   selector: 'mcs-content-panel',
   template: `
-  <div class="content-panel-wrapper" scrollable scrollbarId="page-content">
+  <div class="content-panel-wrapper"
+    set-focus
+    tabindex="-1"
+    scrollable scrollbarId="page-content">
     <ng-content></ng-content>
   </div>
   `,
