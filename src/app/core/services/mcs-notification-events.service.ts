@@ -10,6 +10,7 @@ import { McsJobType } from '../enumerations/mcs-job-type.enum';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import {
   compareNumbers,
+  compareStrings,
   isNullOrEmpty
 } from '../../utilities';
 
@@ -213,7 +214,8 @@ export class McsNotificationEventsService {
   private _notifyUser(_job: McsApiJob): void {
     if (isNullOrEmpty(_job)) { return; }
 
-    let userStartedTheJob = _job.ownerId === this._authenticationIdentity.user.userId;
+    let userStartedTheJob = compareStrings(_job.ownerId,
+      this._authenticationIdentity.user.userId) === 0;
     if (userStartedTheJob) {
       this.currentUserJob.next(_job);
     }
