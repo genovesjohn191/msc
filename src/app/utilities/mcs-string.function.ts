@@ -103,6 +103,8 @@ export function getRecordCountLabel(count: number, singularSuffix: string, plura
  * @param secondString Second string to compare
  */
 export function compareStrings(firstString: string, secondString: string): number {
+  if (!firstString) { firstString = ''; }
+  if (!secondString) { secondString = ''; }
   let a = firstString.toLowerCase();
   let b = secondString.toLowerCase();
 
