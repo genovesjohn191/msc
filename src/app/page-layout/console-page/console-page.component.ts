@@ -30,8 +30,7 @@ import {
   Server,
   ServersRepository,
   ServersService,
-  ServerCommand,
-  ServerPowerState
+  ServerCommand
 } from '../../features/servers';
 import { ConsolePageRepository } from './console-page.repository';
 
