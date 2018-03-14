@@ -166,7 +166,7 @@
               <span>{{ server.platform?.resourceName }}</span>
             </mcs-list-item>
             <!-- MacView Service ID -->
-            <mcs-list-item>
+            <mcs-list-item *ngIf="server.serviceId">
               <span>{{ textContent.supportIdentifiers.macViewServiceId }}:</span>
               <span>{{ server.serviceId }}</span>
             </mcs-list-item>

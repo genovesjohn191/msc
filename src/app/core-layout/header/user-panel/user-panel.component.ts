@@ -122,7 +122,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.textContent = this._textContent.content.header.userPanel.notifications;
+    this.textContent = this._textContent.content.header.userPanel;
 
     // Listen to events
     this._listenToConnectionStatusChanged();
