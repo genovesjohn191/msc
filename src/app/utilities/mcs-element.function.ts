@@ -199,7 +199,8 @@ export function createSvgElement(svgContent: string): SVGElement {
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   }
   svg.setAttribute('fit', '');
-  svg.setAttribute('title', '');
+  svg.removeAttribute('id');
+  svg.removeAttribute('title');
   svg.setAttribute('height', '100%');
   svg.setAttribute('width', '100%');
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');

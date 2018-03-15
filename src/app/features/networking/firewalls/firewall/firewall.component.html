@@ -16,6 +16,7 @@
               [groupName]="firewallPanel.haGroupName"
               (click)="onFirewallSelect(firewallPanel.firewall)">
               <mcs-icon
+                size="small"
                 [key]="getConnectionStatusIconKey(firewallPanel.firewall?.connectionStatus)">
               </mcs-icon>
               <a>{{ firewallPanel.firewall?.managementName }}</a>

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { finalize } from 'rxjs/operators/finalize';
+import { map } from 'rxjs/operators/map';
+import { share } from 'rxjs/operators/share';
 import { HttpClient } from '@angular/common/http';
 
 /** Core Configuration */
@@ -15,6 +18,7 @@ export class McsAssetsProvider {
   private _fontIcons: Map<string, string>;
   private _svgIcons: Map<string, string>;
   private _svgElements: Map<string, SVGElement>;
+  private _svgActiveRequest: Map<string, Observable<SVGElement>>;
   private _gifIcons: Map<string, string>;
   private _config: any;
 
@@ -25,6 +29,7 @@ export class McsAssetsProvider {
     this._fontIcons = new Map<string, string>();
     this._svgIcons = new Map<string, string>();
     this._svgElements = new Map<string, SVGElement>();
+    this._svgActiveRequest = new Map<string, Observable<SVGElement>>();
     this._images = new Map<string, string>();
     this._gifIcons = new Map<string, string>();
     this.load();
@@ -118,15 +123,38 @@ export class McsAssetsProvider {
     // Check the svg in the cache and return it immediately.
     let svgExist = this._svgElements.has(url);
     if (svgExist) {
-      return Observable.of(this._svgElements.get(url));
+      return Observable.of(this._cloneSvg(this._svgElements.get(url)));
     }
 
-    return this._httpClient.get(url, { responseType: 'text' })
-      .map((response) => {
-        let svgElement = createSvgElement(response);
+    // Check the url if it is in progress and return it immediately.
+    // We use share in order for the call to be executed only once
+    // when the same url has been requested.
+    let activeRequest = this._svgActiveRequest.get(url);
+    if (!isNullOrEmpty(activeRequest)) {
+      return activeRequest;
+    }
+
+    // Get the svg from http request
+    let svgRequest = this._httpClient.get(url, { responseType: 'text' }).pipe(
+      finalize(() => this._svgActiveRequest.delete(url)),
+      share(),
+      map((response) => {
+        let svgElement = this._cloneSvg(createSvgElement(response));
         this._svgElements.set(url, svgElement);
         return svgElement;
-      });
+      })
+    );
+    this._svgActiveRequest.set(url, svgRequest);
+    return svgRequest;
+  }
+
+  /**
+   * Clone the svg element provided in order for the instance of
+   * the svg not to mimic its coordinate
+   * @param svg SVG element to clone
+   */
+  private _cloneSvg(svg: SVGElement): SVGElement {
+    return svg.cloneNode(true) as SVGElement;
   }
 
   /**

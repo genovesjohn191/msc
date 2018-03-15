@@ -11,7 +11,8 @@ import {
 import {
   CoreDefinition,
   McsSizeType,
-  McsColorType
+  McsColorType,
+  McsAssetsProvider
 } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 import {
@@ -19,10 +20,11 @@ import {
   Icon,
   IconService
 } from './icon.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'mcs-icon',
-  templateUrl: './icon.component.html',
+  template: '',
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -32,149 +34,171 @@ import {
 })
 
 export class IconComponent implements OnChanges {
-  public icon: Icon;
-  public iconElement: any;
-
   @Input()
   public key: string;
 
   @Input()
-  public size: McsSizeType;
-
-  @Input()
   public color: McsColorType;
 
-  private _iconActualSize: number;
+  @Input()
+  public set size(value: McsSizeType) {
+    let sizeIsDifferent = !isNullOrEmpty(value) && value !== this._size;
+    if (sizeIsDifferent) {
+      this._size = value;
+      this._iconActualSize = this._iconSizeTable.get(value);
+    }
+  }
+  private _size: McsSizeType;
+
+  // Icon variables
+  private _icon: Icon;
+  private _iconContainer: HTMLElement;
+  private _iconSizeTable: Map<McsSizeType, string>;
+  private _iconActualSize: string;
 
   public constructor(
     private _iconService: IconService,
     private _renderer: Renderer2,
     private _elementRef: ElementRef,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _assetsProvider: McsAssetsProvider
   ) {
     // Size of icons by default is medium and the type is SVG
+    this._createSizeTable();
     this.size = 'medium';
     this.color = 'black';
   }
 
-  public ngOnChanges() {
-    // Set Icon content and actual size
+  public async ngOnChanges() {
     this._setIconContent();
-    this._setActualSize();
 
     // Recreate Icon if it is already exist
-    this._recreateIcon();
-
-    // Add Icon Styling
-    this._setIconStyles();
+    this._clearIconContainer();
+    await this._createIconAsync();
+    this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Set the representation icon content to variable
+   */
   private _setIconContent(): void {
-    this.icon = {} as any;
-    this.icon = this._iconService.getIcon(this.key);
+    this._icon = {} as any;
+    this._icon = this._iconService.getIconDetails(this.key);
 
     // In case of no icon found.::.
     // Display the no-image availabe icon
-    if (isNullOrEmpty(this.icon)) {
-      this.icon = this._iconService.getIcon(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
+    if (isNullOrEmpty(this._icon)) {
+      this._icon = this._iconService.getIconDetails(CoreDefinition.ASSETS_SVG_NO_ICON_AVAILABLE);
     }
   }
 
-  private _setActualSize() {
-    if (!this.icon) { return; }
-
-    // Set size for the icon variables
-    switch (this.size) {
-      case 'xlarge':
-        this._iconActualSize = CoreDefinition.ICON_SIZE_XLARGE;
-        break;
-
-      case 'large':
-        this._iconActualSize = CoreDefinition.ICON_SIZE_LARGE;
-        break;
-
-      case 'small':
-        this._iconActualSize = CoreDefinition.ICON_SIZE_SMALL;
-        break;
-
-      case 'xsmall':
-        this._iconActualSize = CoreDefinition.ICON_SIZE_XSMALL;
-        break;
-
-      case 'medium':
-      default:
-        this._iconActualSize = CoreDefinition.ICON_SIZE_MEDIUM;
-        break;
-    }
-
-    // Set size for the icon wrapper
-    this._renderer.setStyle(this._elementRef.nativeElement, 'min-width',
-      `${this._iconActualSize}px`);
-    this._renderer.setStyle(this._elementRef.nativeElement, 'min-height',
-      `${this._iconActualSize}px`);
+  /**
+   * Creates the size table for mapping
+   */
+  private _createSizeTable(): void {
+    this._iconSizeTable = new Map<McsSizeType, string>();
+    this._iconSizeTable.set('xsmall', `${CoreDefinition.ICON_SIZE_XSMALL}px`);
+    this._iconSizeTable.set('small', `${CoreDefinition.ICON_SIZE_SMALL}px`);
+    this._iconSizeTable.set('medium', `${CoreDefinition.ICON_SIZE_MEDIUM}px`);
+    this._iconSizeTable.set('large', `${CoreDefinition.ICON_SIZE_LARGE}px`);
+    this._iconSizeTable.set('xlarge', `${CoreDefinition.ICON_SIZE_XLARGE}px`);
+    this._iconSizeTable.set('auto', `auto`);
   }
 
-  private _setIconStyles() {
-    if (!this.iconElement || !this.icon) { return; }
+  /**
+   * Create the icon in an asynchronous
+   */
+  private _createIconAsync(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this._createIconContainer();
 
-    switch (this.icon.type) {
-      case IconType.FontAwesome:
-        // Add class for the font awesome icons
-        let fontClasses: string[] = this.icon.value.split(' ');
-        fontClasses.forEach((fontClass) => {
-          this._renderer.addClass(this.iconElement, fontClass);
-        });
+      switch (this._icon.type) {
+        case IconType.Svg:
+          this._renderSvgElement(this._iconContainer)
+            .subscribe(() => resolve());
+          break;
 
-        // Set the sie of the Font Awesome icon based on the font-size
-        this._renderer.setStyle(this.iconElement, 'font-size',
-          `${this._iconActualSize}px`);
-        break;
+        case IconType.Gif:
+          this._renderImageElement(this._iconContainer)
+            .subscribe(() => resolve());
+          break;
 
-      case IconType.Gif:
-        this._renderer.setAttribute(this.iconElement, 'src', this.icon.value);
-
-        // Set the size of the SVG element based on the height and width
-        this._renderer.setStyle(this.iconElement, 'width',
-          `${this._iconActualSize}px`);
-        this._renderer.setStyle(this.iconElement, 'height',
-          `${this._iconActualSize}px`);
-        break;
-
-      case IconType.Svg:
-      default:
-        // Set the style to populate the background image of the SVG
-        this._renderer.setStyle(
-          this.iconElement,
-          'background-image',
-          `url(${this.icon.value})`
-        );
-
-        // Set the size of the SVG element based on the height and width
-        this._renderer.setStyle(this.iconElement, 'width',
-          `${this._iconActualSize}px`);
-        this._renderer.setStyle(this.iconElement, 'height',
-          `${this._iconActualSize}px`);
-        break;
-    }
-
-    this._renderer.addClass(this.iconElement, this.color);
-    this._renderer.addClass(this.iconElement, 'icon-container');
+        case IconType.FontAwesome:
+        default:
+          this._renderFontElement(this._iconContainer)
+            .subscribe(() => resolve());
+          break;
+      }
+    });
   }
 
-  private _recreateIcon(): void {
-    // Remove icon if it is already exist
-    if (this.iconElement) {
-      this._renderer.removeChild(this._elementRef.nativeElement, this.iconElement);
+  /**
+   * Creates the icon container which serves as a div element
+   */
+  private _createIconContainer(): void {
+    this._iconContainer = this._renderer.createElement('div');
+    this._renderer.appendChild(
+      this._elementRef.nativeElement,
+      this._iconContainer);
+    this._renderer.addClass(this._iconContainer, 'icon-container');
+  }
+
+  /**
+   * Render the svg element to the container provided
+   * @param parentContainer Parent container were the icon element will be attached
+   */
+  private _renderSvgElement(parentContainer: HTMLElement): Observable<HTMLElement> {
+    return this._assetsProvider
+      .getSvgElement(this._icon.value)
+      .map((svgElement) => {
+
+        svgElement.setAttribute('width', this._iconActualSize);
+        this._renderer.appendChild(parentContainer, svgElement);
+        return parentContainer;
+      });
+  }
+
+  /**
+   * Render the image element to the container provided
+   * @param parentContainer Parent container were the icon element will be attached
+   */
+  private _renderImageElement(parentContainer: HTMLElement): Observable<HTMLElement> {
+    let imageElement = this._renderer.createElement('img');
+    this._renderer.setAttribute(imageElement, 'src', this._icon.value);
+    this._renderer.setStyle(imageElement, 'display', 'block');
+    this._renderer.setStyle(imageElement, 'height', 'auto');
+    this._renderer.setStyle(imageElement, 'width', this._iconActualSize);
+
+    this._renderer.appendChild(parentContainer, imageElement);
+    return Observable.of(parentContainer);
+  }
+
+  /**
+   * Render the Font element to the container provided
+   * @param parentContainer Parent container were the icon element will be attached
+   */
+  private _renderFontElement(parentContainer: HTMLElement): Observable<HTMLElement> {
+    let imageElement = this._renderer.createElement('i');
+
+    // Add class for the font awesome icons
+    let fontClasses: string[] = this._icon.value.split(' ');
+    fontClasses.forEach((fontClass) => {
+      this._renderer.addClass(imageElement, fontClass);
+    });
+
+    // Set the size of the Font Awesome icon based on the font-size
+    this._renderer.setStyle(imageElement, 'font-size', this._iconActualSize);
+    this._renderer.addClass(parentContainer, `color-${this.color}`);
+    this._renderer.appendChild(parentContainer, imageElement);
+    return Observable.of(parentContainer);
+  }
+
+  /**
+   * Clear the corresponding icon by deleting its container
+   */
+  private _clearIconContainer(): void {
+    if (this._iconContainer) {
+      this._renderer.removeChild(this._elementRef.nativeElement, this._iconContainer);
     }
-
-    // Create icon
-    this.iconElement = this.icon.type === IconType.Gif ?
-      this._renderer.createElement('img') :
-      this._renderer.createElement('i');
-    this._renderer.appendChild(this._elementRef.nativeElement,
-      this.iconElement);
-
-    // Refresh view manually
-    this._changeDetectorRef.markForCheck();
   }
 }

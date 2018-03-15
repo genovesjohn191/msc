@@ -11,29 +11,4 @@
   @include display-flex(row);
   align-items: center;
   background-repeat: no-repeat;
-
-  &.green {
-    color: $color-green-00;
-  }
-
-  &.red {
-    color: $color-red-00;
-  }
-
-  &.black {
-    color: $color-black;
-  }
-
-  &.white {
-    color: $color-white;
-  }
-
-  &.blue,
-  &.primary {
-    color: $color-primary-00;
-  }
-
-  &.inherit {
-    color: inherit;
-  }
 }

@@ -20,7 +20,6 @@ import {
 import {
   ServerPerformanceScale,
   ServerThumbnail,
-  ServerPowerState,
   ServerServiceType,
   ServerMedia,
   ServerManageMedia,
@@ -123,7 +122,9 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get consoleEnabled(): boolean {
-    return this.isPoweredOn && this._deviceType === McsDeviceType.Desktop;
+    return this.isPoweredOn
+      && this.server.executable
+      && this._deviceType === McsDeviceType.Desktop;
   }
 
   public get warningIconKey(): string {
@@ -157,7 +158,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get isPoweredOn(): boolean {
-    return this.server.powerState === ServerPowerState.PoweredOn;
+    return this.server.isPoweredOn;
   }
 
   public get hasNics(): boolean {

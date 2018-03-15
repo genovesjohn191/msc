@@ -44,19 +44,19 @@
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Device Status -->
         <mcs-list-item>
-          <mcs-icon [key]="deviceStatusIconKey"></mcs-icon>
+          <mcs-icon size="small" [key]="deviceStatusIconKey"></mcs-icon>
           <span>{{ textContent.status.deviceStatus }}:</span>
           <span>{{ deviceStatus[firewall.deviceStatus] }}</span>
         </mcs-list-item>
         <!-- Connection Status -->
         <mcs-list-item>
-          <mcs-icon [key]="connectionStatusIconKey"></mcs-icon>
+          <mcs-icon size="small" [key]="connectionStatusIconKey"></mcs-icon>
           <span>{{ textContent.status.connectionStatus }}:</span>
           <span>{{ connectionStatus[firewall.connectionStatus] }}</span>
         </mcs-list-item>
         <!-- Configuration Status -->
         <mcs-list-item>
-          <mcs-icon [key]="configurationStatusIconKey"></mcs-icon>
+          <mcs-icon size="small" [key]="configurationStatusIconKey"></mcs-icon>
           <span>{{ textContent.status.configurationStatus }}:</span>
           <span>{{ configurationStatus[firewall.configurationStatus] }}</span>
         </mcs-list-item>
@@ -69,19 +69,22 @@
         <mcs-list spacing="xsmall" class="grid-content-body">
           <!-- AV Expiry Date -->
           <mcs-list-item *ngIf="firewall.utm.avExpiryDate">
-            <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.avExpiryDate)"></mcs-icon>
+            <mcs-icon size="small"
+              [key]="getLicenseStatusIconKey(firewall.utm.avExpiryDate)"></mcs-icon>
             <span>{{ textContent.utmServices.antivirus }}:</span>
             <span>{{ getLicenseDetails(firewall.utm.avExpiryDate) }}</span>
           </mcs-list-item>
           <!-- Web Expiry Date -->
           <mcs-list-item *ngIf="firewall.utm.webExpiryDate">
-            <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.webExpiryDate)"></mcs-icon>
+            <mcs-icon size="small"
+              [key]="getLicenseStatusIconKey(firewall.utm.webExpiryDate)"></mcs-icon>
             <span>{{ textContent.utmServices.webFiltering }}:</span>
             <span>{{ getLicenseDetails(firewall.utm.webExpiryDate) }}</span>
           </mcs-list-item>
           <!-- Email Expiry Date -->
           <mcs-list-item *ngIf="firewall.utm.emailExpiryDate">
-            <mcs-icon [key]="getLicenseStatusIconKey(firewall.utm.emailExpiryDate)"></mcs-icon>
+            <mcs-icon size="small"
+              [key]="getLicenseStatusIconKey(firewall.utm.emailExpiryDate)"></mcs-icon>
             <span>{{ textContent.utmServices.emailFiltering }}:</span>
             <span>{{ getLicenseDetails(firewall.utm.emailExpiryDate) }}</span>
           </mcs-list-item>

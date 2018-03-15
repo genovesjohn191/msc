@@ -101,7 +101,7 @@ $left-panel-navigation-collapse-padding: 6px;
 
     // Top Panel and Items Styling
     .page-top-wrapper {
-      align-items: center;
+      @include align-items(center);
       border-bottom: 1px solid $page-border-color;
       height: $top-panel-height;
       overflow: hidden;
@@ -113,21 +113,13 @@ $left-panel-navigation-collapse-padding: 6px;
       .page-header {
         padding: $page-header-padding;
         @include display-flex(row);
-        align-items: center;
-
-        *:not(.icon-container) {
-          font-family: $page-header-font;
-          @include font-size($page-header-font-size-default);
-          @include breakpoint(small) {
-            @include font-size($page-header-font-size-small);
-          }
-        }
+        @include align-items(center);
       }
 
       .top-panel-wrapper {
         @include flex(1 1 auto);
         @include display-flex(row);
-        align-items: center;
+        @include align-items(center);
         overflow: hidden;
 
         .top-panel-item-wrapper {
