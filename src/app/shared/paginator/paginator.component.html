@@ -1,5 +1,12 @@
-<div *ngIf="!loading && hasNextPage" class="load-more-container" (click)="nextPage()" mcsRipple>
-  <span>{{ textContent.nextPage }}</span>
-  <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
-</div>
-<mcs-icon *ngIf="enableLoader && loading" [key]="spinnerIconKey" size="medium"></mcs-icon>
+<!-- More button -->
+<ng-container *ngIf="showMoreButton">
+  <div class="paginator-load-more" (click)="nextPage()" mcsRipple>
+    <span>{{ textContent.nextPage }}</span>
+    <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
+  </div>
+</ng-container>
+
+<!-- Spinner -->
+<ng-container *ngIf="showLoader">
+  <mcs-icon [key]="spinnerIconKey" size="medium"></mcs-icon>
+</ng-container>

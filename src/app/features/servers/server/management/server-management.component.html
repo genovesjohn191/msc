@@ -45,8 +45,7 @@
         <!-- Console -->
         <div class="grid-column container-wrapper break-on-small">
           <h3 flex="none" class="container-header">{{ textContent.vmConsole.title }}</h3>
-          <div display-flex="column" align-items="flex-start"
-            (click)="onClickViewConsole()" [disabled]="!consoleEnabled">
+          <div class="inline-block" (click)="onClickViewConsole()" [disabled]="!consoleEnabled">
             <div class="thumbnail-container" cursor="pointer">
               <img #thumbnailElement class="thumbnail"/>
             </div>

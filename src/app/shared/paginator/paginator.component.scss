@@ -2,12 +2,13 @@
 
 .paginator-wrapper {
   @include display-flex(row);
-  align-items: center;
+  @include align-items(center);
   justify-content: center;
 
-  .load-more-container {
+  .paginator-load-more {
     @include display-flex(row);
-    align-items: center;
+    @include align-items(center);
+    @include set-items-interval($space-xsmall, horizontal);
     cursor: pointer;
     border-bottom: 1px solid $color-black;
   }

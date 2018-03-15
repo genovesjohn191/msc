@@ -32,7 +32,7 @@ export class IconService {
    * and it will search in all icons directory
    * @param key Icon key to be searched in the list
    */
-  public getIcon(key: string): Icon {
+  public getIconDetails(key: string): Icon {
     let icon: Icon;
     let iconValue: string = '';
 

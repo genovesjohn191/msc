@@ -81,7 +81,7 @@ export class ServerComponent
   }
 
   public get angleDoubleRightIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_ANGLE_DOUBLE_RIGHT;
+    return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
   }
 
   /**

@@ -72,7 +72,6 @@ export class PaginatorComponent implements McsPaginator {
     this._pageIndex = 0;
     this._pageSize = 0;
     this._totalCount = 0;
-    this.loading = false;
     this.pageChangedStream = new EventEmitter<any>();
     this.textContent = this._textContentProvider.content.shared.paginator;
   }
@@ -90,6 +89,21 @@ export class PaginatorComponent implements McsPaginator {
    */
   public get hasPreviousPage(): boolean {
     return this.pageIndex >= 1 && this.pageSize !== 0;
+  }
+
+  /**
+   * Returns true when loader/spinner should be displayed
+   */
+  public get showLoader(): boolean {
+    return this.enableLoader && this.loading;
+  }
+
+  /**
+   * Returns true if more button show be displayed
+   */
+  public get showMoreButton(): boolean {
+    return this.loading === false
+      && this.hasNextPage;
   }
 
   public get arrowDownIconKey(): string {

@@ -16,9 +16,11 @@
               [disabled]="serverDeleting(serverPanel.server)"
               (click)="onServerSelect(serverPanel.server.id)">
               <mcs-icon *ngIf="!serverPanel.server.isProcessing"
+                size="small"
                 [key]="getStateIconKey(serverPanel.server.powerState)"></mcs-icon>
 
-              <mcs-icon *ngIf="serverPanel.server.isProcessing" [key]="spinnerIconKey"
+              <mcs-icon *ngIf="serverPanel.server.isProcessing"
+                size="small" [key]="spinnerIconKey"
                 [mcsTooltip]="serverPanel.server.processingText"
                 mcsTooltipPosition="right"></mcs-icon>
 

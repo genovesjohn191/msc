@@ -8,7 +8,7 @@
         </a>
       </div>
       <div *ngIf="selectedItem">
-        <mcs-icon [key]="angleDoubleRightIconKey"></mcs-icon>
+        <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       </div>
       <div>
         <h3>{{ selectedServerName }}</h3>
@@ -33,9 +33,11 @@
               [disabled]="serverDeleting(serverPanel.server)"
               (click)="onServerSelect(serverPanel.server)">
               <mcs-icon *ngIf="!serverPanel.server.isProcessing"
+                size="small"
                 [key]="getStateIconKey(serverPanel.server.powerState)"></mcs-icon>
 
-              <mcs-icon *ngIf="serverPanel.server.isProcessing" [key]="spinnerIconKey"
+              <mcs-icon *ngIf="serverPanel.server.isProcessing"
+                size="small" [key]="spinnerIconKey"
                 [mcsTooltip]="serverPanel.server.processingText"
                 mcsTooltipPosition="right"></mcs-icon>
 
