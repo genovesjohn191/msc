@@ -569,7 +569,7 @@
         "supportIdentifiers": {
           "title": "Support Identifiers",
           "service": "Service",
-          "serial": "Serial"
+          "serial": "Serial Number"
         },
         "status": {
           "title": "Status",
@@ -736,11 +736,12 @@
     "userPanel": {
       "notifications": {
         "title": "Notifications",
-        "loadingCompany": "Loading company details.",
         "noRecord": "Nothing new to report",
         "connectionError": "Notification server connection error",
         "viewMore": "View More"
-      }
+      },
+      "loadingCompany": "Loading company details.",
+      "signOut": "Sign Out"
     }
   },
   "footer": {

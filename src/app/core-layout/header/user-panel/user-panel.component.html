@@ -6,7 +6,7 @@
     </div>
 
     <div class="logout-panel">
-      <a cursor="pointer" (click)="logout($event)">Logout</a>
+      <a cursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
     </div>
 
     <div *mcsHasPermission="['CompanyView']" class="switch-account-panel hidden-small">
@@ -23,15 +23,15 @@
     <div class="notifications-content-wrapper">
       <div class="notification-item font-bold"
         display-flex justify-content="flex-start" align-items="center">
-        <span>{{ textContent.title }}</span>
+        <span>{{ textContent.notifications.title }}</span>
       </div>
 
       <div class="notification-item" *ngIf="!hasNotification && !hasConnectionError">
-        <span>{{ textContent.noRecord }}</span>
+        <span>{{ textContent.notifications.noRecord }}</span>
       </div>
 
       <div class="notification-item text-error" *ngIf="hasConnectionError">
-        <span>{{ textContent.connectionError }}</span>
+        <span>{{ textContent.notifications.connectionError }}</span>
       </div>
 
       <!-- Jobs -->
@@ -45,7 +45,7 @@
 
       <div class="notification-item" display-flex justify-content="center" align-items="center">
         <a (click)="viewNotificationsPage()">
-          {{ textContent.viewMore }}
+          {{ textContent.notifications.viewMore }}
         </a>
       </div>
     </div>
