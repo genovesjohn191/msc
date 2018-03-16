@@ -123,10 +123,10 @@
       <ng-container *mcsIsSelfManagedServer="server">
         <div class="grid-column" *ngIf="expandStorage && hasDiskStorageProfile">
           <mcs-server-manage-storage #mcsStorage
-            [minimumMB]="selectedStorageDevice.sizeMB"
+            [minimumMB]="minimumMB"
             [maximumMB]="maximumMB"
             [step]="sliderStep"
-            [minValueMB]="selectedStorageDevice.sizeMB + storageMinValueMB"
+            [minValueMB]="minimumMB"
             (storageChanged)="onStorageChanged($event)">
             <!--Server manage storage contents on the left hand side (description)-->
             <div mcsStorageTitle>

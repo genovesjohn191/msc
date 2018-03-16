@@ -153,8 +153,8 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public get hasUpdate(): boolean {
     return this._serverPerformanceScale.valid && !isNullOrEmpty(this.server.compute)
-      && (this.server.compute.memoryMB < this._serverPerformanceScale.memoryMB
-        || this.server.compute.cpuCount < this._serverPerformanceScale.cpuCount);
+      && (this.serverMemoryMB < this._serverPerformanceScale.memoryMB
+        || this.serverCpuCount < this._serverPerformanceScale.cpuCount);
   }
 
   public get isPoweredOn(): boolean {

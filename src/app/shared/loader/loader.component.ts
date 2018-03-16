@@ -4,28 +4,23 @@ import {
   Renderer2,
   ElementRef,
   ViewChild,
-  AfterViewInit
+  AfterViewInit,
+  ViewEncapsulation
 } from '@angular/core';
 import { CoreDefinition } from '../../core';
-import { coerceBoolean } from '../../utilities';
 import { LoaderService } from './loader.service';
 
 @Component({
   selector: 'mcs-loader',
   templateUrl: './loader.component.html',
   styleUrls: ['./loader.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'block'
+    'class': 'loader-wrapper'
   }
 })
 
 export class LoaderComponent implements AfterViewInit {
-
-  @Input()
-  public get expanded(): boolean { return this._expanded; }
-  public set expanded(value: boolean) { this._expanded = coerceBoolean(value); }
-  private _expanded: boolean;
-
   @Input()
   public get size(): string { return this._size; }
   public set size(value: string) { this._size = value; }
@@ -51,9 +46,6 @@ export class LoaderComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    if (this.expanded) {
-      this._renderer.addClass(this._wrapperElement.nativeElement, 'expanded');
-    }
     if (this.orientation) {
       this._renderer.addClass(this._wrapperElement.nativeElement,
         `${this.orientation}-orientation`);

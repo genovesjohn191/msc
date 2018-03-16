@@ -37,7 +37,8 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   addOrUpdateArrayRecord,
-  deleteArrayRecord
+  deleteArrayRecord,
+  convertToMb
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
@@ -45,7 +46,7 @@ import {
   DeleteStorageDialogComponent,
 } from '../../shared';
 
-const STORAGE_SLIDER_STEP_DEFAULT = 25;
+const STORAGE_SLIDER_STEP_DEFAULT = 10;
 const STORAGE_MAXIMUM_DISKS = 14;
 const STORAGE_MINIMUM_VALUE = 1024;
 
@@ -272,7 +273,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     if (!this.server.executable || this.server.isProcessing
         || isNullOrEmpty(storage.storageProfile)) { return; }
 
-    this.minimumMB = storage.sizeMB;
+    this.minimumMB = this._getMinimumStorageMB(storage.sizeMB);
     this.maximumMB = this.getStorageAvailableMemory(storage.storageProfile);
     this.selectedStorageDevice = storage;
     this.expandStorage = true;
@@ -625,5 +626,21 @@ export class ServerStorageComponent extends ServerDetailsBase
       .subscribe(() => {
         // Subscribe to update the storage to server resource
       });
+  }
+
+  private _getMinimumStorageMB(sizeMB: number): number {
+    if (isNullOrEmpty(sizeMB)) { return 0; }
+
+    /**
+     * Business Rule:
+     * Minimum value must be greater than the current value
+     * and multiple of default slider step
+     */
+    let sizeGB = this.convertDiskToGB(sizeMB);
+    let isExactMultiple = sizeGB % STORAGE_SLIDER_STEP_DEFAULT === 0;
+    let minimumStorageMB = convertToMb(STORAGE_SLIDER_STEP_DEFAULT *
+      (Math.ceil(sizeGB / STORAGE_SLIDER_STEP_DEFAULT)));
+
+    return isExactMultiple ? sizeMB : minimumStorageMB;
   }
 }

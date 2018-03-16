@@ -58,14 +58,6 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
   private _subscriptions: Subscription | Subscription[];
 
   /**
-   * Input for the loader whether it is expanded(absolute) or not
-   */
-  @Input('mcsLoaderExpanded')
-  public get expanded(): boolean { return this._expanded; }
-  public set expanded(value: boolean) { this._expanded = coerceBoolean(value); }
-  private _expanded: boolean = true;
-
-  /**
    * Hide the given element when activated
    */
   @Input('mcsLoaderHideElement')
@@ -147,7 +139,6 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
   public showLoader() {
     if (isNullOrEmpty(this.componentRef)) {
       this.componentRef = this.componentService.createComponent();
-      this.componentRef.instance.expanded = this.expanded;
       this.componentRef.instance.size = this.size;
       this.componentRef.instance.text = this.text;
       this.componentRef.instance.orientation = this.orientation;
@@ -190,13 +181,10 @@ export class LoaderDirective implements OnInit, DoCheck, OnDestroy {
     }
 
     // Show to hide the target element based on flag
-    let parentElement = targetElement.parentElement || targetElement;
     if (hide) {
       this._renderer.addClass(targetElement, 'hide-element');
-      this._renderer.addClass(parentElement, 'position-relative');
     } else {
       this._renderer.removeClass(targetElement, 'hide-element');
-      this._renderer.removeClass(parentElement, 'position-relative');
     }
   }
 }
