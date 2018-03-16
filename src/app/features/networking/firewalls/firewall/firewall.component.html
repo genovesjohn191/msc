@@ -40,7 +40,7 @@
     </mcs-left-panel-item>
   </mcs-left-panel>
 
-  <mcs-content-panel *mcsContentPanelDef [mcsLoader]="subscription">
+  <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper">
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Overview Tab -->
@@ -69,7 +69,12 @@
 
       <!-- Tab content for routing tab -->
       <div class="routing-tab-content-wrapper">
-        <router-outlet></router-outlet>
+        <div [mcsLoader]="subscription"
+          [mcsLoaderHideElement]="tabContent"
+          [mcsLoaderText]="firewallTextContent.loading"
+          mcsLoaderOrientation="top"></div>
+
+        <router-outlet #tabContent></router-outlet>
       </div>
     </div>
   </mcs-content-panel>

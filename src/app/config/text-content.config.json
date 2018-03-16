@@ -555,6 +555,7 @@
     "firewall": {
       "header": "Firewall",
       "leftPanelHeader": "Firewall Filter",
+      "loading": "Loading firewall details.",
       "overview": {
         "label": "Overview",
         "properties": {
