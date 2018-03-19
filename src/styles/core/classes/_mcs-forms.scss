@@ -29,13 +29,4 @@ $label-min-width: 70px;
       line-height: 0;
     }
   }
-
-  .basic-action-bar {
-    @include display-flex(row);
-    align-items: center;
-    margin-top: $field-bottom-margin;
-    justify-content: space-between;
-  }
 }
-
-

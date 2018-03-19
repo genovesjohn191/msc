@@ -16,7 +16,10 @@
     "networking": "Networking",
     "firewalls": "Firewalls",
     "tools": "Other Tools",
-    "catalog": "Catalog"
+    "catalog": "Catalog",
+    "signOut": "Sign Out",
+    "macquarieView": "Macquarie View",
+    "title": "Macquarie Cloud Services Portal"
   },
   "dashboard": {
     "title": "Macquarie Cloud Services: Dashboard",
@@ -501,7 +504,7 @@
     },
     "createTicket": {
       "header": "Create New Ticket",
-      "description": "We all need help from time to time.<br/><br/>Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView.",
+      "description": "<h4>We all need help from time to time.</h4><br/>Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView.",
       "type": "Ticket Type",
       "services": "Services",
       "attachments": "Attachments",
@@ -788,10 +791,11 @@
     },
     "attachment": {
       "chooseFile": "Choose File",
-      "dragDropZone": "File attachments (select or drag & drop)",
+      "dragDropZone": "Drag & drop file here",
       "ok": "OK",
       "errorCaption": "Selection error",
       "errorFileType": "Invalid file type selected.",
+      "errorFileSize": "The file you are trying to attach exceeds the {{max_size}}MB attachment limit.",
       "errorGeneral": "Unexpected error occured."
     },
     "commentBox": {

@@ -22,8 +22,12 @@ import {
   CoreDefinition
 } from '../../core';
 import {
-  isNullOrEmpty
+  isNullOrEmpty,
+  coerceNumber,
+  replacePlaceholder
 } from '../../utilities';
+
+const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
 
 @Component({
   selector: 'mcs-attachment',
@@ -51,8 +55,12 @@ export class AttachmentComponent implements OnInit {
   @Output()
   public attachedFilesChanged: EventEmitter<McsAttachment[]>;
 
+  @Input()
+  public set maxSizeInMb(value: number) { this._maxSizeInMb = coerceNumber(value, 0); }
+  private _maxSizeInMb: number = DEFAULT_MAX_FILE_SIZE_IN_MB;
+
   @ViewChild('errorDialogTemplate')
-  public errorDialogTemplate: TemplateRef<any>;
+  private _errorDialogTemplate: TemplateRef<any>;
 
   public get errorIconKey(): string {
     return CoreDefinition.ASSETS_FONT_WARNING;
@@ -71,8 +79,8 @@ export class AttachmentComponent implements OnInit {
     return this.fileUploader.queue;
   }
 
-  public get attachmentIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_ATTACHMENT;
+  public get cloudUploadBlueIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_CLOUD_UPLOAD_BLUE;
   }
 
   public get closeIconKey(): string {
@@ -85,7 +93,8 @@ export class AttachmentComponent implements OnInit {
     this.fileUploader = new FileUploader({
       autoUpload: false,
       queueLimit: this.attachedLimit === 'single' ? 1 : undefined,
-      allowedMimeType: this.allowedMimeType
+      allowedMimeType: this.allowedMimeType,
+      maxFileSize: 1024 * 1024 * this._maxSizeInMb
     });
     this.fileUploader.onWhenAddingFileFailed = this._onUploadingFileError.bind(this);
   }
@@ -159,6 +168,13 @@ export class AttachmentComponent implements OnInit {
         errorMessage = this.textContent.errorFileType;
         break;
 
+      case 'fileSize':
+        errorMessage = replacePlaceholder(
+          this.textContent.errorFileSize,
+          'max_size',
+          `${this._maxSizeInMb}`);
+        break;
+
       default:
         errorMessage = this.textContent.errorGeneral;
         break;
@@ -166,7 +182,7 @@ export class AttachmentComponent implements OnInit {
 
     // Open Error dialog
     this.errorDialogRef = this._dialogService.open(
-      this.errorDialogTemplate,
+      this._errorDialogTemplate,
       {
         disableClose: true,
         size: 'small',

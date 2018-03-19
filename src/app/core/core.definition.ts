@@ -57,6 +57,7 @@ export class CoreDefinition {
   public static ICON_SIZE_MEDIUM = 20;
   public static ICON_SIZE_LARGE = 25;
   public static ICON_SIZE_XLARGE = 30;
+  public static ICON_SIZE_XXLARGE = 40;
 
   /** Images */
   public static IMAGE_SIZE_XSMALL = 100;
@@ -64,6 +65,7 @@ export class CoreDefinition {
   public static IMAGE_SIZE_MEDIUM = 200;
   public static IMAGE_SIZE_LARGE = 250;
   public static IMAGE_SIZE_XLARGE = 300;
+  public static IMAGE_SIZE_XXLARGE = 400;
 
   /** Assets Provider Key Definitions */
   // GIF Icons
@@ -111,6 +113,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_NEXT_ARROW = 'next-arrow';
   public static ASSETS_SVG_NOTIFICATION_BELL = 'notification-bell';
   public static ASSETS_SVG_RELOAD = 'reload';
+  public static ASSETS_SVG_CLOUD_UPLOAD_BLUE = 'cloud-upload-blue';
   public static ASSETS_SVG_WARNING = 'warning-svg';
   public static ASSETS_SVG_ERROR = 'error-svg';
 

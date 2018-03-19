@@ -1,38 +1,42 @@
 @import "../../../styles/shared/base";
 
 // Attachment component
-$attachment-bg-color: $color-grey-07;
-$attachment-padding: $space-small;
+$attachment-height: 150px;
+$attachment-bg-color: $color-white;
+$attachment-border-color: $color-grey-03;
+$attachment-border-radius: 6px;
 // Filezone selection
 $attachment-filezone-bg-color: $color-white;
-$attachment-filezone-box-shadow-color: $color-black;
 $attachment-filezone-padding: $space-medium;
 // File wrapper variables
-$attachment-files-padding: $space-medium;
+$attachment-files-padding: $space-medium 0;
 
 .attachment-wrapper {
-  padding: $attachment-padding;
-  @include display-flex(column);
+  height: $attachment-height;
+  width: 100%;
+  @include display-flex(row);
+  @include align-items(center);
   justify-content: center;
-  @include set-items-interval($space-small);
   background-color: $attachment-bg-color;
+  @include box-shadow(1px 2px 20px hsla(0,0%,4%,.1));
+  @include border-radius($attachment-border-radius);
+  border: 2px dashed $attachment-border-color;
 
   .attachment-filezone-wrapper {
-    @include display-flex(row);
+    @include display-flex(column);
     justify-content: space-between;
     align-items: center;
     padding: $attachment-filezone-padding;
     background-color: $attachment-filezone-bg-color;
-    @include box-shadow(0 0 5px 1px rgba($attachment-filezone-box-shadow-color, 0.2));
 
     input[type="file"] {
       display: none;
     }
   }
+}
 
-  .attached-files-wrapper {
-    @include display-flex(column);
-    @include set-items-interval($space-small);
-    padding: $attachment-files-padding;
-  }
+.attached-files-wrapper {
+  @include display-flex(column);
+  @include set-items-interval($space-small);
+  padding: $attachment-files-padding;
 }

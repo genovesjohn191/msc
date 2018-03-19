@@ -8,7 +8,7 @@
   <div class="macquarie-link">
     <a [href]="macquarieViewUrl" target="_blank">
       <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-      <span>Macquarie View</span>
+      <span>{{ textContent.macquarieView }}</span>
     </a>
   </div>
 </div>
@@ -20,7 +20,7 @@
 
   <!-- Title -->
   <div class="navigation-mobile-item navigation-mobile-title">
-    <h3>Macquarie Cloud Services Portal</h3>
+    <h3>{{ textContent.title }}</h3>
     <mcs-icon [key]="closeIconKey" color="white"
       cursor="pointer" (click)="close()"></mcs-icon>
   </div>
@@ -31,7 +31,7 @@
   <!-- Logout Item -->
   <div class="navigation-item">
     <mcs-icon [key]="caretRightIconKey" color="white"></mcs-icon>
-    <a cursor="pointer" (click)="logout($event)">Logout</a>
+    <a cursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
   </div>
 
   <!-- Account panel Item -->
