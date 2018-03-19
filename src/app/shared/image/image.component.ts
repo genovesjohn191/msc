@@ -97,6 +97,7 @@ export class ImageComponent implements OnChanges {
     this._imageSizeTable.set('medium', `${CoreDefinition.IMAGE_SIZE_MEDIUM}px`);
     this._imageSizeTable.set('large', `${CoreDefinition.IMAGE_SIZE_LARGE}px`);
     this._imageSizeTable.set('xlarge', `${CoreDefinition.IMAGE_SIZE_XLARGE}px`);
+    this._imageSizeTable.set('xxlarge', `${CoreDefinition.IMAGE_SIZE_XXLARGE}px`);
     this._imageSizeTable.set('auto', `auto`);
   }
 

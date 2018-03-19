@@ -19,11 +19,11 @@
       [mcsLoaderText]="textContent.creatingTicket"
       mcsLoaderOrientation="top"></div>
 
+    <p [innerHTML]="textContent.description"></p>
+
     <div class="contextual-help-page-wrapper" #createContent>
       <!-- Create ticket details -->
-      <div class="page-information-wrapper ticket-create-information limited-view">
-        <p [innerHTML]="textContent.description"></p>
-
+      <div class="page-information-wrapper limited-view">
         <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">
 
           <!-- Ticket Type -->
@@ -89,7 +89,7 @@
 
           <!-- Services -->
           <div class="field">
-            <label class="label" for="services">{{ textContent.services }}</label>
+            <h4 class="space-bottom-small">{{ textContent.services }}</h4>
             <div class="item">
               <ng-container *ngIf="services">
 
@@ -124,7 +124,7 @@
                   </div>
                 </div>
 
-                <mcs-select-tag #selectService [hidden]="!servicePanelOpen" class="vspace-small"
+                <mcs-select-tag #selectService [hidden]="!servicePanelOpen" class="padding-small"
                   (selectionChanged)="serviceItemSelectionChanged($event)">
                   <mcs-select-tag-main-item *ngFor="let service of services"
                     [header]="service.serviceName">
@@ -138,26 +138,26 @@
               </ng-container>
             </div>
           </div>
-
-          <!-- Attachments -->
-          <div class="field">
-            <h4>{{ textContent.attachments }}</h4>
-            <mcs-attachment attachedLimit="multiple"
-              [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
-              (attachedFilesChanged)="onChangedAttachments($event)"
-              [mcsContextualHelp]="contextualContent.attachments">
-            </mcs-attachment>
-          </div>
-
-          <!-- Ticket Action -->
-          <div class="basic-action-bar">
-            <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
-
-            <button mcsButton id="ctaNewTicket" arrow="right" (click)="onLogTicket()">
-              {{ textContent.newTicket }}
-            </button>
-          </div>
         </form>
+
+        <!-- Attachments -->
+        <div>
+          <h4 class="space-bottom-small">{{ textContent.attachments }}</h4>
+          <mcs-attachment attachedLimit="multiple"
+            [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
+            (attachedFilesChanged)="onChangedAttachments($event)"
+            [mcsContextualHelp]="contextualContent.attachments">
+          </mcs-attachment>
+        </div>
+
+        <!-- Ticket Action -->
+        <div class="space-between-inline-items">
+          <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
+
+          <button mcsButton id="ctaNewTicket" arrow="right" (click)="onLogTicket()">
+            {{ textContent.newTicket }}
+          </button>
+        </div>
       </div>
 
       <!-- Create ticket contextual help -->

@@ -102,6 +102,7 @@ export class IconComponent implements OnChanges {
     this._iconSizeTable.set('medium', `${CoreDefinition.ICON_SIZE_MEDIUM}px`);
     this._iconSizeTable.set('large', `${CoreDefinition.ICON_SIZE_LARGE}px`);
     this._iconSizeTable.set('xlarge', `${CoreDefinition.ICON_SIZE_XLARGE}px`);
+    this._iconSizeTable.set('xxlarge', `${CoreDefinition.ICON_SIZE_XXLARGE}px`);
     this._iconSizeTable.set('auto', `auto`);
   }
 

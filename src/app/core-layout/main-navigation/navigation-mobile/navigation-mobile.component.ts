@@ -25,7 +25,8 @@ import {
   CoreDefinition,
   McsApiCompany,
   McsAuthenticationIdentity,
-  McsAuthenticationService
+  McsAuthenticationService,
+  McsTextContentProvider
 } from '../../../core';
 import {
   resolveEnvVar,
@@ -59,6 +60,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   @ViewChild('navigationList')
   public navigationList: ElementRef;
 
+  public textContent: any;
   public switchAccountAnimation: string;
   private _routerSubscription: any;
   private _activeAccountSubscription: any;
@@ -139,13 +141,15 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
-    private _authenticationService: McsAuthenticationService
+    private _authenticationService: McsAuthenticationService,
+    private _textContentProvider: McsTextContentProvider
   ) {
     this.accountPanelOpen = false;
     this.switchAccountAnimation = 'collapsed';
   }
 
   public ngOnInit() {
+    this.textContent = this._textContentProvider.content.navigation;
     this._routerSubscription = this._router.events
       .subscribe((event) => {
         if (event instanceof NavigationStart) {

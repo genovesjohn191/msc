@@ -1,8 +1,9 @@
 @import "../../../styles/shared/base";
 
-$select-tag-max-height: 500px;
+$select-tag-max-height: 300px;
 $select-tag-main-items-min-width: 100px;
 $select-tag-main-items-padding: $space-small;
+$select-tag-sub-items-min-height: 50px;
 
 .select-tag-wrapper {
   @include display-flex(row);
@@ -15,6 +16,7 @@ $select-tag-main-items-padding: $space-small;
 
   .select-tag-main-item-wrapper {
     display: block;
+    margin-bottom: $space-xsmall;
 
     .select-tag-main-item-content {
       position: relative;
@@ -30,5 +32,20 @@ $select-tag-main-items-padding: $space-small;
 .select-tag-sub-items-container {
   @include flex(1 1 auto);
   @include display-flex(column);
-  padding-left: $space-medium;
+
+  .select-tab-sub-items-search,
+  .select-tab-sub-items-action {
+    padding-left: $space-medium;
+  }
+
+  .select-tab-sub-items-action {
+    min-height: $select-tag-sub-items-min-height;
+    padding-top: $space-medium;
+    @include display-flex(column);
+    @include set-items-interval($space-small);
+
+    .checkbox-wrapper {
+      padding: 0 $space-xsmall;
+    }
+  }
 }
