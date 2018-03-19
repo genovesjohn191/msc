@@ -190,7 +190,7 @@ export class ServerIpAddressComponent implements OnInit {
 
       case ServerInputManageType.Buttons:
       default:
-        ipAddressData.customIpAddress = this.customIpAdrress ? this.customIpAdrress : null;
+        ipAddressData.customIpAddress = null;
         ipAddressData.ipAllocationMode = this.ipAddressValue;
         ipAddressData.valid = true;
         break;
