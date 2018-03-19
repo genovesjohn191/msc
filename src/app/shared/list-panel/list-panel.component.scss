@@ -62,6 +62,7 @@ $list-item-border-color: $color-primary-01;
     border-left: 1px solid $list-item-border-color;
     margin-left: $space-small;
     @include set-items-interval($space-xsmall, horizontal);
+    white-space: nowrap;
 
     &:first-of-type {
       margin-top: $space-xsmall;
