@@ -40,7 +40,7 @@
     <!-- Selection zone -->
     <button mcsButton id="ctaChooseFile"
       size="small" (click)="chooFileElement.click()">
-      <input #chooFileElement type="file"
+      <input #chooFileElement type="file" [accept]="allowedMimeType"
         ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
       {{ textContent.chooseFile }}
     </button>

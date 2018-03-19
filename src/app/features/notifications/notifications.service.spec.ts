@@ -6,10 +6,7 @@ import {
 import { HttpTestingController } from '@angular/common/http/testing';
 /** Services and Models */
 import { NotificationsService } from './notifications.service';
-import {
-  McsApiSuccessResponse,
-  CoreDefinition
-} from '../../core/';
+import { McsApiSuccessResponse } from '../../core/';
 import { NotificationsTestingModule } from './testing';
 
 describe('NotificationsService', () => {
@@ -19,7 +16,7 @@ describe('NotificationsService', () => {
   let notificationsService: NotificationsService;
   let requestOptions = {
     page: 1,
-    perPage: CoreDefinition.NOTIFICATION_MAX_ITEM_PER_PAGE,
+    perPage: 25,
     searchKeyword: 'start',
     id: 459
   };
