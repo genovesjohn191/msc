@@ -37,9 +37,6 @@ export class CoreDefinition {
   public static SERVER_NAME_MIN = 4;
   public static SERVER_NAME_MAX = 15;
 
-  /** Notification Page */
-  public static NOTIFICATION_MAX_ITEM_PER_PAGE = 10;
-
   /** Others */
   public static SEARCH_TIME = 1000;
   public static INPUT_TIME = 1000;

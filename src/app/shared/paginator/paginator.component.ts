@@ -1,20 +1,32 @@
 import {
   Component,
   Input,
+  OnInit,
+  AfterViewInit,
   EventEmitter,
+  ElementRef,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ViewChild
 } from '@angular/core';
 import {
   CoreDefinition,
   McsTextContentProvider,
+  McsScrollDispatcherService,
   McsPaginator
 } from '../../core';
 import {
   coerceNumber,
-  coerceBoolean
+  coerceBoolean,
+  isNullOrEmpty,
+  refreshView,
+  triggerEvent
 } from '../../utilities';
+
+// Constants default
+const PAGINATOR_DEFAULT_PAGE_SIZE = 25;
+const PAGINATOR_DEFAULT_LOAD_OFFSET = 10;
 
 @Component({
   selector: 'mcs-paginator',
@@ -27,11 +39,19 @@ import {
   }
 })
 
-export class PaginatorComponent implements McsPaginator {
+export class PaginatorComponent implements McsPaginator, OnInit, AfterViewInit {
 
   public loading: boolean;
   public textContent: any;
   public pageChangedStream: EventEmitter<any>;
+
+  @Input()
+  public get scrollLoadOffset(): number { return this._scrollLoadOffset; }
+  public set scrollLoadOffset(value: number) {
+    this._scrollLoadOffset = coerceNumber(value);
+    this._changeDetectorRef.markForCheck();
+  }
+  private _scrollLoadOffset: number;
 
   @Input()
   public get pageIndex(): number { return this._pageIndex; }
@@ -65,15 +85,30 @@ export class PaginatorComponent implements McsPaginator {
   }
   private _enableLoader: boolean;
 
+  @ViewChild('nextButton')
+  private _nextButton: ElementRef;
+
   public constructor(
+    private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _scrollableDispatcher: McsScrollDispatcherService
   ) {
     this._pageIndex = 0;
-    this._pageSize = 0;
+    this._pageSize = PAGINATOR_DEFAULT_PAGE_SIZE;
+    this._scrollLoadOffset = PAGINATOR_DEFAULT_LOAD_OFFSET;
     this._totalCount = 0;
     this.pageChangedStream = new EventEmitter<any>();
+  }
+
+  public ngOnInit() {
     this.textContent = this._textContentProvider.content.shared.paginator;
+  }
+
+  public ngAfterViewInit() {
+    refreshView(() => {
+      this._listenToScrollChanged();
+    });
   }
 
   /**
@@ -135,5 +170,38 @@ export class PaginatorComponent implements McsPaginator {
     this.loading = true;
     this._changeDetectorRef.markForCheck();
     this.pageChangedStream.next(this);
+  }
+
+  /**
+   * Listen to each scroll changed
+   */
+  private _listenToScrollChanged(): void {
+    let scrollContainer = this._scrollableDispatcher.getScrollContainers(this._elementRef);
+    if (isNullOrEmpty(scrollContainer)) { return; }
+    let scrollableParent = scrollContainer[0];
+    let scrollableElement = scrollableParent.getElementRef().nativeElement as HTMLElement;
+
+    scrollableParent.elementScrolled().subscribe(() => {
+      this._scrollChanged(scrollableElement);
+    });
+  }
+
+  /**
+   * Event that emits when the scroll has changed
+   * @param scrollableElement Scrollable element to listen to
+   */
+  private _scrollChanged(scrollableElement: HTMLElement): void {
+    if (isNullOrEmpty(scrollableElement)) { return; }
+    let scrollTop = scrollableElement.scrollTop;
+    let scrollBottom = scrollTop + scrollableElement.offsetHeight;
+    let scrollHeight = scrollableElement.scrollHeight;
+
+    let loadNext = ((scrollHeight - scrollBottom) < this.scrollLoadOffset)
+      && this.showMoreButton
+      && !isNullOrEmpty(this._nextButton);
+
+    if (loadNext) {
+      triggerEvent(this._nextButton.nativeElement, 'click');
+    }
   }
 }

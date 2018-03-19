@@ -1,6 +1,6 @@
 <!-- More button -->
 <ng-container *ngIf="showMoreButton">
-  <div class="paginator-load-more" (click)="nextPage()" mcsRipple>
+  <div #nextButton class="paginator-load-more" (click)="nextPage()" mcsRipple>
     <span>{{ textContent.nextPage }}</span>
     <mcs-icon [key]="arrowDownIconKey" size="small"></mcs-icon>
   </div>
