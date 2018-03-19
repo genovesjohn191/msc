@@ -435,7 +435,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
     newSelfManaged.serverManageStorage = this.fcStorage.value;
     newSelfManaged.ipAddress = this.fcIpAddress.value;
     newSelfManaged.isValid = this.fgCreateDirective.isValid() &&
-      this.fcStorage.valid && this.fcScale.valid;
+      this.fcStorage.valid && this.fcScale.valid && this.fcIpAddress.valid;
 
     this.onOutputServerDetails.next(newSelfManaged);
   }
