@@ -4,6 +4,7 @@ export class ServerStorage {
   public enabled: boolean;
   public limitMB: number;
   public usedMB: number;
+  public availableMB: number;
 
   constructor() {
     this.id = undefined;
@@ -11,5 +12,6 @@ export class ServerStorage {
     this.enabled = undefined;
     this.limitMB = undefined;
     this.usedMB = undefined;
+    this.availableMB = undefined;
   }
 }

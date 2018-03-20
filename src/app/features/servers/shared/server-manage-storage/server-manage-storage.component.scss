@@ -26,7 +26,6 @@ $server-manage-storage-font-size: $h4-small-font-size;
 
   .slider-content {
     @include flex(0 1 100%);
-    @include font-size($server-manage-storage-font-size);
     min-height: 100px;
 
     > .storage-label,
@@ -36,7 +35,7 @@ $server-manage-storage-font-size: $h4-small-font-size;
     }
 
     > .storage-label {
-      font-family: $server-manage-storage-font;
+      font-family: $base-font-bold;
     }
   }
 

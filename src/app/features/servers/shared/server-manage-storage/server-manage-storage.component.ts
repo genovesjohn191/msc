@@ -143,7 +143,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get remainingMemory(): string {
-    return appendUnitSuffix(this.maximumGB - this.storageValue, 'gigabyte');
+    return replacePlaceholder(this.textContent.sliderRemainingText, ['storage', 'unit'],
+      [`${this.maximumGB - this.storageValue}`, this.textContent.unit]);
+  }
+
+  public get availableMemory(): string {
+    return replacePlaceholder(this.textContent.sliderAvailableText, ['storage', 'unit'],
+      [`${this.maximumGB}`, this.textContent.unit]);
   }
 
   public get hasAvailableStorageSpace(): boolean {
