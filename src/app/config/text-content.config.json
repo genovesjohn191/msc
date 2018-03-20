@@ -436,6 +436,8 @@
         "unit": "GB",
         "sliderSwitch": "Select from slider",
         "sliderMessage": "Select the disk size from a slider.",
+        "sliderRemainingText": "{{storage}} {{unit}} Remaining",
+        "sliderAvailableText": "{{storage}} {{unit}}",
         "customSwitch": "Enter custom size",
         "customMessage": "Manually enter the disk size.",
         "validationError": "Storage size should not exceed {{available_storage}}",
