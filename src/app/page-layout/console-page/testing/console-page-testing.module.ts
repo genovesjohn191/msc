@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 /** Providers */
-import { constantsProviders } from '../console-page.constants';
+import { ConsolePageService } from '../console-page.service';
 /** Modules */
 import { CoreTestingModule } from '../../../core/testing';
 
@@ -9,7 +9,7 @@ import { CoreTestingModule } from '../../../core/testing';
     CoreTestingModule
   ],
   providers: [
-    ...constantsProviders
+    ConsolePageService
   ],
 })
 
