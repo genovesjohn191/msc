@@ -77,6 +77,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
       this.server.snapshots[0] : new ServerSnapshot();
   }
 
+  public get creatingSnapshot(): boolean {
+    return isNullOrEmpty(this.snapshot.createdOn);
+  }
+
   public get enabledActions(): boolean {
     return this.server.serviceType === ServerServiceType.SelfManaged
       && !this.snapshotProcessing
@@ -297,18 +301,27 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onUpdateServerSnapshot(job: McsApiJob): void {
-    let notTheActiveServer = isNullOrEmpty(job) || this.server.id !==
-      job.clientReferenceObject.serverId;
-    if (notTheActiveServer) { return; }
+    if (!this._serverIsActiveByJob(job)) { return; }
 
     // We need to set the processing flag manually here in order to cater
     // from moving one server to another
     this._snapshotProcessing = job.dataStatus === McsDataStatus.InProgress;
+    this.dataStatusFactory.setSuccesfull(this.server.snapshots);
 
     // Update the server snapshot
     if (job.dataStatus === McsDataStatus.Success) {
       this._getServerSnapshots();
     }
+  }
+
+  /**
+   * Returns true when the server is activated by job process
+   * @param job Emitted job to be checked
+   */
+  private _serverIsActiveByJob(job: McsApiJob): boolean {
+    let activeServer = !isNullOrEmpty(job) &&
+      this.server.id === job.clientReferenceObject.serverId;
+    return activeServer;
   }
 
   /**

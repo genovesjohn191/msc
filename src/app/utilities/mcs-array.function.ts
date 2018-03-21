@@ -60,7 +60,7 @@ export function addOrUpdateArrayRecord<T>(
   sourceArray: T[],
   record: T,
   updateOnly: boolean,
-  predicate?: (_pr1: T, _pr2: T) => boolean,
+  predicate?: (_record: T) => boolean,
   insertIndex?: number): T[] {
 
   let isExisting: boolean = false;
@@ -71,13 +71,10 @@ export function addOrUpdateArrayRecord<T>(
 
   // Update the existing element else append to last record
   if (predicate) {
-
-    for (let index = 0; index < sourceArray.length; index++) {
-      if (predicate(sourceArray[index], record)) {
-        isExisting = true;
-        sourceArray[index] = record;
-        break;
-      }
+    let recordIndex = sourceArray.findIndex((sourceRecord) => predicate(sourceRecord));
+    isExisting = recordIndex >= 0;
+    if (isExisting) {
+      sourceArray.splice(recordIndex, 1, record);
     }
     insertThisItem = insertThisItem && !isExisting;
   }
@@ -88,7 +85,6 @@ export function addOrUpdateArrayRecord<T>(
       ? sourceArray.splice(insertIndex, 0, record)
       : sourceArray.push(record);
   }
-
   return sourceArray;
 }
 

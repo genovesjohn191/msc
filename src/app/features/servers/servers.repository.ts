@@ -317,9 +317,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       // Append a mock media record while job is processing
       // Update the media list when job has completed
       addOrUpdateArrayRecord(activeServer.media, media, false,
-        (_first: any, _second: any) => {
-          return _first.id === _second.id;
-        });
+        (_existingMedia: ServerMedia) => _existingMedia.id === media.id);
 
       this.updateRecord(activeServer);
     }
@@ -440,7 +438,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         // We need to fake the date in order for us to check
         // when the snapshot is currently creating
         let snapshot = new ServerSnapshot();
-        snapshot.createdOn = new Date();
         snapshot.isProcessing = activeServer.isProcessing;
         activeServer.snapshots.push(snapshot);
       } else {

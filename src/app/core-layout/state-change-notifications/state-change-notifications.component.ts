@@ -119,8 +119,9 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
         this.notifications = addOrUpdateArrayRecord(
           this.notifications,
           notification,
-          false, (_first: McsApiJob, _second: McsApiJob) => {
-            return _first.id === _second.id;
+          false,
+          (_existingJob: McsApiJob) => {
+            return _existingJob.id === notification.id;
           });
         this._changeDetectorRef.markForCheck();
       });

@@ -66,15 +66,13 @@ export class ServerComponent
   @ViewChild('search')
   public search: McsSearch;
 
+  public textContent: any;
   public server: Server;
   public selectedGroupName: string;
   public selectedServerName: string;
   public serversTextContent: any;
-  public textContent: any;
   public serverListSource: ServersListSource | null;
   public serverSubscription: Subscription;
-
-  private _notificationsChangeSubscription: any;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -117,7 +115,6 @@ export class ServerComponent
 
     // Initialize base class
     super.onInit();
-    this._listenToNotificationsChange();
   }
 
   public ngAfterViewInit() {
@@ -128,7 +125,6 @@ export class ServerComponent
 
   public ngOnDestroy() {
     super.onDestroy();
-    unsubscribeSafely(this._notificationsChangeSubscription);
     unsubscribeSafely(this.serverSubscription);
   }
 
@@ -285,17 +281,6 @@ export class ServerComponent
         this.server = response;
         this._setSelectedServerInfo(response);
         this._serverService.setSelectedServer(this.server);
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * Listen to notifications changes
-   */
-  private _listenToNotificationsChange(): void {
-    this._notificationsChangeSubscription = this._serversRepository
-      .notificationsChanged
-      .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });
   }

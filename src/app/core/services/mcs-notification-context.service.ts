@@ -150,9 +150,7 @@ export class McsNotificationContextService {
       if (this._isSameJobReceived(updatedNotification)) { return; }
 
       // Comparer method for the jobs
-      let jobsComparer = (firstRecord: McsApiJob, secondRecord: McsApiJob) => {
-        return firstRecord.id === secondRecord.id;
-      };
+      let jobsComparer = (_job: McsApiJob) => _job.id === updatedNotification.id;
 
       // Update corresponding notification if it is exist else
       // add it to the list of notifications

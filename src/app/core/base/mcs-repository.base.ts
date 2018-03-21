@@ -5,7 +5,6 @@ import {
 } from 'rxjs/Rx';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
 import { McsSearch } from '../interfaces/mcs-search.interface';
-import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 import {
   isNullOrEmpty,
@@ -20,10 +19,9 @@ const MAX_DISPLAY_RECORD = 200;
 
 export abstract class McsRepositoryBase<T> {
   /**
-   * ID list of the updated element that was searched when getRecorById called
+   * Updated records obtained from each individual call to API (getRecordById)
    */
-  private _obtainedByIdList: Set<string> = new Set<string>();
-  private _dataRecordsObtained: boolean = false;
+  private _updatedRecordsById: T[] = new Array();
 
   /**
    * Get or Set the total records count of the entity
@@ -31,13 +29,6 @@ export abstract class McsRepositoryBase<T> {
   public get totalRecordsCount(): number { return this._totalRecordsCount; }
   public set totalRecordsCount(value: number) { this._totalRecordsCount = value; }
   private _totalRecordsCount: number = 0;
-
-  /**
-   * Get or Set the data status of the data record obtainment
-   */
-  public get dataStatus(): McsDataStatus { return this._dataStatus; }
-  public set dataStatus(value: McsDataStatus) { this._dataStatus = value; }
-  private _dataStatus: McsDataStatus = McsDataStatus.Success;
 
   /**
    * Get the Data records from the API
@@ -87,11 +78,8 @@ export abstract class McsRepositoryBase<T> {
     if (isNullOrEmpty(record)) { return; }
 
     // Update the record
-    addOrUpdateArrayRecord(this._dataRecords,
-      record, true,
-      (_first: any, _second: any) => {
-        return _first.id === _second.id;
-      });
+    addOrUpdateArrayRecord(this._dataRecords, record, true,
+      (_existingRecord: any) => _existingRecord.id === (record as any).id);
     this._notifyDataRecordsChanged();
   }
 
@@ -169,8 +157,6 @@ export abstract class McsRepositoryBase<T> {
   public findAllRecords(page?: McsPaginator, search?: McsSearch): Observable<T[]> {
     // We need to clear the records when the flag for caching is set to false
     let isSearching = !isNullOrEmpty(search) && search.searching;
-    this._dataStatus = McsDataStatus.InProgress;
-    this._dataRecordsObtained = true;
 
     // We need to reset the page in order to get the data from initial page
     if (isSearching && !isNullOrEmpty(page)) {
@@ -189,20 +175,16 @@ export abstract class McsRepositoryBase<T> {
       return this.getAllRecords(displayedRecords, !isNullOrEmpty(search) ? search.keyword : '')
         .finally(() => this._notifyAfterDataObtained())
         .catch((error) => {
-          this._dataStatus = McsDataStatus.Error;
           return Observable.throw(error);
         })
         .map((data) => {
-          if (!isNullOrEmpty(data)) {
-            this._totalRecordsCount = data.totalCount;
-            this._dataRecords = data.content;
-            this._filteredRecords = data.content;
-            this._dataStatus = McsDataStatus.Success;
-            this._obtainedByIdList.clear();
-          } else {
-            this._dataStatus = McsDataStatus.Empty;
-          }
-          return isNullOrEmpty(data) ? new Array() : data.content;
+          if (isNullOrEmpty(data)) { return new Array(); }
+
+          this._totalRecordsCount = data.totalCount;
+          this._dataRecords = data.content;
+          this._filteredRecords = data.content;
+          this._patchRecordsByUpdatedRecords();
+          return this._dataRecords;
         });
     } else {
       // We need to mock the data to pageData
@@ -211,13 +193,10 @@ export abstract class McsRepositoryBase<T> {
       let actualData = pageData.splice(0, displayedRecords);
       return Observable.of(actualData)
         .catch((error) => {
-          this._dataStatus = McsDataStatus.Error;
           return Observable.throw(error);
         })
         .map((data) => {
           this._filteredRecords = data;
-          this._dataStatus = !isNullOrEmpty(data) ?
-            McsDataStatus.Success : McsDataStatus.Empty;
           return data;
         });
     }
@@ -229,30 +208,23 @@ export abstract class McsRepositoryBase<T> {
    * @param id Id to be based as comparison
    */
   public findRecordById(id: string): Observable<T> {
-    // Find record to data records
-    let recordFound = this.dataRecords.find((data) => {
-      return (data as any).id === id;
+    // Return the record immediately when found in cache
+    let recordFoundFromCache = this._updatedRecordsById.find((record: any) => {
+      return record.id === id;
     });
-
-    // Call the API if the record has not yet found and not yet updated
-    let recordIsOutdated = isNullOrEmpty(recordFound) || !this._obtainedByIdList.has(id);
-
-    if (recordIsOutdated) {
-      return this.getRecordById(id)
-        .finally(() => this._notifyAfterDataObtained())
-        .map((record) => {
-          // We need to save manually the data when findAllRecords was not yet invoke
-          if (!this._dataRecordsObtained) {
-            this.dataRecords.push(record.content);
-          }
-
-          // Update record content
-          this.updateRecord(record.content);
-          this._obtainedByIdList.add((id));
-          return record.content;
-        });
+    if (!isNullOrEmpty(recordFoundFromCache)) {
+      return Observable.of(recordFoundFromCache);
     }
-    return recordFound ? Observable.of(recordFound) : Observable.empty();
+
+    // Call the API if record has not been called once
+    return this.getRecordById(id)
+      .finally(() => this._notifyAfterDataObtained())
+      .map((record) => {
+        // Update record content
+        this._updatedRecordsById.push(record.content);
+        this.updateRecord(record.content);
+        return record.content;
+      });
   }
 
   /**
@@ -273,6 +245,18 @@ export abstract class McsRepositoryBase<T> {
    * Event that emits after the data obtained in getting all records or getting individual records
    */
   protected abstract afterDataObtained(): void;
+
+  /**
+   * Patch the data records based on the updated records
+   * during individual obtainment (getRecordById)
+   */
+  private _patchRecordsByUpdatedRecords(): void {
+    if (isNullOrEmpty(this._updatedRecordsById)) { return; }
+    this._updatedRecordsById.forEach((record: any) => {
+      addOrUpdateArrayRecord(this._dataRecords, record, true,
+        (_existingRecord: any) => _existingRecord.id === (record as any).id);
+    });
+  }
 
   /**
    * Notify the data records changed event

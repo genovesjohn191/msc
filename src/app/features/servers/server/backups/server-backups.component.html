@@ -21,21 +21,32 @@
         <!-- Snapshots -->
         <mcs-data-status [dataStatusFactory]="dataStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
-            <div class="space-between-inline-items">
-              <div class="inline-items-xsmall">
-                <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
-                  size="small" [mcsTooltip]="server.processingText"></mcs-icon>
-                <span>{{ convertDateToString(snapshot.createdOn) }}</span>
-              </div>
-              <div [disabled]="!enabledActions" class="inline-items-medium text-right">
-                <a (click)="restoreSnapshot(snapshot)">
-                  {{ textContent.restoreSnapshot }}
-                </a>
-                <a (click)="deleteSnapshot(snapshot)" class="space-left-small">
-                  {{ textContent.deleteSnapshot }}
-                </a>
-              </div>
-            </div>
+            <ng-container [ngSwitch]="creatingSnapshot">
+              <ng-container *ngSwitchCase="false">
+                <div class="space-between-inline-items">
+                  <div class="inline-items-xsmall">
+                    <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
+                      size="small" [mcsTooltip]="server.processingText"></mcs-icon>
+                    <span>{{ convertDateToString(snapshot.createdOn) }}</span>
+                  </div>
+                  <div [disabled]="!enabledActions" class="inline-items-medium text-right">
+                    <a (click)="restoreSnapshot(snapshot)">
+                      {{ textContent.restoreSnapshot }}
+                    </a>
+                    <a (click)="deleteSnapshot(snapshot)" class="space-left-small">
+                      {{ textContent.deleteSnapshot }}
+                    </a>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <div class="inline-items-xsmall">
+                  <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
+                    size="small" [mcsTooltip]="server.processingText"></mcs-icon>
+                  <span>{{ textContent.creatingSnapshot }}</span>
+                </div>
+              </ng-container>
+            </ng-container>
           </mcs-data-status-success>
 
           <mcs-data-status-in-progress mcsDataInProgress>

@@ -258,6 +258,7 @@
         "noSnapshots": "There are no Snapshots to display for this server.",
         "errorGettingSnapshots":"Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
         "createSnapshot": "Snapshot now",
+        "creatingSnapshot": "Capturing Snapshot",
         "restoreSnapshot": "Restore",
         "deleteSnapshot": "Delete",
         "serverBackups": "Server Backups",

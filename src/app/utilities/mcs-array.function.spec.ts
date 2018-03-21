@@ -91,9 +91,7 @@ describe('ARRAY Functions', () => {
         arrayRecord,
         updatedElement,
         false,
-        (first: TestStructure, second: TestStructure) => {
-          return first.key === second.key;
-        }
+        (record: TestStructure) => record.key === updatedElement.key
       );
       expect(mergedArray.length).toEqual(1);
     });
