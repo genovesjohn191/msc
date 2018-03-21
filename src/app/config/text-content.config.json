@@ -5,7 +5,8 @@
     "start": "Start",
     "stop": "Stop",
     "restart": "Restart",
-    "disconnectedMessage": "VM Console gets disconnected. We will try to reconnect once the server is back."
+    "disconnectedMessage": "Console disconnected. Attempting to reconnect...",
+    "errorMessage": "Console connection error."
   },
   "navigation": {
     "home": "Home",

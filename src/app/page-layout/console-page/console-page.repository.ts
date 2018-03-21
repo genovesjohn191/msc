@@ -28,6 +28,8 @@ export class ConsolePageRepository extends McsRepositoryBase<McsApiConsole> {
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsApiConsole>> {
+    // Clear the record for each call to remove the caching
+    this.clearRecords();
     return this._consoleApiService.getServerConsole(recordId);
   }
 
