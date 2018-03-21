@@ -271,7 +271,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    */
   public showExpandStorageBox(storage: ServerStorageDevice) {
     if (!this.server.executable || this.server.isProcessing
-        || isNullOrEmpty(storage.storageProfile)) { return; }
+      || isNullOrEmpty(storage.storageProfile)) { return; }
 
     this.minimumMB = this._getMinimumStorageMB(storage.sizeMB);
     this.maximumMB = this.getStorageAvailableMemory(storage.storageProfile);
@@ -553,9 +553,7 @@ export class ServerStorageComponent extends ServerDetailsBase
 
     // Append a mock disk record while job is processing
     addOrUpdateArrayRecord(this.serverDisks, disk, false,
-      (_first: ServerStorageDevice, _second: ServerStorageDevice) => {
-        return _first.id === _second.id;
-      });
+      (_existingStorage: ServerStorageDevice) => _existingStorage.id === disk.id);
   }
 
   /**

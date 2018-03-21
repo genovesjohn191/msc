@@ -6,7 +6,7 @@
     mcsLoaderOrientation="top"></div>
 
   <div #managementContent>
-    <div *ngIf="!ScaleOptionIsVisible && !isAttachMedia" class="content-grid">
+    <div *ngIf="!scaleOptionIsVisible && !isAttachMedia" class="content-grid">
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
           <h3 class="container-header">{{ textContent.vmProperties.title }}</h3>
@@ -181,7 +181,7 @@
 
     <ng-container *mcsHasPermission="['VmEdit']">
       <ng-container *mcsIsSelfManagedServer="server">
-        <div *ngIf="ScaleOptionIsVisible" class="server-performance-scale">
+        <div *ngIf="scaleOptionIsVisible" class="server-performance-scale">
           <div class="container-wrapper" [disabled]="!server.executable">
             <h3 class="container-header">Scaling {{ server.managementName }}</h3>
             <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"

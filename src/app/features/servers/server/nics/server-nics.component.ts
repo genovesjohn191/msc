@@ -505,9 +505,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
     // Append a mock nic record while job is processing
     addOrUpdateArrayRecord(this.serverNics, nic, false,
-      (_first: ServerNicSummary, _second: ServerNicSummary) => {
-        return _first.id === _second.id;
-      });
+      (_existingNic: ServerNicSummary) => _existingNic.id === nic.id);
   }
 
   /**

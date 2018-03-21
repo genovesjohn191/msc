@@ -415,9 +415,7 @@ export class CreateSelfManagedServersComponent implements
           // Update new created servers
           for (let job of creationJobs) {
             addOrUpdateArrayRecord(this.notifications, job, true,
-              (_first: McsApiJob, _second: McsApiJob) => {
-                return _first.id === _second.id;
-              });
+              (_existingJob: McsApiJob) => _existingJob.id === job.id);
           }
         }
       });

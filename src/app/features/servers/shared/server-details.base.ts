@@ -28,20 +28,16 @@ export abstract class ServerDetailsBase {
   public serverResource: ServerResource;
   public serverResourceSubscription: Subscription;
   private _serverSubscription: Subscription;
-  private _notificationsSubscription: Subscription;
+  private _serversUpdateSubscription: Subscription;
 
   /**
    * Selected Server
    */
   private _server: Server;
-  public get server(): Server {
-    return this._server;
-  }
+  public get server(): Server { return this._server; }
   public set server(value: Server) {
-    if (this._server !== value) {
-      this._server = value;
-      this._changeDetectorRef.markForCheck();
-    }
+    this._server = value;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -121,7 +117,7 @@ export abstract class ServerDetailsBase {
 
   protected initialize(): void {
     this._listenToSelectedServerStream();
-    this._listenToNotificationsChanged();
+    this._listenToServersUpdate();
   }
 
   /**
@@ -138,7 +134,7 @@ export abstract class ServerDetailsBase {
   protected dispose(): void {
     unsubscribeSafely(this.serverResourceSubscription);
     unsubscribeSafely(this._serverSubscription);
-    unsubscribeSafely(this._notificationsSubscription);
+    unsubscribeSafely(this._serversUpdateSubscription);
   }
 
   /**
@@ -192,12 +188,12 @@ export abstract class ServerDetailsBase {
   }
 
   /**
-   * Listen to each notifications changed in server
+   * Listen to each servers data update
    * so that we could refresh the view of the corresponding component
    */
-  private _listenToNotificationsChanged(): void {
-    this._notificationsSubscription = this._serversRepository
-      .notificationsChanged
+  private _listenToServersUpdate(): void {
+    this._serversUpdateSubscription = this._serversRepository
+      .dataRecordsChanged
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });

@@ -139,7 +139,7 @@ export class ServerManagementComponent extends ServerDetailsBase
     return this._textProvider.content.servers.shared.storageScale.invalidStorage;
   }
 
-  public get ScaleOptionIsVisible(): boolean {
+  public get scaleOptionIsVisible(): boolean {
     return !isNullOrEmpty(this.server.id) && this._hasScaleParam && !this.isManaged;
   }
 
