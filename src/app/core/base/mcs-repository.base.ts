@@ -127,6 +127,7 @@ export abstract class McsRepositoryBase<T> {
    * Clears out the data records of the repository
    */
   public clearRecords(): void {
+    clearArrayRecord(this._updatedRecordsById);
     clearArrayRecord(this._dataRecords);
     this._totalRecordsCount = 0;
     this._notifyDataRecordsChanged();
@@ -222,7 +223,9 @@ export abstract class McsRepositoryBase<T> {
       .map((record) => {
         // Update record content
         this._updatedRecordsById.push(record.content);
-        this.updateRecord(record.content);
+        isNullOrEmpty(this.dataRecords)
+          ? this.addRecord(record.content)
+          : this.updateRecord(record.content);
         return record.content;
       });
   }

@@ -16,6 +16,13 @@
       </div>
     </ng-container>
 
+    <!-- Error state -->
+    <ng-container *ngSwitchCase="vmConsoleStatusEnum.Error">
+      <div class="console-message">
+        <span>{{ textContent.errorMessage }}</span>
+      </div>
+    </ng-container>
+
     <!-- Connected state -->
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Connected">
       <div class="left-align">

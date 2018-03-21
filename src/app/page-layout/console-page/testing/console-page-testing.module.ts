@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
+/** Providers */
+import { constantsProviders } from '../console-page.constants';
 /** Modules */
 import { CoreTestingModule } from '../../../core/testing';
-/** Services */
-import { ConsolePageService } from '../console-page.service';
 
 @NgModule({
   imports: [
     CoreTestingModule
   ],
   providers: [
-    ConsolePageService
+    ...constantsProviders
   ],
 })
 

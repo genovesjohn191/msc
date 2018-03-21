@@ -23,7 +23,6 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   Key,
-  McsErrorHandlerService,
   McsApiConsole
 } from '../../core';
 import {
@@ -134,8 +133,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _serversRepository: ServersRepository,
     private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _errorHandlerService: McsErrorHandlerService
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.consoleStatus = VmConsoleStatus.None;
   }
@@ -250,7 +248,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._consoleRepository.findRecordById(serverId)
       .catch((error) => {
         // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
+        this.consoleStatus = VmConsoleStatus.Error;
         return Observable.throw(error);
       })
       .subscribe((response: McsApiConsole) => {
