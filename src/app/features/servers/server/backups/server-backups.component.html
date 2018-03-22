@@ -7,7 +7,7 @@
 
   <div #snapshotContent>
     <div class="container-wrapper">
-      <h3 class="container-header">{{ textContent.snapshotHeader }}</h3>
+      <h4 class="container-header">{{ textContent.snapshotHeader }}</h4>
       <div class="vspace-medium space-between-inline-items">
         <p [innerHTML]="textContent.snapshotDescription"></p>
         <div *mcsIsSelfManagedServer="server">
@@ -67,7 +67,7 @@
     <!-- Server Backups -->
     <!-- TODO: Remove ngIf when Backups is working -->
     <div *ngIf="false" class="container-wrapper">
-      <h3 class="container-header">{{ textContent.serverBackups }}</h3>
+      <h4 class="container-header">{{ textContent.serverBackups }}</h4>
       <p>{{ textContent.serverBackupsDescription }}</p>
       <div>
         <button mcsButton size="small" [disabled]="true">{{ textContent.requestRestore }}</button>

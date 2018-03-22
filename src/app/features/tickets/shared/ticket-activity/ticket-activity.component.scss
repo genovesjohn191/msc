@@ -2,43 +2,15 @@
 
 // Ticket Activity Variables
 $ticket-activity-separator-color: $color-grey-06;
-
-:host {
-  display: block;
-
-  &:hover {
-    background-color: $color-grey-07;
-  }
-}
+$ticket-activity-active-color: $color-grey-07;
 
 .ticket-activity-wrapper {
   @include display-flex(row);
-  align-items: center;
-  padding-top: $space-small;
+  padding: $space-small $space-xsmall;
   border-top: 1px solid $ticket-activity-separator-color;
 
-  .icon-wrapper {
-    margin-bottom: auto;
-  }
-
-  .information-wrapper {
-    margin-left: $space-small;
-    width: 100%;
-    @include set-items-interval($space-small);
-
-    .header {
-      @include display-flex(row);
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .content {
-      display: block;
-      word-break: break-all;
-
-      p {
-        text-align: left;
-      }
-    }
+  &:hover,
+  &.worknotes {
+    background-color: $ticket-activity-active-color;
   }
 }

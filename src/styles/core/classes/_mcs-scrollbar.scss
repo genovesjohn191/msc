@@ -30,7 +30,7 @@ $scrollbar-dark-track-color: $color-black;
 
 // Scrollbar reset size
 %scrollbar-reset {
-  @include breakpoint(small) {
+  @include breakpoint(medium) {
     width: unset !important;
     height: unset !important;
   }

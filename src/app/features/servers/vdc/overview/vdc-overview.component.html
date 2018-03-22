@@ -1,7 +1,7 @@
 <div class="limited-view content-grid">
   <div class="grid-row">
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="container-header">{{ textContent.vdcProperties.title }}</h3>
+      <h4 class="container-header">{{ textContent.vdcProperties.title }}</h4>
       <mcs-list>
         <!-- Service Type -->
         <mcs-list-item>
@@ -24,7 +24,7 @@
 
     <!-- VCloud -->
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h3>
+      <h4 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h4>
       <mcs-list>
         <mcs-list-item *ngIf="isSelfManaged">
           <button mcsButton id="ctaVdcNewServer"
@@ -41,7 +41,7 @@
 
   <div class="grid-row">
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="container-header container-header">{{ textContent.networkInformation.title }}</h3>
+      <h4 class="container-header container-header">{{ textContent.networkInformation.title }}</h4>
       <div class="vertical-items-spacing-medium">
         <span>{{ textContent.networkInformation.description }}</span>
         <mcs-accordion [multi]="true">
@@ -62,10 +62,11 @@
     </div>
 
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="horizontal-items-spacing-small container-header" display-flex="row" align-items="center">
+      <h4 class="horizontal-items-spacing-small container-header"
+        display-flex="row" align-items="center">
         <mcs-icon *ngIf="hasLowCapacityStorage" [key]="warningIconKey"></mcs-icon>
         <span>{{ textContent.storageProfiles.title }}</span>
-      </h3>
+      </h4>
 
       <div class="vertical-items-spacing-medium">
         <span *ngIf="hasLowCapacityStorage">{{ displayStorageSummary() }}</span>

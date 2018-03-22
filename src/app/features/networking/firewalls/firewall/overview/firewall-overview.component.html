@@ -1,7 +1,7 @@
 <div class="limited-view content-grid">
   <div class="grid-row">
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="container-header">{{ textContent.properties.title }}</h3>
+      <h4 class="container-header">{{ textContent.properties.title }}</h4>
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Model -->
         <mcs-list-item>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="container-header">{{ textContent.supportIdentifiers.title }}</h3>
+      <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Service -->
         <mcs-list-item>
@@ -40,7 +40,7 @@
 
   <div class="grid-row">
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="container-header">{{ textContent.status.title }}</h3>
+      <h4 class="container-header">{{ textContent.status.title }}</h4>
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Device Status -->
         <mcs-list-item>
@@ -64,7 +64,7 @@
     </div>
 
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="container-header">{{ textContent.utmServices.title }}</h3>
+      <h4 class="container-header">{{ textContent.utmServices.title }}</h4>
       <ng-container *ngIf="hasUtmInformation; else noUtmInfo">
         <mcs-list spacing="xsmall" class="grid-content-body">
           <!-- AV Expiry Date -->
@@ -98,7 +98,7 @@
 
   <div class="grid-row">
     <div class="grid-column container-wrapper break-on-small">
-      <h3 class="container-header">{{ textContent.topology.title }}</h3>
+      <h4 class="container-header">{{ textContent.topology.title }}</h4>
       <ng-container *ngIf="hasTopologyInformation; else noTopologyInfo">
         <mcs-list spacing="xsmall" class="grid-content-body">
           <!-- HA Role -->

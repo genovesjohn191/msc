@@ -20,7 +20,6 @@ import {
 } from '../../../core';
 import {
   isNullOrEmpty,
-  getEnumString,
   convertDateToStandardString,
   compareDates,
   replacePlaceholder,
@@ -29,7 +28,9 @@ import {
 import {
   Ticket,
   TicketStatus,
+  ticketStatusText,
   TicketSubType,
+  ticketSubTypeText,
   TicketAttachment,
   TicketActivity,
   TicketCommentCategory,
@@ -180,7 +181,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * @param status Enumeration status to be converted
    */
   public getStateString(status: TicketStatus): string {
-    return getEnumString(TicketStatus, status);
+    return ticketStatusText[status];
   }
 
   /**
@@ -188,7 +189,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * @param status Enumeration status to be converted
    */
   public getSubTypeString(status: TicketSubType) {
-    return getEnumString(TicketSubType, status);
+    return ticketSubTypeText[status];
   }
 
   /**
