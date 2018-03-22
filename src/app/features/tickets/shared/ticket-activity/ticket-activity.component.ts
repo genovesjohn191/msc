@@ -2,13 +2,15 @@ import {
   Component,
   Input,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewEncapsulation
 } from '@angular/core';
 import { convertDateToStandardString } from '../../../../utilities';
 import { CoreDefinition } from '../../../../core';
 import {
   TicketActivity,
-  TicketActivityType
+  TicketActivityType,
+  TicketCommentType
 } from '../../models';
 import { TicketsService } from '../../tickets.service';
 import { saveAs } from 'file-saver';
@@ -17,7 +19,12 @@ import { saveAs } from 'file-saver';
   selector: 'mcs-ticket-activity',
   templateUrl: './ticket-activity.component.html',
   styleUrls: ['./ticket-activity.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'ticket-activity-wrapper',
+    '[class.worknotes]': 'isWorkNotes'
+  }
 })
 
 export class TicketActivityComponent {
@@ -50,6 +57,10 @@ export class TicketActivityComponent {
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
+  public get isWorkNotes(): boolean {
+    return this.activity.commentType === TicketCommentType.WorkNotes;
   }
 
   private _ticketId: any;

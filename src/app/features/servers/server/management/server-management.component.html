@@ -9,7 +9,7 @@
     <div *ngIf="!scaleOptionIsVisible && !isAttachMedia" class="content-grid">
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
-          <h3 class="container-header">{{ textContent.vmProperties.title }}</h3>
+          <h4 class="container-header">{{ textContent.vmProperties.title }}</h4>
           <mcs-list spacing="xsmall">
             <!-- Status -->
             <mcs-list-item>
@@ -44,7 +44,7 @@
 
         <!-- Console -->
         <div class="grid-column container-wrapper break-on-small">
-          <h3 flex="none" class="container-header">{{ textContent.vmConsole.title }}</h3>
+          <h4 flex="none" class="container-header">{{ textContent.vmConsole.title }}</h4>
           <div class="inline-block" (click)="onClickViewConsole()" [disabled]="!consoleEnabled">
             <div class="thumbnail-container" cursor="pointer">
               <img #thumbnailElement class="thumbnail"/>
@@ -56,7 +56,7 @@
 
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
-          <h3 class="container-header">{{ textContent.storage.title }}
+          <h4 class="container-header">{{ textContent.storage.title }}
             <ng-container *mcsHasPermission="['VmEdit']">
               <a *mcsIsSelfManagedServer="server"
                 [disabled]="!server.executable"
@@ -64,7 +64,7 @@
                 {{ textContent.storage.manage }}
               </a>
             </ng-container>
-          </h3>
+          </h4>
           <div>
             <div *ngIf="!hasStorageInformation">
               <span class="missing-data-info">{{ textContent.storage.noContentMessage }}</span>
@@ -88,7 +88,7 @@
         </div>
 
         <div class="grid-column container-wrapper break-on-small">
-          <h3 class="container-header">{{ textContent.nics.title }}</h3>
+          <h4 class="container-header">{{ textContent.nics.title }}</h4>
           <div>
             <div *ngIf="!hasNics">
               <span class="missing-data-info">
@@ -117,7 +117,7 @@
 
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
-          <h3 class="container-header">
+          <h4 class="container-header">
             {{ textContent.media.title }}
             <span [mcsTooltip]="textContent.media.noAvailableMedia"
               [mcsTooltipShow]="!hasAvailableMedia">
@@ -128,7 +128,7 @@
                 </a>
               </ng-container>
             </span>
-          </h3>
+          </h4>
 
           <div *ngIf="!hasMedia">
             <span class="missing-data-info">{{ textContent.media.noContentMessage }}</span>
@@ -157,7 +157,7 @@
         </div>
 
         <div class="grid-column container-wrapper break-on-small">
-          <h3 class="container-header">{{ textContent.supportIdentifiers.title }}</h3>
+          <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
           <mcs-list spacing="xsmall">
             <!-- VDC -->
             <mcs-list-item>
@@ -183,7 +183,7 @@
       <ng-container *mcsIsSelfManagedServer="server">
         <div *ngIf="scaleOptionIsVisible" class="server-performance-scale">
           <div class="container-wrapper" [disabled]="!server.executable">
-            <h3 class="container-header">Scaling {{ server.managementName }}</h3>
+            <h4 class="container-header">Scaling {{ server.managementName }}</h4>
             <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
               [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
               [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
@@ -218,7 +218,7 @@
 
         <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
           <div class="container-wrapper" [disabled]="attachMediaIsDisabled">
-            <h3 class="container-header">{{ textContent.media.attachHeading }}</h3>
+            <h4 class="container-header">{{ textContent.media.attachHeading }}</h4>
             <mcs-select [(ngModel)]="selectedMedia" class="space-bottom-large"
               [placeholder]="textContent.media.mediaSelect.placeholder">
               <mcs-select-group [header]="textContent.media.mediaSelect.header">

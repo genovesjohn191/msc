@@ -36,7 +36,7 @@
 
       <!-- Ticket details -->
       <div class="container-wrapper">
-        <h3 class="container-header" [innerHTML]="ticket.shortDescription | mcsNewLines"></h3>
+        <h4 class="container-header" [innerHTML]="ticket.shortDescription | mcsNewLines"></h4>
         <div class="grid-row vspace-medium">
           <div class="grid-column">
             <div class="inline-items-xsmall">
@@ -65,7 +65,7 @@
       <!-- Ticket Services and Attachments -->
       <div class="grid-row">
         <div class="container-wrapper grid-column break-on-small">
-          <h3 class="container-header">{{ textContent.services }}</h3>
+          <h4 class="container-header">{{ textContent.services }}</h4>
           <p *ngIf="missingServices" class="missing-data-info">
             {{ textContent.missingServicesLabel }}
           </p>
@@ -77,7 +77,7 @@
         </div>
 
         <div class="container-wrapper grid-column break-on-small">
-          <h3 class="container-header">{{ textContent.attachments }}</h3>
+          <h4 class="container-header">{{ textContent.attachments }}</h4>
           <p *ngIf="missingAttachments" class="missing-data-info">
             {{ textContent.missingAttachmentsLabel }}
           </p>
@@ -92,7 +92,7 @@
 
       <!-- Ticket Activities -->
       <div class="container-wrapper">
-        <h3 class="container-header">{{ textContent.activity }}</h3>
+        <h4 class="container-header">{{ textContent.activity }}</h4>
         <p *ngIf="missingActivities" class="missing-data-info">
           {{ textContent.missingActivitiesLabel }}
         </p>
@@ -114,6 +114,7 @@
 
         <div>
           <mcs-ticket-activity [ticketId]="ticket.id"
+            class="vspace-xsmall"
             *ngFor="let activity of activities; trackBy: trackByFn"
             [activity]="activity">
           </mcs-ticket-activity>

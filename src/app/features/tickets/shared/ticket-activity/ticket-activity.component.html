@@ -1,27 +1,31 @@
-<!-- Ticket Activity Wrapper -->
-<div [ngClass]="{attachment: isAttachment}" class="ticket-activity-wrapper">
+<!-- Ticket Activity Icon Wrapper -->
+<div class="space-right-medium">
+  <mcs-icon [key]="activityIconKey"></mcs-icon>
+</div>
 
-  <!-- Ticket Activity Icon Wrapper -->
-  <div class="icon-wrapper">
-    <mcs-icon [key]="activityIconKey" size="large"></mcs-icon>
+<div class="block-items-medium" flex="auto">
+  <!-- Header (User details) -->
+  <div class="space-between-inline-items">
+    <strong>{{ activity.header }}</strong>
+    <span class="hidden-small" read-only>
+      {{ convertDateTimeToString(activity.date) }}
+    </span>
   </div>
 
-  <!-- Ticket Activity Header Wrapper (Header, Content) -->
-  <div class="information-wrapper">
-    <div class="header">
-      <strong>{{ activity.header }}</strong>
-      <span class="right-align hidden-small" read-only>
-        {{ convertDateTimeToString(activity.date) }}
-      </span>
-    </div>
+  <!-- Comment message -->
+  <div>
+    <p *ngIf="!isAttachment" [innerHTML]="activity.content | mcsNewLines"></p>
+    <p *ngIf="isAttachment">
+      <mcs-icon [hidden]="!downloading" [key]="spinnerIconKey" size="small"></mcs-icon>
+      <a [hidden]="downloading" (click)="downloadAttachment()"
+        [innerHTML]="activity.content | mcsNewLines"></a>
+    </p>
+  </div>
 
-    <div class="content">
-      <p *ngIf="!isAttachment" [innerHTML]="activity.content | mcsNewLines"></p>
-      <p *ngIf="isAttachment">
-        <mcs-icon [hidden]="!downloading" [key]="spinnerIconKey" size="small"></mcs-icon>
-        <a [hidden]="downloading" (click)="downloadAttachment()"
-          [innerHTML]="activity.content | mcsNewLines"></a>
-      </p>
-    </div>
+  <!-- Work note footer -->
+  <div class="right-align" *ngIf="isWorkNotes">
+    <span read-only>
+      The comment is not visible to the customer
+    </span>
   </div>
 </div>

@@ -12,6 +12,17 @@ export enum TicketStatus {
   WaitingForTaskCompletion
 }
 
+export const ticketStatusText = {
+  [TicketStatus.Undefined]: 'Undefined',
+  [TicketStatus.New]: 'New',
+  [TicketStatus.InProgress]: 'InProgress',
+  [TicketStatus.AwaitingCustomer]: 'Awaiting Customer',
+  [TicketStatus.Resolved]: 'Resolved',
+  [TicketStatus.Closed]: 'Closed',
+  [TicketStatus.WaitForRfo]: 'Wait For Rfo',
+  [TicketStatus.WaitingForTaskCompletion]: 'Waiting For Task Completion',
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */
