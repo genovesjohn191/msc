@@ -12,7 +12,10 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { CoreDefinition } from '../../core';
+import {
+  CoreDefinition,
+  McsColorType
+} from '../../core';
 import {
   coerceBoolean,
   coerceNumber
@@ -47,6 +50,9 @@ export class CheckboxComponent implements ControlValueAccessor {
   public id: string = `mcs-checkbox-${nextUniqueId++}`;
 
   @Input()
+  public color: McsColorType = 'black';
+
+  @Input()
   public get indeterminate(): boolean { return this._indeterminate; }
   public set indeterminate(value: boolean) { this._indeterminate = coerceBoolean(value); }
   private _indeterminate: boolean;
@@ -70,8 +76,10 @@ export class CheckboxComponent implements ControlValueAccessor {
   private _checked: boolean = false;
 
   public get checkboxIconKey(): string {
-    return this.checked ? CoreDefinition.ASSETS_FONT_CHECKBOX :
-      CoreDefinition.ASSETS_FONT_SQUARE_OPEN;
+    let checkedIcon = this.indeterminate ?
+      CoreDefinition.ASSETS_FONT_CHECKBOX_INDETERMINATE :
+      CoreDefinition.ASSETS_FONT_CHECKBOX;
+    return this.checked ? checkedIcon : CoreDefinition.ASSETS_FONT_SQUARE_OPEN;
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {

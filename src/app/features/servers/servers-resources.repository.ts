@@ -112,7 +112,8 @@ export class ServersResourcesRespository extends McsRepositoryBase<ServerResourc
    * to populate the data obtained
    */
   protected getAllRecords(
-    _recordCount: number,
+    _pageIndex: number,
+    _pageSize: number,
     _keyword: string
   ): Observable<McsApiSuccessResponse<ServerResource[]>> {
     return this._serversApiService.getServerResources();

@@ -28,14 +28,16 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
    * to populate the data obtained
    */
   protected getAllRecords(
-    recordCount: number,
+    pageIndex: number,
+    pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<McsApiCompany[]>> {
     let emptyResponse = new McsApiSuccessResponse<McsApiCompany[]>();
     emptyResponse.content = [];
     return !this._hasPermission ? Observable.of(emptyResponse) :
       this._coreLayoutService.getCompanies({
-        perPage: recordCount,
+        page: pageIndex,
+        perPage: pageSize,
         searchKeyword: keyword
       });
   }

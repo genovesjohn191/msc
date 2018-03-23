@@ -169,7 +169,7 @@ describe('ServersService', () => {
       });
 
       // Create request to the backend and expect that the request happened
-      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/rename`);
+      let mockRequest = httpMock.expectOne(`/servers/${requestOptions.id}/name`);
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback

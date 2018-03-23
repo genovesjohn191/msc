@@ -131,24 +131,6 @@ export class Server {
   }
 
   /**
-   * Return true when server is executable
-   */
-  public get executable(): boolean {
-    return this.isOperable
-      && !this.isProcessing
-      && this.powerState !== ServerPowerState.Suspended;
-  }
-
-  /**
-   * Return true when server is resumable
-   */
-  public get resumable(): boolean {
-    return this.isOperable
-      && !this.isProcessing
-      && this.powerState === ServerPowerState.Suspended;
-  }
-
-  /**
    * Returns the status label of the server
    * based on its power state or command executed
    */
@@ -159,27 +141,58 @@ export class Server {
   }
 
   /**
-   * Return true when server is startable
+   * Returns true when server is executable
    */
-  public get startable(): boolean {
+  public get executable(): boolean {
     return this.isOperable
       && !this.isProcessing
+      && this.powerState !== ServerPowerState.Suspended;
+  }
+
+  /**
+   * Returns true when server is startable
+   */
+  public get startable(): boolean {
+    return this.executable
       && this.powerState === ServerPowerState.PoweredOff;
   }
 
   /**
-   * Return true when server is stopable
+   * Returns true when server is stoppable
    */
-  public get stopable(): boolean {
-    return this.isOperable
-      && !this.isProcessing
+  public get stoppable(): boolean {
+    return this.executable
       && this.powerState === ServerPowerState.PoweredOn;
   }
 
   /**
-   * Return true when server is restartable
+   * Returns true when server is restartable
    */
   public get restartable(): boolean {
-    return this.stopable;
+    return this.stoppable;
+  }
+
+  /**
+   * Returns true when server is suspendable
+   */
+  public get suspendable(): boolean {
+    return this.stoppable;
+  }
+
+  /**
+   * Returns true when server is deletable
+   */
+  public get deletable(): boolean {
+    return this.executable
+      && this.serviceType === ServerServiceType.SelfManaged;
+  }
+
+  /**
+   * Returns true when server is resumable
+   */
+  public get resumable(): boolean {
+    return this.isOperable
+      && !this.isProcessing
+      && this.powerState === ServerPowerState.Suspended;
   }
 }

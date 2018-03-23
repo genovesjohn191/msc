@@ -19,11 +19,13 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
    * to populate the data inbound
    */
   protected getAllRecords(
-    recordCount: number,
+    pageIndex: number,
+    pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<Firewall[]>> {
     return this._firewallsService.getFirewalls({
-      perPage: recordCount,
+      page: pageIndex,
+      perPage: pageSize,
       searchKeyword: keyword
     });
   }
