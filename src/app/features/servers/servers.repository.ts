@@ -99,11 +99,13 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * to populate the data obtained
    */
   protected getAllRecords(
-    recordCount: number,
+    pageIndex: number,
+    pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<Server[]>> {
     return this._serversApiService.getServers({
-      perPage: recordCount,
+      page: pageIndex,
+      perPage: pageSize,
       searchKeyword: keyword
     });
   }

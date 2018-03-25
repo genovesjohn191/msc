@@ -11,6 +11,7 @@
     "square-open": "fa fa-square-o",
     "check-box": "fa fa-check-square",
     "check-box-open": "fa fa-check-square-o",
+    "check-box-indeterminate": "fa fa-minus-square",
     "exclamation": "fa fa-exclamation",
     "minus": "fa fa-minus",
     "plus": "fa fa-plus",

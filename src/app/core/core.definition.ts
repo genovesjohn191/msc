@@ -126,6 +126,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_SQUARE_OPEN = 'square-open';
   public static ASSETS_FONT_CHECKBOX = 'check-box';
   public static ASSETS_FONT_CHECKBOX_OPEN = 'check-box-open';
+  public static ASSETS_FONT_CHECKBOX_INDETERMINATE = 'check-box-indeterminate';
   public static ASSETS_FONT_EXCLAMATION = 'exclamation';
   public static ASSETS_FONT_MINUS = 'minus';
   public static ASSETS_FONT_PLUS = 'plus';

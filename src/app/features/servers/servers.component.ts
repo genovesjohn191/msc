@@ -14,9 +14,7 @@ import { ServersDataSource } from './servers.datasource';
 /** Models */
 import {
   Server,
-  ServerPowerState,
-  ServerCommand,
-  ServerServiceType
+  ServerCommand
 } from './models';
 /** Shared */
 import {
@@ -177,79 +175,16 @@ export class ServersComponent
   }
 
   /**
-   * Return true when Start button on the top panel is enabled
-   * @deprecated Use the property of the server model instead
-   * `@Note`: All selected servers must be powered OFF
+   * Returns true when the action can be executed based on the property value
+   * @param propName Property name of the flag
    */
-  public get startable(): boolean {
-    return this.selection.selected.filter((serverId) => {
+  public executableAction(propName: string): boolean {
+    let hasNonExecutable = this.selection.selected.find((serverId) => {
       let server = this.dataSource.getDisplayedServerById(serverId);
-      return !server.isOperable
-        || server.powerState !== ServerPowerState.PoweredOff
-        || server.isProcessing;
-    }).length === 0;
-  }
-
-  /**
-   * Return true when Stop button on the top panel is enabled
-   * @deprecated Use the property of the server model instead
-   * `@Note`: All selected servers must be powered ON
-   */
-  public get stoppable(): boolean {
-    return this.selection.selected.filter((serverId) => {
-      let server = this.dataSource.getDisplayedServerById(serverId);
-      return !server.isOperable
-        || server.powerState !== ServerPowerState.PoweredOn
-        || server.isProcessing;
-    }).length === 0;
-  }
-
-  /**
-   * Return true when Restart button on the top panel is enabled
-   * @deprecated Use the property of the server model instead
-   * `@Note`: All selected servers must be powered ON
-   */
-  public get restartable(): boolean {
-    return this.stoppable;
-  }
-
-  /**
-   * Return true when Delete button on the top panel is enabled
-   * @deprecated Use the property of the server model instead
-   * `@Note`: All selected servers should not processing any request
-   */
-  public get deletable(): boolean {
-    return this.selection.selected.filter((serverId) => {
-      let server = this.dataSource.getDisplayedServerById(serverId);
-      return server.serviceType === ServerServiceType.Managed ||
-        server.isProcessing || server.powerState === ServerPowerState.Suspended;
-    }).length === 0;
-  }
-
-  /**
-   * Return true when Suspend button on the top panel is enabled
-   * @deprecated Use the property of the server model instead
-   * `@Note`: All selected servers should not processing any request and should be powered on
-   */
-  public get suspendable(): boolean {
-    return this.selection.selected.filter((serverId) => {
-      let server = this.dataSource.getDisplayedServerById(serverId);
-      return !server.isOperable || server.isProcessing ||
-        server.powerState !== ServerPowerState.PoweredOn;
-    }).length === 0;
-  }
-
-  /**
-   * Return true when Resume button on the top panel is enabled
-   * @deprecated Use the property of the server model instead
-   * `@Note`: All selected servers should not processing any request and should be powered suspended
-   */
-  public get resumable(): boolean {
-    return this.selection.selected.filter((serverId) => {
-      let server = this.dataSource.getDisplayedServerById(serverId);
-      return !server.isOperable || server.isProcessing ||
-        server.powerState !== ServerPowerState.Suspended;
-    }).length === 0;
+      return !server[propName];
+    });
+    let canExecute = isNullOrEmpty(hasNonExecutable) && this.selection.hasValue();
+    return canExecute;
   }
 
   /**

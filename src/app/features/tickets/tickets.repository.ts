@@ -19,11 +19,13 @@ export class TicketsRepository extends McsRepositoryBase<Ticket> {
    * to populate the data obtained
    */
   protected getAllRecords(
-    recordCount: number,
+    pageIndex: number,
+    pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<Ticket[]>> {
     return this._ticketsApiService.getTickets({
-      perPage: recordCount,
+      page: pageIndex,
+      perPage: pageSize,
       searchKeyword: keyword
     });
   }

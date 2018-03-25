@@ -18,7 +18,7 @@
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
             id="ctaStartSelectedServer"
-            [disabled]="!startable || !selection.hasValue()"
+            [disabled]="!executableAction('startable')"
             (click)="executeTopPanelAction(serverCommand.Start)">
             <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
             <span>{{ textContent.start }}</span>
@@ -27,7 +27,7 @@
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
             id="ctaStopSelectedServer"
-            [disabled]="!stoppable || !selection.hasValue()"
+            [disabled]="!executableAction('stoppable')"
             (click)="executeTopPanelAction(serverCommand.Stop)">
             <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
             <span>{{ textContent.stop }}</span>
@@ -36,7 +36,7 @@
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
             id="ctaRestartSelectedServer"
-            [disabled]="!restartable || !selection.hasValue()"
+            [disabled]="!executableAction('restartable')"
             (click)="executeTopPanelAction(serverCommand.Restart)">
             <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
             <span>{{ textContent.restart }}</span>
@@ -45,23 +45,25 @@
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
             id="ctaDeleteSelectedServer"
-            [disabled]="!deletable || !selection.hasValue()"
+            [disabled]="!executableAction('deletable')"
             (click)="executeTopPanelAction(serverCommand.Delete)">
             <mcs-icon [key]="deleteIconKey" size="small"></mcs-icon>
             <span>{{ textContent.delete }}</span>
           </mcs-action-item>
 
-          <mcs-action-item class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem
+            class="hidden-small"
             id="ctaSuspendSelectedServer"
-            [disabled]="!suspendable || !selection.hasValue()"
+            [disabled]="!executableAction('suspendable')"
             (click)="executeTopPanelAction(serverCommand.Suspend)">
             <mcs-icon [key]="suspendIconKey" size="small"></mcs-icon>
             <span>{{ textContent.suspend }}</span>
           </mcs-action-item>
 
-          <mcs-action-item class="hidden-small"
+          <mcs-action-item mcsResponsivePanelItem
+            class="hidden-small"
             id="ctaResumeSelectedServer"
-            [disabled]="!resumable || !selection.hasValue()"
+            [disabled]="!executableAction('resumable')"
             (click)="executeTopPanelAction(serverCommand.Resume)">
             <mcs-icon [key]="resumeIconKey" size="small"></mcs-icon>
             <span>{{ textContent.resume }}</span>
@@ -103,6 +105,7 @@
         <ng-container mcsColumnDef="select">
           <mcs-header-cell *mcsHeaderCellDef class="text-center action-cell hidden-small">
             <mcs-checkbox (change)="toggleSelectAll()"
+              color="white"
               [checked]="isAllSelected()"
               [indeterminate]="selection.hasValue() && !isAllSelected()">
             </mcs-checkbox>

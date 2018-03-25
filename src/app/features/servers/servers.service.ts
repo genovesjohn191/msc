@@ -231,7 +231,7 @@ export class ServersService {
   public renameServer(id: any, serverData: ServerRename):
     Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/${id}/rename`;
+    mcsApiRequestParameter.endPoint = `/servers/${id}/name`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(serverData);
 
     return this._mcsApiService.put(mcsApiRequestParameter)

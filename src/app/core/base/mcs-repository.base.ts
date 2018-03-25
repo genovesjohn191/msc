@@ -11,17 +11,20 @@ import {
   addOrUpdateArrayRecord,
   deleteArrayRecord,
   clearArrayRecord,
+  compareStrings,
   mergeArrays,
   unsubscribeSafely
 } from '../../utilities';
 
-const MAX_DISPLAY_RECORD = 200;
+const DEFAULT_PAGE_INDEX = 1;
+const DEFAULT_PAGE_SIZE = 1000;
 
 export abstract class McsRepositoryBase<T> {
   /**
    * Updated records obtained from each individual call to API (getRecordById)
    */
   private _updatedRecordsById: T[] = new Array();
+  private _previouslySearched: string;
 
   /**
    * Get or Set the total records count of the entity
@@ -49,6 +52,13 @@ export abstract class McsRepositoryBase<T> {
    */
   public get dataRecordsChanged(): Subject<T[]> { return this._dataRecordsChanged; }
   private _dataRecordsChanged: Subject<T[]> = new Subject<T[]>();
+
+  /**
+   * Returns true when data records has content, otherwise false
+   */
+  public get hasDataRecords(): boolean {
+    return !isNullOrEmpty(this.dataRecords);
+  }
 
   /**
    * Data records obtainment subscription
@@ -127,8 +137,7 @@ export abstract class McsRepositoryBase<T> {
    * Clears out the data records of the repository
    */
   public clearRecords(): void {
-    clearArrayRecord(this._updatedRecordsById);
-    clearArrayRecord(this._dataRecords);
+    this._clearCacheData();
     this._totalRecordsCount = 0;
     this._notifyDataRecordsChanged();
   }
@@ -153,67 +162,58 @@ export abstract class McsRepositoryBase<T> {
    * This will find all the records based on the paging and searching method
    * if the content is not found, the API will trigger
    * @param page Page settings where the data returned are based on page index and size
-   * @param whereClause Where clause delegate for filtering condition
+   * @param search Search settings where the keyword is use to filter the data
+   * @param fromCache Flag to determine where the data should get from
    */
-  public findAllRecords(page?: McsPaginator, search?: McsSearch): Observable<T[]> {
-    // We need to clear the records when the flag for caching is set to false
-    let isSearching = !isNullOrEmpty(search) && search.searching;
-
-    // We need to reset the page in order to get the data from initial page
-    if (isSearching && !isNullOrEmpty(page)) {
+  public findAllRecords(
+    page?: McsPaginator,
+    search?: McsSearch,
+    fromCache: boolean = true
+  ): Observable<T[]> {
+    // We need to clear the records when searching to be able to get the data from api again
+    let isSearching = !isNullOrEmpty(search) && search.searching
+      || !isNullOrEmpty(search) && compareStrings(this._previouslySearched, search.keyword) !== 0;
+    if (isSearching) {
       page.pageIndex = 0;
+      this._clearCacheData();
     }
 
-    let displayedRecords = isNullOrEmpty(page) ? MAX_DISPLAY_RECORD :
-      page.pageSize * (page.pageIndex + 1);
-    let dataRecordsLength = isNullOrEmpty(this.dataRecords) ? 0 : this.dataRecords.length;
-    let requestRecords = !!(displayedRecords > dataRecordsLength)
-      && !!(this._totalRecordsCount !== dataRecordsLength)
-      || this._totalRecordsCount === 0 || isSearching;
-
-    if (requestRecords) {
-      // Get all records from API calls implemented under inherited class
-      return this.getAllRecords(displayedRecords, !isNullOrEmpty(search) ? search.keyword : '')
-        .finally(() => this._notifyAfterDataObtained())
-        .catch((error) => {
-          return Observable.throw(error);
-        })
-        .map((data) => {
-          if (isNullOrEmpty(data)) { return new Array(); }
-
-          this._totalRecordsCount = data.totalCount;
-          this._dataRecords = data.content;
-          this._filteredRecords = data.content;
-          this._patchRecordsByUpdatedRecords();
-          return this._dataRecords;
-        });
-    } else {
-      // We need to mock the data to pageData
-      // so that we wont touch the original record
-      let pageData = this._dataRecords.slice();
-      let actualData = pageData.splice(0, displayedRecords);
-      return Observable.of(actualData)
-        .catch((error) => {
-          return Observable.throw(error);
-        })
-        .map((data) => {
-          this._filteredRecords = data;
-          return data;
-        });
+    let pageIndex: number = DEFAULT_PAGE_INDEX;
+    let pageSize: number = DEFAULT_PAGE_SIZE;
+    let searchKeyword: string = '';
+    if (!isNullOrEmpty(page)) {
+      pageIndex = page.pageIndex + 1;
+      pageSize = page.pageSize;
     }
+    if (!isNullOrEmpty(search)) {
+      searchKeyword = search.keyword;
+      this._previouslySearched = searchKeyword;
+    }
+
+    // Set flags where to obtain the data
+    let displayedRecords = Math.min(pageSize * (pageIndex), this._totalRecordsCount);
+    let dataRecordsLength = this.hasDataRecords ? this.dataRecords.length : 0;
+    let requestRecordsFromApi = displayedRecords > dataRecordsLength || !this.hasDataRecords;
+    let requestRecordFromCache = !requestRecordsFromApi && fromCache;
+
+    return requestRecordFromCache ?
+      this._findAllRecordsFromCache(displayedRecords) :
+      this._findAllRecordsFromApi(pageIndex, pageSize, searchKeyword);
   }
 
   /**
    * Find any record using id for its comparison method.
    * And return the record as observable<T>
    * @param id Id to be based as comparison
+   * @param fromCache Flag to determine where the data should get from
    */
-  public findRecordById(id: string): Observable<T> {
+  public findRecordById(id: string, fromCache: boolean = true): Observable<T> {
     // Return the record immediately when found in cache
     let recordFoundFromCache = this._updatedRecordsById.find((record: any) => {
       return record.id === id;
     });
-    if (!isNullOrEmpty(recordFoundFromCache)) {
+    let requestRecordFromCache = !isNullOrEmpty(recordFoundFromCache) && fromCache;
+    if (requestRecordFromCache) {
       return Observable.of(recordFoundFromCache);
     }
 
@@ -234,7 +234,8 @@ export abstract class McsRepositoryBase<T> {
    * Get all records based on type
    */
   protected abstract getAllRecords(
-    recordCount: number,
+    pageIndex: number,
+    pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<T[]>>;
 
@@ -259,6 +260,54 @@ export abstract class McsRepositoryBase<T> {
       addOrUpdateArrayRecord(this._dataRecords, record, true,
         (_existingRecord: any) => _existingRecord.id === (record as any).id);
     });
+  }
+
+  /**
+   * Find all records from datarecords cache based on the record count
+   * @param recordsCount Records count to pull in the cache
+   */
+  private _findAllRecordsFromCache(recordsCount: number): Observable<T[]> {
+    let pageData = this._dataRecords.slice();
+    let actualData = pageData.splice(0, recordsCount);
+    return Observable.of(actualData)
+      .map((data) => {
+        this._filteredRecords = data;
+        return data;
+      });
+  }
+
+  /**
+   * Find all records from API and automatically update the cache data
+   * @param pageIndex Page Index where the page should be started
+   * @param pageSize Page size to pull data from the current page
+   * @param keyword Keyword to searched
+   */
+  private _findAllRecordsFromApi(
+    pageIndex: number,
+    pageSize: number,
+    keyword: string): Observable<T[]> {
+    // Get all records from API calls implemented under inherited class
+    return this.getAllRecords(pageIndex, pageSize, keyword)
+      .finally(() => this._notifyAfterDataObtained())
+      .map((data) => {
+        if (isNullOrEmpty(data)) { return new Array(); }
+        this._totalRecordsCount = data.totalCount;
+        this._dataRecords = mergeArrays(this._dataRecords,
+          data.content, (_first: any, _second: any) => {
+            return _first.id === _second.id;
+          });
+        this._filteredRecords = this._dataRecords;
+        this._patchRecordsByUpdatedRecords();
+        return this._dataRecords;
+      });
+  }
+
+  /**
+   * Clears the cache data and it will not notify the dataChange event
+   */
+  private _clearCacheData(): void {
+    clearArrayRecord(this._dataRecords);
+    clearArrayRecord(this._updatedRecordsById);
   }
 
   /**

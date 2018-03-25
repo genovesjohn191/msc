@@ -28,11 +28,13 @@ export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
    * to populate the data inbound
    */
   protected getAllRecords(
-    recordCount: number,
+    pageIndex: number,
+    pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<McsApiJob[]>> {
     return this._notificationsApiService.getNotifications({
-      perPage: recordCount,
+      page: pageIndex,
+      perPage: pageSize,
       searchKeyword: keyword
     });
   }

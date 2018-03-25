@@ -13,8 +13,7 @@ import {
 } from '../../../../core';
 import {
   ServerCommand,
-  Server,
-  ServerPowerState
+  Server
 } from '../../models';
 import { isNullOrEmpty } from '../../../../utilities';
 
@@ -76,15 +75,19 @@ export class ServerCommandComponent implements OnInit {
 
     switch (command) {
       case ServerCommand.Start:
-        enabled = this.server.executable &&
-          this.server.powerState === ServerPowerState.PoweredOff;
+        enabled = this.server.startable;
         break;
 
       case ServerCommand.Stop:
+        enabled = this.server.stoppable;
+        break;
+
       case ServerCommand.Restart:
+
+        enabled = this.server.restartable;
+        break;
       case ServerCommand.Suspend:
-        enabled = this.server.executable &&
-          this.server.powerState === ServerPowerState.PoweredOn;
+        enabled = this.server.suspendable;
         break;
 
       case ServerCommand.ViewVCloud:
@@ -96,14 +99,13 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       case ServerCommand.Delete:
-        enabled = !this.server.isProcessing && !this.server.resumable;
+        enabled = this.server.deletable;
         break;
 
       default:
         enabled = this.server.executable;
         break;
     }
-
     return enabled;
   }
 
