@@ -106,7 +106,6 @@
           <mcs-form-field>
             <mcs-select [formControl]="fcNetwork"
               [placeholder]="textContent.networkSelect.placeholder">
-              <mcs-select-item value="">-</mcs-select-item>
               <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
                 {{ network.name }}
               </mcs-select-item>
