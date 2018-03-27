@@ -10,6 +10,9 @@ import { GadgetsModule } from './gadgets/gadgets.module';
 import { HttpErrorPageModule } from './http-error-page/http-error-page.module';
 import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.module';
 
+/** Service */
+import { FeaturesService } from './features.service';
+
 @NgModule({
   imports: [
     DashboardModule,
@@ -22,6 +25,9 @@ import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.
     GadgetsModule,
     HttpErrorPageModule,
     AccessDeniedPageModule
+  ],
+  providers: [
+    FeaturesService
   ]
 })
 

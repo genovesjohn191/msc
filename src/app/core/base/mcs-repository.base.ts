@@ -64,7 +64,6 @@ export abstract class McsRepositoryBase<T> {
    * Data records obtainment subscription
    */
   private _getDataRecordsSubscription: Subscription;
-  private _isInitialized: boolean = false;
 
   /**
    * Dispose all the resources of the management based such as
@@ -321,9 +320,6 @@ export abstract class McsRepositoryBase<T> {
    * Notify after data obtained abstract method
    */
   private _notifyAfterDataObtained(): void {
-    if (!this._isInitialized) {
-      this.afterDataObtained();
-      this._isInitialized = true;
-    }
+    this.afterDataObtained();
   }
 }

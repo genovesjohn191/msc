@@ -24,21 +24,20 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsComponentService,
-  McsNotificationContextService,
-  McsJobType,
   McsSafeToNavigateAway,
   McsErrorHandlerService,
-  McsOption
-} from '../../../core';
+  McsOption,
+  McsDataStatusFactory
+} from '../../../../core';
 import {
   mergeArrays,
-  addOrUpdateArrayRecord,
   refreshView,
   isNullOrEmpty,
   replacePlaceholder,
-  unsubscribeSafely
-} from '../../../utilities';
-import { ContextualHelpDirective } from '../../../shared';
+  unsubscribeSafely,
+  removeAllChildren
+} from '../../../../utilities';
+import { ContextualHelpDirective } from '../../../../shared';
 import {
   ServerGroupedOs,
   ServerOperatingSystem,
@@ -50,13 +49,12 @@ import {
   ServerCreateNetwork,
   ServerServiceType,
   ServerCreateType
-} from '../models';
+} from '../../models';
 import { CreateSelfManagedServersService } from './create-self-managed-servers.service';
 import {
   CreateSelfManagedServerComponent
 } from './create-self-managed-server/create-self-managed-server.component';
-import { ServersResourcesRespository } from '../servers-resources.repository';
-import { removeAllChildren } from '../../../utilities';
+import { ServersResourcesRespository } from '../../servers-resources.repository';
 
 @Component({
   selector: 'mcs-create-self-managed-servers',
@@ -87,6 +85,7 @@ export class CreateSelfManagedServersComponent implements
   public notifications: McsApiJob[];
   public newServers: Array<McsComponentService<CreateSelfManagedServerComponent>>;
   public deployingServers: boolean;
+  public provisioningStatusFactory: McsDataStatusFactory<McsApiJob>;
 
   /**
    * VDC name selection field
@@ -170,13 +169,13 @@ export class CreateSelfManagedServersComponent implements
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _viewContainerRef: ViewContainerRef,
     private _renderer: Renderer2,
-    private _notificationContextService: McsNotificationContextService,
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.notifications = new Array();
     this.newServers = new Array();
     this.vdcList = new Array();
+    this.provisioningStatusFactory = new McsDataStatusFactory();
 
     this._mainContextInformations = new Array();
     this._serversOs = new Array();
@@ -185,7 +184,7 @@ export class CreateSelfManagedServersComponent implements
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
-      .servers.createSelfManagedServer;
+      .servers.createServer.selfManagedServer;
     this.contextualTextContent = this.textContent.contextualHelp;
 
     // Get all the data from api in parallel
@@ -211,7 +210,6 @@ export class CreateSelfManagedServersComponent implements
 
     // Listen to contextual helps and notifications
     this._listenToContextualHelp();
-    this._listenToNotifications();
   }
 
   public ngAfterViewInit() {
@@ -309,22 +307,26 @@ export class CreateSelfManagedServersComponent implements
   public onDeployServer() {
     // Clear notifications and set the deployment flag to true
     this.deployingServers = true;
-    this.notifications = new Array();
 
     // Loop to all new servers
+    this.provisioningStatusFactory.setInProgress();
     this.newServers.forEach((server) => {
       if (server.componentRef.instance.serverInputs.type === ServerCreateType.Clone) {
         let serverId = server.componentRef.instance.serverInputs.targetServer;
         let serverClone = new ServerClone();
         serverClone.name = server.componentRef.instance.serverInputs.serverName;
 
-        this._createSelfManagedServices.cloneServer(serverId, serverClone)
+        this._createSelfManagedServices
+          .cloneServer(serverId, serverClone)
+          .catch((error) => {
+            this.provisioningStatusFactory.setError();
+            return Observable.throw(error);
+          })
           .subscribe((response) => {
-            // Subscribe to execute the creation asynchronously
-            // and get the current jobs
-            if (response.content) {
-              this.notifications.push(response.content);
-            }
+            if (isNullOrEmpty(response)) { return; }
+            this.notifications.push(response.content);
+            this.provisioningStatusFactory.setSuccesfull(response.content);
+            this._changeDetectorRef.markForCheck();
           });
       } else {
         let serverCreate = new ServerCreate();
@@ -361,13 +363,17 @@ export class CreateSelfManagedServersComponent implements
         serverCreate.network.ipAddress = server.componentRef.instance
           .serverInputs.ipAddress.customIpAddress;
 
-        this._createSelfManagedServices.createServer(serverCreate)
+        this._createSelfManagedServices
+          .createServer(serverCreate)
+          .catch((error) => {
+            this.provisioningStatusFactory.setError();
+            return Observable.throw(error);
+          })
           .subscribe((response) => {
-            // Subscribe to execute the creation asynchronously
-            // and get the current jobs
-            if (response.content) {
-              this.notifications.push(response.content);
-            }
+            if (isNullOrEmpty(response)) { return; }
+            this.notifications.push(response.content);
+            this.provisioningStatusFactory.setSuccesfull(response.content);
+            this._changeDetectorRef.markForCheck();
           });
       }
     });
@@ -397,28 +403,6 @@ export class CreateSelfManagedServersComponent implements
     if (!isNullOrEmpty(this.vdcList)) {
       this.vdcValue = this.vdcList[0].value;
     }
-  }
-
-  /**
-   * This will listen to notifications changes in case
-   * the existing notification in the provisioning is created and
-   * need to update
-   */
-  private _listenToNotifications(): void {
-    this._notificationsSubscription = this._notificationContextService
-      .notificationsStream.subscribe((updatedNotifications) => {
-        if (updatedNotifications) {
-          let creationJobs = updatedNotifications.filter((job) => {
-            return job.type === McsJobType.CreateServer || job.type === McsJobType.CloneServer;
-          });
-
-          // Update new created servers
-          for (let job of creationJobs) {
-            addOrUpdateArrayRecord(this.notifications, job, true,
-              (_existingJob: McsApiJob) => _existingJob.id === job.id);
-          }
-        }
-      });
   }
 
   /**

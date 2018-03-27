@@ -1,25 +1,29 @@
 import {
   Component,
   OnInit,
+  DoCheck,
   OnDestroy,
   Input,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  IterableDiffers,
+  IterableDiffer
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider,
   McsApiJob,
   McsApiTask,
   McsTaskType,
-  McsDataStatus
+  McsDataStatus,
+  McsNotificationEventsService
 } from '../../../../core';
 import {
   isNullOrEmpty,
-  refreshView,
-  unsubscribeSafely
+  unsubscribeSafely,
+  addOrUpdateArrayRecord
 } from '../../../../utilities';
 
 @Component({
@@ -29,47 +33,122 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
-  @Input()
-  public jobs: McsApiJob[];
-
+export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDestroy {
   public progressValue: number;
   public progressMax: number;
-  public animateTrigger: string;
-  public progressBarVisibility: boolean;
   public textContent: any;
 
+  /**
+   * Returns all the jobs of the current provisioning
+   */
+  @Input()
+  public get jobs(): McsApiJob[] { return this._jobs; }
+  public set jobs(value: McsApiJob[]) {
+    if (value !== this._jobs) {
+      this._jobs = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _jobs: McsApiJob[];
+  private _jobsDiffer: IterableDiffer<McsApiJob>;
+
+  /**
+   * Animation of the progressbar for fadeIn and fadeOut
+   */
+  private _animateTrigger: string;
+  public get animateTrigger(): string { return this._animateTrigger; }
+  public set animateTrigger(value: string) {
+    if (value !== this._animateTrigger) {
+      this._animateTrigger = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  // Subscription
   private _timerSubscription: any;
+  private _jobsSubscription: Subscription;
+
+  public get isMultiJobs(): boolean {
+    return isNullOrEmpty(this.jobs) ? false : this.jobs.length > 1;
+  }
+
+  public get hasJobs(): boolean {
+    return !isNullOrEmpty(this.jobs);
+  }
+
+  public get dataStatusEnum(): any {
+    return McsDataStatus;
+  }
+
+  // Icons
+  public get checkIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHECK;
+  }
+
+  public get spinnerIconKey(): string {
+    return CoreDefinition.ASSETS_GIF_SPINNER;
+  }
+
+  public get closeIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CLOSE;
+  }
 
   public constructor(
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _notificationsEvents: McsNotificationEventsService,
+    private _iterableDiffers: IterableDiffers
   ) {
     this.progressValue = 0;
     this.progressMax = 0;
-    this.jobs = new Array();
-    this.progressBarVisibility = true;
     this.animateTrigger = 'fadeIn';
-  }
-
-  public get isMultiJobs(): boolean {
-    return this.jobs.length > 1;
+    this._jobsDiffer = this._iterableDiffers.find([]).create(null);
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
       .servers.shared.provisioningNotifications;
-    this._updateProgressbar();
+    this._listenToCurrentUserJob();
+  }
+
+  public ngDoCheck() {
+    let changes = this._jobsDiffer.diff(this.jobs);
+    if (!isNullOrEmpty(changes)) {
+      this._updateProgressbarRealTime();
+    }
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._timerSubscription);
+    unsubscribeSafely(this._jobsSubscription);
   }
 
+  /**
+   * Returns true when all jobs are completed
+   */
+  public get allJobsCompleted(): boolean {
+    let inProgressJob = this.jobs.find((job) => {
+      return job.dataStatus !== McsDataStatus.Success;
+    });
+    return isNullOrEmpty(inProgressJob) && this.hasJobs;
+  }
+
+  /**
+   * Returns true when some of the jobs is error
+   */
+  public get hasErrorJobs(): boolean {
+    let errorJob = this.jobs.find((job) => {
+      return job.dataStatus === McsDataStatus.Error;
+    });
+    return !isNullOrEmpty(errorJob) && this.hasJobs;
+  }
+
+  /**
+   * Returns the title based on single or multiple deployments status
+   */
   public getTitle(): string {
     let title: string;
-
     if (this.isMultiJobs) {
       title = this.textContent ? this.textContent.deployMultiple : '';
     } else {
@@ -78,53 +157,46 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
     return title;
   }
 
+  /**
+   * Returns true when the job was completed
+   * @param job Job to be checked
+   */
   public isJobCompleted(job: McsApiJob): boolean {
     return job.dataStatus !== McsDataStatus.InProgress;
   }
 
+  /**
+   * Returns true when the job was successful
+   * @param job Job to be checked
+   */
   public isJobSuccessful(job: McsApiJob): boolean {
     return job.dataStatus === McsDataStatus.Success;
   }
 
-  public getStatusIcon(dataStatus: McsDataStatus): { key, color, class } {
-    let iconKey: string;
-    let iconColor: string;
-    let iconClass: string;
-
-    switch (dataStatus) {
-      case McsDataStatus.InProgress:
-        iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
-        iconColor = 'black';
-        iconClass = 'active';
-        break;
-      case McsDataStatus.Error:
-        iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
-        iconColor = 'red';
-        iconClass = 'failed';
-        break;
-      case McsDataStatus.Success:
-        iconKey = CoreDefinition.ASSETS_FONT_CHECK;
-        iconColor = 'green';
-        iconClass = 'completed';
-        break;
-      default:
-        break;
-    }
-    return { key: iconKey, color: iconColor, class: iconClass };
-  }
-
+  /**
+   * View the server page based on tasks provided
+   * @param tasks Tasks to be checked and navigated to
+   */
   public onViewServerPage(tasks: McsApiTask[]): void {
     let serverId = this._getCreatedServerId(tasks);
     let route = !isNullOrEmpty(serverId) ? `/servers/${serverId}` : '/servers';
     this._router.navigate([route]);
   }
 
+  /**
+   * Returns the redirection link text based on tasks provided
+   * @param tasks Tasks to be checked where the server will get from
+   */
   public getRedirectionLinkText(tasks: McsApiTask[]): string {
     let serverId = this._getCreatedServerId(tasks);
     return !isNullOrEmpty(serverId) ?
       this.textContent.viewServerLink : this.textContent.viewServersLink;
   }
 
+  /**
+   * Returns the created server id when the job is done
+   * @param tasks Tasks to get the server details from
+   */
   private _getCreatedServerId(tasks: McsApiTask[]): string {
     if (isNullOrEmpty(tasks)) { return ''; }
 
@@ -137,60 +209,72 @@ export class ProvisioningNotificationsComponent implements OnInit, OnDestroy {
       completedTask.referenceObject.resourceId : '';
   }
 
-  private _updateProgressbar(): void {
-    if (!isNullOrEmpty(this.jobs)) {
-      let progressTolerance: number = 0;
+  /**
+   * Asynchronously update the progressbar in realtime
+   */
+  private _updateProgressbarRealTime(): void {
+    if (isNullOrEmpty(this.jobs)) { return; }
+    let progressMaxWithOffset: number = 0;
 
-      this.jobs.forEach((job) => {
-        this.progressMax += job.ectInSeconds;
+    this.jobs.forEach((job) => {
+      if (isNullOrEmpty(job)) { return; }
+      this.progressValue += job.elapsedTimeInSeconds;
+      this.progressMax += (job.ectInSeconds + job.elapsedTimeInSeconds);
+    });
+
+    // Calculate the 99% of the progreesbar maximum
+    progressMaxWithOffset = (this.progressMax * 0.99);
+
+    // Set Inifinity Timer
+    this._timerSubscription = Observable.timer(0, 1000)
+      .take(Infinity)
+      .subscribe(() => {
+        let actualProgress = this.progressValue + 1;
+        this.progressValue = Math.min(actualProgress, progressMaxWithOffset);
+        this._changeDetectorRef.markForCheck();
       });
+  }
 
-      // Calculate the 99% of the progreesbar maximum
-      // In case the tolerance is less than 1, set it to 1 instead
-      progressTolerance = this.progressMax - (this.progressMax * 0.99);
-      if (progressTolerance < 1) { progressTolerance = 1; }
+  /**
+   * Listen to current user job triggered
+   */
+  private _listenToCurrentUserJob(): void {
+    this._jobsSubscription = this._notificationsEvents.currentUserJob
+      .subscribe((job) => {
+        let inProgressJob = isNullOrEmpty(job) || job.dataStatus === McsDataStatus.InProgress;
+        if (inProgressJob) { return; }
+        // Update the existing job
+        addOrUpdateArrayRecord(this.jobs, job, true,
+          (_existingJob: McsApiJob) => _existingJob.id === job.id);
 
-      // Set Inifinity Timer
-      this._timerSubscription = Observable.timer(0, 1000)
-        .take(Infinity)
-        .subscribe((time) => {
-          let timeExceedsEstimate = (this.progressMax - this.progressValue) <= progressTolerance;
+        // Exit progressbar
+        if (this.allJobsCompleted) { this._removeProgressbar(McsDataStatus.Success); }
+        if (this.hasErrorJobs) { this._removeProgressbar(McsDataStatus.Error); }
+      });
+  }
 
-          // Find active jobs (in case there are) and exit timer in case of completion
-          let activeJobExists = this.jobs.find((job) => {
-            return job.dataStatus === McsDataStatus.InProgress;
-          });
-          if (!activeJobExists) {
-            // Find error jobs and roll back the progressbar
-            let errorJobExists = this.jobs.find((job) => {
-              return job.dataStatus === McsDataStatus.Error;
-            });
-            if (errorJobExists) {
-              this._endTimer(0);
-            } else {
-              this._endTimer(this.progressMax);
-            }
-            // Remove progressbar when all the process are done
-            this._removeProgressbar();
+  /**
+   * Remove the progressbar when all the job was finished
+   */
+  private _removeProgressbar(status: McsDataStatus): void {
+    switch (status) {
+      case McsDataStatus.Error:
+        this._endTimer(0);
+        break;
 
-          } else if (timeExceedsEstimate) {
-            // Hold progress bar position to wait for other jobs to finished
-          } else if (time <= this.progressMax) {
-            this.progressValue = time;
-          }
-          this._changeDetectorRef.markForCheck();
-        });
+      case McsDataStatus.Success:
+      default:
+        this._endTimer(this.progressMax);
+        break;
     }
-  }
-
-  private _removeProgressbar(): void {
-    // Set the animation of the progress bar before removing it to actual DOM
     this.animateTrigger = 'fadeOut';
-    refreshView(() => {
-      this.progressBarVisibility = false;
-    }, 500);
   }
 
+  /**
+   * End all the timer to removed the infinity loop and
+   * mitigate the problem of possible memory leak
+   * @param progressValue Progressbar value
+   */
   private _endTimer(progressValue: number): void {
     this.progressValue = progressValue;
     unsubscribeSafely(this._timerSubscription);

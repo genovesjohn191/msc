@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
+import { McsNavigateAwayGuard } from '../../core';
 /** Services */
 import { ServerService } from './server/';
 import {
   CreateSelfManagedServersService,
   CreateSelfManagedServerResolver
-} from './self-managed-server';
+} from './create-server';
 import { ServersService } from './servers.service';
 import { ServersRepository } from './servers.repository';
 import { ServersResourcesRespository } from './servers-resources.repository';
@@ -18,14 +19,16 @@ import {
   ServerStorageComponent,
   ServerNicsComponent
 } from './server';
-import { McsNavigateAwayGuard } from '../../core';
-import { CreateSelfManagedServersComponent } from './self-managed-server';
+import {
+  CreateSelfManagedServersComponent,
+  CreateServerDetailsComponent
+} from './create-server';
 import {
   VdcComponent,
   VdcOverviewComponent,
   VdcService
 } from './vdc';
-import { CanActivateSelfManagedServer } from './guards';
+import { SelfManagedServerGuard } from './guards';
 
 /**
  * List of services for the main module
@@ -38,7 +41,7 @@ export const serversProviders: any[] = [
   CreateSelfManagedServerResolver,
   CreateSelfManagedServersService,
   VdcService,
-  CanActivateSelfManagedServer
+  SelfManagedServerGuard
 ];
 
 /**
@@ -55,6 +58,10 @@ export const serversRoutes: Routes = [
     canDeactivate: [McsNavigateAwayGuard]
   },
   {
+    path: 'servers/create/:id',
+    component: CreateServerDetailsComponent
+  },
+  {
     path: 'servers/:id',
     component: ServerComponent,
     children: [
@@ -65,8 +72,8 @@ export const serversRoutes: Routes = [
       { path: 'nics', component: ServerNicsComponent },
       {
         path: 'backups', component:
-        ServerBackupsComponent,
-        canActivate: [CanActivateSelfManagedServer]
+          ServerBackupsComponent,
+        canActivate: [SelfManagedServerGuard]
       }
     ]
   },

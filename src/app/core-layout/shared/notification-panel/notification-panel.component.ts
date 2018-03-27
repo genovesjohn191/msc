@@ -21,6 +21,7 @@ import {
   refreshView,
   isNullOrEmpty
 } from '../../../utilities';
+import { Router } from '@angular/router';
 
 // Notification type
 type notificationType = 'statechange' | 'running';
@@ -99,7 +100,8 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
 
   public constructor(
     private _ngZone: NgZone,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router
   ) { }
 
   public ngOnInit() {
@@ -139,6 +141,16 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
    */
   public removeNotification(): void {
     this._removeNotification(0);
+  }
+
+  /**
+   * Event that triggers when the notification was clicked
+   */
+  public onClickNotification(): void {
+    let hasLink = !isNullOrEmpty(this.notification) &&
+      !isNullOrEmpty(this.notification.link);
+    if (!hasLink) { return; }
+    this._router.navigate([this.notification.link]);
   }
 
   /**

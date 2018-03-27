@@ -76,10 +76,10 @@ export class CheckboxComponent implements ControlValueAccessor {
   private _checked: boolean = false;
 
   public get checkboxIconKey(): string {
-    let checkedIcon = this.indeterminate ?
+    let unCheckedIcon = this.indeterminate ?
       CoreDefinition.ASSETS_FONT_CHECKBOX_INDETERMINATE :
-      CoreDefinition.ASSETS_FONT_CHECKBOX;
-    return this.checked ? checkedIcon : CoreDefinition.ASSETS_FONT_SQUARE_OPEN;
+      CoreDefinition.ASSETS_FONT_SQUARE_OPEN;
+    return this.checked ? CoreDefinition.ASSETS_FONT_CHECKBOX : unCheckedIcon;
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {

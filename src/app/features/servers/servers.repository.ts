@@ -39,6 +39,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     private _notificationEvents: McsNotificationEventsService
   ) {
     super();
+    this._registerJobEvents();
   }
 
   /**
@@ -129,7 +130,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * we will get notified by the jobs when data is obtained
    */
   protected afterDataObtained(): void {
-    this._registerJobEvents();
+    this._notificationEvents.notifyNotificationsSubscribers();
   }
 
   /**

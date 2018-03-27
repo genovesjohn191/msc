@@ -16,7 +16,7 @@ import {
 import {
   McsTextContentProvider,
   CoreValidators
-} from '../../../../core';
+} from '../../../../../core';
 import {
   ServerManageStorage,
   ServerPerformanceScale,
@@ -27,15 +27,15 @@ import {
   ServerNetwork,
   Server,
   ServerCreateType
-} from '../../models';
+} from '../../../models';
 import {
   refreshView,
   mergeArrays,
   isNullOrEmpty,
   convertToGb,
   unsubscribeSafely
-} from '../../../../utilities';
-import { ContextualHelpDirective } from '../../../../shared';
+} from '../../../../../utilities';
+import { ContextualHelpDirective } from '../../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 
 const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
@@ -135,7 +135,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
 
   public ngOnInit() {
     this.contextualTextContent = this._textContentProvider.content
-      .servers.createSelfManagedServer.contextualHelp;
+      .servers.createServer.selfManagedServer.contextualHelp;
 
     this._registerFormGroup();
 

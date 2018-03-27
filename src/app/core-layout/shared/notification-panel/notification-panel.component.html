@@ -7,7 +7,10 @@
 
     <!-- Notification content -->
     <div class="notification-panel-content">
-      <span class="font-bold">{{ notification.description }}</span>
+      <span class="font-bold"
+        cursor="pointer"
+        [triggerCursorIf]="notification.link"
+        (click)="onClickNotification()">{{ notification.description }}</span>
       <small class="notification-panel-message">{{ notification.summaryInformation }}</small>
       <ng-container *ngIf="notification.errorMessage">
         <small class="notification-panel-message">{{ notification.errorMessage }}</small>

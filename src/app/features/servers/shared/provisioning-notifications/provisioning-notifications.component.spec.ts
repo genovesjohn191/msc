@@ -7,12 +7,11 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { ProvisioningNotificationsComponent } from './provisioning-notifications.component';
 import {
-  CoreDefinition,
   McsTextContentProvider,
   McsApiJob,
-  McsJobStatus,
-  McsDataStatus
+  McsJobStatus
 } from '../../../../core';
+import { CoreTestingModule } from '../../../../core/testing';
 import { getEnumString } from '../../../../utilities';
 
 describe('ProvisioningNotificationsComponent', () => {
@@ -34,7 +33,7 @@ describe('ProvisioningNotificationsComponent', () => {
     notification.status = notificationStatus;
     notification.summaryInformation = 'Test Job 2 Summary';
     notification.ownerName = 'Shaun Domingo';
-    notification.durationInSeconds = 0;
+    notification.elapsedTimeInSeconds = 0;
     notification.description = 'mongo-db' + notificationId;
     notification.ectInSeconds = 5;
 
@@ -51,7 +50,8 @@ describe('ProvisioningNotificationsComponent', () => {
         ProvisioningNotificationsComponent
       ],
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        CoreTestingModule
       ],
       providers: [
         McsTextContentProvider
@@ -74,6 +74,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
       component = fixture.componentInstance;
 
+      component.jobs = new Array();
       component.jobs.push(createNotification('12345', McsJobStatus.Active));
       component.jobs.push(createNotification('12346', McsJobStatus.Failed));
       component.jobs.push(createNotification('12347', McsJobStatus.Completed));
@@ -84,6 +85,7 @@ describe('ProvisioningNotificationsComponent', () => {
   describe('ngOnInit()', () => {
     beforeEach(fakeAsync(() => {
       component.ngOnInit();
+      component.ngDoCheck();
       discardPeriodicTasks();
     }));
 
@@ -167,56 +169,6 @@ describe('ProvisioningNotificationsComponent', () => {
       let jobSuccess = component.isJobSuccessful(
         createNotification('12348', McsJobStatus.Failed));
       expect(jobSuccess).toBeFalsy();
-    });
-  });
-
-  describe('getStatusIcon()', () => {
-    it(`should return the iconKey to spinner, iconColor to black, iconClass to active
-    when the job status is active`, () => {
-      let jobStatus = component.getStatusIcon(McsDataStatus.InProgress);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
-      expect(jobStatus.color).toBe('black');
-      expect(jobStatus.class).toBe('active');
-    });
-
-    it(`should return the iconKey to spinner, iconColor to black, iconClass to active
-    when the job status is pending`, () => {
-      let jobStatus = component.getStatusIcon(McsDataStatus.InProgress);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
-      expect(jobStatus.color).toBe('black');
-      expect(jobStatus.class).toBe('active');
-    });
-
-    it(`should return the iconKey to close, iconColor to red, iconClass to failed
-    when the job status is timedout`, () => {
-      let jobStatus = component.getStatusIcon(McsDataStatus.Error);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
-      expect(jobStatus.color).toBe('red');
-      expect(jobStatus.class).toBe('failed');
-    });
-
-    it(`should return the iconKey to close, iconColor to red, iconClass to failed
-    when the job status is cancelled`, () => {
-      let jobStatus = component.getStatusIcon(McsDataStatus.Error);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
-      expect(jobStatus.color).toBe('red');
-      expect(jobStatus.class).toBe('failed');
-    });
-
-    it(`should return the iconKey to close, iconColor to red, iconClass to failed
-    when the job status is failed`, () => {
-      let jobStatus = component.getStatusIcon(McsDataStatus.Error);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
-      expect(jobStatus.color).toBe('red');
-      expect(jobStatus.class).toBe('failed');
-    });
-
-    it(`should return the iconKey to check, iconColor to green, iconClass to completed
-    when the job status is completed`, () => {
-      let jobStatus = component.getStatusIcon(McsDataStatus.Success);
-      expect(jobStatus.key).toBe(CoreDefinition.ASSETS_FONT_CHECK);
-      expect(jobStatus.color).toBe('green');
-      expect(jobStatus.class).toBe('completed');
     });
   });
 });

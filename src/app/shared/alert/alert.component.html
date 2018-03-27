@@ -1,9 +1,11 @@
-<div class="mcs-alert" [ngClass]="type">
-  <div class="alert-icon">
-    <mcs-icon [key]="getAlertIconKey()" size="small" color="white"></mcs-icon>
-  </div>
-  <div class="alert-content">
-    <h4 *ngIf="title" class="title">{{ title }}</h4>
+<!-- Alert Icon -->
+<div class="alert-icon">
+  <mcs-icon [key]="alertIconDetails.key" [color]="alertIconDetails.color"></mcs-icon>
+</div>
+<!-- Message Content -->
+<div class="alert-content">
+  <span>{{ header }}</span>
+  <span read-only>
     <ng-content></ng-content>
-  </div>
+  </span>
 </div>

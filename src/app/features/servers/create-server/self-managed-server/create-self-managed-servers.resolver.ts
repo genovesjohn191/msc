@@ -6,7 +6,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ServersResourcesRespository } from '../servers-resources.repository';
+import { ServersResourcesRespository } from '../../servers-resources.repository';
 
 @Injectable()
 export class CreateSelfManagedServerResolver implements Resolve<any> {

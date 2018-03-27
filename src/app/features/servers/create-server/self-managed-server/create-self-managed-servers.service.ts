@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
-import { ServersService } from '../servers.service';
+import { ServersService } from '../../servers.service';
 import {
   ServerCreate,
   ServerResource,
   ServerStorage,
   ServerClone
-} from '../models';
-import { ContextualHelpDirective } from '../../../shared';
+} from '../../models';
+import { ContextualHelpDirective } from '../../../../shared';
 
 @Injectable()
 export class CreateSelfManagedServersService {
