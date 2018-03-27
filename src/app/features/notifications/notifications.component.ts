@@ -6,6 +6,8 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 /** Services */
 import { NotificationsRepository } from './notifications.repository';
 import { NotificationsDataSource } from './notifications.datasource';
@@ -24,7 +26,6 @@ import {
   getRecordCountLabel,
   unsubscribeSafely
 } from '../../utilities';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mcs-notifications',
@@ -66,6 +67,7 @@ export class NotificationsComponent
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _textContentProvider: McsTextContentProvider,
     private _notificationsRepository: NotificationsRepository
@@ -88,6 +90,15 @@ export class NotificationsComponent
     this.dispose();
     unsubscribeSafely(this._accountSubscription);
     unsubscribeSafely(this._notificationsSubscription);
+  }
+
+  /**
+   * This will navigate to specified link, otherwise do nothing
+   * @param url Url to be navigated
+   */
+  public navigateTo(url: string): void {
+    if (isNullOrEmpty(url)) { return; }
+    this._router.navigate([url]);
   }
 
   /**

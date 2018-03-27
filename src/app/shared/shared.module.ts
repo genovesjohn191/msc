@@ -13,6 +13,7 @@ import { CheckboxModule } from './checkbox/checkbox.module';
 import { FilterSelectorModule } from './filter-selector/filter-selector.module';
 import { PopoverModule } from './popover/popover.module';
 import { IconModule } from './icon/icon.module';
+import { AlertModule } from './alert/alert.module';
 import { ImageModule } from './image/image.module';
 import { ValidationMessageModule } from './validation-message/validation-message.module';
 import { TableModule } from './table/table.module';
@@ -44,7 +45,6 @@ import { DataStatusModule } from './data-status/data-status.module';
 import { PipesModule } from './pipes';
 /** Components */
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
-import { AlertComponent } from './alert/alert.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
 /** Directives */
 import { HasPermissionDirective } from './authentication/has-permission.directive';
@@ -53,7 +53,6 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
 @NgModule({
   declarations: [
     ProgressBarComponent,
-    AlertComponent,
     HasPermissionDirective,
     ExclusiveForAccountDirective,
     CapacityBarComponent
@@ -68,6 +67,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     LayoutModule,
     PopoverModule,
     IconModule,
+    AlertModule,
     ImageModule,
     ButtonModule,
     CheckboxModule,
@@ -102,7 +102,6 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
   ],
   exports: [
     ProgressBarComponent,
-    AlertComponent,
     HasPermissionDirective,
     ExclusiveForAccountDirective,
     CapacityBarComponent,
@@ -115,6 +114,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     LayoutModule,
     PopoverModule,
     IconModule,
+    AlertModule,
     ImageModule,
     ButtonModule,
     CheckboxModule,

@@ -13,7 +13,7 @@ import { ServersRepository } from '../servers.repository';
 import { ServerServiceType } from '../models';
 
 @Injectable()
-export class CanActivateSelfManagedServer implements CanActivate {
+export class SelfManagedServerGuard implements CanActivate {
 
   constructor(
     private _serversRepository: ServersRepository,

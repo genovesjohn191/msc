@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
-  ReplaySubject
+  ReplaySubject,
+  Subscription
 } from 'rxjs/Rx';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
@@ -11,7 +12,8 @@ import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.
 import {
   compareNumbers,
   compareStrings,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSafely
 } from '../../utilities';
 
 @Injectable()
@@ -80,11 +82,22 @@ export class McsNotificationEventsService {
   /** Event that emits when the connection to socket is changed */
   public connectionStatusChanged = new BehaviorSubject<McsConnectionStatus>(undefined);
 
+  /** Subscriptions */
+  private _notificationsSubscription: Subscription;
+
   constructor(
     private _notificationsContext: McsNotificationContextService,
     private _authenticationIdentity: McsAuthenticationIdentity
   ) {
     this._listenToStatusUpdate();
+    this._listenToNotificationsUpdate();
+  }
+
+  /**
+   * This will notify all the notifications subscribers to get
+   * the latest notifications
+   */
+  public notifyNotificationsSubscribers(): void {
     this._listenToNotificationsUpdate();
   }
 
@@ -102,7 +115,8 @@ export class McsNotificationEventsService {
    * Listens to notifications changed stream
    */
   private _listenToNotificationsUpdate(): void {
-    this._notificationsContext.notificationsStream
+    unsubscribeSafely(this._notificationsSubscription);
+    this._notificationsSubscription = this._notificationsContext.notificationsStream
       .subscribe((updatedNotifications) => {
         // Notify general notifications
         this.notificationsEvent.next(updatedNotifications);

@@ -43,22 +43,22 @@ describe('AlertComponent', () => {
   describe('getAlertIconKey()', () => {
     it('should return the close icon key definition in case of failed', () => {
       component.type = 'failed';
-      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_CLOSE);
+      expect(component.alertIconDetails.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE_CIRCLE);
     });
 
     it('should return the warning icon key definition in case of warning', () => {
       component.type = 'warning';
-      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_WARNING);
+      expect(component.alertIconDetails.key).toBe(CoreDefinition.ASSETS_FONT_WARNING);
     });
 
     it('should return the information-2 icon key definition in case of info', () => {
       component.type = 'info';
-      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_INFORMATION_2);
+      expect(component.alertIconDetails.key).toBe(CoreDefinition.ASSETS_FONT_INFORMATION_CIRCLE);
     });
 
     it('should return the check icon key definition in case of success', () => {
       component.type = 'success';
-      expect(component.getAlertIconKey()).toBe(CoreDefinition.ASSETS_FONT_CHECK);
+      expect(component.alertIconDetails.key).toBe(CoreDefinition.ASSETS_FONT_CHECK_CIRCLE);
     });
   });
 });

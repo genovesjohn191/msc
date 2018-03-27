@@ -20,7 +20,7 @@ export class McsApiJob {
   public description: string;
   public summaryInformation: string;
   public errorMessage: string;
-  public durationInSeconds: number;
+  public elapsedTimeInSeconds: number;
   public ectInSeconds: number;
   public clientReferenceObject: any;
 
@@ -79,7 +79,7 @@ export class McsApiJob {
     this.description = undefined;
     this.summaryInformation = undefined;
     this.errorMessage = undefined;
-    this.durationInSeconds = undefined;
+    this.elapsedTimeInSeconds = undefined;
     this.ectInSeconds = undefined;
     this.tasks = undefined;
     this.clientReferenceObject = undefined;
@@ -115,5 +115,23 @@ export class McsApiJob {
         break;
     }
     return dataStatus;
+  }
+
+  /**
+   * Returns the job link based on its job type
+   */
+  public get link(): string {
+    let jobLink: string;
+    switch (this.type) {
+      case McsJobType.CreateServer:
+      case McsJobType.CloneServer:
+        jobLink = `./servers/create/${this.id}`;
+        break;
+
+      // Add more link here when a job has requested page
+      default:
+        break;
+    }
+    return jobLink;
   }
 }

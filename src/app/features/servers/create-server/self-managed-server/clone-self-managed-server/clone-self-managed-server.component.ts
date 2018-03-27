@@ -28,12 +28,12 @@ import {
   McsDataStatusFactory,
   CoreValidators,
   CoreDefinition
-} from '../../../../core';
+} from '../../../../../core';
 import {
   ServerCreateSelfManaged,
   Server,
   ServerCreateType
-} from '../../models';
+} from '../../../models';
 import {
   refreshView,
   mergeArrays,
@@ -41,12 +41,12 @@ import {
   isFormControlValid,
   replacePlaceholder,
   unsubscribeSafely
-} from '../../../../utilities';
+} from '../../../../../utilities';
 import {
   ContextualHelpDirective,
   FormGroupDirective
-} from '../../../../shared';
-import { ServersRepository } from '../../servers.repository';
+} from '../../../../../shared';
+import { ServersRepository } from '../../../servers.repository';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import { Subscription } from 'rxjs/Rx';
 
@@ -115,7 +115,7 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, O
   public ngOnInit() {
     // Set text content including contextual help
     this.textContent = this._textContentProvider.content
-      .servers.createSelfManagedServer;
+      .servers.createServer.selfManagedServer;
     this.textHelpContent = this.textContent.contextualHelp;
 
     // Register forms

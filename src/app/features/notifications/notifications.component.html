@@ -100,7 +100,10 @@
 
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
-        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          cursor="pointer"
+          [triggerCursorIf]="row.link"
+          (click)="navigateTo(row.link)"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

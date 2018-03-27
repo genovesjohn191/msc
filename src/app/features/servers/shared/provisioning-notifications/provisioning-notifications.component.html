@@ -1,52 +1,95 @@
-<section class="provisioning-notifications-container">
-  <!-- Progress Information -->
-  <div class="vertical-items-spacing-medium">
-    <h4 class="title">{{ getTitle() }}</h4>
-    <mcs-progress-bar *ngIf="progressBarVisibility" animate [trigger]="animateTrigger"
-      [(ngModel)]="progressValue" [maxValue]="progressMax"></mcs-progress-bar>
-  </div>
-
-  <!-- Job Details -->
-  <div class="jobs-container">
-    <div *ngFor="let job of jobs">
-      <h4 *ngIf="isMultiJobs">{{ job.description }}</h4>
-
-      <!-- Tasks content -->
-      <div class="task-content" *ngIf="job.tasks">
-        <div *ngFor="let task of job.tasks" class="status-details">
-
-          <mcs-icon [ngClass]="getStatusIcon(task.dataStatus).class"
-            [key]="getStatusIcon(task.dataStatus).key"
-            [color]="getStatusIcon(task.dataStatus).color"
-            size="small"></mcs-icon>
-          <span>{{ task.description }}</span>
-        </div>
+<ng-container [ngSwitch]="hasJobs">
+  <!-- When job received -->
+  <ng-container *ngSwitchCase="true">
+    <div class="provisioning-notifications-container">
+      <!-- Progress Information -->
+      <div class="vertical-items-spacing-medium">
+        <h4 class="title">{{ getTitle() }}</h4>
+        <mcs-progress-bar [hidden]="allJobsCompleted" animate [trigger]="animateTrigger"
+          [(ngModel)]="progressValue" [maxValue]="progressMax"></mcs-progress-bar>
       </div>
 
-      <!-- Job completed -->
-      <div *ngIf="isJobCompleted(job)" class="job-completed">
-        <!-- In case of success -->
-        <div *ngIf="isJobSuccessful(job)" class="status-details">
-          <mcs-icon [ngClass]="getStatusIcon(job.dataStatus).class"
-            [key]="getStatusIcon(job.dataStatus).key"
-            [color]="getStatusIcon(job.dataStatus).color"
-            size="small"></mcs-icon>
-          <span class="font-bold">{{ textContent.deploymentCompleted }}</span>
-        </div>
-        <div class="space-top-medium">
-          <button *ngIf="isJobSuccessful(job)" mcsButton id="ctaViewServer"
-            arrow="right" size="small" (click)="onViewServerPage(job.tasks)">
-            {{ getRedirectionLinkText(job.tasks) }}
-          </button>
-        </div>
+      <!-- Job Details -->
+      <div class="jobs-container">
+        <div *ngFor="let job of jobs">
+          <h4 *ngIf="isMultiJobs">{{ job.description }}</h4>
 
-        <!-- In case of Error -->
-        <div *ngIf="!isJobSuccessful(job)" class="status-details">
-          <mcs-alert type="failed" [title]="textContent.deploymentFailed">
-            <span>{{ job.errorMessage }}</span>
-          </mcs-alert>
+          <!-- Tasks content -->
+          <div class="task-content" *ngIf="job.tasks">
+            <div *ngFor="let task of job.tasks" class="status-details">
+              <div [ngSwitch]="task.dataStatus">
+                <!-- In progress -->
+                <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+                  <div class="inline-items-small">
+                    <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+                    <span read-only>{{ task.description }}</span>
+                  </div>
+                </ng-container>
+
+                <!-- Success -->
+                <ng-container *ngSwitchCase="dataStatusEnum.Success">
+                  <div class="inline-items-small">
+                    <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
+                    <span read-only>{{ task.description }}</span>
+                  </div>
+                </ng-container>
+
+                <!-- Error -->
+                <ng-container *ngSwitchCase="dataStatusEnum.Error">
+                  <div class="inline-items-small">
+                    <mcs-icon [key]="closeIconKey" size="small" color="red"></mcs-icon>
+                    <span read-only>{{ task.description }}</span>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <!-- Job completed -->
+          <div *ngIf="isJobCompleted(job)" class="job-completed">
+
+            <div [ngSwitch]="job.dataStatus">
+              <!-- In progress -->
+              <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+                <div class="inline-items-small">
+                  <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+                  <span>{{ textContent.deploymentInProgress }}</span>
+                </div>
+              </ng-container>
+
+              <!-- Success -->
+              <ng-container *ngSwitchCase="dataStatusEnum.Success">
+                <div class="inline-items-small">
+                  <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
+                  <span>{{ textContent.deploymentCompleted }}</span>
+                </div>
+                <div class="space-top-medium">
+                  <button mcsButton id="ctaViewServer"
+                    arrow="right" size="small" (click)="onViewServerPage(job.tasks)">
+                    {{ getRedirectionLinkText(job.tasks) }}
+                  </button>
+                </div>
+              </ng-container>
+
+              <!-- Error -->
+              <ng-container *ngSwitchCase="dataStatusEnum.Error">
+                <mcs-alert type="failed" [header]="textContent.deploymentFailed">
+                  <span>{{ job.errorMessage }}</span>
+                </mcs-alert>
+              </ng-container>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </ng-container>
+
+  <!-- When no job received yet -->
+  <ng-container *ngSwitchCase="false">
+    <div class="inline-items-small">
+      <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
+      <span read-only>{{ textContent.deploymentInProgress }}</span>
+    </div>
+  </ng-container>
+</ng-container>
+

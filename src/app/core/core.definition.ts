@@ -118,9 +118,11 @@ export class CoreDefinition {
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
   public static ASSETS_FONT_SEARCH = 'search';
   public static ASSETS_FONT_CHECK = 'check';
+  public static ASSETS_FONT_CHECK_CIRCLE = 'check-circle';
   public static ASSETS_FONT_WARNING = 'warning';
   public static ASSETS_FONT_CALENDAR = 'calendar';
   public static ASSETS_FONT_INFORMATION = 'info';
+  public static ASSETS_FONT_INFORMATION_CIRCLE = 'info-circle';
   public static ASSETS_FONT_BELL = 'bell';
   public static ASSETS_FONT_SQUARE = 'square';
   public static ASSETS_FONT_SQUARE_OPEN = 'square-open';
@@ -137,6 +139,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_CARET_DOWN = 'caret-down';
   public static ASSETS_FONT_PLAY = 'play';
   public static ASSETS_FONT_CLOSE = 'close';
+  public static ASSETS_FONT_CLOSE_CIRCLE = 'close-circle';
   public static ASSETS_FONT_CHEVRON_DOWN = 'chevron-down';
   public static ASSETS_FONT_CHEVRON_UP = 'chevron-up';
   public static ASSETS_FONT_CHEVRON_LEFT = 'chevron-left';

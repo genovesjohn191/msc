@@ -22,10 +22,10 @@ import {
   ServerCreateSelfManaged,
   ServerResource,
   ServerGroupedOs
-} from '../../models';
-import { McsTextContentProvider } from '../../../../core';
-import { isNullOrEmpty } from '../../../../utilities';
-import { ContextualHelpDirective } from '../../../../shared';
+} from '../../../models';
+import { McsTextContentProvider } from '../../../../../core';
+import { isNullOrEmpty } from '../../../../../utilities';
+import { ContextualHelpDirective } from '../../../../../shared';
 
 @Component({
   selector: 'mcs-create-self-managed-server',
@@ -111,7 +111,7 @@ export class CreateSelfManagedServerComponent implements OnInit {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
-      .servers.createSelfManagedServer;
+      .servers.createServer.selfManagedServer;
     this.contextualTextContent = this.textContent.contextualHelp;
     this._setCreationType();
   }

@@ -22,7 +22,7 @@ $job-server-link-left-offset: 25px;
     .job-completed {
       @include display-flex(column);
       align-items: flex-start;
-      margin-top: $space-medium;
+      margin-top: $space-large;
 
       .link {
         display: inline-block;
@@ -30,25 +30,5 @@ $job-server-link-left-offset: 25px;
         margin-left: $job-server-link-left-offset;
       }
     }
-  }
-}
-
-.status-details {
-  @include display-flex(row);
-  @include align-items(center);
-  @include set-items-interval($space-small, horizontal);
-  margin: $space-xsmall 0;
-
-  .active {
-    color: $job-active-color;
-    + span {
-      color: $job-active-color;
-    }
-  }
-  .failed {
-    color: $job-failed-color;
-  }
-  .completed {
-    color: $job-completed-color;
   }
 }

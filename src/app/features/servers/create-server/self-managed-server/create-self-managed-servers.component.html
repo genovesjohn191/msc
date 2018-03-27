@@ -44,10 +44,9 @@
 
   <!-- Step 2  -->
   <mcs-wizard-step [stepTitle]="textContent.serverGoStep.title">
-    <div class="limited-view" *ngIf="hasNotifications">
-      <mcs-provisioning-notifications [jobs]="notifications"
-        [mcsContextualHelp]="contextualTextContent.provisioningNotifications">
-      </mcs-provisioning-notifications>
+    <div class="limited-view">
+      <p>{{ contextualTextContent.provisioningNotifications }}</p>
+      <mcs-provisioning-notifications [jobs]="notifications"></mcs-provisioning-notifications>
     </div>
   </mcs-wizard-step>
 </mcs-wizard>

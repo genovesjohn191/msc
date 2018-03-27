@@ -1,75 +1,40 @@
 @import "../../../styles/shared/base";
 
 // Alerts
-$alert-container-padding: $space-small;
-$alert-icon-container-size: 30px;
-$alert-title-font-size: 16;
-$alert-background-opacity: 0.09;
+$alert-border-radius: $border-radius-small;
+$alert-bg-opacity: 0.09;
+$alert-bg-color-success: $color-green-00;
+$alert-bg-color-failed: $color-red-00;
+$alert-bg-color-warning: $color-yellow-00;
+$alert-bg-color-info: $color-primary-01;
 
-.mcs-alert {
+.alert-wrapper {
   @include display-flex(row);
-  align-items: center;
-  border: 1px solid transparent;
-  @include border-radius(5px);
-  padding: $alert-container-padding;
+  @include align-items(center);
+  padding: $space-medium;
+  @include border-radius($alert-border-radius);
 
   .alert-icon {
-    @include display-flex(row);
-    align-items: center;
-    margin-right: $space-small;
-    @include border-radius(100%);
-    width: $alert-icon-container-size;
-    height: $alert-icon-container-size;
-    flex-shrink: 0;
-
-    mcs-icon {
-      @include font-size($icon-medium-font-size);
-      margin: 0 auto;
-    }
+    margin-right: $space-medium;
   }
 
   .alert-content {
-    .title {
-      font-family: $base-font-bold;
-      color: $color-black;
-      @include font-size($alert-title-font-size);
-      margin-bottom: 0;
-    }
+    @include display-flex(column);
   }
 
   &.success {
-    @include background-opacity($color-green-00, $alert-background-opacity);
-    border-color: $color-green-00;
-
-    .alert-icon {
-      background-color: $color-green-00;
-    }
+    background-color: rgba($alert-bg-color-success, $alert-bg-opacity);
   }
 
   &.failed {
-    @include background-opacity($color-red-00, $alert-background-opacity);
-    border-color: $color-red-00;
-
-    .alert-icon {
-      background-color: $color-red-00;
-    }
+    background-color: rgba($alert-bg-color-failed, $alert-bg-opacity);
   }
 
   &.warning {
-    @include background-opacity($color-yellow-00, $alert-background-opacity);
-    border-color: $color-yellow-00;
-
-    .alert-icon {
-      background-color: $color-yellow-00;
-    }
+    background-color: rgba($alert-bg-color-warning, $alert-bg-opacity);
   }
 
   &.info {
-    @include background-opacity($color-primary-01, $alert-background-opacity);
-    border-color: $color-primary-01;
-
-    .alert-icon {
-      background-color: $color-primary-01;
-    }
+    background-color: rgba($alert-bg-color-info, $alert-bg-opacity);
   }
 }

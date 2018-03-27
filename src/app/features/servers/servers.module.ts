@@ -32,14 +32,15 @@ import {
   ServerBackupsComponent,
   ServerServicesComponent
 } from './server/';
-/** Self Managed Servers */
+/** Create Servers */
 import {
   CreateSelfManagedServerComponent,
   CreateSelfManagedServersComponent,
   NewSelfManagedServerComponent,
   CopySelfManagedServerComponent,
-  CloneSelfManagedServerComponent
-} from './self-managed-server';
+  CloneSelfManagedServerComponent,
+  CreateServerDetailsComponent
+} from './create-server';
 /** VDC */
 import {
   VdcComponent,
@@ -85,6 +86,7 @@ import { SharedModule } from '../../shared';
     NewSelfManagedServerComponent,
     CopySelfManagedServerComponent,
     CloneSelfManagedServerComponent,
+    CreateServerDetailsComponent,
     ProvisioningNotificationsComponent,
     VdcComponent,
     VdcOverviewComponent,

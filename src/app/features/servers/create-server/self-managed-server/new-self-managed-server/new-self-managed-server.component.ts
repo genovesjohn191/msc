@@ -23,7 +23,7 @@ import {
   McsOption,
   CoreValidators,
   CoreDefinition
-} from '../../../../core';
+} from '../../../../../core';
 import {
   refreshView,
   mergeArrays,
@@ -33,11 +33,11 @@ import {
   replacePlaceholder,
   appendUnitSuffix,
   unsubscribeSafely
-} from '../../../../utilities';
+} from '../../../../../utilities';
 import {
   ContextualHelpDirective,
   FormGroupDirective
-} from '../../../../shared';
+} from '../../../../../shared';
 import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import {
   ServerManageStorage,
@@ -51,7 +51,7 @@ import {
   ServerImageType,
   ServerImage,
   ServerCatalogItemType
-} from '../../models';
+} from '../../../models';
 
 const RAM_MINIMUM_VALUE = 2048;
 const CPU_MINIMUM_VALUE = 2;
@@ -159,9 +159,8 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
-      .servers.createSelfManagedServer;
-    this.textHelpContent = this._textContentProvider.content
-      .servers.createSelfManagedServer.contextualHelp;
+      .servers.createServer.selfManagedServer;
+    this.textHelpContent = this.textContent.contextualHelp;
 
     this.memoryMB = RAM_MINIMUM_VALUE;
     this.cpuCount = CPU_MINIMUM_VALUE;
