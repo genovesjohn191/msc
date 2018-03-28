@@ -214,7 +214,7 @@ export class McsAuthenticationService {
     this._cookieService.setItem(
       this._jwtCookieName,
       authentication,
-      { expires: expiration }
+      { domain: window.location.hostname }
     );
   }
 }

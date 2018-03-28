@@ -1,4 +1,9 @@
-<div class="notification-panel-content-wrapper" animate [trigger]="animationTrigger">
+<div class="notification-panel-content-wrapper"
+  animate [trigger]="animationTrigger"
+  cursor="pointer"
+  [triggerCursorIf]="notification.link"
+  (click)="onClickNotification()">
+
   <div class="notification-panel-details">
     <!-- Notification Status Icon -->
     <div class="notification-panel-status-icon">
@@ -7,10 +12,7 @@
 
     <!-- Notification content -->
     <div class="notification-panel-content">
-      <span class="font-bold"
-        cursor="pointer"
-        [triggerCursorIf]="notification.link"
-        (click)="onClickNotification()">{{ notification.description }}</span>
+      <span class="font-bold">{{ notification.description }}</span>
       <small class="notification-panel-message">{{ notification.summaryInformation }}</small>
       <ng-container *ngIf="notification.errorMessage">
         <small class="notification-panel-message">{{ notification.errorMessage }}</small>

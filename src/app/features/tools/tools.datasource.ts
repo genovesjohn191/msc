@@ -7,8 +7,10 @@ import {
   McsDataStatus
 } from '../../core';
 import { resolveEnvVar } from '../../utilities';
-import { Portal } from './portal';
-import { PortalAccess } from './portal.access';
+import {
+  Portal,
+  PortalAccess
+} from './models';
 import { ToolsRepository } from './tools.repository';
 
 export class ToolsDataSource implements McsDataSource<Portal> {

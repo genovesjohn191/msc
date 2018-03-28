@@ -115,7 +115,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   public ngDoCheck() {
     let changes = this._jobsDiffer.diff(this.jobs);
     if (!isNullOrEmpty(changes)) {
-      this._updateProgressbarRealTime();
+      this._updateProgressbarRealTimeAsync();
     }
   }
 
@@ -212,7 +212,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   /**
    * Asynchronously update the progressbar in realtime
    */
-  private _updateProgressbarRealTime(): void {
+  private _updateProgressbarRealTimeAsync(): void {
     if (isNullOrEmpty(this.jobs)) { return; }
     let progressMaxWithOffset: number = 0;
 

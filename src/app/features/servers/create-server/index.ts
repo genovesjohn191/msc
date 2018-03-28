@@ -8,5 +8,5 @@ export * from './self-managed-server/clone-self-managed-server/clone-self-manage
 export * from './self-managed-server/create-self-managed-servers.service';
 export * from './self-managed-server/create-self-managed-servers.resolver';
 
-/** Create server details */
-export * from './create-server-details/create-server-details.component';
+/** Create server provisioning page */
+export * from './provisioning-page/server-provisioning-page.component';

@@ -25,7 +25,6 @@ import {
   McsNotificationEventsService,
   McsDataStatusFactory,
   McsErrorHandlerService,
-  McsHttpStatusCode,
   McsDataStatus
 } from '../../../../core';
 import { ServersService } from '../../servers.service';
@@ -541,11 +540,6 @@ export class ServerNicsComponent extends ServerDetailsBase
     unsubscribeSafely(this.networksSubscription);
     this.networksSubscription = this._serversResourcesRespository
       .findResourceNetworks(this.serverResource)
-      .catch((error) => {
-        // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
-        return Observable.throw(error);
-      })
       .subscribe(() => {
         // Subscribe to update the snapshots in server instance
         this._changeDetectorRef.markForCheck();

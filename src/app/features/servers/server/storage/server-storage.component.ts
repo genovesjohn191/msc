@@ -25,7 +25,6 @@ import {
   McsDialogService,
   McsOption,
   McsErrorHandlerService,
-  McsHttpStatusCode,
   McsDataStatusFactory,
   McsDataStatus
 } from '../../../../core';
@@ -617,10 +616,6 @@ export class ServerStorageComponent extends ServerDetailsBase
 
     this.storageSubscription = this._serversResourcesRespository
       .findResourceStorage(this.serverResource)
-      .catch((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
-        return Observable.throw(error);
-      })
       .subscribe(() => {
         // Subscribe to update the storage to server resource
       });

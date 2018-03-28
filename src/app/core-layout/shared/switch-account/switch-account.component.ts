@@ -81,10 +81,8 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     return McsDataStatus;
   }
 
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this._switchAccountRepository) ? 0 :
-      this._switchAccountRepository.totalRecordsCount;
-  }
+  public get totalRecordsCount(): number { return this._totalRecordsCount; }
+  private _totalRecordsCount: number = 0;
 
   public get filteredRecordCount(): number {
     return getArrayCount(this.displayedCompanies);
@@ -223,6 +221,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
       })
       .subscribe((response) => {
         this.displayedCompanies = response.slice();
+        this._totalRecordsCount = this._switchAccountRepository.totalRecordsCount;
 
         this._removeActiveDefaultAccounts();
         this.search.showLoading(false);
@@ -262,8 +261,8 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
       let isActive = this._switchAccountService.activeAccount.id === _item.id;
       let isDefault = this.defaultAccount.id === _item.id;
 
-      // Se tthe actual count based on deduction from active and default account
-      this._switchAccountRepository.totalRecordsCount -= isActive || isDefault ? 1 : 0;
+      // Se the actual count based on deduction from active and default account
+      this._totalRecordsCount -= isActive || isDefault ? 1 : 0;
       return isActive || isDefault;
     });
   }

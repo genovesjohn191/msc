@@ -6,7 +6,7 @@ import {
   McsApiRequestParameter,
   McsLoggerService
 } from '../../core';
-import { Portal } from './portal';
+import { Portal } from './models';
 
 @Injectable()
 export class ToolsService {

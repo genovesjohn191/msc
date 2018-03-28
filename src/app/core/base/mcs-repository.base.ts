@@ -30,7 +30,6 @@ export abstract class McsRepositoryBase<T> {
    * Get or Set the total records count of the entity
    */
   public get totalRecordsCount(): number { return this._totalRecordsCount; }
-  public set totalRecordsCount(value: number) { this._totalRecordsCount = value; }
   private _totalRecordsCount: number = 0;
 
   /**
@@ -127,7 +126,7 @@ export abstract class McsRepositoryBase<T> {
       (_first: any, _second: any) => {
         return _first.id === _second.id;
       });
-    this.totalRecordsCount += mergedArrays.length - this._dataRecords.length;
+    this._totalRecordsCount += mergedArrays.length - this._dataRecords.length;
     this._dataRecords = mergedArrays;
     this._notifyDataRecordsChanged();
   }
@@ -192,7 +191,9 @@ export abstract class McsRepositoryBase<T> {
     // Set flags where to obtain the data
     let displayedRecords = Math.min(pageSize * (pageIndex), this._totalRecordsCount);
     let dataRecordsLength = this.hasDataRecords ? this.dataRecords.length : 0;
-    let requestRecordsFromApi = displayedRecords > dataRecordsLength || !this.hasDataRecords;
+    let requestRecordsFromApi = displayedRecords === 0
+      || displayedRecords > dataRecordsLength
+      || !this.hasDataRecords;
     let requestRecordFromCache = !requestRecordsFromApi && fromCache;
 
     return requestRecordFromCache ?

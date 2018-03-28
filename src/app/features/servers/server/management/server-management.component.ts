@@ -31,8 +31,7 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsDialogService,
-  McsErrorHandlerService,
-  McsHttpStatusCode
+  McsErrorHandlerService
 } from '../../../../core';
 import {
   getEncodedUrl,
@@ -436,11 +435,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   private _getServerCompute(): void {
     this.computeSubscription = this._serversResourcesRespository
       .findResourceCompute(this.serverResource)
-      .catch((error) => {
-        // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
-        return Observable.throw(error);
-      })
       .subscribe(() => {
         // Subscribe to update the compute of the selected server resource
       });

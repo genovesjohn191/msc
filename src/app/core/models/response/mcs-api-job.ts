@@ -119,6 +119,9 @@ export class McsApiJob {
 
   /**
    * Returns the job link based on its job type
+   *
+   * TODO: Need to consider links based on status.
+   * Do we need to use base class and extend it?
    */
   public get link(): string {
     let jobLink: string;

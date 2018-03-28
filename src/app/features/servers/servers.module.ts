@@ -39,7 +39,7 @@ import {
   NewSelfManagedServerComponent,
   CopySelfManagedServerComponent,
   CloneSelfManagedServerComponent,
-  CreateServerDetailsComponent
+  ServerProvisioningPageComponent
 } from './create-server';
 /** VDC */
 import {
@@ -86,7 +86,7 @@ import { SharedModule } from '../../shared';
     NewSelfManagedServerComponent,
     CopySelfManagedServerComponent,
     CloneSelfManagedServerComponent,
-    CreateServerDetailsComponent,
+    ServerProvisioningPageComponent,
     ProvisioningNotificationsComponent,
     VdcComponent,
     VdcOverviewComponent,

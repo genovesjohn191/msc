@@ -1,8 +1,5 @@
 import { ChangeDetectorRef } from '@angular/core';
-import {
-  Observable,
-  Subscription
-} from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Rx';
 import {
   Server,
   ServerResource,
@@ -15,8 +12,7 @@ import { ServersRepository } from '../servers.repository';
 import { ServerService } from '../server/server.service';
 import {
   McsTextContentProvider,
-  McsErrorHandlerService,
-  McsHttpStatusCode
+  McsErrorHandlerService
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -159,17 +155,19 @@ export abstract class ServerDetailsBase {
    * Obtain server resources and set resource map
    */
   private _getServerResources(): void {
+    // TODO: Need to handle when error occured during the obtainment
+    // of resource. It could be an information beneath the server management tab
+    // or something like an error page. As of now we need to remove the catching of error
+    // in order to proceed with the server details while john is fixing the issue .::. 03282018
     unsubscribeSafely(this.serverResourceSubscription);
     this.serverResourceSubscription = this._serversResourcesRespository
       .findRecordById(this.server.platform.resourceId)
-      .catch((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.ServiceUnavailable);
-        return Observable.throw(error);
+      .finally(() => {
+        this.serverSelectionChanged();
+        this._changeDetectorRef.markForCheck();
       })
       .subscribe((resource) => {
         this.serverResource = resource;
-        this.serverSelectionChanged();
-        this._changeDetectorRef.markForCheck();
       });
   }
 

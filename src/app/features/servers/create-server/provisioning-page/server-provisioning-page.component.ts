@@ -14,7 +14,6 @@ import {
   Subscription,
   Observable
 } from 'rxjs';
-import {  } from 'rxjs/operators/catch';
 import {
   McsTextContentProvider,
   McsErrorHandlerService,
@@ -24,7 +23,7 @@ import {
   McsHttpStatusCode,
   McsDataStatusFactory
 } from '../../../../core';
-import { FeaturesService } from '../../../features.service';
+import { JobsApiService } from '../../../services';
 import {
   isNullOrEmpty,
   unsubscribeSafely
@@ -32,12 +31,12 @@ import {
 import { ContextualHelpDirective } from '../../../../shared';
 
 @Component({
-  selector: 'mcs-create-server-details',
-  templateUrl: 'create-server-details.component.html',
+  selector: 'mcs-server-provisioning-page',
+  templateUrl: 'server-provisioning-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CreateServerDetailsComponent implements OnInit, OnDestroy {
+export class ServerProvisioningPageComponent implements OnInit, OnDestroy {
 
   public textContent: any;
   public contextualTextContent: any;
@@ -59,7 +58,7 @@ export class CreateServerDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _textContentProvider: McsTextContentProvider,
-    private _featuresService: FeaturesService,
+    private _jobApiService: JobsApiService,
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -68,7 +67,7 @@ export class CreateServerDetailsComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers
-      .createServer.createServerDetails;
+      .createServer.serverProvisioningPage;
     this.contextualTextContent = this.textContent;
     this._getJobById();
   }
@@ -86,7 +85,7 @@ export class CreateServerDetailsComponent implements OnInit, OnDestroy {
     this.jobSubscription = this._activatedRoute.paramMap
       .switchMap((params: ParamMap) => {
         let jobId = params.get('id');
-        return this._featuresService.getJob(jobId);
+        return this._jobApiService.getJob(jobId);
       })
       .catch((error) => {
         // Handle common error status code
