@@ -96,7 +96,7 @@ export class NotificationsComponent
    * This will navigate to specified link, otherwise do nothing
    * @param url Url to be navigated
    */
-  public navigateTo(url: string): void {
+  public tryNavigateTo(url: string): void {
     if (isNullOrEmpty(url)) { return; }
     this._router.navigate([url]);
   }

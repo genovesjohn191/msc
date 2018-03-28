@@ -17,7 +17,7 @@ import {
   TicketAttachment,
   TicketCreate,
   TicketCreateComment,
-  TicketComment,
+  TicketComment
 } from './models';
 import {
   Server,

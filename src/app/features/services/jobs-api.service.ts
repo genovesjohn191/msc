@@ -6,11 +6,11 @@ import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
   McsLoggerService
-} from '../core';
-import { isNullOrEmpty } from '../utilities';
+} from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()
-export class FeaturesService {
+export class JobsApiService {
 
   constructor(
     private _apiService: McsApiService,

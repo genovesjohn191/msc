@@ -11,7 +11,7 @@ import { HttpErrorPageModule } from './http-error-page/http-error-page.module';
 import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.module';
 
 /** Service */
-import { FeaturesService } from './features.service';
+import { JobsApiService } from './services';
 
 @NgModule({
   imports: [
@@ -27,7 +27,7 @@ import { FeaturesService } from './features.service';
     AccessDeniedPageModule
   ],
   providers: [
-    FeaturesService
+    JobsApiService
   ]
 })
 

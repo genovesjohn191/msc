@@ -21,7 +21,7 @@ import {
 } from './server';
 import {
   CreateSelfManagedServersComponent,
-  CreateServerDetailsComponent
+  ServerProvisioningPageComponent
 } from './create-server';
 import {
   VdcComponent,
@@ -59,7 +59,7 @@ export const serversRoutes: Routes = [
   },
   {
     path: 'servers/create/:id',
-    component: CreateServerDetailsComponent
+    component: ServerProvisioningPageComponent
   },
   {
     path: 'servers/:id',

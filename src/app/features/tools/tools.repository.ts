@@ -5,7 +5,7 @@ import {
   McsApiSuccessResponse
 } from '../../core';
 import { ToolsService } from './tools.service';
-import { Portal } from './portal';
+import { Portal } from './models';
 import { isNullOrEmpty } from 'app/utilities';
 
 @Injectable()

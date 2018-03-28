@@ -5,10 +5,12 @@ $notification-panel-max-width: 400px;
 $notification-panel-content-margin-size: 7px;
 // Notification panel state change settings
 $notification-panel-statechange-bg-color: rgba($color-black, 0.87);
+$notification-panel-statechange-hover-bg-color: rgba($color-black, 0.9);
 $notification-panel-statechange-border-color: $color-grey-05;
 $notification-panel-statechange-color: $dark-bg-text-color;
 // Notification panel running settings
 $notification-panel-running-bg-color: $color-white;
+$notification-panel-running-hover-bg-color: $color-grey-07;
 $notification-panel-running-color: $light-bg-text-color;
 
 .notification-panel-wrapper {
@@ -21,6 +23,10 @@ $notification-panel-running-color: $light-bg-text-color;
     .notification-panel-content-wrapper {
       color: $notification-panel-running-color;
       background-color: $notification-panel-running-bg-color;
+
+      &:hover {
+        background-color: $notification-panel-running-hover-bg-color;
+      }
     }
   }
 
@@ -29,6 +35,10 @@ $notification-panel-running-color: $light-bg-text-color;
       color: $notification-panel-statechange-color;
       border: 1px solid $notification-panel-statechange-border-color;
       background-color: $notification-panel-statechange-bg-color;
+
+      &:hover {
+        background-color: $notification-panel-statechange-hover-bg-color;
+      }
     }
   }
 }

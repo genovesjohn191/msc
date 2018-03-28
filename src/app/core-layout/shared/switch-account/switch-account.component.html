@@ -43,7 +43,7 @@
           <div read-only class="space-between-inline-items">
             <span>Company Accounts</span>
             <span *ngIf="dataStatus === dataStatusEnum.Success">
-              {{ filteredRecordCount }}/{{ totalRecordCount }}
+              {{ filteredRecordCount }}/{{ totalRecordsCount }}
             </span>
           </div>
         </ng-container>
@@ -78,7 +78,7 @@
       <!-- Paginator that displays when data obtainment was success -->
       <mcs-paginator #paginator
         [hidden]="dataStatus !== dataStatusEnum.Success"
-        [totalCount]="totalRecordCount"
+        [totalCount]="totalRecordsCount"
         [pageIndex]="0"
         [pageSize]="20">
       </mcs-paginator>

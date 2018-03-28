@@ -86,8 +86,8 @@ export class ServersListSource implements McsDataSource<ServerList> {
    * Map servers to server list to display in list-panel
    * @param servers Servers to map
    */
-  private _mapToServerList(servers: Server[]): ServerList[] {
-    if (isNullOrEmpty(servers)) { return new Array(); }
+  private _mapToServerList(servers: Server[]): void {
+    if (isNullOrEmpty(servers)) { return; }
 
     // We need to check again if there are added or deleted
     // to notify the list panel that a data should be refreshed
@@ -122,6 +122,5 @@ export class ServersListSource implements McsDataSource<ServerList> {
         }
       });
     }
-    return this._serverList;
   }
 }

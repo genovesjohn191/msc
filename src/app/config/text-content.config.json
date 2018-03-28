@@ -159,7 +159,7 @@
         "errorMessageServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
         "fullStorageSpace": "This server cannot be created due to insufficient storage space ({{remaining_memory}} remaining)."
       },
-      "createServerDetails": {
+      "serverProvisioningPage": {
         "header": "Create server status",
         "leftPanelHeader": "New server",
         "creationDetails": "Creation details",

@@ -103,7 +103,7 @@
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           cursor="pointer"
           [triggerCursorIf]="row.link"
-          (click)="navigateTo(row.link)"></mcs-data-row>
+          (click)="tryNavigateTo(row.link)"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->
