@@ -172,7 +172,7 @@ export abstract class McsRepositoryBase<T> {
     let isSearching = !isNullOrEmpty(search) && search.searching
       || !isNullOrEmpty(search) && compareStrings(this._previouslySearched, search.keyword) !== 0;
     if (isSearching) {
-      page.pageIndex = 0;
+      this._resetPaging(page);
       this._clearCacheData();
     }
 
@@ -322,5 +322,14 @@ export abstract class McsRepositoryBase<T> {
    */
   private _notifyAfterDataObtained(): void {
     this.afterDataObtained();
+  }
+
+  /**
+   * Reset repository paging
+   * @param paginator
+   */
+  private _resetPaging(paginator: McsPaginator): void {
+    if (isNullOrEmpty(paginator)) { return; }
+    paginator.pageIndex = 0;
   }
 }
