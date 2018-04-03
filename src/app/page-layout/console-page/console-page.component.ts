@@ -17,7 +17,8 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  replacePlaceholder
 } from '../../utilities';
 import {
   McsTextContentProvider,
@@ -43,13 +44,15 @@ const OTHER_ELEMENT_WIDTH = 0;
 const OTHER_ELEMENT_HEIGHT = 44;
 const BROWSER_WIDTH = 18;
 const BROWSER_HEIGHT = 60;
+const CLOSING_DEFAULT_TIME_IN_SECONDS = 3;
 
 enum VmConsoleStatus {
   Error = -1,
   None = 0,
   Connecting = 1,
   Connected = 2,
-  Disconnected = 3
+  Disconnected = 3,
+  Closing = 4
 }
 
 @Component({
@@ -68,6 +71,8 @@ enum VmConsoleStatus {
 export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
+  public stopping: boolean;
+  public closingTime: number;
 
   @ViewChild('consoleUiElement')
   public consoleUiElement: ElementRef;
@@ -91,6 +96,11 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public get stopIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STOP;
+  }
+
+  public get stoppingText(): string {
+    return replacePlaceholder(this.textContent.stopping,
+      'timer', this.closingTime.toString());
   }
 
   /**
@@ -136,6 +146,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     this.consoleStatus = VmConsoleStatus.None;
+    this.closingTime = CLOSING_DEFAULT_TIME_IN_SECONDS;
   }
 
   public ngOnInit() {
@@ -173,6 +184,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   public executeServerCommand(action: ServerCommand): void {
     if (isNullOrEmpty(action)) { return; }
+    this.stopping = action === ServerCommand.Stop;
     this._serversService.executeServerCommand({ server: this.server }, action);
   }
 
@@ -319,6 +331,13 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _serverStatusChanged(): void {
     if (isNullOrEmpty(this.server)) { return; }
+    let closeConsoleWindow = this.stopping && this.server.isPoweredOff;
+    if (closeConsoleWindow) {
+      this.consoleStatus = VmConsoleStatus.Closing;
+      setInterval(this._closeWindow.bind(this), 1000);
+      return;
+    }
+
     // Set disconnected when server is powered of
     if (!this.server.isPoweredOn) {
       this.consoleStatus = VmConsoleStatus.Disconnected;
@@ -327,6 +346,18 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     // Reconnect vm console when server is disconnected
     this._reconnectVmConsole();
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Close the window within the specified time
+   */
+  private _closeWindow(): void {
+    if (this.closingTime > 0) {
+      --this.closingTime;
+      this._changeDetectorRef.markForCheck();
+      return;
+    }
+    window.close();
   }
 
   /**

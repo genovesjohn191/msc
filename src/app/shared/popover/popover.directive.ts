@@ -12,6 +12,13 @@ import {
   EventEmitter
 } from '@angular/core';
 import {
+  Router,
+  // import as RouterEvent to avoid confusion with the DOM Event
+  Event as RouterEvent,
+  NavigationEnd
+} from '@angular/router';
+import { Subscription } from 'rxjs';
+import {
   McsScrollDispatcherService,
   McsOverlayService,
   McsOverlayRef,
@@ -71,7 +78,8 @@ export class PopoverDirective implements OnInit, OnDestroy {
 
   // Others
   public componentRef: ComponentRef<PopoverComponent>;
-  public zoneSubscription: any;
+  public zoneSubscription: Subscription;
+  private _routerSubscription: Subscription;
   private _overlayRef: McsOverlayRef;
 
   /**
@@ -85,6 +93,7 @@ export class PopoverDirective implements OnInit, OnDestroy {
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
     private _ngZone: NgZone,
+    private _router: Router,
     private _scrollDispatcher: McsScrollDispatcherService,
     private _overlayService: McsOverlayService,
     private _popoverService: PopoverService
@@ -118,12 +127,14 @@ export class PopoverDirective implements OnInit, OnDestroy {
   public ngOnInit() {
     // Register all events listener
     this._registerEvents();
+    this._listenToRouterEvents();
   }
 
   public ngOnDestroy() {
     this._unregisterEvents();
     this.close();
     unsubscribeSafely(this.zoneSubscription);
+    unsubscribeSafely(this._routerSubscription);
   }
 
   public open() {
@@ -383,5 +394,17 @@ export class PopoverDirective implements OnInit, OnDestroy {
   private _removeActivePopover(): void {
     if (isNullOrEmpty(this._popoverService.activePopover)) { return; }
     this._popoverService.activePopover.close();
+  }
+
+  /**
+   * Listen to every route changed to close the dialog itself
+   */
+  private _listenToRouterEvents(): void {
+    this._routerSubscription = this._router.events
+      .subscribe((event: RouterEvent) => {
+        if (event instanceof NavigationEnd) {
+          this.close();
+        }
+      });
   }
 }

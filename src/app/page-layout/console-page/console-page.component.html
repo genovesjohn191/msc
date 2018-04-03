@@ -16,6 +16,13 @@
       </div>
     </ng-container>
 
+    <!-- Closing state -->
+    <ng-container *ngSwitchCase="vmConsoleStatusEnum.Closing">
+      <div class="console-message">
+        <span [innerHTML]="stoppingText"></span>
+      </div>
+    </ng-container>
+
     <!-- Error state -->
     <ng-container *ngSwitchCase="vmConsoleStatusEnum.Error">
       <div class="console-message">
@@ -32,14 +39,6 @@
       <div class="inline-items-small console-buttons right-align">
 
         <div class="console-button-command-action">
-          <!-- Start -->
-          <mcs-icon [key]="startIconKey" size="small"
-            [disabled]="!server?.startable"
-            [mcsTooltip]="textContent.start"
-            mcsTooltipPosition="left"
-            cursor="pointer"
-            (click)="executeServerCommand(serverCommandEnum.Start)"></mcs-icon>
-
           <!-- Stop -->
           <mcs-icon [key]="stopIconKey" size="small"
             [disabled]="!server?.stoppable"

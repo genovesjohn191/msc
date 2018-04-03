@@ -142,10 +142,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Navigate to notifications page to see all the jobs
    */
   public viewNotificationsPage(): void {
-    if (this.notificationsPopover) { this.notificationsPopover.close(); }
-    refreshView(() => {
-      this._router.navigate(['./notifications']);
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
+    this._router.navigate(['./notifications']);
   }
 
   /**

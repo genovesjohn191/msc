@@ -6,6 +6,7 @@
     "stop": "Stop",
     "restart": "Restart",
     "disconnectedMessage": "Console disconnected. Attempting to reconnect...",
+    "stopping": "Window will close in <strong>{{timer}}</strong>.",
     "errorMessage": "Console connection error."
   },
   "navigation": {
@@ -90,6 +91,7 @@
     "createServer": {
       "selfManagedServer": {
         "header": "Create a New Server",
+        "description": "Your server is deploying and will be available shortly. You can track progress from notifications menu at the top of the portal.",
         "backToServers": "Back To Servers",
         "computeSizeLabel": "Compute Size",
         "storageLabel": "Storage",
@@ -137,7 +139,6 @@
           "networkField": "Select the network to create a primary network interface for your server.",
           "ipAddressField": "Select a method for acquiring the server's private IP address. Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
           "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
-          "provisioningNotifications": "We're currently deploying your server. Your server will be ready in a few minutes. Browsing to another page will not affect your server build. You can track progress from notifications area at the top of the portal.",
           "quickNavigateToCreatedServer": "You can go back to server listing page to view your newly created server",
           "backToListing": "This link would take you back to your server listing page"
         },
@@ -161,13 +162,13 @@
       },
       "serverProvisioningPage": {
         "header": "Create server status",
+        "description": "Your server is deploying and will be available shortly. You can track progress from notifications menu at the top of the portal.",
         "leftPanelHeader": "New server",
         "creationDetails": "Creation details",
         "serverHeader": "Server",
         "noJob": "There are no Job to display for this server.",
         "loadingJob": "Loading server creation details.",
-        "errorGettingJob": "Sorry, something’s not right. We weren’t able to retrieve the creation details of the server.",
-        "provisioningNotifications": "We're currently deploying your server. Your server will be ready in a few minutes. Browsing to another page will not affect your server build. You can track progress from notifications area at the top of the portal."
+        "errorGettingJob": "Sorry, something’s not right. We weren’t able to retrieve the creation details of the server."
       }
     },
     "server": {
