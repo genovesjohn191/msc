@@ -115,6 +115,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   public ngDoCheck() {
     let changes = this._jobsDiffer.diff(this.jobs);
     if (!isNullOrEmpty(changes)) {
+      this._resetJob();
       this._updateProgressbarRealTimeAsync();
     }
   }
@@ -277,6 +278,15 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    */
   private _endTimer(progressValue: number): void {
     this.progressValue = progressValue;
+    unsubscribeSafely(this._timerSubscription);
+  }
+
+  /**
+   * Reset job instance to re-calculate the progressbar status
+   */
+  private _resetJob(): void {
+    this.progressValue = 0;
+    this.progressMax = 0;
     unsubscribeSafely(this._timerSubscription);
   }
 }

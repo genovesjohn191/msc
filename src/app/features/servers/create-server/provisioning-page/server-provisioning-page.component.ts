@@ -39,7 +39,6 @@ import { ContextualHelpDirective } from '../../../../shared';
 export class ServerProvisioningPageComponent implements OnInit, OnDestroy {
 
   public textContent: any;
-  public contextualTextContent: any;
 
   @ViewChildren(ContextualHelpDirective)
   public contextualHelpDirectives;
@@ -68,7 +67,6 @@ export class ServerProvisioningPageComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers
       .createServer.serverProvisioningPage;
-    this.contextualTextContent = this.textContent;
     this._getJobById();
   }
 

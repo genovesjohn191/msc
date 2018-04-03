@@ -14,7 +14,7 @@
     <mcs-data-status [dataStatusFactory]="dataStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
         <div class="limited-view">
-          <p>{{ contextualTextContent.provisioningNotifications }}</p>
+          <p>{{ textContent.description }}</p>
           <ng-container *ngIf="job">
             <mcs-provisioning-notifications [jobs]="[job]"></mcs-provisioning-notifications>
           </ng-container>
