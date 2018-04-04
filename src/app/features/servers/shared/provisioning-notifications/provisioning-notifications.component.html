@@ -4,9 +4,11 @@
     <div class="provisioning-notifications-container">
       <!-- Progress Information -->
       <div class="vertical-items-spacing-medium">
+        <ng-content *ngIf="hasInProgressJob" select="[mcsProvisioningText]"></ng-content>
         <h4 class="title">{{ getTitle() }}</h4>
-        <mcs-progress-bar [hidden]="allJobsCompleted" animate [trigger]="animateTrigger"
-          [(ngModel)]="progressValue" [maxValue]="progressMax"></mcs-progress-bar>
+        <mcs-progress-bar [hidden]="allJobsCompleted || !isVisibleProgressBar"
+          animate [trigger]="animateTrigger" [(ngModel)]="progressValue"
+          [maxValue]="progressMax"></mcs-progress-bar>
       </div>
 
       <!-- Job Details -->
