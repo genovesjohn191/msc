@@ -64,6 +64,20 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
     }
   }
 
+  /**
+   * Returns true when progress bar needs to be visile
+   */
+  private _isVisibleProgressBar: boolean;
+  public get isVisibleProgressBar(): boolean {
+    return this._isVisibleProgressBar;
+  }
+  public set isVisibleProgressBar(value: boolean) {
+    if (this._isVisibleProgressBar !== value) {
+      this._isVisibleProgressBar = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
   // Subscription
   private _timerSubscription: any;
   private _jobsSubscription: Subscription;
@@ -104,6 +118,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
     this.progressMax = 0;
     this.animateTrigger = 'fadeIn';
     this._jobsDiffer = this._iterableDiffers.find([]).create(null);
+    this.isVisibleProgressBar = false;
   }
 
   public ngOnInit() {
@@ -143,6 +158,13 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
       return job.dataStatus === McsDataStatus.Error;
     });
     return !isNullOrEmpty(errorJob) && this.hasJobs;
+  }
+
+  /**
+   * Returns true when there is ongoing job
+   */
+  public get hasInProgressJob(): boolean {
+    return !this.allJobsCompleted && !this.hasErrorJobs;
   }
 
   /**
@@ -243,7 +265,11 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
     this._jobsSubscription = this._notificationsEvents.currentUserJob
       .subscribe((job) => {
         let inProgressJob = isNullOrEmpty(job) || job.dataStatus === McsDataStatus.InProgress;
-        if (inProgressJob) { return; }
+        if (inProgressJob) {
+          this.isVisibleProgressBar = inProgressJob;
+          return;
+        }
+
         // Update the existing job
         addOrUpdateArrayRecord(this.jobs, job, true,
           (_existingJob: McsApiJob) => _existingJob.id === job.id);
@@ -251,6 +277,8 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
         // Exit progressbar
         if (this.allJobsCompleted) { this._removeProgressbar(McsDataStatus.Success); }
         if (this.hasErrorJobs) { this._removeProgressbar(McsDataStatus.Error); }
+
+        this._changeDetectorRef.markForCheck();
       });
   }
 

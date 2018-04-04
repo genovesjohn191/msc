@@ -45,8 +45,9 @@
   <!-- Step 2  -->
   <mcs-wizard-step [stepTitle]="textContent.serverGoStep.title">
     <div class="limited-view">
-      <p>{{ textContent.description }}</p>
-      <mcs-provisioning-notifications [jobs]="notifications"></mcs-provisioning-notifications>
+      <mcs-provisioning-notifications [jobs]="notifications">
+        <p mcsProvisioningText>{{ textContent.description }}</p>
+      </mcs-provisioning-notifications>
     </div>
   </mcs-wizard-step>
 </mcs-wizard>
