@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** Components/Services */
 import { ContextualHelpComponent } from './contextual-help.component';
 import { ContextualHelpDirective } from './contextual-help.directive';
 
@@ -15,7 +14,8 @@ import { ContextualHelpDirective } from './contextual-help.directive';
   exports: [
     ContextualHelpComponent,
     ContextualHelpDirective
-  ]
+  ],
+  entryComponents: [ContextualHelpComponent]
 })
 
 export class ContextualHelpModule { }

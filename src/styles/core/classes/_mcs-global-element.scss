@@ -1,0 +1,14 @@
+.mcs-global-element-wrapper {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.mcs-global-element-item {
+  @include display-flex(row);
+  pointer-events: auto;
+  position: absolute;
+}

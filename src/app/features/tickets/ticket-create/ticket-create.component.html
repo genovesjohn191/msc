@@ -21,149 +21,138 @@
 
     <p [innerHTML]="textContent.description"></p>
 
-    <div class="contextual-help-page-wrapper" #createContent>
-      <!-- Create ticket details -->
-      <div class="page-information-wrapper limited-view">
-        <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">
+    <div class="contextual-help-page-wrapper limited-view" #createContent>
+      <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">
+        <!-- Ticket Type -->
+        <div class="field">
+          <mcs-form-field>
+            <mcs-select id="type" [placeholder]="textContent.placeholders.type"
+              [formControl]="fcType" set-focus required
+              [mcsContextualHelp]="contextualContent.type">
+              <mcs-select-group header="Ticket Type">
+                <mcs-select-item *ngFor="let ticketType of ticketTypeList"
+                  [value]="ticketType.value">
+                  {{ ticketType.text }}
+                </mcs-select-item>
+              </mcs-select-group>
+            </mcs-select>
 
-          <!-- Ticket Type -->
-          <div class="field">
-            <mcs-form-field>
-              <mcs-select id="type" [placeholder]="textContent.placeholders.type"
-                [formControl]="fcType" set-focus required
-                [mcsContextualHelp]="contextualContent.type">
-                <mcs-select-group header="Ticket Type">
-                  <mcs-select-item *ngFor="let ticketType of ticketTypeList"
-                    [value]="ticketType.value">
-                    {{ ticketType.text }}
-                  </mcs-select-item>
-                </mcs-select-group>
-              </mcs-select>
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.typeRequired }}
+            </mcs-error>
+          </mcs-form-field>
+        </div>
 
-              <mcs-error mcsError errorState="required">
-                {{ textContent.errors.typeRequired }}
-              </mcs-error>
-            </mcs-form-field>
-          </div>
-
-
-          <!-- Summary -->
-          <div class="field">
-            <mcs-form-field>
-              <input mcsInput #summaryInput required
-                [placeholder]="textContent.placeholders.summary" maxlength="80"
-                [formControl]="fcSummary"
-                [mcsContextualHelp]="contextualContent.summary">
-
-                <mcs-hint mcsHint align="start">
-                  {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
-                </mcs-hint>
-                <mcs-hint mcsHint align="end">
-                  {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
-                </mcs-hint>
-                <mcs-error mcsError errorState="required">
-                  {{ textContent.errors.summaryRequired }}
-                </mcs-error>
-            </mcs-form-field>
-          </div>
-
-          <!-- Details -->
-          <div class="field">
-            <mcs-form-field>
-              <textarea mcsInput rows="3" #detailsInput required
-                [placeholder]="textContent.placeholders.details" maxlength="4000"
-                [formControl]="fcDetails"
-                [mcsContextualHelp]="contextualContent.details"></textarea>
+        <!-- Summary -->
+        <div class="field">
+          <mcs-form-field>
+            <input mcsInput #summaryInput required
+              [placeholder]="textContent.placeholders.summary" maxlength="80"
+              [formControl]="fcSummary"
+              [mcsContextualHelp]="contextualContent.summary">
 
               <mcs-hint mcsHint align="start">
-                {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
+                {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
               </mcs-hint>
               <mcs-hint mcsHint align="end">
-                {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
+                {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
               </mcs-hint>
               <mcs-error mcsError errorState="required">
-                {{ textContent.errors.detailsRequired }}
+                {{ textContent.errors.summaryRequired }}
               </mcs-error>
-            </mcs-form-field>
-          </div>
+          </mcs-form-field>
+        </div>
 
-          <!-- Services -->
-          <div class="field">
-            <h4 class="space-bottom-small">{{ textContent.services }}</h4>
-            <div class="item">
-              <ng-container *ngIf="services">
+        <!-- Details -->
+        <div class="field">
+          <mcs-form-field>
+            <textarea mcsInput rows="3" #detailsInput required
+              [placeholder]="textContent.placeholders.details" maxlength="4000"
+              [formControl]="fcDetails"
+              [mcsContextualHelp]="contextualContent.details"></textarea>
 
-                <div display-flex="row" align-items="flex-start">
-                  <!-- Tags -->
-                  <mcs-form-field flex="auto">
-                    <mcs-tag-list [placeholder]="textContent.placeholders.services"
-                      [formControl]="fcService">
+            <mcs-hint mcsHint align="start">
+              {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
+            </mcs-hint>
+            <mcs-hint mcsHint align="end">
+              {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
+            </mcs-hint>
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.detailsRequired }}
+            </mcs-error>
+          </mcs-form-field>
+        </div>
 
-                      <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
-                        [selectable]="true" [removable]="true"
-                        (removed)="selectService.removeSubSelection(subItem)">
-                        {{ subItem.text }}
-                      </mcs-tag>
-                    </mcs-tag-list>
+        <!-- Services -->
+        <div class="field">
+          <h4 class="space-bottom-small">{{ textContent.services }}</h4>
+          <div class="item">
+            <ng-container *ngIf="services">
 
-                    <mcs-error mcsError errorState="required">
-                      {{ textContent.errors.servicesRequired }}
-                    </mcs-error>
-                  </mcs-form-field>
+              <div display-flex="row" align-items="flex-start">
+                <!-- Tags -->
+                <mcs-form-field flex="auto">
+                  <mcs-tag-list [placeholder]="textContent.placeholders.services"
+                    [formControl]="fcService">
 
-                  <!-- Icon trigger -->
-                  <div cursor="pointer" id="ctaSelectService"
-                    class="space-left-small space-top-small" flex="none"
-                    (click)="servicePanelOpen = !servicePanelOpen" #trigger>
-                    <mcs-icon [key]="toggleIconKey"></mcs-icon>
-                    <mcs-ripple class="icon-ripple-wrapper"
-                      mcsRipple
-                      [rippleTrigger]="trigger"
-                      [rippleCentered]="true">
-                    </mcs-ripple>
-                  </div>
+                    <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
+                      [selectable]="true" [removable]="true"
+                      (removed)="selectService.removeSubSelection(subItem)">
+                      {{ subItem.text }}
+                    </mcs-tag>
+                  </mcs-tag-list>
+
+                  <mcs-error mcsError errorState="required">
+                    {{ textContent.errors.servicesRequired }}
+                  </mcs-error>
+                </mcs-form-field>
+
+                <!-- Icon trigger -->
+                <div cursor="pointer" id="ctaSelectService"
+                  class="space-left-small space-top-small" flex="none"
+                  (click)="servicePanelOpen = !servicePanelOpen" #trigger>
+                  <mcs-icon [key]="toggleIconKey"></mcs-icon>
+                  <mcs-ripple class="icon-ripple-wrapper"
+                    mcsRipple
+                    [rippleTrigger]="trigger"
+                    [rippleCentered]="true">
+                  </mcs-ripple>
                 </div>
+              </div>
 
-                <mcs-select-tag #selectService [hidden]="!servicePanelOpen" class="padding-small"
-                  (selectionChanged)="serviceItemSelectionChanged($event)">
-                  <mcs-select-tag-main-item *ngFor="let service of services"
-                    [header]="service.serviceName">
+              <mcs-select-tag #selectService [hidden]="!servicePanelOpen" class="padding-small"
+                (selectionChanged)="serviceItemSelectionChanged($event)">
+                <mcs-select-tag-main-item *ngFor="let service of services"
+                  [header]="service.serviceName">
 
-                    <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
-                      [searchKey]="item.name" [value]="item">
-                      {{ item.name }}
-                    </mcs-select-tag-sub-item>
-                  </mcs-select-tag-main-item>
-                </mcs-select-tag>
-              </ng-container>
-            </div>
+                  <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
+                    [searchKey]="item.name" [value]="item">
+                    {{ item.name }}
+                  </mcs-select-tag-sub-item>
+                </mcs-select-tag-main-item>
+              </mcs-select-tag>
+            </ng-container>
           </div>
-        </form>
-
-        <!-- Attachments -->
-        <div>
-          <h4 class="space-bottom-small">{{ textContent.attachments }}</h4>
-          <mcs-attachment attachedLimit="multiple"
-            [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
-            (attachedFilesChanged)="onChangedAttachments($event)"
-            [mcsContextualHelp]="contextualContent.attachments">
-          </mcs-attachment>
         </div>
+      </form>
 
-        <!-- Ticket Action -->
-        <div class="space-between-inline-items">
-          <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
-
-          <button mcsButton id="ctaNewTicket" arrow="right" (click)="onLogTicket()">
-            {{ textContent.newTicket }}
-          </button>
-        </div>
+      <!-- Attachments -->
+      <div>
+        <h4 class="space-bottom-small">{{ textContent.attachments }}</h4>
+        <mcs-attachment attachedLimit="multiple"
+          [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
+          (attachedFilesChanged)="onChangedAttachments($event)"
+          [mcsContextualHelp]="contextualContent.attachments">
+        </mcs-attachment>
       </div>
 
-      <!-- Create ticket contextual help -->
-      <div class="contextual-information-wrapper">
-        <mcs-contextual-help
-          [contextualInformations]="contextualHelp"></mcs-contextual-help>
+      <!-- Ticket Action -->
+      <div class="space-between-inline-items">
+        <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
+
+        <button mcsButton id="ctaNewTicket" arrow="right" (click)="onLogTicket()">
+          {{ textContent.newTicket }}
+        </button>
       </div>
     </div>
   </mcs-content-panel>

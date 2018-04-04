@@ -39,6 +39,7 @@ import {
   unsubscribeSafely
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
+import { selectAnimations } from './select.animations';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -51,6 +52,10 @@ let nextUniqueId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     { provide: McsFormFieldControlBase, useExisting: SelectComponent }
+  ],
+  animations: [
+    selectAnimations.transformPanel,
+    selectAnimations.fadeInContent
   ],
   host: {
     'class': 'select-wrapper',

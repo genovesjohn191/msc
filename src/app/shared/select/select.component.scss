@@ -5,14 +5,15 @@ $select-trigger-default-padding: $space-small $space-medium;
 $select-trigger-small-padding: 0 $space-xsmall;
 $select-trigger-border-color: $color-black;
 $select-trigger-border-radius: $border-radius-small;
-// Select group container
-$select-group-container-bg-color: $color-white;
-$select-group-container-border-color: $color-grey-03;
-$select-group-container-border-radius: $border-radius-small;
-$select-group-container-padding: $space-small;
+// Select group panel
+$select-group-panel-wrapper-max-height: 400px;
+$select-group-panel-bg-color: $color-white;
+$select-group-panel-border-color: $color-grey-03;
+$select-group-panel-border-radius: $border-radius-small;
+$select-group-panel-padding: $space-small;
 // Select group wrapper
 $select-group-wrapper-padding: $space-small 0;
-$select-group-wrapper-border-color: $select-group-container-border-color;
+$select-group-wrapper-border-color: $select-group-panel-border-color;
 // Select Item
 $select-item-min-width: 100px;
 $select-item-padding: $space-xsmall $space-small;
@@ -22,12 +23,11 @@ $select-sub-group-padding: $space-small;
 $select-sub-group-bg-color: $color-white;
 $select-sub-group-border-color: $color-grey-03;
 $select-sub-group-box-shadow: $color-black;
-$select-sub-group-max-height: 500px;
+$select-sub-group-max-height: 400px;
 // Select sub-group mobile
 $select-sub-group-mobile-offset: $space-xlarge;
 
 .select-wrapper {
-  position: relative;
   display: block;
   width: 100%;
   outline: none;
@@ -51,15 +51,15 @@ $select-sub-group-mobile-offset: $space-xlarge;
   }
 }
 
-.select-group-container {
+.select-group-panel-wrapper {
+  background-color: $select-group-panel-bg-color;
+  border: 1px solid $select-group-panel-border-color;
   position: absolute;
   width: 100%;
-  background-color: $select-group-container-bg-color;
-  border: 1px solid $select-group-container-border-color;
-  @include border-radius($select-group-container-border-radius);
-  padding: $select-group-container-padding;
+  @include border-radius($select-group-panel-border-radius);
+  padding: $select-group-panel-padding;
   z-index: $zindex-select;
-
+  transform-origin: 50% 24px 0px;
   @include box-shadow((
     0 2px 4px -1px rgba($select-sub-group-box-shadow, 0.2),
     0 4px 5px 0 rgba($select-sub-group-box-shadow, 0.14),

@@ -42,7 +42,6 @@ export class TooltipDirective implements OnInit, OnDestroy {
    * Tooltip message to be displayed
    */
   @Input('mcsTooltip')
-
   public get message(): string {
     return this._message;
   }

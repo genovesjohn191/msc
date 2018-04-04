@@ -15,6 +15,7 @@ export * from './services/mcs-browser.service';
 export * from './services/mcs-notification-job.service';
 export * from './services/mcs-notification-context.service';
 export * from './services/mcs-notification-events.service';
+export * from './services/mcs-global-element.service';
 export * from './services/mcs-overlay.service';
 export * from './services/mcs-dialog.service';
 export * from './services/mcs-scroll-dispatcher.service';
@@ -79,6 +80,8 @@ export * from './services/google-analytics-events.service';
 /** Factory */
 export * from './factory/dialog/mcs-dialog-ref';
 export * from './factory/dialog/mcs-dialog-config';
+export * from './factory/global-element/mcs-global-element-ref';
+export * from './factory/global-element/mcs-global-element-option';
 export * from './factory/overlay/mcs-overlay-ref';
 export * from './factory/overlay/mcs-overlay-state';
 export * from './factory/portal/mcs-portal-component';

@@ -1,10 +1,8 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
   OnDestroy,
   ViewChild,
-  ViewChildren,
   Injector,
   ComponentFactoryResolver,
   ViewContainerRef,
@@ -30,14 +28,11 @@ import {
   McsDataStatusFactory
 } from '../../../../core';
 import {
-  mergeArrays,
-  refreshView,
   isNullOrEmpty,
   replacePlaceholder,
   unsubscribeSafely,
   removeAllChildren
 } from '../../../../utilities';
-import { ContextualHelpDirective } from '../../../../shared';
 import {
   ServerGroupedOs,
   ServerOperatingSystem,
@@ -50,10 +45,10 @@ import {
   ServerServiceType,
   ServerCreateType
 } from '../../models';
-import { CreateSelfManagedServersService } from './create-self-managed-servers.service';
 import {
   CreateSelfManagedServerComponent
 } from './create-self-managed-server/create-self-managed-server.component';
+import { ServersService } from '../../servers.service';
 import { ServersResourcesRespository } from '../../servers-resources.repository';
 
 @Component({
@@ -68,15 +63,11 @@ import { ServersResourcesRespository } from '../../servers-resources.repository'
 
 export class CreateSelfManagedServersComponent implements
   OnInit,
-  AfterViewInit,
   OnDestroy,
   McsSafeToNavigateAway {
 
   @ViewChild('selfManagedServersElement')
   public selfManagedServersElement: ElementRef;
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives;
 
   public contextualTextContent: any;
   public textContent: any;
@@ -104,7 +95,6 @@ export class CreateSelfManagedServersComponent implements
   private _resourcesSubscription: Subscription;
   private _contextulHelpSubscription: Subscription;
   private _notificationsSubscription: Subscription;
-  private _mainContextInformations: ContextualHelpDirective[];
 
   /**
    * Server resources data mapping
@@ -161,7 +151,7 @@ export class CreateSelfManagedServersComponent implements
   }
 
   public constructor(
-    private _createSelfManagedServices: CreateSelfManagedServersService,
+    private _serversService: ServersService,
     private _serversResourceRepository: ServersResourcesRespository,
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
@@ -177,7 +167,6 @@ export class CreateSelfManagedServersComponent implements
     this.vdcList = new Array();
     this.provisioningStatusFactory = new McsDataStatusFactory();
 
-    this._mainContextInformations = new Array();
     this._serversOs = new Array();
     this._serverResourceMap = new Map<string, ServerResource>();
   }
@@ -189,7 +178,7 @@ export class CreateSelfManagedServersComponent implements
 
     // Get all the data from api in parallel
     this.obtainDataSubscription = Observable.forkJoin([
-      this._createSelfManagedServices.getServersOs(),
+      this._serversService.getServerOs(),
       this._serversResourceRepository.findAllRecords()
     ])
       .catch((error) => {
@@ -206,20 +195,6 @@ export class CreateSelfManagedServersComponent implements
     this.obtainDataSubscription.add(() => {
       this._initializeData();
       this._changeDetectorRef.markForCheck();
-    });
-
-    // Listen to contextual helps and notifications
-    this._listenToContextualHelp();
-  }
-
-  public ngAfterViewInit() {
-    refreshView(() => {
-      if (this.contextualHelpDirectives) {
-        this._mainContextInformations = this.contextualHelpDirectives
-          .map((description) => {
-            return description;
-          });
-      }
     });
   }
 
@@ -272,14 +247,6 @@ export class CreateSelfManagedServersComponent implements
   }
 
   /**
-   * Get all the contextual helps including the child components
-   */
-  public getAllContextualInformations() {
-    return mergeArrays(this._mainContextInformations,
-      this._createSelfManagedServices.subContextualHelp);
-  }
-
-  /**
    * Go to servers page
    */
   public gotoServers() {
@@ -316,8 +283,7 @@ export class CreateSelfManagedServersComponent implements
         let serverClone = new ServerClone();
         serverClone.name = server.componentRef.instance.serverInputs.serverName;
 
-        this._createSelfManagedServices
-          .cloneServer(serverId, serverClone)
+        this._serversService.cloneServer(serverId, serverClone)
           .catch((error) => {
             this.provisioningStatusFactory.setError();
             return Observable.throw(error);
@@ -363,8 +329,7 @@ export class CreateSelfManagedServersComponent implements
         serverCreate.network.ipAddress = server.componentRef.instance
           .serverInputs.ipAddress.customIpAddress;
 
-        this._createSelfManagedServices
-          .createServer(serverCreate)
+        this._serversService.createServer(serverCreate)
           .catch((error) => {
             this.provisioningStatusFactory.setError();
             return Observable.throw(error);
@@ -403,16 +368,6 @@ export class CreateSelfManagedServersComponent implements
     if (!isNullOrEmpty(this.vdcList)) {
       this.vdcValue = this.vdcList[0].value;
     }
-  }
-
-  /**
-   * Listener to all contextual help to refresh the view since the changedetection is OnPush
-   */
-  private _listenToContextualHelp(): void {
-    this._contextulHelpSubscription = this._createSelfManagedServices.
-      subContextualHelpStream.subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
   }
 
   /**

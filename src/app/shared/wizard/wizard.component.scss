@@ -8,6 +8,7 @@ $wizard-border-color: $border-color-light;
 $wizard-left-panel-width: $shared-left-panel-size;
 $wizard-top-panel-height: $shared-top-panel-size;
 $wizard-top-panel-padding: 0 $space-large;
+$wizard-top-panel-bg-color: $color-white;
 $wizard-content-panel-large-padding: $content-large-padding;
 $wizard-content-panel-small-padding: $content-small-padding;
 // Step items
@@ -134,6 +135,7 @@ $step-disabled-color: $color-grey-02;
     border-bottom: 1px solid $wizard-border-color;
     height: $wizard-top-panel-height;
     padding: $wizard-top-panel-padding;
+    background-color: $wizard-top-panel-bg-color;
   }
 
   .wizard-top-panel-mobile-wrapper {

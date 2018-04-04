@@ -25,7 +25,6 @@ import {
 } from '../../../models';
 import { McsTextContentProvider } from '../../../../../core';
 import { isNullOrEmpty } from '../../../../../utilities';
-import { ContextualHelpDirective } from '../../../../../shared';
 
 @Component({
   selector: 'mcs-create-self-managed-server',
@@ -50,9 +49,6 @@ export class CreateSelfManagedServerComponent implements OnInit {
 
   @Input()
   public servers: Server[];
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
   @ViewChildren('createServerInstance')
   public createServerInstance: QueryList<any>;

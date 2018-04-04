@@ -1,38 +1,33 @@
 import {
   async,
   TestBed,
-  getTestBed
+  ComponentFixture
 } from '@angular/core/testing';
 import {
   Component,
-  DebugElement,
   ViewChild
 } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { ContextualHelpDirective } from './contextual-help.directive';
-import {
-  McsBrowserService,
-  McsDeviceType
-} from '../../core';
 import { triggerEvent } from '../../utilities';
+
+import { ContextualHelpDirective } from './contextual-help.directive';
+import { ContextualHelpModule } from './contextual-help.module';
 import { CoreTestingModule } from '../../core/testing';
 
 @Component({
-  selector: 'mcs-test',
+  selector: 'mcs-test-contextualhelp',
   template: ``
 })
-export class TestComponent {
+export class TestContextualHelpComponent {
   @ViewChild(ContextualHelpDirective)
-  public contextualHelp: ContextualHelpDirective;
+  public contextual: ContextualHelpDirective;
 }
 
 describe('ContextualHelpDirective', () => {
 
   /** Stub Services/Components */
-  let fixtureInstance: any;
-  let component: TestComponent;
-  let directiveElement: DebugElement;
-  let browserService: McsBrowserService;
+  let component: TestContextualHelpComponent;
+  let buttonElement: any;
+  let fixtureInstance: ComponentFixture<TestContextualHelpComponent>;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -41,55 +36,45 @@ describe('ContextualHelpDirective', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
-        TestComponent,
-        ContextualHelpDirective
+        TestContextualHelpComponent
       ],
       imports: [
-        CoreTestingModule
+        CoreTestingModule,
+        ContextualHelpModule
       ]
     });
 
-    /** Testbed Onverriding of Components */
-    TestBed.overrideComponent(TestComponent, {
+    /** Testbed Overriding of Components */
+    TestBed.overrideComponent(TestContextualHelpComponent, {
       set: {
         template: `
-        <span mcsContextualHelp="Hi"> Hello World! :)</span>
+        <button mcsContextualHelp="Something">TooltipDirective Template</button>
+        <input id="placement"/>
         `
       }
     });
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      fixtureInstance = TestBed.createComponent(TestComponent);
+      fixtureInstance = TestBed.createComponent(TestContextualHelpComponent);
       fixtureInstance.detectChanges();
 
       component = fixtureInstance.componentInstance;
-      directiveElement = fixtureInstance.debugElement.query(By.directive(ContextualHelpDirective));
-      browserService = getTestBed().get(McsBrowserService);
-
-      // Force the devicestream to set in Desktop mode
-      browserService.deviceTypeStream.next(McsDeviceType.Desktop);
+      buttonElement = fixtureInstance.nativeElement.querySelector('button');
     });
   }));
 
   /** Test Implementation */
-  describe('ContextualHelpDirective()', () => {
-    it(`should set the contextual help message`, () => {
-      expect(component.contextualHelp.mcsContextualHelp).toBe('Hi');
-    });
-  });
+  describe('focus() Event', () => {
+    beforeEach(async(() => {
+      component.contextual.ngOnInit();
+      triggerEvent(buttonElement, 'focus');
+      fixtureInstance.detectChanges();
+    }));
 
-  describe('focusIn()', () => {
-    it(`should set has focus flag to true when focusin is triggered`, () => {
-      triggerEvent(directiveElement.nativeElement, 'focusin');
-      expect(component.contextualHelp.hasFocus).toBeTruthy();
-    });
-  });
-
-  describe('focusOut()', () => {
-    it(`should set has focus false to true when focusout is triggered`, () => {
-      triggerEvent(directiveElement.nativeElement, 'focusout');
-      expect(component.contextualHelp.hasFocus).toBeFalsy();
+    it(`should open/create the contextual help when the implemented element is on focus`, () => {
+      let elementExist = document.querySelector('mcs-contextual-help');
+      expect(elementExist).not.toBe(null);
     });
   });
 });

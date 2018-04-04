@@ -21,7 +21,7 @@ import { ListPanelModule } from './list-panel/list-panel.module';
 import { PageHeaderModule } from './page-header/page-header.module';
 import { LoaderModule } from './loader/loader.module';
 import { PageModule } from './page/page.module';
-import { ContextualHelpModule } from './contextual-help';
+import { ContextualHelpModule } from './contextual-help/contextual-help.module';
 import { SelectModule } from './select/select.module';
 import { AccordionModule } from './accordion/accordion.module';
 import { ListModule } from './list/list.module';

@@ -3,9 +3,6 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
-  ViewChildren,
-  QueryList,
-  AfterViewInit,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -17,7 +14,6 @@ import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 import {
   isNullOrEmpty,
-  refreshView,
   replacePlaceholder,
   unsubscribeSafely
 } from '../../../utilities';
@@ -29,10 +25,7 @@ import {
   CoreValidators,
   CoreDefinition
 } from '../../../core';
-import {
-  ContextualHelpDirective,
-  FormGroupDirective
-} from '../../../shared';
+import { FormGroupDirective } from '../../../shared';
 import {
   TicketCreate,
   TicketCreateAttachment,
@@ -54,7 +47,6 @@ import { McsSafeToNavigateAway } from '../../../core';
 
 export class TicketCreateComponent implements
   OnInit,
-  AfterViewInit,
   OnDestroy,
   McsSafeToNavigateAway {
 
@@ -62,7 +54,6 @@ export class TicketCreateComponent implements
   public enumDefinition: any;
   public contextualContent: any;
   public services: TicketService[];
-  public contextualHelp: ContextualHelpDirective[];
   public isServicesOpen: boolean;
   public textService: string;
   public servicePanelOpen: boolean;
@@ -70,9 +61,6 @@ export class TicketCreateComponent implements
 
   @ViewChild(FormGroupDirective)
   public fgCreateDirective: FormGroupDirective;
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
   // Form variables
   public fgCreateTicket: FormGroup;
@@ -128,7 +116,6 @@ export class TicketCreateComponent implements
   ) {
     this.ticketTypeList = new Array();
     this.services = new Array();
-    this.contextualHelp = new Array();
     this.isServicesOpen = false;
     this.textService = '';
   }
@@ -163,17 +150,6 @@ export class TicketCreateComponent implements
     this._registerFormGroup();
     this._setTicketType();
     this._getServices();
-  }
-
-  public ngAfterViewInit() {
-    refreshView(() => {
-      if (this.contextualHelpDirectives) {
-        this.contextualHelp = this.contextualHelpDirectives
-          .map((description) => {
-            return description;
-          });
-      }
-    });
   }
 
   public ngOnDestroy() {

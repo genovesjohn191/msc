@@ -15,8 +15,10 @@
 </div>
 
 <!-- Group Items container -->
-<div animate [trigger]="panelOpen ? 'fadeIn' : 'fadeOut'">
-  <div display-flex="column" class="select-group-container">
-    <ng-content></ng-content>
+<ng-container *ngIf="panelOpen">
+  <div [@transformPanel]="'showing'" class="select-group-panel-wrapper">
+    <div [@fadeInContent]="'showing'">
+      <ng-content></ng-content>
+    </div>
   </div>
-</div>
+</ng-container>

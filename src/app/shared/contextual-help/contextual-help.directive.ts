@@ -1,92 +1,153 @@
 import {
+  Input,
   Directive,
   OnInit,
-  Input,
+  OnDestroy,
+  ElementRef,
   Renderer2,
-  ElementRef
+  ViewContainerRef
 } from '@angular/core';
+import {
+  McsGlobalElementRef,
+  McsGlobalElementOption,
+  McsGlobalElementService,
+  McsPortalComponent
+} from '../../core';
+import {
+  isNullOrEmpty,
+  coerceBoolean
+} from '../../utilities';
+import { ContextualHelpComponent } from './contextual-help.component';
 
 @Directive({
   selector: '[mcsContextualHelp]',
   host: {
-    '(focusout)': 'focusOut()',
-    '(focusin)': 'focusIn()'
-  }
+    '(focus)': 'show()',
+    '(blur)': 'hide()'
+  },
+  exportAs: 'mcsContextualHelp'
 })
 
-export class ContextualHelpDirective implements OnInit {
-  public refreshFunc: () => void;
-
-  @Input()
-  public mcsContextualHelp: string;
-
+export class ContextualHelpDirective implements OnInit, OnDestroy {
   /**
-   * Focus flag that determines weather the directive has received focus,
-   * and that corresponding styling for the contextual help should be applied
+   * Contextual help message to be displayed
    */
-  private _hasFocus: boolean;
-  public get hasFocus(): boolean {
-    return this._hasFocus;
-  }
-  public set hasFocus(value: boolean) {
-    if (this._hasFocus !== value) {
-      this._hasFocus = value;
-      if (this.refreshFunc) {
-        this.refreshFunc();
-      }
+  @Input('mcsContextualHelp')
+  public get message(): string { return this._message; }
+  public set message(value: string) {
+    if (this._message !== value) {
+      this._message = value;
+      this._setMessage(value);
     }
   }
+  private _message: string;
+
+  /**
+   * Condition when contextual help should be visible the whole time
+   */
+  @Input('mcsContextualHelpVisible')
+  public get visible(): boolean { return this._visible; }
+  public set visible(value: boolean) {
+    if (this._visible !== value) {
+      this._visible = coerceBoolean(value);
+    }
+  }
+  private _visible: boolean = true;
+
+  // Others declaration
+  private _globalElementRef: McsGlobalElementRef | null;
+  private _contextualHelpInstance: ContextualHelpComponent | null;
 
   constructor(
+    private _elementRef: ElementRef,
     private _renderer: Renderer2,
-    private _elementRef: ElementRef
-  ) {
-    this.mcsContextualHelp = '';
-  }
+    private _viewContainerRef: ViewContainerRef,
+    private _globalElementService: McsGlobalElementService
+  ) { }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this._setTabIndex();
   }
 
-  /**
-   * Get the host element reference which serves as the
-   * attachment of the contextual help
-   *
-   * `@Note` This position of these should be static
-   * so that it will get the actual direction
-   */
-  public getHostElement(): HTMLElement {
-    return this._elementRef.nativeElement;
+  public ngOnDestroy(): void {
+    if (this._contextualHelpInstance) {
+      this._disposeContextualHelp();
+    }
   }
 
   /**
-   * Get the contextual help given on the directive element
+   * Show the contextual help
    */
-  public getContextualHelp(): string {
-    return this.mcsContextualHelp;
+  public show(): void {
+    if (!this._visible) { return; }
+    if (isNullOrEmpty(this._contextualHelpInstance)) {
+      this._createContextualHelp();
+    }
+    this._setMessage(this._message);
+    this._contextualHelpInstance!.show();
   }
 
   /**
-   * Visibility flag to check if the context should be dispayed or not
-   * according with its parent element, if the parent element is not display
-   * then the contextual help should not be display also
+   * Hide the contextual help
    */
-  public isVisible(): boolean {
-    return this._elementRef.nativeElement.offsetParent !== null;
+  public hide(_delay: number = 0): void {
+    if (!isNullOrEmpty(this._contextualHelpInstance)) {
+      this._contextualHelpInstance.hide(_delay);
+    }
   }
 
   /**
-   * This will hide the contextual help when new focus is set to other elements
+   * Set the tool message and notify view for changes
+   * @param message Message of the contextual help to be displayed
    */
-  public focusOut(): void {
-    this.hasFocus = false;
+  private _setMessage(message: string): void {
+    if (isNullOrEmpty(this._contextualHelpInstance)) { return; }
+    this._contextualHelpInstance.message = message;
+    this._contextualHelpInstance.markForCheck();
   }
 
   /**
-   * Show the contextual of the host element
+   * Create the contextual help component including the global element wrapper
    */
-  public focusIn(): void {
-    this.hasFocus = true;
+  private _createContextualHelp(): void {
+    this._globalElementRef = this._createGlobalElementWrapper();
+    let portal = new McsPortalComponent(ContextualHelpComponent, this._viewContainerRef);
+    this._contextualHelpInstance = this._globalElementRef.attachComponent(portal).instance;
+
+    // Close the contextual help when the animation ended
+    this._contextualHelpInstance!.afterHidden().subscribe(() => {
+      if (!isNullOrEmpty(this._contextualHelpInstance)) {
+        this._disposeContextualHelp();
+      }
+    });
+  }
+
+  /**
+   * Dispose the current displayed contextual help
+   */
+  private _disposeContextualHelp(): void {
+    if (!isNullOrEmpty(this._globalElementRef)) {
+      this._globalElementRef.dispose();
+      this._globalElementRef = null;
+    }
+    this._contextualHelpInstance = null;
+  }
+
+  /**
+   * Create the overlay of the contextual help
+   */
+  private _createGlobalElementWrapper(): McsGlobalElementRef {
+    let globalElementRef: McsGlobalElementRef;
+    let globalElementOption = new McsGlobalElementOption();
+
+    // Create overlay element
+    globalElementOption.pointerEvents = 'auto';
+    globalElementRef = this._globalElementService.create(globalElementOption);
+    globalElementRef.moveElementTo({
+      hostElement: this._elementRef.nativeElement,
+      placement: 'right-top'
+    });
+    return globalElementRef;
   }
 
   /**

@@ -2,10 +2,7 @@ import { Routes } from '@angular/router';
 import { McsNavigateAwayGuard } from '../../core';
 /** Services */
 import { ServerService } from './server/';
-import {
-  CreateSelfManagedServersService,
-  CreateSelfManagedServerResolver
-} from './create-server';
+import { CreateSelfManagedServerResolver } from './create-server';
 import { ServersService } from './servers.service';
 import { ServersRepository } from './servers.repository';
 import { ServersResourcesRespository } from './servers-resources.repository';
@@ -39,7 +36,6 @@ export const serversProviders: any[] = [
   ServersRepository,
   ServersResourcesRespository,
   CreateSelfManagedServerResolver,
-  CreateSelfManagedServersService,
   VdcService,
   SelfManagedServerGuard
 ];

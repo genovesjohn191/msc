@@ -1,29 +1,15 @@
-$page-information-padding: 55px;
-$page-information-border-color: $color-grey-04;
+$contextual-help-page-information-padding: 55px;
+$contextual-help-page-information-border-color: $color-grey-04;
 
 .contextual-help-page-wrapper {
-  @include display-flex(row);
+  @include display-flex(column);
+  max-width: 70%;
+  padding-right: $contextual-help-page-information-padding;
+  border-right: 1px solid $contextual-help-page-information-border-color;
 
-  .page-information-wrapper {
-    @include set-items-interval($space-large);
-    display: block;
-    position: relative;
-    @include flex(1 1 auto);
-    padding-right: $page-information-padding;
-    border-right: 1px solid $page-information-border-color;
-
-    @include breakpoint(medium) {
-      padding-right: 0;
-      border-right: none;
-    }
-  }
-
-  .contextual-information-wrapper {
-    position: relative;
-    @include flex(0 0 auto);
-
-    @include breakpoint(medium) {
-      display: none;
-    }
+  @include breakpoint(medium) {
+    padding-right: 0;
+    border-right: none;
+    max-width: 100%;
   }
 }

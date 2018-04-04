@@ -4,7 +4,6 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
-  AfterViewInit,
   ViewChild,
   ViewChildren,
   QueryList,
@@ -35,19 +34,13 @@ import {
   ServerCreateType
 } from '../../../models';
 import {
-  refreshView,
-  mergeArrays,
   isNullOrEmpty,
   isFormControlValid,
   replacePlaceholder,
   unsubscribeSafely
 } from '../../../../../utilities';
-import {
-  ContextualHelpDirective,
-  FormGroupDirective
-} from '../../../../../shared';
+import { FormGroupDirective } from '../../../../../shared';
 import { ServersRepository } from '../../../servers.repository';
-import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
 import { Subscription } from 'rxjs/Rx';
 
 @Component({
@@ -60,16 +53,13 @@ import { Subscription } from 'rxjs/Rx';
   }
 })
 
-export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CloneSelfManagedServerComponent implements OnInit, OnDestroy {
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
 
   @ViewChild(FormGroupDirective)
   public fgCreateDirective: FormGroupDirective;
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
   @ViewChildren(FormControlDirective)
   public formControls: QueryList<FormControlDirective>;
@@ -102,7 +92,6 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, O
   }
 
   public constructor(
-    private _managedServerService: CreateSelfManagedServersService,
     private _textContentProvider: McsTextContentProvider,
     private _serversRespository: ServersRepository,
     private _activatedRoute: ActivatedRoute,
@@ -122,21 +111,6 @@ export class CloneSelfManagedServerComponent implements OnInit, AfterViewInit, O
     this._registerFormGroup();
     this._getAllServers();
     this._listenToParamChange();
-  }
-
-  public ngAfterViewInit() {
-    refreshView(() => {
-      // Get all contextual help information
-      if (this.contextualHelpDirectives) {
-        let contextInformations: ContextualHelpDirective[];
-        contextInformations = this.contextualHelpDirectives
-          .map((description) => {
-            return description;
-          });
-        this._managedServerService.subContextualHelp =
-          mergeArrays(this._managedServerService.subContextualHelp, contextInformations);
-      }
-    });
   }
 
   public ngOnDestroy() {

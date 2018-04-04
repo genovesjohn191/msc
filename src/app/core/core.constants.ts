@@ -7,6 +7,7 @@ import { McsNotificationJobService } from './services/mcs-notification-job.servi
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
 import { McsNotificationEventsService } from './services/mcs-notification-events.service';
 import { McsDialogService } from './services/mcs-dialog.service';
+import { McsGlobalElementService } from './services/mcs-global-element.service';
 import { McsOverlayService } from './services/mcs-overlay.service';
 import { McsScrollDispatcherService } from './services/mcs-scroll-dispatcher.service';
 import { McsViewportService } from './services/mcs-viewport.service';
@@ -37,6 +38,7 @@ export const coreProviders: any[] = [
   McsNotificationJobService,
   McsNotificationContextService,
   McsNotificationEventsService,
+  McsGlobalElementService,
   McsOverlayService,
   McsDialogService,
   McsScrollDispatcherService,
