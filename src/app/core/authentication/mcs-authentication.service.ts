@@ -15,7 +15,8 @@ import { McsLoggerService } from '../services/mcs-logger.service';
 import { AppState } from '../../app.service';
 import {
   resolveEnvVar,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getDomainName
 } from '../../utilities';
 
 @Injectable()
@@ -209,7 +210,9 @@ export class McsAuthenticationService {
 
   private _setCookie(authentication: string, expiration: Date): void {
     if (!authentication) { return; }
-    let domainName = window.location.hostname.replace(/http:\/\/.+?\./, '');
+    let domainName = getDomainName(window.location.href);
+    this._loggerService.trace('domain', domainName);
+    this._loggerService.trace('token expiry', expiration);
 
     // Set cookie with expiration date
     this._cookieService.setItem(
