@@ -61,18 +61,20 @@ $space-small: 10px;
 $space-xsmall: 5px;
 
 // Z-index
+$zindex-header: 1500;
+$zindex-navigation: 1400;
+$zindex-content: 1300;
+$zindex-notifications: 1200;
+
 $zindex-select: 800;
 $zindex-dropdown: 800;
-$zindex-loader: 900;
 $zindex-loader-container: 800;
-$zindex-header: 1000;
-$zindex-navigation: 1000;
-$zindex-notifications: 1100;
-$zindex-overlay: 2000;
-
+$zindex-loader: 900;
 $zindex-popover-low: 500;
 $zindex-popover-medium: 1000;
 $zindex-popover-high: 1500;
+
+$zindex-overlay: 2000;
 
 // Opacity
 $disabled-opacity: 0.65;

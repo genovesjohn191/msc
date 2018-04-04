@@ -4,10 +4,7 @@ import {
   OnDestroy,
   Input,
   Output,
-  EventEmitter,
-  AfterViewInit,
-  ViewChildren,
-  QueryList
+  EventEmitter
 } from '@angular/core';
 import {
   FormGroup,
@@ -29,14 +26,11 @@ import {
   ServerCreateType
 } from '../../../models';
 import {
-  refreshView,
-  mergeArrays,
   isNullOrEmpty,
   convertToGb,
   unsubscribeSafely
 } from '../../../../../utilities';
-import { ContextualHelpDirective } from '../../../../../shared';
-import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
+import { ServersService } from '../../../servers.service';
 
 const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
 
@@ -45,7 +39,7 @@ const NEW_SERVER_STORAGE_SLIDER_STEP = 10;
   templateUrl: './copy-self-managed-server.component.html'
 })
 
-export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CopySelfManagedServerComponent implements OnInit, OnDestroy {
   @Input()
   public visible: boolean;
 
@@ -61,9 +55,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
 
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
-
   // Form variables
   public formGroupCopyServer: FormGroup;
   public formControlTargetServer: FormControl;
@@ -76,7 +67,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   public formGroupSubscription: any;
 
   // Scale and Storage
-
   public selectedServer: Server;
   public storageMemoryMB: number;
   public storageAvailableMemoryMB: number;
@@ -113,7 +103,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   public constructor(
-    private _serverService: CreateSelfManagedServersService,
+    private _serversService: ServersService,
     private _textContentProvider: McsTextContentProvider
   ) {
     this.storageMemoryMB = 0;
@@ -147,20 +137,6 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
       this._setAvailableMemoryMB();
       this._setAvailableCpuCount();
     }
-  }
-
-  public ngAfterViewInit() {
-    refreshView(() => {
-      if (this.contextualHelpDirectives) {
-        let contextInformations: ContextualHelpDirective[];
-        contextInformations = this.contextualHelpDirectives
-          .map((description) => {
-            return description;
-          });
-        this._serverService.subContextualHelp =
-          mergeArrays(this._serverService.subContextualHelp, contextInformations);
-      }
-    });
   }
 
   public ngOnDestroy() {
@@ -201,11 +177,11 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
   }
 
   private _setAvailableMemoryMB(): void {
-    this.availableMemoryMB = this._serverService.computeAvailableMemoryMB(this.resource);
+    this.availableMemoryMB = this._serversService.computeAvailableMemoryMB(this.resource);
   }
 
   private _setAvailableCpuCount(): void {
-    this.availableCpuCount = this._serverService.computeAvailableCpu(this.resource);
+    this.availableCpuCount = this._serversService.computeAvailableCpu(this.resource);
   }
 
   private _setServersItems(): void {
@@ -278,7 +254,7 @@ export class CopySelfManagedServerComponent implements OnInit, AfterViewInit, On
         return resource.name === serverStorage.storageProfile;
       });
 
-    this.storageAvailableMemoryMB = this._serverService
+    this.storageAvailableMemoryMB = this._serversService
       .computeAvailableStorageMB(resourceStorage, this.formControlTargetServer.value);
   }
 

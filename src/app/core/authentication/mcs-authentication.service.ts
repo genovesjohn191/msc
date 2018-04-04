@@ -208,13 +208,17 @@ export class McsAuthenticationService {
   }
 
   private _setCookie(authentication: string, expiration: Date): void {
-    if (!expiration && !authentication) { return; }
+    if (!authentication) { return; }
+    let domainName = window.location.hostname.replace(/http:\/\/.+?\./, '');
 
     // Set cookie with expiration date
     this._cookieService.setItem(
       this._jwtCookieName,
       authentication,
-      { domain: window.location.hostname }
+      {
+        domain: domainName,
+        expires: expiration
+      }
     );
   }
 }

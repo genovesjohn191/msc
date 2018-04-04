@@ -1,10 +1,16 @@
 @import "../../../styles/shared/base";
 
-$contextual-help-width: 250px;
-$contextual-padding-left: $space-xlarge;
+$contextual-help-max-width: 300px;
+$contextual-help-margin-left: 100px;
 
 .contextual-help-wrapper {
+  @include display-flex(column);
   position: relative;
-  padding-left: $contextual-padding-left;
-  width: $contextual-help-width;
+  max-width: $contextual-help-max-width;
+}
+
+.contextual-panel-message {
+  @include display-flex(row);
+  @include align-items(flex-start);
+  margin-left: $contextual-help-margin-left;
 }

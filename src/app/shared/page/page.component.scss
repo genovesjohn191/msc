@@ -10,6 +10,7 @@ $page-header-font-size-default: $h3-default-font-size;
 $page-header-font-size-small: $font-size-large;
 $page-header-padding: 0 $space-large;
 // Top Panel Definition
+$top-panel-bg-color: $color-white;
 $top-panel-height: $shared-top-panel-size;
 $top-panel-item-padding: $page-header-padding;
 $action-item-hover-color: $color-grey-07;
@@ -104,6 +105,7 @@ $left-panel-navigation-collapse-padding: 6px;
       @include align-items(center);
       border-bottom: 1px solid $page-border-color;
       height: $top-panel-height;
+      background-color: $top-panel-bg-color;
       overflow: hidden;
 
       &.active {

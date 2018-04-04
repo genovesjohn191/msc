@@ -1,72 +1,129 @@
 import {
   Component,
-  Input,
   ChangeDetectorRef,
   ViewEncapsulation,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import {
-  getElementPositionFromHost,
-  refreshView
-} from '../../utilities';
-import { ContextualHelpDirective } from './contextual-help.directive';
+  animate,
+  AnimationEvent,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
+import {
+  Observable,
+  Subject
+} from 'rxjs/Rx';
+
+export type ContextualVisibility = 'initial' | 'visible' | 'hidden';
 
 @Component({
   selector: 'mcs-contextual-help',
   templateUrl: './contextual-help.component.html',
   styleUrls: ['./contextual-help.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('state', [
+      state('void', style({ transform: 'scale(0)' })),
+      state('initial', style({ transform: 'scale(0)' })),
+      state('visible', style({ transform: 'scale(1)' })),
+      state('hidden', style({ transform: 'scale(0)' })),
+      transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
+      transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
+    ])
+  ],
+  host: {
+    'class': 'contextual-help-wrapper',
+    '[style.zoom]': 'visibility === "visible" ? 1 : null'
+  }
 })
 
 export class ContextualHelpComponent {
-  @Input()
-  public get contextualInformations(): ContextualHelpDirective[] {
-    return this._contextualInformations;
+
+  @ViewChild('contextualPanel')
+  public contextualPanel: ElementRef;
+
+  public message: string;
+  public visibility: ContextualVisibility;
+  public transformOrigin: string = 'bottom';
+  public hideTimeoutId: any;
+
+  // Stream that emits when tooltip is hidden
+  private _onHide: Subject<any>;
+
+  constructor(private _changeDetectorRef: ChangeDetectorRef) {
+    this.message = '';
+    this.visibility = 'initial';
+    this._onHide = new Subject();
   }
-  public set contextualInformations(value: ContextualHelpDirective[]) {
-    if (this._contextualInformations !== value) {
-      this._contextualInformations = value;
-      this._markForCheck();
+
+  /**
+   * Show the tooltip
+   */
+  public show(): void {
+    // Cancel the delayed hide if it is scheduled
+    if (this.hideTimeoutId) {
+      clearTimeout(this.hideTimeoutId);
+    }
+
+    // Display the tooltip
+    this._setTransformOrigin();
+    this.visibility = 'visible';
+    this.markForCheck();
+  }
+
+  /**
+   * Hide the tooltip
+   */
+  public hide(delay: number): void {
+    this.hideTimeoutId = setTimeout(() => {
+      this.visibility = 'hidden';
+      this.markForCheck();
+    }, delay);
+  }
+
+  /**
+   * After hidden observable that emits when tooltip state is changed
+   */
+  public afterHidden(): Observable<void> {
+    return this._onHide.asObservable();
+  }
+
+  /**
+   * Change visibily of the animation
+   * @param e Animation event instance
+   */
+  public afterVisibilityAnimation(e: AnimationEvent): void {
+    if (e.toState === 'hidden' && !(this.visibility === 'visible')) {
+      this._onHide.next();
     }
   }
-  private _contextualInformations: ContextualHelpDirective[];
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this.contextualInformations = new Array();
+  /**
+   * Sets the tooltip transform origin according to the tooltip position
+   * @param value Value of the position of the tooltip to determine the tranform-style
+   */
+  public _setTransformOrigin(value = 'right') {
+    switch (value) {
+      case 'left': this.transformOrigin = 'right'; break;
+      case 'right': this.transformOrigin = 'left'; break;
+      case 'top': this.transformOrigin = 'bottom'; break;
+      case 'bottom':
+      default:
+        this.transformOrigin = 'top';
+        break;
+    }
   }
 
   /**
-   * Get the text styles of the contextual help directive
-   * @param targetElementRef Target element of the directive
-   * @param contextInformation Contextual informations
+   * Reflect the changes in the view
    */
-  public getTextStyle(targetElementRef: any, contextInformation: ContextualHelpDirective) {
-    if (!contextInformation) { return; }
-
-    // Register refresh functions
-    contextInformation.refreshFunc = this._markForCheck.bind(this);
-
-    // Get the right top coordinates and set to top of description
-    let targetElementPosition = getElementPositionFromHost(
-      contextInformation.getHostElement(),
-      targetElementRef, 'right-top', false);
-
-    return {
-      'top': `${targetElementPosition.top}px`,
-      'position': 'absolute',
-      'opacity': contextInformation.hasFocus ? 1 : 0
-    };
-  }
-
-  /**
-   * Refresh the view of the component itself
-   */
-  private _markForCheck(): void {
-    // We need to run this detection change in a separate thread in order
-    // to apply the visibilty settings of directive
-    refreshView(() => {
-      this._changeDetectorRef.markForCheck();
-    });
+  public markForCheck(): void {
+    this._changeDetectorRef.markForCheck();
   }
 }

@@ -5,7 +5,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  AfterViewInit,
   ViewChild,
   ViewChildren,
   QueryList,
@@ -25,8 +24,6 @@ import {
   CoreDefinition
 } from '../../../../../core';
 import {
-  refreshView,
-  mergeArrays,
   isNullOrEmpty,
   convertToGb,
   isFormControlValid,
@@ -34,11 +31,8 @@ import {
   appendUnitSuffix,
   unsubscribeSafely
 } from '../../../../../utilities';
-import {
-  ContextualHelpDirective,
-  FormGroupDirective
-} from '../../../../../shared';
-import { CreateSelfManagedServersService } from '../create-self-managed-servers.service';
+import { FormGroupDirective } from '../../../../../shared';
+import { ServersService } from '../../../servers.service';
 import {
   ServerManageStorage,
   ServerPerformanceScale,
@@ -68,7 +62,7 @@ const NEW_SERVER_WIN_STORAGE_SLIDER_MINIMUM_MB = 30 * CoreDefinition.GB_TO_MB_MU
   }
 })
 
-export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
   @Input()
   public resource: ServerResource;
 
@@ -80,9 +74,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
   @ViewChild(FormGroupDirective)
   public fgCreateDirective: FormGroupDirective;
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives: QueryList<ContextualHelpDirective>;
 
   @ViewChildren(FormControlDirective)
   public formControls: QueryList<FormControlDirective>;
@@ -139,7 +130,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   public constructor(
-    private _serverService: CreateSelfManagedServersService,
+    private _serversService: ServersService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -177,18 +168,6 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
       this._setAvailableCpuCount();
     }
     this._changeDetectorRef.markForCheck();
-  }
-
-  public ngAfterViewInit() {
-    refreshView(() => {
-      // Merge the sub contextual help
-      if (this.contextualHelpDirectives) {
-        let contextInformations: ContextualHelpDirective[];
-        contextInformations = this.contextualHelpDirectives.map((description) => description);
-        this._serverService.subContextualHelp =
-          mergeArrays(this._serverService.subContextualHelp, contextInformations);
-      }
-    });
   }
 
   public ngOnDestroy() {
@@ -238,11 +217,11 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _setAvailableMemoryMB(): void {
-    this.availableMemoryMB = this._serverService.computeAvailableMemoryMB(this.resource);
+    this.availableMemoryMB = this._serversService.computeAvailableMemoryMB(this.resource);
   }
 
   private _setAvailableCpuCount(): void {
-    this.availableCpuCount = this._serverService.computeAvailableCpu(this.resource);
+    this.availableCpuCount = this._serversService.computeAvailableCpu(this.resource);
   }
 
   private _setVAppItems(): void {
@@ -346,7 +325,7 @@ export class NewSelfManagedServerComponent implements OnInit, AfterViewInit, OnD
 
     if (!isNullOrEmpty(resourceStorage)) {
       let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
-      this.storageAvailableMemoryMB = this._serverService
+      this.storageAvailableMemoryMB = this._serversService
         .computeAvailableStorageMB(resourceStorage, currentSelectedScale);
     }
   }

@@ -3,8 +3,11 @@
 $header-large-padding: $space-large;
 $header-small-padding: $space-large $space-medium;
 
-header {
+:host {
   z-index: $zindex-header;
+}
+
+header {
   @include breakpoint(small) {
     top: 0;
     width: 100%;

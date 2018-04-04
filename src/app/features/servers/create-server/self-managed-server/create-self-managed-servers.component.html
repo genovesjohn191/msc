@@ -10,35 +10,28 @@
       [mcsLoaderText]="textContent.serverDetailsStep.loading"
       mcsLoaderOrientation="top"></div>
 
-    <div class="contextual-help-page-wrapper" #serverDetailsStep>
-      <div class="page-information-wrapper">
-        <mcs-form-field>
-          <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC"
-            [mcsContextualHelp]="contextualTextContent.vdcField">
-            <mcs-select-group [header]="textContent.vdcDropdownList.name">
-              <mcs-select-item *ngFor="let vdc of vdcList" [value]="vdc.value">
-                {{ vdc.text }}
-              </mcs-select-item>
-            </mcs-select-group>
-          </mcs-select>
-        </mcs-form-field>
+    <div class="contextual-help-page-wrapper limited-view" #serverDetailsStep>
+      <mcs-form-field>
+        <mcs-select [(ngModel)]="vdcValue" placeholder="Select a VDC"
+          [mcsContextualHelp]="contextualTextContent.vdcField">
+          <mcs-select-group [header]="textContent.vdcDropdownList.name">
+            <mcs-select-item *ngFor="let vdc of vdcList" [value]="vdc.value">
+              {{ vdc.text }}
+            </mcs-select-item>
+          </mcs-select-group>
+        </mcs-select>
+      </mcs-form-field>
 
-        <div class="new-servers-container" #selfManagedServersElement></div>
-        <ng-container mcsWizardActionPlacement></ng-container>
+      <div class="new-servers-container vspace-medium" #selfManagedServersElement></div>
+      <ng-container mcsWizardActionPlacement></ng-container>
 
-        <!-- TODO: Temporary disable multiple server deployment for phase 1 -->
-        <!-- <div class="additional-server-container vspace-small">
-          <div class="add-server clickable-text" (click)="addServer()">
-            <mcs-icon [key]="addIconKey" size="large"></mcs-icon>
-            <span class="clickable-text">Add another server</span>
-          </div>
+      <!-- TODO: Temporary disable multiple server deployment for phase 1 -->
+      <!-- <div class="additional-server-container vspace-small">
+        <div class="add-server clickable-text" (click)="addServer()">
+          <mcs-icon [key]="addIconKey" size="large"></mcs-icon>
+          <span class="clickable-text">Add another server</span>
+        </div>
         </div> -->
-      </div>
-
-      <div class="contextual-information-wrapper">
-        <mcs-contextual-help [contextualInformations]="getAllContextualInformations()">
-        </mcs-contextual-help>
-      </div>
     </div>
   </mcs-wizard-step>
 

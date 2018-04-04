@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChildren,
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
@@ -28,7 +27,6 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '../../../../utilities';
-import { ContextualHelpDirective } from '../../../../shared';
 
 @Component({
   selector: 'mcs-server-provisioning-page',
@@ -39,9 +37,6 @@ import { ContextualHelpDirective } from '../../../../shared';
 export class ServerProvisioningPageComponent implements OnInit, OnDestroy {
 
   public textContent: any;
-
-  @ViewChildren(ContextualHelpDirective)
-  public contextualHelpDirectives;
 
   // Job variables
   public job: McsApiJob;
