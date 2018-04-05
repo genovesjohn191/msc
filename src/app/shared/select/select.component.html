@@ -15,10 +15,10 @@
 </div>
 
 <!-- Group Items container -->
-<ng-container *ngIf="panelOpen">
-  <div [@transformPanel]="'showing'" class="select-group-panel-wrapper">
+<div *ngIf="panelOpen">
+  <div [@transformPanel]="'showing'" scrollable class="select-group-panel-wrapper">
     <div [@fadeInContent]="'showing'">
       <ng-content></ng-content>
     </div>
   </div>
-</ng-container>
+</div>

@@ -24,13 +24,12 @@ $select-sub-group-bg-color: $color-white;
 $select-sub-group-border-color: $color-grey-03;
 $select-sub-group-box-shadow: $color-black;
 $select-sub-group-max-height: 400px;
-// Select sub-group mobile
-$select-sub-group-mobile-offset: $space-xlarge;
 
 .select-wrapper {
   display: block;
   width: 100%;
   outline: none;
+  position: relative;
 
   .animation {
     animation-timing-function: ease-out;
@@ -65,6 +64,7 @@ $select-sub-group-mobile-offset: $space-xlarge;
     0 4px 5px 0 rgba($select-sub-group-box-shadow, 0.14),
     0 1px 10px 0 rgba($select-sub-group-box-shadow, 0.12)
   ));
+  max-height: $select-group-panel-wrapper-max-height;
 }
 
 .select-group-wrapper {
@@ -85,6 +85,7 @@ $select-sub-group-mobile-offset: $space-xlarge;
 }
 
 .select-item-wrapper {
+  display: block;
   @include flex(0 0 auto);
   padding: $select-item-padding;
   position: relative;
@@ -111,17 +112,12 @@ $select-sub-group-mobile-offset: $space-xlarge;
     padding: $select-sub-group-padding;
     position: absolute;
     top: 0;
-    left: 100%;
+    right: 0;
+    @include transform(-100%);
     background-color: $select-sub-group-bg-color;
     border: 1px solid $select-sub-group-border-color;
     max-height: $select-sub-group-max-height;
     overflow-y: auto;
-
-    @include breakpoint(small) {
-      right: -$select-sub-group-mobile-offset;
-      top: $select-sub-group-mobile-offset;
-      left: auto;
-    }
 
     @include box-shadow((
       0 2px 4px -1px rgba($select-sub-group-box-shadow, 0.2),
