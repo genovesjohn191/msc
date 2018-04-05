@@ -64,14 +64,14 @@
                   </mcs-list>
                 </td>
                 <td class="action-items top-align">
-                  <ng-container *mcsHasPermission="['VmNetworkEdit']">
+                  <ng-container *mcsHasPermission="['VmNicEdit']">
                     <span *mcsIsSelfManagedServer="server">
                       <a [disabled]="!server.executable" (click)="onUpdateNetwork(nic)">
                         {{ textContent.editLink }}
                       </a>
                     </span>
                   </ng-container>
-                  <span *mcsHasPermission="['VmNetworkEdit']">
+                  <span *mcsHasPermission="['VmNicEdit']">
                     <a *ngIf="!nic.isPrimary"
                       [disabled]="!server.executable"
                       (click)="onDeleteNetwork(nic)">
