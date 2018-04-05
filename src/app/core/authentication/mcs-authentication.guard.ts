@@ -4,7 +4,7 @@ import {
   CanActivate,
   RouterStateSnapshot
 } from '@angular/router';
-import { resolveEnvVar } from '../../utilities';
+import { resolveEnvVar, isNullOrEmpty } from '../../utilities';
 import { McsAuthenticationService } from './mcs-authentication.service';
 import { Observable } from 'rxjs/Rx';
 
@@ -23,23 +23,17 @@ export class McsAuthenticationGuard implements CanActivate {
     routerState: RouterStateSnapshot
   ) {
     let authToken: string;
+    let headerToken: any;
 
     // Set Return URL always
     this._authenticationService.setReturnUrl(routerState.url, activatedRoute.queryParams);
 
-    // Get JWT based on switch
-    if (this._enablePassingJwtInUrl) {
-      // Get JWT from query params
-      authToken = this._authenticationService.getAuthToken(activatedRoute.queryParams);
-    } else {
-      // Get JWT from cookie
-      authToken = this._authenticationService.getAuthToken();
-    }
+    // Get the JWT Token from header and cookie
+    headerToken = this._enablePassingJwtInUrl ? activatedRoute.queryParams : undefined;
+    authToken = this._authenticationService.getAuthToken(headerToken);
 
-    if (authToken) {
-      if (this._enablePassingJwtInUrl) {
-        this._authenticationService.setAuthToken(authToken);
-      }
+    if (!isNullOrEmpty(authToken)) {
+      if (this._enablePassingJwtInUrl) { this._authenticationService.setAuthToken(authToken); }
       return this._authenticationService.IsAuthenticated(authToken)
         .map((response) => {
           return response;

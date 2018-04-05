@@ -86,7 +86,7 @@ export class McsAuthenticationService {
    * This will set the token to Cookie and Appstate
    * @param authToken Valid Authentication Token
    */
-  public setAuthToken(authToken: string, expiration?: Date): void {
+  public setAuthToken(authToken: string, expiration: Date = null): void {
     // Update cookie
     this._setCookie(authToken, expiration);
   }
@@ -208,20 +208,21 @@ export class McsAuthenticationService {
     return modifiedUrl;
   }
 
-  private _setCookie(authentication: string, expiration: Date): void {
-    if (!authentication) { return; }
+  private _setCookie(token: string, expiry: Date): void {
+    let invalidToken = isNullOrEmpty(token);
+    if (invalidToken) { return; }
+
     let domainName = getDomainName(window.location.href);
     this._loggerService.trace('domain', domainName);
-    this._loggerService.trace('token expiry', expiration);
+    this._loggerService.trace('token expiry', expiry);
 
     // Set cookie with expiration date
     this._cookieService.setItem(
       this._jwtCookieName,
-      authentication,
+      token,
       {
         domain: domainName,
-        expires: expiration
-      }
-    );
+        expires: expiry
+      });
   }
 }

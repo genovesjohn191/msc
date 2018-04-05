@@ -92,7 +92,7 @@ export class McsErrorHandlerService {
         if (!errorResponse) { return; }
         switch (errorResponse.status) {
           case McsHttpStatusCode.Unauthorized:
-            this._authService.logIn();
+            this._authService.logOut();
             break;
         }
       });
@@ -109,7 +109,7 @@ export class McsErrorHandlerService {
           // If the token is expired it will redirect automatic to login page
           let authToken = this._authService.getAuthToken();
           if (isNullOrEmpty(authToken)) {
-            this._authService.logIn();
+            this._authService.logOut();
           }
         }
       });
