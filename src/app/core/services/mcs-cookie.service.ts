@@ -16,14 +16,17 @@ let cryptoJS = require('crypto-js');
 @Injectable()
 export class McsCookieService {
 
-  public secured: boolean = false;
+  /**
+   * Returns true if the cookie should be secured
+   */
+  public get secured(): boolean {
+    return !isDevMode();
+  }
 
   constructor(
     private _cookieService: CookieService,
     private _coreConfig: CoreConfig
-  ) {
-    this._setSecuredFlag();
-  }
+  ) {}
 
   /**
    * Set the cookie item as encrypted content
@@ -119,12 +122,5 @@ export class McsCookieService {
    */
   public removeItem(key: string, options?: CookieOptions): void {
     this._cookieService.remove(key, options);
-  }
-
-  /**
-   * Sets the secured flag based on mode (Development/Production)
-   */
-  private _setSecuredFlag(): void {
-    this.secured = !isDevMode;
   }
 }
