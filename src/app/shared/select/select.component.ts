@@ -33,7 +33,6 @@ import {
   registerEvent,
   unregisterEvent,
   ErrorStateMatcher,
-  refreshView,
   coerceBoolean,
   coerceNumber,
   unsubscribeSafely
@@ -239,12 +238,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    refreshView(() => {
-      if (this._items) {
-        let selectedItem = this._items.find((item) => item.value === value);
-        this._selectItem(selectedItem);
-      }
-    });
+    if (this._items) {
+      let selectedItem = this._items.find((item) => item.value === value);
+      this._selectItem(selectedItem);
+    }
   }
 
   /**
@@ -289,7 +286,15 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   private _selectItem(item: SelectItemComponent) {
-    if (isNullOrEmpty(item)) { return; }
+    // Clear the selection including the value in case the item is null
+    // to make way with the changes when formControl.reset() was called
+    if (isNullOrEmpty(item)) {
+      this.value = undefined;
+      this._clearItemSelection(item);
+      this.stateChanges.next();
+      return;
+    }
+
     this._clearItemSelection(item);
     item.select();
     this._selection.select(item);
@@ -297,10 +302,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     this.stateChanges.next();
   }
 
-  private _clearItemSelection(selectedItem: SelectItemComponent): void {
+  private _clearItemSelection(skipItem: SelectItemComponent): void {
     this._selection.clear();
     this._items.forEach((item) => {
-      if (item.id !== selectedItem.id) {
+      if (item !== skipItem) {
         item.deselect();
       }
     });

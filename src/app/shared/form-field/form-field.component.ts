@@ -17,7 +17,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { startWith } from 'rxjs/operator/startWith';
+import { startWith } from 'rxjs/operators/startWith';
 import { McsFormFieldControlBase } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 import {
@@ -87,7 +87,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
   public ngAfterContentInit(): void {
     this._validateControlChild();
     // Subscribe to any state changes of the control
-    startWith.call(this._controlChild.stateChanges, null).subscribe(() => {
+    this._controlChild.stateChanges.pipe(startWith(null!)).subscribe(() => {
       this._redisplayErrorMessage();
       this._changeDetectorRef.markForCheck();
     });
@@ -102,12 +102,12 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
     }
 
     // Subscribe to any changes of the hint
-    startWith.call(this._hintChildren.changes, null).subscribe(() => {
+    this._hintChildren.changes.pipe(startWith(null)).subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
 
     // Subscribe to any changes of the error
-    startWith.call(this._errorChildren.changes, null).subscribe(() => {
+    this._errorChildren.changes.pipe(startWith(null)).subscribe(() => {
       this._changeDetectorRef.markForCheck();
     });
   }
@@ -193,7 +193,6 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
   private _redisplayErrorMessage(): void {
     if (isNullOrEmpty(this._errorChildren)) { return; }
     let errorState = this._getFirstErrorState();
-    if (isNullOrEmpty(errorState)) { return; }
 
     this._errorChildren.map((error) => {
       if (error.errorState === errorState) {
