@@ -442,6 +442,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         // when the snapshot is currently creating
         let snapshot = new ServerSnapshot();
         snapshot.isProcessing = activeServer.isProcessing;
+        activeServer.snapshots = [];
         activeServer.snapshots.push(snapshot);
       } else {
         activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
