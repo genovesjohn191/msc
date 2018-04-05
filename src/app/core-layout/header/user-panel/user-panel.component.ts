@@ -26,7 +26,8 @@ import {
   refreshView,
   isNullOrEmpty,
   unsubscribeSafely,
-  addOrUpdateArrayRecord
+  addOrUpdateArrayRecord,
+  compareDates
 } from '../../../utilities';
 import { Subscription } from 'rxjs';
 
@@ -176,6 +177,16 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Sort the notifications(jobs) in descending order from the date created
+   */
+  private _sortNotifications(): void {
+    if (isNullOrEmpty(this.notifications)) { return; }
+    this.notifications.sort((_first: McsApiJob, _second: McsApiJob) => {
+      return compareDates(_second.createdOn, _first.createdOn);
+    });
+  }
+
+  /**
    * Listen to current user job triggered
    */
   private _listenToCurrentUserJob(): void {
@@ -192,6 +203,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
           (_existingJob: McsApiJob) => {
             return _existingJob.id === notification.id;
           });
+        this._sortNotifications();
         this._changeDetectorRef.markForCheck();
       });
   }
