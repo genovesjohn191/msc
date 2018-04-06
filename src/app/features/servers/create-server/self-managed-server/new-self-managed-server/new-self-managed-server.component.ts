@@ -21,7 +21,8 @@ import {
   McsTextContentProvider,
   McsOption,
   CoreValidators,
-  CoreDefinition
+  CoreDefinition,
+  McsUnitType
 } from '../../../../../core';
 import {
   isNullOrEmpty,
@@ -125,7 +126,7 @@ export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
     return replacePlaceholder(
       this.textContent.fullStorageSpace,
       'remaining_memory',
-      appendUnitSuffix(this._maximumMemoryGB, 'gigabyte')
+      appendUnitSuffix(this._maximumMemoryGB, McsUnitType.Gigabyte)
     );
   }
 

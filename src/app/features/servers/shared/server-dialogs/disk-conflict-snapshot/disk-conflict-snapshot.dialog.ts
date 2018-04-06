@@ -9,29 +9,28 @@ import {
   McsTextContentProvider,
   CoreDefinition
 } from '../../../../../core';
-import { replacePlaceholder } from '../../../../../utilities';
 import { ServerSnapshotDialogContent } from '../../../models';
 
 @Component({
-  selector: 'mcs-insufficient-storage-snapshot-dialog',
-  templateUrl: './insufficient-storage-snapshot.dialog.html',
+  selector: 'mcs-disk-conflict-snapshot-dialog',
+  templateUrl: './disk-conflict-snapshot.dialog.html',
   encapsulation: ViewEncapsulation.None,
   host: {
-    'class': 'insufficient-storage-snapshot-dialog-wrapper'
+    'class': 'disk-conflict-snapshot-dialog-wrapper'
   }
 })
 
-export class InsufficientStorageSnapshotDialogComponent {
+export class DiskConflictSnapshotDialogComponent {
   public textContent: any;
   public dialogModel: ServerSnapshotDialogContent;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    public dialogRef: McsDialogRef<InsufficientStorageSnapshotDialogComponent>,
+    public dialogRef: McsDialogRef<DiskConflictSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this.textContent =
-      this._textContentProvider.content.servers.shared.insufficientStorageSnapshotDialog;
+      this._textContentProvider.content.servers.shared.diskConflictSnapshotDialog;
     this.dialogModel = this.dialogData as ServerSnapshotDialogContent[][0];
   }
 
@@ -40,16 +39,6 @@ export class InsufficientStorageSnapshotDialogComponent {
    */
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
-  }
-
-  /**
-   * Alert message to be displayed in the dialog
-   */
-  public get alertMessage(): string {
-    return replacePlaceholder(
-      this.textContent.alert,
-      'vdc_name',
-      this.dialogModel.vdcName);
   }
 
   /**

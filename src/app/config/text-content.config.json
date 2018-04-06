@@ -412,7 +412,7 @@
         "title": "Insufficient Storage",
         "alert": "The VDC {{vdc_name}} does not have enough storage space available in order to capture a snapshot.",
         "confirmation": "Please remove any unneeded servers or snapshots and then try again.",
-        "cancel": "Cancel"
+        "cancel": "Close"
       },
       "createSnapshotDialog": {
         "title": "New VM Snapshot",
@@ -420,6 +420,11 @@
         "confirmation": "Are you sure you wish to capture a new snapshot for <strong>{{server_name}}</strong>?",
         "cancel": "Cancel",
         "confirm": "Confirm"
+      },
+      "diskConflictSnapshotDialog": {
+        "title": "Disk Conflict",
+        "alert": "A snapshot cannot be captured for this server as it uses a custom, split-profile disk configuration.",
+        "cancel": "Close"
       },
       "suspendServerDialog": {
         "title": {

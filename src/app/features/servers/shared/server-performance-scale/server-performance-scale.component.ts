@@ -14,7 +14,8 @@ import {
 import {
   McsTextContentProvider,
   CoreDefinition,
-  CoreValidators
+  CoreValidators,
+  McsUnitType
 } from '../../../../core';
 import {
   ServerPerformanceScale,
@@ -241,7 +242,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this.invalidCustomMemoryMaxValueMessage = replacePlaceholder(
       this.textContent.errors.ramMax,
       'available_memory',
-      appendUnitSuffix(this.availableMemoryMB, 'megabyte')
+      appendUnitSuffix(this.availableMemoryMB, McsUnitType.Megabyte)
     );
 
     this.invalidCustomMemoryValueMessage = replacePlaceholder(
@@ -253,7 +254,7 @@ export class ServerPerformanceScaleComponent implements OnInit {
     this.invalidCustomCpuMaxValueMessage = replacePlaceholder(
       this.textContent.errors.cpuMax,
       'available_cpu',
-      appendUnitSuffix(this.availableCpuCount, 'cpu')
+      appendUnitSuffix(this.availableCpuCount, McsUnitType.CPU)
     );
 
     this.invalidCustomCpuValueMessage = replacePlaceholder(

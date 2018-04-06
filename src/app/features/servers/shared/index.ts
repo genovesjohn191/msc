@@ -26,5 +26,6 @@ export * from './server-dialogs/insufficient-storage-snapshot/insufficient-stora
 export * from './server-dialogs/restore-snapshot/restore-snapshot.dialog';
 export * from './server-dialogs/suspend-server/suspend-server.dialog';
 export * from './server-dialogs/resume-server/resume-server.dialog';
+export * from './server-dialogs/disk-conflict-snapshot/disk-conflict-snapshot.dialog';
 /** Directives */
 export * from './directives/is-self-managed-server.directive';

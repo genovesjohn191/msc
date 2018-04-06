@@ -19,6 +19,7 @@ import {
   DeleteSnapshotDialogComponent,
   InsufficientStorageSnapshotDialogComponent,
   RestoreSnapshotDialogComponent,
+  DiskConflictSnapshotDialogComponent,
   SuspendServerDialogComponent,
   ResumeServerDialogComponent,
   IsSelfManagedServerDirective
@@ -64,6 +65,7 @@ import { SharedModule } from '../../shared';
     DeleteSnapshotDialogComponent,
     InsufficientStorageSnapshotDialogComponent,
     RestoreSnapshotDialogComponent,
+    DiskConflictSnapshotDialogComponent,
     DeleteServerDialogComponent,
     SuspendServerDialogComponent,
     ResumeServerDialogComponent,
@@ -101,6 +103,7 @@ import { SharedModule } from '../../shared';
     DeleteSnapshotDialogComponent,
     InsufficientStorageSnapshotDialogComponent,
     RestoreSnapshotDialogComponent,
+    DiskConflictSnapshotDialogComponent,
     SuspendServerDialogComponent,
     ResumeServerDialogComponent,
     IsSelfManagedServerDirective

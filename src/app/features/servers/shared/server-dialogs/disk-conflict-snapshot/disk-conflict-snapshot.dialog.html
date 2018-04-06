@@ -7,14 +7,13 @@
     <div class="labelled-icon">
       <mcs-icon [key]="warningIconKey"></mcs-icon>
       <div class="block-items-large">
-        <span>{{ alertMessage }}</span>
-        <span>{{ textContent.confirmation }}</span>
+        <span>{{ textContent.alert }}</span>
       </div>
     </div>
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="ctaCloseInsufficientStorageSnapshotDialog"
+    <a id="ctaCloseDiskConflictSnapshotDialog"
       (click)="closeDialog()">{{ textContent.cancel }}</a>
   </mcs-dialog-actions>
 </mcs-dialog>

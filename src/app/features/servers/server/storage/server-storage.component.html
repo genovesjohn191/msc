@@ -98,23 +98,22 @@
                   <h4>{{ textContent.addStorageHeading }}</h4>
                 </div>
 
-                <div mcsStorageWarning>
-                  <span>{{ textContent.fullStorageSpace }}</span>
-                </div>
-              </mcs-server-manage-storage>
-              <div [ngStyle]="{'text-align': 'right'}">
-                <button mcsButton id="ctaAttachServerStorage" arrow="right"
-                  [disabled]="attachStorageIsDisabled" (click)="onClickAttach()">
-                  {{ textContent.attachStorage }}
-                </button>
+              <div mcsStorageWarning>
+                <span>{{ textContent.fullStorageSpace }}</span>
               </div>
+            </mcs-server-manage-storage>
+            <div class="text-right">
+              <button mcsButton id="ctaAttachServerStorage" arrow="right"
+                [disabled]="attachStorageIsDisabled" (click)="onClickAttach()">
+                {{ textContent.attachStorage }}
+              </button>
             </div>
+          </div>
 
-            <div *ngIf="hasReachedDisksLimit" class="horizontal-items-spacing-xsmall"
-              display-flex="row" align-items="center" justify-content="center">
-              <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-              <h4>{{ textContent.reachedStorageLimit }}</h4>
-            </div>
+          <div *ngIf="hasReachedDisksLimit" class="inline-items-xsmall">
+            <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
+            <h4>{{ textContent.reachedStorageLimit }}</h4>
+          </div>
         </ng-container>
       </ng-container>
     </div>

@@ -66,7 +66,7 @@
       <div class="grid-row">
         <div class="container-wrapper grid-column break-on-small">
           <h4 class="container-header">{{ textContent.services }}</h4>
-          <p *ngIf="missingServices" class="missing-data-info">
+          <p *ngIf="missingServices" read-only>
             {{ textContent.missingServicesLabel }}
           </p>
           <ul class="inline-list">
@@ -78,7 +78,7 @@
 
         <div class="container-wrapper grid-column break-on-small">
           <h4 class="container-header">{{ textContent.attachments }}</h4>
-          <p *ngIf="missingAttachments" class="missing-data-info">
+          <p *ngIf="missingAttachments" read-only>
             {{ textContent.missingAttachmentsLabel }}
           </p>
           <ul class="inline-list rollover">
@@ -93,7 +93,7 @@
       <!-- Ticket Activities -->
       <div class="container-wrapper">
         <h4 class="container-header">{{ textContent.activity }}</h4>
-        <p *ngIf="missingActivities" class="missing-data-info">
+        <p *ngIf="missingActivities" read-only>
           {{ textContent.missingActivitiesLabel }}
         </p>
       </div>
