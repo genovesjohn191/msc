@@ -56,6 +56,7 @@ export * from './enumerations/mcs-job-status.enum';
 export * from './enumerations/mcs-task-type.enum';
 export * from './enumerations/mcs-data-status.enum';
 export * from './enumerations/mcs-company-status.enum';
+export * from './enumerations/mcs-unit-type.enum';
 /** Interfaces */
 export * from './interfaces/mcs-data-source.interface';
 export * from './interfaces/mcs-paginator.interface';

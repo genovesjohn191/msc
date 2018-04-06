@@ -67,7 +67,7 @@
           </h4>
           <div>
             <div *ngIf="!hasStorageInformation">
-              <span class="missing-data-info">{{ textContent.storage.noContentMessage }}</span>
+              <span read-only>{{ textContent.storage.noContentMessage }}</span>
             </div>
             <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
               <!-- Primary Volume -->
@@ -91,7 +91,7 @@
           <h4 class="container-header">{{ textContent.nics.title }}</h4>
           <div>
             <div *ngIf="!hasNics">
-              <span class="missing-data-info">
+              <span read-only>
                 {{ textContent.nics.noContentMessage }}
               </span>
             </div>
@@ -131,7 +131,7 @@
           </h4>
 
           <div *ngIf="!hasMedia">
-            <span class="missing-data-info">{{ textContent.media.noContentMessage }}</span>
+            <span read-only>{{ textContent.media.noContentMessage }}</span>
           </div>
           <mcs-list *ngIf="hasMedia" spacing="xsmall">
             <!-- Media Items -->

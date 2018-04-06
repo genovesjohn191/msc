@@ -15,7 +15,8 @@ import {
 import { VdcService } from '../vdc.service';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsUnitType
 } from '../../../../core';
 import {
   isNullOrEmpty,
@@ -55,12 +56,12 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
 
   public get vdcMemoryValue(): string {
     return !isNullOrEmpty(this.vdc.compute) ?
-      appendUnitSuffix(this.vdc.compute.memoryLimitMB, 'megabyte') : '' ;
+      appendUnitSuffix(this.vdc.compute.memoryLimitMB, McsUnitType.Megabyte) : '' ;
   }
 
   public get vdcCpuValue(): string {
     return !isNullOrEmpty(this.vdc.compute) ?
-      appendUnitSuffix(this.vdc.compute.cpuLimit, 'cpu') : '' ;
+      appendUnitSuffix(this.vdc.compute.cpuLimit, McsUnitType.CPU) : '' ;
   }
 
   public get hasLowCapacityStorage(): boolean {
@@ -122,8 +123,8 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   public getCurrentStorageValues(usedMB: number, limitMB: number): string {
     if (isNullOrEmpty(usedMB) || isNullOrEmpty(limitMB)) { return ''; }
 
-    let usedGB = appendUnitSuffix(Math.round(convertToGb(usedMB)), 'gigabyte');
-    let limitGB = appendUnitSuffix(Math.round(convertToGb(limitMB)), 'gigabyte');
+    let usedGB = appendUnitSuffix(Math.round(convertToGb(usedMB)), McsUnitType.Gigabyte);
+    let limitGB = appendUnitSuffix(Math.round(convertToGb(limitMB)), McsUnitType.Gigabyte);
 
     return `(${usedGB} of ${limitGB})`;
   }

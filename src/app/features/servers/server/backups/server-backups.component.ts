@@ -17,24 +17,29 @@ import {
   McsDataStatusFactory,
   CoreDefinition,
   McsDataStatus,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsUnitType
 } from '../../../../core';
 import {
   convertDateToStandardString,
   unsubscribeSafely,
-  isNullOrEmpty
+  isNullOrEmpty,
+  convertToGb,
+  appendUnitSuffix
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
   CreateSnapshotDialogComponent,
   DeleteSnapshotDialogComponent,
   RestoreSnapshotDialogComponent,
-  InsufficientStorageSnapshotDialogComponent
+  InsufficientStorageSnapshotDialogComponent,
+  DiskConflictSnapshotDialogComponent
 } from '../../shared';
 import {
   ServerSnapshotDialogContent,
   ServerSnapshot,
-  ServerServiceType
+  ServerServiceType,
+  ServerStorageDevice
 } from '../../models';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
@@ -46,7 +51,8 @@ enum SnapshotDialogType {
   Create,
   Restore,
   Delete,
-  InsufficientStorage
+  InsufficientStorage,
+  DiskConflict
 }
 
 @Component({
@@ -83,6 +89,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
   public get enabledActions(): boolean {
     return this.server.serviceType === ServerServiceType.SelfManaged
+      && !isNullOrEmpty(this.server.storageDevices)
       && !this.snapshotProcessing
       && !this.server.isProcessing
       && (!isNullOrEmpty(this.serverSnapshotsSubscription)
@@ -160,12 +167,21 @@ export class ServerBackupsComponent extends ServerDetailsBase
     return convertDateToStandardString(date);
   }
 
+  public getSnapshotSizeInGB(sizeMB: number): string {
+    let sizeGB = convertToGb(sizeMB);
+    return appendUnitSuffix(sizeGB, McsUnitType.Gigabyte);
+  }
+
   /**
    * Create snapshot based on server details
    */
   public createSnapshot(): void {
+    let dialogType = this._getSnapshotDialogType();
+
     // For sufficient storage show the creation dialog
-    this._showDialog(SnapshotDialogType.Create, () => {
+    this._showDialog(dialogType, () => {
+      if (dialogType !== SnapshotDialogType.Create) { return; }
+
       this.createSnapshotSubscription = this._serversService
         .createServerSnapshot(this.server.id, {
           preserveState: true,
@@ -256,13 +272,12 @@ export class ServerBackupsComponent extends ServerDetailsBase
     if (!isNullOrEmpty(_snapshot)) {
       dialogData.snapshotName = convertDateToStandardString(_snapshot.createdOn);
     }
-    dialogData.vdcName = this.server.serviceId;
+    dialogData.vdcName = this.serverResource.name;
 
     // Set the dialog component instance and the callback function
     switch (dialogType) {
       case SnapshotDialogType.Create:
         dialogComponent = CreateSnapshotDialogComponent;
-        // TODO: Add checking for insufficient storage here
         break;
 
       case SnapshotDialogType.Delete:
@@ -275,6 +290,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
       case SnapshotDialogType.InsufficientStorage:
         dialogComponent = InsufficientStorageSnapshotDialogComponent;
+        break;
+
+      case SnapshotDialogType.DiskConflict:
+        dialogComponent = DiskConflictSnapshotDialogComponent;
         break;
 
       default:
@@ -348,5 +367,57 @@ export class ServerBackupsComponent extends ServerDetailsBase
         this.dataStatusFactory.setSuccesfull(response);
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  /**
+   * Check if server has disk conflict or
+   * has disks with multiple storage profiles
+   * @param disks Server disks
+   */
+  private _hasDiskConflict(disks: ServerStorageDevice[]): boolean {
+    if (isNullOrEmpty(disks)) { return false; }
+
+    let storageProfile = disks[0].storageProfile;
+    let conflictDisk = disks.find((disk) => {
+      return disk.storageProfile !== storageProfile;
+    });
+
+    return !isNullOrEmpty(conflictDisk);
+  }
+
+  /**
+   * Get storage profile available space
+   * @param storageProfile Server resource storage profile
+   */
+  private _getStorageProfileAvailableMB(storageProfile: string): number {
+    let storage = this.serverResource.storage.find((profile) => {
+      return profile.name === storageProfile;
+    });
+    return !isNullOrEmpty(storage) ? storage.availableMB : 0;
+  }
+
+  /**
+   * Get snapshot dialog type
+   */
+  private _getSnapshotDialogType(): SnapshotDialogType {
+    if (isNullOrEmpty(this.server.storageDevices)) { return SnapshotDialogType.None; }
+
+    let dialogType: SnapshotDialogType;
+    // Business rule: Customer can't create snapshot if
+    // server has disks with multiple storage profiles
+    let hasDiskConflict = this._hasDiskConflict(this.server.storageDevices);
+
+    if (hasDiskConflict) {
+      dialogType = SnapshotDialogType.DiskConflict;
+    } else {
+      let storageProfile = this.server.storageDevices[0].storageProfile;
+      let availableStorageMB = this._getStorageProfileAvailableMB(storageProfile);
+      let hasSufficientStorage = availableStorageMB >= this.snapshot.sizeMB;
+
+      dialogType = hasSufficientStorage ?
+        SnapshotDialogType.Create : SnapshotDialogType.InsufficientStorage;
+    }
+
+    return dialogType;
   }
 }

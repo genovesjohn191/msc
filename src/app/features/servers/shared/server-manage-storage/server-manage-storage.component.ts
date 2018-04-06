@@ -13,7 +13,8 @@ import {
 import {
   CoreDefinition,
   CoreValidators,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsUnitType
 } from '../../../../core';
 import {
   ServerManageStorage,
@@ -139,7 +140,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get currentMemory(): string {
-    return appendUnitSuffix(this.storageValue, 'gigabyte');
+    return appendUnitSuffix(this.storageValue, McsUnitType.Gigabyte);
   }
 
   public get remainingMemory(): string {
@@ -229,7 +230,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return replacePlaceholder(
       this.textContent.errors.storageAvailable,
       'available_storage',
-      appendUnitSuffix(this.maximumGB, 'gigabyte')
+      appendUnitSuffix(this.maximumGB, McsUnitType.Gigabyte)
     );
   }
 
@@ -237,7 +238,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return replacePlaceholder(
       this.textContent.errors.storageMin,
       'min_value',
-      appendUnitSuffix(this.minValueGB, 'gigabyte')
+      appendUnitSuffix(this.minValueGB, McsUnitType.Gigabyte)
     );
   }
 

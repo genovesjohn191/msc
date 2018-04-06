@@ -31,7 +31,8 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsDialogService,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsUnitType
 } from '../../../../core';
 import {
   getEncodedUrl,
@@ -108,11 +109,11 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get serverMemoryValue(): string {
-    return appendUnitSuffix(this.serverMemoryMB, 'megabyte');
+    return appendUnitSuffix(this.serverMemoryMB, McsUnitType.Megabyte);
   }
 
   public get serverCpuValue(): string {
-    return appendUnitSuffix(this.serverCpuCount, 'cpu');
+    return appendUnitSuffix(this.serverCpuCount, McsUnitType.CPU);
   }
 
   // Check if the current server's serverType is managed

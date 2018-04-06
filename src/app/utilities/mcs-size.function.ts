@@ -1,4 +1,5 @@
-type unitType = 'megabyte' | 'gigabyte' | 'cpu';
+import { McsUnitType } from '../core';
+
 let gbToMbMultiplier = 1024;
 
 /**
@@ -6,22 +7,19 @@ let gbToMbMultiplier = 1024;
  * @param unit Unit type of the value
  * @param value Size value
  */
-export function appendUnitSuffix(value: number, unit: unitType): string {
-
-  if (!unit) { return ''; }
-
+export function appendUnitSuffix(value: number, unit: McsUnitType): string {
   let unitValue: string;
 
   switch (unit) {
-    case 'megabyte':
+    case McsUnitType.Megabyte:
       unitValue = 'MB';
       break;
 
-    case 'gigabyte':
+    case McsUnitType.Gigabyte:
       unitValue = 'GB';
       break;
 
-    case 'cpu':
+    case McsUnitType.CPU:
       unitValue = 'vCPU';
       break;
 
