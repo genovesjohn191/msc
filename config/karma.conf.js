@@ -70,7 +70,7 @@ module.exports = function (config) {
        * webpack-dev-middleware configuration
        * i.e.
        */
-      noInfo: true,
+      logLevel: 'warn',
       /**
        * and use stats to turn off verbose output
        */
@@ -116,14 +116,14 @@ module.exports = function (config) {
      * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
     browsers: [
-      'Chrome'
+      'ChromeTravisCi'
     ],
     browserNoActivityTimeout: 120000,
 
     customLaunchers: {
       ChromeTravisCi: {
         base: 'Chrome',
-        flags: ['--no-sandbox']
+        flags: ['--no-sandbox', '--disable-gpu']
       }
     },
 
