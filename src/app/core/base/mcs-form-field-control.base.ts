@@ -38,7 +38,8 @@ export abstract class McsFormFieldControlBase<T> {
   public abstract placeholder: string;
 
   /** Error state matcher to be used in checking error forms */
-  public abstract errorStateMatcher: ErrorStateMatcher;
+  public abstract errorStateMatcher: ErrorStateMatcher =
+    this.errorStateMatcher || defaultErrorStateMatcher;
 
   /** Whether the control is required. */
   public abstract required: boolean;
@@ -49,10 +50,7 @@ export abstract class McsFormFieldControlBase<T> {
   constructor(
     protected elementForm: HTMLElement,
     protected parentForm: NgForm | FormGroupDirective
-  ) {
-    // Add the default state matcher for controls otherwise set the custom matcher
-    this.errorStateMatcher = this.errorStateMatcher || defaultErrorStateMatcher;
-  }
+  ) { }
 
   /**
    * Determine whether the control is empty
