@@ -75,10 +75,9 @@ export * from './base/mcs-repository.base';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';
+export * from './authentication/mcs-access-control.service';
 export * from './authentication/mcs-authentication.identity';
 export * from './authentication/mcs-route-permission.guard';
-/** Access Control */
-export * from './authentication/mcs-access-control.service';
 /** Google Analytics */
 export * from './services/google-analytics-events.service';
 /** Factory */

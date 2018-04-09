@@ -10,12 +10,15 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { CoreDefinition } from '../../core/core.definition';
-import { McsApiIdentity } from '../../core/models/response/mcs-api-identity';
+import {
+  CoreDefinition,
+  McsApiIdentity,
+  McsAuthenticationIdentity,
+  McsKeyValuePair
+} from '../../core';
+import { CoreTestingModule } from '../../core/testing';
 import { AppState } from '../../app.service';
 import { AccessControlDirective } from './access-control.directive';
-import { CoreTestingModule } from '../../core/testing';
-import { McsAuthenticationIdentity, McsKeyValuePair } from 'app/core';
 
 @Component({
   selector: 'mcs-test',
@@ -68,7 +71,7 @@ describe('AccessControlDirective', () => {
     });
   }));
 
-  describe('ngAfterViewInit()', () => {
+  describe('ngOnChanges()', () => {
     it(`should render the element when permission required is present`, fakeAsync(() => {
       let userIdentity = new McsApiIdentity();
       userIdentity.permissions = ['VmAccess', 'VmEdit'];
@@ -78,7 +81,7 @@ describe('AccessControlDirective', () => {
 
       spyOn(component.accessControl.viewContainer, 'createEmbeddedView');
       component.accessControl.requiredPermission = ['VmEdit'];
-      component.accessControl.ngAfterViewInit();
+      component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
     }));
@@ -96,7 +99,7 @@ describe('AccessControlDirective', () => {
       spyOn(component.accessControl.viewContainer, 'createEmbeddedView');
       component.accessControl.requiredPermission = [];
       component.accessControl.feature = 'createServer';
-      component.accessControl.ngAfterViewInit();
+      component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
     }));
@@ -110,7 +113,7 @@ describe('AccessControlDirective', () => {
 
       spyOn(component.accessControl.viewContainer, 'clear');
       component.accessControl.requiredPermission = ['VmEdit'];
-      component.accessControl.ngAfterViewInit();
+      component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.clear).toHaveBeenCalledTimes(1);
     }));
@@ -125,7 +128,7 @@ describe('AccessControlDirective', () => {
       spyOn(component.accessControl.viewContainer, 'clear');
       component.accessControl.requiredPermission = [];
       component.accessControl.feature = 'createServer';
-      component.accessControl.ngAfterViewInit();
+      component.accessControl.ngOnChanges();
       tick();
       expect(component.accessControl.viewContainer.clear).toHaveBeenCalledTimes(1);
     }));
