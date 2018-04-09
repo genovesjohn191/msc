@@ -3,9 +3,7 @@ import {
   NavigationEnd
 } from '@angular/router';
 import { Injectable } from '@angular/core';
-import {
-  McsAuthenticationService
-} from './mcs-authentication.service';
+import { McsAccessControlService } from './mcs-access-control.service';
 import {
   isNullOrEmpty,
   unsubscribeSafely
@@ -26,7 +24,7 @@ export class McsRoutePermissionGuard {
   constructor(
     private _router: Router,
     private _loggerService: McsLoggerService,
-    private _authenticationService: McsAuthenticationService) {
+    private _accessControlService: McsAccessControlService) {
   }
 
   public initializeRouteChecking(): void {
@@ -47,10 +45,10 @@ export class McsRoutePermissionGuard {
 
   public onNavigateEnd(navStart: NavigationEnd) {
     // Ths will check the permission of the token/identity
-    this._checkPermissions(navStart);
+    this._guardRoute(navStart);
   }
 
-  private _checkPermissions(navStart: NavigationEnd): void {
+  private _guardRoute(navStart: NavigationEnd): void {
     // Get required permissions
     this._loggerService.traceInfo(`Checking permission...`);
     let requiredPermissions: string[] =
@@ -59,18 +57,20 @@ export class McsRoutePermissionGuard {
       `Route Required Permissions: `,
       navStart.urlAfterRedirects,
       requiredPermissions);
-    if (isNullOrEmpty(requiredPermissions)) {
-      return;
-    }
+
+    if (isNullOrEmpty(requiredPermissions)) { return; }
 
     // Check if user has permission
-    let hasRoutePermission =
-      this._authenticationService.hasPermission(requiredPermissions);
+    let hasRoutePermission = this._accessControlService.hasPermission(requiredPermissions);
 
     if (!hasRoutePermission) {
-      this._loggerService.traceInfo(`ROUTE ACCESS DENIED!`);
-      this._router.navigate(['/access-denied']);
+      this._showAccessDenied();
     }
+  }
+
+  private _showAccessDenied() {
+    this._loggerService.traceInfo(`ROUTE ACCESS DENIED!`);
+    this._router.navigate(['/access-denied']);
   }
 
   private _getRouteRequiredPermission(route: string): string[] {

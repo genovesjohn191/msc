@@ -124,41 +124,6 @@ export class McsAuthenticationService {
   }
 
   /**
-   * This will check if current user identity has all of the required permission
-   *
-   * Returns true if user has permission, and false if otherwise
-   * @param requiredPermissions list of required permissions
-   */
-  public hasPermission(requiredPermissions: string[]): boolean {
-    this._loggerService.traceInfo(
-      `Checking if user has required permission...`,
-      requiredPermissions);
-
-    let hasPermission: boolean = isNullOrEmpty(requiredPermissions);
-    let identity: McsApiIdentity = this._appState.get(CoreDefinition.APPSTATE_AUTH_IDENTITY);
-
-    this._loggerService.traceInfo(`User identity:`, identity);
-
-    if (!hasPermission && !isNullOrEmpty(identity) && !isNullOrEmpty(identity.permissions)) {
-      let permissions: string[] = identity.permissions;
-      hasPermission = true;
-
-      // Loop thru each required permissions
-      // making sure all of them are existing in the users permissions.
-      for (let value of requiredPermissions) {
-        if (permissions.indexOf(value) === -1) {
-          hasPermission = false;
-          break;
-        }
-      }
-    }
-
-    this._loggerService.traceInfo(`User has permission:`, hasPermission);
-
-    return hasPermission;
-  }
-
-  /**
    * Tries to get user identity based on JWT to verify if user is authenticated
    * Also updates the user identity in the app
    *

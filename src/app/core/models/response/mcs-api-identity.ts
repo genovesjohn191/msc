@@ -1,4 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
+import { McsKeyValuePair } from '../mcs-key-value-pair';
 import { McsDateSerialization } from '../../factory/serialization/mcs-date-serialization';
 
 export class McsApiIdentity {
@@ -10,6 +11,7 @@ export class McsApiIdentity {
   public companyId: string;
   public companyName: string;
   public permissions: string[];
+  public features: McsKeyValuePair[];
 
   @JsonProperty({
     type: Date,
@@ -28,5 +30,6 @@ export class McsApiIdentity {
     this.companyName = undefined;
     this.expiry = undefined;
     this.permissions = undefined;
+    this.features = undefined;
   }
 }

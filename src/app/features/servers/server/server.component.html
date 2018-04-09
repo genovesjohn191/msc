@@ -78,7 +78,7 @@
           use the "Snapshot" on the backups tab first
           instead of textContent.backups.label
          -->
-        <ng-container *mcsHasPermission="['SnapshotAccess']">
+        <ng-container *mcsAccessControl="['SnapshotAccess']">
           <mcs-tab *mcsIsSelfManagedServer="server"
             label="Snapshots" id="backups">
           </mcs-tab>
@@ -90,7 +90,7 @@
 
         <!-- Action tab -->
         <mcs-tab [canSelect]="false" customClass="right-align"
-          *mcsHasPermission="['VmPowerStateEdit']">
+          *mcsAccessControl="['VmPowerStateEdit']">
           <ng-template mcsTabLabel>
             <mcs-server-command [server]="server"
               (onClick)="executeServerCommand(server, $event)">

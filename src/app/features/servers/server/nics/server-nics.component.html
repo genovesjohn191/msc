@@ -64,14 +64,14 @@
                   </mcs-list>
                 </td>
                 <td class="action-items top-align">
-                  <ng-container *mcsHasPermission="['VmNicEdit']">
+                  <ng-container *mcsAccessControl="['VmNicEdit']">
                     <span *mcsIsSelfManagedServer="server">
                       <a [disabled]="!server.executable" (click)="onUpdateNetwork(nic)">
                         {{ textContent.editLink }}
                       </a>
                     </span>
                   </ng-container>
-                  <span *mcsHasPermission="['VmNicEdit']">
+                  <span *mcsAccessControl="['VmNicEdit']">
                     <a *ngIf="!nic.isPrimary"
                       [disabled]="!server.executable"
                       (click)="onDeleteNetwork(nic)">
@@ -97,7 +97,7 @@
         </mcs-data-status-error>
       </mcs-data-status>
 
-      <div *mcsHasPermission="['VmNicEdit']">
+      <div *mcsAccessControl="['VmNicEdit']">
         <div *ngIf="hasAvailableResourceNetwork && !hasReachedNicsLimit"
           class="action-box" [disabled]="!server.executable">
           <h4>{{ textContent.addHeading }}</h4>
@@ -183,7 +183,7 @@
           <div display-flex="row" align-items="center" justify-content="space-between">
             <a (click)="closeUpdateWindow()">Cancel</a>
 
-            <button *mcsHasPermission="['VmEdit']"
+            <button *mcsAccessControl="['VmEdit']"
               mcsButton id="ctaUpdateServerNetwork" arrow="right"
               [disabled]="scaleNicIsDisabled" (click)="updateNetwork()">
               {{ textContent.updateButton }}

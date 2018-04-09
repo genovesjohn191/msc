@@ -13,7 +13,7 @@
   <!-- All Routing -->
   <ng-template #navigationList>
     <!-- Servers -->
-    <div class="navigation-item" routerLinkActive="active" *mcsHasPermission="['VmAccess']">
+    <div class="navigation-item" routerLinkActive="active" *mcsAccessControl="['VmAccess']">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
       <a [routerLink]="['/servers']" (click)="setTitle(textContent.servers.title)">
@@ -24,7 +24,7 @@
     <!-- Firewalls -->
     <!-- TODO: Replaced texts to Firewalls and added temporary firewall restriction for Phase 1 -->
     <div class="navigation-item" routerLinkActive="active"
-      *mcsHasPermission="['FirewallConfigurationView']">
+      *mcsAccessControl="['FirewallConfigurationView']">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
       <a [routerLink]="['/networking/firewalls']" (click)="setTitle(textContent.firewalls.title)">
