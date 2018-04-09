@@ -9,7 +9,7 @@ import {
   CoreDefinition,
   McsDataStatus,
   McsCookieService,
-  McsAuthenticationService
+  McsAccessControlService
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -35,7 +35,7 @@ export class SwitchAccountService {
 
   constructor(
     private _authIdentity: McsAuthenticationIdentity,
-    private _authService: McsAuthenticationService,
+    private _accessControlService: McsAccessControlService,
     private _cookieService: McsCookieService,
     private _accountRepository: SwitchAccountRepository
   ) {
@@ -44,7 +44,7 @@ export class SwitchAccountService {
     this.recentCompaniesStream = new BehaviorSubject(undefined);
     this.activeAccountStream = new BehaviorSubject(undefined);
 
-    if (this._authService.hasPermission(['CompanyView'])) {
+    if (this._accessControlService.hasPermission(['CompanyView'])) {
       this._hasPermission = true;
     }
 

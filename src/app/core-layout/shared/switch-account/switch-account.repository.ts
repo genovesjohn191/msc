@@ -3,7 +3,7 @@ import {
   McsRepositoryBase,
   McsApiCompany,
   McsApiSuccessResponse,
-  McsAuthenticationService
+  McsAccessControlService
 } from '../../../core';
 import { Observable } from 'rxjs/Rx';
 import { CoreLayoutService } from '../../core-layout.services';
@@ -15,10 +15,10 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
 
   constructor(
     private _coreLayoutService: CoreLayoutService,
-    private _authService: McsAuthenticationService
+    private _accessControlService: McsAccessControlService
   ) {
     super();
-    if (this._authService.hasPermission(['CompanyView'])) {
+    if (this._accessControlService.hasPermission(['CompanyView'])) {
       this._hasPermission = true;
     }
   }

@@ -9,7 +9,7 @@
       <a cursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
     </div>
 
-    <div *mcsHasPermission="['CompanyView']" class="switch-account-panel hidden-small">
+    <div *mcsAccessControl="['CompanyView']" class="switch-account-panel hidden-small">
       <mcs-switch-account [ngStyle]="{width: '400px'}"
         (selectionChanged)="userPopover?.close()">
       </mcs-switch-account>

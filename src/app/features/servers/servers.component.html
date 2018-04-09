@@ -215,7 +215,7 @@
         </ng-container>
 
         <!-- Action Column -->
-        <ng-container mcsColumnDef="action" *mcsHasPermission="['VmPowerStateEdit']">
+        <ng-container mcsColumnDef="action" *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef class="action-cell">
             <!-- {{ columnSettings.action.text }} -->
           </mcs-header-cell>

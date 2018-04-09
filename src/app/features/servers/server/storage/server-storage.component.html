@@ -48,7 +48,7 @@
                 </td>
                 <td class="action-items">
                   <ng-container *mcsIsSelfManagedServer="server">
-                    <ng-container *mcsHasPermission="['VmEdit']">
+                    <ng-container *mcsAccessControl="['VmEdit']">
                       <span class="expand text-right">
                         <a [disabled]="expandDiskIsDisabled(storage)"
                           (click)="showExpandStorageBox(storage)">
@@ -57,7 +57,7 @@
                       </span>
                     </ng-container>
 
-                    <ng-container *mcsHasPermission="['VmEdit']">
+                    <ng-container *mcsAccessControl="['VmEdit']">
                       <span class="delete text-right">
                         <a *ngIf="hasMultipleStorageDevice"
                           [disabled]="!server.executable"
@@ -86,7 +86,7 @@
         </mcs-data-status-error>
       </mcs-data-status>
 
-      <ng-container *mcsHasPermission="['VmEdit']">
+      <ng-container *mcsAccessControl="['VmEdit']">
         <ng-container *mcsIsSelfManagedServer="server">
             <div *ngIf="!hasReachedDisksLimit && hasStorageProfileList" class="action-box">
               <mcs-server-manage-storage #mcsStorage
@@ -118,7 +118,7 @@
       </ng-container>
     </div>
 
-    <ng-container *mcsHasPermission="['VmEdit']">
+    <ng-container *mcsAccessControl="['VmEdit']">
       <ng-container *mcsIsSelfManagedServer="server">
         <div class="grid-column" *ngIf="expandStorage && hasDiskStorageProfile">
           <mcs-server-manage-storage #mcsStorage

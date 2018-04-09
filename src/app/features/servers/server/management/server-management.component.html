@@ -30,7 +30,7 @@
             <mcs-list-item>
               <span>{{ textContent.vmProperties.configuration }}:</span>
               <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
-              <span *mcsHasPermission="['VmEdit']">
+              <span *mcsAccessControl="['VmEdit']">
                 <ng-container *mcsIsSelfManagedServer="server">
                   <a *ngIf="!isScaling" (click)="showScaleOption()" [disabled]="!server.executable">
                     {{ textContent.performanceScale.scale }}</a>
@@ -57,7 +57,7 @@
       <div class="grid-row">
         <div class="grid-column container-wrapper break-on-small">
           <h4 class="container-header">{{ textContent.storage.title }}
-            <ng-container *mcsHasPermission="['VmEdit']">
+            <ng-container *mcsAccessControl="['VmEdit']">
               <a *mcsIsSelfManagedServer="server"
                 [disabled]="!server.executable"
                 [routerLink]="['../storage']">
@@ -121,7 +121,7 @@
             {{ textContent.media.title }}
             <span [mcsTooltip]="textContent.media.noAvailableMedia"
               [mcsTooltipShow]="!hasAvailableMedia">
-              <ng-container *mcsHasPermission="['VmEdit']">
+              <ng-container *mcsAccessControl="['VmEdit']">
                 <a flex="auto" *mcsIsSelfManagedServer="server" (click)="onAttachMedia()"
                   [disabled]="attachMediaIsDisabled">
                   {{ textContent.media.attach }}
@@ -138,7 +138,7 @@
             <mcs-list-item *ngFor="let media of server.media">
               <div display-flex="row" class="horizontal-items-spacing-xsmall">
                 <span>{{ media.name }}</span>
-                <span *mcsHasPermission="['VmEdit']">
+                <span *mcsAccessControl="['VmEdit']">
                   <ng-container *mcsIsSelfManagedServer="server">
                     <ng-container *ngIf="media.isProcessing; else detachMedia">
                       <mcs-icon [key]="spinnerIconKey" size="small" class="hidden-small"
@@ -179,7 +179,7 @@
       </div>
     </div>
 
-    <ng-container *mcsHasPermission="['VmEdit']">
+    <ng-container *mcsAccessControl="['VmEdit']">
       <ng-container *mcsIsSelfManagedServer="server">
         <div *ngIf="scaleOptionIsVisible" class="server-performance-scale">
           <div class="container-wrapper" [disabled]="!server.executable">

@@ -47,13 +47,13 @@ import { PipesModule } from './pipes';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
 /** Directives */
-import { HasPermissionDirective } from './authentication/has-permission.directive';
+import { AccessControlDirective } from './authentication/access-control.directive';
 import { ExclusiveForAccountDirective } from './authentication/exclusive-for-account.directive';
 
 @NgModule({
   declarations: [
     ProgressBarComponent,
-    HasPermissionDirective,
+    AccessControlDirective,
     ExclusiveForAccountDirective,
     CapacityBarComponent
   ],
@@ -102,7 +102,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
   ],
   exports: [
     ProgressBarComponent,
-    HasPermissionDirective,
+    AccessControlDirective,
     ExclusiveForAccountDirective,
     CapacityBarComponent,
     CommonModule,
