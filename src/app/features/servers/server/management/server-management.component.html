@@ -183,7 +183,7 @@
       <ng-container *mcsIsSelfManagedServer="server">
         <div *ngIf="scaleOptionIsVisible" class="server-performance-scale">
           <div class="container-wrapper" [disabled]="!server.executable">
-            <h4 class="container-header">Scaling {{ server.managementName }}</h4>
+            <h4 class="container-header">Scaling {{ server.name }}</h4>
             <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
               [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
               [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"

@@ -16,8 +16,8 @@
 
 <!-- Group Items container -->
 <div *ngIf="panelOpen">
-  <div [@transformPanel]="'showing'" scrollable class="select-group-panel-wrapper">
-    <div [@fadeInContent]="'showing'">
+  <div [@transformVertical] scrollable class="select-group-panel-wrapper">
+    <div [@fadeIn]>
       <ng-content></ng-content>
     </div>
   </div>

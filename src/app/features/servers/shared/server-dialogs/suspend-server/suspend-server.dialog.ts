@@ -68,7 +68,7 @@ export class SuspendServerDialogComponent {
     if (this.hasMultipleServers) {
       title = this.textContent.title.multiple;
     } else {
-      let serverName = (this.hasServer) ? this.servers[0].managementName : '' ;
+      let serverName = (this.hasServer) ? this.servers[0].name : '' ;
       title = replacePlaceholder(this.textContent.title.single, 'server_name', serverName);
     }
 

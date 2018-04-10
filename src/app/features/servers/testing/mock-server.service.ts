@@ -28,7 +28,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = {
       id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
-      managementName: 'contoso-lin01',
+      name: 'contoso-lin01',
       platform: {
         environmentName: 'Macquarie_Telecom_Contoso_100320',
         resourceName: 'M1VDC27117001'

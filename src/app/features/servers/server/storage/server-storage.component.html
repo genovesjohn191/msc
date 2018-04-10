@@ -88,8 +88,8 @@
 
       <ng-container *mcsAccessControl="['VmEdit']">
         <ng-container *mcsIsSelfManagedServer="server">
-            <div *ngIf="!hasReachedDisksLimit && hasStorageProfileList" class="action-box">
-              <mcs-server-manage-storage #mcsStorage
+          <div *ngIf="!hasReachedDisksLimit && hasStorageProfileList" class="action-box">
+            <mcs-server-manage-storage #mcsStorage
                 [storageProfileList]="storageProfileList" [minValueMB]="storageMinValueMB"
                 [minimumMB]="0" [maximumMB]="maximumMB" [step]="sliderStep"
                 (storageChanged)="onStorageChanged($event)" [disabled]="!server.executable">
