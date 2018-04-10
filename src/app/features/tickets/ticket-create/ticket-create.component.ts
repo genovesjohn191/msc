@@ -15,13 +15,15 @@ import { Router } from '@angular/router';
 import {
   isNullOrEmpty,
   replacePlaceholder,
-  unsubscribeSafely
+  unsubscribeSafely,
+  animateFactory
 } from '../../../utilities';
 import {
   McsTextContentProvider,
   McsAttachment,
   McsOption,
   McsErrorHandlerService,
+  McsSafeToNavigateAway,
   CoreValidators,
   CoreDefinition
 } from '../../../core';
@@ -37,12 +39,14 @@ import { TicketsRepository } from '../tickets.repository';
 import { TicketCreateService } from './ticket-create.service';
 import { Server } from '../../servers';
 import { Firewall } from '../../networking';
-import { McsSafeToNavigateAway } from '../../../core';
 
 @Component({
   selector: 'mcs-ticket-create',
   templateUrl: './ticket-create.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    animateFactory.expansionVertical
+  ]
 })
 
 export class TicketCreateComponent implements
@@ -302,7 +306,7 @@ export class TicketCreateComponent implements
       if (isNullOrEmpty(server.serviceId)) { return; }
       let serviceData = new TicketServiceData();
 
-      serviceData.name = `${server.managementName} (${server.serviceId})`;
+      serviceData.name = `${server.name} (${server.serviceId})`;
       serviceData.isChecked = false;
       serviceData.serviceId = server.serviceId;
       service.serviceItems.push(serviceData);

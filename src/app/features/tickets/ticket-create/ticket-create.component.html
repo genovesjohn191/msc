@@ -120,17 +120,19 @@
                 </div>
               </div>
 
-              <mcs-select-tag #selectService [hidden]="!servicePanelOpen" class="padding-small"
-                (selectionChanged)="serviceItemSelectionChanged($event)">
-                <mcs-select-tag-main-item *ngFor="let service of services"
-                  [header]="service.serviceName">
+              <div [@expansionVertical]="servicePanelOpen ? 'show' : 'void'">
+                <mcs-select-tag #selectService class="padding-small"
+                  (selectionChanged)="serviceItemSelectionChanged($event)">
+                  <mcs-select-tag-main-item *ngFor="let service of services"
+                    [header]="service.serviceName">
 
                   <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
                     [searchKey]="item.name" [value]="item">
                     {{ item.name }}
                   </mcs-select-tag-sub-item>
                 </mcs-select-tag-main-item>
-              </mcs-select-tag>
+                </mcs-select-tag>
+              </div>
             </ng-container>
           </div>
         </div>

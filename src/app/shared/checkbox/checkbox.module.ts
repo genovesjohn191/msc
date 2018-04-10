@@ -19,6 +19,7 @@ import { CheckboxComponent } from './checkbox.component';
   ],
   exports: [
     CheckboxComponent,
+    CommonModule,
     FormsModule,
     RippleModule,
     LayoutModule,

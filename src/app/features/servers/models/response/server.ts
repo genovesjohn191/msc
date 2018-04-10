@@ -26,11 +26,9 @@ export class Server {
   public id: any;
   public name: string;
   public hostname: string;
-  public managementName: string;
   public serviceId: string;
   public availabilityZone: string;
   public companyId: string;
-  public managementIpAddress: string;
   public ipAddress: string;
   public instanceId: string;
   public vApp: string;
@@ -90,12 +88,10 @@ export class Server {
     this.id = undefined;
     this.name = undefined;
     this.hostname = undefined;
-    this.managementName = undefined;
     this.serviceId = undefined;
     this.serviceType = undefined;
     this.availabilityZone = undefined;
     this.companyId = undefined;
-    this.managementIpAddress = undefined;
     this.ipAddress = undefined;
     this.instanceId = undefined;
     this.operatingSystem = undefined;

@@ -10,15 +10,9 @@ import {
   EventEmitter
 } from '@angular/core';
 import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
-import {
   isNullOrEmpty,
-  coerceBoolean
+  coerceBoolean,
+  animateFactory
 } from '../../../utilities';
 import {
   AccordionPanelHeaderComponent
@@ -33,11 +27,7 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('bodyExpansion', [
-      state('collapsed', style({ height: '0px', visibility: 'hidden' })),
-      state('expanded', style({ height: '*', visibility: 'visible' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4,0.0,0.2,1)')),
-    ]),
+    animateFactory.expansionVertical
   ],
   host: {
     'class': 'accordion-panel-wrapper',
@@ -46,7 +36,7 @@ let nextUniqueId = 0;
 })
 
 export class AccordionPanelComponent implements OnInit {
-  public id: string = `mcs-option-${nextUniqueId++}`;
+  public id: string = `mcs-accordion-panel-${nextUniqueId++}`;
 
   @Output()
   public selectionChanged = new EventEmitter<any>();
@@ -68,19 +58,6 @@ export class AccordionPanelComponent implements OnInit {
     }
   }
 
-  /**
-   * Animation to be trigger during the collapse and expand
-   */
-  private _animateTrigger: string;
-  public get animateTrigger(): string {
-    return this._animateTrigger;
-  }
-  public set animateTrigger(value: string) {
-    if (this._animateTrigger !== value) {
-      this._animateTrigger = value;
-    }
-  }
-
   @Input()
   public get enableToggle(): boolean { return this._enableToggle; }
   public set enableToggle(value: boolean) { this._enableToggle = coerceBoolean(value); }
@@ -94,7 +71,6 @@ export class AccordionPanelComponent implements OnInit {
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.enableToggle = true;
     this.selectionChanged = new EventEmitter();
-    this.animateTrigger = 'collapsed';
   }
 
   public ngOnInit(): void {
@@ -120,7 +96,6 @@ export class AccordionPanelComponent implements OnInit {
    * This will open the panel including the animation
    */
   public openPanel(): void {
-    this.animateTrigger = 'expanded';
     this.panelOpen = true;
     this.headerPanel.updateView();
   }
@@ -129,7 +104,6 @@ export class AccordionPanelComponent implements OnInit {
    * This will close the panel including the animation
    */
   public closePanel(): void {
-    this.animateTrigger = 'collapsed';
     this.panelOpen = false;
     this.headerPanel.updateView();
   }

@@ -35,10 +35,10 @@ import {
   ErrorStateMatcher,
   coerceBoolean,
   coerceNumber,
-  unsubscribeSafely
+  unsubscribeSafely,
+  animateFactory
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
-import { selectAnimations } from './select.animations';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -53,8 +53,8 @@ let nextUniqueId = 0;
     { provide: McsFormFieldControlBase, useExisting: SelectComponent }
   ],
   animations: [
-    selectAnimations.transformPanel,
-    selectAnimations.fadeInContent
+    animateFactory.fadeIn,
+    animateFactory.transformVertical
   ],
   host: {
     'class': 'select-wrapper',

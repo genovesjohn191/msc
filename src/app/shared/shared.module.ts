@@ -33,6 +33,7 @@ import { AttachmentModule } from './attachment/attachment.module';
 import { PaginatorModule } from './paginator/paginator.module';
 import { ActionItemModule } from './action-item/action-item.module';
 import { ResponsivePanelModule } from './responsive-panel/responsive-panel.module';
+import { CollapsiblePanelModule } from './collapsible-panel/collapsible-panel.module';
 import { RadioButtonGroupModule } from './radio-button-group/radio-button-group.module';
 import { FormFieldModule } from './form-field/form-field.module';
 import { InputModule } from './input/input.module';
@@ -90,6 +91,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     PaginatorModule,
     ActionItemModule,
     ResponsivePanelModule,
+    CollapsiblePanelModule,
     RadioButtonGroupModule,
     FormFieldModule,
     InputModule,
@@ -137,6 +139,7 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     PaginatorModule,
     ActionItemModule,
     ResponsivePanelModule,
+    CollapsiblePanelModule,
     RadioButtonGroupModule,
     FormFieldModule,
     InputModule,

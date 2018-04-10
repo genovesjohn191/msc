@@ -1,0 +1,25 @@
+@import "../../../styles/shared/base";
+
+// Variables
+$collapsible-panel-padding: $space-large $space-medium;
+$collapsible-panel-border-radius: $border-radius-small;
+$collapsible-panel-main-border-color: $border-color-dark;
+$collapsible-panel-sub-border-color: $border-color-light;
+
+.collapsible-panel-wrapper {
+  display: block;
+  outline: none;
+  border: 1px solid $collapsible-panel-main-border-color;
+  @include border-radius($collapsible-panel-border-radius);
+}
+
+.collapsible-panel-toggle {
+  @include display-flex(row);
+  border-bottom: 1px solid $collapsible-panel-sub-border-color;
+  padding: $collapsible-panel-padding;
+}
+
+.collapsible-panel-content {
+  @include display-flex(column);
+  padding: $collapsible-panel-padding;
+}

@@ -191,7 +191,7 @@ export class CopySelfManagedServerComponent implements OnInit, OnDestroy {
     this.servers.forEach((server) => {
       this.serverItems.push({
         'value': server.id,
-        'text': server.managementName
+        'text': server.name
       });
     });
 

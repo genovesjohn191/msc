@@ -70,7 +70,7 @@ export class ResetPasswordDialogComponent {
     return replacePlaceholder(
       this.textContent.poweredOnInfo,
       'server_name',
-      this.server.managementName
+      this.server.name
     );
   }
 
@@ -82,7 +82,7 @@ export class ResetPasswordDialogComponent {
     return replacePlaceholder(
       this.textContent.poweredOffInfo,
       'server_name',
-      this.server.managementName
+      this.server.name
     );
   }
 }
