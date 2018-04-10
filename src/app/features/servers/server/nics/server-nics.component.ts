@@ -282,7 +282,7 @@ export class ServerNicsComponent extends ServerDetailsBase
       this.selectedNic.ipAddress = Array.isArray(this.selectedNic.ipAddress) ?
         this.selectedNic.ipAddress : new Array(this.selectedNic.ipAddress);
     }
-    this.networkName = nic.name;
+    this.networkName = nic.logicalNetworkName;
     this.ipAddress.ipAllocationMode = nic.ipAllocationMode;
     this.ipAddress.customIpAddress = isNullOrEmpty(nic) ? '' : nic.ipAddress[0];
 
@@ -498,7 +498,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
     // Mock NIC data based on job response
     let nic = new ServerNicSummary();
-    nic.networkName = job.clientReferenceObject.networkName;
+    nic.logicalNetworkName = job.clientReferenceObject.networkName;
     nic.ipAllocationMode = job.clientReferenceObject.ipAllocationMode;
     nic.isProcessing = this.server.isProcessing;
 

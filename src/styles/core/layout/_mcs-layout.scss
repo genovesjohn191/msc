@@ -147,8 +147,15 @@ table.mcs-simple-table {
     border-spacing: 0 $space-small;
   }
 
+  th {
+    font-family: $base-font-bold;
+    text-align: left;
+    padding: 0 $space-small;
+    white-space: nowrap;
+  }
+
   td {
-    padding-right: $space-small;
+    padding: 0 $space-small;
     vertical-align: middle;
 
     &:last-of-type {
@@ -157,6 +164,7 @@ table.mcs-simple-table {
 
     &.action-items {
       @include set-items-interval($space-medium, horizontal);
+      white-space: nowrap;
 
       @include breakpoint(small) {
         @include set-items-interval(0, horizontal);

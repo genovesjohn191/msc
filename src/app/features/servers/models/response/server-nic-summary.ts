@@ -6,8 +6,11 @@ import { JsonProperty } from 'json-object-mapper';
 
 export class ServerNicSummary {
   public id: string;
+  public vCloudNicId: string;
   public name: string;
   public ipAddress: string[];
+  public index: number;
+  public isPrimary: boolean;
   public adminStatus: string;
   public operStatus: string;
   public maxSpeed: string;
@@ -16,9 +19,9 @@ export class ServerNicSummary {
   public isSubInterface: boolean;
   public vlanId: number;
   public portgroup: string;
-  public networkName: string;
-  public index: number;
-  public isPrimary: boolean;
+  public portgroupName: string;
+  public logicalNetworkName: string;
+  public deviceType: string;
 
   @JsonProperty({
     type: ServerIpAllocationMode,
@@ -32,6 +35,7 @@ export class ServerNicSummary {
 
   constructor() {
     this.id = undefined;
+    this.vCloudNicId = undefined;
     this.name = undefined;
     this.ipAddress = undefined;
     this.adminStatus = undefined;
@@ -42,7 +46,9 @@ export class ServerNicSummary {
     this.isSubInterface = undefined;
     this.vlanId = undefined;
     this.portgroup = undefined;
-    this.networkName = undefined;
+    this.portgroupName = undefined;
+    this.logicalNetworkName = undefined;
+    this.deviceType = undefined;
     this.index = undefined;
     this.isPrimary = undefined;
     this.ipAllocationMode = undefined;
