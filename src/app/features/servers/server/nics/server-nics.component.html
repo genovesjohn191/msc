@@ -16,22 +16,12 @@
           <table class="mcs-simple-table full-width">
             <thead>
               <tr>
-                <td>
-                  <strong>{{ textContent.nic }}</strong>
-                </td>
-                <td>
-                  <strong>{{ textContent.network }}</strong>
-                </td>
-                <td>
-                  <strong>{{ textContent.primary }}</strong>
-                </td>
-                <td>
-                  <strong>{{ textContent.ipMode }}</strong>
-                </td>
-                <td>
-                  <strong>{{ textContent.ipAddress }}</strong>
-                </td>
-                <td></td>
+                <th>{{ textContent.nic }}</th>
+                <th>{{ textContent.network }}</th>
+                <th>{{ textContent.primary }}</th>
+                <th>{{ textContent.ipMode }}</th>
+                <th>{{ textContent.ipAddress }}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody class="vertical-items-spacing-xsmall">
@@ -48,7 +38,7 @@
                   </ng-template>
                 </td>
                 <td class="top-align">
-                  <span>{{ nic.networkName }}</span>
+                  <span>{{ nic.logicalNetworkName }}</span>
                 </td>
                 <td class="top-align">
                   <mcs-icon *ngIf="nic.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
@@ -150,7 +140,6 @@
             <mcs-form-field>
               <mcs-select [formControl]="fcNetwork"
                 [placeholder]="textContent.networkSelect.placeholder">
-                <mcs-select-item value="">-</mcs-select-item>
                 <mcs-select-item *ngFor="let network of resourceNetworks" [value]="network.name">
                   {{ network.name }}
                 </mcs-select-item>
