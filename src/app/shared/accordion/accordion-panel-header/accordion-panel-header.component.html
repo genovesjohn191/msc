@@ -1,2 +1,3 @@
 <ng-content></ng-content>
-<mcs-icon [@indicatorIcon]="panelAnimation" [key]="toggleIconKey" size="medium"></mcs-icon>
+<mcs-icon [@rotate180]="panelOpen ? 'show' : 'void'"
+  [key]="toggleIconKey" size="medium"></mcs-icon>

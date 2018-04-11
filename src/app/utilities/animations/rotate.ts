@@ -16,8 +16,8 @@ export const rotate: {
   readonly rotate180: AnimationTriggerMetadata;
 } = {
     rotate180: trigger('rotate180', [
-      state('collapsed', style({ transform: 'rotate(0deg)' })),
-      state('expanded', style({ transform: 'rotate(180deg)' })),
-      transition('expanded <=> collapsed', animate(ANIMATION_TIMING)),
+      state('void', style({ transform: 'rotate(0deg)' })),
+      state('*', style({ transform: 'rotate(180deg)' })),
+      transition('void <=> *', animate(ANIMATION_TIMING)),
     ])
   };
