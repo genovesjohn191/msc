@@ -8,10 +8,12 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { CoreDefinition } from '../../core';
-import { McsCookieService } from '../../core';
+import {
+  CoreDefinition,
+  McsCookieService
+} from '../../../core';
 import { ExclusiveForAccountDirective } from './exclusive-for-account.directive';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '../../../core/testing';
 
 @Component({
   selector: 'mcs-test',
@@ -72,5 +74,5 @@ describe('ExclusiveForAccountDirective', () => {
         let element = document.getElementById('mcsAccount');
         expect(element).not.toBe(null);
       });
-    });
+  });
 });

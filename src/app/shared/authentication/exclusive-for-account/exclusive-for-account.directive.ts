@@ -7,8 +7,8 @@ import {
 import {
   McsCookieService,
   CoreDefinition
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+} from '../../../core';
+import { isNullOrEmpty } from '../../../utilities';
 
 // Account type enumeration
 type accountType = 'default' | 'others';

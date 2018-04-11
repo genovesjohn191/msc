@@ -1,7 +1,7 @@
-<div #contextualPanel class="contextual-panel-message"
-  [style.transform-origin]="transformOrigin"
-  [@state]="visibility"
-  (@state.done)="afterVisibilityAnimation($event)">
+<div class="contextual-panel-message"
+  [style.transform-origin]="'left'"
+  [@scaleIn]="visible ? 'show' : 'void'"
+  (@scaleIn.done)="afterVisibilityAnimation($event)">
 
   <span>{{ message }}</span>
 </div>

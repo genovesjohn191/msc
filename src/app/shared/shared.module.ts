@@ -15,7 +15,6 @@ import { PopoverModule } from './popover/popover.module';
 import { IconModule } from './icon/icon.module';
 import { AlertModule } from './alert/alert.module';
 import { ImageModule } from './image/image.module';
-import { ValidationMessageModule } from './validation-message/validation-message.module';
 import { TableModule } from './table/table.module';
 import { ListPanelModule } from './list-panel/list-panel.module';
 import { PageHeaderModule } from './page-header/page-header.module';
@@ -43,19 +42,15 @@ import { TagListModule } from './tag-list/tag-list.module';
 import { SelectTagModule } from './select-tag/select-tag.module';
 import { CommentBoxModule } from './comment-box/comment-box.module';
 import { DataStatusModule } from './data-status/data-status.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 import { PipesModule } from './pipes';
 /** Components */
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
-/** Directives */
-import { AccessControlDirective } from './authentication/access-control.directive';
-import { ExclusiveForAccountDirective } from './authentication/exclusive-for-account.directive';
 
 @NgModule({
   declarations: [
     ProgressBarComponent,
-    AccessControlDirective,
-    ExclusiveForAccountDirective,
     CapacityBarComponent
   ],
   imports: [
@@ -73,7 +68,6 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     ButtonModule,
     CheckboxModule,
     FilterSelectorModule,
-    ValidationMessageModule,
     TableModule,
     ListPanelModule,
     PageHeaderModule,
@@ -100,12 +94,11 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     TagListModule,
     SelectTagModule,
     CommentBoxModule,
-    DataStatusModule
+    DataStatusModule,
+    AuthenticationModule
   ],
   exports: [
     ProgressBarComponent,
-    AccessControlDirective,
-    ExclusiveForAccountDirective,
     CapacityBarComponent,
     CommonModule,
     RouterModule,
@@ -121,7 +114,6 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     ButtonModule,
     CheckboxModule,
     FilterSelectorModule,
-    ValidationMessageModule,
     TableModule,
     ListPanelModule,
     PageHeaderModule,
@@ -148,7 +140,8 @@ import { ExclusiveForAccountDirective } from './authentication/exclusive-for-acc
     TagListModule,
     SelectTagModule,
     CommentBoxModule,
-    DataStatusModule
+    DataStatusModule,
+    AuthenticationModule
   ]
 })
 

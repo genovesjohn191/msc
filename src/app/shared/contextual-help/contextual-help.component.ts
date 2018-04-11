@@ -2,24 +2,14 @@ import {
   Component,
   ChangeDetectorRef,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
-  ViewChild,
-  ElementRef
+  ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  animate,
-  AnimationEvent,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
+import { AnimationEvent } from '@angular/animations';
 import {
   Observable,
   Subject
 } from 'rxjs/Rx';
-
-export type ContextualVisibility = 'initial' | 'visible' | 'hidden';
+import { animateFactory } from '../../utilities';
 
 @Component({
   selector: 'mcs-contextual-help',
@@ -28,14 +18,7 @@ export type ContextualVisibility = 'initial' | 'visible' | 'hidden';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('state', [
-      state('void', style({ transform: 'scale(0)' })),
-      state('initial', style({ transform: 'scale(0)' })),
-      state('visible', style({ transform: 'scale(1)' })),
-      state('hidden', style({ transform: 'scale(0)' })),
-      transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
-      transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
-    ])
+    animateFactory.scaleIn
   ],
   host: {
     'class': 'contextual-help-wrapper',
@@ -44,26 +27,32 @@ export type ContextualVisibility = 'initial' | 'visible' | 'hidden';
 })
 
 export class ContextualHelpComponent {
-
-  @ViewChild('contextualPanel')
-  public contextualPanel: ElementRef;
-
   public message: string;
-  public visibility: ContextualVisibility;
-  public transformOrigin: string = 'bottom';
   public hideTimeoutId: any;
+
+  /**
+   * Returns true when the contextual help is displayed
+   */
+  private _visible: boolean;
+  public get visible(): boolean { return this._visible; }
+  public set visible(value: boolean) {
+    if (value !== this._visible) {
+      this._visible = value;
+      this.markForCheck();
+    }
+  }
 
   // Stream that emits when tooltip is hidden
   private _onHide: Subject<any>;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.message = '';
-    this.visibility = 'initial';
+    this.visible = false;
     this._onHide = new Subject();
   }
 
   /**
-   * Show the tooltip
+   * Show the contextual help
    */
   public show(): void {
     // Cancel the delayed hide if it is scheduled
@@ -71,24 +60,21 @@ export class ContextualHelpComponent {
       clearTimeout(this.hideTimeoutId);
     }
 
-    // Display the tooltip
-    this._setTransformOrigin();
-    this.visibility = 'visible';
-    this.markForCheck();
+    // Display the contextual help
+    this.visible = true;
   }
 
   /**
-   * Hide the tooltip
+   * Hide the contextual help
    */
   public hide(delay: number): void {
     this.hideTimeoutId = setTimeout(() => {
-      this.visibility = 'hidden';
-      this.markForCheck();
+      this.visible = false;
     }, delay);
   }
 
   /**
-   * After hidden observable that emits when tooltip state is changed
+   * After hidden observable that emits when contextual help state is changed
    */
   public afterHidden(): Observable<void> {
     return this._onHide.asObservable();
@@ -99,24 +85,9 @@ export class ContextualHelpComponent {
    * @param e Animation event instance
    */
   public afterVisibilityAnimation(e: AnimationEvent): void {
-    if (e.toState === 'hidden' && !(this.visibility === 'visible')) {
+    let hideElement = e.toState === 'void' && this.visible === false;
+    if (hideElement) {
       this._onHide.next();
-    }
-  }
-
-  /**
-   * Sets the tooltip transform origin according to the tooltip position
-   * @param value Value of the position of the tooltip to determine the tranform-style
-   */
-  public _setTransformOrigin(value = 'right') {
-    switch (value) {
-      case 'left': this.transformOrigin = 'right'; break;
-      case 'right': this.transformOrigin = 'left'; break;
-      case 'top': this.transformOrigin = 'bottom'; break;
-      case 'bottom':
-      default:
-        this.transformOrigin = 'top';
-        break;
     }
   }
 
