@@ -15,9 +15,9 @@ import {
   McsApiIdentity,
   McsAuthenticationIdentity,
   McsKeyValuePair
-} from '../../core';
-import { CoreTestingModule } from '../../core/testing';
-import { AppState } from '../../app.service';
+} from '../../../core';
+import { CoreTestingModule } from '../../../core/testing';
+import { AppState } from '../../../app.service';
 import { AccessControlDirective } from './access-control.directive';
 
 @Component({

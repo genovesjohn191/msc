@@ -1,7 +1,7 @@
 <div #tooltipPanel class="tooltip-panel"
   [style.transform-origin]="transformOrigin"
-  [@state]="visibility"
-  (@state.done)="afterVisibilityAnimation($event)">
+  [@scaleIn]="visible ? 'show' : 'void'"
+  (@scaleIn.done)="afterVisibilityAnimation($event)">
 
   <span>{{ message }}</span>
 </div>

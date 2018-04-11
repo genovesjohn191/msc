@@ -6,22 +6,15 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import {
-  animate,
-  AnimationEvent,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
+import { AnimationEvent } from '@angular/animations';
 import {
   Observable,
   Subject
 } from 'rxjs/Rx';
+import { animateFactory } from '../../utilities';
 
 /** Tooltips declaration type */
 export type TooltipPosition = 'left' | 'right' | 'top' | 'bottom';
-export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 export type TooltipColor = 'light' | 'dark';
 
 @Component({
@@ -31,14 +24,7 @@ export type TooltipColor = 'light' | 'dark';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('state', [
-      state('void', style({ transform: 'scale(0)' })),
-      state('initial', style({ transform: 'scale(0)' })),
-      state('visible', style({ transform: 'scale(1)' })),
-      state('hidden', style({ transform: 'scale(0)' })),
-      transition('* => visible', animate('150ms cubic-bezier(0.0, 0.0, 0.2, 1)')),
-      transition('* => hidden', animate('150ms cubic-bezier(0.4, 0.0, 1, 1)')),
-    ])
+    animateFactory.scaleIn
   ],
   host: {
     'class': 'tooltip-wrapper',
@@ -53,16 +39,26 @@ export class TooltipComponent {
   public tooltipPanel: ElementRef;
 
   public message: string;
-  public visibility: TooltipVisibility;
   public transformOrigin: string = 'bottom';
   public hideTimeoutId: any;
+
+  /**
+   * Returns true when the contextual help is displayed
+   */
+  private _visible: boolean;
+  public get visible(): boolean { return this._visible; }
+  public set visible(value: boolean) {
+    if (value !== this._visible) {
+      this._visible = value;
+      this.markForCheck();
+    }
+  }
 
   // Stream that emits when tooltip is hidden
   private _onHide: Subject<any>;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
     this.message = '';
-    this.visibility = 'initial';
     this._onHide = new Subject();
   }
 
@@ -77,8 +73,7 @@ export class TooltipComponent {
 
     // Display the tooltip
     this._setTransformOrigin(position);
-    this.visibility = 'visible';
-    this.markForCheck();
+    this.visible = true;
   }
 
   /**
@@ -86,8 +81,7 @@ export class TooltipComponent {
    */
   public hide(delay: number): void {
     this.hideTimeoutId = setTimeout(() => {
-      this.visibility = 'hidden';
-      this.markForCheck();
+      this.visible = false;
     }, delay);
   }
 
@@ -103,7 +97,8 @@ export class TooltipComponent {
    * @param e Animation event instance
    */
   public afterVisibilityAnimation(e: AnimationEvent): void {
-    if (e.toState === 'hidden' && !(this.visibility === 'visible')) {
+    let hideElement = e.toState === 'void' && this.visible === false;
+    if (hideElement) {
       this._onHide.next();
     }
   }

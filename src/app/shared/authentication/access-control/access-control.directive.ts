@@ -5,8 +5,8 @@ import {
   ViewContainerRef,
   OnChanges
 } from '@angular/core';
-import { McsAccessControlService } from '../../core';
-import { coerceArray } from '../../utilities';
+import { McsAccessControlService } from '../../../core';
+import { coerceArray } from '../../../utilities';
 
 @Directive({
   selector: '[mcsAccessControl]'
