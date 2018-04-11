@@ -37,7 +37,11 @@ import {
 } from '../models';
 import { TicketsRepository } from '../tickets.repository';
 import { TicketCreateService } from './ticket-create.service';
-import { Server } from '../../servers';
+import {
+  Server,
+  ServerResource,
+  serverServiceTypeText
+} from '../../servers';
 import { Firewall } from '../../networking';
 
 @Component({
@@ -282,15 +286,43 @@ export class TicketCreateComponent implements
   private _getServices(): void {
     // Get all the data from api in parallel
     this.servicesSubscription = Observable.forkJoin([
+      this._ticketCreateService.getServerResources(),
       this._ticketCreateService.getServers(),
       this._ticketCreateService.getFirewalls()
     ]).subscribe((data) => {
-      this._setServers(data[0]);
-      this._setFirewalls(data[1]);
+      this._setVdcs(data[0]);
+      this._setServers(data[1]);
+      this._setFirewalls(data[2]);
     });
     this.servicesSubscription.add(() => {
       this._changeDetectorRef.markForCheck();
     });
+  }
+
+  /**
+   * Set the data of VDCs obtained from API
+   */
+  private _setVdcs(response: any): void {
+    if (isNullOrEmpty(response) || isNullOrEmpty(response.content)) { return; }
+    let vdcs = response.content as ServerResource[];
+    let service: TicketService = new TicketService();
+
+    service.serviceName = 'VDCs';
+    vdcs.forEach((vdc) => {
+      // TODO: Waiting for Orch to add serviceId in server resource
+      if (isNullOrEmpty(vdc.name)) { return; }
+      let serviceData = new TicketServiceData();
+
+      serviceData.name = `${serverServiceTypeText[vdc.serviceType]} VDC (${vdc.name})`;
+      serviceData.isChecked = false;
+      serviceData.serviceId = vdc.name;
+      service.serviceItems.push(serviceData);
+    });
+
+    // Do not include in the services when the service item is nothing
+    if (!isNullOrEmpty(service.serviceItems)) {
+      this.services.push(service);
+    }
   }
 
   /**

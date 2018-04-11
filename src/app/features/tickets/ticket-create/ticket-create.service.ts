@@ -8,6 +8,13 @@ export class TicketCreateService {
   constructor(private _ticketsService: TicketsService) { }
 
   /**
+   * Get server resources based from servers service
+   */
+  public getServerResources() {
+    return this._ticketsService.getServerResources();
+  }
+
+  /**
    * Get server list based from servers service
    */
   public getServers() {
