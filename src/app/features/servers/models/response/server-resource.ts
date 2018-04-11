@@ -15,6 +15,7 @@ import { JsonProperty } from 'json-object-mapper';
 
 export class ServerResource {
   public id: string;
+  public serviceId: string;
   public name: string;
   public environmentName: string;
   public availabilityZone: string;
@@ -56,6 +57,7 @@ export class ServerResource {
     this.catalogItems = undefined;
     this.vApps = undefined;
     this.id = undefined;
+    this.serviceId = undefined;
     this.name = undefined;
     this.platform = undefined;
     this.environmentName = undefined;

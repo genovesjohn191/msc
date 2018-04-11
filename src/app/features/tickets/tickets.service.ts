@@ -21,7 +21,8 @@ import {
 } from './models';
 import {
   Server,
-  ServersService
+  ServersService,
+  ServerResource
 } from '../servers';
 import {
   Firewall,
@@ -76,6 +77,13 @@ export class TicketsService {
         this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
+  }
+
+  /**
+   * Get all server resources from the API
+   */
+  public getServerResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
+    return this._serversService.getServerResources();
   }
 
   /**

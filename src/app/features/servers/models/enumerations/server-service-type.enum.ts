@@ -6,6 +6,11 @@ export enum ServerServiceType {
   SelfManaged = 1
 }
 
+export const serverServiceTypeText = {
+  [ServerServiceType.Managed]: 'Managed',
+  [ServerServiceType.SelfManaged]: 'Self-Managed'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */
