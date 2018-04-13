@@ -15,7 +15,8 @@ import {
 import { CoreDefinition } from '../../../core';
 import {
   registerEvent,
-  unregisterEvent
+  unregisterEvent,
+  isNullOrEmpty
 } from '../../../utilities';
 import { SelectGroupComponent } from '../select-group/select-group.component';
 
@@ -29,6 +30,9 @@ let nextUniqueId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'select-item-wrapper',
+    'role': 'option',
+    '[class.active]': 'active',
+    '[class.selected]': 'selected',
     '[id]': 'id',
     '(click)': 'onClickItem($event)'
   }
@@ -82,12 +86,22 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
    * Return true when the item is selected, otherwise false
    */
   private _selected: boolean;
-  public get selected(): boolean {
-    return this._selected;
-  }
+  public get selected(): boolean { return this._selected; }
   public set selected(value: boolean) {
     if (this._selected !== value) {
       this._selected = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  /**
+   * Return true when the item is active, otherwise false
+   */
+  private _active: boolean;
+  public get active(): boolean { return this._active; }
+  public set active(value: boolean) {
+    if (this._active !== value) {
+      this._active = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -118,7 +132,7 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
     this._unregisterEvents();
   }
 
-  public getHostElement(): any {
+  public getHostElement(): HTMLElement {
     return this._elementRef.nativeElement;
   }
 
@@ -126,7 +140,10 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
     if (this.hasSubgroup) { return; }
     this.select();
     this._emitSelectionChanged();
-    _event.stopPropagation();
+
+    if (!isNullOrEmpty(_event)) {
+      _event.stopPropagation();
+    }
   }
 
   public select(): void {
@@ -137,6 +154,15 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
   public deselect(): void {
     this.selected = false;
     this.subGroupOpen = false;
+  }
+
+  public setActiveState(): void {
+    this.active = true;
+    this.getHostElement().focus();
+  }
+
+  public setInActiveState(): void {
+    this.active = false;
   }
 
   private _registerEvents(): void {

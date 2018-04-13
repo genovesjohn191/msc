@@ -3,6 +3,9 @@ import {
   forwardRef,
   Input,
   Output,
+  Renderer2,
+  ViewChild,
+  ElementRef,
   EventEmitter,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -15,7 +18,9 @@ import {
 import {
   coerceBoolean,
   coerceNumber,
-  animateFactory
+  animateFactory,
+  isNullOrEmpty,
+  refreshView
 } from '../../utilities';
 
 // Unique Id that generates during runtime
@@ -71,6 +76,9 @@ export class CollapsiblePanelComponent implements ControlValueAccessor {
   }
   private _value: boolean = false;
 
+  @ViewChild('panelElement')
+  private _panelElement: ElementRef;
+
   /**
    * Returns true when the panel is currently open (toggled)
    */
@@ -83,7 +91,10 @@ export class CollapsiblePanelComponent implements ControlValueAccessor {
     }
   }
 
-  public constructor(private _changeDetectorRef: ChangeDetectorRef) {
+  public constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _renderer: Renderer2
+  ) {
   }
 
   /**
@@ -127,6 +138,19 @@ export class CollapsiblePanelComponent implements ControlValueAccessor {
    */
   public registerOnTouched(fn: any) {
     this._onTouched = fn;
+  }
+
+  /**
+   * Removes the overflow of the animation
+   *
+   * `@Note` This is needed in order to show the whole panel of the select component.
+   */
+  public removeOverflow(): void {
+    if (isNullOrEmpty(this._panelElement)) { return; }
+    refreshView(() => {
+      this._renderer.removeStyle(this._panelElement.nativeElement, 'overflow');
+      this._changeDetectorRef.markForCheck();
+    });
   }
 
   // View <-> Model callback methods

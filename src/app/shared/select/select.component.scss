@@ -18,6 +18,7 @@ $select-group-wrapper-border-color: $select-group-panel-border-color;
 $select-item-min-width: 100px;
 $select-item-padding: $space-xsmall $space-small;
 $select-item-hover-color: $color-grey-07;
+$select-item-selected-color: $color-grey-06;
 // Select sub-group
 $select-sub-group-padding: $space-small;
 $select-sub-group-bg-color: $color-white;
@@ -92,6 +93,7 @@ $select-sub-group-max-height: 400px;
   white-space: nowrap;
   min-width: $select-item-min-width;
   cursor: pointer;
+  outline: none;
 
   .select-item-content {
     @include display-flex(row);
@@ -104,8 +106,13 @@ $select-sub-group-max-height: 400px;
   }
 
   &:hover,
-  &:focus {
+  &:focus,
+  &.active {
     background-color: $select-item-hover-color;
+  }
+
+  &.selected {
+    background-color: $select-item-selected-color;
   }
 
   .select-group-wrapper {

@@ -92,3 +92,5 @@ export * from './factory/portal/mcs-portal-template';
 export * from './factory/data-status/mcs-data-status-factory';
 export * from './factory/serialization/mcs-enum-serialization-base';
 export * from './factory/serialization/mcs-date-serialization';
+export * from './factory/item-list-manager/mcs-item-list-manager';
+export * from './factory/item-list-manager/mcs-item-list-key-manager';
