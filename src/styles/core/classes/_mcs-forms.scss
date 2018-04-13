@@ -7,6 +7,11 @@ $label-font-size: $font-size-large;
 $label-line-height: 45;
 $label-min-width: 70px;
 
+// Form field size
+$form-field-size-small: 200px;
+$form-field-size-medium: 300px;
+$form-field-size-large: 400px;
+
 .basic-form, form {
   .field {
     margin-bottom: $field-bottom-margin;
@@ -29,4 +34,16 @@ $label-min-width: 70px;
       line-height: 0;
     }
   }
+}
+
+.form-field-size-small {
+  max-width: $form-field-size-small;
+}
+
+.form-field-size-medium {
+  max-width: $form-field-size-medium;
+}
+
+.form-field-size-large {
+  max-width: $form-field-size-large;
 }

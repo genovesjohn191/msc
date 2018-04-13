@@ -1,7 +1,7 @@
 import {
   ServerIpAllocationMode,
   ServerIpAllocationModeSerialization
-} from './enumerations/server-ip-allocation-mode.enum';
+} from '../enumerations/server-ip-allocation-mode.enum';
 import { JsonProperty } from 'json-object-mapper';
 
 export class ServerManageNic {

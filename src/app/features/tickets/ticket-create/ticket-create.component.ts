@@ -319,7 +319,7 @@ export class TicketCreateComponent implements
       service.serviceItems.push(serviceData);
     });
 
-    // Do not include in the services when the service item is nothing
+    // Do not include in the services when there is no service item
     if (!isNullOrEmpty(service.serviceItems)) {
       this.services.push(service);
     }
@@ -344,7 +344,7 @@ export class TicketCreateComponent implements
       service.serviceItems.push(serviceData);
     });
 
-    // Do not include in the services when the service item is nothing
+    // Do not include in the services when there is no service item
     if (!isNullOrEmpty(service.serviceItems)) {
       this.services.push(service);
     }
@@ -369,7 +369,7 @@ export class TicketCreateComponent implements
       service.serviceItems.push(serviceData);
     });
 
-    // Do not include in the services when the service item is nothing
+    // Do not include in the services when there is no service item
     if (!isNullOrEmpty(service.serviceItems)) {
       this.services.push(service);
     }
