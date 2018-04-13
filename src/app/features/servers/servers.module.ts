@@ -22,7 +22,8 @@ import {
   DiskConflictSnapshotDialogComponent,
   SuspendServerDialogComponent,
   ResumeServerDialogComponent,
-  IsSelfManagedServerDirective
+  IsSelfManagedServerDirective,
+  AntiMalwareAddOnComponent
 } from './shared';
 /** Server */
 import {
@@ -69,7 +70,8 @@ import { SharedModule } from '../../shared';
     DeleteServerDialogComponent,
     SuspendServerDialogComponent,
     ResumeServerDialogComponent,
-    CreateSelfManagedServerComponent
+    CreateSelfManagedServerComponent,
+    AntiMalwareAddOnComponent
   ],
   declarations: [
     ServersComponent,
@@ -106,7 +108,8 @@ import { SharedModule } from '../../shared';
     DiskConflictSnapshotDialogComponent,
     SuspendServerDialogComponent,
     ResumeServerDialogComponent,
-    IsSelfManagedServerDirective
+    IsSelfManagedServerDirective,
+    AntiMalwareAddOnComponent
   ],
   imports: [
     SharedModule

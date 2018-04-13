@@ -491,6 +491,11 @@
           "cpuMax": "The number of vCPUs should not exceed {{available_cpu}}.",
           "cpuInvalid": "vCPU must be a multiple of {{multiple}}."
         }
+      },
+      "antiMalwareAddOn": {
+        "header": "Anti-Malware",
+        "label": "Anti-Malware Service Variant",
+        "placeholder": "Select variant"
       }
     }
   },

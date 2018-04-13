@@ -8,6 +8,8 @@ export * from './request/server-create-storage';
 export * from './request/server-create-network';
 export * from './request/server-client-object';
 export * from './request/server-create-snapshot';
+export * from './request/server-manage-network';
+export * from './request/server-manage-media';
 
 export * from './response/server';
 export * from './response/server-vmware-tools';
@@ -36,13 +38,14 @@ export * from './response/server-snapshot';
 /** Other Models that are use inside server component */
 export * from './server-performance-scale';
 export * from './server-manage-storage';
-export * from './server-manage-network';
-export * from './server-manage-media';
 export * from './server-ip-address';
 export * from './server-create-self-managed';
 export * from './server-list';
 export * from './server-image';
 export * from './server-snapshot-dialog-content';
+// TODO: This is just a temporary model
+// Will update once the API was finalized
+export * from './server-anti-malware';
 
 /** Enumerations */
 export * from './enumerations/server-command.enum';
@@ -57,3 +60,6 @@ export * from './enumerations/server-catalog-item-type.enum';
 export * from './enumerations/server-ip-allocation-mode.enum';
 export * from './enumerations/server-running-status.enum';
 export * from './enumerations/server-version-status.enum';
+// TODO: This is just a temporary model
+// Will update once the API was finalized
+export * from './enumerations/server-anti-malware-service-type.enum';

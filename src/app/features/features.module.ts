@@ -11,7 +11,10 @@ import { HttpErrorPageModule } from './http-error-page/http-error-page.module';
 import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.module';
 
 /** Service */
-import { JobsApiService } from './services';
+import {
+  JobsApiService,
+  OptionsApiService
+} from './services';
 
 @NgModule({
   imports: [
@@ -27,7 +30,8 @@ import { JobsApiService } from './services';
     AccessDeniedPageModule
   ],
   providers: [
-    JobsApiService
+    JobsApiService,
+    OptionsApiService
   ]
 })
 

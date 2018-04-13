@@ -29,3 +29,5 @@ export * from './server-dialogs/resume-server/resume-server.dialog';
 export * from './server-dialogs/disk-conflict-snapshot/disk-conflict-snapshot.dialog';
 /** Directives */
 export * from './directives/is-self-managed-server.directive';
+/** Add Ons */
+export * from './server-addons/anti-malware/anti-malware.addon';
