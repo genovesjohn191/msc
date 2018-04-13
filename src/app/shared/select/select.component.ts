@@ -21,24 +21,31 @@ import {
   NgForm
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
-import { startWith } from 'rxjs/operator/startWith';
+import { startWith } from 'rxjs/operators/startWith';
+import { takeUntil } from 'rxjs/operators/takeUntil';
 import {
   Key,
   McsSelection,
   CoreDefinition,
-  McsFormFieldControlBase
+  McsFormFieldControlBase,
+  McsItemListKeyManager,
+  McsScrollDispatcherService
 } from '../../core';
 import {
   isNullOrEmpty,
+  triggerEvent,
   registerEvent,
   unregisterEvent,
   ErrorStateMatcher,
   coerceBoolean,
   coerceNumber,
-  unsubscribeSafely,
   animateFactory
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
+import { Subject } from 'rxjs/Subject';
+
+const SELECT_PANEL_MAX_HEIGHT = 400;
+const SELECT_ITEM_OFFSET = 7;
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -132,8 +139,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   private _selection: McsSelection<SelectItemComponent>;
-  private _selectionSubscription: any;
-  private _itemsSubscripton: any;
+  private _itemListKeyManager: McsItemListKeyManager<SelectItemComponent>;
+  private _closePanelKeyEventsMap = new Map<Key, (_event) => void>();
+  private _openPanelKeyEventsMap = new Map<Key, (_event) => void>();
+  private _destroySubject = new Subject<void>();
 
   /**
    * Event handler references
@@ -158,6 +167,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public constructor(
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _scrollDispatcher: McsScrollDispatcherService,
     @Optional() @Self() public ngControl: NgControl,
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective
@@ -173,9 +183,11 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   public ngAfterContentInit(): void {
     registerEvent(document, 'click', this._closeOutsideHandler);
-    this._itemsSubscripton = startWith.call(this._items.changes, null).subscribe(() => {
-      this._listenToSelectionChange();
-    });
+    this._initializeKeyboardManager();
+    this._items.changes.pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => {
+        this._listenToSelectionChange();
+      });
   }
 
   public ngDoCheck(): void {
@@ -190,33 +202,54 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   public ngOnDestroy(): void {
     unregisterEvent(document, 'click', this._closeOutsideHandler);
-    unsubscribeSafely(this._selectionSubscription);
-    unsubscribeSafely(this._itemsSubscripton);
+    this._destroySubject.next();
+    this._destroySubject.complete();
     this.stateChanges.complete();
   }
 
+  /**
+   * Event that emits when the host element received keydown
+   * @param _event Keyboard event details
+   */
   public onKeyDown(_event: KeyboardEvent) {
-    if (_event.keyCode === Key.Enter || _event.keyCode === Key.Space) {
-      event.preventDefault(); // prevents the page from scrolling down when pressing space
-      this.closePanel();
+    if (!this.disabled) {
+      this.panelOpen ? this._handleOpenKeydown(_event) : this._handleClosedKeydown(_event);
     }
   }
 
+  /**
+   * Opens the panel of the select
+   */
   public openPanel() {
     if (isNullOrEmpty(this._items)) { return; }
     this.panelOpen = true;
   }
 
+  /**
+   * Closes the panel of the select
+   */
   public closePanel() {
     if (isNullOrEmpty(this._items)) { return; }
     this.panelOpen = false;
+
+    // We need to clear the active item upon closing the panel
+    // to selected item as active item
+    this._clearActiveItemState();
+    if (this._selection.hasValue()) {
+      this._itemListKeyManager.setActiveItem(this._selection.selected[0]);
+    }
   }
 
+  /**
+   * Toggles the panel of the select
+   */
   public toggle() {
     this.panelOpen ? this.closePanel() : this.openPanel();
   }
 
-  /** Callback for the cases where the focused state of the input changes. */
+  /**
+   * Callback for the cases where the focused state of the input changes.
+   */
   public onBlur(): void {
     this.focused = false;
     if (!this.disabled && !this.panelOpen) {
@@ -226,6 +259,9 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     }
   }
 
+  /**
+   * Event that emits when the element received focus
+   */
   public onFocus(): void {
     if (!this.disabled) {
       this.focused = true;
@@ -271,6 +307,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _onChanged: (value: any) => void = () => { /** dummy */ };
   private _onTouched = () => { /** dummy */ };
 
+  /**
+   * Event that emits when user has clicked outside the panel
+   * @param _event Event details
+   */
   private _onCloseOutside(_event: any) {
     if (this._elementRef.nativeElement.contains(_event.target)) {
       return;
@@ -278,13 +318,21 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     this.closePanel();
   }
 
+  /**
+   * Listen to every selection changed event
+   */
   private _listenToSelectionChange(): void {
-    this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
-      this._selectItem(item);
-      this.closePanel();
-    });
+    this.itemsSelectionChanged.pipe(takeUntil(this._destroySubject))
+      .subscribe((item) => {
+        this._selectItem(item);
+        this.closePanel();
+      });
   }
 
+  /**
+   * Selects the item provided by the parameter
+   * @param item Item to be selected
+   */
   private _selectItem(item: SelectItemComponent) {
     // Clear the selection including the value in case the item is null
     // to make way with the changes when formControl.reset() was called
@@ -302,6 +350,10 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     this.stateChanges.next();
   }
 
+  /**
+   * Clears the item selection model
+   * @param skipItem Item to be skipped in clearing the selection
+   */
   private _clearItemSelection(skipItem: SelectItemComponent): void {
     this._selection.clear();
     this._items.forEach((item) => {
@@ -309,5 +361,117 @@ export class SelectComponent extends McsFormFieldControlBase<any>
         item.deselect();
       }
     });
+  }
+
+  /**
+   * Initializes the instance of keyboard manager
+   */
+  private _initializeKeyboardManager(): void {
+    this._itemListKeyManager = new McsItemListKeyManager(this._items);
+
+    // Register tab event subscription
+    this._itemListKeyManager.tabPressed.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this.closePanel());
+
+    // Register change element on manager subscription
+    this._itemListKeyManager.activeItemChanged.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => {
+        this.panelOpen ? this._setActiveItemState() : this._selectActiveItem();
+      });
+
+    // Register keyboard events
+    this._registerClosePanelKeyEvents();
+    this._registerOpenPanelKeyEvents();
+  }
+
+  /**
+   * Event that emits when keydown is pressed while the panel is closed
+   * @param event Keyboard eventhandler details
+   */
+  private _handleClosedKeydown(event: KeyboardEvent): void {
+    let keyCodeExists = this._closePanelKeyEventsMap.has(event.keyCode);
+    if (keyCodeExists) {
+      event.preventDefault();
+      this._closePanelKeyEventsMap.get(event.keyCode)(event);
+    }
+  }
+
+  /**
+   * Event that emits when keydown is pressed while the panel is opened
+   * @param event Keyboard event instance
+   */
+  private _handleOpenKeydown(event: KeyboardEvent): void {
+    // Reselect previously active element
+    if (event.keyCode === Key.UpArrow || event.keyCode === Key.DownArrow) {
+      this._clearActiveItemState();
+    }
+    let keyCodeExists = this._openPanelKeyEventsMap.has(event.keyCode);
+    if (keyCodeExists) {
+      event.preventDefault();
+      this._openPanelKeyEventsMap.get(event.keyCode)(event);
+    }
+  }
+
+  /**
+   * Registers the keyboard events of the component while the panel is opened
+   */
+  private _registerOpenPanelKeyEvents(): void {
+    this._openPanelKeyEventsMap.set(Key.Enter, this._selectActiveItem.bind(this));
+    this._openPanelKeyEventsMap.set(Key.Space, this._selectActiveItem.bind(this));
+    this._openPanelKeyEventsMap.set(Key.Tab, this.closePanel.bind(this));
+    this._openPanelKeyEventsMap.set(Key.Escape, this.closePanel.bind(this));
+    this._openPanelKeyEventsMap.set(Key.UpArrow, this._keymanagerKeyDown.bind(this));
+    this._openPanelKeyEventsMap.set(Key.DownArrow, this._keymanagerKeyDown.bind(this));
+  }
+
+  /**
+   * Registers the keyboard events of the component while the panel is closed
+   */
+  private _registerClosePanelKeyEvents(): void {
+    this._closePanelKeyEventsMap.set(Key.Enter, this.openPanel.bind(this));
+    this._closePanelKeyEventsMap.set(Key.Space, this.openPanel.bind(this));
+    this._closePanelKeyEventsMap.set(Key.UpArrow, this._keymanagerKeyDown.bind(this));
+    this._closePanelKeyEventsMap.set(Key.DownArrow, this._keymanagerKeyDown.bind(this));
+    this._closePanelKeyEventsMap.set(Key.LeftArrow, this._keymanagerKeyDown.bind(this));
+    this._closePanelKeyEventsMap.set(Key.RightArrow, this._keymanagerKeyDown.bind(this));
+  }
+
+  /**
+   * Event that triggers when key is pressed
+   *
+   * `@Note` This is needed in order for the instace of this class
+   * to be address on the bind(this), otherwise directly call to keymanager.onkeydown
+   * will not work.
+   * @param event Keyboard event instance
+   */
+  private _keymanagerKeyDown(event: KeyboardEvent): void {
+    this._itemListKeyManager.onKeyDown(event);
+  }
+
+  /**
+   * Select the active items while selecting using keyboard
+   */
+  private _selectActiveItem(): void {
+    if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
+    triggerEvent(this._itemListKeyManager.activeItem.getHostElement(), 'click');
+  }
+
+  /**
+   * Sets the active item state with scrolling down animation
+   */
+  private _setActiveItemState(): void {
+    if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
+    let activeElement = this._itemListKeyManager.activeItem.getHostElement();
+    let heightOffset = SELECT_PANEL_MAX_HEIGHT - (activeElement.offsetHeight + SELECT_ITEM_OFFSET);
+    this._scrollDispatcher.scrollToElement(activeElement, heightOffset);
+    this._itemListKeyManager.activeItem.setActiveState();
+  }
+
+  /**
+   * Clears the currently active item status
+   */
+  private _clearActiveItemState(): void {
+    if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
+    this._itemListKeyManager.activeItem.setInActiveState();
   }
 }

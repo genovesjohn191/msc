@@ -133,7 +133,6 @@ export class McsScrollDispatcherService {
   /**
    * Scroll element based on the given parameters
    * @param element Element to be scrolled
-   * @param scrollableElementId Scrollable element that serve as the based on the element to scroll
    * @param offset Addition offset of the scrolled element
    * @param duration Duration of the scrolling
    */
@@ -149,9 +148,11 @@ export class McsScrollDispatcherService {
     if (isNullOrEmpty(scrollableElements)) { return; }
 
     // Execute scrolling of element
+    let parentScrollableElement = scrollableElements[scrollableElements.length - 1];
+
     this._executeScrollingToElement(
-      scrollableElements[0].getElementRef().nativeElement,
-      element.offsetTop + offset, duration
+      parentScrollableElement.getElementRef().nativeElement,
+      element.offsetTop + (offset * -1), duration
     );
   }
 
