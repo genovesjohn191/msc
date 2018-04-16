@@ -11,7 +11,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { SharedModule } from '../../../../../shared';
-import { AntiMalwareAddOnComponent } from './anti-malware.addon';
+import { DisasterRecoveryAddOnComponent } from './disaster-recovery.addon';
 import { CoreTestingModule } from '../../../../../core/testing';
 import { OptionsApiService } from '../../../../services';
 
@@ -20,15 +20,15 @@ import { OptionsApiService } from '../../../../services';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(AntiMalwareAddOnComponent)
-  public antiMalwareAddOnComponent: AntiMalwareAddOnComponent;
+  @ViewChild(DisasterRecoveryAddOnComponent)
+  public disasterRecoveryAddOnComponent: DisasterRecoveryAddOnComponent;
 
-  public onSelectAntiMalwareVariant($event): any {
+  public onSelectDisasterRecoveryGroup($event): any {
     return $event;
   }
 }
 
-describe('AntiMalwareComponent', () => {
+describe('DisasterRecoveryAddOnComponent', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
@@ -41,7 +41,7 @@ describe('AntiMalwareComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        AntiMalwareAddOnComponent
+        DisasterRecoveryAddOnComponent
       ],
       imports: [
         FormsModule,
@@ -58,7 +58,9 @@ describe('AntiMalwareComponent', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <mcs-anti-malware (change)="onSelectAntiMalwareVariant($event)"></mcs-anti-malware>
+        <mcs-disaster-recovery
+          (change)="onSelectDisasterRecoveryGroup($event)">
+        </mcs-disaster-recovery>
         `
       }
     });
@@ -69,8 +71,7 @@ describe('AntiMalwareComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.antiMalwareAddOnComponent.antiMalwareServices.push('Standard');
-      component.antiMalwareAddOnComponent.antiMalwareServices.push('Self-Managed');
+      component.disasterRecoveryAddOnComponent.protectionGroups.push('Contoso MMAZG00001');
     });
   }));
 
@@ -79,10 +80,10 @@ describe('AntiMalwareComponent', () => {
   // was updated and using the data from the api
   describe('onChanged()', () => {
     it(`should output the selected value from select field`, () => {
-        spyOn(component.antiMalwareAddOnComponent.change, 'emit');
-        component.antiMalwareAddOnComponent.onServiceChanged();
-        expect(component.antiMalwareAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
-        expect(component.onSelectAntiMalwareVariant('Standard')).toBeDefined();
+        spyOn(component.disasterRecoveryAddOnComponent.change, 'emit');
+        component.disasterRecoveryAddOnComponent.onGroupChanged();
+        expect(component.disasterRecoveryAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
+        expect(component.onSelectDisasterRecoveryGroup('Contoso MMAZG00001')).toBeDefined();
       });
   });
 });

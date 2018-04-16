@@ -21,4 +21,17 @@ export class OptionsApiService {
 
     return Observable.of(response);
   }
+
+  /**
+   * Get disaster recovery options
+   * TODO: Will update this one when API is ready
+   */
+  public getDisasterRecoveryOptions(): Observable<McsApiSuccessResponse<string[]>> {
+    let response = new McsApiSuccessResponse<string[]>();
+    response.status = McsHttpStatusCode.Success;
+    response.totalCount = 2;
+    response.content = ['Contoso MMAZG00001'];
+
+    return Observable.of(response);
+  }
 }

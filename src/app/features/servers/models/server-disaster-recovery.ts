@@ -1,9 +1,10 @@
 // TODO: This is just a temporary model
 // Will update once the API was finalized
-export class ServerAntiMalware {
-  public serviceType: string;
+
+export class ServerDisasterRecovery {
+  public groupName: string;
 
   constructor() {
-    this.serviceType = undefined;
+    this.groupName = undefined;
   }
 }

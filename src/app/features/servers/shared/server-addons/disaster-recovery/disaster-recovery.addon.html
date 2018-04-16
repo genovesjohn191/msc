@@ -1,12 +1,12 @@
 <mcs-collapsible-panel [header]="textContent.header">
   <div class="space-between-inline-items align-items-center">
     <span>{{ textContent.label }}:</span>
-    <mcs-select [(ngModel)]="antiMalwareService"
-      (change)="onServiceChanged()"
+    <mcs-select [(ngModel)]="protectionGroup"
+      (change)="onGroupChanged()"
       [placeholder]="textContent.placeholder"
       class="form-field-size-small">
-      <mcs-select-item *ngFor="let service of antiMalwareServices" [value]="service">
-        {{ service }}
+      <mcs-select-item *ngFor="let group of protectionGroups" [value]="group">
+        {{ group }}
       </mcs-select-item>
     </mcs-select>
   </div>
