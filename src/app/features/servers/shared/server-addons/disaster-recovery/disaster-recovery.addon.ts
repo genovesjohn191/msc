@@ -9,10 +9,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import {
-  McsTextContentProvider,
-  McsOption
-} from '../../../../../core';
+import { McsTextContentProvider } from '../../../../../core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
@@ -32,29 +29,32 @@ import { ServerDisasterRecovery } from '../../../models';
 
 export class DisasterRecoveryAddOnComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public groups: McsOption[];
-  public subscription: Subscription;
+  public protectionGroups: string[];
+  public disasterRecovery: ServerDisasterRecovery;
 
   @Output()
   public change: EventEmitter<ServerDisasterRecovery> = new EventEmitter();
 
-  private _disasterRecoveryGroup: string;
-  public get disasterRecoveryGroup(): string {
-    return this._disasterRecoveryGroup;
+  private _protectionGroup: string;
+  public get protectionGroup(): string {
+    return this._protectionGroup;
   }
-  public set disasterRecoveryGroup(value: string) {
-    if (this._disasterRecoveryGroup !== value) {
-      this._disasterRecoveryGroup = value;
+  public set protectionGroup(value: string) {
+    if (this._protectionGroup !== value) {
+      this._protectionGroup = value;
       this._changeDetectorRef.markForCheck();
     }
   }
+
+  private _protectionGroupSubscription: Subscription;
 
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _optionsApiService: OptionsApiService
   ) {
-    this.groups = new Array<McsOption>();
+    this.protectionGroups = new Array();
+    this.disasterRecovery = new ServerDisasterRecovery();
   }
 
   public ngOnInit(): void {
@@ -63,16 +63,14 @@ export class DisasterRecoveryAddOnComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this.subscription);
+    unsubscribeSafely(this._protectionGroupSubscription);
   }
 
   /**
    * This will set the disaster recovery group value
    * and notify change parameter
-   * @param value Server disaster recovery group
    */
-  public onGroupChanged(value: string): void {
-    this.disasterRecoveryGroup = value;
+  public onGroupChanged(): void {
     this._notifyChangeParameter();
   }
 
@@ -80,37 +78,22 @@ export class DisasterRecoveryAddOnComponent implements OnInit, OnDestroy {
    * Get disaster recovery options from the API
    */
   private _getDisasterRecoveryGroups(): void {
-    this.subscription = this._optionsApiService.getDisasterRecoveryOptions()
+    this._protectionGroupSubscription = this._optionsApiService.getDisasterRecoveryOptions()
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
+        this.protectionGroups = response.content;
 
-        this._setDisasterRecoveryGroups(response.content);
-        this._setGroupInitialValue();
+        if (!isNullOrEmpty(this.protectionGroups)) {
+          this.protectionGroup = this.protectionGroups[0];
+        }
       });
-  }
-
-  /** Set disaster recovery groups */
-  private _setDisasterRecoveryGroups(options: string[]): void {
-    if (isNullOrEmpty(options)) { return; }
-
-    options.forEach((option) => {
-      this.groups.push(new McsOption(option, option));
-    });
-  }
-
-  /** Set disaster recovery group initial value */
-  private _setGroupInitialValue(): void {
-    if (isNullOrEmpty(this.groups)) { return; }
-
-    this.disasterRecoveryGroup = this.groups[0].value;
   }
 
   /**
    * Event that emits whenever there are changes in the model
    */
   private _notifyChangeParameter(): void {
-    let serverDisasterRecovery = new ServerDisasterRecovery();
-    serverDisasterRecovery.groupName = this.disasterRecoveryGroup;
-    this.change.emit(serverDisasterRecovery);
+    this.disasterRecovery.groupName = this.protectionGroup;
+    this.change.emit(this.disasterRecovery);
   }
 }

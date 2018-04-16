@@ -12,7 +12,6 @@ import {
 } from '@angular/core/testing';
 import { SharedModule } from '../../../../../shared';
 import { DisasterRecoveryAddOnComponent } from './disaster-recovery.addon';
-import { McsOption } from '../../../../../core';
 import { CoreTestingModule } from '../../../../../core/testing';
 import { OptionsApiService } from '../../../../services';
 
@@ -72,8 +71,7 @@ describe('DisasterRecoveryAddOnComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.disasterRecoveryAddOnComponent.groups.push(
-        new McsOption('Contoso MMAZG00001', 'Contoso MMAZG00001'));
+      component.disasterRecoveryAddOnComponent.protectionGroups.push('Contoso MMAZG00001');
     });
   }));
 
@@ -83,7 +81,7 @@ describe('DisasterRecoveryAddOnComponent', () => {
   describe('onChanged()', () => {
     it(`should output the selected value from select field`, () => {
         spyOn(component.disasterRecoveryAddOnComponent.change, 'emit');
-        component.disasterRecoveryAddOnComponent.onGroupChanged('Contoso MMAZG00001');
+        component.disasterRecoveryAddOnComponent.onGroupChanged();
         expect(component.disasterRecoveryAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
         expect(component.onSelectDisasterRecoveryGroup('Contoso MMAZG00001')).toBeDefined();
       });

@@ -61,6 +61,3 @@ export * from './enumerations/server-catalog-item-type.enum';
 export * from './enumerations/server-ip-allocation-mode.enum';
 export * from './enumerations/server-running-status.enum';
 export * from './enumerations/server-version-status.enum';
-// TODO: This is just a temporary model
-// Will update once the API was finalized
-export * from './enumerations/server-anti-malware-service-type.enum';
