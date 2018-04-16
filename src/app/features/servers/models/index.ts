@@ -46,6 +46,7 @@ export * from './server-snapshot-dialog-content';
 // TODO: This is just a temporary model
 // Will update once the API was finalized
 export * from './server-anti-malware';
+export * from './server-disaster-recovery';
 
 /** Enumerations */
 export * from './enumerations/server-command.enum';

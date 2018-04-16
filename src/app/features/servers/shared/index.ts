@@ -31,3 +31,4 @@ export * from './server-dialogs/disk-conflict-snapshot/disk-conflict-snapshot.di
 export * from './directives/is-self-managed-server.directive';
 /** Add Ons */
 export * from './server-addons/anti-malware/anti-malware.addon';
+export * from './server-addons/disaster-recovery/disaster-recovery.addon';

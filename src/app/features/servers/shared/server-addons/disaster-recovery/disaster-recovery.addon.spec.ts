@@ -11,12 +11,9 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { SharedModule } from '../../../../../shared';
-import { AntiMalwareAddOnComponent } from './anti-malware.addon';
+import { DisasterRecoveryAddOnComponent } from './disaster-recovery.addon';
 import { McsOption } from '../../../../../core';
 import { CoreTestingModule } from '../../../../../core/testing';
-import {
-  ServerAntiMalwareServiceType,
-} from '../../../models';
 import { OptionsApiService } from '../../../../services';
 
 @Component({
@@ -24,15 +21,15 @@ import { OptionsApiService } from '../../../../services';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(AntiMalwareAddOnComponent)
-  public antiMalwareAddOnComponent: AntiMalwareAddOnComponent;
+  @ViewChild(DisasterRecoveryAddOnComponent)
+  public disasterRecoveryAddOnComponent: DisasterRecoveryAddOnComponent;
 
-  public onSelectAntiMalwareVariant($event): any {
+  public onSelectDisasterRecoveryGroup($event): any {
     return $event;
   }
 }
 
-describe('AntiMalwareComponent', () => {
+describe('DisasterRecoveryAddOnComponent', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
@@ -45,7 +42,7 @@ describe('AntiMalwareComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        AntiMalwareAddOnComponent
+        DisasterRecoveryAddOnComponent
       ],
       imports: [
         FormsModule,
@@ -62,7 +59,9 @@ describe('AntiMalwareComponent', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <mcs-anti-malware (change)="onSelectAntiMalwareVariant($event)"></mcs-anti-malware>
+        <mcs-disaster-recovery
+          (change)="onSelectDisasterRecoveryGroup($event)">
+        </mcs-disaster-recovery>
         `
       }
     });
@@ -73,10 +72,8 @@ describe('AntiMalwareComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.antiMalwareAddOnComponent.services.push(
-        new McsOption(ServerAntiMalwareServiceType.Standard, 'Standard'));
-      component.antiMalwareAddOnComponent.services.push(
-        new McsOption(ServerAntiMalwareServiceType.SelfManaged, 'Self-Managed'));
+      component.disasterRecoveryAddOnComponent.groups.push(
+        new McsOption('Contoso MMAZG00001', 'Contoso MMAZG00001'));
     });
   }));
 
@@ -85,11 +82,10 @@ describe('AntiMalwareComponent', () => {
   // was updated and using the data from the api
   describe('onChanged()', () => {
     it(`should output the selected value from select field`, () => {
-        spyOn(component.antiMalwareAddOnComponent.change, 'emit');
-        component.antiMalwareAddOnComponent.onServiceChanged(ServerAntiMalwareServiceType.Standard);
-        expect(component.antiMalwareAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
-        expect(component.onSelectAntiMalwareVariant(
-          ServerAntiMalwareServiceType.Standard)).toBeDefined();
+        spyOn(component.disasterRecoveryAddOnComponent.change, 'emit');
+        component.disasterRecoveryAddOnComponent.onGroupChanged('Contoso MMAZG00001');
+        expect(component.disasterRecoveryAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
+        expect(component.onSelectDisasterRecoveryGroup('Contoso MMAZG00001')).toBeDefined();
       });
   });
 });
