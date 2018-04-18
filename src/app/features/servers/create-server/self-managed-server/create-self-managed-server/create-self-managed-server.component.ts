@@ -21,7 +21,7 @@ import {
   ServerCreateType,
   ServerCreateSelfManaged,
   ServerResource,
-  ServerGroupedOs
+  ServerOperatingSystem
 } from '../../../models';
 import { McsTextContentProvider } from '../../../../../core';
 import { isNullOrEmpty } from '../../../../../utilities';
@@ -45,7 +45,7 @@ export class CreateSelfManagedServerComponent implements OnInit {
   public resource: ServerResource;
 
   @Input()
-  public serversOs: ServerGroupedOs[];
+  public serversOs: ServerOperatingSystem[];
 
   @Input()
   public servers: Server[];

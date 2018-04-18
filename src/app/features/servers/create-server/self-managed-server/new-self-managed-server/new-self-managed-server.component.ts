@@ -41,10 +41,11 @@ import {
   ServerCreateSelfManaged,
   ServerResource,
   ServerNetwork,
-  ServerGroupedOs,
+  ServerOperatingSystem,
   ServerCreateType,
-  ServerImageType,
   ServerImage,
+  ServerImageType,
+  ServerCatalogItem,
   ServerCatalogItemType
 } from '../../../models';
 
@@ -68,7 +69,7 @@ export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
   public resource: ServerResource;
 
   @Input()
-  public serversOs: ServerGroupedOs[];
+  public serversOs: ServerOperatingSystem[];
 
   @Output()
   public onOutputServerDetails: EventEmitter<ServerCreateSelfManaged>;
@@ -98,14 +99,14 @@ export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
   public storageSliderValues: number[];
   public storageAvailableMemoryMB: number;
   public selectedStorage: ServerManageStorage;
-  public serverImageData: ServerImage[];
 
   // Dropdowns
   public vAppItems: McsOption[];
   public serverOsItems: any;
-  public serverTemplateItems: McsOption[];
   public networkItems: McsOption[];
   public storageItems: McsOption[];
+  public operatingSystemsMap: Map<string, ServerImage[]>;
+  public customTemplates: ServerImage[];
 
   // Others
   public createType: ServerCreateType;
@@ -130,6 +131,14 @@ export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
     );
   }
 
+  public get hasOperatingSystems(): boolean {
+    return this.operatingSystemsMap.size > 0;
+  }
+
+  public get hasCustomTemplates(): boolean {
+    return  this.customTemplates.length > 0;
+  }
+
   public constructor(
     private _serversService: ServersService,
     private _textContentProvider: McsTextContentProvider,
@@ -144,9 +153,10 @@ export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
     this.createType = ServerCreateType.New;
     this.storageAvailableMemoryMB = 0;
     this.selectedStorage = new ServerManageStorage();
-    this.serverImageData = new Array<ServerImage>();
     this.selectedNetwork = new ServerNetwork();
     this.onOutputServerDetails = new EventEmitter<ServerCreateSelfManaged>();
+    this.operatingSystemsMap = new Map<string, ServerImage[]>();
+    this.customTemplates = new Array<ServerImage>();
   }
 
   public ngOnInit() {
@@ -238,48 +248,43 @@ export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
   }
 
   private _setServerImageItems(): void {
-    let serverImageId = 1;
-
     // Set the server image
-    this.serverOsItems = new Array();
-    this.serversOs.forEach((groupedOs) => {
-      groupedOs.os.forEach((os) => {
-        let serverImage = new ServerImage();
-        serverImage.id = serverImageId;
-        serverImage.imageType = ServerImageType.Os;
-        serverImage.image = os.name;
+    this._filterOsGroup(this.serversOs);
 
-        this.serverImageData.push(serverImage);
+    // Set custom templates
+    if (isNullOrEmpty(this.resource)) { return; }
+    this._filterCustomTemplates(this.resource.catalogItems);
+  }
 
-        let osItem = { value: serverImage.id, text: serverImage.image };
-        let osGroupIndex = this.serverOsItems.findIndex((item) => {
-          return item.group === groupedOs.platform;
-        });
+  private _filterOsGroup(_operatingSystems: ServerOperatingSystem[]): void {
+    if (isNullOrEmpty(_operatingSystems)) { return; }
 
-        if (osGroupIndex > -1) {
-          this.serverOsItems[osGroupIndex].items.push(osItem);
-        } else {
-          this.serverOsItems.push({ group: groupedOs.platform, items: [osItem] });
-        }
-        serverImageId++;
-      });
+    _operatingSystems.forEach((operatingSystem) => {
+      let keyString = operatingSystem.name.split(CoreDefinition.REGEX_SPACE_AND_DASH);
+      if (isNullOrEmpty(keyString)) { return; }
+      let groupedOs: ServerImage[];
+
+      let existingOs = this.operatingSystemsMap.get(keyString[0]);
+      groupedOs = isNullOrEmpty(existingOs) ? new Array() : existingOs;
+
+      let os = new ServerImage();
+      os.image = operatingSystem.name;
+      os.imageType = ServerImageType.Os;
+
+      groupedOs.push(os);
+      this.operatingSystemsMap.set(keyString[0], groupedOs);
     });
+  }
 
-    // Check the Catalog items
-    let hasCatalogs: boolean = !isNullOrEmpty(this.resource) &&
-      !isNullOrEmpty(this.resource.catalogItems);
-    if (!hasCatalogs) { return; }
-    this.serverTemplateItems = new Array();
-    this.resource.catalogItems.forEach((catalog) => {
+  private _filterCustomTemplates(_catalogItems: ServerCatalogItem[]): void {
+    if (isNullOrEmpty(_catalogItems)) { return; }
+
+    _catalogItems.forEach((catalog) => {
       if (catalog.itemType === ServerCatalogItemType.Template) {
-        let serverImage = new ServerImage();
-        serverImage.id = serverImageId;
-        serverImage.imageType = ServerImageType.Template;
-        serverImage.image = catalog.itemName;
-
-        this.serverImageData.push(serverImage);
-        this.serverTemplateItems.push({ value: serverImage.id, text: serverImage.image });
-        serverImageId++;
+        let template = new ServerImage();
+        template.image = catalog.itemName;
+        template.imageType = ServerImageType.Template;
+        this.customTemplates.push(template);
       }
     });
   }
@@ -399,9 +404,7 @@ export class NewSelfManagedServerComponent implements OnInit, OnDestroy {
     newSelfManaged.type = ServerCreateType.New;
     newSelfManaged.vApp = this.fcVApp.value;
 
-    let serverImage = this.serverImageData.find((data) => {
-      return data.id === this.fcImage.value;
-    });
+    let serverImage = this.fcImage.value as ServerImage;
 
     if (!isNullOrEmpty(serverImage)) {
       newSelfManaged.imageType = serverImage.imageType;
