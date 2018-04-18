@@ -18,7 +18,7 @@ import {
   ServerManageMedia,
   ServerCreate,
   ServerClone,
-  ServerGroupedOs
+  ServerOperatingSystem
 } from './models';
 import { ServersService } from './servers.service';
 import {
@@ -262,7 +262,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerGroupedOs[]>();
+      let responseData = new McsApiSuccessResponse<ServerOperatingSystem[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       mockRequest.flush(responseData);

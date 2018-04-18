@@ -38,7 +38,7 @@ import {
   ServerNetwork,
   ServerCatalogItem,
   ServerVApp,
-  ServerGroupedOs,
+  ServerOperatingSystem,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerNicSummary,
@@ -369,7 +369,7 @@ export class ServersService {
   /**
    * This will get the server os data from the API
    */
-  public getServerOs(): Observable<McsApiSuccessResponse<ServerGroupedOs[]>> {
+  public getServerOs(): Observable<McsApiSuccessResponse<ServerOperatingSystem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/servers/os';
 
@@ -380,7 +380,7 @@ export class ServersService {
       .map((response) => {
         // Deserialize json reponse
         let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<ServerGroupedOs[]>(ServerGroupedOs, response);
+          .deserializeResponse<ServerOperatingSystem[]>(ServerOperatingSystem, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

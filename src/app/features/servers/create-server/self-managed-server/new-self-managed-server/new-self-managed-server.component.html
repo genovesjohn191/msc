@@ -49,20 +49,20 @@
       <mcs-select [formControl]="fcImage" required
         [placeholder]="textContent.placeholder.image"
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
-        <mcs-select-group *ngIf="serverOsItems" [header]="textContent.headers.os">
-          <mcs-select-item *ngFor="let platform of serverOsItems">
-            {{ platform.group }}
+        <mcs-select-group *ngIf="hasOperatingSystems" [header]="textContent.headers.os">
+          <mcs-select-item *ngFor="let groupedOs of operatingSystemsMap | mcsMapIterable">
+            {{ groupedOs.key }}
             <mcs-select-group sub-group>
-              <mcs-select-item *ngFor="let os of platform.items" [value]="os.value">
-                {{ os.text }}
+              <mcs-select-item *ngFor="let os of groupedOs.value" [value]="os">
+                {{ os.image }}
               </mcs-select-item>
             </mcs-select-group>
           </mcs-select-item>
         </mcs-select-group>
 
-        <mcs-select-group *ngIf="serverTemplateItems" [header]="textContent.headers.templates">
-          <mcs-select-item *ngFor="let template of serverTemplateItems" [value]="template.value">
-            {{ template.text }}
+        <mcs-select-group *ngIf="hasCustomTemplates" [header]="textContent.headers.templates">
+          <mcs-select-item *ngFor="let template of customTemplates" [value]="template">
+            {{ template.image }}
           </mcs-select-item>
         </mcs-select-group>
       </mcs-select>

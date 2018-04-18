@@ -34,7 +34,6 @@ import {
   removeAllChildren
 } from '../../../../utilities';
 import {
-  ServerGroupedOs,
   ServerOperatingSystem,
   ServerResource,
   ServerVApp,
@@ -115,8 +114,8 @@ export class CreateSelfManagedServersComponent implements
   /**
    * Server OS list
    */
-  private _serversOs: ServerGroupedOs[];
-  public get serversOs(): ServerGroupedOs[] {
+  private _serversOs: ServerOperatingSystem[];
+  public get serversOs(): ServerOperatingSystem[] {
     return this._serversOs;
   }
 
@@ -394,26 +393,16 @@ export class CreateSelfManagedServersComponent implements
    */
   private _setServerOs(response: any): void {
     if (response && response.content) {
-      let serverOs = response.content as ServerGroupedOs[];
-      let serverGroupedOs = new Array<ServerGroupedOs>();
+      let serverOs = response.content as ServerOperatingSystem[];
+      let serverSelfManagedOs = new Array<ServerOperatingSystem>();
 
-      serverOs.forEach((group) => {
-        let groupedOs = new ServerGroupedOs();
-        groupedOs.platform = group.platform;
-        groupedOs.os = new Array<ServerOperatingSystem>();
-
-        group.os.forEach((os) => {
-          if (os.serviceType === ServerServiceType.SelfManaged) {
-            groupedOs.os.push(os);
-          }
-        });
-
-        if (groupedOs.os.length > 0) {
-          serverGroupedOs.push(groupedOs);
+      serverOs.forEach((os) => {
+        if (os.serviceType === ServerServiceType.SelfManaged) {
+          serverSelfManagedOs.push(os);
         }
       });
 
-      this._serversOs = serverGroupedOs;
+      this._serversOs = serverSelfManagedOs;
     }
   }
 
