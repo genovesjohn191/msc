@@ -1,0 +1,41 @@
+<div class="vertical-items-spacing-small">
+  <div class="space-between-inline-items align-items-center">
+    <span>{{ textContent.version.label }}:</span>
+    <mcs-select [(ngModel)]="selectedSqlServerVersion"
+      (change)="onVersionChanged()"
+      [placeholder]="textContent.version.placeholder"
+      class="form-field-size-small">
+      <mcs-select-item *ngFor="let version of sqlServerVersions" [value]="version">
+        {{ version }}
+      </mcs-select-item>
+    </mcs-select>
+  </div>
+
+  <div class="space-between-inline-items align-items-center">
+    <span>{{ textContent.edition.label }}:</span>
+    <mcs-select [(ngModel)]="selectedSqlServerEdition"
+      (change)="onEditionChanged()"
+      [placeholder]="textContent.edition.placeholder"
+      class="form-field-size-small">
+      <ng-container *ngFor="let edition of sqlServerEditions">
+        <mcs-select-item *ngIf="isOptionIncluded(edition)" [value]="edition">
+          {{ edition }}
+        </mcs-select-item>
+      </ng-container>
+    </mcs-select>
+  </div>
+
+  <div class="space-between-inline-items align-items-center">
+    <span>{{ textContent.architecture.label }}:</span>
+    <mcs-select [(ngModel)]="selectedSqlServerArchitecture"
+      (change)="onArchitectureChanged()"
+      [placeholder]="textContent.architecture.placeholder"
+      class="form-field-size-small">
+      <mcs-select-item
+        *ngFor="let architecture of sqlServerArchitectures"
+        [value]="architecture">
+        {{ architecture }}
+      </mcs-select-item>
+    </mcs-select>
+  </div>
+</div>
