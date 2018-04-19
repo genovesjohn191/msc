@@ -5,10 +5,4 @@ export class ServerSql {
   public version: string;
   public edition: string;
   public architecture: string;
-
-  constructor() {
-    this.version = undefined;
-    this.edition = undefined;
-    this.architecture = undefined;
-  }
 }

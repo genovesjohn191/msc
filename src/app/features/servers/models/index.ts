@@ -51,6 +51,7 @@ export * from './server-snapshot-dialog-content';
 export * from './server-anti-malware';
 export * from './server-disaster-recovery';
 export * from './server-sql';
+export * from './server-infrastructure';
 
 /** Enumerations */
 export * from './enumerations/server-command.enum';

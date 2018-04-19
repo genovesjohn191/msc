@@ -33,3 +33,4 @@ export * from './directives/is-self-managed-server.directive';
 export * from './server-addons/anti-malware/anti-malware.addon';
 export * from './server-addons/disaster-recovery/disaster-recovery.addon';
 export * from './server-addons/sql-server/sql-server.addon';
+export * from './server-addons/infrastructure-monitoring/infrastructure-monitoring.addon';
