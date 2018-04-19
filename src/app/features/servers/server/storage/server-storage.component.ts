@@ -23,7 +23,6 @@ import {
   McsNotificationEventsService,
   McsApiJob,
   McsDialogService,
-  McsOption,
   McsErrorHandlerService,
   McsDataStatusFactory,
   McsDataStatus
@@ -31,7 +30,7 @@ import {
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRespository } from '../../servers-resources.repository';
+import { ServersResourcesRepository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -102,7 +101,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   }
 
   public get hasStorageProfileList(): boolean {
-    return !isNullOrEmpty(this.storageProfileList);
+    return !isNullOrEmpty(this.resourceStorage);
   }
 
   public get hasStorageDevice(): boolean {
@@ -194,21 +193,10 @@ export class ServerStorageComponent extends ServerDetailsBase
       || !this.hasAvailableStorageSpace;
   }
 
-  public get storageProfileList(): any[] {
-    let storageProfileList = new Array<McsOption>();
-
-    if (!isNullOrEmpty(this.resourceStorage)) {
-      this.resourceStorage.forEach((storage) => {
-        storageProfileList.push({ value: storage.name, text: storage.name });
-      });
-    }
-    return storageProfileList;
-  }
-
   private _storageProfile: string;
 
   constructor(
-    _serversResourcesRepository: ServersResourcesRespository,
+    _serversResourcesRepository: ServersResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,

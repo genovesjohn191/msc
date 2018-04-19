@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   Output,
+  OnDestroy,
   EventEmitter,
   ContentChildren,
   QueryList,
@@ -10,12 +11,15 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { startWith } from 'rxjs/operators/startWith';
+import { takeUntil } from 'rxjs/operators/takeUntil';
 import { McsSelection } from '../../core';
 import {
   isNullOrEmpty,
   refreshView
 } from '../../utilities';
 import { TabComponent } from './tab/tab.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'mcs-tab-group',
@@ -28,43 +32,45 @@ import { TabComponent } from './tab/tab.component';
   }
 })
 
-export class TabGroupComponent implements AfterContentInit {
+export class TabGroupComponent implements AfterContentInit, OnDestroy {
 
   @ContentChildren(TabComponent)
   public tabs: QueryList<TabComponent>;
 
   @Output()
-  public tabChanged: EventEmitter<any>;
+  public tabChanged = new EventEmitter<any>();
+
+  @Output()
+  public selectedTabIdChange = new EventEmitter<any>();
 
   @Input()
-  public get selectedTabId(): any {
-    return this._selectedTabId;
-  }
+  public get selectedTabId(): any { return this._selectedTabId; }
   public set selectedTabId(value: any) {
     if (this._selectedTabId !== value) {
       this._selectedTabId = value;
-      refreshView(() => {
-        this._setActiveTab(value);
-      });
+      this.selectedTabIdChange.emit(this._selectedTabId);
+      refreshView(() => this._setActiveTab(value));
     }
   }
   private _selectedTabId: any;
 
   /** Selection model to determine which tab is selected */
   private _selectionModel: McsSelection<TabComponent>;
+  private _destroySubject = new Subject<void>();
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this.tabChanged = new EventEmitter();
     this._selectionModel = new McsSelection<TabComponent>(false);
   }
 
   public ngAfterContentInit(): void {
-    this.tabs.changes.subscribe(() => {
-      this._changeDetectorRef.markForCheck();
-    });
-    refreshView(() => {
-      this._setActiveTab(this.selectedTabId);
-    });
+    this.tabs.changes.pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => this._changeDetectorRef.markForCheck());
+    refreshView(() => this._setActiveTab(this.selectedTabId));
+  }
+
+  public ngOnDestroy() {
+    this._destroySubject.next();
+    this._destroySubject.complete();
   }
 
   /**
@@ -82,8 +88,11 @@ export class TabGroupComponent implements AfterContentInit {
   public selectTab(tab: TabComponent): void {
     if (isNullOrEmpty(tab) || !tab.canSelect) { return; }
     this._selectionModel.select(tab);
-    this._changeDetectorRef.markForCheck();
+
+    // Add the changing of selectedTabId to support two way binding [(selectedTabId)]
+    this.selectedTabId = tab.id;
     this.tabChanged.emit(tab);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

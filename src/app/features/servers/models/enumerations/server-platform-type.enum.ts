@@ -7,6 +7,12 @@ export enum ServerPlatformType {
   Ucs = 2
 }
 
+export const serverPlatformTypeText = {
+  [ServerPlatformType.VCloud]: 'VCloud',
+  [ServerPlatformType.VCenter]: 'VCenter',
+  [ServerPlatformType.Ucs]: 'Ucs'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

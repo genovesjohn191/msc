@@ -61,6 +61,9 @@ $step-disabled-color: $color-grey-02;
       }
     }
     .step-title {
+      @include display-flex(row);
+      @include align-items(center);
+      @include set-items-interval($space-small, horizontal);
       padding-left: $space-small;
     }
     // Disabled step
@@ -134,8 +137,10 @@ $step-disabled-color: $color-grey-02;
     @include align-items(center);
     border-bottom: 1px solid $wizard-border-color;
     height: $wizard-top-panel-height;
-    padding: $wizard-top-panel-padding;
     background-color: $wizard-top-panel-bg-color;
+    h3 {
+      padding: $wizard-top-panel-padding;
+    }
   }
 
   .wizard-top-panel-mobile-wrapper {
@@ -149,7 +154,6 @@ $step-disabled-color: $color-grey-02;
 
   .wizard-steps-content {
     @include flex(1 1 auto);
-    @include set-items-interval($space-xxlarge);
     padding: $wizard-content-panel-large-padding;
     position: relative;
 
@@ -157,11 +161,15 @@ $step-disabled-color: $color-grey-02;
       padding: $wizard-content-panel-small-padding;
     }
 
-    .step-actions {
+    .wizard-step-actions {
       @include display-flex(row);
+      @include align-items(center);
       justify-content: space-between;
-      align-items: center;
-      @include set-items-interval($space-xxlarge, horizontal);
+      margin-top: $space-medium;
+
+      > :only-child {
+        margin-left: auto;
+      }
     }
   }
 }

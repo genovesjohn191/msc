@@ -1,0 +1,136 @@
+<mcs-wizard [header]="textContent.header" (completed)="createServer()">
+
+  <!-- Top panel action -->
+  <ng-container *mcsWizardTopPanelDef>
+    <mcs-action-item class="right-align" (click)="gotoServers()">
+      <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+      <span>Back to Servers</span>
+    </mcs-action-item>
+  </ng-container>
+
+  <!-- Server details -->
+  <mcs-wizard-step [stepTitle]="textContent.serverDetailsStep.title"
+    [stepControl]="faCreationForms">
+    <!-- Loader settings -->
+    <div [mcsLoader]="[resourcesSubscription, resourceSubscription]"
+      [mcsLoaderHideElement]="serverDetailsStep"
+      [mcsLoaderText]="textContent.serverDetailsStep.loading"
+      mcsLoaderOrientation="top"></div>
+
+    <div class="limited-view">
+      <div class="contextual-help-page-wrapper" #serverDetailsStep>
+        <mcs-form-field>
+          <mcs-select placeholder="Select a VDC"
+            [(ngModel)]="selectedResource"
+            (change)="onChangeResource($event)"
+            [mcsContextualHelp]="contextualTextContent.vdcField">
+            <mcs-select-group [header]="textContent.vdcDropdownList.name">
+              <ng-container *ngFor="let item of resources">
+                <mcs-select-item *ngIf="resourceHasAccess(item)" [value]="item">
+                  {{ getResourceDisplayedText(item) }}
+                </mcs-select-item>
+              </ng-container>
+            </mcs-select-group>
+          </mcs-select>
+        </mcs-form-field>
+
+        <ng-container *ngFor="let item of serverComponents">
+          <div class="vspace-medium">
+            <mcs-tab-group [(selectedTabId)]="selectedTabIndex">
+              <!-- New Server Tab -->
+              <mcs-tab [label]="textContent.newServer" [id]="serverCreateTypeEnum.New">
+                <p class="space-bottom-medium">{{ textContent.newServerDescription }}</p>
+
+                <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.New">
+                  <mcs-new-server #serverBase
+                    [resource]="selectedResource"
+                    [serviceType]="selectedResource?.serviceType"></mcs-new-server>
+                </ng-container>
+              </mcs-tab>
+
+              <!-- Clone Server Tab -->
+              <mcs-tab [label]="textContent.cloneServer" [id]="serverCreateTypeEnum.Clone">
+                <p class="space-bottom-medium">{{ textContent.cloneServerDescription }}</p>
+
+                <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
+                  <mcs-clone-server #serverBase
+                    [serviceType]="selectedResource?.serviceType"></mcs-clone-server>
+                </ng-container>
+              </mcs-tab>
+            </mcs-tab-group>
+          </div>
+        </ng-container>
+
+        <div class="wizard-step-actions">
+          <button mcsWizardStepNext mcsButton size="small" arrow="right"
+            (click)="validateFormFields()">Next</button>
+        </div>
+      </div>
+
+      <!-- Note: Contextual help are dynamically inserted here -->
+    </div>
+  </mcs-wizard-step>
+
+  <!-- Add-ons Step -->
+  <mcs-wizard-step *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed"
+    [stepTitle]="textContent.serverAddOnsStep.title">
+
+    <div class="limited-view">
+      <div class="contextual-help-page-wrapper">
+        <p>{{ textContent.serverAddOnsStep.description }}</p>
+
+        <div class="block-items-large">
+          <mcs-collapsible-panel [header]="textContent.serverAddOnsStep.antiMalwareAddOn"
+            [mcsContextualHelp]="contextualTextContent.antiMalwareAddOn">
+            <mcs-anti-malware></mcs-anti-malware>
+          </mcs-collapsible-panel>
+
+          <mcs-collapsible-panel [header]="textContent.serverAddOnsStep.disasterRecoveryAddOn"
+            [mcsContextualHelp]="contextualTextContent.disasterRecoveryAddOn">
+            <mcs-disaster-recovery></mcs-disaster-recovery>
+          </mcs-collapsible-panel>
+
+          <mcs-collapsible-panel [header]="textContent.serverAddOnsStep.sqlServerAddOn"
+            [mcsContextualHelp]="contextualTextContent.sqlServerAddOn">
+            <mcs-sql-server></mcs-sql-server>
+          </mcs-collapsible-panel>
+        </div>
+
+        <div class="wizard-step-actions">
+          <a mcsWizardStepPrevious>Back</a>
+          <button mcsButton size="small" arrow="right" mcsWizardStepNext>Next</button>
+        </div>
+      </div>
+    </div>
+  </mcs-wizard-step>
+
+  <!-- Confirm Step  -->
+  <mcs-wizard-step *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed"
+    [stepTitle]="textContent.serverConfirmStep.title">
+
+    <div class="limited-view">
+      <div class="contextual-help-page-wrapper">
+        <h4 class="space-bottom-small">{{ textContent.serverConfirmStep.header }}</h4>
+        <p>{{ textContent.serverConfirmStep.description }}</p>
+
+        <div class="block-items-large">
+          <!--  -->
+        </div>
+
+        <div class="wizard-step-actions">
+          <a mcsWizardStepPrevious>Back</a>
+          <button mcsButton size="small" arrow="right" mcsWizardStepNext>Next</button>
+        </div>
+      </div>
+    </div>
+  </mcs-wizard-step>
+
+  <!-- Go! Step  -->
+  <mcs-wizard-step [stepTitle]="textContent.serverGoStep.title">
+    <div class="limited-view">
+      <mcs-provisioning-notifications [jobs]="notifications">
+        <p mcsProvisioningText>{{ textContent.description }}</p>
+      </mcs-provisioning-notifications>
+    </div>
+  </mcs-wizard-step>
+</mcs-wizard>

@@ -12,7 +12,9 @@ import {
   ContentChildren,
   ElementRef,
   Optional,
-  Self
+  Self,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -77,6 +79,9 @@ let nextUniqueId = 0;
 export class SelectComponent extends McsFormFieldControlBase<any>
   implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
 
+  @Output()
+  public change = new EventEmitter<any>();
+
   @Input()
   public id: string = `mcs-select-${nextUniqueId++}`;
 
@@ -119,7 +124,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public set value(value: any) {
     if (this._value !== value) {
       this._value = value;
-      this._onChanged(value);
+      this.change.emit(this._value);
+      this._onChanged(this._value);
       this._changeDetectorRef.markForCheck();
     }
   }

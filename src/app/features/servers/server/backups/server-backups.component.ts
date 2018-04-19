@@ -44,7 +44,7 @@ import {
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRespository } from '../../servers-resources.repository';
+import { ServersResourcesRepository } from '../../servers-resources.repository';
 
 enum SnapshotDialogType {
   None = 0,
@@ -112,7 +112,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   constructor(
-    _serversResourcesRepository: ServersResourcesRespository,
+    _serversResourcesRepository: ServersResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,

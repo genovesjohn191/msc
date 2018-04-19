@@ -44,7 +44,7 @@ import {
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRespository } from '../../servers-resources.repository';
+import { ServersResourcesRepository } from '../../servers-resources.repository';
 import {
   ServerDetailsBase,
   DetachMediaDialogComponent
@@ -181,7 +181,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   constructor(
-    _serversResourcesRepository: ServersResourcesRespository,
+    _serversResourcesRepository: ServersResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,

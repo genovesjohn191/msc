@@ -16,7 +16,8 @@ import { CoreDefinition } from '../../../core';
 import {
   registerEvent,
   unregisterEvent,
-  isNullOrEmpty
+  isNullOrEmpty,
+  animateFactory
 } from '../../../utilities';
 import { SelectGroupComponent } from '../select-group/select-group.component';
 
@@ -28,6 +29,10 @@ let nextUniqueId = 0;
   templateUrl: './select-item.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    animateFactory.fadeIn,
+    animateFactory.transformVertical
+  ],
   host: {
     'class': 'select-item-wrapper',
     'role': 'option',
@@ -137,7 +142,11 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
   }
 
   public onClickItem(_event: any): void {
-    if (this.hasSubgroup) { return; }
+    if (this.hasSubgroup) {
+      this.subGroupOpen = !this.subGroupOpen;
+      return;
+    }
+
     this.select();
     this._emitSelectionChanged();
 

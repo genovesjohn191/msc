@@ -14,6 +14,7 @@ import { McsViewportService } from './services/mcs-viewport.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
 import { McsPlatformService } from './services/mcs-platform.service';
 import { McsLoggerService } from './services/mcs-logger.service';
+import { McsFormGroupService } from './services/mcs-form-group.service';
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
@@ -48,6 +49,7 @@ export const coreProviders: any[] = [
   McsErrorHandlerService,
   McsPlatformService,
   McsLoggerService,
+  McsFormGroupService,
   McsTextContentProvider,
   McsAssetsProvider,
   McsFilterProvider,

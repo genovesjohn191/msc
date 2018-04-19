@@ -115,8 +115,8 @@ $select-sub-group-max-height: 400px;
     background-color: $select-item-selected-color;
   }
 
-  .select-group-wrapper {
-    padding: $select-sub-group-padding;
+  .select-item-subgroup-panel {
+    z-index: $zindex-select;
     position: absolute;
     top: 0;
     right: 0;

@@ -90,7 +90,7 @@
         <ng-container *mcsIsSelfManagedServer="server">
           <div *ngIf="!hasReachedDisksLimit && hasStorageProfileList" class="action-box">
             <mcs-server-manage-storage #mcsStorage
-                [storageProfileList]="storageProfileList" [minValueMB]="storageMinValueMB"
+                [storageProfileList]="resourceStorage" [minValueMB]="storageMinValueMB"
                 [minimumMB]="0" [maximumMB]="maximumMB" [step]="sliderStep"
                 (storageChanged)="onStorageChanged($event)" [disabled]="!server.executable">
                 <!--Server manage storage contents on the left hand side (description)-->

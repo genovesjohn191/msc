@@ -26,7 +26,8 @@ $form-field-error-hint-color: rgba($color-black, 0.54);
     }
   }
 
-  &.ng-invalid.ng-touched {
+  &.ng-invalid.ng-touched,
+  &.mcs-form-field-invalid {
     .form-field-content {
       border-color: $form-field-content-error-color;
     }

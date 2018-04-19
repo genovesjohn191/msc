@@ -49,14 +49,6 @@ describe('WizardStepComponent', () => {
       expect(component.stepTitle).toBeFalsy();
     });
 
-    it(`should set the showNext to true`, () => {
-      expect(component.showNext).toBeTruthy();
-    });
-
-    it(`should set the showPrevious to true`, () => {
-      expect(component.showPrevious).toBeTruthy();
-    });
-
     it(`should set the isActive to false`, () => {
       expect(component.isActive).toBeFalsy();
     });

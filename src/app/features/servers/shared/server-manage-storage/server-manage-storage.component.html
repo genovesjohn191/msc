@@ -24,13 +24,13 @@
   <!--Storage profile content element (dropdown)-->
   <div *ngIf="storageProfileList" animate trigger="fadeIn">
     <mcs-form-field>
-      <mcs-select [(ngModel)]="storageProfileValue"
+      <mcs-select [(ngModel)]="selectedStorageProfile"
         placeholder="Select storage profile"
         [disabled]="!hasAvailableStorageSpace">
         <mcs-select-group header="Storage Profiles">
           <mcs-select-item *ngFor="let storageProfile of storageProfileList"
-            [value]="storageProfile.value">
-            {{ storageProfile.text }}
+            [value]="storageProfile">
+            {{ storageProfile.name }}
           </mcs-select-item>
         </mcs-select-group>
       </mcs-select>
@@ -83,7 +83,7 @@
   </div>
 
   <!-- Insufficient Storage Capacity Warning Message -->
-  <div *ngIf="storageProfileValue && !hasAvailableStorageSpace">
+  <div *ngIf="selectedStorageProfile && !hasAvailableStorageSpace">
     <div animate trigger="fadeIn" class="storage-full-warning">
       <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
       <h4 class="squishy">

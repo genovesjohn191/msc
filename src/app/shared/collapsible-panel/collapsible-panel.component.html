@@ -1,17 +1,15 @@
 <!-- Collapsible Toggle -->
 <div class="collapsible-panel-toggle">
-  <mcs-checkbox [(ngModel)]="value"
-    (change)="onChange($event)" (blur)="onBlur()"
-    [tabindex]="tabindex">
+  <mcs-checkbox (change)="onCheckboxTick($event)" [tabindex]="tabindex">
     {{ header }}
   </mcs-checkbox>
 </div>
 
 <!-- Collapsible content -->
-<div #panelElement
-  [@expansionVertical]="panelOpen ? 'show' : 'void'"
-  (@expansionVertical.done)="removeOverflow()">
-  <div class="collapsible-panel-content">
-    <ng-content></ng-content>
+<ng-container *ngIf="!collapse">
+  <div #panelElement [@expansionVertical] (@expansionVertical.done)="removeOverflow()">
+    <div class="collapsible-panel-content">
+      <ng-content></ng-content>
+    </div>
   </div>
-</div>
+</ng-container>

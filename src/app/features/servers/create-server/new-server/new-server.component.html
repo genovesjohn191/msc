@@ -1,4 +1,4 @@
-<form [formGroup]="fgNewServer" mcsFormGroup>
+<form [formGroup]="fgNewServer">
   <!-- Server Name Input -->
   <div class="field">
     <mcs-form-field>
@@ -31,8 +31,8 @@
         [placeholder]="textContent.placeholder.vApp">
         <mcs-select-group [header]="textContent.headers.vApp">
           <mcs-select-item>-</mcs-select-item>
-          <mcs-select-item *ngFor="let vApp of vAppItems" [value]="vApp.value">
-            {{ vApp.text }}
+          <mcs-select-item *ngFor="let vApp of resource?.vApps" [value]="vApp">
+            {{ vApp.name }}
           </mcs-select-item>
         </mcs-select-group>
       </mcs-select>
@@ -49,20 +49,22 @@
       <mcs-select [formControl]="fcImage" required
         [placeholder]="textContent.placeholder.image"
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
-        <mcs-select-group *ngIf="hasOperatingSystems" [header]="textContent.headers.os">
-          <mcs-select-item *ngFor="let groupedOs of operatingSystemsMap | mcsMapIterable">
-            {{ groupedOs.key }}
+        <!-- Os Group -->
+        <mcs-select-group [header]="textContent.headers.os">
+          <mcs-select-item *ngFor="let platform of (operatingSystemsMap | mcsMapIterable)">
+            {{ platform.key }}
             <mcs-select-group sub-group>
-              <mcs-select-item *ngFor="let os of groupedOs.value" [value]="os">
-                {{ os.image }}
+              <mcs-select-item *ngFor="let os of platform.value" [value]="os">
+                {{ os.name }}
               </mcs-select-item>
             </mcs-select-group>
           </mcs-select-item>
         </mcs-select-group>
 
-        <mcs-select-group *ngIf="hasCustomTemplates" [header]="textContent.headers.templates">
-          <mcs-select-item *ngFor="let template of customTemplates" [value]="template">
-            {{ template.image }}
+        <!-- Template Group -->
+        <mcs-select-group [header]="textContent.headers.templates">
+          <mcs-select-item *ngFor="let catalog of resource?.catalogItems" [value]="catalog">
+            {{ catalog.name }}
           </mcs-select-item>
         </mcs-select-group>
       </mcs-select>
@@ -76,10 +78,10 @@
   <!-- Server RAM -->
   <div class="field">
     <mcs-server-performance-scale
-      [memoryMB]="memoryMB" [cpuCount]="cpuCount"
-      [mcsContextualHelp]="textHelpContent.computeField"
-      [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpuCount"
-      (scaleChanged)="onScaleChanged($event)">
+      [memoryMB]="scaleMemoryMB" [cpuCount]="scaleCpuCount"
+      [availableMemoryMB]="scaleAvailableMemoryMB" [availableCpuCount]="scaleAvailableCpuCount"
+      (scaleChanged)="onScaleChanged($event)"
+      [mcsContextualHelp]="textHelpContent.computeField">
       <!--Performance scale contents on the left hand side (title and description)-->
       <div title>
         <span class="label no-line-height">{{ textContent.computeSizeLabel }}</span>
@@ -88,12 +90,12 @@
   </div>
 
   <!-- Storage Management -->
-  <div class="field" *ngIf="storageItems">
+  <div class="field">
     <mcs-server-manage-storage
-      [minimumMB]="storageMemoryMB"
-      [maximumMB]="storageAvailableMemoryMB"
-      [step]="sliderStep"
-      [storageProfileList]="storageItems"
+      [minimumMB]="storageMinMemoryMB"
+      [maximumMB]="storageMaxMemoryMB"
+      [step]="storageSliderStep"
+      [storageProfileList]="resource?.storage"
       [mcsContextualHelp]="textHelpContent.storageField"
       (storageChanged)="onStorageChanged($event)">
       <!--Server manage storage contents on the left hand side (title and description)-->
@@ -111,12 +113,13 @@
   <div class="field">
     <span class="label">{{ textContent.networkLabel }}</span>
     <mcs-form-field>
-      <mcs-select [formControl]="fcNetwork" required
+      <mcs-select [(ngModel)]="selectedNetwork" required
+        [formControl]="fcNetwork"
         [placeholder]="textContent.placeholder.network"
         [mcsContextualHelp]="textHelpContent.networkField">
         <mcs-select-group [header]="textContent.headers.network">
-          <mcs-select-item *ngFor="let network of networkItems" [value]="network.value">
-            {{ network.text }}
+          <mcs-select-item *ngFor="let network of resource?.networks" [value]="network">
+            {{ network.name }}
           </mcs-select-item>
         </mcs-select-group>
       </mcs-select>
@@ -129,8 +132,8 @@
 
   <!-- IP Address setting -->
   <div class="field">
-    <mcs-server-ip-address [gateway]="selectedNetwork.gateway"
-      [subnetMask]="selectedNetwork.netmask"
+    <mcs-server-ip-address [gateway]="selectedNetwork?.gateway"
+      [subnetMask]="selectedNetwork?.netmask"
       (ipAddressChanged)="onIpAddressChanged($event)">
       <!--Ip address contents on the left hand side (title and description)-->
       <div title>

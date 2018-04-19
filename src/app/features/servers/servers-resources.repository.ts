@@ -17,7 +17,7 @@ import {
 } from './models';
 
 @Injectable()
-export class ServersResourcesRespository extends McsRepositoryBase<ServerResource> {
+export class ServersResourcesRepository extends McsRepositoryBase<ServerResource> {
 
   constructor(private _serversApiService: ServersService) {
     super();

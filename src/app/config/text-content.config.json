@@ -98,11 +98,23 @@
         "networkLabel": "Network",
         "ipAddressLabel": "IP Address",
         "serverDetailsStep" : {
-          "title": "1. Server Details",
+          "title": "Server Details",
           "loading": "Loading server data, this may take a few moments."
         },
+        "serverAddOnsStep": {
+          "title": "Add ons",
+          "description": "Select the Add-Ons you'd like for this order and specify any relevant configuration options.",
+          "antiMalwareAddOn": "Anti-Malware",
+          "disasterRecoveryAddOn": "Disaster Recovery",
+          "sqlServerAddOn": "SQL Server"
+        },
+        "serverConfirmStep": {
+          "title": "Confirm",
+          "header": "Confirm Order",
+          "description": "Review your order and associated charges below."
+        },
         "serverGoStep": {
-          "title": "2. Go!"
+          "title": "Go!"
         },
         "headers": {
           "vApp": "Virtual Applications",
@@ -140,11 +152,14 @@
           "ipAddressField": "Select a method for acquiring the server's private IP address. Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
           "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
           "quickNavigateToCreatedServer": "You can go back to server listing page to view your newly created server",
-          "backToListing": "This link would take you back to your server listing page"
+          "backToListing": "This link would take you back to your server listing page",
+          "antiMalwareAddOn": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
+          "disasterRecoveryAddOn": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
+          "sqlServerAddOn": "Add additional storage on your server to save more data"
         },
         "vdcDropdownList": {
           "name": "Virtual Data Centres",
-          "prefix": "Self Managed VDC - {{availability_zone}} "
+          "prefix": "{{service_type}} VDC - {{availability_zone}} "
         },
         "newServer": "New server",
         "newServerDescription": "Creating a new server allows you to specify the way your server will be built.",

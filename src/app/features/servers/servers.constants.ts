@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 import { McsNavigateAwayGuard } from '../../core';
 /** Services */
 import { ServerService } from './server/';
-import { CreateSelfManagedServerResolver } from './create-server';
 import { ServersService } from './servers.service';
 import { ServersRepository } from './servers.repository';
-import { ServersResourcesRespository } from './servers-resources.repository';
+import { ServersResourcesRepository } from './servers-resources.repository';
+import { ServersOsRepository } from './servers-os.repository';
 /** Components */
 import { ServersComponent } from './servers.component';
 import {
@@ -17,7 +17,7 @@ import {
   ServerNicsComponent
 } from './server';
 import {
-  CreateSelfManagedServersComponent,
+  CreateServerComponent,
   ServerProvisioningPageComponent
 } from './create-server';
 import {
@@ -34,8 +34,8 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   ServersRepository,
-  ServersResourcesRespository,
-  CreateSelfManagedServerResolver,
+  ServersResourcesRepository,
+  ServersOsRepository,
   VdcService,
   SelfManagedServerGuard
 ];
@@ -49,8 +49,7 @@ export const serversRoutes: Routes = [
   },
   {
     path: 'servers/create',
-    component: CreateSelfManagedServersComponent,
-    resolve: { CreateSelfManagedServerResolver },
+    component: CreateServerComponent,
     canDeactivate: [McsNavigateAwayGuard]
   },
   {

@@ -191,4 +191,11 @@ export class Server {
       && !this.isProcessing
       && this.powerState === ServerPowerState.Suspended;
   }
+
+  /**
+   * Returns true when server is clonable
+   */
+  public get clonable(): boolean {
+    return this.isOperable;
+  }
 }
