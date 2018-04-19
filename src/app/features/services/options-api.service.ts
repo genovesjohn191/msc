@@ -4,6 +4,7 @@ import {
   McsApiSuccessResponse,
   McsHttpStatusCode
 } from '../../core';
+import { ServerSqlOptions } from '../servers/models';
 
 @Injectable()
 export class OptionsApiService {
@@ -31,6 +32,23 @@ export class OptionsApiService {
     response.status = McsHttpStatusCode.Success;
     response.totalCount = 2;
     response.content = ['Contoso MMAZG00001'];
+
+    return Observable.of(response);
+  }
+
+  /**
+   * Get sql server options
+   * TODO: Will update this one when API is ready
+   */
+  public getSqlServerOptions(): Observable<McsApiSuccessResponse<ServerSqlOptions>> {
+    let response = new McsApiSuccessResponse<ServerSqlOptions>();
+    response.status = McsHttpStatusCode.Success;
+    response.totalCount = 2;
+    response.content = {
+      versions: ['2008 SP4', '2008 R2 SP3', '2012 SP3', '2016 SP1'],
+      editions: ['Web', 'Standard', 'Enterprise', 'Datacenter'],
+      architectures: ['x86', 'x64']
+    };
 
     return Observable.of(response);
   }

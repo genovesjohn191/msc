@@ -179,8 +179,8 @@ export class Server {
    * Returns true when server is deletable
    */
   public get deletable(): boolean {
-    return this.executable
-      && this.serviceType === ServerServiceType.SelfManaged;
+    return !this.isProcessing &&
+      this.serviceType === ServerServiceType.SelfManaged;
   }
 
   /**

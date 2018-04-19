@@ -501,6 +501,21 @@
         "header": "Disaster Recovery",
         "label": "VM Replication Protection Group",
         "placeholder": "Select group"
+      },
+      "sqlServerAddOn": {
+        "header": "SQL Server",
+        "version": {
+          "label": "Version",
+          "placeholder": "Select version"
+        },
+        "edition": {
+          "label": "Edition",
+          "placeholder": "Select edition"
+        },
+        "architecture": {
+          "label": "Architecture",
+          "placeholder": "Select architecture"
+        }
       }
     }
   },

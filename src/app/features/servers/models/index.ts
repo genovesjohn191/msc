@@ -34,6 +34,9 @@ export * from './response/server-compute-summary';
 export * from './response/server-catalog-item';
 export * from './response/server-platform-summary';
 export * from './response/server-snapshot';
+// TODO: This is just a temporary model
+// Will update once the API was finalized
+export * from './response/server-sql-options';
 
 /** Other Models that are use inside server component */
 export * from './server-performance-scale';
@@ -47,6 +50,7 @@ export * from './server-snapshot-dialog-content';
 // Will update once the API was finalized
 export * from './server-anti-malware';
 export * from './server-disaster-recovery';
+export * from './server-sql';
 
 /** Enumerations */
 export * from './enumerations/server-command.enum';
