@@ -18,7 +18,8 @@ import {
 } from '../../../../core';
 import {
   ServerManageStorage,
-  ServerInputManageType
+  ServerInputManageType,
+  ServerStorage
 } from '../../models';
 import {
   refreshView,
@@ -59,11 +60,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public textContent: any;
   public invalidCustomStorageMessage: string;
 
+  public selectedStorageProfile: ServerStorage;
+
   @Output()
   public storageChanged: EventEmitter<ServerManageStorage>;
 
   @Input()
-  public storageProfileList: any;
+  public storageProfileList: ServerStorage[];
 
   @Input()
   public get minimumMB(): number { return this._minimumMB; }
@@ -95,20 +98,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public set inputManageType(value: ServerInputManageType) {
     if (this._inputManageType !== value) {
       this._inputManageType = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * Storage profile value
-   */
-  private _storageProfileValue: string;
-  public get storageProfileValue(): string {
-    return this._storageProfileValue;
-  }
-  public set storageProfileValue(value: string) {
-    if (this._storageProfileValue !== value) {
-      this._storageProfileValue = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -165,7 +154,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     private _textProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this.storageProfileValue = '';
     this.storageValue = 0;
     this.minimumMB = 0;
     this.inputManageType = ServerInputManageType.Slider;
@@ -207,8 +195,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this._notifyStorageChanged();
   }
 
-  public onStorageProfileChanged(value: any): void {
-    this.storageProfileValue = value;
+  public onStorageProfileChanged(): void {
     this._setCustomControlValidator();
     this._notifyStorageChanged();
   }
@@ -247,14 +234,14 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    */
   private _initializeValues(): void {
     if (!isNullOrEmpty(this.storageProfileList)) {
-      this.storageProfileValue = this.storageProfileList[0].value;
+      this.selectedStorageProfile = this.storageProfileList[0];
     }
 
     if (isNullOrEmpty(this.minValueMB)) {
       this.minValueMB = this.minimumMB;
     }
 
-    this.onStorageProfileChanged(this.storageProfileValue);
+    this.onStorageProfileChanged();
     this.storageValue = this.minimumGB;
     this.fcServerStorageCustom.setValue(this.minimumGB);
   }
@@ -313,8 +300,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    * Event that emits whenever the storage data is changed
    */
   private _notifyStorageChanged() {
+    if (isNullOrEmpty(this.selectedStorageProfile)) { return; }
     let serverStorage = new ServerManageStorage();
-    serverStorage.storageProfile = this.storageProfileValue;
+    serverStorage.storageProfile = this.selectedStorageProfile.name;
 
     refreshView(() => {
       // Set model data based on management type

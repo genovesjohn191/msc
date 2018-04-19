@@ -34,7 +34,7 @@ import {
   unsubscribeSafely
 } from '../../../utilities';
 import { ServersRepository } from '../servers.repository';
-import { ServersResourcesRespository } from '../servers-resources.repository';
+import { ServersResourcesRepository } from '../servers-resources.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 
@@ -90,7 +90,7 @@ export class VdcComponent
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversRepository: ServersRepository,
-    private _serversResourceRepository: ServersResourcesRespository,
+    private _serversResourceRepository: ServersResourcesRepository,
     private _vdcService: VdcService
   ) {
     super(_router, _activatedRoute);

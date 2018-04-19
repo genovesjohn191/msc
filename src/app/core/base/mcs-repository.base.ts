@@ -1,7 +1,8 @@
 import {
   Subject,
   Observable,
-  Subscription
+  Subscription,
+  Scheduler
 } from 'rxjs/Rx';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
 import { McsSearch } from '../interfaces/mcs-search.interface';
@@ -214,7 +215,7 @@ export abstract class McsRepositoryBase<T> {
     });
     let requestRecordFromCache = !isNullOrEmpty(recordFoundFromCache) && fromCache;
     if (requestRecordFromCache) {
-      return Observable.of(recordFoundFromCache);
+      return Observable.of(recordFoundFromCache, Scheduler.async);
     }
 
     // Call the API if record has not been called once
@@ -269,7 +270,7 @@ export abstract class McsRepositoryBase<T> {
   private _findAllRecordsFromCache(recordsCount: number): Observable<T[]> {
     let pageData = this._dataRecords.slice();
     let actualData = pageData.splice(0, recordsCount);
-    return Observable.of(actualData)
+    return Observable.of(actualData, Scheduler.async)
       .map((data) => {
         this._filteredRecords = data;
         return data;
@@ -294,7 +295,8 @@ export abstract class McsRepositoryBase<T> {
         this._totalRecordsCount = data.totalCount;
         this._dataRecords = mergeArrays(this._dataRecords,
           data.content, (_first: any, _second: any) => {
-            return _first.id === _second.id;
+            let dataExist = isNullOrEmpty(_first.id) ? false : _first.id === _second.id;
+            return dataExist;
           });
         this._filteredRecords = this._dataRecords;
         this._patchRecordsByUpdatedRecords();

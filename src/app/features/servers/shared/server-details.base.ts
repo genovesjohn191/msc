@@ -6,7 +6,7 @@ import {
   ServerCatalogItem,
   ServerCatalogItemType
 } from '../models';
-import { ServersResourcesRespository } from '../servers-resources.repository';
+import { ServersResourcesRepository } from '../servers-resources.repository';
 import { ServersService } from '../servers.service';
 import { ServersRepository } from '../servers.repository';
 import { ServerService } from '../server/server.service';
@@ -98,7 +98,7 @@ export abstract class ServerDetailsBase {
   }
 
   constructor(
-    protected _serversResourcesRespository: ServersResourcesRespository,
+    protected _serversResourcesRespository: ServersResourcesRepository,
     protected _serversRepository: ServersRepository,
     protected _serversService: ServersService,
     protected _serverService: ServerService,

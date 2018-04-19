@@ -9,7 +9,10 @@ import {
   CoreDefinition,
   McsTextContentProvider
 } from '../../../../core';
-import { ServerInputManageType } from '../../models';
+import {
+  ServerInputManageType,
+  ServerStorage
+} from '../../models';
 import { FormControl } from '@angular/forms';
 
 describe('ServerManageStorageComponent', () => {
@@ -51,9 +54,9 @@ describe('ServerManageStorageComponent', () => {
       component.maximumMB = 102400;
 
       component.storageProfileList = new Array();
-      component.storageProfileList.push({ value: 'storageProfile1', text: 'Storage 1' });
-      component.storageProfileList.push({ value: 'storageProfile2', text: 'Storage 2' });
-      component.storageProfileList.push({ value: 'storageProfile3', text: 'Storage 3' });
+      component.storageProfileList.push(new ServerStorage());
+      component.storageProfileList.push(new ServerStorage());
+      component.storageProfileList.push(new ServerStorage());
 
       component.ngOnInit();
     });
@@ -62,8 +65,8 @@ describe('ServerManageStorageComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it(`should set the storageProfileValue to the first item of storageProfileList`, () => {
-      expect(component.storageProfileValue)
-        .toBe(component.storageProfileList[0].value);
+      expect(component.selectedStorageProfile)
+        .toBe(component.storageProfileList[0]);
     });
 
     it(`should initialize the storageValue`, fakeAsync(() => {

@@ -1,8 +1,8 @@
 <!-- Steps template declaration -->
 <ng-template #stepsTemplate>
   <div class="wizard-steps-items" scrollable scrollbarId="wizard-items">
-    <div class="step-item" *ngFor="let step of displayedSteps"
-      (click)="goToStep(step)"
+    <div class="step-item" *ngFor="let step of steps; let idx = index"
+      (click)="moveStepTo(step)"
       [hidden]="step.hidden"
       [ngClass]="{
         'active': step.isActive,
@@ -14,36 +14,18 @@
         <mcs-icon *ngIf="step.completed" [key]="checkIconKey"
           size="small" color="primary"></mcs-icon>
       </div>
-      <strong class="step-title">{{ step.stepTitle }}</strong>
+      <div class="step-title">
+        <strong>{{ (idx + 1) }}</strong>
+        <strong>{{ step.stepTitle }}</strong>
+      </div>
     </div>
-  </div>
-</ng-template>
-
-<!-- Actions template declaration -->
-<ng-template #actionTemplate>
-  <div class="step-actions">
-    <a id="ctaCancelWizard" (click)="onClickCancel()"
-      [hidden]="!enableCancel">{{ cancelTextContent }}</a>
-
-    <a id="ctaPreviousStep" (click)="onClickPrevious()"
-      [hidden]="!hasPreviousStep">{{ wizardTextContent.previous }}</a>
-
-    <button mcsButton id="ctaNextStep" arrow="right"
-      [hidden]="!hasNextStep" (click)="onClickNext()">
-      {{ wizardTextContent.next }}
-    </button>
-
-    <button mcsButton id="ctaCompleteStep" arrow="right"
-      [hidden]="!enableCompletedStep" (click)="onClickCompleted()">
-      {{ completedTextContent }}
-    </button>
   </div>
 </ng-template>
 
 <!-- Left panel wrapper in case of desktop -->
 <div class="wizard-left-panel-wrapper hidden-small">
   <div class="wizard-steps-header">
-    <h4 read-only>{{ wizardTextContent.steps }}</h4>
+    <h4 read-only>{{ textContent.steps }}</h4>
   </div>
   <ng-container *ngTemplateOutlet="stepsTemplate"></ng-container>
 </div>
@@ -57,6 +39,7 @@
     <ng-container *ngIf="!headerTemplate">
       <h3>{{ header }}</h3>
     </ng-container>
+    <ng-container mcsWizardTopPanelPlaceholder></ng-container>
   </div>
 
   <!-- Top panel wrapper in case of mobile -->
@@ -66,15 +49,6 @@
 
   <!-- Active steps content -->
   <div class="wizard-steps-content" scrollable scrollbarId="wizard-content">
-    <div [ngClass]="activeStep?.customClass">
-      <ng-container *ngIf="activeStep?.actionPlacement">
-        <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
-      </ng-container>
-
-      <ng-container *ngIf="!activeStep?.actionPlacement">
-        <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
-        <ng-template [ngTemplateOutlet]="actionTemplate"></ng-template>
-      </ng-container>
-    </div>
+    <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
   </div>
 </div>

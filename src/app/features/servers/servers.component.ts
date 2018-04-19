@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServersResourcesRespository } from './servers-resources.repository';
+import { ServersResourcesRepository } from './servers-resources.repository';
 import { ServersRepository } from './servers.repository';
 import { ServersService } from './servers.service';
 import { ServersDataSource } from './servers.datasource';
@@ -123,7 +123,7 @@ export class ServersComponent
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _serversRepository: ServersRepository,
-    private _serversResourceRepository: ServersResourcesRespository,
+    private _serversResourceRepository: ServersResourcesRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);

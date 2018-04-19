@@ -39,11 +39,9 @@ import {
 } from './server/';
 /** Create Servers */
 import {
-  CreateSelfManagedServerComponent,
-  CreateSelfManagedServersComponent,
-  NewSelfManagedServerComponent,
-  CopySelfManagedServerComponent,
-  CloneSelfManagedServerComponent,
+  CreateServerComponent,
+  NewServerComponent,
+  CloneServerComponent,
   ServerProvisioningPageComponent
 } from './create-server';
 /** VDC */
@@ -73,7 +71,6 @@ import { SharedModule } from '../../shared';
     DeleteServerDialogComponent,
     SuspendServerDialogComponent,
     ResumeServerDialogComponent,
-    CreateSelfManagedServerComponent,
     AntiMalwareAddOnComponent,
     DisasterRecoveryAddOnComponent,
     SqlServerAddOnComponent,
@@ -91,12 +88,10 @@ import { SharedModule } from '../../shared';
     ServerPerformanceScaleComponent,
     ServerManageStorageComponent,
     ServerIpAddressComponent,
-    CreateSelfManagedServerComponent,
-    CreateSelfManagedServersComponent,
-    NewSelfManagedServerComponent,
-    CopySelfManagedServerComponent,
-    CloneSelfManagedServerComponent,
     ServerProvisioningPageComponent,
+    CreateServerComponent,
+    NewServerComponent,
+    CloneServerComponent,
     ProvisioningNotificationsComponent,
     VdcComponent,
     VdcOverviewComponent,

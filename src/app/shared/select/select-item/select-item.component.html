@@ -4,12 +4,16 @@
   <mcs-icon *ngIf="hasSubgroup" size="small" [key]="carretRightIconKey"></mcs-icon>
 </div>
 
-<!-- Sub-group content -->
-<ng-container *ngIf="subGroupOpen">
-  <div animate trigger="fadeIn">
-    <ng-content select="[sub-group]"></ng-content>
-  </div>
+<!-- Ripple element -->
+<ng-container *ngIf="!hasSubgroup">
+  <mcs-ripple mcsRipple [rippleTrigger]="getHostElement()"></mcs-ripple>
 </ng-container>
 
-<!-- Ripple element -->
-<mcs-ripple mcsRipple [rippleTrigger]="getHostElement()"></mcs-ripple>
+<!-- Sub-group content -->
+<div *ngIf="subGroupOpen">
+  <div [@transformVertical] class="select-item-subgroup-panel">
+    <div [@fadeIn]>
+      <ng-content select="[sub-group]"></ng-content>
+    </div>
+  </div>
+</div>

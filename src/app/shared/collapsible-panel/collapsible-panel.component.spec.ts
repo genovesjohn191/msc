@@ -72,33 +72,23 @@ describe('CollapsiblePanelComponent', () => {
     });
   });
 
-  describe('onChange() when value is true', () => {
+  describe('onCheckboxTick() when value is true', () => {
     beforeEach(async(() => {
-      component.collapsiblePanelComponent.value = true;
-      component.collapsiblePanelComponent.onChange(true);
+      component.collapsiblePanelComponent.onCheckboxTick({ checked: true });
     }));
 
-    it(`should set the value to true`, () => {
-      expect(component.collapsiblePanelComponent.value).toBeTruthy();
-    });
-
-    it(`should open the panel`, () => {
-      expect(component.collapsiblePanelComponent.panelOpen).toBeTruthy();
+    it(`should set the collapse value to false`, () => {
+      expect(component.collapsiblePanelComponent.collapse).toBeFalsy();
     });
   });
 
-  describe('onChange() when value is false', () => {
+  describe('onCheckboxTick() when value is false', () => {
     beforeEach(async(() => {
-      component.collapsiblePanelComponent.value = false;
-      component.collapsiblePanelComponent.onChange(false);
+      component.collapsiblePanelComponent.onCheckboxTick({ checked: false });
     }));
 
-    it(`should set the value to false`, () => {
-      expect(component.collapsiblePanelComponent.value).toBeFalsy();
-    });
-
-    it(`should close the panel`, () => {
-      expect(component.collapsiblePanelComponent.panelOpen).toBeFalsy();
+    it(`should set the collapse value to true`, () => {
+      expect(component.collapsiblePanelComponent.collapse).toBeTruthy();
     });
   });
 });

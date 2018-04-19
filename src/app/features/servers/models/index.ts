@@ -42,7 +42,7 @@ export * from './response/server-sql-options';
 export * from './server-performance-scale';
 export * from './server-manage-storage';
 export * from './server-ip-address';
-export * from './server-create-self-managed';
+export * from './server-create-details';
 export * from './server-list';
 export * from './server-image';
 export * from './server-snapshot-dialog-content';

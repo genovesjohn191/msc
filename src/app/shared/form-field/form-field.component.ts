@@ -177,7 +177,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
     let ngControl = this._controlChild.ngControl;
     if (!isNullOrEmpty(ngControl)) {
       for (let propertyName in ngControl.errors) {
-        if (ngControl.errors.hasOwnProperty(propertyName) && ngControl.touched) {
+        if (ngControl.errors.hasOwnProperty(propertyName)) {
           return propertyName;
         }
       }
@@ -195,11 +195,7 @@ export class FormFieldComponent implements AfterViewInit, AfterContentInit, Afte
     let errorState = this._getFirstErrorState();
 
     this._errorChildren.map((error) => {
-      if (error.errorState === errorState) {
-        error.show();
-      } else {
-        error.hide();
-      }
+      error.errorState === errorState ? error.show() : error.hide();
     });
     this._changeDetectorRef.markForCheck();
   }

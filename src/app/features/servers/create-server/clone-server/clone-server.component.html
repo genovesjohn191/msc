@@ -1,0 +1,59 @@
+<form [formGroup]="fgCloneServer" mcsFormGroup>
+    <!-- Server Name Input -->
+    <div class="field">
+      <mcs-form-field>
+        <input mcsInput #serverNameInput set-focus required
+          placeholder="Enter a server name" maxlength="15"
+          [formControl]="fcServerName"
+          [mcsContextualHelp]="textHelpContent.serverNameField">
+
+        <mcs-hint mcsHint align="start">
+          {{ convertMaxCharText(textContent.hints.serverNameMax, serverNameInput.maxLength) }}
+        </mcs-hint>
+        <mcs-hint mcsHint align="end">
+          {{ serverNameInput.value.length }} / {{ serverNameInput.maxLength }}
+        </mcs-hint>
+
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.serverNameRequired }}
+        </mcs-error>
+        <mcs-error mcsError errorState="invalidServerName">
+          {{ textContent.errors.invalidServerName }}
+        </mcs-error>
+      </mcs-form-field>
+    </div>
+
+    <div class="position-relative">
+      <!-- Servers -->
+      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <mcs-form-field>
+            <mcs-select [formControl]="fcTargetServer" required
+              [placeholder]="textContent.placeholder.server">
+              <mcs-select-group header="Servers">
+                <mcs-select-item *ngFor="let server of servers" [value]="server">
+                  {{ server.name }}
+                </mcs-select-item>
+              </mcs-select-group>
+            </mcs-select>
+
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.selectServerRequired }}
+            </mcs-error>
+          </mcs-form-field>
+        </mcs-data-status-success>
+
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingServers }}</span>
+        </mcs-data-status-in-progress>
+
+        <mcs-data-status-empty mcsDataEmpty>
+          <span>{{ textContent.noServers }}</span>
+        </mcs-data-status-empty>
+
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorMessageServers }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
+    </div>
+  </form>

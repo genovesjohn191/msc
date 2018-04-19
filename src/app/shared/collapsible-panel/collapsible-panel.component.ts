@@ -1,6 +1,5 @@
 import {
   Component,
-  forwardRef,
   Input,
   Output,
   Renderer2,
@@ -11,10 +10,6 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR
-} from '@angular/forms';
 import {
   coerceBoolean,
   coerceNumber,
@@ -32,13 +27,6 @@ let nextUniqueId = 0;
   styleUrls: ['./collapsible-panel.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CollapsiblePanelComponent),
-      multi: true
-    }
-  ],
   animations: [
     animateFactory.expansionVertical
   ],
@@ -49,9 +37,9 @@ let nextUniqueId = 0;
   }
 })
 
-export class CollapsiblePanelComponent implements ControlValueAccessor {
+export class CollapsiblePanelComponent {
   @Output()
-  public change: EventEmitter<CollapsiblePanelComponent> = new EventEmitter();
+  public collapseChange = new EventEmitter<boolean>();
 
   @Input()
   public id: string = `mcs-collapsible-panel-${nextUniqueId++}`;
@@ -67,77 +55,29 @@ export class CollapsiblePanelComponent implements ControlValueAccessor {
   private _header: string;
 
   @Input()
-  public get value(): boolean { return this._value; }
-  public set value(value: boolean) {
-    if (this._value !== value) {
-      this._value = coerceBoolean(value);
-      this._onChanged(this._value);
+  public get collapse(): boolean { return this._collapse; }
+  public set collapse(value: boolean) {
+    if (this._collapse !== value) {
+      this._collapse = coerceBoolean(value);
+      this.collapseChange.emit(this._collapse);
     }
   }
-  private _value: boolean = false;
+  private _collapse: boolean = true;
 
   @ViewChild('panelElement')
   private _panelElement: ElementRef;
 
-  /**
-   * Returns true when the panel is currently open (toggled)
-   */
-  private _panelOpen: boolean;
-  public get panelOpen(): boolean { return this._panelOpen; }
-  public set panelOpen(value: boolean) {
-    if (value !== this._panelOpen) {
-      this._panelOpen = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _renderer: Renderer2
-  ) {
-  }
+  ) { }
 
   /**
-   * Event that emits when there is change in the toggle of panel
-   * @param _event Event to be pass on the emitter
+   * Event that emits when checkbox is ticked
    */
-  public onChange(_event: any): void {
-    this.panelOpen = this.value;
-    this.change.emit(this);
-  }
-
-  /**
-   * Event that emits when checkbox removed focused
-   */
-  public onBlur(): void {
-    this._onTouched();
-  }
-
-  /**
-   * Write value implementation of ControlValueAccessor
-   * @param value Model binding value
-   */
-  public writeValue(_value: any) {
-    if (_value !== this.value) {
-      this.value = _value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * On Change Event implementation of ControlValueAccessor
-   * @param fn Function Invoker
-   */
-  public registerOnChange(fn: any) {
-    this._onChanged = fn;
-  }
-
-  /**
-   * On Touched Event implementation of ControlValueAccessor
-   * @param fn Function Invoker
-   */
-  public registerOnTouched(fn: any) {
-    this._onTouched = fn;
+  public onCheckboxTick(checkboxRef: any): void {
+    if (isNullOrEmpty(checkboxRef)) { return; }
+    this.collapse = !checkboxRef.checked;
   }
 
   /**
@@ -152,8 +92,4 @@ export class CollapsiblePanelComponent implements ControlValueAccessor {
       this._changeDetectorRef.markForCheck();
     });
   }
-
-  // View <-> Model callback methods
-  private _onChanged: (value: any) => void = () => { /** dummy */ };
-  private _onTouched = () => { /** dummy */ };
 }

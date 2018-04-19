@@ -8,12 +8,24 @@ import { WizardComponent } from './wizard.component';
 import { WizardActionPlacementDirective } from './wizard-step/wizard-action-placement.directive';
 // Wizard step
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
+// Wizard buttons
+import { WizardStepNextDirective } from './wizard-buttons/wizard-step-next.directive';
+import { WizardStepPreviousDirective } from './wizard-buttons/wizard-step-previous.directive';
+// Wizard Top panel definitions
+import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-def.directive';
+import {
+  WizardTopPanelPlaceholderDirective
+} from './wizard-top-panel/wizard-top-panel-placeholder.directive';
 
 @NgModule({
   declarations: [
     WizardComponent,
     WizardActionPlacementDirective,
-    WizardStepComponent
+    WizardStepComponent,
+    WizardStepNextDirective,
+    WizardStepPreviousDirective,
+    WizardTopPanelDefDirective,
+    WizardTopPanelPlaceholderDirective
   ],
   imports: [
     CommonModule,
@@ -26,6 +38,10 @@ import { WizardStepComponent } from './wizard-step/wizard-step.component';
     WizardComponent,
     WizardActionPlacementDirective,
     WizardStepComponent,
+    WizardStepNextDirective,
+    WizardStepPreviousDirective,
+    WizardTopPanelDefDirective,
+    WizardTopPanelPlaceholderDirective,
     TabGroupModule,
     LayoutModule,
     IconModule,
