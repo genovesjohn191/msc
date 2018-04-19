@@ -516,6 +516,11 @@
           "label": "Architecture",
           "placeholder": "Select architecture"
         }
+      },
+      "infrastructureMonitoringAddOn": {
+        "header": "Infrastructure Monitoring",
+        "label": "Service Level",
+        "placeholder": "Select service level"
       }
     }
   },

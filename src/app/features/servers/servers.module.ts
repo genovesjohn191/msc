@@ -25,7 +25,8 @@ import {
   IsSelfManagedServerDirective,
   AntiMalwareAddOnComponent,
   DisasterRecoveryAddOnComponent,
-  SqlServerAddOnComponent
+  SqlServerAddOnComponent,
+  InfrastructureMonitoringAddOnComponent
 } from './shared';
 /** Server */
 import {
@@ -75,7 +76,8 @@ import { SharedModule } from '../../shared';
     CreateSelfManagedServerComponent,
     AntiMalwareAddOnComponent,
     DisasterRecoveryAddOnComponent,
-    SqlServerAddOnComponent
+    SqlServerAddOnComponent,
+    InfrastructureMonitoringAddOnComponent
   ],
   declarations: [
     ServersComponent,
@@ -115,7 +117,8 @@ import { SharedModule } from '../../shared';
     IsSelfManagedServerDirective,
     AntiMalwareAddOnComponent,
     DisasterRecoveryAddOnComponent,
-    SqlServerAddOnComponent
+    SqlServerAddOnComponent,
+    InfrastructureMonitoringAddOnComponent
   ],
   imports: [
     SharedModule
