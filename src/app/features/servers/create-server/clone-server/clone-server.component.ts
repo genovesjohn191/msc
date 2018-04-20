@@ -71,9 +71,8 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content
-      .servers.createServer.selfManagedServer;
-    this.textHelpContent = this.textContent.contextualHelp;
+    this.textContent = this._textContentProvider.content.servers.createServer.cloneServer;
+    this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerFormGroup();
     this._getAllServers();
   }

@@ -13,8 +13,7 @@ export abstract class CreateServerBase {
     return this._creationType;
   }
 
-  constructor(private _creationType: ServerCreateType) {
-  }
+  constructor(private _creationType: ServerCreateType) { }
 
   /**
    * Returns the creation inputs of the server

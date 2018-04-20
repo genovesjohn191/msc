@@ -166,7 +166,6 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
       if (this.activeStepIndex === (this.steps.length - 1)) {
         this.stepsCompleted();
       }
-      // this._attachActionTemplate();
       this.change.emit(this.activeStep);
       this._changeDetectorRef.markForCheck();
     }
