@@ -17,7 +17,7 @@ import { OptionsApiService } from '../../../../services';
 import { ServerInfrastructure } from '../../../models';
 
 @Component({
-  selector: 'mcs-infrastructure-monitoring',
+  selector: 'mcs-infrastructure-monitoring-addon',
   templateUrl: './infrastructure-monitoring.addon.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

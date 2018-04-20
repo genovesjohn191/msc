@@ -63,9 +63,13 @@
 
         <!-- Template Group -->
         <mcs-select-group [header]="textContent.headers.templates">
-          <mcs-select-item *ngFor="let catalog of resource?.catalogItems" [value]="catalog">
-            {{ catalog.name }}
-          </mcs-select-item>
+          <ng-container *ngFor="let catalog of resource?.catalogItems">
+            <mcs-select-item
+              *ngIf="catalog.itemType === serverCatalogItemTypeEnum.Template"
+              [value]="catalog">
+              {{ catalog.itemName }}
+            </mcs-select-item>
+          </ng-container>
         </mcs-select-group>
       </mcs-select>
 

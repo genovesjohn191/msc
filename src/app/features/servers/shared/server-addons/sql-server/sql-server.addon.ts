@@ -20,7 +20,7 @@ import {
 } from '../../../models';
 
 @Component({
-  selector: 'mcs-sql-server',
+  selector: 'mcs-sql-server-addon',
   templateUrl: './sql-server.addon.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

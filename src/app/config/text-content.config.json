@@ -545,6 +545,21 @@
         "header": "Infrastructure Monitoring",
         "label": "Service Level",
         "placeholder": "Select service level"
+      },
+      "hidsAddOn": {
+        "header": "Host Intrusion Detection",
+        "serviceVariant": {
+          "label": "Service Variant",
+          "placeholder": "Select service variant"
+        },
+        "protectionLevel": {
+          "label": "Protection Level",
+          "placeholder": "Select protection level"
+        },
+        "policyTemplate": {
+          "label": "Policy Template",
+          "placeholder": "Select policy template"
+        }
       }
     }
   },

@@ -4,7 +4,10 @@ import {
   McsApiSuccessResponse,
   McsHttpStatusCode
 } from '../../core';
-import { ServerSqlOptions } from '../servers/models';
+import {
+  ServerSqlOptions,
+  ServerHidsOptions
+} from '../servers/models';
 
 @Injectable()
 export class OptionsApiService {
@@ -61,6 +64,31 @@ export class OptionsApiService {
     response.status = McsHttpStatusCode.Success;
     response.totalCount = 2;
     response.content = ['Standard', 'Premium'];
+
+    return Observable.of(response);
+  }
+
+  /**
+   * Get host intrusion detection options
+   * TODO: Will update this one when API is ready
+   */
+  public getHidsOptions(): Observable<McsApiSuccessResponse<ServerHidsOptions>> {
+    let response = new McsApiSuccessResponse<ServerHidsOptions>();
+    response.status = McsHttpStatusCode.Success;
+    response.content = {
+      serviceVariants: ['Standard', 'Self-Managed'],
+      protectionLevels: ['Detect', 'Protect'],
+      policyTemplates: [
+        'LAMP',
+        'Linux_Oracle',
+        'Active Directory',
+        'Exchange Server',
+        'File & Print Server',
+        'IIS Web Server',
+        'MS_SQL Database Server',
+        'Generic Member Server'
+      ]
+    };
 
     return Observable.of(response);
   }

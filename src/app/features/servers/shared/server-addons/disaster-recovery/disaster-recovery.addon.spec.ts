@@ -22,10 +22,6 @@ import { OptionsApiService } from '../../../../services';
 export class TestComponent {
   @ViewChild(DisasterRecoveryAddOnComponent)
   public disasterRecoveryAddOnComponent: DisasterRecoveryAddOnComponent;
-
-  public onSelectDisasterRecoveryGroup($event): any {
-    return $event;
-  }
 }
 
 describe('DisasterRecoveryAddOnComponent', () => {
@@ -58,9 +54,7 @@ describe('DisasterRecoveryAddOnComponent', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <mcs-disaster-recovery
-          (change)="onSelectDisasterRecoveryGroup($event)">
-        </mcs-disaster-recovery>
+        <mcs-disaster-recovery-addon></mcs-disaster-recovery-addon>
         `
       }
     });
@@ -83,7 +77,6 @@ describe('DisasterRecoveryAddOnComponent', () => {
         spyOn(component.disasterRecoveryAddOnComponent.change, 'emit');
         component.disasterRecoveryAddOnComponent.onGroupChanged();
         expect(component.disasterRecoveryAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
-        expect(component.onSelectDisasterRecoveryGroup('Contoso MMAZG00001')).toBeDefined();
       });
   });
 });

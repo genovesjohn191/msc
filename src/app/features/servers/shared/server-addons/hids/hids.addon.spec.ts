@@ -11,7 +11,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { SharedModule } from '../../../../../shared';
-import { InfrastructureMonitoringAddOnComponent } from './infrastructure-monitoring.addon';
+import { HidsAddOnComponent } from './hids.addon';
 import { CoreTestingModule } from '../../../../../core/testing';
 import { OptionsApiService } from '../../../../services';
 
@@ -20,11 +20,11 @@ import { OptionsApiService } from '../../../../services';
   template: ``
 })
 export class TestComponent {
-  @ViewChild(InfrastructureMonitoringAddOnComponent)
-  public infrastructureMonitoringAddOnComponent: InfrastructureMonitoringAddOnComponent;
+  @ViewChild(HidsAddOnComponent)
+  public hidsAddOnComponent: HidsAddOnComponent;
 }
 
-describe('InfrastructureMonitoringAddOnComponent', () => {
+describe('DisasterRecoveryAddOnComponent', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
@@ -37,7 +37,7 @@ describe('InfrastructureMonitoringAddOnComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        InfrastructureMonitoringAddOnComponent
+        HidsAddOnComponent
       ],
       imports: [
         FormsModule,
@@ -54,7 +54,7 @@ describe('InfrastructureMonitoringAddOnComponent', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <mcs-infrastructure-monitoring-addon></mcs-infrastructure-monitoring-addon>
+        <mcs-hids-addon></mcs-hids-addon>
         `
       }
     });
@@ -65,20 +65,36 @@ describe('InfrastructureMonitoringAddOnComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.infrastructureMonitoringAddOnComponent.serviceLevels.push('Standard');
-      component.infrastructureMonitoringAddOnComponent.serviceLevels.push('Premium');
+      component.hidsAddOnComponent.hidsServiceVariants.push('Standard');
+      component.hidsAddOnComponent.hidsProtectionLevels.push('Detect');
+      component.hidsAddOnComponent.hidsPolicyTemplates.push('LAMP');
     });
   }));
 
   /** Test Implementation */
   // TODO: Needs to update unit test once the component
   // was updated and using the data from the api
-  describe('onServiceLevelChanged()', () => {
+  describe('onServiceVariantChanged()', () => {
     it(`should output the selected value from select field`, () => {
-        spyOn(component.infrastructureMonitoringAddOnComponent.change, 'emit');
-        component.infrastructureMonitoringAddOnComponent.onServiceLevelChanged();
-        expect(component.infrastructureMonitoringAddOnComponent.change.emit)
-          .toHaveBeenCalledTimes(1);
+        spyOn(component.hidsAddOnComponent.change, 'emit');
+        component.hidsAddOnComponent.onServiceVariantChanged();
+        expect(component.hidsAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
+      });
+  });
+
+  describe('onProtectionLevelChanged()', () => {
+    it(`should output the selected value from select field`, () => {
+        spyOn(component.hidsAddOnComponent.change, 'emit');
+        component.hidsAddOnComponent.onProtectionLevelChanged();
+        expect(component.hidsAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
+      });
+  });
+
+  describe('onPolicyTemplateChanged()', () => {
+    it(`should output the selected value from select field`, () => {
+        spyOn(component.hidsAddOnComponent.change, 'emit');
+        component.hidsAddOnComponent.onPolicyTemplateChanged();
+        expect(component.hidsAddOnComponent.change.emit).toHaveBeenCalledTimes(1);
       });
   });
 });

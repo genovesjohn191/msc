@@ -1,0 +1,41 @@
+<div class="vertical-items-spacing-small">
+  <div class="space-between-inline-items align-items-center">
+    <span>{{ textContent.serviceVariant.label }}:</span>
+    <mcs-select [(ngModel)]="selectedHidsServiceVariant"
+      (change)="onServiceVariantChanged()"
+      [placeholder]="textContent.serviceVariant.placeholder"
+      class="form-field-size-small">
+      <mcs-select-item *ngFor="let serviceVariant of hidsServiceVariants" [value]="serviceVariant">
+        {{ serviceVariant }}
+      </mcs-select-item>
+    </mcs-select>
+  </div>
+
+  <div class="space-between-inline-items align-items-center">
+    <span>{{ textContent.protectionLevel.label }}:</span>
+    <mcs-select [(ngModel)]="selectedHidsProtectionLevel"
+      (change)="onProtectionLevelChanged()"
+      [placeholder]="textContent.protectionLevel.placeholder"
+      class="form-field-size-small">
+      <ng-container *ngFor="let protectionLevel of hidsProtectionLevels">
+        <mcs-select-item [value]="protectionLevel">
+          {{ protectionLevel }}
+        </mcs-select-item>
+      </ng-container>
+    </mcs-select>
+  </div>
+
+  <div class="space-between-inline-items align-items-center">
+    <span>{{ textContent.policyTemplate.label }}:</span>
+    <mcs-select [(ngModel)]="selectedHidsPolicyTemplate"
+      (change)="onPolicyTemplateChanged()"
+      [placeholder]="textContent.policyTemplate.placeholder"
+      class="form-field-size-small">
+      <mcs-select-item
+        *ngFor="let policyTemplate of hidsPolicyTemplates"
+        [value]="policyTemplate">
+        {{ policyTemplate }}
+      </mcs-select-item>
+    </mcs-select>
+  </div>
+</div>
