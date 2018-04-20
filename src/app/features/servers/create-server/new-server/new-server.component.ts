@@ -41,11 +41,6 @@ import { CreateServerBase } from '../create-server.base';
 import { ServersOsRepository } from '../../servers-os.repository';
 import { ServersService } from '../../servers.service';
 
-const NEW_SERVER_MINIMUM_RAM = 2048;
-const NEW_SERVER_MINIMUM_CPU = 2;
-const NEW_SERVER_MINIMUM_STORAGE = 30 * CoreDefinition.GB_TO_MB_MULTIPLIER;
-const NEW_SERVER_STORAGE_STEP = 10;
-
 @Component({
   selector: 'mcs-new-server',
   templateUrl: 'new-server.component.html'
@@ -91,9 +86,8 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content
-      .servers.createServer.selfManagedServer;
-    this.textHelpContent = this.textContent.contextualHelp;
+    this.textContent = this._textContentProvider.content.servers.createServer.newServer;
+    this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerFormGroup();
     this._getServersOs();
   }
@@ -111,19 +105,19 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   }
 
   public get scaleMemoryMB(): number {
-    return NEW_SERVER_MINIMUM_RAM;
+    return CoreDefinition.CREATE_SERVER_MINIMUM_RAM;
   }
 
   public get scaleCpuCount(): number {
-    return NEW_SERVER_MINIMUM_CPU;
+    return CoreDefinition.CREATE_SERVER_MINIMUM_CPU;
   }
 
   public get storageMinMemoryMB(): number {
-    return NEW_SERVER_MINIMUM_STORAGE;
+    return CoreDefinition.CREATE_SERVER_MINIMUM_STORAGE;
   }
 
   public get storageSliderStep(): number {
-    return NEW_SERVER_STORAGE_STEP;
+    return CoreDefinition.CREATE_SERVER_STORAGE_STEP;
   }
 
   /**

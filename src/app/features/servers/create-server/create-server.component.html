@@ -23,7 +23,7 @@
           <mcs-select placeholder="Select a VDC"
             [(ngModel)]="selectedResource"
             (change)="onChangeResource($event)"
-            [mcsContextualHelp]="contextualTextContent.vdcField">
+            [mcsContextualHelp]="textHelpContent.vdcField">
             <mcs-select-group [header]="textContent.vdcDropdownList.name">
               <ng-container *ngFor="let item of resources">
                 <mcs-select-item *ngIf="resourceHasAccess(item)" [value]="item">
@@ -38,8 +38,8 @@
           <div class="vspace-medium">
             <mcs-tab-group [(selectedTabId)]="selectedTabIndex">
               <!-- New Server Tab -->
-              <mcs-tab [label]="textContent.newServer" [id]="serverCreateTypeEnum.New">
-                <p class="space-bottom-medium">{{ textContent.newServerDescription }}</p>
+              <mcs-tab [label]="textContent.newServer.title" [id]="serverCreateTypeEnum.New">
+                <p class="space-bottom-medium">{{ textContent.newServer.description }}</p>
 
                 <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.New">
                   <mcs-new-server #serverBase
@@ -49,8 +49,8 @@
               </mcs-tab>
 
               <!-- Clone Server Tab -->
-              <mcs-tab [label]="textContent.cloneServer" [id]="serverCreateTypeEnum.Clone">
-                <p class="space-bottom-medium">{{ textContent.cloneServerDescription }}</p>
+              <mcs-tab [label]="textContent.cloneServer.title" [id]="serverCreateTypeEnum.Clone">
+                <p class="space-bottom-medium">{{ textContent.cloneServer.description }}</p>
 
                 <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
                   <mcs-clone-server #serverBase
@@ -81,17 +81,17 @@
 
         <div class="block-items-large">
           <mcs-collapsible-panel [header]="textContent.serverAddOnsStep.antiMalwareAddOn"
-            [mcsContextualHelp]="contextualTextContent.antiMalwareAddOn">
+            [mcsContextualHelp]="textHelpContent.antiMalwareAddOn">
             <mcs-anti-malware></mcs-anti-malware>
           </mcs-collapsible-panel>
 
           <mcs-collapsible-panel [header]="textContent.serverAddOnsStep.disasterRecoveryAddOn"
-            [mcsContextualHelp]="contextualTextContent.disasterRecoveryAddOn">
+            [mcsContextualHelp]="textHelpContent.disasterRecoveryAddOn">
             <mcs-disaster-recovery></mcs-disaster-recovery>
           </mcs-collapsible-panel>
 
           <mcs-collapsible-panel [header]="textContent.serverAddOnsStep.sqlServerAddOn"
-            [mcsContextualHelp]="contextualTextContent.sqlServerAddOn">
+            [mcsContextualHelp]="textHelpContent.sqlServerAddOn">
             <mcs-sql-server></mcs-sql-server>
           </mcs-collapsible-panel>
         </div>

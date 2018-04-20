@@ -63,7 +63,7 @@ export class CreateServerComponent implements
   OnInit, OnDestroy, AfterViewInit, McsSafeToNavigateAway {
 
   public textContent: any;
-  public contextualTextContent: any;
+  public textHelpContent: any;
   public serverDeploying: boolean;
   public serverComponents: CreateServerBase[];
   public notifications: McsApiJob[];
@@ -113,8 +113,8 @@ export class CreateServerComponent implements
   }
 
   public ngOnInit() {
-    this.textContent = this._textContentProvider.content.servers.createServer.selfManagedServer;
-    this.contextualTextContent = this.textContent.contextualHelp;
+    this.textContent = this._textContentProvider.content.servers.createServer;
+    this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerServerMap();
     this._getAllResources();
     this._setInitialTabViewByParam();
