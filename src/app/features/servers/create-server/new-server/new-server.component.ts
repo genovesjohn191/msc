@@ -35,7 +35,8 @@ import {
   ServerManageStorage,
   ServerNetwork,
   ServerIpAddress,
-  ServerImageType
+  ServerImageType,
+  ServerCatalogItemType
 } from '../../models';
 import { CreateServerBase } from '../create-server.base';
 import { ServersOsRepository } from '../../servers-os.repository';
@@ -118,6 +119,10 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
 
   public get storageSliderStep(): number {
     return CoreDefinition.CREATE_SERVER_STORAGE_STEP;
+  }
+
+  public get serverCatalogItemTypeEnum(): any {
+    return ServerCatalogItemType;
   }
 
   /**

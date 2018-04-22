@@ -18,7 +18,7 @@ import { OptionsApiService } from '../../../../services';
 import { ServerDisasterRecovery } from '../../../models';
 
 @Component({
-  selector: 'mcs-disaster-recovery',
+  selector: 'mcs-disaster-recovery-addon',
   templateUrl: './disaster-recovery.addon.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

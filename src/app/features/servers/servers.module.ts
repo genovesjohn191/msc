@@ -26,7 +26,8 @@ import {
   AntiMalwareAddOnComponent,
   DisasterRecoveryAddOnComponent,
   SqlServerAddOnComponent,
-  InfrastructureMonitoringAddOnComponent
+  InfrastructureMonitoringAddOnComponent,
+  HidsAddOnComponent
 } from './shared';
 /** Server */
 import {
@@ -74,7 +75,8 @@ import { SharedModule } from '../../shared';
     AntiMalwareAddOnComponent,
     DisasterRecoveryAddOnComponent,
     SqlServerAddOnComponent,
-    InfrastructureMonitoringAddOnComponent
+    InfrastructureMonitoringAddOnComponent,
+    HidsAddOnComponent
   ],
   declarations: [
     ServersComponent,
@@ -113,7 +115,8 @@ import { SharedModule } from '../../shared';
     AntiMalwareAddOnComponent,
     DisasterRecoveryAddOnComponent,
     SqlServerAddOnComponent,
-    InfrastructureMonitoringAddOnComponent
+    InfrastructureMonitoringAddOnComponent,
+    HidsAddOnComponent
   ],
   imports: [
     SharedModule

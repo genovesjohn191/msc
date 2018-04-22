@@ -22,10 +22,6 @@ import { OptionsApiService } from '../../../../services';
 export class TestComponent {
   @ViewChild(SqlServerAddOnComponent)
   public sqlServerAddOnComponent: SqlServerAddOnComponent;
-
-  public onSelectSqlServer($event): any {
-    return $event;
-  }
 }
 
 describe('DisasterRecoveryAddOnComponent', () => {
@@ -58,9 +54,7 @@ describe('DisasterRecoveryAddOnComponent', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <mcs-sql-server
-          (change)="onSelectSqlServer($event)">
-        </mcs-sql-server>
+        <mcs-sql-server-addon></mcs-sql-server-addon>
         `
       }
     });
