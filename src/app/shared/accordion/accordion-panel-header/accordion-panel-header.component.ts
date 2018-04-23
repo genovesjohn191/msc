@@ -7,7 +7,10 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { CoreDefinition } from '../../../core';
-import { isNullOrEmpty, animateFactory } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  animateFactory
+} from '../../../utilities';
 import { AccordionPanelComponent } from '../accordion-panel/accordion-panel.component';
 
 @Component({

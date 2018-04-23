@@ -100,7 +100,7 @@
             <mcs-accordion *ngIf="hasNics" [multi]="true">
               <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
                 [expanded]="i === 0" [hidden]="!nic.ipAddress">
-                <mcs-accordion-panel-header panel-header-def>
+                <mcs-accordion-panel-header mcsPanelHeaderDef>
                   <h4>{{ nic.name }}</h4>
                 </mcs-accordion-panel-header>
                 <div class="block-items-xsmall">

@@ -4,7 +4,7 @@
   <ng-container *mcsWizardTopPanelDef>
     <mcs-action-item class="right-align" (click)="gotoServers()">
       <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
-      <span>Back to Servers</span>
+      <span>{{ textContent.backToServers }}</span>
     </mcs-action-item>
   </ng-container>
 
@@ -66,8 +66,6 @@
             (click)="validateFormFields()">Next</button>
         </div>
       </div>
-
-      <!-- Note: Contextual help are dynamically inserted here -->
     </div>
   </mcs-wizard-step>
 
@@ -134,3 +132,23 @@
     </div>
   </mcs-wizard-step>
 </mcs-wizard>
+
+<!-- Quote Widget -->
+<!-- TODO: The value should be changed when order endpoint was finalized -->
+<ng-container *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed">
+  <mcs-quote-widget>
+    <ng-container mcsQuoteWidgetHeader>
+      <span>Total Cost: $200</span>
+    </ng-container>
+
+    <div class="space-between-inline-items">
+      <span>- Monthly cost</span>
+      <span>: $150</span>
+    </div>
+
+    <div class="space-between-inline-items">
+      <span>- One-off cost</span>
+      <span>: $50</span>
+    </div>
+  </mcs-quote-widget>
+</ng-container>

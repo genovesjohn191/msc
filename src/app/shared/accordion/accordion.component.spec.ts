@@ -48,7 +48,7 @@ describe('AccordionComponent', () => {
         <mcs-accordion [multi]="true" class="multiple-selection">
           <!-- Panel 1 -->
           <mcs-accordion-panel>
-            <mcs-accordion-panel-header panel-header-def>
+            <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="notification-bell"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h4>
             </mcs-accordion-panel-header>
@@ -60,7 +60,7 @@ describe('AccordionComponent', () => {
 
           <!-- Panel 2 -->
           <mcs-accordion-panel>
-            <mcs-accordion-panel-header panel-header-def>
+            <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="calendar"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
             </mcs-accordion-panel-header>
@@ -74,7 +74,7 @@ describe('AccordionComponent', () => {
         <mcs-accordion [multi]="false" class="single-selection">
           <!-- Panel 1 -->
           <mcs-accordion-panel>
-            <mcs-accordion-panel-header panel-header-def>
+            <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="notification-bell"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h4>
             </mcs-accordion-panel-header>
@@ -86,7 +86,7 @@ describe('AccordionComponent', () => {
 
           <!-- Panel 2 -->
           <mcs-accordion-panel>
-            <mcs-accordion-panel-header panel-header-def>
+            <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="calendar"></mcs-icon>
               <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
             </mcs-accordion-panel-header>
