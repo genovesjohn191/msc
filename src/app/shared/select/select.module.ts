@@ -25,6 +25,7 @@ import { SelectItemComponent } from './select-item/select-item.component';
     SelectComponent,
     SelectGroupComponent,
     SelectItemComponent,
+    CommonModule,
     IconModule,
     LayoutModule,
     RippleModule
