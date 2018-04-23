@@ -1,0 +1,17 @@
+<!-- Collapsible content -->
+<ng-container *ngIf="!collapse">
+  <div #panelElement [@expansionVertical]>
+    <div class="quote-widget-panel">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Quote widget handler -->
+<div class="quote-widget-header" cursor="pointer" (click)="toggleWidget()">
+  <ng-content select="[mcsQuoteWidgetHeader]"></ng-content>
+  <div class="quote-widget-toggle">
+    <mcs-icon [@rotate180]="collapse ? 'void' : 'show'"
+      color="white" [key]="toggleIconKey"></mcs-icon>
+  </div>
+</div>

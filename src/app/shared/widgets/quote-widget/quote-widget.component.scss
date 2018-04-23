@@ -1,0 +1,38 @@
+@import "../../../../styles/shared/base";
+
+// Variables
+$quote-widget-max-width: 250px;
+$quote-widget-offset: $space-large;
+$quote-widget-color: $color-white;
+$quote-widget-header-bg-color: $color-black;
+$quote-widget-panel-bg-color: rgba($color-black, 0.87);
+
+.quote-widget-wrapper {
+  @include border-radius($border-radius-small);
+  @include display-flex(column);
+  position: fixed;
+  overflow: hidden;
+  right: $quote-widget-offset;
+  bottom: $quote-widget-offset;
+  max-width: $quote-widget-max-width;
+  width: 100%;
+  @include box-shadow((
+    0 3px 6px rgba(0,0,0,0.16),
+    0 3px 6px rgba(0,0,0,0.23)
+  ));
+}
+
+.quote-widget-panel {
+  color: $quote-widget-color;
+  background-color: $quote-widget-panel-bg-color;
+  padding: $space-medium;
+}
+
+.quote-widget-header {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: space-between;
+  color: $quote-widget-color;
+  background-color: $quote-widget-header-bg-color;
+  padding: $space-medium;
+}

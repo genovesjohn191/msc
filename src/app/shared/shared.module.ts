@@ -28,6 +28,7 @@ import { DialogModule } from './dialog/dialog.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
 import { WizardModule } from './wizard/wizard.module';
+import { WidgetsModule } from './widgets/widgets.module';
 import { AttachmentModule } from './attachment/attachment.module';
 import { PaginatorModule } from './paginator/paginator.module';
 import { ActionItemModule } from './action-item/action-item.module';
@@ -81,6 +82,7 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     TooltipModule,
     TabGroupModule,
     WizardModule,
+    WidgetsModule,
     AttachmentModule,
     PaginatorModule,
     ActionItemModule,
@@ -127,6 +129,7 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     TooltipModule,
     TabGroupModule,
     WizardModule,
+    WidgetsModule,
     AttachmentModule,
     PaginatorModule,
     ActionItemModule,
