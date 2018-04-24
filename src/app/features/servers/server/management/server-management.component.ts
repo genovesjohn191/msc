@@ -162,10 +162,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get hasNics(): boolean {
-    return !isNullOrEmpty(this.server.nics) && !isNullOrEmpty(
-      this.server.nics.find((nic) => {
-        return !isNullOrEmpty(nic.ipAddress);
-      }));
+    return !isNullOrEmpty(this.server.nics);
   }
 
   public get hasStorageInformation(): boolean {
@@ -231,6 +228,10 @@ export class ServerManagementComponent extends ServerDetailsBase
     if (!ipAddresses || ipAddresses.length === 0) { return ''; }
 
     return ipAddresses.join(', ');
+  }
+
+  public hasIpAddress(ipAddress: string[]): boolean {
+    return !isNullOrEmpty(ipAddress);
   }
 
   public onClickViewConsole() {

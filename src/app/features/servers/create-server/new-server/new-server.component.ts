@@ -36,6 +36,7 @@ import {
   ServerNetwork,
   ServerIpAddress,
   ServerImageType,
+  ServerCatalogItem,
   ServerCatalogItemType
 } from '../../models';
 import { CreateServerBase } from '../create-server.base';
@@ -56,6 +57,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   public operatingSystemsMap: Map<string, ServerOperatingSystem[]>;
   public operatingSystemsSubscription: Subscription;
   public selectedNetwork: ServerNetwork;
+  public customTemplates: ServerCatalogItem[];
 
   // Form variables
   public fgNewServer: FormGroup;
@@ -91,6 +93,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
     this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerFormGroup();
     this._getServersOs();
+    this._getCustomTemplates();
   }
 
   public ngOnDestroy() {
@@ -119,10 +122,6 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
 
   public get storageSliderStep(): number {
     return CoreDefinition.CREATE_SERVER_STORAGE_STEP;
-  }
-
-  public get serverCatalogItemTypeEnum(): any {
-    return ServerCatalogItemType;
   }
 
   /**
@@ -258,6 +257,21 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
       groupedOs.push(operatingSystem);
       this.operatingSystemsMap.set(keyString[0], groupedOs);
     });
+  }
+
+  /**
+   * Get custom templates from the catalog items
+   */
+  private _getCustomTemplates(): void {
+    if (isNullOrEmpty(this.resource)) { return; }
+
+    let filteredCatalogItems = this.resource.catalogItems.filter((catalog) => {
+      return catalog.itemType === ServerCatalogItemType.Template;
+    });
+
+    if (!isNullOrEmpty(filteredCatalogItems)) {
+      this.customTemplates = filteredCatalogItems;
+    }
   }
 
   /**

@@ -35,7 +35,8 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   addOrUpdateArrayRecord,
-  deleteArrayRecord
+  deleteArrayRecord,
+  refreshView
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
@@ -288,7 +289,7 @@ export class ServerNicsComponent extends ServerDetailsBase
 
     this.isPrimary = nic.isPrimary;
     this.isUpdate = true;
-    this.fcNetwork.setValue(this.networkName);
+    refreshView(() => this.fcNetwork.setValue(this.networkName));
   }
 
   public closeUpdateWindow(): void {

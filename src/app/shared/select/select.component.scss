@@ -71,11 +71,11 @@ $select-sub-group-max-height: 400px;
 .select-group-wrapper {
   @include flex(0 0 auto);
   @include display-flex(column);
-  border-bottom: 1px solid $select-group-wrapper-border-color;
+  border-top: 1px solid $select-group-wrapper-border-color;
   padding: $select-group-wrapper-padding;
 
-  &:last-child {
-    border-bottom: none;
+  &:first-child {
+    border-top: none;
   }
 
   .select-group-header {
