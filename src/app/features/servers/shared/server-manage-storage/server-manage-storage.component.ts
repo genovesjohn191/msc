@@ -300,9 +300,10 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    * Event that emits whenever the storage data is changed
    */
   private _notifyStorageChanged() {
-    if (isNullOrEmpty(this.selectedStorageProfile)) { return; }
     let serverStorage = new ServerManageStorage();
-    serverStorage.storageProfile = this.selectedStorageProfile.name;
+    if (!isNullOrEmpty(this.selectedStorageProfile)) {
+      serverStorage.storageProfile = this.selectedStorageProfile.name;
+    }
 
     refreshView(() => {
       // Set model data based on management type

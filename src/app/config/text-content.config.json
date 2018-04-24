@@ -218,6 +218,7 @@
           "publicIp": "Public IP",
           "interface": "NIC",
           "ipAddresses": "IP Addresses",
+          "dhcpLabel": "This IP address is assigned by DHCP",
           "noContentMessage": "There are no NICs for this server."
         },
         "storage": {
