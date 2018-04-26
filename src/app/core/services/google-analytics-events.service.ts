@@ -5,6 +5,7 @@ import {
 } from '@angular/router';
 import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
+import { isNullOrEmpty } from '../../utilities';
 
 declare let dataLayer: any;
 
@@ -52,8 +53,12 @@ export class GoogleAnalyticsEventsService {
   private _subscribeToNavigationEvents(): void {
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        // Mask URLs with UUIDs
-        let maskedUrl = event.urlAfterRedirects.replace(CoreDefinition.REGEX_UUID_PATTERN, '{id}');
+        // Mask UUID from the URL
+        let maskedUrl = this._maskPrivateDataFromUrl(
+          event.urlAfterRedirects, CoreDefinition.REGEX_UUID_PATTERN, '{id}');
+        // Mask JWT Token from the URL
+        maskedUrl = this._maskPrivateDataFromUrl(
+          event.urlAfterRedirects, CoreDefinition.REGEX_BEARER_PATTERN, 'bearer={token}');
 
         dataLayer.push({
           'event': 'virtualPageView',
@@ -61,5 +66,14 @@ export class GoogleAnalyticsEventsService {
         });
       }
     });
+  }
+
+  private _maskPrivateDataFromUrl(
+    url: string,
+    pattern: RegExp,
+    value: string): string {
+    if (isNullOrEmpty(url)) { return ''; }
+
+    return url.replace(pattern, value);
   }
 }
