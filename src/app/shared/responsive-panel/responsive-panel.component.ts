@@ -15,8 +15,13 @@ import {
 } from '@angular/core';
 import {
   Observable,
+  Subject,
   Subscription
 } from 'rxjs';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsViewportService
@@ -76,6 +81,8 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   private _viewportChangeSubscription: Subscription;
   private _scrollDistanceChanged: boolean;
   private _panelItemsCount: number;
+  private _destroySubject = new Subject<void>();
+  private _selectedPanelItem: ResponsivePanelItemDirective;
 
   public get chevronRightKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_RIGHT;
@@ -114,11 +121,12 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
 
   public ngAfterContentInit(): void {
     // We need to listen to changes on header
-    // in order to cater the scenarios of dynamic adding of tab
-    if (this.panelItems) { this._listenToSelectionChange(); }
-    this.panelItems.changes.subscribe(() => {
-      this._listenToSelectionChange();
-    });
+    // in order to cater the scenarios of dynamic adding of responsive panel item
+    this.panelItems.changes.pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => {
+        this._listenToSelectionChange();
+        this._selectActivePanelItem();
+      });
     this._listenToViewportChange();
   }
 
@@ -142,6 +150,8 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   public ngOnDestroy(): void {
     unsubscribeSafely(this._selectionSubscription);
     unsubscribeSafely(this._viewportChangeSubscription);
+    this._destroySubject.next();
+    this._destroySubject.complete();
   }
 
   /**
@@ -230,10 +240,20 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   }
 
   /**
+   * Select the current active panel item
+   */
+  private _selectActivePanelItem(): void {
+    if (isNullOrEmpty(this._selectedPanelItem)) { return; }
+    this._selectedPanelItem.select.emit(this._selectedPanelItem);
+  }
+
+  /**
    * Listen to selection changed of all the items
    */
   private _listenToSelectionChange(): void {
+    unsubscribeSafely(this._selectionSubscription);
     this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
+      this._selectedPanelItem = item;
       if (this.showPaginationControls) {
         this._scrollToElement(item);
       }

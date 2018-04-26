@@ -3,13 +3,15 @@
   <mcs-top-panel *mcsTopPanelDef [active]="selection.hasValue()">
 
     <!-- Server Creation -->
-    <mcs-top-panel-item *mcsTopPanelItemDef [disabled]="!hasSelfManagedResource">
-      <mcs-action-item id="ctaCreateNewServer"
-        (click)="onClickNewServerButton()">
-        <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-        <span>{{ textContent.newServer }}</span>
-      </mcs-action-item>
-    </mcs-top-panel-item>
+    <ng-container *mcsAccessControl="['VmEdit']">
+      <mcs-top-panel-item *mcsTopPanelItemDef [disabled]="!hasSelfManagedResource">
+        <mcs-action-item id="ctaCreateNewServer"
+          (click)="onClickNewServerButton()">
+          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.newServer }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </ng-container>
 
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">

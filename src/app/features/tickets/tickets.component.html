@@ -3,19 +3,21 @@
   <mcs-top-panel *mcsTopPanelDef>
 
     <!-- Ticket Action -->
-    <mcs-top-panel-item *mcsTopPanelItemDef>
-      <div class="listing-action-wrapper">
-        <mcs-action-item *mcsExclusiveForAccount="'default'"
-          (click)="onClickNewTicket()">
-          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-          <span>{{ textContent.newTicket }}</span>
-        </mcs-action-item>
+    <ng-container *mcsAccessControl="['TicketEdit']">
+      <mcs-top-panel-item *mcsTopPanelItemDef>
+        <div class="listing-action-wrapper">
+          <mcs-action-item *mcsExclusiveForAccount="'default'"
+            (click)="onClickNewTicket()">
+            <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+            <span>{{ textContent.newTicket }}</span>
+          </mcs-action-item>
 
-        <div class="total-record-count right-align">
-          <span>{{ recordsFoundLabel }}</span>
+          <div class="total-record-count right-align">
+            <span>{{ recordsFoundLabel }}</span>
+          </div>
         </div>
-      </div>
-    </mcs-top-panel-item>
+      </mcs-top-panel-item>
+    </ng-container>
   </mcs-top-panel>
 
   <!-- Left Panel -->
