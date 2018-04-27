@@ -1,3 +1,5 @@
+import { isNullOrEmpty } from './mcs-object.function';
+
 /**
  * Get style of the element based on the property given
  * @param element Target element to get the property value
@@ -206,4 +208,12 @@ export function createSvgElement(svgContent: string): SVGElement {
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   svg.setAttribute('focusable', 'false'); // Disable IE11 default behavior to make SVGs focusable.
   return svg;
+}
+
+/**
+ * Returns true when the element is visible
+ * @param element Element to be checked
+ */
+export function isElementVisible(element: HTMLElement): boolean {
+  return !isNullOrEmpty(element) && !isNullOrEmpty(element.offsetParent);
 }

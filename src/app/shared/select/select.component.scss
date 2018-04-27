@@ -17,6 +17,7 @@ $select-group-wrapper-border-color: $select-group-panel-border-color;
 // Select Item
 $select-item-min-width: 100px;
 $select-item-padding: $space-xsmall $space-small;
+$select-item-sub-group-padding: 0 $space-small;
 $select-item-hover-color: $color-grey-07;
 $select-item-selected-color: $color-grey-06;
 // Select sub-group
@@ -88,22 +89,10 @@ $select-sub-group-max-height: 400px;
 .select-item-wrapper {
   display: block;
   @include flex(0 0 auto);
-  padding: $select-item-padding;
   position: relative;
   white-space: nowrap;
   min-width: $select-item-min-width;
-  cursor: pointer;
   outline: none;
-
-  .select-item-content {
-    @include display-flex(row);
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .icon-wrapper {
-    padding-left: $space-large;
-  }
 
   &:hover,
   &:focus,
@@ -115,21 +104,14 @@ $select-sub-group-max-height: 400px;
     background-color: $select-item-selected-color;
   }
 
-  .select-item-subgroup-panel {
-    z-index: $zindex-select;
-    position: absolute;
-    top: 0;
-    right: 0;
-    @include transform(-100%);
-    background-color: $select-sub-group-bg-color;
-    border: 1px solid $select-sub-group-border-color;
-    max-height: $select-sub-group-max-height;
-    overflow-y: auto;
+  .select-item-content {
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: space-between;
+    padding: $select-item-padding;
+  }
 
-    @include box-shadow((
-      0 2px 4px -1px rgba($select-sub-group-box-shadow, 0.2),
-      0 4px 5px 0 rgba($select-sub-group-box-shadow, 0.14),
-      0 1px 10px 0 rgba($select-sub-group-box-shadow, 0.12)
-    ));
+  .select-item-subgroup-panel {
+    padding: $select-item-sub-group-padding;
   }
 }

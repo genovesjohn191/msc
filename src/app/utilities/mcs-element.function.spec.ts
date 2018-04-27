@@ -6,7 +6,8 @@ import {
   getElementStyle,
   getOffsetParent,
   removeAllChildren,
-  createSvgElement
+  createSvgElement,
+  isElementVisible
 } from './mcs-element.function';
 
 describe('McsElementFunction', () => {
@@ -286,6 +287,21 @@ describe('McsElementFunction', () => {
     it('should create an SVG Element based on content provided', () => {
       let svgElement = createSvgElement(`<svg><title>SVG Title</title></svg>`);
       expect(svgElement).toBeDefined();
+    });
+  });
+
+  describe('isElementVisible()', () => {
+    it('should return true when the element is visible', () => {
+      let visibleElement = createElement(200, 300, 100, 150);
+      document.body.appendChild(visibleElement);
+      expect(isElementVisible(visibleElement)).toBeTruthy();
+    });
+
+    it('should return false when the element is hidden', () => {
+      let hiddenElement = createElement(200, 300, 100, 150);
+      hiddenElement.style.display = 'none';
+      document.body.appendChild(hiddenElement);
+      expect(isElementVisible(hiddenElement)).toBeFalsy();
     });
   });
 });

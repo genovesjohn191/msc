@@ -7,17 +7,16 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
   AfterContentInit,
-  OnDestroy,
   QueryList,
   ContentChildren,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import { CoreDefinition } from '../../../core';
 import {
-  registerEvent,
-  unregisterEvent,
   isNullOrEmpty,
-  animateFactory
+  animateFactory,
+  isElementVisible
 } from '../../../utilities';
 import { SelectGroupComponent } from '../select-group/select-group.component';
 
@@ -30,20 +29,22 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    animateFactory.fadeIn,
-    animateFactory.transformVertical
+    animateFactory.expansionVertical,
+    animateFactory.rotate90
   ],
   host: {
     'class': 'select-item-wrapper',
     'role': 'option',
+    '[class.sub-group]': 'hasSubgroup',
     '[class.active]': 'active',
     '[class.selected]': 'selected',
-    '[id]': 'id',
-    '(click)': 'onClickItem($event)'
+    '[id]': 'id'
   }
 })
 
-export class SelectItemComponent implements AfterContentInit, OnDestroy {
+export class SelectItemComponent implements AfterContentInit {
+
+  public recreate: boolean = true;
 
   @Input()
   public value: any;
@@ -52,17 +53,24 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
   }
 
   @Output()
-  public selectionChanged = new EventEmitter<any>();
+  public itemSelectionChanged = new EventEmitter<SelectItemComponent>();
+
+  @Output()
+  public groupSelectionChanged = new EventEmitter<SelectItemComponent>();
 
   @ContentChildren(SelectGroupComponent)
   public groups: QueryList<SelectGroupComponent>;
 
+  @Input()
   public id: string = `mcs-select-item-${nextUniqueId++}`;
+
+  @ViewChild('triggerElement')
+  public triggerElement: ElementRef;
 
   /**
    * Sub group open flag determines wheather the sub-group is open or not
    */
-  private _subGroupOpen: boolean;
+  private _subGroupOpen: boolean = false;
   public get subGroupOpen(): boolean {
     return this._subGroupOpen;
   }
@@ -111,90 +119,110 @@ export class SelectItemComponent implements AfterContentInit, OnDestroy {
     }
   }
 
-  /**
-   * Event handler references
-   */
-  private _openSubgroupHandler = this._onOpenSubgroup.bind(this);
-  private _closeSubgroupHandler = this._onCloseSubgroup.bind(this);
-
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef
   ) {
-    this.selectionChanged = new EventEmitter<any>();
+    this.itemSelectionChanged = new EventEmitter<any>();
   }
 
+  /**
+   * Returns the carrent icon key
+   */
   public get carretRightIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
+  /**
+   * Returns the current value of the rotation
+   */
+  public get transformRotate(): string {
+    // Note: We need to manually set this in order to fix
+    // the issue related in angular when recreating the element
+    // the animate is not triggered correctly.
+    return this.subGroupOpen ? 'rotate(90deg)' : 'rotate(0deg)';
+  }
+
   public ngAfterContentInit(): void {
     this.hasSubgroup = this.groups.length !== 0;
-    this._registerEvents();
   }
 
-  public ngOnDestroy(): void {
-    this._unregisterEvents();
-  }
-
+  /**
+   * Returns the host element instance
+   */
   public getHostElement(): HTMLElement {
     return this._elementRef.nativeElement;
   }
 
+  /**
+   * Returns the trigger element instance
+   */
+  public getTriggerElement(): HTMLElement {
+    return this.triggerElement.nativeElement;
+  }
+
+  /**
+   * Event that emits when click is executed on the trigger element
+   */
   public onClickItem(_event: any): void {
-    if (this.hasSubgroup) {
-      this.subGroupOpen = !this.subGroupOpen;
-      return;
-    }
-
-    this.select();
-    this._emitSelectionChanged();
-
-    if (!isNullOrEmpty(_event)) {
-      _event.stopPropagation();
-    }
+    if (!isNullOrEmpty(_event)) { _event.stopPropagation(); }
+    this.hasSubgroup ? this.groupSelectionChanged.emit(this) :
+      this.itemSelectionChanged.emit(this);
   }
 
-  public select(): void {
-    if (this.hasSubgroup) { return; }
-    this.selected = true;
-  }
-
-  public deselect(): void {
-    this.selected = false;
+  /**
+   * Closes the group panel element
+   */
+  public closeGroupPanel(): void {
     this.subGroupOpen = false;
   }
 
-  public setActiveState(): void {
-    this.active = true;
-    this.getHostElement().focus();
+  /**
+   * Opens the group panel element
+   */
+  public openGroupPanel(): void {
+    this.subGroupOpen = true;
   }
 
+  /**
+   * Toggles the group panel element
+   */
+  public toggleGroupPanel(): void {
+    this.subGroupOpen ? this.closeGroupPanel() : this.openGroupPanel();
+  }
+
+  /**
+   * Selects the current item
+   */
+  public select(): void {
+    this.selected = true;
+  }
+
+  /**
+   * Deselects the current item
+   */
+  public deselect(): void {
+    this.selected = false;
+  }
+
+  /**
+   * Sets this item to active state
+   */
+  public setActiveState(): void {
+    this.active = true;
+  }
+
+  /**
+   * Removes this item to active state
+   */
   public setInActiveState(): void {
     this.active = false;
   }
 
-  private _registerEvents(): void {
-    if (!this.hasSubgroup) { return; }
-    registerEvent(this._elementRef.nativeElement, 'mouseenter', this._openSubgroupHandler);
-    registerEvent(this._elementRef.nativeElement, 'mouseleave', this._closeSubgroupHandler);
-  }
-
-  private _unregisterEvents(): void {
-    if (!this.hasSubgroup) { return; }
-    unregisterEvent(this._elementRef.nativeElement, 'mouseenter', this._openSubgroupHandler);
-    unregisterEvent(this._elementRef.nativeElement, 'mouseleave', this._closeSubgroupHandler);
-  }
-
-  private _onOpenSubgroup(): void {
-    this.subGroupOpen = true;
-  }
-
-  private _onCloseSubgroup(): void {
-    this.subGroupOpen = false;
-  }
-
-  private _emitSelectionChanged(): void {
-    this.selectionChanged.emit(this);
+  /**
+   * Returns true when this item is visible
+   */
+  public isVisible(): boolean {
+    return isElementVisible(this.getHostElement());
   }
 }
