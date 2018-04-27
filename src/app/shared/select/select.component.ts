@@ -164,10 +164,24 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   /**
-   * Combine stream of all the selected item child's change event
+   * Combine streams of all the selected item child's change event
    */
   public get itemsSelectionChanged(): Observable<SelectItemComponent> {
-    return Observable.merge(...this._items.map((item) => item.selectionChanged));
+    return Observable.merge(...this._items.map((item) => item.itemSelectionChanged));
+  }
+
+  /**
+   * Combine streams of all the selected item child's group selection event
+   */
+  public get groupsSelectionChanged(): Observable<SelectItemComponent> {
+    return Observable.merge(...this._items.map((item) => item.groupSelectionChanged));
+  }
+
+  /**
+   * Returns all the visible items from elements
+   */
+  public get visibleItems(): SelectItemComponent[] {
+    return this._items.filter((item) => item.isVisible());
   }
 
   public constructor(
@@ -219,7 +233,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   public onKeyDown(_event: KeyboardEvent) {
     if (!this.disabled) {
-      this.panelOpen ? this._handleOpenKeydown(_event) : this._handleClosedKeydown(_event);
+      this.panelOpen ? this._handleOpenPanelKeydown(_event) :
+        this._handleClosedPanelKeydown(_event);
     }
   }
 
@@ -235,15 +250,16 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Closes the panel of the select
    */
   public closePanel() {
-    if (isNullOrEmpty(this._items)) { return; }
-    this.panelOpen = false;
+    if (!isNullOrEmpty(this._items) && !this.panelOpen) { return; }
 
     // We need to clear the active item upon closing the panel
     // to selected item as active item
+    this._items.forEach((item) => item.closeGroupPanel());
     this._clearActiveItemState();
     if (this._selection.hasValue()) {
       this._itemListKeyManager.setActiveItem(this._selection.selected[0]);
     }
+    setTimeout(() => this.panelOpen = false);
   }
 
   /**
@@ -318,9 +334,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param _event Event details
    */
   private _onCloseOutside(_event: any) {
-    if (this._elementRef.nativeElement.contains(_event.target)) {
-      return;
-    }
+    if (this._elementRef.nativeElement.contains(_event.target)) { return; }
     this.closePanel();
   }
 
@@ -333,6 +347,21 @@ export class SelectComponent extends McsFormFieldControlBase<any>
         this._selectItem(item);
         this.closePanel();
       });
+
+    this.groupsSelectionChanged.pipe(takeUntil(this._destroySubject))
+      .subscribe((item) => {
+        this._toggleItemPanel(item);
+      });
+  }
+
+  /**
+   * Toggle the panel of the sub-group item
+   * @param item Item to be toggled
+   */
+  private _toggleItemPanel(item: SelectItemComponent) {
+    this._items.forEach((_item) => {
+      (_item === item) ? _item.toggleGroupPanel() : _item.closeGroupPanel();
+    });
   }
 
   /**
@@ -376,11 +405,18 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     this._itemListKeyManager = new McsItemListKeyManager(this._items);
 
     // Register tab event subscription
-    this._itemListKeyManager.tabPressed.pipe(takeUntil(this._destroySubject))
+    this._itemListKeyManager.tabPressed
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this.closePanel());
 
+    // Register pre active change element
+    this._itemListKeyManager.preActiveItemChanged
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._clearActiveItemState());
+
     // Register change element on manager subscription
-    this._itemListKeyManager.activeItemChanged.pipe(takeUntil(this._destroySubject))
+    this._itemListKeyManager.activeItemChanged
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         this.panelOpen ? this._setActiveItemState() : this._selectActiveItem();
       });
@@ -394,7 +430,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Event that emits when keydown is pressed while the panel is closed
    * @param event Keyboard eventhandler details
    */
-  private _handleClosedKeydown(event: KeyboardEvent): void {
+  private _handleClosedPanelKeydown(event: KeyboardEvent): void {
     let keyCodeExists = this._closePanelKeyEventsMap.has(event.keyCode);
     if (keyCodeExists) {
       event.preventDefault();
@@ -406,11 +442,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Event that emits when keydown is pressed while the panel is opened
    * @param event Keyboard event instance
    */
-  private _handleOpenKeydown(event: KeyboardEvent): void {
-    // Reselect previously active element
-    if (event.keyCode === Key.UpArrow || event.keyCode === Key.DownArrow) {
-      this._clearActiveItemState();
-    }
+  private _handleOpenPanelKeydown(event: KeyboardEvent): void {
     let keyCodeExists = this._openPanelKeyEventsMap.has(event.keyCode);
     if (keyCodeExists) {
       event.preventDefault();
@@ -426,8 +458,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     this._openPanelKeyEventsMap.set(Key.Space, this._selectActiveItem.bind(this));
     this._openPanelKeyEventsMap.set(Key.Tab, this.closePanel.bind(this));
     this._openPanelKeyEventsMap.set(Key.Escape, this.closePanel.bind(this));
-    this._openPanelKeyEventsMap.set(Key.UpArrow, this._keymanagerKeyDown.bind(this));
-    this._openPanelKeyEventsMap.set(Key.DownArrow, this._keymanagerKeyDown.bind(this));
+    this._openPanelKeyEventsMap.set(Key.UpArrow, this._setActiveItemByVisibility.bind(this));
+    this._openPanelKeyEventsMap.set(Key.DownArrow, this._setActiveItemByVisibility.bind(this));
   }
 
   /**
@@ -459,18 +491,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    */
   private _selectActiveItem(): void {
     if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
-    triggerEvent(this._itemListKeyManager.activeItem.getHostElement(), 'click');
-  }
-
-  /**
-   * Sets the active item state with scrolling down animation
-   */
-  private _setActiveItemState(): void {
-    if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
-    let activeElement = this._itemListKeyManager.activeItem.getHostElement();
-    let heightOffset = SELECT_PANEL_MAX_HEIGHT - (activeElement.offsetHeight + SELECT_ITEM_OFFSET);
-    this._scrollDispatcher.scrollToElement(activeElement, heightOffset);
-    this._itemListKeyManager.activeItem.setActiveState();
+    triggerEvent(this._itemListKeyManager.activeItem.getTriggerElement(), 'click');
   }
 
   /**
@@ -479,5 +500,47 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   private _clearActiveItemState(): void {
     if (isNullOrEmpty(this._itemListKeyManager.activeItem)) { return; }
     this._itemListKeyManager.activeItem.setInActiveState();
+  }
+
+  /**
+   * Sets the active item state with scrolling down animation
+   */
+  private _setActiveItemState(): void {
+    let activeItemDisplayed = !isNullOrEmpty(this._itemListKeyManager.activeItem) &&
+      this._itemListKeyManager.activeItem.isVisible();
+    if (!activeItemDisplayed) { return; }
+
+    let activeElement = this._itemListKeyManager.activeItem.getHostElement();
+    let elementsOffset = (activeElement.offsetHeight + SELECT_ITEM_OFFSET);
+
+    let heightOffset = SELECT_PANEL_MAX_HEIGHT - (elementsOffset);
+    this._scrollDispatcher.scrollToElement(activeElement, heightOffset);
+    this._itemListKeyManager.activeItem.setActiveState();
+  }
+
+  /**
+   * Sets the active item based on their visiblity flag
+   * @param event Keyboard event instance
+   */
+  private _setActiveItemByVisibility(event: KeyboardEvent): void {
+    let activeIndex = this._itemListKeyManager.activeItemIndex;
+    let activeItem = this._itemListKeyManager.activeItem;
+    activeIndex = !isNullOrEmpty(activeItem) && activeItem.isVisible() ? activeIndex : -1;
+
+    let visibleRecords: SelectItemComponent[];
+    if (event.keyCode === Key.UpArrow) {
+      visibleRecords = this._itemListKeyManager.itemsArray
+        .slice(0, activeIndex)
+        .filter((item) => item.isVisible())
+        .reverse();
+    } else if (event.keyCode === Key.DownArrow) {
+      visibleRecords = this._itemListKeyManager.itemsArray
+        .slice(activeIndex + 1)
+        .filter((item) => item.isVisible());
+    }
+
+    if (!isNullOrEmpty(visibleRecords)) {
+      this._itemListKeyManager.setActiveItem(visibleRecords[0]);
+    }
   }
 }

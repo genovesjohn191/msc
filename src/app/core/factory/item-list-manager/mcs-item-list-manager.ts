@@ -5,6 +5,7 @@ import { isNullOrEmpty } from '../../../utilities';
 export abstract class McsItemListManager<T> {
 
   public activeItemChanged: Subject<number> = new Subject();
+  public preActiveItemChanged: Subject<number> = new Subject();
 
   /**
    * Returns all the array of the querylist provided
@@ -33,16 +34,16 @@ export abstract class McsItemListManager<T> {
    */
   public setActiveItem(item: T): void {
     if (isNullOrEmpty(item)) { return; }
-    let previousIndex = this._activeItemIndex;
+
+    // Notify Pre active changed event
+    this.preActiveItemChanged.next(this._activeItemIndex);
 
     // Set the active item and item index
     this._activeItemIndex = this.itemsArray.indexOf(item);
     this._activeItem = this.itemsArray[this._activeItemIndex];
 
     // Notify whenever change happen on active items
-    if (this._activeItemIndex !== previousIndex) {
-      this.activeItemChanged.next(this._activeItemIndex);
-    }
+    this.activeItemChanged.next(this._activeItemIndex);
   }
 
   /**
