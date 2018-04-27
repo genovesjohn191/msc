@@ -56,7 +56,7 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
         // Find all records based on settings provided in the input
         return this._firewallsRepository.findAllRecords(undefined, this._search)
           .map((content) => {
-            this._firewallList = this._mapFirewallList(content);
+            this._mapFirewallList(content);
             return this._firewallList;
           });
       });
@@ -76,8 +76,8 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
    * Map firewalls to firewall list to display in list-panel
    * @param firewalls Firewalls to map
    */
-  private _mapFirewallList(firewalls: Firewall[]): FirewallList[] {
-    if (isNullOrEmpty(firewalls)) { return new Array(); }
+  private _mapFirewallList(firewalls: Firewall[]): void {
+    if (isNullOrEmpty(firewalls)) { return; }
 
     // We need to check again if there are added or deleted
     // to notify the list panel that a data should be refreshed
@@ -92,9 +92,10 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
         this._firewallList.push(firewallListItem);
       });
 
-      // Sort record based on haGroup name
+      // Sort record by firewall name per haGroup
       this._firewallList.sort((first: FirewallList, second: FirewallList) => {
-        return compareStrings(first.haGroupName, second.haGroupName);
+        return compareStrings(first.firewall.managementName, second.firewall.managementName)
+          || compareStrings(first.haGroupName, second.haGroupName);
       });
     } else {
       // Update the corresponding firewall instance so that the
@@ -108,6 +109,5 @@ export class FirewallListSource implements McsDataSource<FirewallList> {
         }
       });
     }
-    return this._firewallList;
   }
 }

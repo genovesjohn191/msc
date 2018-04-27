@@ -106,9 +106,10 @@ export class ServersListSource implements McsDataSource<ServerList> {
         this._serverList.push(serverListItem);
       });
 
-      // Sort record based on VDC name
+      // Sort record by server name per vdc
       this._serverList.sort((first: ServerList, second: ServerList) => {
-        return compareStrings(first.vdcName, second.vdcName);
+        return compareStrings(first.server.name, second.server.name)
+          || compareStrings(first.vdcName, second.vdcName);
       });
     } else {
       // Update the corresponding server instance so that the
