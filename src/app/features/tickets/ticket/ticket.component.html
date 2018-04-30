@@ -98,20 +98,21 @@
         </p>
       </div>
       <div class="block-items-medium">
-        <div *mcsExclusiveForAccount="'default'" class="position-relative">
-          <div [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]"
-            [mcsLoaderHideElement]="commentBox"
-            [mcsLoaderPreserveHeight]="true"
-            [mcsLoaderText]="textContent.creatingComment">
+        <ng-container *mcsAccessControl="['TicketEdit']">
+          <div *mcsExclusiveForAccount="'default'" class="position-relative">
+            <div [mcsLoader]="[createCommentSubscription, createAttachmentSubscription]"
+              [mcsLoaderHideElement]="commentBox"
+              [mcsLoaderPreserveHeight]="true"
+              [mcsLoaderText]="textContent.creatingComment">
+            </div>
+            <div #commentBox>
+              <mcs-comment-box attachedLimit="single"
+                [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
+                (onAddComment)="createComment($event)">
+              </mcs-comment-box>
+            </div>
           </div>
-          <div #commentBox>
-            <mcs-comment-box attachedLimit="single"
-              [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
-              (onAddComment)="createComment($event)">
-            </mcs-comment-box>
-          </div>
-        </div>
-
+        </ng-container>
         <div>
           <mcs-ticket-activity [ticketId]="ticket.id"
             class="vspace-xsmall"

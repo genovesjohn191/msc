@@ -207,6 +207,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     this.nics = new Array<ServerNicSummary>();
     this.ipAddress = new ServerIpAddress();
     this.selectedNic = new ServerNicSummary();
+    this.dataStatusFactory = new McsDataStatusFactory();
   }
 
   public ngOnInit() {
