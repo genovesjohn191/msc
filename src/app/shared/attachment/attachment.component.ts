@@ -15,7 +15,7 @@ import {
   FileItem
 } from 'ng2-file-upload';
 import {
-  McsAttachment,
+  McsFileInfo,
   McsTextContentProvider,
   McsDialogService,
   McsDialogRef,
@@ -53,7 +53,7 @@ export class AttachmentComponent implements OnInit {
   public allowedMimeType: any[];
 
   @Output()
-  public attachedFilesChanged: EventEmitter<McsAttachment[]>;
+  public attachedFilesChanged: EventEmitter<McsFileInfo[]>;
 
   @Input()
   public set maxSizeInMb(value: number) { this._maxSizeInMb = coerceNumber(value, 0); }
@@ -72,7 +72,7 @@ export class AttachmentComponent implements OnInit {
     private _changeDetectorRef: ChangeDetectorRef
   ) {
     // Set uploader configuration
-    this.attachedFilesChanged = new EventEmitter<McsAttachment[]>();
+    this.attachedFilesChanged = new EventEmitter<McsFileInfo[]>();
   }
 
   public get attachedFiles(): FileItem[] {
@@ -132,14 +132,14 @@ export class AttachmentComponent implements OnInit {
    */
   private _notifyOutputParameter(): void {
     if (isNullOrEmpty(this.attachedFiles)) { return; }
-    let attachments: McsAttachment[] = new Array();
+    let attachments: McsFileInfo[] = new Array();
 
     this.attachedFiles.forEach((attachment) => {
       let fileReader = new FileReader();
       fileReader.readAsBinaryString(attachment._file);
 
       fileReader.onload = () => {
-        let convertedAttachment = new McsAttachment();
+        let convertedAttachment = new McsFileInfo();
         convertedAttachment.filename = attachment.file.name;
         convertedAttachment.fileContents = attachment.file;
         convertedAttachment.base64Contents = btoa(fileReader.result);

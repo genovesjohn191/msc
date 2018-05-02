@@ -17,7 +17,7 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  convertToGb
+  convertMbToGb
 } from '../../../utilities';
 
 export abstract class ServerDetailsBase {
@@ -139,7 +139,7 @@ export abstract class ServerDetailsBase {
    * @param value Disk value to convert
    */
   protected convertDiskToGB(memoryMB: number): number {
-    return (memoryMB > 0) ? Math.floor(convertToGb(memoryMB)) : 0;
+    return (memoryMB > 0) ? Math.floor(convertMbToGb(memoryMB)) : 0;
   }
 
   /**

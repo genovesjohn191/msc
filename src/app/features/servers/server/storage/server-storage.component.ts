@@ -36,7 +36,7 @@ import {
   unsubscribeSafely,
   addOrUpdateArrayRecord,
   deleteArrayRecord,
-  convertToMb
+  convertGbToMb
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
@@ -619,7 +619,7 @@ export class ServerStorageComponent extends ServerDetailsBase
      */
     let sizeGB = this.convertDiskToGB(sizeMB);
     let isExactMultiple = sizeGB % STORAGE_SLIDER_STEP_DEFAULT === 0;
-    let minimumStorageMB = convertToMb(STORAGE_SLIDER_STEP_DEFAULT *
+    let minimumStorageMB = convertGbToMb(STORAGE_SLIDER_STEP_DEFAULT *
       (Math.ceil(sizeGB / STORAGE_SLIDER_STEP_DEFAULT)));
 
     return isExactMultiple ? sizeMB : minimumStorageMB;

@@ -23,8 +23,8 @@ import {
 } from '../../models';
 import {
   refreshView,
-  convertToGb,
-  convertToMb,
+  convertMbToGb,
+  convertGbToMb,
   replacePlaceholder,
   appendUnitSuffix,
   isFormControlValid,
@@ -121,11 +121,11 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get minimumGB(): number {
-    return Math.floor(convertToGb(this.minimumMB));
+    return Math.floor(convertMbToGb(this.minimumMB));
   }
 
   public get maximumGB(): number {
-    return Math.floor(convertToGb(this.maximumMB));
+    return Math.floor(convertMbToGb(this.maximumMB));
   }
 
   public get currentMemory(): string {
@@ -147,7 +147,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get minValueGB(): number {
-    return convertToGb(this.minValueMB);
+    return convertMbToGb(this.minValueMB);
   }
 
   public constructor(
@@ -252,7 +252,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    * @param currentValue Current value to set the storage
    */
   private _setStorageValue(currentValue: number) {
-    this.storageValue = Math.min(currentValue, convertToGb(this.maximumMB));
+    this.storageValue = Math.min(currentValue, convertMbToGb(this.maximumMB));
   }
 
   /**
@@ -309,13 +309,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       // Set model data based on management type
       switch (this.inputManageType) {
         case ServerInputManageType.Custom:
-          serverStorage.storageMB = convertToMb(this.storageValue);
+          serverStorage.storageMB = convertGbToMb(this.storageValue);
           serverStorage.valid = this.fcServerStorageCustom.valid;
           break;
 
         case ServerInputManageType.Slider:
         default:
-          serverStorage.storageMB = convertToMb(this.storageValue);
+          serverStorage.storageMB = convertGbToMb(this.storageValue);
           serverStorage.valid = true;
           break;
       }

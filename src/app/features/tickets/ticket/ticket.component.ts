@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/Rx';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsAttachment,
+  McsFileInfo,
   McsComment,
   McsErrorHandlerService
 } from '../../../core';
@@ -255,7 +255,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _createAttachment(attachedFile: McsAttachment) {
+  private _createAttachment(attachedFile: McsFileInfo) {
     if (isNullOrEmpty(attachedFile)) { return; }
 
     // Create attachment

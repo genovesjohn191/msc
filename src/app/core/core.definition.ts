@@ -39,6 +39,7 @@ export class CoreDefinition {
   public static DEFAULT_VIEW_REFRESH_TIME = 50;
   public static DEFAULT_INITIAL_PAGE = 'servers';
   public static GB_TO_MB_MULTIPLIER = 1024;
+  public static MB_TO_KB_MULTIPLIER = 1024;
 
   /** Server Page */
   public static CREATE_SERVER_MINIMUM_RAM = 2048;
@@ -115,6 +116,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_CLOUD_UPLOAD_BLUE = 'cloud-upload-blue';
   public static ASSETS_SVG_WARNING = 'warning-svg';
   public static ASSETS_SVG_ERROR = 'error-svg';
+  public static ASSETS_SVG_DOWNLOAD = 'download';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';

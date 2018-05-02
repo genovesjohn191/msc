@@ -134,7 +134,8 @@ export class ServerIpAddressComponent implements OnInit {
       // to prevent exception thrown in the Netmask
       return this._netMaskInstance.contains(inputValue) &&
         this._netMaskInstance.broadcast !== inputValue &&
-        this._netMaskInstance.base !== inputValue;
+        this._netMaskInstance.base !== inputValue &&
+        this.gateway !== inputValue;
     } catch (error) {
       return false;
     }

@@ -83,7 +83,8 @@
     "reload": "reload.svg",
     "cloud-upload-blue": "cloud-upload-blue.svg",
     "warning-svg": "warning.svg",
-    "error-svg": "error.svg"
+    "error-svg": "error.svg",
+    "download": "download.svg"
   },
   "gifIcons": {
     "spinner": "spinner.gif"

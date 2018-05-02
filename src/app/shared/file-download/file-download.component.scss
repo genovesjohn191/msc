@@ -1,0 +1,12 @@
+@import "../../../styles/shared/base";
+
+.file-download-content {
+  @include display-flex(row);
+  @include align-items(center);
+  @include set-items-interval($space-medium, horizontal);
+
+  .file-download-info {
+    @include display-flex(column);
+    @include set-items-interval($space-xsmall, vertical);
+  }
+}

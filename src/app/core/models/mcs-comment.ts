@@ -1,6 +1,6 @@
-import { McsAttachment } from './mcs-attachment';
+import { McsFileInfo } from './mcs-file-info';
 
 export class McsComment {
   public message: string;
-  public attachments: McsAttachment[];
+  public attachments: McsFileInfo[];
 }

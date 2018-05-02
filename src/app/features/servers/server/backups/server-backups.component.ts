@@ -24,7 +24,7 @@ import {
   convertDateToStandardString,
   unsubscribeSafely,
   isNullOrEmpty,
-  convertToGb,
+  convertMbToGb,
   appendUnitSuffix
 } from '../../../../utilities';
 import {
@@ -168,7 +168,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   public getSnapshotSizeInGB(sizeMB: number): string {
-    let sizeGB = convertToGb(sizeMB);
+    let sizeGB = convertMbToGb(sizeMB);
     return appendUnitSuffix(sizeGB, McsUnitType.Gigabyte);
   }
 

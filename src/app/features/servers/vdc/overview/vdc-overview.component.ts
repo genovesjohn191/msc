@@ -21,7 +21,7 @@ import {
 import {
   isNullOrEmpty,
   appendUnitSuffix,
-  convertToGb,
+  convertMbToGb,
   replacePlaceholder,
   unsubscribeSafely
 } from '../../../../utilities';
@@ -123,8 +123,8 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   public getCurrentStorageValues(usedMB: number, limitMB: number): string {
     if (isNullOrEmpty(usedMB) || isNullOrEmpty(limitMB)) { return ''; }
 
-    let usedGB = appendUnitSuffix(Math.round(convertToGb(usedMB)), McsUnitType.Gigabyte);
-    let limitGB = appendUnitSuffix(Math.round(convertToGb(limitMB)), McsUnitType.Gigabyte);
+    let usedGB = appendUnitSuffix(Math.round(convertMbToGb(usedMB)), McsUnitType.Gigabyte);
+    let limitGB = appendUnitSuffix(Math.round(convertMbToGb(limitMB)), McsUnitType.Gigabyte);
 
     return `(${usedGB} of ${limitGB})`;
   }
