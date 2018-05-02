@@ -20,7 +20,7 @@ import {
 } from '../../../utilities';
 import {
   McsTextContentProvider,
-  McsAttachment,
+  McsFileInfo,
   McsOption,
   McsErrorHandlerService,
   McsSafeToNavigateAway,
@@ -104,11 +104,11 @@ export class TicketCreateComponent implements
   /**
    * Attachment files list
    */
-  private _fileAttachments: McsAttachment[];
-  public get fileAttachments(): McsAttachment[] {
+  private _fileAttachments: McsFileInfo[];
+  public get fileAttachments(): McsFileInfo[] {
     return this._fileAttachments;
   }
-  public set fileAttachments(value: McsAttachment[]) {
+  public set fileAttachments(value: McsFileInfo[]) {
     if (this._fileAttachments !== value) {
       this._fileAttachments = value;
     }

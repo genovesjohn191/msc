@@ -1,6 +1,7 @@
 import { McsUnitType } from '../core';
 
 let gbToMbMultiplier = 1024;
+let kbToMbMultiplier = 1024;
 
 /**
  * This will return the size value together with its unit as a string
@@ -11,6 +12,10 @@ export function appendUnitSuffix(value: number, unit: McsUnitType): string {
   let unitValue: string;
 
   switch (unit) {
+    case McsUnitType.Kilobyte:
+      unitValue = 'KB';
+      break;
+
     case McsUnitType.Megabyte:
       unitValue = 'MB';
       break;
@@ -36,7 +41,7 @@ export function appendUnitSuffix(value: number, unit: McsUnitType): string {
  * This will return the value converted from MB to GB
  * @param value Value in MB
  */
-export function convertToGb(value: number): number {
+export function convertMbToGb(value: number): number {
   if (!value) { return 0; }
 
   return (value / gbToMbMultiplier);
@@ -46,8 +51,18 @@ export function convertToGb(value: number): number {
  * This will return the value converted from GB to MB
  * @param value Value in GB
  */
-export function convertToMb(value: number): number {
+export function convertGbToMb(value: number): number {
   if (!value) { return 0; }
 
   return (value * gbToMbMultiplier);
+}
+
+/**
+ * This will return the value converted from KB to MB
+ * @param value Value in KB
+ */
+export function convertKbToMb(value: number): number {
+  if (!value) { return 0; }
+
+  return (value / kbToMbMultiplier);
 }

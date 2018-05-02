@@ -45,9 +45,11 @@ import { CommentBoxModule } from './comment-box/comment-box.module';
 import { DataStatusModule } from './data-status/data-status.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { PipesModule } from './pipes';
+import { FileDownloadModule } from './file-download/file-download.module';
 /** Components */
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
+
 
 @NgModule({
   declarations: [
@@ -97,7 +99,8 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     SelectTagModule,
     CommentBoxModule,
     DataStatusModule,
-    AuthenticationModule
+    AuthenticationModule,
+    FileDownloadModule
   ],
   exports: [
     ProgressBarComponent,
@@ -144,7 +147,8 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     SelectTagModule,
     CommentBoxModule,
     DataStatusModule,
-    AuthenticationModule
+    AuthenticationModule,
+    FileDownloadModule
   ]
 })
 

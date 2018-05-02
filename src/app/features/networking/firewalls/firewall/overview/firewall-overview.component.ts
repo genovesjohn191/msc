@@ -16,7 +16,7 @@ import {
 import { FirewallService } from '../firewall.service';
 import {
   isNullOrEmpty,
-  convertToGb,
+  convertMbToGb,
   reviverParser,
   formatDate,
   compareDates,
@@ -52,7 +52,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
 
   public get firewallMemory(): string {
     return !isNullOrEmpty(this.firewall.memoryMB) ?
-      `${convertToGb(this.firewall.memoryMB)} ${this.textContent.properties.ramUnit}` :
+      `${convertMbToGb(this.firewall.memoryMB)} ${this.textContent.properties.ramUnit}` :
       this.textContent.properties.unknown;
   }
 

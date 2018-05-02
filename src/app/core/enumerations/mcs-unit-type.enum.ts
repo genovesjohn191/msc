@@ -2,6 +2,7 @@ import { McsEnumSerializationBase } from '../factory/serialization/mcs-enum-seri
 import { CacheKey } from 'json-object-mapper';
 
 export enum McsUnitType {
+  Kilobyte,
   Megabyte,
   Gigabyte,
   CPU

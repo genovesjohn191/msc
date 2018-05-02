@@ -23,7 +23,7 @@ import {
   replacePlaceholder,
   isNullOrEmpty,
   appendUnitSuffix,
-  convertToGb
+  convertMbToGb
 } from '../../../../utilities';
 import {
   ServerCreateType,
@@ -128,7 +128,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
    * Returns the storage warning text
    */
   public get storageWarning(): string {
-    let maxMemoryInGb = Math.floor(convertToGb(this.storageMaxMemoryMB));
+    let maxMemoryInGb = Math.floor(convertMbToGb(this.storageMaxMemoryMB));
 
     return replacePlaceholder(
       this.textContent.fullStorageSpace,
