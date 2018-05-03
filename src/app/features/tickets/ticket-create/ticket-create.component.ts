@@ -33,7 +33,8 @@ import {
   TicketCreateAttachment,
   TicketService,
   TicketServiceData,
-  TicketSubType
+  TicketSubType,
+  ticketSubTypeText
 } from '../models';
 import { TicketsRepository } from '../tickets.repository';
 import { TicketCreateService } from './ticket-create.service';
@@ -59,7 +60,6 @@ export class TicketCreateComponent implements
   McsSafeToNavigateAway {
 
   public textContent: any;
-  public enumDefinition: any;
   public contextualContent: any;
   public services: TicketService[];
   public isServicesOpen: boolean;
@@ -151,7 +151,6 @@ export class TicketCreateComponent implements
   }
 
   public ngOnInit() {
-    this.enumDefinition = this._textContentProvider.content.enumerations;
     this.textContent = this._textContentProvider.content.tickets.createTicket;
     this.contextualContent = this.textContent.contextualHelp;
 
@@ -379,13 +378,11 @@ export class TicketCreateComponent implements
    * Set ticket type based on selection
    */
   private _setTicketType(): void {
-    if (isNullOrEmpty(this.enumDefinition)) { return; }
+    if (isNullOrEmpty(ticketSubTypeText)) { return; }
 
     this.ticketTypeList.push(new McsOption(TicketSubType.Enquiry,
-      this.enumDefinition.ticketSubType[TicketSubType.Enquiry])
-    );
+      ticketSubTypeText[TicketSubType.Enquiry]));
     this.ticketTypeList.push(new McsOption(TicketSubType.TroubleTicket,
-      this.enumDefinition.ticketSubType[TicketSubType.TroubleTicket])
-    );
+      ticketSubTypeText[TicketSubType.TroubleTicket]));
   }
 }

@@ -385,21 +385,12 @@ export class ServerNicsComponent extends ServerDetailsBase
   /**
    * Set network name, netmask and gateway on network select
    *
-   * @param networkName Network name selected
+   * @param network Network selected
    */
-  private _onNetworkSelect(networkName: string): void {
-    this.networkName = networkName;
-
-    if (!isNullOrEmpty(networkName)) {
-      let targetNetwork = this.resourceNetworks.find((result) => {
-        return result.name === networkName;
-      });
-
-      if (!isNullOrEmpty(targetNetwork)) {
-        this.networkNetmask = targetNetwork.netmask;
-        this.networkGateway = targetNetwork.gateway;
-      }
-    }
+  private _onNetworkSelect(network: ServerNetwork): void {
+    this.networkName = network.name;
+    this.networkNetmask = network.netmask;
+    this.networkGateway = network.gateway;
   }
 
   /**

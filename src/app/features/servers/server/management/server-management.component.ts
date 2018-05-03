@@ -66,6 +66,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
+  public selectedMedia: ServerMedia;
 
   public computeSubscription: Subscription;
   private _notificationsChangeSubscription: Subscription;
@@ -84,17 +85,6 @@ export class ServerManagementComponent extends ServerDetailsBase
   public set isAttachMedia(value: boolean) {
     if (this._isAttachMedia !== value) {
       this._isAttachMedia = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _selectedMedia: string;
-  public get selectedMedia(): string {
-    return this._selectedMedia;
-  }
-  public set selectedMedia(value: string) {
-    if (this._selectedMedia !== value) {
-      this._selectedMedia = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -306,10 +296,10 @@ export class ServerManagementComponent extends ServerDetailsBase
     if (this.attachMediaIsDisabled || isNullOrEmpty(this.selectedMedia)) { return; }
 
     let mediaValues = new ServerManageMedia();
-    mediaValues.name = this.selectedMedia;
+    mediaValues.name = this.selectedMedia.name;
     mediaValues.clientReferenceObject = {
       serverId: this.server.id,
-      mediaName: this.selectedMedia,
+      mediaName: this.selectedMedia.name,
       powerState: this.server.powerState
     };
 
