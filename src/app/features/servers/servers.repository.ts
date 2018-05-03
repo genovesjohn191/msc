@@ -23,9 +23,7 @@ import {
 import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
-  deleteArrayRecord,
-  compareNumbers,
-  compareStrings
+  deleteArrayRecord
 } from '../../utilities';
 
 @Injectable()
