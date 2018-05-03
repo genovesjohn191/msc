@@ -7,8 +7,8 @@ import {
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
-import { AttachmentComponent } from './attachment.component';
-import { AttachmentModule } from './attachment.module';
+import { FileAttachmentComponent } from './file-attachment.component';
+import { FileAttachmentModule } from './file-attachment.module';
 import { CoreTestingModule } from '../../core/testing';
 
 @Component({
@@ -16,8 +16,8 @@ import { CoreTestingModule } from '../../core/testing';
   template: ``
 })
 export class TestAttachmentComponent {
-  @ViewChild(AttachmentComponent)
-  public attachmentComponent: AttachmentComponent;
+  @ViewChild(FileAttachmentComponent)
+  public attachmentComponent: FileAttachmentComponent;
 }
 
 describe('AttachmentComponent', () => {
@@ -37,7 +37,7 @@ describe('AttachmentComponent', () => {
       ],
       imports: [
         CoreTestingModule,
-        AttachmentModule
+        FileAttachmentModule
       ]
     });
 
@@ -45,8 +45,8 @@ describe('AttachmentComponent', () => {
     TestBed.overrideComponent(TestAttachmentComponent, {
       set: {
         template: `
-        <mcs-attachment attachedLimit="single" [allowedMimeType]="['image/png', 'text/plain']">
-        </mcs-attachment>
+        <mcs-file-attachment attachedLimit="single" [allowedMimeType]="['image/png', 'text/plain']">
+        </mcs-file-attachment>
         `
       }
     });
@@ -62,8 +62,8 @@ describe('AttachmentComponent', () => {
 
   /** Test Implementation */
   describe('ngOnInit()', () => {
-    it(`should create the mcs-attachment element`, () => {
-      let element = document.querySelector('mcs-attachment');
+    it(`should create the mcs-file-attachment element`, () => {
+      let element = document.querySelector('mcs-file-attachment');
       expect(element).not.toBe(null);
     });
 

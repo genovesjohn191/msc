@@ -4,11 +4,11 @@ import { DialogModule } from '../dialog/dialog.module';
 import { ButtonModule } from '../button/button.module';
 /** External modules */
 import { FileUploadModule } from 'ng2-file-upload';
-import { AttachmentComponent } from './attachment.component';
+import { FileAttachmentComponent } from './file-attachment.component';
 
 @NgModule({
   declarations: [
-    AttachmentComponent
+    FileAttachmentComponent
   ],
   imports: [
     FileUploadModule,
@@ -18,10 +18,10 @@ import { AttachmentComponent } from './attachment.component';
   ],
   exports: [
     FileUploadModule,
-    AttachmentComponent,
+    FileAttachmentComponent,
     DialogModule,
     ButtonModule
   ]
 })
 
-export class AttachmentModule { }
+export class FileAttachmentModule { }
