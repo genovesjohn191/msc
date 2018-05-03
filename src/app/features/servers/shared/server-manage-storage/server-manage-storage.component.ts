@@ -117,7 +117,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_WARNING;
+    return CoreDefinition.ASSETS_SVG_WARNING;
   }
 
   public get minimumGB(): number {

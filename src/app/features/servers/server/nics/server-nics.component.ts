@@ -77,7 +77,7 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_WARNING;
+    return CoreDefinition.ASSETS_SVG_WARNING;
   }
 
   public get checkIconKey(): string {

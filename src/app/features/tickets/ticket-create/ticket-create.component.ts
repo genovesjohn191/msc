@@ -129,7 +129,7 @@ export class TicketCreateComponent implements
   }
 
   public get servicesIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_NAVBAR;
+    return CoreDefinition.ASSETS_SVG_TOGGLE_NAV;
   }
 
   public get backIconKey(): string {
