@@ -141,11 +141,11 @@
       <!-- Attachments -->
       <div>
         <h4 class="space-bottom-small">{{ textContent.attachments }}</h4>
-        <mcs-attachment attachedLimit="multiple"
+        <mcs-file-attachment attachedLimit="multiple"
           [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
           (attachedFilesChanged)="onChangedAttachments($event)"
           [mcsContextualHelp]="contextualContent.attachments">
-        </mcs-attachment>
+        </mcs-file-attachment>
       </div>
 
       <!-- Ticket Action -->

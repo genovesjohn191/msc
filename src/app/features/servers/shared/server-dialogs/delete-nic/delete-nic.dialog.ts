@@ -62,7 +62,7 @@ export class DeleteNicDialogComponent {
     if (isNullOrEmpty(this.nic)) { return ''; }
     return replacePlaceholder(
       this.textContent.title,
-      'network_name',
+      'nic_name',
       this.nic.name
     );
   }
@@ -74,7 +74,7 @@ export class DeleteNicDialogComponent {
     if (isNullOrEmpty(this.nic)) { return ''; }
     return replacePlaceholder(
       this.textContent.alert,
-      'network_name',
+      'nic_name',
       this.nic.name
     );
   }

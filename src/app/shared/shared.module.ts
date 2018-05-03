@@ -29,7 +29,7 @@ import { TooltipModule } from './tooltip/tooltip.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
 import { WizardModule } from './wizard/wizard.module';
 import { WidgetsModule } from './widgets/widgets.module';
-import { AttachmentModule } from './attachment/attachment.module';
+import { FileAttachmentModule } from './file-attachment/file-attachment.module';
 import { PaginatorModule } from './paginator/paginator.module';
 import { ActionItemModule } from './action-item/action-item.module';
 import { ResponsivePanelModule } from './responsive-panel/responsive-panel.module';
@@ -49,7 +49,6 @@ import { FileDownloadModule } from './file-download/file-download.module';
 /** Components */
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
-
 
 @NgModule({
   declarations: [
@@ -85,7 +84,7 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     TabGroupModule,
     WizardModule,
     WidgetsModule,
-    AttachmentModule,
+    FileAttachmentModule,
     PaginatorModule,
     ActionItemModule,
     ResponsivePanelModule,
@@ -133,7 +132,7 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     TabGroupModule,
     WizardModule,
     WidgetsModule,
-    AttachmentModule,
+    FileAttachmentModule,
     PaginatorModule,
     ActionItemModule,
     ResponsivePanelModule,

@@ -30,9 +30,9 @@ import {
 const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
 
 @Component({
-  selector: 'mcs-attachment',
-  templateUrl: './attachment.component.html',
-  styleUrls: ['./attachment.component.scss'],
+  selector: 'mcs-file-attachment',
+  templateUrl: './file-attachment.component.html',
+  styleUrls: ['./file-attachment.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -40,7 +40,7 @@ const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
   }
 })
 
-export class AttachmentComponent implements OnInit {
+export class FileAttachmentComponent implements OnInit {
   public textContent: any;
   public fileUploader: FileUploader;
   public hasDropZone: boolean;
