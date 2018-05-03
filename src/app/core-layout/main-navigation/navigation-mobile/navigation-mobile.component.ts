@@ -119,7 +119,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CLOSE;
+    return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
   }
 
   public get firstName(): string {
