@@ -29,7 +29,10 @@ import {
   McsErrorHandlerService,
   McsFormGroupService,
   McsAccessControlService,
-  McsApiJob
+  McsApiJob,
+  McsDataStatusFactory,
+  McsApiErrorResponse,
+  McsDataStatus
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -73,6 +76,8 @@ export class CreateServerComponent implements
   public resourceSubscription: Subscription;
   public selectedResource: ServerResource;
   public selectedTabIndex: ServerCreateType = ServerCreateType.New;
+  public dataStatusFactory: McsDataStatusFactory<McsApiJob>;
+  public errorResponse: McsApiErrorResponse;
 
   @ViewChildren('serverBase')
   private _createServerItems: QueryList<CreateServerBase>;
@@ -95,6 +100,10 @@ export class CreateServerComponent implements
     return ServerCreateType;
   }
 
+  public get dataStatusEnum(): any {
+    return McsDataStatus;
+  }
+
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
@@ -110,6 +119,7 @@ export class CreateServerComponent implements
     this.faCreationForms = new FormArray([]);
     this.notifications = new Array();
     this.serverComponents = new Array();
+    this.dataStatusFactory = new McsDataStatusFactory();
   }
 
   public ngOnInit() {
@@ -221,11 +231,19 @@ export class CreateServerComponent implements
       let createInstance = this._createServerMap.get(serverDetails.creationType);
 
       if (!isNullOrEmpty(createInstance)) {
-        createInstance(serverDetails.getCreationInputs()).subscribe((job) => {
-          if (isNullOrEmpty(job)) { return; }
-          this.notifications.push(job);
-          this._changeDetectorRef.markForCheck();
-        });
+        createInstance(serverDetails.getCreationInputs())
+          .catch((response) => {
+            this.dataStatusFactory.setError();
+            this.errorResponse = response.error;
+            this._changeDetectorRef.markForCheck();
+            return Observable.throw(response);
+          })
+          .subscribe((job) => {
+            if (isNullOrEmpty(job)) { return; }
+            this.dataStatusFactory.setSuccesfull();
+            this.notifications.push(job);
+            this._changeDetectorRef.markForCheck();
+          });
       }
     });
   }

@@ -1,5 +1,6 @@
 // Size Type
-export type McsSizeType = 'auto' | 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
+export type McsSizeType = 'auto' | 'xxsmall' | 'xsmall' | 'small' |
+   'medium' | 'large' | 'xlarge' | 'xxlarge';
 
 // Color Type
 export type McsColorType = 'primary' | 'primary-01' | 'primary-02' | 'secondary'

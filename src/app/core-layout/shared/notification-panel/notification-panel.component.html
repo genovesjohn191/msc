@@ -17,7 +17,11 @@
       <ng-container *ngIf="notification.errorMessage">
         <small class="notification-panel-message">{{ notification.errorMessage }}</small>
       </ng-container>
-      <small read-only>{{ startTimeText }}</small>
+      <div class="notification-panel-user-info">
+        <small read-only>{{ notification.ownerName }}</small>
+        <mcs-icon [key]="bulletIconKey" color="grey-02" size="xxsmall"></mcs-icon>
+        <small read-only>{{ startTimeText }}</small>
+      </div>
     </div>
   </div>
 

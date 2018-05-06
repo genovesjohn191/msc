@@ -52,6 +52,7 @@ export class CoreDefinition {
   public static BASE_FONT_BOLD = 'Circular-Pro-Bold';
 
   /** Icons */
+  public static ICON_SIZE_XXSMALL = 5;
   public static ICON_SIZE_XSMALL = 10;
   public static ICON_SIZE_SMALL = 15;
   public static ICON_SIZE_MEDIUM = 20;
@@ -157,6 +158,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_NAVBAR = 'navbar';
   public static ASSETS_FONT_ANGLE_DOUBLE_RIGHT = 'angle-double-right';
   public static ASSETS_FONT_TRASH = 'trash-o';
+  public static ASSETS_FONT_BULLET = 'circle';
 
   // Images
   public static ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG = 'light-mcs-logo-svg';
