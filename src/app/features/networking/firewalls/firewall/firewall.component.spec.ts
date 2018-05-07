@@ -1,3 +1,4 @@
+import { EventEmitter } from '@angular/core';
 import {
   async,
   TestBed,
@@ -47,6 +48,12 @@ describe('FirewallComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      component.search = {
+        keyword: '',
+        searchChangedStream: new EventEmitter(),
+        searching: false,
+        showLoading() { return true; }
+      };
       router = getTestBed().get(Router);
     });
   }));
@@ -58,7 +65,7 @@ describe('FirewallComponent', () => {
     });
 
     it('should set the firewall listsource', () => {
-      expect(component.firewallListSource).toBeDefined();
+      expect(component.firewallsListSource).toBeDefined();
     });
   });
 
@@ -67,14 +74,6 @@ describe('FirewallComponent', () => {
       spyOn(router, 'navigate');
       component.onFirewallSelect(mockFirewallDetails);
       expect(router.navigate).toHaveBeenCalled();
-    });
-  });
-
-  describe('ngOnDestroy()', () => {
-    it('should unsubscribe from stream subscription', () => {
-      spyOn(component.subscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.subscription.unsubscribe).toHaveBeenCalled();
     });
   });
 });

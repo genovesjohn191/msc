@@ -2,8 +2,8 @@ import {
   Pipe,
   PipeTransform
 } from '@angular/core';
-import { convertMapToJsonObject } from '../../utilities';
 import { McsKeyValuePair } from '../../core';
+import { isNullOrEmpty } from '../../utilities';
 
 @Pipe({
   name: 'mcsMapIterable',
@@ -24,6 +24,8 @@ export class MapIterablePipe implements PipeTransform {
   private _recordCount: number = 0;
 
   public transform(records: Map<any, any>): McsKeyValuePair[] {
+    if (isNullOrEmpty(records)) { return this._cacheArray; }
+
     let resetCache = this._recordCount !== records.size;
     if (resetCache) {
       this._recordCount = records.size;
@@ -32,10 +34,13 @@ export class MapIterablePipe implements PipeTransform {
     return this._cacheArray;
   }
 
+  /**
+   * Resets the cache of the map
+   */
   private _resetCache(collections: Map<any, any>): void {
     this._cacheArray = new Array();
-    let collection = convertMapToJsonObject(collections);
-    let keys = Object.keys(collection);
-    keys.map((_key) => this._cacheArray.push({ key: _key, value: collection[_key] }));
+    collections.forEach((_value, _key) => {
+      this._cacheArray.push({ key: _key, value: _value });
+    });
   }
 }

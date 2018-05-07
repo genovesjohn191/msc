@@ -1,3 +1,4 @@
+import { EventEmitter } from '@angular/core';
 import {
   async,
   TestBed,
@@ -63,6 +64,12 @@ describe('ServerComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
+      component.search = {
+        keyword: '',
+        searchChangedStream: new EventEmitter(),
+        searching: false,
+        showLoading() { return true; }
+      };
       router = getTestBed().get(Router);
     });
   }));
@@ -74,14 +81,14 @@ describe('ServerComponent', () => {
     });
 
     it('should set the value of server', () => {
-      expect(component.server).toBeDefined();
+      expect(component.selectedServer).toBeDefined();
     });
   });
 
   describe('onServerSelect()', () => {
     it('should set the value of server from the selected server', () => {
       component.onServerSelect(mockServerDetails);
-      expect(component.server).toBeDefined();
+      expect(component.selectedServer).toBeDefined();
     });
 
     it('should navigate to the selected server management page', () => {

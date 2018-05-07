@@ -56,21 +56,16 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
 
   public get vdcMemoryValue(): string {
     return !isNullOrEmpty(this.vdc.compute) ?
-      appendUnitSuffix(this.vdc.compute.memoryLimitMB, McsUnitType.Megabyte) : '' ;
+      appendUnitSuffix(this.vdc.compute.memoryLimitMB, McsUnitType.Megabyte) : '';
   }
 
   public get vdcCpuValue(): string {
     return !isNullOrEmpty(this.vdc.compute) ?
-      appendUnitSuffix(this.vdc.compute.cpuLimit, McsUnitType.CPU) : '' ;
+      appendUnitSuffix(this.vdc.compute.cpuLimit, McsUnitType.CPU) : '';
   }
 
   public get hasLowCapacityStorage(): boolean {
     return this.getLowCapacityStorage() > 0;
-  }
-
-  // TODO: Will remove once we have create server page for Managed
-  public get isSelfManaged(): boolean {
-    return this.vdc.serviceType === ServerServiceType.SelfManaged;
   }
 
   constructor(
@@ -85,7 +80,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.servers.vdc.overview;
     this.enumDefinition = this._textContentProvider.content.enumerations;
-    this._setVdcData();
+    this._listenToSelectedVdc();
   }
 
   public ngOnDestroy(): void {
@@ -153,7 +148,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     let storageCount = this.getLowCapacityStorage();
     status = replacePlaceholder(status, 'storage_profile_number', `${storageCount}`);
 
-    let verb = (storageCount === 1) ? 'is' : 'are' ;
+    let verb = (storageCount === 1) ? 'is' : 'are';
     status = replacePlaceholder(status, 'verb', verb);
 
     return status;
@@ -166,13 +161,12 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     this._router.navigate(['/servers/create']);
   }
 
-  private _setVdcData(): void {
+  private _listenToSelectedVdc(): void {
     this._vdcSubscription = this._vdcService.selectedVdcStream
-      .subscribe((vdc) => {
-        if (!isNullOrEmpty(vdc)) {
-          this.vdc = vdc;
-        }
-    });
+      .subscribe((response) => {
+        if (isNullOrEmpty(response)) { return; }
+        this.vdc = response;
+      });
   }
 
   private _computeStorageValuePercentage(storage: ServerStorage): number {

@@ -79,6 +79,8 @@ let nextUniqueId = 0;
 export class SelectComponent extends McsFormFieldControlBase<any>
   implements AfterContentInit, DoCheck, OnChanges, OnDestroy, ControlValueAccessor {
 
+  public selection: McsSelection<SelectItemComponent>;
+
   @Output()
   public change = new EventEmitter<any>();
 
@@ -144,7 +146,6 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     }
   }
 
-  private _selection: McsSelection<SelectItemComponent>;
   private _itemListKeyManager: McsItemListKeyManager<SelectItemComponent>;
   private _closePanelKeyEventsMap = new Map<Key, (_event) => void>();
   private _openPanelKeyEventsMap = new Map<Key, (_event) => void>();
@@ -160,7 +161,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   public get displayedText(): string {
-    return this._selection.selected.map((item) => item.viewValue).toString();
+    return this.selection.selected.map((item) => item.viewValue).toString();
   }
 
   /**
@@ -197,7 +198,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       this.ngControl.valueAccessor = this;
     }
     this.panelOpen = false;
-    this._selection = new McsSelection<SelectItemComponent>(false);
+    this.selection = new McsSelection<SelectItemComponent>(false);
     this.size = 'default';
   }
 
@@ -256,8 +257,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     // to selected item as active item
     this._items.forEach((item) => item.closeGroupPanel());
     this._clearActiveItemState();
-    if (this._selection.hasValue()) {
-      this._itemListKeyManager.setActiveItem(this._selection.selected[0]);
+    if (this.selection.hasValue()) {
+      this._itemListKeyManager.setActiveItem(this.selection.selected[0]);
     }
     setTimeout(() => this.panelOpen = false);
   }
@@ -380,7 +381,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
     this._clearItemSelection(item);
     item.select();
-    this._selection.select(item);
+    this.selection.select(item);
     this.value = item.value;
     this.stateChanges.next();
   }
@@ -390,7 +391,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param skipItem Item to be skipped in clearing the selection
    */
   private _clearItemSelection(skipItem: SelectItemComponent): void {
-    this._selection.clear();
+    this.selection.clear();
     this._items.forEach((item) => {
       if (item !== skipItem) {
         item.deselect();

@@ -1,0 +1,25 @@
+@import "../../../../styles/shared/base";
+
+$option-padding: $space-xsmall $space-small;
+$option-hover-color: $hover-bg-color;
+$option-active-color: $active-bg-color;
+$option-selected-color: $selected-bg-color;
+
+.option-wrapper {
+  display: block;
+  outline: none;
+  cursor: pointer;
+  padding: $option-padding;
+
+  &.option-selected {
+    background-color: $option-selected-color;
+  }
+
+  &.option-active {
+    background-color: $option-active-color;
+  }
+
+  &:hover:not(.option-selected) {
+    background-color: $option-hover-color;
+  }
+}

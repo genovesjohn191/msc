@@ -15,6 +15,7 @@ export const animateFactory: {
   readonly fadeIn: AnimationTriggerMetadata;
   readonly transformVertical: AnimationTriggerMetadata;
   readonly expansionVertical: AnimationTriggerMetadata;
+  readonly rotate45: AnimationTriggerMetadata;
   readonly rotate90: AnimationTriggerMetadata;
   readonly rotate180: AnimationTriggerMetadata;
   readonly scaleIn: AnimationTriggerMetadata;
@@ -22,6 +23,7 @@ export const animateFactory: {
     fadeIn: fade.fadeIn,
     transformVertical: transform.transformVertical,
     expansionVertical: expansion.expansionVertical,
+    rotate45: rotate.rotate45,
     rotate90: rotate.rotate90,
     rotate180: rotate.rotate180,
     scaleIn: scale.scaleIn,

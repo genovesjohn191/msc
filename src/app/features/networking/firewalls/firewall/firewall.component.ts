@@ -13,28 +13,33 @@ import {
 } from '@angular/router';
 import {
   Observable,
-  Subscription
+  Subscription,
+  Subject
 } from 'rxjs/Rx';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider,
   McsSearch,
-  McsListPanelItem,
   McsRoutingTabBase,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsDataStatusFactory
 } from '../../../../core';
-import {
-  Firewall,
-  FirewallConnectionStatus
-} from '../models';
-import { FirewallService } from './firewall.service';
-import { FirewallListSource } from './firewall.listsource';
-import { FirewallsRepository } from '../firewalls.repository';
 import {
   isNullOrEmpty,
   refreshView,
   unsubscribeSafely
 } from '../../../../utilities';
+import {
+  Firewall,
+  FirewallConnectionStatus
+} from '../models';
+import { FirewallService } from './firewall.service';
+import { FirewallsListSource } from '../firewalls.listsource';
+import { FirewallsRepository } from '../firewalls.repository';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview' | 'policies';
@@ -49,13 +54,14 @@ export class FirewallComponent
   extends McsRoutingTabBase<tabGroupType>
   implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('listSearch')
-  public _listSearch: McsSearch;
+  @ViewChild('search')
+  public search: McsSearch;
 
   public firewallsTextContent: any;
   public firewallTextContent: any;
-  public firewallListSource: FirewallListSource | null;
-  public header: string;
+  public firewallsListSource: FirewallsListSource | null;
+  public firewallsMap: Map<string, Firewall[]>;
+  public listStatusFactory: McsDataStatusFactory<Map<string, Firewall[]>>;
 
   // Subscription
   public subscription: Subscription;
@@ -69,30 +75,18 @@ export class FirewallComponent
   }
 
   public get hasFirewallData(): boolean {
-    return !isNullOrEmpty(this.firewall);
+    return !isNullOrEmpty(this.selectedFirewall);
   }
 
-  private _firewall: Firewall;
-  public get firewall(): Firewall {
-    return this._firewall;
-  }
-  public set firewall(value: Firewall) {
-    if (this._firewall !== value) {
-      unsubscribeSafely(this.subscription);
-
-      this._firewall = value;
+  private _selectedFirewall: Firewall;
+  public get selectedFirewall(): Firewall { return this._selectedFirewall; }
+  public set selectedFirewall(value: Firewall) {
+    if (this._selectedFirewall !== value) {
+      this._selectedFirewall = value;
       this._changeDetectorRef.markForCheck();
     }
   }
-
-  private _selectedItem: McsListPanelItem;
-  public get selectedItem(): McsListPanelItem {
-    return this._selectedItem;
-  }
-  public set selectedItem(value: McsListPanelItem) {
-    this._selectedItem = value;
-    this._changeDetectorRef.markForCheck();
-  }
+  private _destroySubject = new Subject<void>();
 
   constructor(
     _router: Router,
@@ -104,7 +98,9 @@ export class FirewallComponent
     private _firewallsRepository: FirewallsRepository
   ) {
     super(_router, _activatedRoute);
-    this.firewall = new Firewall();
+    this.selectedFirewall = new Firewall();
+    this.firewallsMap = new Map();
+    this.listStatusFactory = new McsDataStatusFactory();
   }
 
   public ngOnInit() {
@@ -115,6 +111,8 @@ export class FirewallComponent
 
   public ngAfterViewInit() {
     refreshView(() => {
+      this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
+        .subscribe(() => this.listStatusFactory.setInProgress());
       this._initializeListsource();
     });
   }
@@ -140,14 +138,6 @@ export class FirewallComponent
   }
 
   /**
-   * Retry to obtain the source from API
-   */
-  public retryListsource(): void {
-    if (isNullOrEmpty(this.firewallListSource)) { return; }
-    this._initializeListsource();
-  }
-
-  /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */
@@ -161,6 +151,7 @@ export class FirewallComponent
    * @param id Id of the parameter
    */
   protected onParamIdChanged(id: string): void {
+    if (isNullOrEmpty(id)) { return; }
     this._getFirewallById(id);
   }
 
@@ -168,10 +159,28 @@ export class FirewallComponent
    * Initialize list source
    */
   private _initializeListsource(): void {
-    this.firewallListSource = new FirewallListSource(
+    this.firewallsListSource = new FirewallsListSource(
       this._firewallsRepository,
-      this._listSearch
+      this.search
     );
+
+    // Key function pointer for mapping objects
+    let keyFn = (item: Firewall) => {
+      let resourseName = isNullOrEmpty(item.haGroupName) ? '' : item.haGroupName;
+      return resourseName;
+    };
+
+    // Listen to all records changed
+    this.firewallsListSource.findAllRecordsMapStream(keyFn)
+      .catch((error) => {
+        this.listStatusFactory.setError();
+        return Observable.throw(error);
+      })
+      .subscribe((response) => {
+        this.firewallsMap = response;
+        this.search.showLoading(false);
+        this.listStatusFactory.setSuccesfull(response);
+      });
     this._changeDetectorRef.markForCheck();
   }
 
@@ -187,11 +196,11 @@ export class FirewallComponent
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
       })
-      .subscribe((firewall) => {
-        if (!isNullOrEmpty(firewall)) {
-          this.firewall = firewall;
-          this._setSelectedFirewallInfo(firewall);
-          this._firewallService.setSelectedFirewall(this.firewall);
+      .subscribe((response) => {
+        if (!isNullOrEmpty(response)) {
+          this.selectedFirewall = response;
+          this._setSelectedFirewallInfo(response);
+          this._firewallService.setSelectedFirewall(this.selectedFirewall);
           this._changeDetectorRef.markForCheck();
         }
       });
@@ -202,12 +211,6 @@ export class FirewallComponent
    */
   private _setSelectedFirewallInfo(selectedFirewall: Firewall): void {
     if (isNullOrEmpty(selectedFirewall)) { return; }
-
-    this.selectedItem = {
-      itemId: selectedFirewall.id,
-      groupName: selectedFirewall.haGroupName
-    } as McsListPanelItem;
-
-    this.header = selectedFirewall.managementName;
+    this.selectedFirewall = selectedFirewall;
   }
 }

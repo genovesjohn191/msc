@@ -1,7 +1,8 @@
 import { Subscription } from 'rxjs/Rx';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  updateObjectData
 } from './mcs-object.function';
 
 describe('OBJECT Functions', () => {
@@ -56,6 +57,16 @@ describe('OBJECT Functions', () => {
       expect(subscription.closed).toBeFalsy();
       unsubscribeSafely(subscription);
       expect(subscription.closed).toBeTruthy();
+    });
+  });
+
+  describe('updateObjectData()', () => {
+    it('should update the source data without removing the instance of the source', () => {
+      let sourceInstance = { name: 'arrian', age: 18 };
+      let targetInstance = { name: 'arrian', age: 19 };
+      updateObjectData(sourceInstance, targetInstance);
+      expect(sourceInstance).not.toBe(targetInstance);
+      expect(sourceInstance.age).toBe(19);
     });
   });
 });

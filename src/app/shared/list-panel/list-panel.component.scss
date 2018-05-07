@@ -1,90 +1,12 @@
 @import "../../../styles/shared/base";
 
-$list-header-padding-left: $space-small + $space-xsmall;
-$list-header-padding-right: $space-small;
-$list-header-margin-bottom: $space-xsmall;
-$list-header-font-size: $link-default-font-size;
-$list-header-font-family-active: $base-font-bold;
-
-$list-item-padding: $space-xsmall $space-xsmall $space-xsmall $space-small + $space-xsmall;
-$list-item-font-size: $link-default-font-size;
-$list-item-font-family-active: $base-font-bold;
-$list-item-border-color: $color-primary-01;
-
 .list-panel-wrapper {
   @include display-flex(column);
-  width: 100%;
-  height: 100%;
 
-  %list-header-styling {
-    cursor: pointer;
-    @include font-size($list-header-font-size);
-    padding: 0 $list-header-padding-right 0 $list-header-padding-left;
-    margin-bottom: $list-header-margin-bottom;
-    @include flex(0 0 auto);
-
-    .list-header-container {
-      @include display-flex(row);
-      align-items: center;
-      justify-content: space-between;
+  .option-group-wrapper {
+    .option-group-wrapper,
+    .option-wrapper {
+      margin-left: $space-xsmall;
     }
-
-    &.active {
-      .list-header-container {
-        font-family: $list-header-font-family-active;
-      }
-    }
-  }
-
-  .list-panel-header-wrapper {
-    @include display-flex(column);
-    justify-content: center;
-    @extend %list-header-styling;
-  }
-
-  .list-no-group-wrapper {
-    @include display-flex(row);
-    align-items: center;
-    @extend %list-header-styling;
-    @include set-items-interval($space-xsmall, horizontal);
-
-    &.active {
-      a {
-        font-family: $list-item-font-family-active;
-      }
-    }
-  }
-
-  .list-panel-item-wrapper {
-    position: relative;
-    padding: $list-item-padding;
-    @include font-size($list-item-font-size);
-    border-left: 1px solid $list-item-border-color;
-    margin-left: $space-small;
-    @include set-items-interval($space-xsmall, horizontal);
-    white-space: nowrap;
-
-    &:first-of-type {
-      margin-top: $space-xsmall;
-    }
-
-    &.active, &:hover {
-      a {
-        font-family: $list-item-font-family-active;
-      }
-    }
-  }
-
-  mcs-list-items-empty,
-  mcs-list-items-error,
-  .mcs-data-loading {
-    @include display-flex(row);
-    align-items: center;
-    min-height: $space-xlarge;
-    padding: 0 $space-medium;
-  }
-
-  .mcs-data-loading {
-    justify-content: center;
   }
 }
