@@ -126,9 +126,23 @@
   <!-- Go! Step  -->
   <mcs-wizard-step [stepTitle]="textContent.serverGoStep.title">
     <div class="limited-view">
-      <mcs-provisioning-notifications [jobs]="notifications">
-        <p mcsProvisioningText>{{ textContent.description }}</p>
-      </mcs-provisioning-notifications>
+      <div [ngSwitch]="dataStatusFactory?.dataStatus">
+        <!-- Success -->
+        <ng-container *ngSwitchCase="dataStatusEnum.Success">
+          <mcs-provisioning-notifications [jobs]="notifications">
+            <p mcsProvisioningText>{{ textContent.description }}</p>
+          </mcs-provisioning-notifications>
+        </ng-container>
+
+        <!-- Error -->
+        <ng-container *ngSwitchCase="dataStatusEnum.Error">
+          <mcs-alert type="failed" [header]="errorResponse?.message">
+            <ng-container *ngFor="let error of errorResponse?.errors">
+              <span>{{ error.message }}</span>
+            </ng-container>
+          </mcs-alert>
+        </ng-container>
+      </div>
     </div>
   </mcs-wizard-step>
 </mcs-wizard>

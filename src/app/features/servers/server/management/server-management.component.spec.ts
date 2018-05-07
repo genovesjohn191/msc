@@ -108,7 +108,7 @@ describe('ServerManagementComponent', () => {
 
   describe('IconKey() | Properties', () => {
     it('should get the warning icon key definition', () => {
-      expect(component.warningIconKey).toBe(CoreDefinition.ASSETS_FONT_WARNING);
+      expect(component.warningIconKey).toBe(CoreDefinition.ASSETS_SVG_WARNING);
     });
 
     it('should get the spinner icon key definition', () => {

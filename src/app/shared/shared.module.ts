@@ -44,17 +44,12 @@ import { SelectTagModule } from './select-tag/select-tag.module';
 import { CommentBoxModule } from './comment-box/comment-box.module';
 import { DataStatusModule } from './data-status/data-status.module';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { ProgressBarModule } from './progress-bar/progress-bar.module';
+import { CapacityBarModule } from './capacity-bar/capacity-bar.module';
 import { PipesModule } from './pipes';
 import { FileDownloadModule } from './file-download/file-download.module';
-/** Components */
-import { ProgressBarComponent } from './progress-bar/progress-bar.component';
-import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
 
 @NgModule({
-  declarations: [
-    ProgressBarComponent,
-    CapacityBarComponent
-  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -99,11 +94,11 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     CommentBoxModule,
     DataStatusModule,
     AuthenticationModule,
+    ProgressBarModule,
+    CapacityBarModule,
     FileDownloadModule
   ],
   exports: [
-    ProgressBarComponent,
-    CapacityBarComponent,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -147,6 +142,8 @@ import { CapacityBarComponent } from './capacity-bar/capacity-bar.component';
     CommentBoxModule,
     DataStatusModule,
     AuthenticationModule,
+    ProgressBarModule,
+    CapacityBarModule,
     FileDownloadModule
   ]
 })

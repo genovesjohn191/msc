@@ -90,6 +90,10 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
     return CoreDefinition.ASSETS_SVG_CLOSE_WHITE;
   }
 
+  public get bulletIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_BULLET;
+  }
+
   /**
    * Returns the formatted started date of the job
    */

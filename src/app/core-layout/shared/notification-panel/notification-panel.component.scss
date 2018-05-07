@@ -64,6 +64,11 @@ $notification-panel-running-color: $light-bg-text-color;
         display: block;
         margin-bottom: $notification-panel-content-margin-size;
       }
+
+      .notification-panel-user-info {
+        @include display-flex(row);
+        @include set-items-interval($space-xsmall, horizontal);
+      }
     }
   }
 

@@ -97,6 +97,7 @@ export class IconComponent implements OnChanges {
    */
   private _createSizeTable(): void {
     this._iconSizeTable = new Map<McsSizeType, string>();
+    this._iconSizeTable.set('xxsmall', `${CoreDefinition.ICON_SIZE_XXSMALL}px`);
     this._iconSizeTable.set('xsmall', `${CoreDefinition.ICON_SIZE_XSMALL}px`);
     this._iconSizeTable.set('small', `${CoreDefinition.ICON_SIZE_SMALL}px`);
     this._iconSizeTable.set('medium', `${CoreDefinition.ICON_SIZE_MEDIUM}px`);
