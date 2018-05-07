@@ -56,29 +56,31 @@ export abstract class ServerDetailsBase {
   public get resourceMediaList(): ServerCatalogItem[] {
     let resourceMediaList = new Array<ServerCatalogItem>();
 
-    if (!isNullOrEmpty(this.serverResource.catalogItems)) {
-      this.serverResource.catalogItems.forEach((catalog) => {
-        if (catalog.itemType === ServerCatalogItemType.Media) {
-          let resourceMedia = new ServerCatalogItem();
+    let noCatalogItems = isNullOrEmpty(this.serverResource)
+      || isNullOrEmpty(this.serverResource.catalogItems);
+    if (noCatalogItems) { return undefined; }
 
-          if (isNullOrEmpty(this.server.media)) {
-            resourceMedia = catalog;
-          } else {
-            let media = this.server.media.find((serverMedia) => {
-              return catalog.itemName !== serverMedia.name;
-            });
+    this.serverResource.catalogItems.forEach((catalog) => {
+      if (catalog.itemType === ServerCatalogItemType.Media) {
+        let resourceMedia = new ServerCatalogItem();
 
-            if (!isNullOrEmpty(media)) {
-              resourceMedia.itemName = media.name;
-            }
-          }
+        if (isNullOrEmpty(this.server.media)) {
+          resourceMedia = catalog;
+        } else {
+          let media = this.server.media.find((serverMedia) => {
+            return catalog.itemName !== serverMedia.name;
+          });
 
-          if (!isNullOrEmpty(resourceMedia.itemName)) {
-            resourceMediaList.push(resourceMedia);
+          if (!isNullOrEmpty(media)) {
+            resourceMedia.itemName = media.name;
           }
         }
-      });
-    }
+
+        if (!isNullOrEmpty(resourceMedia.itemName)) {
+          resourceMediaList.push(resourceMedia);
+        }
+      }
+    });
 
     return resourceMediaList;
   }

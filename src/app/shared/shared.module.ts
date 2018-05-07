@@ -21,6 +21,7 @@ import { PageHeaderModule } from './page-header/page-header.module';
 import { LoaderModule } from './loader/loader.module';
 import { PageModule } from './page/page.module';
 import { ContextualHelpModule } from './contextual-help/contextual-help.module';
+import { OptionGroupModule } from './option-group/option-group.module';
 import { SelectModule } from './select/select.module';
 import { AccordionModule } from './accordion/accordion.module';
 import { ListModule } from './list/list.module';
@@ -71,6 +72,7 @@ import { FileDownloadModule } from './file-download/file-download.module';
     LoaderModule,
     PageModule,
     ContextualHelpModule,
+    OptionGroupModule,
     SelectModule,
     AccordionModule,
     ListModule,
@@ -119,6 +121,7 @@ import { FileDownloadModule } from './file-download/file-download.module';
     LoaderModule,
     PageModule,
     ContextualHelpModule,
+    OptionGroupModule,
     SelectModule,
     AccordionModule,
     ListModule,

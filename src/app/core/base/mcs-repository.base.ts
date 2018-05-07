@@ -87,7 +87,7 @@ export abstract class McsRepositoryBase<T> {
     if (isNullOrEmpty(record)) { return; }
 
     // Update the record
-    addOrUpdateArrayRecord(this._dataRecords, record, true,
+    addOrUpdateArrayRecord(this._dataRecords, record, false,
       (_existingRecord: any) => _existingRecord.id === (record as any).id);
     this._notifyDataRecordsChanged();
   }
@@ -222,12 +222,17 @@ export abstract class McsRepositoryBase<T> {
     return this.getRecordById(id)
       .finally(() => this._notifyAfterDataObtained())
       .map((record) => {
-        // Update record content
-        this._updatedRecordsById.push(record.content);
-        isNullOrEmpty(this.dataRecords)
-          ? this.addRecord(record.content)
-          : this.updateRecord(record.content);
-        return record.content;
+        let noRecordFound = isNullOrEmpty(record) || isNullOrEmpty(record.content);
+        if (noRecordFound) { throw new Error(`No record found for ${id}`); }
+
+        this.updateRecord(record.content);
+        let updatedRecord = this.dataRecords.find((recordInstance) =>
+          (recordInstance as any).id === (record.content as any).id
+        );
+        if (!isNullOrEmpty(updatedRecord)) {
+          this._updatedRecordsById.push(updatedRecord);
+        }
+        return updatedRecord;
       });
   }
 

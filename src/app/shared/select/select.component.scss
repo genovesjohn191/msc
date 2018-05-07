@@ -26,6 +26,7 @@ $select-sub-group-bg-color: $color-white;
 $select-sub-group-border-color: $color-grey-03;
 $select-sub-group-box-shadow: $color-black;
 $select-sub-group-max-height: 400px;
+$select-sub-group-expanded-bg-color: $color-white;
 
 .select-wrapper {
   display: block;
@@ -98,6 +99,14 @@ $select-sub-group-max-height: 400px;
   &:focus,
   &.active {
     background-color: $select-item-hover-color;
+  }
+
+  &.sub-group-expanded {
+    &.active,
+    &:focus,
+    &:hover {
+      background-color: $select-sub-group-expanded-bg-color;
+    }
   }
 
   &.selected {

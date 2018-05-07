@@ -36,6 +36,7 @@ let nextUniqueId = 0;
     'class': 'select-item-wrapper',
     'role': 'option',
     '[class.sub-group]': 'hasSubgroup',
+    '[class.sub-group-expanded]': 'subGroupOpen',
     '[class.active]': 'active',
     '[class.selected]': 'selected',
     '[id]': 'id'

@@ -1,0 +1,36 @@
+@import "../../../styles/shared/base";
+
+$option-group-padding: $space-xsmall $space-small;
+$option-group-hover-color: $hover-bg-color;
+$option-group-active-color: $active-bg-color;
+$option-group-selected-color: $selected-bg-color;
+
+.option-group-wrapper {
+  display: block;
+  cursor: pointer;
+
+  &.option-group-selected:not(.option-group-expanded) {
+    background-color: $option-group-selected-color;
+  }
+
+  &.option-group-active {
+    background-color: $option-group-active-color;
+  }
+
+  &:hover:not(.option-group-expanded):not(.option-group-selected) {
+    background-color: $option-group-hover-color;
+  }
+
+  .option-group-label {
+    @include display-flex(row);
+    @include align-items(center);
+    @include set-items-interval($space-small, horizontal);
+    padding: $option-group-padding;
+
+    .option-group-icon {
+      @include display-flex(row);
+      @include align-items(center);
+      justify-content: center;
+    }
+  }
+}

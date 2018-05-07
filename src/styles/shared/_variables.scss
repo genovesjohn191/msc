@@ -164,3 +164,8 @@ $shared-left-panel-size: 275px;
 // Shared text color
 $light-bg-text-color: $color-black;
 $dark-bg-text-color: $color-grey-06;
+
+// Shared background color
+$hover-bg-color: $color-grey-08;
+$selected-bg-color: $color-grey-07;
+$active-bg-color: rgba($selected-bg-color, 0.8);

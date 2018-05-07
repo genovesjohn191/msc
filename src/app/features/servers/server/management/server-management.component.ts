@@ -425,6 +425,7 @@ export class ServerManagementComponent extends ServerDetailsBase
    * Get the server resource compute
    */
   private _getServerCompute(): void {
+    if (isNullOrEmpty(this.serverResource)) { return; }
     this.computeSubscription = this._serversResourcesRespository
       .findResourceCompute(this.serverResource)
       .subscribe(() => {

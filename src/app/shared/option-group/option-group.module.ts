@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
 import { LayoutModule } from '../layout/layout.module';
 import { RippleModule } from '../ripple/ripple.module';
-/** List Panel */
-import { ListPanelComponent } from './list-panel.component';
+/** Options */
+import { OptionGroupComponent } from './option-group.component';
+import { OptionGroupLabelDirective } from './option-group-label.directive';
+import { OptionComponent } from './option/option.component';
 
 @NgModule({
   declarations: [
-    ListPanelComponent
+    OptionGroupComponent,
+    OptionGroupLabelDirective,
+    OptionComponent
   ],
   imports: [
     CommonModule,
@@ -17,7 +21,9 @@ import { ListPanelComponent } from './list-panel.component';
     RippleModule
   ],
   exports: [
-    ListPanelComponent,
+    OptionGroupComponent,
+    OptionGroupLabelDirective,
+    OptionComponent,
     CommonModule,
     IconModule,
     LayoutModule,
@@ -25,4 +31,4 @@ import { ListPanelComponent } from './list-panel.component';
   ]
 })
 
-export class ListPanelModule { }
+export class OptionGroupModule { }

@@ -13,8 +13,13 @@ import {
 } from '@angular/router';
 import {
   Subscription,
-  Observable
+  Observable,
+  Subject
 } from 'rxjs/Rx';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   Server,
   ServerCommand
@@ -29,11 +34,11 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsListPanelItem,
   McsSearch,
   McsDialogService,
   McsRoutingTabBase,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsDataStatusFactory
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -67,12 +72,15 @@ export class ServerComponent
   public search: McsSearch;
 
   public textContent: any;
-  public server: Server;
+  public serversMap: Map<string, Server[]>;
   public selectedGroupName: string;
+  public selectedServer: Server;
   public selectedServerName: string;
   public serversTextContent: any;
   public serverListSource: ServersListSource | null;
   public serverSubscription: Subscription;
+  public serversSubscription: Subscription;
+  public listStatusFactory: McsDataStatusFactory<Map<string, Server[]>>;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -81,18 +89,7 @@ export class ServerComponent
   public get angleDoubleRightIconKey(): string {
     return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
   }
-
-  /**
-   * Selected item on the list, this will set everytime
-   * the user select one of the item in item list panel
-   */
-  private _selectedItem: McsListPanelItem;
-  public get selectedItem(): McsListPanelItem {
-    return this._selectedItem;
-  }
-  public set selectedItem(value: McsListPanelItem) {
-    this._selectedItem = value;
-  }
+  private _destroySubject = new Subject<void>();
 
   constructor(
     _router: Router,
@@ -106,7 +103,9 @@ export class ServerComponent
     private _errorHandlerService: McsErrorHandlerService
   ) {
     super(_router, _activatedRoute);
-    this.server = new Server();
+    this.selectedServer = new Server();
+    this.serversMap = new Map();
+    this.listStatusFactory = new McsDataStatusFactory();
   }
 
   public ngOnInit() {
@@ -119,6 +118,8 @@ export class ServerComponent
 
   public ngAfterViewInit() {
     refreshView(() => {
+      this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
+        .subscribe(() => this.listStatusFactory.setInProgress());
       this._initializeListsource();
     });
   }
@@ -126,10 +127,12 @@ export class ServerComponent
   public ngOnDestroy() {
     super.onDestroy();
     unsubscribeSafely(this.serverSubscription);
+    this._destroySubject.next();
+    this._destroySubject.complete();
   }
 
   /**
-   * Event that emits when the server is selected
+   * Event that emits when the server is selected on the list panel
    * @param _server Selected server instance
    */
   public onServerSelect(_server: Server) {
@@ -194,14 +197,6 @@ export class ServerComponent
   }
 
   /**
-   * Return the status Icon key based on the status of the server
-   * @param state Server status
-   */
-  public getStateIconKey(state: number): string {
-    return this._serversService.getStateIconKey(state);
-  }
-
-  /**
    * Return true when the server is currently deleting, otherwise false
    * @param server Server to be deleted
    */
@@ -210,20 +205,20 @@ export class ServerComponent
   }
 
   /**
+   * Return the status Icon key based on the status of the server
+   * @param state Server status
+   */
+  public getStateIconKey(state: number): string {
+    return this._serversService.getStateIconKey(state);
+  }
+
+  /**
    * Navigate to resources
    * @param server Server to navigate from
    */
   public navigateToResource(server: Server): void {
-    if (isNullOrEmpty(server.platform)) { return; }
+    if (isNullOrEmpty(server)) { return; }
     this.router.navigate(['/servers/vdc', server.platform.resourceId]);
-  }
-
-  /**
-   * Retry to obtain the source from API
-   */
-  public retryListsource(): void {
-    if (isNullOrEmpty(this.serverListSource)) { return; }
-    this._initializeListsource();
   }
 
   /**
@@ -245,13 +240,9 @@ export class ServerComponent
 
     // Set the selection iniatially when no selected item
     // in order for the header to show it immediately
-    if (isNullOrEmpty(this.selectedItem)) {
-      let serverExist = this._serversRepository.dataRecords
-        .find((server) => {
-          return server.id === this.paramId;
-        });
-      this._setSelectedServerInfo(serverExist);
-    }
+    let serverExist = this._serversRepository.dataRecords
+      .find((server) => server.id === this.paramId);
+    this._setSelectedServerInfo(serverExist);
   }
 
   /**
@@ -262,6 +253,25 @@ export class ServerComponent
       this._serversRepository,
       this.search
     );
+
+    // Key function pointer for mapping objects
+    let keyFn = (item: Server) => {
+      let resourseName = isNullOrEmpty(item.platform.resourceName) ?
+        'Others' : item.platform.resourceName;
+      return resourseName;
+    };
+
+    // Listen to all records changed
+    this.serverListSource.findAllRecordsMapStream(keyFn)
+      .catch((error) => {
+        this.listStatusFactory.setError();
+        return Observable.throw(error);
+      })
+      .subscribe((response) => {
+        this.serversMap = response;
+        this.search.showLoading(false);
+        this.listStatusFactory.setSuccesfull(response);
+      });
     this._changeDetectorRef.markForCheck();
   }
 
@@ -278,9 +288,8 @@ export class ServerComponent
         return Observable.throw(error);
       })
       .subscribe((response) => {
-        this.server = response;
         this._setSelectedServerInfo(response);
-        this._serverService.setSelectedServer(this.server);
+        this._serverService.setSelectedServer(this.selectedServer);
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -290,8 +299,7 @@ export class ServerComponent
    */
   private _setSelectedServerInfo(selectedServer: Server): void {
     if (isNullOrEmpty(selectedServer)) { return; }
-
-    this.server = selectedServer;
+    this.selectedServer = selectedServer;
 
     this.selectedServerName = selectedServer.name;
     let hasResourceName = !isNullOrEmpty(selectedServer.platform)
@@ -300,13 +308,5 @@ export class ServerComponent
     let resourceName = (hasResourceName) ?
       selectedServer.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
     this.selectedGroupName = resourceName;
-
-    // Initially set the selected item in the list source
-    if (isNullOrEmpty(this.selectedItem)) {
-      this.selectedItem = {
-        itemId: selectedServer.id,
-        groupName: resourceName
-      } as McsListPanelItem;
-    }
   }
 }

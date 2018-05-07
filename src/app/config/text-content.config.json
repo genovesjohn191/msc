@@ -34,6 +34,7 @@
     "description": "View and manage any Managed or Self-Managed VDC servers. Dedicated and physical servers will be displayed in future versions of the portal.",
     "leftPanelHeader": "Server Filter",
     "newServer": "New Server",
+    "loading": "Loading servers.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
     "noServers": "No servers to display.",
     "retry": "Try again shortly",
@@ -59,6 +60,7 @@
     },
     "vdc": {
       "leftPanelHeader": "Server Filter",
+      "loading": "Loading VDC details.",
       "overview": {
         "label": "Overview",
         "vdcProperties": {
@@ -641,6 +643,7 @@
     "description": "View details of your firewalls and firewall policies. Firewalls prevent malicious traffic from accessing services deployed in your environment.",
     "leftPanelHeader": "Firewall Filter",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of firewalls.",
+    "loading": "Loading firewalls.",
     "noFirewalls": "No firewalls to display.",
     "retry": "Try again shortly",
     "filterColumn": "Filter Column",

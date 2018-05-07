@@ -3,11 +3,11 @@
   <ng-container *mcsPageHeader>
     <div class="horizontal-items-spacing-small" display-flex="row" align-items="center">
       <div>
-        <a (click)="navigateToResource(server)">
+        <a (click)="navigateToResource(selectedServer)">
           <h3>{{ selectedGroupName }}</h3>
         </a>
       </div>
-      <div *ngIf="selectedItem">
+      <div *ngIf="selectedServer">
         <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       </div>
       <div>
@@ -22,42 +22,47 @@
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
         <mcs-search #search></mcs-search>
-        <mcs-list-panel [listSource]="serverListSource" [selectedListItem]="selectedItem">
-          <ng-container mcsListPanelDef>
-            <mcs-list-panel-header *mcsListPanelHeaderDef="let vdc; propertyName: 'vdcName';"
-              [groupName]="vdc">
-              <span>{{ vdc }}</span>
-            </mcs-list-panel-header>
-            <mcs-list-panel-item *mcsListPanelItemDef="let serverPanel"
-              [itemId]="serverPanel.server.id" [groupName]="serverPanel.vdcName"
-              [disabled]="serverDeleting(serverPanel.server)"
-              (click)="onServerSelect(serverPanel.server)">
-              <mcs-icon *ngIf="!serverPanel.server.isProcessing"
-                size="small"
-                [key]="getStateIconKey(serverPanel.server.powerState)"></mcs-icon>
 
-              <mcs-icon *ngIf="serverPanel.server.isProcessing"
-                size="small" [key]="spinnerIconKey"
-                [mcsTooltip]="serverPanel.server.processingText"
-                mcsTooltipPosition="right"></mcs-icon>
+        <mcs-data-status [dataStatusFactory]="listStatusFactory">
+          <mcs-data-status-success mcsDataSuccess>
 
-              <a>{{ serverPanel.server.name }}</a>
-            </mcs-list-panel-item>
-          </ng-container>
+            <mcs-list-panel [initialSelected]="selectedServer">
+              <ng-container *ngFor="let iterator of (serversMap | mcsMapIterable) |
+                mcsSortArray: serverListSource?.serversGroupSortMethod">
 
-          <!-- List Items Status Integration -->
-          <ng-container mcsListItemsStatusDef>
-            <mcs-list-items-empty *mcsListItemsEmptyDef>
-              <span>{{ serversTextContent.noServers }}</span>
-            </mcs-list-items-empty>
-            <mcs-list-items-error *mcsListItemsErrorDef>
-              <div class="data-error">
-                <span>{{ serversTextContent.errorMessage }}</span>
-                <a (click)="retryListsource()">{{ serversTextContent.retry }}</a>.
-              </div>
-            </mcs-list-items-error>
-          </ng-container>
-        </mcs-list-panel>
+                <mcs-option-group [label]="iterator.key">
+                  <mcs-option *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)"
+                    [value]="server"
+                    [disabled]="serverDeleting(server)"
+                    (click)="onServerSelect(server)">
+
+                    <mcs-icon *ngIf="!server.isProcessing" size="small"
+                      [key]="getStateIconKey(server.powerState)"></mcs-icon>
+
+                    <mcs-icon *ngIf="server.isProcessing"
+                      size="small" [key]="spinnerIconKey"
+                      [mcsTooltip]="server.processingText"
+                      mcsTooltipPosition="right"></mcs-icon>
+
+                    <span class="space-left-xsmall">{{ server.name }}</span>
+                  </mcs-option>
+                </mcs-option-group>
+              </ng-container>
+            </mcs-list-panel>
+          </mcs-data-status-success>
+
+          <mcs-data-status-in-progress mcsDataInProgress>
+            <span>{{ serversTextContent.loading }}</span>
+          </mcs-data-status-in-progress>
+
+          <mcs-data-status-empty mcsDataEmpty>
+            <span>{{ serversTextContent.noServers }}</span>
+          </mcs-data-status-empty>
+
+          <mcs-data-status-error mcsDataError>
+            <span>{{ serversTextContent.errorMessage }}</span>
+          </mcs-data-status-error>
+        </mcs-data-status>
       </div>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -79,7 +84,7 @@
           instead of textContent.backups.label
          -->
         <ng-container *mcsAccessControl="['SnapshotAccess']">
-          <mcs-tab *mcsIsSelfManagedServer="server"
+          <mcs-tab *mcsIsSelfManagedServer="selectedServer"
             label="Snapshots" id="backups">
           </mcs-tab>
         </ng-container>
@@ -92,8 +97,8 @@
         <mcs-tab [canSelect]="false" customClass="right-align"
           *mcsAccessControl="['VmPowerStateEdit']">
           <ng-template mcsTabLabel>
-            <mcs-server-command [server]="server"
-              (onClick)="executeServerCommand(server, $event)">
+            <mcs-server-command [server]="selectedServer"
+              (onClick)="executeServerCommand(selectedServer, $event)">
             </mcs-server-command>
           </ng-template>
         </mcs-tab>

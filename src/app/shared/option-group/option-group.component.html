@@ -1,0 +1,21 @@
+<!-- Option group label -->
+<div>
+  <div class="option-group-label" #groupLabelTemplate>
+    <div class="option-group-icon" [@rotate45]="panelOpen ? 'rotate' : 'void'">
+      <mcs-icon size="small" [key]="caretRightIconKey"></mcs-icon>
+    </div>
+
+    <ng-container *ngIf="labelTemplate">
+      <ng-container *ngTemplateOutlet="labelTemplate?.templateRef"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="!labelTemplate">
+      <span>{{ label }}</span>
+    </ng-container>
+  </div>
+  <mcs-ripple mcsRipple [rippleTrigger]="groupLabelTemplate"></mcs-ripple>
+</div>
+
+<!-- Option group content -->
+<div [@expansionVertical]="panelOpen ? 'show' : 'void'" class="option-group-content">
+  <ng-content></ng-content>
+</div>

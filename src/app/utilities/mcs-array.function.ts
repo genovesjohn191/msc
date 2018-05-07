@@ -1,3 +1,8 @@
+import {
+  isNullOrEmpty,
+  updateObjectData
+} from './mcs-object.function';
+
 /**
  * Merge 2 arrays according to predicate definition,
  * if predicate is supplied the second array will merge to the first array
@@ -23,7 +28,7 @@ export function mergeArrays<T>(
       let updatedElement: T = firstElement;
       for (let secondElement of secondArray) {
         if (predicate(firstElement, secondElement)) {
-          updatedElement = secondElement;
+          updateObjectData(updatedElement, secondElement);
           break;
         }
       }
@@ -53,32 +58,33 @@ export function mergeArrays<T>(
  * @param sourceArray Record list for the updatedElement to be append to
  * @param record Updated element to check if the record is already exist
  * @param updateOnly `@Optional` flag if the record should be appended in the array
- * @param predicate Rules of matching the element
+ * @param compareFn Rules of matching the element
  * @param insertIndex `@Optional` Custom index to insert the record
  */
 export function addOrUpdateArrayRecord<T>(
   sourceArray: T[],
   record: T,
   updateOnly: boolean,
-  predicate?: (_record: T) => boolean,
+  compareFn?: (_record: T) => boolean,
   insertIndex?: number): T[] {
 
   let isExisting: boolean = false;
+  let recordIndex: number = 0;
   let insertThisItem: boolean = !updateOnly;
 
   // Initialize for undefined and null record
   if (!sourceArray) { sourceArray = new Array(); }
 
   // Update the existing element else append to last record
-  if (predicate) {
-    let recordIndex = sourceArray.findIndex((sourceRecord) => predicate(sourceRecord));
-    isExisting = recordIndex >= 0;
-    if (isExisting) {
-      sourceArray.splice(recordIndex, 1, record);
-    }
-    insertThisItem = insertThisItem && !isExisting;
+  recordIndex = isNullOrEmpty(compareFn) ? sourceArray.indexOf(record) :
+    sourceArray.findIndex((sourceRecord) => compareFn(sourceRecord));
+  isExisting = recordIndex >= 0;
+  if (isExisting) {
+    updateObjectData(sourceArray[recordIndex], record);
+    return sourceArray;
   }
 
+  // Insert item based on index
   if (insertThisItem) {
     let validIndex = insertIndex !== undefined && insertIndex >= 0;
     validIndex

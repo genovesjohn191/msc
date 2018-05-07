@@ -8,7 +8,7 @@
   display-flex justify-content="space-between"
   align-items="center" cursor="pointer" (click)="toggle()">
 
-  <span *ngIf="value;else placeholderTemplate">
+  <span *ngIf="selection?.hasValue();else placeholderTemplate">
     {{ displayedText }}
   </span>
   <mcs-icon size="small" [key]="carretDownIconKey"></mcs-icon>

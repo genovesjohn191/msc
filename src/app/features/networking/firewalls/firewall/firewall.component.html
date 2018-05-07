@@ -1,41 +1,57 @@
-<mcs-page [header]="header">
+<mcs-page [header]="selectedFirewall?.managementName">
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="firewallTextContent.leftPanelHeader">
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
-        <mcs-search #listSearch delayInSeconds="none"></mcs-search>
-        <mcs-list-panel [listSource]="firewallListSource" [selectedListItem]="selectedItem">
-          <ng-container mcsListPanelDef>
-            <mcs-list-panel-header [groupName]="haGroup"
-              *mcsListPanelHeaderDef="let haGroup; propertyName: 'haGroupName';">
-              <span>{{ haGroup }}</span>
-            </mcs-list-panel-header>
-            <mcs-list-panel-item *mcsListPanelItemDef="let firewallPanel"
-              [itemId]="firewallPanel.firewall.id"
-              [groupName]="firewallPanel.haGroupName"
-              (click)="onFirewallSelect(firewallPanel.firewall)">
-              <mcs-icon
-                size="small"
-                [key]="getConnectionStatusIconKey(firewallPanel.firewall?.connectionStatus)">
-              </mcs-icon>
-              <a>{{ firewallPanel.firewall?.managementName }}</a>
-            </mcs-list-panel-item>
-          </ng-container>
+        <mcs-search #search></mcs-search>
 
-          <!-- List Items Status Integration -->
-          <ng-container mcsListItemsStatusDef>
-            <mcs-list-items-empty *mcsListItemsEmptyDef>
-              <span>{{ firewallsTextContent.noFirewalls }}</span>
-            </mcs-list-items-empty>
-            <mcs-list-items-error *mcsListItemsErrorDef>
-              <div class="data-error">
-                <span>{{ firewallsTextContent.errorMessage }}</span>
-                <a (click)="retryListsource()">{{ firewallsTextContent.retry }}</a>.
-              </div>
-            </mcs-list-items-error>
-          </ng-container>
-        </mcs-list-panel>
+        <mcs-data-status [dataStatusFactory]="listStatusFactory">
+          <mcs-data-status-success mcsDataSuccess>
+
+            <mcs-list-panel [initialSelected]="selectedFirewall">
+              <ng-container *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
+                mcsSortArray: firewallsListSource?.firewallGroupSortMethod">
+
+                <!-- With ha group -->
+                <mcs-option-group [label]="iterator.key" *ngIf="iterator.key">
+                  <mcs-option [value]="firewall"
+                    *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
+                    (click)="onFirewallSelect(firewall)">
+
+                    <mcs-icon size="small"
+                      [key]="getConnectionStatusIconKey(firewall?.connectionStatus)"></mcs-icon>
+                    <span class="space-left-xsmall">{{ firewall.managementName }}</span>
+                  </mcs-option>
+                </mcs-option-group>
+
+                <!-- Without ha group -->
+                <ng-container *ngIf="!iterator.key">
+                  <mcs-option [value]="firewall" cursor="pointer"
+                    *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
+                    (click)="onFirewallSelect(firewall)">
+
+                    <mcs-icon size="small"
+                      [key]="getConnectionStatusIconKey(firewall?.connectionStatus)"></mcs-icon>
+                    <span class="space-left-xsmall">{{ firewall.managementName }}</span>
+                  </mcs-option>
+                </ng-container>
+              </ng-container>
+            </mcs-list-panel>
+          </mcs-data-status-success>
+
+          <mcs-data-status-in-progress mcsDataInProgress>
+            <span>{{ firewallsTextContent.loading }}</span>
+          </mcs-data-status-in-progress>
+
+          <mcs-data-status-empty mcsDataEmpty>
+            <span>{{ firewallsTextContent.noFirewalls }}</span>
+          </mcs-data-status-empty>
+
+          <mcs-data-status-error mcsDataError>
+            <span>{{ firewallsTextContent.errorMessage }}</span>
+          </mcs-data-status-error>
+        </mcs-data-status>
       </div>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -60,7 +76,7 @@
             </mcs-icon>
             <ng-template #actionContent>
               <div class="cog-container">
-                <a [href]="firewall.url" target="_blank">View in Portal</a>
+                <a [href]="selectedFirewall.url" target="_blank">View in Portal</a>
               </div>
             </ng-template>
           </ng-template>

@@ -24,3 +24,13 @@ export function unsubscribeSafely(subscription: Subscription): void {
     subscription.unsubscribe();
   }
 }
+
+/**
+ * Update the object data without removing the instance of the source element
+ * @param source Source object to be updated
+ * @param target Target object to be the basis
+ */
+export function updateObjectData(source: any, target: any): void {
+  let keys = Object.keys(target);
+  keys.forEach((key) => source[key] = target[key]);
+}
