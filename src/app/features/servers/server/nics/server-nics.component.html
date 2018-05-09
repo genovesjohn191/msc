@@ -5,7 +5,7 @@
     [mcsLoaderText]="textContent.loading"
     mcsLoaderOrientation="top"></div>
 
-  <div class="vertical-items-spacing-large container-wrapper" #nicsContent>
+  <div class="container-wrapper" #nicsContent>
     <h4 class="container-header">{{ textContent.title }}</h4>
     <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
@@ -13,7 +13,7 @@
       <!-- Nics -->
       <mcs-data-status [dataStatusFactory]="dataStatusFactory">
         <mcs-data-status-success mcsDataSuccess>
-          <table class="mcs-simple-table full-width">
+          <table class="basic-table no-gutter">
             <thead>
               <tr>
                 <th>{{ textContent.nic }}</th>
@@ -24,7 +24,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody class="vertical-items-spacing-xsmall">
+            <tbody>
               <tr *ngFor="let nic of serverNics">
                 <td class="top-align">
                   <ng-container *ngIf="nic.isProcessing; else nicIndex">

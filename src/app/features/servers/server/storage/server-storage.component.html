@@ -13,19 +13,13 @@
       <!-- Disks -->
       <mcs-data-status [dataStatusFactory]="dataStatusFactory">
         <mcs-data-status-success mcsDataSuccess>
-          <table class="mcs-simple-table full-width">
+          <table class="basic-table no-gutter">
             <thead>
               <tr>
-                <td>
-                  <strong>{{ textContent.storageDevice }}</strong>
-                </td>
-                <td>
-                  <strong>{{ textContent.storageProfile }}</strong>
-                </td>
-                <td>
-                  <strong>{{ textContent.capacity }}</strong>
-                </td>
-                <td></td>
+                <th>{{ textContent.storageDevice }}</th>
+                <th>{{ textContent.storageProfile }}</th>
+                <th>{{ textContent.capacity }}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>

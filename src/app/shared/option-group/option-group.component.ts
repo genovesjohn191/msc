@@ -88,10 +88,6 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
     return Observable.merge(...this._options.map((option) => option.selectionChange));
   }
 
-  public get hostElement(): HTMLElement {
-    return this._elementRef.nativeElement;
-  }
-
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef
@@ -105,6 +101,13 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   public ngOnDestroy(): void {
     this._destroySubject.next();
     this._destroySubject.complete();
+  }
+
+  /**
+   * Returns the associated host element of the component
+   */
+  public get hostElement(): HTMLElement {
+    return this._elementRef.nativeElement;
   }
 
   /**
@@ -140,6 +143,9 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
     this.selectionChange.emit(this);
   }
 
+  /**
+   * Returns true if the associated option is part of the group
+   */
   public hasOption(activeOption: OptionComponent): boolean {
     let existingOption = this._options.find((_option: OptionComponent) =>
       _option.id === activeOption.id);
@@ -150,7 +156,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    * Listen to every selection changed event
    */
   private _listenToSelectionChange(): void {
-    this.optionsSelectionChange.pipe(takeUntil(this._destroySubject))
+    this.optionsSelectionChange.pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => {
         let selectedOptions = this._options.filter((option) => option.selected);
         isNullOrEmpty(selectedOptions) ? this.closePanel() : this.openPanel();

@@ -166,6 +166,6 @@ $light-bg-text-color: $color-black;
 $dark-bg-text-color: $color-grey-06;
 
 // Shared background color
-$hover-bg-color: $color-grey-08;
-$selected-bg-color: $color-grey-07;
+$hover-bg-color: $color-grey-07;
+$selected-bg-color: rgba($color-grey-06, 0.8);
 $active-bg-color: rgba($selected-bg-color, 0.8);

@@ -22,7 +22,7 @@ export class NotificationsService {
    * Get Notifications (MCS API Response)
    * @param page Page Number
    * @param perPage Count per page
-   * @param serverName Server name filter
+   * @param searchKeyword Search keyword
    */
   public getNotifications(args?: {
     page?: number,

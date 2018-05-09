@@ -44,6 +44,8 @@ $navigation-mobile-macquarie-item-font: $circular-pro-bold;
     cursor: pointer;
     margin-left: auto;
     background-color: $navigation-mobile-macquarie-link-bg-color;
+    @include display-flex(row);
+    @include align-items(center);
 
     a {
       color: $navigation-mobile-macquarie-link-color;
@@ -51,6 +53,11 @@ $navigation-mobile-macquarie-item-font: $circular-pro-bold;
       text-decoration: none;
       font-family: $navigation-mobile-macquarie-link-font;
       padding: $navigation-mobile-macquarie-link-padding;
+
+      &:hover {
+        text-decoration: none;
+        color: $navigation-mobile-macquarie-link-color;
+      }
     }
   }
 }

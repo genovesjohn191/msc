@@ -33,4 +33,9 @@ $option-group-selected-color: $selected-bg-color;
       justify-content: center;
     }
   }
+
+  .option-group-wrapper,
+  .option-wrapper {
+    margin-left: $space-small;
+  }
 }

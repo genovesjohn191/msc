@@ -6,10 +6,19 @@
 
   <!-- Macquarie Link View -->
   <div class="macquarie-link">
-    <a [href]="macquarieViewUrl" target="_blank">
-      <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
-      <span>{{ textContent.macquarieView }}</span>
-    </a>
+    <ng-container *ngIf="productCatalogFeatureIsOn; else macquarieViewTemplate">
+      <a (click)="gotoProduct('product')" class="inline-items-xsmall">
+        <span>{{ textContent.productCatalog }}</span>
+        <mcs-icon [key]="caretDownIconKey" size="medium" color="white"></mcs-icon>
+      </a>
+    </ng-container>
+
+    <ng-template #macquarieViewTemplate>
+      <a [href]="macquarieViewUrl" target="_blank" class="inline-items-xsmall">
+        <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
+        <span>{{ textContent.macquarieView }}</span>
+      </a>
+    </ng-template>
   </div>
 </div>
 

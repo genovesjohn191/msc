@@ -10,6 +10,11 @@ import { isNullOrEmpty } from '../../utilities';
 
 export abstract class McsListSourceBase<T> {
 
+  /**
+   * Returns all the records obtained from API
+   */
+  public get dataRecords(): T[] { return this._cachedRecords; }
+
   private _recordsMap = new Map<any, T[]>();
   private _cachedRecords = new Array<T>();
 

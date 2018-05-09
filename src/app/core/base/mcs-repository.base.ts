@@ -223,7 +223,7 @@ export abstract class McsRepositoryBase<T> {
       .finally(() => this._notifyAfterDataObtained())
       .map((record) => {
         let noRecordFound = isNullOrEmpty(record) || isNullOrEmpty(record.content);
-        if (noRecordFound) { throw new Error(`No record found for ${id}`); }
+        if (noRecordFound) { return undefined; }
 
         this.updateRecord(record.content);
         let updatedRecord = this.dataRecords.find((recordInstance) =>
