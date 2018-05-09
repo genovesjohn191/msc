@@ -21,6 +21,7 @@
     "catalog": "Catalog",
     "signOut": "Sign Out",
     "macquarieView": "Macquarie View",
+    "productCatalog": "Products",
     "title": "Macquarie Cloud Services Portal"
   },
   "dashboard": {
@@ -719,6 +720,17 @@
   },
   "catalog": {
     "title": "Macquarie Cloud Services: Catalog"
+  },
+  "products": {
+    "title": "Macquarie Cloud Services: Product Catalog",
+    "header": "Product Catalog",
+    "leftPanelHeader": "Product Filter",
+    "loading": "Loading Products.",
+    "noProducts": "No products to display.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of products.",
+    "product": {
+      "loading": "Loading product details."
+    }
   },
   "tools": {
     "title": "Macquarie Cloud Services: Other Tools",

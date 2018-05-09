@@ -7,7 +7,11 @@ import {
   ChangeDetectorRef,
   ElementRef
 } from '@angular/core';
-import { isNullOrEmpty, isElementVisible } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  isElementVisible,
+  coerceBoolean
+} from '../../../utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -45,22 +49,27 @@ export class OptionComponent {
   }
 
   /**
+   * Returns true when option is currently selected
+   */
+  @Input()
+  public get selected(): boolean { return this._selected; }
+  public set selected(value: boolean) { this._selected = coerceBoolean(value); }
+  private _selected: boolean;
+
+  /**
    * Returns true when option is currently active
    */
   private _active: boolean;
   public get active(): boolean { return this._active; }
-
-  /**
-   * Returns true when option is currently selected
-   */
-  private _selected: boolean;
-  public get selected(): boolean { return this._selected; }
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef
   ) { }
 
+  /**
+   * Returns the associated host element of the component
+   */
   public get hostElement(): HTMLElement {
     return this._elementRef.nativeElement;
   }

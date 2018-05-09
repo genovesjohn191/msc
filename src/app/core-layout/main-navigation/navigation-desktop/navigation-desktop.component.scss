@@ -38,6 +38,8 @@ $navigation-desktop-macquarie-link-bg-color: $color-grey-01;
     cursor: pointer;
     margin-left: auto;
     background-color: $navigation-desktop-macquarie-link-bg-color;
+    @include display-flex(row);
+    @include align-items(center);
 
     a {
       color: $navigation-desktop-macquarie-link-color;
@@ -45,6 +47,11 @@ $navigation-desktop-macquarie-link-bg-color: $color-grey-01;
       text-decoration: none;
       font-family: $navigation-desktop-item-font;
       padding: $navigation-desktop-item-padding;
+
+      &:hover {
+        text-decoration: none;
+        color: $navigation-desktop-macquarie-link-color;
+      }
     }
   }
 }

@@ -1,0 +1,87 @@
+<!-- Loader settings -->
+<div [mcsLoader]="dataStatusFactory?.statusSubscription"
+  [mcsLoaderHideElement]="productContent"
+  [mcsLoaderText]="textContent.loading"
+  mcsLoaderOrientation="top"></div>
+
+<div #productContent class="grid-row">
+  <!-- Content Panel -->
+  <div class="grid-column limited-view">
+    <div *ngIf="product?.description" class="container-wrapper">
+      <h4 class="container-header">Product Description</h4>
+      <p>{{ product.description }}</p>
+    </div>
+
+    <div *ngIf="product?.useCases" class="container-wrapper">
+      <h4 class="container-header">Use Cases</h4>
+      <div [innerHTML]="product.useCases"></div>
+    </div>
+
+    <div *ngIf="product?.pciCompliance" class="container-wrapper">
+      <h4 class="container-header">PCI Compliance</h4>
+      <p>{{ product.pciCompliance }}</p>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="grid-column space-left-large">
+    <div class="small-panel">
+      <button mcsButton size="small" id="ctaBuyNow">Buy Now</button>
+
+      <div class="divider"></div>
+
+      <mcs-list header="Make a Change">
+        <mcs-list-item class="space-left-small">
+          <a>Scale a Virtual Data Centre</a>
+        </mcs-list-item>
+        <mcs-list-item class="space-left-small">
+          <a>Change InView Monitoring Level</a>
+        </mcs-list-item>
+      </mcs-list>
+
+      <div class="divider"></div>
+
+      <mcs-list header="Dependencies" *ngIf="product?.dependencies">
+        <mcs-list-item *ngFor="let dependency of product.dependencies" class="space-left-small">
+          <a (click)="onClickDependency(dependency)">{{ dependency.name }}</a>
+        </mcs-list-item>
+      </mcs-list>
+
+      <div class="divider"></div>
+
+      <mcs-list header="Pricing">
+        <mcs-list-item class="space-left-small">
+          Per Storage: $0.50
+        </mcs-list-item>
+        <mcs-list-item class="space-left-small">
+          Per vRAM: $0.25
+        </mcs-list-item>
+        <mcs-list-item class="space-left-small">
+          Per vCPU: $0.20
+        </mcs-list-item>
+      </mcs-list>
+
+      <div class="divider"></div>
+
+      <mcs-list header="Downloads" *ngIf="product?.downloads">
+        <mcs-list-item *ngFor="let download of product.downloads" class="space-left-small">
+          <mcs-file-download [file]="getFileInfo(download)"></mcs-file-download>
+        </mcs-list-item>
+      </mcs-list>
+
+      <div class="divider"></div>
+
+      <mcs-list header="We also recommend...">
+        <mcs-list-item class="space-left-small">
+          <a>VDC VM Instance</a>
+        </mcs-list-item>
+        <mcs-list-item class="space-left-small">
+          <a>Managed Firewall</a>
+        </mcs-list-item>
+        <mcs-list-item class="space-left-small">
+          <a>Managed Load Balancer</a>
+        </mcs-list-item>
+      </mcs-list>
+    </div>
+  </div>
+</div>

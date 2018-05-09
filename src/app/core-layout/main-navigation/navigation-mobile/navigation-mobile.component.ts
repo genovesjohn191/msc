@@ -26,7 +26,8 @@ import {
   McsApiCompany,
   McsAuthenticationIdentity,
   McsAuthenticationService,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsAccessControlService
 } from '../../../core';
 import {
   resolveEnvVar,
@@ -86,18 +87,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     return this._authenticationIdentity.activeAccount;
   }
 
-  private _accountPanelOpen: boolean;
-  public get accountPanelOpen(): boolean {
-    return this._accountPanelOpen;
-  }
-  public set accountPanelOpen(value: boolean) {
-    if (this._accountPanelOpen !== value) {
-      this._accountPanelOpen = value;
-      this.switchAccountAnimation = value ? 'expanded' : 'collapsed';
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   public get macquarieViewUrl(): string {
     return resolveEnvVar('MACQUARIE_VIEW_URL');
   }
@@ -131,6 +120,13 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Returns true when feature flag is on for product catalog
+   */
+  public get productCatalogFeatureIsOn(): boolean {
+    return this._accessControlService.hasAccessToFeature('enableProductCatalog');
+  }
+
+  /**
    * Event handler references
    */
   private _clickOutsideHandler = this.onClickOutside.bind(this);
@@ -142,9 +138,9 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _accessControlService: McsAccessControlService
   ) {
-    this.accountPanelOpen = false;
     this.switchAccountAnimation = 'collapsed';
   }
 
@@ -166,33 +162,62 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     unregisterEvent(document, 'click', this._clickOutsideHandler);
   }
 
+  /**
+   * Navigate to product catalog
+   * @param product Product to be navigated
+   */
+  public gotoProduct(_product: any) {
+    // TODO: Id was set temporarily, this should be a mega-menu
+    // so that the user can choose the product
+    this._router.navigate(['/products/', '01147ad4-5a46-4af5-855b-9c09a64bb768']);
+  }
+
+  /**
+   * Logout the current user and navigate to auth page
+   */
   public logout(event): void {
     event.preventDefault();
     this._authenticationService.logOut();
   }
 
+  /**
+   * Event that emits when user clicks outside the popover boundary
+   */
   public onClickOutside(_event: any): void {
     if (!this._elementRef.nativeElement.contains(_event.target)) {
       this.close();
     }
   }
 
+  /**
+   * Toggle the account panel
+   */
   public toggleAccountPanel(): void {
-    this.accountPanelOpen = !this.accountPanelOpen;
+    this.switchAccountAnimation = this.switchAccountAnimation === 'expanded' ?
+      'collapsed' : 'expanded';
+    this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Opens the navigation panel
+   */
   public open(): void {
     this._renderer.setStyle(this.navigationList.nativeElement, 'display', 'block');
     this.slideTrigger = 'slideInLeft';
   }
 
+  /**
+   * Closes the navigation panel
+   */
   public close(): void {
     if (this.slideTrigger) {
       this.slideTrigger = 'slideOutLeft';
-      setTimeout(() => { this.accountPanelOpen = false; }, 500);
     }
   }
 
+  /**
+   * Listens to account switching
+   */
   private _listenToSwitchAccount(): void {
     this._activeAccountSubscription = this._authenticationIdentity
       .activeAccountChanged

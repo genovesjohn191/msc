@@ -1,6 +1,13 @@
-import { BehaviorSubject } from 'rxjs/Rx';
+import { ChangeDetectorRef } from '@angular/core';
+import {
+  BehaviorSubject,
+  Subscription
+} from 'rxjs/Rx';
 import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely
+} from '../../../utilities';
 
 export class McsDataStatusFactory<T> {
   /**
@@ -12,6 +19,9 @@ export class McsDataStatusFactory<T> {
     if (this._dataStatus !== value) {
       this._dataStatus = value;
       this._notifyStatusChanged();
+      if (!isNullOrEmpty(this._changeDetectorRef)) {
+        this._changeDetectorRef.markForCheck();
+      }
     }
   }
 
@@ -21,7 +31,13 @@ export class McsDataStatusFactory<T> {
   private _statusChanged = new BehaviorSubject<McsDataStatus>(undefined);
   public get statusChanged(): BehaviorSubject<McsDataStatus> { return this._statusChanged; }
 
-  constructor() {
+  /**
+   * Returns the instance of subscription when the status is in-progress
+   */
+  private _statusSubscription: Subscription;
+  public get statusSubscription(): Subscription { return this._statusSubscription; }
+
+  constructor(private _changeDetectorRef?: ChangeDetectorRef) {
     this._dataStatus = McsDataStatus.Success;
   }
 
@@ -29,6 +45,7 @@ export class McsDataStatusFactory<T> {
    * Set data status to in progress
    */
   public setInProgress(): void {
+    this._statusSubscription = new Subscription();
     this.dataStatus = McsDataStatus.InProgress;
   }
 
@@ -36,6 +53,7 @@ export class McsDataStatusFactory<T> {
    * Set data status to in error
    */
   public setError(): void {
+    unsubscribeSafely(this._statusSubscription);
     this.dataStatus = McsDataStatus.Error;
   }
 
@@ -43,6 +61,7 @@ export class McsDataStatusFactory<T> {
    * Set data status to in success or empty based on the record provided
    */
   public setSuccesfull(data?: T): void {
+    unsubscribeSafely(this._statusSubscription);
     this.dataStatus = isNullOrEmpty(data) ?
       McsDataStatus.Empty : McsDataStatus.Success;
   }

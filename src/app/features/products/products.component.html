@@ -1,0 +1,46 @@
+<mcs-page [header]="selectedProduct?.name">
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+    <!-- listing panel -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <div class="listing-panel-wrapper">
+        <mcs-search #search></mcs-search>
+
+        <mcs-data-status [dataStatusFactory]="listStatusFactory">
+          <mcs-data-status-success mcsDataSuccess>
+
+            <mcs-list-panel [initialSelected]="selectedProduct">
+              <mcs-option-group [label]="catalog.name" *ngFor="let catalog of catalogs">
+                <mcs-option-group [label]="category.name" *ngFor="let category of catalog.categories">
+                  <mcs-option *ngFor="let product of category.products"
+                    [value]="product"
+                    [selected]="product.id === selectedProductId"
+                    (click)="onClickProduct(product)">
+                    <span>{{ product.name }}</span>
+                  </mcs-option>
+                </mcs-option-group>
+              </mcs-option-group>
+            </mcs-list-panel>
+
+          </mcs-data-status-success>
+
+          <mcs-data-status-in-progress mcsDataInProgress>
+            <span>{{ textContent.loading }}</span>
+          </mcs-data-status-in-progress>
+
+          <mcs-data-status-empty mcsDataEmpty>
+            <span>{{ textContent.noProducts }}</span>
+          </mcs-data-status-empty>
+
+          <mcs-data-status-error mcsDataError>
+            <span>{{ textContent.errorMessage }}</span>
+          </mcs-data-status-error>
+        </mcs-data-status>
+      </div>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <mcs-content-panel *mcsContentPanelDef>
+    <router-outlet></router-outlet>
+  </mcs-content-panel>
+</mcs-page>

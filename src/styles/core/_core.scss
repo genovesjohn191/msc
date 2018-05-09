@@ -7,6 +7,7 @@
 @import "layout/mcs-color";
 @import "layout/mcs-alignment";
 @import "classes/mcs-container";
+@import "classes/mcs-panel";
 @import "classes/mcs-contextual-help";
 @import "classes/mcs-listing";
 @import "classes/mcs-page-title";
@@ -20,6 +21,7 @@
 @import "classes/mcs-grid";
 @import "classes/mcs-list";
 @import "classes/mcs-ripple";
+@import "classes/mcs-table";
 
 *,
 *:after,
@@ -105,16 +107,6 @@ html {
       &:hover {
         cursor: pointer;
         color: $link-hover-color;
-      }
-
-      // Override bootstrap no underline for non-href
-      &:not([href]):not([tabindex]) {
-        text-decoration: underline;
-        &:hover {
-          text-decoration: underline;
-          cursor: pointer;
-          color: $link-hover-color;
-        }
       }
 
       &:not([href]) {

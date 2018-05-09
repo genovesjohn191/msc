@@ -2,11 +2,4 @@
 
 .list-panel-wrapper {
   @include display-flex(column);
-
-  .option-group-wrapper {
-    .option-group-wrapper,
-    .option-wrapper {
-      margin-left: $space-xsmall;
-    }
-  }
 }
