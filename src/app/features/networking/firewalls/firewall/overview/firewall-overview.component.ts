@@ -7,12 +7,7 @@ import {
   McsTextContentProvider,
   CoreDefinition
 } from '../../../../../core';
-import {
-  Firewall,
-  FirewallDeviceStatus,
-  FirewallConnectionStatus,
-  FirewallConfigurationStatus
-} from '../../models';
+import { Firewall } from '../../models';
 import { FirewallService } from '../firewall.service';
 import {
   isNullOrEmpty,
@@ -33,11 +28,6 @@ import {
 export class FirewallOverviewComponent implements OnInit, OnDestroy {
   public textContent: any;
   public firewall: Firewall;
-  public subscription: any;
-
-  public deviceStatusIconKey: string;
-  public connectionStatusIconKey: string;
-  public configurationStatusIconKey: string;
 
   public get firewallModel(): string {
     return !isNullOrEmpty(this.firewall.model) ?
@@ -56,18 +46,6 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
       this.textContent.properties.unknown;
   }
 
-  public get deviceStatus()  {
-    return FirewallDeviceStatus;
-  }
-
-  public get connectionStatus() {
-    return FirewallConnectionStatus;
-  }
-
-  public get configurationStatus() {
-    return FirewallConfigurationStatus;
-  }
-
   public get hasUtmInformation(): boolean {
     return !isNullOrEmpty(this.firewall.utm) &&
       (!isNullOrEmpty(this.firewall.utm.avExpiryDate) ||
@@ -78,23 +56,24 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   public get hasTopologyInformation(): boolean {
     return !isNullOrEmpty(this.firewall.haRole) || !isNullOrEmpty(this.firewall.haGroupName);
   }
+  private _subscription: any;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _firewallService: FirewallService
   ) {
     this.firewall = new Firewall();
-    this.deviceStatusIconKey = '';
-    this.connectionStatusIconKey = '';
-    this.configurationStatusIconKey = '';
   }
 
   public ngOnInit(): void {
-    // OnInit
     this.textContent =
       this._textContentProvider.content.firewalls.firewall.overview;
 
     this._initializeFirewallData();
+  }
+
+  public ngOnDestroy(): void {
+    unsubscribeSafely(this._subscription);
   }
 
   public getLicenseDetails(expiry: string): string {
@@ -117,37 +96,15 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
       CoreDefinition.ASSETS_SVG_STATE_STOPPED ;
   }
 
-  public ngOnDestroy(): void {
-    unsubscribeSafely(this.subscription);
-  }
-
   private _initializeFirewallData(): void {
-    this.subscription = this._firewallService.selectedFirewallStream
+    this._subscription = this._firewallService.selectedFirewallStream
       .subscribe((firewall) => {
         if (isNullOrEmpty(firewall)) { return; }
         this.firewall = firewall;
-        this._setDeviceStatusIconKey();
-        this._setConnectionStatusIconKey();
-        this._setConfigurationStatusIconKey();
       });
   }
 
   private _validateLicense(expiry: Date): boolean {
     return compareDates(expiry, new Date()) >= 0;
-  }
-
-  private _setDeviceStatusIconKey(): void {
-    this.deviceStatusIconKey = this._firewallService
-      .getFirewallDeviceStatusIconKey(this.firewall.deviceStatus);
-  }
-
-  private _setConnectionStatusIconKey(): void {
-    this.connectionStatusIconKey = this._firewallService
-      .getFirewallConnectionStatusIconKey(this.firewall.connectionStatus);
-  }
-
-  private _setConfigurationStatusIconKey(): void {
-    this.configurationStatusIconKey = this._firewallService
-      .getFirewallConfigurationStatusIconKey(this.firewall.configurationStatus);
   }
 }

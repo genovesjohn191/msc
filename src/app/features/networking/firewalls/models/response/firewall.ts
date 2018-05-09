@@ -1,14 +1,17 @@
 import {
   FirewallDeviceStatus,
-  FirewallDeviceStatusSerialization
+  FirewallDeviceStatusSerialization,
+  firewallDeviceStatusText
 } from '../enumerations/firewall-device-status.enum';
 import {
   FirewallConfigurationStatus,
-  FirewallConfigurationStatusSerialization
+  FirewallConfigurationStatusSerialization,
+  firewallConfigurationStatusText
 } from '../enumerations/firewall-configuration-status.enum';
 import {
   FirewallConnectionStatus,
-  FirewallConnectionStatusSerialization
+  FirewallConnectionStatusSerialization,
+  firewallConnectionStatusText
 } from '../enumerations/firewall-connection-status.enum';
 import {
   FirewallHaMode,
@@ -16,6 +19,7 @@ import {
 } from '../enumerations/firewall-ha-mode.enum';
 import { FirewallUtm } from '../response/firewall-utm';
 import { JsonProperty } from 'json-object-mapper';
+import { CoreDefinition } from '../../../../../core';
 
 export class Firewall {
   public id: any;
@@ -96,5 +100,117 @@ export class Firewall {
     this.configurationStatus = undefined;
     this.connectionStatus = undefined;
     this.haMode = undefined;
+  }
+
+  /**
+   * Returns device status label
+   */
+  public get deviceStatusLabel()  {
+    return firewallDeviceStatusText[this.deviceStatus];
+  }
+
+  /**
+   * Returns connection status label
+   */
+  public get connectionStatusLabel() {
+    return firewallConnectionStatusText[this.connectionStatus];
+  }
+
+  /**
+   * Returns configuration status label
+   */
+  public get configurationStatusLabel() {
+    return firewallConfigurationStatusText[this.configurationStatus];
+  }
+
+  /**
+   * This will return the device status icon key
+   * based on the firewall device status
+   */
+  public get deviceStatusIconKey(): string {
+
+    let iconKey = '';
+
+    switch (this.deviceStatus) {
+      case FirewallDeviceStatus.AutoUpdated:
+      case FirewallDeviceStatus.InProgress:
+      case FirewallDeviceStatus.Retrieved:
+      case FirewallDeviceStatus.Reverted:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+
+      case FirewallDeviceStatus.Aborted:
+      case FirewallDeviceStatus.Cancelled:
+      case FirewallDeviceStatus.None:
+      case FirewallDeviceStatus.SyncFailed:
+      case FirewallDeviceStatus.Timeout:
+      case FirewallDeviceStatus.Unknown:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case FirewallDeviceStatus.ChangedConfig:
+      case FirewallDeviceStatus.CheckedIn:
+      case FirewallDeviceStatus.Installed:
+      case FirewallDeviceStatus.Pending:
+      case FirewallDeviceStatus.Retry:
+      case FirewallDeviceStatus.Sched:
+      default:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        break;
+    }
+
+    return iconKey;
+  }
+
+  /**
+   * This will return the connection status icon key
+   * based on the firewall connection status
+   */
+  public get connectionStatusIconKey(): string {
+
+    let iconKey = '';
+
+    switch (this.connectionStatus) {
+      case FirewallConnectionStatus.Up:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+
+      case FirewallConnectionStatus.Down:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case FirewallConnectionStatus.Unknown:
+      default:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        break;
+    }
+
+    return iconKey;
+  }
+
+  /**
+   * This will return the configuration status icon key
+   * based on the firewall configuration status
+   */
+  public get configurationStatusIconKey(): string {
+
+    let iconKey = '';
+
+    switch (this.configurationStatus) {
+      case FirewallConfigurationStatus.InSync:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+
+      case FirewallConfigurationStatus.OutOfSync:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case FirewallConfigurationStatus.Unknown:
+      default:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        break;
+    }
+
+    return iconKey;
   }
 }

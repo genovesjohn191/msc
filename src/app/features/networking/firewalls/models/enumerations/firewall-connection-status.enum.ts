@@ -7,6 +7,12 @@ export enum FirewallConnectionStatus {
   Down
 }
 
+export const firewallConnectionStatusText = {
+  [FirewallConnectionStatus.Unknown]: 'Unknown',
+  [FirewallConnectionStatus.Up]: 'Up',
+  [FirewallConnectionStatus.Down]: 'Down'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

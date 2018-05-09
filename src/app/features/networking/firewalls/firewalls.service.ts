@@ -5,16 +5,12 @@ import {
   McsApiService,
   McsApiRequestParameter,
   McsApiSuccessResponse,
-  CoreDefinition,
   McsLoggerService
 } from '../../../core/';
 import { isNullOrEmpty } from '../../../utilities';
 // Models
 import {
   Firewall,
-  FirewallDeviceStatus,
-  FirewallConfigurationStatus,
-  FirewallConnectionStatus,
   FirewallPolicy
 } from './models';
 
@@ -125,105 +121,5 @@ export class FirewallsService {
         this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
-  }
-
-  /**
-   * This will return the connection status icon key
-   * based on the provided firewall connection status
-   *
-   * @param status Firewall connection status
-   */
-  public getFirewallConnectionStatusIconKey(
-    status: FirewallConnectionStatus): string {
-
-    let iconKey = '';
-
-    switch (status) {
-      case FirewallConnectionStatus.Up:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-      case FirewallConnectionStatus.Down:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-
-      case FirewallConnectionStatus.Unknown:
-      default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
-        break;
-    }
-
-    return iconKey;
-  }
-
-  /**
-   * This will return the configuration status icon key
-   * based on the provided firewall configuration status
-   *
-   * @param status Firewall configuration status
-   */
-  public getFirewallConfigurationStatusIconKey(
-    status: FirewallConfigurationStatus): string {
-
-    let iconKey = '';
-
-    switch (status) {
-      case FirewallConfigurationStatus.InSync:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-      case FirewallConfigurationStatus.OutOfSync:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-
-      case FirewallConfigurationStatus.Unknown:
-      default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
-        break;
-    }
-
-    return iconKey;
-  }
-
-  /**
-   * This will return the device status icon key
-   * based on the provided firewall device status
-   *
-   * @param status Firewall device status
-   */
-  public getFirewallDeviceStatusIconKey(
-    status: FirewallDeviceStatus): string {
-
-    let iconKey = '';
-
-    switch (status) {
-      case FirewallDeviceStatus.AutoUpdated:
-      case FirewallDeviceStatus.InProgress:
-      case FirewallDeviceStatus.Retrieved:
-      case FirewallDeviceStatus.Reverted:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-
-      case FirewallDeviceStatus.Aborted:
-      case FirewallDeviceStatus.Cancelled:
-      case FirewallDeviceStatus.None:
-      case FirewallDeviceStatus.SyncFailed:
-      case FirewallDeviceStatus.Timeout:
-      case FirewallDeviceStatus.Unknown:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-
-      case FirewallDeviceStatus.ChangedConfig:
-      case FirewallDeviceStatus.CheckedIn:
-      case FirewallDeviceStatus.Installed:
-      case FirewallDeviceStatus.Pending:
-      case FirewallDeviceStatus.Retry:
-      case FirewallDeviceStatus.Sched:
-      default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
-        break;
-    }
-
-    return iconKey;
   }
 }

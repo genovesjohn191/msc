@@ -44,21 +44,21 @@
       <mcs-list spacing="xsmall" class="grid-content-body">
         <!-- Device Status -->
         <mcs-list-item>
-          <mcs-icon size="small" [key]="deviceStatusIconKey"></mcs-icon>
+          <mcs-icon size="small" [key]="firewall.deviceStatusIconKey"></mcs-icon>
           <span>{{ textContent.status.deviceStatus }}:</span>
-          <span>{{ deviceStatus[firewall.deviceStatus] }}</span>
+          <span>{{ firewall.deviceStatusLabel }}</span>
         </mcs-list-item>
         <!-- Connection Status -->
         <mcs-list-item>
-          <mcs-icon size="small" [key]="connectionStatusIconKey"></mcs-icon>
+          <mcs-icon size="small" [key]="firewall.connectionStatusIconKey"></mcs-icon>
           <span>{{ textContent.status.connectionStatus }}:</span>
-          <span>{{ connectionStatus[firewall.connectionStatus] }}</span>
+          <span>{{ firewall.connectionStatusLabel }}</span>
         </mcs-list-item>
         <!-- Configuration Status -->
         <mcs-list-item>
-          <mcs-icon size="small" [key]="configurationStatusIconKey"></mcs-icon>
+          <mcs-icon size="small" [key]="firewall.configurationStatusIconKey"></mcs-icon>
           <span>{{ textContent.status.configurationStatus }}:</span>
-          <span>{{ configurationStatus[firewall.configurationStatus] }}</span>
+          <span>{{ firewall.configurationStatusLabel }}</span>
         </mcs-list-item>
       </mcs-list>
     </div>

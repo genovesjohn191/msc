@@ -130,7 +130,7 @@
           <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
             <div class="inline-items-small">
               <div *ngIf="!row.isProcessing">
-                <mcs-icon [key]="getStateIconKey(row.powerState)" size="small"></mcs-icon>
+                <mcs-icon [key]="row.powerStateIconKey" size="small"></mcs-icon>
               </div>
               <div *ngIf="row.isProcessing"
                 [ngStyle]="{'pointer-events': 'auto'}"

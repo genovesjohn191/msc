@@ -12,7 +12,6 @@ import {
   McsNotificationContextService,
   McsNotificationEventsService,
   McsApiJob,
-  CoreDefinition,
   McsDialogService,
   McsAuthenticationIdentity,
   McsLoggerService
@@ -25,7 +24,6 @@ import {
 import {
   Server,
   ServerClientObject,
-  ServerPowerState,
   ServerThumbnail,
   ServerCreate,
   ServerRename,
@@ -991,41 +989,6 @@ export class ServersService {
         this._loggerService.traceInfo(`converted response:`, apiResponse);
         return apiResponse;
       });
-  }
-
-  /**
-   * Return the status Icon key based on the status of the server
-   * @param state Server status
-   */
-  public getStateIconKey(state: number): string {
-    let stateIconKey: string = '';
-
-    switch (state as ServerPowerState) {
-      case ServerPowerState.Unresolved:   // Red
-      case ServerPowerState.Deployed:
-      case ServerPowerState.Unknown:
-      case ServerPowerState.Unrecognised:
-      case ServerPowerState.PoweredOff:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-
-      case ServerPowerState.Resolved:   // Amber
-      case ServerPowerState.WaitingForInput:
-      case ServerPowerState.InconsistentState:
-      case ServerPowerState.Mixed:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
-        break;
-
-      case ServerPowerState.Suspended: // Grey
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_SUSPENDED;
-        break;
-
-      case ServerPowerState.PoweredOn:  // Green
-      default:
-        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-    }
-    return stateIconKey;
   }
 
   /**

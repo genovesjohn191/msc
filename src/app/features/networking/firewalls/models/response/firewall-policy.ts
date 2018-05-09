@@ -7,6 +7,7 @@ import {
   FirewallPolicyNatSerialization
 } from '../enumerations/firewall-policy-nat.enum';
 import { JsonProperty } from 'json-object-mapper';
+import { CoreDefinition } from '../../../../../core';
 
 export class FirewallPolicy {
   public id: any;
@@ -49,5 +50,26 @@ export class FirewallPolicy {
     this.schedule = undefined;
     this.action = undefined;
     this.nat = undefined;
+  }
+
+  /**
+   * Returns firewall action icon key
+   */
+  public get actionIconKey(): string {
+    if (this.action < 0) { return ''; }
+
+    let iconKey = '';
+    switch (this.action) {
+      case FirewallPolicyAction.Disabled:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case FirewallPolicyAction.Enabled:
+      default:
+        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+    }
+
+    return iconKey;
   }
 }

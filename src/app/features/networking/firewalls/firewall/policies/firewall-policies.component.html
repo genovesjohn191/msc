@@ -14,9 +14,11 @@
         </mcs-filter-selector>
       </ng-template>
       <!-- Note: This is required for generating policies table -->
-      <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey"
-        (onGetFilters)="updateColumnSettings($event)">
-      </mcs-filter-selector>
+      <ng-container>
+        <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey"
+          (onGetFilters)="updateColumnSettings($event)">
+        </mcs-filter-selector>
+      </ng-container>
       <div class="record-count hidden-small" flex="none">
         <span>{{ recordsFoundLabel }}</span>
       </div>

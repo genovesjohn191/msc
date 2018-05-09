@@ -21,6 +21,7 @@ import {
   serverCommandActiveText
 } from '../enumerations/server-command.enum';
 import { JsonProperty } from 'json-object-mapper';
+import { CoreDefinition } from '../../../../core';
 
 export class Server {
   public id: any;
@@ -197,5 +198,39 @@ export class Server {
    */
   public get clonable(): boolean {
     return this.isOperable;
+  }
+
+  /**
+   * Return the status Icon key based on the status of the server
+   */
+  public get powerStateIconKey(): string {
+    let stateIconKey: string = '';
+
+    switch (this.powerState) {
+      case ServerPowerState.Unresolved:   // Red
+      case ServerPowerState.Deployed:
+      case ServerPowerState.Unknown:
+      case ServerPowerState.Unrecognised:
+      case ServerPowerState.PoweredOff:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
+        break;
+
+      case ServerPowerState.Resolved:   // Amber
+      case ServerPowerState.WaitingForInput:
+      case ServerPowerState.InconsistentState:
+      case ServerPowerState.Mixed:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
+        break;
+
+      case ServerPowerState.Suspended: // Grey
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_SUSPENDED;
+        break;
+
+      case ServerPowerState.PoweredOn:  // Green
+      default:
+        stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
+        break;
+    }
+    return stateIconKey;
   }
 }
