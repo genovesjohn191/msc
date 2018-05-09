@@ -6,10 +6,7 @@ import {
 } from 'rxjs/Rx';
 import {
   Firewall,
-  FirewallPolicy,
-  FirewallConnectionStatus,
-  FirewallConfigurationStatus,
-  FirewallDeviceStatus
+  FirewallPolicy
 } from '../models';
 import { McsApiSuccessResponse } from '../../../../core/';
 
@@ -71,41 +68,5 @@ export class FirewallService {
     perPage?: number,
     searchKeyword?: string): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
     return this._firewallsService.getFirewallPolicies(id, page, perPage, searchKeyword);
-  }
-
-  /**
-   * This will return the connection status icon key
-   * based on the provided firewall connection status
-   *
-   * @param status Firewall connection status
-   */
-  public getFirewallConnectionStatusIconKey(
-    status: FirewallConnectionStatus): string {
-
-    return this._firewallsService.getFirewallConnectionStatusIconKey(status);
-  }
-
-  /**
-   * This will return the configuration status icon key
-   * based on the provided firewall configuration status
-   *
-   * @param status Firewall configuration status
-   */
-  public getFirewallConfigurationStatusIconKey(
-    status: FirewallConfigurationStatus): string {
-
-    return this._firewallsService.getFirewallConfigurationStatusIconKey(status);
-  }
-
-  /**
-   * This will return the device status icon key
-   * based on the provided firewall device status
-   *
-   * @param status Firewall device status
-   */
-  public getFirewallDeviceStatusIconKey(
-    status: FirewallDeviceStatus): string {
-
-    return this._firewallsService.getFirewallDeviceStatusIconKey(status);
   }
 }

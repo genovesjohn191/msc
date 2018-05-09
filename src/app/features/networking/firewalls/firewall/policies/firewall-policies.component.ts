@@ -42,12 +42,8 @@ export class FirewallPoliciesComponent
   public firewallPoliciesTextContent: any;
   public firewallPolicyTextContent: any;
 
-  // Filter selector variables
-  public columnSettings: any;
-
   // Table variables
   public dataSource: FirewallPoliciesDataSource;
-  public dataColumns: string[];
 
   public isViewMode: boolean;
   public selectedFirewallPolicy: FirewallPolicy;
@@ -99,7 +95,6 @@ export class FirewallPoliciesComponent
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
-    this.dataColumns = new Array();
     this.isViewMode = false;
     this.selectedFirewallPolicy = new FirewallPolicy();
   }
@@ -118,24 +113,6 @@ export class FirewallPoliciesComponent
 
   public ngOnDestroy() {
     this.dispose();
-  }
-
-  /**
-   * Update the column settings based on filtered selectors
-   * and update the data column of the table together
-   * @param columns New column settings
-   */
-  public updateColumnSettings(columns: any): void {
-    if (columns) {
-      this.columnSettings = columns;
-      let columnDetails = Object.keys(this.columnSettings);
-
-      this.dataColumns = [];
-      columnDetails.forEach((column) => {
-        if (!this.columnSettings[column].value) { return; }
-        this.dataColumns.push(column);
-      });
-    }
   }
 
   /**

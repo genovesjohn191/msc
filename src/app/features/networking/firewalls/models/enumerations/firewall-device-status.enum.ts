@@ -20,6 +20,25 @@ export enum FirewallDeviceStatus {
   AutoUpdated = 14
 }
 
+export const firewallDeviceStatusText = {
+  [FirewallDeviceStatus.None]: 'None',
+  [FirewallDeviceStatus.Unknown]: 'Unknown',
+  [FirewallDeviceStatus.CheckedIn]: 'CheckedIn',
+  [FirewallDeviceStatus.InProgress]: 'InProgress',
+  [FirewallDeviceStatus.Installed]: 'Installed',
+  [FirewallDeviceStatus.Aborted]: 'Aborted',
+  [FirewallDeviceStatus.Sched]: 'Sched',
+  [FirewallDeviceStatus.Retry]: 'Retry',
+  [FirewallDeviceStatus.Cancelled]: 'Cancelled',
+  [FirewallDeviceStatus.Pending]: 'Pending',
+  [FirewallDeviceStatus.Retrieved]: 'Retrieved',
+  [FirewallDeviceStatus.ChangedConfig]: 'ChangedConfig',
+  [FirewallDeviceStatus.SyncFailed]: 'SyncFailed',
+  [FirewallDeviceStatus.Timeout]: 'Timeout',
+  [FirewallDeviceStatus.Reverted]: 'Reverted',
+  [FirewallDeviceStatus.AutoUpdated]: 'AutoUpdated'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

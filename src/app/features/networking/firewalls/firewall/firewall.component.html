@@ -19,8 +19,7 @@
                     *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
                     (click)="onFirewallSelect(firewall)">
 
-                    <mcs-icon size="small"
-                      [key]="getConnectionStatusIconKey(firewall?.connectionStatus)"></mcs-icon>
+                    <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
                     <span class="space-left-xsmall">{{ firewall.managementName }}</span>
                   </mcs-option>
                 </mcs-option-group>
@@ -31,8 +30,7 @@
                     *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
                     (click)="onFirewallSelect(firewall)">
 
-                    <mcs-icon size="small"
-                      [key]="getConnectionStatusIconKey(firewall?.connectionStatus)"></mcs-icon>
+                    <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
                     <span class="space-left-xsmall">{{ firewall.managementName }}</span>
                   </mcs-option>
                 </ng-container>

@@ -37,7 +37,7 @@
                     (click)="onServerSelect(server)">
 
                     <mcs-icon *ngIf="!server.isProcessing" size="small"
-                      [key]="getStateIconKey(server.powerState)"></mcs-icon>
+                      [key]="server.powerStateIconKey"></mcs-icon>
 
                     <mcs-icon *ngIf="server.isProcessing"
                       size="small" [key]="spinnerIconKey"

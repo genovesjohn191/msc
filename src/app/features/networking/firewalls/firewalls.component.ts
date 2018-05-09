@@ -7,14 +7,10 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FirewallsService } from './firewalls.service';
 import { FirewallsRepository } from './firewalls.repository';
 import { FirewallsDataSource } from './firewalls.datasource';
 /** Models */
-import {
-  Firewall,
-  FirewallConnectionStatus
-} from './models';
+import { Firewall } from './models';
 /** Core */
 import {
   McsTextContentProvider,
@@ -69,7 +65,6 @@ export class FirewallsComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _firewallsService: FirewallsService,
     private _firewallsRepository: FirewallsRepository,
     private _router: Router
   ) {
@@ -88,10 +83,6 @@ export class FirewallsComponent
 
   public ngOnDestroy() {
     this.dispose();
-  }
-
-  public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
-    return this._firewallsService.getFirewallConnectionStatusIconKey(status);
   }
 
   /**

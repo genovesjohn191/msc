@@ -60,12 +60,4 @@ describe('FirewallOverviewComponent', () => {
       expect(mockFirewallService.selectedFirewallStream.subscribe).toHaveBeenCalled();
     });
   });
-
-  describe('ngOnDestroy()', () => {
-    it('should unsubscribe from stream subscription', () => {
-      spyOn(component.subscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.subscription.unsubscribe).toHaveBeenCalled();
-    });
-  });
 });

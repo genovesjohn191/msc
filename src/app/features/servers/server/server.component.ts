@@ -205,14 +205,6 @@ export class ServerComponent
   }
 
   /**
-   * Return the status Icon key based on the status of the server
-   * @param state Server status
-   */
-  public getStateIconKey(state: number): string {
-    return this._serversService.getStateIconKey(state);
-  }
-
-  /**
    * Navigate to resources
    * @param server Server to navigate from
    */

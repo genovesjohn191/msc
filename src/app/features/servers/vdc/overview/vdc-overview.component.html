@@ -6,7 +6,7 @@
         <!-- Service Type -->
         <mcs-list-item>
           {{ textContent.vdcProperties.serviceType }}:
-          {{ enumDefinition.serverServiceType[vdc.serviceType] }}
+          {{ vdcServiceType }}
         </mcs-list-item>
         <!-- Zone -->
         <mcs-list-item>
@@ -26,9 +26,9 @@
     <div class="grid-column container-wrapper break-on-small">
       <h4 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h4>
       <mcs-list>
-        <mcs-list-item>
+        <mcs-list-item *ngIf="hasResourceAccess">
           <button mcsButton id="ctaVdcNewServer"
-            (click)="createNewServer(vdc.serviceType)">
+            (click)="createNewServer()">
             {{ textContent.vcloud.newServer }}
           </button>
         </mcs-list-item>
@@ -64,12 +64,12 @@
     <div class="grid-column container-wrapper break-on-small">
       <h4 class="horizontal-items-spacing-small container-header"
         display-flex="row" align-items="center">
-        <mcs-icon *ngIf="hasLowCapacityStorage" [key]="warningIconKey"></mcs-icon>
+        <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
         <span>{{ textContent.storageProfiles.title }}</span>
       </h4>
 
       <div class="vertical-items-spacing-medium">
-        <span *ngIf="hasLowCapacityStorage">{{ displayStorageSummary() }}</span>
+        <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
         <mcs-accordion [multi]="true">
           <mcs-accordion-panel *ngFor="let storage of vdc.storage; let i = index"
             [expanded]="i === 0">
@@ -78,17 +78,22 @@
               <h4>{{ storage.name }}</h4>
             </mcs-accordion-panel-header>
 
-            <div class="vertical-items-spacing-small" display-flex="column">
-              <span>
-                <b>{{ textContent.storageProfiles.status }}:</b> {{ getStorageStatus(storage.enabled) }}
-              </span>
-              <span class="horizontal-items-spacing-xsmall" display-flex="row" align-items="center">
-                <b flex="none">{{ textContent.storageProfiles.utilisation }}:</b>
-                <mcs-capacity-bar [(ngModel)]="storage.usedMB"
-                  [max]="storage.limitMB" flex="auto"></mcs-capacity-bar>
-              </span>
-              <span class="right-align">{{ getCurrentStorageValues(storage.usedMB, storage.limitMB) }}</span>
-            </div>
+            <mcs-list>
+              <mcs-list-item>
+                <strong>{{ textContent.storageProfiles.status }}:</strong>
+                <span>{{ getStorageStatus(storage) }}</span>
+              </mcs-list-item>
+              <mcs-list-item>
+                <div class="inline-items-xsmall">
+                  <strong>{{ textContent.storageProfiles.utilisation }}:</strong>
+                  <mcs-capacity-bar [(ngModel)]="storage.usedMB"
+                    [max]="storage.limitMB" flex="auto"></mcs-capacity-bar>
+                </div>
+              </mcs-list-item>
+              <mcs-list-item class="right-align">
+                <span>{{ getCurrentStorageValues(storage.usedMB, storage.limitMB) }}</span>
+              </mcs-list-item>
+            </mcs-list>
 
             <div *ngIf="isStorageProfileLow(storage)"
               class="horizontal-items-spacing-small vspace-small"

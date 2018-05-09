@@ -68,3 +68,4 @@ export * from './enumerations/server-catalog-item-type.enum';
 export * from './enumerations/server-ip-allocation-mode.enum';
 export * from './enumerations/server-running-status.enum';
 export * from './enumerations/server-version-status.enum';
+export * from './enumerations/server-storage-status.enum';

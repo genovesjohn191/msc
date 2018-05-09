@@ -45,8 +45,6 @@ import { ServersRepository } from '../servers.repository';
 import { ServersResourcesRepository } from '../servers-resources.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
-import { ServersService } from '../servers.service';
-
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview';
 
@@ -95,7 +93,6 @@ export class VdcComponent
     _activatedRoute: ActivatedRoute,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _serversService: ServersService,
     private _serversRepository: ServersRepository,
     private _serversResourceRepository: ServersResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService,
@@ -146,13 +143,6 @@ export class VdcComponent
    */
   public serverDeleting(server: Server): boolean {
     return server.commandAction === ServerCommand.Delete && server.isProcessing;
-  }
-  /**
-   * Return the status Icon key based on the status of the server
-   * @param state Server status
-   */
-  public getStateIconKey(state: number): string {
-    return this._serversService.getStateIconKey(state);
   }
 
   /**

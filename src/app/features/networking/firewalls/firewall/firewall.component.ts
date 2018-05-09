@@ -33,10 +33,7 @@ import {
   refreshView,
   unsubscribeSafely
 } from '../../../../utilities';
-import {
-  Firewall,
-  FirewallConnectionStatus
-} from '../models';
+import { Firewall } from '../models';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
 import { FirewallsRepository } from '../firewalls.repository';
@@ -131,10 +128,6 @@ export class FirewallComponent
     if (isNullOrEmpty(firewall)) { return; }
     this._setSelectedFirewallInfo(firewall);
     this.router.navigate(['/networking/firewalls', firewall.id]);
-  }
-
-  public getConnectionStatusIconKey(status: FirewallConnectionStatus): string {
-    return this._firewallService.getFirewallConnectionStatusIconKey(status);
   }
 
   /**

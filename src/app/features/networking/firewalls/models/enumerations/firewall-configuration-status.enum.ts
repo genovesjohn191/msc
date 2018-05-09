@@ -7,6 +7,12 @@ export enum FirewallConfigurationStatus {
   OutOfSync
 }
 
+export const firewallConfigurationStatusText = {
+  [FirewallConfigurationStatus.Unknown]: 'Unknown',
+  [FirewallConfigurationStatus.InSync]: 'InSync',
+  [FirewallConfigurationStatus.OutOfSync]: 'OutOfSync'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

@@ -61,19 +61,11 @@ export abstract class McsTableListingBase<T> {
   }
 
   /**
-   * This will initialize the datasource from the derived class
-   *
-   * `@Note` This should be called inside AfterViewInit to make sure the
-   * element was completely rendered in the DOM
-   */
-  protected abstract initializeDatasource(): void;
-
-  /**
    * Update the column settings based on filtered selectors
    * and update the data column of the table together
    * @param columns New column settings
    */
-  protected updateColumnSettings(columns: any): void {
+  public updateColumnSettings(columns: any): void {
     if (columns) {
       this.columnSettings = columns;
       let columnDetails = Object.keys(this.columnSettings);
@@ -85,6 +77,14 @@ export abstract class McsTableListingBase<T> {
       });
     }
   }
+
+  /**
+   * This will initialize the datasource from the derived class
+   *
+   * `@Note` This should be called inside AfterViewInit to make sure the
+   * element was completely rendered in the DOM
+   */
+  protected abstract initializeDatasource(): void;
 
   /**
    * Retry the obtainment from the datasource when an error occured
