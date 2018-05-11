@@ -10,6 +10,7 @@
     "errorMessage": "Console connection error."
   },
   "navigation": {
+    "title": "Macquarie Cloud Services Portal",
     "home": "Home",
     "about": "About",
     "dashboard": "Dashboard",
@@ -22,7 +23,9 @@
     "signOut": "Sign Out",
     "macquarieView": "Macquarie View",
     "productCatalog": "Products",
-    "title": "Macquarie Cloud Services Portal"
+    "loadingProducts": "Loading products.",
+    "noProducts": "No products to display.",
+    "errorProducts": "Sorry, something’s not right. We weren’t able to retrieve the list of products."
   },
   "dashboard": {
     "title": "Macquarie Cloud Services: Dashboard",
