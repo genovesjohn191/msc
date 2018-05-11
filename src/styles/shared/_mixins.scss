@@ -1,4 +1,11 @@
 // Responsive Breakpoints
+// Usage:
+// .page-wrap {
+//   width: 75%;
+//   @include breakpoint(large) { width: 60%; }
+//   @include breakpoint(medium) { width: 80%; }
+//   @include breakpoint(small) { width: 95%; }
+// }
 @mixin breakpoint($point) {
   @if $point == large {
     @media screen and (min-width: $desktop-min-width) { @content; }
@@ -14,16 +21,11 @@
   }
 }
 
-// Usage
-
-// .page-wrap {
-//   width: 75%;
-//   @include breakpoint(large) { width: 60%; }
-//   @include breakpoint(medium) { width: 80%; }
-//   @include breakpoint(small) { width: 95%; }
-// }
-
 // Clearfix
+// Usage:
+// .article {
+//     @include clearfix();
+// }
 @mixin clearfix() {
   &:before,
   &:after {
@@ -35,13 +37,12 @@
   }
 }
 
-// Usage
-
-// .article {
-//     @include clearfix();
-// }
-
 // Retina Images
+// Usage:
+// div.logo {
+//   background: url("logo.png") no-repeat;
+//   @include image-2x("logo2x.png", 100px, 25px);
+// }
 @mixin image-2x($image, $width, $height) {
   @media (min--moz-device-pixel-ratio: 1.3),
          (-o-min-device-pixel-ratio: 2.6/2),
@@ -53,14 +54,11 @@
   }
 }
 
-// Usage
-
-// div.logo {
-//   background: url("logo.png") no-repeat;
-//   @include image-2x("logo2x.png", 100px, 25px);
-// }
-
 // Font Size Setter
+// Usage:
+// div {
+//   @include font-size(10, 10);
+// }
 @mixin font-size($sizeValue: 16, $lineHeightValue: $sizeValue * 1.5) {
   font-size: $sizeValue + px;
   line-height: $lineHeightValue + px;
@@ -68,36 +66,24 @@
   line-height: ($lineHeightValue / 16) + rem;
 }
 
-// Usage
-// This mixin generates the font-size and line-height in px and rem.
-// Parameter needs to be passed in px equivalent without unit suffix.
-
-// // Using a variable (Requires the get-value function)
-// body {
-//   @include font-size(get-value($default-font-size));
-// }
-
-// // Using a static value
-// body {
-//   @include font-size(12);
-// }
-
 // Box Sizing
+// Usage:
+// *,
+// *:after,
+// *:before {
+//   @include box-sizing(border-box);
+// }
 @mixin box-sizing($box-model) {
   -webkit-box-sizing: $box-model;
      -moz-box-sizing: $box-model;
           box-sizing: $box-model;
 }
 
-// Usage
-
-// *,
-// *:after,
-// *:before {
-//   @include box-sizing(border-box);
-// }
-
 // Border Radius
+// Usage:
+// .button {
+//   @include border-radius(5px);
+// }
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
@@ -139,54 +125,46 @@
                     background-clip: padding-box;
 }
 
-// Usage
-
-// .button {
-//   @include border-radius(5px);
-// }
-
 // Opacity
+// Usage:
+// .article-heading {
+//   @include opacity(0.8);
+// }
 @mixin opacity($opacity) {
   $opacity-ie: $opacity * 100;
       opacity: $opacity;
        filter: alpha(opacity=$opacity-ie); //IE8
 }
 
-// Usage
-
-// .article-heading {
-//   @include opacity(0.8);
-// }
-
 // Center-align a block element
+// Note: width must be specified for this to work.
+// Usage:
+// .footer-wrap {
+//   width: 450px;
+//   @include center-block;
+// }
 @mixin center-block {
   margin-right: auto;
    margin-left: auto;
        display: block;
 }
 
-// Usage
-// Note: width must be specified for this to work.
-
-// .footer-wrap {
-//   width: 450px;
-//   @include center-block;
-// }
-
 // Text Overflow
+// Usage:
+// .text-truncate {
+//   @include text-truncate;
+// }
 @mixin text-truncate {
   text-overflow: ellipsis;
     white-space: nowrap;
        overflow: hidden;
 }
 
-// Usage
-
-// .text-truncate {
-//   @include text-truncate;
-// }
-
 // Rotate
+// Usage:
+// .label {
+//   @include rotate(7);
+// }
 @mixin rotate($value) {
   -webkit-transform: rotate($value + deg);
      -moz-transform: rotate($value + deg);
@@ -194,14 +172,11 @@
           transform: rotate($value + deg);
 }
 
-// Usage
-
-// .label {
-//   @include rotate(7);
-// }
-
-
 // Translate
+// Usage:
+// .div {
+//   @include translate(15px, 30px);
+// }
 @mixin translate($xValue, $yValue) {
   -webkit-transform: translate($xValue, $yValue);
      -moz-transform: translate($xValue, $yValue);
@@ -209,13 +184,11 @@
           transform: translate($xValue, $yValue);
 }
 
-// Usage
-
-// .div {
-//   @include translate(15px, 30px);
-// }
-
 // Translate Rotate
+// Usage:
+// .div {
+//   @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
+// }
 @mixin transform($value) {
   -webkit-transform: $value;
      -moz-transform: $value;
@@ -223,13 +196,11 @@
           transform: $value;
 }
 
-// Usage
-
-// .div {
-//   @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
-// }
-
 // Box Shadow
+// Usage:
+// .contact-wrapper {
+//   @include box-shadow(10px 10px 5px #888888);
+// }
 @mixin box-shadow ($value) {
   -webkit-box-shadow: $value;
      -moz-box-shadow: $value;
@@ -237,13 +208,11 @@
           box-shadow: $value;
 }
 
-// Usage
-
-// .contact-wrapper {
-//   @include box-shadow(10px 10px 5px #888888);
-// }
-
 // Set Placeholder Color
+// Usage:
+// .mcs-textbox {
+//   @include set-placeholder-color($black);
+// }
 @mixin set-placeholder-color ($value) {
   &::-webkit-input-placeholder {
     color: $value;
@@ -259,13 +228,11 @@
   }
 }
 
-// Usage
-
-// .mcs-textbox {
-//   @include set-placeholder-color($black);
-// }
-
 // Set display flex with direction
+// Usage:
+// .mcs-container {
+//   @include display-flex(row);
+// }
 @mixin display-flex ($direction) {
   display: -webkit-box;
   display: -moz-box;
@@ -277,13 +244,11 @@
   flex-direction: $direction;
 }
 
-// Usage
-
-// .mcs-container {
-//   @include display-flex(row);
-// }
-
 // Set display inline-flex with direction
+// Usage:
+// .mcs-container {
+//   @include display-inline-flex(row);
+// }
 @mixin display-inline-flex ($direction) {
   display: -webkit-inline-box;
   display: -moz-inline-box;
@@ -294,13 +259,11 @@
   flex-direction: $direction;
 }
 
-// Usage
-
-// .mcs-container {
-//   @include display-inline-flex(row);
-// }
-
 // Flex item
+// Usage:
+// .mcs-flex-item {
+//   @include flex(1 1 auto);
+// }
 @mixin flex ($values) {
   -webkit-box-flex: $values;
   -moz-box-flex:  $values;
@@ -309,13 +272,11 @@
   flex:  $values;
 }
 
-// Usage
-
-// .mcs-flex-item {
-//   @include flex(1 1 auto);
-// }
-
 // Flex item order
+// Usage:
+// .mcs-flex-item {
+//   @include flex-order(1);
+// }
 @mixin flex-order ($value) {
   -webkit-box-ordinal-group: $value;
   -moz-box-ordinal-group: $value;
@@ -324,37 +285,31 @@
   order: $value;
 }
 
-// Usage
-
-// .mcs-flex-item {
-//   @include flex-order(1);
-// }
-
 // Flex wrap
+// Usage:
+// .mcs-flex-item {
+//   @include flex-wrap(nowrap);
+// }
 @mixin flex-wrap ($wrap) {
   -ms-flex-wrap: $wrap;
   flex-wrap: $wrap;
 }
 
-// Usage
-
-// .mcs-flex-item {
-//   @include flex-wrap(nowrap);
-// }
-
 // Flex Align-items
+// Usage:
+// .mcs-flex-item {
+//   @include align-items(center);
+// }
 @mixin align-items ($value) {
   -webkit-align-items: $value;
   align-items: $value;
 }
 
-// Usage
-
-// .mcs-flex-item {
-//   @include align-items(center);
-// }
-
 // Textbox Highlight
+// Usage:
+// .mcs-textbox {
+//   @include textbox-highlight(none);
+// }
 @mixin textbox-highlight($value) {
   -webkit-touch-callout: $value;
   -webkit-user-select: $value;
@@ -364,66 +319,77 @@
   user-select: $value;
 }
 
-// Usage
-
-// .mcs-textbox {
-//   @include textbox-highlight(none);
-// }
-
 // Set interval to all child(items) vertical or horizontal
-@mixin set-items-interval($value, $orientation: vertical) {
-  @if $orientation == vertical {
-    > * {
-      margin-top: $value;
-      &:first-child {
-        margin-top: 0px;
-      }
-    }
-  } @else {
-    > * {
-      margin-left: $value;
-      &:first-child {
-        margin-left: 0px;
-      }
-    }
-  }
-}
-
-// Usage
-
+// Usage:
 // .mcs-textbox {
 //   @include set-items-interval(20);
 // }
-
-@mixin set-items-divider($color: default, $orientation: vertical) {
-  @if $color == default {
-    $color: $color-grey-01;
-  }
-
+@mixin set-items-interval($value, $orientation: vertical) {
   @if $orientation == vertical {
     > * {
-      border-top: 1px solid $color;
-      &:first-child {
-        border-top: 1px solid transparent;
+      &:not(:first-child) {
+        margin-top: $value;
       }
     }
   } @else {
     > * {
-      border-left: 1px solid $color;
-      &:first-child {
-        border-left: 1px solid transparent;
+      &:not(:first-child) {
+        margin-left: $value;
       }
     }
   }
 }
 
-// Usage
+// Set padding on every children
+// Usage:
+// .mcs-textbox {
+//   @include set-items-padding(20px);
+// }
+@mixin set-items-padding($value, $orientation: vertical) {
+  @if $orientation == vertical {
+    > * {
+      &:not(:first-child) {
+        padding-top: $value;
+      }
+    }
+  } @else {
+    > * {
+      &:not(:first-child) {
+        padding-left: $value;
+      }
+    }
+  }
+}
 
+// Set items divider
+// Usage:
 // .mcs-textbox {
 //   @include set-items-divider(default, vertical);
 // }
+@mixin set-items-divider($color: default, $orientation: vertical) {
+  $actual-color: if($color == default, $divider-light-color, $color);
+  $actual-border-style: 1px solid $actual-color;
+
+  @if $orientation == vertical {
+    > * {
+      &:not(:first-child) {
+        border-top: $actual-border-style;
+      }
+    }
+  } @else {
+    > * {
+      &:not(:first-child) {
+        border-left: $actual-border-style;
+      }
+    }
+  }
+}
 
 // Transition
+// Usage:
+// .mcs-textbox {
+//   @include transition(.4s linear);
+// }
 @mixin transition($transition...) {
   @if length($transition) == 0 {
     -webkit-transition: $transition-base;
@@ -440,13 +406,11 @@
   }
 }
 
-// Usage
-
-// .mcs-textbox {
-//   @include transition(.4s linear);
-// }
-
 // Animation
+// Usage:
+// .mcs-textbox {
+//   @include animation(Name .4s linear);
+// }
 @mixin animation($animation) {
   -webkit-animation: $animation;
   -moz-animation: $animation;
@@ -455,59 +419,78 @@
   animation: $animation;
 }
 
-// Usage
-
-// .mcs-textbox {
-//   @include animation(Name .4s linear);
-// }
-
-
 // Set background-opacrity
+// Usage:
+// .mcs-alert {
+//   @include background-opacity(#000, 0.5);
+// }
 @mixin background-opacity($color, $opacity) {
   background: rgba($color, $opacity);
 }
 
-// Usage
-
-// .mcs-alert {
-//   @include background-opacity(#000, 0.5);
-// }
-
 // Set column-count
+// Usage:
+// .mcs-alert {
+//   @include column-count(3);
+// }
 @mixin column-count($value) {
   -webkit-column-count: $value;
   -moz-column-count: $value;
   column-count: $value;
 }
 
-// Usage
-
-// .mcs-alert {
-//   @include column-count(3);
-// }
-
 // Set cursor to grab hand
+// Usage:
+// .mcs-slider {
+//   @include cursor-grab;
+// }
 @mixin cursor-grab {
   cursor: -webkit-grab;
   cursor: -moz-grab;
   cursor: grab;
 }
 
-// Usage
-
-// .mcs-slider {
-//   @include cursor-grab;
-// }
-
 // Set cursor to grabbing hand
+// Usage:
+// .mcs-slider {
+//   @include cursor-grabbing;
+// }
 @mixin cursor-grabbing {
   cursor: -webkit-grabbing;
   cursor: -moz-grabbing;
   cursor: grabbing;
 }
 
-// Usage
-
+// Sets the items inline with each other
+// Usage:
 // .mcs-slider {
-//   @include cursor-grabbing;
+//   @include inline-items(10px, pink);
 // }
+@mixin inline-items($interval, $item-border-color) {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  @include align-items(center);
+  @include set-items-interval($interval, horizontal);
+
+  &.bordered {
+    @include set-items-interval($interval * 0.5, horizontal);
+    @include set-items-padding($interval * 0.5, horizontal);
+    @include set-items-divider($divider-light-color, horizontal);
+  }
+}
+
+// Sets the items block with each other
+// Usage:
+// .mcs-slider {
+//   @include block-items(10px, pink);
+// }
+@mixin block-items($interval, $item-border-color) {
+  @include display-flex(column);
+  @include set-items-interval($interval, vertical);
+
+  &.bordered {
+    @include set-items-interval($interval * 0.5, vertical);
+    @include set-items-padding($interval * 0.5, vertical);
+    @include set-items-divider($divider-light-color, vertical);
+  }
+}

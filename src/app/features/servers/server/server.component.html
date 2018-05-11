@@ -26,13 +26,14 @@
         <mcs-data-status [dataStatusFactory]="listStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
 
-            <mcs-list-panel [initialSelected]="selectedServer">
+            <mcs-list-panel>
               <ng-container *ngFor="let iterator of (serversMap | mcsMapIterable) |
                 mcsSortArray: serverListSource?.serversGroupSortMethod">
 
                 <mcs-option-group [label]="iterator.key">
                   <mcs-option *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)"
                     [value]="server"
+                    [selected]="selectedServer === server"
                     [disabled]="serverDeleting(server)"
                     (click)="onServerSelect(server)">
 

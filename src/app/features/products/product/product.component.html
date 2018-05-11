@@ -1,25 +1,19 @@
-<!-- Loader settings -->
-<div [mcsLoader]="dataStatusFactory?.statusSubscription"
-  [mcsLoaderHideElement]="productContent"
-  [mcsLoaderText]="textContent.loading"
-  mcsLoaderOrientation="top"></div>
-
 <div #productContent class="grid-row">
   <!-- Content Panel -->
   <div class="grid-column limited-view">
-    <div *ngIf="product?.description" class="container-wrapper">
+    <div *ngIf="selectedProduct?.description" class="container-wrapper">
       <h4 class="container-header">Product Description</h4>
-      <p>{{ product.description }}</p>
+      <p>{{ selectedProduct.description }}</p>
     </div>
 
-    <div *ngIf="product?.useCases" class="container-wrapper">
+    <div *ngIf="selectedProduct?.useCases" class="container-wrapper">
       <h4 class="container-header">Use Cases</h4>
-      <div [innerHTML]="product.useCases"></div>
+      <div [innerHTML]="selectedProduct.useCases"></div>
     </div>
 
-    <div *ngIf="product?.pciCompliance" class="container-wrapper">
+    <div *ngIf="selectedProduct?.pciCompliance" class="container-wrapper">
       <h4 class="container-header">PCI Compliance</h4>
-      <p>{{ product.pciCompliance }}</p>
+      <p>{{ selectedProduct.pciCompliance }}</p>
     </div>
   </div>
 
@@ -41,8 +35,8 @@
 
       <div class="divider"></div>
 
-      <mcs-list header="Dependencies" *ngIf="product?.dependencies">
-        <mcs-list-item *ngFor="let dependency of product.dependencies" class="space-left-small">
+      <mcs-list header="Dependencies" *ngIf="selectedProduct?.dependencies">
+        <mcs-list-item *ngFor="let dependency of selectedProduct.dependencies" class="space-left-small">
           <a (click)="onClickDependency(dependency)">{{ dependency.name }}</a>
         </mcs-list-item>
       </mcs-list>
@@ -63,8 +57,8 @@
 
       <div class="divider"></div>
 
-      <mcs-list header="Downloads" *ngIf="product?.downloads">
-        <mcs-list-item *ngFor="let download of product.downloads" class="space-left-small">
+      <mcs-list header="Downloads" *ngIf="selectedProduct?.downloads">
+        <mcs-list-item *ngFor="let download of selectedProduct.downloads" class="space-left-small">
           <mcs-file-download [file]="getFileInfo(download)"></mcs-file-download>
         </mcs-list-item>
       </mcs-list>

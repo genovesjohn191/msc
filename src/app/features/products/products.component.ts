@@ -15,11 +15,13 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  switchMap
 } from 'rxjs/operators';
 import {
   Router,
-  ActivatedRoute
+  ActivatedRoute,
+  ParamMap
 } from '@angular/router';
 import {
   McsTextContentProvider,
@@ -38,6 +40,8 @@ import {
 } from './models';
 import { ProductCatalogRepository } from './product-catalog.repository';
 import { ProductCatalogListSource } from './products.listsource';
+import { ProductsRepository } from './products.repository';
+import { ProductService } from './product/product.service';
 
 @Component({
   selector: 'mcs-products',
@@ -47,18 +51,17 @@ import { ProductCatalogListSource } from './products.listsource';
 
 export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  public textContent: any;
-
   @ViewChild('search')
   public search: McsSearch;
+  public textContent: any;
 
-  public listStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
   public catalogs: ProductCatalog[];
   public catalogListSource: ProductCatalogListSource | null;
   public catalogSubscription: Subscription;
   public selectedProduct: Product;
-  public selectedProductId: string;
 
+  public listStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
+  public productStatusFactory: McsDataStatusFactory<Product>;
   private _destroySubject = new Subject<void>();
 
   constructor(
@@ -67,14 +70,17 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
+    private _productService: ProductService,
+    private _productsRepository: ProductsRepository,
     private _productCatalogRepository: ProductCatalogRepository
   ) {
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this.productStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.products;
-    this._listenToParamChange();
+    this._getProductById();
   }
 
   public ngAfterViewInit() {
@@ -135,19 +141,28 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Listens to each parameter changed
+   * Listens to every params changed and get the product by id
    */
-  private _listenToParamChange(): void {
+  private _getProductById(): void {
     this._activatedRoute.paramMap.pipe(
       takeUntil(this._destroySubject),
       catchError((error) => {
         // Handle common error status code
+        this.productStatusFactory.setError();
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
+      }),
+      switchMap((params: ParamMap) => {
+        this.productStatusFactory.setInProgress();
+        let productId = params.get('id');
+        this.selectedProduct = { id: productId } as Product;
+        return this._productsRepository.findRecordById(productId);
       })
     )
-      .subscribe((params) => {
-        this.selectedProductId = params.get('id');
+      .subscribe((response) => {
+        this.selectedProduct = response;
+        this._productService.selectProduct(response);
+        this.productStatusFactory.setSuccesfull(response);
       });
   }
 }

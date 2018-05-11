@@ -9,14 +9,15 @@
         <mcs-data-status [dataStatusFactory]="listStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
 
-            <mcs-list-panel [initialSelected]="selectedFirewall">
+            <mcs-list-panel>
               <ng-container *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
                 mcsSortArray: firewallsListSource?.firewallGroupSortMethod">
 
                 <!-- With ha group -->
                 <mcs-option-group [label]="iterator.key" *ngIf="iterator.key">
-                  <mcs-option [value]="firewall"
-                    *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
+                  <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
+                    [value]="firewall"
+                    [selected]="selectedFirewall === firewall"
                     (click)="onFirewallSelect(firewall)">
 
                     <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>

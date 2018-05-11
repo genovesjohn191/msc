@@ -53,7 +53,15 @@ export class OptionComponent {
    */
   @Input()
   public get selected(): boolean { return this._selected; }
-  public set selected(value: boolean) { this._selected = coerceBoolean(value); }
+  public set selected(value: boolean) {
+    this._selected = coerceBoolean(value);
+
+    // We need to check if the option selected state is true
+    // to mitigate the problem of collapsing other group panel
+    // because the click event will notify the subscribers
+    // and we don't want to emit the selection stream twice
+    if (value) { this.selectionChange.emit(this); }
+  }
   private _selected: boolean;
 
   /**

@@ -131,7 +131,7 @@ $navigation-mobile-macquarie-item-font: $circular-pro-bold;
     .switch-account-panel {
       overflow: hidden;
       @include display-flex(column);
-      @include set-items-divider();
+      @include set-items-divider($divider-light-color);
 
       .account-details,
       .switch-account-details {

@@ -5,25 +5,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
+import { Router } from '@angular/router';
 import {
-  Router,
-  ActivatedRoute,
-  ParamMap
-} from '@angular/router';
-import {
-  Observable,
   Subscription,
   Subject
 } from 'rxjs';
-import {
-  switchMap,
-  takeUntil,
-  catchError
-} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  McsDataStatusFactory,
-  McsErrorHandlerService,
   McsFileInfo
 } from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
@@ -32,7 +21,7 @@ import {
   ProductDownload,
   ProductDependency
 } from '../models';
-import { ProductsRepository } from '../products.repository';
+import { ProductService } from './product.service';
 
 @Component({
   selector: 'mcs-product',
@@ -44,24 +33,25 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   public textContent: any;
   public productSubscription: Subscription;
-  public dataStatusFactory: McsDataStatusFactory<Product>;
-  public product: Product;
   private _destroySubject = new Subject<void>();
+
+  /**
+   * Returns the selected product from the list panel
+   */
+  public get selectedProduct(): Product {
+    return this._productService.selectedProduct;
+  }
 
   constructor(
     private _router: Router,
-    private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _errorHandlerService: McsErrorHandlerService,
-    private _productsRepository: ProductsRepository
-  ) {
-    this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-  }
+    private _productService: ProductService
+  ) { }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.products.product;
-    this._getProductById();
+    this._listenToSelectedProduct();
   }
 
   public ngOnDestroy() {
@@ -69,6 +59,10 @@ export class ProductComponent implements OnInit, OnDestroy {
     this._destroySubject.complete();
   }
 
+  /**
+   * Returns the configuration file for download component
+   * @param download Product download details
+   */
   public getFileInfo(download: ProductDownload): McsFileInfo {
     if (isNullOrEmpty(download)) { return undefined; }
     return {
@@ -81,32 +75,20 @@ export class ProductComponent implements OnInit, OnDestroy {
     } as McsFileInfo;
   }
 
+  /**
+   * Event that emits when dependency is clicked
+   */
   public onClickDependency(dependency: ProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
     this._router.navigate(['/products/', dependency.id]);
   }
 
   /**
-   * Get Product based on the given ID in the provided parameter
+   * Listens to every product selection and refresh the dom
    */
-  private _getProductById(): void {
-    this._activatedRoute.paramMap.pipe(
-      takeUntil(this._destroySubject),
-      catchError((error) => {
-        // Handle common error status code
-        this.dataStatusFactory.setError();
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      }),
-      switchMap((params: ParamMap) => {
-        this.dataStatusFactory.setInProgress();
-        let productId = params.get('id');
-        return this._productsRepository.findRecordById(productId);
-      })
-    )
-      .subscribe((response) => {
-        this.product = response;
-        this.dataStatusFactory.setSuccesfull(response);
-      });
+  private _listenToSelectedProduct(): void {
+    this._productService.productSelectionChange
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }

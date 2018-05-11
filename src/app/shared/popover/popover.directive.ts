@@ -65,6 +65,9 @@ export class PopoverDirective implements OnInit, OnDestroy {
   public trigger: 'manual' | 'hover';
 
   @Input()
+  public placementElement: HTMLElement | ElementRef;
+
+  @Input()
   public placement: 'top' | 'bottom' | 'center' | 'left' | 'right';
 
   @Input()
@@ -270,8 +273,11 @@ export class PopoverDirective implements OnInit, OnDestroy {
   }
 
   public setPopoverPlacement(placement: string) {
+    let targetPlacementElement = isNullOrEmpty(this.placementElement) ?
+      this._elementRef.nativeElement : this.placementElement;
+
     let targetElementPosition = getElementPositionFromHost(
-      this._elementRef.nativeElement,
+      targetPlacementElement,
       this.componentRef.location.nativeElement,
       placement, true);
 
@@ -354,7 +360,9 @@ export class PopoverDirective implements OnInit, OnDestroy {
     // Calculate the actual size of the popover including the offset of the host element
     let popoverHeight = this.componentRef.instance.contentElement.nativeElement.offsetHeight;
     let popoverWidth = this.componentRef.instance.contentElement.nativeElement.offsetWidth;
-    let hostOffset = getElementOffset(this._elementRef.nativeElement);
+    let targetPlacementElement = isNullOrEmpty(this.placementElement) ?
+      this._elementRef.nativeElement : this.placementElement;
+    let hostOffset = getElementOffset(targetPlacementElement);
 
     // Set popover actual position based on the screen size
     switch (this.placement) {

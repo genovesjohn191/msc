@@ -4,20 +4,38 @@
   @include flex(0 0 auto);
   @include display-flex(column);
 
-    &.xsmall {
-      @include set-items-interval($space-xsmall);
-    }
+  &.xsmall {
+    @include set-items-interval($space-xsmall);
+  }
 
-    &.small {
-      @include set-items-interval($space-small);
-    }
+  &.small {
+    @include set-items-interval($space-small);
+  }
 
-    &.medium {
-      @include set-items-interval($space-medium);
-    }
+  &.medium {
+    @include set-items-interval($space-medium);
+  }
 
   .list-item-wrapper {
     @include flex(0 0 auto);
     display: block;
+  }
+
+  &.items-offset-small {
+    .list-item-wrapper {
+      margin-left: $space-small;
+    }
+  }
+
+  &.items-offset-medium {
+    .list-item-wrapper {
+      margin-left: $space-medium;
+    }
+  }
+
+  &.items-offset-large {
+    .list-item-wrapper {
+      margin-left: $space-large;
+    }
   }
 }

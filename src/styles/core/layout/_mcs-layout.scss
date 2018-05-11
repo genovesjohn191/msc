@@ -116,7 +116,7 @@
 
 // Status
 .read-only {
-  color: $color-grey-02;
+  color: $readonly-color;
 }
 
 .disabled-element {
@@ -218,6 +218,6 @@
 
 // Divider
 .divider {
-  border-bottom: 1px solid $color-grey-04;
+  border-bottom: 1px solid $divider-light-color;
   margin: $space-medium 0;
 }
