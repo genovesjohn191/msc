@@ -56,15 +56,6 @@ export class NavigationDesktopComponent implements OnInit {
   }
 
   /**
-   * Navigate to product catalog
-   * @param product Product to be navigated
-   */
-  public gotoProduct(_product: Product) {
-    if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate(['/products/', _product.id]);
-  }
-
-  /**
    * Returns the macquarie view url
    */
   public get macquarieViewUrl(): string {
@@ -76,6 +67,15 @@ export class NavigationDesktopComponent implements OnInit {
    */
   public get productCatalogFeatureIsOn(): boolean {
     return this._accessControlService.hasAccessToFeature('enableProductCatalog');
+  }
+
+  /**
+   * Navigate to product catalog
+   * @param product Product to be navigated
+   */
+  public gotoProduct(_product: Product) {
+    if (isNullOrEmpty(_product)) { return; }
+    this._router.navigate(['/products/', _product.id]);
   }
 
   /**

@@ -1,5 +1,9 @@
 @import "../../../../styles/shared/base";
 
+// Product Mega menu
+$product-megamenu-mobile-height: 70vh;
+$product-megamenu-mobile-width: 75vw;
+// Navigation
 $navigation-link-mobile-padding: $space-medium;
 // Main Mobile wrapper
 $navigation-mobile-top-offset: 50px;
@@ -139,4 +143,9 @@ $navigation-mobile-macquarie-item-font: $circular-pro-bold;
       }
     }
   }
+}
+
+.product-megamenu-mobile-wrapper {
+  max-height: $product-megamenu-mobile-height;
+  width: $product-megamenu-mobile-width;
 }

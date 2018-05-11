@@ -4,7 +4,8 @@
 $accordion-panel-bg-color: $color-white;
 $accordion-panel-box-shadow-color: $color-black;
 // Accordion panel header
-$accordion-panel-header-height: 45px;
+$accordion-panel-header-mobile-height: 35px;
+$accordion-panel-header-height: 40px;
 $accordion-panel-header-padding: 0 22px;
 $accordion-panel-header-bg-color: $color-grey-08;
 $accordion-panel-header-active-bg-color: $color-grey-07;
@@ -39,6 +40,10 @@ $accordion-panel-content-padding: $space-medium 22px;
     border-left: 2px solid transparent;
     cursor: pointer;
     @include set-items-interval($space-small, horizontal);
+
+    @include breakpoint(small) {
+      height: $accordion-panel-header-mobile-height;
+    }
 
     &:hover,
     &.active {

@@ -29,7 +29,9 @@ import { AccordionPanelComponent } from '../accordion-panel/accordion-panel.comp
 })
 
 export class AccordionPanelHeaderComponent {
-
+  /**
+   * Returns true when panel is currently opened
+   */
   public get panelOpen(): boolean {
     return isNullOrEmpty(this._panelHost) ? false : this._panelHost.panelOpen;
   }

@@ -101,15 +101,14 @@
               <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
                 [expanded]="i === 0">
                 <mcs-accordion-panel-header mcsPanelHeaderDef>
-                  <h4>{{ nic.name }}</h4>
+                  {{ nic.name }}
                 </mcs-accordion-panel-header>
                 <div class="block-items-xsmall">
-                  <h4 class="space-bottom-small">{{ textContent.nics.ipAddresses }}:</h4>
                   <ng-container *ngIf="hasIpAddress(nic.ipAddress); else dhcpLabelTemplate">
-                    <ng-container *ngFor="let item of nic.ipAddress">
-                      <span *ngIf="item"
-                        class="break-word-all">{{ item }}</span>
-                    </ng-container>
+                    <mcs-list itemsOffset="small" [header]="textContent.nics.ipAddresses"
+                      *ngFor="let item of nic.ipAddress">
+                      <mcs-list-item>{{ item }}</mcs-list-item>
+                    </mcs-list>
                   </ng-container>
 
                   <ng-template #dhcpLabelTemplate>
