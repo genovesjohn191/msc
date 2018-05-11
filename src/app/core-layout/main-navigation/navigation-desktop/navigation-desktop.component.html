@@ -1,21 +1,35 @@
 <!-- Products Mega Menu Pop-over -->
 <ng-template #productMegaMenuTemplate>
   <div class="product-megamenu-wrapper" scrollable>
-    <div class="inline-items-medium bordered align-items-none">
-
-      <ng-container *ngFor="let catalog of productCatalogs">
-        <div class="container-wrapper flex-auto block-items-medium">
-          <h4 class="container-header">{{ catalog.name }}</h4>
-            <mcs-list [header]="category.name" itemsOffset="small"
-              *ngFor="let category of catalog.categories">
-              <mcs-list-item *ngFor="let product of category.products">
-                <a (click)="gotoProduct(product)">{{ product.name }}</a>
-              </mcs-list-item>
-            </mcs-list>
+    <mcs-data-status [dataStatusFactory]="productsStatusFactory">
+      <mcs-data-status-success mcsDataSuccess>
+        <div class="inline-items-medium bordered align-items-none">
+          <ng-container *ngFor="let catalog of productCatalogs">
+            <div class="container-wrapper flex-auto block-items-medium">
+              <h4 class="container-header">{{ catalog.name }}</h4>
+                <mcs-list [header]="category.name" itemsOffset="small"
+                  *ngFor="let category of catalog.categories">
+                  <mcs-list-item *ngFor="let product of category.products">
+                    <a (click)="gotoProduct(product)">{{ product.name }}</a>
+                  </mcs-list-item>
+                </mcs-list>
+            </div>
+          </ng-container>
         </div>
-      </ng-container>
+      </mcs-data-status-success>
 
-    </div>
+      <mcs-data-status-in-progress mcsDataInProgress>
+        <span>{{ textContent.loadingProducts }}</span>
+      </mcs-data-status-in-progress>
+
+      <mcs-data-status-empty mcsDataEmpty>
+        <span>{{ textContent.noProducts }}</span>
+      </mcs-data-status-empty>
+
+      <mcs-data-status-error mcsDataError>
+        <span>{{ textContent.productsError }}</span>
+      </mcs-data-status-error>
+    </mcs-data-status>
   </div>
 </ng-template>
 

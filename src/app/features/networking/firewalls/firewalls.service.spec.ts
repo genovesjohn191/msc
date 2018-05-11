@@ -5,17 +5,9 @@ import {
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 /** Services and Models */
-import {
-  Firewall,
-  FirewallConnectionStatus,
-  FirewallConfigurationStatus,
-  FirewallDeviceStatus
-} from './models';
+import { Firewall } from './models';
 import { FirewallsService } from './firewalls.service';
-import {
-  McsApiSuccessResponse,
-  CoreDefinition
-} from '../../../core';
+import { McsApiSuccessResponse } from '../../../core';
 import { NetworkingTestingModule } from '../testing';
 
 describe('FirewallsService', () => {

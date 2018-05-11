@@ -2,14 +2,17 @@ import {
   Component,
   OnInit,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectorRef
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 /** Providers / Services */
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsAccessControlService
+  McsAccessControlService,
+  McsDataStatusFactory
 } from '../../../core';
 import {
   resolveEnvVar,
@@ -33,6 +36,7 @@ export class NavigationDesktopComponent implements OnInit {
 
   public textContent: any;
   public productCatalogs: ProductCatalog[];
+  public productsStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
 
   public get arrowUpIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
@@ -44,10 +48,12 @@ export class NavigationDesktopComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _accessControlService: McsAccessControlService,
     private _productCatalogRepository: ProductCatalogRepository
   ) {
+    this.productsStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -82,8 +88,14 @@ export class NavigationDesktopComponent implements OnInit {
    * Gets the product catalogs
    */
   private _getProductCatalogs(): void {
+    this.productsStatusFactory.setInProgress();
     this._productCatalogRepository.findAllRecords()
+      .catch((error) => {
+        this.productsStatusFactory.setError();
+        return Observable.throw(error);
+      })
       .subscribe((response) => {
+        this.productsStatusFactory.setSuccesfull(response);
         if (isNullOrEmpty(response)) { return; }
         this.productCatalogs = response;
       });

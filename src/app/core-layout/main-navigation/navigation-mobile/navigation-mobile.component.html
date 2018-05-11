@@ -1,22 +1,38 @@
 <!-- Products Mega Menu Pop-over -->
 <ng-template #productMegaMenuTemplate>
   <div class="product-megamenu-mobile-wrapper" scrollable>
-    <mcs-accordion [multi]="true">
-      <mcs-accordion-panel *ngFor="let catalog of productCatalogs">
-        <mcs-accordion-panel-header mcsPanelHeaderDef>
-          {{ catalog.name }}
-        </mcs-accordion-panel-header>
+    <mcs-data-status [dataStatusFactory]="productsStatusFactory">
+      <mcs-data-status-success mcsDataSuccess>
+        <mcs-accordion [multi]="true">
+          <mcs-accordion-panel *ngFor="let catalog of productCatalogs">
+            <mcs-accordion-panel-header mcsPanelHeaderDef>
+              {{ catalog.name }}
+            </mcs-accordion-panel-header>
 
-        <div class="block-items-medium bordered">
-          <mcs-list [header]="category.name" itemsOffset="small"
-            *ngFor="let category of catalog.categories">
-            <mcs-list-item *ngFor="let product of category.products">
-              <a (click)="gotoProduct(product)">{{ product.name }}</a>
-            </mcs-list-item>
-          </mcs-list>
-        </div>
-      </mcs-accordion-panel>
-    </mcs-accordion>
+            <div class="block-items-medium bordered">
+              <mcs-list [header]="category.name" itemsOffset="small"
+                *ngFor="let category of catalog.categories">
+                <mcs-list-item *ngFor="let product of category.products">
+                  <a (click)="gotoProduct(product)">{{ product.name }}</a>
+                </mcs-list-item>
+              </mcs-list>
+            </div>
+          </mcs-accordion-panel>
+        </mcs-accordion>
+      </mcs-data-status-success>
+
+      <mcs-data-status-in-progress mcsDataInProgress>
+        <span>{{ textContent.loadingProducts }}</span>
+      </mcs-data-status-in-progress>
+
+      <mcs-data-status-empty mcsDataEmpty>
+        <span>{{ textContent.noProducts }}</span>
+      </mcs-data-status-empty>
+
+      <mcs-data-status-error mcsDataError>
+        <span>{{ textContent.productsError }}</span>
+      </mcs-data-status-error>
+    </mcs-data-status>
   </div>
 </ng-template>
 

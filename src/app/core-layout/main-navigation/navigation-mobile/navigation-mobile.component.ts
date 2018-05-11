@@ -20,6 +20,7 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { Observable } from 'rxjs';
 /** Providers / Services */
 import {
   CoreDefinition,
@@ -27,7 +28,8 @@ import {
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsTextContentProvider,
-  McsAccessControlService
+  McsAccessControlService,
+  McsDataStatusFactory
 } from '../../../core';
 import {
   resolveEnvVar,
@@ -69,6 +71,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public textContent: any;
   public productCatalogs: ProductCatalog[];
+  public productsStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
   public switchAccountAnimation: string;
   private _routerSubscription: any;
   private _activeAccountSubscription: any;
@@ -150,6 +153,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _productCatalogRepository: ProductCatalogRepository
   ) {
     this.switchAccountAnimation = 'collapsed';
+    this.productsStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -227,8 +231,14 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    * Gets the product catalogs
    */
   private _getProductCatalogs(): void {
+    this.productsStatusFactory.setInProgress();
     this._productCatalogRepository.findAllRecords()
+      .catch((error) => {
+        this.productsStatusFactory.setError();
+        return Observable.throw(error);
+      })
       .subscribe((response) => {
+        this.productsStatusFactory.setSuccesfull(response);
         if (isNullOrEmpty(response)) { return; }
         this.productCatalogs = response;
       });
