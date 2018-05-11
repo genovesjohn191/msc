@@ -11,7 +11,15 @@ import {
   McsTextContentProvider,
   McsAccessControlService
 } from '../../../core';
-import { resolveEnvVar } from '../../../utilities';
+import {
+  resolveEnvVar,
+  isNullOrEmpty
+} from '../../../utilities';
+import {
+  Product,
+  ProductCatalog,
+  ProductCatalogRepository
+} from '../../../features/products';
 
 @Component({
   selector: 'mcs-navigation-desktop',
@@ -24,6 +32,7 @@ import { resolveEnvVar } from '../../../utilities';
 export class NavigationDesktopComponent implements OnInit {
 
   public textContent: any;
+  public productCatalogs: ProductCatalog[];
 
   public get arrowUpIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
@@ -36,22 +45,23 @@ export class NavigationDesktopComponent implements OnInit {
   constructor(
     private _router: Router,
     private _textContentProvider: McsTextContentProvider,
-    private _accessControlService: McsAccessControlService
+    private _accessControlService: McsAccessControlService,
+    private _productCatalogRepository: ProductCatalogRepository
   ) {
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.navigation;
+    this._getProductCatalogs();
   }
 
   /**
    * Navigate to product catalog
    * @param product Product to be navigated
    */
-  public gotoProduct(_product: any) {
-    // TODO: Id was set temporarily, this should be a mega-menu
-    // so that the user can choose the product
-    this._router.navigate(['/products/', '01147ad4-5a46-4af5-855b-9c09a64bb768']);
+  public gotoProduct(_product: Product) {
+    if (isNullOrEmpty(_product)) { return; }
+    this._router.navigate(['/products/', _product.id]);
   }
 
   /**
@@ -66,5 +76,16 @@ export class NavigationDesktopComponent implements OnInit {
    */
   public get productCatalogFeatureIsOn(): boolean {
     return this._accessControlService.hasAccessToFeature('enableProductCatalog');
+  }
+
+  /**
+   * Gets the product catalogs
+   */
+  private _getProductCatalogs(): void {
+    this._productCatalogRepository.findAllRecords()
+      .subscribe((response) => {
+        if (isNullOrEmpty(response)) { return; }
+        this.productCatalogs = response;
+      });
   }
 }

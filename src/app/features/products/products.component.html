@@ -9,12 +9,12 @@
         <mcs-data-status [dataStatusFactory]="listStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
 
-            <mcs-list-panel [initialSelected]="selectedProduct">
+            <mcs-list-panel>
               <mcs-option-group [label]="catalog.name" *ngFor="let catalog of catalogs">
                 <mcs-option-group [label]="category.name" *ngFor="let category of catalog.categories">
                   <mcs-option *ngFor="let product of category.products"
                     [value]="product"
-                    [selected]="product.id === selectedProductId"
+                    [selected]="product.id === selectedProduct.id"
                     (click)="onClickProduct(product)">
                     <span>{{ product.name }}</span>
                   </mcs-option>
@@ -41,6 +41,13 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
-    <router-outlet></router-outlet>
+    <div [mcsLoader]="productStatusFactory?.statusSubscription"
+      [mcsLoaderHideElement]="productDetails"
+      [mcsLoaderText]="textContent.loadingDetails"
+      mcsLoaderOrientation="top"></div>
+
+    <div #productDetails>
+      <router-outlet></router-outlet>
+    </div>
   </mcs-content-panel>
 </mcs-page>

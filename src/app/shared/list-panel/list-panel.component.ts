@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   QueryList,
   ContentChildren,
   ChangeDetectionStrategy,
@@ -14,8 +13,8 @@ import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
-import { OptionComponent } from '../option-group/option/option.component';
 import { isNullOrEmpty } from '../../utilities';
+import { OptionComponent } from '../option-group/option/option.component';
 import { OptionGroupComponent } from '../option-group/option-group.component';
 
 @Component({
@@ -30,9 +29,6 @@ import { OptionGroupComponent } from '../option-group/option-group.component';
 })
 
 export class ListPanelComponent implements AfterContentInit, OnDestroy {
-
-  @Input()
-  public initialSelected: any;
 
   @ContentChildren(OptionGroupComponent, { descendants: true })
   private _optionGroups: QueryList<OptionGroupComponent>;
@@ -53,7 +49,6 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
   public ngAfterContentInit(): void {
     this._options.changes.pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => {
-        this._selectOptionByValue(this.initialSelected);
         this._listenToOptionsSelectionChange();
       });
   }
@@ -97,17 +92,5 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
       if (option === _activeOption) { return; }
       option.removeSelectedState();
     });
-  }
-
-  /**
-   * Sets the selection based on the value provided
-   * @param value Value to be selected
-   */
-  private _selectOptionByValue(value: any): void {
-    if (isNullOrEmpty(value)) { return; }
-    let optionExist = this._options.find((option) => option.value === value);
-    if (!isNullOrEmpty(optionExist)) {
-      optionExist.onClick();
-    }
   }
 }

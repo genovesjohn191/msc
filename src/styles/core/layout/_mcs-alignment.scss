@@ -1,53 +1,43 @@
-// Inline Items
-%inline-items {
-  @include flex(0 0 auto);
-  @include display-flex(row);
-  align-items: center;
-}
-
+// Inline items settings
 .inline-items-xsmall {
-  @extend %inline-items;
-  @include set-items-interval($space-xsmall, horizontal);
+  @include inline-items($space-xsmall, $divider-light-color);
 }
 
 .inline-items-small {
-  @extend %inline-items;
-  @include set-items-interval($space-small, horizontal);
+  @include inline-items($space-small, $divider-light-color);
 }
 
 .inline-items-medium {
-  @extend %inline-items;
-  @include set-items-interval($space-medium, horizontal);
+  @include inline-items($space-medium, $divider-light-color);
 }
 
 .inline-items-large {
-  @extend %inline-items;
-  @include set-items-interval($space-large, horizontal);
+  @include inline-items($space-large, $divider-light-color);
 }
 
-// Block Items
-%block-items {
-  @include display-flex(column);
+.inline-items-xlarge {
+  @include inline-items($space-xlarge, $divider-light-color);
 }
 
+// Block items settings
 .block-items-xsmall {
-  @extend %block-items;
-  @include set-items-interval($space-xsmall);
+  @include block-items($space-xsmall, $divider-light-color);
 }
 
 .block-items-small {
-  @extend %block-items;
-  @include set-items-interval($space-small);
+  @include block-items($space-small, $divider-light-color);
 }
 
 .block-items-medium {
-  @extend %block-items;
-  @include set-items-interval($space-medium);
+  @include block-items($space-medium, $divider-light-color);
 }
 
 .block-items-large {
-  @extend %block-items;
-  @include set-items-interval($space-large);
+  @include block-items($space-large, $divider-light-color);
+}
+
+.block-items-xlarge {
+  @include block-items($space-xlarge, $divider-light-color);
 }
 
 // Separate Items

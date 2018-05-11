@@ -726,6 +726,7 @@
     "header": "Product Catalog",
     "leftPanelHeader": "Product Filter",
     "loading": "Loading Products.",
+    "loadingDetails": "Loading product details.",
     "noProducts": "No products to display.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of products.",
     "product": {

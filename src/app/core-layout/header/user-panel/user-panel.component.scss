@@ -75,7 +75,7 @@ $notification-item-label-size: 18px;
 // Popover for notifications layout
 .notifications-content-wrapper {
   @include display-flex(column);
-  @include set-items-divider($border-color-light);
+  @include set-items-divider($divider-light-color);
   min-width: $notification-minimum-width;
 
   .notification-item {
@@ -86,7 +86,7 @@ $notification-item-label-size: 18px;
 // Popover for switch account layout
 .switch-account-settings-wrapper {
   @include display-flex(column);
-  @include set-items-divider();
+  @include set-items-divider($divider-dark-color);
   background-color: $color-black;
   color: $color-grey-05;
   min-width: 200px;

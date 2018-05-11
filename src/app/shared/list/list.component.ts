@@ -9,6 +9,7 @@ import {
   ContentChild,
   TemplateRef
 } from '@angular/core';
+import { McsSizeType } from '../../core';
 import { ListHeaderDirective } from './list-header.directive';
 
 @Component({
@@ -27,7 +28,10 @@ export class ListComponent implements AfterViewInit {
   public header: string;
 
   @Input()
-  public spacing: 'none' | 'xsmall' | 'small' | 'medium';
+  public spacing: McsSizeType;
+
+  @Input()
+  public itemsOffset: McsSizeType;
 
   @ContentChild(ListHeaderDirective)
   public headerTemplate: TemplateRef<any>;
@@ -37,10 +41,11 @@ export class ListComponent implements AfterViewInit {
     private _renderer: Renderer2
   ) {
     this.spacing = 'small';
+    this.itemsOffset = 'auto';
   }
 
   public ngAfterViewInit(): void {
     this._renderer.addClass(this._elementRef.nativeElement, this.spacing);
+    this._renderer.addClass(this._elementRef.nativeElement, `items-offset-${this.itemsOffset}`);
   }
-
 }
