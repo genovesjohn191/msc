@@ -47,7 +47,7 @@
         <mcs-accordion [multi]="true">
           <mcs-accordion-panel *ngFor="let network of vdc.networks; let i = index" [expanded]="i === 0">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
-              <h4>{{ network.name }}</h4>
+              {{ network.name }}
             </mcs-accordion-panel-header>
 
             <div class="vertical-items-spacing-small" display-flex="column">
@@ -74,8 +74,9 @@
           <mcs-accordion-panel *ngFor="let storage of vdc.storage; let i = index"
             [expanded]="i === 0">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
-              <mcs-icon [key]="getStorageStatusIconKey(storage)"></mcs-icon>
-              <h4>{{ storage.name }}</h4>
+
+              <mcs-icon size="small" [key]="getStorageStatusIconKey(storage)"></mcs-icon>
+              {{ storage.name }}
             </mcs-accordion-panel-header>
 
             <mcs-list>

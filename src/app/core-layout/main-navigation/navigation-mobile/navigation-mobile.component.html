@@ -1,3 +1,25 @@
+<!-- Products Mega Menu Pop-over -->
+<ng-template #productMegaMenuTemplate>
+  <div class="product-megamenu-mobile-wrapper" scrollable>
+    <mcs-accordion [multi]="true">
+      <mcs-accordion-panel *ngFor="let catalog of productCatalogs">
+        <mcs-accordion-panel-header mcsPanelHeaderDef>
+          {{ catalog.name }}
+        </mcs-accordion-panel-header>
+
+        <div class="block-items-medium bordered">
+          <mcs-list [header]="category.name" itemsOffset="small"
+            *ngFor="let category of catalog.categories">
+            <mcs-list-item *ngFor="let product of category.products">
+              <a (click)="gotoProduct(product)">{{ product.name }}</a>
+            </mcs-list-item>
+          </mcs-list>
+        </div>
+      </mcs-accordion-panel>
+    </mcs-accordion>
+  </div>
+</ng-template>
+
 <!-- Main navigation for mobile -->
 <div class="navigation-mobile-wrapper">
   <div class="navigation-mobile-icon">
@@ -7,9 +29,17 @@
   <!-- Macquarie Link View -->
   <div class="macquarie-link">
     <ng-container *ngIf="productCatalogFeatureIsOn; else macquarieViewTemplate">
-      <a (click)="gotoProduct('product')" class="inline-items-xsmall">
+      <a class="inline-items-xsmall" mcsPopover maxWidth="auto"
+        [content]="productMegaMenuTemplate"
+        theme="light" priority="high"
+        placement="bottom" orientation="left"
+        [placementElement]="caretIconElement">
+
         <span>{{ textContent.productCatalog }}</span>
-        <mcs-icon [key]="caretDownIconKey" size="medium" color="white"></mcs-icon>
+        <span #caretIconElement>
+          <mcs-icon [key]="caretDownIconKey"
+            size="medium" color="white"></mcs-icon>
+        </span>
       </a>
     </ng-container>
 

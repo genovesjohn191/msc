@@ -33,8 +33,14 @@ import {
   resolveEnvVar,
   registerEvent,
   unregisterEvent,
-  unsubscribeSafely
+  unsubscribeSafely,
+  isNullOrEmpty
 } from '../../../utilities';
+import {
+  Product,
+  ProductCatalog,
+  ProductCatalogRepository
+} from '../../../features/products';
 
 @Component({
   selector: 'mcs-navigation-mobile',
@@ -62,6 +68,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public navigationList: ElementRef;
 
   public textContent: any;
+  public productCatalogs: ProductCatalog[];
   public switchAccountAnimation: string;
   private _routerSubscription: any;
   private _activeAccountSubscription: any;
@@ -139,7 +146,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
     private _textContentProvider: McsTextContentProvider,
-    private _accessControlService: McsAccessControlService
+    private _accessControlService: McsAccessControlService,
+    private _productCatalogRepository: ProductCatalogRepository
   ) {
     this.switchAccountAnimation = 'collapsed';
   }
@@ -154,22 +162,13 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
       });
     registerEvent(document, 'click', this._clickOutsideHandler);
     this._listenToSwitchAccount();
+    this._getProductCatalogs();
   }
 
   public ngOnDestroy() {
     unsubscribeSafely(this._routerSubscription);
     unsubscribeSafely(this._activeAccountSubscription);
     unregisterEvent(document, 'click', this._clickOutsideHandler);
-  }
-
-  /**
-   * Navigate to product catalog
-   * @param product Product to be navigated
-   */
-  public gotoProduct(_product: any) {
-    // TODO: Id was set temporarily, this should be a mega-menu
-    // so that the user can choose the product
-    this._router.navigate(['/products/', '01147ad4-5a46-4af5-855b-9c09a64bb768']);
   }
 
   /**
@@ -213,6 +212,26 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     if (this.slideTrigger) {
       this.slideTrigger = 'slideOutLeft';
     }
+  }
+
+  /**
+   * Navigate to product catalog
+   * @param product Product to be navigated
+   */
+  public gotoProduct(_product: Product) {
+    if (isNullOrEmpty(_product)) { return; }
+    this._router.navigate(['/products/', _product.id]);
+  }
+
+  /**
+   * Gets the product catalogs
+   */
+  private _getProductCatalogs(): void {
+    this._productCatalogRepository.findAllRecords()
+      .subscribe((response) => {
+        if (isNullOrEmpty(response)) { return; }
+        this.productCatalogs = response;
+      });
   }
 
   /**
