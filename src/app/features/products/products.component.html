@@ -15,7 +15,7 @@
                 <mcs-option-group [label]="category.name" *ngFor="let category of catalog.categories">
                   <mcs-option *ngFor="let product of category.products"
                     [value]="product"
-                    [selected]="product.id === selectedProduct.id"
+                    [selected]="product.id === selectedProduct?.id"
                     (click)="onClickProduct(product)">
                     <span>{{ product.name }}</span>
                   </mcs-option>
