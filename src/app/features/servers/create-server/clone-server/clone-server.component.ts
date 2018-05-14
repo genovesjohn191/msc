@@ -164,7 +164,7 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
       CoreValidators.required,
       CoreValidators.custom(
         this._customServerNameValidator.bind(this),
-        this.textContent.invalidServerName
+        'invalidServerName'
       )
     ]);
 

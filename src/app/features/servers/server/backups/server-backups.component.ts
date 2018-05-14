@@ -320,7 +320,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onUpdateServerSnapshot(job: McsApiJob): void {
-    if (!this._serverIsActiveByJob(job)) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     // We need to set the processing flag manually here in order to cater
     // from moving one server to another
@@ -331,16 +331,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     if (job.dataStatus === McsDataStatus.Success) {
       this._getServerSnapshots();
     }
-  }
-
-  /**
-   * Returns true when the server is activated by job process
-   * @param job Emitted job to be checked
-   */
-  private _serverIsActiveByJob(job: McsApiJob): boolean {
-    let activeServer = !isNullOrEmpty(job) &&
-      this.server.id === job.clientReferenceObject.serverId;
-    return activeServer;
   }
 
   /**
