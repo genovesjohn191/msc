@@ -8,8 +8,13 @@ import {
 import { FormControl } from '@angular/forms';
 import {
   Observable,
-  Subscription
+  Subscription,
+  Subject
 } from 'rxjs/Rx';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   ServerNetwork,
   ServerNicSummary,
@@ -34,8 +39,6 @@ import { ServersResourcesRepository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  addOrUpdateArrayRecord,
-  deleteArrayRecord,
   refreshView
 } from '../../../../utilities';
 import {
@@ -67,10 +70,10 @@ export class ServerNicsComponent extends ServerDetailsBase
   // Subscriptions
   public updateNicsSubscription: Subscription;
   public networksSubscription: Subscription;
-  private _notificationsChangeSubscription: Subscription;
-  private _createServerNicSubscription: Subscription;
-  private _updateServerNicSubscription: Subscription;
-  private _deleteServerNicSubscription: Subscription;
+
+  private _newNic: ServerNicSummary;
+
+  private _destroySubject = new Subject<void>();
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -105,15 +108,10 @@ export class ServerNicsComponent extends ServerDetailsBase
       this.serverResource.networks : new Array();
   }
 
-  private _serverNics: ServerNicSummary[];
   public get serverNics(): ServerNicSummary[] {
-    return this._serverNics;
-  }
-  public set serverNics(value: ServerNicSummary[]) {
-    if (this._serverNics !== value) {
-      this._serverNics = value;
-      this._changeDetectorRef.markForCheck();
-    }
+    return isNullOrEmpty(this._newNic) ?
+      this.server.nics :
+      [...this.server.nics, this._newNic];
   }
 
   private _networkName: string;
@@ -207,7 +205,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     this.nics = new Array<ServerNicSummary>();
     this.ipAddress = new ServerIpAddress();
     this.selectedNic = new ServerNicSummary();
-    this.dataStatusFactory = new McsDataStatusFactory();
+    this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -379,7 +377,10 @@ export class ServerNicsComponent extends ServerDetailsBase
    */
   protected serverSelectionChanged(): void {
     this._getResourceNetworks();
-    this._getServerNics();
+    if (!this.server.isProcessing ||
+      isNullOrEmpty(this.server.nics)) {
+      this._getServerNics();
+    }
   }
 
   /**
@@ -388,6 +389,7 @@ export class ServerNicsComponent extends ServerDetailsBase
    * @param network Network selected
    */
   private _onNetworkSelect(network: ServerNetwork): void {
+    if (isNullOrEmpty(network)) { return; }
     this.networkName = network.name;
     this.networkNetmask = network.netmask;
     this.networkGateway = network.gateway;
@@ -417,13 +419,17 @@ export class ServerNicsComponent extends ServerDetailsBase
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+    this._serversRepository.notificationsChanged
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => { this._changeDetectorRef.markForCheck(); });
-    this._createServerNicSubscription = this._notificationEvents.createServerNic
+    this._notificationEvents.createServerNic
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onCreateServerNic.bind(this));
-    this._updateServerNicSubscription = this._notificationEvents.updateServerNic
+    this._notificationEvents.updateServerNic
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onModifyServerNic.bind(this));
-    this._deleteServerNicSubscription = this._notificationEvents.deleteServerNic
+    this._notificationEvents.deleteServerNic
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onModifyServerNic.bind(this));
   }
 
@@ -431,10 +437,8 @@ export class ServerNicsComponent extends ServerDetailsBase
    * Unregister jobs/notifications events
    */
   private _unregisterJobEvents(): void {
-    unsubscribeSafely(this._notificationsChangeSubscription);
-    unsubscribeSafely(this._createServerNicSubscription);
-    unsubscribeSafely(this._updateServerNicSubscription);
-    unsubscribeSafely(this._deleteServerNicSubscription);
+    this._destroySubject.next();
+    this._destroySubject.complete();
   }
 
   /**
@@ -444,28 +448,13 @@ export class ServerNicsComponent extends ServerDetailsBase
   private _onCreateServerNic(job: McsApiJob): void {
     if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
 
-    switch (job.dataStatus) {
-      case McsDataStatus.InProgress:
-        this._onAddingNic(job);
-        break;
-
-      case McsDataStatus.Success:
-        // Get and update the server nics
-        this._getServerNics();
-        break;
-
-      case McsDataStatus.Error:
-      default:
-        // Remove appended mock disk record
-        deleteArrayRecord(this.serverNics, (targetNic) => {
-          return isNullOrEmpty(targetNic.id);
-        }, 1);
-        break;
-    }
-
-    // Update data status if in progress or failed
-    if (job.dataStatus !== McsDataStatus.Success) {
-      this.dataStatusFactory.setSuccesfull(this.serverNics);
+    if (job.dataStatus === McsDataStatus.InProgress) {
+      // Append a mock nic record while job is processing
+      this._onAddingNic(job);
+    } else {
+      // Get and update the server nics
+      this._newNic = undefined;
+      this._getServerNics();
     }
   }
 
@@ -490,14 +479,10 @@ export class ServerNicsComponent extends ServerDetailsBase
     if (isNullOrEmpty(job)) { return; }
 
     // Mock NIC data based on job response
-    let nic = new ServerNicSummary();
-    nic.logicalNetworkName = job.clientReferenceObject.networkName;
-    nic.ipAllocationMode = job.clientReferenceObject.ipAllocationMode;
-    nic.isProcessing = this.server.isProcessing;
-
-    // Append a mock nic record while job is processing
-    addOrUpdateArrayRecord(this.serverNics, nic, false,
-      (_existingNic: ServerNicSummary) => _existingNic.id === nic.id);
+    this._newNic = new ServerNicSummary();
+    this._newNic.logicalNetworkName = job.clientReferenceObject.networkName;
+    this._newNic.ipAllocationMode = job.clientReferenceObject.ipAllocationMode;
+    this._newNic.isProcessing = this.server.isProcessing;
   }
 
   /**
@@ -505,11 +490,6 @@ export class ServerNicsComponent extends ServerDetailsBase
    */
   private _getServerNics(): void {
     unsubscribeSafely(this.updateNicsSubscription);
-    // We need to check the datastatus factory if its not undefined
-    // because it was called under base class and for any reason, the instance is undefined.
-    if (isNullOrEmpty(this.dataStatusFactory)) {
-      this.dataStatusFactory = new McsDataStatusFactory();
-    }
 
     this.dataStatusFactory.setInProgress();
     this.updateNicsSubscription = this._serversRepository
@@ -520,7 +500,6 @@ export class ServerNicsComponent extends ServerDetailsBase
         return Observable.throw(error);
       })
       .subscribe((response) => {
-        this.serverNics = this.server.nics;
         this.dataStatusFactory.setSuccesfull(response);
         this._changeDetectorRef.markForCheck();
       });

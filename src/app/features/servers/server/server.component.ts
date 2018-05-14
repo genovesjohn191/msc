@@ -89,6 +89,7 @@ export class ServerComponent
   public get angleDoubleRightIconKey(): string {
     return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
   }
+
   private _destroySubject = new Subject<void>();
 
   constructor(

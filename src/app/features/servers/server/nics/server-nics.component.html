@@ -53,7 +53,7 @@
                     </mcs-list-item>
                   </mcs-list>
                 </td>
-                <td class="action-items top-align">
+                <td class="action-items top-align inline-items-small">
                   <ng-container *mcsAccessControl="['VmNicEdit']">
                     <span *mcsIsSelfManagedServer="server">
                       <a [disabled]="!server.executable" (click)="onUpdateNetwork(nic)">

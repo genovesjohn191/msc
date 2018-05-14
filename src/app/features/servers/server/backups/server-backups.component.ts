@@ -412,7 +412,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
     } else {
       let storageProfile = this.server.storageDevices[0].storageProfile;
       let availableStorageMB = this._getStorageProfileAvailableMB(storageProfile);
-      let hasSufficientStorage = availableStorageMB >= this.snapshot.sizeMB;
+      let snapshotSizeMB = this.hasSnapshot ? this.snapshot.sizeMB : 0;
+      let hasSufficientStorage = availableStorageMB >= snapshotSizeMB;
 
       dialogType = hasSufficientStorage ?
         SnapshotDialogType.Create : SnapshotDialogType.InsufficientStorage;

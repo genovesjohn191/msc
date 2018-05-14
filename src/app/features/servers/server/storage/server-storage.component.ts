@@ -8,8 +8,13 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  Subscription
+  Subscription,
+  Subject
 } from 'rxjs/Rx';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   ServerManageStorage,
   ServerStorage,
@@ -34,8 +39,6 @@ import { ServersResourcesRepository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  addOrUpdateArrayRecord,
-  deleteArrayRecord,
   convertGbToMb
 } from '../../../../utilities';
 import {
@@ -70,10 +73,11 @@ export class ServerStorageComponent extends ServerDetailsBase
   // Subscriptions
   public updateDisksSubscription: Subscription;
   public storageSubscription: Subscription;
-  private _notificationsChangeSubscription: Subscription;
-  private _createServerDiskSubscription: Subscription;
-  private _updateServerDiskSubscription: Subscription;
-  private _deleteServerDiskSubscription: Subscription;
+
+  private _storageProfile: string;
+  private _newDisk: ServerStorageDevice;
+
+  private _destroySubject = new Subject<void>();
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
@@ -133,15 +137,10 @@ export class ServerStorageComponent extends ServerDetailsBase
       this.serverResource.storage : new Array();
   }
 
-  private _serverDisks: ServerStorageDevice[];
   public get serverDisks(): ServerStorageDevice[] {
-    return this._serverDisks;
-  }
-  public set serverDisks(value: ServerStorageDevice[]) {
-    if (this._serverDisks !== value) {
-      this._serverDisks = value;
-      this._changeDetectorRef.markForCheck();
-    }
+    return isNullOrEmpty(this._newDisk) ?
+      this.server.storageDevices :
+      [...this.server.storageDevices, this._newDisk];
   }
 
   private _minimumMB: number;
@@ -193,8 +192,6 @@ export class ServerStorageComponent extends ServerDetailsBase
       || !this.hasAvailableStorageSpace;
   }
 
-  private _storageProfile: string;
-
   constructor(
     _serversResourcesRepository: ServersResourcesRepository,
     _serversRepository: ServersRepository,
@@ -222,6 +219,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     this.storageChangedValue = new ServerManageStorage();
     this.storageChangedValue.valid = false;
     this._storageProfile = '';
+    this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -368,7 +366,10 @@ export class ServerStorageComponent extends ServerDetailsBase
    */
   protected serverSelectionChanged(): void {
     this._getResourceStorage();
-    this._getServerDisks();
+    if (!this.server.isProcessing ||
+      isNullOrEmpty(this.server.storageDevices)) {
+      this._getServerDisks();
+    }
   }
 
   /**
@@ -439,13 +440,17 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
+    this._serversRepository.notificationsChanged
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => { this._changeDetectorRef.markForCheck(); });
-    this._createServerDiskSubscription = this._notificationEvents.createServerDisk
+    this._notificationEvents.createServerDisk
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onCreateServerDisk.bind(this));
-    this._updateServerDiskSubscription = this._notificationEvents.updateServerDisk
+    this._notificationEvents.updateServerDisk
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onUpdateServerDisk.bind(this));
-    this._deleteServerDiskSubscription = this._notificationEvents.deleteServerDisk
+    this._notificationEvents.deleteServerDisk
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onDeleteServerDisk.bind(this));
   }
 
@@ -453,10 +458,8 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Unregister jobs/notifications events
    */
   private _unregisterJobEvents(): void {
-    unsubscribeSafely(this._notificationsChangeSubscription);
-    unsubscribeSafely(this._createServerDiskSubscription);
-    unsubscribeSafely(this._updateServerDiskSubscription);
-    unsubscribeSafely(this._deleteServerDiskSubscription);
+    this._destroySubject.next();
+    this._destroySubject.complete();
   }
 
   /**
@@ -473,21 +476,12 @@ export class ServerStorageComponent extends ServerDetailsBase
 
       case McsDataStatus.Success:
         this._updateResourceStorageUsedMB(job);
-        this._getServerDisks();
-        break;
 
       case McsDataStatus.Error:
       default:
-        // Remove appended mock disk record
-        deleteArrayRecord(this.serverDisks, (targetNic) => {
-          return isNullOrEmpty(targetNic.id);
-        }, 1);
+        this._newDisk = undefined;
+        this._getServerDisks();
         break;
-    }
-
-    // Update data status if server disks is not empty
-    if (!isNullOrEmpty(this.serverDisks)) {
-      this.dataStatusFactory.setSuccesfull(this.serverDisks);
     }
   }
 
@@ -531,16 +525,11 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _onAddingDisk(job): void {
     if (isNullOrEmpty(job)) { return; }
 
-    // Mock disk data based on job response
-    let disk = new ServerStorageDevice();
-    disk.name = job.clientReferenceObject.name;
-    disk.sizeMB = job.clientReferenceObject.sizeMB;
-    disk.storageProfile = job.clientReferenceObject.storageProfile;
-    disk.isProcessing = this.server.isProcessing;
-
-    // Append a mock disk record while job is processing
-    addOrUpdateArrayRecord(this.serverDisks, disk, false,
-      (_existingStorage: ServerStorageDevice) => _existingStorage.id === disk.id);
+    this._newDisk = new ServerStorageDevice();
+    this._newDisk.name = job.clientReferenceObject.name;
+    this._newDisk.sizeMB = job.clientReferenceObject.sizeMB;
+    this._newDisk.storageProfile = job.clientReferenceObject.storageProfile;
+    this._newDisk.isProcessing = this.server.isProcessing;
   }
 
   /**
@@ -576,11 +565,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    */
   private _getServerDisks(): void {
     unsubscribeSafely(this.updateDisksSubscription);
-    // We need to check the datastatus factory if its not undefined
-    // because it was called under base class and for any reason, the instance is undefined.
-    if (isNullOrEmpty(this.dataStatusFactory)) {
-      this.dataStatusFactory = new McsDataStatusFactory();
-    }
+
     this.dataStatusFactory.setInProgress();
     this.updateDisksSubscription = this._serversRepository
       .findServerDisks(this.server)
@@ -590,7 +575,6 @@ export class ServerStorageComponent extends ServerDetailsBase
         return Observable.throw(error);
       })
       .subscribe((response) => {
-        this.serverDisks = this.server.storageDevices;
         this.dataStatusFactory.setSuccesfull(response);
         this._changeDetectorRef.markForCheck();
       });
@@ -609,6 +593,10 @@ export class ServerStorageComponent extends ServerDetailsBase
       });
   }
 
+  /**
+   * Get storage minimum value in MB
+   * @param sizeMB Storage size in MB
+   */
   private _getMinimumStorageMB(sizeMB: number): number {
     if (isNullOrEmpty(sizeMB)) { return 0; }
 
