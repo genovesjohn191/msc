@@ -1,8 +1,9 @@
-<header class="header-container">
-  <div class="logo">
-    <a [routerLink]="['/servers']">
-      <mcs-image size="small" [key]="lightLogoIconKey"></mcs-image>
-    </a>
-  </div>
+<!-- Macquarie Logo -->
+<a [routerLink]="['/servers']">
+  <mcs-image size="small" [key]="lightLogoIconKey"></mcs-image>
+</a>
+
+<!-- User panel content -->
+<div class="right-align">
   <mcs-user-panel></mcs-user-panel>
-</header>
+</div>

@@ -1,5 +1,14 @@
 <mcs-page [header]="selectedProduct?.name">
 
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef class="visible-small">
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <mcs-action-item class="right-align" (click)="onToggleSlidingPanel()">
+        <mcs-icon [key]="toggleIconKey"></mcs-icon>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- listing panel -->
@@ -47,8 +56,20 @@
       [mcsLoaderText]="textContent.loadingDetails"
       mcsLoaderOrientation="top"></div>
 
-    <div #productDetails>
+    <mcs-sliding-panel #slidingPanel class="visible-small">
+      <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
+    </mcs-sliding-panel>
+
+    <div #productDetails class="inline-items align-items-none">
       <router-outlet></router-outlet>
+      <div class="space-left-xlarge hidden-small">
+        <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
+      </div>
     </div>
   </mcs-content-panel>
 </mcs-page>
+
+<!-- Product Annex -->
+<ng-template #productAnnexTemplate>
+  <mcs-product-annex [product]="selectedProduct"></mcs-product-annex>
+</ng-template>

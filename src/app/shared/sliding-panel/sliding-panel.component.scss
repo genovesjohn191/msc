@@ -1,0 +1,39 @@
+@import "../../../styles/shared/base";
+
+// Sliding panel definition
+$sliding-panel-top-offset: $shared-top-panel-size
+  + $shared-header-panel-height
+  + $shared-navigation-panel-height;
+$sliding-panel-overlay-bg-color: rgba($color-black, 0.6);
+$sliding-panel-light-bg-color: $color-white;
+$sliding-panel-light-color: $color-black;
+
+.sliding-panel-wrapper {
+  @include display-flex(row);
+
+  &.sliding-panel-right.sliding-panel-overlay {
+    justify-content: flex-end;
+  }
+  &.sliding-panel-left.sliding-panel-overlay {
+    justify-content: flex-start;
+  }
+}
+
+.sliding-panel-overlay {
+  @include display-flex(row);
+  justify-content: flex-end;
+  position: fixed;
+  top: $sliding-panel-top-offset;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: $sliding-panel-overlay-bg-color;
+  z-index: $zindex-sliding-panel;
+}
+
+.sliding-panel-content {
+  background-color: $sliding-panel-light-bg-color;
+  color: $sliding-panel-light-color;
+  padding: $space-medium;
+  width: 70%;
+}

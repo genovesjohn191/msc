@@ -2,70 +2,38 @@ import {
   state,
   style,
   transition,
-  keyframes,
+  trigger,
   animate,
-  AnimationMetadata
+  AnimationTriggerMetadata
 } from '@angular/animations';
 
-export const slide = (timing: string): AnimationMetadata[] => [
-  state('slideOutDown', style({
-    display: 'none'
-  })),
-  state('slideOutLeft', style({
-    display: 'none'
-  })),
-  state('slideOutRight', style({
-    display: 'none'
-  })),
-  state('slideOutUp', style({
-    display: 'none'
-  })),
-  transition('* => slideInDown', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(0, -100%, 0)', offset: 0 }),
-      style({ transform: 'translate3d(0, 0%, 0)', offset: 1 })
-    ]))
-  ]),
-  transition('slideInDown => void, * => slideOutDown', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(0, 0%, 0)', offset: 0 }),
-      style({ transform: 'translate3d(0, 100%, 0)', offset: 1 })
-    ]))
-  ]),
-  transition('* => slideInLeft', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(-100%, 0, 0)', offset: 0 }),
-      style({ transform: 'translate3d(0%, 0, 0)', offset: 1 })
-    ]))
-  ]),
-  transition('slideInLeft => void, * => slideOutRight', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(0%, 0, 0)', offset: 0 }),
-      style({ transform: 'translate3d(100%, 0, 0)', offset: 1 })
-    ]))
-  ]),
-  transition('* => slideInRight', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(100%, 0, 0)', offset: 0 }),
-      style({ transform: 'translate3d(0%, 0, 0)', offset: 1 })
-    ]))
-  ]),
-  transition('slideInRight => void, * => slideOutLeft', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(0%, 0, 0)', offset: 0 }),
-      style({ transform: 'translate3d(-100%, 0, 0)', offset: 1 })
-    ]))
-  ]),
-  transition('* => slideInUp', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(0, 100%, 0)', offset: 0 }),
-      style({ transform: 'translate3d(0, 0%, 0)', offset: 1 })
-    ]))
-  ]),
-  transition('slideInUp => void, * => slideOutUp', [
-    animate(timing, keyframes([
-      style({ transform: 'translate3d(0, 0%, 0)', offset: 0 }),
-      style({ transform: 'translate3d(0, -100%, 0)', offset: 1 })
-    ]))
-  ])
-];
+/**
+ * Slide element animation factory
+ */
+export const slide: {
+  readonly slideLeft: AnimationTriggerMetadata;
+  readonly slideRight: AnimationTriggerMetadata;
+  readonly slideTop: AnimationTriggerMetadata;
+  readonly slideBottom: AnimationTriggerMetadata;
+} = {
+    slideLeft: trigger('slideLeft', [
+      state('*', style({ transform: 'translate3d(0%, 0, 0)', offset: 1 })),
+      state('void', style({ transform: 'translate3d(-100%, 0, 0)', offset: 0 })),
+      transition('* <=> void', animate('225ms cubic-bezier(0.4,0.0,0.2,1)'))
+    ]),
+    slideRight: trigger('slideRight', [
+      state('*', style({ transform: 'translate3d(0%, 0, 0)', offset: 1 })),
+      state('void', style({ transform: 'translate3d(100%, 0, 0)', offset: 0 })),
+      transition('* <=> void', animate('225ms cubic-bezier(0.4,0.0,0.2,1)'))
+    ]),
+    slideTop: trigger('slideTop', [
+      state('*', style({ transform: 'translate3d(0, 0%, 0)', offset: 0 })),
+      state('void', style({ transform: 'translate3d(0, -100%, 0)', offset: 1 })),
+      transition('* <=> void', animate('225ms cubic-bezier(0.4,0.0,0.2,1)'))
+    ]),
+    slideBottom: trigger('slideBottom', [
+      state('*', style({ transform: 'translate3d(0, 100%, 0)', offset: 1 })),
+      state('void', style({ transform: 'translate3d(0, 0%, 0)', offset: 0 })),
+      transition('* <=> void', animate('225ms cubic-bezier(0.4,0.0,0.2,1)'))
+    ]),
+  };

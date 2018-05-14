@@ -1,78 +1,23 @@
 @import '../../../styles/shared/base';
 
+// Header definitions
+$header-bg-color: $color-black;
+$header-color: $color-white;
 $header-large-padding: $space-large;
-$header-small-padding: $space-large $space-medium;
+$header-small-padding: $space-medium;
 
-:host {
-  z-index: $zindex-header;
-}
-
-header {
-  @include breakpoint(small) {
-    top: 0;
-    width: 100%;
-    padding-right: 0;
-  }
-}
-
-.header-container {
-  align-items: center;
-  padding: $header-large-padding;
+.header-wrapper {
   @include display-flex(row);
+  @include align-items(center);
+  z-index: $zindex-header;
+  height: $shared-header-panel-height;
+  padding-left: $header-large-padding;
+  padding-right: $header-large-padding;
+  background-color: $header-bg-color;
+  color: $header-color;
 
   @include breakpoint(small) {
-    padding: $header-small-padding;
-    border-right: none;
-  }
-
-  i {
-    @include breakpoint(small) {
-      @include font-size($icon-small-font-size);
-    }
-  }
-
-  .logo {
-    margin-right: auto;
-    img {
-      width: auto;
-      height: 30px;
-      @include breakpoint(small) {
-        height: 25px;
-      }
-    }
-  }
-
-  .exit {
-    padding: 0 $space-large;
-    border-left: 1px solid $color-grey-01;
-    display: none;
-    @include breakpoint(small) {
-      display: inline-block;
-    }
-  }
-
-  .user-panel {
-    max-height: 40px;
-    padding: 0 $space-xlarge;
-    text-align: center;
-
-    @include breakpoint(small) {
-      padding: 0 $space-large;
-      border-left: 1px solid $color-grey-01;
-    }
-    .user-icon {
-      display: none;
-      @include breakpoint(small) {
-        display: inline-block;
-      }
-    }
-    .user-info {
-      display: block;
-      @include breakpoint(small) {
-        display: none;
-      }
-      color:  $color-grey-01;
-      @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
-    }
+    padding-left: $header-small-padding;
+    padding-right: $header-small-padding;
   }
 }

@@ -159,6 +159,7 @@ export class CoreDefinition {
   public static ASSETS_FONT_ANGLE_DOUBLE_RIGHT = 'angle-double-right';
   public static ASSETS_FONT_TRASH = 'trash-o';
   public static ASSETS_FONT_BULLET = 'circle';
+  public static ASSETS_FONT_ELLIPSIS_VERTICAL = 'ellipsis-v';
 
   // Images
   public static ASSETS_IMAGE_MCS_LIGHT_LOGO_SVG = 'light-mcs-logo-svg';

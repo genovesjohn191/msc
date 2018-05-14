@@ -470,11 +470,15 @@
   @include flex(0 0 auto);
   @include display-flex(row);
   @include align-items(center);
-  @include set-items-interval($interval, horizontal);
+  @if $interval != null {
+    @include set-items-interval($interval, horizontal);
+  }
 
   &.bordered {
-    @include set-items-interval($interval * 0.5, horizontal);
-    @include set-items-padding($interval * 0.5, horizontal);
+    @if $interval != null {
+      @include set-items-interval($interval * 0.5, horizontal);
+      @include set-items-padding($interval * 0.5, horizontal);
+    }
     @include set-items-divider($divider-light-color, horizontal);
   }
 }
@@ -486,11 +490,15 @@
 // }
 @mixin block-items($interval, $item-border-color) {
   @include display-flex(column);
-  @include set-items-interval($interval, vertical);
+  @if $interval != null {
+    @include set-items-interval($interval, vertical);
+  }
 
   &.bordered {
-    @include set-items-interval($interval * 0.5, vertical);
-    @include set-items-padding($interval * 0.5, vertical);
+    @if $interval != null {
+      @include set-items-interval($interval * 0.5, vertical);
+      @include set-items-padding($interval * 0.5, vertical);
+    }
     @include set-items-divider($divider-light-color, vertical);
   }
 }

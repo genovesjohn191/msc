@@ -33,6 +33,7 @@ import { WidgetsModule } from './widgets/widgets.module';
 import { FileAttachmentModule } from './file-attachment/file-attachment.module';
 import { PaginatorModule } from './paginator/paginator.module';
 import { ActionItemModule } from './action-item/action-item.module';
+import { SlidingPanelModule } from './sliding-panel/sliding-panel.module';
 import { ResponsivePanelModule } from './responsive-panel/responsive-panel.module';
 import { CollapsiblePanelModule } from './collapsible-panel/collapsible-panel.module';
 import { RadioButtonGroupModule } from './radio-button-group/radio-button-group.module';
@@ -84,6 +85,7 @@ import { FileDownloadModule } from './file-download/file-download.module';
     FileAttachmentModule,
     PaginatorModule,
     ActionItemModule,
+    SlidingPanelModule,
     ResponsivePanelModule,
     CollapsiblePanelModule,
     RadioButtonGroupModule,
@@ -133,6 +135,7 @@ import { FileDownloadModule } from './file-download/file-download.module';
     FileAttachmentModule,
     PaginatorModule,
     ActionItemModule,
+    SlidingPanelModule,
     ResponsivePanelModule,
     CollapsiblePanelModule,
     RadioButtonGroupModule,

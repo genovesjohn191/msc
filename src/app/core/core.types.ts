@@ -9,3 +9,6 @@ export type McsColorType = 'primary' | 'primary-01' | 'primary-02' | 'secondary'
 
 // Status Type
 export type McsStatusType = 'success' | 'failed' | 'warning' | 'info';
+
+// Placement Type
+export type McsPlacementType = 'left' | 'right' | 'top' | 'bottom';

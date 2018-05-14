@@ -1,4 +1,8 @@
 // Inline items settings
+.inline-items {
+  @include inline-items(null, $divider-light-color);
+}
+
 .inline-items-xsmall {
   @include inline-items($space-xsmall, $divider-light-color);
 }
@@ -20,6 +24,10 @@
 }
 
 // Block items settings
+.block-items {
+  @include block-items(null, $divider-light-color);
+}
+
 .block-items-xsmall {
   @include block-items($space-xsmall, $divider-light-color);
 }
