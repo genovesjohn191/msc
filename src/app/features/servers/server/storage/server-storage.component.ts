@@ -368,6 +368,7 @@ export class ServerStorageComponent extends ServerDetailsBase
     this._getResourceStorage();
     if (!this.server.isProcessing ||
       isNullOrEmpty(this.server.storageDevices)) {
+      console.log('getServerDisks - serverSelectionChanged');
       this._getServerDisks();
     }
   }
@@ -467,7 +468,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onCreateServerDisk(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || isNullOrEmpty(job.clientReferenceObject)) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
       case McsDataStatus.InProgress:
@@ -490,7 +491,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onUpdateServerDisk(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || isNullOrEmpty(job.clientReferenceObject)) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     if (job.dataStatus === McsDataStatus.Success) {
       this._updateResourceStorageUsedMB(job);
@@ -503,7 +504,7 @@ export class ServerStorageComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onDeleteServerDisk(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || isNullOrEmpty(job.clientReferenceObject)) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     if (job.dataStatus === McsDataStatus.Success) {
       // Update resource values
@@ -522,8 +523,8 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Will trigger if currently adding a disk
    * @param job Emitted job content
    */
-  private _onAddingDisk(job): void {
-    if (isNullOrEmpty(job)) { return; }
+  private _onAddingDisk(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     this._newDisk = new ServerStorageDevice();
     this._newDisk.name = job.clientReferenceObject.name;
@@ -536,8 +537,8 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Will trigger once a disk was added successfully
    * @param job Emitted job content
    */
-  private _updateResourceStorageUsedMB(job): void {
-    if (isNullOrEmpty(job)) { return; }
+  private _updateResourceStorageUsedMB(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     // Update resource values
     let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);

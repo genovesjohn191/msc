@@ -58,7 +58,7 @@ export class GoogleAnalyticsEventsService {
           event.urlAfterRedirects, CoreDefinition.REGEX_UUID_PATTERN, '{id}');
         // Mask JWT Token from the URL
         maskedUrl = this._maskPrivateDataFromUrl(
-          event.urlAfterRedirects, CoreDefinition.REGEX_BEARER_PATTERN, 'bearer={token}');
+          maskedUrl, CoreDefinition.REGEX_BEARER_PATTERN, 'bearer={token}');
 
         dataLayer.push({
           'event': 'virtualPageView',

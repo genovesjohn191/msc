@@ -446,7 +446,7 @@ export class ServerNicsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onCreateServerNic(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     if (job.dataStatus === McsDataStatus.InProgress) {
       // Append a mock nic record while job is processing
@@ -463,7 +463,7 @@ export class ServerNicsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onModifyServerNic(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || this.server.id !== job.clientReferenceObject.serverId) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     // Get and update the server nics
     if (job.dataStatus === McsDataStatus.Success) {
@@ -476,7 +476,7 @@ export class ServerNicsComponent extends ServerDetailsBase
    * @param job Emitted job content
    */
   private _onAddingNic(job: McsApiJob): void {
-    if (isNullOrEmpty(job)) { return; }
+    if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock NIC data based on job response
     this._newNic = new ServerNicSummary();

@@ -12,7 +12,8 @@ import { ServersRepository } from '../servers.repository';
 import { ServerService } from '../server/server.service';
 import {
   McsTextContentProvider,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  McsApiJob
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -151,6 +152,16 @@ export abstract class ServerDetailsBase {
   protected appendUnitGB(value: number): string {
     let textContent = this._textProvider.content.servers.shared.storageScale;
     return (value > 0) ? `${value} ${textContent.unit}` : textContent.invalidStorage;
+  }
+
+  /**
+   * Returns true when the server is activated by job process
+   * @param job Emitted job to be checked
+   */
+  protected serverIsActiveByJob(job: McsApiJob): boolean {
+    let activeServer = !isNullOrEmpty(job) &&
+      this.server.id === job.clientReferenceObject.serverId;
+    return activeServer;
   }
 
   /**
