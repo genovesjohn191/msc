@@ -1,0 +1,7 @@
+<ng-container *ngIf="panelOpen">
+  <div [@slideInPanel] class="sliding-panel-overlay" (click)="toggle()">
+    <div [@slideRight] class="sliding-panel-content" stop-propagation scrollable>
+      <ng-content></ng-content>
+    </div>
+  </div>
+</ng-container>

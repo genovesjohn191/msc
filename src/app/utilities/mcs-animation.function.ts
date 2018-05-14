@@ -2,6 +2,7 @@ import { AnimationTriggerMetadata } from '@angular/animations';
 
 // Factories
 import { fade } from './animations/fade';
+import { slide } from './animations/slide';
 import { expansion } from './animations/expansion';
 import { rotate } from './animations/rotate';
 import { transform } from './animations/transform';
@@ -13,6 +14,10 @@ import { scale } from './animations/scale';
  */
 export const animateFactory: {
   readonly fadeIn: AnimationTriggerMetadata;
+  readonly slideLeft: AnimationTriggerMetadata;
+  readonly slideRight: AnimationTriggerMetadata;
+  readonly slideTop: AnimationTriggerMetadata;
+  readonly slideBottom: AnimationTriggerMetadata;
   readonly transformVertical: AnimationTriggerMetadata;
   readonly expansionVertical: AnimationTriggerMetadata;
   readonly rotate45: AnimationTriggerMetadata;
@@ -21,6 +26,10 @@ export const animateFactory: {
   readonly scaleIn: AnimationTriggerMetadata;
 } = {
     fadeIn: fade.fadeIn,
+    slideLeft: slide.slideLeft,
+    slideRight: slide.slideRight,
+    slideTop: slide.slideTop,
+    slideBottom: slide.slideBottom,
     transformVertical: transform.transformVertical,
     expansionVertical: expansion.expansionVertical,
     rotate45: rotate.rotate45,

@@ -1,0 +1,57 @@
+<div class="block-items-medium bordered">
+
+  <!-- Buy now button -->
+  <div>
+    <button mcsButton size="small" id="ctaBuyNow">Buy Now</button>
+  </div>
+
+  <!-- Changes -->
+  <mcs-list header="Make a Change" itemsOffset="small">
+    <mcs-list-item>
+      <a>Scale a Virtual Data Centre</a>
+    </mcs-list-item>
+    <mcs-list-item>
+      <a>Change InView Monitoring Level</a>
+    </mcs-list-item>
+  </mcs-list>
+
+  <!-- Dependencies -->
+  <mcs-list header="Dependencies" itemsOffset="small" *ngIf="product?.dependencies">
+    <mcs-list-item *ngFor="let dependency of product.dependencies">
+      <a (click)="onClickDependency(dependency)">{{ dependency.name }}</a>
+    </mcs-list-item>
+  </mcs-list>
+
+  <!-- Pricing -->
+  <mcs-list header="Pricing" itemsOffset="small">
+    <mcs-list-item>
+      Per Storage: $0.50
+    </mcs-list-item>
+    <mcs-list-item>
+      Per vRAM: $0.25
+    </mcs-list-item>
+    <mcs-list-item>
+      Per vCPU: $0.20
+    </mcs-list-item>
+  </mcs-list>
+
+  <!-- Downloads -->
+  <mcs-list header="Downloads" itemsOffset="small" *ngIf="product?.downloads">
+    <mcs-list-item *ngFor="let download of product.downloads">
+      <mcs-file-download [file]="getFileInfo(download)"></mcs-file-download>
+    </mcs-list-item>
+  </mcs-list>
+
+  <!-- Recommended -->
+  <mcs-list header="We also recommend..." itemsOffset="small">
+    <mcs-list-item>
+      <a>VDC VM Instance</a>
+    </mcs-list-item>
+    <mcs-list-item>
+      <a>Managed Firewall</a>
+    </mcs-list-item>
+    <mcs-list-item>
+      <a>Managed Load Balancer</a>
+    </mcs-list-item>
+  </mcs-list>
+</div>

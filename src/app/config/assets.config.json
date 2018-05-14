@@ -37,7 +37,8 @@
     "attachment": "fa fa-paperclip",
     "navbar": "fa fa-bars",
     "angle-double-right": "fa fa-angle-double-right",
-    "trash-o": "fa fa-trash-o"
+    "trash-o": "fa fa-trash-o",
+    "ellipsis-v": "fa fa-ellipsis-v"
   },
   "svgIcons": {
     "no-icon-available": "no-icon-available.svg",

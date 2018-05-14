@@ -27,13 +27,15 @@ import {
   McsTextContentProvider,
   McsDataStatusFactory,
   McsSearch,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  CoreDefinition
 } from '../../core';
 import {
   unsubscribeSafely,
   refreshView,
   isNullOrEmpty
 } from '../../utilities';
+import { SlidingPanelComponent } from '../../shared';
 import {
   ProductCatalog,
   Product
@@ -53,6 +55,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
   public search: McsSearch;
+
+  @ViewChild('slidingPanel')
+  public slidingPanel: SlidingPanelComponent;
+
   public textContent: any;
 
   public catalogs: ProductCatalog[];
@@ -63,6 +69,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   public listStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
   public productStatusFactory: McsDataStatusFactory<Product>;
   private _destroySubject = new Subject<void>();
+
+  public get toggleIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_ELLIPSIS_VERTICAL;
+  }
 
   constructor(
     private _router: Router,
@@ -106,6 +116,14 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedProduct = product;
     this._navigateToProduct(product);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Toggles the sliding panel
+   */
+  public onToggleSlidingPanel(): void {
+    if (isNullOrEmpty(this.slidingPanel)) { return; }
+    this.slidingPanel.toggle();
   }
 
   /**

@@ -99,8 +99,21 @@
 
 .visible-small {
   display: none !important;
-
   @include breakpoint(small) {
+    display: block !important;
+  }
+}
+
+.visible-medium {
+  display: none !important;
+  @include breakpoint(medium) {
+    display: block !important;
+  }
+}
+
+.visible-large {
+  display: none !important;
+  @include breakpoint(large) {
     display: block !important;
   }
 }
