@@ -3,14 +3,16 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { ServerCommandComponent } from './server-command.component';
-import { CoreDefinition } from '../../../../core';
+import {
+  CoreDefinition,
+  GoogleAnalyticsEventsService } from '../../../../core';
+import { googleAnalyticsEventsMock } from '../../../../core/testing';
 import { ServerCommand } from '../../models';
 import { ServersTestingModule } from '../../testing';
 
 describe('ServerCommandComponent', () => {
   /** Stub Services/Components */
   let component: ServerCommandComponent;
-
   beforeEach(async(() => {
     /** Testbed Reset Module */
     TestBed.resetTestingModule();
@@ -24,6 +26,9 @@ describe('ServerCommandComponent', () => {
         ServersTestingModule
       ]
     });
+
+    /** Testbed Onverriding of Providers */
+    TestBed.overrideProvider(GoogleAnalyticsEventsService, { useValue: googleAnalyticsEventsMock });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(ServerCommandComponent, {

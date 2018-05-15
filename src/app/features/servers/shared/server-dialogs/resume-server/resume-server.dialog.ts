@@ -7,7 +7,8 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  GoogleAnalyticsEventsService
 } from '../../../../../core';
 import { Server } from '../../../models';
 import {
@@ -42,6 +43,7 @@ export class ResumeServerDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
+    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<ResumeServerDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -52,6 +54,7 @@ export class ResumeServerDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
+    this._sendEventTracking('resume-cancel-click');
     this.dialogRef.close();
   }
 
@@ -59,6 +62,7 @@ export class ResumeServerDialogComponent {
    * This will close the dialog and set the dialog result to true
    */
   public resumeServer(): void {
+    this._sendEventTracking('resume-confirm-click');
     this.dialogRef.close(true);
   }
 
@@ -90,5 +94,9 @@ export class ResumeServerDialogComponent {
     } else {
       this.servers.push(this.dialogData);
     }
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'resume-dialog');
   }
 }

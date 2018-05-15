@@ -25,9 +25,9 @@ export class GoogleAnalyticsEventsService {
     _eventValue: number = null) {
     dataLayer.push({
       'event': 'customEvent',
-      'eventCategory': _eventCategory,
-      'eventAction': _eventAction,
-      'eventLabel': _eventLabel,
+      'eventCategory': _eventCategory.toLowerCase(),
+      'eventAction': _eventAction.toLowerCase(),
+      'eventLabel': _eventLabel.toLowerCase(),
       'eventValue': _eventValue
     });
   }

@@ -32,7 +32,8 @@ import {
   McsDeviceType,
   McsSelection,
   McsTableListingBase,
-  McsDialogService
+  McsDialogService,
+  GoogleAnalyticsEventsService
 } from '../../core';
 import {
   isNullOrEmpty,
@@ -124,7 +125,8 @@ export class ServersComponent
     private _serversService: ServersService,
     private _serversRepository: ServersRepository,
     private _serversResourceRepository: ServersResourcesRepository,
-    private _router: Router
+    private _router: Router,
+    private _ga: GoogleAnalyticsEventsService
   ) {
     super(_browserService, _changeDetectorRef);
     this.selection = new McsSelection<Server>(true);
@@ -202,6 +204,8 @@ export class ServersComponent
       servers.push(selectedServer);
     });
 
+    this._ga.emitEvent('server', ServerCommand[action] + '-click', 'server-listing-top-panel');
+
     // Execute server command
     this.executeServerCommand(servers, action);
   }
@@ -274,6 +278,7 @@ export class ServersComponent
    * This will navigate to new server page
    */
   public onClickNewServerButton() {
+    this._ga.emitEvent('server', 'create-new-server-click', 'server-listing-top-panel');
     this._router.navigate(['./servers/create']);
   }
 
@@ -291,6 +296,7 @@ export class ServersComponent
    */
   public navigateToResource(server: Server): void {
     if (isNullOrEmpty(server.platform)) { return; }
+    this._sendEventTracking('navigate-to-vdc-click');
     this._router.navigate(['/servers/vdc', server.platform.resourceId]);
   }
 
@@ -301,6 +307,7 @@ export class ServersComponent
   public navigateToServer(server: Server): void {
     // Do not navigate to server details when server is deleting
     if (isNullOrEmpty(server) || this.serverDeleting(server)) { return; }
+    this._sendEventTracking('navigate-to-server-click');
     this._router.navigate(['/servers/', server.id]);
   }
 
@@ -360,5 +367,9 @@ export class ServersComponent
       .subscribe(() => {
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'server-listing-page');
   }
 }
