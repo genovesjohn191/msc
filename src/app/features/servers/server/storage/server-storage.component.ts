@@ -368,7 +368,6 @@ export class ServerStorageComponent extends ServerDetailsBase
     this._getResourceStorage();
     if (!this.server.isProcessing ||
       isNullOrEmpty(this.server.storageDevices)) {
-      console.log('getServerDisks - serverSelectionChanged');
       this._getServerDisks();
     }
   }

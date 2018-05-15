@@ -133,7 +133,7 @@ export class Firewall {
 
     switch (this.deviceStatus) {
       case FirewallDeviceStatus.AutoUpdated:
-      case FirewallDeviceStatus.InProgress:
+      case FirewallDeviceStatus.Installed:
       case FirewallDeviceStatus.Retrieved:
       case FirewallDeviceStatus.Reverted:
         iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
@@ -150,7 +150,7 @@ export class Firewall {
 
       case FirewallDeviceStatus.ChangedConfig:
       case FirewallDeviceStatus.CheckedIn:
-      case FirewallDeviceStatus.Installed:
+      case FirewallDeviceStatus.InProgress:
       case FirewallDeviceStatus.Pending:
       case FirewallDeviceStatus.Retry:
       case FirewallDeviceStatus.Sched:
