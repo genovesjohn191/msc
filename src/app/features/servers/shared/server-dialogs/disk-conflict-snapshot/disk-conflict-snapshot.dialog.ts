@@ -7,7 +7,8 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  GoogleAnalyticsEventsService
 } from '../../../../../core';
 import { ServerSnapshotDialogContent } from '../../../models';
 
@@ -26,6 +27,7 @@ export class DiskConflictSnapshotDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
+    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<DiskConflictSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -45,6 +47,11 @@ export class DiskConflictSnapshotDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
+    this._sendEventTracking('disk-conflict-snapshot-close-click');
     this.dialogRef.close();
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'disk-conflict-snapshot-dialog');
   }
 }

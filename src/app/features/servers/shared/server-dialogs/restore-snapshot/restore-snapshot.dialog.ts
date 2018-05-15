@@ -7,7 +7,8 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  GoogleAnalyticsEventsService
 } from '../../../../../core';
 import { replacePlaceholder } from '../../../../../utilities';
 import { ServerSnapshotDialogContent } from '../../../models';
@@ -27,6 +28,7 @@ export class RestoreSnapshotDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
+    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<RestoreSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -59,6 +61,7 @@ export class RestoreSnapshotDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
+    this._sendEventTracking('restore-snapshot-cancel-click');
     this.dialogRef.close();
   }
 
@@ -66,6 +69,11 @@ export class RestoreSnapshotDialogComponent {
    * This will close the dialog and set the dialog result to true
    */
   public restoreSnapshot(): void {
+    this._sendEventTracking('restore-snapshot-confirm-click');
     this.dialogRef.close(true);
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'restore-snapshot-dialog');
   }
 }

@@ -7,7 +7,8 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  GoogleAnalyticsEventsService
 } from '../../../../../core';
 import { replacePlaceholder } from '../../../../../utilities';
 import { ServerSnapshotDialogContent } from '../../../models';
@@ -27,6 +28,7 @@ export class InsufficientStorageSnapshotDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
+    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<InsufficientStorageSnapshotDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -56,6 +58,11 @@ export class InsufficientStorageSnapshotDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
+    this._sendEventTracking('insufficient-snapshot-storage-close-click');
     this.dialogRef.close();
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'insufficient-snapshot-storage-dialog');
   }
 }

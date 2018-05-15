@@ -7,7 +7,8 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  GoogleAnalyticsEventsService
 } from '../../../../../core';
 import {
   isNullOrEmpty,
@@ -30,6 +31,7 @@ export class DeleteNicDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
+    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<DeleteNicDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData: ServerNicSummary
   ) {
@@ -45,6 +47,7 @@ export class DeleteNicDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
+    this._sendEventTracking('delete-nic-cancel-click');
     this.dialogRef.close();
   }
 
@@ -52,6 +55,7 @@ export class DeleteNicDialogComponent {
    * This will close the dialog and set the dialog result to true
    */
   public deleteNic(): void {
+    this._sendEventTracking('delete-nic-confirm-click');
     this.dialogRef.close(this.nic);
   }
 
@@ -77,5 +81,9 @@ export class DeleteNicDialogComponent {
       'nic_name',
       this.nic.name
     );
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'delete-nic-dialog');
   }
 }

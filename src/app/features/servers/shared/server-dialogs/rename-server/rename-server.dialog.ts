@@ -9,7 +9,8 @@ import {
   McsDialogRef,
   CoreDefinition,
   McsTextContentProvider,
-  CoreValidators
+  CoreValidators,
+  GoogleAnalyticsEventsService
 } from '../../../../../core';
 import {
   replacePlaceholder,
@@ -34,6 +35,7 @@ export class RenameServerDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
+    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<RenameServerDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -47,6 +49,7 @@ export class RenameServerDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
+    this._sendEventTracking('rename-cancel-click');
     this.dialogRef.close();
   }
 
@@ -56,9 +59,12 @@ export class RenameServerDialogComponent {
    */
   public renameServer(serverNameInput: HTMLInputElement): void {
     if (isNullOrEmpty(serverNameInput)) { return; }
-    this.fcServerName.valid ?
-      this.dialogRef.close(serverNameInput.value) :
+    if (this.fcServerName.valid) {
+      this._sendEventTracking('rename-confirm-click');
+      this.dialogRef.close(serverNameInput.value);
+    } else {
       serverNameInput.focus();
+    }
   }
 
   /**
@@ -98,5 +104,9 @@ export class RenameServerDialogComponent {
   private _serverNameValidator(inputValue: any): boolean {
     return CoreDefinition.REGEX_SERVER_NAME_PATTERN.test(inputValue) &&
       (this.server && this.server.name !== inputValue);
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'rename-dialog');
   }
 }

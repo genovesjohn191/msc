@@ -32,7 +32,8 @@ import {
   McsApiJob,
   McsDataStatusFactory,
   McsApiErrorResponse,
-  McsDataStatus
+  McsDataStatus,
+  GoogleAnalyticsEventsService
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -114,7 +115,8 @@ export class CreateServerComponent implements
     private _errorHandlerService: McsErrorHandlerService,
     private _accessControlService: McsAccessControlService,
     private _serversService: ServersService,
-    private _serversResourceRepository: ServersResourcesRepository
+    private _serversResourceRepository: ServersResourcesRepository,
+    private _ga: GoogleAnalyticsEventsService
   ) {
     this.faCreationForms = new FormArray([]);
     this.notifications = new Array();
@@ -154,6 +156,7 @@ export class CreateServerComponent implements
    * Navigate to servers listing page
    */
   public gotoServers() {
+    this._sendEventTracking('navigate-to-server-listing-click');
     this._router.navigate(['/servers']);
   }
 
@@ -276,6 +279,8 @@ export class CreateServerComponent implements
     serverCreate.network.ipAllocationMode = serverInput.ipAddress.ipAllocationMode;
     serverCreate.network.ipAddress = serverInput.ipAddress.customIpAddress;
 
+    this._sendEventTracking('create-new-server-next-click');
+
     return this._serversService.createServer(serverCreate).map((response) => {
       return isNullOrEmpty(response) ? undefined : response.content;
     });
@@ -289,6 +294,8 @@ export class CreateServerComponent implements
     if (isNullOrEmpty(serverInput)) { return; }
     let serverClone = new ServerClone();
     serverClone.name = serverInput.serverName;
+
+    this._sendEventTracking('clone-server-next-click');
 
     return this._serversService.cloneServer(serverInput.targetServer.id, serverClone)
       .map((response) => {
@@ -349,5 +356,9 @@ export class CreateServerComponent implements
   private _registerServerMap(): void {
     this._createServerMap.set(ServerCreateType.New, this._createNewServer.bind(this));
     this._createServerMap.set(ServerCreateType.Clone, this._cloneNewServer.bind(this));
+  }
+
+  private _sendEventTracking(event: string): void {
+    this._ga.emitEvent('server', event, 'create-new-server-page');
   }
 }
