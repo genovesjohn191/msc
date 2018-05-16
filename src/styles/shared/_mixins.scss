@@ -481,6 +481,10 @@
     }
     @include set-items-divider($divider-light-color, horizontal);
   }
+
+  &.centered {
+    justify-content: center;
+  }
 }
 
 // Sets the items block with each other
@@ -500,5 +504,9 @@
       @include set-items-padding($interval * 0.5, vertical);
     }
     @include set-items-divider($divider-light-color, vertical);
+  }
+
+  &.centered {
+    justify-content: center;
   }
 }

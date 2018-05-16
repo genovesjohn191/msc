@@ -17,10 +17,9 @@ import {
 } from 'rxjs/operators';
 import {
   ServerNetwork,
-  ServerNicSummary,
+  ServerNic,
   ServerManageNic,
-  ServerIpAddress,
-  ServerIpAllocationMode
+  ServerManageNetwork
 } from '../../models';
 import {
   CoreDefinition,
@@ -39,41 +38,50 @@ import { ServersResourcesRepository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  refreshView
+  animateFactory
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
   DeleteNicDialogComponent
 } from '../../shared';
 
+// Enumeration
+export enum ServerNicMethodType {
+  None = 0,
+  AddNic = 1,
+  EditNic = 2,
+  DeleteNic = 3
+}
+
+// Constants
 const SERVER_MAXIMUM_NICS = 10;
 
 @Component({
   selector: 'mcs-server-nics',
   templateUrl: './server-nics.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    animateFactory.fadeIn
+  ],
   host: {
     'class': 'block'
   }
 })
 
-export class ServerNicsComponent extends ServerDetailsBase
-  implements OnInit, OnDestroy {
-
+export class ServerNicsComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
-  public nics: ServerNicSummary[];
-  public ipAddress: ServerIpAddress;
-
+  public currentIpAddress: string;
   public fcNetwork: FormControl;
-  public dataStatusFactory: McsDataStatusFactory<ServerNicSummary[]>;
+  public manageNetwork: ServerManageNetwork;
+  public selectedNetwork: ServerNetwork;
+  public selectedNic: ServerNic;
+  public dataStatusFactory: McsDataStatusFactory<ServerNic[]>;
 
-  // Subscriptions
-  public updateNicsSubscription: Subscription;
-  public networksSubscription: Subscription;
-
-  private _newNic: ServerNicSummary;
-
+  private _updateNicsSubscription: Subscription;
+  private _networksSubscription: Subscription;
+  private _newNic: ServerNic;
   private _destroySubject = new Subject<void>();
+  private _hasInProgressNic: boolean;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -87,95 +95,46 @@ export class ServerNicsComponent extends ServerDetailsBase
     return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
-  public get hasNics(): boolean {
-    return !isNullOrEmpty(this.server.nics);
-  }
-
+  /**
+   * Returns true when the nics has reached its limitation
+   */
   public get hasReachedNicsLimit(): boolean {
-    return this.hasNics && this.server.nics.length === SERVER_MAXIMUM_NICS;
+    return !isNullOrEmpty(this.server.nics) &&
+      this.server.nics.length >= SERVER_MAXIMUM_NICS;
   }
 
-  public get hasAvailableResourceNetwork(): boolean {
-    return !isNullOrEmpty(this.resourceNetworks);
+  /**
+   * Returns the enum type of the server nic method
+   */
+  public get serverNicMethodTypeEnum(): any {
+    return ServerNicMethodType;
   }
 
-  public get scaleNicIsDisabled(): boolean {
-    return !this.server.executable || !this.validate();
-  }
-
-  public get resourceNetworks(): ServerNetwork[] {
-    return !isNullOrEmpty(this.serverResource.networks) ?
-      this.serverResource.networks : new Array();
-  }
-
-  public get serverNics(): ServerNicSummary[] {
+  /**
+   * Returns all the server nics including the newly created nic as a mock data
+   */
+  public get serverNics(): ServerNic[] {
     return isNullOrEmpty(this._newNic) ?
       this.server.nics :
       [...this.server.nics, this._newNic];
   }
 
-  private _networkName: string;
-  public get networkName(): string {
-    return this._networkName;
-  }
-  public set networkName(value: string) {
-    if (this._networkName !== value) {
-      this._networkName = value;
-      this._changeDetectorRef.markForCheck();
-    }
+  /**
+   * Returns all the resource networks
+   */
+  public get resourceNetworks(): ServerNetwork[] {
+    return !isNullOrEmpty(this.serverResource.networks) ?
+      this.serverResource.networks : new Array();
   }
 
-  private _networkMask: string;
-  public get networkNetmask(): string {
-    return this._networkMask;
-  }
-  public set networkNetmask(value: string) {
-    if (this._networkMask !== value) {
-      this._networkMask = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _networkGateway: string;
-  public get networkGateway(): string {
-    return this._networkGateway;
-  }
-  public set networkGateway(value: string) {
-    if (this._networkGateway !== value) {
-      this._networkGateway = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _selectedNic: ServerNicSummary;
-  public get selectedNic(): ServerNicSummary {
-    return this._selectedNic;
-  }
-  public set selectedNic(value: ServerNicSummary) {
-    if (this._selectedNic !== value) {
-      this._selectedNic = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _isPrimary: boolean;
-  public get isPrimary(): boolean {
-    return this._isPrimary;
-  }
-  public set isPrimary(value: boolean) {
-    if (this._isPrimary !== value) {
-      this._isPrimary = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _isUpdate: boolean;
-  public get isUpdate(): boolean {
-    return this._isUpdate;
-  }
-  public set isUpdate(value: boolean) {
-    if (this._isUpdate !== value) {
-      this._isUpdate = value;
+  /**
+   * Returns true when the NIC is currently updating/editing
+   */
+  private _nicMethodType: ServerNicMethodType = ServerNicMethodType.AddNic;
+  public get nicMethodType(): ServerNicMethodType { return this._nicMethodType; }
+  public set nicMethodType(value: ServerNicMethodType) {
+    if (this._nicMethodType !== value) {
+      this._nicMethodType = value;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -191,7 +150,6 @@ export class ServerNicsComponent extends ServerDetailsBase
     private _dialogService: McsDialogService,
     private _notificationEvents: McsNotificationEventsService
   ) {
-    // Constructor
     super(
       _serversResourcesRepository,
       _serversRepository,
@@ -201,145 +159,146 @@ export class ServerNicsComponent extends ServerDetailsBase
       _textProvider,
       _errorHandlerService
     );
-    this.isUpdate = false;
-    this.nics = new Array<ServerNicSummary>();
-    this.ipAddress = new ServerIpAddress();
-    this.selectedNic = new ServerNicSummary();
+    this.manageNetwork = new ServerManageNetwork();
+    this.selectedNic = new ServerNic();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this.nicMethodType = ServerNicMethodType.AddNic;
   }
 
   public ngOnInit() {
-    // OnInit
     this.textContent = this._textProvider.content.servers.server.nics;
     this.initialize();
-    this._registerFormGroup();
     this._registerJobEvents();
   }
 
   public ngOnDestroy() {
     this.dispose();
-    this._unregisterJobEvents();
-    unsubscribeSafely(this.networksSubscription);
+    this._destroySubject.next();
+    this._destroySubject.complete();
+    unsubscribeSafely(this._networksSubscription);
   }
 
-  public onIpAddressChanged(ipAddress: ServerIpAddress): void {
-    if (isNullOrEmpty(ipAddress)) { return; }
-
-    this.ipAddress = (ipAddress.valid) ? ipAddress : new ServerIpAddress();
+  /**
+   * Event that emits when data in network component has been changed
+   * @param manageNetwork Manage Network content
+   */
+  public onNetworkChanged(manageNetwork: ServerManageNetwork): void {
+    if (isNullOrEmpty(manageNetwork)) { return; }
+    this.manageNetwork = manageNetwork;
   }
 
-  public validate(): boolean {
-    let isValid = false;
+  /**
+   * Returns true when there is a selected network when adding nic and the inputted is valid
+   */
+  public get inputIsValid(): boolean {
+    return !isNullOrEmpty(this.manageNetwork)
+      && this.manageNetwork.valid;
+  }
 
-    if (this.isUpdate) {
-      let ipAddressExist: string;
-      if (!isNullOrEmpty(this.selectedNic.ipAddress)) {
-        ipAddressExist = this.selectedNic.ipAddress.find((ip) => {
-          return ip !== this.ipAddress.customIpAddress;
-        });
-      }
-      isValid = this.ipAddress.valid &&
-        (this.networkName !== this.selectedNic.name ||
-          this.ipAddress.ipAllocationMode !== this.selectedNic.ipAllocationMode ||
-          isNullOrEmpty(ipAddressExist));
-    } else {
-      isValid = !isNullOrEmpty(this.networkName) && this.ipAddress.valid;
+  /**
+   * Returns true when user can add nic or not
+   */
+  public get canAddNic(): boolean {
+    return !this.hasReachedNicsLimit
+      && !isNullOrEmpty(this.resourceNetworks);
+  }
+
+  /**
+   * Returns true when the NIC data has been changed
+   */
+  public get canEditNic(): boolean {
+    let modeHasChanged = this.manageNetwork.ipAllocationMode !== this.selectedNic.ipAllocationMode;
+    if (modeHasChanged) { return true; }
+
+    let networkHasChanged = this.manageNetwork.network.name !== this.selectedNic.logicalNetworkName;
+    if (networkHasChanged) { return true; }
+
+    if (!isNullOrEmpty(this.manageNetwork.customIpAddress) && this.inputIsValid) {
+      let ipAddressFound = this.selectedNic.ipAddress.find((ip) => {
+        return ip === this.manageNetwork.customIpAddress;
+      });
+      if (!isNullOrEmpty(ipAddressFound)) { return false; }
     }
-
-    return isValid;
+    return this.inputIsValid;
   }
 
-  public getIpAllocationModeText(ipAllocationMode: ServerIpAllocationMode): string {
-    let text: string;
-
-    switch (ipAllocationMode) {
-      case ServerIpAllocationMode.Dhcp:
-        text = this.textContent.ipAllocationMode.dhcp;
-        break;
-
-      case ServerIpAllocationMode.Pool:
-        text = this.textContent.ipAllocationMode.dynamic;
-        break;
-
-      case ServerIpAllocationMode.Manual:
-        text = this.textContent.ipAllocationMode.static;
-        break;
-
-      default:
-        text = '';
-        break;
-    }
-
-    return text;
-  }
-
-  public onUpdateNetwork(nic: ServerNicSummary): void {
+  /**
+   * Edits the selected NIC content
+   * @param nic NIC to be edited
+   */
+  public editNic(nic: ServerNic): void {
     if (isNullOrEmpty(nic)) { return; }
-
     this.selectedNic = nic;
-    // TODO: Remove this when the nics endpoint and the ipaddress is array in API are available
-    if (!isNullOrEmpty(this.selectedNic)) {
-      this.selectedNic.ipAddress = Array.isArray(this.selectedNic.ipAddress) ?
-        this.selectedNic.ipAddress : new Array(this.selectedNic.ipAddress);
+    this.nicMethodType = ServerNicMethodType.EditNic;
+    if (!isNullOrEmpty(nic.ipAddress)) {
+      this.currentIpAddress = nic.ipAddress[0];
     }
-    this.networkName = nic.logicalNetworkName;
-    this.ipAddress.ipAllocationMode = nic.ipAllocationMode;
-    this.ipAddress.customIpAddress = isNullOrEmpty(nic) ? '' : nic.ipAddress[0];
-
-    this.isPrimary = nic.isPrimary;
-    this.isUpdate = true;
-    refreshView(() => this.fcNetwork.setValue(this.networkName));
+    this._selectNetworkByName(nic.logicalNetworkName);
   }
 
-  public closeUpdateWindow(): void {
+  /**
+   * Closes the edit window
+   */
+  public closeEditWindow(): void {
     this._resetNetworkValues();
-    this.isUpdate = false;
   }
 
-  public onDeleteNetwork(nic: ServerNicSummary): void {
+  /**
+   * Deletes the selected NIC
+   * @param nic NIC to be deleted
+   */
+  public deleteNic(nic: ServerNic): void {
     let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
       data: nic,
       size: 'medium'
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.deleteNetwork(nic);
-      }
+      if (isNullOrEmpty(result)) { return; }
+
+      let nicValues = new ServerManageNic();
+      nicValues.name = this.manageNetwork.network.name;
+      nicValues.clientReferenceObject = {
+        serverId: this.server.id,
+        nicId: nic.id
+      };
+      this._resetNetworkValues();
+      this._serversService.deleteServerNic(this.server.id, nic.id, nicValues).subscribe();
     });
   }
 
-  public addNetwork(): void {
-    if (!this.validate()) { return; }
-
+  /**
+   * Add NIC to the current server
+   */
+  public addNic(): void {
     let nicValues = new ServerManageNic();
-    nicValues.name = this.networkName;
-    nicValues.ipAllocationMode = this.ipAddress.ipAllocationMode;
-    nicValues.ipAddress = this.ipAddress.customIpAddress;
+    nicValues.name = this.manageNetwork.network.name;
+    nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
+    nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
       serverId: this.server.id,
-      networkName: this.networkName,
-      ipAllocationMode: this.ipAddress.ipAllocationMode,
-      ipAddress: this.ipAddress.customIpAddress
+      networkName: this.manageNetwork.network.name,
+      ipAllocationMode: this.manageNetwork.ipAllocationMode,
+      ipAddress: this.manageNetwork.customIpAddress
     };
-
     this._resetNetworkValues();
     this._serversService.addServerNic(this.server.id, nicValues).subscribe();
   }
 
-  public updateNetwork(): void {
-    if (!this.validate()) { return; }
-
+  /**
+   * Updates the NIC data based on the selected NIC
+   */
+  public updateNic(): void {
     let nicValues = new ServerManageNic();
-    nicValues.name = this.networkName;
-    nicValues.ipAllocationMode = this.ipAddress.ipAllocationMode;
-    nicValues.ipAddress = this.ipAddress.customIpAddress;
+    nicValues.name = this.manageNetwork.network.name;
+    nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
+    nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
       serverId: this.server.id,
       nicId: this.selectedNic.id,
-      networkName: this.networkName,
-      ipAllocationMode: this.ipAddress.ipAllocationMode,
-      ipAddress: this.ipAddress.customIpAddress
+      networkName: this.manageNetwork.network.name,
+      ipAllocationMode: this.manageNetwork.ipAllocationMode,
+      ipAddress: this.manageNetwork.customIpAddress
     };
 
     this._serversService.setServerSpinner(this.server, this.selectedNic);
@@ -351,24 +310,9 @@ export class ServerNicsComponent extends ServerDetailsBase
       })
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
-          this.isUpdate = false;
           this._resetNetworkValues();
         }
       });
-  }
-
-  public deleteNetwork(nic: ServerNicSummary): void {
-    if (isNullOrEmpty(nic)) { return; }
-
-    let nicValues = new ServerManageNic();
-    nicValues.name = this.networkName;
-    nicValues.clientReferenceObject = {
-      serverId: this.server.id,
-      nicId: nic.id
-    };
-
-    this._resetNetworkValues();
-    this._serversService.deleteServerNic(this.server.id, nic.id, nicValues).subscribe();
   }
 
   /**
@@ -377,42 +321,16 @@ export class ServerNicsComponent extends ServerDetailsBase
    */
   protected serverSelectionChanged(): void {
     this._getResourceNetworks();
-    if (!this.server.isProcessing ||
-      isNullOrEmpty(this.server.nics)) {
-      this._getServerNics();
-    }
-  }
-
-  /**
-   * Set network name, netmask and gateway on network select
-   *
-   * @param network Network selected
-   */
-  private _onNetworkSelect(network: ServerNetwork): void {
-    if (isNullOrEmpty(network)) { return; }
-    this.networkName = network.name;
-    this.networkNetmask = network.netmask;
-    this.networkGateway = network.gateway;
-  }
-
-  /**
-   * Register form group controls
-   */
-  private _registerFormGroup(): void {
-    this.fcNetwork = new FormControl('', []);
-    this.fcNetwork.valueChanges.subscribe(this._onNetworkSelect.bind(this));
+    if (!this._hasInProgressNic) { this._getServerNics(); }
   }
 
   /**
    * Reset network form values to initial
    */
   private _resetNetworkValues(): void {
-    this.fcNetwork.setValue('');
-    this.networkName = '';
-    this.ipAddress = new ServerIpAddress();
-    this.networkGateway = '';
-    this.networkNetmask = '';
-    this.isPrimary = false;
+    this.nicMethodType = ServerNicMethodType.AddNic;
+    this.manageNetwork = new ServerManageNetwork();
+    this.currentIpAddress = undefined;
   }
 
   /**
@@ -434,11 +352,17 @@ export class ServerNicsComponent extends ServerDetailsBase
   }
 
   /**
-   * Unregister jobs/notifications events
+   * Selects the network by its resource name
+   * @param networkName Network name to be find in the resources
    */
-  private _unregisterJobEvents(): void {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+  private _selectNetworkByName(networkName: string): void {
+    if (isNullOrEmpty(networkName)) { return; }
+    let foundNetwork = this.resourceNetworks.find((network) => {
+      return network.name === networkName;
+    });
+    if (!isNullOrEmpty(foundNetwork)) {
+      this.selectedNetwork = foundNetwork;
+    }
   }
 
   /**
@@ -449,10 +373,8 @@ export class ServerNicsComponent extends ServerDetailsBase
     if (!this.serverIsActiveByJob(job)) { return; }
 
     if (job.dataStatus === McsDataStatus.InProgress) {
-      // Append a mock nic record while job is processing
       this._onAddingNic(job);
     } else {
-      // Get and update the server nics
       this._newNic = undefined;
       this._getServerNics();
     }
@@ -464,11 +386,8 @@ export class ServerNicsComponent extends ServerDetailsBase
    */
   private _onModifyServerNic(job: McsApiJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
-
-    // Get and update the server nics
-    if (job.dataStatus === McsDataStatus.Success) {
-      this._getServerNics();
-    }
+    if (job.dataStatus === McsDataStatus.Success) { this._getServerNics(); }
+    this._hasInProgressNic = job.dataStatus === McsDataStatus.InProgress;
   }
 
   /**
@@ -479,7 +398,7 @@ export class ServerNicsComponent extends ServerDetailsBase
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock NIC data based on job response
-    this._newNic = new ServerNicSummary();
+    this._newNic = new ServerNic();
     this._newNic.logicalNetworkName = job.clientReferenceObject.networkName;
     this._newNic.ipAllocationMode = job.clientReferenceObject.ipAllocationMode;
     this._newNic.isProcessing = this.server.isProcessing;
@@ -489,10 +408,10 @@ export class ServerNicsComponent extends ServerDetailsBase
    * This will get and update the list of server nics
    */
   private _getServerNics(): void {
-    unsubscribeSafely(this.updateNicsSubscription);
+    unsubscribeSafely(this._updateNicsSubscription);
 
     this.dataStatusFactory.setInProgress();
-    this.updateNicsSubscription = this._serversRepository
+    this._updateNicsSubscription = this._serversRepository
       .findServerNics(this.server)
       .catch((error) => {
         // Handle common error status code
@@ -509,8 +428,8 @@ export class ServerNicsComponent extends ServerDetailsBase
    * Get the resource networks from the server
    */
   private _getResourceNetworks(): void {
-    unsubscribeSafely(this.networksSubscription);
-    this.networksSubscription = this._serversResourcesRespository
+    unsubscribeSafely(this._networksSubscription);
+    this._networksSubscription = this._serversResourcesRespository
       .findResourceNetworks(this.serverResource)
       .subscribe(() => {
         // Subscribe to update the snapshots in server instance

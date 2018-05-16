@@ -1,0 +1,67 @@
+<!-- Network header -->
+<div><ng-content select="[mcsManageNetworkTitle]"></ng-content></div>
+
+<!-- Network selection -->
+<div class="server-manage-network-selection">
+  <mcs-form-field>
+    <mcs-select [(ngModel)]="selectedNetwork" placeholder="Select network">
+      <mcs-select-group header="Networks">
+        <mcs-select-item *ngFor="let network of networks" [value]="network">
+          {{ network.name }}
+        </mcs-select-item>
+      </mcs-select-group>
+    </mcs-select>
+  </mcs-form-field>
+</div>
+
+<!-- Network switcher -->
+<div class="space-between-inline-items">
+  <h4 class="space-buttom-small auto-width">IP address</h4>
+  <a *ngIf="inputManageType === inputManageTypeEnum.Custom"
+    (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
+    {{ textContent.buttonSwitch }}</a>
+  <a *ngIf="inputManageType === inputManageTypeEnum.Buttons"
+    (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+    {{ textContent.customSwitch }}</a>
+</div>
+
+<div [ngSwitch]="inputManageType" class="server-manage-network-ip-address">
+  <!-- Ip address DHCP Mode -->
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
+    <p>{{ textContent.buttonMessage }}</p>
+
+    <mcs-radio-button-group orientation="vertical"
+      [ngModel]="ipAddressValue" (ngModelChange)="onRadioButtonChanged($event)">
+      <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value">
+        {{ item.text }}
+      </mcs-radio-button>
+    </mcs-radio-button-group>
+  </div>
+
+  <!-- IP address custom mode -->
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+    <p>{{ textContent.customMessage }}</p>
+
+    <form [formGroup]="fgIpAddress">
+      <mcs-form-field class="form-field-size-medium">
+        <input mcsInput placeholder="Enter IP Address"
+          [(ngModel)]="customIpAddress"
+          [formControl]="fcIpdAdrress">
+
+        <mcs-hint mcsHint align="start" *ngIf="netMask">
+          {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
+        </mcs-hint>
+
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.ipAddressRequired }}
+        </mcs-error>
+        <mcs-error mcsError errorState="ipAddress">
+          {{ textContent.errors.ipAddressInvalid }}
+        </mcs-error>
+        <mcs-error mcsError errorState="ipRange">
+          {{ ipRangeErrorText }}
+        </mcs-error>
+      </mcs-form-field>
+    </form>
+  </div>
+</div>

@@ -234,3 +234,15 @@
   border-bottom: 1px solid $divider-light-color;
   margin: $space-medium 0;
 }
+
+// Action items
+.action-items {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: space-between;
+  margin-top: $space-medium;
+
+  > :only-child {
+    margin-left: auto;
+  }
+}

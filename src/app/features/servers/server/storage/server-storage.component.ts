@@ -238,9 +238,9 @@ export class ServerStorageComponent extends ServerDetailsBase
   public onStorageChanged(serverStorage: ServerManageStorage) {
     this.storageChangedValue = serverStorage;
 
-    if (!isNullOrEmpty(serverStorage.storageProfile) &&
-      serverStorage.storageProfile !== this._storageProfile) {
-      this._storageProfile = serverStorage.storageProfile;
+    if (!isNullOrEmpty(serverStorage.storage) &&
+      serverStorage.storage.name !== this._storageProfile) {
+      this._storageProfile = serverStorage.storage.name;
       this.maximumMB = this.getStorageAvailableMemory(this._storageProfile);
     }
   }
@@ -291,12 +291,12 @@ export class ServerStorageComponent extends ServerDetailsBase
     this.mcsStorage.completed();
 
     let storageData = new ServerStorageDeviceUpdate();
-    storageData.storageProfile = this.storageChangedValue.storageProfile;
+    storageData.storageProfile = this.storageChangedValue.storage.name;
     storageData.sizeMB = this.storageChangedValue.storageMB;
     storageData.clientReferenceObject = {
       serverId: this.server.id,
       name: `${this.textContent.diskName} ${this.server.storageDevices.length + 1}`,
-      storageProfile: this.storageChangedValue.storageProfile,
+      storageProfile: this.storageChangedValue.storage.name,
       sizeMB: this.storageChangedValue.storageMB
     };
 
@@ -552,7 +552,7 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _resetDiskValues(): void {
     this.storageChangedValue = new ServerManageStorage();
     let storage = new ServerManageStorage();
-    storage.storageProfile = this._storageProfile;
+    storage.storage = { name: this._storageProfile } as ServerStorage;
     storage.storageMB = 0;
     storage.valid = false;
     this.onStorageChanged(storage);

@@ -1,9 +1,8 @@
 import { ServerPerformanceScale } from './server-performance-scale';
 import { ServerManageStorage } from './server-manage-storage';
-import { ServerIpAddress } from './server-ip-address';
+import { ServerManageNetwork } from './server-manage-network';
 import { ServerVApp } from './response/server-vapp';
 import { Server } from './response/server';
-import { ServerNetwork } from './response/server-network';
 import { ServerImageType } from './enumerations/server-image-type.enum';
 
 export class ServerCreateDetails {
@@ -12,8 +11,7 @@ export class ServerCreateDetails {
   public vApp: ServerVApp;
   public imageType: ServerImageType;
   public image: string;
-  public performanceScale: ServerPerformanceScale;
+  public serverScale: ServerPerformanceScale;
   public serverManageStorage: ServerManageStorage;
-  public network: ServerNetwork;
-  public ipAddress: ServerIpAddress;
+  public serverNetwork: ServerManageNetwork;
 }

@@ -33,11 +33,11 @@ import {
   ServerServiceType,
   ServerPerformanceScale,
   ServerManageStorage,
-  ServerNetwork,
-  ServerIpAddress,
   ServerImageType,
   ServerCatalogItem,
-  ServerCatalogItemType
+  ServerCatalogItemType,
+  ServerManageNetwork,
+  ServerStorage
 } from '../../models';
 import { CreateServerBase } from '../create-server.base';
 import { ServersOsRepository } from '../../servers-os.repository';
@@ -56,7 +56,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   public textHelpContent: any;
   public operatingSystemsMap: Map<string, ServerOperatingSystem[]>;
   public operatingSystemsSubscription: Subscription;
-  public selectedNetwork: ServerNetwork;
+  public selectedStorage: ServerStorage;
   public customTemplates: ServerCatalogItem[];
 
   // Form variables
@@ -67,7 +67,6 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   public fcNetwork: FormControl;
   public fcScale: FormControl;
   public fcStorage: FormControl;
-  public fcIpAddress: FormControl;
 
   @Input()
   public get resource(): ServerResource { return this._resource; }
@@ -143,15 +142,10 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
    * `@Note`: The value will vary according to selected CPU scale
    */
   public get storageMaxMemoryMB(): number {
-    if (isNullOrEmpty(this.fcStorage.value)) { return 0; }
-
-    let serverStorage = this.fcStorage.value as ServerManageStorage;
-    let resourceStorage = this.resource.storage.find((resource) => {
-      return resource.name === serverStorage.storageProfile;
-    });
-    if (isNullOrEmpty(resourceStorage)) { return 0; }
     let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
-    return this._serversService.computeAvailableStorageMB(resourceStorage, currentSelectedScale);
+    return this._serversService.computeAvailableStorageMB(
+      this.selectedStorage, currentSelectedScale
+    );
   }
 
   /**
@@ -170,15 +164,16 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   public onStorageChanged(serverStorage: ServerManageStorage) {
     if (isNullOrEmpty(this.fcStorage) || isNullOrEmpty(this.resource)) { return; }
     serverStorage.valid ? this.fcStorage.setValue(serverStorage) : this.fcStorage.reset();
+    this.selectedStorage = serverStorage.storage;
   }
 
   /**
-   * Event that emits when IP Address component has changed
-   * @param ipAddress Ip address emitted value
+   * Event that emits when network settings component has changed
+   * @param network Server network output to be emitted
    */
-  public onIpAddressChanged(ipAddress: ServerIpAddress): void {
-    if (isNullOrEmpty(this.fcIpAddress)) { return; }
-    ipAddress.valid ? this.fcIpAddress.setValue(ipAddress) : this.fcIpAddress.reset();
+  public onNetworkChanged(network: ServerManageNetwork): void {
+    if (isNullOrEmpty(this.fcNetwork)) { return; }
+    network.valid ? this.fcNetwork.setValue(network) : this.fcNetwork.reset();
   }
 
   /**
@@ -199,10 +194,9 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
     let newServerInputs = new ServerCreateDetails();
     newServerInputs.serverName = this.fcServerName.value;
     newServerInputs.vApp = this.fcVApp.value;
-    newServerInputs.performanceScale = this.fcScale.value;
+    newServerInputs.serverScale = this.fcScale.value;
     newServerInputs.serverManageStorage = this.fcStorage.value;
-    newServerInputs.network = this.fcNetwork.value;
-    newServerInputs.ipAddress = this.fcIpAddress.value;
+    newServerInputs.serverNetwork = this.fcNetwork.value;
 
     // Set image based on type Os/Template
     let selectedImage = this.fcImage.value;
@@ -307,19 +301,14 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
       CoreValidators.required
     ]);
 
-    this.fcIpAddress = new FormControl('', [
-      CoreValidators.required
-    ]);
-
     // Register Form Groups using binding
     this.fgNewServer = new FormGroup({
-      formControlServerName: this.fcServerName,
-      formControlVApp: this.fcVApp,
-      formControlImage: this.fcImage,
-      formControlNetwork: this.fcNetwork,
-      formControlScale: this.fcScale,
-      formControlStorage: this.fcStorage,
-      formControlIpAddress: this.fcIpAddress
+      fcServerName: this.fcServerName,
+      fcVApp: this.fcVApp,
+      fcImage: this.fcImage,
+      fcNetwork: this.fcNetwork,
+      fcScale: this.fcScale,
+      fcStorage: this.fcStorage
     });
   }
 

@@ -8,6 +8,13 @@ export enum ServerIpAllocationMode {
   Manual = 3
 }
 
+export const serverIpAllocationModeText = {
+  [ServerIpAllocationMode.None]: 'Unresolved',
+  [ServerIpAllocationMode.Dhcp]: 'DHCP',
+  [ServerIpAllocationMode.Pool]: 'Dynamic - IP Pool',
+  [ServerIpAllocationMode.Manual]: 'Manual'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

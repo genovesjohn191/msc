@@ -267,17 +267,17 @@ export class CreateServerComponent implements
     serverCreate.image = serverInput.image;
     serverCreate.serviceId = ''; // TODO: This is only empty if the type is Self-Managed
     // Scale
-    serverCreate.cpuCount = serverInput.performanceScale.cpuCount;
-    serverCreate.memoryMB = serverInput.performanceScale.memoryMB;
+    serverCreate.cpuCount = serverInput.serverScale.cpuCount;
+    serverCreate.memoryMB = serverInput.serverScale.memoryMB;
     // Storage
     serverCreate.storage = new ServerCreateStorage();
-    serverCreate.storage.name = serverInput.serverManageStorage.storageProfile;
+    serverCreate.storage.name = serverInput.serverManageStorage.storage.name;
     serverCreate.storage.storageMB = serverInput.serverManageStorage.storageMB;
     // Network
     serverCreate.network = new ServerCreateNetwork();
-    serverCreate.network.name = serverInput.network.name;
-    serverCreate.network.ipAllocationMode = serverInput.ipAddress.ipAllocationMode;
-    serverCreate.network.ipAddress = serverInput.ipAddress.customIpAddress;
+    serverCreate.network.name = serverInput.serverNetwork.network.name;
+    serverCreate.network.ipAllocationMode = serverInput.serverNetwork.ipAllocationMode;
+    serverCreate.network.ipAddress = serverInput.serverNetwork.customIpAddress;
 
     this._sendEventTracking('create-new-server-next-click');
 

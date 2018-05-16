@@ -105,9 +105,8 @@
                 </mcs-accordion-panel-header>
                 <div class="block-items-xsmall">
                   <ng-container *ngIf="hasIpAddress(nic.ipAddress); else dhcpLabelTemplate">
-                    <mcs-list itemsOffset="small" [header]="textContent.nics.ipAddresses"
-                      *ngFor="let item of nic.ipAddress">
-                      <mcs-list-item>{{ item }}</mcs-list-item>
+                    <mcs-list itemsOffset="small" [header]="textContent.nics.ipAddresses">
+                      <mcs-list-item *ngFor="let item of nic.ipAddress">{{ item }}</mcs-list-item>
                     </mcs-list>
                   </ng-container>
 

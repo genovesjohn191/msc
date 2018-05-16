@@ -39,7 +39,7 @@ import {
   ServerOperatingSystem,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
-  ServerNicSummary,
+  ServerNic,
   ServerManageNic,
   ServerManageMedia,
   ServerSnapshot,
@@ -533,7 +533,7 @@ export class ServersService {
    * This will get the server networks from the API
    */
   public getServerNics(
-    serverId: any): Observable<McsApiSuccessResponse<ServerNicSummary[]>> {
+    serverId: any): Observable<McsApiSuccessResponse<ServerNic[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
 
@@ -544,7 +544,7 @@ export class ServersService {
       .map((response) => {
         // Deserialize json reponse
         let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<ServerNicSummary[]>(ServerNicSummary, response);
+          .deserializeResponse<ServerNic[]>(ServerNic, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

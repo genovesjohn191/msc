@@ -127,6 +127,7 @@
         "storageLabel": "Storage",
         "networkLabel": "Network",
         "ipAddressLabel": "IP Address",
+        "createNewVApp": "Create a new vApp",
         "headers": {
           "vApp": "Virtual Applications",
           "os": "Operating System",
@@ -339,7 +340,8 @@
           "dhcp": "DHCP"
         },
         "noNics": "There are no NICs to display for this server.",
-        "errorGettingNics":"Sorry, something’s not right. We weren’t able to retrieve the list of NICs."
+        "errorGettingNics":"Sorry, something’s not right. We weren’t able to retrieve the list of NICs.",
+        "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
       }
     },
     "shared": {
@@ -352,10 +354,13 @@
         "viewServerLink": "View your server"
       },
       "serverIpAddress": {
-        "custom": "Enter a custom IP Address",
+        "customSwitch": "Enter a custom IP Address",
         "customMessage": "Warning: entering a custom IP address may cause conflicts if other servers in the network have this IP address assigned via another method.",
-        "default": "Select from default",
-        "defaultMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
+        "buttonSwitch": "Select from default",
+        "buttonMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
+        "hints": {
+          "ipRange": "Valid range"
+        },
         "errors": {
           "ipAddressRequired": "Enter an IP address.",
           "ipAddressInvalid": "Please enter a valid IP Address.",

@@ -17,7 +17,7 @@ import {
   ServerPowerState,
   ServerMedia,
   ServerStorageDevice,
-  ServerNicSummary,
+  ServerNic,
   ServerSnapshot
 } from './models';
 import {
@@ -61,7 +61,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * and update the nics of the active server
    * @param activeServer Active server to set storage device
    */
-  public findServerNics(activeServer: Server): Observable<ServerNicSummary[]> {
+  public findServerNics(activeServer: Server): Observable<ServerNic[]> {
     return this._serversApiService.getServerNics(activeServer.id)
       .map((response) => {
         activeServer.nics = !isNullOrEmpty(response.content) ?
