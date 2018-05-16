@@ -3,7 +3,7 @@
   <ng-container *mcsPageHeader>
     <div class="horizontal-items-spacing-small" display-flex="row" align-items="center">
       <div>
-        <a (click)="navigateToResource(selectedServer)">
+        <a (click)="onSelectVdcByName($event, selectedServer.platform)">
           <h3>{{ selectedGroupName }}</h3>
         </a>
       </div>
@@ -28,9 +28,20 @@
 
             <mcs-list-panel>
               <ng-container *ngFor="let iterator of (serversMap | mcsMapIterable) |
-                mcsSortArray: serverListSource?.serversGroupSortMethod">
+                mcsSortArray: serverListSource?.sortResourceMethod">
 
-                <mcs-option-group [label]="iterator.key">
+                <mcs-option-group>
+                  <ng-container *mcsOptionGroupLabel>
+                    <ng-container *ngIf="iterator.key?.resourceId">
+                      <a (click)="onSelectVdcByName($event, iterator.key)">
+                        {{ iterator.key?.resourceName }}
+                      </a>
+                    </ng-container>
+                    <ng-container *ngIf="!iterator.key?.resourceId">
+                      <span>{{ iterator.key?.resourceName }}</span>
+                    </ng-container>
+                  </ng-container>
+
                   <mcs-option *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)"
                     [value]="server"
                     [selected]="selectedServer === server"

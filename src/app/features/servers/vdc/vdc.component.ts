@@ -32,7 +32,6 @@ import {
   McsSearch,
   McsRoutingTabBase,
   McsDataStatusFactory,
-  McsKeyValuePair,
   McsErrorHandlerService
 } from '../../../core';
 import {
@@ -143,15 +142,6 @@ export class VdcComponent
    */
   public serverDeleting(server: Server): boolean {
     return server.commandAction === ServerCommand.Delete && server.isProcessing;
-  }
-
-  /**
-   * Resource listing sort method
-   * @param first First record of the list
-   * @param second Second record of the list
-   */
-  public sortResourceMethod(first: McsKeyValuePair, second: McsKeyValuePair): number {
-    return compareStrings(first.key.resourceName, second.key.resourceName);
   }
 
   /**

@@ -309,7 +309,6 @@ export class ServerStorageComponent extends ServerDetailsBase
    */
   public onExpandStorage(): void {
     if (this.attachStorageIsDisabled) { return; }
-    this.mcsStorage.completed();
 
     let storageData = new ServerStorageDeviceUpdate();
     storageData.name = this.selectedStorageDevice.name;
@@ -324,7 +323,6 @@ export class ServerStorageComponent extends ServerDetailsBase
     };
 
     this._serversService.setServerSpinner(this.server, this.selectedStorageDevice);
-    this._resetDiskValues();
     this._serversService.updateServerStorage(
       this.server.id,
       this.selectedStorageDevice.id,

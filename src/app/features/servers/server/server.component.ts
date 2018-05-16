@@ -22,7 +22,8 @@ import {
 } from 'rxjs/operators';
 import {
   Server,
-  ServerCommand
+  ServerCommand,
+  ServerPlatformSummary
 } from '../models';
 import {
   ResetPasswordDialogComponent,
@@ -91,6 +92,7 @@ export class ServerComponent
   }
 
   private _destroySubject = new Subject<void>();
+  private _resourcesKeyMap: Map<string, ServerPlatformSummary>;
 
   constructor(
     _router: Router,
@@ -107,6 +109,7 @@ export class ServerComponent
     this.selectedServer = new Server();
     this.serversMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory();
+    this._resourcesKeyMap = new Map();
   }
 
   public ngOnInit() {
@@ -206,12 +209,14 @@ export class ServerComponent
   }
 
   /**
-   * Navigate to resources
-   * @param server Server to navigate from
+   * Event that emits when VDC name is selected
    */
-  public navigateToResource(server: Server): void {
-    if (isNullOrEmpty(server)) { return; }
-    this.router.navigate(['/servers/vdc', server.platform.resourceId]);
+  public onSelectVdcByName(event: MouseEvent, resource: ServerPlatformSummary): void {
+    if (!isNullOrEmpty(event)) { event.stopPropagation(); }
+    if (isNullOrEmpty(resource.resourceId)) { return; }
+
+    this._changeDetectorRef.markForCheck();
+    this.router.navigate(['servers/vdc/', resource.resourceId]);
   }
 
   /**
@@ -249,9 +254,15 @@ export class ServerComponent
 
     // Key function pointer for mapping objects
     let keyFn = (item: Server) => {
-      let resourseName = isNullOrEmpty(item.platform.resourceName) ?
-        'Others' : item.platform.resourceName;
-      return resourseName;
+      let resourceName = isNullOrEmpty(item.platform) ? 'Others' : item.platform.resourceName;
+      let resource: ServerPlatformSummary = this._resourcesKeyMap.get(resourceName);
+      if (isNullOrEmpty(resource)) {
+        let resourceInstance = new ServerPlatformSummary();
+        resourceInstance.resourceName = 'Others';
+        resource = !isNullOrEmpty(item.platform.resourceName) ? item.platform : resourceInstance;
+      }
+      this._resourcesKeyMap.set(resourceName, resource);
+      return resource;
     };
 
     // Listen to all records changed
