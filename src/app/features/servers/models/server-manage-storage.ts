@@ -1,5 +1,7 @@
+import { ServerStorage } from './response/server-storage';
+
 export class ServerManageStorage {
-  public storageProfile: string;
+  public storage: ServerStorage;
   public storageMB: number;
   public valid: boolean;
 }

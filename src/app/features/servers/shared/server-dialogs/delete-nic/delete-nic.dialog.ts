@@ -14,7 +14,7 @@ import {
   isNullOrEmpty,
   replacePlaceholder
 } from '../../../../../utilities';
-import { ServerNicSummary } from '../../../models';
+import { ServerNic } from '../../../models';
 
 @Component({
   selector: 'mcs-delete-nic-dialog',
@@ -27,13 +27,13 @@ import { ServerNicSummary } from '../../../models';
 
 export class DeleteNicDialogComponent {
   public textContent: any;
-  public nic: ServerNicSummary;
+  public nic: ServerNic;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<DeleteNicDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: ServerNicSummary
+    @Inject(MCS_DIALOG_DATA) public dialogData: ServerNic
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.deleteNicDialog;
     this.nic = this.dialogData;

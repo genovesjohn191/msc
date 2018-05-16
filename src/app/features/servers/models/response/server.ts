@@ -4,7 +4,7 @@ import { ServerComputeSummary } from './server-compute-summary';
 import { ServerPlatformSummary } from './server-platform-summary';
 import { ServerMedia } from './server-media';
 import { ServerStorageDevice } from './server-storage-device';
-import { ServerNicSummary } from './server-nic-summary';
+import { ServerNic } from './server-nic';
 import { ServerVmwareTools } from './server-vmware-tools';
 import { ServerSnapshot } from './server-snapshot';
 import {
@@ -45,8 +45,8 @@ export class Server {
   @JsonProperty({ type: ServerPlatformSummary })
   public platform: ServerPlatformSummary;
 
-  @JsonProperty({ type: ServerNicSummary })
-  public nics: ServerNicSummary[];
+  @JsonProperty({ type: ServerNic })
+  public nics: ServerNic[];
 
   @JsonProperty({ type: ServerStorageDevice })
   public storageDevices: ServerStorageDevice[];

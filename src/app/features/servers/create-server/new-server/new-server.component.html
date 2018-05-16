@@ -30,7 +30,7 @@
         [mcsContextualHelp]="textHelpContent.vAppField"
         [placeholder]="textContent.placeholder.vApp">
         <mcs-select-group [header]="textContent.headers.vApp">
-          <mcs-select-item>-</mcs-select-item>
+          <mcs-select-item>{{ textContent.createNewVApp }}</mcs-select-item>
           <mcs-select-item *ngFor="let vApp of resource?.vApps" [value]="vApp">
             {{ vApp.name }}
           </mcs-select-item>
@@ -112,36 +112,11 @@
     </mcs-server-manage-storage>
   </div>
 
-  <!-- Network Selection -->
-  <div class="field">
-    <span class="label">{{ textContent.networkLabel }}</span>
-    <mcs-form-field>
-      <mcs-select [(ngModel)]="selectedNetwork" required
-        [formControl]="fcNetwork"
-        [placeholder]="textContent.placeholder.network"
-        [mcsContextualHelp]="textHelpContent.networkField">
-        <mcs-select-group [header]="textContent.headers.network">
-          <mcs-select-item *ngFor="let network of resource?.networks" [value]="network">
-            {{ network.name }}
-          </mcs-select-item>
-        </mcs-select-group>
-      </mcs-select>
-
-      <mcs-error mcsError errorState="required">
-        {{ textContent.errors.selectNetworkRequired }}
-      </mcs-error>
-    </mcs-form-field>
-  </div>
-
-  <!-- IP Address setting -->
-  <div class="field">
-    <mcs-server-ip-address [gateway]="selectedNetwork?.gateway"
-      [subnetMask]="selectedNetwork?.netmask"
-      (ipAddressChanged)="onIpAddressChanged($event)">
-      <!--Ip address contents on the left hand side (title and description)-->
-      <div title>
-        <span class="label no-line-height">{{ textContent.ipAddressLabel }}</span>
-      </div>
-    </mcs-server-ip-address>
-  </div>
+  <!-- Server network settings -->
+  <mcs-server-manage-network [networks]="resource?.networks"
+    (dataChange)="onNetworkChanged($event)">
+    <div mcsManageNetworkTitle>
+      <h4>{{ textContent.networkLabel }}</h4>
+    </div>
+  </mcs-server-manage-network>
 </form>

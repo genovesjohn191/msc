@@ -21,7 +21,7 @@ export * from './response/server-storage-device';
 export * from './response/server-resource';
 export * from './response/server-operating-system';
 export * from './response/server-operating-system-summary';
-export * from './response/server-nic-summary';
+export * from './response/server-nic';
 export * from './response/server-network';
 export * from './response/server-media';
 export * from './response/server-hardware';
@@ -42,7 +42,7 @@ export * from './response/server-hids-options';
 /** Other Models that are use inside server component */
 export * from './server-performance-scale';
 export * from './server-manage-storage';
-export * from './server-ip-address';
+export * from './server-manage-network';
 export * from './server-create-details';
 export * from './server-list';
 export * from './server-image';

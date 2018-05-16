@@ -40,7 +40,7 @@
                 <td>
                   {{ appendUnitGB(convertDiskToGB(storage.sizeMB)) }}
                 </td>
-                <td class="action-items inline-items-small">
+                <td class="inline-items-small">
                   <ng-container *mcsIsSelfManagedServer="server">
                     <ng-container *mcsAccessControl="['VmEdit']">
                       <span class="expand text-right">
@@ -97,7 +97,7 @@
               </div>
             </mcs-server-manage-storage>
             <div class="text-right">
-              <button mcsButton id="ctaAttachServerStorage" arrow="right"
+              <button mcsButton id="ctaAttachServerStorage" arrow="right" size="small"
                 [disabled]="attachStorageIsDisabled" (click)="onClickAttach()">
                 {{ textContent.attachStorage }}
               </button>
@@ -144,7 +144,7 @@
           <div display-flex="row" align-items="center" justify-content="space-between">
             <a (click)="closeExpandStorageBox()">Cancel</a>
 
-            <button mcsButton id="ctaUpdateServerStorage" arrow="right"
+            <button mcsButton id="ctaUpdateServerStorage" arrow="right" size="small"
               [disabled]="attachStorageIsDisabled" (click)="onExpandStorage()">
               {{ textContent.updateStorage }}
             </button>

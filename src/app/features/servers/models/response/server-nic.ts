@@ -1,10 +1,11 @@
 import {
   ServerIpAllocationMode,
-  ServerIpAllocationModeSerialization
+  ServerIpAllocationModeSerialization,
+  serverIpAllocationModeText
 } from '../enumerations/server-ip-allocation-mode.enum';
 import { JsonProperty } from 'json-object-mapper';
 
-export class ServerNicSummary {
+export class ServerNic {
   public id: string;
   public vCloudNicId: string;
   public name: string;
@@ -52,5 +53,12 @@ export class ServerNicSummary {
     this.index = undefined;
     this.isPrimary = undefined;
     this.ipAllocationMode = undefined;
+  }
+
+  /**
+   * Returns the ip allocation mode label
+   */
+  public get ipAllocationModeLabel(): string {
+    return serverIpAllocationModeText[this.ipAllocationMode];
   }
 }

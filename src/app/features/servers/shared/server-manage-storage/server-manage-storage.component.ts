@@ -302,7 +302,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   private _notifyStorageChanged() {
     let serverStorage = new ServerManageStorage();
     if (!isNullOrEmpty(this.selectedStorageProfile)) {
-      serverStorage.storageProfile = this.selectedStorageProfile.name;
+      serverStorage.storage = this.selectedStorageProfile;
     }
 
     refreshView(() => {

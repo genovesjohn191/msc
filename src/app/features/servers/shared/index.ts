@@ -5,7 +5,7 @@ export * from './server-performance-scale/server-performance-scale.component';
 /** Server Manage Storage Component */
 export * from './server-manage-storage/server-manage-storage.component';
 /** Server IP Address */
-export * from './server-ip-address/server-ip-address.component';
+export * from './server-manage-network/server-manage-network.component';
 /** Provisioning Notifications */
 export * from './provisioning-notifications/provisioning-notifications.component';
 /** Server Details Base Class */
