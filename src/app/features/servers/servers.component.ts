@@ -158,7 +158,15 @@ export class ServersComponent
   public isAllSelected(): boolean {
     if (isNullOrEmpty(this.dataSource)) { return false; }
     if (!this.selection.hasValue()) { return false; }
-    return this.selection.selected.length === this._serversRepository.filteredRecords.length;
+
+    let selectableRecords = this._serversRepository.filteredRecords
+      .filter((record) => {
+        return !record.isProcessing;
+      });
+
+    if (isNullOrEmpty(selectableRecords)) { return false; }
+
+    return selectableRecords.length === this.selection.selected.length;
   }
 
   /**
@@ -171,7 +179,9 @@ export class ServersComponent
       this.selection.clear();
     } else {
       this._serversRepository.filteredRecords.forEach((record) => {
-        this.selection.select(record.id);
+        if (!record.isProcessing) {
+          this.selection.select(record.id);
+        }
       });
     }
   }

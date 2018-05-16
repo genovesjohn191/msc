@@ -17,12 +17,12 @@ export class ServersListSource extends McsListSourceBase<Server> {
   }
 
   /**
-   * Servers group sort method
+   * Resource listing sort method
    * @param first First record of the list
    * @param second Second record of the list
    */
-  public serversGroupSortMethod(first: McsKeyValuePair, second: McsKeyValuePair): number {
-    return compareStrings(first.key, second.key);
+  public sortResourceMethod(first: McsKeyValuePair, second: McsKeyValuePair): number {
+    return compareStrings(first.key.resourceName, second.key.resourceName);
   }
 
   /**

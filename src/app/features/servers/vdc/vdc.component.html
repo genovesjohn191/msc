@@ -12,7 +12,7 @@
 
             <mcs-list-panel>
               <ng-container *ngFor="let iterator of (serversMap | mcsMapIterable) |
-                mcsSortArray: sortResourceMethod">
+                mcsSortArray: serverListSource?.sortResourceMethod">
 
                 <mcs-option-group [selected]="isSelected(iterator.key)">
                   <ng-container *mcsOptionGroupLabel>
