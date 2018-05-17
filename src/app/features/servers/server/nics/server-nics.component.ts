@@ -19,7 +19,8 @@ import {
   ServerNetwork,
   ServerNic,
   ServerManageNic,
-  ServerManageNetwork
+  ServerManageNetwork,
+  ServerIpAllocationMode
 } from '../../models';
 import {
   CoreDefinition,
@@ -207,11 +208,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Returns true when the NIC data has been changed
    */
   public get canEditNic(): boolean {
-    let modeHasChanged = this.manageNetwork.ipAllocationMode !== this.selectedNic.ipAllocationMode;
-    if (modeHasChanged) { return true; }
-
-    let networkHasChanged = this.manageNetwork.network.name !== this.selectedNic.logicalNetworkName;
-    if (networkHasChanged) { return true; }
+    let modeNotChanged = this.manageNetwork.network.name === this.selectedNic.logicalNetworkName
+      && this.manageNetwork.ipAllocationMode !== ServerIpAllocationMode.Manual
+      && this.manageNetwork.ipAllocationMode === this.selectedNic.ipAllocationMode;
+    if (modeNotChanged) { return false; }
 
     if (!isNullOrEmpty(this.manageNetwork.customIpAddress) && this.inputIsValid) {
       let ipAddressFound = this.selectedNic.ipAddress.find((ip) => {
