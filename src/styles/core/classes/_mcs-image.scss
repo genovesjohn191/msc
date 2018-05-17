@@ -1,0 +1,13 @@
+$image-thumbnail-height: 96px;
+$image-thumbnail-width: 128px;
+$image-thumbnail-dark-bg-color: $color-black;
+
+.image-thumbnail {
+  height: $image-thumbnail-height;
+  width: $image-thumbnail-width;
+
+  &.dark {
+    background: $image-thumbnail-dark-bg-color;
+  }
+}
+

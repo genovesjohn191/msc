@@ -128,6 +128,13 @@ export class Server {
   }
 
   /**
+   * Returns true when server is suspended
+   */
+  public get isSuspended(): boolean {
+    return this.powerState === ServerPowerState.Suspended;
+  }
+
+  /**
    * Returns the status label of the server
    * based on its power state or command executed
    */

@@ -200,6 +200,11 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this._notifyStorageChanged();
   }
 
+  public onChangedSelectedStorage(): void {
+    this.storageValue = this.minimumGB;
+    this._notifyStorageChanged();
+  }
+
   public isControlValid(control: FormControl): boolean {
     return isFormControlValid(control);
   }

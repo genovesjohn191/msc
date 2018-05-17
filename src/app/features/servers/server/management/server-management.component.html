@@ -45,11 +45,26 @@
         <!-- Console -->
         <div class="grid-column container-wrapper break-on-small">
           <h4 flex="none" class="container-header">{{ textContent.vmConsole.title }}</h4>
-          <div class="inline-block" (click)="onClickViewConsole()" [disabled]="!consoleEnabled">
-            <div class="thumbnail-container" cursor="pointer">
-              <img #thumbnailElement class="thumbnail"/>
+          <div *ngIf="consoleEnabled" class="inline-block"
+            cursor="pointer" (click)="onClickViewConsole()">
+            <div class="image-thumbnail dark" cursor="pointer">
+              <img #thumbnailElement/>
             </div>
             <a>{{ textContent.vmConsole.link }}</a>
+          </div>
+          <div *ngIf="!consoleEnabled">
+            <div class="inline-block">
+              <mcs-icon [ngStyle]="{width: '110px'}"
+                [key]="consoleIconKey" size="auto"></mcs-icon>
+            </div>
+            <div read-only>
+              <span *ngIf="server.isPoweredOff">
+                {{ textContent.vmConsole.serverPoweredOff }}
+              </span>
+              <span *ngIf="server.isSuspended">
+                {{ textContent.vmConsole.serverSuspended }}
+              </span>
+            </div>
           </div>
         </div>
       </div>

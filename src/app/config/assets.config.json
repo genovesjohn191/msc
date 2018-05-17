@@ -85,7 +85,9 @@
     "cloud-upload-blue": "cloud-upload-blue.svg",
     "warning-svg": "warning.svg",
     "error-svg": "error.svg",
-    "download": "download.svg"
+    "download": "download.svg",
+    "dos-prompt-blue": "dos-prompt-blue.svg",
+    "dos-prompt-grey": "dos-prompt-grey.svg"
   },
   "gifIcons": {
     "spinner": "spinner.gif"
