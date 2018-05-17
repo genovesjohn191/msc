@@ -204,7 +204,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
       newServerInputs.image = selectedImage.name;
       newServerInputs.imageType = ServerImageType.Os;
     } else {
-      newServerInputs.image = selectedImage.name;
+      newServerInputs.image = selectedImage.itemName;
       newServerInputs.imageType = ServerImageType.Template;
     }
     return newServerInputs;

@@ -126,8 +126,8 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public set value(value: any) {
     if (this._value !== value) {
       this._value = value;
-      this.change.emit(this._value);
       this._onChanged(this._value);
+      this.change.emit(this._value);
       this._changeDetectorRef.markForCheck();
     }
   }

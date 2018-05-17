@@ -118,6 +118,8 @@ export class CoreDefinition {
   public static ASSETS_SVG_WARNING = 'warning-svg';
   public static ASSETS_SVG_ERROR = 'error-svg';
   public static ASSETS_SVG_DOWNLOAD = 'download';
+  public static ASSETS_SVG_DOS_PROMPT_BLUE = 'dos-prompt-blue';
+  public static ASSETS_SVG_DOS_PROMPT_GREY = 'dos-prompt-grey';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';

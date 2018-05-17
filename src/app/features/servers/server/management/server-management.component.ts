@@ -125,6 +125,10 @@ export class ServerManagementComponent extends ServerDetailsBase
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
+  public get consoleIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_DOS_PROMPT_GREY;
+  }
+
   public get invalidStorage(): string {
     return this._textProvider.content.servers.shared.storageScale.invalidStorage;
   }

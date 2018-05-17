@@ -218,7 +218,9 @@
         },
         "vmConsole": {
           "title": "VM Console",
-          "link": "View console"
+          "link": "View console",
+          "serverPoweredOff": "Console unavailable while server is stopped.",
+          "serverSuspended": "Console unavailable while server is suspended."
         },
         "nics": {
           "title": "NICs",
