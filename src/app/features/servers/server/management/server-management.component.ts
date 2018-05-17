@@ -23,7 +23,8 @@ import {
   ServerServiceType,
   ServerMedia,
   ServerManageMedia,
-  ServerCommand
+  ServerCommand,
+  ServerCatalogItem
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -66,7 +67,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
-  public selectedMedia: ServerMedia;
+  public selectedMedia: ServerCatalogItem;
 
   public computeSubscription: Subscription;
   private _notificationsChangeSubscription: Subscription;
@@ -300,10 +301,10 @@ export class ServerManagementComponent extends ServerDetailsBase
     if (this.attachMediaIsDisabled || isNullOrEmpty(this.selectedMedia)) { return; }
 
     let mediaValues = new ServerManageMedia();
-    mediaValues.name = this.selectedMedia.name;
+    mediaValues.name = this.selectedMedia.itemName;
     mediaValues.clientReferenceObject = {
       serverId: this.server.id,
-      mediaName: this.selectedMedia.name,
+      mediaName: this.selectedMedia.itemName,
       powerState: this.server.powerState
     };
 

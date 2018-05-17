@@ -83,7 +83,7 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
     if (this._selectedNetwork !== value) {
       this._selectedNetwork = value;
       this.selectedNetworkChange.emit(this._selectedNetwork);
-      this._createNetmasByNetwork(this._selectedNetwork);
+      this._createNetmaskByNetwork(this._selectedNetwork);
     }
   }
   private _selectedNetwork: ServerNetwork;
@@ -111,6 +111,14 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
   public ngOnDestroy() {
     this._destroySubject.next();
     this._destroySubject.complete();
+  }
+
+  /**
+   * Reset the form and change the input to default type
+   */
+  public reset(): void {
+    this._resetFormGroup();
+    this.onChangeInputManageType(ServerInputManageType.Buttons);
   }
 
   /**
@@ -152,7 +160,7 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
    * Create the instance of the netmask based on the provided network
    * @param network Network to be considered
    */
-  private _createNetmasByNetwork(network: ServerNetwork): void {
+  private _createNetmaskByNetwork(network: ServerNetwork): void {
     this._resetFormGroup();
     if (isNullOrEmpty(network)) { return; }
     this.netMask = new Netmask(`${network.gateway}/${network.netmask}`);

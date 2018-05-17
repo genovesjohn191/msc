@@ -71,18 +71,6 @@ export class DeleteNicDialogComponent {
     );
   }
 
-  /**
-   * Display dialog alert message
-   */
-  public get dialogAlert(): string {
-    if (isNullOrEmpty(this.nic)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.alert,
-      'nic_name',
-      this.nic.name
-    );
-  }
-
   private _sendEventTracking(event: string): void {
     this._ga.emitEvent('server', event, 'delete-nic-dialog');
   }

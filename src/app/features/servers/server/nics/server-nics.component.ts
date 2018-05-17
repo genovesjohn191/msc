@@ -2,8 +2,9 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  ViewChild,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
@@ -43,7 +44,8 @@ import {
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
-  DeleteNicDialogComponent
+  DeleteNicDialogComponent,
+  ServerManageNetworkComponent
 } from '../../shared';
 
 // Enumeration
@@ -70,6 +72,9 @@ const SERVER_MAXIMUM_NICS = 10;
 })
 
 export class ServerNicsComponent extends ServerDetailsBase implements OnInit, OnDestroy {
+  @ViewChild('manageNetworkElement')
+  public manageNetworkElement: ServerManageNetworkComponent;
+
   public textContent: any;
   public currentIpAddress: string;
   public fcNetwork: FormControl;
@@ -281,8 +286,17 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       ipAllocationMode: this.manageNetwork.ipAllocationMode,
       ipAddress: this.manageNetwork.customIpAddress
     };
+
+    this.manageNetworkElement.reset();
     this._resetNetworkValues();
-    this._serversService.addServerNic(this.server.id, nicValues).subscribe();
+
+    this._serversService.setServerSpinner(this.server, nicValues);
+    this._serversService.addServerNic(this.server.id, nicValues)
+    .catch((error) => {
+      this._serversService.clearServerSpinner(this.server, nicValues);
+      return Observable.throw(error);
+    })
+    .subscribe();
   }
 
   /**
