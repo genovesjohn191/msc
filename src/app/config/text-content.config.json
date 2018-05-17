@@ -323,7 +323,7 @@
         "network": "Network",
         "primary": "Primary",
         "ipMode": "IP Mode",
-        "ipAddress": "IP Address",
+        "ipAddresses": "IP Addresses",
         "editLink": "Edit",
         "deleteLink": "Delete",
         "addHeading": "Add NIC",
@@ -407,14 +407,12 @@
       },
       "deleteNicDialog": {
         "title": "Delete {{nic_name}}",
-        "alert": "The data on {{nic_name}} will be lost forever.",
         "confirmation": "Are you sure you want to delete this NIC?",
         "cancel": "Cancel",
         "confirm": "Yes"
       },
       "detachMediaDialog": {
         "title": "Detach {{media_name}} Media",
-        "alert": "The data on {{media_name}} will be lost forever.",
         "confirmation": "Are you sure you want to detach this media?",
         "cancel": "Cancel",
         "confirm": "Yes"

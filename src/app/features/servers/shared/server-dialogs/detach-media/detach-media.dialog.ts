@@ -28,6 +28,18 @@ export class DetachMediaDialogComponent {
   public textContent: any;
   public media: ServerMedia;
 
+  /**
+   * Dialog title
+   */
+  public get dialogTitle(): string {
+    if (isNullOrEmpty(this.media)) { return ''; }
+    return replacePlaceholder(
+      this.textContent.title,
+      'media_name',
+      this.media.name
+    );
+  }
+
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _ga: GoogleAnalyticsEventsService,
@@ -52,30 +64,6 @@ export class DetachMediaDialogComponent {
   public detachMedia(): void {
     this._sendEventTracking('detach-media-confirm-click');
     this.dialogRef.close(this.media);
-  }
-
-  /**
-   * Display dialog title
-   */
-  public displayDialogTitle(): string {
-    if (isNullOrEmpty(this.media)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.title,
-      'media_name',
-      this.media.name
-    );
-  }
-
-  /**
-   * Display dialog alert message
-   */
-  public displayDialogAlertMessage(): string {
-    if (isNullOrEmpty(this.media)) { return ''; }
-    return replacePlaceholder(
-      this.textContent.alert,
-      'media_name',
-      this.media.name
-    );
   }
 
   private _sendEventTracking(event: string): void {
