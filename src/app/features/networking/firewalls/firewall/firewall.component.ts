@@ -61,7 +61,7 @@ export class FirewallComponent
   public listStatusFactory: McsDataStatusFactory<Map<string, Firewall[]>>;
 
   // Subscription
-  public subscription: Subscription;
+  public firewallSubscription: Subscription;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -116,7 +116,7 @@ export class FirewallComponent
 
   public ngOnDestroy() {
     super.onDestroy();
-    unsubscribeSafely(this.subscription);
+    unsubscribeSafely(this.firewallSubscription);
   }
 
   /**
@@ -182,7 +182,7 @@ export class FirewallComponent
    * @param firewallId Firewall identification
    */
   private _getFirewallById(firewallId: string): void {
-    this.subscription = this._firewallsRepository
+    this.firewallSubscription = this._firewallsRepository
       .findRecordById(firewallId)
       .catch((error) => {
         // Handle common error status code
@@ -190,12 +190,10 @@ export class FirewallComponent
         return Observable.throw(error);
       })
       .subscribe((response) => {
-        if (!isNullOrEmpty(response)) {
-          this.selectedFirewall = response;
-          this._setSelectedFirewallInfo(response);
-          this._firewallService.setSelectedFirewall(this.selectedFirewall);
-          this._changeDetectorRef.markForCheck();
-        }
+        this._setSelectedFirewallInfo(response);
+        this._firewallService.setSelectedFirewall(this.selectedFirewall);
+        unsubscribeSafely(this.firewallSubscription);
+        this._changeDetectorRef.markForCheck();
       });
   }
 

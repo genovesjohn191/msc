@@ -316,9 +316,20 @@ export class CreateServerComponent implements
       .subscribe(() => {
         if (isNullOrEmpty(this.resources)) { return; }
         // Select the first element of the resource
-        this.onChangeResource(this.resources[0]);
+        this._selectTheFirstValidResource(this.resources);
         this._changeDetectorRef.markForCheck();
       });
+  }
+
+  /**
+   * Selects the first valid resource based on their access control
+   */
+  private _selectTheFirstValidResource(resources: ServerResource[]): void {
+    if (isNullOrEmpty(resources)) { return; }
+    let validResource = resources.find((resource) => this.resourceHasAccess(resource));
+    if (!isNullOrEmpty(validResource)) {
+      this.onChangeResource(validResource);
+    }
   }
 
   /**
