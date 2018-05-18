@@ -27,8 +27,11 @@
 
 <div [ngSwitch]="inputManageType" class="server-manage-network-ip-address">
   <!-- Ip address DHCP Mode -->
-  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons">
-    <p>{{ textContent.buttonMessage }}</p>
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons" class="block-items-medium">
+    <div class="block-items">
+      <span>{{ textContent.buttonMessage }}</span>
+      <span>{{ textContent.advisoryMessage }}</span>
+    </div>
 
     <mcs-radio-button-group orientation="vertical"
       [ngModel]="ipAddressValue" (ngModelChange)="onRadioButtonChanged($event)">
