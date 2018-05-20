@@ -360,6 +360,7 @@
         "customMessage": "Warning: entering a custom IP address may cause conflicts if other servers in the network have this IP address assigned via another method.",
         "buttonSwitch": "Select from default",
         "buttonMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
+        "advisoryMessage": "This server may need to be restarted before any NIC changes are made effective.",
         "hints": {
           "ipRange": "Valid range"
         },

@@ -113,9 +113,8 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get consoleEnabled(): boolean {
-    return this.isPoweredOn
-      && this.server.executable
-      && this._deviceType !== McsDeviceType.MobilePortrait;
+    return this.server.consoleEnabled &&
+      this._deviceType !== McsDeviceType.MobilePortrait;
   }
 
   public get warningIconKey(): string {

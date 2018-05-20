@@ -208,6 +208,15 @@ export class Server {
   }
 
   /**
+   * Returns true when server console is enabled
+   */
+  public get consoleEnabled(): boolean {
+    return this.isPoweredOn
+      && !this.isProcessing
+      && !this.isSuspended;
+  }
+
+  /**
    * Return the status Icon key based on the status of the server
    */
   public get powerStateIconKey(): string {
