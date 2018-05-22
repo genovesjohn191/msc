@@ -5,12 +5,9 @@ import {
   Server,
   ServerPerformanceScale,
   ServerUpdate,
-  ServerResource,
-  ServerStorage,
   ServerPowerState,
   ServerCommand
 } from '../models';
-import { isNullOrEmpty } from '../../../utilities';
 
 @Injectable()
 export class ServerService {
@@ -63,18 +60,5 @@ export class ServerService {
    */
   public setSelectedServer(server: Server): void {
     this.selectedServerStream.next(server);
-  }
-
-  public computeAvailableMemoryMB(resource: ServerResource): number {
-    return this._serversService.computeAvailableMemoryMB(resource);
-  }
-
-  public computeAvailableCpu(resource: ServerResource): number {
-    return this._serversService.computeAvailableCpu(resource);
-  }
-
-  public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
-    return this._serversService.computeAvailableStorageMB(storage,
-      isNullOrEmpty(memoryMB) ? 0 : memoryMB);
   }
 }

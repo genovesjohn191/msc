@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
@@ -19,8 +18,7 @@ import {
   ServerManageStorage,
   ServerStorage,
   ServerStorageDevice,
-  ServerStorageDeviceUpdate,
-  ServerServiceType
+  ServerStorageDeviceUpdate
 } from '../../models';
 import {
   CoreDefinition,
@@ -32,51 +30,57 @@ import {
   McsDataStatusFactory,
   McsDataStatus
 } from '../../../../core';
+import {
+  isNullOrEmpty,
+  unsubscribeSafely,
+  animateFactory,
+  convertMbToGb
+} from '../../../../utilities';
+import {
+  ServerDetailsBase,
+  DeleteStorageDialogComponent
+} from '../../shared';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRepository } from '../../servers-resources.repository';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  convertGbToMb
-} from '../../../../utilities';
-import {
-  ServerDetailsBase,
-  McsStorage,
-  DeleteStorageDialogComponent,
-} from '../../shared';
 
-const STORAGE_SLIDER_STEP_DEFAULT = 10;
-const STORAGE_MAXIMUM_DISKS = 14;
-const STORAGE_MINIMUM_VALUE = 1024;
+// Enumeration
+export enum ServerDiskMethodType {
+  None = 0,
+  AddDisk = 1,
+  ExpandDisk = 2,
+  DeleteDisk = 3
+}
+
+// Constants
+const SERVER_MAXIMUM_DISKS = 14;
+const SERVER_DISK_STEP = 10;
 
 @Component({
   selector: 'mcs-server-storage',
   templateUrl: './server-storage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    animateFactory.fadeIn
+  ],
   host: {
     'class': 'block'
   }
 })
 
-export class ServerStorageComponent extends ServerDetailsBase
-  implements OnInit, OnDestroy {
-  @ViewChild('mcsStorage')
-  public mcsStorage: McsStorage;
-
+export class ServerStorageComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
-  public storageChangedValue: ServerManageStorage;
-  public selectedStorageDevice: ServerStorageDevice;
+  public manageStorage: ServerManageStorage;
+  public selectedStorage: ServerStorage;
+  public selectedDisk: ServerStorageDevice;
   public dataStatusFactory: McsDataStatusFactory<ServerStorageDevice[]>;
+  public manageStorageTemplate: any[];
 
-  // Subscriptions
-  public updateDisksSubscription: Subscription;
-  public storageSubscription: Subscription;
-
-  private _storageProfile: string;
+  private _updateDiskSubscription: Subscription;
+  private _storagesSubscription: Subscription;
   private _newDisk: ServerStorageDevice;
-
+  private _inProgressDiskId: string;
   private _destroySubject = new Subject<void>();
 
   public get storageIconKey(): string {
@@ -87,109 +91,69 @@ export class ServerStorageComponent extends ServerDetailsBase
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
-  }
-
-  public get sliderStep(): number {
-    return STORAGE_SLIDER_STEP_DEFAULT;
-  }
-
-  public get storageMinValueMB(): number {
-    return STORAGE_MINIMUM_VALUE;
-  }
-
-  // Check if the current server's serverType is managed
-  public get isManaged(): boolean {
-    return this.server.serviceType === ServerServiceType.Managed;
-  }
-
-  public get hasStorageProfileList(): boolean {
-    return !isNullOrEmpty(this.resourceStorage);
-  }
-
-  public get hasStorageDevice(): boolean {
-    return !isNullOrEmpty(this.server.storageDevices);
-  }
-
-  public get hasMultipleStorageDevice(): boolean {
-    return this.hasStorageDevice && this.server.storageDevices.length > 1;
-  }
-
+  /**
+   * Returns true when the disks has reached its limitation
+   */
   public get hasReachedDisksLimit(): boolean {
-    return this.hasStorageDevice && this.server.storageDevices.length >= STORAGE_MAXIMUM_DISKS;
+    return !isNullOrEmpty(this.server.storageDevices) &&
+      this.server.storageDevices.length >= SERVER_MAXIMUM_DISKS;
   }
 
-  public get hasAvailableStorageSpace(): boolean {
-    return this.convertDiskToGB(this.maximumMB) > 0;
-  }
-
-  public get isValidStorageValues(): boolean {
-    return this._validateStorageChangedValues();
-  }
-
-  public get hasDiskStorageProfile(): boolean {
-    return !isNullOrEmpty(this.selectedStorageDevice.storageProfile);
-  }
-
-  public get resourceStorage(): ServerStorage[] {
-    return !isNullOrEmpty(this.serverResource.storage) ?
-      this.serverResource.storage : new Array();
-  }
-
+  /**
+   * Returns all the server disks including the newly created disk as a mock data
+   */
   public get serverDisks(): ServerStorageDevice[] {
+    if (isNullOrEmpty(this.server.storageDevices)) { return new Array(); }
     return isNullOrEmpty(this._newDisk) ?
       this.server.storageDevices :
       [...this.server.storageDevices, this._newDisk];
   }
 
-  private _minimumMB: number;
-  public get minimumMB(): number {
-    return this._minimumMB;
+  /**
+   * Returns all the resource storages
+   */
+  public get resourceStorages(): ServerStorage[] {
+    return !isNullOrEmpty(this.serverResource.storage) ?
+      this.serverResource.storage : new Array();
   }
-  public set minimumMB(value: number) {
-    if (this._minimumMB !== value) {
-      this._minimumMB = value;
+
+  /**
+   * Returns the enum type of the server disk method
+   */
+  public get serverDiskMethodTypeEnum(): any {
+    return ServerDiskMethodType;
+  }
+
+  /**
+   * Returns the disk type based on the method currently invoked
+   */
+  private _diskMethodType: ServerDiskMethodType = ServerDiskMethodType.AddDisk;
+  public get diskMethodType(): ServerDiskMethodType { return this._diskMethodType; }
+  public set diskMethodType(value: ServerDiskMethodType) {
+    if (this._diskMethodType !== value) {
+      this._diskMethodType = value;
       this._changeDetectorRef.markForCheck();
     }
   }
 
-  private _maximumMB: number;
-  public get maximumMB(): number {
-    return this._maximumMB;
-  }
-  public set maximumMB(value: number) {
-    if (this._maximumMB !== value) {
-      this._maximumMB = value;
-      this._changeDetectorRef.markForCheck();
-    }
+  /**
+   * Returns the minimum GB required
+   */
+  public get minimumGB(): number {
+    if (isNullOrEmpty(this.selectedDisk)) { return 0; }
+
+    let exactMinValue = convertMbToGb(this.selectedDisk.sizeMB);
+    let dividedValue = Math.floor(exactMinValue / SERVER_DISK_STEP);
+    let isExactByStep = (exactMinValue % SERVER_DISK_STEP) === 0;
+    return isExactByStep ? exactMinValue : (dividedValue + 1) * SERVER_DISK_STEP;
   }
 
-  private _expandStorage: boolean;
-  public get expandStorage(): boolean {
-    return this._expandStorage;
-  }
-  public set expandStorage(value: boolean) {
-    if (this._expandStorage !== value) {
-      this._expandStorage = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  private _deletingStorage: boolean;
-  public get deletingStorage(): boolean {
-    return this._deletingStorage;
-  }
-  public set deletingStorage(value: boolean) {
-    if (this._deletingStorage !== value) {
-      this._deletingStorage = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  public get attachStorageIsDisabled(): boolean {
-    return !this.server.executable || !this.isValidStorageValues
-      || !this.hasAvailableStorageSpace;
+  /**
+   * Returns the selected disk size in GB
+   */
+  public get selectedDiskSizeGB(): number {
+    if (isNullOrEmpty(this.selectedDisk)) { return 0; }
+    return convertMbToGb(this.selectedDisk.sizeMB);
   }
 
   constructor(
@@ -212,18 +176,13 @@ export class ServerStorageComponent extends ServerDetailsBase
       _textProvider,
       _errorHandlerService
     );
-    this.expandStorage = false;
-    this.deletingStorage = false;
-    this.selectedStorageDevice = new ServerStorageDevice();
-    this.minimumMB = 0;
-    this.storageChangedValue = new ServerManageStorage();
-    this.storageChangedValue.valid = false;
-    this._storageProfile = '';
+    this.manageStorageTemplate = [{}];
+    this.manageStorage = new ServerManageStorage();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this.diskMethodType = ServerDiskMethodType.AddDisk;
   }
 
   public ngOnInit() {
-    // OnInit
     this.textContent = this._textProvider.content.servers.server.storage;
     this.initialize();
     this._registerJobEvents();
@@ -231,131 +190,157 @@ export class ServerStorageComponent extends ServerDetailsBase
 
   public ngOnDestroy() {
     this.dispose();
-    this._unregisterJobEvents();
-    unsubscribeSafely(this.storageSubscription);
-  }
-
-  public onStorageChanged(serverStorage: ServerManageStorage) {
-    this.storageChangedValue = serverStorage;
-
-    if (!isNullOrEmpty(serverStorage.storage) &&
-      serverStorage.storage.name !== this._storageProfile) {
-      this._storageProfile = serverStorage.storage.name;
-      this.maximumMB = this.getStorageAvailableMemory(this._storageProfile);
-    }
-  }
-
-  public closeExpandStorageBox() {
-    this.selectedStorageDevice = new ServerStorageDevice();
-    this.expandStorage = false;
+    this._destroySubject.next();
+    this._destroySubject.complete();
+    unsubscribeSafely(this._storagesSubscription);
   }
 
   /**
-   * Event that emits when user clicked on expand link
-   * @param storageDevice Storage to be expanded
+   * Event that emits when data in storage component has been changed
+   * @param manageStorage Manage Storage content
    */
-  public showExpandStorageBox(storage: ServerStorageDevice) {
-    if (!this.server.executable || this.server.isProcessing
-      || isNullOrEmpty(storage.storageProfile)) { return; }
-
-    this.minimumMB = this._getMinimumStorageMB(storage.sizeMB);
-    this.maximumMB = this.getStorageAvailableMemory(storage.storageProfile);
-    this.selectedStorageDevice = storage;
-    this.expandStorage = true;
+  public onStorageChanged(manageStorage: ServerManageStorage): void {
+    if (isNullOrEmpty(manageStorage)) { return; }
+    this.manageStorage = manageStorage;
   }
 
   /**
-   * Event that emits when user deleted a storage
-   * @param storage Storage to be deleted
+   * Returns true when there is a selected storage when adding disk and the inputted is valid
    */
-  public onDeleteStorage(storage: ServerStorageDevice): void {
-    if (!this.server.executable || this.server.isProcessing) { return; }
+  public get inputIsValid(): boolean {
+    return !isNullOrEmpty(this.manageStorage)
+      && this.manageStorage.valid;
+  }
 
+  /**
+   * Returns true when the storage has atleast 2 disk or more
+   */
+  public get canDeleteDisk(): boolean {
+    return isNullOrEmpty(this.server.storageDevices) ? false :
+      this.server.storageDevices.length > 1;
+  }
+
+  /**
+   * Returns true when user can add disk or not
+   */
+  public get canAddDisk(): boolean {
+    return !this.hasReachedDisksLimit
+      && !isNullOrEmpty(this.resourceStorages);
+  }
+
+  /**
+   * Returns true when the input is valid and the disk can be added
+   */
+  public get addDiskEnabled(): boolean {
+    return !isNullOrEmpty(this.manageStorage)
+      && this.inputIsValid
+      && this.manageStorage.storageMB > 0;
+  }
+
+  /**
+   * Returns true when the Storage data has been changed and input is valid
+   */
+  public get expandDiskEnabled(): boolean {
+    let storageHasChanged = this.manageStorage.storageMB > this.selectedDisk.sizeMB;
+    return storageHasChanged && this.inputIsValid;
+  }
+
+  /**
+   * Shows the expand disk window
+   * @param disk Disk to be edited
+   */
+  public showExpandDiskWindow(disk: ServerStorageDevice): void {
+    if (isNullOrEmpty(disk)) { return; }
+    this.selectedDisk = disk;
+    this.diskMethodType = ServerDiskMethodType.ExpandDisk;
+  }
+
+  /**
+   * Closes the expand disk window
+   */
+  public closeExpandDiskWindow(): void {
+    this._resetStorageValues();
+  }
+
+  /**
+   * Deletes the selected disk
+   * @param disk Storage disk to be deleted
+   */
+  public deleteDisk(disk: ServerStorageDevice): void {
     let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
-      data: storage,
+      data: disk,
       size: 'medium'
     });
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this._executeDeleteStorage(storage);
-      }
+      if (isNullOrEmpty(result)) { return; }
+
+      let diskValues = new ServerStorageDeviceUpdate();
+      diskValues.clientReferenceObject = {
+        serverId: this.server.id,
+        diskId: disk.id,
+        storageProfile: disk.storageProfile,
+        sizeMB: disk.sizeMB
+      };
+      this._serversService.setServerSpinner(this.server, disk);
+      this._serversService.deleteServerStorage(this.server.id, disk.id, diskValues)
+        .finally(() => this._serversService.clearServerSpinner(this.server, disk))
+        .subscribe();
     });
   }
 
   /**
-   * This will process the adding of disk
+   * Add disk to the current server
    */
-  public onClickAttach(): void {
-    if (this.attachStorageIsDisabled) { return; }
-
-    this.mcsStorage.completed();
-
-    let storageData = new ServerStorageDeviceUpdate();
-    storageData.storageProfile = this.storageChangedValue.storage.name;
-    storageData.sizeMB = this.storageChangedValue.storageMB;
-    storageData.clientReferenceObject = {
+  public addDisk(): void {
+    let diskValues = new ServerStorageDeviceUpdate();
+    diskValues.storageProfile = this.manageStorage.storage.name;
+    diskValues.sizeMB = this.manageStorage.storageMB;
+    diskValues.clientReferenceObject = {
       serverId: this.server.id,
       name: `${this.textContent.diskName} ${this.server.storageDevices.length + 1}`,
-      storageProfile: this.storageChangedValue.storage.name,
-      sizeMB: this.storageChangedValue.storageMB
+      storageProfile: this.manageStorage.storage.name,
+      sizeMB: this.manageStorage.storageMB
     };
 
-    this._resetDiskValues();
-    this._serversService.createServerStorage(this.server.id, storageData).subscribe();
+    this._serversService.setServerSpinner(this.server, diskValues);
+    this._serversService.createServerStorage(this.server.id, diskValues)
+      .finally(() => this._serversService.clearServerSpinner(this.server, diskValues))
+      .subscribe();
   }
 
   /**
-   * This will process the update for the selected disk
+   * Expands the storage of the selected disk
    */
-  public onExpandStorage(): void {
-    if (this.attachStorageIsDisabled) { return; }
-
-    let storageData = new ServerStorageDeviceUpdate();
-    storageData.name = this.selectedStorageDevice.name;
-    storageData.storageProfile = this.selectedStorageDevice.storageProfile;
-    storageData.sizeMB = this.storageChangedValue.storageMB;
-    storageData.clientReferenceObject = {
+  public expandDisk(): void {
+    let diskValues = new ServerStorageDeviceUpdate();
+    diskValues.name = this.selectedStorage.name;
+    diskValues.storageProfile = this.selectedStorage.name;
+    diskValues.sizeMB = this.manageStorage.storageMB;
+    diskValues.clientReferenceObject = {
       serverId: this.server.id,
-      diskId: this.selectedStorageDevice.id,
-      name: this.selectedStorageDevice.name,
-      storageProfile: this.selectedStorageDevice.storageProfile,
-      sizeMB: this.storageChangedValue.storageMB
+      diskId: this.selectedDisk.id,
+      name: this.selectedStorage.name,
+      storageProfile: this.selectedDisk.storageProfile,
+      sizeMB: this.selectedDisk.sizeMB
     };
 
-    this._serversService.setServerSpinner(this.server, this.selectedStorageDevice);
+    this.closeExpandDiskWindow();
+    this._serversService.setServerSpinner(this.server, this.selectedDisk);
     this._serversService.updateServerStorage(
       this.server.id,
-      this.selectedStorageDevice.id,
-      storageData)
-      .catch((error) => {
-        this._serversService.clearServerSpinner(this.server, this.selectedStorageDevice);
-        return Observable.throw(error);
-      })
-      .subscribe(() => {
-        this.expandStorage = false;
-      });
+      this.selectedStorage.id,
+      diskValues)
+      .finally(() => this._serversService.clearServerSpinner(this.server, this.selectedDisk))
+      .subscribe();
   }
 
   /**
-   * This will return the available memory of
-   * the selected storage profile from the resource
-   *
-   * @param storageProfile Resource storage profile
+   * Returns true when inputted disk is currently in-progress
+   * @param disk Disk to be checked
    */
-  public getStorageAvailableMemory(storageProfile: string): number {
-    let storage = this._getStorageByProfile(storageProfile);
-    return this._serverService.computeAvailableStorageMB(storage,
-      this.server.compute && this.server.compute.memoryMB);
-  }
-
-  /**
-   * This will identify if expand disk is disabled or enabled
-   *
-   * @param disk Server disk
-   */
-  public expandDiskIsDisabled(disk: ServerStorageDevice): boolean {
-    return !this.server.executable || !this.hasAvailableStorageSpace
-      || isNullOrEmpty(disk.storageProfile);
+  public diskIsInProgress(disk: ServerStorageDevice): boolean {
+    if (isNullOrEmpty(disk)) { return false; }
+    return disk.id === this._inProgressDiskId;
   }
 
   /**
@@ -363,101 +348,38 @@ export class ServerStorageComponent extends ServerDetailsBase
    * `@Note:` Base implementation
    */
   protected serverSelectionChanged(): void {
+    this._resetStorageValues();
     this._getResourceStorage();
-    if (!this.server.isProcessing ||
-      isNullOrEmpty(this.server.storageDevices)) {
-      this._getServerDisks();
-    }
+    this._getServerDisks();
   }
 
   /**
-   * This will process the deletion of the selected disk
-   *
-   * @param storage Disk to be deleted
+   * Reset storage form values to initial
    */
-  private _executeDeleteStorage(storage: ServerStorageDevice): void {
-    if (this.server.isProcessing) { return; }
-    this.mcsStorage.completed();
+  private _resetStorageValues(): void {
+    this.diskMethodType = ServerDiskMethodType.AddDisk;
+    this.manageStorage = new ServerManageStorage();
 
-    let storageData = new ServerStorageDeviceUpdate();
-    storageData.clientReferenceObject = {
-      serverId: this.server.id,
-      diskId: storage.id,
-      storageProfile: storage.storageProfile,
-      sizeMB: storage.sizeMB
-    };
-    this._serversService.setServerSpinner(this.server, storage);
-    this._serversService
-      .deleteServerStorage(this.server.id, storage.id, storageData)
-      .catch((error) => {
-        this._serversService.clearServerSpinner(this.server, this.selectedStorageDevice);
-        return Observable.throw(error);
-      })
-      .subscribe();
+    // We need to set the first instance of the template
+    // in order to re-initialize the storage component and have fresh data
+    this.manageStorageTemplate[0] = {};
   }
 
   /**
-   * This will return the resource storage
-   * where the provided storage profile belongs
-   *
-   * @param profile Storage profile
-   */
-  private _getStorageByProfile(profile: string): ServerStorage {
-    let serverStorage = new ServerStorage();
-
-    if (!isNullOrEmpty(this.resourceStorage)) {
-      let targetStorage = this.resourceStorage.find((storage) => {
-        return storage.name === profile;
-      });
-
-      if (!isNullOrEmpty(targetStorage)) {
-        serverStorage = targetStorage;
-      }
-    }
-    return serverStorage;
-  }
-
-  /**
-   * This will validate the the values of the storage
-   */
-  private _validateStorageChangedValues(): boolean {
-    let isValid: boolean = false;
-
-    if (this.expandStorage) {
-      isValid = this.storageChangedValue.storageMB > this.selectedStorageDevice.sizeMB
-        && this.storageChangedValue.valid;
-    } else {
-      isValid = this.storageChangedValue.storageMB > this.minimumMB
-        && this.storageChangedValue.valid;
-    }
-
-    return isValid;
-  }
-
-  /**
-   * Register jobs/notifications events
+   * Register disk jobs events
    */
   private _registerJobEvents(): void {
-    this._serversRepository.notificationsChanged
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => { this._changeDetectorRef.markForCheck(); });
     this._notificationEvents.createServerDisk
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onCreateServerDisk.bind(this));
+
     this._notificationEvents.updateServerDisk
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onUpdateServerDisk.bind(this));
+
     this._notificationEvents.deleteServerDisk
       .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(this._onDeleteServerDisk.bind(this));
-  }
-
-  /**
-   * Unregister jobs/notifications events
-   */
-  private _unregisterJobEvents(): void {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+      .subscribe(this._onUpdateServerDisk.bind(this));
   }
 
   /**
@@ -473,12 +395,10 @@ export class ServerStorageComponent extends ServerDetailsBase
         break;
 
       case McsDataStatus.Success:
-        this._updateResourceStorageUsedMB(job);
-
+        this.refreshServerResource();
       case McsDataStatus.Error:
       default:
         this._newDisk = undefined;
-        this._getServerDisks();
         break;
     }
   }
@@ -490,30 +410,14 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _onUpdateServerDisk(job: McsApiJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
-    if (job.dataStatus === McsDataStatus.Success) {
-      this._updateResourceStorageUsedMB(job);
-      this._getServerDisks();
-    }
-  }
+    // Refresh the data when the disk in-progress is already completed
+    let inProgressDiskEnded = !isNullOrEmpty(this._inProgressDiskId)
+      && job.dataStatus === McsDataStatus.Success;
+    if (inProgressDiskEnded) { this.refreshServerResource(); }
 
-  /**
-   * Event that emits when deleting a server disk
-   * @param job Emitted job content
-   */
-  private _onDeleteServerDisk(job: McsApiJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-
-    if (job.dataStatus === McsDataStatus.Success) {
-      // Update resource values
-      let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
-      if (!isNullOrEmpty(resourceStorage)) {
-        resourceStorage.usedMB -= job.clientReferenceObject.sizeMB;
-        this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
-      }
-
-      // Get and update server disks
-      this._getServerDisks();
-    }
+    // Set the inprogress disk ID to be checked
+    this._inProgressDiskId = job.dataStatus === McsDataStatus.InProgress ?
+      job.clientReferenceObject.diskId : undefined;
   }
 
   /**
@@ -523,49 +427,23 @@ export class ServerStorageComponent extends ServerDetailsBase
   private _onAddingDisk(job: McsApiJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
+    // Mock NIC data based on job response
     this._newDisk = new ServerStorageDevice();
+    this._newDisk.id = this._inProgressDiskId;
     this._newDisk.name = job.clientReferenceObject.name;
     this._newDisk.sizeMB = job.clientReferenceObject.sizeMB;
     this._newDisk.storageProfile = job.clientReferenceObject.storageProfile;
-    this._newDisk.isProcessing = this.server.isProcessing;
-  }
-
-  /**
-   * Will trigger once a disk was added successfully
-   * @param job Emitted job content
-   */
-  private _updateResourceStorageUsedMB(job: McsApiJob): void {
-    if (!this.serverIsActiveByJob(job)) { return; }
-
-    // Update resource values
-    let resourceStorage = this._getStorageByProfile(job.clientReferenceObject.storageProfile);
-
-    if (!isNullOrEmpty(resourceStorage)) {
-      resourceStorage.usedMB += job.clientReferenceObject.sizeMB;
-      this.maximumMB = this.getStorageAvailableMemory(job.clientReferenceObject.storageProfile);
-    }
-  }
-
-  /**
-   * This will reset the disks values
-   */
-  private _resetDiskValues(): void {
-    this.storageChangedValue = new ServerManageStorage();
-    let storage = new ServerManageStorage();
-    storage.storage = { name: this._storageProfile } as ServerStorage;
-    storage.storageMB = 0;
-    storage.valid = false;
-    this.onStorageChanged(storage);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
    * This will update the list of server disks
    */
   private _getServerDisks(): void {
-    unsubscribeSafely(this.updateDisksSubscription);
+    unsubscribeSafely(this._updateDiskSubscription);
 
     this.dataStatusFactory.setInProgress();
-    this.updateDisksSubscription = this._serversRepository
+    this._updateDiskSubscription = this._serversRepository
       .findServerDisks(this.server)
       .catch((error) => {
         // Handle common error status code
@@ -574,7 +452,6 @@ export class ServerStorageComponent extends ServerDetailsBase
       })
       .subscribe((response) => {
         this.dataStatusFactory.setSuccesfull(response);
-        this._changeDetectorRef.markForCheck();
       });
   }
 
@@ -582,32 +459,13 @@ export class ServerStorageComponent extends ServerDetailsBase
    * Get the resource storage to the selected server
    */
   private _getResourceStorage(): void {
-    if (isNullOrEmpty(this.serverResource)) { return; }
+    let hasResource = !isNullOrEmpty(this.serverResource) && !isNullOrEmpty(this.serverResource.id);
+    if (!hasResource) { return; }
 
-    this.storageSubscription = this._serversResourcesRespository
+    this._storagesSubscription = this._serversResourcesRespository
       .findResourceStorage(this.serverResource)
       .subscribe(() => {
         // Subscribe to update the storage to server resource
       });
-  }
-
-  /**
-   * Get storage minimum value in MB
-   * @param sizeMB Storage size in MB
-   */
-  private _getMinimumStorageMB(sizeMB: number): number {
-    if (isNullOrEmpty(sizeMB)) { return 0; }
-
-    /**
-     * Business Rule:
-     * Minimum value must be greater than the current value
-     * and multiple of default slider step
-     */
-    let sizeGB = this.convertDiskToGB(sizeMB);
-    let isExactMultiple = sizeGB % STORAGE_SLIDER_STEP_DEFAULT === 0;
-    let minimumStorageMB = convertGbToMb(STORAGE_SLIDER_STEP_DEFAULT *
-      (Math.ceil(sizeGB / STORAGE_SLIDER_STEP_DEFAULT)));
-
-    return isExactMultiple ? sizeMB : minimumStorageMB;
   }
 }

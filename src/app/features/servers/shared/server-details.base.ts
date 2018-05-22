@@ -38,20 +38,6 @@ export abstract class ServerDetailsBase {
   }
 
   /**
-   * Selected server resource available memory
-   */
-  public get availableMemoryMB(): number {
-    return this._serverService.computeAvailableMemoryMB(this.serverResource);
-  }
-
-  /**
-   * Selected server resource available cpu
-   */
-  public get availableCpu(): number {
-    return this._serverService.computeAvailableCpu(this.serverResource);
-  }
-
-  /**
    * Selected server resource media
    */
   public get resourceMediaList(): ServerCatalogItem[] {
@@ -165,16 +151,23 @@ export abstract class ServerDetailsBase {
   }
 
   /**
+   * Refresh the server resource to get the updated result
+   */
+  protected refreshServerResource(): void {
+    let hasSelectedServer = !isNullOrEmpty(this.server) && !isNullOrEmpty(this.server.id);
+    if (!hasSelectedServer) {
+      throw new Error('Could not get the resource since there is no selected server yet');
+    }
+    this._getServerResources(false);
+  }
+
+  /**
    * Obtain server resources and set resource map
    */
-  private _getServerResources(): void {
-    // TODO: Need to handle when error occured during the obtainment
-    // of resource. It could be an information beneath the server management tab
-    // or something like an error page. As of now we need to remove the catching of error
-    // in order to proceed with the server details while john is fixing the issue .::. 03282018
+  private _getServerResources(fromCache: boolean = true): void {
     unsubscribeSafely(this.serverResourceSubscription);
     this.serverResourceSubscription = this._serversResourcesRespository
-      .findRecordById(this.server.platform.resourceId)
+      .findRecordById(this.server.platform.resourceId, fromCache)
       .finally(() => {
         this.serverSelectionChanged();
         this._changeDetectorRef.markForCheck();
@@ -205,8 +198,6 @@ export abstract class ServerDetailsBase {
   private _listenToServersUpdate(): void {
     this._serversUpdateSubscription = this._serversRepository
       .dataRecordsChanged
-      .subscribe(() => {
-        this._changeDetectorRef.markForCheck();
-      });
+      .subscribe(() => this._changeDetectorRef.markForCheck());
   }
 }

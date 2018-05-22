@@ -1,12 +1,14 @@
 import {
   Component,
   OnInit,
+  OnChanges,
   OnDestroy,
   Input,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   EventEmitter,
-  Output
+  Output,
+  SimpleChanges
 } from '@angular/core';
 import {
   FormGroup,
@@ -53,7 +55,7 @@ const Netmask = require('netmask').Netmask;
   }
 })
 
-export class ServerManageNetworkComponent implements OnInit, OnDestroy {
+export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestroy {
 
   public textContent: any;
   public netMask: any;
@@ -108,13 +110,20 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
     this._setSelectedNetwork();
   }
 
+  public ngOnChanges(changes: SimpleChanges) {
+    let networksChange = changes['networks'];
+    if (!isNullOrEmpty(networksChange)) {
+      this._setSelectedNetwork();
+    }
+  }
+
   public ngOnDestroy() {
     this._destroySubject.next();
     this._destroySubject.complete();
   }
 
   /**
-   * Reset the form and change the input to default type
+   * Resets the form and change the input to default type
    */
   public reset(): void {
     this._resetFormGroup();
@@ -144,7 +153,7 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
    */
   public onChangeInputManageType(inputManageType: ServerInputManageType) {
     this.inputManageType = inputManageType;
-    this._notifyIpAddressChange();
+    this._notifyDataChanged();
   }
 
   /**
@@ -153,7 +162,7 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
    */
   public onRadioButtonChanged(inputValue: ServerIpAllocationMode) {
     this.selectedIpAddress = inputValue;
-    this._notifyIpAddressChange();
+    this._notifyDataChanged();
   }
 
   /**
@@ -197,11 +206,10 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
       )
     ]);
 
+    // Notify data changed for every changes made in the status
     this.fcIpdAdrress.statusChanges
       .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
-        this._notifyIpAddressChange();
-      });
+      .subscribe(() => this._notifyDataChanged());
 
     // Create form group and bind the form controls
     this.fgIpAddress = new FormGroup({
@@ -233,16 +241,16 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
    * Sets the selected network if no network selected yet
    */
   private _setSelectedNetwork(): void {
-    let hasSelectedNetwork = !isNullOrEmpty(this.networks) &&
-      !isNullOrEmpty(this.selectedNetwork);
+    let hasSelectedNetwork = !isNullOrEmpty(this.selectedNetwork) &&
+      !isNullOrEmpty(this.networks.find((network) => network === this.selectedNetwork));
     if (hasSelectedNetwork) { return; }
     this.selectedNetwork = this.networks[0];
   }
 
   /**
-   * Event that emits when an input in IP address component has been changed
+   * Event that emits when an input has been changed
    */
-  private _notifyIpAddressChange() {
+  private _notifyDataChanged() {
     // Set model data based on management type
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
@@ -260,7 +268,6 @@ export class ServerManageNetworkComponent implements OnInit, OnDestroy {
         this._networkOutput.valid = true;
         break;
     }
-
     // Emit changes
     this.dataChange.emit(this._networkOutput);
     this._changeDetectorRef.markForCheck();

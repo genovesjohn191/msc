@@ -507,6 +507,6 @@
   }
 
   &.centered {
-    justify-content: center;
+    @include align-items(center);
   }
 }

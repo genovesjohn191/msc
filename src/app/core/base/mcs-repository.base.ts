@@ -257,18 +257,6 @@ export abstract class McsRepositoryBase<T> {
   protected abstract afterDataObtained(): void;
 
   /**
-   * Patch the data records based on the updated records
-   * during individual obtainment (getRecordById)
-   */
-  private _patchRecordsByUpdatedRecords(): void {
-    if (isNullOrEmpty(this._updatedRecordsById)) { return; }
-    this._updatedRecordsById.forEach((record: any) => {
-      addOrUpdateArrayRecord(this._dataRecords, record, true,
-        (_existingRecord: any) => _existingRecord.id === (record as any).id);
-    });
-  }
-
-  /**
    * Find all records from datarecords cache based on the record count
    * @param recordsCount Records count to pull in the cache
    */
@@ -298,13 +286,21 @@ export abstract class McsRepositoryBase<T> {
       .map((data) => {
         if (isNullOrEmpty(data)) { return new Array(); }
         this._totalRecordsCount = data.totalCount;
-        this._dataRecords = mergeArrays(this._dataRecords,
-          data.content, (_first: any, _second: any) => {
+
+        // Filter the unobtained records based on the updated records
+        let unObtainedRecords = data.content.filter((record: any) => {
+          let dataExist = this._updatedRecordsById.find((updated: any) => updated.id === record.id);
+          return isNullOrEmpty(dataExist);
+        });
+
+        // We need to merge only the un-obtained records in order to retain the
+        // instance of the obtained records from the updated records
+        this._dataRecords = mergeArrays(this._dataRecords, unObtainedRecords,
+          (_first: any, _second: any) => {
             let dataExist = isNullOrEmpty(_first.id) ? false : _first.id === _second.id;
             return dataExist;
           });
         this._filteredRecords = this._dataRecords;
-        this._patchRecordsByUpdatedRecords();
         return this._dataRecords;
       });
   }

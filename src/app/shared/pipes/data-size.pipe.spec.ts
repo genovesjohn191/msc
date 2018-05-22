@@ -8,7 +8,7 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { FileSizePipe } from './file-size.pipe';
+import { DataSizePipe } from './data-size.pipe';
 import {
   convertKbToMb,
   convertMbToGb
@@ -28,15 +28,15 @@ export class TestComponent {
   @ViewChild('testElementGB')
   public testElementGB: ElementRef;
 
-  @ViewChild(FileSizePipe)
-  public pipe: FileSizePipe;
+  @ViewChild(DataSizePipe)
+  public pipe: DataSizePipe;
 
   public kilobyte = 512;
   public megabyte = 2048;
   public gigabyte = 8388608;
 }
 
-describe('FileSizePipe', () => {
+describe('DataSizePipe', () => {
 
   /** Stub Services/Components */
   let component: TestComponent;
@@ -50,7 +50,7 @@ describe('FileSizePipe', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        FileSizePipe
+        DataSizePipe
       ]
     });
 
@@ -59,9 +59,9 @@ describe('FileSizePipe', () => {
       set: {
         template: `
         <div>FileSizePipe Template</div>
-        <span #testElementKB>{{ kilobyte | mcsFileSize }}</span>
-        <span #testElementMB>{{ megabyte | mcsFileSize }}</span>
-        <span #testElementGB>{{ gigabyte | mcsFileSize }}</span>
+        <span #testElementKB>{{ kilobyte | mcsDataSize }}</span>
+        <span #testElementMB>{{ megabyte | mcsDataSize }}</span>
+        <span #testElementGB>{{ gigabyte | mcsDataSize }}</span>
         `
       }
     });

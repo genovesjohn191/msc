@@ -149,6 +149,14 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   }
 
   /**
+   * Returns the current scale value to deduct in the storage
+   */
+  public get currentScaleValue(): number {
+    let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
+    return convertMbToGb(currentSelectedScale);
+  }
+
+  /**
    * Event that emits when the performance scale component has changed
    * @param serverScale Server Scale Result
    */
@@ -257,12 +265,13 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
    * Get custom templates from the catalog items
    */
   private _getCustomTemplates(): void {
-    if (isNullOrEmpty(this.resource)) { return; }
+    let hasCatalogItems = !isNullOrEmpty(this.resource) &&
+      !isNullOrEmpty(this.resource.catalogItems);
+    if (!hasCatalogItems) { return; }
 
     let filteredCatalogItems = this.resource.catalogItems.filter((catalog) => {
       return catalog.itemType === ServerCatalogItemType.Template;
     });
-
     if (!isNullOrEmpty(filteredCatalogItems)) {
       this.customTemplates = filteredCatalogItems;
     }

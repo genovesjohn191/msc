@@ -285,8 +285,9 @@
         "storageProfile": "Storage Profile",
         "capacity": "Capacity",
         "diskName": "Hard disk",
-        "attachStorage": "Attach",
-        "updateStorage": "Update",
+        "addButton": "Attach",
+        "updateButton": "Update",
+        "cancelButton": "Cancel",
         "addStorageHeading": "Add New Disk",
         "expandStorageHeading": "Expand Disk",
         "expandStorageLink": "Expand",
@@ -489,23 +490,20 @@
         "cancel": "Cancel",
         "confirm": "Resume"
       },
-      "storageScale": {
+      "manageStorage": {
         "label": "Storage",
         "unit": "GB",
         "sliderSwitch": "Select from slider",
         "sliderMessage": "Select the disk size from a slider.",
-        "sliderRemainingText": "{{storage}} {{unit}} Remaining",
-        "sliderAvailableText": "{{storage}} {{unit}}",
         "customSwitch": "Enter custom size",
         "customMessage": "Manually enter the disk size.",
-        "validationError": "Storage size should not exceed {{available_storage}}",
+        "maximumStorage": "Maximum storage",
         "errors": {
           "storageRequired": "Enter storage value.",
           "storageNumeric": "Please enter a valid number.",
           "storageMin": "The minimum value that can be entered is {{min_value}}.",
           "storageAvailable": "Storage size should not exceed {{available_storage}}."
-        },
-        "invalidStorage": "Unknown"
+        }
       },
       "performanceScale": {
         "sliderSwitch": "Select from slider",

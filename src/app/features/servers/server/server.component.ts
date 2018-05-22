@@ -293,7 +293,7 @@ export class ServerComponent
       })
       .subscribe((response) => {
         this._setSelectedServerInfo(response);
-        this._serverService.setSelectedServer(this.selectedServer);
+        unsubscribeSafely(this.serverSubscription);
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -304,6 +304,7 @@ export class ServerComponent
   private _setSelectedServerInfo(selectedServer: Server): void {
     if (isNullOrEmpty(selectedServer)) { return; }
     this.selectedServer = selectedServer;
+    this._serverService.setSelectedServer(this.selectedServer);
 
     this.selectedServerName = selectedServer.name;
     let hasResourceName = !isNullOrEmpty(selectedServer.platform)

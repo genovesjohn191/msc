@@ -88,9 +88,7 @@
               <!-- Primary Volume -->
               <mcs-list-item *ngFor="let storage of server.storageDevices">
                 <span>{{ storage.name }}:</span>
-                <span>
-                  {{ appendUnitGB(convertDiskToGB(storage.sizeMB)) }}
-                </span>
+                <span>{{ storage.sizeMB | mcsDataSize: 'MB' }}</span>
               </mcs-list-item>
               <!-- Storage Policy -->
               <!-- TODO: Will confirm to Orch API where to pull this data -->
