@@ -14,9 +14,16 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="ctaCloseDeleteStorageDialog" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <a id="ctaCloseDeleteStorageDialog"
+      (click)="closeDialog()"
+      mcsEventTracker="cancel"
+      eventCategory="server"
+      eventLabel="delete-storage-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaDeleteStorage" arrow="right"
-      size="small" (click)="deleteStorage()">
+      size="small" (click)="deleteStorage()"
+      mcsEventTracker="confirm"
+      eventCategory="server"
+      eventLabel="delete-storage-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>

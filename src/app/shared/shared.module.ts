@@ -50,6 +50,7 @@ import { ProgressBarModule } from './progress-bar/progress-bar.module';
 import { CapacityBarModule } from './capacity-bar/capacity-bar.module';
 import { PipesModule } from './pipes';
 import { FileDownloadModule } from './file-download/file-download.module';
+import { EventTrackerModule } from './event-tracker/event-tracker.module';
 
 @NgModule({
   imports: [
@@ -100,7 +101,8 @@ import { FileDownloadModule } from './file-download/file-download.module';
     AuthenticationModule,
     ProgressBarModule,
     CapacityBarModule,
-    FileDownloadModule
+    FileDownloadModule,
+    EventTrackerModule
   ],
   exports: [
     CommonModule,
@@ -150,7 +152,8 @@ import { FileDownloadModule } from './file-download/file-download.module';
     AuthenticationModule,
     ProgressBarModule,
     CapacityBarModule,
-    FileDownloadModule
+    FileDownloadModule,
+    EventTrackerModule
   ]
 })
 

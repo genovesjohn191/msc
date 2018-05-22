@@ -14,9 +14,16 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="ctaCloseDeleteServerDialog" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <a id="ctaCloseDeleteServerDialog"
+      (click)="closeDialog()"
+      mcsEventTracker="cancel"
+      eventCategory="server"
+      eventLabel="delete-server-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaDeleteServer" arrow="right"
-      size="small" (click)="deleteServer()">
+      size="small" (click)="deleteServer()"
+      mcsEventTracker="confirm"
+      eventCategory="server"
+      eventLabel="delete-server-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>

@@ -7,8 +7,7 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   CoreDefinition,
-  McsTextContentProvider,
-  GoogleAnalyticsEventsService
+  McsTextContentProvider
 } from '../../../../../core';
 import { Server } from '../../../models';
 import {
@@ -43,7 +42,6 @@ export class SuspendServerDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<SuspendServerDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -54,7 +52,6 @@ export class SuspendServerDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
-    this._sendEventTracking('suspend-cancel-click');
     this.dialogRef.close();
   }
 
@@ -62,7 +59,6 @@ export class SuspendServerDialogComponent {
    * This will close the dialog and set the dialog result to true
    */
   public suspendServer(): void {
-    this._sendEventTracking('suspend-confirm-click');
     this.dialogRef.close(true);
   }
 
@@ -94,9 +90,5 @@ export class SuspendServerDialogComponent {
     } else {
       this.servers.push(this.dialogData);
     }
-  }
-
-  private _sendEventTracking(event: string): void {
-    this._ga.emitEvent('server', event, 'suspend-dialog');
   }
 }

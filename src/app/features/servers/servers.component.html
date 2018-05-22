@@ -6,7 +6,10 @@
     <ng-container *mcsAccessControl="['VmEdit']">
       <mcs-top-panel-item *mcsTopPanelItemDef [disabled]="!hasSelfManagedResource">
         <mcs-action-item id="ctaCreateNewServer"
-          (click)="onClickNewServerButton()">
+          (click)="onClickNewServerButton()"
+          mcsEventTracker="create-new-server"
+          eventCategory="server"
+          eventLabel="server-listing-top-panel">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
           <span>{{ textContent.newServer }}</span>
         </mcs-action-item>
@@ -21,7 +24,10 @@
             class="hidden-small"
             id="ctaStartSelectedServer"
             [disabled]="!executableAction('startable')"
-            (click)="executeTopPanelAction(serverCommand.Start)">
+            (click)="executeTopPanelAction(serverCommand.Start)"
+            mcsEventTracker="start"
+            eventCategory="server"
+            eventLabel="server-listing-top-panel">
             <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
             <span>{{ textContent.start }}</span>
           </mcs-action-item>
@@ -30,7 +36,10 @@
             class="hidden-small"
             id="ctaStopSelectedServer"
             [disabled]="!executableAction('stoppable')"
-            (click)="executeTopPanelAction(serverCommand.Stop)">
+            (click)="executeTopPanelAction(serverCommand.Stop)"
+            mcsEventTracker="stop"
+            eventCategory="server"
+            eventLabel="server-listing-top-panel">
             <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
             <span>{{ textContent.stop }}</span>
           </mcs-action-item>
@@ -39,7 +48,10 @@
             class="hidden-small"
             id="ctaRestartSelectedServer"
             [disabled]="!executableAction('restartable')"
-            (click)="executeTopPanelAction(serverCommand.Restart)">
+            (click)="executeTopPanelAction(serverCommand.Restart)"
+            mcsEventTracker="restart"
+            eventCategory="server"
+            eventLabel="server-listing-top-panel">
             <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
             <span>{{ textContent.restart }}</span>
           </mcs-action-item>
@@ -48,7 +60,10 @@
             class="hidden-small"
             id="ctaDeleteSelectedServer"
             [disabled]="!executableAction('deletable')"
-            (click)="executeTopPanelAction(serverCommand.Delete)">
+            (click)="executeTopPanelAction(serverCommand.Delete)"
+            mcsEventTracker="delete"
+            eventCategory="server"
+            eventLabel="server-listing-top-panel">
             <mcs-icon [key]="deleteIconKey" size="small"></mcs-icon>
             <span>{{ textContent.delete }}</span>
           </mcs-action-item>
@@ -57,7 +72,10 @@
             class="hidden-small"
             id="ctaSuspendSelectedServer"
             [disabled]="!executableAction('suspendable')"
-            (click)="executeTopPanelAction(serverCommand.Suspend)">
+            (click)="executeTopPanelAction(serverCommand.Suspend)"
+            mcsEventTracker="suspend"
+            eventCategory="server"
+            eventLabel="server-listing-top-panel">
             <mcs-icon [key]="suspendIconKey" size="small"></mcs-icon>
             <span>{{ textContent.suspend }}</span>
           </mcs-action-item>
@@ -66,7 +84,10 @@
             class="hidden-small"
             id="ctaResumeSelectedServer"
             [disabled]="!executableAction('resumable')"
-            (click)="executeTopPanelAction(serverCommand.Resume)">
+            (click)="executeTopPanelAction(serverCommand.Resume)"
+            mcsEventTracker="resume"
+            eventCategory="server"
+            eventLabel="server-listing-top-panel">
             <mcs-icon [key]="resumeIconKey" size="small"></mcs-icon>
             <span>{{ textContent.resume }}</span>
           </mcs-action-item>
@@ -200,7 +221,10 @@
             {{ columnSettings.vdc.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            <a (click)="navigateToResource(row)">
+            <a (click)="navigateToResource(row)"
+              mcsEventTracker="navigate-to-vdc"
+              eventCategory="server"
+              eventLabel="server-listing-page">
               {{ row.platform?.resourceName }}
             </a>
           </mcs-data-cell>
@@ -236,7 +260,10 @@
               <span *ngIf="hasSelfManagedResource">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
-                Click <a (click)="onClickNewServerButton()">here</a> to create new server.
+                Click <a (click)="onClickNewServerButton()"
+                mcsEventTracker="create-new-server"
+                eventCategory="server"
+                eventLabel="empty-server-listing-option">here</a> to create new server.
               </span>
             </div>
           </mcs-data-empty>
@@ -254,7 +281,10 @@
           cursor="pointer"
           [disabled]="serverDeleting(row)"
           [ngClass]="{'active-row': selection.isSelected(row.id)}"
-          (click)="navigateToServer(row)"></mcs-data-row>
+          (click)="navigateToServer(row)"
+          mcsEventTracker="navigate-to-server"
+          eventCategory="server"
+          eventLabel="server-listing-page"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

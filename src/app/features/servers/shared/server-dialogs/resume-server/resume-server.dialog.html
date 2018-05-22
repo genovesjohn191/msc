@@ -14,9 +14,16 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="ctaCloseResumeServerDialog" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <a id="ctaCloseResumeServerDialog"
+      (click)="closeDialog()"
+      mcsEventTracker="cancel"
+      eventCategory="server"
+      eventLabel="resume-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaResumeServer" arrow="right"
-      size="small" (click)="resumeServer()">
+      size="small" (click)="resumeServer()"
+      mcsEventTracker="confirm"
+      eventCategory="server"
+      eventLabel="resume-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>
