@@ -47,8 +47,6 @@ export class GoogleAnalyticsEventsService {
     dataLayer.push({
       'userID': identity[0],
       'companyGroup': identity[1],
-    });
-    dataLayer.push({
       'event': 'userIdentityUpdate'
     });
   }
