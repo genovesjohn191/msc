@@ -236,14 +236,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public get addDiskEnabled(): boolean {
     return !isNullOrEmpty(this.manageStorage)
       && this.inputIsValid
-      && this.manageStorage.storageMB > 0;
+      && this.manageStorage.sizeMB > 0;
   }
 
   /**
    * Returns true when the Storage data has been changed and input is valid
    */
   public get expandDiskEnabled(): boolean {
-    let storageHasChanged = this.manageStorage.storageMB > this.selectedDisk.sizeMB;
+    let storageHasChanged = this.manageStorage.sizeMB > this.selectedDisk.sizeMB;
     return storageHasChanged && this.inputIsValid;
   }
 
@@ -270,12 +270,12 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public addDisk(): void {
     let diskValues = new ServerStorageDeviceUpdate();
     diskValues.storageProfile = this.manageStorage.storage.name;
-    diskValues.sizeMB = this.manageStorage.storageMB;
+    diskValues.sizeMB = this.manageStorage.sizeMB;
     diskValues.clientReferenceObject = {
       serverId: this.server.id,
       name: `${this.textContent.diskName} ${this.server.storageDevices.length + 1}`,
       storageProfile: this.manageStorage.storage.name,
-      sizeMB: this.manageStorage.storageMB
+      sizeMB: this.manageStorage.sizeMB
     };
 
     this._serversService.setServerSpinner(this.server, diskValues);
@@ -327,7 +327,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     let diskValues = new ServerStorageDeviceUpdate();
     diskValues.name = this.selectedStorage.name;
     diskValues.storageProfile = this.selectedStorage.name;
-    diskValues.sizeMB = this.manageStorage.storageMB;
+    diskValues.sizeMB = this.manageStorage.sizeMB;
     diskValues.clientReferenceObject = {
       serverId: this.server.id,
       diskId: this.selectedDisk.id,

@@ -123,14 +123,6 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   }
 
   /**
-   * Resets the form and change the input to default type
-   */
-  public reset(): void {
-    this._resetFormGroup();
-    this.onChangeInputManageType(ServerInputManageType.Buttons);
-  }
-
-  /**
    * Returns the server input managetype enumeration instance
    */
   public get inputManageTypeEnum(): any {
@@ -241,8 +233,9 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
    * Sets the selected network if no network selected yet
    */
   private _setSelectedNetwork(): void {
-    let hasSelectedNetwork = !isNullOrEmpty(this.selectedNetwork) &&
-      !isNullOrEmpty(this.networks.find((network) => network === this.selectedNetwork));
+    if (isNullOrEmpty(this.networks)) { return; }
+    let hasSelectedNetwork = !isNullOrEmpty(this.selectedNetwork)
+      && !isNullOrEmpty(this.networks.find((network) => network === this.selectedNetwork));
     if (hasSelectedNetwork) { return; }
     this.selectedNetwork = this.networks[0];
   }

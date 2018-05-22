@@ -190,8 +190,6 @@ export class CreateServerComponent implements
    * Event that emits whenever a resource is selected
    */
   public onChangeResource(_resource: ServerResource): void {
-    let resourceHasNotChanged = this.selectedResource === _resource;
-    if (resourceHasNotChanged) { return; }
     // We need to clear the server components instance here
     // in order to generate new component in the DOM and refresh everything
     clearArrayRecord(this.serverComponents);
@@ -269,7 +267,7 @@ export class CreateServerComponent implements
     // Storage
     serverCreate.storage = new ServerCreateStorage();
     serverCreate.storage.name = serverInput.serverManageStorage.storage.name;
-    serverCreate.storage.storageMB = serverInput.serverManageStorage.storageMB;
+    serverCreate.storage.sizeMB = serverInput.serverManageStorage.sizeMB;
     // Network
     serverCreate.network = new ServerCreateNetwork();
     serverCreate.network.name = serverInput.serverNetwork.network.name;
