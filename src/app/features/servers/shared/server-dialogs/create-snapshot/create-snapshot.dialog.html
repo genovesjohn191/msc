@@ -15,9 +15,15 @@
 
   <mcs-dialog-actions>
     <a id="ctaCloseCreateSnapshotDialog"
-      (click)="closeDialog()">{{ textContent.cancel }}</a>
+      (click)="closeDialog()"
+      mcsEventTracker="cancel"
+      eventCategory="server"
+      eventLabel="create-snapshot-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaCreateSnapshot" arrow="right"
-      size="small" (click)="createSnapshot()">
+      size="small" (click)="createSnapshot()"
+      mcsEventTracker="confirm"
+      eventCategory="server"
+      eventLabel="create-snapshot-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>

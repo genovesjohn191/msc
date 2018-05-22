@@ -7,8 +7,7 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   McsTextContentProvider,
-  CoreDefinition,
-  GoogleAnalyticsEventsService
+  CoreDefinition
 } from '../../../../../core';
 import {
   isNullOrEmpty,
@@ -31,7 +30,6 @@ export class DeleteStorageDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<DeleteStorageDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData: ServerStorageDevice
   ) {
@@ -47,7 +45,6 @@ export class DeleteStorageDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
-    this._sendEventTracking('delete-storage-cancel-click');
     this.dialogRef.close();
   }
 
@@ -55,7 +52,6 @@ export class DeleteStorageDialogComponent {
    * This will close the dialog and set the dialog result to true
    */
   public deleteStorage(): void {
-    this._sendEventTracking('delete-storage-confirm-click');
     this.dialogRef.close(this.storage);
   }
 
@@ -81,9 +77,5 @@ export class DeleteStorageDialogComponent {
       'storage_name',
       this.storage.name
     );
-  }
-
-  private _sendEventTracking(event: string): void {
-    this._ga.emitEvent('server', event, 'delete-storage-dialog');
   }
 }

@@ -13,9 +13,16 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="ctaCloseDeleteNicDialog" (click)="closeDialog()">{{ textContent.cancel }}</a>
+    <a id="ctaCloseDeleteNicDialog"
+      (click)="closeDialog()"
+      mcsEventTracker="cancel"
+      eventCategory="server"
+      eventLabel="delete-nic-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaDeleteNic" arrow="right"
-      size="small" (click)="deleteNic()">
+      size="small" (click)="deleteNic()"
+      mcsEventTracker="confirm"
+      eventCategory="server"
+      eventLabel="delete-nic-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>

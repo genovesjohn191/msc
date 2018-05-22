@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsTextContentProvider,
-  GoogleAnalyticsEventsService
+  McsTextContentProvider
 } from '../../../../core';
 import {
   ServerCommand,
@@ -55,10 +54,7 @@ export class ServerCommandComponent implements OnInit {
     return ServerCommand;
   }
 
-  constructor(
-    private _textProvider: McsTextContentProvider,
-    private _ga: GoogleAnalyticsEventsService,
-  ) {
+  constructor(private _textProvider: McsTextContentProvider) {
     this.id = `mcs-server-command-${nextUniqueId++}`;
     this.excluded = new Array<ServerCommand>();
   }
@@ -71,7 +67,6 @@ export class ServerCommandComponent implements OnInit {
     if (this.popoverActionElement) {
       this.popoverActionElement.close();
     }
-    this._sendEventTracking(ServerCommand[command] + '-click');
     this.onClick.emit(command);
   }
 
@@ -125,9 +120,5 @@ export class ServerCommandComponent implements OnInit {
     }
 
     return included;
-  }
-
-  private _sendEventTracking(event: string): void {
-    this._ga.emitEvent('server', event, 'server-command-tool');
   }
 }

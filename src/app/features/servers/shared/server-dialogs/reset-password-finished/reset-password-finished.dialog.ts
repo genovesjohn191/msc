@@ -7,8 +7,7 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   CoreDefinition,
-  McsTextContentProvider,
-  GoogleAnalyticsEventsService
+  McsTextContentProvider
 } from '../../../../../core';
 import {
   isNullOrEmpty,
@@ -39,7 +38,6 @@ export class ResetPasswordFinishedDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<ResetPasswordFinishedDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
@@ -63,11 +61,6 @@ export class ResetPasswordFinishedDialogComponent {
    * Close the current displayed dialog
    */
   public closeDialog(): void {
-    this._sendEventTracking('new-password-details-close-click');
     this.dialogRef.close();
-  }
-
-  private _sendEventTracking(event: string): void {
-    this._ga.emitEvent('server', event, 'new-password-details-dialog');
   }
 }

@@ -2,7 +2,10 @@
 
   <!-- Top panel action -->
   <ng-container *mcsWizardTopPanelDef>
-    <mcs-action-item class="right-align" (click)="gotoServers()">
+    <mcs-action-item class="right-align" (click)="gotoServers()"
+      mcsEventTracker="back-to-server-listing"
+      eventCategory="server"
+      eventLabel="create-new-server-page">
       <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
       <span>{{ textContent.backToServers }}</span>
     </mcs-action-item>
@@ -63,7 +66,10 @@
 
         <div class="wizard-step-actions">
           <button mcsWizardStepNext mcsButton size="small" arrow="right"
-            (click)="validateFormFields()">Next</button>
+            (click)="validateFormFields()"
+            mcsEventTracker="step-1-next"
+            eventCategory="server"
+            eventLabel="create-new-server-page">Next</button>
         </div>
       </div>
     </div>

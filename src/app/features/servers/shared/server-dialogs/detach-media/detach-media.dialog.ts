@@ -6,8 +6,7 @@ import {
 import {
   MCS_DIALOG_DATA,
   McsDialogRef,
-  McsTextContentProvider,
-  GoogleAnalyticsEventsService
+  McsTextContentProvider
 } from '../../../../../core';
 import {
   isNullOrEmpty,
@@ -42,7 +41,6 @@ export class DetachMediaDialogComponent {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _ga: GoogleAnalyticsEventsService,
     public dialogRef: McsDialogRef<DetachMediaDialogComponent>,
     @Inject(MCS_DIALOG_DATA) public dialogData: ServerMedia
   ) {
@@ -54,7 +52,6 @@ export class DetachMediaDialogComponent {
    * Close the displayed dialog
    */
   public closeDialog(): void {
-    this._sendEventTracking('detach-media-cancel-click');
     this.dialogRef.close();
   }
 
@@ -62,11 +59,6 @@ export class DetachMediaDialogComponent {
    * This will close the dialog and set the dialog result to true
    */
   public detachMedia(): void {
-    this._sendEventTracking('detach-media-confirm-click');
     this.dialogRef.close(this.media);
-  }
-
-  private _sendEventTracking(event: string): void {
-    this._ga.emitEvent('server', event, 'detach-media-dialog');
   }
 }

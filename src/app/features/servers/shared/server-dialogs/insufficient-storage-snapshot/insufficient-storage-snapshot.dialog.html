@@ -15,6 +15,9 @@
 
   <mcs-dialog-actions>
     <a id="ctaCloseInsufficientStorageSnapshotDialog"
-      (click)="closeDialog()">{{ textContent.cancel }}</a>
+      (click)="closeDialog()"
+      mcsEventTracker="close"
+      eventCategory="server"
+      eventLabel="insufficient-snapshot-storage-dialog">{{ textContent.cancel }}</a>
   </mcs-dialog-actions>
 </mcs-dialog>
