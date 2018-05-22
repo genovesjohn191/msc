@@ -1,9 +1,9 @@
 export class ServerCreateStorage {
   public name: string;
-  public storageMB: number;
+  public sizeMB: number;
 
   constructor() {
     this.name = '';
-    this.storageMB = 0;
+    this.sizeMB = 0;
   }
 }

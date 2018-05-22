@@ -185,7 +185,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    */
   public reset(): void {
     this._resetFormGroup();
-    this.storageValue = 0;
+    this.storageValue = this.minValueGB;
     this.inputManageType = ServerInputManageType.Slider;
   }
 
@@ -217,8 +217,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    * Sets the selected storage if no network selected yet
    */
   private _setSelectedStorage(): void {
-    let hasSelectedStorage = !isNullOrEmpty(this.selectedStorage) &&
-      !isNullOrEmpty(this.storages.find((storage) => storage === this.selectedStorage));
+    if (isNullOrEmpty(this.storages)) { return; }
+    let hasSelectedStorage = !isNullOrEmpty(this.selectedStorage)
+      && !isNullOrEmpty(this.storages.find((storage) => storage === this.selectedStorage));
     if (hasSelectedStorage) { return; }
     this.selectedStorage = this.storages[0];
   }
@@ -283,7 +284,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
         this._storageOutput.storage = this.selectedStorage;
-        this._storageOutput.storageMB = convertGbToMb(
+        this._storageOutput.sizeMB = convertGbToMb(
           coerceNumber(this.customStorageValue,
             this.minValueGB)
         );
@@ -293,7 +294,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       case ServerInputManageType.Slider:
       default:
         this._storageOutput.storage = this.selectedStorage;
-        this._storageOutput.storageMB = convertGbToMb(this.storageValue);
+        this._storageOutput.sizeMB = convertGbToMb(this.storageValue);
         this._storageOutput.valid = true;
         break;
     }
