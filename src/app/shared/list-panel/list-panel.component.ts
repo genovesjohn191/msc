@@ -8,11 +8,11 @@ import {
   AfterContentInit,
   OnDestroy
 } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
 import {
-  startWith,
-  takeUntil
-} from 'rxjs/operators';
+  Subject,
+  Observable
+} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { isNullOrEmpty } from '../../utilities';
 import { OptionComponent } from '../option-group/option/option.component';
 import { OptionGroupComponent } from '../option-group/option-group.component';
@@ -40,17 +40,15 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
   /**
    * Combine streams of all option selection change
    */
-  public get optionsSelectionChange(): Observable<OptionComponent> {
+  private readonly _optionsSelectionChanges: Observable<OptionComponent> = Observable.defer(() => {
     return Observable.merge(...this._options.map((option) => option.selectionChange));
-  }
+  });
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   public ngAfterContentInit(): void {
-    this._options.changes.pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
-        this._listenToOptionsSelectionChange();
-      });
+    this._options.changes.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._listenToOptionsSelectionChange());
   }
 
   public ngOnDestroy(): void {
@@ -62,7 +60,10 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
    * Listens to every selection of option to close the previous selection
    */
   private _listenToOptionsSelectionChange(): void {
-    this.optionsSelectionChange.pipe(takeUntil(this._destroySubject))
+    // Drops the current subscriptions and resets from scratch
+    let resetSubject = Observable.merge(this._options.changes, this._destroySubject);
+
+    this._optionsSelectionChanges.pipe(takeUntil(resetSubject))
       .subscribe((option: OptionComponent) => {
         this._closeGroupsPanel(option);
         this._clearOptionSelection(option);

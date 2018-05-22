@@ -2,6 +2,7 @@ import {
   Pipe,
   PipeTransform
 } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { McsDataSizeType } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 
@@ -19,7 +20,7 @@ export class DataSizePipe implements PipeTransform {
     'TB'
   ];
 
-  constructor() {
+  constructor(private _decimalPipe: DecimalPipe) {
     this._createUnitSizeTable();
   }
 
@@ -41,7 +42,7 @@ export class DataSizePipe implements PipeTransform {
       unitIndex++;
     }
     unitIndex = Math.min(unitIndex, (this._unitTable.length - 1));
-    return `${sizeInBytes} ${this._unitTable[unitIndex]}`;
+    return `${this._decimalPipe.transform(sizeInBytes, '1.0-2')} ${this._unitTable[unitIndex]}`;
   }
 
   /**

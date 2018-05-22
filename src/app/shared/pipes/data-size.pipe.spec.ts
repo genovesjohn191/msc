@@ -3,6 +3,7 @@ import {
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
+import { DecimalPipe } from '@angular/common';
 import {
   Component,
   ViewChild,
@@ -51,7 +52,8 @@ describe('DataSizePipe', () => {
       declarations: [
         TestComponent,
         DataSizePipe
-      ]
+      ],
+      providers: [DecimalPipe]
     });
 
     /** Testbed Onverriding of Components */
