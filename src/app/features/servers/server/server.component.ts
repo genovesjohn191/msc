@@ -108,7 +108,7 @@ export class ServerComponent
     super(_router, _activatedRoute);
     this.selectedServer = new Server();
     this.serversMap = new Map();
-    this.listStatusFactory = new McsDataStatusFactory();
+    this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
     this._resourcesKeyMap = new Map();
   }
 
@@ -276,7 +276,6 @@ export class ServerComponent
         this.search.showLoading(false);
         this.listStatusFactory.setSuccesfull(response);
       });
-    this._changeDetectorRef.markForCheck();
   }
 
   /**

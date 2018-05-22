@@ -31,7 +31,7 @@
       [(ngModel)]="storageValue" (change)="onSliderChanged($event)">
     </mcs-slider>
     <div class="block-items centered">
-      <strong>{{ (storageValue | number:'1.0-2') | mcsDataSize: 'GB' }}</strong>
+      <strong>{{ storageValue | mcsDataSize: 'GB' }}</strong>
       <span>
         ({{ remainingMemory | number:'1.0-2' }} GB Remaining /
         {{ availableMemory | number:'1.0-2' }} GB)

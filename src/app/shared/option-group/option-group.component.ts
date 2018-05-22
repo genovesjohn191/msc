@@ -12,8 +12,10 @@ import {
   AfterContentInit,
   OnDestroy
 } from '@angular/core';
-import { startWith } from 'rxjs/operators/startWith';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import {
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
 import {
   Subject,
   Observable
@@ -69,6 +71,13 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   /**
+   * Combine streams of all the selected item child's change event
+   */
+  private readonly _optionsSelectionChanges: Observable<OptionComponent> = Observable.defer(() => {
+    return Observable.merge(...this._options.map((option) => option.selectionChange));
+  });
+
+  /**
    * Returns the caret icon key
    */
   public get caretRightIconKey(): string {
@@ -81,21 +90,15 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   private _panelOpen: boolean = false;
   public get panelOpen(): boolean { return this._panelOpen; }
 
-  /**
-   * Combine streams of all the selected item child's change event
-   */
-  public get optionsSelectionChange(): Observable<OptionComponent> {
-    return Observable.merge(...this._options.map((option) => option.selectionChange));
-  }
-
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef
   ) { }
 
   public ngAfterContentInit(): void {
-    this._options.changes.pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._listenToSelectionChange());
+    this._options.changes.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._changeDetectorRef.markForCheck());
+    this._listenToSelectionChange();
   }
 
   public ngOnDestroy(): void {
@@ -156,7 +159,10 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    * Listen to every selection changed event
    */
   private _listenToSelectionChange(): void {
-    this.optionsSelectionChange.pipe(startWith(null), takeUntil(this._destroySubject))
+    // Drops the current subscriptions and resets from scratch
+    let resetSubject = Observable.merge(this._options.changes, this._destroySubject);
+
+    this._optionsSelectionChanges.pipe(startWith(null), takeUntil(resetSubject))
       .subscribe(() => {
         let selectedOptions = this._options.filter((option) => option.selected);
         isNullOrEmpty(selectedOptions) ? this.closePanel() : this.openPanel();
