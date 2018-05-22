@@ -12,7 +12,9 @@ import {
 } from 'rxjs/Rx';
 import {
   startWith,
-  takeUntil
+  takeUntil,
+  catchError,
+  finalize
 } from 'rxjs/operators';
 import {
   ServerManageStorage,
@@ -246,10 +248,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   /**
-   * Shows the expand disk window
+   * Opens the expand disk window
    * @param disk Disk to be edited
    */
-  public showExpandDiskWindow(disk: ServerStorageDevice): void {
+  public openExpandDiskWindow(disk: ServerStorageDevice): void {
     if (isNullOrEmpty(disk)) { return; }
     this.selectedDisk = disk;
     this.diskMethodType = ServerDiskMethodType.ExpandDisk;
@@ -260,6 +262,31 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    */
   public closeExpandDiskWindow(): void {
     this._resetStorageValues();
+  }
+
+  /**
+   * Add disk to the current server
+   */
+  public addDisk(): void {
+    let diskValues = new ServerStorageDeviceUpdate();
+    diskValues.storageProfile = this.manageStorage.storage.name;
+    diskValues.sizeMB = this.manageStorage.storageMB;
+    diskValues.clientReferenceObject = {
+      serverId: this.server.id,
+      name: `${this.textContent.diskName} ${this.server.storageDevices.length + 1}`,
+      storageProfile: this.manageStorage.storage.name,
+      sizeMB: this.manageStorage.storageMB
+    };
+
+    this._serversService.setServerSpinner(this.server, diskValues);
+    this._serversService.createServerStorage(this.server.id, diskValues)
+      .pipe(
+        catchError((error) => {
+          this._errorHandlerService.handleHttpRedirectionError(error);
+          return Observable.throw(error);
+        }),
+        finalize(() => this._serversService.clearServerSpinner(this.server, diskValues))
+      ).subscribe();
   }
 
   /**
@@ -281,31 +308,16 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         storageProfile: disk.storageProfile,
         sizeMB: disk.sizeMB
       };
-      this._serversService.setServerSpinner(this.server, disk);
+      this._serversService.setServerSpinner(this.server, this.selectedDisk);
       this._serversService.deleteServerStorage(this.server.id, disk.id, diskValues)
-        .finally(() => this._serversService.clearServerSpinner(this.server, disk))
-        .subscribe();
+        .pipe(
+          catchError((error) => {
+            this._errorHandlerService.handleHttpRedirectionError(error);
+            return Observable.throw(error);
+          }),
+          finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedDisk))
+        ).subscribe();
     });
-  }
-
-  /**
-   * Add disk to the current server
-   */
-  public addDisk(): void {
-    let diskValues = new ServerStorageDeviceUpdate();
-    diskValues.storageProfile = this.manageStorage.storage.name;
-    diskValues.sizeMB = this.manageStorage.storageMB;
-    diskValues.clientReferenceObject = {
-      serverId: this.server.id,
-      name: `${this.textContent.diskName} ${this.server.storageDevices.length + 1}`,
-      storageProfile: this.manageStorage.storage.name,
-      sizeMB: this.manageStorage.storageMB
-    };
-
-    this._serversService.setServerSpinner(this.server, diskValues);
-    this._serversService.createServerStorage(this.server.id, diskValues)
-      .finally(() => this._serversService.clearServerSpinner(this.server, diskValues))
-      .subscribe();
   }
 
   /**
@@ -326,12 +338,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
     this.closeExpandDiskWindow();
     this._serversService.setServerSpinner(this.server, this.selectedDisk);
-    this._serversService.updateServerStorage(
-      this.server.id,
-      this.selectedStorage.id,
-      diskValues)
-      .finally(() => this._serversService.clearServerSpinner(this.server, this.selectedDisk))
-      .subscribe();
+    this._serversService.updateServerStorage(this.server.id, this.selectedStorage.id, diskValues)
+      .pipe(
+        catchError((error) => {
+          this._errorHandlerService.handleHttpRedirectionError(error);
+          return Observable.throw(error);
+        }),
+        finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedDisk))
+      ).subscribe();
   }
 
   /**

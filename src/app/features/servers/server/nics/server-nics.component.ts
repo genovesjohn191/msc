@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -14,7 +13,9 @@ import {
 } from 'rxjs/Rx';
 import {
   startWith,
-  takeUntil
+  takeUntil,
+  catchError,
+  finalize
 } from 'rxjs/operators';
 import {
   ServerNetwork,
@@ -44,8 +45,7 @@ import {
 } from '../../../../utilities';
 import {
   ServerDetailsBase,
-  DeleteNicDialogComponent,
-  ServerManageNetworkComponent
+  DeleteNicDialogComponent
 } from '../../shared';
 
 // Enumeration
@@ -72,9 +72,6 @@ const SERVER_MAXIMUM_NICS = 10;
 })
 
 export class ServerNicsComponent extends ServerDetailsBase implements OnInit, OnDestroy {
-  @ViewChild('manageNetworkElement')
-  public manageNetworkElement: ServerManageNetworkComponent;
-
   public textContent: any;
   public currentIpAddress: string;
   public fcNetwork: FormControl;
@@ -82,19 +79,16 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public selectedNetwork: ServerNetwork;
   public selectedNic: ServerNic;
   public dataStatusFactory: McsDataStatusFactory<ServerNic[]>;
+  public manageNetworkTemplate: any[];
 
   private _updateNicsSubscription: Subscription;
   private _networksSubscription: Subscription;
   private _newNic: ServerNic;
+  private _inProgressNicId: string;
   private _destroySubject = new Subject<void>();
-  private _hasInProgressNic: boolean;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
-  }
-
-  public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
   }
 
   public get checkIconKey(): string {
@@ -165,8 +159,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _textProvider,
       _errorHandlerService
     );
+    this.manageNetworkTemplate = [{}];
     this.manageNetwork = new ServerManageNetwork();
-    this.selectedNic = new ServerNic();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
     this.nicMethodType = ServerNicMethodType.AddNic;
   }
@@ -202,9 +196,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
-   * Returns true when user can add nic or not
+   * Returns true when user can add nic
    */
-  public get canAddNic(): boolean {
+  public get addNicEnabled(): boolean {
     return !this.hasReachedNicsLimit
       && !isNullOrEmpty(this.resourceNetworks);
   }
@@ -212,7 +206,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Returns true when the NIC data has been changed
    */
-  public get canEditNic(): boolean {
+  public get editNicEnabled(): boolean {
     let modeNotChanged = this.manageNetwork.network.name === this.selectedNic.logicalNetworkName
       && this.manageNetwork.ipAllocationMode !== ServerIpAllocationMode.Manual
       && this.manageNetwork.ipAllocationMode === this.selectedNic.ipAllocationMode;
@@ -228,10 +222,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
-   * Edits the selected NIC content
+   * Opens the edit nic window
    * @param nic NIC to be edited
    */
-  public editNic(nic: ServerNic): void {
+  public openEditNicWindow(nic: ServerNic): void {
     if (isNullOrEmpty(nic)) { return; }
     this.selectedNic = nic;
     this.nicMethodType = ServerNicMethodType.EditNic;
@@ -242,34 +236,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
-   * Closes the edit window
+   * Closes the edit nic window
    */
-  public closeEditWindow(): void {
+  public closeEditNicWindow(): void {
     this._resetNetworkValues();
-  }
-
-  /**
-   * Deletes the selected NIC
-   * @param nic NIC to be deleted
-   */
-  public deleteNic(nic: ServerNic): void {
-    let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
-      data: nic,
-      size: 'medium'
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (isNullOrEmpty(result)) { return; }
-
-      let nicValues = new ServerManageNic();
-      nicValues.name = this.selectedNic.logicalNetworkName;
-      nicValues.clientReferenceObject = {
-        serverId: this.server.id,
-        nicId: nic.id
-      };
-      this._resetNetworkValues();
-      this._serversService.deleteServerNic(this.server.id, nic.id, nicValues).subscribe();
-    });
   }
 
   /**
@@ -287,14 +257,48 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       ipAddress: this.manageNetwork.customIpAddress
     };
 
-    this._resetNetworkValues();
     this._serversService.setServerSpinner(this.server, nicValues);
     this._serversService.addServerNic(this.server.id, nicValues)
-      .catch((error) => {
-        this._serversService.clearServerSpinner(this.server, nicValues);
-        return Observable.throw(error);
-      })
-      .subscribe();
+      .pipe(
+        catchError((error) => {
+          this._errorHandlerService.handleHttpRedirectionError(error);
+          return Observable.throw(error);
+        }),
+        finalize(() => this._serversService.clearServerSpinner(this.server, nicValues))
+      ).subscribe();
+  }
+
+  /**
+   * Deletes the selected NIC
+   * @param nic NIC to be deleted
+   */
+  public deleteNic(nic: ServerNic): void {
+    let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
+      data: nic,
+      size: 'medium'
+    });
+
+    this.selectedNic = nic;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (isNullOrEmpty(result)) { return; }
+
+      let nicValues = new ServerManageNic();
+      nicValues.name = this.selectedNic.logicalNetworkName;
+      nicValues.clientReferenceObject = {
+        serverId: this.server.id,
+        nicId: this.selectedNic.id
+      };
+
+      this._serversService.setServerSpinner(this.server, this.selectedNic);
+      this._serversService.deleteServerNic(this.server.id, this.selectedNic.id, nicValues)
+        .pipe(
+          catchError((error) => {
+            this._errorHandlerService.handleHttpRedirectionError(error);
+            return Observable.throw(error);
+          }),
+          finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedNic))
+        ).subscribe();
+    });
   }
 
   /**
@@ -313,17 +317,25 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       ipAddress: this.manageNetwork.customIpAddress
     };
 
+    this.closeEditNicWindow();
     this._serversService.setServerSpinner(this.server, this.selectedNic);
-    this._serversService
-      .updateServerNic(this.server.id, this.selectedNic.id, nicValues)
-      .catch((error) => {
-        this._serversService.clearServerSpinner(this.server, this.selectedNic);
-        return Observable.throw(error);
-      })
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        this._resetNetworkValues();
-      });
+    this._serversService.updateServerNic(this.server.id, this.selectedNic.id, nicValues)
+      .pipe(
+        catchError((error) => {
+          this._errorHandlerService.handleHttpRedirectionError(error);
+          return Observable.throw(error);
+        }),
+        finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedNic))
+      ).subscribe();
+  }
+
+  /**
+   * Returns true when inputted nic is currently in-progress
+   * @param nic NIC to be checked
+   */
+  public nicIsInProgress(nic: ServerNic): boolean {
+    if (isNullOrEmpty(nic)) { return false; }
+    return nic.id === this._inProgressNicId;
   }
 
   /**
@@ -331,10 +343,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * `@Note:` Base implementation
    */
   protected serverSelectionChanged(): void {
+    this._resetNetworkValues();
     this._getResourceNetworks();
-
-    let nicsIsOutdated = !this._hasInProgressNic || isNullOrEmpty(this.server.nics);
-    if (nicsIsOutdated) { this._getServerNics(); }
+    this._getServerNics();
   }
 
   /**
@@ -344,24 +355,24 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.nicMethodType = ServerNicMethodType.AddNic;
     this.manageNetwork = new ServerManageNetwork();
     this.currentIpAddress = undefined;
-    if (!isNullOrEmpty(this.manageNetworkElement)) {
-      this.manageNetworkElement.reset();
-    }
+
+    // We need to set the first instance of the template
+    // in order to re-initialize the network component and have fresh data
+    this.manageNetworkTemplate[0] = {};
   }
 
   /**
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    this._serversRepository.notificationsChanged
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => { this._changeDetectorRef.markForCheck(); });
     this._notificationEvents.createServerNic
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onCreateServerNic.bind(this));
+
     this._notificationEvents.updateServerNic
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onModifyServerNic.bind(this));
+
     this._notificationEvents.deleteServerNic
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(this._onModifyServerNic.bind(this));
@@ -388,11 +399,17 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _onCreateServerNic(job: McsApiJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
-    if (job.dataStatus === McsDataStatus.InProgress) {
-      this._onAddingNic(job);
-    } else {
-      this._newNic = undefined;
-      this._getServerNics();
+    switch (job.dataStatus) {
+      case McsDataStatus.InProgress:
+        this._onAddingNic(job);
+        break;
+
+      case McsDataStatus.Success:
+        this.refreshServerResource();
+      case McsDataStatus.Error:
+      default:
+        this._newNic = undefined;
+        break;
     }
   }
 
@@ -402,8 +419,15 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   private _onModifyServerNic(job: McsApiJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
-    if (job.dataStatus === McsDataStatus.Success) { this._getServerNics(); }
-    this._hasInProgressNic = job.dataStatus === McsDataStatus.InProgress;
+
+    // Refresh the data when the nic in-progress is already completed
+    let inProgressNicEnded = !isNullOrEmpty(this._inProgressNicId)
+      && job.dataStatus === McsDataStatus.Success;
+    if (inProgressNicEnded) { this.refreshServerResource(); }
+
+    // Set the inprogress nic ID to be checked
+    this._inProgressNicId = job.dataStatus === McsDataStatus.InProgress ?
+      job.clientReferenceObject.nicId : undefined;
   }
 
   /**
@@ -417,7 +441,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this._newNic = new ServerNic();
     this._newNic.logicalNetworkName = job.clientReferenceObject.networkName;
     this._newNic.ipAllocationMode = job.clientReferenceObject.ipAllocationMode;
-    this._newNic.isProcessing = this.server.isProcessing;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -436,7 +460,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       })
       .subscribe((response) => {
         this.dataStatusFactory.setSuccesfull(response);
-        this._changeDetectorRef.markForCheck();
       });
   }
 
@@ -444,12 +467,13 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Get the resource networks from the server
    */
   private _getResourceNetworks(): void {
-    unsubscribeSafely(this._networksSubscription);
+    let hasResource = !isNullOrEmpty(this.serverResource) && !isNullOrEmpty(this.serverResource.id);
+    if (!hasResource) { return; }
+
     this._networksSubscription = this._serversResourcesRespository
       .findResourceNetworks(this.serverResource)
       .subscribe(() => {
         // Subscribe to update the snapshots in server instance
-        this._changeDetectorRef.markForCheck();
       });
   }
 }

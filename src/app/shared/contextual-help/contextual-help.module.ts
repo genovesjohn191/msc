@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PipesModule } from '../pipes/pipes.module';
 import { ContextualHelpComponent } from './contextual-help.component';
 import { ContextualHelpDirective } from './contextual-help.directive';
 
@@ -9,11 +10,13 @@ import { ContextualHelpDirective } from './contextual-help.directive';
     ContextualHelpDirective
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    PipesModule
   ],
   exports: [
     ContextualHelpComponent,
-    ContextualHelpDirective
+    ContextualHelpDirective,
+    PipesModule
   ],
   entryComponents: [ContextualHelpComponent]
 })

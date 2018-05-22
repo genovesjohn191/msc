@@ -10,94 +10,68 @@
     <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
     <ng-container [ngSwitch]="nicMethodType">
-      <div [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic">
+      <div [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic" class="block-items-large">
         <!-- NICs Table -->
         <mcs-data-status [dataStatusFactory]="dataStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
-            <div class="block-items-large">
-              <table class="basic-table no-gutter">
-                <thead>
-                  <tr>
-                    <th>{{ textContent.nic }}</th>
-                    <th>{{ textContent.network }}</th>
-                    <th>{{ textContent.primary }}</th>
-                    <th>{{ textContent.ipMode }}</th>
-                    <th>{{ textContent.ipAddresses }}</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let nic of serverNics">
-                    <td class="top-align">
-                      <ng-container *ngIf="nic.isProcessing; else nicIndex">
-                        <mcs-icon [key]="spinnerIconKey"
-                          size="small" class="hidden-small"
-                          [mcsTooltip]="jobSummaryInfo"
-                          mcsTooltipPosition="right"></mcs-icon>
-                      </ng-container>
-                      <ng-template #nicIndex>
-                        <span>{{ nic.index }}</span>
-                      </ng-template>
-                    </td>
-                    <td class="top-align">
-                      <span>{{ nic.logicalNetworkName }}</span>
-                    </td>
-                    <td class="top-align">
-                      <mcs-icon *ngIf="nic.isPrimary" [key]="checkIconKey" size="small"></mcs-icon>
-                    </td>
-                    <td class="top-align">
-                      <span>{{ nic.ipAllocationModeLabel }}</span>
-                    </td>
-                    <td class="top-align">
-                      <mcs-list spacing="none">
-                        <mcs-list-item *ngFor="let ipAddress of nic.ipAddress">
-                          {{ ipAddress }}
-                        </mcs-list-item>
-                      </mcs-list>
-                    </td>
-                    <td class="top-align inline-items-small">
-                      <ng-container *mcsAccessControl="['VmNicEdit']">
-                        <span *mcsIsSelfManagedServer="server">
-                          <a [disabled]="!server.executable" (click)="editNic(nic)">
-                            {{ textContent.editLink }}
-                          </a>
-                        </span>
-                      </ng-container>
+            <table class="basic-table no-gutter">
+              <thead>
+                <tr>
+                  <th>{{ textContent.nic }}</th>
+                  <th>{{ textContent.network }}</th>
+                  <th>{{ textContent.primary }}</th>
+                  <th>{{ textContent.ipMode }}</th>
+                  <th>{{ textContent.ipAddresses }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let nic of serverNics">
+                  <td>
+                    <ng-container *ngIf="nicIsInProgress(nic); else nicIndex">
+                      <mcs-icon [key]="spinnerIconKey" size="small"
+                        [mcsTooltip]="jobSummaryInfo"
+                        mcsTooltipPosition="right"></mcs-icon>
+                    </ng-container>
+                    <ng-template #nicIndex>
+                      <span>{{ nic.index }}</span>
+                    </ng-template>
+                  </td>
+                  <td>
+                    <span class="break-word-all">{{ nic.logicalNetworkName }}</span>
+                  </td>
+                  <td>
+                    <mcs-icon *ngIf="nic.isPrimary" class="space-left-medium"
+                      [key]="checkIconKey" size="small"></mcs-icon>
+                  </td>
+                  <td>
+                    <span>{{ nic.ipAllocationModeLabel }}</span>
+                  </td>
+                  <td>
+                    <mcs-list spacing="none">
+                      <mcs-list-item *ngFor="let ipAddress of nic.ipAddress">
+                        {{ ipAddress }}
+                      </mcs-list-item>
+                    </mcs-list>
+                  </td>
+                  <td>
+                    <div *mcsAccessControl="['VmNicEdit']" class="inline-items-small flex-nowrap">
+                      <span *mcsIsSelfManagedServer="server">
+                        <a [disabled]="!server.executable" (click)="openEditNicWindow(nic)">
+                          {{ textContent.editLink }}
+                        </a>
+                      </span>
                       <span *mcsAccessControl="['VmNicEdit']">
                         <a *ngIf="!nic.isPrimary"
                           [disabled]="!server.executable" (click)="deleteNic(nic)">
                           {{ textContent.deleteLink }}
                         </a>
                       </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <!-- Adding NIC -->
-              <ng-container *mcsAccessControl="['VmNicEdit']">
-                <div class="action-box" *ngIf="canAddNic" [disabled]="!server.executable">
-                  <mcs-server-manage-network #manageNetworkElement
-                    [networks]="resourceNetworks"
-                    (dataChange)="onNetworkChanged($event)"
-                    [(selectedNetwork)]="selectedNetwork">
-                    <div mcsManageNetworkTitle>
-                      <h4>{{ textContent.addHeading }}</h4>
                     </div>
-                  </mcs-server-manage-network>
-
-                  <div class="action-items">
-                    <button mcsButton id="ctaAddServerNetwork" arrow="right" size="small"
-                      [disabled]="!inputIsValid" (click)="addNic()">
-                      {{ textContent.addButton }}
-                    </button>
-                  </div>
-                </div>
-
-                <mcs-data-status-warning *ngIf="hasReachedNicsLimit">
-                  <span>{{ textContent.reachedNetworksLimit }}</span>
-                </mcs-data-status-warning>
-              </ng-container>
-            </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </mcs-data-status-success>
 
           <mcs-data-status-in-progress mcsDataInProgress>
@@ -112,6 +86,32 @@
             <span>{{ textContent.errorGettingNics }}</span>
           </mcs-data-status-error>
         </mcs-data-status>
+
+        <!-- Adding NIC -->
+        <ng-container *mcsAccessControl="['VmNicEdit']">
+          <div class="action-box" *ngIf="addNicEnabled" [disabled]="!server.executable">
+            <mcs-server-manage-network *ngFor="let item of manageNetworkTemplate"
+              [networks]="resourceNetworks"
+              (dataChange)="onNetworkChanged($event)"
+              [(selectedNetwork)]="selectedNetwork">
+
+              <ng-container mcsManageNetworkHeader>
+                <h4>{{ textContent.addHeading }}</h4>
+              </ng-container>
+            </mcs-server-manage-network>
+
+            <div class="action-items">
+              <button mcsButton id="ctaAddServerNetwork" arrow="right" size="small"
+                [disabled]="!inputIsValid" (click)="addNic()">
+                {{ textContent.addButton }}
+              </button>
+            </div>
+          </div>
+
+          <mcs-data-status-warning *ngIf="hasReachedNicsLimit">
+            <span>{{ textContent.reachedNetworksLimit }}</span>
+          </mcs-data-status-warning>
+        </ng-container>
       </div>
 
       <!-- Edit NIC -->
@@ -121,16 +121,17 @@
             (dataChange)="onNetworkChanged($event)"
             [customIpAddress]="currentIpAddress"
             [(selectedNetwork)]="selectedNetwork">
-            <div mcsManageNetworkTitle>
+
+            <ng-container mcsManageNetworkHeader>
               <h4>{{ textContent.editHeading }} {{ selectedNic.index }}</h4>
-            </div>
+            </ng-container>
           </mcs-server-manage-network>
 
           <div class="action-items">
-            <a (click)="closeEditWindow()">Cancel</a>
+            <a (click)="closeEditNicWindow()">Cancel</a>
             <button *mcsAccessControl="['VmEdit']"
               mcsButton id="ctaUpdateServerNetwork" arrow="right" size="small"
-              [disabled]="!canEditNic" (click)="updateNic()">
+              [disabled]="!editNicEnabled" (click)="updateNic()">
               {{ textContent.updateButton }}
             </button>
           </div>

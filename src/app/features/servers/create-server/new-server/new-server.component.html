@@ -98,7 +98,8 @@
       [storages]="resource?.storage"
       [minValueGB]="30"
       [deductValueGB]="currentScaleValue"
-      (dataChange)="onStorageChanged($event)">
+      (dataChange)="onStorageChanged($event)"
+      [mcsContextualHelp]="textHelpContent.storageField">
 
       <ng-container mcsManageStorageHeader>
         <h4>{{ textContent.storageLabel }}</h4>
@@ -110,10 +111,13 @@
   </div>
 
   <!-- Server network settings -->
-  <mcs-server-manage-network [networks]="resource?.networks"
-    (dataChange)="onNetworkChanged($event)">
-    <div mcsManageNetworkTitle>
+  <mcs-server-manage-network
+    [networks]="resource?.networks"
+    (dataChange)="onNetworkChanged($event)"
+    [mcsContextualHelp]="textHelpContent.networkField">
+
+    <ng-container mcsManageNetworkHeader>
       <h4>{{ textContent.networkLabel }}</h4>
-    </div>
+    </ng-container>
   </mcs-server-manage-network>
 </form>
