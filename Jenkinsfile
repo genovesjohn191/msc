@@ -64,7 +64,7 @@ podTemplate(
             args: '${computer.jnlpmac} ${computer.name}',
             ttyEnabled: true,
             resourceRequestMemory: '200Mi',
-            resourceLimitMemory: '2.50Gi',
+            resourceLimitMemory: '3.0Gi',
             alwaysPullImage: true
         )
     ],
@@ -150,7 +150,7 @@ podTemplate(
                 if (env.DEPLOYMENT_ENVIRONMENT != "LAB") {
                     image_version = params.IMAGE_VERSION
                 }
-                
+
                 echo "Update the deployed image"
                 sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
                 sh "kubectl rollout status deployment ${kube_deployment}"
@@ -175,13 +175,13 @@ podTemplate(
             slackSend (
                 color: '#ff0000', //red
                 message: "*BUILD FAILURE*: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
-                    ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ? 
+                    ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ?
                         "${commitSHAShort} ${commitAuthor}:\n" +
                         "> Msg: ${commitMsg}\n" :
                         "") +
                     "Error:\n" +
                     "> ${e}\n" +
-                    "<${env.BUILD_URL}console|Jenkins Link>" 
+                    "<${env.BUILD_URL}console|Jenkins Link>"
             )
             if (debug_sleep) {
                 stage('Debug failed build') {
