@@ -3,5 +3,5 @@
   [@scaleIn]="visible ? 'show' : 'void'"
   (@scaleIn.done)="afterVisibilityAnimation($event)">
 
-  <span>{{ message }}</span>
+  <span [innerHTML]="message | mcsNewLines"></span>
 </div>

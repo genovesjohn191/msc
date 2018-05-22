@@ -10,7 +10,6 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { SharedModule } from '../../../../../shared';
 import { InfrastructureMonitoringAddOnComponent } from './infrastructure-monitoring.addon';
 import { CoreTestingModule } from '../../../../../core/testing';
 import { OptionsApiService } from '../../../../services';
@@ -42,8 +41,7 @@ describe('InfrastructureMonitoringAddOnComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        CoreTestingModule,
-        SharedModule
+        CoreTestingModule
       ],
       providers: [
         OptionsApiService

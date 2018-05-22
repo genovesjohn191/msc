@@ -26,14 +26,17 @@
               <tbody>
                 <tr *ngFor="let storage of serverDisks">
                   <td>
-                    <ng-container *ngIf="diskIsInProgress(storage); else defaultStorageIcon">
-                      <mcs-icon class="inline-block" [key]="spinnerIconKey" size="small"
-                        [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
-                    </ng-container>
-                    <ng-template #defaultStorageIcon>
-                      <mcs-icon class="inline-block" [key]="storageIconKey" size="small"></mcs-icon>
-                    </ng-template>
-                    <span class="inline-block">{{ storage.name }}</span>
+                    <div class="inline-items-xsmall">
+                      <ng-container *ngIf="diskIsInProgress(storage); else defaultStorageIcon">
+                        <mcs-icon [key]="spinnerIconKey" size="small"
+                          [mcsTooltip]="jobSummaryInfo"
+                          mcsTooltipPosition="right"></mcs-icon>
+                      </ng-container>
+                      <ng-template #defaultStorageIcon>
+                        <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
+                      </ng-template>
+                      <span class="break-word-all">{{ storage.name }}</span>
+                    </div>
                   </td>
                   <td>
                     {{ storage.storageProfile }}
@@ -41,26 +44,21 @@
                   <td>
                     {{ storage.sizeMB | mcsDataSize: 'MB' }}
                   </td>
-                  <td class="inline-items-small">
-                    <ng-container *mcsIsSelfManagedServer="server">
-                      <ng-container *mcsAccessControl="['VmEdit']">
-                        <span class="expand text-right">
-                          <a [disabled]="!server.executable"
-                            (click)="showExpandDiskWindow(storage)">
-                            {{ textContent.expandStorageLink }}
-                          </a>
-                        </span>
-                      </ng-container>
-
-                      <ng-container *mcsAccessControl="['VmEdit']">
-                        <span class="delete text-right">
-                          <a *ngIf="canDeleteDisk"
-                            [disabled]="!server.executable" (click)="deleteDisk(storage)">
-                            {{ textContent.deleteStorageLink }}
-                          </a>
-                        </span>
-                      </ng-container>
-                    </ng-container>
+                  <td>
+                    <div class="inline-items-small flex-nowrap" *mcsIsSelfManagedServer="server">
+                      <span *mcsAccessControl="['VmEdit']">
+                        <a [disabled]="!server.executable"
+                          (click)="openExpandDiskWindow(storage)">
+                          {{ textContent.expandStorageLink }}
+                        </a>
+                      </span>
+                      <span *mcsAccessControl="['VmEdit']" >
+                        <a *ngIf="canDeleteDisk" [disabled]="!server.executable"
+                          (click)="deleteDisk(storage)">
+                          {{ textContent.deleteStorageLink }}
+                        </a>
+                      </span>
+                    </div>
                   </td>
                 </tr>
               </tbody>

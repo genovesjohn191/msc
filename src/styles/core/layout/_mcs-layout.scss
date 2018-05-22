@@ -20,6 +20,14 @@
   @include flex(1 1 0%);
 }
 
+.flex-wrap {
+  @include flex-wrap(wrap);
+}
+
+.flex-nowrap {
+  @include flex-wrap(nowrap);
+}
+
 // Align Items
 .align-items-flex-start {
   @include align-items(flex-start);
