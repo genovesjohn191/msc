@@ -15,8 +15,7 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  Subject,
-  Subscription
+  Subject
 } from 'rxjs';
 import {
   startWith,
@@ -27,8 +26,8 @@ import {
   McsViewportService
 } from '../../core';
 import {
-  unsubscribeSafely,
-  isNullOrEmpty
+  isNullOrEmpty,
+  refreshView
 } from '../../utilities';
 import {
   ResponsivePanelBarComponent
@@ -77,8 +76,6 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   public disableScrollBefore: boolean = true;
   public showPaginationControls: boolean = false;
 
-  private _selectionSubscription: Subscription;
-  private _viewportChangeSubscription: Subscription;
   private _scrollDistanceChanged: boolean;
   private _panelItemsCount: number;
   private _destroySubject = new Subject<void>();
@@ -148,8 +145,6 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this._selectionSubscription);
-    unsubscribeSafely(this._viewportChangeSubscription);
     this._destroySubject.next();
     this._destroySubject.complete();
   }
@@ -251,26 +246,26 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
    * Listen to selection changed of all the items
    */
   private _listenToSelectionChange(): void {
-    unsubscribeSafely(this._selectionSubscription);
-    this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
-      this._selectedPanelItem = item;
-      if (this.showPaginationControls) {
-        this._scrollToElement(item);
-      }
-      if (item.selectable) {
-        this.panelBorderBar.alignToElement(item.elementRef);
-      }
-      this._changeDetectorRef.markForCheck();
-    });
+    this.itemsSelectionChanged.pipe(takeUntil(this._destroySubject))
+      .subscribe((item) => {
+        refreshView(() => {
+          this._selectedPanelItem = item;
+          if (this.showPaginationControls) {
+            this._scrollToElement(item);
+          }
+          if (item.selectable) {
+            this.panelBorderBar.alignToElement(item.elementRef);
+          }
+          this._changeDetectorRef.markForCheck();
+        });
+      });
   }
 
   /**
    * Listen to viewport resize change
    */
   private _listenToViewportChange(): void {
-    this._viewportChangeSubscription = this._viewportService.change()
-      .subscribe(() => {
-        this._updatePagination();
-      });
+    this._viewportService.change().pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => this._updatePagination());
   }
 }
