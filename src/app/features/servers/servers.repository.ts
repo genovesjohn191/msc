@@ -50,7 +50,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       .map((response) => {
         activeServer.storageDevices = !isNullOrEmpty(response.content) ?
           response.content : new Array();
-
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -161,10 +160,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       .subscribe(this._onCreateServerDisk.bind(this));
 
     this._notificationEvents.updateServerDisk
-      .subscribe(this._onModifyServerDisk.bind(this));
+      .subscribe(this._onUpdateServerDisk.bind(this));
 
     this._notificationEvents.deleteServerDisk
-      .subscribe(this._onModifyServerDisk.bind(this));
+      .subscribe(this._onUpdateServerDisk.bind(this));
 
     this._notificationEvents.createServerNic
       .subscribe(this._onCreateServerNic.bind(this));
@@ -232,12 +231,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   private _onPowerStateServer(job: McsApiJob): void {
     if (isNullOrEmpty(job)) { return; }
     let activeServer = this._getServerByJob(job);
+
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
       if (job.dataStatus === McsDataStatus.Success) {
         this._updateServerPowerState(activeServer);
       }
-
       this.updateRecord(activeServer);
     }
   }
@@ -362,21 +361,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when either updating or deleting a server disk
    * @param job Emitted job content
    */
-  private _onModifyServerDisk(job: McsApiJob): void {
+  private _onUpdateServerDisk(job: McsApiJob): void {
     if (isNullOrEmpty(job)) { return; }
     let activeServer = this._getServerByJob(job);
 
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      if (!isNullOrEmpty(activeServer.storageDevices)) {
-        let disk = activeServer.storageDevices.find((result) => {
-          return result.id === job.clientReferenceObject.diskId;
-        });
-        if (!isNullOrEmpty(disk)) {
-          disk.isProcessing = activeServer.isProcessing;
-        }
-      }
       this.updateRecord(activeServer);
     }
   }
@@ -403,7 +393,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     if (isNullOrEmpty(job)) { return; }
     let activeServer = this._getServerByJob(job);
 
-    if (!isNullOrEmpty(activeServer)) {
+    let hasServerNics = !isNullOrEmpty(activeServer) && !isNullOrEmpty(activeServer.nics);
+    if (hasServerNics) {
       this._setServerProcessDetails(activeServer, job);
       let nic = activeServer.nics.find((result) => {
         return result.id === job.clientReferenceObject.nicId;

@@ -65,8 +65,7 @@
                       </ng-container>
                       <span *mcsAccessControl="['VmNicEdit']">
                         <a *ngIf="!nic.isPrimary"
-                          [disabled]="!server.executable"
-                          (click)="deleteNic(nic)">
+                          [disabled]="!server.executable" (click)="deleteNic(nic)">
                           {{ textContent.deleteLink }}
                         </a>
                       </span>

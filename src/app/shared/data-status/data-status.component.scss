@@ -3,6 +3,7 @@
 $data-status-size: 30px;
 
 .data-status-wrapper {
-  display: block;
   min-height: $data-status-size;
+  @include display-flex(column);
+  justify-content: center;
 }

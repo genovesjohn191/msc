@@ -2,6 +2,6 @@
   <mcs-icon [key]="downloadIconKey" size="xlarge"></mcs-icon>
   <div class="file-download-info">
     <a (click)="downloadFile()" cursor="pointer">{{ file?.filename }}</a>
-    <span read-only>{{ fileType }} - {{ fileSize | mcsFileSize }}</span>
+    <span read-only>{{ fileType }} - {{ fileSize | mcsDataSize }}</span>
   </div>
 </div>

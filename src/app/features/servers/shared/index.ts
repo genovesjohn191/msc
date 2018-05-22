@@ -10,8 +10,6 @@ export * from './server-manage-network/server-manage-network.component';
 export * from './provisioning-notifications/provisioning-notifications.component';
 /** Server Details Base Class */
 export * from './server-details.base';
-/** Interfaces */
-export * from './mcs-storage.interface';
 /** Server Dialogs */
 export * from './server-dialogs/rename-server/rename-server.dialog';
 export * from './server-dialogs/reset-password/reset-password.dialog';

@@ -95,20 +95,17 @@
   <!-- Storage Management -->
   <div class="field">
     <mcs-server-manage-storage
-      [minimumMB]="storageMinMemoryMB"
-      [maximumMB]="storageMaxMemoryMB"
-      [step]="storageSliderStep"
-      [storageProfileList]="resource?.storage"
-      [mcsContextualHelp]="textHelpContent.storageField"
-      (storageChanged)="onStorageChanged($event)">
-      <!--Server manage storage contents on the left hand side (title and description)-->
-      <div mcsStorageTitle>
-        <span class="label no-line-height">{{ textContent.storageLabel }}</span>
-      </div>
+      [storages]="resource?.storage"
+      [minValueGB]="30"
+      [deductValueGB]="currentScaleValue"
+      (dataChange)="onStorageChanged($event)">
 
-      <div mcsStorageWarning>
+      <ng-container mcsManageStorageHeader>
+        <h4>{{ textContent.storageLabel }}</h4>
+      </ng-container>
+      <ng-container mcsManageStorageWarning>
         <span>{{ storageWarning }}</span>
-      </div>
+      </ng-container>
     </mcs-server-manage-storage>
   </div>
 

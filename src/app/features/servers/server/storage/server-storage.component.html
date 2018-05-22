@@ -9,148 +9,152 @@
     <h4 class="container-header">{{ textContent.title }}</h4>
     <p>{{ textContent.description }}</p>
 
-    <div *ngIf="!expandStorage" class="vertical-items-spacing-large">
-      <!-- Disks -->
-      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-        <mcs-data-status-success mcsDataSuccess>
-          <table class="basic-table no-gutter">
-            <thead>
-              <tr>
-                <th>{{ textContent.storageDevice }}</th>
-                <th>{{ textContent.storageProfile }}</th>
-                <th>{{ textContent.capacity }}</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let storage of serverDisks">
-                <td class="squishy-cell">
-                  <ng-container *ngIf="storage.isProcessing; else defaultStorageIcon">
-                    <mcs-icon class="inline-block" [key]="spinnerIconKey" size="small"
-                      [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
-                  </ng-container>
-                  <ng-template #defaultStorageIcon>
-                    <mcs-icon class="inline-block" [key]="storageIconKey" size="small"></mcs-icon>
-                  </ng-template>
-                  <span class="inline-block">{{ storage.name }}</span>
-                </td>
-                <td class="squishy-cell">
-                  {{ storage.storageProfile }}
-                </td>
-                <td>
-                  {{ appendUnitGB(convertDiskToGB(storage.sizeMB)) }}
-                </td>
-                <td class="inline-items-small">
-                  <ng-container *mcsIsSelfManagedServer="server">
-                    <ng-container *mcsAccessControl="['VmEdit']">
-                      <span class="expand text-right">
-                        <a [disabled]="expandDiskIsDisabled(storage)"
-                          (click)="showExpandStorageBox(storage)">
-                          {{ textContent.expandStorageLink }}
-                        </a>
-                      </span>
+    <ng-container [ngSwitch]="diskMethodType">
+      <div [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk" class="block-items-large">
+        <!-- Disks Table -->
+        <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+          <mcs-data-status-success mcsDataSuccess>
+            <table class="basic-table no-gutter">
+              <thead>
+                <tr>
+                  <th>{{ textContent.storageDevice }}</th>
+                  <th>{{ textContent.storageProfile }}</th>
+                  <th>{{ textContent.capacity }}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let storage of serverDisks">
+                  <td>
+                    <ng-container *ngIf="diskIsInProgress(storage); else defaultStorageIcon">
+                      <mcs-icon class="inline-block" [key]="spinnerIconKey" size="small"
+                        [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
                     </ng-container>
+                    <ng-template #defaultStorageIcon>
+                      <mcs-icon class="inline-block" [key]="storageIconKey" size="small"></mcs-icon>
+                    </ng-template>
+                    <span class="inline-block">{{ storage.name }}</span>
+                  </td>
+                  <td>
+                    {{ storage.storageProfile }}
+                  </td>
+                  <td>
+                    {{ storage.sizeMB | mcsDataSize: 'MB' }}
+                  </td>
+                  <td class="inline-items-small">
+                    <ng-container *mcsIsSelfManagedServer="server">
+                      <ng-container *mcsAccessControl="['VmEdit']">
+                        <span class="expand text-right">
+                          <a [disabled]="!server.executable"
+                            (click)="showExpandDiskWindow(storage)">
+                            {{ textContent.expandStorageLink }}
+                          </a>
+                        </span>
+                      </ng-container>
 
-                    <ng-container *mcsAccessControl="['VmEdit']">
-                      <span class="delete text-right">
-                        <a *ngIf="hasMultipleStorageDevice"
-                          [disabled]="!server.executable"
-                          (click)="onDeleteStorage(storage)">
-                          {{ textContent.deleteStorageLink }}
-                        </a>
-                      </span>
+                      <ng-container *mcsAccessControl="['VmEdit']">
+                        <span class="delete text-right">
+                          <a *ngIf="canDeleteDisk"
+                            [disabled]="!server.executable" (click)="deleteDisk(storage)">
+                            {{ textContent.deleteStorageLink }}
+                          </a>
+                        </span>
+                      </ng-container>
                     </ng-container>
-                  </ng-container>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </mcs-data-status-success>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </mcs-data-status-success>
 
-        <mcs-data-status-in-progress mcsDataInProgress>
-          <span>{{ textContent.loadingContent }}</span>
-        </mcs-data-status-in-progress>
+          <mcs-data-status-in-progress mcsDataInProgress>
+            <span>{{ textContent.loadingContent }}</span>
+          </mcs-data-status-in-progress>
 
-        <mcs-data-status-empty mcsDataEmpty>
-          <span>{{ textContent.noDisks }}</span>
-        </mcs-data-status-empty>
+          <mcs-data-status-empty mcsDataEmpty>
+            <span>{{ textContent.noDisks }}</span>
+          </mcs-data-status-empty>
 
-        <mcs-data-status-error mcsDataError>
-          <span>{{ textContent.errorGettingDisks }}</span>
-        </mcs-data-status-error>
-      </mcs-data-status>
+          <mcs-data-status-error mcsDataError>
+            <span>{{ textContent.errorGettingDisks }}</span>
+          </mcs-data-status-error>
+        </mcs-data-status>
 
-      <ng-container *mcsAccessControl="['VmEdit']">
-        <ng-container *mcsIsSelfManagedServer="server">
-          <div *ngIf="!hasReachedDisksLimit && hasStorageProfileList" class="action-box">
-            <mcs-server-manage-storage #mcsStorage
-              [storageProfileList]="resourceStorage" [minValueMB]="storageMinValueMB"
-              [minimumMB]="0" [maximumMB]="maximumMB" [step]="sliderStep"
-              (storageChanged)="onStorageChanged($event)" [disabled]="!server.executable">
-              <!--Server manage storage contents on the left hand side (description)-->
-              <div mcsStorageTitle>
-                <h4>{{ textContent.addStorageHeading }}</h4>
+        <!-- Adding Disk -->
+        <ng-container *mcsAccessControl="['VmEdit']">
+          <ng-container *mcsIsSelfManagedServer="server">
+            <div class="action-box" *ngIf="canAddDisk" [disabled]="!server.executable">
+              <mcs-server-manage-storage *ngFor="let item of manageStorageTemplate"
+                [storages]="resourceStorages"
+                [minValueGB]="0"
+                [(selectedStorage)]="selectedStorage"
+                (dataChange)="onStorageChanged($event)">
+
+                <ng-container mcsManageStorageHeader>
+                  <h4>{{ textContent.addStorageHeading }}</h4>
+                </ng-container>
+                <ng-container mcsManageStorageWarning>
+                  <span>{{ textContent.fullStorageSpace }}</span>
+                </ng-container>
+              </mcs-server-manage-storage>
+
+              <div class="action-items">
+                <button mcsButton id="ctaAttachServerStorage" arrow="right" size="small"
+                  [disabled]="!addDiskEnabled" (click)="addDisk()">
+                  {{ textContent.addButton }}
+                </button>
               </div>
-
-              <div mcsStorageWarning>
-                <span>{{ textContent.fullStorageSpace }}</span>
-              </div>
-            </mcs-server-manage-storage>
-            <div class="text-right">
-              <button mcsButton id="ctaAttachServerStorage" arrow="right" size="small"
-                [disabled]="attachStorageIsDisabled" (click)="onClickAttach()">
-                {{ textContent.attachStorage }}
-              </button>
             </div>
-          </div>
 
-          <div *ngIf="hasReachedDisksLimit" class="inline-items-xsmall">
-            <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-            <h4>{{ textContent.reachedStorageLimit }}</h4>
-          </div>
+            <mcs-data-status-warning *ngIf="hasReachedDisksLimit">
+              <span>{{ textContent.reachedStorageLimit }}</span>
+            </mcs-data-status-warning>
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </div>
+      </div>
 
-    <ng-container *mcsAccessControl="['VmEdit']">
-      <ng-container *mcsIsSelfManagedServer="server">
-        <div class="grid-column" *ngIf="expandStorage && hasDiskStorageProfile">
-          <mcs-server-manage-storage #mcsStorage
-            [minimumMB]="minimumMB"
-            [maximumMB]="maximumMB"
-            [step]="sliderStep"
-            [minValueMB]="minimumMB"
-            (storageChanged)="onStorageChanged($event)">
-            <!--Server manage storage contents on the left hand side (description)-->
-            <div mcsStorageTitle>
+      <!-- Expand Disk -->
+      <div [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.ExpandDisk">
+        <div class="action-box" [disabled]="!server.executable">
+          <mcs-server-manage-storage
+            [storages]="resourceStorages"
+            [minValueGB]="minimumGB"
+            [addedValueGB]="selectedDiskSizeGB"
+            [detailsTemplate]="diskDetailsTemplate"
+            [(selectedStorage)]="selectedStorage"
+            (dataChange)="onStorageChanged($event)">
+
+            <ng-container mcsManageStorageHeader>
               <h4>{{ textContent.expandStorageHeading }}</h4>
-            </div>
-
-            <div mcsStorageDetails class="vertical-items-spacing-xsmall">
-              <p>
-                <strong>{{ textContent.storageDevice }}:</strong>
-                <span>{{ selectedStorageDevice.name }}</span>
-              </p>
-              <p>
-                <strong>{{ textContent.storageProfile }}:</strong>
-                <span>{{ selectedStorageDevice.storageProfile }}</span>
-              </p>
-              <p>
-                <strong>{{ textContent.capacity }}:</strong>
-                <span>{{ appendUnitGB(convertDiskToGB(selectedStorageDevice.sizeMB)) }}</span>
-              </p>
-            </div>
+            </ng-container>
           </mcs-server-manage-storage>
-          <div display-flex="row" align-items="center" justify-content="space-between">
-            <a (click)="closeExpandStorageBox()">Cancel</a>
 
+          <ng-template #diskDetailsTemplate>
+            <mcs-list spacing="none">
+              <mcs-list-item>
+                <strong>{{ textContent.storageDevice }}:</strong>
+                <span>{{ selectedDisk.name }}</span>
+              </mcs-list-item>
+              <mcs-list-item>
+                <strong>{{ textContent.storageProfile }}:</strong>
+                <span>{{ selectedDisk.storageProfile }}</span>
+              </mcs-list-item>
+              <mcs-list-item>
+                <strong>{{ textContent.capacity }}:</strong>
+                <span>{{ selectedDisk.sizeMB | mcsDataSize: 'MB' }}</span>
+              </mcs-list-item>
+            </mcs-list>
+          </ng-template>
+
+          <div class="action-items">
+            <a (click)="closeExpandDiskWindow()">{{ textContent.cancelButton }}</a>
             <button mcsButton id="ctaUpdateServerStorage" arrow="right" size="small"
-              [disabled]="attachStorageIsDisabled" (click)="onExpandStorage()">
-              {{ textContent.updateStorage }}
+              [disabled]="!expandDiskEnabled" (click)="expandDisk()">
+              {{ textContent.updateButton }}
             </button>
           </div>
         </div>
-      </ng-container>
+      </div>
     </ng-container>
   </div>
 </div>

@@ -134,7 +134,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
-   * Returns true when the NIC is currently updating/editing
+   * Returns the nic type based on the method currently invoked
    */
   private _nicMethodType: ServerNicMethodType = ServerNicMethodType.AddNic;
   public get nicMethodType(): ServerNicMethodType { return this._nicMethodType; }
@@ -262,7 +262,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       if (isNullOrEmpty(result)) { return; }
 
       let nicValues = new ServerManageNic();
-      nicValues.name = this.manageNetwork.network.name;
+      nicValues.name = this.selectedNic.logicalNetworkName;
       nicValues.clientReferenceObject = {
         serverId: this.server.id,
         nicId: nic.id
@@ -287,16 +287,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       ipAddress: this.manageNetwork.customIpAddress
     };
 
-    this.manageNetworkElement.reset();
     this._resetNetworkValues();
-
     this._serversService.setServerSpinner(this.server, nicValues);
     this._serversService.addServerNic(this.server.id, nicValues)
-    .catch((error) => {
-      this._serversService.clearServerSpinner(this.server, nicValues);
-      return Observable.throw(error);
-    })
-    .subscribe();
+      .catch((error) => {
+        this._serversService.clearServerSpinner(this.server, nicValues);
+        return Observable.throw(error);
+      })
+      .subscribe();
   }
 
   /**
@@ -323,9 +321,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         return Observable.throw(error);
       })
       .subscribe((response) => {
-        if (!isNullOrEmpty(response)) {
-          this._resetNetworkValues();
-        }
+        if (isNullOrEmpty(response)) { return; }
+        this._resetNetworkValues();
       });
   }
 
@@ -335,7 +332,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    */
   protected serverSelectionChanged(): void {
     this._getResourceNetworks();
-    if (!this._hasInProgressNic) { this._getServerNics(); }
+
+    let nicsIsOutdated = !this._hasInProgressNic || isNullOrEmpty(this.server.nics);
+    if (nicsIsOutdated) { this._getServerNics(); }
   }
 
   /**
@@ -345,6 +344,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.nicMethodType = ServerNicMethodType.AddNic;
     this.manageNetwork = new ServerManageNetwork();
     this.currentIpAddress = undefined;
+    if (!isNullOrEmpty(this.manageNetworkElement)) {
+      this.manageNetworkElement.reset();
+    }
   }
 
   /**

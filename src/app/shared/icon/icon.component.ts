@@ -154,7 +154,9 @@ export class IconComponent implements OnChanges {
       .getSvgElement(this._icon.value)
       .map((svgElement) => {
 
-        svgElement.setAttribute('width', this._iconActualSize);
+        // We need to set the 100% when the size is auto since SVG uses 100% only
+        let svgActualSize = this._iconActualSize === 'auto' ? '100%' : this._iconActualSize;
+        svgElement.setAttribute('width', svgActualSize);
         this._renderer.appendChild(parentContainer, svgElement);
         return parentContainer;
       });

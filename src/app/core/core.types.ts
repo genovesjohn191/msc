@@ -12,3 +12,6 @@ export type McsStatusType = 'success' | 'failed' | 'warning' | 'info';
 
 // Placement Type
 export type McsPlacementType = 'left' | 'right' | 'top' | 'bottom';
+
+// Data Size Type
+export type McsDataSizeType = 'B' | 'KB' | 'MB' | 'GB' | 'TB';

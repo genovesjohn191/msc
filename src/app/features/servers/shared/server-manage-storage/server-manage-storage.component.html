@@ -1,55 +1,58 @@
-<div class="server-manage-storage-container">
-  <div display-flex flex="auto">
-    <div display-flex="column" flex="auto" class="vertical-items-spacing-small">
-      <ng-content select="[mcsStorageTitle]"></ng-content>
-      <ng-content select="[mcsStorageDetails]"></ng-content>
+<!-- Storage header and switcher -->
+<div class="space-between-inline-items">
+  <div><ng-content select="[mcsManageStorageHeader]"></ng-content></div>
+  <a *ngIf="inputManageType === inputManageTypeEnum.Custom"
+    (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
+    {{ textContent.sliderSwitch }}</a>
+  <a *ngIf="inputManageType === inputManageTypeEnum.Slider"
+    (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+    {{ textContent.customSwitch }}</a>
+</div>
+
+<!-- Storage profiles selection and details template -->
+<ng-container *ngIf="!detailsTemplate;else detailsTemplate">
+  <mcs-form-field >
+    <mcs-select [(ngModel)]="selectedStorage" placeholder="Select storage profile">
+      <mcs-select-group header="Storage Profiles">
+        <mcs-select-item *ngFor="let storage of storages" [value]="storage">
+          {{ storage.name }}
+        </mcs-select-item>
+      </mcs-select-group>
+    </mcs-select>
+  </mcs-form-field>
+</ng-container>
+
+<div *ngIf="hasAvailableMemory" [ngSwitch]="inputManageType" [ngStyle]="{height: '140px'}">
+  <!-- Slider selection mode -->
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
+    <p>{{ textContent.sliderMessage }}</p>
+
+    <mcs-slider [min]="minValueGB" [max]="availableMemory" [step]="10"
+      [(ngModel)]="storageValue" (change)="onSliderChanged($event)">
+    </mcs-slider>
+    <div class="block-items centered">
+      <strong>{{ (storageValue | number:'1.0-2') | mcsDataSize: 'GB' }}</strong>
+      <span>
+        ({{ remainingMemory | number:'1.0-2' }} GB Remaining /
+        {{ availableMemory | number:'1.0-2' }} GB)
+      </span>
     </div>
-
-    <div flex="none" display-flex justify-content="flex-end"
-      [disabled]="!hasAvailableStorageSpace">
-      <a *ngIf="inputManageType == inputManageTypeEnum.Slider"
-        (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
-          {{ textContent.customSwitch }}</a>
-      <a *ngIf="inputManageType == inputManageTypeEnum.Custom"
-        (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
-          {{ textContent.sliderSwitch }}</a>
-    </div>
   </div>
 
-  <div [ngSwitch]="inputManageType" class="description">
-    <div *ngSwitchCase="inputManageTypeEnum.Slider">{{ textContent.sliderMessage }}</div>
-    <div *ngSwitchCase="inputManageTypeEnum.Custom">{{ textContent.customMessage }}</div>
-  </div>
+  <!-- Custom storage mode -->
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+    <p>{{ textContent.customMessage }}</p>
 
-  <!--Storage profile content element (dropdown)-->
-  <div *ngIf="storageProfileList" animate trigger="fadeIn">
-    <mcs-form-field>
-      <mcs-select [(ngModel)]="selectedStorageProfile"
-        (change)="onChangedSelectedStorage()"
-        placeholder="Select storage profile">
-        <mcs-select-group header="Storage Profiles">
-          <mcs-select-item *ngFor="let storageProfile of storageProfileList"
-            [value]="storageProfile">
-            {{ storageProfile.name }}
-          </mcs-select-item>
-        </mcs-select-group>
-      </mcs-select>
-    </mcs-form-field>
-  </div>
-
-  <!--Custom size content element-->
-  <form *ngIf="inputManageType == inputManageTypeEnum.Custom && hasAvailableStorageSpace"
-    [formGroup]="fgServerStorage" class="custom-size-form">
-
-    <div animate trigger="fadeIn" display-flex align-items="flex-start"
-      class="horizontal-items-spacing-medium">
-      <span class="label">{{ textContent.label }} : </span>
-
-      <mcs-form-field [ngStyle]="{width: '150px'}">
+    <form [formGroup]="fgServerStorage" class="inline-items-small">
+      <mcs-form-field class="form-field-size-small">
         <input mcsInput placeholder="Enter storage"
-          [formControl]="fcServerStorageCustom">
+          [(ngModel)]="customStorageValue"
+          [formControl]="fcCustomStorage">
         <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
 
+        <mcs-hint mcsHint align="start">
+          {{ textContent.maximumStorage }}: {{ availableMemory | number:'1.0-2' }} GB
+        </mcs-hint>
         <mcs-error mcsError errorState="required">
           {{ textContent.errors.storageRequired }}
         </mcs-error>
@@ -63,32 +66,13 @@
           {{ storageAvailableText }}
         </mcs-error>
       </mcs-form-field>
-    </div>
-  </form>
-
-  <!--Slider content element-->
-  <div *ngIf="inputManageType == inputManageTypeEnum.Slider
-    && hasAvailableStorageSpace" class="slider-content">
-
-    <mcs-slider animate trigger="fadeIn"
-      [min]="minimumGB" [max]="maximumGB" [step]="step"
-      [ngModel]="storageValue" [disabled]="!hasAvailableStorageSpace"
-      (ngModelChange)="onStorageChanged($event)"></mcs-slider>
-    <span animate trigger="fadeIn" class="storage-label">
-      {{ currentMemory }}
-    </span>
-    <span animate trigger="fadeIn" class="available-label">
-      ({{ remainingMemory }} / {{ availableMemory }})
-    </span>
+    </form>
   </div>
+</div>
 
-  <!-- Insufficient Storage Capacity Warning Message -->
-  <div *ngIf="selectedStorageProfile && !hasAvailableStorageSpace">
-    <div animate trigger="fadeIn" class="storage-full-warning">
-      <mcs-icon [key]="warningIconKey" size="xlarge"></mcs-icon>
-      <h4 class="squishy">
-        <ng-content select="[mcsStorageWarning]"></ng-content>
-      </h4>
-    </div>
-  </div>
+<!-- Insufficient Storage Capacity Warning Message -->
+<div *ngIf="!hasAvailableMemory" [@fadeIn]>
+  <mcs-data-status-warning>
+    <ng-content select="[mcsManageStorageWarning]"></ng-content>
+  </mcs-data-status-warning>
 </div>
