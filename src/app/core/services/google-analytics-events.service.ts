@@ -48,6 +48,9 @@ export class GoogleAnalyticsEventsService {
       'userID': identity[0],
       'companyGroup': identity[1],
     });
+    dataLayer.push({
+      'event': 'userIdentityUpdate'
+    });
   }
 
   private _subscribeToNavigationEvents(): void {
