@@ -93,7 +93,10 @@
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              <a (click)="retryDatasource()"
+                mcsEventTracker="retry-loading-notifications"
+                mcsEventCategory="notification"
+                mcsEventLabel="notification-listing-page">{{ textContent.retry }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>
@@ -103,7 +106,10 @@
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           cursor="pointer"
           [triggerCursorIf]="row.link"
-          (click)="tryNavigateTo(row.link)"></mcs-data-row>
+          (click)="tryNavigateTo(row.link)"
+          mcsEventTracker="try-navigate-to-job-details"
+          mcsEventCategory="notification"
+          mcsEventLabel="notification-listing-page"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->
