@@ -57,13 +57,19 @@
                   <td>
                     <div *mcsAccessControl="['VmNicEdit']" class="inline-items-small flex-nowrap">
                       <span *mcsIsSelfManagedServer="server">
-                        <a [disabled]="!server.executable" (click)="openEditNicWindow(nic)">
+                        <a [disabled]="!server.executable" (click)="openEditNicWindow(nic)"
+                            mcsEventTracker="edit-nic"
+                            mcsEventCategory="server"
+                            mcsEventLabel="server-details-page">
                           {{ textContent.editLink }}
                         </a>
                       </span>
                       <span *mcsAccessControl="['VmNicEdit']">
                         <a *ngIf="!nic.isPrimary"
-                          [disabled]="!server.executable" (click)="deleteNic(nic)">
+                          [disabled]="!server.executable" (click)="deleteNic(nic)"
+                          mcsEventTracker="delete-nic"
+                          mcsEventCategory="server"
+                          mcsEventLabel="server-details-page">
                           {{ textContent.deleteLink }}
                         </a>
                       </span>
@@ -101,8 +107,14 @@
             </mcs-server-manage-network>
 
             <div class="action-items">
-              <button mcsButton id="ctaAddServerNetwork" arrow="right" size="small"
-                [disabled]="!inputIsValid" (click)="addNic()">
+              <button mcsButton
+                id="ctaAddServerNetwork"
+                arrow="right" size="small"
+                [disabled]="!inputIsValid"
+                (click)="addNic()"
+                mcsEventTracker="add-nic"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
                 {{ textContent.addButton }}
               </button>
             </div>
@@ -128,10 +140,16 @@
           </mcs-server-manage-network>
 
           <div class="action-items">
-            <a (click)="closeEditNicWindow()">Cancel</a>
+            <a (click)="closeEditNicWindow()"
+              mcsEventTracker="update-nic-close"
+              mcsEventCategory="server"
+              mcsEventLabel="server-details-page">Cancel</a>
             <button *mcsAccessControl="['VmEdit']"
               mcsButton id="ctaUpdateServerNetwork" arrow="right" size="small"
-              [disabled]="!editNicEnabled" (click)="updateNic()">
+              [disabled]="!editNicEnabled" (click)="updateNic()"
+                mcsEventTracker="update-nic"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
               {{ textContent.updateButton }}
             </button>
           </div>

@@ -18,7 +18,10 @@
                   <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
                     [value]="firewall"
                     [selected]="selectedFirewall === firewall"
-                    (click)="onFirewallSelect(firewall)">
+                    (click)="onFirewallSelect(firewall)"
+                    mcsEventTracker="select-firewall"
+                    mcsEventCategory="firewall"
+                    mcsEventLabel="firewall-list-panel">
 
                     <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
                     <span class="space-left-xsmall">{{ firewall.managementName }}</span>

@@ -6,7 +6,10 @@
     </div>
 
     <div class="logout-panel">
-      <a cursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
+      <a cursor="pointer" (click)="logout($event)"
+        mcsEventTracker="logout"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">{{ textContent.signOut }}</a>
     </div>
 
     <div *mcsAccessControl="['CompanyView']" class="switch-account-panel hidden-small">
@@ -44,7 +47,10 @@
       </div>
 
       <div class="notification-item" display-flex justify-content="center" align-items="center">
-        <a (click)="viewNotificationsPage()">
+        <a (click)="viewNotificationsPage()"
+          mcsEventTracker="view-notifications"
+          mcsEventCategory="navigation"
+          mcsEventLabel="user-panel">
           {{ textContent.notifications.viewMore }}
         </a>
       </div>
@@ -73,7 +79,11 @@
   <!-- User icon -->
   <div class="user-panel-item user-item" display-flex align-items="center">
     <a flex="auto" display-flex="column" cursor="pointer"
-      (click)="clickUser()" stop-propagation>
+      (click)="clickUser()"
+      mcsEventTracker="user-dropdown-toggle"
+      mcsEventCategory="navigation"
+      mcsEventLabel="user-panel"
+      stop-propagation>
       <mcs-icon class="user-icon" [key]="userIconKey" size="medium"></mcs-icon>
       <span class="hidden-small text-light">{{ firstName }} {{ lastName }}</span>
 

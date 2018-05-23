@@ -17,13 +17,13 @@
     <a id="ctaCloseDeleteSnapshotDialog"
       (click)="closeDialog()"
       mcsEventTracker="cancel"
-      eventCategory="server"
-      eventLabel="delete-snapshot-dialog">{{ textContent.cancel }}</a>
+      mcsEventCategory="server"
+      mcsEventLabel="delete-snapshot-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaDeleteSnapshot" arrow="right"
       size="small" (click)="deleteSnapshot()"
       mcsEventTracker="confirm"
-      eventCategory="server"
-      eventLabel="delete-snapshot-dialog">
+      mcsEventCategory="server"
+      mcsEventLabel="delete-snapshot-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>

@@ -8,8 +8,8 @@
         <mcs-action-item id="ctaCreateNewServer"
           (click)="onClickNewServerButton()"
           mcsEventTracker="create-new-server"
-          eventCategory="server"
-          eventLabel="server-listing-top-panel">
+          mcsEventCategory="server"
+          mcsEventLabel="server-listing-top-panel">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
           <span>{{ textContent.newServer }}</span>
         </mcs-action-item>
@@ -26,8 +26,8 @@
             [disabled]="!executableAction('startable')"
             (click)="executeTopPanelAction(serverCommand.Start)"
             mcsEventTracker="start"
-            eventCategory="server"
-            eventLabel="server-listing-top-panel">
+            mcsEventCategory="server"
+            mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="startIconKey" size="small"></mcs-icon>
             <span>{{ textContent.start }}</span>
           </mcs-action-item>
@@ -38,8 +38,8 @@
             [disabled]="!executableAction('stoppable')"
             (click)="executeTopPanelAction(serverCommand.Stop)"
             mcsEventTracker="stop"
-            eventCategory="server"
-            eventLabel="server-listing-top-panel">
+            mcsEventCategory="server"
+            mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="stopIconKey" size="small"></mcs-icon>
             <span>{{ textContent.stop }}</span>
           </mcs-action-item>
@@ -50,8 +50,8 @@
             [disabled]="!executableAction('restartable')"
             (click)="executeTopPanelAction(serverCommand.Restart)"
             mcsEventTracker="restart"
-            eventCategory="server"
-            eventLabel="server-listing-top-panel">
+            mcsEventCategory="server"
+            mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="restartIconKey" size="small"></mcs-icon>
             <span>{{ textContent.restart }}</span>
           </mcs-action-item>
@@ -62,8 +62,8 @@
             [disabled]="!executableAction('deletable')"
             (click)="executeTopPanelAction(serverCommand.Delete)"
             mcsEventTracker="delete"
-            eventCategory="server"
-            eventLabel="server-listing-top-panel">
+            mcsEventCategory="server"
+            mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="deleteIconKey" size="small"></mcs-icon>
             <span>{{ textContent.delete }}</span>
           </mcs-action-item>
@@ -74,8 +74,8 @@
             [disabled]="!executableAction('suspendable')"
             (click)="executeTopPanelAction(serverCommand.Suspend)"
             mcsEventTracker="suspend"
-            eventCategory="server"
-            eventLabel="server-listing-top-panel">
+            mcsEventCategory="server"
+            mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="suspendIconKey" size="small"></mcs-icon>
             <span>{{ textContent.suspend }}</span>
           </mcs-action-item>
@@ -86,8 +86,8 @@
             [disabled]="!executableAction('resumable')"
             (click)="executeTopPanelAction(serverCommand.Resume)"
             mcsEventTracker="resume"
-            eventCategory="server"
-            eventLabel="server-listing-top-panel">
+            mcsEventCategory="server"
+            mcsEventLabel="server-listing-top-panel">
             <mcs-icon [key]="resumeIconKey" size="small"></mcs-icon>
             <span>{{ textContent.resume }}</span>
           </mcs-action-item>
@@ -223,8 +223,8 @@
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
             <a (click)="navigateToResource(row)"
               mcsEventTracker="navigate-to-vdc"
-              eventCategory="server"
-              eventLabel="server-listing-page">
+              mcsEventCategory="server"
+              mcsEventLabel="server-listing-page">
               {{ row.platform?.resourceName }}
             </a>
           </mcs-data-cell>
@@ -262,15 +262,18 @@
                     since it is using link -->
                 Click <a (click)="onClickNewServerButton()"
                 mcsEventTracker="create-new-server"
-                eventCategory="server"
-                eventLabel="empty-server-listing-option">here</a> to create new server.
+                mcsEventCategory="server"
+                mcsEventLabel="empty-server-listing-option">here</a> to create new server.
               </span>
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              <a (click)="retryDatasource()"
+                mcsEventTracker="retry-loading-server-list"
+                mcsEventCategory="server"
+                mcsEventLabel="server-listing-page">{{ textContent.retry }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>
@@ -283,8 +286,8 @@
           [ngClass]="{'active-row': selection.isSelected(row.id)}"
           (click)="navigateToServer(row)"
           mcsEventTracker="navigate-to-server"
-          eventCategory="server"
-          eventLabel="server-listing-page"></mcs-data-row>
+          mcsEventCategory="server"
+          mcsEventLabel="server-listing-page"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

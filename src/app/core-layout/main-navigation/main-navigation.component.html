@@ -16,7 +16,11 @@
     <div class="navigation-item" routerLinkActive="active" *mcsAccessControl="['VmAccess']">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/servers']" (click)="setTitle(textContent.servers.title)">
+      <a [routerLink]="['/servers']"
+        (click)="setTitle(textContent.servers.title)"
+        mcsEventTracker="navigate-to-servers"
+        mcsEventCategory="navigation"
+        mcsEventLabel="main-nav">
         {{ textContent.navigation.servers }}
       </a>
     </div>
@@ -27,7 +31,11 @@
       *mcsAccessControl="['FirewallConfigurationView']">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/networking/firewalls']" (click)="setTitle(textContent.firewalls.title)">
+      <a [routerLink]="['/networking/firewalls']"
+        (click)="setTitle(textContent.firewalls.title)"
+        mcsEventTracker="navigate-to-firewalls"
+        mcsEventCategory="navigation"
+        mcsEventLabel="main-nav">
         {{ textContent.navigation.firewalls }}
       </a>
     </div>
@@ -36,7 +44,12 @@
     <div class="navigation-item hidden-small" routerLinkActive="active">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/tools']" (click)="setTitle(textContent.tools.title)">
+      <a
+        [routerLink]="['/tools']"
+        (click)="setTitle(textContent.tools.title)"
+        mcsEventTracker="navigate-to-other-tools"
+        mcsEventCategory="navigation"
+        mcsEventLabel="main-nav">
         {{ textContent.navigation.tools }}
       </a>
     </div>

@@ -7,7 +7,10 @@
       <mcs-top-panel-item *mcsTopPanelItemDef>
         <div class="listing-action-wrapper">
           <mcs-action-item *mcsExclusiveForAccount="'default'"
-            (click)="onClickNewTicket()">
+            (click)="onClickNewTicket()"
+            mcsEventTracker="create-new-ticket"
+            mcsEventCategory="ticket"
+            mcsEventLabel="ticket-listing-page">
             <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
             <span>{{ textContent.newTicket }}</span>
           </mcs-action-item>
@@ -69,7 +72,10 @@
             {{ columnSettings.summary.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell word-wrap">
-            <a (click)="navigateToTicket(row)">{{ row.shortDescription }}</a>
+            <a (click)="navigateToTicket(row)"
+            mcsEventTracker="navigate-to-ticket"
+            mcsEventCategory="ticket"
+            mcsEventLabel="ticket-listing-page">{{ row.shortDescription }}</a>
           </mcs-data-cell>
         </ng-container>
 
@@ -111,14 +117,20 @@
               <span *mcsExclusiveForAccount="'default'">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
-                Click <a (click)="onClickNewTicket()">here</a> to create new ticket.
+                Click <a (click)="onClickNewTicket()"
+                mcsEventTracker="create-new-ticket"
+                mcsEventCategory="ticket"
+                mcsEventLabel="empty-ticket-listing-option">here</a> to create new ticket.
               </span>
             </div>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              <a (click)="retryDatasource()"
+                mcsEventTracker="retry-loading-ticket-list"
+                mcsEventCategory="ticket"
+                mcsEventLabel="ticket-listing-page">{{ textContent.retry }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>
@@ -126,7 +138,10 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          cursor="pointer" (click)="navigateToTicket(row)"></mcs-data-row>
+          cursor="pointer" (click)="navigateToTicket(row)"
+          mcsEventTracker="navigate-to-ticket"
+          mcsEventCategory="ticket"
+          mcsEventLabel="ticket-listing-page"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

@@ -17,13 +17,13 @@
     <a id="ctaCloseResumeServerDialog"
       (click)="closeDialog()"
       mcsEventTracker="cancel"
-      eventCategory="server"
-      eventLabel="resume-dialog">{{ textContent.cancel }}</a>
+      mcsEventCategory="server"
+      mcsEventLabel="resume-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaResumeServer" arrow="right"
       size="small" (click)="resumeServer()"
       mcsEventTracker="confirm"
-      eventCategory="server"
-      eventLabel="resume-dialog">
+      mcsEventCategory="server"
+      mcsEventLabel="resume-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>

@@ -12,7 +12,10 @@
     </mcs-list-item> -->
     <mcs-list-item>
       <a cursor="pointer" [routerLink]="['/tickets']"
-        *mcsAccessControl="['TicketView']" (click)="notifySelectionChange('tickets')">
+        *mcsAccessControl="['TicketView']" (click)="notifySelectionChange('tickets')"
+        mcsEventTracker="navigate-to-ticket"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">
         {{ textContent.tickets }}
       </a>
     </mcs-list-item>
