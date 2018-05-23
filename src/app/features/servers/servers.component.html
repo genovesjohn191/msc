@@ -256,8 +256,8 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span *ngIf="!hasSelfManagedResource">{{ textContent.noServers }} </span>
-              <span *ngIf="hasSelfManagedResource">
+              <span>{{ textContent.noServers }} </span>
+              <span *ngIf="hasSelfManagedResource && !isSearching">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
                 Click <a (click)="onClickNewServerButton()"
