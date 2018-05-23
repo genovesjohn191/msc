@@ -172,6 +172,15 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Returns the tier of the VDC storage.
+   * @param storage VDC Storage
+   */
+  public getStorageTierText(storage: ServerStorage): string {
+    return replacePlaceholder(this.textContent.storageProfiles.iops,
+      'iops', `${storage.iops}`);
+  }
+
+  /**
    * Returns the current used and limit of storage in GB
    */
   public getCurrentStorageValues(usedMB: number, limitMB: number): string {

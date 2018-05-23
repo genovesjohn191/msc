@@ -84,6 +84,10 @@
                 <strong>{{ textContent.storageProfiles.status }}:</strong>
                 <span>{{ getStorageStatus(storage) }}</span>
               </mcs-list-item>
+              <mcs-list-item *ngIf="storage.iops">
+                <strong>{{ textContent.storageProfiles.tier }}:</strong>
+                <span>{{ getStorageTierText(storage) }}</span>
+              </mcs-list-item>
               <mcs-list-item>
                 <div class="inline-items-xsmall">
                   <strong>{{ textContent.storageProfiles.utilisation }}:</strong>

@@ -88,6 +88,8 @@
         "storageProfiles": {
           "title": "Storage Profiles",
           "status": "Status",
+          "tier": "Tier",
+          "iops": "Performance {{iops}}",
           "utilisation": "Utilisation",
           "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on capacity.",
           "lowStorageProfile": "You're running low on capacity in this profile."
@@ -408,6 +410,7 @@
       },
       "deleteNicDialog": {
         "title": "Delete {{nic_name}}",
+        "alert": "This server may need to be restarted before any NIC changes are made effective.",
         "confirmation": "Are you sure you want to delete this NIC?",
         "cancel": "Cancel",
         "confirm": "Yes"
