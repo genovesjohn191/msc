@@ -16,7 +16,10 @@
 
     <!-- Back to Tickets -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-action-item class="right-align" (click)="gotoTickets()">
+      <mcs-action-item class="right-align" (click)="gotoTickets()"
+        mcsEventTracker="navigate-to-ticket-listing"
+        mcsEventCategory="ticket"
+        mcsEventLabel="ticket-details-page">
         <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
         <span>{{ textContent.backToTickets }}</span>
       </mcs-action-item>
@@ -84,7 +87,10 @@
           <ul class="inline-list rollover">
             <li *ngFor="let attachment of ticket.attachments; trackBy: trackByFn">
               <mcs-icon [key]="attachmentIconKey" size="small"></mcs-icon>
-              <a (click)="downloadAttachment(attachment)">{{ attachment.fileName }}</a>
+              <a (click)="downloadAttachment(attachment)"
+                mcsEventTracker="download-attachment"
+                mcsEventCategory="ticket"
+                mcsEventLabel="ticket-details-page">{{ attachment.fileName }}</a>
             </li>
           </ul>
         </div>

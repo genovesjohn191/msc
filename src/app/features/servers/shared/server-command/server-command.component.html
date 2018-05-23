@@ -9,8 +9,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.Start)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Start)"
         mcsEventTracker="start"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.start }}
       </a>
     </ng-container>
@@ -19,8 +19,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.Stop)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Stop)"
         mcsEventTracker="stop"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.stop }}
       </a>
     </ng-container>
@@ -29,8 +29,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.Restart)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Restart)"
         mcsEventTracker="restart"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.restart }}
       </a>
     </ng-container>
@@ -40,8 +40,8 @@
         <a (click)="onExecuteCommand(serverCommandEnum.Scale)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Scale)"
           mcsEventTracker="scale"
-          eventCategory="server"
-          eventLabel="server-command-tool">
+          mcsEventCategory="server"
+          mcsEventLabel="server-command-tool">
           {{ textContent.scale }}
         </a>
       </ng-container>
@@ -52,8 +52,8 @@
         <a (click)="onExecuteCommand(serverCommandEnum.Clone)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Clone)"
           mcsEventTracker="clone"
-          eventCategory="server"
-          eventLabel="server-command-tool">
+          mcsEventCategory="server"
+          mcsEventLabel="server-command-tool">
           {{ textContent.clone }}
         </a>
       </ng-container>
@@ -63,8 +63,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.Rename)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Rename)"
         mcsEventTracker="rename"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.rename }}
       </a>
     </ng-container>
@@ -74,8 +74,8 @@
         <a (click)="onExecuteCommand(serverCommandEnum.Delete)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Delete)"
           mcsEventTracker="delete"
-          eventCategory="server"
-          eventLabel="server-command-tool">
+          mcsEventCategory="server"
+          mcsEventLabel="server-command-tool">
           {{ textContent.delete }}
         </a>
       </ng-container>
@@ -85,8 +85,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.Suspend)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)"
         mcsEventTracker="suspend"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.suspend }}
       </a>
     </ng-container>
@@ -95,8 +95,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.Resume)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Resume)"
         mcsEventTracker="resume"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.resume }}
       </a>
     </ng-container>
@@ -105,8 +105,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
         [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)"
         mcsEventTracker="viewvcloud"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.viewVCloud }}
       </a>
     </ng-container>
@@ -115,8 +115,8 @@
       <a (click)="onExecuteCommand(serverCommandEnum.ResetVmPassword)"
         [disabled]="!getEnabledCommand(serverCommandEnum.ResetVmPassword)"
         mcsEventTracker="reset-password"
-        eventCategory="server"
-        eventLabel="server-command-tool">
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
         {{ textContent.resetVmPassword }}
       </a>
     </ng-container>

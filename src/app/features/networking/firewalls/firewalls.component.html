@@ -106,7 +106,12 @@
             </mcs-icon>
             <ng-template #actionContent>
               <div class="cog-container">
-                <a [href]="row.url" target="_blank">
+                <a
+                  [href]="row.url"
+                  target="_blank"
+                  mcsEventTracker="view-in-portal"
+                  mcsEventCategory="firewall"
+                  mcsEventLabel="firewall-listing-page">
                   View in Portal
                 </a>
               </div>
@@ -122,7 +127,10 @@
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              <a (click)="retryDatasource()"
+                mcsEventTracker="retry-loading-firewall-list"
+                mcsEventCategory="firewall"
+                mcsEventLabel="firewall-listing-page">{{ textContent.retry }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>
@@ -130,7 +138,11 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          cursor="pointer" (click)="navigateToFirewall(row)"></mcs-data-row>
+          cursor="pointer"
+          (click)="navigateToFirewall(row)"
+          mcsEventTracker="navigate-to-firewall"
+          mcsEventCategory="firewall"
+          mcsEventLabel="firewall-listing-page"></mcs-data-row>
       </mcs-table>
 
       <!-- Paginator -->

@@ -8,7 +8,10 @@
     <mcs-list header="Default">
       <mcs-list-item>
         <div class="account-action"
-          (click)="selectAccount(defaultAccount)" cursor="pointer">
+          (click)="selectAccount(defaultAccount)" cursor="pointer"
+          mcsEventTracker="use-default-account"
+          mcsEventCategory="navigation"
+          mcsEventLabel="switch-account-panel">
 
           <mcs-icon [key]="arrowUpBueIconKey" size="small"></mcs-icon>
           <span>{{ getTextFormat(defaultAccount) }}</span>
@@ -50,6 +53,9 @@
 
         <mcs-list-item *ngFor="let item of displayedCompanies; trackBy: trackByFn">
           <div class="account-action" (click)="selectAccount(item)" cursor="pointer"
+            mcsEventTracker="switch-to-account"
+            mcsEventCategory="navigation"
+            mcsEventLabel="switch-account-panel"
             [mcsTooltip]="getStatusText(item.status)" mcsTooltipColor="light">
 
             <mcs-icon color="white" [key]="getUserIconKey(item.status)" size="small"></mcs-icon>
@@ -70,7 +76,10 @@
           </div>
           <div *ngSwitchCase="dataStatusEnum.Error">
             <span>{{ textContent.errorMessage }}</span>
-            <a (click)="retry()">{{ textContent.retry }}</a>
+            <a (click)="retry()"
+              mcsEventTracker="retry-loading-account-list"
+              mcsEventCategory="navigation"
+              mcsEventLabel="switch-account-panel">{{ textContent.retry }}</a>
           </div>
         </div>
       </ng-container>

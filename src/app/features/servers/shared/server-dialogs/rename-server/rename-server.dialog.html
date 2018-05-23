@@ -30,13 +30,13 @@
   <mcs-dialog-actions>
     <a id="ctaCloseRenameServerDialog" (click)="closeDialog()"
       mcsEventTracker="cancel"
-      eventCategory="server"
-      eventLabel="rename-dialog">{{ textContent.cancel }}</a>
+      mcsEventCategory="server"
+      mcsEventLabel="rename-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaRenameServer" arrow="right" [disabled]="disabledRenameButton"
       size="small" (click)="renameServer(serverNameInput)"
       mcsEventTracker="confirm"
-      eventCategory="server"
-      eventLabel="rename-dialog">
+      mcsEventCategory="server"
+      mcsEventLabel="rename-dialog">
       {{ textContent.rename }}
     </button>
   </mcs-dialog-actions>

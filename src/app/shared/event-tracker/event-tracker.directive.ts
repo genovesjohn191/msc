@@ -13,13 +13,19 @@ import { coerceNumber } from '../../utilities';
 
 export class EventTrackerDirective {
 
-  @Input()
-  public eventCategory: string;
+  @Input('mcsEventCategory')
+  public set eventCategory(value: string) {
+    this._eventCategory = value;
+  }
+  private _eventCategory: string;
 
-  @Input()
-  public eventLabel: string;
+  @Input('mcsEventLabel')
+  public set eventLabel(value: string) {
+    this._eventLabel = value;
+  }
+  private _eventLabel: string;
 
-  @Input()
+  @Input('mcsEventValue')
   public set eventValue(value: number) {
     this._eventValue = coerceNumber(value, null);
   }
@@ -36,9 +42,9 @@ export class EventTrackerDirective {
 
   public onClick(): void {
     this._ga.emitEvent(
-      this.eventCategory,
+      this._eventCategory,
       this._action + '-click',
-      this.eventLabel,
+      this._eventLabel,
       this._eventValue);
   }
 }

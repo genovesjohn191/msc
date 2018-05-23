@@ -3,7 +3,10 @@
   <mcs-top-panel *mcsTopPanelDef>
     <!-- Server Creation -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
-      <mcs-action-item class="right-align" (click)="gotoTickets()">
+      <mcs-action-item class="right-align" (click)="gotoTickets()"
+        mcsEventTracker="navigate-to-ticket-listing"
+        mcsEventCategory="ticket"
+        mcsEventLabel="create-new-ticket-page">
         <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
         <span>{{ textContent.backToTickets }}</span>
       </mcs-action-item>
@@ -110,7 +113,10 @@
                 <!-- Icon trigger -->
                 <div cursor="pointer" id="ctaSelectService"
                   class="space-left-small space-top-small" flex="none"
-                  (click)="servicePanelOpen = !servicePanelOpen" #trigger>
+                  (click)="servicePanelOpen = !servicePanelOpen" #trigger
+                  mcsEventTracker="toggle-service-panel"
+                  mcsEventCategory="ticket"
+                  mcsEventLabel="create-new-ticket-page">
                   <mcs-icon [key]="toggleIconKey"></mcs-icon>
                   <mcs-ripple class="icon-ripple-wrapper"
                     mcsRipple
@@ -150,9 +156,18 @@
 
       <!-- Ticket Action -->
       <div class="space-between-inline-items">
-        <a (click)="gotoTickets()">{{ textContent.cancelActivity }}</a>
+        <a (click)="gotoTickets()"
+          mcsEventTracker="cancel-ticket-creation"
+          mcsEventCategory="ticket"
+          mcsEventLabel="create-new-ticket-page">{{ textContent.cancelActivity }}</a>
 
-        <button mcsButton id="ctaNewTicket" arrow="right" (click)="onLogTicket()">
+        <button mcsButton
+          id="ctaNewTicket"
+          arrow="right"
+          (click)="onLogTicket()"
+          mcsEventTracker="submit-new-ticket"
+          mcsEventCategory="ticket"
+          mcsEventLabel="create-new-ticket-page">
           {{ textContent.newTicket }}
         </button>
       </div>

@@ -17,13 +17,13 @@
     <a id="ctaCloseSuspendServerDialog"
       (click)="closeDialog()"
       mcsEventTracker="cancel"
-      eventCategory="server"
-      eventLabel="suspend-dialog">{{ textContent.cancel }}</a>
+      mcsEventCategory="server"
+      mcsEventLabel="suspend-dialog">{{ textContent.cancel }}</a>
     <button mcsButton id="ctaSuspendServer" arrow="right"
       size="small" (click)="suspendServer()"
       mcsEventTracker="confirm"
-      eventCategory="server"
-      eventLabel="suspend-dialog">
+      mcsEventCategory="server"
+      mcsEventLabel="suspend-dialog">
       {{ textContent.confirm }}
     </button>
   </mcs-dialog-actions>

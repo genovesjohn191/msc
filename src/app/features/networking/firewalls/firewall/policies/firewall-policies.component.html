@@ -159,6 +159,9 @@
         <mcs-data-cell *mcsDataCellDef="let row" class="details text-center hidden-small">
           <mcs-icon [key]="infoIconKey" size="medium"
             (click)="showFirewallPolicyDetails(row)"
+            mcsEventTracker="select-policy"
+            mcsEventCategory="firewall"
+            mcsEventLabel="firewall-details-page"
             cursor="pointer"></mcs-icon>
         </mcs-data-cell>
       </ng-container>

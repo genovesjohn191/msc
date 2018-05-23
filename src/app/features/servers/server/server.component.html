@@ -3,7 +3,10 @@
   <ng-container *mcsPageHeader>
     <div class="horizontal-items-spacing-small" display-flex="row" align-items="center">
       <div>
-        <a (click)="onSelectVdcByName($event, selectedServer.platform)">
+        <a (click)="onSelectVdcByName($event, selectedServer.platform)"
+          mcsEventTracker="select-vdc"
+          mcsEventCategory="vdc"
+          mcsEventLabel="server-details-page">
           <h3>{{ selectedGroupName }}</h3>
         </a>
       </div>
@@ -33,7 +36,10 @@
                 <mcs-option-group>
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
-                      <a (click)="onSelectVdcByName($event, iterator.key)">
+                      <a (click)="onSelectVdcByName($event, iterator.key)"
+                        mcsEventTracker="select-vdc"
+                        mcsEventCategory="vdc"
+                        mcsEventLabel="server-list-panel">
                         {{ iterator.key?.resourceName }}
                       </a>
                     </ng-container>
@@ -46,7 +52,10 @@
                     [value]="server"
                     [selected]="selectedServer === server"
                     [disabled]="serverDeleting(server)"
-                    (click)="onServerSelect(server)">
+                    (click)="onServerSelect(server)"
+                    mcsEventTracker="select-server"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-list-panel">
 
                     <mcs-icon *ngIf="!server.isProcessing" size="small"
                       [key]="server.powerStateIconKey"></mcs-icon>

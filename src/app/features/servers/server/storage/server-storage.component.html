@@ -48,13 +48,19 @@
                     <div class="inline-items-small flex-nowrap" *mcsIsSelfManagedServer="server">
                       <span *mcsAccessControl="['VmEdit']">
                         <a [disabled]="!server.executable"
-                          (click)="openExpandDiskWindow(storage)">
+                          (click)="openExpandDiskWindow(storage)"
+                            mcsEventTracker="show-expand-disk"
+                            mcsEventCategory="server"
+                            mcsEventLabel="server-details-page">
                           {{ textContent.expandStorageLink }}
                         </a>
                       </span>
                       <span *mcsAccessControl="['VmEdit']" >
                         <a *ngIf="canDeleteDisk" [disabled]="!server.executable"
-                          (click)="deleteDisk(storage)">
+                          (click)="deleteDisk(storage)"
+                          mcsEventTracker="delete-disk"
+                          mcsEventCategory="server"
+                          mcsEventLabel="server-details-page">
                           {{ textContent.deleteStorageLink }}
                         </a>
                       </span>
@@ -98,7 +104,10 @@
 
               <div class="action-items">
                 <button mcsButton id="ctaAttachServerStorage" arrow="right" size="small"
-                  [disabled]="!addDiskEnabled" (click)="addDisk()">
+                  [disabled]="!addDiskEnabled" (click)="addDisk()"
+                  mcsEventTracker="add-disk"
+                  mcsEventCategory="server"
+                  mcsEventLabel="server-details-page">
                   {{ textContent.addButton }}
                 </button>
               </div>
@@ -145,9 +154,15 @@
           </ng-template>
 
           <div class="action-items">
-            <a (click)="closeExpandDiskWindow()">{{ textContent.cancelButton }}</a>
+            <a (click)="closeExpandDiskWindow()"
+              mcsEventTracker="expand-disk-close"
+              mcsEventCategory="server"
+              mcsEventLabel="server-details-page">{{ textContent.cancelButton }}</a>
             <button mcsButton id="ctaUpdateServerStorage" arrow="right" size="small"
-              [disabled]="!expandDiskEnabled" (click)="expandDisk()">
+              [disabled]="!expandDiskEnabled" (click)="expandDisk()"
+              mcsEventTracker="expand-disk"
+              mcsEventCategory="server"
+              mcsEventLabel="server-details-page">
               {{ textContent.updateButton }}
             </button>
           </div>

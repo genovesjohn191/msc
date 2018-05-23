@@ -32,7 +32,11 @@
               <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
               <span *mcsAccessControl="['VmEdit']">
                 <ng-container *mcsIsSelfManagedServer="server">
-                  <a *ngIf="!isScaling" (click)="showScaleOption()" [disabled]="!server.executable">
+                  <a *ngIf="!isScaling" (click)="showScaleOption()"
+                    mcsEventTracker="scale-option"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page"
+                    [disabled]="!server.executable">
                     {{ textContent.performanceScale.scale }}</a>
                   <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
                     [mcsTooltip]="textContent.performanceScale.scaling"></mcs-icon>
@@ -46,7 +50,11 @@
         <div class="grid-column container-wrapper break-on-small">
           <h4 flex="none" class="container-header">{{ textContent.vmConsole.title }}</h4>
           <div *ngIf="consoleEnabled" class="inline-block"
-            cursor="pointer" (click)="onClickViewConsole()">
+            cursor="pointer"
+            (click)="onClickViewConsole()"
+            mcsEventTracker="view-console"
+            mcsEventCategory="server"
+            mcsEventLabel="server-details-page">
             <div class="image-thumbnail dark" cursor="pointer">
               <img #thumbnailElement/>
             </div>
@@ -143,7 +151,10 @@
               [mcsTooltipShow]="!hasAvailableMedia">
               <ng-container *mcsAccessControl="['VmEdit']">
                 <a flex="auto" *mcsIsSelfManagedServer="server" (click)="onAttachMedia()"
-                  [disabled]="attachMediaIsDisabled">
+                  [disabled]="attachMediaIsDisabled"
+                  mcsEventTracker="attach-media-option"
+                  mcsEventCategory="server"
+                  mcsEventLabel="server-details-page">
                   {{ textContent.media.attach }}
                 </a>
               </ng-container>
@@ -165,7 +176,11 @@
                         [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
                     </ng-container>
                     <ng-template #detachMedia>
-                      <a (click)="onDetachMedia(media)" [disabled]="!server.executable">
+                      <a (click)="onDetachMedia(media)"
+                        [disabled]="!server.executable"
+                        mcsEventTracker="detach-media-option"
+                        mcsEventCategory="server"
+                        mcsEventLabel="server-details-page">
                         {{ textContent.media.detach }}
                       </a>
                     </ng-template>
@@ -225,11 +240,18 @@
             </p>
 
             <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
-              <a class="text-underline" (click)="cancelScale()">
+              <a class="text-underline"
+                (click)="cancelScale()"
+                mcsEventTracker="scale-cancel"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
                 {{ textContent.performanceScale.cancel }}</a>
 
                 <button class="scale" mcsButton id="ctaScaleServer" arrow="right"
-                  [disabled]="!hasUpdate" (click)="onClickScale()">
+                  [disabled]="!hasUpdate" (click)="onClickScale()"
+                  mcsEventTracker="scale-option"
+                  mcsEventCategory="server"
+                  mcsEventLabel="server-details-page">
                     {{ textContent.performanceScale.scale }}
                 </button>
             </div>
@@ -248,12 +270,18 @@
               </mcs-select-group>
             </mcs-select>
             <div display-flex="row" align-items="center" justify-content="space-between">
-              <a class="text-underline" (click)="cancelAttachMedia()">
+              <a class="text-underline" (click)="cancelAttachMedia()"
+                mcsEventTracker="attach-media-cancel"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
                 {{ textContent.media.cancel }}
               </a>
 
               <button mcsButton id="ctaAttachMedia" arrow="right" size="small"
-                [disabled]="!selectedMedia" (click)="attachMedia()">
+                [disabled]="!selectedMedia" (click)="attachMedia()"
+                mcsEventTracker="attach-media"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
                 {{ textContent.media.attach }}
               </button>
             </div>
