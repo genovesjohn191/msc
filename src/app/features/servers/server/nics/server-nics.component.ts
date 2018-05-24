@@ -212,8 +212,11 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       && this.manageNetwork.ipAllocationMode === this.selectedNic.ipAllocationMode;
     if (modeNotChanged) { return false; }
 
-    if (!isNullOrEmpty(this.manageNetwork.customIpAddress) && this.inputIsValid) {
-      let ipAddressFound = this.selectedNic.ipAddress.find((ip) => {
+    let ipAddressHasChanged = !isNullOrEmpty(this.manageNetwork.customIpAddress)
+      && !isNullOrEmpty(this.selectedNic.ipAddresses)
+      && this.inputIsValid;
+    if (ipAddressHasChanged) {
+      let ipAddressFound = this.selectedNic.ipAddresses.find((ip) => {
         return ip === this.manageNetwork.customIpAddress;
       });
       if (!isNullOrEmpty(ipAddressFound)) { return false; }
@@ -229,8 +232,8 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     if (isNullOrEmpty(nic)) { return; }
     this.selectedNic = nic;
     this.nicMethodType = ServerNicMethodType.EditNic;
-    if (!isNullOrEmpty(nic.ipAddress)) {
-      this.currentIpAddress = nic.ipAddress[0];
+    if (!isNullOrEmpty(nic.ipAddresses)) {
+      this.currentIpAddress = nic.ipAddresses[0];
     }
     this._selectNetworkByName(nic.logicalNetworkName);
   }
