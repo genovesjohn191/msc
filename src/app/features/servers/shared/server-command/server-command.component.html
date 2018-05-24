@@ -104,7 +104,7 @@
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">
       <a (click)="onExecuteCommand(serverCommandEnum.ViewVCloud)"
         [disabled]="!getEnabledCommand(serverCommandEnum.ViewVCloud)"
-        mcsEventTracker="viewvcloud"
+        mcsEventTracker="view-in-portal"
         mcsEventCategory="server"
         mcsEventLabel="server-command-tool">
         {{ textContent.viewVCloud }}
