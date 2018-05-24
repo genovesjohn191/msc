@@ -25,17 +25,18 @@
 <div *ngIf="hasAvailableMemory" [ngSwitch]="inputManageType" [ngStyle]="{height: '140px'}">
   <!-- Slider selection mode -->
   <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
-    <p>{{ textContent.sliderMessage }}</p>
+    <div class="space-bottom-large">
+      <span>{{ textContent.sliderMessage }} </span>
+      <!-- We need to hardcode this instead of putting
+      in the text-config since it is using a pipe -->
+      <span>This storage profile has {{ availableMemory | mcsDataSize: 'GB' }} of usable capacity.</span>
+    </div>
 
     <mcs-slider [min]="minValueGB" [max]="availableMemory" [step]="10"
       [(ngModel)]="storageValue" (change)="onSliderChanged($event)">
     </mcs-slider>
     <div class="block-items centered">
       <strong>{{ storageValue | mcsDataSize: 'GB' }}</strong>
-      <span>
-        ({{ remainingMemory | number:'1.0-2' }} GB Remaining /
-        {{ availableMemory | number:'1.0-2' }} GB)
-      </span>
     </div>
   </div>
 

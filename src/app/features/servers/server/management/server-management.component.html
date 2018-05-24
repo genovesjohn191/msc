@@ -225,12 +225,15 @@
               (scaleChanged)="onScaleChanged($event)">
 
               <!--Performance scale container-->
-              <span slider-details>
-                {{ textContent.performanceScale.sliderMessage }}
-              </span>
-              <span custom-details>
-                {{ textContent.performanceScale.customMessage }}
-              </span>
+              <div slider-details>
+                <span>{{ textContent.performanceScale.sliderMessage }} </span>
+                <!-- We need to hardcode this instead of putting
+                  in the text-config since it is using a pipe -->
+                <span>This VDC has {{ availableMemoryMB | mcsDataSize: 'MB' }} RAM and {{ availableCpu }} vCPU available.</span>
+              </div>
+              <div custom-details>
+                <span>{{ textContent.performanceScale.customMessage }}</span>
+              </div>
             </mcs-server-performance-scale>
 
             <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
