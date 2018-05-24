@@ -512,6 +512,8 @@
         "sliderMessage": "Select the RAM and vCPU quantity for this server from a slider.",
         "customSwitch": "Enter custom size",
         "customMessage": "Manually enter the RAM and vCPU quantity for this server.",
+        "maximumRam": "Maximum RAM",
+        "maximumCpu": "Maximum CPU",
         "ramLabel": "RAM",
         "ramUnit": "MB",
         "cpuLabel": "vCPUs",

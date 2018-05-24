@@ -107,6 +107,14 @@ export class ServerManagementComponent extends ServerDetailsBase
     return appendUnitSuffix(this.serverCpuCount, McsUnitType.CPU);
   }
 
+  public get availableMemoryMB(): number {
+    return this._serversService.computeAvailableMemoryMB(this.serverResource);
+  }
+
+  public get availableCpu(): number {
+    return this._serversService.computeAvailableCpu(this.serverResource);
+  }
+
   // Check if the current server's serverType is managed
   public get isManaged(): boolean {
     return this.server.serviceType === ServerServiceType.Managed;

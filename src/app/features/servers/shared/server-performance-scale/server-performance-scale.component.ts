@@ -101,14 +101,6 @@ export class ServerPerformanceScaleComponent implements OnInit {
       this.sliderTable[this.sliderValue];
   }
 
-  public get remainingMemoryMB(): number {
-    return this.availableMemoryMB - this.currentServerScale.memoryMB;
-  }
-
-  public get remainingCpuCount(): number {
-    return this.availableCpuCount - this.currentServerScale.cpuCount;
-  }
-
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef

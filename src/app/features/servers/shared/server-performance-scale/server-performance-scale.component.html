@@ -24,12 +24,14 @@
         <div class="inline-field">
           <span class="label">{{ textContent.ramLabel + ':'}} </span>
 
-          <mcs-form-field [ngStyle]="{width: '150px'}">
+          <mcs-form-field class="form-field-size-small" [ngStyle]="{width: '150px'}">
             <input mcsInput placeholder="Enter RAM"
               [ngModel]="customMemoryGBValue"
               [formControl]="serverScaleCustomRam">
-            <mcs-suffix mcsSuffix>{{ textContent.ramUnit }}</mcs-suffix>
 
+            <mcs-hint mcsHint align="start">
+              {{ textContent.maximumRam }}: {{ availableMemoryMB | mcsDataSize: 'MB' }}
+            </mcs-hint>
             <mcs-error mcsError errorState="required">
               {{ textContent.errors.ramRequired }}
             </mcs-error>
@@ -50,12 +52,14 @@
 
         <div class="inline-field">
           <span class="label">{{ textContent.cpuLabel + ':'}} </span>
-          <mcs-form-field [ngStyle]="{width: '150px'}">
+          <mcs-form-field class="form-field-size-small" [ngStyle]="{width: '150px'}">
             <input mcsInput placeholder="Enter CPU"
               [ngModel]="customCpuCountValue"
               [formControl]="serverScaleCustomCpu">
-            <mcs-suffix mcsSuffix>{{ textContent.cpuUnit }}</mcs-suffix>
 
+            <mcs-hint mcsHint align="start">
+              {{ textContent.maximumCpu }}: {{ availableCpuCount }} vCPU
+            </mcs-hint>
             <mcs-error mcsError errorState="required">
               {{ textContent.errors.cpuRequired }}
             </mcs-error>
@@ -90,13 +94,6 @@
           textContent.ramUnit + ' ' +
             textContent.ramLabel }} /
         {{ currentServerScale.cpuCount + ' ' + textContent.cpuUnit }}
-      </span>
-      <span class="available-label">
-        ({{ remainingMemoryMB + ' ' +
-          textContent.ramUnit + ' ' +
-            textContent.ramLabel }} /
-              {{ remainingCpuCount + ' ' +
-                textContent.cpuUnit }} available)
       </span>
     </div>
   </div>

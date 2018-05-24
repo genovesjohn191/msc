@@ -118,13 +118,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   /**
-   * Returns the remaining memory according to storage value and the available memory
-   */
-  public get remainingMemory(): number {
-    return Math.max(this.availableMemory - this.storageValue, 0);
-  }
-
-  /**
    * Returns true when storage has available memory based on minimum value required
    */
   public get hasAvailableMemory(): boolean {
