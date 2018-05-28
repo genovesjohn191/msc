@@ -5,8 +5,11 @@ import {
   OnDestroy,
   ElementRef,
   Renderer2,
-  ViewContainerRef
+  ViewContainerRef,
+  NgZone
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsGlobalElementRef,
   McsGlobalElementOption,
@@ -15,7 +18,8 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  coerceBoolean
+  coerceBoolean,
+  unsubscribeSubject
 } from '../../utilities';
 import { ContextualHelpComponent } from './contextual-help.component';
 
@@ -57,19 +61,23 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
   // Others declaration
   private _globalElementRef: McsGlobalElementRef | null;
   private _contextualHelpInstance: ContextualHelpComponent | null;
+  private _destroySubject = new Subject<any>();
 
   constructor(
     private _elementRef: ElementRef,
     private _renderer: Renderer2,
     private _viewContainerRef: ViewContainerRef,
+    private _ngZone: NgZone,
     private _globalElementService: McsGlobalElementService
   ) { }
 
   public ngOnInit(): void {
     this._setTabIndex();
+    this._moveContextualHelpToHost();
   }
 
   public ngOnDestroy(): void {
+    unsubscribeSubject(this._destroySubject);
     if (this._contextualHelpInstance) {
       this._disposeContextualHelp();
     }
@@ -148,6 +156,20 @@ export class ContextualHelpDirective implements OnInit, OnDestroy {
       placement: 'right-top'
     });
     return globalElementRef;
+  }
+
+  /**
+   * Moves the contextual help relative to host element
+   */
+  private _moveContextualHelpToHost(): void {
+    this._ngZone.onStable.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => {
+        if (isNullOrEmpty(this._globalElementRef)) { return; }
+        this._globalElementRef.moveElementTo({
+          hostElement: this._elementRef.nativeElement,
+          placement: 'right-top'
+        });
+      });
   }
 
   /**

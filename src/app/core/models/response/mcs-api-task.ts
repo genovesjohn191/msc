@@ -9,9 +9,9 @@ import {
   McsTaskTypeSerialization
 } from '../../enumerations/mcs-task-type.enum';
 import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
+import { McsEntityBase } from '../../base/mcs-entity.base';
 
-export class McsApiTask {
-  public id: string;
+export class McsApiTask extends McsEntityBase {
   public description: string;
   public summaryInformation: string;
   public errorMessage: string;
@@ -62,7 +62,7 @@ export class McsApiTask {
   public endedOn: Date;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.description = undefined;
     this.summaryInformation = undefined;
     this.errorMessage = undefined;

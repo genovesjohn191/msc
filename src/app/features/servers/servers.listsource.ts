@@ -40,7 +40,6 @@ export class ServersListSource extends McsListSourceBase<Server> {
   protected getStreams(): Observable<any> {
     const dataStreams = [
       Observable.of(undefined),
-      this._serversRepository.dataRecordsChanged,
       this._search.searchChangedStream,
     ];
     return Observable.merge(...dataStreams);

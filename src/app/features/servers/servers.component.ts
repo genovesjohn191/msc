@@ -7,6 +7,8 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ServersResourcesRepository } from './servers-resources.repository';
 import { ServersRepository } from './servers.repository';
 import { ServersService } from './servers.service';
@@ -38,7 +40,7 @@ import {
   isNullOrEmpty,
   refreshView,
   getRecordCountLabel,
-  unsubscribeSafely
+  unsubscribeSubject
 } from '../../utilities';
 
 @Component({
@@ -55,10 +57,7 @@ export class ServersComponent
   public enumDefinition: any;
   public selection: McsSelection<Server>;
   public hasSelfManagedResource: boolean;
-
-  // Subscription
-  private _selectionModeSubscription: any;
-  private _notificationsChangeSubscription: any;
+  private _destroySubject = new Subject<any>();
 
   public get serverCommand() {
     return ServerCommand;
@@ -140,14 +139,13 @@ export class ServersComponent
       this.initializeDatasource();
       this._setSelfManagedFlag();
       this._listenToSelectionModeChange();
-      this._listenToNotificationsChange();
+      this._listenToDataChange();
     });
   }
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSafely(this._selectionModeSubscription);
-    unsubscribeSafely(this._notificationsChangeSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -178,7 +176,7 @@ export class ServersComponent
     } else {
       this._serversRepository.filteredRecords.forEach((record) => {
         if (!record.isProcessing) {
-          this.selection.select(record.id);
+          this.selection.select(record);
         }
       });
     }
@@ -189,9 +187,8 @@ export class ServersComponent
    * @param propName Property name of the flag
    */
   public executableAction(propName: string): boolean {
-    let hasNonExecutable = this.selection.selected.find((serverId) => {
-      let server = this.dataSource.getDisplayedServerById(serverId);
-      return !server[propName];
+    let hasNonExecutable = this.selection.selected.find((selectedServer) => {
+      return !selectedServer[propName];
     });
     let canExecute = isNullOrEmpty(hasNonExecutable) && this.selection.hasValue();
     return canExecute;
@@ -203,17 +200,17 @@ export class ServersComponent
    */
   public executeTopPanelAction(action: ServerCommand) {
     if (!this.selection.hasValue()) { return; }
-    let servers: Server[] = new Array();
+    let selectedServers: Server[] = new Array();
 
-    // Get server data based on serverID
-    this.selection.selected.forEach((serverId) => {
-      let selectedServer = this._serversRepository.filteredRecords
-        .find((data) => data.id === serverId);
-      servers.push(selectedServer);
+    // Get selected servers based on selection model
+    this.selection.selected.forEach((selectedServer) => {
+      let existingServer = this._serversRepository.filteredRecords
+        .find((data) => data.id === selectedServer.id);
+      selectedServers.push(existingServer);
     });
 
     // Execute server command
-    this.executeServerCommand(servers, action);
+    this.executeServerCommand(selectedServers, action);
   }
 
   /**
@@ -353,22 +350,21 @@ export class ServersComponent
    * Listener to selection mode change in all servers
    */
   private _listenToSelectionModeChange(): void {
-    this._selectionModeSubscription = this.browserService.deviceTypeStream
+    this.browserService.deviceTypeStream
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType) => {
         let multipleSelection = !(deviceType === McsDeviceType.MobileLandscape ||
           deviceType === McsDeviceType.MobilePortrait);
-
         this.selection = new McsSelection<Server>(multipleSelection);
       });
   }
 
   /**
-   * Listen to notifications changes
+   * Listen to data records changes
    */
-  private _listenToNotificationsChange(): void {
-    this._notificationsChangeSubscription = this._serversRepository.notificationsChanged
-      .subscribe(() => {
-        this.changeDetectorRef.markForCheck();
-      });
+  private _listenToDataChange(): void {
+    this._serversRepository.dataRecordsChanged
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this.changeDetectorRef.markForCheck());
   }
 }

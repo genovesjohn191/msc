@@ -70,14 +70,4 @@ export class ServersDataSource implements McsDataSource<Server> {
     this._search.showLoading(false);
     this._paginator.showLoading(false);
   }
-
-  /**
-   * Get the displayed server by ID
-   * @param serverId Server Id to obtained
-   */
-  public getDisplayedServerById(serverId: any): Server {
-    if (isNullOrEmpty(this._serversRepository.dataRecords)) { return; }
-    return this._serversRepository.dataRecords
-      .find((server) => server.id === serverId);
-  }
 }

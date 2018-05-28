@@ -137,7 +137,6 @@ export class McsGlobalElementRef {
     );
     this._globalElementItem.style.top = `${elementPosition.top}px`;
     this._globalElementItem.style.left = `${elementPosition.left}px`;
-    this._globalElementItem.classList.add(`${placementAttribute.placement}-center`);
   }
 
   /**

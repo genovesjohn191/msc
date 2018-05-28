@@ -116,6 +116,8 @@ export class VdcComponent
     refreshView(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
+      this._serversRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
+        .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
   }

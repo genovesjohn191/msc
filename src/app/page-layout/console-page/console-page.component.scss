@@ -38,22 +38,18 @@ body {
   width: 100%;
   height: $console-menu-height;
   background-color: $console-menu-bg-color;
-  padding: 0 $space-medium;
+  padding: 0 $space-large;
 
   .console-message {
     margin: auto;
   }
 
-  .console-buttons {
+  .console-button-command-action {
+    border-right: 1px solid $console-menu-button-border-color;
+    padding-right: $space-large;
+    @include display-flex(row);
+    @include align-items(center);
     @include set-items-interval($space-large, horizontal);
-
-    .console-button-command-action {
-      border-right: 1px solid $console-menu-button-border-color;
-      padding-right: $space-large;
-      @include display-flex(row);
-      @include align-items(center);
-      @include set-items-interval($space-large, horizontal);
-    }
   }
 }
 

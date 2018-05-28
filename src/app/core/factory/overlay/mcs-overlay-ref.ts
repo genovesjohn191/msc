@@ -12,10 +12,13 @@ import {
   registerEvent,
   getElementPositionFromHost
 } from '../../../utilities';
+import {
+  McsPlacementType,
+  McsAlignmentType
+} from '../../core.types';
 import { McsOverlayState } from './mcs-overlay-state';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
-import { McsPlacementType, McsAlignmentType } from '../../core.types';
 
 /**
  * Overlay Reference class that supports the functionalities to attach and detach
@@ -36,8 +39,8 @@ export class McsOverlayRef {
   private _disposeFunc: (() => void) | null;
 
   constructor(
-    private _overlayItem: HTMLElement,
-    private _overlayPane: HTMLElement,
+    private _overlayElementWrapper: HTMLElement,
+    private _overlayElementItem: HTMLElement,
     private _overlayState: McsOverlayState,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _applicationRef: ApplicationRef,
@@ -48,10 +51,10 @@ export class McsOverlayRef {
   }
 
   /**
-   * Get the overlay pane element created
+   * Get the overlay element item created
    */
-  public get overlayPane(): HTMLElement {
-    return this._overlayPane;
+  public get overlayElementItem(): HTMLElement {
+    return this._overlayElementItem;
   }
 
   /**
@@ -84,7 +87,7 @@ export class McsOverlayRef {
     }
 
     // Append the component root nodes to the overlay element as host
-    this._overlayPane.appendChild(
+    this._overlayElementItem.appendChild(
       (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement
     );
 
@@ -105,7 +108,7 @@ export class McsOverlayRef {
     viewRef.detectChanges();
 
     // Add all the rootnodes of the created embeddedview and append it as a child
-    viewRef.rootNodes.forEach((rootNode) => this.overlayPane.appendChild(rootNode));
+    viewRef.rootNodes.forEach((rootNode) => this.overlayElementItem.appendChild(rootNode));
     this._setDisposeFunc((() => {
       let index = viewContainer.indexOf(viewRef);
       if (index !== -1) {
@@ -125,7 +128,7 @@ export class McsOverlayRef {
   public attachElement(element: HTMLElement): HTMLElement {
     if (isNullOrEmpty(element)) { return; }
 
-    this._overlayPane.appendChild(element);
+    this._overlayElementItem.appendChild(element);
 
     // Add attachment's settings
     this._setAttachmentSettings();
@@ -136,17 +139,15 @@ export class McsOverlayRef {
    * Move the element at the specified position based on its host provided and placement
    * @param hostElement Host element that serves as the basis of the position
    * @param placement Placement of the element, Left, Top, Right, Bottom
-   * @param _offset Offset of the element based on its placement
    */
-  public moveElementTo(hostElement: HTMLElement, placement: string, _offset: number = 2): void {
+  public moveElementTo(hostElement: HTMLElement, placement: McsPlacementType): void {
     if (isNullOrEmpty(hostElement)) { return; }
 
     let elementPosition = getElementPositionFromHost(
-      hostElement, this._overlayPane, placement, true
+      hostElement, this._overlayElementItem, `${placement}-center`, true
     );
-    this._overlayPane.style.top = `${elementPosition.top}px`;
-    this._overlayPane.style.left = `${elementPosition.left}px`;
-    this._overlayPane.classList.add(`${placement}-center`);
+    this._overlayElementItem.style.top = `${elementPosition.top}px`;
+    this._overlayElementItem.style.left = `${elementPosition.left}px`;
   }
 
   /**
@@ -158,13 +159,13 @@ export class McsOverlayRef {
     alignment: McsAlignmentType = 'center',
     customClass?: string
   ): void {
-    if (isNullOrEmpty(this._overlayPane)) { return; }
+    if (isNullOrEmpty(this._overlayElementItem)) { return; }
     placement === 'center' ?
-      this._overlayPane.classList.add(placement) :
-      this._overlayPane.classList.add(`${placement}-${alignment}`);
+      this._overlayElementItem.classList.add(placement) :
+      this._overlayElementItem.classList.add(`${placement}-${alignment}`);
 
     if (!isNullOrEmpty(customClass)) {
-      this._overlayPane.classList.add(customClass);
+      this._overlayElementItem.classList.add(customClass);
     }
   }
 
@@ -176,15 +177,15 @@ export class McsOverlayRef {
 
     // Remove the pointer events of the attachment
     if (this._overlayState.pointerEvents) {
-      this._overlayPane.style.pointerEvents = 'none';
+      this._overlayElementItem.style.pointerEvents = 'none';
     }
     // Remove the current item of the overlay
-    if (!isNullOrEmpty(this._overlayItem)) {
-      this._overlayItem.parentElement.removeChild(this._overlayItem);
+    if (!isNullOrEmpty(this._overlayElementWrapper)) {
+      this._overlayElementWrapper.parentElement.removeChild(this._overlayElementWrapper);
     }
     // Remove the current overlay after detaching the background
-    if (!isNullOrEmpty(this.overlayPane.parentNode)) {
-      this.overlayPane.parentNode.removeChild(this._overlayPane);
+    if (!isNullOrEmpty(this.overlayElementItem.parentNode)) {
+      this.overlayElementItem.parentNode.removeChild(this._overlayElementItem);
     }
   }
 
@@ -237,7 +238,7 @@ export class McsOverlayRef {
   private _setAttachmentSettings(): void {
     // Set the pointer events of the attachment
     if (this._overlayState.pointerEvents) {
-      this._overlayPane.style.pointerEvents = this._overlayState.pointerEvents;
+      this._overlayElementItem.style.pointerEvents = this._overlayState.pointerEvents;
     }
     // Add the backdrop if it is necessary
     if (this._overlayState.hasBackdrop) {
@@ -254,7 +255,10 @@ export class McsOverlayRef {
     this._backdropElement.classList.add('animation');
 
     this._setBackdropColor();
-    this._overlayPane.parentElement!.insertBefore(this._backdropElement, this._overlayPane);
+    this._overlayElementItem.parentElement!.insertBefore(
+      this._backdropElement,
+      this._overlayElementItem
+    );
     registerEvent(this._backdropElement, 'click', () => this.backdropClickStream.next(null));
 
     // Add class to fade-in the backdrop after one frame.

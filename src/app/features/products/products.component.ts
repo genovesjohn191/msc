@@ -97,6 +97,8 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     refreshView(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
+      this._productsRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
+        .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
   }

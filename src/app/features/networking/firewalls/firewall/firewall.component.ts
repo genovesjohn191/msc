@@ -110,6 +110,8 @@ export class FirewallComponent
     refreshView(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
+      this._firewallsRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
+        .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
   }

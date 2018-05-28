@@ -10,9 +10,9 @@ import {
   McsJobStatusSerialization
 } from '../../enumerations/mcs-job-status.enum';
 import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
+import { McsEntityBase } from '../../base/mcs-entity.base';
 
-export class McsApiJob {
-  public id: string;
+export class McsApiJob extends McsEntityBase  {
   public ownerId: string;
   public ownerName: string;
   public ownerCompanyId: string;
@@ -69,7 +69,7 @@ export class McsApiJob {
   public endedOn: Date;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.type = undefined;
     this.ownerId = undefined;
     this.ownerName = undefined;

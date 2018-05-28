@@ -1,12 +1,11 @@
-// TODO: Temporary model. Will update once API is ready
+import { JsonProperty } from 'json-object-mapper';
 import {
   MediaType,
   MediaTypeSerialization
 } from '../enumerations/media-type.enum';
-import { JsonProperty } from 'json-object-mapper';
+import { McsEntityBase } from '../../../../core';
 
-export class Media {
-  public id: any;
+export class Media extends McsEntityBase {
   public name: string;
   public itemName: string;
   public sizeMB: number;
@@ -25,7 +24,7 @@ export class Media {
   public processingText: string;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
     this.type = undefined;
     this.itemName = undefined;

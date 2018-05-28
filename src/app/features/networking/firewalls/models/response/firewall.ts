@@ -1,3 +1,4 @@
+import { JsonProperty } from 'json-object-mapper';
 import {
   FirewallDeviceStatus,
   FirewallDeviceStatusSerialization,
@@ -18,11 +19,12 @@ import {
   FirewallHaModeSerialization
 } from '../enumerations/firewall-ha-mode.enum';
 import { FirewallUtm } from '../response/firewall-utm';
-import { JsonProperty } from 'json-object-mapper';
-import { CoreDefinition } from '../../../../../core';
+import {
+  CoreDefinition,
+  McsEntityBase
+} from '../../../../../core';
 
-export class Firewall {
-  public id: any;
+export class Firewall extends McsEntityBase {
   public serviceId: string;
   public availabilityZone: string;
   public managementName: string;
@@ -75,7 +77,7 @@ export class Firewall {
   public connectionStatus: FirewallConnectionStatus;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.serviceId = undefined;
     this.availabilityZone = undefined;
     this.managementName = undefined;
@@ -105,7 +107,7 @@ export class Firewall {
   /**
    * Returns device status label
    */
-  public get deviceStatusLabel()  {
+  public get deviceStatusLabel() {
     return firewallDeviceStatusText[this.deviceStatus];
   }
 

@@ -1,3 +1,4 @@
+import { JsonProperty } from 'json-object-mapper';
 import { ServerCompute } from './server-compute';
 import { ServerStorage } from './server-storage';
 import { ServerNetwork } from './server-network';
@@ -11,10 +12,9 @@ import {
   ServerPlatformType,
   ServerPlatformTypeSerialization
 } from '../enumerations/server-platform-type.enum';
-import { JsonProperty } from 'json-object-mapper';
+import { McsEntityBase } from '../../../../core';
 
-export class ServerResource {
-  public id: string;
+export class ServerResource extends McsEntityBase {
   public serviceId: string;
   public name: string;
   public environmentName: string;
@@ -51,6 +51,7 @@ export class ServerResource {
   public platform: ServerPlatformType;
 
   constructor() {
+    super();
     this.compute = undefined;
     this.storage = undefined;
     this.networks = undefined;

@@ -40,7 +40,6 @@ export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> 
   protected getStreams(): Observable<any> {
     const dataStreams = [
       Observable.of(undefined),
-      this._catalogRepository.dataRecordsChanged,
       this._search.searchChangedStream,
     ];
     return Observable.merge(...dataStreams);

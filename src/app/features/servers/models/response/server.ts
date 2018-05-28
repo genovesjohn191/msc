@@ -21,10 +21,12 @@ import {
   serverCommandActiveText
 } from '../enumerations/server-command.enum';
 import { JsonProperty } from 'json-object-mapper';
-import { CoreDefinition } from '../../../../core';
+import {
+  CoreDefinition,
+  McsEntityBase
+} from '../../../../core';
 
-export class Server {
-  public id: any;
+export class Server extends McsEntityBase {
   public name: string;
   public hostname: string;
   public serviceId: string;
@@ -86,7 +88,7 @@ export class Server {
   public processingText: string;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
     this.hostname = undefined;
     this.serviceId = undefined;

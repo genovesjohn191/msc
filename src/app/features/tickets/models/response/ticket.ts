@@ -1,4 +1,8 @@
-import { McsDateSerialization } from '../../../../core';
+import { JsonProperty } from 'json-object-mapper';
+import {
+  McsDateSerialization,
+  McsEntityBase
+} from '../../../../core';
 import {
   TicketPriority,
   TicketPrioritySerialization
@@ -14,10 +18,8 @@ import {
 import { TicketComment } from './ticket-comment';
 import { TicketClosureInformation } from './ticket-closure-information';
 import { TicketAttachment } from './ticket-attachment';
-import { JsonProperty } from 'json-object-mapper';
 
-export class Ticket {
-  public id: any;
+export class Ticket extends McsEntityBase {
   public number: string;
   public crispTicketNumber: string;
   public requestor: string;
@@ -79,7 +81,7 @@ export class Ticket {
   public subType: TicketSubType;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.number = undefined;
     this.crispTicketNumber = undefined;
     this.requestor = undefined;

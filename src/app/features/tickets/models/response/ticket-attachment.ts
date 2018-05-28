@@ -1,8 +1,10 @@
-import { McsDateSerialization } from '../../../../core';
 import { JsonProperty } from 'json-object-mapper';
+import {
+  McsDateSerialization,
+  McsEntityBase
+} from '../../../../core';
 
-export class TicketAttachment {
-  public id: string;
+export class TicketAttachment extends McsEntityBase {
   public fileName: string;
   public contentType: string;
   public createdBy: string;
@@ -15,7 +17,7 @@ export class TicketAttachment {
   public createdOn: Date;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.fileName = undefined;
     this.contentType = undefined;
     this.createdBy = undefined;
