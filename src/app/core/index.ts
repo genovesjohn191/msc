@@ -18,9 +18,11 @@ export * from './services/mcs-notification-events.service';
 export * from './services/mcs-global-element.service';
 export * from './services/mcs-overlay.service';
 export * from './services/mcs-dialog.service';
+export * from './services/mcs-snack-bar.service';
 export * from './services/mcs-scroll-dispatcher.service';
 export * from './services/mcs-viewport.service';
 export * from './services/mcs-error-handler.service';
+export * from './services/mcs-route-handler.service';
 export * from './services/mcs-platform.service';
 export * from './services/mcs-logger.service';
 export * from './services/mcs-form-group.service';
@@ -69,6 +71,7 @@ export * from './interfaces/mcs-component-type.interface';
 export * from './interfaces/mcs-scrollable.interface';
 export * from './interfaces/mcs-safe-to-navigate-away.interface';
 export * from './interfaces/mcs-property-type.interface';
+export * from './interfaces/mcs-initializer.interface';
 /** Base */
 export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-table-listing.base';
@@ -80,12 +83,11 @@ export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';
 export * from './authentication/mcs-access-control.service';
 export * from './authentication/mcs-authentication.identity';
-export * from './authentication/mcs-route-permission.guard';
-/** Google Analytics */
-export * from './services/google-analytics-events.service';
 /** Factory */
 export * from './factory/dialog/mcs-dialog-ref';
 export * from './factory/dialog/mcs-dialog-config';
+export * from './factory/snack-bar/mcs-snack-bar-ref';
+export * from './factory/snack-bar/mcs-snack-bar-config';
 export * from './factory/global-element/mcs-global-element-ref';
 export * from './factory/global-element/mcs-global-element-option';
 export * from './factory/overlay/mcs-overlay-ref';

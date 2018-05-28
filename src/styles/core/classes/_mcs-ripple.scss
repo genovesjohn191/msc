@@ -1,6 +1,9 @@
 $ripple-dark-bg-color: rgba($color-black, 0.1);
 $ripple-light-bg-color: rgba($color-white, 0.3);
-$ripple-icon-size: 15px;
+
+$ripple-icon-size-small: 10px;
+$ripple-icon-size-medium: 15px;
+$ripple-icon-size-large: 20px;
 
 .ripple-directive-wrapper {
   overflow: hidden;
@@ -34,11 +37,25 @@ $ripple-icon-size: 15px;
 
 .icon-ripple-wrapper {
   position: absolute;
-  left: -$ripple-icon-size;
-  top: -$ripple-icon-size;
-  right: -$ripple-icon-size;
-  bottom: -$ripple-icon-size;
+  left: -$ripple-icon-size-medium;
+  top: -$ripple-icon-size-medium;
+  right: -$ripple-icon-size-medium;
+  bottom: -$ripple-icon-size-medium;
   @include border-radius(50%);
   z-index: 1;
   pointer-events: none;
+
+  &.icon-ripple-small {
+    left: -$ripple-icon-size-small;
+    top: -$ripple-icon-size-small;
+    right: -$ripple-icon-size-small;
+    bottom: -$ripple-icon-size-small;
+  }
+
+  &.icon-ripple-large {
+    left: -$ripple-icon-size-large;
+    top: -$ripple-icon-size-large;
+    right: -$ripple-icon-size-large;
+    bottom: -$ripple-icon-size-large;
+  }
 }

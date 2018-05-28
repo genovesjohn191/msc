@@ -5,7 +5,6 @@ import {
   Subscription
 } from 'rxjs/Rx';
 import { McsNotificationContextService } from './mcs-notification-context.service';
-import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsJobType } from '../enumerations/mcs-job-type.enum';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
@@ -16,71 +15,70 @@ import {
   unsubscribeSafely
 } from '../../utilities';
 
+const DEFAULT_CACHE_BUFFER = 25;
+
 @Injectable()
 export class McsNotificationEventsService {
 
   /** Event that emits when create server executed */
-  public createServerEvent = new ReplaySubject<McsApiJob>(undefined);
+  public createServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when clone server executed */
-  public cloneServerEvent = new ReplaySubject<McsApiJob>(undefined);
+  public cloneServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when rename server executed */
-  public renameServerEvent = new ReplaySubject<McsApiJob>(undefined);
+  public renameServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server executed */
-  public deleteServerEvent = new ReplaySubject<McsApiJob>(undefined);
+  public deleteServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when reset server password is executed */
-  public resetServerPasswordEvent = new ReplaySubject<McsApiJob>(undefined);
+  public resetServerPasswordEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when power state is executed on server  */
-  public changeServerPowerStateEvent = new ReplaySubject<McsApiJob>(undefined);
+  public changeServerPowerStateEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when scale server executed */
-  public scaleServerEvent = new ReplaySubject<McsApiJob>(undefined);
+  public scaleServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when attach server media executed */
-  public attachServerMediaEvent = new ReplaySubject<McsApiJob>(undefined);
+  public attachServerMediaEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when detach server media executed */
-  public detachServerMediaEvent = new ReplaySubject<McsApiJob>(undefined);
+  public detachServerMediaEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when create server disk executed */
-  public createServerDisk = new ReplaySubject<McsApiJob>(undefined);
+  public createServerDisk = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when update server disk executed */
-  public updateServerDisk = new ReplaySubject<McsApiJob>(undefined);
+  public updateServerDisk = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server disk executed */
-  public deleteServerDisk = new ReplaySubject<McsApiJob>(undefined);
+  public deleteServerDisk = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when create server network executed */
-  public createServerNic = new ReplaySubject<McsApiJob>(undefined);
+  public createServerNic = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when update server network executed */
-  public updateServerNic = new ReplaySubject<McsApiJob>(undefined);
+  public updateServerNic = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server network executed */
-  public deleteServerNic = new ReplaySubject<McsApiJob>(undefined);
+  public deleteServerNic = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when create server snapshot executed */
-  public createServerSnapshot = new ReplaySubject<McsApiJob>(undefined);
+  public createServerSnapshot = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when apply server snapshot executed */
-  public applyServerSnapshot = new ReplaySubject<McsApiJob>(undefined);
+  public applyServerSnapshot = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server snapshot executed */
-  public deleteServerSnapshot = new ReplaySubject<McsApiJob>(undefined);
+  public deleteServerSnapshot = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits only when current user triggered a job */
-  public currentUserJob = new ReplaySubject<McsApiJob>(undefined);
+  public currentUserJob = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits all jobs */
   public notificationsEvent = new BehaviorSubject<McsApiJob[]>(undefined);
-
-  /** Event that emits when the connection to socket is changed */
-  public connectionStatusChanged = new BehaviorSubject<McsConnectionStatus>(undefined);
 
   /** Subscriptions */
   private _notificationsSubscription: Subscription;
@@ -89,7 +87,6 @@ export class McsNotificationEventsService {
     private _notificationsContext: McsNotificationContextService,
     private _authenticationIdentity: McsAuthenticationIdentity
   ) {
-    this._listenToStatusUpdate();
     this._listenToNotificationsUpdate();
   }
 
@@ -99,16 +96,6 @@ export class McsNotificationEventsService {
    */
   public notifyNotificationsSubscribers(): void {
     this._listenToNotificationsUpdate();
-  }
-
-  /**
-   * Listens to notifications status changed stream
-   */
-  private _listenToStatusUpdate(): void {
-    this._notificationsContext.connectionStatusStream
-      .subscribe((status) => {
-        this.connectionStatusChanged.next(status);
-      });
   }
 
   /**

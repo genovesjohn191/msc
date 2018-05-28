@@ -10,7 +10,12 @@ import {
   IterableDiffer
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs/Rx';
+import {
+  Observable,
+  Subject,
+  Subscription
+} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -23,19 +28,25 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  addOrUpdateArrayRecord
+  unsubscribeSubject,
+  addOrUpdateArrayRecord,
+  animateFactory
 } from '../../../../utilities';
 
 @Component({
   selector: 'mcs-provisioning-notifications',
   templateUrl: './provisioning-notifications.component.html',
   styleUrls: ['./provisioning-notifications.component.scss'],
+  animations: [
+    animateFactory.fadeIn
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDestroy {
   public progressValue: number;
   public progressMax: number;
+  public progressBarHidden: boolean;
   public textContent: any;
 
   /**
@@ -52,35 +63,9 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   private _jobs: McsApiJob[];
   private _jobsDiffer: IterableDiffer<McsApiJob>;
 
-  /**
-   * Animation of the progressbar for fadeIn and fadeOut
-   */
-  private _animateTrigger: string;
-  public get animateTrigger(): string { return this._animateTrigger; }
-  public set animateTrigger(value: string) {
-    if (value !== this._animateTrigger) {
-      this._animateTrigger = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  /**
-   * Returns true when progress bar needs to be visile
-   */
-  private _isVisibleProgressBar: boolean;
-  public get isVisibleProgressBar(): boolean {
-    return this._isVisibleProgressBar;
-  }
-  public set isVisibleProgressBar(value: boolean) {
-    if (this._isVisibleProgressBar !== value) {
-      this._isVisibleProgressBar = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
   // Subscription
-  private _timerSubscription: any;
-  private _jobsSubscription: Subscription;
+  private _timerSubscription: Subscription;
+  private _destroySubject = new Subject<void>();
 
   public get isMultiJobs(): boolean {
     return isNullOrEmpty(this.jobs) ? false : this.jobs.length > 1;
@@ -116,9 +101,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   ) {
     this.progressValue = 0;
     this.progressMax = 0;
-    this.animateTrigger = 'fadeIn';
     this._jobsDiffer = this._iterableDiffers.find([]).create(null);
-    this.isVisibleProgressBar = false;
   }
 
   public ngOnInit() {
@@ -137,7 +120,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
 
   public ngOnDestroy() {
     unsubscribeSafely(this._timerSubscription);
-    unsubscribeSafely(this._jobsSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -227,7 +210,6 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
       return (task.type === McsTaskType.CreateServer || task.type === McsTaskType.CloneServer)
         && task.dataStatus === McsDataStatus.Success && !isNullOrEmpty(task.referenceObject);
     });
-
     return !isNullOrEmpty(completedTask) ?
       completedTask.referenceObject.resourceId : '';
   }
@@ -240,9 +222,13 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
     let progressMaxWithOffset: number = 0;
 
     this.jobs.forEach((job) => {
-      if (isNullOrEmpty(job)) { return; }
-      this.progressValue += job.elapsedTimeInSeconds;
-      this.progressMax += (job.ectInSeconds + job.elapsedTimeInSeconds);
+      let hasTasks = !isNullOrEmpty(job) && !isNullOrEmpty(job.tasks);
+      if (!hasTasks) { return; }
+
+      job.tasks.forEach((task) => {
+        this.progressValue += task.elapsedTimeInSeconds;
+        this.progressMax += (task.ectInSeconds + task.elapsedTimeInSeconds);
+      });
     });
 
     // Calculate the 99% of the progreesbar maximum
@@ -262,13 +248,11 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Listen to current user job triggered
    */
   private _listenToCurrentUserJob(): void {
-    this._jobsSubscription = this._notificationsEvents.currentUserJob
+    this._notificationsEvents.currentUserJob
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((job) => {
         let inProgressJob = isNullOrEmpty(job) || job.dataStatus === McsDataStatus.InProgress;
-        if (inProgressJob) {
-          this.isVisibleProgressBar = inProgressJob;
-          return;
-        }
+        if (inProgressJob) { return; }
 
         // Update the existing job
         addOrUpdateArrayRecord(this.jobs, job, true,
@@ -277,7 +261,6 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
         // Exit progressbar
         if (this.allJobsCompleted) { this._removeProgressbar(McsDataStatus.Success); }
         if (this.hasErrorJobs) { this._removeProgressbar(McsDataStatus.Error); }
-
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -296,7 +279,6 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
         this._endTimer(this.progressMax);
         break;
     }
-    this.animateTrigger = 'fadeOut';
   }
 
   /**

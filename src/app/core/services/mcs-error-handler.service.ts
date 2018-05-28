@@ -3,21 +3,20 @@ import {
   Router,
   NavigationEnd
 } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import {
+  isNullOrEmpty,
+  unsubscribeSubject
+} from '../../utilities';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsApiService } from './mcs-api.service';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely
-} from '../../utilities';
+import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 
 @Injectable()
-export class McsErrorHandlerService {
-
-  // Subscriptions
-  private _unauthorizedResponseSubscription: any;
-  private _routerEventSubscription: any;
-  private _initialized: boolean = false;
+export class McsErrorHandlerService implements McsInitializer {
+  private _destroySubject = new Subject<void>();
 
   constructor(
     private _apiService: McsApiService,
@@ -27,25 +26,17 @@ export class McsErrorHandlerService {
 
   /**
    * Initialize all the error handlers to all the response
-   *
-   * `@Note:` This should be call once inside the APP component
    */
-  public initializeErrorHandlers(): void {
-    if (!this._initialized) {
-      this._listenToUnauthorizedResponse();
-      this._listenToRouterEvent();
-      this._initialized = true;
-    }
+  public initialize(): void {
+    this._listenToUnauthorizedResponse();
+    this._listenToRouterEvent();
   }
 
   /**
-   * Disposes all the error handlers subscriptions
-   *
-   * `@Note:` This should be call once inside the APP component
+   * Destroys all the resources
    */
-  public dispose(): void {
-    unsubscribeSafely(this._unauthorizedResponseSubscription);
-    unsubscribeSafely(this._routerEventSubscription);
+  public destroy(): void {
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -78,7 +69,7 @@ export class McsErrorHandlerService {
         });
         break;
       default:
-      // Do nothing if its not HTTP request
+        // Do nothing if its not HTTP request
         break;
     }
   }
@@ -87,7 +78,8 @@ export class McsErrorHandlerService {
    * Listen to error response from api
    */
   private _listenToUnauthorizedResponse(): void {
-    this._unauthorizedResponseSubscription = this._apiService.errorResponseStream
+    this._apiService.errorResponseStream
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((errorResponse) => {
         if (!errorResponse) { return; }
         switch (errorResponse.status) {
@@ -102,7 +94,8 @@ export class McsErrorHandlerService {
    * Listen to router events and check if the token is not expired
    */
   private _listenToRouterEvent(): void {
-    this._routerEventSubscription = this._router.events
+    this._router.events
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((event) => {
         if (event instanceof NavigationEnd) {
           // This will check the token if its not expired.

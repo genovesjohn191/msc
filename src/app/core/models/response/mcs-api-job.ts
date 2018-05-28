@@ -21,7 +21,6 @@ export class McsApiJob {
   public summaryInformation: string;
   public errorMessage: string;
   public elapsedTimeInSeconds: number;
-  public ectInSeconds: number;
   public clientReferenceObject: any;
 
   @JsonProperty({ type: McsApiTask })
@@ -80,7 +79,6 @@ export class McsApiJob {
     this.summaryInformation = undefined;
     this.errorMessage = undefined;
     this.elapsedTimeInSeconds = undefined;
-    this.ectInSeconds = undefined;
     this.tasks = undefined;
     this.clientReferenceObject = undefined;
     this.status = undefined;

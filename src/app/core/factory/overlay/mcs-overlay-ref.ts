@@ -15,9 +15,7 @@ import {
 import { McsOverlayState } from './mcs-overlay-state';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
-
-// placement type enumerations
-type placementType = 'left' | 'top' | 'right' | 'bottom' | 'center';
+import { McsPlacementType, McsAlignmentType } from '../../core.types';
 
 /**
  * Overlay Reference class that supports the functionalities to attach and detach
@@ -155,11 +153,19 @@ export class McsOverlayRef {
    * Move the element based on global position that is currently displayed on the view port
    * @param placement Placement of the element, center, left, top, bottom
    */
-  public moveElementToGlobal(placement?: placementType) {
+  public moveElementToGlobal(
+    placement?: McsPlacementType,
+    alignment: McsAlignmentType = 'center',
+    customClass?: string
+  ): void {
     if (isNullOrEmpty(this._overlayPane)) { return; }
     placement === 'center' ?
       this._overlayPane.classList.add(placement) :
-      this._overlayPane.classList.add(`${placement}-center`);
+      this._overlayPane.classList.add(`${placement}-${alignment}`);
+
+    if (!isNullOrEmpty(customClass)) {
+      this._overlayPane.classList.add(customClass);
+    }
   }
 
   /**

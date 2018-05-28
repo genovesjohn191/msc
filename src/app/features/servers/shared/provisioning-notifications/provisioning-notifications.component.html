@@ -6,8 +6,8 @@
       <div class="vertical-items-spacing-medium">
         <ng-content *ngIf="hasInProgressJob" select="[mcsProvisioningText]"></ng-content>
         <h4 class="title">{{ getTitle() }}</h4>
-        <mcs-progress-bar [hidden]="allJobsCompleted || !isVisibleProgressBar"
-          animate [trigger]="animateTrigger" [(ngModel)]="progressValue"
+        <mcs-progress-bar *ngIf="hasInProgressJob" [@fadeIn]
+          [(ngModel)]="progressValue"
           [maxValue]="progressMax"></mcs-progress-bar>
       </div>
 

@@ -10,7 +10,6 @@ import {
   McsApiJob,
   McsNotificationContextService,
   CoreDefinition,
-  McsConnectionStatus,
   McsJobStatus
 } from '../../../core';
 import { CoreLayoutTestingModule } from '../../testing';
@@ -174,28 +173,5 @@ describe('UserPanelComponent', () => {
           expect(component.notifications).toBeDefined();
           expect(component.notifications.length).toBe(1);
         }))));
-  });
-
-  describe('connectionStatusStream()', () => {
-    it('should set the hasConnectionError to true in case of error in connection',
-      inject([McsNotificationContextService],
-        (notificationContextService: McsNotificationContextService) => {
-          notificationContextService.connectionStatusStream.next(McsConnectionStatus.Failed);
-          expect(component.hasConnectionError).toBe(true);
-        }));
-
-    it('should set the hasConnectionError to true in case of fatal in connection',
-      inject([McsNotificationContextService],
-        (notificationContextService: McsNotificationContextService) => {
-          notificationContextService.connectionStatusStream.next(McsConnectionStatus.Fatal);
-          expect(component.hasConnectionError).toBe(true);
-        }));
-
-    it('should set the hasConnectionError to false in case of success in connection',
-      inject([McsNotificationContextService],
-        (notificationContextService: McsNotificationContextService) => {
-          notificationContextService.connectionStatusStream.next(McsConnectionStatus.Success);
-          expect(component.hasConnectionError).toBe(false);
-        }));
   });
 });

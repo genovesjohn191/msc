@@ -40,5 +40,5 @@ export class DialogHeaderComponent {
     return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
   }
 
-  constructor( @Optional() public dialogRef: McsDialogRef<any>) { }
+  constructor(@Optional() public dialogRef: McsDialogRef<any>) { }
 }

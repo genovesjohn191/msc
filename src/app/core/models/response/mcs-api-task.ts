@@ -16,7 +16,8 @@ export class McsApiTask {
   public summaryInformation: string;
   public errorMessage: string;
   public referenceObject: any;
-  public durationInSeconds: number;
+  public elapsedTimeInSeconds: number;
+  public ectInSeconds: number;
 
   @JsonProperty({
     type: McsTaskType,
@@ -68,11 +69,12 @@ export class McsApiTask {
     this.type = undefined;
     this.status = undefined;
     this.referenceObject = undefined;
-    this.durationInSeconds = undefined;
     this.createdOn = undefined;
     this.updatedOn = undefined;
     this.startedOn = undefined;
     this.endedOn = undefined;
+    this.elapsedTimeInSeconds = undefined;
+    this.ectInSeconds = undefined;
   }
 
   /**
@@ -99,7 +101,6 @@ export class McsApiTask {
         dataStatus = McsDataStatus.InProgress;
         break;
     }
-
     return dataStatus;
   }
 }

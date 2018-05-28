@@ -1,0 +1,16 @@
+@import "../../../../styles/shared/base";
+
+$snack-bar-container-offset: 24px;
+$snack-bar-container-border-radius: $border-radius-small;
+
+.snack-bar-container-wrapper {
+  display: block;
+  border-radius: $snack-bar-container-border-radius;
+  box-sizing: border-box;
+  overflow: hidden;
+  @include transform(translateY(100%) translateY($snack-bar-container-offset));
+
+  &.top-position {
+    @include transform(translateY(-100%) translateY(-$snack-bar-container-offset));
+  }
+}

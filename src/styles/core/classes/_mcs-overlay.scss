@@ -1,6 +1,7 @@
 $overlay-transparent-color: none;
 $overlay-light-color: $color-white;
 $overlay-dark-color: rgba($color: $color-black, $alpha: 0.4);
+$overlay-item-position-offset: 0;
 
 .mcs-overlay-wrapper {
   position: fixed;
@@ -58,16 +59,64 @@ $overlay-dark-color: rgba($color: $color-black, $alpha: 0.4);
     left: 50%;
     @include translate(-50%, -50%);
   }
+
+  // Top placement
   &.top-center {
-    @include translate(-50%, -100%);
-  }
-  &.bottom-center {
+    top: 0;
+    left: 50%;
     @include translate(-50%, 0);
   }
-  &.left-center {
-    @include translate(-100%, -50%);
+  &.top-start {
+    top: 0;
+    left: 0;
   }
-  &.right-center {
+  &.top-end {
+    top: 0;
+    right: 0;
+  }
+
+  // Bottom placement
+  &.bottom-center {
+    bottom: 0;
+    left: 50%;
+    @include translate(-50%, 0);
+  }
+  &.bottom-start {
+    bottom: 0;
+    left: 0;
+  }
+  &.bottom-end {
+    bottom: 0;
+    right: 0;
+  }
+
+  // Left Placement
+  &.left-center {
+    left: 0;
+    top: 50%;
     @include translate(0, -50%);
+  }
+  &.left-start {
+    left: 0;
+    top: 0;
+  }
+  &.left-end {
+    left: 0;
+    bottom: 0;
+  }
+
+  // Right Placement
+  &.right-center {
+    right: 0;
+    top: 50%;
+    @include translate(0, -50%);
+  }
+  &.right-start {
+    right: 0;
+    top: 0;
+  }
+  &.right-end {
+    right: 0;
+    bottom: 0;
   }
 }
