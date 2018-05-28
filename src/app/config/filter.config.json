@@ -190,5 +190,33 @@
       "text": "Details",
       "value": true
     }
+  },
+  "mediasListingFilter": {
+    "media": {
+      "text": "Media",
+      "value": true,
+      "exclude": true
+    },
+    "catalog": {
+      "text": "Catalog",
+      "value": true
+    },
+    "location": {
+      "text": "Location",
+      "value": true
+    },
+    "size": {
+      "text": "Media Size",
+      "value": true
+    },
+    "attachedTo": {
+      "text": "Attached To",
+      "value": true
+    },
+    "action": {
+      "text": "",
+      "value": true,
+      "exclude": true
+    }
   }
 }

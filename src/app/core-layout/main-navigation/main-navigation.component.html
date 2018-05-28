@@ -25,6 +25,16 @@
       </a>
     </div>
 
+    <!-- Medias -->
+    <div class="navigation-item" routerLinkActive="active"
+      *mcsAccessControl="[]; feature: 'enableMediaCatalog'">
+      <mcs-icon [key]="caretRightIconKey" color="white"
+        size="medium" class="navigation-mobile"></mcs-icon>
+      <a [routerLink]="['/medias']" (click)="setTitle(textContent.medias.title)">
+        {{ textContent.navigation.medias }}
+      </a>
+    </div>
+
     <!-- Firewalls -->
     <!-- TODO: Replaced texts to Firewalls and added temporary firewall restriction for Phase 1 -->
     <div class="navigation-item" routerLinkActive="active"
