@@ -3,9 +3,9 @@ import {
   McsCompanyStatus,
   McsCompanyStatusSerialization
 } from '../../enumerations/mcs-company-status.enum';
+import { McsEntityBase } from '../../base/mcs-entity.base';
 
-export class McsApiCompany {
-  public id: any;
+export class McsApiCompany extends McsEntityBase  {
   public name: string;
   public hasHosting: boolean;
   public hasData: boolean;
@@ -20,7 +20,7 @@ export class McsApiCompany {
   public status: McsCompanyStatus;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
     this.hasHosting = undefined;
     this.hasData = undefined;

@@ -1,3 +1,4 @@
+import { JsonProperty } from 'json-object-mapper';
 import {
   FirewallPolicyAction,
   FirewallPolicyActionSerialization
@@ -6,11 +7,12 @@ import {
   FirewallPolicyNat,
   FirewallPolicyNatSerialization
 } from '../enumerations/firewall-policy-nat.enum';
-import { JsonProperty } from 'json-object-mapper';
-import { CoreDefinition } from '../../../../../core';
+import {
+  CoreDefinition,
+  McsEntityBase
+} from '../../../../../core';
 
-export class FirewallPolicy {
-  public id: any;
+export class FirewallPolicy extends McsEntityBase {
   public policyId: number;
   public objectSequence: number;
   public natIpAddresses: string[];
@@ -37,7 +39,7 @@ export class FirewallPolicy {
   public nat: FirewallPolicyNat;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.policyId = undefined;
     this.objectSequence = undefined;
     this.natIpAddresses = undefined;

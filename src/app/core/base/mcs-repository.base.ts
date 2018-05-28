@@ -7,6 +7,7 @@ import {
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
 import { McsSearch } from '../interfaces/mcs-search.interface';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
+import { McsEntityBase } from './mcs-entity.base';
 import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
@@ -20,7 +21,7 @@ import {
 const DEFAULT_PAGE_INDEX = 1;
 const DEFAULT_PAGE_SIZE = 1000;
 
-export abstract class McsRepositoryBase<T> {
+export abstract class McsRepositoryBase<T extends McsEntityBase> {
   /**
    * Updated records obtained from each individual call to API (getRecordById)
    */
@@ -88,7 +89,7 @@ export abstract class McsRepositoryBase<T> {
 
     // Update the record
     addOrUpdateArrayRecord(this._dataRecords, record, false,
-      (_existingRecord: any) => _existingRecord.id === (record as any).id);
+      (_existingRecord: T) => _existingRecord.id === record.id);
     this._notifyDataRecordsChanged();
   }
 
@@ -100,7 +101,7 @@ export abstract class McsRepositoryBase<T> {
    */
   public deleteRecordById(recordId: string): void {
     if (isNullOrEmpty(recordId)) { return; }
-    deleteArrayRecord(this._dataRecords, (_record: any) => {
+    deleteArrayRecord(this._dataRecords, (_record: T) => {
       return recordId === _record.id;
     });
     this._notifyDataRecordsChanged();
@@ -124,7 +125,7 @@ export abstract class McsRepositoryBase<T> {
     let noRecords = isNullOrEmpty(records) || isNullOrEmpty(this._dataRecords);
     if (noRecords) { return; }
     let mergedArrays = mergeArrays(this.dataRecords, records,
-      (_first: any, _second: any) => {
+      (_first: T, _second: T) => {
         return _first.id === _second.id;
       });
     this._totalRecordsCount += mergedArrays.length - this._dataRecords.length;
@@ -210,7 +211,7 @@ export abstract class McsRepositoryBase<T> {
    */
   public findRecordById(id: string, fromCache: boolean = true): Observable<T> {
     // Return the record immediately when found in cache
-    let recordFoundFromCache = this._updatedRecordsById.find((record: any) => {
+    let recordFoundFromCache = this._updatedRecordsById.find((record: T) => {
       return record.id === id;
     });
     let requestRecordFromCache = !isNullOrEmpty(recordFoundFromCache) && fromCache;
@@ -227,7 +228,7 @@ export abstract class McsRepositoryBase<T> {
 
         this.updateRecord(record.content);
         let updatedRecord = this.dataRecords.find((recordInstance) =>
-          (recordInstance as any).id === (record.content as any).id
+          recordInstance.id === record.content.id
         );
         if (!isNullOrEmpty(updatedRecord)) {
           this._updatedRecordsById.push(updatedRecord);
@@ -288,15 +289,15 @@ export abstract class McsRepositoryBase<T> {
         this._totalRecordsCount = data.totalCount;
 
         // Filter the unobtained records based on the updated records
-        let unObtainedRecords = data.content.filter((record: any) => {
-          let dataExist = this._updatedRecordsById.find((updated: any) => updated.id === record.id);
+        let unObtainedRecords = data.content.filter((record: T) => {
+          let dataExist = this._updatedRecordsById.find((updated: T) => updated.id === record.id);
           return isNullOrEmpty(dataExist);
         });
 
         // We need to merge only the un-obtained records in order to retain the
         // instance of the obtained records from the updated records
         this._dataRecords = mergeArrays(this._dataRecords, unObtainedRecords,
-          (_first: any, _second: any) => {
+          (_first: T, _second: T) => {
             let dataExist = isNullOrEmpty(_first.id) ? false : _first.id === _second.id;
             return dataExist;
           });

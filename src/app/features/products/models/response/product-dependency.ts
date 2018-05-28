@@ -1,9 +1,10 @@
-export class ProductDependency {
-  public id: any;
+import { McsEntityBase } from '../../../../core';
+
+export class ProductDependency extends McsEntityBase {
   public name: string;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
   }
 }

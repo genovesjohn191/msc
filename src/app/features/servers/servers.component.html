@@ -137,8 +137,8 @@
             [disabled]="row.isProcessing"
             class="text-center action-cell hidden-small">
             <mcs-checkbox stop-propagation
-              [checked]="selection.isSelected(row.id)"
-              (change)="selection.toggle(row.id)">
+              [checked]="selection.isSelected(row)"
+              (change)="selection.toggle(row)">
             </mcs-checkbox>
           </mcs-data-cell>
         </ng-container>
@@ -286,7 +286,7 @@
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           cursor="pointer"
           [disabled]="serverDeleting(row)"
-          [ngClass]="{'active-row': selection.isSelected(row.id)}"
+          [ngClass]="{'active-row': selection.isSelected(row)}"
           (click)="navigateToServer(row)"
           mcsEventTracker="navigate-to-server"
           mcsEventCategory="server"

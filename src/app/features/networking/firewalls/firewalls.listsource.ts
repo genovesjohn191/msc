@@ -40,7 +40,6 @@ export class FirewallsListSource extends McsListSourceBase<Firewall> {
   protected getStreams(): Observable<any> {
     const dataStreams = [
       Observable.of(undefined),
-      this._firewallsRepository.dataRecordsChanged,
       this._search.searchChangedStream,
     ];
     return Observable.merge(...dataStreams);

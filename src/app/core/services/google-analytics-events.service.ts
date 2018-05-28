@@ -47,8 +47,7 @@ export class GoogleAnalyticsEventsService implements McsInitializer {
   public emitEvent(
     _eventCategory: string,
     _eventAction: string,
-    _eventLabel: string =
-      null,
+    _eventLabel: string = null,
     _eventValue: number = null) {
     dataLayer.push({
       'event': 'customEvent',

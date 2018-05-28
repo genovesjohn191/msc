@@ -1,15 +1,15 @@
 import { JsonProperty } from 'json-object-mapper';
 import { Product } from './product';
+import { McsEntityBase } from '../../../../core';
 
-export class ProductCategory {
-  public id: any;
+export class ProductCategory extends McsEntityBase {
   public name: string;
 
   @JsonProperty({ type: Product })
   public products: Product[];
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
     this.products = undefined;
   }

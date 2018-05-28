@@ -78,6 +78,7 @@ export * from './base/mcs-table-listing.base';
 export * from './base/mcs-form-field-control.base';
 export * from './base/mcs-repository.base';
 export * from './base/mcs-list-source.base';
+export * from './base/mcs-entity.base';
 /** Authentication */
 export * from './authentication/mcs-authentication.guard';
 export * from './authentication/mcs-authentication.service';

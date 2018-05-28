@@ -4,8 +4,11 @@ import {
   OnInit,
   OnDestroy,
   ElementRef,
-  ViewContainerRef
+  ViewContainerRef,
+  NgZone
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsOverlayRef,
   McsOverlayState,
@@ -16,7 +19,8 @@ import {
   isNullOrEmpty,
   registerEvent,
   unregisterEvent,
-  coerceBoolean
+  coerceBoolean,
+  unsubscribeSubject
 } from '../../utilities';
 import {
   TooltipComponent,
@@ -102,6 +106,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
   // Others declaration
   private _overlayRef: McsOverlayRef | null;
   private _tooltipInstance: TooltipComponent | null;
+  private _destroySubject = new Subject<any>();
 
   // Event handlers reference
   private _mouseEnterHandler = this.show.bind(this);
@@ -110,15 +115,18 @@ export class TooltipDirective implements OnInit, OnDestroy {
   constructor(
     private _elementRef: ElementRef,
     private _viewContainerRef: ViewContainerRef,
-    private _overlayService: McsOverlayService
+    private _overlayService: McsOverlayService,
+    private _ngZone: NgZone
   ) { }
 
   public ngOnInit(): void {
     this._registerEvents();
+    this._moveTooltipToHost();
   }
 
   public ngOnDestroy(): void {
     this._unregisterEvents();
+    unsubscribeSubject(this._destroySubject);
     if (this._tooltipInstance) {
       this._disposeTooltip();
     }
@@ -205,8 +213,18 @@ export class TooltipDirective implements OnInit, OnDestroy {
     overlayState.hasBackdrop = false;
     overlayState.pointerEvents = 'auto';
     overlayRef = this._overlayService.create(overlayState);
-    overlayRef.moveElementTo(this._elementRef.nativeElement, this.position);
     return overlayRef;
+  }
+
+  /**
+   * Moves the tooltip relative to host element
+   */
+  private _moveTooltipToHost(): void {
+    this._ngZone.onStable.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => {
+        if (isNullOrEmpty(this._overlayRef)) { return; }
+        this._overlayRef.moveElementTo(this._elementRef.nativeElement, this.position);
+      });
   }
 
   /**

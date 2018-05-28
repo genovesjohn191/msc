@@ -1,5 +1,6 @@
-export class ServerMedia {
-  public id: any;
+import { McsEntityBase } from '../../../../core';
+
+export class ServerMedia extends McsEntityBase {
   public name: string;
 
   // Additional flag not related to API response
@@ -7,7 +8,7 @@ export class ServerMedia {
   public processingText: string;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
     this.isProcessing = undefined;
     this.processingText = undefined;

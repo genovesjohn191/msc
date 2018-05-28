@@ -101,6 +101,9 @@ export function getElementPosition(element: HTMLElement): ClientRect {
  * @param placement Position of the target element around the host element
  * (top, right, bottom, or left)
  * @param appendToBody When "true" the position will be based on the body else "false"
+ *
+ * `@Note:` Need to use this inside ngZone when angular view is stable to
+ * get the actual size of the host and target element.
  */
 export function getElementPositionFromHost(
   hostElement: HTMLElement,

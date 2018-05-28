@@ -1,9 +1,9 @@
 import { JsonProperty } from 'json-object-mapper';
 import { ProductDownload } from './product-download';
 import { ProductDependency } from './product-dependency';
+import { McsEntityBase } from '../../../../core';
 
-export class Product {
-  public id: any;
+export class Product extends McsEntityBase {
   public name: string;
   public url: string;
   public catalog: string;
@@ -19,7 +19,7 @@ export class Product {
   public dependencies: ProductDependency[];
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
     this.url = undefined;
     this.catalog = undefined;

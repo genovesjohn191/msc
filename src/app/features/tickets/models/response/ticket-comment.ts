@@ -1,4 +1,8 @@
-import { McsDateSerialization } from '../../../../core';
+import { JsonProperty } from 'json-object-mapper';
+import {
+  McsDateSerialization,
+  McsEntityBase
+} from '../../../../core';
 import {
   TicketCommentType,
   TicketCommentTypeSerialization
@@ -7,10 +11,8 @@ import {
   TicketCommentCategory,
   TicketCommentCategorySerialization
 } from '../enumerations/ticket-comment-category';
-import { JsonProperty } from 'json-object-mapper';
 
-export class TicketComment {
-  public id: string;
+export class TicketComment extends McsEntityBase {
   public createdBy: string;
   public value: string;
 
@@ -36,7 +38,7 @@ export class TicketComment {
   public createdOn: Date;
 
   constructor() {
-    this.id = undefined;
+    super();
     this.category = undefined;
     this.type = undefined;
     this.createdBy = undefined;

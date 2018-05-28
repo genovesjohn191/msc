@@ -1,10 +1,11 @@
+import { JsonProperty } from 'json-object-mapper';
+import { McsEntityBase } from '../../../../core';
 import {
   ServerServiceType,
   ServerServiceTypeSerialization
 } from '../enumerations/server-service-type.enum';
-import { JsonProperty } from 'json-object-mapper';
 
-export class ServerOperatingSystem {
+export class ServerOperatingSystem extends McsEntityBase {
   public name: string;
 
   @JsonProperty({
@@ -15,6 +16,7 @@ export class ServerOperatingSystem {
   public serviceType: ServerServiceType;
 
   constructor() {
+    super();
     this.name = undefined;
     this.serviceType = undefined;
   }
