@@ -15,7 +15,6 @@ import {
   McsNotificationEventsService,
   McsBrowserService,
   McsDeviceType,
-  McsConnectionStatus,
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsApiCompany,
@@ -126,7 +125,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this.textContent = this._textContent.content.header.userPanel;
 
     // Listen to events
-    this._listenToConnectionStatusChanged();
     this._listenToCurrentUserJob();
     this._listenToBrowserResize();
     this._listenToSwitchAccount();
@@ -204,23 +202,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
             return _existingJob.id === notification.id;
           });
         this._sortNotifications();
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  /**
-   * Listen to connection status changed of the notifications
-   */
-  private _listenToConnectionStatusChanged(): void {
-    this._notificationsConnectionSubscription = this._notificationEvents
-      .connectionStatusChanged
-      .subscribe((status) => {
-        if (status === McsConnectionStatus.Success) {
-          this.hasConnectionError = false;
-        } else if (status === McsConnectionStatus.Failed ||
-          status === McsConnectionStatus.Fatal) {
-          this.hasConnectionError = true;
-        }
         this._changeDetectorRef.markForCheck();
       });
   }

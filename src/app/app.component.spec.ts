@@ -55,18 +55,4 @@ describe(`AppComponent`, () => {
       expect(component).toBeDefined();
     });
   });
-
-  describe('ngOnInit()', () => {
-    it(`should defined the router subscription`, () => {
-      expect(component.routerSubscription).toBeDefined();
-    });
-  });
-
-  describe('ngOnDestroy()', () => {
-    it(`should unsubscrie to the router subscription`, () => {
-      spyOn(component.routerSubscription, 'unsubscribe');
-      component.ngOnDestroy();
-      expect(component.routerSubscription.unsubscribe).toHaveBeenCalledTimes(1);
-    });
-  });
 });

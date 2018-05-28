@@ -1,0 +1,18 @@
+<div class="snack-bar-content">
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!hideCloseButton">
+  <div class="snack-bar-icon" #closeButton>
+    <!-- Ripple Effect -->
+    <mcs-ripple class="icon-ripple-wrapper icon-ripple-small"
+      mcsRipple
+      [rippleTrigger]="closeButton"
+      [rippleCentered]="true"
+      [rippleColor]="rippleColor">
+    </mcs-ripple>
+
+    <mcs-icon [key]="closeIconKey" size="xsmall"
+      cursor="pointer" (click)="snackBarRef?.close()">
+    </mcs-icon>
+  </div>
+</ng-container>

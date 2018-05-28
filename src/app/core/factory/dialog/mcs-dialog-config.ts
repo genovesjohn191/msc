@@ -1,6 +1,8 @@
+import { ViewContainerRef } from '@angular/core';
 import {
-  ViewContainerRef
-} from '@angular/core';
+  McsThemeType,
+  McsSizeType
+} from '../../core.types';
 
 export class McsDialogConfig {
   public id?: string;
@@ -8,8 +10,8 @@ export class McsDialogConfig {
   public data?: any = null;
   public width?: string;
   public height?: string;
-  public size?: 'auto' | 'small' | 'medium' | 'large' = 'auto';
+  public size?: McsSizeType = 'auto';
   public hasBackdrop?: boolean = true;
-  public backdropColor?: 'none' | 'light' | 'dark' = 'dark';
+  public backdropColor?: McsThemeType = 'dark';
   public disableClose?: boolean = false;
 }

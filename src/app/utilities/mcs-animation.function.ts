@@ -1,5 +1,8 @@
 import { AnimationTriggerMetadata } from '@angular/animations';
 
+// Constants
+export * from './animations/constants';
+
 // Factories
 import { fade } from './animations/fade';
 import { slide } from './animations/slide';

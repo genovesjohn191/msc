@@ -9,7 +9,8 @@ import { ProvisioningNotificationsComponent } from './provisioning-notifications
 import {
   McsTextContentProvider,
   McsApiJob,
-  McsJobStatus
+  McsJobStatus,
+  McsApiTask
 } from '../../../../core';
 import { CoreTestingModule } from '../../../../core/testing';
 import { getEnumString } from '../../../../utilities';
@@ -35,7 +36,13 @@ describe('ProvisioningNotificationsComponent', () => {
     notification.ownerName = 'Shaun Domingo';
     notification.elapsedTimeInSeconds = 0;
     notification.description = 'mongo-db' + notificationId;
-    notification.ectInSeconds = 5;
+
+    notification.tasks = new Array();
+    let task = new McsApiTask();
+    task.description = 'new task';
+    task.ectInSeconds = 5;
+    task.elapsedTimeInSeconds = 0;
+    notification.tasks.push(task);
 
     return notification;
   };
@@ -93,7 +100,7 @@ describe('ProvisioningNotificationsComponent', () => {
       expect(component.textContent).toBeDefined();
     });
 
-    it(`should set the progressbar maximum based on the ectInSeconds of all the jobs`, () => {
+    it(`should set the progressbar maximum based on the ectInSeconds of all the tasks`, () => {
       expect(component.progressMax).toBe(15);
     });
 

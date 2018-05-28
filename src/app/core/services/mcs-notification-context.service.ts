@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
+import {
+  Subject,
+  BehaviorSubject
+} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 import { McsNotificationJobService } from './mcs-notification-job.service';
 import { CoreDefinition } from '../core.definition';
-import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiService } from './mcs-api.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
@@ -15,6 +18,7 @@ import {
   deleteArrayRecord,
   isNullOrEmpty
 } from '../../utilities';
+import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 
 /**
  * MCS notification context service
@@ -22,8 +26,8 @@ import {
  * get notified when there are changes on the notification job
  */
 @Injectable()
-export class McsNotificationContextService {
-
+export class McsNotificationContextService implements McsInitializer {
+  private _destroySubject = new Subject<void>();
   private _notifications: McsApiJob[];
   private _notificationServiceSubscription: any;
   private _connectionStatusSubscription: any;
@@ -39,53 +43,26 @@ export class McsNotificationContextService {
     this._notificationsStream = value;
   }
 
-  /**
-   * Subsrcibe to know the connection status in real time
-   */
-  private _connectionStatusStream: BehaviorSubject<McsConnectionStatus>;
-  public get connectionStatusStream(): BehaviorSubject<McsConnectionStatus> {
-    return this._connectionStatusStream;
-  }
-  public set connectionStatusStream(value: BehaviorSubject<McsConnectionStatus>) {
-    this._connectionStatusStream = value;
-  }
-
   constructor(
     private _notificationJobService: McsNotificationJobService,
     private _apiService: McsApiService
   ) {
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsApiJob[]>(new Array());
-    this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
-      (McsConnectionStatus.Success);
+  }
 
-    // Get all previous jobs and filter them those who are In-Progress
+  /**
+   * Initializes the context instance
+   */
+  public initialize(): void {
     this.getAllActiveJobs();
-
-    // Subscribe to RabbitMQ for real-time update
-    this._notificationServiceSubscription = this._notificationJobService
-      .notificationStream
-      .subscribe((updatedNotification) => {
-        this._updateNotifications(updatedNotification);
-
-        // We need to call this function after notifying all the
-        // subscribers so that on the next job, all the completed jobs
-        // will not be included.
-        this._removeCompletedJobs();
-      });
-
-    // Subscribe to RabbitMQ connection status to get the error state
-    this._connectionStatusSubscription = this._notificationJobService
-      .connectionStatusStream
-      .subscribe((status) => {
-        this._notifyForConnectionStatus(status);
-      });
+    this._listenToJobChanged();
   }
 
   /**
    * Destroy all instance of notification job service including its subscription
    */
-  public destroy() {
+  public destroy(): void {
     unsubscribeSafely(this._notificationServiceSubscription);
     unsubscribeSafely(this._connectionStatusSubscription);
   }
@@ -161,14 +138,6 @@ export class McsNotificationContextService {
   }
 
   /**
-   * Notify listeners of connection status
-   * @param status Status to be invoke
-   */
-  private _notifyForConnectionStatus(status: any): void {
-    this._connectionStatusStream.next(status);
-  }
-
-  /**
    * This will remove all completed jobs after emitting the original one
    */
   private _removeCompletedJobs(): void {
@@ -190,5 +159,22 @@ export class McsNotificationContextService {
         _job.summaryInformation === updatedJob.summaryInformation;
     });
     return !isNullOrEmpty(jobExists);
+  }
+
+  /**
+   * Listens to every job changed
+   */
+  private _listenToJobChanged(): void {
+    // Subscribe to RabbitMQ for real-time update
+    this._notificationServiceSubscription = this._notificationJobService.notificationStream
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((updatedNotification) => {
+        this._updateNotifications(updatedNotification);
+
+        // We need to call this function after notifying all the
+        // subscribers so that on the next job, all the completed jobs
+        // will not be included.
+        this._removeCompletedJobs();
+      });
   }
 }

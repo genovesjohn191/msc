@@ -1,4 +1,8 @@
 {
+  "applicationPage": {
+    "stompConnectionError": "Notification server connection error.",
+    "stompConnectionRetryButton": "RETRY"
+  },
   "consolePage": {
     "loading": "Loading VM Console...",
     "sendCtrlAltDelete": "Send ctrl+alt+del",

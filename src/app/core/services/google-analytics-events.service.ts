@@ -3,25 +3,52 @@ import {
   Router,
   NavigationEnd,
 } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CoreDefinition } from '../core.definition';
+import {
+  isNullOrEmpty,
+  unsubscribeSubject
+} from '../../utilities';
+import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
-import { isNullOrEmpty } from '../../utilities';
 
 declare let dataLayer: any;
 
 @Injectable()
-export class GoogleAnalyticsEventsService {
+export class GoogleAnalyticsEventsService implements McsInitializer {
+  private _destroySubject = new Subject<void>();
 
   constructor(
     private _mcsAuthenticationIdentity: McsAuthenticationIdentity,
     private _router: Router) {
-    this._initializeAnalytics();
+  }
+
+  /**
+   * Initializes the google analytics by providing the user
+   */
+  public initialize(): void {
+    this._mcsAuthenticationIdentity.userChanged
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((updated) => {
+        if (isNullOrEmpty(updated)) { return; }
+        this._setUser();
+        this._subscribeToNavigationEvents();
+      });
+  }
+
+  /**
+   * Destroys all the resources
+   */
+  public destroy(): void {
+    unsubscribeSubject(this._destroySubject);
   }
 
   public emitEvent(
     _eventCategory: string,
     _eventAction: string,
-    _eventLabel: string = null,
+    _eventLabel: string =
+      null,
     _eventValue: number = null) {
     dataLayer.push({
       'event': 'customEvent',
@@ -30,16 +57,6 @@ export class GoogleAnalyticsEventsService {
       'eventLabel': _eventLabel.toLowerCase(),
       'eventValue': _eventValue
     });
-  }
-
-  private _initializeAnalytics(): void {
-    this._mcsAuthenticationIdentity.userChanged
-      .subscribe((updated) => {
-        if (updated) {
-          this._setUser();
-          this._subscribeToNavigationEvents();
-        }
-      });
   }
 
   private _setUser() {

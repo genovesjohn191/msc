@@ -26,6 +26,7 @@ import { SelectModule } from './select/select.module';
 import { AccordionModule } from './accordion/accordion.module';
 import { ListModule } from './list/list.module';
 import { DialogModule } from './dialog/dialog.module';
+import { SnackBarModule } from './snack-bar/snack-bar.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { TabGroupModule } from './tab-group/tab-group.module';
 import { WizardModule } from './wizard/wizard.module';
@@ -79,6 +80,7 @@ import { EventTrackerModule } from './event-tracker/event-tracker.module';
     AccordionModule,
     ListModule,
     DialogModule,
+    SnackBarModule,
     TooltipModule,
     TabGroupModule,
     WizardModule,
@@ -130,6 +132,7 @@ import { EventTrackerModule } from './event-tracker/event-tracker.module';
     AccordionModule,
     ListModule,
     DialogModule,
+    SnackBarModule,
     TooltipModule,
     TabGroupModule,
     WizardModule,

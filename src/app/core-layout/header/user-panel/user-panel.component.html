@@ -29,12 +29,8 @@
         <span>{{ textContent.notifications.title }}</span>
       </div>
 
-      <div class="notification-item" *ngIf="!hasNotification && !hasConnectionError">
+      <div class="notification-item" *ngIf="!hasNotification">
         <span>{{ textContent.notifications.noRecord }}</span>
-      </div>
-
-      <div class="notification-item text-error" *ngIf="hasConnectionError">
-        <span>{{ textContent.notifications.connectionError }}</span>
       </div>
 
       <!-- Jobs -->

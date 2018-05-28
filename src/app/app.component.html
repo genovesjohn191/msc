@@ -3,3 +3,14 @@
   <div></div>
 </div>
 <router-outlet></router-outlet>
+
+<!-- Stomp status connection template as snackbar -->
+<ng-template #stompStatusTemplate>
+  <mcs-snack-bar [snackBarRef]="stompStatusBarRef" theme="dark">
+    <div class="inline-items-small">
+      <span>{{ textContent.stompConnectionError }}</span>
+      <span (click)="reconnectWebsocket()" cursor="pointer"
+        class="color-primary-01">{{ textContent.stompConnectionRetryButton }}</span>
+    </div>
+  </mcs-snack-bar>
+</ng-template>

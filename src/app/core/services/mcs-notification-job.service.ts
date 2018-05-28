@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
-import { McsApiJob } from '../models/response/mcs-api-job';
+import {
+  Observable,
+  BehaviorSubject
+} from 'rxjs';
 import { CoreDefinition } from '../core.definition';
 import {
-  refreshView,
   unsubscribeSafely,
-  deserializeJsonToObject
+  deserializeJsonToObject,
+  isNullOrEmpty
 } from '../../utilities';
+import { McsApiJob } from '../models/response/mcs-api-job';
+import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiService } from './mcs-api.service';
 import { McsLoggerService } from './mcs-logger.service';
@@ -14,51 +18,45 @@ import { McsApiRequestParameter } from '../models/request/mcs-api-request-parame
 import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 
+const STOMP_RETRY_COUNT = 3;
+
 /**
  * MCS notification job service
  * Serves as the main core of the notification job and it will
  * get notified when there are changes on the websocket (RabbitMQ)
  */
 @Injectable()
-export class McsNotificationJobService {
-  private _connecting: boolean = false;
+export class McsNotificationJobService implements McsInitializer {
+  public notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
+  public connectionStatusStream = new BehaviorSubject<McsConnectionStatus>(0);
+
+  private _retryCount: number = STOMP_RETRY_COUNT;
   private _websocket: WebSocket;
   private _websocketClient: any;
-
-  /**
-   * Subscribe to get the updated notification from websocket(RabbitMQ) in real time
-   */
-  private _notificationStream: BehaviorSubject<McsApiJob>;
-  public get notificationStream(): BehaviorSubject<McsApiJob> {
-    return this._notificationStream;
-  }
-  public set notificationStream(value: BehaviorSubject<McsApiJob>) {
-    this._notificationStream = value;
-  }
-
-  /**
-   * Subsrcibe to know the connection status in real time
-   */
-  private _connectionStatusStream: BehaviorSubject<McsConnectionStatus>;
-  public get connectionStatusStream(): BehaviorSubject<McsConnectionStatus> {
-    return this._connectionStatusStream;
-  }
-  public set connectionStatusStream(value: BehaviorSubject<McsConnectionStatus>) {
-    this._connectionStatusStream = value;
-  }
-
   private _apiSubscription: any;
   private _jobConnection: McsApiJobConnection;
+
+  /**
+   * Returns the connection status of websocket
+   */
+  private _connectionStatus: McsConnectionStatus;
+  public set connectionStatus(value: McsConnectionStatus) {
+    if (this._connectionStatus !== value) {
+      this._connectionStatus = value;
+      this.connectionStatusStream.next(this._connectionStatus);
+    }
+  }
 
   constructor(
     private _apiService: McsApiService,
     private _loggerService: McsLoggerService
-  ) {
-    this._notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
-    this._connectionStatusStream = new BehaviorSubject<McsConnectionStatus>
-      (McsConnectionStatus.Success);
+  ) { }
 
-    this._getConnectionsDetails();
+  /**
+   * Initializes the websocket instance and connect
+   */
+  public initialize(): void {
+    this._connectWebsocket();
   }
 
   /**
@@ -69,86 +67,28 @@ export class McsNotificationJobService {
     unsubscribeSafely(this._apiSubscription);
   }
 
-  private _onErrorConnection() {
-    this._connectionStatusStream.next(McsConnectionStatus.Failed);
-    this._websocket.close();
+  /**
+   * Retry the connection of websocket by getting the data from API and connect to websocket
+   */
+  public reConnectWebsocket(): void {
+    this.connectionStatus = McsConnectionStatus.Reconnecting;
+    this._connectWebsocket();
   }
 
-  private _onCloseConnection(_event: any) {
-    refreshView(() => {
-      this._connectToWebsocket();
-      this._connectionStatusStream.next(McsConnectionStatus.Retrying);
-    }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
-  }
-
-  private _onOpenConnection() {
-    this._connectionStatusStream.next(McsConnectionStatus.Success);
-  }
-
-  private _connectToWebsocket() {
-    this._connecting = true;
-
-    let webStomp = require('webstomp-client');
-    this._websocket = new WebSocket(this._jobConnection.host);
-    this._websocket.onopen = this._onOpenConnection.bind(this);
-    this._websocket.onerror = this._onErrorConnection.bind(this);
-    this._websocket.onclose = this._onCloseConnection.bind(this);
-
-    // Setup websocker client
-    this._websocketClient = null;
-    this._websocketClient = webStomp.over(this._websocket, { debug: false });
-
-    this._websocketClient.connect(
-      this._getHeaders(),
-      this._onConnect.bind(this),
-      () => {
-        if (!this._connecting) {
-          this._connecting = true;
-          setTimeout(() => {
-            this._connectToWebsocket();
-          }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
-        }
-      }
-    );
-  }
-
-  private _getHeaders(): any {
-    let headers = { login: '', passcode: '' };
-    let credentials = this._decodeString(this._jobConnection.destinationKey);
-    headers.login = credentials.username;
-    headers.passcode = credentials.password;
-    return headers;
-  }
-
-  private _onConnect(): void {
-    this._connecting = false;
-    this._websocketClient.subscribe(this._jobConnection.destinationRoute,
-      this._onMessage.bind(this));
-    this._loggerService.trace(`Web socket connected.`);
-  }
-
-  private _onMessage(message) {
-    this._loggerService.trace(`Rabbitmq Message Received`, message);
-    if (message.body) {
-      this._updateNotification(message.body);
-    }
-  }
-
-  private _updateNotification(bodyContent: any) {
-    if (bodyContent) {
-      let updatedNotification: McsApiJob;
-      updatedNotification = deserializeJsonToObject(McsApiJob, JSON.parse(bodyContent));
-      this._notificationStream.next(updatedNotification);
-    }
-  }
-
-  private _getConnectionsDetails(): void {
+  /**
+   * Gets the connection details from API and connect to websocket
+   */
+  private _connectWebsocket(): void {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/jobs/connection';
 
     this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
+      .catch((error) => {
+        this.connectionStatus = McsConnectionStatus.NoData;
+        return Observable.throw(error);
       })
       .map((response) => {
         // Deserialize json reponse
@@ -161,11 +101,118 @@ export class McsNotificationJobService {
         return apiResponse;
       })
       .subscribe((details) => {
+        if (isNullOrEmpty(details)) {
+          this._loggerService.traceEnd(`No connection details data found.`);
+          this.connectionStatus = McsConnectionStatus.NoData;
+          return;
+        }
+
         this._jobConnection = details.content;
-        this._connectToWebsocket();
+        this.connectionStatus = McsConnectionStatus.Connecting;
+        this._retryCount = STOMP_RETRY_COUNT;
+        this._initializeWebsocket();
       });
   }
 
+  /**
+   * Initializes the websocket instance and connect based on connection details
+   */
+  private _initializeWebsocket() {
+    let webStomp = require('webstomp-client');
+    this._websocket = new WebSocket(this._jobConnection.host);
+    this._websocket.onopen = this._onWebsocketOpened.bind(this);
+    this._websocket.onerror = this._onWebsocketError.bind(this);
+
+    // Setup websocket client and connect
+    this._websocketClient = null;
+    this._websocketClient = webStomp.over(this._websocket, { debug: false });
+    this._websocketClient.connect(
+      this._getHeaders(),
+      this._onStompConnect.bind(this),
+      this._onStompError.bind(this));
+  }
+
+  /**
+   * Event that emits when error occured while connecting to websocket
+   */
+  private _onWebsocketError() {
+    this._loggerService.trace(`Websocket connection error. Closing the websocket.`);
+    this.connectionStatus = McsConnectionStatus.Fatal;
+  }
+
+  /**
+   * Event that emits when websocket is opened
+   */
+  private _onWebsocketOpened() {
+    this.connectionStatus = McsConnectionStatus.Success;
+  }
+
+  /**
+   * Returns the headers of the socket including the login and passcode
+   */
+  private _getHeaders(): any {
+    let headers = { login: '', passcode: '' };
+    let credentials = this._decodeString(this._jobConnection.destinationKey);
+    headers.login = credentials.username;
+    headers.passcode = credentials.password;
+    return headers;
+  }
+
+  /**
+   * Event that emits when stomp gets connected
+   */
+  private _onStompConnect(): void {
+    this.connectionStatus = McsConnectionStatus.Success;
+
+    this._websocketClient.subscribe(this._jobConnection.destinationRoute,
+      this._onStompMessage.bind(this));
+    this._loggerService.trace(`Web socket connected.`);
+  }
+
+  /**
+   * Event that emits when stomp has error in connecting to rabbitMQ
+   */
+  private _onStompError(): void {
+    if (this._retryCount <= 0) {
+      this.connectionStatus = McsConnectionStatus.Failed;
+      return;
+    }
+
+    setTimeout(() => {
+      this._loggerService.trace(`Error connecting to RabbitMQ.
+        Trying to reconnect ${this._retryCount} times`);
+
+      this._initializeWebsocket();
+      this._retryCount--;
+    }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
+  }
+
+  /**
+   * Event that emits when stomp received message
+   * @param message Message to be emiited
+   */
+  private _onStompMessage(message) {
+    this._loggerService.trace(`Rabbitmq Message Received`, message);
+    if (message.body) {
+      this._updateNotification(message.body);
+    }
+  }
+
+  /**
+   * Notify the notification subscribers that a job is emitted
+   * @param bodyContent Emitted job to be sent
+   */
+  private _updateNotification(bodyContent: any) {
+    if (isNullOrEmpty(bodyContent)) { return; }
+    let updatedNotification: McsApiJob;
+    updatedNotification = deserializeJsonToObject(McsApiJob, JSON.parse(bodyContent));
+    this.notificationStream.next(updatedNotification);
+  }
+
+  /**
+   * Decodes the hexadecimal content to get the credentials
+   * @param hexInput Hexdecimal input to be decoded
+   */
   private _decodeString(hexInput: string): { username: string, password: string } {
     let decodedHex: string = '';
     let credentials: string[];

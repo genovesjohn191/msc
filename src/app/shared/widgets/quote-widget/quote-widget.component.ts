@@ -27,7 +27,7 @@ let nextUniqueId = 0;
     animateFactory.rotate180
   ],
   host: {
-    'class': 'quote-widget-wrapper',
+    'class': 'quote-widget-wrapper box-shadow-medium',
     '[attr.id]': 'id'
   }
 })

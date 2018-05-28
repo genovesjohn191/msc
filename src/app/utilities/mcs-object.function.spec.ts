@@ -1,7 +1,11 @@
-import { Subscription } from 'rxjs/Rx';
+import {
+  Subscription,
+  Subject
+} from 'rxjs/Rx';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
+  unsubscribeSubject,
   updateObjectData
 } from './mcs-object.function';
 
@@ -57,6 +61,22 @@ describe('OBJECT Functions', () => {
       expect(subscription.closed).toBeFalsy();
       unsubscribeSafely(subscription);
       expect(subscription.closed).toBeTruthy();
+    });
+  });
+
+  describe('unsubscribeSubject()', () => {
+    it('should call the next of the subject', () => {
+      let subject = new Subject();
+      spyOn(subject, 'next');
+      unsubscribeSubject(subject);
+      expect(subject.next).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call the complete of the subject', () => {
+      let subject = new Subject();
+      spyOn(subject, 'complete');
+      unsubscribeSubject(subject);
+      expect(subject.complete).toHaveBeenCalledTimes(1);
     });
   });
 

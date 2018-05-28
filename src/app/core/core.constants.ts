@@ -7,14 +7,17 @@ import { McsNotificationJobService } from './services/mcs-notification-job.servi
 import { McsNotificationContextService } from './services/mcs-notification-context.service';
 import { McsNotificationEventsService } from './services/mcs-notification-events.service';
 import { McsDialogService } from './services/mcs-dialog.service';
+import { McsSnackBarService } from './services/mcs-snack-bar.service';
 import { McsGlobalElementService } from './services/mcs-global-element.service';
 import { McsOverlayService } from './services/mcs-overlay.service';
 import { McsScrollDispatcherService } from './services/mcs-scroll-dispatcher.service';
 import { McsViewportService } from './services/mcs-viewport.service';
 import { McsErrorHandlerService } from './services/mcs-error-handler.service';
+import { McsRouteHandlerService } from './services/mcs-route-handler.service';
 import { McsPlatformService } from './services/mcs-platform.service';
 import { McsLoggerService } from './services/mcs-logger.service';
 import { McsFormGroupService } from './services/mcs-form-group.service';
+import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
 /** Providers */
 import { McsTextContentProvider } from './providers/mcs-text-content.provider';
 import { McsAssetsProvider } from './providers/mcs-assets.provider';
@@ -23,11 +26,8 @@ import { McsFilterProvider } from './providers/mcs-filter.provider';
 import { McsAuthenticationIdentity } from './authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from './authentication/mcs-authentication.service';
 import { McsAuthenticationGuard } from './authentication/mcs-authentication.guard';
-import { McsRoutePermissionGuard } from './authentication/mcs-route-permission.guard';
 /** Access Control */
 import { McsAccessControlService } from './authentication/mcs-access-control.service';
-/** Google Analytics */
-import { GoogleAnalyticsEventsService } from './services/google-analytics-events.service';
 /** Guards */
 import { McsNavigateAwayGuard } from './guards/mcs-navigate-away.guard';
 /**
@@ -44,9 +44,11 @@ export const coreProviders: any[] = [
   McsGlobalElementService,
   McsOverlayService,
   McsDialogService,
+  McsSnackBarService,
   McsScrollDispatcherService,
   McsViewportService,
   McsErrorHandlerService,
+  McsRouteHandlerService,
   McsPlatformService,
   McsLoggerService,
   McsFormGroupService,
@@ -57,7 +59,6 @@ export const coreProviders: any[] = [
   McsAuthenticationService,
   McsAuthenticationGuard,
   McsAccessControlService,
-  McsRoutePermissionGuard,
   McsNavigateAwayGuard,
   GoogleAnalyticsEventsService
 ];

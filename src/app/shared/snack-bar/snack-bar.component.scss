@@ -1,0 +1,31 @@
+@import "../../../styles/shared/base";
+
+$snack-bar-padding: $space-small $space-medium;
+// Dark theme
+$snack-bar-dark-bg-color: rgba($color-black, 0.87);
+$snack-bar-dark-color: $dark-bg-text-color;
+// Light theme
+$snack-bar-light-bg-color: $color-white;
+$snack-bar-light-color: $light-bg-text-color;
+
+.snack-bar-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  padding: $snack-bar-padding;
+  background: $snack-bar-light-bg-color;
+  color: $snack-bar-light-color;
+
+  &.snack-bar-dark {
+    background: $snack-bar-dark-bg-color;
+    color: $snack-bar-dark-color;
+  }
+
+  .snack-bar-content {
+    margin-right: $space-medium;
+  }
+
+  .snack-bar-icon {
+    margin-left: auto;
+    position: relative;
+  }
+}

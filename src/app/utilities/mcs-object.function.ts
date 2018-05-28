@@ -1,4 +1,7 @@
-import { Subscription } from 'rxjs/Rx';
+import {
+  Subscription,
+  Subject
+} from 'rxjs/Rx';
 
 /**
  * This will check if the inputted object is null/undefined or empty,
@@ -20,9 +23,18 @@ export function isNullOrEmpty<T>(data: T): boolean {
  * @param subscription subscription to unsubscribe
  */
 export function unsubscribeSafely(subscription: Subscription): void {
-  if (!isNullOrEmpty(subscription)) {
-    subscription.unsubscribe();
-  }
+  if (isNullOrEmpty(subscription)) { return; }
+  subscription.unsubscribe();
+}
+
+/**
+ * Unsubscribe the subject to kill its reference
+ * @param subject Subject to be killed
+ */
+export function unsubscribeSubject(subject: Subject<any>): void {
+  if (isNullOrEmpty(subject)) { return; }
+  subject.next();
+  subject.complete();
 }
 
 /**
