@@ -8,6 +8,7 @@ import {
   networkingRoutes,
   toolsRoutes,
   productsRoutes,
+  mediasRoutes,
   accessDeniedPageRoutes,
   httpErrorPageRoutes
 } from '../../features';
@@ -25,6 +26,7 @@ export const routes: Routes = [
       ...networkingRoutes,
       ...toolsRoutes,
       ...productsRoutes,
+      ...mediasRoutes,
       ...accessDeniedPageRoutes,
 
       // New routes must be added on top of pageHttpErrorRoutes

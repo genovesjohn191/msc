@@ -4,6 +4,7 @@ import { TicketsModule } from './tickets/tickets.module';
 import { NetworkingModule } from './networking/networking.module';
 import { ToolsModule } from './tools/tools.module';
 import { ProductsModule } from './products/products.module';
+import { MediasModule } from './medias/medias.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
@@ -24,6 +25,7 @@ import {
     NetworkingModule,
     ToolsModule,
     ProductsModule,
+    MediasModule,
     NotificationsModule,
     GadgetsModule,
     HttpErrorPageModule,

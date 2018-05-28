@@ -174,6 +174,7 @@ export class CoreDefinition {
   public static FILTERSELECTOR_TICKET_LISTING = 'ticketsListingFilter';
   public static FILTERSELECTOR_FIREWALLS_LISTING = 'firewallsListingFilter';
   public static FILTERSELECTOR_FIREWALL_POLICIES_LISTING = 'firewallPoliciesListingFilter';
+  public static FILTERSELECTOR_MEDIA_LISTING = 'mediasListingFilter';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

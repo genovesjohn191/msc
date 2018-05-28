@@ -159,7 +159,10 @@
                 <mcs-icon [key]="spinnerIconKey" size="small"
                   [mcsTooltip]="row.processingText"></mcs-icon>
               </div>
-              <a (click)="navigateToServer(row)">
+              <a (click)="navigateToServer(row)"
+                mcsEventTracker="navigate-to-server"
+                mcsEventCategory="server"
+                mcsEventLabel="server-listing-page">
                 {{ row.name }}</a>
             </div>
           </mcs-data-cell>

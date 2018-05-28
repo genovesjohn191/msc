@@ -1,0 +1,26 @@
+<a stop-propagation mcsPopover #popoverActionElement="mcsPopover" padding="none"
+  placement="bottom" orientation="left" theme="light" [content]="cogContent">
+  <mcs-icon [key]="gearIconKey" size="medium"></mcs-icon>
+</a>
+
+<ng-template #cogContent>
+  <div class="cog-container">
+    <a mcsEventTracker="attach"
+      mcsEventCategory="media"
+      mcsEventLabel="media-command-tool">
+      {{ mediaCommandAttachText }}
+    </a>
+
+    <a mcsEventTracker="delete"
+      mcsEventCategory="media"
+      mcsEventLabel="media-command-tool">
+      {{ mediaCommandDeleteText }}
+    </a>
+
+    <a mcsEventTracker="rename"
+      mcsEventCategory="media"
+      mcsEventLabel="media-command-tool">
+      {{ mediaCommandRenameText }}
+    </a>
+  </div>
+</ng-template>

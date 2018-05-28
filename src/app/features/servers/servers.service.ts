@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Observable,
-  BehaviorSubject
-} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 /** Services and Models */
 import {
@@ -53,29 +50,6 @@ import { ResetPasswordFinishedDialogComponent } from './shared';
 @Injectable()
 export class ServersService {
 
-  /**
-   * Get all the active servers on the given notification stream
-   * based on the COG command action triggered
-   */
-  private _activeServers: ServerClientObject[];
-  public get activeServers(): ServerClientObject[] {
-    return this._activeServers;
-  }
-  public set activeServers(value: ServerClientObject[]) {
-    this._activeServers = value;
-  }
-
-  /**
-   * Subscribe to get notify when their is active server
-   */
-  private _activeServersStream: BehaviorSubject<ServerClientObject[]>;
-  public get activeServersStream(): BehaviorSubject<ServerClientObject[]> {
-    return this._activeServersStream;
-  }
-  public set activeServersStream(value: BehaviorSubject<ServerClientObject[]>) {
-    this._activeServersStream = value;
-  }
-
   constructor(
     private _mcsApiService: McsApiService,
     private _loggerService: McsLoggerService,
@@ -85,8 +59,6 @@ export class ServersService {
     private _notificationEventService: McsNotificationEventsService,
     private _router: Router
   ) {
-    this._activeServers = new Array();
-    this._activeServersStream = new BehaviorSubject(undefined);
     this._listenToResetPassword();
     this._listenToNotificationUpdate();
   }
@@ -1225,10 +1197,6 @@ export class ServersService {
             } as ServerClientObject);
           }
         });
-
-        // Set active servers to property
-        this._activeServers = activeServers;
-        this._activeServersStream.next(activeServers);
       });
   }
 }

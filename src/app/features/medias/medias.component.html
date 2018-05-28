@@ -1,0 +1,152 @@
+<mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <!-- TODO: Temporary hidden -->
+    <!-- Add New Media -->
+    <!-- <ng-container>
+      <mcs-top-panel-item *mcsTopPanelItemDef>
+        <mcs-action-item id="ctaAddNewMedia"
+          (click)="onClickNewMediaButton()"
+          mcsEventTracker="add-new-media"
+          mcsEventCategory="media"
+          mcsEventLabel="media-listing-top-panel">
+          <span>{{ textContent.newMedia }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </ng-container> -->
+
+    <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
+      <div class="listing-action-wrapper">
+        <div class="total-record-count right-align">
+          <span>{{ recordsFoundLabel }}</span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey"
+        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+        <!-- Media Column -->
+        <ng-container mcsColumnDef="media">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.media.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <a (click)="navigateToMedia(row)"
+              mcsEventTracker="navigate-to-media"
+              mcsEventCategory="media"
+              mcsEventLabel="media-listing-page">
+              {{ row.itemName }}</a>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Catalog Column -->
+        <ng-container mcsColumnDef="catalog">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.catalog.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell hidden-small">
+            {{ row.name }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Location Column -->
+        <ng-container mcsColumnDef="location">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.location.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.resourceName }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Size Column -->
+        <ng-container mcsColumnDef="size">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.size.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.sizeMB | mcsDataSize: 'MB' }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Attached To Column -->
+        <ng-container mcsColumnDef="attachedTo">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.attachedTo.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+            {{ getAttachedToCountLabel(row) }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- TODO: Temporarily hidden -->
+        <!-- Action Column -->
+        <!-- <ng-container mcsColumnDef="action">
+          <mcs-header-cell *mcsHeaderCellDef class="action-cell"></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
+            <mcs-media-command [media]="row" stop-propagation></mcs-media-command>
+          </mcs-data-cell>
+        </ng-container> -->
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.noMedias }} </span>
+              <span *ngIf="!isSearching">
+                <!-- We need to hardcode this instead of putting in the text-config
+                    since it is using link -->
+                Click <a (click)="onClickNewMediaButton()">here</a> to add new media.
+              </span>
+            </div>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          cursor="pointer" (click)="navigateToMedia(row)"
+          mcsEventTracker="navigate-to-media"
+          mcsEventCategory="media"
+          mcsEventLabel="media-listing-page"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="isSearching"
+        [totalCount]="totalRecordCount"
+        [pageIndex]="0"
+        [pageSize]="25">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

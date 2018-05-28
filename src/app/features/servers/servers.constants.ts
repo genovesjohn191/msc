@@ -66,8 +66,8 @@ export const serversRoutes: Routes = [
       { path: 'storage', component: ServerStorageComponent },
       { path: 'nics', component: ServerNicsComponent },
       {
-        path: 'backups', component:
-          ServerBackupsComponent,
+        path: 'backups',
+        component: ServerBackupsComponent,
         canActivate: [SelfManagedServerGuard]
       }
     ]
