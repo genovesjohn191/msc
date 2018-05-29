@@ -29,7 +29,8 @@ import {
   McsSnackBarRef,
   McsSnackBarConfig,
   McsConnectionStatus,
-  McsNotificationContextService
+  McsNotificationContextService,
+  CoreDefinition
 } from './core';
 import {
   unsubscribeSubject,
@@ -50,10 +51,14 @@ import {
 
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   public textContent: any;
-  public stompStatusBarRef: McsSnackBarRef<any>;
+  public stompErrorStatusBarRef: McsSnackBarRef<any>;
+  public stompSuccessStatusBarRef: McsSnackBarRef<any>;
 
-  @ViewChild('stompStatusTemplate')
-  private _stompStatusTemplate: TemplateRef<any>;
+  @ViewChild('stompErrorStatusTemplate')
+  private _stompErrorStatusTemplate: TemplateRef<any>;
+
+  @ViewChild('stompSucessStatusTemplate')
+  private _stompSucessStatusTemplate: TemplateRef<any>;
 
   private _isInitialDisplayed: boolean;
   private _destroySubject = new Subject<void>();
@@ -67,6 +72,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this._trigger !== value) {
       this._trigger = value;
     }
+  }
+
+  public get checkIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_CHECK;
   }
 
   constructor(
@@ -115,7 +124,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     let isConnected = !isNullOrEmpty(this._notificationJobService)
       && this._notificationJobService.connectionStatus === McsConnectionStatus.Success;
     if (isConnected) { return; }
-    this._hideStompStatusBar();
+    this._hideStompErrorStatusBar();
+    this._hideStompSuccessStatusBar();
     this._notificationJobService.reConnectWebsocket();
   }
 
@@ -126,23 +136,32 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     this._notificationJobService.connectionStatusStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe((connectionStatus) => {
-        let connectionSuccess = (connectionStatus >= 0);
-        if (connectionSuccess) {
-          this._hideStompStatusBar();
+        // Stomp is connected
+        let stompIsConnected = !isNullOrEmpty(this.stompErrorStatusBarRef) &&
+          (connectionStatus === McsConnectionStatus.Success);
+        if (stompIsConnected) {
+          this._hideStompErrorStatusBar();
+          this._showStompSuccessStatusBar();
           return;
         }
-        this._showStompStatusBar();
+
+        // Stomp has error
+        let stompHasError = connectionStatus < 0;
+        if (stompHasError) {
+          this._hideStompSuccessStatusBar();
+          this._showStompErrorStatusBar();
+        }
       });
   }
 
   /**
-   * Shows the stomp status bar in lower left as a snackbar
+   * Shows the stomp error status bar in lower left as a snackbar
    */
-  private _showStompStatusBar(): void {
-    this.stompStatusBarRef = this._snackBarRefService.open(
-      this._stompStatusTemplate,
+  private _showStompErrorStatusBar(): void {
+    this.stompErrorStatusBarRef = this._snackBarRefService.open(
+      this._stompErrorStatusTemplate,
       {
-        id: 'stomp-status-bar',
+        id: 'stomp-error-status-bar',
         verticalPlacement: 'bottom',
         horizontalAlignment: 'start'
       } as McsSnackBarConfig
@@ -150,11 +169,34 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * Hide the stomp status bar in lower left
+   * Hide the stomp error status bar in lower left
    */
-  private _hideStompStatusBar(): void {
-    if (isNullOrEmpty(this.stompStatusBarRef)) { return; }
-    this.stompStatusBarRef.close();
+  private _hideStompErrorStatusBar(): void {
+    if (isNullOrEmpty(this.stompErrorStatusBarRef)) { return; }
+    this.stompErrorStatusBarRef.close();
+  }
+
+  /**
+   * Shows the stomp success status bar
+   */
+  private _showStompSuccessStatusBar(): void {
+    this.stompSuccessStatusBarRef = this._snackBarRefService.open(
+      this._stompSucessStatusTemplate,
+      {
+        duration: 5000,
+        id: 'stomp-success-status-bar',
+        verticalPlacement: 'bottom',
+        horizontalAlignment: 'start'
+      } as McsSnackBarConfig
+    );
+  }
+
+  /**
+   * Hide the stomp success status bar
+   */
+  private _hideStompSuccessStatusBar(): void {
+    if (isNullOrEmpty(this.stompSuccessStatusBarRef)) { return; }
+    this.stompSuccessStatusBarRef.close();
   }
 
   /**

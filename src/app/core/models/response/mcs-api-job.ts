@@ -14,7 +14,7 @@ import { McsEntityBase } from '../../base/mcs-entity.base';
 
 export class McsApiJob extends McsEntityBase  {
   public ownerId: string;
-  public ownerName: string;
+  public ownerFullName: string;
   public ownerCompanyId: string;
   public ownerCompanyName: string;
   public description: string;
@@ -72,7 +72,7 @@ export class McsApiJob extends McsEntityBase  {
     super();
     this.type = undefined;
     this.ownerId = undefined;
-    this.ownerName = undefined;
+    this.ownerFullName = undefined;
     this.ownerCompanyId = undefined;
     this.ownerCompanyName = undefined;
     this.description = undefined;

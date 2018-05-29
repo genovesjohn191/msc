@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  Observable,
+  Subject,
   BehaviorSubject
 } from 'rxjs';
 import { CoreDefinition } from '../core.definition';
@@ -28,7 +28,7 @@ const STOMP_RETRY_COUNT = 3;
 @Injectable()
 export class McsNotificationJobService implements McsInitializer {
   public notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
-  public connectionStatusStream = new BehaviorSubject<McsConnectionStatus>(0);
+  public connectionStatusStream = new Subject<McsConnectionStatus>();
 
   private _retryCount: number = STOMP_RETRY_COUNT;
   private _websocket: WebSocket;
@@ -85,10 +85,6 @@ export class McsNotificationJobService implements McsInitializer {
     this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .catch((error) => {
-        this.connectionStatus = McsConnectionStatus.NoData;
-        return Observable.throw(error);
       })
       .map((response) => {
         // Deserialize json reponse
