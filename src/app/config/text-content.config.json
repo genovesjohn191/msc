@@ -1,6 +1,7 @@
 {
   "applicationPage": {
     "stompConnectionError": "Notification server connection error.",
+    "stompConnectionSuccess": "Notification server successfully connected.",
     "stompConnectionRetryButton": "RETRY"
   },
   "consolePage": {
@@ -30,7 +31,7 @@
     "loadingProducts": "Loading products.",
     "noProducts": "No products to display.",
     "errorProducts": "Sorry, something’s not right. We weren’t able to retrieve the list of products.",
-    "medias": "Medias"
+    "medias": "Media"
   },
   "dashboard": {
     "title": "Macquarie Cloud Services: Dashboard",
@@ -232,8 +233,11 @@
           "title": "NICs",
           "publicIp": "Public IP",
           "interface": "NIC",
+          "primary": "Primary",
+          "ipAllocationMode": "IP Mode",
           "ipAddresses": "IP Addresses",
-          "dhcpLabel": "This IP address is assigned by DHCP",
+          "dhcpLabel": "Automatically assigned",
+          "staticLabel": "Unable to obtain",
           "noContentMessage": "There are no NICs for this server."
         },
         "storage": {

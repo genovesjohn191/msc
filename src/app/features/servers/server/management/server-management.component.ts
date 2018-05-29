@@ -24,7 +24,8 @@ import {
   ServerMedia,
   ServerManageMedia,
   ServerCommand,
-  ServerCatalogItem
+  ServerCatalogItem,
+  ServerIpAllocationMode
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -177,6 +178,10 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public get attachMediaIsDisabled(): boolean {
     return !this.server.executable || !this.hasAvailableMedia;
+  }
+
+  public get ipAllocationModeEnum(): any {
+    return ServerIpAllocationMode;
   }
 
   constructor(

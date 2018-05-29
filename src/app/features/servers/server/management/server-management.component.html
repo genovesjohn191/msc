@@ -122,20 +122,36 @@
               <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
                 [expanded]="i === 0">
                 <mcs-accordion-panel-header mcsPanelHeaderDef>
-                  {{ nic.name }}
+                  <span>{{ nic.name }}</span>
+                  <span *ngIf="nic.isPrimary">({{ textContent.nics.primary }})</span>
                 </mcs-accordion-panel-header>
                 <div class="block-items-xsmall">
-                  <ng-container *ngIf="hasIpAddress(nic.ipAddresses); else dhcpLabelTemplate">
-                    <mcs-list itemsOffset="small" [header]="textContent.nics.ipAddresses">
-                      <mcs-list-item *ngFor="let item of nic.ipAddresses">{{ item }}</mcs-list-item>
-                    </mcs-list>
-                  </ng-container>
 
-                  <ng-template #dhcpLabelTemplate>
-                    <span read-only class="break-word-all">
-                      {{ textContent.nics.dhcpLabel }}
+                  <ng-template #noIpAddressTemplate>
+                    <span [ngSwitch]="nic?.ipAllocationMode">
+                      <ng-container *ngSwitchCase="ipAllocationModeEnum.Dhcp">
+                        {{ textContent.nics.dhcpLabel }}
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                        {{ textContent.nics.staticLabel }}
+                      </ng-container>
                     </span>
                   </ng-template>
+
+                  <div class="form-field-inline">
+                    <span class="form-field-label">{{ textContent.nics.ipAllocationMode }}:</span>
+                    <span>{{ nic.ipAllocationModeLabel }}</span>
+                  </div>
+                  <div class="form-field-inline">
+                    <span class="form-field-label">{{ textContent.nics.ipAddresses }}:</span>
+                    <ng-container *ngIf="hasIpAddress(nic.ipAddresses); else noIpAddressTemplate">
+                      <mcs-list spacing="auto">
+                        <mcs-list-item *ngFor="let item of nic.ipAddresses">
+                          {{ item }}
+                        </mcs-list-item>
+                      </mcs-list>
+                    </ng-container>
+                  </div>
                 </div>
               </mcs-accordion-panel>
             </mcs-accordion>

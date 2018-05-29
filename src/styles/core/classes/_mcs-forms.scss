@@ -47,3 +47,13 @@ $form-field-size-large: 400px;
 .form-field-size-large {
   max-width: $form-field-size-large;
 }
+
+.form-field-inline {
+  @include display-flex(row);
+  @include flex-wrap(wrap);
+  @include set-items-interval($space-xsmall, horizontal);
+}
+
+.form-field-label {
+  color: $readonly-color;
+}
