@@ -1,5 +1,10 @@
 <!-- Content Panel -->
 <div class="limited-view">
+  <div *ngIf="selectedProduct?.shortDescription" class="container-wrapper">
+    <h4 class="container-header">Product Short Description</h4>
+    <p [innerHTML]="selectedProduct.shortDescription | mcsNewLines"></p>
+  </div>
+
   <div *ngIf="selectedProduct?.description" class="container-wrapper">
     <h4 class="container-header">Product Description</h4>
     <p [innerHTML]="selectedProduct.description | mcsNewLines"></p>
@@ -10,8 +15,13 @@
     <div [innerHTML]="selectedProduct.useCases"></div>
   </div>
 
-  <div *ngIf="selectedProduct?.pciCompliance" class="container-wrapper">
+  <div *ngIf="selectedProduct?.pciDetails" class="container-wrapper">
     <h4 class="container-header">PCI Compliance</h4>
-    <p [innerHTML]="selectedProduct.pciCompliance | mcsNewLines"></p>
+    <p [innerHTML]="selectedProduct.pciDetails | mcsNewLines"></p>
+  </div>
+
+  <div *ngIf="selectedProduct?.featureBenefitMatrix" class="container-wrapper">
+    <h4 class="container-header">Feature Benefit Matrix</h4>
+    <p [innerHTML]="selectedProduct.featureBenefitMatrix | mcsNewLines"></p>
   </div>
 </div>

@@ -20,7 +20,6 @@ export class ServerClientObject {
   public serverId?: any;
   public userId?: string;
   public newName?: string;
-  public isOperable?: boolean;
   public processingText?: string;
 
   @JsonProperty({
@@ -58,7 +57,6 @@ export class ServerClientObject {
     this.powerState = undefined;
     this.commandAction = undefined;
     this.newName = undefined;
-    this.isOperable = undefined;
     this.notificationStatus = undefined;
     this.processingText = undefined;
   }

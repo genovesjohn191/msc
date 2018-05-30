@@ -1,33 +1,48 @@
-import { JsonProperty } from 'json-object-mapper';
-import { ProductDownload } from './product-download';
-import { ProductDependency } from './product-dependency';
 import { McsEntityBase } from '../../../../core';
 
 export class Product extends McsEntityBase {
-  public name: string;
-  public url: string;
-  public catalog: string;
-  public category: string;
-  public pciCompliance: string;
-  public useCases: string;
+  public version: number;
+  public order: number;
+  public shortDescription: string;
   public description: string;
-
-  @JsonProperty({ type: ProductDownload })
-  public downloads: ProductDownload[];
-
-  @JsonProperty({ type: ProductDependency })
-  public dependencies: ProductDependency[];
+  public useCases: string;
+  public pciDetails: string;
+  public featureBenefitMatrix: string;
+  public sowDetails: string;
+  public proposalDetails: string;
+  public competitiveIntelligence: string;
+  public targetMarketInfo: string;
+  public price: number;
+  public retailPrice: number;
+  public recurringPrice: number;
+  public locations: string;
+  public serviceIdPrefix: string;
+  public elementCode: string;
+  public name: string;
+  public catalogId: string;
+  public categoryId: string;
 
   constructor() {
     super();
-    this.name = undefined;
-    this.url = undefined;
-    this.catalog = undefined;
-    this.category = undefined;
-    this.pciCompliance = undefined;
-    this.useCases = undefined;
+    this.version = undefined;
+    this.order = undefined;
+    this.shortDescription = undefined;
     this.description = undefined;
-    this.downloads = undefined;
-    this.dependencies = undefined;
+    this.useCases = undefined;
+    this.pciDetails = undefined;
+    this.featureBenefitMatrix = undefined;
+    this.sowDetails = undefined;
+    this.proposalDetails = undefined;
+    this.competitiveIntelligence = undefined;
+    this.targetMarketInfo = undefined;
+    this.price = undefined;
+    this.retailPrice = undefined;
+    this.recurringPrice = undefined;
+    this.locations = undefined;
+    this.serviceIdPrefix = undefined;
+    this.elementCode = undefined;
+    this.name = undefined;
+    this.catalogId = undefined;
+    this.categoryId = undefined;
   }
 }
