@@ -39,7 +39,7 @@ export class ProductsService {
     searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/products/catalog';
+    mcsApiRequestParameter.endPoint = '/catalogs';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -64,7 +64,7 @@ export class ProductsService {
    */
   public getCatalog(id: any): Observable<McsApiSuccessResponse<ProductCatalog>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/products/catalog/' + id;
+    mcsApiRequestParameter.endPoint = '/catalogs/' + id;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .finally(() => {
@@ -103,7 +103,7 @@ export class ProductsService {
     searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/products';
+    mcsApiRequestParameter.endPoint = '/catalogs/products';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -128,7 +128,7 @@ export class ProductsService {
    */
   public getProduct(id: any): Observable<McsApiSuccessResponse<Product>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/products/' + id;
+    mcsApiRequestParameter.endPoint = '/catalogs/products/' + id;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .finally(() => {

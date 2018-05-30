@@ -21,7 +21,8 @@
 
             <mcs-list-panel>
               <mcs-option-group [label]="catalog.name" *ngFor="let catalog of catalogs">
-                <mcs-option-group [label]="category.name" *ngFor="let category of catalog.categories">
+                <mcs-option-group [label]="category.name"
+                  *ngFor="let category of catalog.categories">
                   <mcs-option *ngFor="let product of category.products"
                     [value]="product"
                     [selected]="product.id === selectedProduct?.id"

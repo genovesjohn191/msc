@@ -39,7 +39,6 @@ export class Server extends McsEntityBase {
   public vCloudId: string;
   public vCenterId: string;
   public isTemplate: boolean;
-  public isOperable: boolean;
 
   @JsonProperty({ type: ServerVmwareTools })
   public vmwareTools: ServerVmwareTools;
@@ -111,7 +110,6 @@ export class Server extends McsEntityBase {
     this.vCloudId = undefined;
     this.vCenterId = undefined;
     this.isTemplate = undefined;
-    this.isOperable = undefined;
     this.vmwareTools = undefined;
   }
 
@@ -150,8 +148,7 @@ export class Server extends McsEntityBase {
    * Returns true when server is executable
    */
   public get executable(): boolean {
-    return this.isOperable
-      && !this.isProcessing
+    return !this.isProcessing
       && this.powerState !== ServerPowerState.Suspended;
   }
 
@@ -197,8 +194,7 @@ export class Server extends McsEntityBase {
    * Returns true when server is resumable
    */
   public get resumable(): boolean {
-    return this.isOperable
-      && !this.isProcessing
+    return !this.isProcessing
       && this.powerState === ServerPowerState.Suspended;
   }
 
@@ -206,7 +202,7 @@ export class Server extends McsEntityBase {
    * Returns true when server is clonable
    */
   public get clonable(): boolean {
-    return this.isOperable;
+    return this.executable;
   }
 
   /**
