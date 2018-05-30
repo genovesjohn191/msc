@@ -8,7 +8,9 @@ import {
   McsApiSuccessResponse,
   McsNotificationEventsService,
   McsApiJob,
-  McsDataStatus
+  McsDataStatus,
+  McsDialogService,
+  McsAuthenticationIdentity
 } from '../../core';
 import { ServersService } from './servers.service';
 import {
@@ -25,6 +27,7 @@ import {
   addOrUpdateArrayRecord,
   deleteArrayRecord
 } from '../../utilities';
+import { ResetPasswordFinishedDialogComponent } from './shared';
 
 @Injectable()
 export class ServersRepository extends McsRepositoryBase<Server> {
@@ -34,7 +37,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
   constructor(
     private _serversApiService: ServersService,
-    private _notificationEvents: McsNotificationEventsService
+    private _notificationEvents: McsNotificationEventsService,
+    private _dialogService: McsDialogService,
+    private _authIdentity: McsAuthenticationIdentity
   ) {
     super();
     this._registerJobEvents();
@@ -250,6 +255,21 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
+      this.updateRecord(activeServer);
+
+      let resetSuccessfully = job.dataStatus === McsDataStatus.Success
+        && job.clientReferenceObject.userId === this._authIdentity.user.userId
+        && !isNullOrEmpty(job.tasks);
+      if (!resetSuccessfully) { return; }
+
+      // Show the dialog when reset password was successfull
+      let credentialObject = job.tasks[0].referenceObject.credential;
+      this._dialogService.open(ResetPasswordFinishedDialogComponent, {
+        id: 'reset-vm-password-confirmation',
+        data: credentialObject,
+        size: 'medium',
+        disableClose: true
+      });
     }
   }
 

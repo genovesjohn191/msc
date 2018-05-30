@@ -6,10 +6,7 @@ import {
   McsApiService,
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsNotificationContextService,
-  McsNotificationEventsService,
   McsApiJob,
-  McsDialogService,
   McsAuthenticationIdentity,
   McsLoggerService
 } from '../../core/';
@@ -42,7 +39,6 @@ import {
   ServerSnapshot,
   ServerCreateSnapshot
 } from './models';
-import { ResetPasswordFinishedDialogComponent } from './shared';
 
 /**
  * Servers Services Class
@@ -53,15 +49,9 @@ export class ServersService {
   constructor(
     private _mcsApiService: McsApiService,
     private _loggerService: McsLoggerService,
-    private _dialogService: McsDialogService,
     private _authIdentity: McsAuthenticationIdentity,
-    private _notificationContextService: McsNotificationContextService,
-    private _notificationEventService: McsNotificationEventsService,
     private _router: Router
-  ) {
-    this._listenToResetPassword();
-    this._listenToNotificationUpdate();
-  }
+  ) { }
 
   /**
    * Get Servers (MCS API Response)
@@ -1149,54 +1139,5 @@ export class ServersService {
         }
       });
     }
-  }
-
-  /**
-   * Listener to all servers that reset their password
-   */
-  private _listenToResetPassword(): void {
-    this._notificationEventService.resetServerPasswordEvent.subscribe((updatedJob) => {
-      if (isNullOrEmpty(updatedJob)) { return; }
-
-      // Check whether the user has the same identity
-      let resetPassword = !!(updatedJob.clientReferenceObject.userId ===
-        this._authIdentity.user.userId && !isNullOrEmpty(updatedJob.tasks[0].referenceObject));
-
-      // Display dialog
-      if (resetPassword) {
-        let credentialObject = updatedJob.tasks[0].referenceObject.credential;
-        // Display dialog
-        this._dialogService.open(ResetPasswordFinishedDialogComponent, {
-          data: credentialObject,
-          size: 'medium',
-          disableClose: true
-        });
-      }
-    });
-  }
-
-  /**
-   * Listen to notifications update in the job context
-   */
-  private _listenToNotificationUpdate(): void {
-    // listener for the notification updates
-    this._notificationContextService.notificationsStream
-      .subscribe((updatedNotifications) => {
-        let activeServers: ServerClientObject[] = new Array();
-
-        // Filter only those who have client reference object on notification jobs
-        updatedNotifications.forEach((notification) => {
-          if (notification.clientReferenceObject) {
-            activeServers.push({
-              serverId: notification.clientReferenceObject.serverId,
-              powerState: notification.clientReferenceObject.powerState,
-              commandAction: notification.clientReferenceObject.commandAction,
-              newName: notification.clientReferenceObject.newName,
-              notificationStatus: notification.status,
-              processingText: notification.summaryInformation
-            } as ServerClientObject);
-          }
-        });
-      });
   }
 }

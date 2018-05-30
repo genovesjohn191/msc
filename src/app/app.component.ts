@@ -20,16 +20,12 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsRouteHandlerService,
-  McsErrorHandlerService,
   McsNotificationJobService,
-  GoogleAnalyticsEventsService,
   McsTextContentProvider,
   McsSnackBarService,
   McsSnackBarRef,
   McsSnackBarConfig,
   McsConnectionStatus,
-  McsNotificationContextService,
   CoreDefinition
 } from './core';
 import {
@@ -83,22 +79,14 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     private _ngZone: NgZone,
     private _textContentProvider: McsTextContentProvider,
     private _snackBarRefService: McsSnackBarService,
-    private _routePermission: McsRouteHandlerService,
-    private _errorHandlerService: McsErrorHandlerService,
-    private _notificationJobService: McsNotificationJobService,
-    private _notificationContextService: McsNotificationContextService,
-    private _googleAnalyticsEventsService: GoogleAnalyticsEventsService
+    private _notificationJobService: McsNotificationJobService
   ) {
     this._isInitialDisplayed = true;
   }
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.applicationPage;
-    this._notificationJobService.initialize();
-    this._notificationContextService.initialize();
-    this._googleAnalyticsEventsService.initialize();
-    this._routePermission.initialize();
-    this._errorHandlerService.initialize();
+
   }
 
   public ngAfterViewInit(): void {
@@ -110,11 +98,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSubject(this._destroySubject);
-    this._notificationJobService.destroy();
-    this._notificationContextService.destroy();
-    this._googleAnalyticsEventsService.destroy();
-    this._routePermission.destroy();
-    this._errorHandlerService.destroy();
   }
 
   /**
