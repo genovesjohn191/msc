@@ -4,11 +4,11 @@ import {
   NgModule,
   ErrorHandler
 } from '@angular/core';
-import {
-  BrowserAnimationsModule
-} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { CookieModule } from 'ngx-cookie';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Raven logger
@@ -46,7 +46,12 @@ import { routes } from './app.routes';
 import {
   CoreModule,
   CoreConfig,
-  McsAuthenticationIdentity
+  McsAuthenticationIdentity,
+  McsRouteHandlerService,
+  McsErrorHandlerService,
+  McsNotificationJobService,
+  McsNotificationContextService,
+  GoogleAnalyticsEventsService
 } from './core';
 import {
   ConsolePageModule,
@@ -57,7 +62,10 @@ import { SharedModule } from './shared';
 /**
  * MCS Portal Utilities
  */
-import { resolveEnvVar } from './utilities';
+import {
+  resolveEnvVar,
+  isNullOrEmpty
+} from './utilities';
 
 /**
  * Application-Wide Providers
@@ -108,24 +116,57 @@ export function coreConfig(): CoreConfig {
 })
 
 export class AppModule {
+  private _destroySubject = new Subject<void>();
 
-  constructor(public authIdentityService: McsAuthenticationIdentity) {
-    this.setRavenUserSettings();
+  constructor(
+    private _authIdentity: McsAuthenticationIdentity,
+    private _routePermission: McsRouteHandlerService,
+    private _errorHandlerService: McsErrorHandlerService,
+    private _notificationJobService: McsNotificationJobService,
+    private _notificationContextService: McsNotificationContextService,
+    private _googleAnalyticsEventsService: GoogleAnalyticsEventsService
+  ) {
+    this._listenToUserChanges();
   }
 
   /**
-   * Set the user settings of RAVEN for each changes of the identity
+   * Listens to every user changed.
+   *
+   * `@Note`: In most cases, this will only called once
    */
-  public setRavenUserSettings(): void {
-    this.authIdentityService.userChanged
-      .subscribe((isChanged) => {
-        if (isChanged) {
-          setUserIdentity(
-            this.authIdentityService.user.userId,
-            `${this.authIdentityService.user.firstName} ${this.authIdentityService.user.lastName}`,
-            this.authIdentityService.user.email
-          );
-        }
+  private _listenToUserChanges(): void {
+    this._authIdentity.userChanged
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((response) => {
+        if (isNullOrEmpty(response)) { return; }
+        // We need to initialize all the required services after obtaining
+        // the user identity because we want to make sure that the user
+        // is authenticated, otherwise it will conflict to other process that
+        // dependent on the user identity, like getting the job/connection prior to authentication.
+        this._initializeRavenSentry();
+        this._initializeServices();
       });
+  }
+
+  /**
+   * Initializes the raven sentry configuration
+   */
+  private _initializeRavenSentry(): void {
+    setUserIdentity(
+      this._authIdentity.user.userId,
+      `${this._authIdentity.user.firstName} ${this._authIdentity.user.lastName}`,
+      this._authIdentity.user.email
+    );
+  }
+
+  /**
+   * Initializes all required services
+   */
+  private _initializeServices(): void {
+    this._notificationJobService.initialize();
+    this._notificationContextService.initialize();
+    this._googleAnalyticsEventsService.initialize();
+    this._routePermission.initialize();
+    this._errorHandlerService.initialize();
   }
 }
