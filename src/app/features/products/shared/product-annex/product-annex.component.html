@@ -15,12 +15,12 @@
     </mcs-list-item>
   </mcs-list>
 
-  <!-- Dependencies -->
-  <mcs-list header="Dependencies" itemsOffset="small" *ngIf="product?.dependencies">
+  <!-- TODO: Temporary removed Dependencies -->
+  <!-- <mcs-list header="Dependencies" itemsOffset="small" *ngIf="product?.dependencies">
     <mcs-list-item *ngFor="let dependency of product.dependencies">
       <a (click)="onClickDependency(dependency)">{{ dependency.name }}</a>
     </mcs-list-item>
-  </mcs-list>
+  </mcs-list> -->
 
   <!-- Pricing -->
   <mcs-list header="Pricing" itemsOffset="small">
@@ -35,12 +35,12 @@
     </mcs-list-item>
   </mcs-list>
 
-  <!-- Downloads -->
-  <mcs-list header="Downloads" itemsOffset="small" *ngIf="product?.downloads">
+  <!-- TODO: Temporary removed Downloads -->
+  <!-- <mcs-list header="Downloads" itemsOffset="small" *ngIf="product?.downloads">
     <mcs-list-item *ngFor="let download of product.downloads">
       <mcs-file-download [file]="getFileInfo(download)"></mcs-file-download>
     </mcs-list-item>
-  </mcs-list>
+  </mcs-list> -->
 
   <!-- Recommended -->
   <mcs-list header="We also recommend..." itemsOffset="small">
