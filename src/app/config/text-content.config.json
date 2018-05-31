@@ -275,8 +275,6 @@
         "performanceScale": {
           "description": "Scale your server for improved and better performance.",
           "instruction": "You can input a custom size for RAM and vCPU for scaling your VM. Alternatively, you can also click on select from slider and drag the slider to an appropriate size based on your needs.",
-          "sliderMessage": "Select the RAM and CPU for this server from a slider.",
-          "customMessage": "Manually enter the size of RAM and CPU for this server.",
           "warning": "Scaling the Server will require a restart.",
           "scale": "Scale",
           "cancel": "Cancel",
@@ -518,9 +516,9 @@
       },
       "performanceScale": {
         "sliderSwitch": "Select from slider",
-        "sliderMessage": "Select the RAM and vCPU quantity for this server from a slider.",
         "customSwitch": "Enter custom size",
-        "customMessage": "Manually enter the RAM and vCPU quantity for this server.",
+        "sliderMessage": "Select the RAM and CPU for this server from a slider.",
+        "customMessage": "Manually enter the size of RAM and CPU for this server.",
         "maximumRam": "Maximum RAM",
         "maximumCpu": "Maximum CPU",
         "ramLabel": "RAM",

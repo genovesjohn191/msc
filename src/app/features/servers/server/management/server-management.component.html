@@ -239,17 +239,6 @@
               [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
               [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
               (scaleChanged)="onScaleChanged($event)">
-
-              <!--Performance scale container-->
-              <div slider-details>
-                <span>{{ textContent.performanceScale.sliderMessage }} </span>
-                <!-- We need to hardcode this instead of putting
-                  in the text-config since it is using a pipe -->
-                <span>This VDC has {{ availableMemoryMB | mcsDataSize: 'MB' }} RAM and {{ availableCpu }} vCPU available.</span>
-              </div>
-              <div custom-details>
-                <span>{{ textContent.performanceScale.customMessage }}</span>
-              </div>
             </mcs-server-performance-scale>
 
             <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
