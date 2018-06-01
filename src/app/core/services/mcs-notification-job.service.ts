@@ -136,6 +136,7 @@ export class McsNotificationJobService implements McsInitializer {
    * Event that emits when websocket is opened
    */
   private _onWebsocketOpened() {
+    this._loggerService.trace(`Websocket connection opened.`);
     this.connectionStatus = McsConnectionStatus.Success;
   }
 
@@ -154,6 +155,7 @@ export class McsNotificationJobService implements McsInitializer {
    * Event that emits when stomp gets connected
    */
   private _onStompConnect(): void {
+    this._loggerService.trace(`Web stomp connected.`);
     this.connectionStatus = McsConnectionStatus.Success;
 
     this._websocketClient.subscribe(this._jobConnection.destinationRoute,
@@ -165,6 +167,7 @@ export class McsNotificationJobService implements McsInitializer {
    * Event that emits when stomp has error in connecting to rabbitMQ
    */
   private _onStompError(): void {
+    this._loggerService.trace(`Web stomp error.`);
     this.connectionStatus = McsConnectionStatus.Failed;
     if (this._websocket.CONNECTING) { return; }
 
