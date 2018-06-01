@@ -23,6 +23,7 @@ $custom-size-field-wrapper-max-width: 200px;
   .description {
     @include flex(0 1 75%);
     @include display-flex(column);
+    @include set-items-interval($space-medium);
     @include breakpoint(small) {
       @include flex(0 1 50%);
     }
