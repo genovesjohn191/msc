@@ -15,11 +15,11 @@ import { DataLabelPipe } from './data-label.pipe';
   template: ``
 })
 export class TestComponent {
-  @ViewChild('testElementNoData')
-  public testElementNoData: ElementRef;
+  @ViewChild('testElementEmptyData')
+  public testElementEmptyData: ElementRef;
 
-  @ViewChild('testElementHasData')
-  public testElementHasData: ElementRef;
+  @ViewChild('testElementSampleData')
+  public testElementSampleData: ElementRef;
 
   @ViewChild(DataLabelPipe)
   public pipe: DataLabelPipe;
@@ -51,8 +51,8 @@ describe('DataLabelPipe', () => {
       set: {
         template: `
         <div>DataLabelPipe Template</div>
-        <span #testElementNoData>{{ noData | mcsDataLabel: 'None' }}</span>
-        <span #testElementHasData>{{ hasData | mcsDataLabel: 'Unknown' }}</span>
+        <span #testElementEmptyData>{{ emptyData | mcsDataLabel: 'None' }}</span>
+        <span #testElementSampleData>{{ testData | mcsDataLabel: 'Unknown' }}</span>
         `
       }
     });
@@ -69,13 +69,13 @@ describe('DataLabelPipe', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it(`should display the data label`, () => {
-      let textContentElement = component.testElementNoData.nativeElement as HTMLElement;
+      let textContentElement = component.testElementEmptyData.nativeElement as HTMLElement;
       expect(textContentElement.innerText).toContain('None');
     });
 
     it(`should display the data`, () => {
-      let textContentElement = component.testElementHasData.nativeElement as HTMLElement;
-      expect(textContentElement.innerText).toContain(this.hasData);
+      let textContentElement = component.testElementSampleData.nativeElement as HTMLElement;
+      expect(textContentElement.innerText).toContain(component.testData);
     });
   });
 });
