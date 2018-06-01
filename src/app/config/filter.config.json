@@ -111,6 +111,10 @@
     "lastUpdatedBy": {
       "text": "Last Updated By",
       "value": true
+    },
+    "customerReference": {
+      "text": "Customer Reference",
+      "value": true
     }
   },
   "firewallsListingFilter": {

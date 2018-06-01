@@ -8,6 +8,7 @@ import { JsonProperty } from 'json-object-mapper';
 export class TicketCreate {
   public shortDescription: string;
   public description: string;
+  public customerReference: string;
   public serviceId: string[];
 
   @JsonProperty({ type: TicketCreateAttachment })
@@ -24,6 +25,7 @@ export class TicketCreate {
     this.subType = undefined;
     this.shortDescription = undefined;
     this.description = undefined;
+    this.customerReference = undefined;
     this.serviceId = undefined;
     this.attachments = undefined;
   }

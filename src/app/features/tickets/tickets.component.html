@@ -109,6 +109,16 @@
           </mcs-data-cell>
         </ng-container>
 
+        <!-- Customer Reference Column -->
+        <ng-container mcsColumnDef="customerReference">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.customerReference.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.customerReference | mcsDataLabel: 'None' }}
+          </mcs-data-cell>
+        </ng-container>
+
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>

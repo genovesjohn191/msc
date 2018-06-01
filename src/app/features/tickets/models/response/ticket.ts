@@ -27,6 +27,7 @@ export class Ticket extends McsEntityBase {
   public shortDescription: string;
   public description: string;
   public impact: string;
+  public customerReference: string;
   public slaDue: string;
   public serviceId: string[];
   public assignedTo: string;
@@ -89,6 +90,7 @@ export class Ticket extends McsEntityBase {
     this.shortDescription = undefined;
     this.description = undefined;
     this.impact = undefined;
+    this.customerReference = undefined;
     this.slaDue = undefined;
     this.serviceId = undefined;
     this.assignedTo = undefined;

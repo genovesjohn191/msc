@@ -58,6 +58,11 @@
             <strong>{{ textContent.type }}</strong><br/>
             <span read-only>{{ getSubTypeString(ticket.subType) }}</span>
           </div>
+
+          <div class="grid-column">
+            <strong>{{ textContent.customerReference }}</strong><br/>
+            <span read-only>{{ ticket.customerReference | mcsDataLabel: 'None' }}</span>
+          </div>
         </div>
         <div>
           <div class="divider"></div>

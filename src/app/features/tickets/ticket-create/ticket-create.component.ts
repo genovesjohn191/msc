@@ -73,6 +73,7 @@ export class TicketCreateComponent implements
   // Form variables
   public fgCreateTicket: FormGroup;
   public fcType: FormControl;
+  public fcReference: FormControl;
   public fcSummary: FormControl;
   public fcDetails: FormControl;
   public fcService: FormControl;
@@ -209,6 +210,10 @@ export class TicketCreateComponent implements
     ticket.subType = this.fcType.value;
     ticket.shortDescription = this.fcSummary.value;
     ticket.description = this.fcDetails.value;
+    if (!isNullOrEmpty(this.fcReference.value)) {
+      ticket.customerReference = this.fcReference.value;
+    }
+
     // Set Converted File Attachments
     if (!isNullOrEmpty(this.fileAttachments)) {
       ticket.attachments = new Array();
@@ -258,6 +263,10 @@ export class TicketCreateComponent implements
       CoreValidators.required
     ]);
 
+    this.fcReference = new FormControl('', [
+      // No checking for reference since user can raise a ticket without reference
+    ]);
+
     this.fcSummary = new FormControl('', [
       CoreValidators.required
     ]);
@@ -273,6 +282,7 @@ export class TicketCreateComponent implements
     // Register Form Groups using binding
     this.fgCreateTicket = new FormGroup({
       fcType: this.fcType,
+      fcReference: this.fcReference,
       fcSummary: this.fcSummary,
       fcDetails: this.fcDetails,
       fcService: this.fcService
