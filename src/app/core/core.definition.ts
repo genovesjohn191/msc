@@ -13,7 +13,7 @@ export class CoreDefinition {
   public static NOTIFICATION_ANIMATION_DELAY = 310;
   public static NOTIFICATION_COMPLETED_TIMEOUT_IN_MS = 5000;
   public static NOTIFICATION_FAILED_TIMEOUT_IN_MS = 10000;
-  public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 5000;
+  public static NOTIFICATION_CONNECTION_RETRY_INTERVAL = 10000;
 
   /** Headers */
   public static HEADER_BEARER = 'Bearer';

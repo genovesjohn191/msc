@@ -51,6 +51,7 @@ export * from './models/mcs-comment';
 export * from './models/mcs-point';
 export * from './models/mcs-option';
 export * from './models/mcs-key-value-pair';
+export * from './models/mcs-route-details';
 /** Enumerations */
 export * from './enumerations/mcs-connection-status.enum';
 export * from './enumerations/mcs-device-type.enum';
@@ -62,6 +63,7 @@ export * from './enumerations/mcs-task-type.enum';
 export * from './enumerations/mcs-data-status.enum';
 export * from './enumerations/mcs-company-status.enum';
 export * from './enumerations/mcs-unit-type.enum';
+export * from './enumerations/mcs-router-category.enum';
 /** Interfaces */
 export * from './interfaces/mcs-data-source.interface';
 export * from './interfaces/mcs-paginator.interface';

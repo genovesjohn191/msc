@@ -245,11 +245,8 @@ export class ServerManagementComponent extends ServerDetailsBase
     if (!this.consoleEnabled) { return; }
 
     let windowFeatures = `directories=yes,titlebar=no,toolbar=no,
-    status=no,menubar=no,resizable=yes,scrollbars=yes,
-    width=${CoreDefinition.CONSOLE_DEFAULT_WIDTH},
-    height=${CoreDefinition.CONSOLE_DEFAULT_HEIGHT}`;
-
-    window.open(`/console/${this.server.id}`, 'VM Console', windowFeatures);
+    status=no,menubar=no,resizable=yes,scrollbars=yes`;
+    window.open(`/console/${this.server.id}`, this.server.id, windowFeatures);
   }
 
   public onScaleChanged(scale: ServerPerformanceScale) {

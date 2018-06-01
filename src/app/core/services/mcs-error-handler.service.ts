@@ -62,6 +62,7 @@ export class McsErrorHandlerService implements McsInitializer {
       case McsHttpStatusCode.InternalServerError:
       case McsHttpStatusCode.NotFound:
       case McsHttpStatusCode.Unprocessable:
+      case McsHttpStatusCode.Forbidden:
       case McsHttpStatusCode.ServiceUnavailable:
         this._router.navigate(['**'], {
           skipLocationChange: true,

@@ -1,4 +1,4 @@
-<nav class="main-navigation-wrapper">
+<nav class="main-navigation-content box-shadow-bottom-small">
 
   <!-- Mobile Mode -->
   <mcs-navigation-mobile class="navigation-mobile">
@@ -12,41 +12,25 @@
 
   <!-- All Routing -->
   <ng-template #navigationList>
-    <!-- Servers -->
-    <div class="navigation-item" routerLinkActive="active" *mcsAccessControl="['VmAccess']">
+    <!-- Compute Category -->
+    <div class="navigation-item" [class.active]="selectedCategory === routerCategoryEnum.Compute"
+      *mcsAccessControl="['VmAccess']">
+
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/servers']"
-        (click)="setTitle(textContent.servers.title)"
-        mcsEventTracker="navigate-to-servers"
-        mcsEventCategory="navigation"
-        mcsEventLabel="main-nav">
-        {{ textContent.navigation.servers }}
+      <a [routerLink]="['/servers']">
+        {{ getCategoryLabel(routerCategoryEnum.Compute) }}
       </a>
     </div>
 
-    <!-- Medias -->
-    <div class="navigation-item" routerLinkActive="active"
-      *mcsAccessControl="[]; feature: 'enableMediaCatalog'">
-      <mcs-icon [key]="caretRightIconKey" color="white"
-        size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/medias']" (click)="setTitle(textContent.medias.title)">
-        {{ textContent.navigation.medias }}
-      </a>
-    </div>
-
-    <!-- Firewalls -->
-    <!-- TODO: Replaced texts to Firewalls and added temporary firewall restriction for Phase 1 -->
-    <div class="navigation-item" routerLinkActive="active"
+    <!-- Networking Category -->
+    <div class="navigation-item" [class.active]="selectedCategory === routerCategoryEnum.Network"
       *mcsAccessControl="['FirewallConfigurationView']">
+
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/networking/firewalls']"
-        (click)="setTitle(textContent.firewalls.title)"
-        mcsEventTracker="navigate-to-firewalls"
-        mcsEventCategory="navigation"
-        mcsEventLabel="main-nav">
-        {{ textContent.navigation.firewalls }}
+      <a [routerLink]="['/networking/firewalls']">
+        {{ getCategoryLabel(routerCategoryEnum.Network) }}
       </a>
     </div>
 
@@ -54,9 +38,7 @@
     <div class="navigation-item hidden-small" routerLinkActive="active">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a
-        [routerLink]="['/tools']"
-        (click)="setTitle(textContent.tools.title)"
+      <a [routerLink]="['/tools']"
         mcsEventTracker="navigate-to-other-tools"
         mcsEventCategory="navigation"
         mcsEventLabel="main-nav">

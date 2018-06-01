@@ -1,0 +1,50 @@
+<ng-container *ngIf="showSubNavigation">
+  <div [@expansionVertical] class="box-shadow-bottom-small full-width">
+    <!-- Sub-navigation desktop mode -->
+    <mcs-sub-navigation-desktop>
+      <ng-container *ngTemplateOutlet="subNavigationItemsTemplate"></ng-container>
+    </mcs-sub-navigation-desktop>
+
+    <!-- Sub-navigation mobile mode -->
+    <mcs-sub-navigation-mobile [routeCategory]="activeRouteCategory">
+      <ng-container *ngTemplateOutlet="subNavigationItemsTemplate"></ng-container>
+    </mcs-sub-navigation-mobile>
+  </div>
+</ng-container>
+
+<!-- Router templates -->
+<ng-template #subNavigationItemsTemplate>
+  <div [ngSwitch]="activeRouteCategory" class="sub-navigation-content ">
+    <!-- Compute Category -->
+    <ng-container *ngSwitchCase="routeCategoryEnum.Compute">
+      <a [routerLink]="['/servers']" routerLinkActive="active"
+        class="sub-navigation-item unstyled-link"
+        mcsEventTracker="navigate-to-servers"
+        mcsEventCategory="navigation"
+        mcsEventLabel="sub-nav">
+        {{ textContent.virtual }}
+      </a>
+
+      <a [routerLink]="['/medias']" routerLinkActive="active"
+        *mcsAccessControl="[]; feature: 'enableMediaCatalog'"
+        class="sub-navigation-item unstyled-link"
+        mcsEventTracker="navigate-to-firewalls"
+        mcsEventCategory="navigation"
+        mcsEventLabel="sub-nav">
+        {{ textContent.medias }}
+      </a>
+    </ng-container>
+
+    <!-- Network Category -->
+    <ng-container *ngSwitchCase="routeCategoryEnum.Network">
+      <a [routerLink]="['/networking/firewalls']" routerLinkActive="active"
+        *mcsAccessControl="['FirewallConfigurationView']"
+        class="sub-navigation-item unstyled-link"
+        mcsEventTracker="navigate-to-firewalls"
+        mcsEventCategory="navigation"
+        mcsEventLabel="sub-nav">
+        {{ textContent.firewalls }}
+      </a>
+    </ng-container>
+  </div>
+</ng-template>

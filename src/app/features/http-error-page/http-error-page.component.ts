@@ -59,7 +59,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         // We need to set manually the notFound error since there
         // are no parameter code in that case
         if (this.errorCode === 0) {
-         this.errorCode = McsHttpStatusCode.NotFound;
+          this.errorCode = McsHttpStatusCode.NotFound;
         }
         this._setTextContent();
       });
@@ -91,6 +91,10 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
 
       case McsHttpStatusCode.ServiceUnavailable:
         this.textContent = this.textContentAll.serviceUnavailable;
+        break;
+
+      case McsHttpStatusCode.Forbidden:
+        this.textContent = this.textContentAll.forbidden;
         break;
 
       case McsHttpStatusCode.NotFound:

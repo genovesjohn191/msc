@@ -4,8 +4,12 @@
   <h1>{{ textContent?.header }}</h1>
   <h4>{{ textContent?.summary }}</h4>
   <div>
-    <span>{{ textContent?.description }}</span><br/>
-    <span>{{ textContent?.retry }}</span>
+    <span *ngIf="textContent?.description">
+      {{ textContent?.description }}<br/>
+    </span>
+    <span *ngIf="textContent?.retry">
+      {{ textContent?.retry }}
+    </span>
   </div>
 
   <div [ngSwitch]="errorCode" display-flex align-items="center" justify-content="space-between">
@@ -20,6 +24,9 @@
     </div>
     <div *ngSwitchCase="httpStatusCodeEnum.Unprocessable">
       <ng-container *ngTemplateOutlet="refreshButtonTemplate"></ng-container>
+    </div>
+    <div *ngSwitchCase="httpStatusCodeEnum.Forbidden">
+      <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
     </div>
   </div>
 </div>

@@ -6,7 +6,8 @@
 }
 
 .header,
-.navigation,
+.main-navigation,
+.sub-navigation,
 .footer {
   position: relative;
   @include flex(0 0 auto);
