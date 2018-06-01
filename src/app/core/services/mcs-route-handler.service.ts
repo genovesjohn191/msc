@@ -71,14 +71,14 @@ export class McsRouteHandlerService implements McsInitializer {
    */
   private _onNavigateEnd(navStart: NavigationEnd) {
     this._setMainActiveRoute(navStart.urlAfterRedirects);
-    this._guardRoute(this.activeRoute);
+    this._guardRoutePermissions(this.activeRoute);
     this._updateDocumentTitle(this.activeRoute);
   }
 
   /**
    * Guards the route if it has permission, otherwise it will redirect to access denied page.
    */
-  private _guardRoute(_activeRouteDetails: McsRouteDetails): void {
+  private _guardRoutePermissions(_activeRouteDetails: McsRouteDetails): void {
     if (isNullOrEmpty(_activeRouteDetails)) { return; }
     this._loggerService.traceInfo(`Checking permission...`);
     this._loggerService.traceInfo(
@@ -86,11 +86,19 @@ export class McsRouteHandlerService implements McsInitializer {
       _activeRouteDetails.url,
       _activeRouteDetails.requiredPermissions);
 
-    // Check if user has permission
-    if (isNullOrEmpty(_activeRouteDetails.requiredPermissions)) { return; }
-    let hasRoutePermission = this._accessControlService
-      .hasPermission(_activeRouteDetails.requiredPermissions);
-    if (!hasRoutePermission) { this._navigateToForbiddenPage(); }
+    // Check user Permission
+    if (!isNullOrEmpty(_activeRouteDetails.requiredPermissions)) {
+      let hasRoutePermission = this._accessControlService
+        .hasPermission(_activeRouteDetails.requiredPermissions);
+      if (!hasRoutePermission) { this._navigateToForbiddenPage(); }
+    }
+
+    // Check feature Flag
+    if (!isNullOrEmpty(_activeRouteDetails.featureFlag)) {
+      let featureFlagIsEnabled = this._accessControlService
+        .hasAccessToFeature(_activeRouteDetails.featureFlag);
+      if (!featureFlagIsEnabled) { this._navigateToNotFoundPage(); }
+    }
   }
 
   /**
@@ -140,6 +148,14 @@ export class McsRouteHandlerService implements McsInitializer {
   }
 
   /**
+   * Navigates to not found page
+   */
+  private _navigateToNotFoundPage() {
+    this._loggerService.traceInfo('FEATURE FLAG IS TURNED OFF!');
+    this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.NotFound);
+  }
+
+  /**
    * Creates route table based on url path
    */
   private _createRouteTable(): void {
@@ -151,6 +167,15 @@ export class McsRouteHandlerService implements McsInitializer {
         category: McsRouteCategory.Compute, url: '/servers',
         documentTitle: documentTitleText.servers,
         requiredPermissions: ['VmAccess']
+      });
+
+    // Register /media endpoint
+    this._routeTable.set('/medias',
+      {
+        category: McsRouteCategory.Compute, url: '/medias',
+        documentTitle: documentTitleText.medias,
+        requiredPermissions: [],
+        featureFlag: 'enableMediaCatalog'
       });
 
     // Register /tickets endpoint
@@ -174,7 +199,8 @@ export class McsRouteHandlerService implements McsInitializer {
       {
         category: McsRouteCategory.None, url: '/products',
         documentTitle: documentTitleText.products,
-        requiredPermissions: []
+        requiredPermissions: [],
+        featureFlag: 'enableProductCatalog'
       });
 
     // Register /notifications tools endpoint
