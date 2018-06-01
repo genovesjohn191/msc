@@ -46,6 +46,23 @@
           </mcs-form-field>
         </div>
 
+        <!-- Reference -->
+        <div class="field">
+          <mcs-form-field>
+            <input mcsInput #referenceInput
+              [placeholder]="textContent.placeholders.reference" maxlength="15"
+              [formControl]="fcReference"
+              [mcsContextualHelp]="contextualContent.reference">
+
+            <mcs-hint mcsHint align="start">
+              {{ convertMaxCharText(textContent.hints.reference, referenceInput.maxLength) }}
+            </mcs-hint>
+            <mcs-hint mcsHint align="end">
+              {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
+            </mcs-hint>
+          </mcs-form-field>
+        </div>
+
         <!-- Summary -->
         <div class="field">
           <mcs-form-field>

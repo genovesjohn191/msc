@@ -613,6 +613,7 @@
       "header": "{{ticketType}} #",
       "status": "Status",
       "type": "Type",
+      "customerReference": "Customer Reference",
       "services": "Services",
       "attachments": "Attachments",
       "activity": "Activity",
@@ -638,6 +639,7 @@
       "cancelActivity": "Cancel",
       "creatingTicket": "Creating ticket, this may take a few moments.",
       "hints": {
+        "reference": "Max of {{max_char}} characters",
         "summary": "Max of {{max_char}} characters",
         "details": "Max of {{max_char}} characters"
       },
@@ -649,12 +651,14 @@
       },
       "placeholders": {
         "type": "Select the ticket type",
+        "reference": "Enter reference number",
         "summary": "Enter ticket summary",
         "details": "Enter ticket details",
         "services": "Select a service"
       },
       "contextualHelp": {
         "type": "Select the ticket type",
+        "reference": "If you have a reference number or ID you would like to relate to this ticket, enter it here.",
         "summary": "A short title that describes this ticket.",
         "details": "Please provide as much information as you can and describe any attempts made to remedy the problem",
         "services": "Choose the service type this ticket relates to.",
