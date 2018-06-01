@@ -18,8 +18,6 @@ import { McsApiRequestParameter } from '../models/request/mcs-api-request-parame
 import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 
-const STOMP_RETRY_COUNT = 3;
-
 /**
  * MCS notification job service
  * Serves as the main core of the notification job and it will
@@ -30,7 +28,6 @@ export class McsNotificationJobService implements McsInitializer {
   public notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
   public connectionStatusStream = new Subject<McsConnectionStatus>();
 
-  private _retryCount: number = STOMP_RETRY_COUNT;
   private _websocket: WebSocket;
   private _websocketClient: any;
   private _apiSubscription: any;
@@ -105,7 +102,6 @@ export class McsNotificationJobService implements McsInitializer {
 
         this._jobConnection = details.content;
         this.connectionStatus = McsConnectionStatus.Connecting;
-        this._retryCount = STOMP_RETRY_COUNT;
         this._initializeWebsocket();
       });
   }
@@ -169,18 +165,12 @@ export class McsNotificationJobService implements McsInitializer {
    * Event that emits when stomp has error in connecting to rabbitMQ
    */
   private _onStompError(): void {
-    if (this._retryCount <= 0) {
-      this.connectionStatus = McsConnectionStatus.Failed;
-      return;
-    }
+    this.connectionStatus = McsConnectionStatus.Failed;
+    if (this._websocket.CONNECTING) { return; }
 
-    setTimeout(() => {
-      this._loggerService.trace(`Error connecting to RabbitMQ.
-        Trying to reconnect ${this._retryCount} times`);
-
-      this._initializeWebsocket();
-      this._retryCount--;
-    }, CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
+    // Retry the connection every 10 seconds
+    setTimeout(() => this._initializeWebsocket(),
+      CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL);
   }
 
   /**

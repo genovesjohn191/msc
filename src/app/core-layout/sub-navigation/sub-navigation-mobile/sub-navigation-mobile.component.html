@@ -1,0 +1,15 @@
+<!-- Mobile navigation header -->
+<div class="display-flex-row" cursor="pointer" (click)="toggle()">
+  <div class="sub-navigation-header">
+    <span>{{ routeCategoryLabel }}</span>
+  </div>
+  <mcs-icon class="space-right-medium" [@rotate180]="panelOpen ? 'rotate' : 'void'"
+    [key]="toggleIconKey"></mcs-icon>
+</div>
+
+<!-- Mobile navigation content -->
+<ng-container *ngIf="panelOpen">
+  <div [@expansionVertical] class="block-items">
+    <ng-content></ng-content>
+  </div>
+</ng-container>

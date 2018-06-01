@@ -106,6 +106,17 @@ html {
         @include font-size($font-size-small, $line-height-small);
       }
 
+      &.unstyled-link {
+        text-decoration: none;
+        &.active {
+          text-decoration: none;
+        }
+      }
+
+      &.active {
+        font-family: $base-font-bold;
+      }
+
       &:hover {
         cursor: pointer;
         color: $link-hover-color;

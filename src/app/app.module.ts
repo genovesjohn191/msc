@@ -120,7 +120,7 @@ export class AppModule {
 
   constructor(
     private _authIdentity: McsAuthenticationIdentity,
-    private _routePermission: McsRouteHandlerService,
+    private _routeHandlerService: McsRouteHandlerService,
     private _errorHandlerService: McsErrorHandlerService,
     private _notificationJobService: McsNotificationJobService,
     private _notificationContextService: McsNotificationContextService,
@@ -166,7 +166,7 @@ export class AppModule {
     this._notificationJobService.initialize();
     this._notificationContextService.initialize();
     this._googleAnalyticsEventsService.initialize();
-    this._routePermission.initialize();
+    this._routeHandlerService.initialize();
     this._errorHandlerService.initialize();
   }
 }

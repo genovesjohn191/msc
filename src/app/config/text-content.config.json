@@ -1,7 +1,7 @@
 {
   "applicationPage": {
-    "stompConnectionError": "Notification server connection error.",
-    "stompConnectionSuccess": "Notification server successfully connected.",
+    "stompConnectionError": "We’re experiencing connectivity issues.",
+    "stompConnectionSuccess": "Successfully connected.",
     "stompConnectionRetryButton": "RETRY"
   },
   "consolePage": {
@@ -14,11 +14,19 @@
     "stopping": "Window will close in <strong>{{timer}}</strong>.",
     "errorMessage": "Console connection error."
   },
+  "documentTitle": {
+    "servers": "Macquarie Cloud Services: Servers",
+    "medias": "Macquarie Cloud Services: Media Catalog",
+    "firewalls": "Macquarie Cloud Services: Firewalls",
+    "tickets": "Macquarie Cloud Services: Tickets",
+    "notifications": "Macquarie Cloud Services: Notifications",
+    "products": "Macquarie Cloud Services: Product Catalog",
+    "tools": "Macquarie Cloud Services: Other Tools"
+  },
   "navigation": {
     "title": "Macquarie Cloud Services Portal",
-    "home": "Home",
-    "about": "About",
-    "dashboard": "Dashboard",
+    "virtual": "Virtual",
+    "medias": "Media",
     "servers": "Servers",
     "others": "Others",
     "networking": "Networking",
@@ -31,15 +39,19 @@
     "loadingProducts": "Loading products.",
     "noProducts": "No products to display.",
     "errorProducts": "Sorry, something’s not right. We weren’t able to retrieve the list of products.",
-    "medias": "Media"
+    "categories": {
+      "compute": "Compute",
+      "network": "Network",
+      "colocation": "Colocation",
+      "storage": "Storage",
+      "services": "Services"
+    }
   },
   "dashboard": {
-    "title": "Macquarie Cloud Services: Dashboard",
     "header": "Dashboard",
     "description": "The following graphs roll up information based on the selected Virtual Data Centre."
   },
   "servers": {
-    "title": "Macquarie Cloud Services: Servers",
     "header": "Servers",
     "description": "View and manage any Managed or Self-Managed VDC servers. Dedicated and physical servers will be displayed in future versions of the portal.",
     "leftPanelHeader": "Server Filter",
@@ -109,7 +121,7 @@
         "name": "Virtual Data Centres",
         "prefix": "{{service_type}} VDC - {{availability_zone}} "
       },
-      "serverDetailsStep" : {
+      "serverDetailsStep": {
         "title": "Server Details",
         "loading": "Loading server data, this may take a few moments."
       },
@@ -302,7 +314,7 @@
         "deleteStorageLink": "Delete",
         "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
         "noDisks": "No disks are attached to this server.",
-        "errorGettingDisks":"Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
+        "errorGettingDisks": "Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
         "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
       },
       "backups": {
@@ -313,7 +325,7 @@
         "snapshotDescription": "Snapshots are point-in-time VM-level restore points.<br/>Restoring a snapshot is not reversible, so restore carefully.",
         "snapshots": "Snapshots",
         "noSnapshots": "There are no Snapshots to display for this server.",
-        "errorGettingSnapshots":"Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
+        "errorGettingSnapshots": "Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
         "createSnapshot": "Snapshot now",
         "creatingSnapshot": "Capturing Snapshot",
         "restoreSnapshot": "Restore",
@@ -351,7 +363,7 @@
           "dhcp": "DHCP"
         },
         "noNics": "There are no NICs to display for this server.",
-        "errorGettingNics":"Sorry, something’s not right. We weren’t able to retrieve the list of NICs.",
+        "errorGettingNics": "Sorry, something’s not right. We weren’t able to retrieve the list of NICs.",
         "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
       }
     },
@@ -586,7 +598,6 @@
     }
   },
   "tickets": {
-    "title": "Macquarie Cloud Services: Tickets",
     "header": "Tickets",
     "leftPanelHeader": "Ticket Filter",
     "description": "Below is the list of your Macquarie Cloud Services tickets.",
@@ -657,7 +668,6 @@
     }
   },
   "firewalls": {
-    "title": "Macquarie Cloud Services: Firewalls",
     "header": "Firewalls",
     "description": "View details of your firewalls and firewall policies. Firewalls prevent malicious traffic from accessing services deployed in your environment.",
     "leftPanelHeader": "Firewall Filter",
@@ -736,11 +746,7 @@
   "networking": {
     "title": "Macquarie Cloud Services: Networking"
   },
-  "catalog": {
-    "title": "Macquarie Cloud Services: Catalog"
-  },
   "products": {
-    "title": "Macquarie Cloud Services: Product Catalog",
     "header": "Product Catalog",
     "leftPanelHeader": "Product Filter",
     "loading": "Loading Products.",
@@ -752,7 +758,6 @@
     }
   },
   "medias": {
-    "title": "Macquarie Cloud Services: Media Catalog",
     "header": "Media",
     "leftPanelHeader": "Catalog Filter",
     "newMedia": "New Media",
@@ -766,7 +771,6 @@
     "dataPlural": "Items"
   },
   "tools": {
-    "title": "Macquarie Cloud Services: Other Tools",
     "header": "Other Tools",
     "description": "Macquarie Cloud Services have all the tools you need to manage your compute workloads. Occasionally you may want to do something that's not possible in the Macquarie Cloud Services portal, but available in our partner portals. You have permission to access the following partner portals.",
     "otherServicesTableCaption": "Other services we offer.",
@@ -812,7 +816,6 @@
     }
   },
   "notifications": {
-    "title": "Macquarie Cloud Services: Notifications",
     "header": "Notifications",
     "leftPanelHeader": "Notification Filter",
     "description": "Notifications play back and track activity within the portal.",
@@ -849,8 +852,13 @@
     "unprocessable": {
       "header": "422",
       "summary": "The changes you wanted was rejected",
-      "description": "Some your inputs was not right.",
+      "description": "Some of your inputs was not right.",
       "retry": "Please double check your inputs and try again."
+    },
+    "forbidden": {
+      "header": "403",
+      "summary": "You don't have permission to access this page.",
+      "retry": "Please check the address and try again."
     },
     "serviceUnavailable": {
       "header": "Oops",
@@ -860,10 +868,6 @@
     },
     "refresh": "Refresh the page",
     "home": "Go to home page"
-  },
-  "accessDeniedPage": {
-    "heading": "You don't have permission to access this page.",
-    "linkText": "Click here to return to the Dashboard."
   },
   "accountPanel": {
     "accountSettings": "Account Settings",
@@ -913,7 +917,7 @@
       "min": "The minimum value that can be entered is {{min_value}}",
       "max": "Maximum value can be entered is upto {{max_value}}"
     },
-    "safeToNavigateAway" : {
+    "safeToNavigateAway": {
       "message": "Your changes may not be saved. Are you sure you want to leave this page?"
     },
     "wizard": {

@@ -9,7 +9,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
 import { HttpErrorPageModule } from './http-error-page/http-error-page.module';
-import { AccessDeniedPageModule } from './access-denied-page/access-denied-page.module';
 
 /** Service */
 import {
@@ -28,8 +27,7 @@ import {
     MediasModule,
     NotificationsModule,
     GadgetsModule,
-    HttpErrorPageModule,
-    AccessDeniedPageModule
+    HttpErrorPageModule
   ],
   providers: [
     JobsApiService,

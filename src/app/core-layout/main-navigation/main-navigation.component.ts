@@ -1,15 +1,27 @@
 import {
   Component,
+  OnInit,
   AfterViewInit,
+  OnDestroy,
   ViewChild,
-  TemplateRef
+  TemplateRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  ViewEncapsulation
 } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsTextContentProvider,
+  McsRouteCategory,
+  mcsRouteCategoryText,
+  McsRouteHandlerService,
   CoreDefinition
 } from '../../core';
-import { refreshView } from '../../utilities';
+import {
+  refreshView,
+  unsubscribeSubject
+} from '../../utilities';
 /** Directives for mobile/table/desktop */
 import {
   NavigationDesktopItemsDirective
@@ -21,12 +33,17 @@ import {
 @Component({
   selector: 'mcs-main-navigation',
   templateUrl: './main-navigation.component.html',
-  styleUrls: ['./main-navigation.component.scss']
+  styleUrls: ['./main-navigation.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'main-navigation-wrapper'
+  }
 })
 
-export class MainNavigationComponent implements AfterViewInit {
-
+export class MainNavigationComponent implements OnInit, AfterViewInit, OnDestroy {
   public textContent: any;
+  public selectedCategory: McsRouteCategory;
 
   @ViewChild(NavigationDesktopItemsDirective)
   public navigationDesktop: NavigationDesktopItemsDirective;
@@ -41,11 +58,21 @@ export class MainNavigationComponent implements AfterViewInit {
     return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
+  public get routerCategoryEnum(): any {
+    return McsRouteCategory;
+  }
+
+  private _destroySubject = new Subject<void>();
+
   public constructor(
-    private _textProvider: McsTextContentProvider,
-    private _titleService: Title
-  ) {
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _routerHandlerService: McsRouteHandlerService,
+    private _textProvider: McsTextContentProvider
+  ) { }
+
+  public ngOnInit() {
     this.textContent = this._textProvider.content;
+    this._listenToRouteChanges();
   }
 
   public ngAfterViewInit() {
@@ -55,7 +82,27 @@ export class MainNavigationComponent implements AfterViewInit {
     });
   }
 
-  public setTitle(title: string) {
-    this._titleService.setTitle(title);
+  public ngOnDestroy() {
+    unsubscribeSubject(this._destroySubject);
+  }
+
+  /**
+   * Returns the route category label
+   * @param routeCategory Route category to obtain
+   */
+  public getCategoryLabel(routeCategory: McsRouteCategory): string {
+    return mcsRouteCategoryText[routeCategory];
+  }
+
+  /**
+   * Listens to route details changes
+   */
+  private _listenToRouteChanges(): void {
+    this._routerHandlerService.onActiveRoute
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((activeRoute) => {
+        this.selectedCategory = activeRoute.category;
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

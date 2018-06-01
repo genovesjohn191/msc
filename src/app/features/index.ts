@@ -15,4 +15,3 @@ export * from './dashboard/dashboard.constants';
 export * from './products/products.constants';
 export * from './medias/medias.constants';
 export * from './http-error-page/http-error-page.constants';
-export * from './access-denied-page/access-denied-page.constants';

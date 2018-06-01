@@ -13,6 +13,11 @@ import {
   NavigationDesktopItemsDirective,
   NavigationMobileItemsDirective
 } from './main-navigation';
+import {
+  SubNavigationComponent,
+  SubNavigationDesktopComponent,
+  SubNavigationMobileComponent
+} from './sub-navigation';
 /** Layout Components */
 import { ContentComponent } from './content/content.component';
 import { FooterComponent } from './footer/footer.component';
@@ -48,7 +53,10 @@ import { coreLayoutProviders } from './core-layout.constants';
     NavigationDesktopComponent,
     NavigationMobileComponent,
     NavigationDesktopItemsDirective,
-    NavigationMobileItemsDirective
+    NavigationMobileItemsDirective,
+    SubNavigationComponent,
+    SubNavigationDesktopComponent,
+    SubNavigationMobileComponent
   ],
   imports: [
     CommonModule,
@@ -72,6 +80,9 @@ import { coreLayoutProviders } from './core-layout.constants';
     NavigationMobileComponent,
     NavigationDesktopItemsDirective,
     NavigationMobileItemsDirective,
+    SubNavigationComponent,
+    SubNavigationDesktopComponent,
+    SubNavigationMobileComponent,
     CommonModule,
     RouterModule,
     FormsModule

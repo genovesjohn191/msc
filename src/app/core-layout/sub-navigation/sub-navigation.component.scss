@@ -1,0 +1,69 @@
+@import '../../../styles/shared/base';
+
+$sub-navigation-large-padding: 0 $space-xxlarge;
+$sub-navigation-small-padding: 0;
+$sub-navigation-bg-color: $color-white;
+$sub-navigation-height: $shared-navigation-panel-height;
+// Mobile
+$sub-navigation-mobile-border-color: $border-color-light;
+
+.sub-navigation-wrapper {
+  @include display-flex(row);
+  z-index: $zindex-navigation;
+
+  // We need to deduct the z-index in case of mobile so that it won't
+  // overlapped with the main navigation
+  @include breakpoint(small) {
+    z-index: $zindex-navigation - 1;
+  }
+
+  .sub-navigation-content {
+    width: 100%;
+    min-height: $sub-navigation-height;
+    background-color: $sub-navigation-bg-color;
+  }
+}
+
+.sub-navigation-desktop-wrapper {
+  @include display-flex(row);
+  @include align-items(center);
+  @include breakpoint(small) {
+    display: none;
+  }
+
+  .sub-navigation-content {
+    padding: $sub-navigation-large-padding;
+    @include display-flex(row);
+    @include align-items(center);
+    @include set-items-interval($space-xxlarge, horizontal);
+  }
+}
+
+.sub-navigation-mobile-wrapper {
+  display: none;
+  @include breakpoint(small) {
+    @include display-flex(column);
+  }
+
+  .sub-navigation-header {
+    height: $shared-navigation-panel-height;
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: center;
+    @include flex(1);
+
+    @include font-size(14);
+    font-family: $base-font-bold;
+  }
+
+  .sub-navigation-content {
+    @include display-flex(column);
+    justify-content: center;
+    padding: $sub-navigation-small-padding;
+    border-top: 1px solid $sub-navigation-mobile-border-color;
+
+    .sub-navigation-item {
+      padding: $space-small $space-medium;
+    }
+  }
+}

@@ -4,23 +4,16 @@ $main-navigation-large-padding: 0 $space-large;
 $main-navigation-small-padding: 0 $space-medium;
 $main-navigation-color: $color-black;
 $main-navigation-bg-color: $color-primary-01;
-$main-navigation-box-shadow-color: $color-black;
 $navigation-item-font-size: $h4-default-font-size;
 
-:host {
+.main-navigation-wrapper {
   z-index: $zindex-navigation;
 }
 
-.main-navigation-wrapper {
+.main-navigation-content {
   background-color: $main-navigation-bg-color;
   color: $main-navigation-color;
   padding: $main-navigation-large-padding;
-
-  @include box-shadow((
-    0 3px 4px 0 rgba($main-navigation-box-shadow-color, 0.14),
-    0 3px 3px -2px rgba($main-navigation-box-shadow-color, 0.2),
-    0 1px 8px 0 rgba($main-navigation-box-shadow-color, 0.12)
-  ));
 
   @include breakpoint(small) {
     padding: $main-navigation-small-padding;
@@ -28,7 +21,12 @@ $navigation-item-font-size: $h4-default-font-size;
 
   .navigation-item {
     a {
+      text-decoration: none;
       @include font-size($navigation-item-font-size);
+
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 

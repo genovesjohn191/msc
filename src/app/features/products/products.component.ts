@@ -15,7 +15,6 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError,
   switchMap
 } from 'rxjs/operators';
 import {
@@ -164,21 +163,22 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
    * Listens to every params changed and get the product by id
    */
   private _getProductById(): void {
-    this._activatedRoute.paramMap.pipe(
-      takeUntil(this._destroySubject),
-      catchError((error) => {
+    this._activatedRoute.paramMap
+      .pipe(
+        takeUntil(this._destroySubject),
+        switchMap((params: ParamMap) => {
+          this.productStatusFactory.setInProgress();
+          let productId = params.get('id');
+          this.selectedProduct = { id: productId } as Product;
+          return this._productsRepository.findRecordById(productId);
+        })
+      )
+      .catch((error) => {
         // Handle common error status code
         this.productStatusFactory.setError();
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return Observable.throw(error);
-      }),
-      switchMap((params: ParamMap) => {
-        this.productStatusFactory.setInProgress();
-        let productId = params.get('id');
-        this.selectedProduct = { id: productId } as Product;
-        return this._productsRepository.findRecordById(productId);
       })
-    )
       .subscribe((response) => {
         this.selectedProduct = response;
         this._productService.selectProduct(response);
