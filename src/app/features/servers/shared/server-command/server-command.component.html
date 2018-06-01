@@ -35,6 +35,26 @@
       </a>
     </ng-container>
 
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
+      <a (click)="onExecuteCommand(serverCommandEnum.Suspend)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)"
+        mcsEventTracker="suspend"
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
+        {{ textContent.suspend }}
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
+      <a (click)="onExecuteCommand(serverCommandEnum.Resume)"
+        [disabled]="!getEnabledCommand(serverCommandEnum.Resume)"
+        mcsEventTracker="resume"
+        mcsEventCategory="server"
+        mcsEventLabel="server-command-tool">
+        {{ textContent.resume }}
+      </a>
+    </ng-container>
+
     <ng-container *mcsIsSelfManagedServer="server">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
         <a (click)="onExecuteCommand(serverCommandEnum.Scale)"
@@ -79,26 +99,6 @@
           {{ textContent.delete }}
         </a>
       </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Suspend)">
-      <a (click)="onExecuteCommand(serverCommandEnum.Suspend)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Suspend)"
-        mcsEventTracker="suspend"
-        mcsEventCategory="server"
-        mcsEventLabel="server-command-tool">
-        {{ textContent.suspend }}
-      </a>
-    </ng-container>
-
-    <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Resume)">
-      <a (click)="onExecuteCommand(serverCommandEnum.Resume)"
-        [disabled]="!getEnabledCommand(serverCommandEnum.Resume)"
-        mcsEventTracker="resume"
-        mcsEventCategory="server"
-        mcsEventLabel="server-command-tool">
-        {{ textContent.resume }}
-      </a>
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.ViewVCloud)">

@@ -1,10 +1,12 @@
 <div class="server-performance-scale-container">
   <div class="description">
-    <ng-content select="[title]"></ng-content>
-    <ng-content *ngIf="inputManageType == inputManageTypeEnum.Slider"
-      select="[slider-details]"></ng-content>
-    <ng-content *ngIf="inputManageType == inputManageTypeEnum.Custom"
-      select="[custom-details]"></ng-content>
+    <ng-container *ngIf="inputManageType == inputManageTypeEnum.Slider">
+      <!-- We need to hardcode this instead of putting in the text-config since it is using a pipe -->
+      <span>{{ textContent.sliderMessage }} This VDC has {{ availableMemoryMB | mcsDataSize: 'MB' }} RAM and {{ availableCpuCount }} vCPU available.</span>
+    </ng-container>
+    <ng-container *ngIf="inputManageType == inputManageTypeEnum.Custom">
+      <span>{{ textContent.customMessage }}</span>
+    </ng-container>
   </div>
 
   <div class="custom-size">
@@ -22,12 +24,11 @@
       <div animate trigger="fadeIn" display-flex="column" align-items="flex-start">
 
         <div class="inline-field">
-          <span class="label">{{ textContent.ramLabel + ':'}} </span>
-
           <mcs-form-field class="form-field-size-small" [ngStyle]="{width: '150px'}">
             <input mcsInput placeholder="Enter RAM"
               [ngModel]="customMemoryGBValue"
               [formControl]="serverScaleCustomRam">
+            <mcs-suffix mcsSuffix>{{ textContent.ramUnit }}</mcs-suffix>
 
             <mcs-hint mcsHint align="start">
               {{ textContent.maximumRam }}: {{ availableMemoryMB | mcsDataSize: 'MB' }}
@@ -51,11 +52,11 @@
         </div>
 
         <div class="inline-field">
-          <span class="label">{{ textContent.cpuLabel + ':'}} </span>
           <mcs-form-field class="form-field-size-small" [ngStyle]="{width: '150px'}">
             <input mcsInput placeholder="Enter CPU"
               [ngModel]="customCpuCountValue"
               [formControl]="serverScaleCustomCpu">
+            <mcs-suffix mcsSuffix>{{ textContent.cpuUnit }}</mcs-suffix>
 
             <mcs-hint mcsHint align="start">
               {{ textContent.maximumCpu }}: {{ availableCpuCount }} vCPU
