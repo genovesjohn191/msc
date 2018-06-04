@@ -95,7 +95,7 @@
             {{ columnSettings.lastUpdatedDate.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ convertDateTimeToString(row.updatedOn) }}
+            {{ row.updatedOn | mcsStdDateFormat }}
           </mcs-data-cell>
         </ng-container>
 

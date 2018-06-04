@@ -5,6 +5,7 @@ $table-default-minimum-width: 800px;
 $table-medium-minimum-width: 650px;
 $table-small-minimum-width: 100%;
 $table-cell-side-padding: $space-medium;
+$table-action-cell-size: 55px;
 
 // Table header
 $table-header-background-color: $color-black;
@@ -65,6 +66,12 @@ mcs-table {
       vertical-align: middle;
       font-family: $circular-pro-book;
       padding: $table-header-cell-padding;
+
+      &.action-header-cell {
+        min-width: $table-action-cell-size;
+        max-width: $table-action-cell-size;
+        padding: 0;
+      }
     }
   }
 
@@ -85,6 +92,16 @@ mcs-table {
       border-right: none;
       font-family: $circular-pro-book;
       padding: $table-data-cell-padding;
+
+      &.action-data-cell {
+        min-width: $table-action-cell-size;
+        max-width: $table-action-cell-size;
+        padding: 0;
+      }
+
+      &.active-data-row {
+        background-color: $hover-bg-color;
+      }
     }
   }
 }

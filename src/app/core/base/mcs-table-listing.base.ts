@@ -8,7 +8,6 @@ import {
 } from '../services/mcs-browser.service';
 import {
   isNullOrEmpty,
-  convertDateToStandardString,
   unsubscribeSafely
 } from '../../utilities';
 import { McsSearch } from '../interfaces/mcs-search.interface';
@@ -94,14 +93,6 @@ export abstract class McsTableListingBase<T> {
   protected retryDatasource(): void {
     if (isNullOrEmpty(this.dataSource)) { return; }
     this.initializeDatasource();
-  }
-
-  /**
-   * Converts the date and time to string based on standard format
-   * @param date Date to be converted
-   */
-  protected convertDateTimeToString(date: Date): string {
-    return convertDateToStandardString(date);
   }
 
   /**

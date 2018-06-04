@@ -23,7 +23,16 @@
       <div class="notification-panel-user-info">
         <small read-only>{{ notification.ownerFullName }}</small>
         <mcs-icon [key]="bulletIconKey" color="grey-02" size="xxsmall"></mcs-icon>
-        <small read-only>{{ startTimeText }}</small>
+
+        <!-- Notification date -->
+        <ng-container [ngSwitch]="notification?.dataStatus">
+          <ng-container *ngSwitchCase="dataStatusEnum.InProgress">
+            <small read-only>{{ notification.startedOn | mcsStdDateFormat: 'LT' }}</small>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <small read-only>{{ notification.endedOn | mcsStdDateFormat: 'LT' }}</small>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>

@@ -126,7 +126,8 @@
       <mcs-table [dataSource]="dataSource">
         <!-- Selection Column -->
         <ng-container mcsColumnDef="select">
-          <mcs-header-cell *mcsHeaderCellDef class="text-center action-cell hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef
+            class="text-center action-header-cell hidden-small">
             <mcs-checkbox (change)="toggleSelectAll()"
               color="white"
               [checked]="isAllSelected()"
@@ -134,9 +135,10 @@
             </mcs-checkbox>
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
-            [disabled]="row.isProcessing"
-            class="text-center action-cell hidden-small">
-            <mcs-checkbox stop-propagation
+            [disabled]="row.isProcessing" stop-propagation
+            cursor="default"
+            class="text-center action-data-cell hidden-small">
+            <mcs-checkbox
               [checked]="selection.isSelected(row)"
               (change)="selection.toggle(row)">
             </mcs-checkbox>
@@ -245,11 +247,11 @@
 
         <!-- Action Column -->
         <ng-container mcsColumnDef="action" *mcsAccessControl="['VmPowerStateEdit']">
-          <mcs-header-cell *mcsHeaderCellDef class="action-cell">
-            <!-- {{ columnSettings.action.text }} -->
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-center action-cell">
-            <mcs-server-command [server]="row" stop-propagation
+          <mcs-header-cell *mcsHeaderCellDef class="action-header-cell"></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" stop-propagation
+            cursor="default"
+            class="text-center action-data-cell">
+            <mcs-server-command [server]="row"
               [excluded]="excludedCommands"
               (onClick)="executeServerCommand(row, $event)"></mcs-server-command>
           </mcs-data-cell>
@@ -286,7 +288,7 @@
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           cursor="pointer"
           [disabled]="serverDeleting(row)"
-          [ngClass]="{'active-row': selection.isSelected(row)}"
+          [ngClass]="{'active-data-row': selection.isSelected(row)}"
           (click)="navigateToServer(row)"
           mcsEventTracker="navigate-to-server"
           mcsEventCategory="server"

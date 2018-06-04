@@ -63,9 +63,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   private _tabindex: number = 0;
 
   @Input()
-  public get checked(): boolean {
-    return this._checked;
-  }
+  public get checked(): boolean { return this._checked; }
   public set checked(value: boolean) {
     if (this._checked !== value) {
       this._checked = coerceBoolean(value);

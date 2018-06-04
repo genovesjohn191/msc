@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
-import { convertDateToStandardString } from '../../../../utilities';
+import { saveAs } from 'file-saver';
 import {
   CoreDefinition,
   McsTextContentProvider
@@ -17,7 +17,6 @@ import {
   TicketCommentType
 } from '../../models';
 import { TicketsService } from '../../tickets.service';
-import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'mcs-ticket-activity',
@@ -92,14 +91,6 @@ export class TicketActivityComponent implements OnInit {
     return this.activity.type === TicketActivityType.Comment ?
       CoreDefinition.ASSETS_FONT_COMMENT :
       CoreDefinition.ASSETS_FONT_ATTACHMENT;
-  }
-
-  /**
-   * Converts the date and time to string based on standard format
-   * @param date Date to be converted
-   */
-  public convertDateTimeToString(date: Date): string {
-    return convertDateToStandardString(date);
   }
 
   /**

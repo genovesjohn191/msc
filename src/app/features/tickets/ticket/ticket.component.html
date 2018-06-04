@@ -8,7 +8,7 @@
         <div flex="auto" display-flex align-items="center" justify-content="flex-end">
           <mcs-icon [key]="checkIconKey" size="large"></mcs-icon>
           <span>
-            {{ getStateString(ticket.state) }} ({{ convertDateToString(ticket.createdOn) }})
+            {{ getStateString(ticket.state) }} ({{ ticket.createdOn | mcsStdDateFormat }})
           </span>
         </div>
       </mcs-top-panel-item>
@@ -46,7 +46,7 @@
               <mcs-icon size="small" [key]="userIconKey"></mcs-icon>
               <strong>{{ requestor }}</strong>
             </div>
-            <span read-only>{{ convertDateToString(ticket.createdOn) }}</span>
+            <span read-only>{{ ticket.createdOn | mcsStdDateFormat }}</span>
           </div>
 
           <div class="grid-column">

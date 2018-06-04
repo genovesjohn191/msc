@@ -35,7 +35,7 @@
 
       <!-- Jobs -->
       <div class="hpadding-xsmall"
-        *ngFor="let notification of (displayedNotifications | mcsNotificationPanelMaxPipe)">
+        *ngFor="let notification of (displayedNotifications | mcsArrayTakeMax: 3)">
         <mcs-notification-panel
           type="running"
           [notification]="notification">

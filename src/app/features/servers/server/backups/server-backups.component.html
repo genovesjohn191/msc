@@ -27,7 +27,7 @@
                   <div class="inline-items-xsmall">
                     <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
                       size="small" [mcsTooltip]="server.processingText"></mcs-icon>
-                    <span>{{ convertDateToString(snapshot.createdOn) }}</span>
+                    <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
                     <span read-only>{{ getSnapshotSizeInGB(snapshot.sizeMB) }}</span>
                   </div>
                   <div [disabled]="!enabledActions" class="inline-items-medium text-right">

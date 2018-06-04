@@ -17,7 +17,6 @@ import {
   CoreDefinition
 } from '../../../core';
 import {
-  formatDate,
   refreshView,
   isNullOrEmpty
 } from '../../../utilities';
@@ -94,12 +93,8 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
     return CoreDefinition.ASSETS_FONT_BULLET;
   }
 
-  /**
-   * Returns the formatted started date of the job
-   */
-  public get startTimeText(): string {
-    return isNullOrEmpty(this.notification) ?
-      '' : formatDate(this.notification.startedOn, 'LT');
+  public get dataStatusEnum(): any {
+    return McsDataStatus;
   }
 
   public constructor(
