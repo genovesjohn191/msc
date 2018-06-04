@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
+import { Subscription } from 'rxjs';
 import {
   McsDataStatusFactory,
   McsDataStatus,
@@ -15,9 +16,9 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  animateFactory
 } from '../../utilities';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mcs-data-status',
@@ -25,6 +26,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./data-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  animations: [
+    animateFactory.fadeIn
+  ],
   host: {
     'class': 'data-status-wrapper'
   }

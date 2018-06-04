@@ -5,6 +5,7 @@ export class ServerNetwork {
   public vlanId: number;
   public netmask: string;
   public gateway: string;
+  public ipAddresses: string[];
 
   constructor() {
     this.id = undefined;
@@ -13,5 +14,6 @@ export class ServerNetwork {
     this.vlanId = undefined;
     this.netmask = undefined;
     this.gateway = undefined;
+    this.ipAddresses = undefined;
   }
 }

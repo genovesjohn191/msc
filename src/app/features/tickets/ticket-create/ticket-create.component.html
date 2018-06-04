@@ -22,7 +22,7 @@
       [mcsLoaderText]="textContent.creatingTicket"
       mcsLoaderOrientation="top"></div>
 
-    <p [innerHTML]="textContent.description"></p>
+    <p [innerHTML]="textContent.description | mcsNewLines"></p>
 
     <div class="contextual-help-page-wrapper limited-view" #createContent>
       <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">

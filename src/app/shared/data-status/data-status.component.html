@@ -5,17 +5,17 @@
   </div>
 
   <!-- Successfull status -->
-  <div *ngSwitchCase="dataStatusEnum.Success">
+  <div *ngSwitchCase="dataStatusEnum.Success" [@fadeIn]>
     <ng-content select="[mcsDataSuccess]"></ng-content>
   </div>
 
   <!-- Empty records status -->
-  <div *ngSwitchCase="dataStatusEnum.Empty">
+  <div *ngSwitchCase="dataStatusEnum.Empty" [@fadeIn]>
     <ng-content select="[mcsDataEmpty]"></ng-content>
   </div>
 
   <!-- Error obtainment status -->
-  <div *ngSwitchCase="dataStatusEnum.Error">
+  <div *ngSwitchCase="dataStatusEnum.Error" [@fadeIn]>
     <ng-content select="[mcsDataError]"></ng-content>
   </div>
 </ng-container>

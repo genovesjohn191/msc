@@ -2,11 +2,12 @@ import {
   Component,
   ViewEncapsulation,
   AfterViewInit,
-  NgZone,
   OnInit,
   OnDestroy,
   ViewChild,
-  TemplateRef
+  TemplateRef,
+  ChangeDetectorRef,
+  NgZone
 } from '@angular/core';
 import {
   Router,
@@ -31,7 +32,8 @@ import {
 import {
   unsubscribeSubject,
   refreshView,
-  isNullOrEmpty
+  isNullOrEmpty,
+  animateFactory
 } from './utilities';
 
 /*
@@ -42,11 +44,15 @@ import {
   selector: 'mcs-app',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./app.component.scss'],
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  animations: [
+    animateFactory.fadeOut
+  ]
 })
 
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   public textContent: any;
+  public showLoadingScreen: boolean = true;
   public stompErrorStatusBarRef: McsSnackBarRef<any>;
   public stompSuccessStatusBarRef: McsSnackBarRef<any>;
 
@@ -76,8 +82,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _router: Router,
-    private _ngZone: NgZone,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
+    private _ngZone: NgZone,
     private _snackBarRefService: McsSnackBarService,
     private _notificationJobService: McsNotificationJobService
   ) {
@@ -86,13 +93,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.applicationPage;
-
   }
 
   public ngAfterViewInit(): void {
     refreshView(() => {
       this._listenToStompStatus();
       this._listenToRouterEvents();
+      this._listenToNgZone();
     });
   }
 
@@ -194,6 +201,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Listens to zone event to make sure the loader is always hiding
+   */
+  private _listenToNgZone(): void {
+    // We need to this in order to make sure that the loader is always hiding
+    this._ngZone.onStable.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._hideLoader());
+  }
+
+  /**
    * Intercepts each navigation and do the corresponding process
    * @param event Event to intercept
    */
@@ -215,9 +231,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _showLoader(): void {
     if (!this._isInitialDisplayed) { return; }
-    this._ngZone.runOutsideAngular(() => {
-      this.trigger = undefined;
-    });
+    this.showLoadingScreen = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -227,9 +242,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
    * outside angular that is not reflected in the DOM
    */
   private _hideLoader(): void {
+    if (!this._isInitialDisplayed) { return; }
     this._isInitialDisplayed = false;
-    this._ngZone.runOutsideAngular(() => {
-      this.trigger = 'fadeOut';
-    });
+    this.showLoadingScreen = false;
+    this._changeDetectorRef.markForCheck();
   }
 }

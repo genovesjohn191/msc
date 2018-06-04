@@ -21,7 +21,7 @@
           {{ textContent.errors.required }}
         </mcs-error>
         <mcs-error mcsError errorState="invalidServerName">
-          <span [innerHTML]="textContent.errors.invalidServerName"></span>
+          <span [innerHTML]="textContent.errors.invalidServerName | mcsNewLines"></span>
         </mcs-error>
       </mcs-form-field>
     </div>

@@ -16,7 +16,9 @@ import { scale } from './animations/scale';
  * @example Usage: <ng-container [expansionVertical]> </ng-container>
  */
 export const animateFactory: {
+  readonly fadeInOut: AnimationTriggerMetadata;
   readonly fadeIn: AnimationTriggerMetadata;
+  readonly fadeOut: AnimationTriggerMetadata;
   readonly slideLeft: AnimationTriggerMetadata;
   readonly slideRight: AnimationTriggerMetadata;
   readonly slideTop: AnimationTriggerMetadata;
@@ -28,7 +30,9 @@ export const animateFactory: {
   readonly rotate180: AnimationTriggerMetadata;
   readonly scaleIn: AnimationTriggerMetadata;
 } = {
+    fadeInOut: fade.fadeInOut,
     fadeIn: fade.fadeIn,
+    fadeOut: fade.fadeOut,
     slideLeft: slide.slideLeft,
     slideRight: slide.slideRight,
     slideTop: slide.slideTop,
