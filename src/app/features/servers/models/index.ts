@@ -8,7 +8,7 @@ export * from './request/server-create-storage';
 export * from './request/server-create-network';
 export * from './request/server-client-object';
 export * from './request/server-create-snapshot';
-export * from './request/server-manage-network';
+export * from './request/server-manage-nic';
 export * from './request/server-manage-media';
 
 export * from './response/server';
@@ -23,6 +23,7 @@ export * from './response/server-operating-system';
 export * from './response/server-operating-system-summary';
 export * from './response/server-nic';
 export * from './response/server-network';
+export * from './response/server-network-ip-address';
 export * from './response/server-media';
 export * from './response/server-hardware';
 export * from './response/server-guest-os';

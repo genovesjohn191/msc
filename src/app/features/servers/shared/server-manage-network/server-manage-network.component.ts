@@ -35,7 +35,8 @@ import {
   ServerNetwork,
   ServerInputManageType,
   ServerIpAllocationMode,
-  ServerManageNetwork
+  ServerManageNetwork,
+  ServerNetworkIpAddress
 } from '../../models';
 import { ServersService } from '../../servers.service';
 
@@ -62,10 +63,10 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   public textContent: any;
   public netMask: any;
   public selectedIpAddress: ServerIpAllocationMode;
-  public ipAddressesInUsed: string[];
+  public ipAddressesInUsed: ServerNetworkIpAddress[];
   public ipAddressItems: McsOption[];
   public inputManageType: ServerInputManageType;
-  public ipAddressessStatusFactory = new McsDataStatusFactory<string[]>();
+  public ipAddressessStatusFactory = new McsDataStatusFactory<ServerNetworkIpAddress[]>();
 
   // Form variables
   public fgIpAddress: FormGroup;
@@ -174,7 +175,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
    */
   public isIpAddressInUsed(ipAddress: string): boolean {
     if (isNullOrEmpty(ipAddress)) { return false; }
-    return !!this.ipAddressesInUsed.find((inUsed) => ipAddress === inUsed);
+    return !!this.ipAddressesInUsed.find((inUsed) => ipAddress === inUsed.ipAddress);
   }
 
   /**
