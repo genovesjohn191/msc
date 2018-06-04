@@ -1,4 +1,4 @@
-<div id="preloader" animate [trigger]="trigger">
+<div id="preloader" *ngIf="showLoadingScreen" [@fadeOut]>
   <!-- This is the content to show the spinner -->
   <div></div>
 </div>

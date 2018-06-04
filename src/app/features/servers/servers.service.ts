@@ -101,8 +101,6 @@ export class ServersService {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}`;
 
-    mcsApiRequestParameter.responseType = 'json';
-
     return this._mcsApiService.get(mcsApiRequestParameter)
       .finally(() => {
         this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
@@ -883,11 +881,11 @@ export class ServersService {
 
   /**
    * Get server resource networks by ID (MCS API Response)
-   * @param id Resource identification
+   * @param resourceId Resource identification
    */
-  public getResourceNetworks(id: any): Observable<McsApiSuccessResponse<ServerNetwork[]>> {
+  public getResourceNetworks(resourceId: any): Observable<McsApiSuccessResponse<ServerNetwork[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${id}/networks`;
+    mcsApiRequestParameter.endPoint = `/servers/resources/${resourceId}/networks`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .finally(() => {
@@ -897,6 +895,32 @@ export class ServersService {
         // Deserialize json reponse
         let apiResponse = McsApiSuccessResponse
           .deserializeResponse<ServerNetwork[]>(ServerNetwork, response);
+
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
+        return apiResponse;
+      });
+  }
+
+  /**
+   * Get server resource network details by ID (MCS API Response)
+   * @param resourceId Resource identification
+   * @param networkId Network identification
+   */
+  public getResourceNetwork(resourceId: any, networkId: any):
+    Observable<McsApiSuccessResponse<ServerNetwork>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/resources/${resourceId}/networks/${networkId}`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
+      .map((response) => {
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerNetwork>(ServerNetwork, response);
 
         this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
         this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

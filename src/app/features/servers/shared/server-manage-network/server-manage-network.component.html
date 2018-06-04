@@ -2,7 +2,7 @@
 <div><ng-content select="[mcsManageNetworkHeader]"></ng-content></div>
 
 <!-- Network selection -->
-<div>
+<div class="space-bottom-large">
   <mcs-form-field>
     <mcs-select [(ngModel)]="selectedNetwork" placeholder="Select network">
       <mcs-select-group header="Networks">
@@ -28,10 +28,7 @@
 <div [ngSwitch]="inputManageType" [ngStyle]="{height: '140px'}">
   <!-- Ip address DHCP Mode -->
   <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons" class="block-items-medium">
-    <div class="block-items">
-      <span>{{ textContent.buttonMessage }}</span>
-      <span>{{ textContent.advisoryMessage }}</span>
-    </div>
+    <span>{{ textContent.buttonMessage }}</span>
 
     <mcs-radio-button-group orientation="vertical"
       [ngModel]="ipAddressValue" (ngModelChange)="onRadioButtonChanged($event)">
@@ -39,15 +36,17 @@
         {{ item.text }}
       </mcs-radio-button>
     </mcs-radio-button-group>
+
+    <ng-content select="[mcsManageNetworkWarning]"></ng-content>
   </div>
 
   <!-- IP address custom mode -->
-  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
-    <p>{{ textContent.customMessage }}</p>
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom" class="block-items-medium">
+    <span>{{ textContent.customMessage }}</span>
 
     <form [formGroup]="fgIpAddress">
       <mcs-form-field class="form-field-size-medium">
-        <input mcsInput placeholder="Enter IP Address"
+        <input mcsInput placeholder="Enter IP Address" #customInput
           [(ngModel)]="customIpAddress"
           [formControl]="fcIpdAdrress">
 
@@ -66,5 +65,17 @@
         </mcs-error>
       </mcs-form-field>
     </form>
+
+    <mcs-data-status [dataStatusFactory]="ipAddressessStatusFactory">
+      <mcs-data-status-success mcsDataSuccess>
+        <mcs-data-status-warning class="justify-content-flex-start"
+          *ngIf="isIpAddressInUsed(customInput?.value)">
+          <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>
+        </mcs-data-status-warning>
+      </mcs-data-status-success>
+      <mcs-data-status-in-progress mcsDataInProgress>
+        <span>{{ textContent.loadingIpInUsed }}</span>
+      </mcs-data-status-in-progress>
+    </mcs-data-status>
   </div>
 </div>

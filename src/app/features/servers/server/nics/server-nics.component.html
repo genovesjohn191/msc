@@ -97,12 +97,19 @@
         <ng-container *mcsAccessControl="['VmNicEdit']">
           <div class="action-box" *ngIf="addNicEnabled" [disabled]="!server.executable">
             <mcs-server-manage-network *ngFor="let item of manageNetworkTemplate"
+              [resourceId]="serverResource?.id"
               [networks]="resourceNetworks"
               (dataChange)="onNetworkChanged($event)"
               [(selectedNetwork)]="selectedNetwork">
 
               <ng-container mcsManageNetworkHeader>
                 <h4>{{ textContent.addHeading }}</h4>
+              </ng-container>
+
+              <ng-container mcsManageNetworkWarning>
+                <mcs-data-status-warning>
+                  {{ textContent.warningEditingNic }}
+                </mcs-data-status-warning>
               </ng-container>
             </mcs-server-manage-network>
 
@@ -129,13 +136,21 @@
       <!-- Edit NIC -->
       <div [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.EditNic" class="block-items-large">
         <div class="action-box" [disabled]="!server.executable">
-          <mcs-server-manage-network [networks]="resourceNetworks"
+          <mcs-server-manage-network
+            [networks]="resourceNetworks"
+            [resourceId]="serverResource?.id"
             (dataChange)="onNetworkChanged($event)"
             [customIpAddress]="currentIpAddress"
             [(selectedNetwork)]="selectedNetwork">
 
             <ng-container mcsManageNetworkHeader>
               <h4>{{ textContent.editHeading }} {{ selectedNic.index }}</h4>
+            </ng-container>
+
+            <ng-container mcsManageNetworkWarning>
+              <mcs-data-status-warning>
+                {{ textContent.warningEditingNic }}
+              </mcs-data-status-warning>
             </ng-container>
           </mcs-server-manage-network>
 

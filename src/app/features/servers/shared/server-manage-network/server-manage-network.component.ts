@@ -22,12 +22,14 @@ import {
 import {
   replacePlaceholder,
   isNullOrEmpty,
-  animateFactory
+  animateFactory,
+  clearArrayRecord
 } from '../../../../utilities';
 import {
   McsTextContentProvider,
   McsOption,
-  CoreValidators
+  CoreValidators,
+  McsDataStatusFactory
 } from '../../../../core';
 import {
   ServerNetwork,
@@ -35,6 +37,7 @@ import {
   ServerIpAllocationMode,
   ServerManageNetwork
 } from '../../models';
+import { ServersService } from '../../servers.service';
 
 // Constants
 const DEFAULT_GATEWAY = '192.168.0.1';
@@ -56,13 +59,14 @@ const Netmask = require('netmask').Netmask;
 })
 
 export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestroy {
-
   public textContent: any;
   public netMask: any;
   public selectedIpAddress: ServerIpAllocationMode;
+  public ipAddressesInUsed: string[];
   public ipAddressItems: McsOption[];
-
   public inputManageType: ServerInputManageType;
+  public ipAddressessStatusFactory = new McsDataStatusFactory<string[]>();
+
   // Form variables
   public fgIpAddress: FormGroup;
   public fcIpdAdrress: FormControl;
@@ -72,6 +76,9 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
 
   @Output()
   public selectedNetworkChange = new EventEmitter<ServerNetwork>();
+
+  @Input()
+  public resourceId: string;
 
   @Input()
   public networks: ServerNetwork[];
@@ -85,7 +92,9 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
     if (this._selectedNetwork !== value) {
       this._selectedNetwork = value;
       this.selectedNetworkChange.emit(this._selectedNetwork);
+      this._resetFormGroup();
       this._createNetmaskByNetwork(this._selectedNetwork);
+      this._setInUsedIpAddresses(this._selectedNetwork);
     }
   }
   private _selectedNetwork: ServerNetwork;
@@ -95,16 +104,18 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _serversService: ServersService
   ) {
     this.inputManageType = ServerInputManageType.Buttons;
     this.ipAddressItems = new Array();
+    this.ipAddressesInUsed = new Array();
     this.netMask = new Netmask(`${DEFAULT_GATEWAY}/${DEFAULT_NETMASK}`);
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
-      .servers.shared.serverIpAddress;
+      .servers.shared.manageNetwork;
     this._registerFormGroup();
     this._setIpAddressItems();
     this._setSelectedNetwork();
@@ -158,13 +169,37 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   }
 
   /**
+   * Returns true when the inputted ip-address is inused
+   * @param ipAddress Ip address to be checked
+   */
+  public isIpAddressInUsed(ipAddress: string): boolean {
+    if (isNullOrEmpty(ipAddress)) { return false; }
+    return !!this.ipAddressesInUsed.find((inUsed) => ipAddress === inUsed);
+  }
+
+  /**
    * Create the instance of the netmask based on the provided network
    * @param network Network to be considered
    */
   private _createNetmaskByNetwork(network: ServerNetwork): void {
-    this._resetFormGroup();
     if (isNullOrEmpty(network)) { return; }
     this.netMask = new Netmask(`${network.gateway}/${network.netmask}`);
+  }
+
+  /**
+   * Sets the ip-addresses in used in the current network selected
+   * @param network Network currently selected
+   */
+  private _setInUsedIpAddresses(network: ServerNetwork): void {
+    if (isNullOrEmpty(network)) { return; }
+    this.ipAddressessStatusFactory.setInProgress();
+    this._serversService.getResourceNetwork(this.resourceId, network.id)
+      .finally(() => this.ipAddressessStatusFactory.setSuccesfull(this.ipAddressesInUsed))
+      .subscribe((response) => {
+        if (isNullOrEmpty(response)) { return; }
+        this.ipAddressesInUsed = response.content.ipAddresses;
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /**
@@ -213,6 +248,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
    * Resets the form group fields
    */
   private _resetFormGroup(): void {
+    clearArrayRecord(this.ipAddressesInUsed);
     if (isNullOrEmpty(this.fgIpAddress)) { return; }
     this.fgIpAddress.reset();
     this.fcIpdAdrress.reset();

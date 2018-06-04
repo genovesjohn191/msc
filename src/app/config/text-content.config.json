@@ -322,7 +322,7 @@
         "loading": "Loading snapshots information.",
         "loadingContent": "Loading snapshots.",
         "snapshotHeader": "VM Snapshot",
-        "snapshotDescription": "Snapshots are point-in-time VM-level restore points.<br/>Restoring a snapshot is not reversible, so restore carefully.",
+        "snapshotDescription": "Snapshots are point-in-time VM-level restore points.\r\n Restoring a snapshot is not reversible, so restore carefully.",
         "snapshots": "Snapshots",
         "noSnapshots": "There are no Snapshots to display for this server.",
         "errorGettingSnapshots": "Sorry, something’s not right. We weren’t able to retrieve the list of snapshots.",
@@ -363,6 +363,7 @@
           "dhcp": "DHCP"
         },
         "noNics": "There are no NICs to display for this server.",
+        "warningEditingNic": "This server may need to be restarted before any NIC changes are made effective.",
         "errorGettingNics": "Sorry, something’s not right. We weren’t able to retrieve the list of NICs.",
         "reachedNetworksLimit": "You've reached the maximum number of NICs for this server."
       }
@@ -376,21 +377,6 @@
         "viewServersLink": "View your servers",
         "viewServerLink": "View your server"
       },
-      "serverIpAddress": {
-        "customSwitch": "Enter a custom IP Address",
-        "customMessage": "Warning: entering a custom IP address may cause conflicts if other servers in the network have this IP address assigned via another method.",
-        "buttonSwitch": "Select from default",
-        "buttonMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
-        "advisoryMessage": "This server may need to be restarted before any NIC changes are made effective.",
-        "hints": {
-          "ipRange": "Valid range"
-        },
-        "errors": {
-          "ipAddressRequired": "Enter an IP address.",
-          "ipAddressInvalid": "Please enter a valid IP Address.",
-          "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})."
-        }
-      },
       "renameServerDialog": {
         "title": "Rename Server",
         "information": "Specify the new name for this server:",
@@ -401,7 +387,7 @@
         },
         "errors": {
           "required": "Server name is required",
-          "invalidServerName": "Please ensure the new name meets the following criteria: <br/> • Different to the current name<br/> • Between 1 and 15 characters<br/> • No special characters or spaces except - or _"
+          "invalidServerName": "Please ensure the new name meets the following criteria: \r\n • Different to the current name\r\n • Between 1 and 15 characters\r\n • No special characters or spaces except - or _"
         }
       },
       "resetPasswordDialog": {
@@ -526,6 +512,22 @@
           "storageAvailable": "Storage size should not exceed {{available_storage}}."
         }
       },
+      "manageNetwork": {
+        "customSwitch": "Enter a custom IP Address",
+        "customMessage": "Manually enter an IP address.",
+        "buttonSwitch": "Select from default",
+        "buttonMessage": "Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
+        "inUsedEnteredIpMessage": "This IP address is already assigned to a server.\r\n Your server may not be usable until the IP address is dissociated or the server it is assigned to is stopped.",
+        "loadingIpInUsed": "Loading Ip-addresses.",
+        "hints": {
+          "ipRange": "Valid range"
+        },
+        "errors": {
+          "ipAddressRequired": "Enter an IP address.",
+          "ipAddressInvalid": "Please enter a valid IP Address.",
+          "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})."
+        }
+      },
       "performanceScale": {
         "sliderSwitch": "Select from slider",
         "customSwitch": "Enter custom size",
@@ -630,7 +632,7 @@
     },
     "createTicket": {
       "header": "Create New Ticket",
-      "description": "<h4>We all need help from time to time.</h4><br/>Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.<br/><br/>Provide us with as much information as you can and we'll take a look.<br/><br/>Existing tickets can be viewed and managed in MacquarieView.",
+      "description": "<h4>We all need help from time to time.</h4>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.\r\n\n Provide us with as much information as you can and we'll take a look.\r\n\n Existing tickets can be viewed and managed in MacquarieView.",
       "type": "Ticket Type",
       "services": "Services",
       "attachments": "Attachments",
