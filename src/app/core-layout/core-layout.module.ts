@@ -29,7 +29,6 @@ import {
 import {
   AccountPanelComponent,
   NotificationPanelComponent,
-  NotificationPanelMaxPipe,
   SwitchAccountComponent,
   RecentCompaniesMaxPipe
 } from './shared';
@@ -40,7 +39,6 @@ import { coreLayoutProviders } from './core-layout.constants';
   declarations: [
     BreadcrumbsComponent,
     AccountPanelComponent,
-    NotificationPanelMaxPipe,
     NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,
@@ -66,7 +64,6 @@ import { coreLayoutProviders } from './core-layout.constants';
   ],
   exports: [
     AccountPanelComponent,
-    NotificationPanelMaxPipe,
     NotificationPanelComponent,
     SwitchAccountComponent,
     RecentCompaniesMaxPipe,

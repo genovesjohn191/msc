@@ -22,8 +22,11 @@
       [color]="checked || indeterminate ? 'primary' : color"></mcs-icon>
   </div>
 
+  <!-- Checkbox spacer -->
+  <span *ngIf="labelRef?.textContent.trim()" class="checkbox-spacer"></span>
+
   <!-- Checkbox label -->
-  <span class="checkbox-label">
+  <span class="checkbox-label" #labelRef>
     <!-- Add an invisible span so JAWS can read the label -->
     <span style="display:none">&nbsp;</span>
     <ng-content></ng-content>

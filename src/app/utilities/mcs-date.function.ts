@@ -65,20 +65,6 @@ export function compareDates(firstDate: Date, secondDate: Date): number {
 }
 
 /**
- * Convert Date to standard string based on FUSION standard
- *
- * `@Note:` This conversion is common accross the project
- * @param date Date to be converted
- */
-export function convertDateToStandardString(date: Date) {
-  let convertedString: string = '';
-  if (date) {
-    convertedString = formatDate(date, 'ddd, DD MMM YYYY, LT');
-  }
-  return convertedString;
-}
-
-/**
  * Return expiration label based on the provided expiry date
  * Expires = if not yet expired
  * Expired = if expired

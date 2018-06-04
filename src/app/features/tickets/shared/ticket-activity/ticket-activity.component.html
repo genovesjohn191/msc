@@ -8,7 +8,7 @@
   <div class="space-between-inline-items">
     <strong>{{ activity.header }}</strong>
     <span class="hidden-small" read-only>
-      {{ convertDateTimeToString(activity.date) }}
+      {{ activity.date | mcsStdDateFormat }}
     </span>
   </div>
 

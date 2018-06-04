@@ -21,3 +21,6 @@ export type McsAlignmentType = 'start' | 'center' | 'end';
 
 // Data Size Type
 export type McsDataSizeType = 'B' | 'KB' | 'MB' | 'GB' | 'TB';
+
+// Priority Type
+export type McsPriorityType = 'low' | 'medium' | 'high';

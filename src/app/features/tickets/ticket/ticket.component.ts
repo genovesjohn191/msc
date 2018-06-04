@@ -20,7 +20,6 @@ import {
 } from '../../../core';
 import {
   isNullOrEmpty,
-  convertDateToStandardString,
   compareDates,
   replacePlaceholder,
   unsubscribeSafely
@@ -190,14 +189,6 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public getSubTypeString(status: TicketSubType) {
     return ticketSubTypeText[status];
-  }
-
-  /**
-   * Converts the date and time to string based on standard format
-   * @param date Date to be converted
-   */
-  public convertDateToString(date: Date) {
-    return convertDateToStandardString(date);
   }
 
   /**

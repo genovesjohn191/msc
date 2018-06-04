@@ -71,7 +71,7 @@
             {{ columnSettings.startTime.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-              {{ convertDateTimeToString(row.startedOn) }}
+              {{ row.startedOn | mcsStdDateFormat }}
           </mcs-data-cell>
         </ng-container>
 
@@ -81,7 +81,7 @@
             {{ columnSettings.completed.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-              {{ convertDateTimeToString(row.endedOn) }}
+              {{ row.endedOn | mcsStdDateFormat }}
           </mcs-data-cell>
         </ng-container>
 

@@ -1,11 +1,13 @@
 @import "../../../styles/shared/base";
 
 $checkbox-icon-size: 13px;
-$checkbox-icon-margin: 8px;
+$checkbox-label-spacer: 8px;
 $checkbox-icon-ripple-size: 15px;
 
 .checkbox-wrapper {
-  @include display-flex(row);
+  @include display-inline-flex(row);
+  @include align-items(center);
+  vertical-align: middle;
   position: relative;
   white-space: nowrap;
   cursor: inherit;
@@ -17,12 +19,16 @@ $checkbox-icon-ripple-size: 15px;
   @include align-items(center);
   cursor: pointer;
 
+  .checkbox-spacer {
+    height: 1px;
+    width: $checkbox-label-spacer;
+  }
+
   .checkbox-inner-container {
     @include display-flex(row);
     @include align-items(center);
     width: $checkbox-icon-size;
     height: $checkbox-icon-size;
-    margin-right: $checkbox-icon-margin;
 
     // Override ripple radius effect
     .checkbox-ripple-wrapper {

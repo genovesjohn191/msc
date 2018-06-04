@@ -9,7 +9,6 @@ export class CoreDefinition {
   public static MOBILE_PORTRAIT_MIN_WIDTH = 320;
 
   /** Notifications */
-  public static NOTIFICATION_MAX_DISPLAY = 3;
   public static NOTIFICATION_ANIMATION_DELAY = 310;
   public static NOTIFICATION_COMPLETED_TIMEOUT_IN_MS = 5000;
   public static NOTIFICATION_FAILED_TIMEOUT_IN_MS = 10000;

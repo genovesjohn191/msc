@@ -21,12 +21,12 @@ import {
   McsUnitType
 } from '../../../../core';
 import {
-  convertDateToStandardString,
   unsubscribeSafely,
   isNullOrEmpty,
   convertMbToGb,
   appendUnitSuffix
 } from '../../../../utilities';
+import { StdDateFormatPipe } from '../../../../shared';
 import {
   ServerDetailsBase,
   CreateSnapshotDialogComponent,
@@ -119,6 +119,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
+    private _standardDateFormatPipe: StdDateFormatPipe,
     private _notificationsEventService: McsNotificationEventsService,
     private _dialogService: McsDialogService
   ) {
@@ -157,14 +158,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     unsubscribeSafely(this.restoreJobSnapshotSubscription);
     unsubscribeSafely(this.deleteJobSnapshotSubscription);
     this.dispose();
-  }
-
-  /**
-   * Convert the given date into standard format of string
-   * @param date Date to be converted
-   */
-  public convertDateToString(date: Date): string {
-    return convertDateToStandardString(date);
   }
 
   public getSnapshotSizeInGB(sizeMB: number): string {
@@ -270,7 +263,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     let dialogData = new ServerSnapshotDialogContent();
     dialogData.serverName = this.server.name;
     if (!isNullOrEmpty(_snapshot)) {
-      dialogData.snapshotName = convertDateToStandardString(_snapshot.createdOn);
+      dialogData.snapshotName = this._standardDateFormatPipe.transform(_snapshot.createdOn);
     }
     dialogData.vdcName = this.serverResource.name;
 

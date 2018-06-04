@@ -5,6 +5,8 @@ import { MapIterablePipe } from './map-iterable.pipe';
 import { DataSizePipe } from './data-size.pipe';
 import { SortArrayPipe } from './sort-array.pipe';
 import { DataLabelPipe } from './data-label.pipe';
+import { StdDateFormatPipe } from './std-date-format.pipe';
+import { ArrayTakeMaxPipe } from './array-take-max.pipe';
 
 @NgModule({
   declarations: [
@@ -12,14 +14,18 @@ import { DataLabelPipe } from './data-label.pipe';
     MapIterablePipe,
     DataSizePipe,
     SortArrayPipe,
-    DataLabelPipe
+    DataLabelPipe,
+    StdDateFormatPipe,
+    ArrayTakeMaxPipe
   ],
   exports: [
     NewLinesPipe,
     MapIterablePipe,
     DataSizePipe,
     SortArrayPipe,
-    DataLabelPipe
+    DataLabelPipe,
+    StdDateFormatPipe,
+    ArrayTakeMaxPipe
   ],
   providers: [DecimalPipe]
 })

@@ -22,15 +22,6 @@ $action-cell-width: 55px;
       margin-left: auto;
     }
   }
-
-  .action-cell {
-    width: $action-cell-width;
-    max-width: $action-cell-width;
-  }
-
-  .active-row {
-    background-color: $color-grey-07;
-  }
 }
 
 .listing-action-wrapper {
