@@ -21,7 +21,7 @@ export class TestComponent {
   @ViewChild(StdDateFormatPipe)
   public pipe: StdDateFormatPipe;
 
-  public testDate = new Date('2018-06-04T05:53:23Z');
+  public testDate = new Date(new Date('2018-06-04T05:53:23Z').toISOString());
 }
 
 describe('StdDateFormatPipe', () => {
