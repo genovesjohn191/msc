@@ -1,3 +1,6 @@
+import { JsonProperty } from 'json-object-mapper';
+import { ServerNetworkIpAddress } from './server-network-ip-address';
+
 export class ServerNetwork {
   public id: string;
   public name: string;
@@ -5,7 +8,9 @@ export class ServerNetwork {
   public vlanId: number;
   public netmask: string;
   public gateway: string;
-  public ipAddresses: string[];
+
+  @JsonProperty({ type: ServerNetworkIpAddress })
+  public ipAddresses: ServerNetworkIpAddress[];
 
   constructor() {
     this.id = undefined;
