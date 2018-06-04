@@ -27,7 +27,10 @@ import { ArrayTakeMaxPipe } from './array-take-max.pipe';
     StdDateFormatPipe,
     ArrayTakeMaxPipe
   ],
-  providers: [DecimalPipe]
+  providers: [
+    DecimalPipe,
+    StdDateFormatPipe
+  ]
 })
 
 export class PipesModule { }
