@@ -52,7 +52,8 @@ const Netmask = require('netmask').Netmask;
   templateUrl: 'server-manage-network.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    animateFactory.fadeIn
+    animateFactory.fadeIn,
+    animateFactory.fadeInOut
   ],
   host: {
     'class': 'server-manage-network-wrapper block block-items-medium'
