@@ -892,7 +892,8 @@
         "title": "Notifications",
         "noRecord": "Nothing new to report",
         "connectionError": "Notification server connection error",
-        "viewMore": "View More"
+        "viewMoreCount": "View {{count}} more...",
+        "viewMore": "View more..."
       },
       "loadingCompany": "Loading company details.",
       "signOut": "Sign Out"
