@@ -4,7 +4,8 @@ import {
   Server,
   ServerResource,
   ServerCatalogItem,
-  ServerCatalogItemType
+  ServerCatalogItemType,
+  ServerMedia
 } from '../models';
 import { ServersResourcesRepository } from '../servers-resources.repository';
 import { ServersService } from '../servers.service';
@@ -49,21 +50,20 @@ export abstract class ServerDetailsBase {
 
     this.serverResource.catalogItems.forEach((catalog) => {
       if (catalog.itemType === ServerCatalogItemType.Media) {
-        let resourceMedia = new ServerCatalogItem();
+        let resourceMedia: ServerCatalogItem;
+        let existingMedia: ServerMedia;
 
-        if (isNullOrEmpty(this.server.media)) {
-          resourceMedia = catalog;
-        } else {
-          let media = this.server.media.find((serverMedia) => {
-            return catalog.itemName !== serverMedia.name;
+        if (!isNullOrEmpty(this.server.media)) {
+          existingMedia = this.server.media.find((serverMedia) => {
+            return catalog.itemName === serverMedia.name;
           });
-
-          if (!isNullOrEmpty(media)) {
-            resourceMedia.itemName = media.name;
-          }
         }
 
-        if (!isNullOrEmpty(resourceMedia.itemName)) {
+        if (isNullOrEmpty(existingMedia)) {
+          resourceMedia = catalog;
+        }
+
+        if (!isNullOrEmpty(resourceMedia)) {
           resourceMediaList.push(resourceMedia);
         }
       }
