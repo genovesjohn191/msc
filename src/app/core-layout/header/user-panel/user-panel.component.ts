@@ -26,7 +26,8 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   addOrUpdateArrayRecord,
-  compareDates
+  compareDates,
+  replacePlaceholder
 } from '../../../utilities';
 import { Subscription } from 'rxjs';
 
@@ -68,6 +69,17 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public get hasNotification(): boolean {
     return this.displayedNotifications && this.displayedNotifications.length > 0;
+  }
+
+  /**
+   * Returns 'View [total number of other active notifications] More'
+   * if more than three notifications are created else just returns 'View More'
+   */
+  public get viewMoreNotificationsText(): string {
+    return this.displayedNotifications.length > 3 ?
+      replacePlaceholder(this.textContent.notifications.viewMoreCount,
+        'count', `${this.displayedNotifications.length - 3}`) :
+      this.textContent.notifications.viewMore;
   }
 
   public get bellIconKey(): string {
