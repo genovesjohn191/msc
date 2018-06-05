@@ -298,18 +298,20 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       data: disk,
       size: 'medium'
     });
+
+    this.selectedDisk = disk;
     dialogRef.afterClosed().subscribe((result) => {
       if (isNullOrEmpty(result)) { return; }
 
       let diskValues = new ServerStorageDeviceUpdate();
       diskValues.clientReferenceObject = {
         serverId: this.server.id,
-        diskId: disk.id,
-        storageProfile: disk.storageProfile,
-        sizeMB: disk.sizeMB
+        diskId: this.selectedDisk.id,
+        storageProfile: this.selectedDisk.storageProfile,
+        sizeMB: this.selectedDisk.sizeMB
       };
       this._serversService.setServerSpinner(this.server, this.selectedDisk);
-      this._serversService.deleteServerStorage(this.server.id, disk.id, diskValues)
+      this._serversService.deleteServerStorage(this.server.id, this.selectedDisk.id, diskValues)
         .pipe(
           catchError((error) => {
             this._errorHandlerService.handleHttpRedirectionError(error);
