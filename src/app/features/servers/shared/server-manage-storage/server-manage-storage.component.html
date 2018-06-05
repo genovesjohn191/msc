@@ -52,7 +52,7 @@
         <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
-          {{ textContent.maximumStorage }}: {{ availableMemory | number:'1.0-2' }} GB
+          {{ textContent.maximumStorage }}: {{ availableMemory | mcsDataSize: 'GB' }}
         </mcs-hint>
         <mcs-error mcsError errorState="required">
           {{ textContent.errors.storageRequired }}
