@@ -37,11 +37,11 @@ $table-information-border-color: $color-grey-05;
 }
 
 // Host Component Element
-mcs-table {
+.mcs-table-wrapper {
   display: block;
 }
 
-.mcs-table-wrapper {
+.mcs-table-content {
   display: table;
   border-collapse: collapse;
   min-width: $table-default-minimum-width;
@@ -56,9 +56,9 @@ mcs-table {
   mcs-header-row {
     display: table-row;
     text-align: left;
+    white-space: nowrap;
     background-color: $table-header-background-color;
     color: $table-header-font-color;
-    white-space: nowrap;
 
     mcs-header-cell {
       @extend %cell-style;

@@ -288,7 +288,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       default:
         this._storageOutput.storage = this.selectedStorage;
         this._storageOutput.sizeMB = convertGbToMb(this.storageValue);
-        this._storageOutput.valid = true;
+        this._storageOutput.valid = this.hasAvailableMemory;
         break;
     }
     // Emit changes

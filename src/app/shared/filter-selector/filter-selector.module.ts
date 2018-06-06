@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CheckboxModule } from '../checkbox/checkbox.module';
+import { PipesModule } from '../pipes/pipes.module';
 import { FilterSelectorComponent } from './filter-selector.component';
 
 @NgModule({
@@ -11,11 +12,13 @@ import { FilterSelectorComponent } from './filter-selector.component';
   imports: [
     CommonModule,
     FormsModule,
-    CheckboxModule
+    CheckboxModule,
+    PipesModule
   ],
   exports: [
     FilterSelectorComponent,
-    CheckboxModule
+    CheckboxModule,
+    PipesModule
   ]
 })
 

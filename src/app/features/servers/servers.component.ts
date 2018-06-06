@@ -16,7 +16,8 @@ import { ServersDataSource } from './servers.datasource';
 /** Models */
 import {
   Server,
-  ServerCommand
+  ServerCommand,
+  ServerServiceType
 } from './models';
 /** Shared */
 import {
@@ -34,7 +35,8 @@ import {
   McsDeviceType,
   McsSelection,
   McsTableListingBase,
-  McsDialogService
+  McsDialogService,
+  McsAccessControlService
 } from '../../core';
 import {
   isNullOrEmpty,
@@ -56,7 +58,8 @@ export class ServersComponent
   public textContent: any;
   public enumDefinition: any;
   public selection: McsSelection<Server>;
-  public hasSelfManagedResource: boolean;
+  public hasResources: boolean;
+  public hasManagedResource: boolean;
   private _destroySubject = new Subject<any>();
 
   public get serverCommand() {
@@ -77,6 +80,16 @@ export class ServersComponent
   public get totalRecordCount(): number {
     return isNullOrEmpty(this._serversRepository) ? 0 :
       this._serversRepository.totalRecordsCount;
+  }
+
+  /**
+   * Returns the excluded columns in the listing
+   */
+  public get excludedColumns(): string[] {
+    // TODO: FUSION-1726 - Waiting for the permission to view managementIp for internal users
+    let hasIpViewPermission = this.hasManagedResource &&
+      this._accessControlService.hasPermission(['CompanyView']);
+    return (hasIpViewPermission) ? undefined : ['managementIp'];
   }
 
   public get columnSettingsKey(): string {
@@ -123,6 +136,7 @@ export class ServersComponent
     private _serversService: ServersService,
     private _serversRepository: ServersRepository,
     private _serversResourceRepository: ServersResourcesRepository,
+    private _accessControlService: McsAccessControlService,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
@@ -137,7 +151,7 @@ export class ServersComponent
   public ngAfterViewInit() {
     refreshView(() => {
       this.initializeDatasource();
-      this._setSelfManagedFlag();
+      this._validateResources();
       this._listenToSelectionModeChange();
       this._listenToDataChange();
     });
@@ -338,10 +352,15 @@ export class ServersComponent
    * Initialize the server resources based on repository cache
    * and check whether the resource has self managed type
    */
-  private _setSelfManagedFlag(): void {
-    this._serversResourceRepository.hasSelfManagedServer()
-      .subscribe((response) => {
-        this.hasSelfManagedResource = response;
+  private _validateResources(): void {
+    this._serversResourceRepository.findAllRecords()
+      .subscribe((resources) => {
+        this.hasResources = !isNullOrEmpty(resources);
+        if (!isNullOrEmpty(resources)) {
+          this.hasManagedResource = !!resources.find(
+            (resource) => resource.serviceType === ServerServiceType.Managed
+          );
+        }
         this.changeDetectorRef.markForCheck();
       });
   }

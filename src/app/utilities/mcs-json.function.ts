@@ -1,5 +1,6 @@
 import { isArray } from './mcs-array.function';
 import { ObjectMapper } from 'json-object-mapper';
+import { isNullOrEmpty } from './mcs-object.function';
 
 const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 
@@ -83,6 +84,24 @@ export function convertMapToJsonObject(
     }
   });
   return obj;
+}
+
+/**
+ * Returns the converted json into map
+ * @param json Json object to be converted
+ */
+export function convertJsonToMapObject<T>(json: string): Map<string, T> {
+  let mapObject = new Map<string, T>();
+  if (isNullOrEmpty(json)) { return mapObject; }
+
+  // Converts the json object into keys and set to the mapping object
+  let jsonKeys = Object.keys(json);
+  if (!isNullOrEmpty(jsonKeys)) {
+    jsonKeys.forEach((key) => {
+      mapObject.set(key, json[key]);
+    });
+  }
+  return mapObject;
 }
 
 /**

@@ -40,8 +40,8 @@
       "text": "OS Edition",
       "value": true
     },
-    "privateIp": {
-      "text": "Private IP",
+    "managementIp": {
+      "text": "Management IP",
       "value": true
     },
     "zone": {

@@ -4,7 +4,7 @@
 
     <!-- Server Creation -->
     <ng-container *mcsAccessControl="['VmEdit']">
-      <mcs-top-panel-item *mcsTopPanelItemDef [disabled]="!hasSelfManagedResource">
+      <mcs-top-panel-item *mcsTopPanelItemDef [disabled]="!hasResources">
         <mcs-action-item id="ctaCreateNewServer"
           (click)="onClickNewServerButton()"
           mcsEventTracker="create-new-server"
@@ -110,7 +110,8 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey"
-        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+        [excludedFilterKeys]="excludedColumns"
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -171,7 +172,7 @@
         </ng-container>
 
         <!-- Type Column -->
-        <ng-container mcsColumnDef="type">
+        <ng-container mcsColumnDef="type" [mcsColumnDefHidden]="isColumnHidden('type')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
             {{ columnSettings.type.text }}
           </mcs-header-cell>
@@ -181,8 +182,8 @@
         </ng-container>
 
         <!-- Catalog Column -->
-        <ng-container mcsColumnDef="catalog">
-          <mcs-header-cell *mcsHeaderCellDef  class="hidden-xsmall">
+        <ng-container mcsColumnDef="catalog" [mcsColumnDefHidden]="isColumnHidden('catalog')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
             {{ columnSettings.catalog.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
@@ -190,10 +191,11 @@
           </mcs-data-cell>
         </ng-container>
 
-        <!-- Private IP Column -->
-        <ng-container mcsColumnDef="privateIp">
+        <!-- Management IP Column -->
+        <ng-container mcsColumnDef="managementIp"
+          [mcsColumnDefHidden]="isColumnHidden('managementIp')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-            {{ columnSettings.privateIp.text }}
+            {{ columnSettings.managementIp.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
             {{ row.ipAddress }}
@@ -201,7 +203,7 @@
         </ng-container>
 
         <!-- Zone Column -->
-        <ng-container mcsColumnDef="zone">
+        <ng-container mcsColumnDef="zone" [mcsColumnDefHidden]="isColumnHidden('zone')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.zone.text }}
           </mcs-header-cell>
@@ -211,7 +213,7 @@
         </ng-container>
 
         <!-- Service ID Column -->
-        <ng-container mcsColumnDef="serviceId">
+        <ng-container mcsColumnDef="serviceId" [mcsColumnDefHidden]="isColumnHidden('serviceId')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.serviceId.text }}
           </mcs-header-cell>
@@ -221,7 +223,7 @@
         </ng-container>
 
         <!-- VDC Column -->
-        <ng-container mcsColumnDef="vdc">
+        <ng-container mcsColumnDef="vdc" [mcsColumnDefHidden]="isColumnHidden('vdc')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.vdc.text }}
           </mcs-header-cell>
@@ -236,7 +238,7 @@
         </ng-container>
 
         <!-- VApp Column -->
-        <ng-container mcsColumnDef="vApp">
+        <ng-container mcsColumnDef="vApp" [mcsColumnDefHidden]="isColumnHidden('vApp')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.vApp.text }}
           </mcs-header-cell>
@@ -262,7 +264,7 @@
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.noServers }} </span>
-              <span *ngIf="hasSelfManagedResource && !isSearching">
+              <span *ngIf="hasResources && !isSearching">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
                 Click <a (click)="onClickNewServerButton()"

@@ -22,7 +22,7 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey"
-        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -66,7 +66,7 @@
         </ng-container>
 
         <!-- Start Time Column -->
-        <ng-container mcsColumnDef="startTime">
+        <ng-container mcsColumnDef="startTime" [mcsColumnDefHidden]="isColumnHidden('startTime')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.startTime.text }}
           </mcs-header-cell>
@@ -76,7 +76,7 @@
         </ng-container>
 
         <!-- Completed Column -->
-        <ng-container mcsColumnDef="completed">
+        <ng-container mcsColumnDef="completed" [mcsColumnDefHidden]="isColumnHidden('completed')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.completed.text }}
           </mcs-header-cell>

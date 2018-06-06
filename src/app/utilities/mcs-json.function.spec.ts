@@ -2,6 +2,7 @@ import { async } from '@angular/core/testing';
 import {
   reviverParser,
   convertMapToJsonObject,
+  convertJsonToMapObject,
   serializeObjectToJson,
   deserializeJsonToObject,
   isJson
@@ -79,6 +80,30 @@ describe('JSON Functions', () => {
       expect(convertedObject).toBeDefined();
       expect(convertedObject.first).toBe('value1');
       expect(convertedObject.second).toBe('value2');
+    });
+  });
+
+  describe('convertJsonToMapObject()', () => {
+    let testObject: any;
+    beforeEach(async(() => {
+      testObject = JSON.parse('{"serverName": {"text": "server name", "value": true} }');
+    }));
+
+    it(`should convert Json to Map object`, () => {
+      let convertedMap = convertJsonToMapObject(testObject);
+      expect(convertedMap).toBeDefined();
+    });
+
+    it(`should return true when the key is found on the converted object map`, () => {
+      let convertedMap = convertJsonToMapObject(testObject);
+      expect(convertedMap).toBeDefined();
+      expect(convertedMap.has('serverName')).toBeTruthy();
+    });
+
+    it(`should return false when the key is not found on the converted object map`, () => {
+      let convertedMap = convertJsonToMapObject(testObject);
+      expect(convertedMap).toBeDefined();
+      expect(convertedMap.has('firstNothing')).toBeFalsy();
     });
   });
 

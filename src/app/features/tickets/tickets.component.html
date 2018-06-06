@@ -33,7 +33,7 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey"
-        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -47,7 +47,8 @@
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
         <!-- ID Column -->
-        <ng-container mcsColumnDef="crispTicketNumber">
+        <ng-container mcsColumnDef="crispTicketNumber"
+          [mcsColumnDefHidden]="isColumnHidden('crispTicketNumber')">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.crispTicketNumber.text }}
           </mcs-header-cell>
@@ -57,7 +58,7 @@
         </ng-container>
 
         <!-- Status Column -->
-        <ng-container mcsColumnDef="status">
+        <ng-container mcsColumnDef="status" [mcsColumnDefHidden]="isColumnHidden('status')">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.status.text }}
           </mcs-header-cell>
@@ -80,7 +81,7 @@
         </ng-container>
 
         <!-- Logged By Column -->
-        <ng-container mcsColumnDef="loggedBy">
+        <ng-container mcsColumnDef="loggedBy" [mcsColumnDefHidden]="isColumnHidden('loggedBy')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.loggedBy.text }}
           </mcs-header-cell>
@@ -90,7 +91,8 @@
         </ng-container>
 
         <!-- Last Updated Date Column -->
-        <ng-container mcsColumnDef="lastUpdatedDate">
+        <ng-container mcsColumnDef="lastUpdatedDate"
+          [mcsColumnDefHidden]="isColumnHidden('lastUpdatedDate')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.lastUpdatedDate.text }}
           </mcs-header-cell>
@@ -100,7 +102,8 @@
         </ng-container>
 
         <!-- Last Updated By Column -->
-        <ng-container mcsColumnDef="lastUpdatedBy">
+        <ng-container mcsColumnDef="lastUpdatedBy"
+          [mcsColumnDefHidden]="isColumnHidden('lastUpdatedBy')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.lastUpdatedBy.text }}
           </mcs-header-cell>
@@ -110,7 +113,8 @@
         </ng-container>
 
         <!-- Customer Reference Column -->
-        <ng-container mcsColumnDef="customerReference">
+        <ng-container mcsColumnDef="customerReference"
+          [mcsColumnDefHidden]="isColumnHidden('customerReference')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.customerReference.text }}
           </mcs-header-cell>
