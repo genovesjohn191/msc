@@ -20,7 +20,7 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey"
-        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -57,7 +57,8 @@
         </ng-container>
 
         <!-- Firmware Version Column -->
-        <ng-container mcsColumnDef="firmwareVersion">
+        <ng-container mcsColumnDef="firmwareVersion"
+          [mcsColumnDefHidden]="isColumnHidden('firmwareVersion')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.firmwareVersion.text }}
           </mcs-header-cell>
@@ -67,7 +68,7 @@
         </ng-container>
 
         <!-- IP Address Column -->
-        <ng-container mcsColumnDef="ipAddress">
+        <ng-container mcsColumnDef="ipAddress" [mcsColumnDefHidden]="isColumnHidden('ipAddress')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.ipAddress.text }}
           </mcs-header-cell>
@@ -77,7 +78,7 @@
         </ng-container>
 
         <!-- Role Column -->
-        <ng-container mcsColumnDef="role">
+        <ng-container mcsColumnDef="role" [mcsColumnDefHidden]="isColumnHidden('role')">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.role.text }}
           </mcs-header-cell>
@@ -87,7 +88,7 @@
         </ng-container>
 
         <!-- Service ID Column -->
-        <ng-container mcsColumnDef="serviceId">
+        <ng-container mcsColumnDef="serviceId" [mcsColumnDefHidden]="isColumnHidden('serviceId')">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.serviceId.text }}
           </mcs-header-cell>

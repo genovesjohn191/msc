@@ -41,7 +41,6 @@ table {
   tbody,
   thead {
     tr {
-      text-align: left;
       border-bottom: 1px solid $table-data-border-color;
 
       &:hover:not(th) {
@@ -52,6 +51,7 @@ table {
         background-color: $table-header-background-color;
         color: $table-header-font-color;
         white-space: nowrap;
+        text-align: left;
 
         @extend %cell-style;
         @include font-size($table-header-font-size);
@@ -64,6 +64,7 @@ table {
         @include font-size($table-data-font-size);
         vertical-align: middle;
         border-right: none;
+        text-align: left;
         padding: $table-data-cell-padding;
       }
     }
@@ -92,7 +93,6 @@ table.basic-table {
   tbody,
   thead {
     tr {
-      text-align: left;
       border-bottom: 1px solid $table-basic-border-color;
 
       &:hover:not(th) {
@@ -103,6 +103,7 @@ table.basic-table {
         background-color: $table-basic-header-bg-color;
         color: $table-basic-header-color;
         white-space: nowrap;
+        text-align: left;
 
         @extend %cell-style;
         vertical-align: middle;
@@ -113,6 +114,7 @@ table.basic-table {
         @extend %cell-style;
         vertical-align: middle;
         border-right: none;
+        text-align: left;
         padding: $table-basic-data-padding;
       }
     }

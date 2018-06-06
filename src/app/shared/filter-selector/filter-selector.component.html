@@ -1,7 +1,8 @@
 <!-- Generate checkbox in each of the filter items excluding those who are excluded -->
-<ng-container *ngFor="let key of filterKeys" >
-  <mcs-checkbox *ngIf="!filterItems[key].exclude" [(ngModel)]="filterItems[key].value"
+<ng-container *ngFor="let iterator of (displayedItemsMap | mcsMapIterable)" >
+  <mcs-checkbox *ngIf="!iterator.value.exclude" [@fadeIn]
+    [(ngModel)]="iterator.value.value"
     (change)="onNotifyGetFilters()">
-    {{ filterItems[key].text }}
+    {{ iterator.value.text }}
   </mcs-checkbox>
 </ng-container>

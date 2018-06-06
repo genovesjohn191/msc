@@ -34,7 +34,7 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey"
-        (onGetFilters)="updateColumnSettings($event)"></mcs-filter-selector>
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
 
@@ -63,7 +63,7 @@
         </ng-container>
 
         <!-- Catalog Column -->
-        <ng-container mcsColumnDef="catalog">
+        <ng-container mcsColumnDef="catalog" [mcsColumnDefHidden]="isColumnHidden('catalog')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.catalog.text }}
           </mcs-header-cell>
@@ -73,7 +73,7 @@
         </ng-container>
 
         <!-- Location Column -->
-        <ng-container mcsColumnDef="location">
+        <ng-container mcsColumnDef="location" [mcsColumnDefHidden]="isColumnHidden('location')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.location.text }}
           </mcs-header-cell>
@@ -83,7 +83,7 @@
         </ng-container>
 
         <!-- Size Column -->
-        <ng-container mcsColumnDef="size">
+        <ng-container mcsColumnDef="size" [mcsColumnDefHidden]="isColumnHidden('size')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.size.text }}
           </mcs-header-cell>
@@ -93,7 +93,7 @@
         </ng-container>
 
         <!-- Attached To Column -->
-        <ng-container mcsColumnDef="attachedTo">
+        <ng-container mcsColumnDef="attachedTo" [mcsColumnDefHidden]="isColumnHidden('attachedTo')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.attachedTo.text }}
           </mcs-header-cell>

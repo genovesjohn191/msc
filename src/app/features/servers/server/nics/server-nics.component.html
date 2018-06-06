@@ -17,17 +17,17 @@
             <table class="basic-table no-gutter">
               <thead>
                 <tr>
-                  <th>{{ textContent.nic }}</th>
+                  <th class="hidden-small">{{ textContent.nic }}</th>
                   <th>{{ textContent.network }}</th>
                   <th>{{ textContent.primary }}</th>
-                  <th>{{ textContent.ipMode }}</th>
+                  <th class="hidden-small">{{ textContent.ipMode }}</th>
                   <th>{{ textContent.ipAddresses }}</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let nic of serverNics">
-                  <td>
+                  <td class="hidden-small">
                     <ng-container *ngIf="nicIsInProgress(nic); else nicIndex">
                       <mcs-icon [key]="spinnerIconKey" size="small"
                         [mcsTooltip]="jobSummaryInfo"
@@ -44,7 +44,7 @@
                     <mcs-icon *ngIf="nic.isPrimary" class="space-left-medium"
                       [key]="checkIconKey" size="small"></mcs-icon>
                   </td>
-                  <td>
+                  <td class="hidden-small">
                     <span>{{ nic.ipAllocationModeLabel }}</span>
                   </td>
                   <td>

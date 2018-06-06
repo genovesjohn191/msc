@@ -71,7 +71,7 @@ describe('FilterSelectorComponent', () => {
 
       component = fixture.componentInstance;
       component.key = 'myKey';
-      component.onGetFilters = new EventEmitter();
+      component.filtersChange = new EventEmitter();
     });
   }));
 
@@ -84,11 +84,11 @@ describe('FilterSelectorComponent', () => {
         expect(mcsStorageService.getItem).toHaveBeenCalledTimes(1);
       }));
 
-    it('should set the filterItems value when localStorage is not empty', () => {
+    it('should set the filterItemsMap value when localStorage is not empty', () => {
       component.ngOnInit();
-      expect(component.filterItems).not.toEqual(null || undefined);
-      expect(component.filterItems['serverName'].text).toEqual(filterText);
-      expect(component.filterItems['serverName'].value).toEqual(true);
+      expect(component.filterItemsMap).not.toEqual(null || undefined);
+      expect(component.filterItemsMap.get('serverName').text).toEqual(filterText);
+      expect(component.filterItemsMap.get('serverName').value).toEqual(true);
     });
 
     it('should call getDefaultFilters() of FilterProvider when localStorage is empty',
@@ -99,18 +99,18 @@ describe('FilterSelectorComponent', () => {
         expect(filterProvider.getDefaultFilters).toHaveBeenCalledTimes(1);
       }));
 
-    it('should set the filterItems default value when local storage is empty', () => {
+    it('should set the filterItemsMap default value when local storage is empty', () => {
       mockFlag = 1;
       component.ngOnInit();
-      expect(component.filterItems).not.toEqual(null || undefined);
-      expect(component.filterItems['serverName'].text).toEqual(filterText);
-      expect(component.filterItems['serverName'].value).toEqual(true);
+      expect(component.filterItemsMap).not.toEqual(null || undefined);
+      expect(component.filterItemsMap.get('serverName').text).toEqual(filterText);
+      expect(component.filterItemsMap.get('serverName').value).toEqual(true);
     });
 
-    it('should call the emit() of onGetFilters (EventEmitter)', () => {
-      spyOn(component.onGetFilters, 'emit');
+    it('should call the emit() of filtersChange (EventEmitter)', () => {
+      spyOn(component.filtersChange, 'emit');
       component.ngOnInit();
-      expect(component.onGetFilters.emit).toHaveBeenCalled();
+      expect(component.filtersChange.emit).toHaveBeenCalled();
     });
   });
 });

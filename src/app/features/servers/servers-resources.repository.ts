@@ -4,7 +4,6 @@ import {
   McsRepositoryBase,
   McsApiSuccessResponse
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
 import { ServersService } from './servers.service';
 import {
   ServerResource,
@@ -12,8 +11,7 @@ import {
   ServerStorage,
   ServerNetwork,
   ServerCatalogItem,
-  ServerVApp,
-  ServerServiceType
+  ServerVApp
 } from './models';
 
 @Injectable()
@@ -91,20 +89,6 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
         this.updateRecord(resource);
         return response.content;
       });
-  }
-
-  /**
-   * An observable event that emits when atleast one of the resources
-   * service type is a self managed
-   */
-  public hasSelfManagedServer(): Observable<boolean> {
-    return this.findAllRecords().map((_resources) => {
-      if (isNullOrEmpty(_resources)) { return false; }
-      let resourceExist = _resources.find((_resource) => {
-        return _resource.serviceType === ServerServiceType.SelfManaged;
-      });
-      return !!(resourceExist);
-    });
   }
 
   /**

@@ -10,13 +10,13 @@
       </mcs-icon>
       <ng-template #filterSelector>
         <mcs-filter-selector [key]="columnSettingsKey"
-          (onGetFilters)="updateColumnSettings($event)">
+          (filtersChange)="updateColumnSettings($event)">
         </mcs-filter-selector>
       </ng-template>
       <!-- Note: This is required for generating policies table -->
       <ng-container>
         <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey"
-          (onGetFilters)="updateColumnSettings($event)">
+          (filtersChange)="updateColumnSettings($event)">
         </mcs-filter-selector>
       </ng-container>
       <div class="record-count hidden-small" flex="none">
@@ -26,7 +26,8 @@
 
     <!-- Table -->
     <mcs-table [dataSource]="dataSource">
-      <ng-container mcsColumnDef="action">
+      <!-- Action column -->
+      <ng-container mcsColumnDef="action" [mcsColumnDefHidden]="isColumnHidden('action')">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.action.text }}
         </mcs-header-cell>
@@ -42,7 +43,8 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="sequence">
+      <!-- Sequence Column -->
+      <ng-container mcsColumnDef="sequence" [mcsColumnDefHidden]="isColumnHidden('sequence')">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.sequence.text }}
         </mcs-header-cell>
@@ -51,7 +53,9 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="sourceInterfaces">
+      <!-- Source Interfaces Column -->
+      <ng-container mcsColumnDef="sourceInterfaces"
+        [mcsColumnDefHidden]="isColumnHidden('sourceInterfaces')">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.sourceInterfaces.text }}
         </mcs-header-cell>
@@ -64,7 +68,9 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="destinationInterfaces">
+      <!-- Desination Interfaces Column -->
+      <ng-container mcsColumnDef="destinationInterfaces"
+        [mcsColumnDefHidden]="isColumnHidden('destinationInterfaces')">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.destinationInterfaces.text }}
         </mcs-header-cell>
@@ -77,7 +83,8 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="source">
+      <!-- Source Column -->
+      <ng-container mcsColumnDef="source" >
         <mcs-header-cell *mcsHeaderCellDef>
           {{ columnSettings.source.text }}
         </mcs-header-cell>
@@ -97,7 +104,8 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="destination">
+      <!-- Destincation Interfaces Column -->
+      <ng-container mcsColumnDef="destination" [mcsColumnDefHidden]="isColumnHidden('destination')">
         <mcs-header-cell *mcsHeaderCellDef>
           {{ columnSettings.destination.text }}
         </mcs-header-cell>
@@ -117,7 +125,8 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="label">
+      <!-- Label Column -->
+      <ng-container mcsColumnDef="label" [mcsColumnDefHidden]="isColumnHidden('label')">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.label.text }}
         </mcs-header-cell>
@@ -126,7 +135,8 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="schedule">
+      <!-- Schedule Column -->
+      <ng-container mcsColumnDef="schedule" [mcsColumnDefHidden]="isColumnHidden('schedule')">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.schedule.text }}
         </mcs-header-cell>
@@ -139,6 +149,7 @@
         </mcs-data-cell>
       </ng-container>
 
+      <!-- Service Column -->
       <ng-container mcsColumnDef="service">
         <mcs-header-cell *mcsHeaderCellDef>
           {{ columnSettings.service.text }}
@@ -152,7 +163,8 @@
         </mcs-data-cell>
       </ng-container>
 
-      <ng-container mcsColumnDef="details">
+      <!-- Details Column -->
+      <ng-container mcsColumnDef="details" [mcsColumnDefHidden]="isColumnHidden('details')">
         <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
           {{ columnSettings.details.text }}
         </mcs-header-cell>

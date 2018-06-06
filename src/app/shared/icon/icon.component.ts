@@ -157,6 +157,7 @@ export class IconComponent implements OnChanges {
         // We need to set the 100% when the size is auto since SVG uses 100% only
         let svgActualSize = this._iconActualSize === 'auto' ? '100%' : this._iconActualSize;
         svgElement.setAttribute('width', svgActualSize);
+        svgElement.setAttribute('height', svgActualSize);
         this._renderer.appendChild(parentContainer, svgElement);
         return parentContainer;
       });

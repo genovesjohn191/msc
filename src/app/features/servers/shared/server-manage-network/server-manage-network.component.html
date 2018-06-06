@@ -67,7 +67,7 @@
     </form>
 
     <mcs-data-status [dataStatusFactory]="ipAddressessStatusFactory">
-      <mcs-data-status-success mcsDataSuccess class="display-flex-row">
+      <mcs-data-status-success mcsDataSuccess class="inline-block">
         <mcs-data-status-warning class="justify-content-flex-start"
           *ngIf="isIpAddressInUsed(customInput?.value)" [@fadeInOut]>
           <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>

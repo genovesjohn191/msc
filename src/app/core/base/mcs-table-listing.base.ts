@@ -8,10 +8,12 @@ import {
 } from '../services/mcs-browser.service';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  convertMapToJsonObject
 } from '../../utilities';
 import { McsSearch } from '../interfaces/mcs-search.interface';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
+import { McsFilterInfo } from '../models/mcs-filter-info';
 
 export abstract class McsTableListingBase<T> {
 
@@ -27,15 +29,19 @@ export abstract class McsTableListingBase<T> {
   // Table variables
   public dataSource: T;
   public dataColumns: string[];
+  public hiddenColumnsKey: string[];
+
+  /**
+   * Returns the column settings in json format in order to use it over html easily
+   * `e.g:` columnSettings.name.text
+   */
   public columnSettings: any;
 
   /**
    * Determine weather the browser/platform is in mobile
    */
   private _isMobile: boolean;
-  public get isMobile(): boolean {
-    return this._isMobile;
-  }
+  public get isMobile(): boolean { return this._isMobile; }
   public set isMobile(value: boolean) {
     if (this._isMobile !== value) {
       this._isMobile = value;
@@ -48,6 +54,7 @@ export abstract class McsTableListingBase<T> {
     protected changeDetectorRef: ChangeDetectorRef
   ) {
     this.dataColumns = new Array();
+    this.hiddenColumnsKey = new Array();
     this._listenToBroswerDeviceType();
   }
 
@@ -64,17 +71,33 @@ export abstract class McsTableListingBase<T> {
    * and update the data column of the table together
    * @param columns New column settings
    */
-  public updateColumnSettings(columns: any): void {
-    if (columns) {
-      this.columnSettings = columns;
-      let columnDetails = Object.keys(this.columnSettings);
+  public updateColumnSettings(columns: Map<string, McsFilterInfo>): void {
+    if (isNullOrEmpty(columns)) { return; }
+    this.columnSettings = convertMapToJsonObject(columns);
 
+    // Populate the data columns once so that it won't render multiple times in dom
+    let dataColumnChanged = isNullOrEmpty(this.dataColumns) ||
+      this.dataColumns.length !== columns.size;
+    if (dataColumnChanged) {
       this.dataColumns = [];
-      columnDetails.forEach((column) => {
-        if (!this.columnSettings[column].value) { return; }
-        this.dataColumns.push(column);
-      });
+      columns.forEach((_value, _key) => this.dataColumns.push(_key));
     }
+
+    // Set the displayed columns key based on the toggled
+    this.hiddenColumnsKey = [];
+    columns.forEach((_filterInfo, _key) => {
+      if (_filterInfo.value) { return; }
+      this.hiddenColumnsKey.push(_key);
+    });
+  }
+
+  /**
+   * Returns true when the column is hidden
+   */
+  public isColumnHidden(columnName: string): boolean {
+    let noFilteredColumns = isNullOrEmpty(columnName) || isNullOrEmpty(this.hiddenColumnsKey);
+    if (noFilteredColumns) { return false; }
+    return !!this.hiddenColumnsKey.find((hiddenColumn) => hiddenColumn === columnName);
   }
 
   /**

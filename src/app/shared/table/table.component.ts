@@ -23,8 +23,13 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  Subject
+  Subject,
+  Subscription
 } from 'rxjs/Rx';
+import {
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
 /** Core / Utilities */
 import {
   McsDataSource,
@@ -33,7 +38,8 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  unsubscribeSubject
 } from '../../utilities';
 /** Shared Directives */
 import {
@@ -63,7 +69,10 @@ import { DataStatusDefDirective } from './data-status';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'mcs-table-wrapper'
+  }
 })
 
 export class TableComponent<T> implements OnInit, AfterContentInit, AfterContentChecked, OnDestroy {
@@ -71,9 +80,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * Trackby function to use wheater the data has been changed
    */
   @Input()
-  public set trackBy(fn: TrackByFunction<T>) {
-    this._trackBy = fn;
-  }
+  public set trackBy(fn: TrackByFunction<T>) { this._trackBy = fn; }
   public get trackBy(): TrackByFunction<T> { return this._trackBy; }
   private _trackBy: TrackByFunction<T>;
 
@@ -81,9 +88,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * An observable datasource to bind inside the table data
    */
   @Input()
-  public get dataSource(): McsDataSource<T> {
-    return this._dataSource;
-  }
+  public get dataSource(): McsDataSource<T> { return this._dataSource; }
   public set dataSource(value: McsDataSource<T>) {
     if (this._dataSource !== value) {
       this._listenToDataLoading(value);
@@ -92,18 +97,17 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     }
   }
   private _dataSource: McsDataSource<T>;
-  private _dataSourceSubscription: any;
-  private _dataLoadingSubscription: any;
+  private _dataSourceSubscription: Subscription;
+  private _dataLoadingSubscription: Subscription;
   private _data: NgIterable<T>;
   private _dataDiffer: IterableDiffer<T>;
+  private _destroySubject = new Subject<void>();
 
   /**
    * Get/Set the data obtainment status based on observables
    */
   private _dataStatus: McsDataStatus;
-  public get dataStatus(): McsDataStatus {
-    return this._dataStatus;
-  }
+  public get dataStatus(): McsDataStatus { return this._dataStatus; }
   public set dataStatus(value: McsDataStatus) {
     if (this._dataStatus !== value) {
       this._dataStatus = value;
@@ -170,10 +174,9 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
   public ngAfterContentInit() {
     // Set the column definition mapping for easy accessing
-    this._setColumnDefinitionsMap();
-    this._columnDefinitions.changes.subscribe(
-      this._setColumnDefinitionsMap.bind(this)
-    );
+    this._columnDefinitions.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(this._setColumnDefinitionsMap.bind(this));
 
     // Render row headers
     this._renderHeaderRows();
@@ -189,8 +192,12 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   public ngOnDestroy() {
     unsubscribeSafely(this._dataSourceSubscription);
     unsubscribeSafely(this._dataLoadingSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
+  /**
+   * Sets the column definition map to be the basis of the columns
+   */
   private _setColumnDefinitionsMap(): void {
     this._columnDefinitionsMap.clear();
     this._columnDefinitions.forEach((columnDefDirective) => {

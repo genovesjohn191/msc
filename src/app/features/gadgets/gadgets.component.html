@@ -229,7 +229,7 @@
       <div class="gadgets-container-item">
         <h3 class="title">FILTER SELECTOR</h3>
         <mcs-filter-selector key="columnMainFilter"
-        (onGetFilters)="onGetFilterItems($event)"></mcs-filter-selector>
+          (filtersChange)="onGetFilterItems($event)"></mcs-filter-selector>
        <table class="mcs-table table">
          <thead class="head">
            <tr>

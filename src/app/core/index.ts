@@ -47,6 +47,7 @@ export * from './models/mcs-list-panel-item';
 export * from './models/mcs-size';
 export * from './models/mcs-selection';
 export * from './models/mcs-file-info';
+export * from './models/mcs-filter-info';
 export * from './models/mcs-comment';
 export * from './models/mcs-point';
 export * from './models/mcs-option';
