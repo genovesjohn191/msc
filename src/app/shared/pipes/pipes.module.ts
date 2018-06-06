@@ -7,6 +7,7 @@ import { SortArrayPipe } from './sort-array.pipe';
 import { DataLabelPipe } from './data-label.pipe';
 import { StdDateFormatPipe } from './std-date-format.pipe';
 import { ArrayTakeMaxPipe } from './array-take-max.pipe';
+import { PluralPipe } from './plural.pipe';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ArrayTakeMaxPipe } from './array-take-max.pipe';
     SortArrayPipe,
     DataLabelPipe,
     StdDateFormatPipe,
-    ArrayTakeMaxPipe
+    ArrayTakeMaxPipe,
+    PluralPipe
   ],
   exports: [
     NewLinesPipe,
@@ -25,7 +27,8 @@ import { ArrayTakeMaxPipe } from './array-take-max.pipe';
     SortArrayPipe,
     DataLabelPipe,
     StdDateFormatPipe,
-    ArrayTakeMaxPipe
+    ArrayTakeMaxPipe,
+    PluralPipe
   ],
   providers: [
     DecimalPipe,

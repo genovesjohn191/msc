@@ -8,7 +8,7 @@ export type McsColorType = 'primary' | 'primary-01' | 'primary-02' | 'secondary'
   | 'grey-08' | 'black' | 'white' | 'red' | 'green';
 
 // Theme Type
-export type McsThemeType = 'none' | 'dark' | 'light';
+export type McsThemeType = 'none' | 'dark' | 'light' | 'black';
 
 // Status Type
 export type McsStatusType = 'success' | 'failed' | 'warning' | 'info';

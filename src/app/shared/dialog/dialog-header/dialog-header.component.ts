@@ -9,6 +9,7 @@ import {
   CoreDefinition,
   McsDialogRef
 } from '../../../core';
+import { coerceBoolean } from '../../../utilities';
 
 @Component({
   selector: 'mcs-dialog-header',
@@ -35,6 +36,18 @@ export class DialogHeaderComponent {
   public set dialogRefTemplate(value: McsDialogRef<any>) {
     this.dialogRef = value;
   }
+
+  /**
+   * Returns true when the close button is hidden
+   */
+  @Input()
+  public get hideCloseButton(): boolean { return this._hideCloseButton; }
+  public set hideCloseButton(value: boolean) {
+    if (this._hideCloseButton !== value) {
+      this._hideCloseButton = coerceBoolean(value);
+    }
+  }
+  private _hideCloseButton: boolean = false;
 
   public get closeIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;

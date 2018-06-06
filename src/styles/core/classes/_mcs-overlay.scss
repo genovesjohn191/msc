@@ -1,6 +1,7 @@
 $overlay-transparent-color: none;
 $overlay-light-color: $color-white;
 $overlay-dark-color: rgba($color: $color-black, $alpha: 0.4);
+$overlay-black-color: $color-black;
 $overlay-item-position-offset: 0;
 
 .mcs-overlay-wrapper {
@@ -45,6 +46,10 @@ $overlay-item-position-offset: 0;
 
   &.dark-backdrop {
     background: $overlay-dark-color
+  }
+
+  &.black-backdrop {
+    background: $overlay-black-color
   }
 }
 
