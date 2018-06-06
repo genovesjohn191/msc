@@ -57,7 +57,7 @@ export class McsDialogService {
     let dialogExist = this._openDialogs.find((dialog) => {
       return dialog.id === config.id;
     });
-    if (dialogExist) { return undefined; }
+    if (dialogExist) { return dialogExist; }
 
     config.hasBackdrop = isNullOrEmpty(config.hasBackdrop) ? true : config.hasBackdrop;
     config.backdropColor = isNullOrEmpty(config.backdropColor) ? 'dark' : config.backdropColor;

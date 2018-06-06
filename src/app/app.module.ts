@@ -51,12 +51,14 @@ import {
   McsErrorHandlerService,
   McsNotificationJobService,
   McsNotificationContextService,
-  GoogleAnalyticsEventsService
+  GoogleAnalyticsEventsService,
+  McsSessionHandlerService
 } from './core';
 import {
   ConsolePageModule,
   DefaultPageModule
 } from './page-layout';
+import { PageNotificationsModule } from './page-notifications';
 import { SharedModule } from './shared';
 
 /**
@@ -106,6 +108,7 @@ export function coreConfig(): CoreConfig {
     SharedModule,
     ConsolePageModule,
     DefaultPageModule,
+    PageNotificationsModule,
     RouterModule.forRoot(routes)
   ],
   providers: [
@@ -124,7 +127,8 @@ export class AppModule {
     private _errorHandlerService: McsErrorHandlerService,
     private _notificationJobService: McsNotificationJobService,
     private _notificationContextService: McsNotificationContextService,
-    private _googleAnalyticsEventsService: GoogleAnalyticsEventsService
+    private _googleAnalyticsEventsService: GoogleAnalyticsEventsService,
+    private _sessionHandlerService: McsSessionHandlerService
   ) {
     this._listenToUserChanges();
   }
@@ -168,5 +172,6 @@ export class AppModule {
     this._googleAnalyticsEventsService.initialize();
     this._routeHandlerService.initialize();
     this._errorHandlerService.initialize();
+    this._sessionHandlerService.initialize();
   }
 }

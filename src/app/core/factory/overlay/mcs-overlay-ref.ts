@@ -284,6 +284,10 @@ export class McsOverlayRef {
         this._backdropElement.classList.add('dark-backdrop');
         break;
 
+      case 'black':
+        this._backdropElement.classList.add('black-backdrop');
+        break;
+
       case 'none':
       default:
         this._backdropElement.classList.add('transparent-backdrop');

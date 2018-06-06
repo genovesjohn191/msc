@@ -963,6 +963,22 @@
       }
     }
   },
+  "pageNotifications": {
+    "sessionHandler": {
+      "sessionIdleDialog": {
+        "title": "Hey, are you still there?",
+        "alert": "We've noticed you've been inactive for a while. Click to continue your session, otherwise you'll be signed out in ",
+        "dataSingular": "second",
+        "dataPlural": "seconds",
+        "confirm": "Continue Session"
+      },
+      "sessionTimeoutDialog": {
+        "title": "Session Timed Out",
+        "alert": "Your session has expired due to inactivity. Click to sign in again.",
+        "confirm": "Sign In"
+      }
+    }
+  },
   "enumerations": {
     "serverServiceType": {
       "0": "Managed",
