@@ -194,7 +194,12 @@ module.exports = function (options) {
           'IMAGE_URL': JSON.stringify(METADATA.IMAGE_URL),
           'ICON_URL': JSON.stringify(METADATA.ICON_URL),
           'EK': JSON.stringify(METADATA.EK)
-        }
+        },
+
+        // Needs to be set for zone.js so it does
+        // not throw an exception in IE11 while being in developer tools
+        // https://github.com/angular/zone.js/issues/933
+        'zoneEnableCrossContextCheck': isProd ? 'false' : 'true'
       }),
 
       /**

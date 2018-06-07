@@ -12,7 +12,9 @@
 <!-- Storage profiles selection and details template -->
 <ng-container *ngIf="!detailsTemplate;else detailsTemplate">
   <mcs-form-field >
-    <mcs-select [(ngModel)]="selectedStorage" placeholder="Select storage profile">
+    <mcs-select [(ngModel)]="selectedStorage"
+      [formControl]="fcSliderStorage"
+      placeholder="Select storage profile">
       <mcs-select-group header="Storage Profiles">
         <mcs-select-item *ngFor="let storage of storages" [value]="storage">
           {{ storage.name }}

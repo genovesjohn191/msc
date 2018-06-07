@@ -68,9 +68,9 @@ export function triggerEvent(
   if (event instanceof Event) {
     nativeElement.dispatchEvent(event);
   } else {
-    nativeElement.dispatchEvent(
-      new Event(event, _eventInit)
-    );
+    let customEvent = document.createEvent('HTMLEvents');
+    customEvent.initEvent(event, _eventInit.bubbles, _eventInit.cancelable);
+    nativeElement.dispatchEvent(customEvent);
   }
 }
 

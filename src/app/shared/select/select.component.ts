@@ -205,9 +205,12 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   public ngAfterContentInit(): void {
     registerEvent(document, 'click', this._closeOutsideHandler);
     this._initializeKeyboardManager();
-    this._items.changes.pipe(startWith(null), takeUntil(this._destroySubject))
+
+    this._items.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => {
         this._listenToSelectionChange();
+        this._initializeSelection();
       });
   }
 
@@ -297,10 +300,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (this._items) {
-      let selectedItem = this._items.find((item) => item.value === value);
-      this._selectItem(selectedItem);
-    }
+    if (this._items) { this._selecteItemByValue(value); }
   }
 
   /**
@@ -387,6 +387,16 @@ export class SelectComponent extends McsFormFieldControlBase<any>
   }
 
   /**
+   * Selects the element based on the provided value
+   * @param value Value to be checked in the item options
+   */
+  private _selecteItemByValue(value: any) {
+    if (isNullOrEmpty(value)) { return; }
+    let selectedItem = this._items.find((item) => item.value === value);
+    this._selectItem(selectedItem);
+  }
+
+  /**
    * Clears the item selection model
    * @param skipItem Item to be skipped in clearing the selection
    */
@@ -425,6 +435,17 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     // Register keyboard events
     this._registerClosePanelKeyEvents();
     this._registerOpenPanelKeyEvents();
+  }
+
+  /**
+   * Set the initial selection of the select component
+   */
+  private _initializeSelection(): void {
+    // Defer setting the value in order to avoid the "Expression
+    // has changed after it was checked" errors from Angular.
+    Promise.resolve().then(() => {
+      this._selecteItemByValue(this.ngControl ? this.ngControl.value : this._value);
+    });
   }
 
   /**

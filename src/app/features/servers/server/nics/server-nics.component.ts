@@ -14,8 +14,7 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError,
-  finalize
+  catchError
 } from 'rxjs/operators';
 import {
   ServerNetwork,
@@ -264,10 +263,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this._serversService.addServerNic(this.server.id, nicValues)
       .pipe(
         catchError((error) => {
+          this._serversService.clearServerSpinner(this.server, nicValues);
           this._errorHandlerService.handleHttpRedirectionError(error);
           return Observable.throw(error);
-        }),
-        finalize(() => this._serversService.clearServerSpinner(this.server, nicValues))
+        })
       ).subscribe();
   }
 
@@ -296,10 +295,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       this._serversService.deleteServerNic(this.server.id, this.selectedNic.id, nicValues)
         .pipe(
           catchError((error) => {
+            this._serversService.clearServerSpinner(this.server, this.selectedNic);
             this._errorHandlerService.handleHttpRedirectionError(error);
             return Observable.throw(error);
-          }),
-          finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedNic))
+          })
         ).subscribe();
     });
   }
@@ -325,10 +324,10 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this._serversService.updateServerNic(this.server.id, this.selectedNic.id, nicValues)
       .pipe(
         catchError((error) => {
+          this._serversService.clearServerSpinner(this.server, this.selectedNic);
           this._errorHandlerService.handleHttpRedirectionError(error);
           return Observable.throw(error);
-        }),
-        finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedNic))
+        })
       ).subscribe();
   }
 
