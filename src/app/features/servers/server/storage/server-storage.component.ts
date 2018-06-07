@@ -13,8 +13,7 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError,
-  finalize
+  catchError
 } from 'rxjs/operators';
 import {
   ServerManageStorage,
@@ -282,10 +281,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this._serversService.createServerStorage(this.server.id, diskValues)
       .pipe(
         catchError((error) => {
+          this._serversService.clearServerSpinner(this.server, diskValues);
           this._errorHandlerService.handleHttpRedirectionError(error);
           return Observable.throw(error);
-        }),
-        finalize(() => this._serversService.clearServerSpinner(this.server, diskValues))
+        })
       ).subscribe();
   }
 
@@ -314,10 +313,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       this._serversService.deleteServerStorage(this.server.id, this.selectedDisk.id, diskValues)
         .pipe(
           catchError((error) => {
+            this._serversService.clearServerSpinner(this.server, this.selectedDisk);
             this._errorHandlerService.handleHttpRedirectionError(error);
             return Observable.throw(error);
-          }),
-          finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedDisk))
+          })
         ).subscribe();
     });
   }
@@ -343,10 +342,10 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this._serversService.updateServerStorage(this.server.id, this.selectedStorage.id, diskValues)
       .pipe(
         catchError((error) => {
+          this._serversService.clearServerSpinner(this.server, this.selectedDisk);
           this._errorHandlerService.handleHttpRedirectionError(error);
           return Observable.throw(error);
-        }),
-        finalize(() => this._serversService.clearServerSpinner(this.server, this.selectedDisk))
+        })
       ).subscribe();
   }
 

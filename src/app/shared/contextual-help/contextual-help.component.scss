@@ -6,6 +6,7 @@ $contextual-help-margin-left: 100px;
 .contextual-help-wrapper {
   @include display-flex(column);
   position: relative;
+  width: 100%;
   max-width: $contextual-help-max-width;
 }
 

@@ -11,6 +11,7 @@ import {
   isNullOrEmpty,
   isJson
 } from '../../utilities';
+import { McsPlatformService } from '../services/mcs-platform.service';
 let cryptoJS = require('crypto-js');
 
 @Injectable()
@@ -25,8 +26,9 @@ export class McsCookieService {
 
   constructor(
     private _cookieService: CookieService,
-    private _coreConfig: CoreConfig
-  ) {}
+    private _coreConfig: CoreConfig,
+    private _platformService: McsPlatformService
+  ) { }
 
   /**
    * Set the cookie item as encrypted content
@@ -59,7 +61,8 @@ export class McsCookieService {
     }
 
     // Save the encrypted data to cookie
-    this._cookieService.put(key, encrypted.toString(), securedCookieOptions);
+    this._cookieService.put(key, encrypted.toString(),
+      this._getCookieOptions(securedCookieOptions));
   }
 
   /**
@@ -103,7 +106,10 @@ export class McsCookieService {
     let securedCookieOptions: CookieOptions = options;
     securedCookieOptions.secure = this.secured;
     let objectValue = isJson(value) ? JSON.stringify(value) : value;
-    this._cookieService.put(key, objectValue.toString(), securedCookieOptions);
+
+    // Set the content to the cookie
+    this._cookieService.put(key, objectValue.toString(),
+      this._getCookieOptions(securedCookieOptions));
   }
 
   /**
@@ -122,5 +128,21 @@ export class McsCookieService {
    */
   public removeItem(key: string, options?: CookieOptions): void {
     this._cookieService.remove(key, options);
+  }
+
+  /**
+   * Returns the cookie options based on the platform
+   * @param cookieOptions Cookie Option to set
+   */
+  private _getCookieOptions(cookieOptions: CookieOptions): CookieOptions {
+    if (isNullOrEmpty(cookieOptions)) { return undefined; }
+    // We need to always set the expiry to undefined
+    // when it comes to IE because in IE,
+    // the cookie will expire immediately as soon as it is set.
+    if (this._platformService.TRIDENT) {
+      cookieOptions.domain = undefined;
+      cookieOptions.expires = undefined;
+    }
+    return cookieOptions;
   }
 }

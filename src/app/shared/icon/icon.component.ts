@@ -41,14 +41,27 @@ export class IconComponent implements OnChanges {
   public color: McsColorType;
 
   @Input()
-  public set size(value: McsSizeType) {
+  public customSize: string;
+
+  /**
+   * Size of all the icons
+   * `@Note` If the type of icon that you need to render is SVG and the size of it is 'auto',
+   * you need to provide the actual size of the icon instead.
+   * Because 100% width and height of SVG element doesn't work on IE.
+   */
+  @Input()
+  public set size(value: McsSizeType | string) {
     let sizeIsDifferent = !isNullOrEmpty(value) && value !== this._size;
     if (sizeIsDifferent) {
+      if (value === 'auto') {
+        throw new Error('auto width is not working on IE, set the actual size for icon instead');
+      }
       this._size = value;
-      this._iconActualSize = this._iconSizeTable.get(value);
+      let mapSize = this._iconSizeTable.get(value as McsSizeType);
+      this._iconActualSize = isNullOrEmpty(mapSize) ? this._size : mapSize;
     }
   }
-  private _size: McsSizeType;
+  private _size: McsSizeType | string;
 
   // Icon variables
   private _icon: Icon;
@@ -153,8 +166,6 @@ export class IconComponent implements OnChanges {
     return this._assetsProvider
       .getSvgElement(this._icon.value)
       .map((svgElement) => {
-
-        // We need to set the 100% when the size is auto since SVG uses 100% only
         let svgActualSize = this._iconActualSize === 'auto' ? '100%' : this._iconActualSize;
         svgElement.setAttribute('width', svgActualSize);
         svgElement.setAttribute('height', svgActualSize);

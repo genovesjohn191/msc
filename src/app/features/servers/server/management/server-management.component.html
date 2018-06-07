@@ -62,8 +62,7 @@
           </div>
           <div *ngIf="!consoleEnabled">
             <div class="inline-block">
-              <mcs-icon [ngStyle]="{width: '110px'}"
-                [key]="consoleIconKey" size="auto"></mcs-icon>
+              <mcs-icon [key]="consoleIconKey" size="110px"></mcs-icon>
             </div>
             <div read-only>
               <span *ngIf="server.isPoweredOff">

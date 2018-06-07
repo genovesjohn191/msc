@@ -59,6 +59,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   // Forms
   public fgServerStorage: FormGroup;
+  public fcSliderStorage: FormControl;
   public fcCustomStorage: FormControl;
 
   @Output()
@@ -214,7 +215,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     let hasSelectedStorage = !isNullOrEmpty(this.selectedStorage)
       && !isNullOrEmpty(this.storages.find((storage) => storage === this.selectedStorage));
     if (hasSelectedStorage) { return; }
+
     this.selectedStorage = this.storages[0];
+    if (!this.hasAvailableMemory) {
+      Promise.resolve().then(() => {
+        this.fcSliderStorage.markAsTouched();
+      });
+    }
   }
 
   /**
@@ -250,6 +257,13 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       )
     ]);
 
+    this.fcSliderStorage = new FormControl('', [
+      CoreValidators.custom(
+        this._maxStorageChecking.bind(this),
+        'storageAvailable'
+      )
+    ]);
+
     // Notify data changed for every changes made in the status
     this.fcCustomStorage.statusChanges
       .pipe(startWith(null), takeUntil(this._destroySubject))
@@ -267,6 +281,14 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    */
   private _customStorageValidator(inputValue: any) {
     return inputValue <= this.availableMemory;
+  }
+
+  /**
+   * Returns true when the selected storage has available storage
+   * @param _storage Storage to be checked
+   */
+  private _maxStorageChecking(_storage: ServerStorage) {
+    return this.hasAvailableMemory;
   }
 
   /**

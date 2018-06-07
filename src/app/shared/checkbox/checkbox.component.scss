@@ -20,6 +20,7 @@ $checkbox-icon-ripple-size: 15px;
   cursor: pointer;
 
   .checkbox-spacer {
+    display: block;
     height: 1px;
     width: $checkbox-label-spacer;
   }
