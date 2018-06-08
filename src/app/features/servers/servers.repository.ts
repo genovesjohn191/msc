@@ -314,8 +314,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         deleteArrayRecord(activeServer.media, (targetMedia) => {
           return isNullOrEmpty(targetMedia.id);
         }, 1);
-
-        if (job.dataStatus === McsDataStatus.Error) { return; }
       }
 
       if (job.dataStatus === McsDataStatus.Success) {
@@ -326,10 +324,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         }
       }
 
-      // Append a mock media record while job is processing
-      // Update the media list when job has completed
-      addOrUpdateArrayRecord(activeServer.media, media, false,
-        (_existingMedia: ServerMedia) => _existingMedia.id === media.id);
+      if (job.dataStatus !== McsDataStatus.Error) {
+        // Append a mock media record while job is processing
+        // Update the media list when job has completed
+        addOrUpdateArrayRecord(activeServer.media, media, false,
+          (_existingMedia: ServerMedia) => _existingMedia.id === media.id);
+      }
 
       this.updateRecord(activeServer);
     }

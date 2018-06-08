@@ -51,7 +51,6 @@ export class TicketComponent implements OnInit, OnDestroy {
   public ticketSubscription: any;
   public createCommentSubscription: any;
   public createAttachmentSubscription: any;
-  public enumDefinition: any;
 
   /**
    * An observable ticket data that obtained based on the given id
@@ -93,7 +92,7 @@ export class TicketComponent implements OnInit, OnDestroy {
 
     if (isNullOrEmpty(subTypeEnumValue)) { return ''; }
 
-    let enumTextValue = this.enumDefinition.ticketSubType[subTypeEnumValue];
+    let enumTextValue = ticketSubTypeText[subTypeEnumValue];
     let ticketTypeValue = isNullOrEmpty(enumTextValue) ?
       '' : replacePlaceholder(this.textContent.header, 'ticketType', enumTextValue);
 
@@ -148,7 +147,6 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.tickets.ticket;
-    this.enumDefinition = this._textContentProvider.content.enumerations;
     // Get ticket data by ID
     this._getTicketById();
   }

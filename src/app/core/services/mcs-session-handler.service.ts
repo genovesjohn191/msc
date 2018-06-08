@@ -192,15 +192,15 @@ export class McsSessionHandlerService implements McsInitializer {
 
     // Check session timed out
     if (this.sessionTimedOut) {
-      this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_ID, this._authToken);
+      this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_ID,
+        this._authToken, { expires: this._authIdentity.user.expiry });
       this._onSessionTimedOut.next(true);
     }
 
     // Set the cookie service
     if (this._sessionIdleCounter >= 1) {
-      let cookieExpiry = this._authIdentity.user.expiry;
       this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_TIMER,
-        this._sessionIdleCounter, { expires: cookieExpiry });
+        this._sessionIdleCounter, { expires: this._authIdentity.user.expiry });
     }
   }
 }

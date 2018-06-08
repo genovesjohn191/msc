@@ -35,7 +35,6 @@ import {
 import {
   ServerSnapshotDialogContent,
   ServerSnapshot,
-  ServerServiceType,
   ServerStorageDevice
 } from '../../models';
 import { ServerService } from '../server.service';
@@ -85,8 +84,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   public get enabledActions(): boolean {
-    return this.server.serviceType === ServerServiceType.SelfManaged
-      && !isNullOrEmpty(this.server.storageDevices)
+    return !isNullOrEmpty(this.server.storageDevices)
       && !this.snapshotProcessing
       && !this.server.isProcessing
       && (!isNullOrEmpty(this.serverSnapshotsSubscription)

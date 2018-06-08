@@ -43,7 +43,6 @@ const VDC_LOW_STORAGE_PERCENTAGE = 85;
 export class VdcOverviewComponent implements OnInit, OnDestroy {
 
   public textContent: any;
-  public enumDefinition: any;
 
   private _vdcSubscription: Subscription;
 
@@ -127,7 +126,6 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.servers.vdc.overview;
-    this.enumDefinition = this._textContentProvider.content.enumerations;
     this._listenToSelectedVdc();
   }
 

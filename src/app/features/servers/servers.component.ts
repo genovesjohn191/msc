@@ -17,7 +17,8 @@ import { ServersDataSource } from './servers.datasource';
 import {
   Server,
   ServerCommand,
-  ServerServiceType
+  ServerServiceType,
+  serverServiceTypeText
 } from './models';
 /** Shared */
 import {
@@ -56,11 +57,14 @@ export class ServersComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-  public enumDefinition: any;
   public selection: McsSelection<Server>;
   public hasResources: boolean;
   public hasManagedResource: boolean;
   private _destroySubject = new Subject<any>();
+
+  public get serverServiceTypeText(): any {
+    return serverServiceTypeText;
+  }
 
   public get serverCommand() {
     return ServerCommand;
@@ -145,7 +149,6 @@ export class ServersComponent
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers;
-    this.enumDefinition = this._textProvider.content.enumerations;
   }
 
   public ngAfterViewInit() {

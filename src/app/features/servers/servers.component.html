@@ -177,7 +177,7 @@
             {{ columnSettings.type.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
-            {{ enumDefinition.serverServiceType[row.serviceType] }}
+            {{ serverServiceTypeText[row.serviceType] }}
           </mcs-data-cell>
         </ng-container>
 

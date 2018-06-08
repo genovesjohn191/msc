@@ -195,7 +195,7 @@
       },
       "serverProvisioningPage": {
         "header": "Create server status",
-        "description": "Your server is deploying and will be available shortly. You can track progress from notifications menu at the top of the portal.",
+        "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal.",
         "leftPanelHeader": "New server",
         "creationDetails": "Creation details",
         "serverHeader": "Server",
