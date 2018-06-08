@@ -145,8 +145,9 @@ export abstract class ServerDetailsBase {
    * @param job Emitted job to be checked
    */
   protected serverIsActiveByJob(job: McsApiJob): boolean {
-    let activeServer = !isNullOrEmpty(job) &&
-      this.server.id === job.clientReferenceObject.serverId;
+    let activeServer = !isNullOrEmpty(job)
+      && !isNullOrEmpty(this.server)
+      && this.server.id === job.clientReferenceObject.serverId;
     return activeServer;
   }
 
