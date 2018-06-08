@@ -14,9 +14,9 @@ import { coerceArray } from '../../../utilities';
 
 /**
  * Usage
- * Access:*mcsAccessControl(['VmConfigurationEdit']; feature: 'vmConfiguration')
- * Permission: *mcsAccessControl(['VmAccess'];)
- * Feature: *mcsAccessControl([]; feature: 'experimentalFeature')
+ * Access:*mcsAccessControl="['VmConfigurationEdit']; feature: 'vmConfiguration'"
+ * Permission: *mcsAccessControl="['VmAccess']"
+ * Feature: *mcsAccessControl="[]; feature: 'experimentalFeature'"
  */
 export class AccessControlDirective implements OnChanges {
 

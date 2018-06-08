@@ -60,6 +60,8 @@ $sub-navigation-mobile-border-color: $border-color-light;
     @include display-flex(column);
     justify-content: center;
     padding: $sub-navigation-small-padding;
+    height: auto;
+    min-height: $sub-navigation-height;
     border-top: 1px solid $sub-navigation-mobile-border-color;
 
     .sub-navigation-item {

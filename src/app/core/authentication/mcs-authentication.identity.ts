@@ -4,6 +4,8 @@ import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { AppState } from '../../app.service';
 import { CoreDefinition } from '../core.definition';
 import { BehaviorSubject } from 'rxjs/Rx';
+import { McsAccountStatus } from '../enumerations/mcs-account-status.enum';
+import { McsCookieService } from '../services/mcs-cookie.service';
 
 @Injectable()
 export class McsAuthenticationIdentity {
@@ -34,7 +36,19 @@ export class McsAuthenticationIdentity {
   private _activeAccount: McsApiCompany;
   public get activeAccount(): McsApiCompany { return this._activeAccount; }
 
-  constructor(private _appState: AppState) {
+  /**
+   * Returns the active account current status [default, impersonator]
+   */
+  public get activeAccountStatus(): McsAccountStatus {
+    let hasActiveAccount = this._cookieService
+      .getEncryptedItem<McsApiCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    return hasActiveAccount ? McsAccountStatus.Impersonator : McsAccountStatus.Default;
+  }
+
+  constructor(
+    private _appState: AppState,
+    private _cookieService: McsCookieService
+  ) {
     this._activeAccountChanged = new BehaviorSubject(undefined);
     this._userChanged = new BehaviorSubject(undefined);
     this._user = new McsApiIdentity();

@@ -13,7 +13,6 @@ import {
   TicketsTestingModule,
   mockTicketsService
 } from './testing';
-import { TicketStatus } from './models';
 import { TicketsComponent } from './tickets.component';
 import { TicketsService } from './tickets.service';
 import { unsubscribeSafely } from '../../utilities';
@@ -88,13 +87,6 @@ describe('TicketsComponent', () => {
       spyOn(component.dataSource, 'disconnect');
       component.ngOnDestroy();
       expect(component.dataSource.disconnect).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('getStatusString()', () => {
-    it('should get the equivalent string of the enumeration', () => {
-      let stringEquivalent = component.getStatusString(TicketStatus.InProgress);
-      expect(stringEquivalent).toBe('InProgress');
     });
   });
 

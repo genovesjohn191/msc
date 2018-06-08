@@ -2,13 +2,13 @@
 
 // Button settings
 $button-bg-color: $color-white;
-$button-default-size: 34px;
-$button-small-size: 26px;
+$button-medium-size: 34px;
+$button-default-size: 26px;
 $button-mid-width: 88px;
 $button-padding: 0 15px;
 // Fonts
-$button-small-font-size: 12;
-$button-font-size: 14;
+$button-default-font-size: 12;
+$button-medium-font-size: 14;
 $button-font-family: $circular-pro-bold;
 // Theme colors
 $button-color-white: $color-white;
@@ -66,7 +66,8 @@ $button-color-disabled: $color-grey-02;
   vertical-align: middle;
   background-color: $button-bg-color;
   font-family: $button-font-family;
-  @include font-size($button-font-size);
+  line-height: $button-default-size;
+  @include font-size($button-default-font-size);
   @include transform(translate3d(0, 0, 0));
   @include transition((
     background .4s cubic-bezier(.25,.8,.25,1),
@@ -79,7 +80,6 @@ $button-color-disabled: $color-grey-02;
   ));
   margin: 0;
   min-width: $button-mid-width;
-  line-height: $button-default-size;
   padding: $button-padding;
   @include border-radius($border-radius-small);
 
@@ -92,9 +92,9 @@ $button-color-disabled: $color-grey-02;
   }
 
   // Sizes
-  &.small {
-    @include font-size($button-small-font-size);
-    line-height: $button-small-size;
+  &.medium {
+    line-height: $button-medium-size;
+    @include font-size($button-medium-font-size);
   }
 }
 

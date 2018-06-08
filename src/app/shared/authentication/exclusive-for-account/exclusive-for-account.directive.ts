@@ -2,43 +2,42 @@ import {
   Directive,
   TemplateRef,
   ViewContainerRef,
-  Input
+  Input,
+  ChangeDetectorRef
 } from '@angular/core';
+import { McsAuthenticationIdentity } from '../../../core';
 import {
-  McsCookieService,
-  CoreDefinition
-} from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
-
-// Account type enumeration
-type accountType = 'default' | 'others';
+  isNullOrEmpty,
+  containsString
+} from '../../../utilities';
 
 @Directive({
   selector: '[mcsExclusiveForAccount]'
 })
 
 export class ExclusiveForAccountDirective {
-  @Input() set mcsExclusiveForAccount(account: accountType) {
-    this._createViewForAccount(account);
-  }
-
-  // TODO: Refactor to use account service instead
-  private get _activeAccountType(): accountType {
-    let activeAccount = this._cookieService.getItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    return (isNullOrEmpty(activeAccount)) ? 'default' : 'others';
+  @Input()
+  public set mcsExclusiveForAccount(accountEnumName: string) {
+    this._createViewForAccount(accountEnumName);
   }
 
   constructor(
-    private _cookieService: McsCookieService,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _authIdentityService: McsAuthenticationIdentity,
     private _templateRef: TemplateRef<any>,
     private _viewContainer: ViewContainerRef
   ) { }
 
-  private _createViewForAccount(account: accountType): void {
-    if (this._activeAccountType === account) {
-      this._viewContainer.createEmbeddedView(this._templateRef);
-    } else {
+  /**
+   * Creates the view based on specific type of account
+   * @param accountEnumName Account name enumeration
+   */
+  private _createViewForAccount(accountEnumName: string): void {
+    let showElement = !isNullOrEmpty(accountEnumName) &&
+      containsString(this._authIdentityService.activeAccountStatus, accountEnumName);
+    showElement ?
+      this._viewContainer.createEmbeddedView(this._templateRef) :
       this._viewContainer.clear();
-    }
+    this._changeDetectorRef.markForCheck();
   }
 }

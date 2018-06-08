@@ -28,7 +28,7 @@
                     <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
                       size="small" [mcsTooltip]="server.processingText"></mcs-icon>
                     <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
-                    <span read-only>{{ getSnapshotSizeInGB(snapshot.sizeMB) }}</span>
+                    <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
                   </div>
                   <div [disabled]="!enabledActions" class="inline-items-medium text-right">
                     <a (click)="restoreSnapshot(snapshot)">

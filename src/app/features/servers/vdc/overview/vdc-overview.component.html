@@ -27,7 +27,8 @@
       <h4 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h4>
       <mcs-list>
         <mcs-list-item *ngIf="hasResourceAccess">
-          <button mcsButton id="ctaVdcNewServer"
+          <button mcsButton size="small"
+            id="ctaVdcNewServer"
             (click)="createNewServer()">
             {{ textContent.vcloud.newServer }}
           </button>

@@ -10,6 +10,7 @@ export class ServerNic {
   public vCloudNicId: string;
   public name: string;
   public ipAddresses: string[];
+  public vCloudIpAddress: string;
   public index: number;
   public isPrimary: boolean;
   public adminStatus: string;
@@ -39,6 +40,7 @@ export class ServerNic {
     this.vCloudNicId = undefined;
     this.name = undefined;
     this.ipAddresses = undefined;
+    this.vCloudIpAddress = undefined;
     this.adminStatus = undefined;
     this.operStatus = undefined;
     this.maxSpeed = undefined;

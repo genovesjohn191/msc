@@ -9,7 +9,8 @@ import {
 } from '../enumerations/ticket-priority';
 import {
   TicketStatus,
-  TicketStatusSerialization
+  TicketStatusSerialization,
+  ticketStatusText
 } from '../enumerations/ticket-status';
 import {
   TicketSubType,
@@ -105,5 +106,12 @@ export class Ticket extends McsEntityBase {
     this.priority = undefined;
     this.state = undefined;
     this.subType = undefined;
+  }
+
+  /**
+   * Returns the state label equivalent
+   */
+  public get stateLabel(): string {
+    return ticketStatusText[this.state];
   }
 }

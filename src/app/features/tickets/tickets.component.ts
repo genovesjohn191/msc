@@ -16,16 +16,12 @@ import {
 import { Router } from '@angular/router';
 import {
   isNullOrEmpty,
-  getEnumString,
   refreshView,
   getRecordCountLabel
 } from '../../utilities';
 import { TicketsRepository } from './tickets.repository';
 import { TicketsDataSource } from './tickets.datasource';
-import {
-  Ticket,
-  TicketStatus
-} from './models';
+import { Ticket } from './models';
 
 @Component({
   selector: 'mcs-tickets',
@@ -100,14 +96,6 @@ export class TicketsComponent
    */
   public onClickNewTicket(): void {
     this._router.navigate(['./tickets/create']);
-  }
-
-  /**
-   * Return the status string based on enumeration type
-   * @param status Enumeration status to be converted
-   */
-  public getStatusString(status: TicketStatus) {
-    return getEnumString(TicketStatus, status);
   }
 
   /**

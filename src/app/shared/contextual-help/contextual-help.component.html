@@ -3,5 +3,6 @@
   [@scaleIn]="visible ? 'show' : 'void'"
   (@scaleIn.done)="afterVisibilityAnimation($event)">
 
-  <span [innerHTML]="message | mcsNewLines"></span>
+  <span class="block full-width"
+    [innerHTML]="message | mcsNewLines"></span>
 </div>

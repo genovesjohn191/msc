@@ -13,6 +13,15 @@
               <ng-container *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
                 mcsSortArray: firewallsListSource?.firewallGroupSortMethod">
 
+                <!-- Template method for icon -->
+                <ng-template #optionContentTemplate let-firewallDetails>
+                  <mcs-icon size="small"
+                    [key]="firewallDetails?.connectionStatusIconKey"></mcs-icon>
+                  <span class="space-left-xsmall">
+                    {{ firewallDetails.managementName }}
+                  </span>
+                </ng-template>
+
                 <!-- With ha group -->
                 <mcs-option-group [label]="iterator.key" *ngIf="iterator.key">
                   <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
@@ -23,19 +32,23 @@
                     mcsEventCategory="firewall"
                     mcsEventLabel="firewall-list-panel">
 
-                    <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
-                    <span class="space-left-xsmall">{{ firewall.managementName }}</span>
+                    <ng-template [ngTemplateOutlet]="optionContentTemplate"
+                      [ngTemplateOutletContext]="{ $implicit: firewall }"></ng-template>
                   </mcs-option>
                 </mcs-option-group>
 
                 <!-- Without ha group -->
                 <ng-container *ngIf="!iterator.key">
-                  <mcs-option [value]="firewall" cursor="pointer"
-                    *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
-                    (click)="onFirewallSelect(firewall)">
+                  <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
+                    [value]="firewall"
+                    [selected]="selectedFirewall === firewall"
+                    (click)="onFirewallSelect(firewall)"
+                    mcsEventTracker="select-firewall"
+                    mcsEventCategory="firewall"
+                    mcsEventLabel="firewall-list-panel">
 
-                    <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
-                    <span class="space-left-xsmall">{{ firewall.managementName }}</span>
+                    <ng-template [ngTemplateOutlet]="optionContentTemplate"
+                      [ngTemplateOutletContext]="{ $implicit: firewall }"></ng-template>
                   </mcs-option>
                 </ng-container>
               </ng-container>
@@ -66,8 +79,10 @@
         </mcs-tab>
 
         <!-- Policies Tab -->
-        <mcs-tab [label]="firewallTextContent.policies.label" id="policies">
-        </mcs-tab>
+        <ng-container *ngIf="selectedFirewall?.serialNumber">
+          <mcs-tab [label]="firewallTextContent.policies.label" id="policies">
+          </mcs-tab>
+        </ng-container>
 
         <!-- Action tab -->
         <mcs-tab [canSelect]="false" customClass="right-align">

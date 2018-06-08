@@ -15,7 +15,7 @@ export enum TicketStatus {
 export const ticketStatusText = {
   [TicketStatus.Undefined]: 'Undefined',
   [TicketStatus.New]: 'New',
-  [TicketStatus.InProgress]: 'InProgress',
+  [TicketStatus.InProgress]: 'In Progress',
   [TicketStatus.AwaitingCustomer]: 'Awaiting Customer',
   [TicketStatus.Resolved]: 'Resolved',
   [TicketStatus.Closed]: 'Closed',

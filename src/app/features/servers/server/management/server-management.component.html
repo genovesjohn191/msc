@@ -143,9 +143,9 @@
                   </div>
                   <div class="form-field-inline">
                     <span class="form-field-label">{{ textContent.nics.ipAddresses }}:</span>
-                    <ng-container *ngIf="hasIpAddress(nic.ipAddresses); else noIpAddressTemplate">
+                    <ng-container *ngIf="getNicIpAddresses(nic); else noIpAddressTemplate">
                       <mcs-list spacing="auto">
-                        <mcs-list-item *ngFor="let item of nic.ipAddresses">
+                        <mcs-list-item *ngFor="let item of getNicIpAddresses(nic)">
                           {{ item }}
                         </mcs-list-item>
                       </mcs-list>
