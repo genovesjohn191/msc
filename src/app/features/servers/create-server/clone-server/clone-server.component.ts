@@ -33,7 +33,8 @@ import {
   ServerCreateType,
   ServerCreateDetails,
   ServerServiceType,
-  Server
+  Server,
+  ServerIpAllocationMode
 } from '../../models';
 import { ServersRepository } from '../../servers.repository';
 import { CreateServerBase } from '../create-server.base';
@@ -54,11 +55,37 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
   public serversSubscription: Subscription;
   public parameterSubscription: Subscription;
   public dataStatusFactory: McsDataStatusFactory<Server[]>;
+  public ipAddressStatusFactory: McsDataStatusFactory<Server>;
 
   // Form variables
   public fgCloneServer: FormGroup;
   public fcServerName: FormControl;
   public fcTargetServer: FormControl;
+
+  /**
+   * Selected server property
+   */
+  private _selectedServer: Server;
+  public get selectedServer(): Server { return this._selectedServer; }
+  public set selectedServer(value: Server) {
+    if (this._selectedServer !== value) {
+      this._selectedServer = value;
+      this._getServerById(this._selectedServer.id);
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+
+  /**
+   * Returns true when the server is manually assigned IP address
+   */
+  private _serverIsManuallyAssignedIp: boolean;
+  public get serverIsManuallyAssignedIp(): boolean { return this._serverIsManuallyAssignedIp; }
+  public set serverIsManuallyAssignedIp(value: boolean) {
+    if (value !== this._serverIsManuallyAssignedIp) {
+      this._serverIsManuallyAssignedIp = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
@@ -67,7 +94,8 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
     private _serversRepository: ServersRepository
   ) {
     super(ServerCreateType.Clone);
-    this.dataStatusFactory = new McsDataStatusFactory();
+    this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this.ipAddressStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
@@ -131,6 +159,28 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
       this._listenToParamChange();
       this._changeDetectorRef.markForCheck();
     });
+  }
+
+  /**
+   * Gets the corresponding server details
+   * @param serverId Sever ID to get the server details
+   */
+  private _getServerById(serverId: string): void {
+    this.serverIsManuallyAssignedIp = false;
+    this.ipAddressStatusFactory.setInProgress();
+    this._serversRepository
+      .findRecordById(serverId)
+      .catch((error) => {
+        this.ipAddressStatusFactory.setSuccesfull();
+        return Observable.throw(error);
+      })
+      .subscribe((response) => {
+        this.ipAddressStatusFactory.setSuccesfull(response);
+        let hasNics = !isNullOrEmpty(response) && !isNullOrEmpty(response.nics);
+        if (!hasNics) { return; }
+        this.serverIsManuallyAssignedIp = !!response.nics
+          .find((nic) => nic.ipAllocationMode === ServerIpAllocationMode.Manual);
+      });
   }
 
   /**

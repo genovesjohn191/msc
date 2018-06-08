@@ -18,5 +18,4 @@ export class DataLabelPipe implements PipeTransform {
   public transform(data: any, label: string): string {
     return isNullOrEmpty(data) ? label : data;
   }
-
 }

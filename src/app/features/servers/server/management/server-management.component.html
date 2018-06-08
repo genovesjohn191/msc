@@ -268,16 +268,19 @@
         <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
           <div class="container-wrapper" [disabled]="attachMediaIsDisabled">
             <h4 class="container-header">{{ textContent.media.attachHeading }}</h4>
-            <mcs-select [(ngModel)]="selectedMedia" class="space-bottom-large"
-              [placeholder]="textContent.media.mediaSelect.placeholder">
-              <mcs-select-group [header]="textContent.media.mediaSelect.header">
-                <mcs-select-item *ngFor="let media of resourceMediaList" [value]="media">
-                  {{ media.itemName }}
-                </mcs-select-item>
-              </mcs-select-group>
-            </mcs-select>
-            <div display-flex="row" align-items="center" justify-content="space-between">
-              <a class="text-underline" (click)="cancelAttachMedia()"
+            <mcs-form-field>
+              <mcs-select [placeholder]="textContent.media.mediaSelect.placeholder"
+                [(ngModel)]="selectedMedia">
+                <mcs-select-group [header]="textContent.media.mediaSelect.header">
+                  <mcs-select-item *ngFor="let media of resourceMediaList" [value]="media">
+                    {{ media.itemName }}
+                  </mcs-select-item>
+                </mcs-select-group>
+              </mcs-select>
+            </mcs-form-field>
+
+            <div class="action-items">
+              <a (click)="cancelAttachMedia()"
                 mcsEventTracker="attach-media-cancel"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">

@@ -178,6 +178,7 @@
       "cloneServer": {
         "title": "Clone a server",
         "description": "Cloning a server gives you an exact replica of an existing server in the same Virtual Data Centre.",
+        "loadingServerDetails": "Retrieving network information.",
         "loadingServers": "Loading servers.",
         "noServers": "No servers to clone. Create a new server first.",
         "errorMessageServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
@@ -190,7 +191,8 @@
         "errors": {
           "serverNameRequired": "Enter a server name.",
           "invalidServerName": "Server name can only contain letters, numbers or hypen.",
-          "selectServerRequired": "You must select a server."
+          "selectServerRequired": "You must select a server.",
+          "manuallyAssignedIpWarning": "{{server_name}} has a manually-assigned IP address.\r\n Your new server may not be usable until {{server_name}} is stopped or its IP address is dissociated."
         }
       },
       "serverProvisioningPage": {

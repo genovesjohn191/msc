@@ -38,7 +38,7 @@
         </mcs-form-field>
 
         <ng-container *ngFor="let item of serverComponents">
-          <div class="vspace-medium">
+          <div class="space-top-medium">
             <mcs-tab-group [(selectedTabId)]="selectedTabIndex">
               <!-- New Server Tab -->
               <mcs-tab [label]="textContent.newServer.title" [id]="serverCreateTypeEnum.New">
