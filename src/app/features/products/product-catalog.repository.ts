@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import {
   McsRepositoryBase,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsAccessControlService
 } from '../../core';
 import { ProductCatalog } from './models';
 import { ProductsService } from './products.service';
@@ -10,8 +11,18 @@ import { ProductsService } from './products.service';
 @Injectable()
 export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> {
 
-  constructor(private _productsService: ProductsService) {
+  constructor(
+    private _productsService: ProductsService,
+    private _accessControlService: McsAccessControlService
+  ) {
     super();
+  }
+
+  /**
+   * Returns true when feature flag is on for product catalog
+   */
+  public get productCatalogFeatureIsOn(): boolean {
+    return this._accessControlService.hasAccessToFeature('enableProductCatalog');
   }
 
   /**
@@ -23,6 +34,7 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
     pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<ProductCatalog[]>> {
+    if (!this.productCatalogFeatureIsOn) { return undefined; }
     return this._productsService.getCatalogs({
       page: pageIndex,
       perPage: pageSize,
@@ -36,6 +48,7 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<ProductCatalog>> {
+    if (!this.productCatalogFeatureIsOn) { return undefined; }
     return this._productsService.getCatalog(recordId);
   }
 

@@ -150,12 +150,11 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.reset();
-  }
+  ) { }
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.shared.manageStorage;
+    this.reset();
     this._registerFormGroup();
     this._setSelectedStorage();
     this._setCustomStorageValue();
