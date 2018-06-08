@@ -38,7 +38,6 @@ export class MediasComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-  public enumDefinition: any;
 
   // Subscription
   private _selectionModeSubscription: any;
@@ -72,7 +71,6 @@ export class MediasComponent
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.medias;
-    this.enumDefinition = this._textProvider.content.enumerations;
   }
 
   public ngAfterViewInit() {
