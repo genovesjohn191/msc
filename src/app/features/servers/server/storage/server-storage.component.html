@@ -157,7 +157,10 @@
             <a (click)="closeExpandDiskWindow()"
               mcsEventTracker="expand-disk-close"
               mcsEventCategory="server"
-              mcsEventLabel="server-details-page">{{ textContent.cancelButton }}</a>
+              mcsEventLabel="server-details-page">
+              {{ textContent.cancelButton }}
+            </a>
+
             <button mcsButton id="ctaUpdateServerStorage" arrow="right" size="small"
               [disabled]="!expandDiskEnabled" (click)="expandDisk()"
               mcsEventTracker="expand-disk"

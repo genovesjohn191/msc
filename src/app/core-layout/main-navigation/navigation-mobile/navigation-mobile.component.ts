@@ -28,7 +28,6 @@ import {
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsTextContentProvider,
-  McsAccessControlService,
   McsDataStatusFactory
 } from '../../../core';
 import {
@@ -133,7 +132,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    * Returns true when feature flag is on for product catalog
    */
   public get productCatalogFeatureIsOn(): boolean {
-    return this._accessControlService.hasAccessToFeature('enableProductCatalog');
+    return this._productCatalogRepository.productCatalogFeatureIsOn;
   }
 
   /**
@@ -149,7 +148,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
     private _textContentProvider: McsTextContentProvider,
-    private _accessControlService: McsAccessControlService,
     private _productCatalogRepository: ProductCatalogRepository
   ) {
     this.switchAccountAnimation = 'collapsed';

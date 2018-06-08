@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsAccessControlService,
   McsDataStatusFactory
 } from '../../../core';
 import {
@@ -50,7 +49,6 @@ export class NavigationDesktopComponent implements OnInit {
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _accessControlService: McsAccessControlService,
     private _productCatalogRepository: ProductCatalogRepository
   ) {
     this.productsStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -72,7 +70,7 @@ export class NavigationDesktopComponent implements OnInit {
    * Returns true when feature flag is on for product catalog
    */
   public get productCatalogFeatureIsOn(): boolean {
-    return this._accessControlService.hasAccessToFeature('enableProductCatalog');
+    return this._productCatalogRepository.productCatalogFeatureIsOn;
   }
 
   /**
