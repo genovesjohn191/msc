@@ -11,8 +11,11 @@
       <div class="vspace-medium space-between-inline-items">
         <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
         <div>
-          <button mcsButton size="small" [disabled]="!enabledActions"
-            (click)="createSnapshot()">{{ textContent.createSnapshot }}</button>
+          <button mcsButton size="small" arrow="right"
+            [disabled]="!enabledActions"
+            (click)="createSnapshot()">
+            {{ textContent.createSnapshot }}
+          </button>
         </div>
       </div>
       <div>

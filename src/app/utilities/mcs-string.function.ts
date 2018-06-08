@@ -46,11 +46,12 @@ export function replacePlaceholder(
     throw new Error('Count of placeholders and values are not the same');
   }
 
-  // Replace each string (immutable)
+  // Replace all occurence placeholder strings based on search pattern
   let replacedString: string = fullString;
   for (let index = 0; index < placeholders.length; index++) {
-    replacedString = replacedString
-      .replace(`{{${placeholders[index]}}}`, values[index]);
+    replacedString = replacedString.replace(
+      new RegExp(`{{${placeholders[index]}}}`, 'g') , values[index]
+    );
   }
   return replacedString;
 }

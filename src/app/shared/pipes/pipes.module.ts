@@ -8,6 +8,7 @@ import { DataLabelPipe } from './data-label.pipe';
 import { StdDateFormatPipe } from './std-date-format.pipe';
 import { ArrayTakeMaxPipe } from './array-take-max.pipe';
 import { PluralPipe } from './plural.pipe';
+import { TextPlaceholderPipe } from './text-placeholder.pipe';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { PluralPipe } from './plural.pipe';
     DataLabelPipe,
     StdDateFormatPipe,
     ArrayTakeMaxPipe,
-    PluralPipe
+    PluralPipe,
+    TextPlaceholderPipe
   ],
   exports: [
     NewLinesPipe,
@@ -28,7 +30,8 @@ import { PluralPipe } from './plural.pipe';
     DataLabelPipe,
     StdDateFormatPipe,
     ArrayTakeMaxPipe,
-    PluralPipe
+    PluralPipe,
+    TextPlaceholderPipe
   ],
   providers: [
     DecimalPipe,

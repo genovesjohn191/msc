@@ -23,12 +23,13 @@
       </mcs-form-field>
     </div>
 
-    <div class="position-relative">
+    <div class="position-relative block-items-medium">
       <!-- Servers -->
       <mcs-data-status [dataStatusFactory]="dataStatusFactory">
         <mcs-data-status-success mcsDataSuccess>
           <mcs-form-field>
             <mcs-select [formControl]="fcTargetServer" required
+              [(ngModel)]="selectedServer"
               [placeholder]="textContent.placeholder.server">
               <mcs-select-group header="Servers">
                 <mcs-select-item *ngFor="let server of servers" [value]="server">
@@ -54,6 +55,19 @@
         <mcs-data-status-error mcsDataError>
           <span>{{ textContent.errorMessageServers }}</span>
         </mcs-data-status-error>
+      </mcs-data-status>
+
+      <!-- Manual Ip-Address checking -->
+      <mcs-data-status [dataStatusFactory]="ipAddressStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <mcs-data-status-warning *ngIf="serverIsManuallyAssignedIp">
+            <span [innerHTML]="(textContent.errors.manuallyAssignedIpWarning | mcsTextPlaceholder: 'server_name': selectedServer?.name) | mcsNewLines"></span>
+          </mcs-data-status-warning>
+        </mcs-data-status-success>
+
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingServerDetails }}</span>
+        </mcs-data-status-in-progress>
       </mcs-data-status>
     </div>
   </form>
