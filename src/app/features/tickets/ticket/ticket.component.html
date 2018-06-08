@@ -8,7 +8,7 @@
         <div flex="auto" display-flex align-items="center" justify-content="flex-end">
           <mcs-icon [key]="checkIconKey" size="large"></mcs-icon>
           <span>
-            {{ getStateString(ticket.state) }} ({{ ticket.createdOn | mcsStdDateFormat }})
+            {{ ticket.stateLabel }} ({{ ticket.createdOn | mcsStdDateFormat }})
           </span>
         </div>
       </mcs-top-panel-item>
@@ -51,7 +51,7 @@
 
           <div class="grid-column">
             <strong>{{ textContent.status }}</strong><br/>
-            <span read-only>{{ getStateString(ticket.state) }}</span>
+            <span read-only>{{ ticket.stateLabel }}</span>
           </div>
 
           <div class="grid-column">

@@ -31,7 +31,8 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
-  unsubscribeSafely
+  unsubscribeSafely,
+  unsubscribeSubject
 } from '../../../../utilities';
 import { Firewall } from '../models';
 import { FirewallService } from './firewall.service';
@@ -108,9 +109,12 @@ export class FirewallComponent
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
+      this.search.searchChangedStream
+        .pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
-      this._firewallsRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
+
+      this._firewallsRepository.dataRecordsChanged
+        .pipe(takeUntil(this._destroySubject))
         .subscribe(() => this._changeDetectorRef.markForCheck());
       this._initializeListsource();
     });
@@ -118,6 +122,7 @@ export class FirewallComponent
 
   public ngOnDestroy() {
     super.onDestroy();
+    unsubscribeSubject(this._destroySubject);
     unsubscribeSafely(this.firewallSubscription);
   }
 
@@ -205,5 +210,6 @@ export class FirewallComponent
   private _setSelectedFirewallInfo(selectedFirewall: Firewall): void {
     if (isNullOrEmpty(selectedFirewall)) { return; }
     this.selectedFirewall = selectedFirewall;
+    this._changeDetectorRef.markForCheck();
   }
 }

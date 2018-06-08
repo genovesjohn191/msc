@@ -101,7 +101,7 @@ export class ServersComponent
   }
 
   public get addIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_NEW_SERVER;
+    return CoreDefinition.ASSETS_FONT_PLUS;
   }
 
   public get startIconKey(): string {

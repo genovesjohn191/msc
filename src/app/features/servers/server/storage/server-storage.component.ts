@@ -339,7 +339,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
     this.closeExpandDiskWindow();
     this._serversService.setServerSpinner(this.server, this.selectedDisk);
-    this._serversService.updateServerStorage(this.server.id, this.selectedStorage.id, diskValues)
+    this._serversService.updateServerStorage(this.server.id, this.selectedDisk.id, diskValues)
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, this.selectedDisk);

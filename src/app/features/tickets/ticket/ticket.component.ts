@@ -27,7 +27,6 @@ import {
 import {
   Ticket,
   TicketStatus,
-  ticketStatusText,
   TicketSubType,
   ticketSubTypeText,
   TicketAttachment,
@@ -173,14 +172,6 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   public trackByFn(index: any, _item: any) {
     return index;
-  }
-
-  /**
-   * Return the status string based on enumeration type
-   * @param status Enumeration status to be converted
-   */
-  public getStateString(status: TicketStatus): string {
-    return ticketStatusText[status];
   }
 
   /**

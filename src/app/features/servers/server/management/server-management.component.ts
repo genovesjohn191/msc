@@ -25,7 +25,8 @@ import {
   ServerManageMedia,
   ServerCommand,
   ServerCatalogItem,
-  ServerIpAllocationMode
+  ServerIpAllocationMode,
+  ServerNic
 } from '../../models';
 import {
   McsTextContentProvider,
@@ -237,10 +238,6 @@ export class ServerManagementComponent extends ServerDetailsBase
     return ipAddresses.join(', ');
   }
 
-  public hasIpAddress(ipAddress: string[]): boolean {
-    return !isNullOrEmpty(ipAddress);
-  }
-
   public onClickViewConsole() {
     if (!this.consoleEnabled) { return; }
 
@@ -331,6 +328,13 @@ export class ServerManagementComponent extends ServerDetailsBase
           this.isAttachMedia = false;
         }
       });
+  }
+
+  public getNicIpAddresses(nic: ServerNic): string[] {
+    if (isNullOrEmpty(nic)) { return undefined; }
+    let hasIpAddress = !isNullOrEmpty(nic.ipAddresses);
+    if (hasIpAddress) { return nic.ipAddresses; }
+    return isNullOrEmpty(nic.vCloudIpAddress) ? undefined : [nic.vCloudIpAddress];
   }
 
   public detachMedia(media: ServerMedia): void {

@@ -17,14 +17,11 @@ import {
   McsDataStatusFactory,
   CoreDefinition,
   McsDataStatus,
-  McsErrorHandlerService,
-  McsUnitType
+  McsErrorHandlerService
 } from '../../../../core';
 import {
   unsubscribeSafely,
-  isNullOrEmpty,
-  convertMbToGb,
-  appendUnitSuffix
+  isNullOrEmpty
 } from '../../../../utilities';
 import { StdDateFormatPipe } from '../../../../shared';
 import {
@@ -158,11 +155,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     unsubscribeSafely(this.restoreJobSnapshotSubscription);
     unsubscribeSafely(this.deleteJobSnapshotSubscription);
     this.dispose();
-  }
-
-  public getSnapshotSizeInGB(sizeMB: number): string {
-    let sizeGB = convertMbToGb(sizeMB);
-    return appendUnitSuffix(sizeGB, McsUnitType.Gigabyte);
   }
 
   /**
