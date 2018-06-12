@@ -9,9 +9,7 @@ import { StateChangeNotificationsComponent } from './state-change-notifications'
 import {
   MainNavigationComponent,
   NavigationDesktopComponent,
-  NavigationMobileComponent,
-  NavigationDesktopItemsDirective,
-  NavigationMobileItemsDirective
+  NavigationMobileComponent
 } from './main-navigation';
 import {
   SubNavigationComponent,
@@ -50,8 +48,6 @@ import { coreLayoutProviders } from './core-layout.constants';
     MainNavigationComponent,
     NavigationDesktopComponent,
     NavigationMobileComponent,
-    NavigationDesktopItemsDirective,
-    NavigationMobileItemsDirective,
     SubNavigationComponent,
     SubNavigationDesktopComponent,
     SubNavigationMobileComponent
@@ -75,8 +71,6 @@ import { coreLayoutProviders } from './core-layout.constants';
     MainNavigationComponent,
     NavigationDesktopComponent,
     NavigationMobileComponent,
-    NavigationDesktopItemsDirective,
-    NavigationMobileItemsDirective,
     SubNavigationComponent,
     SubNavigationDesktopComponent,
     SubNavigationMobileComponent,
