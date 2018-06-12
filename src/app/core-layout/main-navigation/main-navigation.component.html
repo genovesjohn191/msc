@@ -2,12 +2,12 @@
 
   <!-- Mobile Mode -->
   <mcs-navigation-mobile class="navigation-mobile">
-    <ng-container mcsNavigationMobileItems></ng-container>
+    <ng-container *ngTemplateOutlet="navigationList"></ng-container>
   </mcs-navigation-mobile>
 
   <!-- Desktop Mode -->
   <mcs-navigation-desktop class="navigation-desktop">
-    <ng-container mcsNavigationDesktopItems></ng-container>
+    <ng-container *ngTemplateOutlet="navigationList"></ng-container>
   </mcs-navigation-desktop>
 
   <!-- All Routing -->

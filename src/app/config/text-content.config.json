@@ -705,7 +705,7 @@
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
-          "service": "Service",
+          "service": "Service ID",
           "serial": "Serial Number"
         },
         "status": {
