@@ -90,6 +90,13 @@
 
   <mcs-content-panel *mcsContentPanelDef>
     <div class="routing-tab-wrapper">
+      <!-- Busy status of the server -->
+      <ng-container *ngIf="selectedServer?.isProcessing">
+        <mcs-busy-ribbon theme="dark" class="space-bottom-small">
+          <span>{{ textContent.serverBusyLabel }}</span>
+        </mcs-busy-ribbon>
+      </ng-container>
+
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Management Tab -->
         <mcs-tab [label]="textContent.management.label" id="management">

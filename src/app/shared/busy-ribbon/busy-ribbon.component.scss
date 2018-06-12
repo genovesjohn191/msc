@@ -1,0 +1,27 @@
+@import "../../../styles/shared/base";
+
+$busy-ribbon-interval: 8px;
+
+.busy-ribbon-wrapper {
+  display: block;
+
+  .busy-ribbon-content {
+    @include display-flex(row);
+    @include align-items(center);
+    @include set-items-interval($busy-ribbon-interval, horizontal);
+    justify-content: center;
+    @include border-radius($border-radius-small);
+    padding: $space-small;
+  }
+
+  &.busy-ribbon-light {
+    background-color: $light-bg-color;
+    color: $light-bg-text-color;
+    border: 1px solid $border-color-light;
+  }
+
+  &.busy-ribbon-dark {
+    background-color: $dark-bg-color;
+    color: $dark-bg-text-color;
+  }
+}

@@ -52,6 +52,7 @@ import { CapacityBarModule } from './capacity-bar/capacity-bar.module';
 import { PipesModule } from './pipes';
 import { FileDownloadModule } from './file-download/file-download.module';
 import { EventTrackerModule } from './event-tracker/event-tracker.module';
+import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
 
 @NgModule({
   imports: [
@@ -104,7 +105,8 @@ import { EventTrackerModule } from './event-tracker/event-tracker.module';
     ProgressBarModule,
     CapacityBarModule,
     FileDownloadModule,
-    EventTrackerModule
+    EventTrackerModule,
+    BusyRibbonModule
   ],
   exports: [
     CommonModule,
@@ -156,7 +158,8 @@ import { EventTrackerModule } from './event-tracker/event-tracker.module';
     ProgressBarModule,
     CapacityBarModule,
     FileDownloadModule,
-    EventTrackerModule
+    EventTrackerModule,
+    BusyRibbonModule
   ]
 })
 

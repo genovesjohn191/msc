@@ -227,6 +227,7 @@
       "header": "Servers",
       "loading": "Loading server details.",
       "leftPanelHeader": "Server Filter",
+      "serverBusyLabel": "This server is currently busy and some actions may be temporarily unavailable.",
       "management": {
         "label": "Management",
         "loading": "Loading server properties.",

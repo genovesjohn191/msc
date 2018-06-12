@@ -106,9 +106,10 @@ export class McsCookieService {
     let securedCookieOptions: CookieOptions = options;
     securedCookieOptions.secure = this.secured;
     let objectValue = isJson(value) ? JSON.stringify(value) : value;
+    let stringValue = isNullOrEmpty(objectValue) ? '' : objectValue.toString();
 
     // Set the content to the cookie
-    this._cookieService.put(key, objectValue.toString(),
+    this._cookieService.put(key, stringValue,
       this._getCookieOptions(securedCookieOptions));
   }
 
