@@ -45,7 +45,6 @@ export class McsSessionHandlerService implements McsInitializer {
    * Returns true if the current auth token has already timed out
    */
   public get authTokenHasTimedOut(): boolean {
-    this._authToken = this._authService.getAuthToken();
     this._sessionTimedOutToken = this._cookieService
       .getItem(CoreDefinition.COOKIE_SESSION_ID);
 
@@ -89,6 +88,7 @@ export class McsSessionHandlerService implements McsInitializer {
    * Initialize the session handler
    */
   public initialize(): void {
+    this._authToken = this._authService.getAuthToken();
     this._registerActivityEvents();
     this._registerRealTimeListener();
   }
@@ -133,7 +133,7 @@ export class McsSessionHandlerService implements McsInitializer {
 
   public renewSession(): void {
     this._cookieService.removeItem(CoreDefinition.COOKIE_SESSION_ID);
-    this._authService.logIn();
+    this._authService.logOut();
   }
 
   /**
