@@ -2,10 +2,10 @@
 
 $snack-bar-padding: $space-small $space-medium;
 // Dark theme
-$snack-bar-dark-bg-color: rgba($color-black, 0.87);
+$snack-bar-dark-bg-color: $dark-bg-color;
 $snack-bar-dark-color: $dark-bg-text-color;
 // Light theme
-$snack-bar-light-bg-color: $color-white;
+$snack-bar-light-bg-color: $light-bg-color;
 $snack-bar-light-color: $light-bg-text-color;
 
 .snack-bar-wrapper {

@@ -172,6 +172,10 @@ $divider-light-color: $color-grey-04;
 $divider-dark-color: $color-grey-01;
 
 // Shared background color
+$light-bg-color: $color-white;
+$dark-bg-color: rgba($color-black, 0.87);
+
+// Shared background color
 $hover-bg-color: $color-grey-07;
 $selected-bg-color: rgba($color-grey-06, 0.8);
 $active-bg-color: rgba($selected-bg-color, 0.8);

@@ -34,7 +34,7 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
     pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<ProductCatalog[]>> {
-    if (!this.productCatalogFeatureIsOn) { return undefined; }
+    if (!this.productCatalogFeatureIsOn) { return Observable.of(undefined); }
     return this._productsService.getCatalogs({
       page: pageIndex,
       perPage: pageSize,
@@ -48,7 +48,7 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<ProductCatalog>> {
-    if (!this.productCatalogFeatureIsOn) { return undefined; }
+    if (!this.productCatalogFeatureIsOn) { return Observable.of(undefined); }
     return this._productsService.getCatalog(recordId);
   }
 
