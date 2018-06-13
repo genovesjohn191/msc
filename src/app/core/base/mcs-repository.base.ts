@@ -289,15 +289,15 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
         this._totalRecordsCount = data.totalCount;
 
         // Filter the unobtained records based on the updated records
-        let unObtainedRecords: T[];
-        unObtainedRecords = data.content && data.content.filter((record: T) => {
+        let unobtainedRecords: T[];
+        unobtainedRecords = data.content && data.content.filter((record: T) => {
           let dataExist = this._updatedRecordsById.find((updated: T) => updated.id === record.id);
           return isNullOrEmpty(dataExist);
         });
 
         // We need to merge only the un-obtained records in order to retain the
         // instance of the obtained records from the updated records
-        this._dataRecords = mergeArrays(this._dataRecords, unObtainedRecords,
+        this._dataRecords = mergeArrays(this._dataRecords, unobtainedRecords,
           (_first: T, _second: T) => {
             let dataExist = isNullOrEmpty(_first.id) ? false : _first.id === _second.id;
             return dataExist;
