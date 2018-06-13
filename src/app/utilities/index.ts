@@ -6,6 +6,7 @@ export * from './mcs-date.function';
 export * from './mcs-string.function';
 export * from './mcs-number.function';
 export * from './mcs-array.function';
+export * from './mcs-map.function';
 export * from './mcs-angular.function';
 export * from './mcs-animation.function';
 export * from './mcs-size.function';

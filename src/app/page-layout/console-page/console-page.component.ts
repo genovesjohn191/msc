@@ -124,6 +124,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // Other variables
+  private _intervalId: number;
   private _vmConsole: any;
   private _serverId: string;
   private _paramChangedSubscription: Subscription;
@@ -334,7 +335,8 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     let closeConsoleWindow = this.stopping && this.server.isPoweredOff;
     if (closeConsoleWindow) {
       this.consoleStatus = VmConsoleStatus.Closing;
-      setInterval(this._closeWindow.bind(this), 1000);
+      if (!isNullOrEmpty(this._intervalId)) { clearInterval(this._intervalId); }
+      this._intervalId = setInterval(this._closeWindow.bind(this), 1000);
       return;
     }
 

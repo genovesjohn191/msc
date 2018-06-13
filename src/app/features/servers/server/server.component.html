@@ -50,7 +50,7 @@
 
                   <mcs-option *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)"
                     [value]="server"
-                    [selected]="selectedServer === server"
+                    [selected]="selectedServer?.id === server.id"
                     [disabled]="serverDeleting(server)"
                     (click)="onServerSelect(server)"
                     mcsEventTracker="select-server"

@@ -406,7 +406,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   private _showThumbnail(): void {
-    if (!this.thumbnailElement) { return; }
+    if (isNullOrEmpty(this.thumbnailElement)) { return; }
 
     // Add thumbnail source
     this._renderer.setAttribute(this.thumbnailElement.nativeElement,

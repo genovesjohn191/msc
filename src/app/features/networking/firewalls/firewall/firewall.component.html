@@ -26,7 +26,7 @@
                 <mcs-option-group [label]="iterator.key" *ngIf="iterator.key">
                   <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
                     [value]="firewall"
-                    [selected]="selectedFirewall === firewall"
+                    [selected]="selectedFirewall?.id === firewall.id"
                     (click)="onFirewallSelect(firewall)"
                     mcsEventTracker="select-firewall"
                     mcsEventCategory="firewall"

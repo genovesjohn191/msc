@@ -97,8 +97,8 @@ export function getRecordCountLabel(count: number, singularSuffix: string, plura
  * This will compare two strings and will return the ffg:
  *
  * -1 = firstString < secondString
- * 0 = firstString > secondString
- * 1 = firstString === secondString
+ * 0 = firstString === secondString
+ * 1 = firstString > secondString
  *
  * @param firstString First string to compare
  * @param secondString Second string to compare
