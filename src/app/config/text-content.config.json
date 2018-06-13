@@ -34,7 +34,7 @@
     "tools": "Other Tools",
     "catalog": "Catalog",
     "signOut": "Sign Out",
-    "macquarieView": "Macquarie View",
+    "macquarieView": "MacquarieView",
     "productCatalog": "Products",
     "loadingProducts": "Loading products.",
     "noProducts": "No products to display.",
@@ -964,6 +964,9 @@
       "errors": {
         "commentRequired": "Please enter a comment."
       }
+    },
+    "dataStatus": {
+      "errorMessage": "Currently unavailable"
     }
   },
   "pageNotifications": {

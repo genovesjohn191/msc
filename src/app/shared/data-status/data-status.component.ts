@@ -1,24 +1,29 @@
 import {
   Component,
   Input,
+  OnInit,
   OnDestroy,
   ElementRef,
   Renderer2,
   ChangeDetectionStrategy,
   ViewEncapsulation,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ContentChild
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsDataStatusFactory,
   McsDataStatus,
+  McsTextContentProvider,
   CoreDefinition
 } from '../../core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
-  animateFactory
+  animateFactory,
+  unsubscribeSubject
 } from '../../utilities';
+import { DataStatusErrorComponent } from './data-status-error/data-status-error.component';
 
 @Component({
   selector: 'mcs-data-status',
@@ -34,7 +39,11 @@ import {
   }
 })
 
-export class DataStatusComponent implements OnDestroy {
+export class DataStatusComponent implements OnInit, OnDestroy {
+  public textContent: any;
+
+  @ContentChild(DataStatusErrorComponent)
+  public errorTemplate: DataStatusErrorComponent;
 
   @Input()
   public get dataStatusFactory(): McsDataStatusFactory<any> { return this._dataStatusFactory; }
@@ -46,7 +55,11 @@ export class DataStatusComponent implements OnDestroy {
   }
   private _dataStatusFactory: McsDataStatusFactory<any>;
 
-  private _statusChangedSubscription: Subscription;
+  @Input()
+  public set alignment(value: string) {
+    if (isNullOrEmpty(value)) { return; }
+    this._renderer.addClass(this._elementRef.nativeElement, value);
+  }
 
   /**
    * Returns the data status based on the factory class
@@ -56,20 +69,21 @@ export class DataStatusComponent implements OnDestroy {
       McsDataStatus.Success : this.dataStatusFactory.dataStatus;
   }
 
-  @Input()
-  public set alignment(value: string) {
-    if (isNullOrEmpty(value)) { return; }
-    this._renderer.addClass(this._elementRef.nativeElement, value);
-  }
+  private _destroySubject = new Subject<void>();
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _textContentProvider: McsTextContentProvider
   ) { }
 
+  public ngOnInit() {
+    this.textContent = this._textContentProvider.content.shared.dataStatus;
+  }
+
   public ngOnDestroy() {
-    unsubscribeSafely(this._statusChangedSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   public get dataStatusEnum(): any {
@@ -96,7 +110,8 @@ export class DataStatusComponent implements OnDestroy {
    */
   private _listenToStatusChanged(): void {
     if (isNullOrEmpty(this.dataStatusFactory)) { return; }
-    this._statusChangedSubscription = this.dataStatusFactory.statusChanged
+    this.dataStatusFactory.statusChanged
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         this._changeDetectorRef.markForCheck();
       });

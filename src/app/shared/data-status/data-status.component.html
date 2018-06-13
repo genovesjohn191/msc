@@ -16,6 +16,13 @@
 
   <!-- Error obtainment status -->
   <div *ngSwitchCase="dataStatusEnum.Error" [@fadeIn]>
-    <ng-content select="[mcsDataError]"></ng-content>
+    <ng-container *ngIf="errorTemplate; else defaultErrorTemplate">
+      <ng-content select="[mcsDataError]"></ng-content>
+    </ng-container>
+    <ng-template #defaultErrorTemplate>
+      <mcs-data-status-error>
+        <span>{{ textContent.errorMessage }}</span>
+      </mcs-data-status-error>
+    </ng-template>
   </div>
 </ng-container>
