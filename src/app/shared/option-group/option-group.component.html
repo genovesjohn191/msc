@@ -16,6 +16,8 @@
 </div>
 
 <!-- Option group content -->
-<div [@expansionVertical]="panelOpen ? 'show' : 'void'" class="option-group-content">
-  <ng-content></ng-content>
-</div>
+<ng-container *ngIf="panelOpen">
+  <div [@expansionVertical]="panelOpen ? 'show' : 'void'" class="option-group-content">
+    <ng-content></ng-content>
+  </div>
+</ng-container>

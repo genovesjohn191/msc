@@ -18,6 +18,14 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public dataLoadingStream: Subject<McsDataStatus>;
 
+  /**
+   * Returns the currently displayed records based on search pattern or paging.
+   */
+  public get displayedRecords(): Server[] {
+    return isNullOrEmpty(this._serversRepository.filteredRecords) ? [] :
+      this._serversRepository.filteredRecords;
+  }
+
   constructor(
     private _serversRepository: ServersRepository,
     private _paginator: McsPaginator,

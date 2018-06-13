@@ -24,7 +24,8 @@ import { CoreDefinition } from '../../core';
 import {
   animateFactory,
   isNullOrEmpty,
-  coerceBoolean
+  coerceBoolean,
+  unsubscribeSubject
 } from '../../utilities';
 import { OptionComponent } from './option/option.component';
 import { OptionGroupLabelDirective } from './option-group-label.directive';
@@ -85,10 +86,16 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Returns true when panel is currently opened
+   * Returns true when panel is opened
    */
-  private _panelOpen: boolean = false;
   public get panelOpen(): boolean { return this._panelOpen; }
+  public set panelOpen(value: boolean) {
+    if (this._panelOpen !== value) {
+      this._panelOpen = value;
+      this._changeDetectorRef.markForCheck();
+    }
+  }
+  private _panelOpen: boolean;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -102,8 +109,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -117,23 +123,21 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    * Closes the currently opened panel
    */
   public closePanel(): void {
-    this._panelOpen = false;
-    this._changeDetectorRef.markForCheck();
+    this.panelOpen = false;
   }
 
   /**
    * Opens the currently closed panel
    */
   public openPanel(): void {
-    this._panelOpen = true;
-    this._changeDetectorRef.markForCheck();
+    this.panelOpen = true;
   }
 
   /**
    * Toggles the panel
    */
   public toggle(): void {
-    this._panelOpen ? this.closePanel() : this.openPanel();
+    this.panelOpen ? this.closePanel() : this.openPanel();
   }
 
   /**
@@ -161,8 +165,8 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   private _listenToSelectionChange(): void {
     // Drops the current subscriptions and resets from scratch
     let resetSubject = Observable.merge(this._options.changes, this._destroySubject);
-
-    this._optionsSelectionChanges.pipe(startWith(null), takeUntil(resetSubject))
+    this._optionsSelectionChanges
+      .pipe(startWith(null), takeUntil(resetSubject))
       .subscribe(() => {
         let selectedOptions = this._options.filter((option) => option.selected);
         isNullOrEmpty(selectedOptions) ? this.closePanel() : this.openPanel();

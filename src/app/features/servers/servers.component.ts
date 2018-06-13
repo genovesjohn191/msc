@@ -172,11 +172,8 @@ export class ServersComponent
     if (isNullOrEmpty(this.dataSource)) { return false; }
     if (!this.selection.hasValue()) { return false; }
 
-    let selectableRecords = this._serversRepository.filteredRecords
-      .filter((record) => {
-        return !record.isProcessing;
-      });
-
+    let selectableRecords = this.dataSource.displayedRecords
+      .filter((record) => !record.isProcessing);
     if (isNullOrEmpty(selectableRecords)) { return false; }
 
     return selectableRecords.length === this.selection.selected.length;
@@ -191,7 +188,7 @@ export class ServersComponent
     if (this.isAllSelected()) {
       this.selection.clear();
     } else {
-      this._serversRepository.filteredRecords.forEach((record) => {
+      this.dataSource.displayedRecords.forEach((record) => {
         if (!record.isProcessing) {
           this.selection.select(record);
         }
@@ -221,7 +218,7 @@ export class ServersComponent
 
     // Get selected servers based on selection model
     this.selection.selected.forEach((selectedServer) => {
-      let existingServer = this._serversRepository.filteredRecords
+      let existingServer = this.dataSource.displayedRecords
         .find((data) => data.id === selectedServer.id);
       selectedServers.push(existingServer);
     });

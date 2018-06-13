@@ -3,7 +3,10 @@ import {
   PipeTransform
 } from '@angular/core';
 import { McsKeyValuePair } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  compareMaps
+} from '../../utilities';
 
 @Pipe({
   name: 'mcsMapIterable',
@@ -16,19 +19,19 @@ import { isNullOrEmpty } from '../../utilities';
  * @description value as _value of the map iterator
  */
 export class MapIterablePipe implements PipeTransform {
-
   /**
    * Array cache of the actual data
    */
   private _cacheArray: McsKeyValuePair[];
-  private _recordCount: number = 0;
+  private _cacheMap: Map<any, any>;
 
   public transform(records: Map<any, any>): McsKeyValuePair[] {
-    if (isNullOrEmpty(records)) { return this._cacheArray; }
+    if (isNullOrEmpty(records)) { return []; }
 
-    let resetCache = this._recordCount !== records.size;
+    let resetCache = isNullOrEmpty(this._cacheMap) ||
+      compareMaps(this._cacheMap, records) !== 0;
     if (resetCache) {
-      this._recordCount = records.size;
+      this._cacheMap = new Map(records);
       this._resetCache(records);
     }
     return this._cacheArray;

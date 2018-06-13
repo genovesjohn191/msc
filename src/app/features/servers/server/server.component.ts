@@ -44,7 +44,8 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '../../../utilities';
 import { ServersRepository } from '../servers.repository';
 import { ServersService } from '../servers.service';
@@ -306,8 +307,9 @@ export class ServerComponent
     this._serverService.setSelectedServer(this.selectedServer);
 
     this.selectedServerName = selectedServer.name;
-    let hasResourceName = !isNullOrEmpty(selectedServer.platform)
-      && !isNullOrEmpty(selectedServer.platform.resourceName);
+    let hasResourceName = !isNullOrEmpty(
+      getSafeProperty(selectedServer, (obj) => obj.platform.resourceName)
+    );
 
     let resourceName = (hasResourceName) ?
       selectedServer.platform.resourceName : SERVER_LIST_GROUP_OTHERS;

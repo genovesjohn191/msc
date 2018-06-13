@@ -6,7 +6,8 @@ import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject,
-  updateObjectData
+  updateObjectData,
+  getSafeProperty
 } from './mcs-object.function';
 
 describe('OBJECT Functions', () => {
@@ -87,6 +88,27 @@ describe('OBJECT Functions', () => {
       updateObjectData(sourceInstance, targetInstance);
       expect(sourceInstance).not.toBe(targetInstance);
       expect(sourceInstance.age).toBe(19);
+    });
+  });
+
+  describe('getSafeProperty()', () => {
+    it('should return the property value when object is not null or undefined', () => {
+      let objectData = { 'first': 'data1', 'second': 'data2' };
+      let propertyValue = getSafeProperty(objectData, (obj) => obj.first);
+      expect(propertyValue).toBe('data1');
+    });
+
+    it('should return the fail value provided when the object is null or undefined', () => {
+      let objectData: any;
+      let failValue = getSafeProperty(objectData, (obj) => obj.first, 'sample');
+      expect(failValue).toBe('sample');
+    });
+
+    it(`should return undefined value when the object is null or undefined
+      and no provided fail value`, () => {
+      let objectData: any;
+      let failValue = getSafeProperty(objectData, (obj) => obj.first);
+      expect(failValue).toBeUndefined();
     });
   });
 });

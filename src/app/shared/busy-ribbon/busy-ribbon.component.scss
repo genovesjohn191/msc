@@ -4,13 +4,13 @@ $busy-ribbon-interval: 8px;
 
 .busy-ribbon-wrapper {
   display: block;
+  @include border-radius($border-radius-small);
 
   .busy-ribbon-content {
     @include display-flex(row);
     @include align-items(center);
     @include set-items-interval($busy-ribbon-interval, horizontal);
     justify-content: center;
-    @include border-radius($border-radius-small);
     padding: $space-small;
   }
 

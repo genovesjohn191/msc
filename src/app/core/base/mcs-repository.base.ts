@@ -289,7 +289,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
         this._totalRecordsCount = data.totalCount;
 
         // Filter the unobtained records based on the updated records
-        let unObtainedRecords = data.content.filter((record: T) => {
+        let unObtainedRecords: T[];
+        unObtainedRecords = data.content && data.content.filter((record: T) => {
           let dataExist = this._updatedRecordsById.find((updated: T) => updated.id === record.id);
           return isNullOrEmpty(dataExist);
         });
