@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { McsAuthenticationGuard } from '../../core';
 import { DefaultPageComponent } from './default-page.component';
 import {
+  dashboardRoutes,
   serversRoutes,
   ticketsRoutes,
   notificationsRoutes,
@@ -18,7 +19,8 @@ export const routes: Routes = [
     component: DefaultPageComponent,
     canActivate: [McsAuthenticationGuard],
     children: [
-      { path: '', redirectTo: 'servers', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      ...dashboardRoutes,
       ...serversRoutes,
       ...ticketsRoutes,
       ...notificationsRoutes,

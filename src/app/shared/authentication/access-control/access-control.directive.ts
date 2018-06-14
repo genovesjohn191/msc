@@ -6,7 +6,10 @@ import {
   OnChanges
 } from '@angular/core';
 import { McsAccessControlService } from '../../../core';
-import { coerceArray } from '../../../utilities';
+import {
+  coerceArray,
+  isNullOrEmpty
+} from '../../../utilities';
 
 @Directive({
   selector: '[mcsAccessControl]'
@@ -20,17 +23,23 @@ import { coerceArray } from '../../../utilities';
  */
 export class AccessControlDirective implements OnChanges {
 
-  private _requiredPermission: string[];
   @Input('mcsAccessControl')
   public set requiredPermission(value: string[]) {
     this._requiredPermission = coerceArray(value);
   }
+  private _requiredPermission: string[];
 
-  private _featureFlag: string;
   @Input('mcsAccessControlFeature')
   public set feature(featureFlag: string) {
     this._featureFlag = featureFlag;
   }
+  private _featureFlag: string;
+
+  @Input('mcsAccessControlElse')
+  public set elseTemplate(templateRef: TemplateRef<any>) {
+    this._elseTemplate = templateRef;
+  }
+  private _elseTemplate: TemplateRef<any>;
 
   constructor(
     private _accessControlService: McsAccessControlService,
@@ -51,7 +60,12 @@ export class AccessControlDirective implements OnChanges {
     let hasAccess = this._accessControlService
       .hasAccess(this._requiredPermission, this._featureFlag);
 
-    hasAccess ? this.viewContainer.createEmbeddedView(this.templateRef) :
-      this.viewContainer.clear();
+    if (isNullOrEmpty(this._elseTemplate)) {
+      hasAccess ? this.viewContainer.createEmbeddedView(this.templateRef) :
+        this.viewContainer.clear();
+    } else {
+      hasAccess ? this.viewContainer.createEmbeddedView(this.templateRef) :
+        this.viewContainer.createEmbeddedView(this._elseTemplate);
+    }
   }
 }

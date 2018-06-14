@@ -11,3 +11,17 @@ $image-thumbnail-dark-bg-color: $color-black;
   }
 }
 
+.image-footer {
+  margin-top: $space-xsmall;
+  padding: $space-xsmall $space-small;
+
+  &.image-dark {
+    background: $dark-bg-color;
+    color: $dark-bg-text-color;
+  }
+
+  &.image-primary {
+    background: $primary-bg-color;
+    color: $primary-bg-text-color;
+  }
+}

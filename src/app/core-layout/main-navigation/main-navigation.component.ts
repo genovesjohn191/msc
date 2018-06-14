@@ -13,7 +13,8 @@ import {
   McsRouteCategory,
   mcsRouteCategoryText,
   McsRouteHandlerService,
-  CoreDefinition
+  CoreDefinition,
+  McsAccessControlService
 } from '../../core';
 import { unsubscribeSubject } from '../../utilities';
 
@@ -45,7 +46,8 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _routerHandlerService: McsRouteHandlerService,
-    private _textProvider: McsTextContentProvider
+    private _textProvider: McsTextContentProvider,
+    private _accessControlService: McsAccessControlService
   ) { }
 
   public ngOnInit() {
@@ -55,6 +57,14 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);
+  }
+
+  /**
+   * Returns true when the user has hosting permission
+   */
+  public get hasHostingAccess(): boolean {
+    return this._accessControlService.hasPermission(['VmAccess']) ||
+      this._accessControlService.hasPermission(['FirewallConfigurationView']);
   }
 
   /**

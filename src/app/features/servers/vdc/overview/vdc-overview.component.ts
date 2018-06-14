@@ -6,21 +6,23 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import {
+  Subscription,
+  Subject
+} from 'rxjs/Rx';
+import { takeUntil } from 'rxjs/operators/takeUntil';
 import {
   ServerResource,
   ServerStorage,
   ServerStorageStatus,
   serverStorageStatusText,
-  ServerServiceType,
   serverServiceTypeText
 } from '../../models';
 import { VdcService } from '../vdc.service';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsUnitType,
-  McsAccessControlService
+  McsUnitType
 } from '../../../../core';
 import {
   isNullOrEmpty,
@@ -29,8 +31,7 @@ import {
   replacePlaceholder,
   unsubscribeSafely
 } from '../../../../utilities';
-import { Subject } from 'rxjs/Subject';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import { ServersResourcesRepository } from '../../servers-resources.repository';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
 
@@ -43,15 +44,14 @@ const VDC_LOW_STORAGE_PERCENTAGE = 85;
 export class VdcOverviewComponent implements OnInit, OnDestroy {
 
   public textContent: any;
+  public hasResources: boolean;
 
   private _vdcSubscription: Subscription;
 
-  private _vdc: ServerResource;
-  public get vdc(): ServerResource {
-    return this._vdc;
-  }
-  public set vdc(value: ServerResource) {
-    this._vdc = value;
+  private _selectedVdc: ServerResource;
+  public get selectedVdc(): ServerResource { return this._selectedVdc; }
+  public set selectedVdc(value: ServerResource) {
+    this._selectedVdc = value;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -60,17 +60,17 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   }
 
   public get vdcServiceType(): string {
-    return serverServiceTypeText[this.vdc.serviceType];
+    return serverServiceTypeText[this.selectedVdc.serviceType];
   }
 
   public get vdcMemoryValue(): string {
-    return !isNullOrEmpty(this.vdc.compute) ?
-      appendUnitSuffix(this.vdc.compute.memoryLimitMB, McsUnitType.Megabyte) : '';
+    return !isNullOrEmpty(this.selectedVdc.compute) ?
+      appendUnitSuffix(this.selectedVdc.compute.memoryLimitMB, McsUnitType.Megabyte) : '';
   }
 
   public get vdcCpuValue(): string {
-    return !isNullOrEmpty(this.vdc.compute) ?
-      appendUnitSuffix(this.vdc.compute.cpuLimit, McsUnitType.CPU) : '';
+    return !isNullOrEmpty(this.selectedVdc.compute) ?
+      appendUnitSuffix(this.selectedVdc.compute.cpuLimit, McsUnitType.CPU) : '';
   }
 
   /**
@@ -98,35 +98,22 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     return status;
   }
 
-  /**
-   * Returns true for self-managed vdc and for the managed vdc
-   * if the feature flag was enable for creating a managed server
-   */
-  public get hasResourceAccess(): boolean {
-    if (this.vdc.serviceType === ServerServiceType.SelfManaged) { return true; }
-
-    let hasAccessToCreateManagedServer = this._accessControlService
-      .hasAccessToFeature('enableCreateManagedServer');
-
-    return this.vdc.serviceType === ServerServiceType.Managed
-      && hasAccessToCreateManagedServer;
-  }
-
   private _destroySubject = new Subject<void>();
 
   constructor(
-    private _textContentProvider: McsTextContentProvider,
+    private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _vdcService: VdcService,
-    private _router: Router,
-    private _accessControlService: McsAccessControlService,
+    private _textContentProvider: McsTextContentProvider,
+    private _serversResourceRepository: ServersResourcesRepository
   ) {
-    this.vdc = new ServerResource();
+    this.selectedVdc = new ServerResource();
   }
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.servers.vdc.overview;
     this._listenToSelectedVdc();
+    this._validateResources();
   }
 
   public ngOnDestroy(): void {
@@ -215,7 +202,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
-        this.vdc = response;
+        this.selectedVdc = response;
       });
   }
 
@@ -225,9 +212,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
    */
   private _computeStoragePercentage(storage: ServerStorage): number {
     if (isNullOrEmpty(storage)) { return 0; }
-
     let percentage = 100 * storage.usedMB / storage.limitMB;
-
     return Math.round(percentage);
   }
 
@@ -235,13 +220,24 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
    * Get the number of storage that has low remaining memory
    */
   private _getLowStorageCount(): number {
-    if (isNullOrEmpty(this.vdc.storage)) { return 0; }
+    if (isNullOrEmpty(this.selectedVdc.storage)) { return 0; }
 
-    let storages = this.vdc.storage.filter((storage) => {
+    let storages = this.selectedVdc.storage.filter((storage) => {
       let storagePercentage = this._computeStoragePercentage(storage);
       return storagePercentage >= VDC_LOW_STORAGE_PERCENTAGE;
     });
-
     return (!isNullOrEmpty(storages)) ? storages.length : 0;
+  }
+
+  /**
+   * Initialize the server resources based on repository cache
+   * and check whether the resource has self managed type
+   */
+  private _validateResources(): void {
+    this._serversResourceRepository.findAllRecords()
+      .subscribe((resources) => {
+        this.hasResources = !isNullOrEmpty(resources);
+        this._changeDetectorRef.markForCheck();
+      });
   }
 }

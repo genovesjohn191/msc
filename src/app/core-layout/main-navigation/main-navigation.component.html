@@ -12,6 +12,21 @@
 
   <!-- All Routing -->
   <ng-template #navigationList>
+    <!-- Dashboard -->
+    <ng-container *ngIf="hasHostingAccess; else dashboardNavTemplate"></ng-container>
+    <ng-template #dashboardNavTemplate>
+      <div class="navigation-item" routerLinkActive="active">
+        <mcs-icon [key]="caretRightIconKey" color="white"
+          size="medium" class="navigation-mobile"></mcs-icon>
+        <a [routerLink]="['/dashboard']"
+          mcsEventTracker="navigate-to-dashboard"
+          mcsEventCategory="navigation"
+          mcsEventLabel="main-nav">
+          {{ textContent.navigation.dashboard }}
+        </a>
+      </div>
+    </ng-template>
+
     <!-- Compute Category -->
     <div class="navigation-item" [class.active]="selectedCategory === routerCategoryEnum.Compute"
       *mcsAccessControl="['VmAccess']">

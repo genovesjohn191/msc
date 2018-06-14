@@ -40,9 +40,6 @@ export class IconComponent implements OnChanges {
   @Input()
   public color: McsColorType;
 
-  @Input()
-  public customSize: string;
-
   /**
    * Size of all the icons
    * `@Note` If the type of icon that you need to render is SVG and the size of it is 'auto',
@@ -53,9 +50,6 @@ export class IconComponent implements OnChanges {
   public set size(value: McsSizeType | string) {
     let sizeIsDifferent = !isNullOrEmpty(value) && value !== this._size;
     if (sizeIsDifferent) {
-      if (value === 'auto') {
-        throw new Error('auto width is not working on IE, set the actual size for icon instead');
-      }
       this._size = value;
       let mapSize = this._iconSizeTable.get(value as McsSizeType);
       this._iconActualSize = isNullOrEmpty(mapSize) ? this._size : mapSize;
@@ -166,9 +160,18 @@ export class IconComponent implements OnChanges {
     return this._assetsProvider
       .getSvgElement(this._icon.value)
       .map((svgElement) => {
-        let svgActualSize = this._iconActualSize === 'auto' ? '100%' : this._iconActualSize;
-        svgElement.setAttribute('width', svgActualSize);
-        svgElement.setAttribute('height', svgActualSize);
+        if (this._iconActualSize === 'auto') {
+          throw new Error(`auto width is not working on IE for SVG Elements,
+            set the actual size for icon instead`);
+        }
+        // Get the actual ratio of the svg to calculate manually the height of
+        // since auto height is not working properly on IE
+        let svgViewBox = (svgElement as SVGSVGElement).viewBox;
+        let svgRatio = svgViewBox.baseVal.height / svgViewBox.baseVal.width;
+        let actualHeight = +(this._iconActualSize.replace('px', '')) * svgRatio;
+
+        svgElement.setAttribute('width', this._iconActualSize);
+        svgElement.setAttribute('height', `${actualHeight}px`);
         this._renderer.appendChild(parentContainer, svgElement);
         return parentContainer;
       });
@@ -184,6 +187,7 @@ export class IconComponent implements OnChanges {
     this._renderer.setStyle(imageElement, 'display', 'block');
     this._renderer.setStyle(imageElement, 'height', 'auto');
     this._renderer.setStyle(imageElement, 'width', this._iconActualSize);
+    this._renderer.setStyle(imageElement, 'max-width', '100%');
 
     this._renderer.appendChild(parentContainer, imageElement);
     return Observable.of(parentContainer);
