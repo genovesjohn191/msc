@@ -178,7 +178,9 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get attachMediaIsDisabled(): boolean {
-    return !this.server.executable || !this.hasAvailableMedia;
+    return !isNullOrEmpty(this.server.media)
+      || !this.server.executable
+      || !this.hasAvailableMedia;
   }
 
   public get ipAllocationModeEnum(): any {

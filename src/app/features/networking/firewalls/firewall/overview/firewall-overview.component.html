@@ -32,7 +32,7 @@
         <!-- Serial -->
         <mcs-list-item>
           <span>{{ textContent.supportIdentifiers.serial }}:</span>
-          <span>{{ firewall.serialNumber }}</span>
+          <span [innerHTML]="firewall.serialNumber | mcsDataLabel: 'Unavailable'"></span>
         </mcs-list-item>
       </mcs-list>
     </div>

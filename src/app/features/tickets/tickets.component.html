@@ -121,7 +121,7 @@
             {{ columnSettings.customerReference.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ row.customerReference | mcsDataLabel: 'None' }}
+            <span [innerHTML]="row.customerReference | mcsDataLabel: 'None'"></span>
           </mcs-data-cell>
         </ng-container>
 

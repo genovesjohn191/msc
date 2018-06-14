@@ -19,7 +19,7 @@
     <!-- Server Actions -->
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
-        <mcs-responsive-panel>
+        <mcs-responsive-panel *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
             id="ctaStartSelectedServer"
@@ -126,7 +126,7 @@
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
         <!-- Selection Column -->
-        <ng-container mcsColumnDef="select">
+        <ng-container mcsColumnDef="select" *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
             class="text-center action-header-cell hidden-small">
             <mcs-checkbox (change)="toggleSelectAll()"

@@ -53,7 +53,3 @@ $form-field-size-large: 400px;
   @include flex-wrap(wrap);
   @include set-items-interval($space-xsmall, horizontal);
 }
-
-.form-field-label {
-  color: $readonly-color;
-}
