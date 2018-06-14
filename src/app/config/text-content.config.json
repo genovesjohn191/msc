@@ -15,6 +15,7 @@
     "errorMessage": "Console connection error."
   },
   "documentTitle": {
+    "dashboard": "Macquarie Cloud Services: Dashboard",
     "servers": "Macquarie Cloud Services: Servers",
     "medias": "Macquarie Cloud Services: Media Catalog",
     "firewalls": "Macquarie Cloud Services: Firewalls",
@@ -25,6 +26,7 @@
   },
   "navigation": {
     "title": "Macquarie Cloud Services Portal",
+    "dashboard": "Dashboard",
     "virtual": "Virtual",
     "medias": "Media",
     "servers": "Servers",

@@ -1,11 +1,54 @@
-<section class="dashboard-container">
-  <div class="mcs-page-title bordered-bottom">
-    <div class="main-title">
-      <h2>{{ dashboardTextContent.header }}</h2>
-    </div>
-  </div>
+<mcs-page header="Welcome to the Macquarie Cloud Services Portal">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <div class="limited-view">
+      <div class="container-wrapper">
+        <p>This Portal allows Macquarie Cloud Services customers with permissions to hosting tools to manage their services from a single spot.</p>
 
-  <span class="dashboard-description">
-    {{ dashboardTextContent.description }}
-  </span>
-</section>
+        <p>In the future, the portal will be the go-to place for managing, ordering and provisioning services with us online.</p>
+
+        <p>What you see in this portal is determined by your hosting permissions in <a [href]="macquarieViewUrl" target="_blank">MacquarieView</a>. If the portal looks a little empty right now, it could be:</p>
+      </div>
+
+      <div class="container-wrapper">
+        <h4 class="container-header">1. You might not have access to hosting tools.</h4>
+        <div class="grid-row">
+
+          <div class="grid-column">
+            <p>
+                Administrators within your company are empowered to make changes to permissions for users in their company from the Hosting Portal Access section in <a [href]="userDetailsUrl" target="_blank">User Details</a> in <a [href]="macquarieViewUrl" target="_blank">MacquarieView</a>. This can be found by navigating to <a [href]="userDetailsUrl" target="_blank">Settings &gt; Manage Users</a>.
+            </p>
+
+            <p>
+                Once an Administrator has changed your permissions in MacquarieView, you'll need to <a (click)="signOut()">Sign Out</a> and Sign In again to see changes.
+            </p>
+          </div>
+
+          <div class="grid-column">
+            <div class="box-shadow-small">
+              <mcs-image [key]="userPermissionsImageKey"></mcs-image>
+              <div class="image-footer image-primary">
+                <span>
+                  Administrators can manage user permissions from MacquarieView &gt; Settings &gt; Manage Users.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-top-small container-wrapper">
+        <h4 class="container-header">2. You might not have purchased any Firewalls, Self-Managed or Managed Virtual Data Centres with Macquarie Cloud Services.</h4>
+        <p>We're busy working away at our Portal and we don't currently support Cloud Services products like Dedicated Servers, ESX, Colocation and Internet products. Continue to leverage existing Macquarie Telecom Group tools to manage those services for now.</p>
+
+        <p>We have a long roadmap and we'll let you know when more services are available in the Portal.</p>
+
+        <div class="space-top-xlarge"></div>
+
+        <p *mcsAccessControl="['TicketEdit']">If you still think there is a problem, please <a (click)="gotoCreateTicket()">raise a ticket</a> and the friendly Macquarie Cloud Services team can give you a hand.</p>
+
+        <p>We welcome your feedback. You can provide information by clicking "Have Feedback?" in the the bottom of the portal.</p>
+      </div>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

@@ -161,12 +161,27 @@ export class McsRouteHandlerService implements McsInitializer {
   private _createRouteTable(): void {
     let documentTitleText = this._textContentProvider.content.documentTitle;
 
+    // Register /dashboard endpoint
+    this._routeTable.set('/dashboard',
+      {
+        category: McsRouteCategory.None, url: '/dashboard',
+        documentTitle: documentTitleText.dashboard
+      });
+
     // Register /servers endpoint
     this._routeTable.set('/servers',
       {
         category: McsRouteCategory.Compute, url: '/servers',
         documentTitle: documentTitleText.servers,
         requiredPermissions: ['VmAccess']
+      });
+
+    // Register /servers/create endpoint
+    this._routeTable.set('/servers/create',
+      {
+        category: McsRouteCategory.Compute, url: '/servers/create',
+        documentTitle: documentTitleText.servers,
+        requiredPermissions: ['VmEdit']
       });
 
     // Register /media endpoint

@@ -36,15 +36,22 @@ export class ImageComponent implements OnChanges {
   @Input()
   public key: string;
 
+  /**
+   * Size of all the images
+   * `@Note` If the type of image that you need to render is SVG and the size of it is 'auto',
+   * you need to provide the actual size of the image instead.
+   * Because 100% width and height of SVG element doesn't work on IE.
+   */
   @Input()
-  public set size(value: McsSizeType) {
+  public set size(value: McsSizeType | string) {
     let sizeIsDifferent = !isNullOrEmpty(value) && value !== this._size;
     if (sizeIsDifferent) {
       this._size = value;
-      this._imageActualSize = this._imageSizeTable.get(value);
+      let mapSize = this._imageSizeTable.get(value as McsSizeType);
+      this._imageActualSize = isNullOrEmpty(mapSize) ? this._size : mapSize;
     }
   }
-  private _size: McsSizeType;
+  private _size: McsSizeType | string;
 
   // Image variables
   private _image: Image;
@@ -59,8 +66,8 @@ export class ImageComponent implements OnChanges {
     private _elementRef: ElementRef,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this._size = 'auto';
     this._createSizeTable();
+    this.size = 'auto';
   }
 
   public async ngOnChanges() {
@@ -142,8 +149,18 @@ export class ImageComponent implements OnChanges {
     return this._assetsProvider
       .getSvgElement(this._image.value)
       .map((svgElement) => {
+        if (this._imageActualSize === 'auto') {
+          throw new Error(`auto width is not working on IE for SVG Elements,
+            set the actual size for image instead`);
+        }
+        // Get the actual ratio of the svg to calculate manually the height of
+        // since auto height is not working properly on IE
+        let svgViewBox = (svgElement as SVGSVGElement).viewBox;
+        let svgRatio = svgViewBox.baseVal.height / svgViewBox.baseVal.width;
+        let actualHeight = +(this._imageActualSize.replace('px', '')) * svgRatio;
 
         svgElement.setAttribute('width', this._imageActualSize);
+        svgElement.setAttribute('height', `${actualHeight}px`);
         this._renderer.appendChild(parentContainer, svgElement);
         return parentContainer;
       });
@@ -159,6 +176,7 @@ export class ImageComponent implements OnChanges {
     this._renderer.setStyle(imageElement, 'display', 'block');
     this._renderer.setStyle(imageElement, 'height', 'auto');
     this._renderer.setStyle(imageElement, 'width', this._imageActualSize);
+    this._renderer.setStyle(imageElement, 'max-width', '100%');
 
     this._renderer.appendChild(parentContainer, imageElement);
     return Observable.of(parentContainer);

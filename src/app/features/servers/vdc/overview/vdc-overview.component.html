@@ -10,7 +10,7 @@
         </mcs-list-item>
         <!-- Zone -->
         <mcs-list-item>
-          {{ textContent.vdcProperties.zone }}: {{ vdc.availabilityZone }}
+          {{ textContent.vdcProperties.zone }}: {{ selectedVdc.availabilityZone }}
         </mcs-list-item>
         <!-- Configuration -->
         <mcs-list-item>
@@ -26,15 +26,17 @@
     <div class="grid-column container-wrapper break-on-small">
       <h4 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h4>
       <mcs-list>
-        <mcs-list-item *ngIf="hasResourceAccess">
-          <button mcsButton size="small"
-            id="ctaVdcNewServer"
-            (click)="createNewServer()">
-            {{ textContent.vcloud.newServer }}
-          </button>
-        </mcs-list-item>
-        <mcs-list-item *ngIf="vdc.portalUrl">
-          <a [href]="vdc.portalUrl" target="_blank">{{ textContent.vcloud.viewVcloud}}</a>
+        <ng-container *mcsAccessControl="['VmEdit']">
+          <mcs-list-item *ngIf="hasResources">
+            <button mcsButton size="small"
+              id="ctaVdcNewServer"
+              (click)="createNewServer()">
+              {{ textContent.vcloud.newServer }}
+            </button>
+          </mcs-list-item>
+        </ng-container>
+        <mcs-list-item *ngIf="selectedVdc.portalUrl">
+          <a [href]="selectedVdc.portalUrl" target="_blank">{{ textContent.vcloud.viewVcloud}}</a>
         </mcs-list-item>
       </mcs-list>
     </div>
@@ -46,7 +48,7 @@
       <div class="vertical-items-spacing-medium">
         <span>{{ textContent.networkInformation.description }}</span>
         <mcs-accordion [multi]="true">
-          <mcs-accordion-panel *ngFor="let network of vdc.networks; let i = index" [expanded]="i === 0">
+          <mcs-accordion-panel *ngFor="let network of selectedVdc.networks; let i = index" [expanded]="i === 0">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               {{ network.name }}
             </mcs-accordion-panel-header>
@@ -72,7 +74,7 @@
       <div class="vertical-items-spacing-medium">
         <span *ngIf="hasLowStorage">{{ storageSummary }}</span>
         <mcs-accordion [multi]="true">
-          <mcs-accordion-panel *ngFor="let storage of vdc.storage; let i = index"
+          <mcs-accordion-panel *ngFor="let storage of selectedVdc.storage; let i = index"
             [expanded]="i === 0">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
 

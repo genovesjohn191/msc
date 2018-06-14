@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '../../utilities';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
+import { McsApiIdentity } from '../models/response/mcs-api-identity';
+import { McsKeyValuePair } from '../models/mcs-key-value-pair';
 
 @Injectable()
 export class McsAccessControlService {
@@ -22,54 +27,50 @@ export class McsAccessControlService {
     return hasPermission && featureEnabled;
   }
 
-  public hasPermission(requiredPermissions: string[]) {
+  /**
+   * Returns true when the logged in user has the permission given
+   * @param requiredPermissions Required permission to be checked
+   */
+  public hasPermission(requiredPermissions: string[]): boolean {
+    if (isNullOrEmpty(requiredPermissions)) { return true; }
     let user = this._authenticationIdentity.user;
 
-    if (isNullOrEmpty(requiredPermissions)) {
-      return true;
-    }
-
-    if (isNullOrEmpty(user) || isNullOrEmpty(user.permissions)) {
-      return false;
-    }
-
-    let hasPermission: boolean = !isNullOrEmpty(requiredPermissions);
-
-    if (!hasPermission) {
-      return hasPermission;
-    }
-
-    hasPermission = true;
+    // Check user existing permissions
+    let userPermissions = getSafeProperty<McsApiIdentity, string[]>(
+      user, (obj) => obj.permissions
+    );
+    if (isNullOrEmpty(userPermissions)) { return false; }
 
     // Loop thru each required permissions
-    // making sure all of them are existing in the users permissions.
+    // making sure all of them are exist in the users permissions.
+    let hasPermission: boolean = true;
     for (let value of requiredPermissions) {
-      if (user.permissions.indexOf(value) === -1) {
+      if (userPermissions.indexOf(value) === -1) {
         hasPermission = false;
         break;
       }
     }
-
     return hasPermission;
   }
 
-  public hasAccessToFeature(feature: string, defaultValue: boolean = false) {
+  /**
+   * Returns true when the given feature flag is turned on
+   * @param feature Feature flag to be checked
+   * @param defaultValue Default value of the feature flag
+   */
+  public hasAccessToFeature(feature: string, defaultValue: boolean = false): boolean {
+    if (isNullOrEmpty(feature)) { return true; }
     let user = this._authenticationIdentity.user;
 
-    if (isNullOrEmpty(feature)) {
-      return true;
-    }
+    // Check existing features
+    let features = getSafeProperty<McsApiIdentity, McsKeyValuePair[]>(
+      user, (obj) => obj.features
+    );
+    if (isNullOrEmpty(features)) { return false; }
 
-    if (isNullOrEmpty(user) || isNullOrEmpty(user.features)) {
-      return false;
-    }
-
-    let targetFeature = user.features.find((featureFlag) => featureFlag.key === feature);
-
-    if (isNullOrEmpty(targetFeature)) {
-      return defaultValue;
-    }
-
+    // Check feature flag
+    let targetFeature = features.find((featureFlag) => featureFlag.key === feature);
+    if (isNullOrEmpty(targetFeature)) { return defaultValue; }
     return targetFeature.value;
   }
 }

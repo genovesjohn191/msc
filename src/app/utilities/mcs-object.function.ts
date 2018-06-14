@@ -56,14 +56,11 @@ export function updateObjectData(source: any, target: any): void {
  */
 export function getSafeProperty<O, T>(
   obj: O,
-  predicateOperator?: (x: O) => T,
-  valueIfFail?: any): T | O {
+  predicateOperator: (x: O) => T,
+  valueIfFail?: any): T {
   try {
     // Validate used object
     if (isNullOrUndefined(obj)) { return valueIfFail; }
-
-    // Validate predicate operator and return the object if it is null
-    if (isNullOrUndefined(predicateOperator)) { return obj; }
 
     // Return the predicate
     return isNullOrUndefined(predicateOperator(obj)) ? valueIfFail : predicateOperator(obj);
