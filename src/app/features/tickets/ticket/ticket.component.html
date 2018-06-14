@@ -46,22 +46,22 @@
               <mcs-icon size="small" [key]="userIconKey"></mcs-icon>
               <strong>{{ requestor }}</strong>
             </div>
-            <span read-only>{{ ticket.createdOn | mcsStdDateFormat }}</span>
+            <span>{{ ticket.createdOn | mcsStdDateFormat }}</span>
           </div>
 
           <div class="grid-column">
             <strong>{{ textContent.status }}</strong><br/>
-            <span read-only>{{ ticket.stateLabel }}</span>
+            <span>{{ ticket.stateLabel }}</span>
           </div>
 
           <div class="grid-column">
             <strong>{{ textContent.type }}</strong><br/>
-            <span read-only>{{ getSubTypeString(ticket.subType) }}</span>
+            <span>{{ getSubTypeString(ticket.subType) }}</span>
           </div>
 
           <div class="grid-column">
             <strong>{{ textContent.customerReference }}</strong><br/>
-            <span read-only>{{ ticket.customerReference | mcsDataLabel: 'None' }}</span>
+            <span [innerHTML]="ticket.customerReference | mcsDataLabel: 'None'"></span>
           </div>
         </div>
         <div>

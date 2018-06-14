@@ -52,7 +52,7 @@
             {{ columnSettings.serialNumber.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ row.serialNumber | mcsDataLabel: 'Unavailable' }}
+            <span [innerHTML]="row.serialNumber | mcsDataLabel: 'Unavailable'"></span>
           </mcs-data-cell>
         </ng-container>
 

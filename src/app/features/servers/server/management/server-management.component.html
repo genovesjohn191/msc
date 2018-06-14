@@ -12,22 +12,22 @@
           <h4 class="container-header">{{ textContent.vmProperties.title }}</h4>
           <mcs-list spacing="xsmall">
             <!-- Status -->
-            <mcs-list-item>
+            <mcs-list-item class="form-field-inline">
               <span>{{ textContent.vmProperties.status }}:</span>
               <span>{{ server.statusLabel }}</span>
             </mcs-list-item>
             <!-- Image -->
-            <mcs-list-item>
+            <mcs-list-item class="form-field-inline">
               <span>{{ textContent.vmProperties.image }}:</span>
-              <span>{{ server.operatingSystem?.guestOs }}</span>
+              <span [innerHTML]="server.operatingSystem?.guestOs | mcsDataLabel"></span>
             </mcs-list-item>
             <!-- Zone -->
-            <mcs-list-item>
+            <mcs-list-item class="form-field-inline">
               <span>{{ textContent.vmProperties.zone }}:</span>
-              <span>{{ server.availabilityZone }}</span>
+              <span [innerHTML]="server.availabilityZone | mcsDataLabel"></span>
             </mcs-list-item>
             <!-- Configuration -->
-            <mcs-list-item>
+            <mcs-list-item class="form-field-inline">
               <span>{{ textContent.vmProperties.configuration }}:</span>
               <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
               <span *mcsAccessControl="['VmEdit']">
@@ -93,9 +93,10 @@
             </div>
             <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
               <!-- Primary Volume -->
-              <mcs-list-item *ngFor="let storage of server.storageDevices">
+              <mcs-list-item *ngFor="let storage of server.storageDevices"
+                class="form-field-inline">
                 <span>{{ storage.name }}:</span>
-                <span>{{ storage.sizeMB | mcsDataSize: 'MB' }}</span>
+                <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
               </mcs-list-item>
               <!-- Storage Policy -->
               <!-- TODO: Will confirm to Orch API where to pull this data -->
@@ -127,7 +128,7 @@
                 <div class="block-items-xsmall">
 
                   <ng-template #noIpAddressTemplate>
-                    <span [ngSwitch]="nic?.ipAllocationMode">
+                    <span read-only [ngSwitch]="nic?.ipAllocationMode">
                       <ng-container *ngSwitchCase="ipAllocationModeEnum.Dhcp">
                         {{ textContent.nics.dhcpLabel }}
                       </ng-container>
@@ -138,11 +139,11 @@
                   </ng-template>
 
                   <div class="form-field-inline">
-                    <span class="form-field-label">{{ textContent.nics.ipAllocationMode }}:</span>
+                    <span>{{ textContent.nics.ipAllocationMode }}:</span>
                     <span>{{ nic.ipAllocationModeLabel }}</span>
                   </div>
                   <div class="form-field-inline">
-                    <span class="form-field-label">{{ textContent.nics.ipAddresses }}:</span>
+                    <span>{{ textContent.nics.ipAddresses }}:</span>
                     <ng-container *ngIf="getNicIpAddresses(nic); else noIpAddressTemplate">
                       <mcs-list spacing="auto">
                         <mcs-list-item *ngFor="let item of getNicIpAddresses(nic)">
@@ -181,27 +182,25 @@
           </div>
           <mcs-list *ngIf="hasMedia" spacing="xsmall">
             <!-- Media Items -->
-            <mcs-list-item *ngFor="let media of server.media">
-              <div display-flex="row" class="horizontal-items-spacing-xsmall">
-                <span>{{ media.name }}</span>
-                <span *mcsAccessControl="['VmEdit']">
-                  <ng-container *mcsIsSelfManagedServer="server">
-                    <ng-container *ngIf="media.isProcessing; else detachMedia">
-                      <mcs-icon [key]="spinnerIconKey" size="small" class="hidden-small"
-                        [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
-                    </ng-container>
-                    <ng-template #detachMedia>
-                      <a (click)="onDetachMedia(media)"
-                        [disabled]="!server.executable"
-                        mcsEventTracker="detach-media-option"
-                        mcsEventCategory="server"
-                        mcsEventLabel="server-details-page">
-                        {{ textContent.media.detach }}
-                      </a>
-                    </ng-template>
+            <mcs-list-item *ngFor="let media of server.media" class="form-field-inline">
+              <span>{{ media.name }}</span>
+              <span *mcsAccessControl="['VmEdit']">
+                <ng-container *mcsIsSelfManagedServer="server">
+                  <ng-container *ngIf="media.isProcessing; else detachMedia">
+                    <mcs-icon [key]="spinnerIconKey" size="small" class="hidden-small"
+                      [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
                   </ng-container>
-                </span>
-              </div>
+                  <ng-template #detachMedia>
+                    <a (click)="onDetachMedia(media)"
+                      [disabled]="!server.executable"
+                      mcsEventTracker="detach-media-option"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-details-page">
+                      {{ textContent.media.detach }}
+                    </a>
+                  </ng-template>
+                </ng-container>
+              </span>
             </mcs-list-item>
           </mcs-list>
         </div>
@@ -210,19 +209,19 @@
           <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
           <mcs-list spacing="xsmall">
             <!-- VDC -->
-            <mcs-list-item>
+            <mcs-list-item class="form-field-inline">
               <span>{{ textContent.supportIdentifiers.vdc }}:</span>
-              <span>{{ server.platform?.resourceName }}</span>
+              <span [innerHTML]="server.platform?.resourceName | mcsDataLabel"></span>
             </mcs-list-item>
             <!-- MacView Service ID -->
-            <mcs-list-item *ngIf="server.serviceId">
+            <mcs-list-item *ngIf="server.serviceId" class="form-field-inline">
               <span>{{ textContent.supportIdentifiers.macViewServiceId }}:</span>
               <span>{{ server.serviceId }}</span>
             </mcs-list-item>
             <!-- VMWare ID -->
-            <mcs-list-item>
+            <mcs-list-item class="form-field-inline">
               <span>{{ textContent.supportIdentifiers.vmWareId }}:</span>
-              <span>{{ server.instanceId }}</span>
+              <span [innerHTML]="server.instanceId"></span>
             </mcs-list-item>
           </mcs-list>
         </div>

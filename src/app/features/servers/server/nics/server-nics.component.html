@@ -64,7 +64,7 @@
                           {{ textContent.editLink }}
                         </a>
                       </span>
-                      <span *mcsAccessControl="['VmNicEdit']">
+                      <span>
                         <a *ngIf="!nic.isPrimary"
                           [disabled]="!server.executable" (click)="deleteNic(nic)"
                           mcsEventTracker="delete-nic"
