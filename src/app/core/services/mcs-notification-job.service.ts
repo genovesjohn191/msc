@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import {
   Subject,
-  BehaviorSubject
+  BehaviorSubject,
+  Observable
 } from 'rxjs';
+import {
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
 import { CoreDefinition } from '../core.definition';
 import {
   unsubscribeSafely,
   deserializeJsonToObject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSubject
 } from '../../utilities';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
@@ -32,6 +38,7 @@ export class McsNotificationJobService implements McsInitializer {
   private _websocketClient: any;
   private _apiSubscription: any;
   private _jobConnection: McsApiJobConnection;
+  private _destroyTimer = new Subject<void>();
 
   /**
    * Returns the connection status of websocket
@@ -41,6 +48,11 @@ export class McsNotificationJobService implements McsInitializer {
     if (this._connectionStatus !== value) {
       this._connectionStatus = value;
       this.connectionStatusStream.next(this._connectionStatus);
+
+      // We need to destroy the timer subject to stop the counter immediately
+      // when error occurs in the connection
+      let connectionError = value < 0;
+      if (connectionError) { unsubscribeSubject(this._destroyTimer); }
     }
   }
 
@@ -62,6 +74,7 @@ export class McsNotificationJobService implements McsInitializer {
   public destroy() {
     unsubscribeSafely(this._websocketClient);
     unsubscribeSafely(this._apiSubscription);
+    unsubscribeSubject(this._destroyTimer);
   }
 
   /**
@@ -156,11 +169,25 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _onStompConnect(): void {
     this._loggerService.trace(`Web stomp connected.`);
-    this.connectionStatus = McsConnectionStatus.Success;
 
-    this._websocketClient.subscribe(this._jobConnection.destinationRoute,
-      this._onStompMessage.bind(this));
-    this._loggerService.trace(`Web socket connected.`);
+    // Execute async process while the socket is connecting
+    Observable.interval(1000)
+      .pipe(startWith(null), takeUntil(this._destroyTimer))
+      .subscribe(() => {
+
+        switch (this._websocketClient.ws.readyState) {
+          case WebSocket.OPEN:
+            this.connectionStatus = McsConnectionStatus.Success;
+            this._websocketClient.subscribe(
+              this._jobConnection.destinationRoute,
+              this._onStompMessage.bind(this));
+          case WebSocket.CLOSED:
+          case WebSocket.CLOSING:
+            unsubscribeSubject(this._destroyTimer);
+            break;
+        }
+        this._loggerService.trace(`Web socket connected.`);
+      });
   }
 
   /**
