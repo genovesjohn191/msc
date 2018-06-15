@@ -107,6 +107,7 @@
         },
         "storageProfiles": {
           "title": "Storage Profiles",
+          "manageLink": "Manage",
           "status": "Status",
           "tier": "Tier",
           "iops": "Performance {{iops}}",
@@ -114,6 +115,19 @@
           "lowStorageSummary": "{{storage_profile_number}} of your storage profiles {{verb}} running low on capacity.",
           "lowStorageProfile": "You're running low on capacity in this profile."
         }
+      },
+      "storage": {
+        "label": "Storage",
+        "title": "Manage Storage",
+        "storageProfile": "Storage Profile",
+        "usage": "Usage",
+        "tier": "Tier",
+        "iopsLabel": "Performance",
+        "expandLink": "Expand",
+        "newStorageProfile": "New Storage Profile",
+        "loadingContent": "Loading list of storage.",
+        "noStorage": "No storage available.",
+        "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage."
       }
     },
     "createServer": {

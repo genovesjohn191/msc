@@ -23,6 +23,7 @@ import {
 import {
   VdcComponent,
   VdcOverviewComponent,
+  VdcStorageComponent,
   VdcService
 } from './vdc';
 
@@ -63,10 +64,7 @@ export const serversRoutes: Routes = [
       { path: 'services', component: ServerServicesComponent },
       { path: 'storage', component: ServerStorageComponent },
       { path: 'nics', component: ServerNicsComponent },
-      {
-        path: 'backups',
-        component: ServerBackupsComponent
-      }
+      { path: 'backups', component: ServerBackupsComponent }
     ]
   },
   {
@@ -74,7 +72,8 @@ export const serversRoutes: Routes = [
     component: VdcComponent,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: VdcOverviewComponent }
+      { path: 'overview', component: VdcOverviewComponent },
+      { path: 'storage', component: VdcStorageComponent }
     ]
   }
 ];

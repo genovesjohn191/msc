@@ -1,0 +1,50 @@
+<div class="limited-view">
+  <div class="container-wrapper">
+    <h4 class="container-header">{{ textContent.title }}</h4>
+    <div class="block-items-large">
+      <!-- Storages Table -->
+      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <table class="basic-table no-gutter">
+            <thead>
+              <tr>
+                <th>{{ textContent.storageProfile }}</th>
+                <th>{{ textContent.usage }}</th>
+                <th>{{ textContent.tier }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let storage of resourceStorages">
+                <td>
+                  <div class="inline-items-xsmall">
+                    <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
+                    <span class="break-word-all">{{ storage.name }}</span>
+                  </div>
+                </td>
+                <td>
+                  <mcs-capacity-bar [(ngModel)]="storage.usedMB"
+                    [max]="storage.limitMB"></mcs-capacity-bar>
+                </td>
+                <td>
+                 {{ textContent.iopsLabel }} {{ storage.iops }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </mcs-data-status-success>
+
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingContent }}</span>
+        </mcs-data-status-in-progress>
+
+        <mcs-data-status-empty mcsDataEmpty>
+          <span>{{ textContent.noStorage }}</span>
+        </mcs-data-status-empty>
+
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorGettingStorage }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
+    </div>
+  </div>
+</div>

@@ -33,19 +33,17 @@ import {
   McsErrorHandlerService,
   McsDataStatus
 } from '../../../../core';
-import { ServersService } from '../../servers.service';
-import { ServerService } from '../server.service';
-import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   animateFactory
 } from '../../../../utilities';
-import {
-  ServerDetailsBase,
-  DeleteNicDialogComponent
-} from '../../shared';
+import { DeleteNicDialogComponent } from '../../shared';
+import { ServersService } from '../../servers.service';
+import { ServerService } from '../server.service';
+import { ServersRepository } from '../../servers.repository';
+import { ServersResourcesRepository } from '../../servers-resources.repository';
+import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
 export enum ServerNicMethodType {

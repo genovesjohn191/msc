@@ -34,17 +34,16 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
+  unsubscribeSubject,
   animateFactory,
   convertMbToGb
 } from '../../../../utilities';
-import {
-  ServerDetailsBase,
-  DeleteStorageDialogComponent
-} from '../../shared';
+import { DeleteStorageDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRepository } from '../../servers-resources.repository';
+import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
 export enum ServerDiskMethodType {
@@ -191,8 +190,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
   public ngOnDestroy() {
     this.dispose();
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
     unsubscribeSafely(this._storagesSubscription);
   }
 

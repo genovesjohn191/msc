@@ -8,6 +8,13 @@ export enum McsUnitType {
   CPU
 }
 
+export const mcsUnitTypeText = {
+  [McsUnitType.Kilobyte]: 'KB',
+  [McsUnitType.Megabyte]: 'MB',
+  [McsUnitType.Gigabyte]: 'GB',
+  [McsUnitType.CPU]: 'vCPU'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

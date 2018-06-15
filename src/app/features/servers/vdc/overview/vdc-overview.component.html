@@ -16,7 +16,10 @@
         <mcs-list-item>
           <div class="configuration">
             <span>{{ textContent.vdcProperties.configuration }}:</span>
-            <span>{{ vdcMemoryValue }} / {{ vdcCpuValue }}</span>
+            <span>
+              {{ selectedVdc?.compute?.memoryLimitMBLabel | mcsDataLabel }} /
+              {{ selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel }}
+            </span>
           </div>
         </mcs-list-item>
       </mcs-list>
@@ -69,6 +72,9 @@
         display-flex="row" align-items="center">
         <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
         <span>{{ textContent.storageProfiles.title }}</span>
+        <a [routerLink]="['../storage']">
+          {{ textContent.storageProfiles.manageLink }}
+        </a>
       </h4>
 
       <div class="vertical-items-spacing-medium">
@@ -97,9 +103,6 @@
                   <mcs-capacity-bar [(ngModel)]="storage.usedMB"
                     [max]="storage.limitMB" flex="auto"></mcs-capacity-bar>
                 </div>
-              </mcs-list-item>
-              <mcs-list-item class="right-align">
-                <span>{{ getCurrentStorageValues(storage.usedMB, storage.limitMB) }}</span>
               </mcs-list-item>
             </mcs-list>
 
