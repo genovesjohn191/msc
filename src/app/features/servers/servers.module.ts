@@ -48,7 +48,8 @@ import {
 /** VDC */
 import {
   VdcComponent,
-  VdcOverviewComponent
+  VdcOverviewComponent,
+  VdcStorageComponent
 } from './vdc';
 /** Services */
 import { serversProviders } from './servers.constants';
@@ -97,6 +98,7 @@ import { SharedModule } from '../../shared';
     ProvisioningNotificationsComponent,
     VdcComponent,
     VdcOverviewComponent,
+    VdcStorageComponent,
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,
     DeleteStorageDialogComponent,

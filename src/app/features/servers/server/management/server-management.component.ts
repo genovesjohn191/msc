@@ -44,14 +44,12 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '../../../../utilities';
+import { DetachMediaDialogComponent } from '../../shared';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRepository } from '../../servers-resources.repository';
-import {
-  ServerDetailsBase,
-  DetachMediaDialogComponent
-} from '../../shared';
+import { ServerDetailsBase } from '../server-details.base';
 
 @Component({
   selector: 'mcs-server-management',

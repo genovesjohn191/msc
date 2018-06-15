@@ -7,18 +7,15 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  Subscription,
-  Subject
-} from 'rxjs/Rx';
-import { takeUntil } from 'rxjs/operators/takeUntil';
-import {
   ServerResource,
   ServerStorage,
   ServerStorageStatus,
   serverStorageStatusText,
   serverServiceTypeText
 } from '../../models';
+import { ServersResourcesRepository } from '../../servers-resources.repository';
 import { VdcService } from '../vdc.service';
+import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -27,11 +24,8 @@ import {
 import {
   isNullOrEmpty,
   appendUnitSuffix,
-  convertMbToGb,
-  replacePlaceholder,
-  unsubscribeSafely
+  replacePlaceholder
 } from '../../../../utilities';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
 
@@ -41,19 +35,10 @@ const VDC_LOW_STORAGE_PERCENTAGE = 85;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class VdcOverviewComponent implements OnInit, OnDestroy {
+export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDestroy {
 
   public textContent: any;
   public hasResources: boolean;
-
-  private _vdcSubscription: Subscription;
-
-  private _selectedVdc: ServerResource;
-  public get selectedVdc(): ServerResource { return this._selectedVdc; }
-  public set selectedVdc(value: ServerResource) {
-    this._selectedVdc = value;
-    this._changeDetectorRef.markForCheck();
-  }
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
@@ -98,26 +83,29 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
     return status;
   }
 
-  private _destroySubject = new Subject<void>();
-
   constructor(
-    private _router: Router,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _vdcService: VdcService,
+    _serversResourcesRespository: ServersResourcesRepository,
+    _vdcService: VdcService,
+    _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _serversResourceRepository: ServersResourcesRepository
+    private _router: Router
   ) {
+    super(
+      _serversResourcesRespository,
+      _vdcService,
+      _changeDetectorRef
+    );
     this.selectedVdc = new ServerResource();
   }
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.servers.vdc.overview;
-    this._listenToSelectedVdc();
+    this.initialize();
     this._validateResources();
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this._vdcSubscription);
+    this.dispose();
   }
 
   /**
@@ -166,18 +154,6 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns the current used and limit of storage in GB
-   */
-  public getCurrentStorageValues(usedMB: number, limitMB: number): string {
-    if (isNullOrEmpty(usedMB) || isNullOrEmpty(limitMB)) { return ''; }
-
-    let usedGB = appendUnitSuffix(Math.round(convertMbToGb(usedMB)), McsUnitType.Gigabyte);
-    let limitGB = appendUnitSuffix(Math.round(convertMbToGb(limitMB)), McsUnitType.Gigabyte);
-
-    return `(${usedGB} of ${limitGB})`;
-  }
-
-  /**
    * Returns true if the storage has more than 85% used memory
    * @param storage VDC Storage
    */
@@ -192,18 +168,6 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
    */
   public createNewServer(): void {
     this._router.navigate(['/servers/create']);
-  }
-
-  /**
-   * Listens to the currently selected VDC stream
-   */
-  private _listenToSelectedVdc(): void {
-    this._vdcSubscription = this._vdcService.selectedVdcStream
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((response) => {
-        if (isNullOrEmpty(response)) { return; }
-        this.selectedVdc = response;
-      });
   }
 
   /**
@@ -234,7 +198,7 @@ export class VdcOverviewComponent implements OnInit, OnDestroy {
    * and check whether the resource has self managed type
    */
   private _validateResources(): void {
-    this._serversResourceRepository.findAllRecords()
+    this._serversResourcesRespository.findAllRecords()
       .subscribe((resources) => {
         this.hasResources = !isNullOrEmpty(resources);
         this._changeDetectorRef.markForCheck();

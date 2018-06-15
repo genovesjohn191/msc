@@ -25,7 +25,6 @@ import {
 } from '../../../../utilities';
 import { StdDateFormatPipe } from '../../../../shared';
 import {
-  ServerDetailsBase,
   CreateSnapshotDialogComponent,
   DeleteSnapshotDialogComponent,
   RestoreSnapshotDialogComponent,
@@ -41,6 +40,7 @@ import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRepository } from '../../servers-resources.repository';
+import { ServerDetailsBase } from '../server-details.base';
 
 enum SnapshotDialogType {
   None = 0,

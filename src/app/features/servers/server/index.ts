@@ -1,3 +1,5 @@
+/** Server Base Class */
+export * from './server-details.base';
 /** Server Components */
 export * from './server.component';
 export * from './management/server-management.component';
