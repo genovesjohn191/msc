@@ -35,14 +35,14 @@
                       <ng-template #defaultStorageIcon>
                         <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
                       </ng-template>
-                      <span class="break-word-all">{{ storage.name }}</span>
+                      <span class="break-word-all" [innerHTML]="storage.name | mcsDataLabel"></span>
                     </div>
                   </td>
                   <td>
-                    {{ storage.storageProfile }}
+                    <span [innerHTML]="storage.storageProfile | mcsDataLabel"></span>
                   </td>
                   <td>
-                    {{ storage.sizeMB | mcsDataSize: 'MB' }}
+                    <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
                   </td>
                   <td>
                     <div class="inline-items-small flex-nowrap" *mcsIsSelfManagedServer="server">

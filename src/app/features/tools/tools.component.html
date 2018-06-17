@@ -40,12 +40,12 @@
         <!-- Data Status Integration -->
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
-            <span>{{ textContent.noRecordsFoundMessage }}</span>
+            <span>{{ textContent.table.noRecordsFoundMessage }}</span>
           </mcs-data-empty>
           <mcs-data-error *mcsDataErrorDef>
             <div class="data-error">
-              <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              <span>{{ textContent.table.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.table.retry }}</a>
             </div>
           </mcs-data-error>
         </ng-container>

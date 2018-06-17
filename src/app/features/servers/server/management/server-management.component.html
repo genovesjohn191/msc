@@ -14,7 +14,7 @@
             <!-- Status -->
             <mcs-list-item class="form-field-inline">
               <span>{{ textContent.vmProperties.status }}:</span>
-              <span>{{ server.statusLabel }}</span>
+              <span [innerHTML]="server.statusLabel | mcsDataLabel"></span>
             </mcs-list-item>
             <!-- Image -->
             <mcs-list-item class="form-field-inline">
@@ -29,7 +29,9 @@
             <!-- Configuration -->
             <mcs-list-item class="form-field-inline">
               <span>{{ textContent.vmProperties.configuration }}:</span>
-              <span>{{ serverMemoryValue }} / {{ serverCpuValue }}</span>
+              <span [innerHTML]="server.compute?.memoryMBLabel | mcsDataLabel"></span>
+              <span> / </span>
+              <span [innerHTML]="server.compute?.cpuCountLabel | mcsDataLabel"></span>
               <span *mcsAccessControl="['VmEdit']">
                 <ng-container *mcsIsSelfManagedServer="server">
                   <a *ngIf="!isScaling" (click)="showScaleOption()"
@@ -221,7 +223,7 @@
             <!-- VMWare ID -->
             <mcs-list-item class="form-field-inline">
               <span>{{ textContent.supportIdentifiers.vmWareId }}:</span>
-              <span [innerHTML]="server.instanceId"></span>
+              <span [innerHTML]="server.instanceId | mcsDataLabel"></span>
             </mcs-list-item>
           </mcs-list>
         </div>

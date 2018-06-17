@@ -34,23 +34,25 @@
                         mcsTooltipPosition="right"></mcs-icon>
                     </ng-container>
                     <ng-template #nicIndex>
-                      <span>{{ nic.index }}</span>
+                      <span [innerHTML]="nic.index | mcsDataLabel"></span>
                     </ng-template>
                   </td>
                   <td>
-                    <span class="break-word-all">{{ nic.logicalNetworkName }}</span>
+                    <span class="break-word-all"
+                      [innerHTML]="nic.logicalNetworkName | mcsDataLabel">
+                    </span>
                   </td>
                   <td>
                     <mcs-icon *ngIf="nic.isPrimary" class="space-left-medium"
                       [key]="checkIconKey" size="small"></mcs-icon>
                   </td>
                   <td class="hidden-small">
-                    <span>{{ nic.ipAllocationModeLabel }}</span>
+                    <span [innerHTML]="nic.ipAllocationModeLabel | mcsDataLabel"></span>
                   </td>
                   <td>
                     <mcs-list spacing="none">
                       <mcs-list-item *ngFor="let ipAddress of nic.ipAddresses">
-                        {{ ipAddress }}
+                        <span [innerHTML]="ipAddress | mcsDataLabel"></span>
                       </mcs-list-item>
                     </mcs-list>
                   </td>
