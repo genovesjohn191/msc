@@ -92,14 +92,13 @@ describe('FirewallsService', () => {
     it('should get all firewall policies from API calls', () => {
       firewallsService.getFirewallPolicies(
         requestOptions.id,
-        requestOptions.page,
-        undefined,
-        undefined
-      ).subscribe((response) => {
-        expect(response).toBeDefined();
-        expect(response.status).toBe(200);
-        expect(response.totalCount).toBe(2);
-      });
+        {
+          page: requestOptions.page
+        }).subscribe((response) => {
+          expect(response).toBeDefined();
+          expect(response.status).toBe(200);
+          expect(response.totalCount).toBe(2);
+        });
 
       // Create request to the backend and expect that the request happened
       let httpRequest = httpMock.expectOne(

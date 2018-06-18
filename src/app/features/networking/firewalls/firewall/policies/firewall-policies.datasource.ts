@@ -11,6 +11,7 @@ import {
 import { isNullOrEmpty } from '../../../../../utilities';
 import { FirewallPolicy } from '../../models';
 import { FirewallService } from '../firewall.service';
+import { FirewallsRepository } from '../../firewalls.repository';
 
 export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy> {
   /**
@@ -19,17 +20,16 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
   public dataLoadingStream: Subject<McsDataStatus>;
 
   /**
-   * It will populate the data when the obtainment is completed
+   * Returns the total record count obtained in the datasource
    */
   private _totalRecordCount: number;
-  public get totalRecordCount(): number {
-    return this._totalRecordCount;
-  }
+  public get totalRecordCount(): number { return this._totalRecordCount; }
   public set totalRecordCount(value: number) {
     this._totalRecordCount = value;
   }
 
   constructor(
+    private _firewallsRepository: FirewallsRepository,
     private _firewallService: FirewallService,
     private _paginator: McsPaginator,
     private _search: McsSearch
@@ -45,7 +45,6 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
   public connect(): Observable<FirewallPolicy[]> {
     const displayDataChanges = [
       Observable.of(undefined),
-      this._firewallService.selectedFirewallStream,
       this._paginator.pageChangedStream,
       this._search.searchChangedStream
     ];
@@ -54,27 +53,21 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
       .switchMap((instance) => {
         // Notify the table that a process is currently in-progress
         // if the user is not searching because the filtering has already a loader
-        let isSearching = !isNullOrEmpty(instance) && instance.searching;
+        // and we need to check it here since the component can be recreated during runtime
+        let isSearching = !isNullOrEmpty(instance) && (instance as any).searching;
         if (!isSearching) {
           this.dataLoadingStream.next(McsDataStatus.InProgress);
         }
 
-        let firewallId = this._firewallService.selectedFirewall.id;
-        let displayedRecords = this._paginator.pageSize * (this._paginator.pageIndex + 1);
-
-        if (isNullOrEmpty(instance)) {
-          return Observable.of(undefined);
-        }
-
-        return this._firewallService.getFirewallPolicies(
-          firewallId,
-          undefined,
-          displayedRecords,
-          this._search.keyword
-        ).map((response) => {
-          this._totalRecordCount = response.totalCount;
-          return response.content;
-        });
+        // Find all records based on settings provided in the input
+        return this._firewallsRepository.findFirewallPolicies(
+          this._firewallService.selectedFirewall,
+          this._paginator,
+          this._search)
+          .map((response) => {
+            this._totalRecordCount = response.length;
+            return response;
+          });
       });
   }
 

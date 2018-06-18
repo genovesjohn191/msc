@@ -6,6 +6,11 @@ export enum FirewallPolicyAction {
   Enabled = 1
 }
 
+export const firewallPolicyText = {
+  [FirewallPolicyAction.Disabled]: 'Disabled',
+  [FirewallPolicyAction.Enabled]: 'Enabled'
+};
+
 /**
  * Enumeration serializer and deserializer methods
  */

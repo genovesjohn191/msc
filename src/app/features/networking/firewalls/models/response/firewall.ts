@@ -1,4 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
+import { FirewallPolicy } from './firewall-policy';
 import {
   FirewallDeviceStatus,
   FirewallDeviceStatusSerialization,
@@ -23,6 +24,7 @@ import {
   CoreDefinition,
   McsEntityBase
 } from '../../../../../core';
+import { isNullOrEmpty } from '../../../../../utilities';
 
 export class Firewall extends McsEntityBase {
   public serviceId: string;
@@ -41,9 +43,11 @@ export class Firewall extends McsEntityBase {
   public model: string;
   public companyId: string;
   public snmpVersion: string;
-  public haGroupName: string;
   public haRole: string;
   public url: string;
+
+  @JsonProperty({ type: FirewallPolicy })
+  public policies: FirewallPolicy[];
 
   @JsonProperty({ type: FirewallUtm })
   public utm: FirewallUtm;
@@ -94,14 +98,21 @@ export class Firewall extends McsEntityBase {
     this.model = undefined;
     this.companyId = undefined;
     this.snmpVersion = undefined;
-    this.haGroupName = undefined;
     this.haRole = undefined;
     this.url = undefined;
+    this.policies = undefined;
     this.utm = undefined;
     this.deviceStatus = undefined;
     this.configurationStatus = undefined;
     this.connectionStatus = undefined;
     this.haMode = undefined;
+  }
+
+  /**
+   * Returns the cpu count label
+   */
+  public get cpuCountLabel(): string {
+    return isNullOrEmpty(this.cpuCount) ? undefined : `${this.cpuCount} CPU`;
   }
 
   /**
@@ -169,7 +180,6 @@ export class Firewall extends McsEntityBase {
    * based on the firewall connection status
    */
   public get connectionStatusIconKey(): string {
-
     let iconKey = '';
 
     switch (this.connectionStatus) {
@@ -186,7 +196,6 @@ export class Firewall extends McsEntityBase {
         iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
     }
-
     return iconKey;
   }
 
@@ -195,7 +204,6 @@ export class Firewall extends McsEntityBase {
    * based on the firewall configuration status
    */
   public get configurationStatusIconKey(): string {
-
     let iconKey = '';
 
     switch (this.configurationStatus) {
@@ -212,7 +220,6 @@ export class Firewall extends McsEntityBase {
         iconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
     }
-
     return iconKey;
   }
 }

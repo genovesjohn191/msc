@@ -2,12 +2,8 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
+import { NetworkingTestingModule } from '../../../testing';
 import { FirewallOverviewComponent } from './firewall-overview.component';
-import {
-  NetworkingTestingModule,
-  mockFirewallService
-} from '../../../testing';
-import { FirewallService } from '../firewall.service';
 
 describe('FirewallOverviewComponent', () => {
   /** Stub Services/Components */
@@ -26,9 +22,6 @@ describe('FirewallOverviewComponent', () => {
         NetworkingTestingModule
       ]
     });
-
-    /** Testbed Overriding of Providers */
-    TestBed.overrideProvider(FirewallService, { useValue: mockFirewallService });
 
     /** Testbed Overriding of Components */
     TestBed.overrideComponent(FirewallOverviewComponent, {
@@ -52,12 +45,6 @@ describe('FirewallOverviewComponent', () => {
   describe('ngOnInit()', () => {
     it('should define the text content value to firewallOverviewTextContent', () => {
       expect(component.textContent).toBeDefined();
-    });
-
-    it('should call the subscribe() of FirewallService selectedFirewallStream', () => {
-      spyOn(mockFirewallService.selectedFirewallStream, 'subscribe');
-      component.ngOnInit();
-      expect(mockFirewallService.selectedFirewallStream.subscribe).toHaveBeenCalled();
     });
   });
 });

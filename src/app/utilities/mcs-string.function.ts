@@ -39,9 +39,9 @@ export function replacePlaceholder(
 
   // Set values based on parameters input
   placeholders = Array.isArray(placeholderNames) ? placeholderNames
-    : new Array<string>(placeholderNames);
+    : new Array<string>(String(placeholderNames));
   values = Array.isArray(placeholderValues) ? placeholderValues
-    : new Array<string>(placeholderValues);
+    : new Array<string>(String(placeholderValues));
   if (placeholders.length !== values.length) {
     throw new Error('Count of placeholders and values are not the same');
   }
