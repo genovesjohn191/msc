@@ -34,15 +34,14 @@ import {
   McsBrowserService,
   McsDeviceType,
   McsDialogService,
-  McsErrorHandlerService,
-  McsUnitType
+  McsErrorHandlerService
 } from '../../../../core';
 import {
   getEncodedUrl,
   refreshView,
-  appendUnitSuffix,
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '../../../../utilities';
 import { DetachMediaDialogComponent } from '../../shared';
 import { ServersService } from '../../servers.service';
@@ -91,20 +90,12 @@ export class ServerManagementComponent extends ServerDetailsBase
   }
 
   public get serverMemoryMB(): number {
-    return !isNullOrEmpty(this.server.compute) ? this.server.compute.memoryMB : 0;
+    return getSafeProperty(this.server, (obj) => obj.compute.memoryMB);
   }
 
   public get serverCpuCount(): number {
-    return !isNullOrEmpty(this.server.compute) ?
-      this.server.compute.cpuCount * this.server.compute.coreCount : 0;
-  }
-
-  public get serverMemoryValue(): string {
-    return appendUnitSuffix(this.serverMemoryMB, McsUnitType.Megabyte);
-  }
-
-  public get serverCpuValue(): string {
-    return appendUnitSuffix(this.serverCpuCount, McsUnitType.CPU);
+    return getSafeProperty(this.server,
+      (obj) => obj.compute.cpuCount * obj.compute.coreCount);
   }
 
   public get availableMemoryMB(): number {

@@ -837,7 +837,8 @@
         }
       },
       "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of other tools.",
-      "noRecordsFoundMessage": "No other tools found."
+      "noRecordsFoundMessage": "No other tools found.",
+      "retry": "Try again shortly"
     }
   },
   "notifications": {
