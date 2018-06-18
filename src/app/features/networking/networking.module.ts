@@ -9,7 +9,8 @@ import {
   FirewallsComponent,
   FirewallComponent,
   FirewallOverviewComponent,
-  FirewallPoliciesComponent
+  FirewallPoliciesComponent,
+  FirewallPolicyComponent
 } from './firewalls';
 
 @NgModule({
@@ -18,7 +19,8 @@ import {
     FirewallsComponent,
     FirewallComponent,
     FirewallOverviewComponent,
-    FirewallPoliciesComponent
+    FirewallPoliciesComponent,
+    FirewallPolicyComponent
   ],
   imports: [
     CommonModule,

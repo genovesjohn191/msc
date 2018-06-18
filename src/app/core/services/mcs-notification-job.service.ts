@@ -38,7 +38,8 @@ export class McsNotificationJobService implements McsInitializer {
   private _websocketClient: any;
   private _apiSubscription: any;
   private _jobConnection: McsApiJobConnection;
-  private _destroyTimer = new Subject<void>();
+  private _destroyTimer: Subject<void>;
+  private _connectionCounter = Observable.interval(1000);
 
   /**
    * Returns the connection status of websocket
@@ -169,10 +170,12 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _onStompConnect(): void {
     this._loggerService.trace(`Web stomp connected.`);
+    unsubscribeSubject(this._destroyTimer);
+    this._destroyTimer = new Subject<void>();
 
     // Execute async process while the socket is connecting
-    Observable.interval(1000)
-      .pipe(startWith(null), takeUntil(this._destroyTimer))
+    this._connectionCounter
+      .pipe(startWith(0), takeUntil(this._destroyTimer))
       .subscribe(() => {
 
         switch (this._websocketClient.ws.readyState) {

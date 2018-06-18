@@ -1,5 +1,6 @@
 import { JsonProperty } from 'json-object-mapper';
 import {
+  firewallPolicyText,
   FirewallPolicyAction,
   FirewallPolicyActionSerialization
 } from '../enumerations/firewall-policy-action.enum';
@@ -71,7 +72,13 @@ export class FirewallPolicy extends McsEntityBase {
         iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
         break;
     }
-
     return iconKey;
+  }
+
+  /**
+   * Returns the action label
+   */
+  public get actionLabel(): string {
+    return firewallPolicyText[this.action];
   }
 }

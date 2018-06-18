@@ -44,9 +44,11 @@ type tabGroupType = 'overview' | 'policies';
 
 @Component({
   selector: 'mcs-firewall',
-  styleUrls: ['./firewall.component.scss'],
   templateUrl: './firewall.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    'class': 'block'
+  }
 })
 export class FirewallComponent
   extends McsRoutingTabBase<tabGroupType>
@@ -76,6 +78,9 @@ export class FirewallComponent
     return !isNullOrEmpty(this.selectedFirewall);
   }
 
+  /**
+   * Selected Firewall based on the selected in the listing panel
+   */
   private _selectedFirewall: Firewall;
   public get selectedFirewall(): Firewall { return this._selectedFirewall; }
   public set selectedFirewall(value: Firewall) {
@@ -133,8 +138,22 @@ export class FirewallComponent
    */
   public onFirewallSelect(firewall: Firewall): void {
     if (isNullOrEmpty(firewall)) { return; }
+
     this._setSelectedFirewallInfo(firewall);
+    this._changeDetectorRef.markForCheck();
     this.router.navigate(['/networking/firewalls', firewall.id]);
+  }
+
+  /**
+   * Returns the firewall group name based on its ipaddress
+   * @param ipAddress Ip address that served as the basis
+   */
+  public getFirewallGroupName(ipAddress: string): string {
+    let firewallGroup = this.firewallsMap && this.firewallsMap.get(ipAddress);
+    if (isNullOrEmpty(firewallGroup)) { return ''; }
+
+    let masterFirewall = firewallGroup.find((firewall) => firewall.haRole === 'Master');
+    return isNullOrEmpty(masterFirewall) ? '' : masterFirewall.managementName;
   }
 
   /**
@@ -152,6 +171,9 @@ export class FirewallComponent
    */
   protected onParamIdChanged(id: string): void {
     if (isNullOrEmpty(id)) { return; }
+    // We need to set the ID in here so that the firewall id
+    // is not null when the user tries to refresh the page while on policies
+    this._setSelectedFirewallInfo({ id } as Firewall);
     this._getFirewallById(id);
   }
 
@@ -166,7 +188,8 @@ export class FirewallComponent
 
     // Key function pointer for mapping objects
     let keyFn = (item: Firewall) => {
-      let resourseName = isNullOrEmpty(item.haGroupName) ? '' : item.haGroupName;
+      let resourseName = isNullOrEmpty(item.managementIpAddress) ? '' :
+        item.managementIpAddress;
       return resourseName;
     };
 
@@ -198,7 +221,6 @@ export class FirewallComponent
       })
       .subscribe((response) => {
         this._setSelectedFirewallInfo(response);
-        this._firewallService.setSelectedFirewall(this.selectedFirewall);
         unsubscribeSafely(this.firewallSubscription);
         this._changeDetectorRef.markForCheck();
       });
@@ -210,6 +232,7 @@ export class FirewallComponent
   private _setSelectedFirewallInfo(selectedFirewall: Firewall): void {
     if (isNullOrEmpty(selectedFirewall)) { return; }
     this.selectedFirewall = selectedFirewall;
+    this._firewallService.setSelectedFirewall(this.selectedFirewall);
     this._changeDetectorRef.markForCheck();
   }
 }

@@ -11,9 +11,6 @@ import {
 
 @Injectable()
 export class ServerService {
-
-  public activeServerSubscription: any;
-
   /**
    * This will notify the subscriber everytime the server is selected or
    * everytime there are new data from the selected server

@@ -8,22 +8,12 @@
 
         <mcs-data-status [dataStatusFactory]="listStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
-
             <mcs-list-panel>
-              <ng-container *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
-                mcsSortArray: firewallsListSource?.firewallGroupSortMethod">
-
-                <!-- Template method for icon -->
-                <ng-template #optionContentTemplate let-firewallDetails>
-                  <mcs-icon size="small"
-                    [key]="firewallDetails?.connectionStatusIconKey"></mcs-icon>
-                  <span class="space-left-xsmall">
-                    {{ firewallDetails.managementName }}
-                  </span>
-                </ng-template>
-
-                <!-- With ha group -->
-                <mcs-option-group [label]="iterator.key" *ngIf="iterator.key">
+              <!-- With ha group (with more than 1 group) -->
+              <div *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
+                mcsSortArray: firewallsListSource?.firewallGroupSortMethod" class="position-relative">
+                <mcs-option-group *ngIf="iterator.value?.length > 1"
+                  [label]="getFirewallGroupName(iterator.key)">
                   <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
                     [value]="firewall"
                     [selected]="selectedFirewall?.id === firewall.id"
@@ -32,26 +22,34 @@
                     mcsEventCategory="firewall"
                     mcsEventLabel="firewall-list-panel">
 
-                    <ng-template [ngTemplateOutlet]="optionContentTemplate"
-                      [ngTemplateOutletContext]="{ $implicit: firewall }"></ng-template>
+                    <div class="inline-items-xsmall">
+                      <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
+                      <span>{{ firewall.managementName }}</span>
+                      <span read-only>{{ firewall.haRole }}</span>
+                    </div>
                   </mcs-option>
                 </mcs-option-group>
+              </div>
 
-                <!-- Without ha group -->
-                <ng-container *ngIf="!iterator.key">
+              <!-- Without ha group -->
+              <div *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
+                mcsSortArray: firewallsListSource?.firewallGroupSortMethod" class="position-relative">
+                <ng-container *ngIf="iterator.value?.length === 1">
                   <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
                     [value]="firewall"
-                    [selected]="selectedFirewall === firewall"
+                    [selected]="selectedFirewall?.id === firewall.id"
                     (click)="onFirewallSelect(firewall)"
                     mcsEventTracker="select-firewall"
                     mcsEventCategory="firewall"
                     mcsEventLabel="firewall-list-panel">
 
-                    <ng-template [ngTemplateOutlet]="optionContentTemplate"
-                      [ngTemplateOutletContext]="{ $implicit: firewall }"></ng-template>
+                    <div class="inline-items-xsmall">
+                      <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
+                      <span>{{ firewall.managementName }}</span>
+                    </div>
                   </mcs-option>
                 </ng-container>
-              </ng-container>
+              </div>
             </mcs-list-panel>
           </mcs-data-status-success>
 

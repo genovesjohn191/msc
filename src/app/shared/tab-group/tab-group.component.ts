@@ -11,15 +11,17 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { startWith } from 'rxjs/operators/startWith';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import { Subject } from 'rxjs';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import { McsSelection } from '../../core';
 import {
   isNullOrEmpty,
   refreshView
 } from '../../utilities';
 import { TabComponent } from './tab/tab.component';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'mcs-tab-group',
@@ -63,9 +65,12 @@ export class TabGroupComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngAfterContentInit(): void {
-    this.tabs.changes.pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
-    refreshView(() => this._setActiveTab(this.selectedTabId));
+    this.tabs.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => {
+        refreshView(() => this._setActiveTab(this.selectedTabId));
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   public ngOnDestroy() {

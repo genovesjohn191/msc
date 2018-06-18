@@ -95,13 +95,15 @@ export class FirewallsService {
    */
   public getFirewallPolicies(
     id: any,
-    page?: number,
-    perPage?: number,
-    searchKeyword?: string): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
+    args?: {
+      page?: number,
+      perPage?: number,
+      searchKeyword?: string
+    }): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
     let searchParams = new Map<string, any>();
-    searchParams.set('page', page ? page.toString() : undefined);
-    searchParams.set('per_page', perPage ? perPage.toString() : undefined);
-    searchParams.set('search_keyword', searchKeyword ? searchKeyword : undefined);
+    searchParams.set('page', args.page ? args.page.toString() : undefined);
+    searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
+    searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/firewalls/${id}/policies`;

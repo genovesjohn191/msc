@@ -14,50 +14,39 @@ import {
   McsTableListingBase
 } from '../../../../../core';
 import {
-  FirewallPolicy,
-  FirewallPolicyAction
-} from '../../models';
-import { FirewallService } from '../firewall.service';
-import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
-import {
   refreshView,
   isNullOrEmpty,
-  replacePlaceholder,
-  getRecordCountLabel
+  animateFactory
 } from '../../../../../utilities';
+import { FirewallPolicy } from '../../models';
+import { FirewallsRepository } from '../../firewalls.repository';
+import { FirewallService } from '../firewall.service';
+import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
 
-const FIREWALL_POLICY_SEQUENCE_PLACEHOLDER = 'sequence';
+// Enumeration
+export enum FirewallPoliciesMode {
+  Listing = 1,
+  Details = 2
+}
 
 @Component({
   selector: 'mcs-firewall-policies',
-  styleUrls: ['./firewall-policies.component.scss'],
   templateUrl: './firewall-policies.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    animateFactory.fadeIn
+  ],
+  host: {
+    'class': 'block'
+  }
 })
 
 export class FirewallPoliciesComponent
   extends McsTableListingBase<FirewallPoliciesDataSource>
   implements OnInit, AfterViewInit, OnDestroy {
 
-  public firewallPoliciesTextContent: any;
-  public firewallPolicyTextContent: any;
-
-  // Table variables
-  public dataSource: FirewallPoliciesDataSource;
-
-  public isViewMode: boolean;
+  public textContent: any;
   public selectedFirewallPolicy: FirewallPolicy;
-
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
-  }
-
-  public get recordsFoundLabel(): string {
-    return getRecordCountLabel(
-      this.totalRecordCount,
-      this.firewallPoliciesTextContent.dataSingular,
-      this.firewallPoliciesTextContent.dataPlural);
-  }
 
   public get columnSettingsKey(): string {
     return CoreDefinition.FILTERSELECTOR_FIREWALL_POLICIES_LISTING;
@@ -71,38 +60,46 @@ export class FirewallPoliciesComponent
     return CoreDefinition.ASSETS_SVG_CIRCLE_INFO_BLACK;
   }
 
-  public get closeIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_CLOSE_BLACK;
+  /**
+   * Returns the total record count of the policies
+   */
+  public get totalRecordCount(): number {
+    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
   }
 
-  public get firewallPolicyTitle(): string {
-    if (isNullOrEmpty(this.selectedFirewallPolicy.objectSequence)) { return ''; }
+  /**
+   * Returns the firewall policies mode enum
+   */
+  public get firewallPoliciesModeEnum(): any {
+    return FirewallPoliciesMode;
+  }
 
-    let sequence = this.selectedFirewallPolicy.objectSequence;
-
-    return replacePlaceholder(
-      this.firewallPolicyTextContent.title,
-      FIREWALL_POLICY_SEQUENCE_PLACEHOLDER,
-      sequence.toString()
-    );
+  /**
+   * Returns the firewall policies viewing mode
+   */
+  private _firewallPoliciesMode: FirewallPoliciesMode = FirewallPoliciesMode.Listing;
+  public get firewallPoliciesMode(): FirewallPoliciesMode { return this._firewallPoliciesMode; }
+  public set firewallPoliciesMode(value: FirewallPoliciesMode) {
+    if (this._firewallPoliciesMode !== value) {
+      this._firewallPoliciesMode = value;
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _textContentProvider: McsTextContentProvider,
     private _firewallService: FirewallService,
-    private _router: Router
+    private _firewallsRepository: FirewallsRepository
   ) {
     super(_browserService, _changeDetectorRef);
-    this.isViewMode = false;
     this.selectedFirewallPolicy = new FirewallPolicy();
   }
 
   public ngOnInit() {
-    this.firewallPoliciesTextContent
-      = this._textContentProvider.content.firewalls.firewall.policies;
-    this.firewallPolicyTextContent = this.firewallPoliciesTextContent.policy;
+    this.textContent = this._textContentProvider.content.firewalls.firewall.policies;
   }
 
   public ngAfterViewInit() {
@@ -130,48 +127,14 @@ export class FirewallPoliciesComponent
    */
   public showFirewallPolicyDetails(policy: FirewallPolicy): void {
     this.selectedFirewallPolicy = policy;
-    this.isViewMode = true;
-    this.changeDetectorRef.markForCheck();
+    this.firewallPoliciesMode = FirewallPoliciesMode.Details;
   }
 
   /**
    * Hide the firewall policy details and go back to firewall policy listing
    */
   public hideFirewallPolicyDetails(): void {
-    this.selectedFirewallPolicy = new FirewallPolicy();
-    this.isViewMode = false;
-    this.changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Convert the firewall action enum to string
-   * @param value firewall action value
-   */
-  public getActionEnumString(value: number): string {
-    if (value < 0) { return ''; }
-    return FirewallPolicyAction[value];
-  }
-
-  /**
-   * Convert the firewall action enum to string
-   * @param value firewall action value
-   */
-  public getActionIconKey(value: number): string {
-    if (value < 0) { return ''; }
-
-    let iconKey = '';
-    switch (value) {
-      case FirewallPolicyAction.Disabled:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
-        break;
-
-      case FirewallPolicyAction.Enabled:
-      default:
-        iconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
-        break;
-    }
-
-    return iconKey;
+    this.firewallPoliciesMode = FirewallPoliciesMode.Listing;
   }
 
   /**
@@ -189,6 +152,7 @@ export class FirewallPoliciesComponent
    */
   protected initializeDatasource(): void {
     this.dataSource = new FirewallPoliciesDataSource(
+      this._firewallsRepository,
       this._firewallService,
       this.paginator,
       this.search

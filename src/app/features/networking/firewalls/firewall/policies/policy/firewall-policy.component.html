@@ -1,0 +1,71 @@
+<!-- Firewall policy header -->
+<div class="space-between-inline-items space-bottom-medium">
+  <h4 class="auto-width">
+    {{ textContent.title | mcsTextPlaceholder: 'sequence': firewallPolicy?.objectSequence }}
+  </h4>
+  <mcs-icon [key]="closeIconKey" cursor="pointer" size="small"
+    (click)="closePolicy()"></mcs-icon>
+</div>
+
+<div class="grid-row">
+  <!-- Firewall Policy Source -->
+  <div class="grid-column break-on-small">
+    <strong>{{ textContent.source }}</strong>
+    <div class="form-field-inline">
+      <span>{{ textContent.address }}:</span>
+      <mcs-list spacing="auto" >
+        <mcs-list-item *ngFor="let sourceAddress of firewallPolicy?.sourceAddresses">
+          {{ sourceAddress }}
+        </mcs-list-item>
+      </mcs-list>
+    </div>
+
+    <div class="form-field-inline">
+      <span>{{ textContent.interface }}:</span>
+      <mcs-list spacing="auto">
+        <mcs-list-item *ngFor="let sourceInterfaces of firewallPolicy?.sourceInterfaces">
+          {{ sourceInterfaces }}
+        </mcs-list-item>
+      </mcs-list>
+    </div>
+  </div>
+
+  <!-- Firewall Policy Destination -->
+  <div class="grid-column break-on-small">
+    <strong>{{ textContent.destination }}</strong>
+    <div class="form-field-inline">
+      <span>{{ textContent.address }}:</span>
+      <mcs-list spacing="auto" >
+        <mcs-list-item *ngFor="let destinationAddress of firewallPolicy?.destinationAddresses">
+          {{ destinationAddress }}
+        </mcs-list-item>
+      </mcs-list>
+    </div>
+
+    <div class="form-field-inline">
+      <span>{{ textContent.interface }}:</span>
+      <mcs-list spacing="auto" >
+        <mcs-list-item *ngFor="let destinationInterface of firewallPolicy?.destinationInterfaces">
+          {{ destinationInterface }}
+        </mcs-list-item>
+      </mcs-list>
+    </div>
+  </div>
+</div>
+
+<div class="grid-row">
+  <!-- Firewall Policy Details -->
+  <div class="grid-column break-on-small">
+    <strong>{{ textContent.details }}</strong>
+    <div class="form-field-inline">
+      <span>{{ textContent.service }}:</span>
+      <span>{{ firewallPolicy?.service }}</span>
+    </div>
+
+    <div class="form-field-inline">
+      <span>{{ textContent.action }}:</span>
+      <span>{{ firewallPolicy?.actionLabel }}</span>
+    </div>
+  </div>
+  <div class="grid-column container-wrapper break-on-small"></div>
+</div>
