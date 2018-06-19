@@ -2,18 +2,14 @@ import { Injectable } from '@angular/core';
 import {
   Subject,
   BehaviorSubject,
-  Observable
+  Observable,
+  Subscription
 } from 'rxjs';
-import {
-  takeUntil,
-  startWith
-} from 'rxjs/operators';
 import { CoreDefinition } from '../core.definition';
 import {
   unsubscribeSafely,
   deserializeJsonToObject,
-  isNullOrEmpty,
-  unsubscribeSubject
+  isNullOrEmpty
 } from '../../utilities';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
@@ -36,10 +32,17 @@ export class McsNotificationJobService implements McsInitializer {
 
   private _websocket: WebSocket;
   private _websocketClient: any;
+  private _webstompSubscription: any;
   private _apiSubscription: any;
   private _jobConnection: McsApiJobConnection;
-  private _destroyTimer: Subject<void>;
+  private _timerSubscription: Subscription;
   private _connectionCounter = Observable.interval(1000);
+
+  /**
+   * Event listeners
+   */
+  private _socketOpenEvent = this._onWebsocketOpened.bind(this);
+  private _socketErrorEvent = this._onWebsocketError.bind(this);
 
   /**
    * Returns the connection status of websocket
@@ -53,7 +56,7 @@ export class McsNotificationJobService implements McsInitializer {
       // We need to destroy the timer subject to stop the counter immediately
       // when error occurs in the connection
       let connectionError = value < 0;
-      if (connectionError) { unsubscribeSubject(this._destroyTimer); }
+      if (connectionError) { this._releaseConnections(); }
     }
   }
 
@@ -75,7 +78,8 @@ export class McsNotificationJobService implements McsInitializer {
   public destroy() {
     unsubscribeSafely(this._websocketClient);
     unsubscribeSafely(this._apiSubscription);
-    unsubscribeSubject(this._destroyTimer);
+    this._releaseConnections();
+    this._releaseSocketListeners();
   }
 
   /**
@@ -126,8 +130,8 @@ export class McsNotificationJobService implements McsInitializer {
   private _initializeWebsocket() {
     let webStomp = require('webstomp-client');
     this._websocket = new WebSocket(this._jobConnection.host);
-    this._websocket.onopen = this._onWebsocketOpened.bind(this);
-    this._websocket.onerror = this._onWebsocketError.bind(this);
+    this._websocket.onopen = this._socketOpenEvent;
+    this._websocket.onerror = this._socketErrorEvent;
 
     // Setup websocket client and connect
     this._websocketClient = null;
@@ -170,27 +174,30 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _onStompConnect(): void {
     this._loggerService.trace(`Web stomp connected.`);
-    unsubscribeSubject(this._destroyTimer);
-    this._destroyTimer = new Subject<void>();
+    this._releaseConnections();
 
     // Execute async process while the socket is connecting
-    this._connectionCounter
-      .pipe(startWith(0), takeUntil(this._destroyTimer))
-      .subscribe(() => {
+    this._timerSubscription = this._connectionCounter.subscribe(() => {
+      let stompConnecting = this._websocket.readyState === WebSocket.CONNECTING ||
+        this._websocketClient.ws.readyState === WebSocket.CONNECTING;
+      if (stompConnecting) { return; }
 
-        switch (this._websocketClient.ws.readyState) {
-          case WebSocket.OPEN:
-            this.connectionStatus = McsConnectionStatus.Success;
-            this._websocketClient.subscribe(
-              this._jobConnection.destinationRoute,
-              this._onStompMessage.bind(this));
-          case WebSocket.CLOSED:
-          case WebSocket.CLOSING:
-            unsubscribeSubject(this._destroyTimer);
-            break;
-        }
-        this._loggerService.trace(`Web socket connected.`);
-      });
+      // Subscribe when connected
+      let stompConnected = this._websocket.readyState === WebSocket.OPEN &&
+        this._websocketClient.ws.readyState === WebSocket.OPEN;
+      if (stompConnected) {
+        this.connectionStatus = McsConnectionStatus.Success;
+        this._webstompSubscription = this._websocketClient
+          .subscribe(
+            this._jobConnection.destinationRoute,
+            this._onStompMessage.bind(this)
+          );
+        this._loggerService.trace(
+          `Webstomp subscription created id: ${this._jobConnection.destinationRoute}`
+        );
+      }
+      unsubscribeSafely(this._timerSubscription);
+    });
   }
 
   /**
@@ -215,6 +222,23 @@ export class McsNotificationJobService implements McsInitializer {
     if (message.body) {
       this._updateNotification(message.body);
     }
+  }
+
+  /**
+   * Releases all the subscriptions/connections including the timer
+   */
+  private _releaseConnections(): void {
+    unsubscribeSafely(this._webstompSubscription);
+    unsubscribeSafely(this._timerSubscription);
+  }
+
+  /**
+   * Releases the socket listeners
+   */
+  private _releaseSocketListeners(): void {
+    if (isNullOrEmpty(this._websocket)) { return; }
+    this._websocket.removeEventListener('error', this._socketErrorEvent);
+    this._websocket.removeEventListener('open', this._socketOpenEvent);
   }
 
   /**
