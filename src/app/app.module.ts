@@ -131,6 +131,7 @@ export class AppModule {
     private _sessionHandlerService: McsSessionHandlerService
   ) {
     this._listenToUserChanges();
+    this._listenToSessionTimedOut();
   }
 
   /**
@@ -149,6 +150,18 @@ export class AppModule {
         // dependent on the user identity, like getting the job/connection prior to authentication.
         this._initializeRavenSentry();
         this._initializeServices();
+      });
+  }
+
+  /**
+   * Listens to sessioned timed out
+   */
+  private _listenToSessionTimedOut(): void {
+    this._sessionHandlerService.onSessionTimedOut()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((response) => {
+        if (!response) { return; }
+        this._releaseServices();
       });
   }
 
@@ -173,5 +186,14 @@ export class AppModule {
     this._routeHandlerService.initialize();
     this._errorHandlerService.initialize();
     this._sessionHandlerService.initialize();
+  }
+
+  /**
+   * Destroy all services
+   */
+  private _releaseServices(): void {
+    this._notificationJobService.destroy();
+    this._notificationContextService.destroy();
+    this._sessionHandlerService.destroy();
   }
 }
