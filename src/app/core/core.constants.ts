@@ -1,4 +1,5 @@
 /** Services */
+import { StompRService } from '@stomp/ng2-stompjs';
 import { McsApiService } from './services/mcs-api.service';
 import { McsStorageService } from './services/mcs-storage.service';
 import { McsCookieService } from './services/mcs-cookie.service';
@@ -35,6 +36,7 @@ import { McsNavigateAwayGuard } from './guards/mcs-navigate-away.guard';
  * Array coverage for the core modules
  */
 export const coreProviders: any[] = [
+  StompRService,
   McsApiService,
   McsStorageService,
   McsCookieService,
