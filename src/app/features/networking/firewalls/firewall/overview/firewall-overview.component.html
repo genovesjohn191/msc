@@ -63,9 +63,9 @@
       </mcs-list>
     </div>
 
-    <div class="grid-column container-wrapper break-on-small">
-      <h4 class="container-header">{{ textContent.utmServices.title }}</h4>
-      <ng-container *ngIf="hasUtmInformation; else noUtmInfo">
+    <ng-container *ngIf="firewall?.utm?.hasUtmService; else topologyTemplate">
+      <div class="grid-column container-wrapper break-on-small">
+        <h4 class="container-header">{{ textContent.utmServices.title }}</h4>
         <mcs-list spacing="xsmall">
           <!-- AV Expiry Date -->
           <mcs-list-item *ngIf="firewall?.utm?.avExpiryDate" class="form-field-inline">
@@ -89,29 +89,30 @@
             <span>{{ getLicenseText(firewall?.utm?.emailExpiryDate) }}</span>
           </mcs-list-item>
         </mcs-list>
-      </ng-container>
-      <ng-template #noUtmInfo>
-        <span read-only>{{ textContent.utmServices.noContentMessage }}</span>
-      </ng-template>
-    </div>
+      </div>
+    </ng-container>
   </div>
 
-  <div class="grid-row">
-    <div class="grid-column container-wrapper break-on-small">
-      <h4 class="container-header">{{ textContent.topology.title }}</h4>
-      <ng-container *ngIf="firewall?.haRole; else noTopologyInfo">
-        <mcs-list spacing="xsmall">
-          <!-- HA Role -->
-          <mcs-list-item *ngIf="firewall.haRole" class="form-field-inline">
-            <span>{{ textContent.topology.role }}:</span>
-            <span>{{ firewall.haRole }}</span>
-          </mcs-list-item>
-        </mcs-list>
-      </ng-container>
-      <ng-template #noTopologyInfo>
-        <span read-only>{{ textContent.topology.noContentMessage }}</span>
-      </ng-template>
-    </div>
+  <div *ngIf="firewall?.utm?.hasUtmService" class="grid-row">
+    <ng-container *ngTemplateOutlet="topologyTemplate"></ng-container>
     <div class="grid-column container-wrapper break-on-small"></div>
   </div>
 </div>
+
+<ng-template #topologyTemplate>
+  <div class="grid-column container-wrapper break-on-small">
+    <h4 class="container-header">{{ textContent.topology.title }}</h4>
+    <ng-container *ngIf="firewall?.haRole; else noTopologyInfo">
+      <mcs-list spacing="xsmall">
+        <!-- HA Role -->
+        <mcs-list-item *ngIf="firewall.haRole" class="form-field-inline">
+          <span>{{ textContent.topology.role }}:</span>
+          <span>{{ firewall.haRole }}</span>
+        </mcs-list-item>
+      </mcs-list>
+    </ng-container>
+    <ng-template #noTopologyInfo>
+      <span read-only>{{ textContent.topology.noContentMessage }}</span>
+    </ng-template>
+  </div>
+</ng-template>

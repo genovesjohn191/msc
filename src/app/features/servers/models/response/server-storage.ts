@@ -1,3 +1,9 @@
+import {
+  ServerStorageStatus,
+  serverStorageStatusText
+} from '../enumerations/server-storage-status.enum';
+import { isNullOrEmpty } from '../../../../utilities';
+
 export class ServerStorage {
   public id: string;
   public name: string;
@@ -15,5 +21,16 @@ export class ServerStorage {
     this.limitMB = undefined;
     this.usedMB = undefined;
     this.availableMB = undefined;
+  }
+
+  /**
+   * Returns storage status label
+   */
+  public get statusLabel(): string {
+    if (isNullOrEmpty(this.enabled)) { return undefined; }
+
+    let status = this.enabled ? ServerStorageStatus.Enabled
+      : ServerStorageStatus.Disabled;
+    return serverStorageStatusText[status];
   }
 }

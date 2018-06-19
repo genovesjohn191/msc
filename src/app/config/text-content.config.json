@@ -128,6 +128,9 @@
         "loadingContent": "Loading list of storage.",
         "noStorage": "No storage available.",
         "errorGettingStorage": "Sorry, something’s not right. We weren’t able to retrieve the list of storage."
+      },
+      "shared": {
+        "iopsLabel": "Performance {{iops}}"
       }
     },
     "createServer": {
@@ -737,8 +740,7 @@
           "emailFiltering": "Email Filtering",
           "licensed": "Licensed",
           "invalidLicense": "Invalid License",
-          "expires": "Expires",
-          "noContentMessage": "UTM Services information is unavailable."
+          "expires": "Expires"
         },
         "topology": {
           "title": "Topology",

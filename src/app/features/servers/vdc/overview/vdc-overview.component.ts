@@ -10,20 +10,17 @@ import {
   ServerResource,
   ServerStorage,
   ServerStorageStatus,
-  serverStorageStatusText,
-  serverServiceTypeText
+  serverStorageStatusText
 } from '../../models';
 import { ServersResourcesRepository } from '../../servers-resources.repository';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreDefinition,
-  McsTextContentProvider,
-  McsUnitType
+  McsTextContentProvider
 } from '../../../../core';
 import {
   isNullOrEmpty,
-  appendUnitSuffix,
   replacePlaceholder
 } from '../../../../utilities';
 
@@ -42,20 +39,6 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
-  }
-
-  public get vdcServiceType(): string {
-    return serverServiceTypeText[this.selectedVdc.serviceType];
-  }
-
-  public get vdcMemoryValue(): string {
-    return !isNullOrEmpty(this.selectedVdc.compute) ?
-      appendUnitSuffix(this.selectedVdc.compute.memoryLimitMB, McsUnitType.Megabyte) : '';
-  }
-
-  public get vdcCpuValue(): string {
-    return !isNullOrEmpty(this.selectedVdc.compute) ?
-      appendUnitSuffix(this.selectedVdc.compute.cpuLimit, McsUnitType.CPU) : '';
   }
 
   /**
@@ -87,13 +70,14 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     _serversResourcesRespository: ServersResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
+    _textContentProvider: McsTextContentProvider,
     private _router: Router
   ) {
     super(
       _serversResourcesRespository,
       _vdcService,
-      _changeDetectorRef
+      _changeDetectorRef,
+      _textContentProvider
     );
     this.selectedVdc = new ServerResource();
   }
@@ -142,15 +126,6 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
     return storage.enabled ?
       serverStorageStatusText[ServerStorageStatus.Enabled] :
       serverStorageStatusText[ServerStorageStatus.Disabled];
-  }
-
-  /**
-   * Returns the tier of the VDC storage.
-   * @param storage VDC Storage
-   */
-  public getStorageTierText(storage: ServerStorage): string {
-    return replacePlaceholder(this.textContent.storageProfiles.iops,
-      'iops', `${storage.iops}`);
   }
 
   /**

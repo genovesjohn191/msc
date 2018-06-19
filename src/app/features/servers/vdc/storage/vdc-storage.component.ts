@@ -55,18 +55,19 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
     _serversResourcesRespository: ServersResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
-    private _textProvider: McsTextContentProvider
+    _textContentProvider: McsTextContentProvider
   ) {
     super(
       _serversResourcesRespository,
       _vdcService,
-      _changeDetectorRef
+      _changeDetectorRef,
+      _textContentProvider
     );
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.servers.vdc.storage;
+    this.textContent = this._textContentProvider.content.servers.vdc.storage;
     this.initialize();
     this._getVdcStorage();
   }

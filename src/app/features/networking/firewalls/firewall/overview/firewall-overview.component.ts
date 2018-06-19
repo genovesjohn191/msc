@@ -54,16 +54,6 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns true when the UTM information including its fields are not null
-   */
-  public get hasUtmInformation(): boolean {
-    return !isNullOrEmpty(this.firewall.utm) &&
-      (!isNullOrEmpty(this.firewall.utm.avExpiryDate) ||
-        !isNullOrEmpty(this.firewall.utm.emailExpiryDate) ||
-        !isNullOrEmpty(this.firewall.utm.webExpiryDate));
-  }
-
-  /**
    * Returns the license date label based on its expiration date
    * @param expirationDate Expiration date to be checked
    */
