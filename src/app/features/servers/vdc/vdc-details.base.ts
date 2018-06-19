@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ServerResource } from '../models';
 import { ServersResourcesRepository } from '../servers-resources.repository';
 import { VdcService } from '../vdc/vdc.service';
+import { McsTextContentProvider } from '../../../core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -28,10 +29,19 @@ export abstract class VdcDetailsBase {
     this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Returns iops label placeholder
+   */
+  public get iopsLabelPlaceholder(): string {
+    return this._textContentProvider.content
+      .servers.vdc.shared.iopsLabel;
+  }
+
   constructor(
     protected _serversResourcesRespository: ServersResourcesRepository,
     protected _vdcService: VdcService,
-    protected _changeDetectorRef: ChangeDetectorRef
+    protected _changeDetectorRef: ChangeDetectorRef,
+    protected _textContentProvider: McsTextContentProvider
   ) {
     this.selectedVdc = new ServerResource();
   }

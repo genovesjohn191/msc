@@ -6,6 +6,7 @@ import { ServerCatalogItem } from './server-catalog-item';
 import { ServerVApp } from './server-vapp';
 import {
   ServerServiceType,
+  serverServiceTypeText,
   ServerServiceTypeSerialization
 } from '../enumerations/server-service-type.enum';
 import {
@@ -65,5 +66,12 @@ export class ServerResource extends McsEntityBase {
     this.serviceType = undefined;
     this.availabilityZone = undefined;
     this.portalUrl = undefined;
+  }
+
+  /**
+   * Returns service type label
+   */
+  public get serviceTypeLabel(): string {
+    return serverServiceTypeText[this.serviceType];
   }
 }

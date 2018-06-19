@@ -5,21 +5,21 @@
       <mcs-list>
         <!-- Service Type -->
         <mcs-list-item>
-          {{ textContent.vdcProperties.serviceType }}:
-          {{ vdcServiceType }}
+          <span>{{ textContent.vdcProperties.serviceType }}:</span>
+          <span [innerHTML]="selectedVdc?.serviceTypeLabel | mcsDataLabel"></span>
         </mcs-list-item>
         <!-- Zone -->
         <mcs-list-item>
-          {{ textContent.vdcProperties.zone }}: {{ selectedVdc.availabilityZone }}
+          <span>{{ textContent.vdcProperties.zone }}:</span>
+          <span [innerHTML]="selectedVdc?.availabilityZone | mcsDataLabel"></span>
         </mcs-list-item>
         <!-- Configuration -->
         <mcs-list-item>
           <div class="configuration">
             <span>{{ textContent.vdcProperties.configuration }}:</span>
-            <span>
-              {{ selectedVdc?.compute?.memoryLimitMBLabel | mcsDataLabel }} /
-              {{ selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel }}
-            </span>
+            <span [innerHTML]="selectedVdc?.compute?.memoryLimitMBLabel | mcsDataLabel"></span>
+            <span>/</span>
+            <span [innerHTML]="selectedVdc?.compute?.cpuLimitMBLabel | mcsDataLabel"></span>
           </div>
         </mcs-list-item>
       </mcs-list>
@@ -51,7 +51,8 @@
       <div class="vertical-items-spacing-medium">
         <span>{{ textContent.networkInformation.description }}</span>
         <mcs-accordion [multi]="true">
-          <mcs-accordion-panel *ngFor="let network of selectedVdc.networks; let i = index" [expanded]="i === 0">
+          <mcs-accordion-panel *ngFor="let network of selectedVdc.networks; let i = index"
+            [expanded]="i === 0">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               {{ network.name }}
             </mcs-accordion-panel-header>
@@ -59,7 +60,8 @@
             <div class="vertical-items-spacing-small" display-flex="column">
               <span>Standard management network for this VDC.</span>
               <span>
-                <b>{{ textContent.networkInformation.gateway }}:</b> {{ network.gateway }}
+                <b>{{ textContent.networkInformation.gateway }}:</b>
+                <span [innerHTML]="network.gateway | mcsDataLabel"></span>
               </span>
             </div>
           </mcs-accordion-panel>
@@ -83,7 +85,6 @@
           <mcs-accordion-panel *ngFor="let storage of selectedVdc.storage; let i = index"
             [expanded]="i === 0">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
-
               <mcs-icon size="small" [key]="getStorageStatusIconKey(storage)"></mcs-icon>
               {{ storage.name }}
             </mcs-accordion-panel-header>
@@ -91,11 +92,13 @@
             <mcs-list>
               <mcs-list-item>
                 <strong>{{ textContent.storageProfiles.status }}:</strong>
-                <span>{{ getStorageStatus(storage) }}</span>
+                <span [innerHTML]="storage?.statusLabel | mcsDataLabel"></span>
               </mcs-list-item>
               <mcs-list-item *ngIf="storage.iops">
                 <strong>{{ textContent.storageProfiles.tier }}:</strong>
-                <span>{{ getStorageTierText(storage) }}</span>
+                <span [innerHTML]="(iopsLabelPlaceholder |
+                  mcsTextPlaceholder: 'iops': storage.iops) |
+                  mcsDataLabel"></span>
               </mcs-list-item>
               <mcs-list-item>
                 <div class="inline-items-xsmall">
