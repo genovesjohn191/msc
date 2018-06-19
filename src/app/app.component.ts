@@ -116,7 +116,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isConnected) { return; }
     this._hideStompErrorStatusBar();
     this._hideStompSuccessStatusBar();
-    this._notificationJobService.reConnectWebsocket();
+    this._notificationJobService.reConnectWebstomp();
   }
 
   /**

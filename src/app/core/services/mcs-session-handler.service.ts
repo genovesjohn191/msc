@@ -20,19 +20,18 @@ import { CoreDefinition } from '../core.definition';
 
 @Injectable()
 export class McsSessionHandlerService implements McsInitializer {
+  private _authToken: string;
+  private _idleTimeInSeconds: number;
 
+  private _sessionIdleCounter: number = 0;
+  private _sessionIsIdle: boolean = false;
+  private _sessionTimedOutToken: string;
+
+  // Events subject
   private _onSessionIdle = new Subject<boolean>();
   private _onSessionTimedOut = new Subject<boolean>();
   private _onSessionResumed = new Subject<boolean>();
-
   private _destroySubject = new Subject<void>();
-  private _sessionIdleCounter: number = 0;
-  private _sessionIsIdle: boolean = false;
-
-  private _authToken: string;
-  private _sessionTimedOutToken: string;
-
-  private _idleTimeInSeconds: number;
 
   /**
    * Returns the session cookie value
@@ -75,7 +74,7 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public get sessionResumed(): boolean {
     return (this._idleTimeInSeconds < CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
-    && (this._idleTimeInSeconds < this._sessionIdleCounter);
+      && (this._idleTimeInSeconds < this._sessionIdleCounter);
   }
 
   constructor(
