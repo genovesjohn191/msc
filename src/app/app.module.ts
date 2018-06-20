@@ -130,6 +130,7 @@ export class AppModule {
     private _googleAnalyticsEventsService: GoogleAnalyticsEventsService,
     private _sessionHandlerService: McsSessionHandlerService
   ) {
+    this._initializeDependentServices();
     this._listenToUserChanges();
     this._listenToSessionTimedOut();
   }
@@ -149,7 +150,7 @@ export class AppModule {
         // is authenticated, otherwise it will conflict to other process that
         // dependent on the user identity, like getting the job/connection prior to authentication.
         this._initializeRavenSentry();
-        this._initializeServices();
+        this._initializeAuthorizedServices();
       });
   }
 
@@ -177,14 +178,20 @@ export class AppModule {
   }
 
   /**
-   * Initializes all required services
+   * Initializes all dependent services, this doesn't require authentication to work on
    */
-  private _initializeServices(): void {
+  private _initializeDependentServices(): void {
+    this._errorHandlerService.initialize();
+  }
+
+  /**
+   * Initializes all authorized services
+   */
+  private _initializeAuthorizedServices(): void {
     this._notificationJobService.initialize();
     this._notificationContextService.initialize();
     this._googleAnalyticsEventsService.initialize();
     this._routeHandlerService.initialize();
-    this._errorHandlerService.initialize();
     this._sessionHandlerService.initialize();
   }
 
