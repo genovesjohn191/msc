@@ -139,6 +139,7 @@ export class McsNotificationJobService implements McsInitializer {
 
     // Register listener to message of webstomp
     this._stompService.connectObservable
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(this._onStompConnected.bind(this));
   }
 
@@ -155,20 +156,20 @@ export class McsNotificationJobService implements McsInitializer {
   }
 
   /**
+   * Event that emits when stomp has error in connecting to rabbitMQ
+   */
+  private _onStompError(_state: any): void {
+    this._loggerService.trace(`Web stomp error.`);
+    this.connectionStatus = McsConnectionStatus.Failed;
+  }
+
+  /**
    * Event that emits when stomp received message
    * @param message Message to be emiited
    */
   private _onStompMessage(message) {
     this._loggerService.trace(`Rabbitmq Message Received`, message);
     if (message.body) { this._updateNotification(message.body); }
-  }
-
-  /**
-   * Event that emits when stomp has error in connecting to rabbitMQ
-   */
-  private _onStompError(_state: any): void {
-    this._loggerService.trace(`Web stomp error.`);
-    this.connectionStatus = McsConnectionStatus.Failed;
   }
 
   /**
