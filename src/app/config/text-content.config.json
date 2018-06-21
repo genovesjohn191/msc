@@ -2,7 +2,8 @@
   "applicationPage": {
     "stompConnectionError": "We’re experiencing connectivity issues.",
     "stompConnectionSuccess": "Successfully connected.",
-    "stompConnectionRetryButton": "RETRY"
+    "stompConnectionRetryButton": "RETRY",
+    "stompConnectionRefreshButton": "REFRESH"
   },
   "consolePage": {
     "loading": "Loading VM Console...",
@@ -1002,6 +1003,12 @@
         "alert": "Your session has expired due to inactivity. Click to sign in again.",
         "confirm": "Sign In"
       }
+    },
+    "webStomp": {
+      "connectionError": "We’re experiencing connectivity issues.",
+      "connectionSuccess": "Successfully connected.",
+      "connectionRetryButton": "RETRY",
+      "connectionRefreshButton": "REFRESH"
     }
   },
   "enumerations": {
