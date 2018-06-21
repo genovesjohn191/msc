@@ -20,12 +20,9 @@ $snack-bar-light-color: $light-bg-text-color;
     color: $snack-bar-dark-color;
   }
 
-  .snack-bar-content {
-    margin-right: $space-medium;
-  }
-
   .snack-bar-icon {
     margin-left: auto;
+    padding-left: $space-medium;
     position: relative;
   }
 }

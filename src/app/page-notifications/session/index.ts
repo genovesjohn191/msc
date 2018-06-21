@@ -1,2 +1,2 @@
-/** Module */
-export * from './session.module';
+export * from './session.component';
+export * from './session-dialogs';

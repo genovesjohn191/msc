@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import {
   Subject,
-  BehaviorSubject
+  BehaviorSubject,
+  Observable,
+  Subscription
 } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   StompRService,
   StompConfig,
   StompState
 } from '@stomp/ng2-stompjs';
+import { StompHeaders } from '@stomp/stompjs';
 import { CoreDefinition } from '../core.definition';
 import {
   unsubscribeSafely,
@@ -23,11 +27,9 @@ import { McsLoggerService } from './mcs-logger.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
-import { StompHeaders } from '@stomp/stompjs';
-import { takeUntil } from 'rxjs/operators';
 
-const DEFAULT_HEARTBEAT_IN = 10000;
-const DEFAULT_HEARTBEAT_OUT = 10000;
+const DEFAULT_HEARTBEAT_IN = 0;
+const DEFAULT_HEARTBEAT_OUT = 20000;
 
 /**
  * MCS notification job service
@@ -40,8 +42,9 @@ export class McsNotificationJobService implements McsInitializer {
   public connectionStatusStream = new Subject<McsConnectionStatus>();
 
   private _apiSubscription: any;
+  private _stompInstance: Observable<any>;
+  private _stompSubscription: Subscription;
   private _jobConnection: McsApiJobConnection;
-  private _stompState: StompState;
   private _destroySubject = new Subject<void>();
 
   /**
@@ -49,10 +52,8 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _connectionStatus: McsConnectionStatus;
   public set connectionStatus(value: McsConnectionStatus) {
-    if (this._connectionStatus !== value) {
-      this._connectionStatus = value;
-      this.connectionStatusStream.next(this._connectionStatus);
-    }
+    this._connectionStatus = value;
+    this.connectionStatusStream.next(this._connectionStatus);
   }
 
   constructor(
@@ -72,19 +73,12 @@ export class McsNotificationJobService implements McsInitializer {
    * Destroy all instance of websocket and webstomp including subscription
    */
   public destroy() {
+    unsubscribeSafely(this._stompSubscription);
     unsubscribeSafely(this._apiSubscription);
     unsubscribeSubject(this.connectionStatusStream);
     unsubscribeSubject(this.notificationStream);
     unsubscribeSubject(this._destroySubject);
     this._disconnectStomp();
-  }
-
-  /**
-   * Retry the connection of webstomp by getting fresh data from API
-   */
-  public reConnectWebstomp(): void {
-    this.connectionStatus = McsConnectionStatus.Reconnecting;
-    this._connectStomp();
   }
 
   /**
@@ -118,7 +112,7 @@ export class McsNotificationJobService implements McsInitializer {
         this._jobConnection = details.content;
         this.connectionStatus = McsConnectionStatus.Connecting;
         this._initializeWebstomp();
-        this._listentToErrorState();
+        this._listenToStateChange();
       });
   }
 
@@ -136,11 +130,6 @@ export class McsNotificationJobService implements McsInitializer {
       reconnect_delay: CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL
     } as StompConfig;
     this._stompService.initAndConnect();
-
-    // Register listener to message of webstomp
-    this._stompService.connectObservable
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(this._onStompConnected.bind(this));
   }
 
   /**
@@ -148,8 +137,10 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _onStompConnected(): void {
     this._loggerService.trace(`Web stomp connected.`);
-    let stompMessageSuject = this._stompService.subscribe(this._jobConnection.destinationRoute);
-    stompMessageSuject
+    unsubscribeSafely(this._stompSubscription);
+    this._stompInstance = this._stompService.subscribe(this._jobConnection.destinationRoute);
+
+    this._stompSubscription = this._stompInstance
       .pipe(takeUntil(this._destroySubject))
       .subscribe(this._onStompMessage.bind(this));
     this.connectionStatus = McsConnectionStatus.Success;
@@ -158,7 +149,7 @@ export class McsNotificationJobService implements McsInitializer {
   /**
    * Event that emits when stomp has error in connecting to rabbitMQ
    */
-  private _onStompError(_state: any): void {
+  private _onStompError(): void {
     this._loggerService.trace(`Web stomp error.`);
     this.connectionStatus = McsConnectionStatus.Failed;
   }
@@ -187,8 +178,7 @@ export class McsNotificationJobService implements McsInitializer {
    * Releases the socket listeners
    */
   private _disconnectStomp(): void {
-    let stompConnected = this._stompState === StompState.CONNECTED;
-    if (!stompConnected) { return; }
+    if (!this._stompService.connected()) { return; }
     this._stompService.disconnect();
   }
 
@@ -204,12 +194,26 @@ export class McsNotificationJobService implements McsInitializer {
   }
 
   /**
-   * Listens to error state of the webstomp
+   * Listens to connection state change
    */
-  private _listentToErrorState(): void {
-    this._stompService.errorSubject
+  private _listenToStateChange(): void {
+    this._stompService.state
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(this._onStompError.bind(this));
+      .subscribe((state) => {
+        switch (state) {
+          case StompState.CONNECTED:
+            this._onStompConnected();
+            break;
+
+          case StompState.CLOSED:
+          case StompState.DISCONNECTING:
+            this._onStompError();
+          case StompState.TRYING:
+          default:
+            unsubscribeSafely(this._stompSubscription);
+            break;
+        }
+      });
   }
 
   /**

@@ -2,22 +2,34 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /** Modules */
 import { SharedModule } from '../shared';
-import { SessionModule } from './session';
 /** Components */
 import { PageNotificationsComponent } from './page-notifications.component';
+import { WebStompComponent } from './web-stomp/web-stomp.component';
+import {
+  SessionComponent,
+  SessionIdleDialogComponent,
+  SessionTimeoutDialogComponent
+} from './session';
 
 @NgModule({
   declarations: [
-    PageNotificationsComponent
+    PageNotificationsComponent,
+    WebStompComponent,
+    SessionComponent,
+    SessionIdleDialogComponent,
+    SessionTimeoutDialogComponent
   ],
   imports: [
     CommonModule,
-    SharedModule,
-    SessionModule
+    SharedModule
   ],
   exports: [
     PageNotificationsComponent
-  ]
+  ],
+  entryComponents: [
+    SessionIdleDialogComponent,
+    SessionTimeoutDialogComponent
+  ],
 })
 
 export class PageNotificationsModule { }

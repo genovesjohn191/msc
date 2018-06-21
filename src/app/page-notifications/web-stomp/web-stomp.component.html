@@ -1,0 +1,24 @@
+<!-- Stomp error status connection template as snackbar -->
+<ng-template #stompErrorStatusTemplate>
+  <mcs-snack-bar [snackBarRef]="stompErrorStatusBarRef" theme="dark" [hideCloseButton]="true">
+    <div class="inline-items-small">
+      <span>{{ textContent.connectionError }}</span>
+      <span (click)="reconnectWebsocket()" cursor="pointer" class="color-primary-01">
+        {{ textContent.connectionRetryButton }}
+      </span>
+    </div>
+  </mcs-snack-bar>
+</ng-template>
+
+<!-- Stomp success status connection template as snackbar -->
+<ng-template #stompSucessStatusTemplate>
+  <mcs-snack-bar [snackBarRef]="stompSuccessStatusBarRef" theme="dark" [hideCloseButton]="true">
+    <div class="inline-items-small">
+      <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
+      <span>{{ textContent.connectionSuccess }}</span>
+      <span (click)="refreshPage()" cursor="pointer" class="color-primary-01">
+        {{ textContent.connectionRefreshButton }}
+      </span>
+    </div>
+  </mcs-snack-bar>
+</ng-template>

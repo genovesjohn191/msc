@@ -2,10 +2,7 @@ import {
   Component,
   ViewEncapsulation,
   AfterViewInit,
-  OnInit,
   OnDestroy,
-  ViewChild,
-  TemplateRef,
   ChangeDetectorRef,
   NgZone
 } from '@angular/core';
@@ -21,18 +18,8 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsNotificationJobService,
-  McsTextContentProvider,
-  McsSnackBarService,
-  McsSnackBarRef,
-  McsSnackBarConfig,
-  McsConnectionStatus,
-  CoreDefinition
-} from './core';
-import {
   unsubscribeSubject,
   refreshView,
-  isNullOrEmpty,
   animateFactory
 } from './utilities';
 
@@ -50,17 +37,8 @@ import {
   ]
 })
 
-export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
-  public textContent: any;
+export class AppComponent implements AfterViewInit, OnDestroy {
   public showLoadingScreen: boolean = true;
-  public stompErrorStatusBarRef: McsSnackBarRef<any>;
-  public stompSuccessStatusBarRef: McsSnackBarRef<any>;
-
-  @ViewChild('stompErrorStatusTemplate')
-  private _stompErrorStatusTemplate: TemplateRef<any>;
-
-  @ViewChild('stompSucessStatusTemplate')
-  private _stompSucessStatusTemplate: TemplateRef<any>;
 
   private _isInitialDisplayed: boolean;
   private _destroySubject = new Subject<void>();
@@ -76,28 +54,16 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  public get checkIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_CHECK;
-  }
-
   constructor(
     private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
-    private _ngZone: NgZone,
-    private _snackBarRefService: McsSnackBarService,
-    private _notificationJobService: McsNotificationJobService
+    private _ngZone: NgZone
   ) {
     this._isInitialDisplayed = true;
   }
 
-  public ngOnInit(): void {
-    this.textContent = this._textContentProvider.content.applicationPage;
-  }
-
   public ngAfterViewInit(): void {
     refreshView(() => {
-      this._listenToStompStatus();
       this._listenToRouterEvents();
       this._listenToNgZone();
     });
@@ -105,88 +71,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSubject(this._destroySubject);
-  }
-
-  /**
-   * Reconnects the websocket instance in-case of failure connection
-   */
-  public reconnectWebsocket(): void {
-    let isConnected = !isNullOrEmpty(this._notificationJobService)
-      && this._notificationJobService.connectionStatus === McsConnectionStatus.Success;
-    if (isConnected) { return; }
-    this._hideStompErrorStatusBar();
-    this._hideStompSuccessStatusBar();
-    this._notificationJobService.reConnectWebstomp();
-  }
-
-  /**
-   * Listens to stomp connection status to displays the snackbar when error occured
-   */
-  private _listenToStompStatus(): void {
-    this._notificationJobService.connectionStatusStream
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((connectionStatus) => {
-        // Stomp is connected
-        let stompIsConnected = !isNullOrEmpty(this.stompErrorStatusBarRef) &&
-          (connectionStatus === McsConnectionStatus.Success);
-        if (stompIsConnected) {
-          this._hideStompErrorStatusBar();
-          this._showStompSuccessStatusBar();
-          return;
-        }
-
-        // Stomp has error
-        let stompHasError = connectionStatus < 0;
-        if (stompHasError) {
-          this._hideStompSuccessStatusBar();
-          this._showStompErrorStatusBar();
-        }
-      });
-  }
-
-  /**
-   * Shows the stomp error status bar in lower left as a snackbar
-   */
-  private _showStompErrorStatusBar(): void {
-    this.stompErrorStatusBarRef = this._snackBarRefService.open(
-      this._stompErrorStatusTemplate,
-      {
-        id: 'stomp-error-status-bar',
-        verticalPlacement: 'bottom',
-        horizontalAlignment: 'start'
-      } as McsSnackBarConfig
-    );
-  }
-
-  /**
-   * Hide the stomp error status bar in lower left
-   */
-  private _hideStompErrorStatusBar(): void {
-    if (isNullOrEmpty(this.stompErrorStatusBarRef)) { return; }
-    this.stompErrorStatusBarRef.close();
-  }
-
-  /**
-   * Shows the stomp success status bar
-   */
-  private _showStompSuccessStatusBar(): void {
-    this.stompSuccessStatusBarRef = this._snackBarRefService.open(
-      this._stompSucessStatusTemplate,
-      {
-        duration: 5000,
-        id: 'stomp-success-status-bar',
-        verticalPlacement: 'bottom',
-        horizontalAlignment: 'start'
-      } as McsSnackBarConfig
-    );
-  }
-
-  /**
-   * Hide the stomp success status bar
-   */
-  private _hideStompSuccessStatusBar(): void {
-    if (isNullOrEmpty(this.stompSuccessStatusBarRef)) { return; }
-    this.stompSuccessStatusBarRef.close();
   }
 
   /**
