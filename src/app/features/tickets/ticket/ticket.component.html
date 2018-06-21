@@ -77,7 +77,7 @@
           <p *ngIf="missingServices" read-only>
             {{ textContent.missingServicesLabel }}
           </p>
-          <ul class="inline-list">
+          <ul class="inline-list hspace-medium">
             <li *ngFor="let service of ticket.serviceId; trackBy: trackByFn">
               {{ service }}
             </li>

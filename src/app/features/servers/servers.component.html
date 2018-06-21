@@ -191,6 +191,27 @@
           </mcs-data-cell>
         </ng-container>
 
+        <!-- Tools Version Column -->
+        <ng-container mcsColumnDef="toolsVersion"
+          [mcsColumnDefHidden]="isColumnHidden('toolsVersion')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+            {{ columnSettings.toolsVersion.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+            <ng-container *ngIf="row.vmwareTools?.hasTools; else toolsNotInstalled">
+              <span>{{ row.vmwareTools?.version }}</span>
+            </ng-container>
+            <ng-template #toolsNotInstalled>
+              <mcs-data-status-empty
+                [mcsTooltip]="textContent.toolsUnavailable"
+                [mcsTooltipShow]="!row.vmwareTools?.hasTools"
+                mcsTooltipPosition="right">
+                {{ textContent.toolsNotInstalled }}
+              </mcs-data-status-empty>
+            </ng-template>
+          </mcs-data-cell>
+        </ng-container>
+
         <!-- Management IP Column -->
         <ng-container mcsColumnDef="managementIp"
           [mcsColumnDefHidden]="isColumnHidden('managementIp')">
