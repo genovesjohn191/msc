@@ -90,10 +90,15 @@ export class ServersComponent
    * Returns the excluded columns in the listing
    */
   public get excludedColumns(): string[] {
+    let excludedColumns = new Array();
+
+    if (!this.hasManagedResource) { excludedColumns.push('serviceId'); }
     // TODO: FUSION-1726 - Waiting for the permission to view managementIp for internal users
     let hasIpViewPermission = this.hasManagedResource &&
       this._accessControlService.hasPermission(['CompanyView']);
-    return (hasIpViewPermission) ? undefined : ['managementIp'];
+    if (!hasIpViewPermission) { excludedColumns.push('managementIp'); }
+
+    return (!isNullOrEmpty(excludedColumns)) ? excludedColumns : undefined;
   }
 
   public get columnSettingsKey(): string {
