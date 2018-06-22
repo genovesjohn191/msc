@@ -64,6 +64,36 @@
             <span [innerHTML]="ticket.customerReference | mcsDataLabel: 'None'"></span>
           </div>
         </div>
+        <ng-container *ngIf="ticket.isClosed">
+          <h4 class="container-header">
+            {{ textContent.closureDetails }}
+          </h4>
+          <div class="grid-row vspace-medium">
+            <div class="grid-column">
+              <strong>{{ textContent.closureDate }}</strong> <br/>
+              <span read-only [innerHTML]="(ticket.closureInformation?.closedAt |
+                mcsStdDateFormat) | mcsDataLabel"></span>
+            </div>
+
+            <div class="grid-column">
+              <strong>{{ textContent.closureNotes }}</strong> <br/>
+              <span read-only [innerHTML]="ticket.closureInformation?.closeNotes |
+                mcsDataLabel: 'None'"></span>
+            </div>
+
+            <div class="grid-column">
+              <strong>{{ textContent.rootCause }}</strong> <br/>
+              <span read-only [innerHTML]="ticket.closureInformation?.closeProblem |
+                mcsDataLabel: 'None'"></span>
+            </div>
+
+            <div class="grid-column">
+              <strong>{{ textContent.resolution }}</strong> <br/>
+              <span read-only [innerHTML]="ticket.closureInformation?.closeResolution |
+                mcsDataLabel: 'None'"></span>
+            </div>
+          </div>
+        </ng-container>
         <div>
           <div class="divider"></div>
           <p [innerHTML]="ticket.description | mcsNewLines"></p>

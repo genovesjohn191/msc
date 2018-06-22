@@ -114,4 +114,11 @@ export class Ticket extends McsEntityBase {
   public get stateLabel(): string {
     return ticketStatusText[this.state];
   }
+
+  /**
+   * Returns true if the ticket is closed
+   */
+  public get isClosed(): boolean {
+    return this.state === TicketStatus.Closed;
+  }
 }
