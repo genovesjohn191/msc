@@ -63,6 +63,7 @@ export class ServerManagementComponent extends ServerDetailsBase
   public thumbnailElement: ElementRef;
 
   public textContent: any;
+  public serversTextContent: any;
 
   public serverThumbnail: ServerThumbnail;
   public serverThumbnailEncoding: string;
@@ -206,6 +207,7 @@ export class ServerManagementComponent extends ServerDetailsBase
 
   public ngOnInit(): void {
     this.textContent = this._textProvider.content.servers.server.management;
+    this.serversTextContent = this._textProvider.content.servers;
     this.initialize();
     this._getScaleParam();
     this._listenToDeviceChange();
