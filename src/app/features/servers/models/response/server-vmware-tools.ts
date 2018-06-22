@@ -9,7 +9,7 @@ import {
 import { JsonProperty } from 'json-object-mapper';
 
 export class ServerVmwareTools {
-  public version: string;
+  public version: number;
 
   @JsonProperty({
     type: ServerRunningStatus,
@@ -29,5 +29,13 @@ export class ServerVmwareTools {
     this.runningStatus = undefined;
     this.version = undefined;
     this.versionStatus = undefined;
+  }
+
+  /**
+   * Returns true if wmware tools were installed
+   * Business rule: if version != 0, there are tools installed
+   */
+  public get hasTools(): boolean {
+    return this.version > 0;
   }
 }

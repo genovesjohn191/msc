@@ -78,6 +78,8 @@
     "tableSearch": "Table Search",
     "dataSingular": "Server",
     "dataPlural": "Servers",
+    "toolsNotInstalled": "Not Installed",
+    "toolsUnavailable": "Some management features may be unavailable.",
     "columnHeaders": {
       "state": "State",
       "name": "Server",
@@ -256,7 +258,8 @@
           "status": "Status",
           "image": "Image",
           "zone": "Zone",
-          "configuration": "Configuration"
+          "configuration": "Configuration",
+          "vmwareTools": "Tools Version"
         },
         "vmConsole": {
           "title": "VM Console",

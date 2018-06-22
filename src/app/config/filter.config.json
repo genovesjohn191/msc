@@ -40,6 +40,10 @@
       "text": "OS Edition",
       "value": true
     },
+    "toolsVersion": {
+      "text": "Tools Version",
+      "value": true
+    },
     "managementIp": {
       "text": "Management IP",
       "value": true
