@@ -32,7 +32,9 @@
               <span [innerHTML]="server.compute?.memoryMBLabel | mcsDataLabel"></span>
               <span> / </span>
               <span [innerHTML]="server.compute?.cpuCountLabel | mcsDataLabel"></span>
-              <span *mcsAccessControl="['VmEdit']">
+
+              <!-- Remove for request -->
+              <!-- <span *mcsAccessControl="['VmEdit']">
                 <ng-container *mcsIsSelfManagedServer="server">
                   <a *ngIf="!isScaling" (click)="showScaleOption()"
                     mcsEventTracker="scale-option"
@@ -43,7 +45,26 @@
                   <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
                     [mcsTooltip]="textContent.performanceScale.scaling"></mcs-icon>
                 </ng-container>
-              </span>
+              </span> -->
+            </mcs-list-item>
+
+            <!-- Temporary: VM Ware tools -->
+            <mcs-list-item>
+              <div class="form-field-inline">
+                <span>Tools Version:</span>
+                <ng-container *ngIf="server.vmwareTools?.hasTools; else vmwareTemplate">
+                  <span>{{ server.vmwareTools.version }}</span>
+                </ng-container>
+
+                <ng-template #vmwareTemplate>
+                  <div class="inline-items-xsmall"
+                    [mcsTooltip]="serversTextContent.toolsUnavailable"
+                    mcsTooltipPosition="right">
+                    <mcs-icon key="warning-svg" size="small"></mcs-icon>
+                    <span read-only>{{ serversTextContent.toolsNotInstalled }}</span>
+                  </div>
+                </ng-template>
+              </div>
             </mcs-list-item>
           </mcs-list>
         </div>

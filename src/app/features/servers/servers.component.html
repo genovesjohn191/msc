@@ -204,8 +204,7 @@
             <ng-template #toolsNotInstalled>
               <mcs-data-status-empty
                 [mcsTooltip]="textContent.toolsUnavailable"
-                [mcsTooltipShow]="!row.vmwareTools?.hasTools"
-                mcsTooltipPosition="right">
+                [mcsTooltipShow]="!row.vmwareTools?.hasTools">
                 {{ textContent.toolsNotInstalled }}
               </mcs-data-status-empty>
             </ng-template>
