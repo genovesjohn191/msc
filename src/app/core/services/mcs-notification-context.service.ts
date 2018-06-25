@@ -14,9 +14,9 @@ import { McsApiSuccessResponse } from '../models/response/mcs-api-success-respon
 import {
   getTimeDifference,
   addOrUpdateArrayRecord,
-  unsubscribeSafely,
   deleteArrayRecord,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSubject
 } from '../../utilities';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 
@@ -29,8 +29,6 @@ import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 export class McsNotificationContextService implements McsInitializer {
   private _destroySubject = new Subject<void>();
   private _notifications: McsApiJob[];
-  private _notificationServiceSubscription: any;
-  private _connectionStatusSubscription: any;
 
   /**
    * Subscribe to get the updated notifications in real-time
@@ -63,8 +61,7 @@ export class McsNotificationContextService implements McsInitializer {
    * Destroy all instance of notification job service including its subscription
    */
   public destroy(): void {
-    unsubscribeSafely(this._notificationServiceSubscription);
-    unsubscribeSafely(this._connectionStatusSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -165,8 +162,8 @@ export class McsNotificationContextService implements McsInitializer {
    * Listens to every job changed
    */
   private _listenToJobChanged(): void {
-    // Subscribe to RabbitMQ for real-time update
-    this._notificationServiceSubscription = this._notificationJobService.notificationStream
+    this._destroySubject.next();
+    this._notificationJobService.notificationStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe((updatedNotification) => {
         this._updateNotifications(updatedNotification);

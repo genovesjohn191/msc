@@ -20,9 +20,15 @@ $snack-bar-light-color: $light-bg-text-color;
     color: $snack-bar-dark-color;
   }
 
+  .snack-bar-spacer {
+    width: $space-medium;
+    height: 1px;
+  }
+
   .snack-bar-icon {
-    margin-left: auto;
-    padding-left: $space-medium;
+    @include display-flex(row);
+    @include align-items(center);
     position: relative;
+    right: 0;
   }
 }
