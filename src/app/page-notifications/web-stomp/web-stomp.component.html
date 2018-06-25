@@ -12,13 +12,10 @@
 
 <!-- Stomp success status connection template as snackbar -->
 <ng-template #stompSucessStatusTemplate>
-  <mcs-snack-bar [snackBarRef]="stompSuccessStatusBarRef" theme="dark" [hideCloseButton]="true">
+  <mcs-snack-bar [snackBarRef]="stompSuccessStatusBarRef" theme="dark">
     <div class="inline-items-small">
       <mcs-icon [key]="checkIconKey" size="small" color="green"></mcs-icon>
       <span>{{ textContent.connectionSuccess }}</span>
-      <span (click)="refreshPage()" cursor="pointer" class="color-primary-01">
-        {{ textContent.connectionRefreshButton }}
-      </span>
     </div>
   </mcs-snack-bar>
 </ng-template>

@@ -14,8 +14,11 @@ import {
   McsConnectionStatus,
   McsSnackBarConfig,
   McsTextContentProvider,
-  CoreDefinition
+  CoreDefinition,
+  McsNotificationContextService
 } from '../../core';
+
+const DEFAULT_SUCCESS_SNACKBAR_DURATION = 5000;
 
 @Component({
   selector: 'mcs-web-stomp',
@@ -46,6 +49,7 @@ export class WebStompComponent implements OnInit {
   constructor(
     private _snackBarRefService: McsSnackBarService,
     private _notificationJobService: McsNotificationJobService,
+    private _notificationContext: McsNotificationContextService,
     private _textContentProvider: McsTextContentProvider
   ) { }
 
@@ -63,13 +67,6 @@ export class WebStompComponent implements OnInit {
   }
 
   /**
-   * Refresh the page
-   */
-  public refreshPage(): void {
-    location.reload();
-  }
-
-  /**
    * Listens to stomp connection status to displays the snackbar when error occured
    */
   private _listenToStompStatus(): void {
@@ -83,6 +80,7 @@ export class WebStompComponent implements OnInit {
         if (stompIsConnected) {
           this._hideStompErrorStatusBar();
           this._showStompSuccessStatusBar();
+          this._notificationContext.initialize();
           return;
         }
 
@@ -104,6 +102,7 @@ export class WebStompComponent implements OnInit {
       this._stompSucessStatusTemplate,
       {
         id: 'stomp-success-status-bar',
+        duration: DEFAULT_SUCCESS_SNACKBAR_DURATION,
         verticalPlacement: 'bottom',
         horizontalAlignment: 'end'
       } as McsSnackBarConfig
