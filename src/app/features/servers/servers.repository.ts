@@ -22,10 +22,7 @@ import {
   ServerNic,
   ServerSnapshot
 } from './models';
-import {
-  isNullOrEmpty,
-  deleteArrayRecord
-} from '../../utilities';
+import { isNullOrEmpty } from '../../utilities';
 import { ResetPasswordFinishedDialogComponent } from './shared';
 
 @Injectable()
@@ -303,7 +300,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         activeServer.compute.cpuCount = job.clientReferenceObject.cpuCount;
         activeServer.compute.coreCount = 1;
       }
-
       this.updateRecord(activeServer);
     }
   }
@@ -332,20 +328,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      let media = activeServer.media.find((result) => {
-        return result.id === job.clientReferenceObject.mediaId;
-      });
-
-      if (!isNullOrEmpty(media)) {
-        media.isProcessing = activeServer.isProcessing;
-
-        if (job.dataStatus === McsDataStatus.Success) {
-          deleteArrayRecord(activeServer.media, (targetMedia) => {
-            return media.id === targetMedia.id;
-          });
-        }
-      }
       this.updateRecord(activeServer);
     }
   }
