@@ -56,7 +56,7 @@
     </ng-container>
 
     <!-- Remove temporarily -->
-    <!-- <ng-container *mcsIsSelfManagedServer="server">
+    <ng-container *mcsIsSelfManagedServer="server">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
         <a (click)="onExecuteCommand(serverCommandEnum.Scale)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Scale)"
@@ -66,7 +66,7 @@
           {{ textContent.scale }}
         </a>
       </ng-container>
-    </ng-container> -->
+    </ng-container>
 
     <ng-container *mcsIsSelfManagedServer="server">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Clone)">

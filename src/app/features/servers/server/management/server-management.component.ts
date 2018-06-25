@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {
+  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
@@ -118,6 +119,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   constructor(
+    private _router: Router,
     private _activatedRoute: ActivatedRoute,
     _changeDetectorRef: ChangeDetectorRef,
     _serversResourcesRepository: ServersResourcesRepository,
@@ -182,6 +184,14 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     return isNullOrEmpty(this.serverMedias)
       && this.server.executable
       && !isNullOrEmpty(this.resourceMedias);
+  }
+
+  /**
+   * Event that emits when the scale has been cancelled
+   */
+  public onCancelScale(): void {
+    this._router.navigate(['servers', this.server.id, 'management']);
+    this.setViewMode(ServerManagementView.None);
   }
 
   /**
