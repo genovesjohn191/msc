@@ -6,311 +6,329 @@
     mcsLoaderOrientation="top"></div>
 
   <div #managementContent>
-    <div *ngIf="!scaleOptionIsVisible && !isAttachMedia" class="content-grid">
-      <div class="grid-row">
-        <div class="grid-column container-wrapper break-on-small">
-          <h4 class="container-header">{{ textContent.vmProperties.title }}</h4>
-          <mcs-list spacing="xsmall">
-            <!-- Status -->
-            <mcs-list-item class="form-field-inline">
-              <span>{{ textContent.vmProperties.status }}:</span>
-              <span [innerHTML]="server.statusLabel | mcsDataLabel"></span>
-            </mcs-list-item>
-            <!-- Image -->
-            <mcs-list-item class="form-field-inline">
-              <span>{{ textContent.vmProperties.image }}:</span>
-              <span [innerHTML]="server.operatingSystem?.guestOs | mcsDataLabel"></span>
-            </mcs-list-item>
-            <!-- Zone -->
-            <mcs-list-item class="form-field-inline">
-              <span>{{ textContent.vmProperties.zone }}:</span>
-              <span [innerHTML]="server.availabilityZone | mcsDataLabel"></span>
-            </mcs-list-item>
-            <!-- Configuration -->
-            <mcs-list-item class="form-field-inline">
-              <span>{{ textContent.vmProperties.configuration }}:</span>
-              <span [innerHTML]="server.compute?.memoryMBLabel | mcsDataLabel"></span>
-              <span> / </span>
-              <span [innerHTML]="server.compute?.cpuCountLabel | mcsDataLabel"></span>
+    <ng-container [ngSwitch]="serverManagementView">
+      <!-- Management view by default -->
+      <div [@fadeIn] *ngSwitchDefault>
+        <div class="grid-row">
+          <!-- VM Properties -->
+          <div class="grid-column container-wrapper break-on-small">
+            <h4 class="container-header">{{ textContent.vmProperties.title }}</h4>
+            <mcs-list spacing="xsmall">
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.vmProperties.status }}:</span>
+                <span [innerHTML]="server.statusLabel | mcsDataLabel"></span>
+              </mcs-list-item>
 
-              <!-- Remove for request -->
-              <!-- <span *mcsAccessControl="['VmEdit']">
-                <ng-container *mcsIsSelfManagedServer="server">
-                  <a *ngIf="!isScaling" (click)="showScaleOption()"
-                    mcsEventTracker="scale-option"
-                    mcsEventCategory="server"
-                    mcsEventLabel="server-details-page"
-                    [disabled]="!server.executable">
-                    {{ textContent.performanceScale.scale }}</a>
-                  <mcs-icon *ngIf="isScaling" [key]="spinnerIconKey" size="medium"
-                    [mcsTooltip]="textContent.performanceScale.scaling"></mcs-icon>
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.vmProperties.image }}:</span>
+                <span [innerHTML]="server.operatingSystem?.guestOs | mcsDataLabel"></span>
+              </mcs-list-item>
+
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.vmProperties.zone }}:</span>
+                <span [innerHTML]="server.availabilityZone | mcsDataLabel"></span>
+              </mcs-list-item>
+
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.vmProperties.configuration }}:</span>
+                <span [innerHTML]="server.compute?.memoryMBLabel | mcsDataLabel"></span>
+                <span> / </span>
+                <span [innerHTML]="server.compute?.cpuCountLabel | mcsDataLabel"></span>
+                <ng-container *mcsAccessControl="['VmEdit']">
+                  <ng-container *mcsIsSelfManagedServer="server">
+                    <mcs-icon *ngIf="scaleInProgress"
+                      [key]="spinnerIconKey" size="small"
+                      [mcsTooltip]="textContent.manageScale.scaling"></mcs-icon>
+                    <a *ngIf="!scaleInProgress"
+                      (click)="setViewMode(serverManagementViewEnum.ManageScale)"
+                      mcsEventTracker="scale-option"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-details-page"
+                      [disabled]="!server.executable">
+                      {{ textContent.manageScale.scale }}</a>
+                  </ng-container>
                 </ng-container>
-              </span> -->
-            </mcs-list-item>
+              </mcs-list-item>
 
-            <!-- Temporary: VM Ware tools -->
-            <mcs-list-item>
-              <div class="form-field-inline">
-                <span>Tools Version:</span>
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.vmProperties.vmwareTools }}:</span>
                 <ng-container *ngIf="server.vmwareTools?.hasTools; else vmwareTemplate">
-                  <span>{{ server.vmwareTools.version }}</span>
+                  <span>{{ server.vmwareTools?.version }}</span>
                 </ng-container>
 
                 <ng-template #vmwareTemplate>
-                  <div class="inline-items-xsmall"
-                    [mcsTooltip]="serversTextContent.toolsUnavailable"
-                    mcsTooltipPosition="right">
-                    <mcs-icon key="warning-svg" size="small"></mcs-icon>
-                    <span read-only>{{ serversTextContent.toolsNotInstalled }}</span>
-                  </div>
+                  <mcs-data-status-empty [mcsTooltip]="serversTextContent.toolsUnavailable">
+                    {{ serversTextContent.toolsNotInstalled }}
+                  </mcs-data-status-empty>
                 </ng-template>
-              </div>
-            </mcs-list-item>
-          </mcs-list>
-        </div>
-
-        <!-- Console -->
-        <div class="grid-column container-wrapper break-on-small">
-          <h4 flex="none" class="container-header">{{ textContent.vmConsole.title }}</h4>
-          <div *ngIf="consoleEnabled" class="inline-block"
-            cursor="pointer"
-            (click)="onClickViewConsole()"
-            mcsEventTracker="view-console"
-            mcsEventCategory="server"
-            mcsEventLabel="server-details-page">
-            <div class="image-thumbnail dark" cursor="pointer">
-              <img #thumbnailElement/>
-            </div>
-            <a>{{ textContent.vmConsole.link }}</a>
-          </div>
-          <div *ngIf="!consoleEnabled">
-            <div class="inline-block">
-              <mcs-icon [key]="consoleIconKey" size="110px"></mcs-icon>
-            </div>
-            <div read-only>
-              <span *ngIf="server.isPoweredOff">
-                {{ textContent.vmConsole.serverPoweredOff }}
-              </span>
-              <span *ngIf="server.isSuspended">
-                {{ textContent.vmConsole.serverSuspended }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-row">
-        <div class="grid-column container-wrapper break-on-small">
-          <h4 class="container-header">{{ textContent.storage.title }}
-            <ng-container *mcsAccessControl="['VmEdit']">
-              <a *mcsIsSelfManagedServer="server"
-                [disabled]="!server.executable"
-                [routerLink]="['../storage']">
-                {{ textContent.storage.manage }}
-              </a>
-            </ng-container>
-          </h4>
-          <div>
-            <div *ngIf="!hasStorageInformation">
-              <span read-only>{{ textContent.storage.noContentMessage }}</span>
-            </div>
-            <mcs-list spacing="xsmall" *ngIf="hasStorageInformation">
-              <!-- Primary Volume -->
-              <mcs-list-item *ngFor="let storage of server.storageDevices"
-                class="form-field-inline">
-                <span>{{ storage.name }}:</span>
-                <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
               </mcs-list-item>
-              <!-- Storage Policy -->
-              <!-- TODO: Will confirm to Orch API where to pull this data -->
-              <!-- <mcs-list-item *ngIf="server.environment?.resource?.storage?.name">
-                <span>{{ textContent.storage.storagePolicy }}:</span>
-                <span>{{ server.environment?.resource?.storage?.name }}</span>
-              </mcs-list-item> -->
+            </mcs-list>
+          </div>
+
+          <!-- VM Console -->
+          <div class="grid-column container-wrapper break-on-small hidden-small">
+            <h4 class="container-header">{{ textContent.vmConsole.title }}</h4>
+            <ng-container *ngIf="!server.consoleEnabled; else consoleTemplate">
+              <div class="form-field-block">
+                <div>
+                  <mcs-icon [key]="consoleIconKey" size="110px"></mcs-icon>
+                </div>
+                <div read-only>
+                  <span *ngIf="server.isPoweredOff">
+                    {{ textContent.vmConsole.serverPoweredOff }}
+                  </span>
+                  <span *ngIf="server.isSuspended">
+                    {{ textContent.vmConsole.serverSuspended }}
+                  </span>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-template #consoleTemplate>
+              <div class="inline-block" cursor="pointer"
+                [disabled]="server.isProcessing"
+                (click)="viewConsole()"
+                mcsEventTracker="view-console"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
+                <div class="image-thumbnail dark" cursor="pointer">
+                  <img class="block full-width" [attr.src]="serverThumbnail"/>
+                </div>
+                <a>{{ textContent.vmConsole.link }}</a>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <!-- VM Storage -->
+          <div class="grid-column container-wrapper break-on-small">
+            <h4 class="container-header">
+              <div class="form-field-inline">
+                <span>{{ textContent.storage.title }}</span>
+                <ng-container *mcsAccessControl="['VmEdit']">
+                  <a *mcsIsSelfManagedServer="server"
+                    [disabled]="!server.executable"
+                    [routerLink]="['../storage']">
+                    {{ textContent.storage.manage }}
+                  </a>
+                </ng-container>
+              </div>
+            </h4>
+            <ng-container *ngIf="server.storageDevices | mcsIsNullOrEmpty; else storagesTemplate">
+              <mcs-data-status-empty>
+                {{ textContent.storage.noContentMessage }}
+              </mcs-data-status-empty>
+            </ng-container>
+
+            <ng-template #storagesTemplate>
+              <mcs-list spacing="xsmall">
+                <mcs-list-item *ngFor="let storage of server.storageDevices"
+                  class="form-field-inline">
+                  <span>{{ storage.name }}:</span>
+                  <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
+                </mcs-list-item>
+              </mcs-list>
+            </ng-template>
+          </div>
+
+          <!-- VM NICs -->
+          <div class="grid-column container-wrapper break-on-small">
+            <h4 class="container-header">{{ textContent.nics.title }}</h4>
+            <ng-container *ngIf="server.nics | mcsIsNullOrEmpty; else nicsTemplate">
+              <mcs-data-status-empty>
+                {{ textContent.nics.noContentMessage }}
+              </mcs-data-status-empty>
+            </ng-container>
+
+            <ng-template #nicsTemplate>
+              <mcs-accordion [multi]="true">
+                <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
+                  [expanded]="i === 0">
+                  <mcs-accordion-panel-header mcsPanelHeaderDef>
+                    <span>{{ nic.name }}</span>
+                    <span *ngIf="nic.isPrimary">({{ textContent.nics.primary }})</span>
+                  </mcs-accordion-panel-header>
+
+                  <div class="block-items-xsmall">
+                    <div class="form-field-inline">
+                      <span>{{ textContent.nics.ipAllocationMode }}:</span>
+                      <span>{{ nic.ipAllocationModeLabel }}</span>
+                    </div>
+                    <div class="form-field-inline">
+                      <span>{{ textContent.nics.ipAddresses }}:</span>
+                      <ng-container *ngIf="getNicIpAddresses(nic); else noIpAddressTemplate">
+                        <mcs-list spacing="auto">
+                          <mcs-list-item *ngFor="let item of getNicIpAddresses(nic)">
+                            {{ item }}
+                          </mcs-list-item>
+                        </mcs-list>
+                      </ng-container>
+
+                      <ng-template #noIpAddressTemplate>
+                        <span read-only [ngSwitch]="nic?.ipAllocationMode">
+                          <ng-container *ngSwitchCase="ipAllocationModeEnum.Dhcp">
+                            {{ textContent.nics.dhcpLabel }}
+                          </ng-container>
+                          <ng-container *ngSwitchDefault>
+                            {{ textContent.nics.staticLabel }}
+                          </ng-container>
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
+                </mcs-accordion-panel>
+              </mcs-accordion>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <!-- VM Medias -->
+          <div class="grid-column container-wrapper break-on-small">
+            <h4 class="container-header">
+              <div class="form-field-inline">
+                <span>{{ textContent.media.title }}</span>
+                <ng-container *mcsAccessControl="['VmEdit']">
+                  <a *mcsIsSelfManagedServer="server"
+                    (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
+                    [disabled]="!attachMediaEnabled"
+                    mcsEventTracker="attach-media-option"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                    {{ textContent.media.attach }}
+                  </a>
+                </ng-container>
+              </div>
+            </h4>
+
+            <mcs-data-status [dataStatusFactory]="mediaStatusFactory">
+              <mcs-data-status-success mcsDataSuccess>
+                <mcs-list spacing="xsmall">
+                  <mcs-list-item *ngFor="let media of serverMedias" class="form-field-inline">
+                    <ng-container *mcsAccessControl="['VmEdit']">
+                      <ng-container *mcsIsSelfManagedServer="server">
+                        <mcs-icon *ngIf="mediaIsDetaching(media)"
+                          [key]="spinnerIconKey" size="small"
+                          [mcsTooltip]="jobSummaryInfo"></mcs-icon>
+
+                        <mcs-icon *ngIf="!mediaIsDetaching(media)" cursor="pointer"
+                          [key]="removeIconKey" size="small"
+                          (click)="showDetachMediaDialog(media)"
+                          [mcsTooltip]="textContent.media.detach"
+                          mcsEventTracker="detach-media-option"
+                          mcsEventCategory="server"
+                          mcsEventLabel="server-details-page"></mcs-icon>
+                      </ng-container>
+                    </ng-container>
+                    <span>{{ media.name }}</span>
+                  </mcs-list-item>
+                </mcs-list>
+              </mcs-data-status-success>
+
+              <mcs-data-status-in-progress mcsDataInProgress>
+                <span>{{ textContent.media.loadingContent }}</span>
+              </mcs-data-status-in-progress>
+
+              <mcs-data-status-empty mcsDataEmpty>
+                <span>{{ textContent.media.noContentMessage }}</span>
+              </mcs-data-status-empty>
+
+              <mcs-data-status-error mcsDataError>
+                <span>{{ textContent.media.errorGettingMedias }}</span>
+              </mcs-data-status-error>
+            </mcs-data-status>
+          </div>
+
+          <!-- VM Support Identifiers -->
+          <div class="grid-column container-wrapper break-on-small">
+            <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
+            <mcs-list spacing="xsmall">
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.supportIdentifiers.vdc }}:</span>
+                <span [innerHTML]="server.platform?.resourceName | mcsDataLabel"></span>
+              </mcs-list-item>
+
+              <mcs-list-item *ngIf="server.serviceId" class="form-field-inline">
+                <span>{{ textContent.supportIdentifiers.macViewServiceId }}:</span>
+                <span>{{ server.serviceId }}</span>
+              </mcs-list-item>
+
+              <mcs-list-item class="form-field-inline">
+                <span>{{ textContent.supportIdentifiers.vmWareId }}:</span>
+                <span [innerHTML]="server.instanceId | mcsDataLabel"></span>
+              </mcs-list-item>
             </mcs-list>
           </div>
         </div>
-
-        <div class="grid-column container-wrapper break-on-small">
-          <h4 class="container-header">{{ textContent.nics.title }}</h4>
-          <div>
-            <div *ngIf="!hasNics">
-              <span read-only>
-                {{ textContent.nics.noContentMessage }}
-              </span>
-            </div>
-
-            <!-- Server NICs -->
-            <mcs-accordion *ngIf="hasNics" [multi]="true">
-              <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
-                [expanded]="i === 0">
-                <mcs-accordion-panel-header mcsPanelHeaderDef>
-                  <span>{{ nic.name }}</span>
-                  <span *ngIf="nic.isPrimary">({{ textContent.nics.primary }})</span>
-                </mcs-accordion-panel-header>
-                <div class="block-items-xsmall">
-
-                  <ng-template #noIpAddressTemplate>
-                    <span read-only [ngSwitch]="nic?.ipAllocationMode">
-                      <ng-container *ngSwitchCase="ipAllocationModeEnum.Dhcp">
-                        {{ textContent.nics.dhcpLabel }}
-                      </ng-container>
-                      <ng-container *ngSwitchDefault>
-                        {{ textContent.nics.staticLabel }}
-                      </ng-container>
-                    </span>
-                  </ng-template>
-
-                  <div class="form-field-inline">
-                    <span>{{ textContent.nics.ipAllocationMode }}:</span>
-                    <span>{{ nic.ipAllocationModeLabel }}</span>
-                  </div>
-                  <div class="form-field-inline">
-                    <span>{{ textContent.nics.ipAddresses }}:</span>
-                    <ng-container *ngIf="getNicIpAddresses(nic); else noIpAddressTemplate">
-                      <mcs-list spacing="auto">
-                        <mcs-list-item *ngFor="let item of getNicIpAddresses(nic)">
-                          {{ item }}
-                        </mcs-list-item>
-                      </mcs-list>
-                    </ng-container>
-                  </div>
-                </div>
-              </mcs-accordion-panel>
-            </mcs-accordion>
-          </div>
-        </div>
       </div>
 
-      <div class="grid-row">
-        <div class="grid-column container-wrapper break-on-small">
-          <h4 class="container-header">
-            {{ textContent.media.title }}
-            <span [mcsTooltip]="textContent.media.noAvailableMedia"
-              [mcsTooltipShow]="!hasAvailableMedia">
-              <ng-container *mcsAccessControl="['VmEdit']">
-                <a flex="auto" *mcsIsSelfManagedServer="server" (click)="onAttachMedia()"
-                  [disabled]="attachMediaIsDisabled"
-                  mcsEventTracker="attach-media-option"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-details-page">
-                  {{ textContent.media.attach }}
-                </a>
+      <!-- Manage Server Scale -->
+      <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageScale" class="container-wrapper">
+        <h4 class="container-header">{{ textContent.manageScale.header }}</h4>
+        <p>{{ textContent.manageScale.description }}</p>
+        <div class="container-wrapper">
+          <div class="action-box" [disabled]="!server.executable">
+            <mcs-server-manage-scale [resource]="serverResource"
+              [serverCompute]="server.compute"
+              (dataChange)="onScaleChanged($event)">
+
+              <ng-container mcsManageScaleHeader>
+                <h4>Scaling {{ server.name }}</h4>
               </ng-container>
-            </span>
-          </h4>
+            </mcs-server-manage-scale>
 
-          <div *ngIf="!hasMedia">
-            <span read-only>{{ textContent.media.noContentMessage }}</span>
-          </div>
-          <mcs-list *ngIf="hasMedia" spacing="xsmall">
-            <!-- Media Items -->
-            <mcs-list-item *ngFor="let media of server.media" class="form-field-inline">
-              <span>{{ media.name }}</span>
-              <span *mcsAccessControl="['VmEdit']">
-                <ng-container *mcsIsSelfManagedServer="server">
-                  <ng-container *ngIf="media.isProcessing; else detachMedia">
-                    <mcs-icon [key]="spinnerIconKey" size="small" class="hidden-small"
-                      [mcsTooltip]="jobSummaryInfo" mcsTooltipPosition="right"></mcs-icon>
-                  </ng-container>
-                  <ng-template #detachMedia>
-                    <a (click)="onDetachMedia(media)"
-                      [disabled]="!server.executable"
-                      mcsEventTracker="detach-media-option"
-                      mcsEventCategory="server"
-                      mcsEventLabel="server-details-page">
-                      {{ textContent.media.detach }}
-                    </a>
-                  </ng-template>
-                </ng-container>
-              </span>
-            </mcs-list-item>
-          </mcs-list>
-        </div>
+            <mcs-data-status-warning *ngIf="server.isPoweredOn">
+              <span>{{ textContent.manageScale.warning }}</span>
+            </mcs-data-status-warning>
 
-        <div class="grid-column container-wrapper break-on-small">
-          <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
-          <mcs-list spacing="xsmall">
-            <!-- VDC -->
-            <mcs-list-item class="form-field-inline">
-              <span>{{ textContent.supportIdentifiers.vdc }}:</span>
-              <span [innerHTML]="server.platform?.resourceName | mcsDataLabel"></span>
-            </mcs-list-item>
-            <!-- MacView Service ID -->
-            <mcs-list-item *ngIf="server.serviceId" class="form-field-inline">
-              <span>{{ textContent.supportIdentifiers.macViewServiceId }}:</span>
-              <span>{{ server.serviceId }}</span>
-            </mcs-list-item>
-            <!-- VMWare ID -->
-            <mcs-list-item class="form-field-inline">
-              <span>{{ textContent.supportIdentifiers.vmWareId }}:</span>
-              <span [innerHTML]="server.instanceId | mcsDataLabel"></span>
-            </mcs-list-item>
-          </mcs-list>
-        </div>
-      </div>
-    </div>
-
-    <ng-container *mcsAccessControl="['VmEdit']">
-      <ng-container *mcsIsSelfManagedServer="server">
-        <div *ngIf="scaleOptionIsVisible" class="server-performance-scale">
-          <div class="container-wrapper" [disabled]="!server.executable">
-            <h4 class="container-header">Scaling {{ server.name }}</h4>
-            <mcs-server-performance-scale *ngIf="availableMemoryMB && availableCpu"
-              [memoryMB]="serverMemoryMB" [cpuCount]="serverCpuCount"
-              [availableMemoryMB]="availableMemoryMB" [availableCpuCount]="availableCpu"
-              (scaleChanged)="onScaleChanged($event)">
-            </mcs-server-performance-scale>
-
-            <p *ngIf="isPoweredOn" class="horizontal-items-spacing-small"
-              display-flex="row" align-items="center" justify-content="center">
-              <mcs-icon [key]="warningIconKey" size="medium"></mcs-icon>
-              <span>{{ textContent.performanceScale.warning }}</span>
-            </p>
-
-            <div class="scaling" display-flex="row" align-items="center" justify-content="space-between">
-              <a class="text-underline"
-                (click)="cancelScale()"
+            <div class="action-items">
+              <a (click)="setViewMode(serverManagementViewEnum.None)"
                 mcsEventTracker="scale-cancel"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
-                {{ textContent.performanceScale.cancel }}</a>
+                {{ textContent.manageScale.cancel }}
+              </a>
 
-                <button class="scale" mcsButton id="ctaScaleServer" arrow="right"
-                  [disabled]="!hasUpdate" (click)="onClickScale()"
-                  mcsEventTracker="scale-option"
-                  mcsEventCategory="server"
-                  mcsEventLabel="server-details-page">
-                    {{ textContent.performanceScale.scale }}
-                </button>
+              <button mcsButton id="ctaScaleServer"
+                arrow="right" size="small"
+                [disabled]="!manageScale?.hasChanged"
+                (click)="updateScale()"
+                mcsEventTracker="scale-option"
+                mcsEventCategory="server"
+                mcsEventLabel="server-details-page">
+                {{ textContent.manageScale.scale }}
+              </button>
             </div>
           </div>
         </div>
+      </div>
 
-        <div *ngIf="isAttachMedia" [ngStyle]="{width: '300px'}">
-          <div class="container-wrapper" [disabled]="attachMediaIsDisabled">
-            <h4 class="container-header">{{ textContent.media.attachHeading }}</h4>
-            <mcs-form-field>
-              <mcs-select [placeholder]="textContent.media.mediaSelect.placeholder"
-                [(ngModel)]="selectedMedia">
-                <mcs-select-group [header]="textContent.media.mediaSelect.header">
-                  <mcs-select-item *ngFor="let media of resourceMediaList" [value]="media">
-                    {{ media.itemName }}
-                  </mcs-select-item>
-                </mcs-select-group>
-              </mcs-select>
-            </mcs-form-field>
+      <!-- Manage Server Media -->
+      <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageMedia" class="container-wrapper">
+        <h4 class="container-header">{{ textContent.media.manageHeader }}</h4>
+        <div class="container-wrapper">
+          <div class="action-box" [disabled]="!server.executable">
+            <mcs-server-manage-media [medias]="resourceMedias"
+              [(selectedMedia)]="selectedMedia">
+
+              <ng-container mcsManageMediaHeader>
+                <h4>{{ textContent.media.attachHeading }}</h4>
+              </ng-container>
+            </mcs-server-manage-media>
 
             <div class="action-items">
-              <a (click)="cancelAttachMedia()"
+              <a (click)="setViewMode(serverManagementViewEnum.None)"
                 mcsEventTracker="attach-media-cancel"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
                 {{ textContent.media.cancel }}
               </a>
 
-              <button mcsButton id="ctaAttachMedia" arrow="right" size="small"
-                [disabled]="!selectedMedia" (click)="attachMedia()"
+              <button mcsButton id="ctaAttachMedia"
+                arrow="right" size="small"
+                (click)="attachMedia(selectedMedia)"
+                [disabled]="!selectedMedia"
                 mcsEventTracker="attach-media"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
@@ -319,7 +337,7 @@
             </div>
           </div>
         </div>
-      </ng-container>
+      </div>
     </ng-container>
   </div>
 </div>

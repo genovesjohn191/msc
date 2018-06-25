@@ -31,13 +31,13 @@ import {
   ServerResource,
   ServerOperatingSystem,
   ServerServiceType,
-  ServerPerformanceScale,
   ServerManageStorage,
   ServerImageType,
   ServerCatalogItem,
   ServerCatalogItemType,
   ServerManageNetwork,
-  ServerStorage
+  ServerStorage,
+  ServerManageScale
 } from '../../models';
 import { CreateServerBase } from '../create-server.base';
 import { ServersOsRepository } from '../../servers-os.repository';
@@ -99,14 +99,6 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
     // Do something
   }
 
-  public get scaleAvailableMemoryMB(): number {
-    return this._serversService.computeAvailableMemoryMB(this.resource);
-  }
-
-  public get scaleAvailableCpuCount(): number {
-    return this._serversService.computeAvailableCpu(this.resource);
-  }
-
   public get scaleMemoryMB(): number {
     return CoreDefinition.CREATE_SERVER_MINIMUM_RAM;
   }
@@ -160,7 +152,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
    * Event that emits when the performance scale component has changed
    * @param serverScale Server Scale Result
    */
-  public onScaleChanged(serverScale: ServerPerformanceScale) {
+  public onScaleChanged(serverScale: ServerManageScale) {
     if (isNullOrEmpty(this.fcScale)) { return; }
     serverScale.valid ? this.fcScale.setValue(serverScale) : this.fcScale.reset();
   }

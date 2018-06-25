@@ -1,5 +1,6 @@
 // Form Field
-$field-bottom-margin: $space-medium;
+$form-field-bottom-margin: $space-medium;
+$form-field-inline-spacing: 8px;
 
 // Label
 $label-font: $base-font-bold;
@@ -14,14 +15,14 @@ $form-field-size-large: 400px;
 
 .basic-form, form {
   .field {
-    margin-bottom: $field-bottom-margin;
+    margin-bottom: $form-field-bottom-margin;
   }
 
   .inline-field {
     @include display-flex(row);
     @include align-items(flex-start);
     @include set-items-interval($space-large, horizontal);
-    margin-bottom: $field-bottom-margin;
+    margin-bottom: $form-field-bottom-margin;
   }
 
   span.label, label.label {
@@ -51,5 +52,11 @@ $form-field-size-large: 400px;
 .form-field-inline {
   @include display-flex(row);
   @include flex-wrap(wrap);
-  @include set-items-interval($space-xsmall, horizontal);
+  @include set-items-interval($form-field-inline-spacing, horizontal);
+}
+
+.form-field-block {
+  @include display-flex(column);
+  @include flex-wrap(wrap);
+  @include set-items-interval($form-field-inline-spacing);
 }

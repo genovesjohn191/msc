@@ -23,7 +23,8 @@ import {
   replacePlaceholder,
   isNullOrEmpty,
   animateFactory,
-  clearArrayRecord
+  clearArrayRecord,
+  unsubscribeSubject
 } from '../../../../utilities';
 import {
   McsTextContentProvider,
@@ -131,8 +132,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnDestroy() {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**

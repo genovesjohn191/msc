@@ -129,7 +129,19 @@ export class McsNotificationJobService implements McsInitializer {
       heartbeat_out: DEFAULT_HEARTBEAT_OUT,
       reconnect_delay: CoreDefinition.NOTIFICATION_CONNECTION_RETRY_INTERVAL
     } as StompConfig;
-    this._stompService.initAndConnect();
+    this._tryConnectToWebstomp();
+  }
+
+  /**
+   * Try to connect to webstomp, just wanna make sure the connection is clear
+   * and would not throw error in the log
+   */
+  private _tryConnectToWebstomp(): void {
+    try {
+      this._stompService.initAndConnect();
+    } catch (error) {
+      this._tryConnectToWebstomp();
+    }
   }
 
   /**

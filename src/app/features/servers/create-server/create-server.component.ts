@@ -49,8 +49,8 @@ import {
   ServerClone,
   ServerCreate,
   ServerCreateStorage,
-  ServerCreateNetwork,
-  serverPlatformTypeText
+  serverPlatformTypeText,
+  ServerCreateNic
 } from '../models';
 import { ServersService } from '../servers.service';
 import { ServersResourcesRepository } from '../servers-resources.repository';
@@ -269,7 +269,7 @@ export class CreateServerComponent implements
     serverCreate.storage.name = serverInput.serverManageStorage.storage.name;
     serverCreate.storage.sizeMB = serverInput.serverManageStorage.sizeMB;
     // Network
-    serverCreate.network = new ServerCreateNetwork();
+    serverCreate.network = new ServerCreateNic();
     serverCreate.network.name = serverInput.serverNetwork.network.name;
     serverCreate.network.ipAllocationMode = serverInput.serverNetwork.ipAllocationMode;
     serverCreate.network.ipAddress = serverInput.serverNetwork.customIpAddress;

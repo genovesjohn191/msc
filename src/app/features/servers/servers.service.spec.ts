@@ -14,11 +14,11 @@ import {
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerNic,
-  ServerManageNic,
-  ServerManageMedia,
+  ServerCreateNic,
   ServerCreate,
   ServerClone,
-  ServerOperatingSystem
+  ServerOperatingSystem,
+  ServerAttachMedia
 } from './models';
 import { ServersService } from './servers.service';
 import {
@@ -409,7 +409,7 @@ describe('ServersService', () => {
     it('should add the server network through API calls', () => {
       serversService.addServerNic(
         requestOptions.id,
-        new ServerManageNic()
+        new ServerCreateNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -435,7 +435,7 @@ describe('ServersService', () => {
       serversService.updateServerNic(
         requestOptions.id,
         networkId,
-        new ServerManageNic()
+        new ServerCreateNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -461,7 +461,7 @@ describe('ServersService', () => {
       serversService.deleteServerNic(
         requestOptions.id,
         networkId,
-        new ServerManageNic()
+        new ServerCreateNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -484,7 +484,7 @@ describe('ServersService', () => {
     it('should attach server media through API calls', () => {
       serversService.attachServerMedia(
         requestOptions.id,
-        new ServerManageMedia()
+        new ServerAttachMedia()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -510,7 +510,7 @@ describe('ServersService', () => {
       serversService.detachServerMedia(
         requestOptions.id,
         mediaId,
-        new ServerManageMedia()
+        new ServerAttachMedia()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);

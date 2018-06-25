@@ -100,17 +100,9 @@ describe('ServerManagementComponent', () => {
     it('should set the serverThumbnail value to undefined since the process is in progress', () => {
       expect(component.serverThumbnail).toBeUndefined();
     });
-
-    it('should set the thumbnailElement value', () => {
-      expect(component.thumbnailElement).toBeDefined();
-    });
   });
 
   describe('IconKey() | Properties', () => {
-    it('should get the warning icon key definition', () => {
-      expect(component.warningIconKey).toBe(CoreDefinition.ASSETS_SVG_WARNING);
-    });
-
     it('should get the spinner icon key definition', () => {
       expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
     });

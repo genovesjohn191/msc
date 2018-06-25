@@ -24,7 +24,6 @@ import {
 } from './models';
 import {
   isNullOrEmpty,
-  addOrUpdateArrayRecord,
   deleteArrayRecord
 } from '../../utilities';
 import { ResetPasswordFinishedDialogComponent } from './shared';
@@ -63,12 +62,27 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   /**
    * This will obtain the server nics values from API
    * and update the nics of the active server
-   * @param activeServer Active server to set storage device
+   * @param activeServer Active server to set the NICs
    */
   public findServerNics(activeServer: Server): Observable<ServerNic[]> {
     return this._serversApiService.getServerNics(activeServer.id)
       .map((response) => {
         activeServer.nics = !isNullOrEmpty(response.content) ?
+          response.content : new Array();
+        this.updateRecord(activeServer);
+        return response.content;
+      });
+  }
+
+  /**
+   * This will obtain the server medias values from API
+   * and update the media of the active server
+   * @param activeServer Active server to set the media
+   */
+  public findServerMedias(activeServer: Server): Observable<ServerMedia[]> {
+    return this._serversApiService.getServerMedias(activeServer.id)
+      .map((response) => {
+        activeServer.media = !isNullOrEmpty(response.content) ?
           response.content : new Array();
         this.updateRecord(activeServer);
         return response.content;
@@ -152,7 +166,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     this._notificationEvents.changeServerPowerStateEvent
       .subscribe(this._onPowerStateServer.bind(this));
 
-    this._notificationEvents.scaleServerEvent
+    this._notificationEvents.updateServerComputeEvent
       .subscribe(this._onScaleServer.bind(this));
 
     this._notificationEvents.attachServerMediaEvent
@@ -304,33 +318,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      let media = new ServerMedia();
-      media.name = job.clientReferenceObject.mediaName;
-      media.isProcessing = activeServer.isProcessing;
-
-      if (!media.isProcessing) {
-        // Delete the mocked media record from the list
-        deleteArrayRecord(activeServer.media, (targetMedia) => {
-          return isNullOrEmpty(targetMedia.id);
-        }, 1);
-      }
-
-      if (job.dataStatus === McsDataStatus.Success) {
-        let referenceObject = job.tasks[0].referenceObject;
-
-        if (!isNullOrEmpty(referenceObject.resourceId)) {
-          media.id = referenceObject.resourceId;
-        }
-      }
-
-      if (job.dataStatus !== McsDataStatus.Error) {
-        // Append a mock media record while job is processing
-        // Update the media list when job has completed
-        addOrUpdateArrayRecord(activeServer.media, media, false,
-          (_existingMedia: ServerMedia) => _existingMedia.id === media.id);
-      }
-
       this.updateRecord(activeServer);
     }
   }

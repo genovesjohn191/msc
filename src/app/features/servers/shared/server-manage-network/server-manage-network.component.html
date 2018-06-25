@@ -25,7 +25,7 @@
     {{ textContent.customSwitch }}</a>
 </div>
 
-<div [ngSwitch]="inputManageType" [ngStyle]="{height: '140px'}">
+<div [ngSwitch]="inputManageType" [ngStyle]="{'min-height': '140px'}">
   <!-- Ip address DHCP Mode -->
   <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Buttons" class="block-items-medium">
     <span>{{ textContent.buttonMessage }}</span>

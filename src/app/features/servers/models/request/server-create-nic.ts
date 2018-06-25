@@ -3,10 +3,10 @@ import {
   ServerIpAllocationModeSerialization
 } from '../enumerations/server-ip-allocation-mode.enum';
 import { JsonProperty } from 'json-object-mapper';
+import { McsApiJobRequestBase } from '../../../../core';
 
-export class ServerManageNic {
+export class ServerCreateNic extends McsApiJobRequestBase {
   public name: string;
-  public isPrimary: boolean;
 
   @JsonProperty({
     type: ServerIpAllocationMode,
@@ -15,5 +15,11 @@ export class ServerManageNic {
   })
   public ipAllocationMode: ServerIpAllocationMode;
   public ipAddress: string;
-  public clientReferenceObject: any;
+
+  constructor() {
+    super();
+    this.name = undefined;
+    this.ipAllocationMode = undefined;
+    this.ipAddress = undefined;
+  }
 }

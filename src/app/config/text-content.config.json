@@ -290,15 +290,23 @@
         "media": {
           "title": "Media",
           "attachHeading": "Attach media to your Server",
-          "mediaSelect": {
-            "header": "Media",
-            "placeholder": "Select a Media"
-          },
+          "manageHeader": "Select media",
           "attach": "Attach",
           "detach": "Detach",
           "cancel": "Cancel",
+          "loadingContent": "Loading list of media.",
+          "errorGettingMedias": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
           "noContentMessage": "No media is mounted for this server.",
           "noAvailableMedia": "No available media to attach."
+        },
+        "manageScale": {
+          "header": "Managed RAM and vCPU",
+          "description": "Scaling a server allows for adjustment of RAM and vCPU power.",
+          "warning": "Scaling the Server will require a restart.",
+          "scale": "Scale",
+          "cancel": "Cancel",
+          "scaling": "Scaling in progress.",
+          "loadingContent": "Loading server compute."
         },
         "supportIdentifiers": {
           "title": "Support Identifiers",
@@ -309,14 +317,6 @@
         "manageServices": {
           "title": "Manage Services",
           "description": "Ensure your server is fully protected. Enable and configure managed services for this server."
-        },
-        "performanceScale": {
-          "description": "Scale your server for improved and better performance.",
-          "instruction": "You can input a custom size for RAM and vCPU for scaling your VM. Alternatively, you can also click on select from slider and drag the slider to an appropriate size based on your needs.",
-          "warning": "Scaling the Server will require a restart.",
-          "scale": "Scale",
-          "cancel": "Cancel",
-          "scaling": "Scaling in Progress"
         }
       },
       "storage": {
@@ -554,7 +554,7 @@
           "ipAddressRangeError": "IP Address must be in the range ({{ip_range}})."
         }
       },
-      "performanceScale": {
+      "manageScale": {
         "sliderSwitch": "Select from slider",
         "customSwitch": "Enter custom size",
         "sliderMessage": "Select the RAM and CPU for this server from a slider.",
@@ -569,13 +569,13 @@
           "ramRequired": "Enter RAM value.",
           "ramNumeric": "Please enter a valid number.",
           "ramMin": "The minimum value that can be entered is {{min_value}}.",
-          "ramInvalid": "RAM must be a multiple of {{multiple}} MB.",
-          "ramMax": "Memory should not exceed {{available_memory}}.",
+          "ramMax": "Memory should not exceed {{max_value}}.",
+          "ramInvalid": "RAM must be a multiple of {{multiplier}} MB.",
           "cpuRequired": "Enter CPU count.",
           "cpuNumeric": "Please enter a valid number.",
           "cpuMin": "The minimum value that can be entered is {{min_value}}.",
-          "cpuMax": "The number of vCPUs should not exceed {{available_cpu}}.",
-          "cpuInvalid": "vCPU must be a multiple of {{multiple}}."
+          "cpuMax": "The number of vCPUs should not exceed {{max_value}}.",
+          "cpuInvalid": "vCPU must be a multiple of {{multiplier}}."
         }
       },
       "antiMalwareAddOn": {

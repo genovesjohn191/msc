@@ -2,194 +2,132 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
-  ElementRef,
-  Renderer2,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {
-  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
 import {
-  Observable,
-  Subscription
+  Subscription,
+  Subject,
+  Observable
 } from 'rxjs/Rx';
 import {
-  ServerPerformanceScale,
-  ServerThumbnail,
-  ServerServiceType,
-  ServerMedia,
-  ServerManageMedia,
-  ServerCommand,
-  ServerCatalogItem,
-  ServerIpAllocationMode,
-  ServerNic
-} from '../../models';
+  takeUntil,
+  startWith,
+  catchError
+} from 'rxjs/operators';
 import {
   McsTextContentProvider,
+  McsErrorHandlerService,
   CoreDefinition,
-  McsBrowserService,
-  McsDeviceType,
   McsDialogService,
-  McsErrorHandlerService
+  McsNotificationEventsService,
+  McsApiJob,
+  McsDataStatus,
+  McsDataStatusFactory
 } from '../../../../core';
 import {
-  getEncodedUrl,
-  refreshView,
   isNullOrEmpty,
   unsubscribeSafely,
+  animateFactory,
+  unsubscribeSubject,
+  getEncodedUrl,
   getSafeProperty
 } from '../../../../utilities';
 import { DetachMediaDialogComponent } from '../../shared';
+import {
+  ServerNic,
+  ServerMedia,
+  ServerIpAllocationMode,
+  ServerCatalogItemType,
+  ServerManageScale,
+  ServerUpdate,
+  ServerComputeSummary
+} from '../../models';
+import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
 import { ServersResourcesRepository } from '../../servers-resources.repository';
-import { ServerDetailsBase } from '../server-details.base';
+
+// Enumeration
+export enum ServerManagementView {
+  None = 0,
+  ManageScale = 1,
+  ManageMedia = 2
+}
 
 @Component({
   selector: 'mcs-server-management',
-  styleUrls: ['./server-management.component.scss'],
   templateUrl: './server-management.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    animateFactory.fadeIn
+  ],
+  host: {
+    'class': 'block'
+  }
 })
 
-export class ServerManagementComponent extends ServerDetailsBase
-  implements OnInit, OnDestroy {
-  @ViewChild('thumbnailElement')
-  public thumbnailElement: ElementRef;
-
+export class ServerManagementComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
+  public manageScale: ServerManageScale;
+  public scaleInProgress: boolean;
   public serversTextContent: any;
+  public serverThumbnail: string;
+  public serverManagementView: ServerManagementView;
+  public mediaStatusFactory: McsDataStatusFactory<ServerMedia[]>;
+  public computeStatusFactory: McsDataStatusFactory<ServerComputeSummary>;
+  public selectedMedia: ServerMedia;
 
-  public serverThumbnail: ServerThumbnail;
-  public serverThumbnailEncoding: string;
-  public selectedMedia: ServerCatalogItem;
+  private _newMedia: ServerMedia;
+  private _resourceMedias: ServerMedia[];
+  private _serverMediasSubscription: Subscription;
+  private _serverThumbnailSubscription: Subscription;
+  private _computeSubscription: Subscription;
+  private _destroySubject = new Subject<void>();
+  private _detachingMediaId: string;
 
-  public computeSubscription: Subscription;
-  private _notificationsChangeSubscription: Subscription;
-  private _scalingSubscription: Subscription;
-  private _paramsSubscription: Subscription;
-  private _deviceTypeSubscription: Subscription;
-
-  private _serverPerformanceScale: ServerPerformanceScale;
-  private _deviceType: McsDeviceType;
-  private _hasScaleParam: boolean;
-
-  private _isAttachMedia: boolean;
-  public get isAttachMedia(): boolean {
-    return this._isAttachMedia;
-  }
-  public set isAttachMedia(value: boolean) {
-    if (this._isAttachMedia !== value) {
-      this._isAttachMedia = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
-
-  public get serverMemoryMB(): number {
-    return getSafeProperty(this.server, (obj) => obj.compute.memoryMB);
-  }
-
-  public get serverCpuCount(): number {
-    return getSafeProperty(this.server,
-      (obj) => obj.compute.cpuCount * obj.compute.coreCount);
-  }
-
-  public get availableMemoryMB(): number {
-    return this._serversService.computeAvailableMemoryMB(this.serverResource);
-  }
-
-  public get availableCpu(): number {
-    return this._serversService.computeAvailableCpu(this.serverResource);
-  }
-
-  // Check if the current server's serverType is managed
-  public get isManaged(): boolean {
-    return this.server.serviceType === ServerServiceType.Managed;
-  }
-
-  public get consoleEnabled(): boolean {
-    return this.server.consoleEnabled &&
-      this._deviceType !== McsDeviceType.MobilePortrait;
-  }
-
-  public get warningIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_WARNING;
+  public get consoleIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_DOS_PROMPT_GREY;
   }
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public get consoleIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_DOS_PROMPT_GREY;
+  public get removeIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_TRASH;
   }
 
-  public get invalidStorage(): string {
-    return this._textProvider.content.servers.shared.storageScale.invalidStorage;
+  /**
+   * Returns the enum type of the server management view
+   */
+  public get serverManagementViewEnum(): any {
+    return ServerManagementView;
   }
 
-  public get scaleOptionIsVisible(): boolean {
-    return !isNullOrEmpty(this.server.id) && this._hasScaleParam && !this.isManaged;
-  }
-
-  public get isScaling(): boolean {
-    return this.server.isProcessing && this.server.commandAction === ServerCommand.Scale;
-  }
-
-  public get hasMedia(): boolean {
-    return !isNullOrEmpty(this.server.media);
-  }
-
-  public get hasUpdate(): boolean {
-    return this._serverPerformanceScale.valid && !isNullOrEmpty(this.server.compute)
-      && (this.serverMemoryMB < this._serverPerformanceScale.memoryMB
-        || this.serverCpuCount < this._serverPerformanceScale.cpuCount);
-  }
-
-  public get isPoweredOn(): boolean {
-    return this.server.isPoweredOn;
-  }
-
-  public get hasNics(): boolean {
-    return !isNullOrEmpty(this.server.nics);
-  }
-
-  public get hasStorageInformation(): boolean {
-    return !isNullOrEmpty(this.server.storageDevices);
-  }
-
-  public get hasAvailableMedia(): boolean {
-    return !isNullOrEmpty(this.resourceMediaList);
-  }
-
-  public get attachMediaIsDisabled(): boolean {
-    return !isNullOrEmpty(this.server.media)
-      || !this.server.executable
-      || !this.hasAvailableMedia;
-  }
-
+  /**
+   * Returns the enum type of the ip allocation mode
+   */
   public get ipAllocationModeEnum(): any {
     return ServerIpAllocationMode;
   }
 
   constructor(
+    private _activatedRoute: ActivatedRoute,
+    _changeDetectorRef: ChangeDetectorRef,
     _serversResourcesRepository: ServersResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
-    _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
-    private _renderer: Renderer2,
-    private _browserService: McsBrowserService,
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute,
-    private _dialogService: McsDialogService
+    private _dialogService: McsDialogService,
+    private _notificationEvents: McsNotificationEventsService
   ) {
     super(
       _serversResourcesRepository,
@@ -200,247 +138,403 @@ export class ServerManagementComponent extends ServerDetailsBase
       _textProvider,
       _errorHandlerService
     );
-    this.isAttachMedia = false;
-    this._serverPerformanceScale = new ServerPerformanceScale();
-    this._hasScaleParam = false;
+    this.manageScale = new ServerManageScale();
+    this.mediaStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.management;
     this.serversTextContent = this._textProvider.content.servers;
     this.initialize();
-    this._getScaleParam();
-    this._listenToDeviceChange();
+    this._registerJobEvents();
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     this.dispose();
-    unsubscribeSafely(this._notificationsChangeSubscription);
-    unsubscribeSafely(this._scalingSubscription);
-    unsubscribeSafely(this._deviceTypeSubscription);
-    unsubscribeSafely(this._paramsSubscription);
-
-    if (!isNullOrEmpty(this._serverPerformanceScale)) {
-      this._serverPerformanceScale = undefined;
-    }
+    unsubscribeSubject(this._destroySubject);
+    unsubscribeSafely(this._serverMediasSubscription);
+    unsubscribeSafely(this._serverThumbnailSubscription);
+    unsubscribeSafely(this._computeSubscription);
   }
 
-  public mergeIpAddresses(ipAddresses: string[]): string {
-    if (!ipAddresses || ipAddresses.length === 0) { return ''; }
-
-    return ipAddresses.join(', ');
+  /**
+   * Returns the resource media items by catalogs
+   *
+   * `@Note`: All medias created doesn't have id, be carefull in using them
+   */
+  public get resourceMedias(): ServerMedia[] {
+    return this._resourceMedias;
   }
 
-  public onClickViewConsole() {
-    if (!this.consoleEnabled) { return; }
+  /**
+   * Returns all the server medias including the newly created media as a mock data
+   */
+  public get serverMedias(): ServerMedia[] {
+    return isNullOrEmpty(this._newMedia) ?
+      this.server.media :
+      [...this.server.media, this._newMedia];
+  }
 
+  /**
+   * Returns true when the attach media button should be enabled
+   */
+  public get attachMediaEnabled(): boolean {
+    return isNullOrEmpty(this.serverMedias)
+      && this.server.executable
+      && !isNullOrEmpty(this.resourceMedias);
+  }
+
+  /**
+   * Event that emits when data in scale component has been changed
+   * @param manageScale Manage Scale content
+   */
+  public onScaleChanged(manageScale: ServerManageScale): void {
+    if (isNullOrEmpty(manageScale)) { return; }
+    this.manageScale = manageScale;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * View the console page
+   */
+  public viewConsole(): void {
     let windowFeatures = `directories=yes,titlebar=no,toolbar=no,
-    status=no,menubar=no,resizable=yes,scrollbars=yes`;
+      status=no,menubar=no,resizable=yes,scrollbars=yes`;
     window.open(`/console/${this.server.id}`, this.server.id, windowFeatures);
   }
 
-  public onScaleChanged(scale: ServerPerformanceScale) {
-    this._serverPerformanceScale = scale;
+  /**
+   * Returns true when the provided media is detaching
+   * @param media Media to be checked
+   */
+  public mediaIsDetaching(media: ServerMedia): boolean {
+    if (isNullOrEmpty(media)) { return false; }
+    return media.id === this._detachingMediaId;
   }
 
-  public showScaleOption(): void {
-    this._serversService.executeServerCommand({ server: this.server }, ServerCommand.Scale);
-  }
+  /**
+   * Updates the scale of the current server
+   */
+  public updateScale(): void {
+    if (isNullOrEmpty(this.server)) { return; }
 
-  public onClickScale(): void {
-    if (!this._serverPerformanceScale.valid || !this.hasUpdate) { return; }
-
-    // Update the Server CPU size scale
+    // Set initial server status so that the spinner will show up immediately
     this._serversService.setServerSpinner(this.server);
-    this._scalingSubscription = this._serverService.setPerformanceScale(
+    this.setViewMode(ServerManagementView.None);
+    this._serversService.updateServerCompute(
       this.server.id,
-      this._serverPerformanceScale,
-      this.server.powerState,
-      ServerCommand.Scale
-    )
+      {
+        memoryMB: this.manageScale.memoryMB,
+        cpuCount: this.manageScale.cpuCount,
+        clientReferenceObject: {
+          serverId: this.server.id,
+          memoryMB: this.manageScale.memoryMB,
+          cpuCount: this.manageScale.cpuCount
+        }
+      } as ServerUpdate)
+      .pipe(
+        catchError((error) => {
+          this._serversService.clearServerSpinner(this.server);
+          this._errorHandlerService.handleHttpRedirectionError(error);
+          return Observable.throw(error);
+        })
+      ).subscribe();
+  }
+
+  /**
+   * Shows the detach media dialog box
+   * @param media Media to be displayed in dialog box
+   */
+  public showDetachMediaDialog(media: ServerMedia): void {
+    if (isNullOrEmpty(media)) { return; }
+    let dialogRef = this._dialogService
+      .open(DetachMediaDialogComponent, {
+        data: media,
+        size: 'medium'
+      });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) { this.detachMedia(media); }
+    });
+  }
+
+  /**
+   * Attach media from the selected server
+   * @param media Media to be attached
+   */
+  public attachMedia(media: ServerMedia): void {
+    if (isNullOrEmpty(media)) { return; }
+    // Set reference object to be expected
+    let expectedJobObject = {
+      mediaName: media.name,
+      serverId: this.server.id
+    };
+
+    // Set initial server status so that the spinner will show up immediately
+    this._serversService.setServerSpinner(this.server);
+    this.setViewMode(ServerManagementView.None);
+    this._serversService.attachServerMedia(
+      this.server.id,
+      {
+        name: media.name,
+        clientReferenceObject: expectedJobObject
+      })
+      .pipe(
+        catchError((error) => {
+          this._serversService.clearServerSpinner(this.server);
+          this._errorHandlerService.handleHttpRedirectionError(error);
+          return Observable.throw(error);
+        })
+      ).subscribe();
+  }
+
+  /**
+   * Detaches the media from the selected server
+   * @param media Media to be detached
+   */
+  public detachMedia(media: ServerMedia): void {
+    if (isNullOrEmpty(media)) { return; }
+    // Set reference object to be expected
+    let expectedJobObject = {
+      mediaId: media.id,
+      serverId: this.server.id
+    };
+
+    // Set initial server status so that the spinner will show up immediately
+    this._serversService.setServerSpinner(this.server);
+    this._serversService.detachServerMedia(
+      this.server.id, media.id,
+      { clientReferenceObject: expectedJobObject })
+      .pipe(
+        catchError((error) => {
+          this._serversService.clearServerSpinner(this.server);
+          this._errorHandlerService.handleHttpRedirectionError(error);
+          return Observable.throw(error);
+        })
+      ).subscribe();
+  }
+
+  /**
+   * Sets the method type of server management type
+   * @param viewMode View mode to be set as displayed
+   */
+  public setViewMode(viewMode: ServerManagementView) {
+    this.serverManagementView = viewMode;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Returns the corresponding NICs of the server
+   * @param nic NIC to be checked if it has ip-addresses
+   */
+  public getNicIpAddresses(nic: ServerNic): string[] {
+    let nicAddresses = getSafeProperty(nic, (obj) => obj.ipAddresses);
+    let vCloudIpAddresses = getSafeProperty(nic, (obj) => obj.vCloudIpAddress);
+    return isNullOrEmpty(nicAddresses) ? [vCloudIpAddresses] : nicAddresses;
+  }
+
+  /**
+   * Event that emits when the server selection was changed
+   * `@Note:` Base implementation
+   */
+  protected serverSelectionChanged(): void {
+    this._getServerThumbnail();
+    this._getResourceCompute();
+    this._getResourceMedias();
+    this._getServerMedias();
+    this._checkScaleParamMode();
+  }
+
+  /**
+   * Get the current server thumbnail
+   */
+  private _getServerThumbnail(): void {
+    this.serverThumbnail = undefined;
+    if (isNullOrEmpty(this.server)) { return; }
+
+    this._serverThumbnailSubscription = this._serversService
+      .getServerThumbnail(this.server.id)
+      .subscribe((response) => {
+        let thumbnailDetails = getSafeProperty(response, (obj) => obj.content);
+        if (isNullOrEmpty(thumbnailDetails)) { return; }
+
+        this.serverThumbnail = getEncodedUrl(
+          thumbnailDetails.file,
+          thumbnailDetails.fileType,
+          thumbnailDetails.encoding);
+        this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  /**
+   * Get the server medias
+   */
+  private _getServerMedias(): void {
+    unsubscribeSafely(this._serverMediasSubscription);
+
+    this.mediaStatusFactory.setInProgress();
+    this._serverMediasSubscription = this._serversRepository
+      .findServerMedias(this.server)
       .catch((error) => {
-        this._serversService.clearServerSpinner(this.server);
+        // Handle common error status code
+        this.mediaStatusFactory.setError();
         return Observable.throw(error);
       })
       .subscribe(() => {
-        this._routeToServerManagement();
-      });
-  }
-
-  public cancelScale(): void {
-    this._serverPerformanceScale = new ServerPerformanceScale();
-    this._routeToServerManagement();
-  }
-
-  public onAttachMedia(): void {
-    if (this.isManaged) { return; }
-
-    this.isAttachMedia = true;
-  }
-
-  public cancelAttachMedia(): void {
-    this.isAttachMedia = false;
-    this.selectedMedia = undefined;
-  }
-
-  public onDetachMedia(media: ServerMedia): void {
-    let dialogRef = this._dialogService.open(DetachMediaDialogComponent, {
-      data: media,
-      size: 'medium'
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.detachMedia(media);
-      }
-    });
-  }
-
-  public attachMedia(): void {
-    if (this.attachMediaIsDisabled || isNullOrEmpty(this.selectedMedia)) { return; }
-
-    let mediaValues = new ServerManageMedia();
-    mediaValues.name = this.selectedMedia.itemName;
-    mediaValues.clientReferenceObject = {
-      serverId: this.server.id,
-      mediaName: this.selectedMedia.itemName,
-      powerState: this.server.powerState
-    };
-
-    this.selectedMedia = undefined;
-
-    // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(this.server);
-    this._serversService.attachServerMedia(this.server.id, mediaValues)
-      .catch((error) => {
-        this._serversService.clearServerSpinner(this.server);
-        return Observable.throw(error);
-      })
-      .subscribe((response) => {
-        if (!isNullOrEmpty(response)) {
-          this.isAttachMedia = false;
-        }
-      });
-  }
-
-  public getNicIpAddresses(nic: ServerNic): string[] {
-    if (isNullOrEmpty(nic)) { return undefined; }
-    let hasIpAddress = !isNullOrEmpty(nic.ipAddresses);
-    if (hasIpAddress) { return nic.ipAddresses; }
-    return isNullOrEmpty(nic.vCloudIpAddress) ? undefined : [nic.vCloudIpAddress];
-  }
-
-  public detachMedia(media: ServerMedia): void {
-    if (isNullOrEmpty(media)) { return; }
-
-    let mediaValues = new ServerManageMedia();
-    mediaValues.clientReferenceObject = {
-      serverId: this.server.id,
-      mediaId: media.id,
-      powerState: this.server.powerState
-    };
-
-    // Set initial server status so that the spinner will show up immediately
-    this._serversService.setServerSpinner(this.server);
-    this._serversService
-      .detachServerMedia(this.server.id, media.id, mediaValues)
-      .catch((error) => {
-        this._serversService.clearServerSpinner(this.server);
-        return Observable.throw(error);
-      })
-      .subscribe();
-  }
-
-  protected serverSelectionChanged(): void {
-    this._getServerCompute();
-    this._getServerThumbnail();
-
-    refreshView(() => {
-      if (!this.consoleEnabled) {
-        this._hideThumbnail();
-      }
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-  }
-
-  private _getScaleParam(): void {
-    this._paramsSubscription = this._activatedRoute.queryParams
-      .subscribe((params: ParamMap) => {
-        this._hasScaleParam = !isNullOrEmpty(params['scale']);
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  private _routeToServerManagement(): void {
-    this._router.navigate(['/servers/', this.server.id, 'management']);
-  }
-
-  private _getServerThumbnail(): void {
-    if (!this.server || !this.consoleEnabled) { return; }
-
-    // Hide thumbnail if it is already displayed in initial routing
-    this._hideThumbnail();
-
-    // Get the server thumbnail to be encoded and display in the image
-    this._serversService.getServerThumbnail(this.server.id)
-      .subscribe((response) => {
-        this.serverThumbnail = response.content;
-
-        if (this.serverThumbnail && this.thumbnailElement) {
-          this.serverThumbnailEncoding = getEncodedUrl(
-            this.serverThumbnail.file,
-            this.serverThumbnail.fileType,
-            this.serverThumbnail.encoding
-          );
-          this._showThumbnail();
-        }
-
-        this._changeDetectorRef.markForCheck();
-      });
-  }
-
-  private _showThumbnail(): void {
-    if (isNullOrEmpty(this.thumbnailElement)) { return; }
-
-    // Add thumbnail source
-    this._renderer.setAttribute(this.thumbnailElement.nativeElement,
-      'src', this.serverThumbnailEncoding);
-
-    // Adjust size of the thumbnail
-    this._setThumbnailSize();
-  }
-
-  private _setThumbnailSize(): void {
-    refreshView(() => {
-      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'block');
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-  }
-
-  private _hideThumbnail(): void {
-    refreshView(() => {
-      if (!this.thumbnailElement) { return; }
-
-      this._renderer.setStyle(this.thumbnailElement.nativeElement, 'display', 'none');
-      this._renderer.removeAttribute(this.thumbnailElement.nativeElement, 'src');
-    }, CoreDefinition.DEFAULT_VIEW_REFRESH_TIME);
-  }
-
-  private _listenToDeviceChange(): void {
-    this._deviceTypeSubscription = this._browserService.deviceTypeStream
-      .subscribe((deviceType) => {
-        this._deviceType = deviceType;
-        this._changeDetectorRef.markForCheck();
+        this.mediaStatusFactory.setSuccesfull(this.serverMedias);
       });
   }
 
   /**
    * Get the server resource compute
    */
-  private _getServerCompute(): void {
-    if (isNullOrEmpty(this.serverResource)) { return; }
-    this.computeSubscription = this._serversResourcesRespository
+  private _getResourceCompute(): void {
+    let resourceId = getSafeProperty(this.serverResource, (obj) => obj.id);
+    if (isNullOrEmpty(resourceId)) { return; }
+
+    this._computeSubscription = this._serversResourcesRespository
       .findResourceCompute(this.serverResource)
-      .subscribe(() => {
-        // Subscribe to update the compute of the selected server resource
+      .subscribe();
+  }
+
+  /**
+   * Get the resource media list
+   */
+  private _getResourceMedias(): void {
+    let resourceCatalogs = getSafeProperty(this.serverResource, (obj) => obj.catalogItems);
+    if (isNullOrEmpty(resourceCatalogs)) { return; }
+
+    this._resourceMedias = new Array();
+    resourceCatalogs.forEach((catalog) => {
+      if (catalog.itemType !== ServerCatalogItemType.Media) { return; }
+      let media = new ServerMedia();
+      media.name = catalog.itemName;
+      this._resourceMedias.push(media);
+    });
+  }
+
+  /**
+   * Check scale parameter mode
+   */
+  private _checkScaleParamMode(): void {
+    this._activatedRoute.queryParams
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((params: ParamMap) => {
+        if (!isNullOrEmpty(params['scale'])) {
+          this.setViewMode(ServerManagementView.ManageScale);
+        }
       });
+  }
+
+  /**
+   * Register jobs/notifications events
+   */
+  private _registerJobEvents(): void {
+    this._notificationEvents.attachServerMediaEvent
+      .pipe(startWith(null!), takeUntil(this._destroySubject))
+      .subscribe(this._onAttachMedia.bind(this));
+
+    this._notificationEvents.detachServerMediaEvent
+      .pipe(startWith(null!), takeUntil(this._destroySubject))
+      .subscribe(this._onDetachMedia.bind(this));
+
+    this._notificationEvents.updateServerComputeEvent
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(this._onUpdateServerCompute.bind(this));
+  }
+
+  /**
+   * Event that emits when updating scale server
+   * @param job Emitted job content
+   */
+  private _onUpdateServerCompute(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
+
+    switch (job.dataStatus) {
+      case McsDataStatus.InProgress:
+        this.scaleInProgress = true;
+        break;
+
+      case McsDataStatus.Success:
+        this._updateServerComputeByJob(job);
+        this.refreshServerResource();
+      case McsDataStatus.Error:
+      default:
+        this.scaleInProgress = false;
+        break;
+    }
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Update the server compute data based on the job
+   */
+  private _updateServerComputeByJob(job: McsApiJob): void {
+    let referenceObject = getSafeProperty(job, (obj) => obj.clientReferenceObject);
+    if (isNullOrEmpty(referenceObject)) { return; }
+
+    // TODO: This is just temporary measure while waiting for the
+    // /compute endpoint from API
+    this.server.compute.memoryMB = referenceObject.memoryMB;
+    if (this.server.compute.cpuCount > 1) {
+      this.server.compute.cpuCount = referenceObject.cpuCount;
+    } else {
+      this.server.compute.coreCount = referenceObject.cpuCount;
+    }
+  }
+
+  /**
+   * Event that emits when attaching media content
+   * @param job Emitted job content
+   */
+  private _onAttachMedia(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
+    switch (job.dataStatus) {
+      case McsDataStatus.InProgress:
+        this._addMockMedia(job);
+        break;
+
+      case McsDataStatus.Success:
+        this.refreshServerResource();
+      case McsDataStatus.Error:
+      default:
+        this._newMedia = undefined;
+        break;
+    }
+
+    // Update the media status factory to see the actual data
+    if (!isNullOrEmpty(this.mediaStatusFactory)) {
+      this.mediaStatusFactory.setSuccesfull(this.serverMedias);
+    }
+  }
+
+  /**
+   * Event that emits when detaching media content
+   * @param job Emitted job content
+   */
+  private _onDetachMedia(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
+
+    // Refresh the data when the detaching media was already completed
+    let detachingMediaEnded = !isNullOrEmpty(this._detachingMediaId)
+      && job.dataStatus === McsDataStatus.Success;
+    if (detachingMediaEnded) { this.refreshServerResource(); }
+
+    // Set the inprogress media ID to be checked
+    this._detachingMediaId = job.dataStatus === McsDataStatus.InProgress ?
+      job.clientReferenceObject.mediaId : undefined;
+  }
+
+  /**
+   * Add mock media for the server
+   * @param job Emitted job content
+   */
+  private _addMockMedia(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
+
+    // Mock media data based on job response
+    this._newMedia = new ServerMedia();
+    this._newMedia.name = job.clientReferenceObject.mediaName;
+    this._changeDetectorRef.markForCheck();
   }
 }

@@ -8,7 +8,8 @@ import {
   McsApiRequestParameter,
   McsApiJob,
   McsAuthenticationIdentity,
-  McsLoggerService
+  McsLoggerService,
+  McsApiJobRequestBase
 } from '../../core/';
 import {
   serializeObjectToJson,
@@ -34,10 +35,11 @@ import {
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
   ServerNic,
-  ServerManageNic,
-  ServerManageMedia,
+  ServerCreateNic,
   ServerSnapshot,
-  ServerCreateSnapshot
+  ServerCreateSnapshot,
+  ServerMedia,
+  ServerAttachMedia
 } from './models';
 
 /**
@@ -521,7 +523,7 @@ export class ServersService {
    */
   public addServerNic(
     serverId: any,
-    nicData: ServerManageNic
+    nicData: ServerCreateNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
@@ -553,7 +555,7 @@ export class ServersService {
   public updateServerNic(
     serverId: any,
     nicId: any,
-    nicData: ServerManageNic
+    nicData: ServerCreateNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
@@ -585,7 +587,7 @@ export class ServersService {
   public deleteServerNic(
     serverId: any,
     nicId: any,
-    nicData: ServerManageNic
+    nicData: ServerCreateNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics/${nicId}`;
@@ -608,6 +610,29 @@ export class ServersService {
   }
 
   /**
+   * This will get the server medias from the API
+   */
+  public getServerMedias(serverId: any): Observable<McsApiSuccessResponse<ServerMedia[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/media`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .finally(() => {
+        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+      })
+      .map((response) => {
+        // Deserialize json reponse
+        let apiResponse = McsApiSuccessResponse
+          .deserializeResponse<ServerMedia[]>(ServerMedia, response);
+
+        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+        this._loggerService.traceInfo(`converted response:`, apiResponse);
+        return apiResponse;
+      });
+  }
+
+  /**
    * Attaching server media
    * *Note: This will send a job (notification)
    *
@@ -616,11 +641,11 @@ export class ServersService {
    */
   public attachServerMedia(
     serverId: any,
-    mediaData: ServerManageMedia
+    mediaDetails: ServerAttachMedia
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/media`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(mediaData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(mediaDetails);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
       .finally(() => {
@@ -644,16 +669,16 @@ export class ServersService {
    *
    * @param serverId Server Identification
    * @param mediaId Media Identification
-   * @param mediaData Server media data
+   * @param referenceObject Reference object to be returned from the job
    */
   public detachServerMedia(
     serverId: any,
     mediaId: any,
-    mediaData: ServerManageMedia
+    referenceObject?: McsApiJobRequestBase
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/media/${mediaId}`;
-    mcsApiRequestParameter.recordData = serializeObjectToJson(mediaData);
+    mcsApiRequestParameter.recordData = serializeObjectToJson(referenceObject);
 
     return this._mcsApiService.delete(mcsApiRequestParameter)
       .finally(() => {
@@ -1082,6 +1107,7 @@ export class ServersService {
 
   /**
    * Calculate the available memory based on the given resource
+   * @deprecated This should be returned from api the available memory
    * @param resource Resource where the calculation came from
    */
   public computeAvailableMemoryMB(resource: ServerResource): number {
@@ -1097,6 +1123,7 @@ export class ServersService {
 
   /**
    * Calculate the available cpu or core based on the given resource
+   * @deprecated This should be returned from api the available cpu
    * @param resource Resource where the calculation came from
    */
   public computeAvailableCpu(resource: ServerResource): number {

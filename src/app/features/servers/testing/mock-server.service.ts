@@ -15,7 +15,7 @@ import {
   ServerResource,
   ServerServiceType,
   ServerStorageDeviceUpdate,
-  ServerManageNic
+  ServerCreateNic
 } from '../models';
 
 export const mockServerService = {
@@ -138,7 +138,7 @@ export const mockServerService = {
   },
   addServerNetwork(
     _serverId: any,
-    _networkData: ServerManageNic
+    _networkData: ServerCreateNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
@@ -160,7 +160,7 @@ export const mockServerService = {
   updateServerNetwork(
     _serverId: any,
     _networkId: any,
-    _networkData: ServerManageNic
+    _networkData: ServerCreateNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
@@ -183,7 +183,7 @@ export const mockServerService = {
   deleteServerNetwork(
     _serverId: any,
     _networkId: any,
-    _networkData: ServerManageNic
+    _networkData: ServerCreateNic
   ): Observable<McsApiSuccessResponse<McsApiJob>> {
 
     let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();

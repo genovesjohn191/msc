@@ -4,6 +4,9 @@ import {
 } from '../../../../core';
 import { isNullOrEmpty } from '../../../../utilities';
 
+/**
+ * @deprecated Use the server-compute instead
+ */
 export class ServerComputeSummary {
   public cpuCount: number;
   public coreCount: number;

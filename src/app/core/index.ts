@@ -34,6 +34,7 @@ export * from './providers/mcs-assets.provider';
 export * from './providers/mcs-filter.provider';
 /** Models */
 export * from './models/request/mcs-api-search-key';
+export * from './models/request/mcs-api-job-request-base';
 export * from './models/request/mcs-api-request-parameter';
 export * from './models/response/mcs-api-error-response';
 export * from './models/response/mcs-api-success-response';

@@ -19,7 +19,7 @@ import {
 import {
   ServerNetwork,
   ServerNic,
-  ServerManageNic,
+  ServerCreateNic,
   ServerManageNetwork,
   ServerIpAllocationMode
 } from '../../models';
@@ -246,7 +246,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Add NIC to the current server
    */
   public addNic(): void {
-    let nicValues = new ServerManageNic();
+    let nicValues = new ServerCreateNic();
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
@@ -282,7 +282,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     dialogRef.afterClosed().subscribe((result) => {
       if (isNullOrEmpty(result)) { return; }
 
-      let nicValues = new ServerManageNic();
+      let nicValues = new ServerCreateNic();
       nicValues.name = this.selectedNic.logicalNetworkName;
       nicValues.clientReferenceObject = {
         serverId: this.server.id,
@@ -305,7 +305,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Updates the NIC data based on the selected NIC
    */
   public updateNic(): void {
-    let nicValues = new ServerManageNic();
+    let nicValues = new ServerCreateNic();
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;

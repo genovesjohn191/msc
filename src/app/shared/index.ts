@@ -4,6 +4,7 @@ export * from './shared.module';
 /** Shared */
 export * from './pipes';
 export * from './table';
+export * from './directives';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

@@ -1,6 +1,6 @@
 import { ServerClientObject } from './server-client-object';
 import { ServerCreateStorage } from './server-create-storage';
-import { ServerCreateNetwork } from './server-create-network';
+import { ServerCreateNic } from './server-create-nic';
 import {
   ServerImageType,
   ServerImageTypeSerialization
@@ -20,8 +20,8 @@ export class ServerCreate {
   @JsonProperty({ type: ServerCreateStorage })
   public storage: ServerCreateStorage;
 
-  @JsonProperty({ type: ServerCreateNetwork })
-  public network: ServerCreateNetwork;
+  @JsonProperty({ type: ServerCreateNic })
+  public network: ServerCreateNic;
 
   @JsonProperty({ type: ServerClientObject })
   public clientReferenceObject: ServerClientObject;

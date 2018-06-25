@@ -4,9 +4,10 @@ import { ServersComponent } from './servers.component';
 /** Shared */
 import {
   ServerCommandComponent,
-  ServerPerformanceScaleComponent,
   ServerManageStorageComponent,
   ServerManageNetworkComponent,
+  ServerManageMediaComponent,
+  ServerManageScaleComponent,
   ProvisioningNotificationsComponent,
   ResetPasswordDialogComponent,
   ResetPasswordFinishedDialogComponent,
@@ -88,9 +89,10 @@ import { SharedModule } from '../../shared';
     ServerNicsComponent,
     ServerServicesComponent,
     ServerBackupsComponent,
-    ServerPerformanceScaleComponent,
     ServerManageStorageComponent,
     ServerManageNetworkComponent,
+    ServerManageMediaComponent,
+    ServerManageScaleComponent,
     ServerProvisioningPageComponent,
     CreateServerComponent,
     NewServerComponent,
