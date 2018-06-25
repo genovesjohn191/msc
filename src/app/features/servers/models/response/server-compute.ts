@@ -4,6 +4,10 @@ import {
 } from '../../../../core';
 import { isNullOrEmpty } from '../../../../utilities';
 
+/**
+ * @deprecated this compute is for resource model /compute endpoint,
+ * planning to move it on resource
+ */
 export class ServerCompute {
   public cpuAllocation: number;
   public cpuReservation: number;

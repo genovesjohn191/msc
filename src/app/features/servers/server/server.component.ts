@@ -44,9 +44,11 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
+  getSafeProperty,
   unsubscribeSafely,
-  getSafeProperty
+  unsubscribeSubject
 } from '../../../utilities';
+import { ComponentHandlerDirective } from '../../../shared';
 import { ServersRepository } from '../servers.repository';
 import { ServersService } from '../servers.service';
 import { ServerService } from './server.service';
@@ -72,6 +74,9 @@ export class ServerComponent
 
   @ViewChild('search')
   public search: McsSearch;
+
+  @ViewChild(ComponentHandlerDirective)
+  public componentHandler: ComponentHandlerDirective;
 
   public textContent: any;
   public serversMap: Map<string, Server[]>;
@@ -107,10 +112,10 @@ export class ServerComponent
     private _errorHandlerService: McsErrorHandlerService
   ) {
     super(_router, _activatedRoute);
+    this._resourcesKeyMap = new Map();
     this.selectedServer = new Server();
     this.serversMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
-    this._resourcesKeyMap = new Map();
   }
 
   public ngOnInit() {
@@ -132,8 +137,7 @@ export class ServerComponent
   public ngOnDestroy() {
     super.onDestroy();
     unsubscribeSafely(this.serverSubscription);
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -143,7 +147,7 @@ export class ServerComponent
   public onServerSelect(_server: Server) {
     if (isNullOrEmpty(_server)) { return; }
 
-    this._setSelectedServerInfo(_server);
+    // this._setSelectedServerInfo(_server);
     this._changeDetectorRef.markForCheck();
     this.router.navigate(['/servers', _server.id]);
   }
@@ -235,13 +239,14 @@ export class ServerComponent
    */
   protected onParamIdChanged(id: string) {
     if (isNullOrEmpty(id)) { return; }
-    this._getServerById(id);
+    // We need to recreate the component in order for the
+    // component to generate new instance
+    if (!isNullOrEmpty(this.componentHandler)) {
+      this.componentHandler.recreateComponent();
+    }
 
-    // Set the selection iniatially when no selected item
-    // in order for the header to show it immediately
-    let serverExist = this._serversRepository.dataRecords
-      .find((server) => server.id === this.paramId);
-    this._setSelectedServerInfo(serverExist);
+    this._getServerById(id);
+    this._setSelectedServerById(id);
   }
 
   /**
@@ -292,8 +297,8 @@ export class ServerComponent
         return Observable.throw(error);
       })
       .subscribe((response) => {
-        this._setSelectedServerInfo(response);
         unsubscribeSafely(this.serverSubscription);
+        this._setSelectedServerById(response.id);
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -301,18 +306,26 @@ export class ServerComponent
   /**
    * This will set the selected server details every selection
    */
-  private _setSelectedServerInfo(selectedServer: Server): void {
-    if (isNullOrEmpty(selectedServer)) { return; }
-    this.selectedServer = selectedServer;
-    this._serverService.setSelectedServer(this.selectedServer);
+  private _setSelectedServerById(serverId: string): void {
+    if (isNullOrEmpty(serverId)) { return; }
 
-    this.selectedServerName = selectedServer.name;
+    // Set the selection of server based on its ID
+    let serverFound = this._serversRepository.dataRecords
+      .find((server) => server.id === serverId);
+    if (isNullOrEmpty(serverFound)) {
+      this.selectedServer = { id: serverId } as Server;
+      return;
+    }
+
+    this.selectedServer = serverFound;
+    this._serverService.setSelectedServer(this.selectedServer);
+    this.selectedServerName = this.selectedServer.name;
     let hasResourceName = !isNullOrEmpty(
-      getSafeProperty(selectedServer, (obj) => obj.platform.resourceName)
+      getSafeProperty(this.selectedServer, (obj) => obj.platform.resourceName)
     );
 
     let resourceName = (hasResourceName) ?
-      selectedServer.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
+      this.selectedServer.platform.resourceName : SERVER_LIST_GROUP_OTHERS;
     this.selectedGroupName = resourceName;
   }
 }

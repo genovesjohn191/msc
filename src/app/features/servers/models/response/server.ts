@@ -210,7 +210,6 @@ export class Server extends McsEntityBase {
    */
   public get consoleEnabled(): boolean {
     return this.isPoweredOn
-      && !this.isProcessing
       && !this.isSuspended;
   }
 

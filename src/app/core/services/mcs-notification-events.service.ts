@@ -39,7 +39,7 @@ export class McsNotificationEventsService {
   public changeServerPowerStateEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when scale server executed */
-  public scaleServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public updateServerComputeEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when attach server media executed */
   public attachServerMediaEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
@@ -155,7 +155,7 @@ export class McsNotificationEventsService {
           break;
 
         case McsJobType.UpdateServerCompute:
-          this.scaleServerEvent.next(notification);
+          this.updateServerComputeEvent.next(notification);
           break;
 
         case McsJobType.AttachServerMedia:

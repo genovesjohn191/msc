@@ -16,6 +16,7 @@ export class ServerService {
    * everytime there are new data from the selected server
    */
   public selectedServerStream: BehaviorSubject<Server>;
+  public selectedServer: Server;
 
   constructor(private _serversService: ServersService) {
     this.selectedServerStream = new BehaviorSubject<Server>(undefined);
@@ -56,6 +57,9 @@ export class ServerService {
    * @param server Server to be selected
    */
   public setSelectedServer(server: Server): void {
-    this.selectedServerStream.next(server);
+    if (this.selectedServer !== server) {
+      this.selectedServer = server;
+      this.selectedServerStream.next(server);
+    }
   }
 }

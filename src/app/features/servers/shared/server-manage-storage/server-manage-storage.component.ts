@@ -37,7 +37,8 @@ import {
   appendUnitSuffix,
   isNullOrEmpty,
   coerceNumber,
-  animateFactory
+  animateFactory,
+  unsubscribeSubject
 } from '../../../../utilities';
 
 @Component({
@@ -169,8 +170,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnDestroy() {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**

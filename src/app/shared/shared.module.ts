@@ -50,6 +50,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { ProgressBarModule } from './progress-bar/progress-bar.module';
 import { CapacityBarModule } from './capacity-bar/capacity-bar.module';
 import { PipesModule } from './pipes';
+import { DirectivesModule } from './directives';
 import { FileDownloadModule } from './file-download/file-download.module';
 import { EventTrackerModule } from './event-tracker/event-tracker.module';
 import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
@@ -61,6 +62,7 @@ import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
     FormsModule,
     ReactiveFormsModule,
     PipesModule,
+    DirectivesModule,
     RippleModule,
     LayoutModule,
     PopoverModule,
@@ -114,6 +116,7 @@ import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
     FormsModule,
     ReactiveFormsModule,
     PipesModule,
+    DirectivesModule,
     RippleModule,
     LayoutModule,
     PopoverModule,

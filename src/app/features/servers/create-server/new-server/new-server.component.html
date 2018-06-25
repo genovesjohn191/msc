@@ -80,16 +80,13 @@
 
   <!-- Server RAM -->
   <div class="field">
-    <mcs-server-performance-scale
-      [memoryMB]="scaleMemoryMB" [cpuCount]="scaleCpuCount"
-      [availableMemoryMB]="scaleAvailableMemoryMB" [availableCpuCount]="scaleAvailableCpuCount"
-      (scaleChanged)="onScaleChanged($event)"
-      [mcsContextualHelp]="textHelpContent.computeField">
-      <!--Performance scale contents on the left hand side (title and description)-->
-      <div title>
-        <span class="label no-line-height">{{ textContent.computeSizeLabel }}</span>
-      </div>
-    </mcs-server-performance-scale>
+    <mcs-server-manage-scale [resource]="resource"
+      (dataChange)="onScaleChanged($event)">
+
+      <ng-container mcsManageScaleHeader>
+        <h4>{{ textContent.computeSizeLabel }}</h4>
+      </ng-container>
+    </mcs-server-manage-scale>
   </div>
 
   <!-- Storage Management -->

@@ -24,7 +24,7 @@
   </mcs-form-field>
 </ng-container>
 
-<div *ngIf="hasAvailableMemory" [ngSwitch]="inputManageType" [ngStyle]="{height: '140px'}">
+<div *ngIf="hasAvailableMemory" [ngSwitch]="inputManageType" [ngStyle]="{'min-height': '140px'}">
   <!-- Slider selection mode -->
   <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
     <div class="space-bottom-large">

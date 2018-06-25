@@ -1,0 +1,92 @@
+<!-- Scale header and switcher -->
+<div class="space-between-inline-items">
+  <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
+  <a *ngIf="inputManageType === inputManageTypeEnum.Custom"
+    (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
+    {{ textContent.sliderSwitch }}</a>
+  <a *ngIf="inputManageType === inputManageTypeEnum.Slider"
+    (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
+    {{ textContent.customSwitch }}</a>
+</div>
+
+<div [ngSwitch]="inputManageType" [ngStyle]="{'min-height': '140px'}">
+  <!-- Slider selection mode -->
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
+    <p>
+      <span>{{ textContent.sliderMessage }}</span>
+      <span>This VDC has {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
+        RAM and {{ resourceAvailableCpu }} vCPU available.</span>
+    </p>
+
+    <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
+      [(ngModel)]="sliderValueIndex"
+      (change)="onSliderChanged($event)"></mcs-slider>
+    <div class="inline-items centered">
+      <strong>
+        {{ sliderValue?.memoryMB }} {{ textContent.ramUnit }} {{ textContent.ramLabel }} /
+        {{ sliderValue?.cpuCount }} {{ textContent.cpuUnit }}
+      </strong>
+    </div>
+  </div>
+
+  <!-- Custom scale mode -->
+  <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom">
+    <p>{{ textContent.customMessage }}</p>
+
+    <form [formGroup]="fgServerScale" class="block-items-small">
+      <mcs-form-field class="form-field-size-small">
+        <input mcsInput placeholder="Enter RAM" [formControl]="fcCustomMemory">
+        <mcs-suffix mcsSuffix>{{ textContent.ramUnit }}</mcs-suffix>
+
+        <mcs-hint mcsHint align="start">
+          {{ textContent.maximumRam }}: {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
+        </mcs-hint>
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.ramRequired }}
+        </mcs-error>
+        <mcs-error mcsError errorState="numeric">
+          {{ textContent.errors.ramNumeric }}
+        </mcs-error>
+        <mcs-error mcsError errorState="min">
+          {{ textContent.errors.ramMin |
+             mcsTextPlaceholder: 'min_value': serverMemoryUsedMB }}
+        </mcs-error>
+        <mcs-error mcsError errorState="max">
+          {{ textContent.errors.ramMax |
+             mcsTextPlaceholder: 'max_value': resourceAvailableMemoryMB }}
+        </mcs-error>
+        <mcs-error mcsError errorState="memoryInvalid">
+          {{ textContent.errors.ramInvalid |
+             mcsTextPlaceholder: 'multiplier': '2048' }}
+        </mcs-error>
+      </mcs-form-field>
+
+      <mcs-form-field class="form-field-size-small">
+        <input mcsInput placeholder="Enter CPU" [formControl]="fcCustomCpu">
+        <mcs-suffix mcsSuffix>{{ textContent.cpuUnit }}</mcs-suffix>
+
+        <mcs-hint mcsHint align="start">
+          {{ textContent.maximumCpu }}: {{ resourceAvailableCpu }} vCPU
+        </mcs-hint>
+        <mcs-error mcsError errorState="required">
+          {{ textContent.errors.cpuRequired }}
+        </mcs-error>
+        <mcs-error mcsError errorState="numeric">
+          {{ textContent.errors.cpuNumeric }}
+        </mcs-error>
+        <mcs-error mcsError errorState="min">
+          {{ textContent.errors.cpuMin |
+              mcsTextPlaceholder: 'min_value': serverCpuUsed }}
+        </mcs-error>
+        <mcs-error mcsError errorState="max">
+          {{ textContent.errors.cpuMax |
+              mcsTextPlaceholder: 'max_value': resourceAvailableCpu }}
+        </mcs-error>
+        <mcs-error mcsError errorState="cpuInvalid">
+          {{ textContent.errors.cpuInvalid |
+              mcsTextPlaceholder: 'multiplier': '2' }}
+        </mcs-error>
+      </mcs-form-field>
+    </form>
+  </div>
+</div>

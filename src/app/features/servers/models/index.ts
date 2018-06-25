@@ -5,11 +5,10 @@ export * from './request/server-create';
 export * from './request/server-rename';
 export * from './request/server-clone';
 export * from './request/server-create-storage';
-export * from './request/server-create-network';
+export * from './request/server-create-nic';
 export * from './request/server-client-object';
 export * from './request/server-create-snapshot';
-export * from './request/server-manage-nic';
-export * from './request/server-manage-media';
+export * from './request/server-attach-media';
 
 export * from './response/server';
 export * from './response/server-vmware-tools';
@@ -42,6 +41,7 @@ export * from './response/server-hids-options';
 
 /** Other Models that are use inside server component */
 export * from './server-performance-scale';
+export * from './server-manage-scale';
 export * from './server-manage-storage';
 export * from './server-manage-network';
 export * from './server-create-details';
