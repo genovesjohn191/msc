@@ -12,7 +12,6 @@ export * from './request/server-attach-media';
 
 export * from './response/server';
 export * from './response/server-vmware-tools';
-export * from './response/server-virtual-machine';
 export * from './response/server-vapp';
 export * from './response/server-thumbnail';
 export * from './response/server-storage';

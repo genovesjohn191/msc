@@ -19,8 +19,8 @@
     </p>
 
     <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
-      [(ngModel)]="sliderValueIndex"
-      (change)="onSliderChanged($event)"></mcs-slider>
+      [ngModel]="sliderValueIndex"
+      (ngModelChange)="onSliderChanged($event)"></mcs-slider>
     <div class="inline-items centered">
       <strong>
         {{ sliderValue?.memoryMB }} {{ textContent.ramUnit }} {{ textContent.ramLabel }} /

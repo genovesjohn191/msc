@@ -60,7 +60,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   // Forms
   public fgServerStorage: FormGroup;
-  public fcSliderStorage: FormControl;
+  public fcSelectStorages: FormControl;
   public fcCustomStorage: FormControl;
 
   @Output()
@@ -164,6 +164,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public ngOnChanges(changes: SimpleChanges) {
     let storagesChange = changes['storages'];
     if (!isNullOrEmpty(storagesChange)) {
+      this.selectedStorage = undefined;
       this._setSelectedStorage();
       this._setCustomStorageValue();
     }
@@ -211,16 +212,19 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    */
   private _setSelectedStorage(): void {
     if (isNullOrEmpty(this.storages)) { return; }
-    let hasSelectedStorage = !isNullOrEmpty(this.selectedStorage)
-      && !isNullOrEmpty(this.storages.find((storage) => storage === this.selectedStorage));
-    if (hasSelectedStorage) { return; }
+    let selectedStorageExist = this.storages.find((storage) => storage === this.selectedStorage);
+    if (!isNullOrEmpty(selectedStorageExist)) { return; }
 
-    this.selectedStorage = this.storages[0];
-    if (!this.hasAvailableMemory) {
-      Promise.resolve().then(() => {
-        this.fcSliderStorage.markAsTouched();
-      });
-    }
+    Promise.resolve().then(() => {
+      if (!isNullOrEmpty(this.fcSelectStorages)) {
+        this.fcSelectStorages.setValue(this.storages[0]);
+
+        let availableMemoryExceeded = !this.hasAvailableMemory;
+        if (availableMemoryExceeded) {
+          this.fcSelectStorages.markAsTouched();
+        }
+      }
+    });
   }
 
   /**
@@ -256,12 +260,17 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       )
     ]);
 
-    this.fcSliderStorage = new FormControl('', [
+    this.fcSelectStorages = new FormControl('', [
       CoreValidators.custom(
         this._maxStorageChecking.bind(this),
         'storageAvailable'
       )
     ]);
+
+    // Set the actual selected in case of storage selection changed
+    this.fcSelectStorages.valueChanges
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe((value) => this.selectedStorage = value);
 
     // Notify data changed for every changes made in the status
     this.fcCustomStorage.statusChanges

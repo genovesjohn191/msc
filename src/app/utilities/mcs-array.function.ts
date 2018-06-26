@@ -10,6 +10,8 @@ import {
  * @param firstArray First Array Record (Old Record for comparison)
  * @param secondArray Second Array Record (This must be updated)
  * @param predicate Rules on how to conduct the merging
+ *
+ * `@Note`: This will return the instance of the previous record
  */
 export function mergeArrays<T>(
   firstArray: T[],
