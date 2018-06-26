@@ -190,8 +190,12 @@ export class McsNotificationJobService implements McsInitializer {
    * Releases the socket listeners
    */
   private _disconnectStomp(): void {
-    if (!this._stompService.connected()) { return; }
-    this._stompService.disconnect();
+    try {
+      if (!this._stompService.connected()) { return; }
+      this._stompService.disconnect();
+    } catch (error) {
+      this._disconnectStomp();
+    }
   }
 
   /**
