@@ -44,6 +44,11 @@ export function getDomainName(url) {
   let hostName = getHostName(url);
   let domain = hostName;
 
+  // Check for local dev url and return it immediately
+  let regExpression = new RegExp(/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/);
+  if (regExpression.test(domain)) { return domain; }
+
+  // Split url to get the actual domain i.e: macquariecloudservices
   if (!isNullOrEmpty(hostName)) {
     let parts = hostName.split('.').reverse();
 

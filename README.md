@@ -55,6 +55,11 @@ After you have installed all dependencies you can now run the app. Run `npm run 
 
  `npm run server:prod`
 
+### Serv from Localhost
+Append this line `--inline --port 8080 --host 10.3.155.169 --content-base`
+to `webpack-server-dev` and
+execute `npm start`
+
 ## Other commands
 ### Development
 `npm run build:dev`
