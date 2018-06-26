@@ -10,6 +10,7 @@ window.ENV_CONFIG = {
   logoutUrl: 'MCS_LOGOUT_URL',
   enablePassingJwtInUrl: 'MCS_ENABLE_PASSING_JWT_IN_URL',
   jwtCookieName: 'MCS_JWT_COOKIE_NAME',
+  jwtRefreshTokenCookieName: 'MCS_JWT_REFRESH_TOKEN_COOKIE_NAME',
   imageRoot: 'MCS_IMAGE_ROOT',
   iconRoot: 'MCS_ICON_ROOT',
   ek: 'MCS_EK'

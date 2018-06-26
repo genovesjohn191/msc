@@ -21,6 +21,7 @@ import {
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiCompany } from '../models/response/mcs-api-company';
 import { McsCookieService } from './mcs-cookie.service';
+import { McsHttpMethod } from '../enumerations/mcs-http-method.enum';
 
 /**
  * Macquarie Portal Api Service class
@@ -42,6 +43,7 @@ export class McsApiService {
   }
 
   private _jwtCookieName: string;
+  private _jwtRefreshTokenCookieName: string;
 
   constructor(
     private _httpClient: HttpClient,
@@ -50,6 +52,8 @@ export class McsApiService {
   ) {
     this._errorResponseStream = new Subject<Response | any>();
     this._jwtCookieName = resolveEnvVar('JWT_COOKIE_NAME', CoreDefinition.COOKIE_AUTH_TOKEN);
+    this._jwtRefreshTokenCookieName =
+      resolveEnvVar('JWT_REFRESH_TOKEN_COOKIE_NAME', CoreDefinition.COOKIE_REFRESH_TOKEN);
   }
 
   /**
@@ -61,7 +65,7 @@ export class McsApiService {
     return this._httpClient.get(
       this.getFullUrl(apiRequest.endPoint),
       {
-        headers: this._getHeaders(apiRequest.optionalHeaders),
+        headers: this._getHeaders(McsHttpMethod.Get, apiRequest.optionalHeaders),
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
@@ -78,7 +82,7 @@ export class McsApiService {
       this.getFullUrl(apiRequest.endPoint),
       apiRequest.recordData,
       {
-        headers: this._getHeaders(apiRequest.optionalHeaders),
+        headers: this._getHeaders(McsHttpMethod.Post, apiRequest.optionalHeaders),
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
@@ -96,7 +100,7 @@ export class McsApiService {
       this.getFullUrl(apiRequest.endPoint),
       apiRequest.recordData,
       {
-        headers: this._getHeaders(apiRequest.optionalHeaders),
+        headers: this._getHeaders(McsHttpMethod.Patch, apiRequest.optionalHeaders),
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
@@ -113,7 +117,7 @@ export class McsApiService {
       this.getFullUrl(apiRequest.endPoint),
       apiRequest.recordData,
       {
-        headers: this._getHeaders(apiRequest.optionalHeaders),
+        headers: this._getHeaders(McsHttpMethod.Put, apiRequest.optionalHeaders),
         responseType: apiRequest.responseType
       })
       .catch((error) => this.handleServerError(error));
@@ -129,7 +133,7 @@ export class McsApiService {
       'DELETE',
       this.getFullUrl(apiRequest.endPoint),
       {
-        headers: this._getHeaders(apiRequest.optionalHeaders),
+        headers: this._getHeaders(McsHttpMethod.Delete, apiRequest.optionalHeaders),
         body: apiRequest.recordData,
         responseType: apiRequest.responseType
       })
@@ -168,12 +172,17 @@ export class McsApiService {
    * Get Headers Value
    * @param {Headers} optHeaders Optional Header
    */
-  private _getHeaders(optHeaders?: Map<string, any>): any {
+  private _getHeaders(httpMethod: McsHttpMethod, optHeaders?: Map<string, any>): any {
     let headers = new Map<string, any>();
 
     this._setDefaultHeaders(headers);
     this._setAccountHeader(headers);
     this._setAuthorizationHeader(headers);
+
+    if (httpMethod !== McsHttpMethod.Get) {
+      this._setRefreshTokenHeader(optHeaders);
+    }
+
     this._setOptionalHeaders(headers, optHeaders);
 
     // Return the converted headers
@@ -223,9 +232,26 @@ export class McsApiService {
    */
   private _setAuthorizationHeader(headers: Map<string, any>) {
     let authToken = this._cookieService.getItem(this._jwtCookieName);
+
     if (authToken) {
       headers.set(CoreDefinition.HEADER_AUTHORIZATION,
         `${CoreDefinition.HEADER_BEARER} ${authToken}`);
+    }
+  }
+
+  /**
+   * Set setAuthorizationHeaders
+   *
+   * `@Note:` This will automatically navigate to login page
+   * when cookie is empty because the API will throw error if
+   * no token provided
+   * @param {Headers} headers Header Instance
+   */
+  private _setRefreshTokenHeader(headers: Map<string, any>) {
+    let refreshToken = this._cookieService.getItem(this._jwtRefreshTokenCookieName);
+
+    if (refreshToken) {
+      headers.set(CoreDefinition.HEADER_REFRESH_TOKEN, refreshToken);
     }
   }
 

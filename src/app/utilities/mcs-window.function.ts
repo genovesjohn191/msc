@@ -5,6 +5,7 @@ type environmentName =
   'LOGIN_URL' |
   'LOGOUT_URL' |
   'JWT_COOKIE_NAME' |
+  'JWT_REFRESH_TOKEN_COOKIE_NAME' |
   'ENABLE_PASSING_JWT_IN_URL' |
   'SENTRY_DSN' |
   'IMAGE_ROOT' |
@@ -38,6 +39,9 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
       break;
     case 'JWT_COOKIE_NAME':
       overrideValue = window['ENV_CONFIG'].jwtCookieName;
+      break;
+    case 'JWT_REFRESH_TOKEN_COOKIE_NAME':
+      overrideValue = window['ENV_CONFIG'].jwtRefreshTokenCookieName;
       break;
     case 'ENABLE_PASSING_JWT_IN_URL':
       overrideValue = window['ENV_CONFIG'].enablePassingJwtInUrl;

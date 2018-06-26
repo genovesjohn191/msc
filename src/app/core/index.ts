@@ -68,6 +68,7 @@ export * from './enumerations/mcs-company-status.enum';
 export * from './enumerations/mcs-unit-type.enum';
 export * from './enumerations/mcs-router-category.enum';
 export * from './enumerations/mcs-account-status.enum';
+export * from './enumerations/mcs-http-method.enum';
 /** Interfaces */
 export * from './interfaces/mcs-data-source.interface';
 export * from './interfaces/mcs-paginator.interface';

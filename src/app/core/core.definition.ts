@@ -21,12 +21,14 @@ export class CoreDefinition {
   public static HEADER_API_VERSION = 'Api-Version';
   public static HEADER_COMPANY_ID = 'Company-Id';
   public static HEADER_AUTHORIZATION = 'Authorization';
+  public static HEADER_REFRESH_TOKEN = 'Refresh-Token';
 
   /** AppState Properties */
   public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
 
   /** Cookie Names */
   public static COOKIE_AUTH_TOKEN = 'JWTBearer';
+  public static COOKIE_REFRESH_TOKEN = 'JWTRefresh';
   public static COOKIE_ACTIVE_ACCOUNT = 'MCSACC';
   public static COOKIE_SESSION_TIMER = 'mcsSessionTimer';
   public static COOKIE_SESSION_ID = 'mcsSessionId';
