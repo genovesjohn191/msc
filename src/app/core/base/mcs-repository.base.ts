@@ -15,7 +15,8 @@ import {
   clearArrayRecord,
   compareStrings,
   mergeArrays,
-  unsubscribeSafely
+  unsubscribeSafely,
+  updateObjectData
 } from '../../utilities';
 
 const DEFAULT_PAGE_INDEX = 1;
@@ -91,6 +92,25 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     addOrUpdateArrayRecord(this._dataRecords, record, false,
       (_existingRecord: T) => _existingRecord.id === record.id);
     this._notifyDataRecordsChanged();
+  }
+
+  /**
+   * Updates the record property according to its structure
+   * @param propertyTarget The target object to copy to.
+   * @param propertyTarget The source object from which to copy records.
+   */
+  public updateRecordProperty<P>(propertyTarget: P | any, propertySource: P | any): void {
+    let objectIsArrayType = !isNullOrEmpty(propertyTarget)
+      && !isNullOrEmpty(propertySource)
+      && Array.isArray(propertyTarget)
+      && Array.isArray(propertySource);
+
+    if (objectIsArrayType) {
+      let mergeMethod = (_first: McsEntityBase, _second: McsEntityBase) => _first.id === _second.id;
+      updateObjectData(propertyTarget, mergeArrays(propertyTarget, propertySource, mergeMethod));
+    } else {
+      updateObjectData(propertyTarget, propertySource);
+    }
   }
 
   /**

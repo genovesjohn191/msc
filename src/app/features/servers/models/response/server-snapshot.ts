@@ -1,7 +1,10 @@
-import { McsDateSerialization } from '../../../../core';
+import {
+  McsDateSerialization,
+  McsEntityBase
+} from '../../../../core';
 import { JsonProperty } from 'json-object-mapper';
 
-export class ServerSnapshot {
+export class ServerSnapshot extends McsEntityBase {
   public sizeMB: number;
   public poweredOn: boolean;
 
@@ -16,6 +19,7 @@ export class ServerSnapshot {
   public isProcessing: boolean;
 
   constructor() {
+    super();
     this.sizeMB = undefined;
     this.createdOn = undefined;
     this.poweredOn = undefined;

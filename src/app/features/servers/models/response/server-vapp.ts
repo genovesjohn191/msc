@@ -1,14 +1,10 @@
-import { ServerVirtualMachine } from './server-virtual-machine';
-import { JsonProperty } from 'json-object-mapper';
+import { McsEntityBase } from '../../../../core';
 
-export class ServerVApp {
+export class ServerVApp extends McsEntityBase {
   public name: string;
 
-  @JsonProperty({ type: ServerVirtualMachine })
-  public virtualMachines: ServerVirtualMachine[];
-
   constructor() {
+    super();
     this.name = undefined;
-    this.virtualMachines = undefined;
   }
 }

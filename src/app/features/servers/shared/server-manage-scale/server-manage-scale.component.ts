@@ -38,6 +38,7 @@ import {
 import { ServersService } from '../../servers.service';
 
 // Constants definition
+const DEFAULT_MB = 1024;
 const DEFAULT_MEMORY_MULTIPLIER = 2048;
 const DEFAULT_CPU_MULTIPLIER = 2;
 
@@ -129,14 +130,16 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
    * Returns the resource available memory in MB
    */
   public get resourceAvailableMemoryMB(): number {
-    return this._serversService.computeAvailableMemoryMB(this.resource);
+    let calculatedResourceMemory = this._serversService.computeAvailableMemoryMB(this.resource);
+    return calculatedResourceMemory + this.serverMemoryUsedMB;
   }
 
   /**
    * Returns the resource available CPU
    */
   public get resourceAvailableCpu(): number {
-    return this._serversService.computeAvailableCpu(this.resource);
+    let calculatedResourceCpu = this._serversService.computeAvailableCpu(this.resource);
+    return calculatedResourceCpu + this.serverCpuUsed;
   }
 
   /**
@@ -183,15 +186,16 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
   private _createSliderTable(): void {
     // Create table definitions
     let table = new Array<ServerManageScale>();
-    table.push({ memoryMB: 2048, cpuCount: 2 } as ServerManageScale);
-    table.push({ memoryMB: 4096, cpuCount: 2 } as ServerManageScale);
-    table.push({ memoryMB: 8192, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: 16384, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: 24576, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: 32768, cpuCount: 4 } as ServerManageScale);
-    table.push({ memoryMB: 16384, cpuCount: 8 } as ServerManageScale);
-    table.push({ memoryMB: 24576, cpuCount: 8 } as ServerManageScale);
-    table.push({ memoryMB: 32768, cpuCount: 8 } as ServerManageScale);
+    let baseMB = DEFAULT_MB;
+    table.push({ memoryMB: baseMB * 2, cpuCount: 2 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 4, cpuCount: 2 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 8, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 16, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 24, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 32, cpuCount: 4 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 64, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 128, cpuCount: 8 } as ServerManageScale);
+    table.push({ memoryMB: baseMB * 256, cpuCount: 8 } as ServerManageScale);
 
     // Filter applicable values on the table
     this.sliderTable = table.filter((scale) => {
@@ -200,6 +204,12 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
         && (scale.cpuCount >= this.serverCpuUsed
           && scale.cpuCount <= this.resourceAvailableCpu);
     });
+    if (isNullOrEmpty(this.sliderTable)) {
+      this.sliderTable.push({
+        memoryMB: this.resourceAvailableMemoryMB,
+        cpuCount: this.resourceAvailableCpu
+      } as ServerManageScale);
+    }
   }
 
   /**

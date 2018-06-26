@@ -12,8 +12,7 @@
 <!-- Storage profiles selection and details template -->
 <ng-container *ngIf="!detailsTemplate;else detailsTemplate">
   <mcs-form-field >
-    <mcs-select [(ngModel)]="selectedStorage"
-      [formControl]="fcSliderStorage"
+    <mcs-select [formControl]="fcSelectStorages"
       placeholder="Select storage profile">
       <mcs-select-group header="Storage Profiles">
         <mcs-select-item *ngFor="let storage of storages" [value]="storage">
@@ -35,7 +34,8 @@
     </div>
 
     <mcs-slider [min]="minValueGB" [max]="availableMemory" [step]="10"
-      [(ngModel)]="storageValue" (change)="onSliderChanged($event)">
+      [ngModel]="storageValue"
+      (ngModelChange)="onSliderChanged($event)">
     </mcs-slider>
     <div class="block-items centered">
       <strong>{{ storageValue | mcsDataSize: 'GB' }}</strong>

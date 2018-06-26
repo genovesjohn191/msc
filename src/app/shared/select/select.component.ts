@@ -120,9 +120,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Base value implementation of value accessor
    */
   private _value: any;
-  public get value(): any {
-    return this._value;
-  }
+  public get value(): any { return this._value; }
   public set value(value: any) {
     if (this._value !== value) {
       this._value = value;
@@ -136,9 +134,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Return true when the panel is currently Open, otherwise false
    */
   private _panelOpen: boolean;
-  public get panelOpen(): boolean {
-    return this._panelOpen;
-  }
+  public get panelOpen(): boolean { return this._panelOpen; }
   public set panelOpen(value: boolean) {
     if (this._panelOpen !== value) {
       this._panelOpen = value;
@@ -300,7 +296,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * @param value Model binding value
    */
   public writeValue(value: any) {
-    if (this._items) { this._selecteItemByValue(value); }
+    if (!isNullOrEmpty(this._items)) { this._selectItemByValue(value); }
   }
 
   /**
@@ -343,13 +339,16 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Listen to every selection changed event
    */
   private _listenToSelectionChange(): void {
-    this.itemsSelectionChanged.pipe(takeUntil(this._destroySubject))
+    let changedOrDestroyed = Observable.merge(this._items.changes, this._destroySubject);
+    this.itemsSelectionChanged
+      .pipe(takeUntil(changedOrDestroyed))
       .subscribe((item) => {
         this._selectItem(item);
         this.closePanel();
       });
 
-    this.groupsSelectionChanged.pipe(takeUntil(this._destroySubject))
+    this.groupsSelectionChanged
+      .pipe(takeUntil(changedOrDestroyed))
       .subscribe((item) => {
         this._toggleItemPanel(item);
       });
@@ -390,8 +389,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Selects the element based on the provided value
    * @param value Value to be checked in the item options
    */
-  private _selecteItemByValue(value: any) {
-    if (isNullOrEmpty(value)) { return; }
+  private _selectItemByValue(value: SelectItemComponent) {
     let selectedItem = this._items.find((item) => item.value === value);
     this._selectItem(selectedItem);
   }
@@ -444,7 +442,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
     Promise.resolve().then(() => {
-      this._selecteItemByValue(this.ngControl ? this.ngControl.value : this._value);
+      this._selectItemByValue(this.ngControl ? this.ngControl.value : this._value);
     });
   }
 

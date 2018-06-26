@@ -40,12 +40,12 @@ export function unsubscribeSubject(subject: Subject<any>): void {
 
 /**
  * Update the object data without removing the instance of the source element
- * @param source Source object to be updated
- * @param target Target object to be the basis
+ * @param target The target object to copy to.
+ * @param source The source object from which to copy records.
  */
-export function updateObjectData(source: any, target: any): void {
-  let keys = Object.keys(target);
-  keys.forEach((key) => source[key] = target[key]);
+export function updateObjectData(target: any, ...source: any[]): void {
+  if (isNullOrUndefined(source)) { return; }
+  target = Object.assign(target || {}, ...source);
 }
 
 /**

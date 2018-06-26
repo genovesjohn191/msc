@@ -29,7 +29,7 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
   public findResourceCompute(resource: ServerResource): Observable<ServerCompute> {
     return this._serversApiService.getResourceCompute(resource.id)
       .map((response) => {
-        resource.compute = response.content;
+        this.updateRecordProperty(resource.compute, response.content);
         this.updateRecord(resource);
         return response.content;
       });
@@ -43,7 +43,7 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
   public findResourceStorage(resource: ServerResource): Observable<ServerStorage[]> {
     return this._serversApiService.getResourceStorage(resource.id)
       .map((response) => {
-        resource.storage = response.content;
+        this.updateRecordProperty(resource.storage, response.content);
         this.updateRecord(resource);
         return response.content;
       });
@@ -57,7 +57,7 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
   public findResourceNetworks(resource: ServerResource): Observable<ServerNetwork[]> {
     return this._serversApiService.getResourceNetworks(resource.id)
       .map((response) => {
-        resource.networks = response.content;
+        this.updateRecordProperty(resource.networks, response.content);
         this.updateRecord(resource);
         return response.content;
       });
@@ -71,7 +71,7 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
   public findResourceCatalogItems(resource: ServerResource): Observable<ServerCatalogItem[]> {
     return this._serversApiService.getResourceCatalogItems(resource.id)
       .map((response) => {
-        resource.catalogItems = response.content;
+        this.updateRecordProperty(resource.catalogItems, response.content);
         this.updateRecord(resource);
         return response.content;
       });
@@ -85,7 +85,7 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
   public findResourceVApps(resource: ServerResource): Observable<ServerVApp[]> {
     return this._serversApiService.getResourceVApps(resource.id)
       .map((response) => {
-        resource.vApps = response.content;
+        this.updateRecordProperty(resource.vApps, response.content);
         this.updateRecord(resource);
         return response.content;
       });

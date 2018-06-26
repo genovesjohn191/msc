@@ -36,7 +36,8 @@ import {
   unsubscribeSafely,
   unsubscribeSubject,
   animateFactory,
-  convertMbToGb
+  convertMbToGb,
+  getSafeProperty
 } from '../../../../utilities';
 import { DeleteStorageDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
@@ -113,8 +114,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Returns all the resource storages
    */
   public get resourceStorages(): ServerStorage[] {
-    return !isNullOrEmpty(this.serverResource.storage) ?
-      this.serverResource.storage : new Array();
+    return getSafeProperty(this.serverResource, (obj) => obj.storage);
   }
 
   /**
@@ -472,7 +472,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Get the resource storage to the selected server
    */
   private _getResourceStorage(): void {
-    let hasResource = !isNullOrEmpty(this.serverResource) && !isNullOrEmpty(this.serverResource.id);
+    let hasResource = getSafeProperty(this.serverResource, (obj) => obj.id);
     if (!hasResource) { return; }
 
     this._storagesSubscription = this._serversResourcesRespository

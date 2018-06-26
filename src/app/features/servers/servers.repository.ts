@@ -49,8 +49,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   public findServerDisks(activeServer: Server): Observable<ServerStorageDevice[]> {
     return this._serversApiService.getServerStorage(activeServer.id)
       .map((response) => {
-        activeServer.storageDevices = !isNullOrEmpty(response.content) ?
-          response.content : new Array();
+        this.updateRecordProperty(activeServer.storageDevices, response.content);
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -64,8 +63,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   public findServerNics(activeServer: Server): Observable<ServerNic[]> {
     return this._serversApiService.getServerNics(activeServer.id)
       .map((response) => {
-        activeServer.nics = !isNullOrEmpty(response.content) ?
-          response.content : new Array();
+        this.updateRecordProperty(activeServer.nics, response.content);
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -79,8 +77,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   public findServerMedias(activeServer: Server): Observable<ServerMedia[]> {
     return this._serversApiService.getServerMedias(activeServer.id)
       .map((response) => {
-        activeServer.media = !isNullOrEmpty(response.content) ?
-          response.content : new Array();
+        this.updateRecordProperty(activeServer.media, response.content);
         this.updateRecord(activeServer);
         return response.content;
       });
@@ -93,8 +90,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   public findSnapshots(activeServer: Server): Observable<ServerSnapshot[]> {
     return this._serversApiService.getServerSnapshots(activeServer.id)
       .map((response) => {
-        activeServer.snapshots = !isNullOrEmpty(response.content) ?
-          response.content : new Array();
+        this.updateRecordProperty(activeServer.snapshots, response.content);
         this.updateRecord(activeServer);
         return response.content;
       });
