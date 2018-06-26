@@ -145,7 +145,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       .subscribe(this._onCreateServer.bind(this));
 
     this._notificationEvents.cloneServerEvent
-      .subscribe(this._onCreateServer.bind(this));
+      .subscribe(this._onCloneServer.bind(this));
 
     this._notificationEvents.renameServerEvent
       .subscribe(this._onRenameServer.bind(this));
@@ -203,6 +203,23 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   private _onCreateServer(job: McsApiJob): void {
     if (isNullOrEmpty(job) || job.dataStatus !== McsDataStatus.Success) { return; }
     this.refreshRecords();
+  }
+
+  /**
+   * Event that emits when cloning a server
+   * @param job Emitted job content
+   */
+  private _onCloneServer(job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+
+    let clonedServer = this._getServerByJob(job);
+    if (!isNullOrEmpty(clonedServer)) {
+      this._setServerProcessDetails(clonedServer, job);
+    }
+
+    if (job.dataStatus === McsDataStatus.Success) {
+      this.refreshRecords();
+    }
   }
 
   /**
