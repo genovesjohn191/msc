@@ -33,6 +33,7 @@ $switch-account-content-min-height: 100px;
     @include display-flex(row);
     @include align-items(center);
     @include set-items-interval($space-small, horizontal);
+    width: 100%;
 
     &:hover {
       color: $color-primary-01;

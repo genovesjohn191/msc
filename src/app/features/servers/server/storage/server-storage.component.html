@@ -137,16 +137,16 @@
           </mcs-server-manage-storage>
 
           <ng-template #diskDetailsTemplate>
-            <mcs-list spacing="none">
-              <mcs-list-item>
+            <mcs-list spacing="auto">
+              <mcs-list-item class="form-field-inline">
                 <strong>{{ textContent.storageDevice }}:</strong>
                 <span>{{ selectedDisk.name }}</span>
               </mcs-list-item>
-              <mcs-list-item>
+              <mcs-list-item class="form-field-inline">
                 <strong>{{ textContent.storageProfile }}:</strong>
                 <span>{{ selectedDisk.storageProfile }}</span>
               </mcs-list-item>
-              <mcs-list-item>
+              <mcs-list-item class="form-field-inline">
                 <strong>{{ textContent.capacity }}:</strong>
                 <span>{{ selectedDisk.sizeMB | mcsDataSize: 'MB' }}</span>
               </mcs-list-item>

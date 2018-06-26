@@ -18,11 +18,7 @@ import {
   animate,
   style
 } from '@angular/animations';
-import {
-  isNullOrEmpty,
-  animationCurves,
-  animationDurations
-} from '../../../utilities';
+import { isNullOrEmpty } from '../../../utilities';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
 import { McsSnackBarRefDirective } from './mcs-snack-bar-ref.directive';
@@ -39,10 +35,10 @@ import { McsPlacementType } from '../../core.types';
     trigger('snackBarSlide', [
       state('top, bottom', style({ transform: 'translateY(0%)' })),
       transition('* => void',
-        animate(`${animationDurations.exiting} ${animationCurves.acceleration}`)
+        animate(`195ms cubic-bezier(0.4,0.0,1,1)`)
       ),
       transition('void => *',
-        animate(`${animationDurations.entering} ${animationCurves.deceleration}`)
+        animate(`225ms cubic-bezier(0.4,0.0,0.2,1)`)
       )
     ])
   ],
