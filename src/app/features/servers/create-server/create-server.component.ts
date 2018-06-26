@@ -50,7 +50,8 @@ import {
   ServerCreate,
   ServerCreateStorage,
   serverPlatformTypeText,
-  ServerCreateNic
+  ServerCreateNic,
+  ServerClientObject
 } from '../models';
 import { ServersService } from '../servers.service';
 import { ServersResourcesRepository } from '../servers-resources.repository';
@@ -287,6 +288,8 @@ export class CreateServerComponent implements
     if (isNullOrEmpty(serverInput)) { return; }
     let serverClone = new ServerClone();
     serverClone.name = serverInput.serverName;
+    serverClone.clientReferenceObject = new ServerClientObject();
+    serverClone.clientReferenceObject.serverId = serverInput.targetServer.id;
 
     return this._serversService.cloneServer(serverInput.targetServer.id, serverClone)
       .map((response) => {

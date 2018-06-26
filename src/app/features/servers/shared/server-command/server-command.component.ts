@@ -83,9 +83,9 @@ export class ServerCommandComponent implements OnInit {
         break;
 
       case ServerCommand.Restart:
-
         enabled = this.server.restartable;
         break;
+
       case ServerCommand.Suspend:
         enabled = this.server.suspendable;
         break;
