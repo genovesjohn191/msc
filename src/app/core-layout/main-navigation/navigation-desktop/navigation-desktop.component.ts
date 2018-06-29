@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
   CoreDefinition,
@@ -88,10 +89,12 @@ export class NavigationDesktopComponent implements OnInit {
   private _getProductCatalogs(): void {
     this.productsStatusFactory.setInProgress();
     this._productCatalogRepository.findAllRecords()
-      .catch((error) => {
-        this.productsStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          this.productsStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this.productsStatusFactory.setSuccesfull(response);
         if (isNullOrEmpty(response)) { return; }

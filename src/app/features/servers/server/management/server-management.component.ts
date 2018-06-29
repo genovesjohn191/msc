@@ -14,7 +14,7 @@ import {
   Subscription,
   Subject,
   Observable
-} from 'rxjs/Rx';
+} from 'rxjs';
 import {
   takeUntil,
   startWith,
@@ -385,11 +385,13 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this.mediaStatusFactory.setInProgress();
     this._serverMediasSubscription = this._serversRepository
       .findServerMedias(this.server)
-      .catch((error) => {
-        // Handle common error status code
-        this.mediaStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.mediaStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe(() => {
         this.mediaStatusFactory.setSuccesfull(this.serverMedias);
       });

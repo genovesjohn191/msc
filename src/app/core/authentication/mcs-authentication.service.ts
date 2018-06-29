@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Params } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { CoreDefinition } from '../core.definition';
 import { CoreConfig } from '../core.config';
@@ -138,17 +139,19 @@ export class McsAuthenticationService {
     );
 
     return this._apiService.get(mcsApiRequestParameter)
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsApiIdentity>(McsApiIdentity, response);
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsApiIdentity>(McsApiIdentity, response);
 
-        if (apiResponse && apiResponse.content) {
-          this._setUserIdentity(authToken, apiResponse.content);
-          return true;
-        }
-        return false;
-      });
+          if (apiResponse && apiResponse.content) {
+            this._setUserIdentity(authToken, apiResponse.content);
+            return true;
+          }
+          return false;
+        })
+      );
   }
 
   private _setUserIdentity(authToken: string, identity: McsApiIdentity) {

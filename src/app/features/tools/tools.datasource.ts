@@ -1,7 +1,8 @@
 import {
   Observable,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsDataSource,
   McsDataStatus
@@ -28,30 +29,32 @@ export class ToolsDataSource implements McsDataSource<Portal> {
   public connect(): Observable<Portal[]> {
     this.dataLoadingStream.next(McsDataStatus.InProgress);
     return this._toolsRepository.findAllRecords(undefined, undefined)
-      .map((portals) => {
-        let partnerPortals: Portal[] = [];
-        let otherServices: Portal[] = [];
+      .pipe(
+        map((portals) => {
+          let partnerPortals: Portal[] = [];
+          let otherServices: Portal[] = [];
 
-        // Add Macquarie View
-        let macquarieView = new Portal();
-        macquarieView.name = 'Macquarie View';
-        let macquarieViewPortalAccess = new PortalAccess();
-        macquarieViewPortalAccess.name = macquarieView.name;
-        macquarieViewPortalAccess.url = resolveEnvVar('MACQUARIE_VIEW_URL');
-        macquarieView.portalAccess = Array(macquarieViewPortalAccess);
-        partnerPortals.push(macquarieView);
+          // Add Macquarie View
+          let macquarieView = new Portal();
+          macquarieView.name = 'Macquarie View';
+          let macquarieViewPortalAccess = new PortalAccess();
+          macquarieViewPortalAccess.name = macquarieView.name;
+          macquarieViewPortalAccess.url = resolveEnvVar('MACQUARIE_VIEW_URL');
+          macquarieView.portalAccess = Array(macquarieViewPortalAccess);
+          partnerPortals.push(macquarieView);
 
-        // Map portals to respective locations
-        for (let portal of portals) {
-          portal.resourceSpecific
-            ? partnerPortals.push(portal)
-            : otherServices.push(portal);
-        }
+          // Map portals to respective locations
+          for (let portal of portals) {
+            portal.resourceSpecific
+              ? partnerPortals.push(portal)
+              : otherServices.push(portal);
+          }
 
-        portals = partnerPortals;
+          portals = partnerPortals;
 
-        return portals;
-      });
+          return portals;
+        })
+      );
   }
 
   /**

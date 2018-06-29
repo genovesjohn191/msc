@@ -5,11 +5,11 @@ import {
 } from '@angular/core';
 import {
   Subject,
-  Subscription
-} from 'rxjs/Rx';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { merge } from 'rxjs/observable/merge';
-import { auditTime } from 'rxjs/operator/auditTime';
+  Subscription,
+  merge,
+  fromEvent
+} from 'rxjs';
+import { auditTime } from 'rxjs/operators';
 import { isNullOrEmpty } from '../../utilities';
 import { McsScrollable } from '../interfaces/mcs-scrollable.interface';
 

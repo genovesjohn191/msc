@@ -228,18 +228,18 @@ export class Server extends McsEntityBase {
         stateIconKey = CoreDefinition.ASSETS_SVG_STATE_STOPPED;
         break;
 
-      case ServerPowerState.Resolved:   // Amber
+      case ServerPowerState.Resolved:     // Amber
       case ServerPowerState.WaitingForInput:
       case ServerPowerState.InconsistentState:
       case ServerPowerState.Mixed:
         stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RESTARTING;
         break;
 
-      case ServerPowerState.Suspended: // Grey
+      case ServerPowerState.Suspended:    // Grey
         stateIconKey = CoreDefinition.ASSETS_SVG_STATE_SUSPENDED;
         break;
 
-      case ServerPowerState.PoweredOn:  // Green
+      case ServerPowerState.PoweredOn:    // Green
       default:
         stateIconKey = CoreDefinition.ASSETS_SVG_STATE_RUNNING;
         break;

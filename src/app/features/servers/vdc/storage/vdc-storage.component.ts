@@ -8,7 +8,8 @@ import {
 import {
   Subscription,
   Observable
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ServerStorage } from '../../models';
 import {
   CoreDefinition,
@@ -88,13 +89,13 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
     this.dataStatusFactory.setInProgress();
     this.storagesSubscription = this._serversResourcesRespository
       .findResourceStorage(this.selectedVdc)
-      .catch((error) => {
-        // Handle common error status code
-        this.dataStatusFactory.setError();
-        return Observable.throw(error);
-      })
-      .subscribe((response) => {
-        this.dataStatusFactory.setSuccesfull(response);
-      });
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.dataStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
+      .subscribe((response) => this.dataStatusFactory.setSuccesfull(response));
   }
 }

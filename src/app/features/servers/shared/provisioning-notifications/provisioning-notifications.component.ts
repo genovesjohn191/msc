@@ -11,11 +11,14 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  Observable,
+  timer,
   Subject,
   Subscription
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  take
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -235,8 +238,8 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
     progressMaxWithOffset = (this.progressMax * 0.99);
 
     // Set Inifinity Timer
-    this._timerSubscription = Observable.timer(0, 1000)
-      .take(Infinity)
+    this._timerSubscription = timer(0, 1000)
+      .pipe(take(Infinity))
       .subscribe(() => {
         let actualProgress = this.progressValue + 1;
         this.progressValue = Math.min(actualProgress, progressMaxWithOffset);

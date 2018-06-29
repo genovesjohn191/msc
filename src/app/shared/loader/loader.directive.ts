@@ -13,7 +13,7 @@ import {
   ComponentRef,
   Renderer2
 } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { LoaderService } from './loader.service';
 import { McsComponentService, CoreDefinition } from '../../core';
 import {

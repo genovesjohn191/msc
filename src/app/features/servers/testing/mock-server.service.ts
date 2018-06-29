@@ -1,7 +1,8 @@
 import {
   Observable,
-  Subject
-} from 'rxjs/Rx';
+  Subject,
+  of
+} from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsApiJob,
@@ -37,7 +38,7 @@ export const mockServerService = {
       powerState: ServerPowerState.PoweredOn,
     } as Server;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   setSelectedServer(server: Server) {
     this.selectedServerStream.next(server);
@@ -51,10 +52,10 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 2;
     mcsApiResponseMock.content = new McsApiJob();
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   getServerThumbnail(_serverId: any) {
-    return Observable.of({
+    return of({
       content: {
         file: 'aaaBBBcccDDD',
         fileType: 'image/png',
@@ -69,7 +70,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 2;
     mcsApiResponseMock.content = new Array<ServerResource>();
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   createServerStorage(
     _serverId: any,
@@ -91,7 +92,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = mcsApiJobMock;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   updateServerStorage(
     _serverId: any,
@@ -113,7 +114,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = mcsApiJobMock;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   deleteServerStorage(
     _serverId: any,
@@ -134,7 +135,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = mcsApiJobMock;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   addServerNetwork(
     _serverId: any,
@@ -155,7 +156,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = mcsApiJobMock;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   updateServerNetwork(
     _serverId: any,
@@ -178,7 +179,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = mcsApiJobMock;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   deleteServerNetwork(
     _serverId: any,
@@ -200,7 +201,7 @@ export const mockServerService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = mcsApiJobMock;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
   convertResourceToMap(_resources: ServerResource[]): Map<string, ServerResource> {
     return new Map<string, ServerResource>();

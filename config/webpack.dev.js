@@ -44,6 +44,12 @@ module.exports = function (options) {
 
   return webpackMerge(commonConfig({ env: ENV, metadata: METADATA  }), {
     /**
+     * Sets the mode of the webpack
+     *
+     * See: https://webpack.js.org/concepts/mode/
+     */
+    mode: ENV,
+    /**
      * Options affecting the output of the compilation.
      *
      * See: http://webpack.github.io/docs/configuration.html#output

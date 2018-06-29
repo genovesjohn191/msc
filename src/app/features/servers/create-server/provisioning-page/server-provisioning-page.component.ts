@@ -14,6 +14,10 @@ import {
   Observable
 } from 'rxjs';
 import {
+  switchMap,
+  catchError
+} from 'rxjs/operators';
+import {
   McsTextContentProvider,
   McsErrorHandlerService,
   McsApiJob,
@@ -76,21 +80,23 @@ export class ServerProvisioningPageComponent implements OnInit, OnDestroy {
   private _getJobById(): void {
     this.dataStatusFactory.setInProgress();
     this.jobSubscription = this._activatedRoute.paramMap
-      .switchMap((params: ParamMap) => {
-        let jobId = params.get('id');
-        return this._jobApiService.getJob(jobId);
-      })
-      .catch((error) => {
-        // Handle common error status code
-        this.dataStatusFactory.setError();
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.dataStatusFactory.setError();
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          return Observable.throw(error);
+        }),
+        switchMap((params: ParamMap) => {
+          let jobId = params.get('id');
+          return this._jobApiService.getJob(jobId);
+        }),
+    )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
         this.job = response.content;
         this._validateJobType(this.job);
-        this.dataStatusFactory.setSuccesfull(response);
+        this.dataStatusFactory.setSuccesfull(response.content);
         this._changeDetectorRef.markForCheck();
       });
   }

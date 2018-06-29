@@ -58,7 +58,7 @@
                     mcsEventLabel="server-list-panel">
 
                     <mcs-icon *ngIf="!server.isProcessing" size="small"
-                      [key]="server.powerStateIconKey"></mcs-icon>
+                      [key]="server?.powerStateIconKey"></mcs-icon>
 
                     <mcs-icon *ngIf="server.isProcessing"
                       size="small" [key]="spinnerIconKey"

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse
@@ -34,7 +37,7 @@ export class ServersOsRepository extends McsRepositoryBase<ServerOperatingSystem
    */
   protected getRecordById(_recordId: string):
     Observable<McsApiSuccessResponse<ServerOperatingSystem>> {
-    return Observable.of(undefined);
+    return of(undefined);
   }
 
   /**

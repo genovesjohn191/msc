@@ -14,9 +14,10 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  Subscription
-} from 'rxjs/Rx';
-import { startWith } from 'rxjs/operator/startWith';
+  merge,
+  Subject
+} from 'rxjs';
+import { startWith, takeUntil } from 'rxjs/operators';
 import {
   McsSearch,
   McsSelection,
@@ -25,7 +26,7 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  unsubscribeSafely
+  unsubscribeSubject
 } from '../../utilities';
 
 // Child Items of the select tag
@@ -62,11 +63,7 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   private _subItems: QueryList<SelectTagSubItemComponent>;
 
   /** Subscriptions */
-  private _itemsSubscripton: Subscription;
-  private _itemsSubSubscripton: Subscription;
-  private _searchSubscripton: Subscription;
-  private _selectionSubscription: Subscription;
-  private _selectionSubSubscription: Subscription;
+  private _destroySubject = new Subject<void>();
 
   /**
    * The instance of the selected main item
@@ -100,7 +97,8 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   }
 
   public ngAfterViewInit() {
-    this._searchSubscripton = this._search.searchChangedStream
+    this._search.searchChangedStream
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         this._redisplaySubItems();
         this._search.showLoading(false);
@@ -109,38 +107,32 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
 
   public ngAfterContentInit() {
     // Listener when user selects the main item
-    this._itemsSubscripton = startWith.call(this._mainItems.changes, null)
-      .subscribe(() => {
-        this._listenToMainSelectionChange();
-      });
+    this._mainItems.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => this._listenToMainSelectionChange());
 
     // Listener when user selects the sub item
-    this._itemsSubSubscripton = startWith.call(this._subItems.changes, null)
-      .subscribe(() => {
-        this._listenToSubSelectionChange();
-      });
+    this._subItems.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => this._listenToSubSelectionChange());
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._searchSubscripton);
-    unsubscribeSafely(this._selectionSubscription);
-    unsubscribeSafely(this._selectionSubSubscription);
-    unsubscribeSafely(this._itemsSubscripton);
-    unsubscribeSafely(this._itemsSubSubscripton);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
    * Event that emits when selection is made on the main item
    */
   public get itemsMainSelectionChanged(): Observable<SelectTagMainItemComponent> {
-    return Observable.merge(...this._mainItems.map((item) => item.selectionChanged));
+    return merge(...this._mainItems.map((item) => item.selectionChanged));
   }
 
   /**
    * Event that emits when selection is made on the sub item
    */
   public get itemsSubSelectionChanged(): Observable<SelectTagSubItemComponent> {
-    return Observable.merge(...this._subItems.map((item) => item.selectionChanged));
+    return merge(...this._subItems.map((item) => item.selectionChanged));
   }
 
   /**
@@ -169,17 +161,19 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
    * Listener to main item selection change
    */
   private _listenToMainSelectionChange(): void {
-    this._selectionSubscription = this.itemsMainSelectionChanged
-      .subscribe((item) => {
-        this._selectMainItem(item);
-      });
+    let resetSubject = merge(this._mainItems.changes, this._destroySubject);
+    this.itemsMainSelectionChanged
+      .pipe(takeUntil(resetSubject))
+      .subscribe((item) => this._selectMainItem(item));
   }
 
   /**
    * Listener to sub item selection change
    */
   private _listenToSubSelectionChange(): void {
-    this._selectionSubSubscription = this.itemsSubSelectionChanged
+    let resetSubject = merge(this._subItems.changes, this._destroySubject);
+    this.itemsSubSelectionChanged
+      .pipe(takeUntil(resetSubject))
       .subscribe((item) => {
         this.toggleSubSelection(item);
         this._emitSubItemsSelectionChanged();

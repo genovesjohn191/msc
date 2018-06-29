@@ -15,10 +15,11 @@ import {
   Observable,
   Subscription,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import {
   startWith,
-  takeUntil
+  takeUntil,
+  catchError
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -195,10 +196,12 @@ export class FirewallComponent
 
     // Listen to all records changed
     this.firewallsListSource.findAllRecordsMapStream(keyFn)
-      .catch((error) => {
-        this.listStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          this.listStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this.firewallsMap = response;
         this.search.showLoading(false);
@@ -214,11 +217,13 @@ export class FirewallComponent
   private _getFirewallById(firewallId: string): void {
     this.firewallSubscription = this._firewallsRepository
       .findRecordById(firewallId)
-      .catch((error) => {
-        // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this._setSelectedFirewallInfo(response);
         unsubscribeSafely(this.firewallSubscription);

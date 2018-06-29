@@ -14,7 +14,7 @@ const commonConfig = require('./webpack.common.js');
  * Webpack Plugins
  */
 const SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HashedModuleIdsPlugin = require('webpack/lib/HashedModuleIdsPlugin')
 const PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin;
@@ -73,7 +73,12 @@ module.exports = function (env) {
   METADATA.envFileSuffix = METADATA.E2E ? 'e2e.prod' : 'prod';
 
   return webpackMerge(commonConfig({ env: ENV, metadata: METADATA }), {
-
+    /**
+     * Sets the mode of the webpack
+     *
+     * See: https://webpack.js.org/concepts/mode/
+     */
+    mode: ENV,
     /**
      * Options affecting the output of the compilation.
      *
@@ -117,31 +122,18 @@ module.exports = function (env) {
     module: {
 
       rules: [
-
         /**
-         * Extract CSS files from .src/styles directory to external CSS file
+         * Extract and compile Styling files from .src/styles directory to external CSS file
          */
         {
-          test: /\.css$/,
-          loader: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: 'css-loader'
-          }),
+          test: /\.(sa|sc|c)ss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader'
+          ],
           include: [helpers.root('src', 'styles')]
-        },
-
-        /**
-         * Extract and compile SCSS files from .src/styles directory to external CSS file
-         */
-        {
-          test: /\.scss$/,
-          loader: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: 'css-loader!sass-loader'
-          }),
-          include: [helpers.root('src', 'styles')]
-        },
-
+        }
       ]
 
     },
@@ -162,12 +154,15 @@ module.exports = function (env) {
 
 
       /**
-       * Plugin: ExtractTextPlugin
+       * Plugin: MiniCssExtractPlugin
        * Description: Extracts imported CSS files into external stylesheet
        *
-       * See: https://github.com/webpack/extract-text-webpack-plugin
+       * See: https://github.com/webpack-contrib/mini-css-extract-plugin
        */
-      new ExtractTextPlugin('[name].[contenthash].css'),
+      new MiniCssExtractPlugin({
+        filename: '[name].[contenthash].css',
+        chunkFilename: '[id].[contenthash].css'
+      }),
 
       /**
        * Optimze CSS Assets to minimize their bundlings
@@ -180,14 +175,7 @@ module.exports = function (env) {
       }),
 
       new PurifyPlugin(), /* buildOptimizer */
-
       new HashedModuleIdsPlugin(),
-
-      /**
-       * This module plugin causes the bundling of the production produces out of memory
-       * due to its concatenation method. .::. For more details: See the link below
-       * https://github.com/webpack/webpack/issues/5992
-       */
       new ModuleConcatenationPlugin(),
 
       /**
@@ -220,6 +208,5 @@ module.exports = function (env) {
       clearImmediate: false,
       setImmediate: false
     }
-
   });
 }

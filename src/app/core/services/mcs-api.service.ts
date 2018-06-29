@@ -9,7 +9,8 @@ import {
 import {
   Observable,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { CoreConfig } from '../core.config';
 import { CoreDefinition } from '../core.definition';
 import {
@@ -69,7 +70,7 @@ export class McsApiService {
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error));
+      .pipe(catchError((error) => this.handleServerError(error)));
   }
 
   /**
@@ -86,7 +87,7 @@ export class McsApiService {
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error));
+      .pipe(catchError((error) => this.handleServerError(error)));
   }
 
   /**
@@ -104,7 +105,7 @@ export class McsApiService {
         params: this._getParams(apiRequest.searchParameters),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error));
+      .pipe(catchError((error) => this.handleServerError(error)));
   }
 
   /**
@@ -120,7 +121,7 @@ export class McsApiService {
         headers: this._getHeaders(McsHttpMethod.Put, apiRequest.optionalHeaders),
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error));
+      .pipe(catchError((error) => this.handleServerError(error)));
   }
 
   /**
@@ -137,7 +138,7 @@ export class McsApiService {
         body: apiRequest.recordData,
         responseType: apiRequest.responseType
       })
-      .catch((error) => this.handleServerError(error));
+      .pipe(catchError((error) => this.handleServerError(error)));
   }
 
   /**

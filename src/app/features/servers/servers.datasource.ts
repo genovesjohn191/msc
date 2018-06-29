@@ -1,7 +1,10 @@
 import {
   Observable,
-  Subject
-} from 'rxjs/Rx';
+  Subject,
+  merge,
+  of
+} from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import {
   McsDataSource,
   McsDataStatus,
@@ -40,25 +43,27 @@ export class ServersDataSource implements McsDataSource<Server> {
    */
   public connect(): Observable<Server[]> {
     const displayDataChanges = [
-      Observable.of(undefined), // Add undefined observable to make way of retry when error occured
+      of(undefined), // Add undefined observable to make way of retry when error occured
       this._serversRepository.dataRecordsChanged,
       this._paginator.pageChangedStream,
       this._search.searchChangedStream
     ];
 
-    return Observable.merge(...displayDataChanges)
-      .switchMap((instance) => {
-        // Notify the table that a process is currently in-progress
-        // if the user is not searching because the filtering has already a loader
-        // and we need to check it here since the component can be recreated during runtime
-        let isSearching = !isNullOrEmpty(instance) && instance.searching;
-        if (!isSearching) {
-          this.dataLoadingStream.next(McsDataStatus.InProgress);
-        }
+    return merge(...displayDataChanges)
+      .pipe(
+        switchMap((instance) => {
+          // Notify the table that a process is currently in-progress
+          // if the user is not searching because the filtering has already a loader
+          // and we need to check it here since the component can be recreated during runtime
+          let isSearching = !isNullOrEmpty(instance) && instance.searching;
+          if (!isSearching) {
+            this.dataLoadingStream.next(McsDataStatus.InProgress);
+          }
 
-        // Find all records based on settings provided in the input
-        return this._serversRepository.findAllRecords(this._paginator, this._search);
-      });
+          // Find all records based on settings provided in the input
+          return this._serversRepository.findAllRecords(this._paginator, this._search);
+        })
+      );
   }
 
   /**

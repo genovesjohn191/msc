@@ -1,7 +1,7 @@
 import {
   Observable,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 
 export interface McsDataSource<T> {

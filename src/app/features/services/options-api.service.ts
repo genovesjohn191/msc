@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   McsApiSuccessResponse,
   McsHttpStatusCode
@@ -23,7 +26,7 @@ export class OptionsApiService {
     response.totalCount = 2;
     response.content = ['Standard', 'Self-Managed'];
 
-    return Observable.of(response);
+    return of(response);
   }
 
   /**
@@ -36,7 +39,7 @@ export class OptionsApiService {
     response.totalCount = 1;
     response.content = ['Contoso MMAZG00001'];
 
-    return Observable.of(response);
+    return of(response);
   }
 
   /**
@@ -52,7 +55,7 @@ export class OptionsApiService {
       architectures: ['x86', 'x64']
     };
 
-    return Observable.of(response);
+    return of(response);
   }
 
   /**
@@ -65,7 +68,7 @@ export class OptionsApiService {
     response.totalCount = 2;
     response.content = ['Standard', 'Premium'];
 
-    return Observable.of(response);
+    return of(response);
   }
 
   /**
@@ -90,6 +93,6 @@ export class OptionsApiService {
       ]
     };
 
-    return Observable.of(response);
+    return of(response);
   }
 }

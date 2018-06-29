@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import {
+  finalize,
+  map
+} from 'rxjs/operators';
 // Services Declarations
 import {
   McsApiService,
@@ -47,19 +51,21 @@ export class FirewallsService {
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<Firewall[]>(Firewall, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<Firewall[]>(Firewall, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 
   /**
@@ -71,19 +77,21 @@ export class FirewallsService {
     mcsApiRequestParameter.endPoint = `/firewalls/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<Firewall>(Firewall, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<Firewall>(Firewall, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 
   /**
@@ -110,18 +118,20 @@ export class FirewallsService {
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<FirewallPolicy[]>(FirewallPolicy, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<FirewallPolicy[]>(FirewallPolicy, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 }

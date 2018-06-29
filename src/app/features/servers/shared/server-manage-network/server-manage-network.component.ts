@@ -17,7 +17,8 @@ import {
 import { Subject } from 'rxjs';
 import {
   takeUntil,
-  startWith
+  startWith,
+  finalize
 } from 'rxjs/operators';
 import {
   replacePlaceholder,
@@ -196,7 +197,9 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
     if (isNullOrEmpty(network)) { return; }
     this.ipAddressessStatusFactory.setInProgress();
     this._serversService.getResourceNetwork(this.resourceId, network.id)
-      .finally(() => this.ipAddressessStatusFactory.setSuccesfull(this.ipAddressesInUsed))
+      .pipe(
+        finalize(() => this.ipAddressessStatusFactory.setSuccesfull(this.ipAddressesInUsed))
+      )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
         this.ipAddressesInUsed = response.content.ipAddresses;

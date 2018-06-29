@@ -30,7 +30,8 @@ export class TagInputDirective {
   public inputElement: HTMLInputElement;
 
   @Output('mcsTagInputOnAdd')
-  public mcsTagInputOnAdd = new EventEmitter<TagInputDirective>();
+  public get tagInputOnAdd(): EventEmitter<TagInputDirective> { return this._tagInputOnAdd; }
+  private _tagInputOnAdd = new EventEmitter<TagInputDirective>();
 
   @Input('mcsTagInputAddOnBlur')
   public get addOnBlur(): boolean { return this._addOnBlur; }
@@ -101,7 +102,7 @@ export class TagInputDirective {
     let keyCodeReceived = isNullOrEmpty(_event) ||
       this.separatorKeyCodes.indexOf(_event.keyCode) > -1;
     if (keyCodeReceived) {
-      this.mcsTagInputOnAdd.emit(this);
+      this._tagInputOnAdd.emit(this);
       if (!isNullOrEmpty(_event)) {
         _event.preventDefault();
       }

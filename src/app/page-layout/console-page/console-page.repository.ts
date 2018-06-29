@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse,
@@ -19,7 +22,7 @@ export class ConsolePageRepository extends McsRepositoryBase<McsApiConsole> {
    * to populate the data obtained
    */
   protected getAllRecords(): Observable<McsApiSuccessResponse<McsApiConsole[]>> {
-    return Observable.of(undefined);
+    return of(undefined);
   }
 
   /**

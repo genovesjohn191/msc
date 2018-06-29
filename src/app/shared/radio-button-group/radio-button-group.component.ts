@@ -16,15 +16,17 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
-import { merge } from 'rxjs/observable/merge';
-import { startWith } from 'rxjs/operator/startWith';
+import {
+  Observable,
+  merge,
+  Subject
+} from 'rxjs';
+import { startWith, takeUntil } from 'rxjs/operators';
 import { Key } from '../../core';
 import {
   coerceNumber,
   isNullOrEmpty,
-  refreshView,
-  unsubscribeSafely
+  unsubscribeSubject
 } from '../../utilities';
 import { RadioButtonComponent } from './radio-button/radio-button.component';
 
@@ -100,8 +102,7 @@ export class RadioButtonGroupComponent implements AfterContentInit,
 
   // Other variables
   private _selectedItemIndex: number;
-  private _itemsSubscripton: any;
-  private _selectionSubscription: any;
+  private _destroySubject = new Subject<void>();
 
   /**
    * Combine stream of all the selected item child's change event
@@ -117,21 +118,17 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   ) { }
 
   public ngAfterContentInit() {
-    this._itemsSubscripton = startWith.call(this._radioButtons.changes, null)
+    this._radioButtons.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => {
         this._listenToSelectionChanges();
+        this._initializeSelection();
         this._updateRadioButtonNames();
       });
-
-    // We need to execute this in a separate thread in order to
-    // update the value based on the model binding
-    refreshView(() => {
-      this._selectInitialItem();
-    });
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._itemsSubscripton);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -190,20 +187,24 @@ export class RadioButtonGroupComponent implements AfterContentInit,
   }
 
   /**
-   * Select the initial item based on value
+   * Set the initial selection of the radio button group
    */
-  private _selectInitialItem(): void {
-    if (isNullOrEmpty(this.value)) {
-      this._radioButtons.first.onClickEvent(null);
-    } else {
-      let elementByValue = this._radioButtons.find((radio) => {
-        return radio.value === this.value;
-      });
-      if (isNullOrEmpty(elementByValue)) {
-        throw new Error('Specified value could not be found within the group.');
+  private _initializeSelection(): void {
+    // Defer setting the value in order to avoid the "Expression
+    // has changed after it was checked" errors from Angular.
+    Promise.resolve().then(() => {
+      if (isNullOrEmpty(this.value)) {
+        this._radioButtons.first.onClickEvent(null);
+      } else {
+        let elementByValue = this._radioButtons.find((radio) => {
+          return radio.value === this.value;
+        });
+        if (isNullOrEmpty(elementByValue)) {
+          throw new Error('Specified value could not be found within the group.');
+        }
+        elementByValue.onClickEvent(null);
       }
-      elementByValue.onClickEvent(null);
-    }
+    });
   }
 
   /**
@@ -221,11 +222,13 @@ export class RadioButtonGroupComponent implements AfterContentInit,
    * Listen to selection changes of each tag
    */
   private _listenToSelectionChanges(): void {
-    unsubscribeSafely(this._selectionSubscription);
-    this._selectionSubscription = this.itemsSelectionChanged.subscribe((item) => {
-      this._selectItem(item);
-      this._selectedItemIndex = this._radioButtons.toArray().indexOf(item);
-    });
+    let resetSubject = merge(this._radioButtons.changes, this._destroySubject);
+    this.itemsSelectionChanged
+      .pipe(takeUntil(resetSubject))
+      .subscribe((item) => {
+        this._selectItem(item);
+        this._selectedItemIndex = this._radioButtons.toArray().indexOf(item);
+      });
   }
 
   /**

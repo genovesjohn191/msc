@@ -1,4 +1,4 @@
-import { EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
 
 export interface McsSearch {
   /**
@@ -9,7 +9,7 @@ export interface McsSearch {
   /**
    * Event that emit the changes when search is changed within the time bound
    */
-  searchChangedStream: EventEmitter<any>;
+  searchChangedStream: Subject<any>;
 
   /**
    * Returns true when user is currently searching, otherwise false

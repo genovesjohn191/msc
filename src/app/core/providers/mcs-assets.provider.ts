@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { finalize } from 'rxjs/operators/finalize';
-import { map } from 'rxjs/operators/map';
-import { share } from 'rxjs/operators/share';
+import {
+  Observable,
+  of
+} from 'rxjs';
+import {
+  finalize,
+  map,
+  share
+} from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 /** Core Configuration */
@@ -118,12 +123,12 @@ export class McsAssetsProvider {
    * Returns the svg element based on the given URL
    */
   public getSvgElement(url: string): Observable<SVGElement> {
-    if (isNullOrEmpty(url)) { return Observable.of(undefined); }
+    if (isNullOrEmpty(url)) { return of(undefined); }
 
     // Check the svg in the cache and return it immediately.
     let svgExist = this._svgElements.has(url);
     if (svgExist) {
-      return Observable.of(this._cloneSvg(this._svgElements.get(url)));
+      return of(this._cloneSvg(this._svgElements.get(url)));
     }
 
     // Check the url if it is in progress and return it immediately.

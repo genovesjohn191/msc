@@ -9,6 +9,11 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {
+  Observable,
+  of
+} from 'rxjs';
+import { map } from 'rxjs/operators';
+import {
   CoreDefinition,
   McsSizeType,
   McsColorType,
@@ -20,7 +25,6 @@ import {
   Icon,
   IconService
 } from './icon.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'mcs-icon',
@@ -159,22 +163,24 @@ export class IconComponent implements OnChanges {
   private _renderSvgElement(parentContainer: HTMLElement): Observable<HTMLElement> {
     return this._assetsProvider
       .getSvgElement(this._icon.value)
-      .map((svgElement) => {
-        if (this._iconActualSize === 'auto') {
-          throw new Error(`auto width is not working on IE for SVG Elements,
+      .pipe(
+        map((svgElement) => {
+          if (this._iconActualSize === 'auto') {
+            throw new Error(`auto width is not working on IE for SVG Elements,
             set the actual size for icon instead`);
-        }
-        // Get the actual ratio of the svg to calculate manually the height of
-        // since auto height is not working properly on IE
-        let svgViewBox = (svgElement as SVGSVGElement).viewBox;
-        let svgRatio = svgViewBox.baseVal.height / svgViewBox.baseVal.width;
-        let actualHeight = +(this._iconActualSize.replace('px', '')) * svgRatio;
+          }
+          // Get the actual ratio of the svg to calculate manually the height of
+          // since auto height is not working properly on IE
+          let svgViewBox = (svgElement as SVGSVGElement).viewBox;
+          let svgRatio = svgViewBox.baseVal.height / svgViewBox.baseVal.width;
+          let actualHeight = +(this._iconActualSize.replace('px', '')) * svgRatio;
 
-        svgElement.setAttribute('width', this._iconActualSize);
-        svgElement.setAttribute('height', `${actualHeight}px`);
-        this._renderer.appendChild(parentContainer, svgElement);
-        return parentContainer;
-      });
+          svgElement.setAttribute('width', this._iconActualSize);
+          svgElement.setAttribute('height', `${actualHeight}px`);
+          this._renderer.appendChild(parentContainer, svgElement);
+          return parentContainer;
+        })
+      );
   }
 
   /**
@@ -190,7 +196,7 @@ export class IconComponent implements OnChanges {
     this._renderer.setStyle(imageElement, 'max-width', '100%');
 
     this._renderer.appendChild(parentContainer, imageElement);
-    return Observable.of(parentContainer);
+    return of(parentContainer);
   }
 
   /**
@@ -210,7 +216,7 @@ export class IconComponent implements OnChanges {
     this._renderer.setStyle(imageElement, 'font-size', this._iconActualSize);
     this._renderer.addClass(parentContainer, `color-${this.color}`);
     this._renderer.appendChild(parentContainer, imageElement);
-    return Observable.of(parentContainer);
+    return of(parentContainer);
   }
 
   /**

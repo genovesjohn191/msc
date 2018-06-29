@@ -1,4 +1,7 @@
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import { McsApiSuccessResponse } from '../../../core';
 import { Ticket } from '../models';
 
@@ -21,7 +24,7 @@ export const mockTicketsService = {
     tickets.id = '5';
     mcsApiResponseMock.content.push(tickets);
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
 
   getTicket(_id: any): Observable<McsApiSuccessResponse<Ticket>> {
@@ -35,6 +38,6 @@ export const mockTicketsService = {
     ticket.id = '4';
     mcsApiResponseMock.content = ticket;
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   }
 };

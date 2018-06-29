@@ -1,4 +1,7 @@
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   McsApiJob,
   McsApiSuccessResponse
@@ -23,6 +26,6 @@ export const mockNotificationsService = {
     notification.id = '5';
     mcsApiResponseMock.content.push(notification);
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   }
 };

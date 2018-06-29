@@ -20,6 +20,12 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'test';
  */
 module.exports = function (options) {
   return {
+    /**
+     * Sets the mode of the webpack
+     *
+     * See: https://webpack.js.org/concepts/mode/
+     */
+    mode: 'none',
 
     /**
      * Source map for Karma from the help of karma-sourcemap-loader &  karma-webpack

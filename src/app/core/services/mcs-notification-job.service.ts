@@ -5,7 +5,11 @@ import {
   Observable,
   Subscription
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  finalize,
+  map
+} from 'rxjs/operators';
 import {
   StompRService,
   StompConfig,
@@ -89,19 +93,21 @@ export class McsNotificationJobService implements McsInitializer {
     mcsApiRequestParameter.endPoint = '/jobs/connection';
 
     this._apiSubscription = this._apiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsApiJobConnection>(McsApiJobConnection, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsApiJobConnection>(McsApiJobConnection, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      })
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      )
       .subscribe((details) => {
         if (isNullOrEmpty(details)) {
           this._loggerService.traceEnd(`No connection details data found.`);

@@ -6,14 +6,14 @@ const helpers = require('./helpers');
  * problem with copy-webpack-plugin
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
-const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+const SplitChunksPlugin = require('webpack/lib/optimize/SplitChunksPlugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlElementsPlugin = require('./html-elements-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const ngcWebpack = require('ngc-webpack');
+const { AngularCompilerPlugin }  = require('@ngtools/webpack');
 
 const buildUtils = require('./build-utils');
 
@@ -203,29 +203,14 @@ module.exports = function (options) {
       }),
 
       /**
-       * Plugin: CommonsChunkPlugin
-       * Description: Shares common code between the pages.
-       * It identifies common modules and put them into a commons chunk.
+       * Plugin: SplitChunksPlugin
+       * Description: Split the chunks to avoid duplicated dependencies across libraries.
        *
-       * See: https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin
-       * See: https://github.com/webpack/docs/wiki/optimization#multi-page-app
+       * See: https://webpack.js.org/plugins/split-chunks-plugin/
        */
-      new CommonsChunkPlugin({
-        name: 'polyfills',
-        chunks: ['polyfills']
+      new SplitChunksPlugin({
+        chunks: 'all'
       }),
-
-      new CommonsChunkPlugin({
-        minChunks: Infinity,
-        name: 'inline'
-      }),
-      new CommonsChunkPlugin({
-        name: 'main',
-        async: 'common',
-        children: true,
-        minChunks: 2
-      }),
-
 
       /**
        * Plugin: CopyWebpackPlugin
@@ -248,7 +233,7 @@ module.exports = function (options) {
       * This is especially useful for webpack bundles that include a hash in the filename
       * which changes every compilation.
       *
-      * See: https://github.com/ampedandwired/html-webpack-plugin
+      * See: https://github.com/jantimon/html-webpack-plugin
       */
       new HtmlWebpackPlugin({
         template: 'src/index.html',
@@ -316,7 +301,7 @@ module.exports = function (options) {
        */
       new LoaderOptionsPlugin({}),
 
-      new ngcWebpack.NgcWebpackPlugin(ngcWebpackConfig.plugin),
+      new AngularCompilerPlugin(ngcWebpackConfig.plugin),
 
       /**
        * Plugin: InlineManifestWebpackPlugin

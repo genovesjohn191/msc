@@ -3,7 +3,7 @@ import {
   BehaviorSubject,
   ReplaySubject,
   Subscription
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { McsNotificationContextService } from './mcs-notification-context.service';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsJobType } from '../enumerations/mcs-job-type.enum';

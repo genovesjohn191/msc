@@ -11,7 +11,8 @@ import {
 import {
   Observable,
   Subscription
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
   McsTextContentProvider,
@@ -222,11 +223,13 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
    */
   private _getServersOs(): void {
     this.operatingSystemsSubscription = this._serversOsRepository.findAllRecords()
-      .catch((error) => {
-        // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response: ServerOperatingSystem[]) => {
         this._filterOsGroup(response);
       });

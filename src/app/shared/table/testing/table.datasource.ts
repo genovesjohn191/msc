@@ -1,7 +1,8 @@
 import {
   Observable,
-  Subject
-} from 'rxjs/Rx';
+  Subject,
+  of
+} from 'rxjs';
 import {
   McsDataSource,
   McsDataStatus
@@ -27,7 +28,7 @@ export class TableDatasource implements McsDataSource<any> {
     users.push({ name: 'Fairbanks', userId: '12346' } as TableUserData);
     users.push({ name: 'Pascual', userId: '12347' } as TableUserData);
 
-    return Observable.of<TableUserData[]>(users);
+    return of<TableUserData[]>(users);
   }
 
   public disconnect() {

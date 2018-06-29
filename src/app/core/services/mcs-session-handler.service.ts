@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
   Observable,
-  Subject
+  Subject,
+  fromEvent,
+  merge,
+  interval
 } from 'rxjs';
 import {
   takeUntil,
@@ -139,10 +142,10 @@ export class McsSessionHandlerService implements McsInitializer {
    * Register activity events
    */
   private _registerActivityEvents(): void {
-    Observable.merge(
-      Observable.fromEvent(window, 'mousemove'),
-      Observable.fromEvent(window, 'resize'),
-      Observable.fromEvent(document, 'keydown')
+    merge(
+      fromEvent(window, 'mousemove'),
+      fromEvent(window, 'resize'),
+      fromEvent(document, 'keydown')
     )
       .pipe(
         takeUntil(this._destroySubject),
@@ -158,7 +161,7 @@ export class McsSessionHandlerService implements McsInitializer {
    * Register real time listener
    */
   private _registerRealTimeListener(): void {
-    Observable.interval(1000)
+    interval(1000)
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         this._sessionIdleCounter++;

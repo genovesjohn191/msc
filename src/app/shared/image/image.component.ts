@@ -8,7 +8,11 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  of
+} from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsSizeType,
@@ -148,22 +152,24 @@ export class ImageComponent implements OnChanges {
   private _renderSvgElement(parentContainer: HTMLElement): Observable<HTMLElement> {
     return this._assetsProvider
       .getSvgElement(this._image.value)
-      .map((svgElement) => {
-        if (this._imageActualSize === 'auto') {
-          throw new Error(`auto width is not working on IE for SVG Elements,
+      .pipe(
+        map((svgElement) => {
+          if (this._imageActualSize === 'auto') {
+            throw new Error(`auto width is not working on IE for SVG Elements,
             set the actual size for image instead`);
-        }
-        // Get the actual ratio of the svg to calculate manually the height of
-        // since auto height is not working properly on IE
-        let svgViewBox = (svgElement as SVGSVGElement).viewBox;
-        let svgRatio = svgViewBox.baseVal.height / svgViewBox.baseVal.width;
-        let actualHeight = +(this._imageActualSize.replace('px', '')) * svgRatio;
+          }
+          // Get the actual ratio of the svg to calculate manually the height of
+          // since auto height is not working properly on IE
+          let svgViewBox = (svgElement as SVGSVGElement).viewBox;
+          let svgRatio = svgViewBox.baseVal.height / svgViewBox.baseVal.width;
+          let actualHeight = +(this._imageActualSize.replace('px', '')) * svgRatio;
 
-        svgElement.setAttribute('width', this._imageActualSize);
-        svgElement.setAttribute('height', `${actualHeight}px`);
-        this._renderer.appendChild(parentContainer, svgElement);
-        return parentContainer;
-      });
+          svgElement.setAttribute('width', this._imageActualSize);
+          svgElement.setAttribute('height', `${actualHeight}px`);
+          this._renderer.appendChild(parentContainer, svgElement);
+          return parentContainer;
+        })
+      );
   }
 
   /**
@@ -179,7 +185,7 @@ export class ImageComponent implements OnChanges {
     this._renderer.setStyle(imageElement, 'max-width', '100%');
 
     this._renderer.appendChild(parentContainer, imageElement);
-    return Observable.of(parentContainer);
+    return of(parentContainer);
   }
 
   /**

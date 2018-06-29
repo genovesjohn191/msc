@@ -11,9 +11,10 @@ import {
 } from '@angular/core';
 import {
   Subscription,
-  Observable,
-  Subject
-} from 'rxjs/Rx';
+  Subject,
+  concat
+} from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { LoaderDirective } from './loader.directive';
 import { LoaderModule } from './loader.module';
 import { unsubscribeSafely } from '../../utilities';
@@ -29,8 +30,8 @@ export class TestLoaderComponent {
   public subscription: Subscription;
   public search: Subject<any> = new Subject<any>();
   public startSubscription() {
-    this.subscription = Observable.concat(this.search)
-      .distinctUntilChanged()
+    this.subscription = concat(this.search)
+      .pipe(distinctUntilChanged())
       .subscribe((response) => {
         return response;
       });
