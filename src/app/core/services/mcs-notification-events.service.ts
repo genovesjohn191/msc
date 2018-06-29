@@ -135,7 +135,7 @@ export class McsNotificationEventsService {
           break;
 
         case McsJobType.CloneServer:
-          this.createServerEvent.next(notification);
+          this.cloneServerEvent.next(notification);
           break;
 
         case McsJobType.RenameServer:
