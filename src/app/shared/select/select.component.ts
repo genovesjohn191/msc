@@ -22,9 +22,15 @@ import {
   NgControl,
   NgForm
 } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
-import { startWith } from 'rxjs/operators/startWith';
-import { takeUntil } from 'rxjs/operators/takeUntil';
+import {
+  Observable,
+  Subject,
+  merge
+} from 'rxjs';
+import {
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   Key,
   McsSelection,
@@ -44,7 +50,6 @@ import {
   animateFactory
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
-import { Subject } from 'rxjs/Subject';
 
 const SELECT_PANEL_MAX_HEIGHT = 400;
 const SELECT_ITEM_OFFSET = 7;
@@ -164,14 +169,14 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Combine streams of all the selected item child's change event
    */
   public get itemsSelectionChanged(): Observable<SelectItemComponent> {
-    return Observable.merge(...this._items.map((item) => item.itemSelectionChanged));
+    return merge(...this._items.map((item) => item.itemSelectionChanged));
   }
 
   /**
    * Combine streams of all the selected item child's group selection event
    */
   public get groupsSelectionChanged(): Observable<SelectItemComponent> {
-    return Observable.merge(...this._items.map((item) => item.groupSelectionChanged));
+    return merge(...this._items.map((item) => item.groupSelectionChanged));
   }
 
   /**
@@ -339,7 +344,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Listen to every selection changed event
    */
   private _listenToSelectionChange(): void {
-    let changedOrDestroyed = Observable.merge(this._items.changes, this._destroySubject);
+    let changedOrDestroyed = merge(this._items.changes, this._destroySubject);
     this.itemsSelectionChanged
       .pipe(takeUntil(changedOrDestroyed))
       .subscribe((item) => {

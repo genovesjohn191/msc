@@ -1,5 +1,12 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { Subscription, Subject } from 'rxjs/Rx';
+import {
+  Subscription,
+  Subject
+} from 'rxjs';
+import {
+  takeUntil,
+  finalize
+} from 'rxjs/operators';
 import {
   McsTextContentProvider,
   McsErrorHandlerService,
@@ -19,7 +26,6 @@ import { ServersResourcesRepository } from '../servers-resources.repository';
 import { ServersService } from '../servers.service';
 import { ServersRepository } from '../servers.repository';
 import { ServerService } from '../server/server.service';
-import { takeUntil } from 'rxjs/operators';
 
 export abstract class ServerDetailsBase {
   public serverResource: ServerResource;
@@ -117,10 +123,12 @@ export abstract class ServerDetailsBase {
     unsubscribeSafely(this.serverResourceSubscription);
     this.serverResourceSubscription = this._serversResourcesRespository
       .findRecordById(this.server.platform.resourceId, fromCache)
-      .finally(() => {
-        this.serverSelectionChanged();
-        this._changeDetectorRef.markForCheck();
-      })
+      .pipe(
+        finalize(() => {
+          this.serverSelectionChanged();
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe((resource) => {
         this.serverResource = resource;
       });

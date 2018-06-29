@@ -19,9 +19,13 @@ import {
   Observable,
   Subscription,
   Subject
-} from 'rxjs/Rx';
-import { takeUntil } from 'rxjs/operators/takeUntil';
-import { startWith } from 'rxjs/operators/startWith';
+} from 'rxjs';
+import {
+  takeUntil,
+  startWith,
+  catchError,
+  map
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsSafeToNavigateAway,
@@ -231,12 +235,14 @@ export class CreateServerComponent implements
 
       if (!isNullOrEmpty(createInstance)) {
         createInstance(serverDetails.getCreationInputs())
-          .catch((response) => {
-            this.dataStatusFactory.setError();
-            this.errorResponse = response.error;
-            this._changeDetectorRef.markForCheck();
-            return Observable.throw(response);
-          })
+          .pipe(
+            catchError((response) => {
+              this.dataStatusFactory.setError();
+              this.errorResponse = response.error;
+              this._changeDetectorRef.markForCheck();
+              return Observable.throw(response);
+            })
+          )
           .subscribe((job) => {
             if (isNullOrEmpty(job)) { return; }
             this.dataStatusFactory.setSuccesfull(job);
@@ -275,9 +281,12 @@ export class CreateServerComponent implements
     serverCreate.network.ipAllocationMode = serverInput.serverNetwork.ipAllocationMode;
     serverCreate.network.ipAddress = serverInput.serverNetwork.customIpAddress;
 
-    return this._serversService.createServer(serverCreate).map((response) => {
-      return isNullOrEmpty(response) ? undefined : response.content;
-    });
+    return this._serversService.createServer(serverCreate)
+      .pipe(
+        map((response) => {
+          return isNullOrEmpty(response) ? undefined : response.content;
+        })
+      );
   }
 
   /**
@@ -292,9 +301,11 @@ export class CreateServerComponent implements
     serverClone.clientReferenceObject.serverId = serverInput.targetServer.id;
 
     return this._serversService.cloneServer(serverInput.targetServer.id, serverClone)
-      .map((response) => {
-        return isNullOrEmpty(response) ? undefined : response.content;
-      });
+      .pipe(
+        map((response) => {
+          return isNullOrEmpty(response) ? undefined : response.content;
+        })
+      );
   }
 
   /**
@@ -303,10 +314,12 @@ export class CreateServerComponent implements
   private _getAllResources(): void {
     this.resourcesSubscription = this._serversResourceRepository
       .findAllRecords()
-      .catch((error) => {
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          return Observable.throw(error);
+        })
+      )
       .subscribe(() => {
         if (isNullOrEmpty(this.resources)) { return; }
         // Select the first element of the resource

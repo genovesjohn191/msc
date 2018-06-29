@@ -10,7 +10,7 @@ import {
   Observable,
   Subscription,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import {
   startWith,
   takeUntil,
@@ -453,11 +453,13 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.dataStatusFactory.setInProgress();
     this._updateNicsSubscription = this._serversRepository
       .findServerNics(this.server)
-      .catch((error) => {
-        // Handle common error status code
-        this.dataStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.dataStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this.dataStatusFactory.setSuccesfull(response);
       });

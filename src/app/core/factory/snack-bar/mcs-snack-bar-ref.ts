@@ -1,7 +1,7 @@
 import {
   Observable,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { McsOverlayRef } from '../overlay/mcs-overlay-ref';
 import { McsSnackBarContainerComponent } from './mcs-snack-bar-container.component';

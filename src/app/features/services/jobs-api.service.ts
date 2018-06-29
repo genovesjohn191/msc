@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import {
+  finalize,
+  map
+} from 'rxjs/operators';
 import {
   McsApiJob,
   McsApiService,
@@ -42,19 +46,21 @@ export class JobsApiService {
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._apiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsApiJob[]>(McsApiJob, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsApiJob[]>(McsApiJob, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 
   /**
@@ -66,18 +72,20 @@ export class JobsApiService {
     mcsApiRequestParameter.endPoint = `/jobs/${id}`;
 
     return this._apiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsApiJob>(McsApiJob, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceInfo(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsApiJob>(McsApiJob, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 }

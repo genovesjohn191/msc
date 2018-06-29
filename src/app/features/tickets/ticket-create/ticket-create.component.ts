@@ -10,7 +10,14 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  forkJoin
+} from 'rxjs';
+import {
+  finalize,
+  catchError
+} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
   isNullOrEmpty,
@@ -237,21 +244,21 @@ export class TicketCreateComponent implements
     // Create ticket
     this.createTicketSubscription = this._ticketCreateService
       .createTicket(ticket)
-      .finally(() => {
-        this.fgCreateDirective.resetAllControls();
-        this._ticketsRepository.refreshRecords();
-        this.creatingTicket = true;
-      })
-      .catch((error) => {
-        unsubscribeSafely(this.createTicketSubscription);
-        this._changeDetectorRef.markForCheck();
-        // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      })
-      .subscribe(() => {
-        this._router.navigate(['/tickets']);
-      });
+      .pipe(
+        finalize(() => {
+          this.fgCreateDirective.resetAllControls();
+          this._ticketsRepository.refreshRecords();
+          this.creatingTicket = true;
+        }),
+        catchError((error) => {
+          unsubscribeSafely(this.createTicketSubscription);
+          this._changeDetectorRef.markForCheck();
+          // Handle common error status code
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          return Observable.throw(error);
+        })
+      )
+      .subscribe(() => this._router.navigate(['/tickets']));
   }
 
   /**
@@ -294,7 +301,7 @@ export class TicketCreateComponent implements
    */
   private _getServices(): void {
     // Get all the data from api in parallel
-    this.servicesSubscription = Observable.forkJoin([
+    this.servicesSubscription = forkJoin([
       this._ticketCreateService.getServerResources(),
       this._ticketCreateService.getServers(),
       this._ticketCreateService.getFirewalls()

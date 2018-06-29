@@ -9,6 +9,16 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
+  Observable,
+  Subscription,
+  of,
+  merge
+} from 'rxjs';
+import {
+  switchMap,
+  catchError
+} from 'rxjs/operators';
+import {
   CoreDefinition,
   McsApiCompany,
   McsCompanyStatus,
@@ -17,10 +27,6 @@ import {
   McsTextContentProvider,
   McsDataStatus
 } from '../../../core';
-import {
-  Observable,
-  Subscription
-} from 'rxjs/Rx';
 import {
   isNullOrEmpty,
   getEnumString,
@@ -197,28 +203,30 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
    */
   private _listenToCompanies(): void {
     const displayDataChanges = [
-      Observable.of(undefined),
+      of(undefined),
       this.paginator.pageChangedStream,
       this.search.searchChangedStream
     ];
 
-    this.companiesSubscription = Observable.merge(...displayDataChanges)
-      .switchMap((instance) => {
-        // Notify the component that a process is currently in-progress
-        // if the user is not searching because the filtering has already a loader
-        // and we need to check it here since the component can be recreated during runtime
-        let isSearching = !isNullOrEmpty(instance) && instance.searching;
-        if (!isSearching) {
-          this.dataStatus = McsDataStatus.InProgress;
-        }
+    this.companiesSubscription = merge(...displayDataChanges)
+      .pipe(
+        switchMap((instance) => {
+          // Notify the component that a process is currently in-progress
+          // if the user is not searching because the filtering has already a loader
+          // and we need to check it here since the component can be recreated during runtime
+          let isSearching = !isNullOrEmpty(instance) && instance.searching;
+          if (!isSearching) {
+            this.dataStatus = McsDataStatus.InProgress;
+          }
 
-        // Find all records based on settings provided in the input
-        return this._switchAccountRepository.findAllRecords(this.paginator, this.search);
-      })
-      .catch((error) => {
-        this.dataStatus = McsDataStatus.Error;
-        return Observable.throw(error);
-      })
+          // Find all records based on settings provided in the input
+          return this._switchAccountRepository.findAllRecords(this.paginator, this.search);
+        }),
+        catchError((error) => {
+          this.dataStatus = McsDataStatus.Error;
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this.displayedCompanies = response.slice();
         this._totalRecordsCount = this._switchAccountRepository.totalRecordsCount;

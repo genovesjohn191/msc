@@ -2,11 +2,13 @@ import {
   Injectable,
   NgZone
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { merge } from 'rxjs/observable/merge';
-import { auditTime } from 'rxjs/operators/auditTime';
-import { of as observableOf } from 'rxjs/observable/of';
+import {
+  Observable,
+  fromEvent,
+  merge,
+  of
+} from 'rxjs';
+import { auditTime } from 'rxjs/operators';
 import { McsPlatformService } from './mcs-platform.service';
 
 // Constants
@@ -24,7 +26,7 @@ export class McsViewportService {
   ) {
     this._change = this._platformService.isBrowser ? this._ngZone.runOutsideAngular(() => {
       return merge<Event>(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange'));
-    }) : observableOf();
+    }) : of();
   }
 
   /**

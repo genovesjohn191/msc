@@ -2,8 +2,10 @@ import { McsDataSource } from '../../core';
 import {
   Observable,
   Subject,
-  BehaviorSubject
-} from 'rxjs/Rx';
+  BehaviorSubject,
+  merge
+} from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsSearch,
   McsListPanelItem,
@@ -53,51 +55,53 @@ export class GadgetsListSource implements McsDataSource<UserData> {
       this._listPanelSearch.searchChangedStream
     ];
 
-    return Observable.merge(...displayDataChanges)
-      .map(() => {
-        let undefinedItems = new Array();
-        let actualItems = new Array();
-        // Add undefined items
-        undefinedItems.push({
-          color: undefined,
-          name: 'no group 1',
-          id: '3',
-          progress: 'Data progress'
-        } as UserData);
+    return merge(...displayDataChanges)
+      .pipe(
+        map(() => {
+          let undefinedItems = new Array();
+          let actualItems = new Array();
+          // Add undefined items
+          undefinedItems.push({
+            color: undefined,
+            name: 'no group 1',
+            id: '3',
+            progress: 'Data progress'
+          } as UserData);
 
-        undefinedItems.push({
-          color: undefined,
-          name: 'no group 2',
-          id: '4',
-          progress: 'Data progress 2'
-        } as UserData);
+          undefinedItems.push({
+            color: undefined,
+            name: 'no group 2',
+            id: '4',
+            progress: 'Data progress 2'
+          } as UserData);
 
-        if (this._listPanelSearch.keyword) {
-          actualItems = this._exampleDatabase.data.filter((item) => {
-            return item.name.toLowerCase()
-              .includes(this._listPanelSearch.keyword.toLowerCase());
-          });
-          this._filterMode = true;
-        } else {
-          actualItems = this._exampleDatabase.data;
-          this._filterMode = false;
-        }
+          if (this._listPanelSearch.keyword) {
+            actualItems = this._exampleDatabase.data.filter((item) => {
+              return item.name.toLowerCase()
+                .includes(this._listPanelSearch.keyword.toLowerCase());
+            });
+            this._filterMode = true;
+          } else {
+            actualItems = this._exampleDatabase.data;
+            this._filterMode = false;
+          }
 
-        // Temporary set the selected element
-        if (!this._selectedElement) {
-          refreshView(() => {
-            this.selectedElement = {
-              itemId: actualItems[0].id,
-              groupName: actualItems[0].color
-            } as McsListPanelItem;
-          });
-        }
+          // Temporary set the selected element
+          if (!this._selectedElement) {
+            refreshView(() => {
+              this.selectedElement = {
+                itemId: actualItems[0].id,
+                groupName: actualItems[0].color
+              } as McsListPanelItem;
+            });
+          }
 
-        return [
-          ...undefinedItems,
-          ...actualItems
-        ];
-      });
+          return [
+            ...undefinedItems,
+            ...actualItems
+          ];
+        })
+      );
   }
 
   public disconnect() {

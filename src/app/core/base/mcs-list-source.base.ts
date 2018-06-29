@@ -1,10 +1,12 @@
 import {
   Observable,
-  Scheduler
+  asyncScheduler,
+  of
 } from 'rxjs';
 import {
   catchError,
-  switchMap
+  switchMap,
+  map
 } from 'rxjs/operators';
 import { isNullOrEmpty } from '../../utilities';
 
@@ -29,11 +31,11 @@ export abstract class McsListSourceBase<T> {
     return this.findAllRecordsStream().pipe(
       catchError((error) => Observable.throw(error)),
       switchMap((records) => {
-        if (isNullOrEmpty(records)) { return Observable.of(undefined); }
+        if (isNullOrEmpty(records)) { return of(undefined); }
 
         let recordsHaveChanged = this._cachedRecords.length !== records.length;
         if (recordsHaveChanged) { this._setMapRecords(records, keyFn); }
-        return Observable.of(this._recordsMap, Scheduler.async);
+        return of(this._recordsMap, asyncScheduler);
       })
     );
   }
@@ -46,7 +48,7 @@ export abstract class McsListSourceBase<T> {
   public findAllRecordsStream(): Observable<T[]> {
     return this.getStreams().pipe(
       catchError((error) => Observable.throw(error)),
-      switchMap(() => this.getAllRecords().map((records) => records))
+      switchMap(() => this.getAllRecords().pipe(map((records) => records)))
     );
   }
 

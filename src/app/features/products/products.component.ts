@@ -15,7 +15,8 @@ import {
 import {
   startWith,
   takeUntil,
-  switchMap
+  switchMap,
+  catchError
 } from 'rxjs/operators';
 import {
   Router,
@@ -147,10 +148,12 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Listen to all records changed
     this.catalogListSource.findAllRecordsStream()
-      .catch((error) => {
-        this.listStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          this.listStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this.catalogs = response;
         this.search.showLoading(false);
@@ -171,14 +174,14 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
           let productId = params.get('id');
           this.selectedProduct = { id: productId } as Product;
           return this._productsRepository.findRecordById(productId);
+        }),
+        catchError((error) => {
+          // Handle common error status code
+          this.productStatusFactory.setError();
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          return Observable.throw(error);
         })
       )
-      .catch((error) => {
-        // Handle common error status code
-        this.productStatusFactory.setError();
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      })
       .subscribe((response) => {
         this.selectedProduct = response;
         this._productService.selectProduct(response);

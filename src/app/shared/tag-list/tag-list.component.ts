@@ -15,9 +15,12 @@ import {
   OnChanges,
   OnDestroy
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { merge } from 'rxjs/observable/merge';
-import { startWith } from 'rxjs/operator/startWith';
+import {
+  Observable,
+  merge,
+  Subject
+} from 'rxjs';
+import { startWith, takeUntil } from 'rxjs/operators';
 import {
   ControlValueAccessor,
   FormGroupDirective,
@@ -117,10 +120,10 @@ export class TagListComponent extends McsFormFieldControlBase<any>
 
   // Other variables
   private _activeTagIndex: number;
+  private _destroySubject = new Subject<void>();
   private _selectionSubscription: any;
   private _removedSubscription: any;
   private _focusedSubscription: any;
-  private _itemsSubscripton: any;
 
   constructor(
     private _elementRef: ElementRef,
@@ -139,17 +142,18 @@ export class TagListComponent extends McsFormFieldControlBase<any>
     unsubscribeSafely(this._selectionSubscription);
     unsubscribeSafely(this._removedSubscription);
     unsubscribeSafely(this._focusedSubscription);
-    unsubscribeSafely(this._itemsSubscripton);
     this.stateChanges.complete();
   }
 
   public ngAfterContentInit() {
-    this._itemsSubscripton = startWith.call(this._items.changes, null).subscribe(() => {
-      this._listenToFocusChanges();
-      this._listenToSelectionChanges();
-      this._listenToRemovedChanges();
-      this._setModelValue(this._items.length);
-    });
+    this._items.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => {
+        this._listenToFocusChanges();
+        this._listenToSelectionChanges();
+        this._listenToRemovedChanges();
+        this._setModelValue(this._items.length);
+      });
   }
 
   public ngDoCheck(): void {

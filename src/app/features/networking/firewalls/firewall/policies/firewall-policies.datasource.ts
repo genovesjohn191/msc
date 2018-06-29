@@ -1,7 +1,13 @@
 import {
   Observable,
-  Subject
-} from 'rxjs/Rx';
+  Subject,
+  of,
+  merge
+} from 'rxjs';
+import {
+  map,
+  switchMap
+} from 'rxjs/operators';
 import {
   McsDataSource,
   McsDataStatus,
@@ -44,31 +50,35 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
    */
   public connect(): Observable<FirewallPolicy[]> {
     const displayDataChanges = [
-      Observable.of(undefined),
+      of(undefined),
       this._paginator.pageChangedStream,
       this._search.searchChangedStream
     ];
 
-    return Observable.merge(...displayDataChanges)
-      .switchMap((instance) => {
-        // Notify the table that a process is currently in-progress
-        // if the user is not searching because the filtering has already a loader
-        // and we need to check it here since the component can be recreated during runtime
-        let isSearching = !isNullOrEmpty(instance) && (instance as any).searching;
-        if (!isSearching) {
-          this.dataLoadingStream.next(McsDataStatus.InProgress);
-        }
+    return merge(...displayDataChanges)
+      .pipe(
+        switchMap((instance) => {
+          // Notify the table that a process is currently in-progress
+          // if the user is not searching because the filtering has already a loader
+          // and we need to check it here since the component can be recreated during runtime
+          let isSearching = !isNullOrEmpty(instance) && (instance as any).searching;
+          if (!isSearching) {
+            this.dataLoadingStream.next(McsDataStatus.InProgress);
+          }
 
-        // Find all records based on settings provided in the input
-        return this._firewallsRepository.findFirewallPolicies(
-          this._firewallService.selectedFirewall,
-          this._paginator,
-          this._search)
-          .map((response) => {
-            this._totalRecordCount = response.length;
-            return response;
-          });
-      });
+          // Find all records based on settings provided in the input
+          return this._firewallsRepository.findFirewallPolicies(
+            this._firewallService.selectedFirewall,
+            this._paginator,
+            this._search)
+            .pipe(
+              map((response) => {
+                this._totalRecordCount = response.length;
+                return response;
+              })
+            );
+        })
+      );
   }
 
   /**

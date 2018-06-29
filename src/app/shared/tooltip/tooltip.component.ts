@@ -10,7 +10,7 @@ import { AnimationEvent } from '@angular/animations';
 import {
   Observable,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { animateFactory } from '../../utilities';
 
 /** Tooltips declaration type */

@@ -10,7 +10,11 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import {
+  catchError,
+  switchMap
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -265,15 +269,17 @@ export class TicketComponent implements OnInit, OnDestroy {
    */
   private _getTicketById(): void {
     this.ticketSubscription = this._activatedRoute.paramMap
-      .switchMap((params: ParamMap) => {
-        let ticketId = params.get('id');
-        return this._ticketsService.getTicket(ticketId);
-      })
-      .catch((error) => {
-        // Handle common error status code
-        this._errorHandlerService.handleHttpRedirectionError(error.status);
-        return Observable.throw(error);
-      })
+      .pipe(
+        switchMap((params: ParamMap) => {
+          let ticketId = params.get('id');
+          return this._ticketsService.getTicket(ticketId);
+        }),
+        catchError((error) => {
+          // Handle common error status code
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         if (!isNullOrEmpty(response)) {
           this.ticket = response.content;

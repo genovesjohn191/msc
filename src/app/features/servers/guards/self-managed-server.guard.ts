@@ -5,6 +5,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
   McsHttpStatusCode
@@ -28,15 +29,17 @@ export class SelfManagedServerGuard implements CanActivate {
   public canActivate(
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
-  ): Observable<boolean>|Promise<boolean>|boolean {
+  ): Observable<boolean> | Promise<boolean> | boolean {
     return this._serversRepository
       .findRecordById(_route.parent.paramMap.get('id'))
-      .map((server) => {
-        if (server.serviceType === ServerServiceType.Managed) {
-          this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.NotFound);
-          return false;
-        }
-        return true;
-      });
+      .pipe(
+        map((server) => {
+          if (server.serviceType === ServerServiceType.Managed) {
+            this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.NotFound);
+            return false;
+          }
+          return true;
+        })
+      );
   }
 }

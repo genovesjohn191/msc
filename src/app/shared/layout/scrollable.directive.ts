@@ -10,7 +10,7 @@ import {
 import {
   Observable,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import {
   McsScrollDispatcherService,
   McsScrollable

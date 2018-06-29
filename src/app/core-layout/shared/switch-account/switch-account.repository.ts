@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import {
+  Observable,
+  of
+} from 'rxjs';
+import { map } from 'rxjs/operators';
+import {
   McsRepositoryBase,
   McsApiCompany,
   McsApiSuccessResponse,
   McsAccessControlService
 } from '../../../core';
-import { Observable } from 'rxjs/Rx';
 import { CoreLayoutService } from '../../core-layout.services';
 
 @Injectable()
@@ -34,7 +38,7 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
   ): Observable<McsApiSuccessResponse<McsApiCompany[]>> {
     let emptyResponse = new McsApiSuccessResponse<McsApiCompany[]>();
     emptyResponse.content = [];
-    return !this._hasPermission ? Observable.of(emptyResponse) :
+    return !this._hasPermission ? of(emptyResponse) :
       this._coreLayoutService.getCompanies({
         page: pageIndex,
         perPage: pageSize,
@@ -48,10 +52,12 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsApiCompany>> {
-    return this._coreLayoutService.getCompany(recordId
-    ).map((response) => {
-      return response;
-    });
+    return this._coreLayoutService.getCompany(recordId)
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
   }
 
   /**

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse
@@ -37,7 +40,7 @@ export class ToolsRepository extends McsRepositoryBase<Portal> {
       apiRecord.content = portalRecord;
       apiRecord.totalCount = 1;
     }
-    return Observable.of(apiRecord);
+    return of(apiRecord);
   }
 
   /**

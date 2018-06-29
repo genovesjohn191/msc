@@ -1,4 +1,7 @@
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of
+} from 'rxjs';
 import { McsApiSuccessResponse } from '../../../../core';
 import { Firewall } from '../../firewalls';
 
@@ -10,7 +13,7 @@ export const mockFirewallsService = {
     mcsApiResponseMock.totalCount = 2;
     mcsApiResponseMock.content = new Array(new Firewall(), new Firewall());
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   }
 
 };

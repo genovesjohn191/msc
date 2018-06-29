@@ -1,7 +1,7 @@
 import {
   Observable,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { CoreDefinition } from '../../core.definition';
 import { McsOverlayRef } from '../overlay/mcs-overlay-ref';
 import { McsDialogContainerComponent } from './mcs-dialog-container.component';

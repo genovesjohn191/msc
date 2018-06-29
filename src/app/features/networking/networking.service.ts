@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import {
+  map,
+  catchError
+} from 'rxjs/operators';
 
 // Services Declarations
 import {
@@ -25,8 +29,10 @@ export class NetworkingService {
 
     return this._mcsApiService
       .get(mcsApiRequestParameter)
-      .map((response) => response as NetworkingModel[])
-      .catch(this.handleError);
+      .pipe(
+        map((response) => response as NetworkingModel[]),
+        catchError(this.handleError)
+      );
   }
 
   /**

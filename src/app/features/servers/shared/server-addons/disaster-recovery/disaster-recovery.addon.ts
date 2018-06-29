@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs';
 import { McsTextContentProvider } from '../../../../../core';
 import {
   unsubscribeSafely,

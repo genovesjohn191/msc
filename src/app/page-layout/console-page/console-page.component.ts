@@ -13,7 +13,8 @@ import { ActivatedRoute } from '@angular/router';
 import {
   Subscription,
   Observable
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {
   refreshView,
   isNullOrEmpty,
@@ -259,11 +260,13 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.consoleStatus = VmConsoleStatus.Connecting;
     this._consoleRepository.findRecordById(serverId)
-      .catch((error) => {
-        // Handle common error status code
-        this.consoleStatus = VmConsoleStatus.Error;
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.consoleStatus = VmConsoleStatus.Error;
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response: McsApiConsole) => {
         if (isNullOrEmpty(response)) { return; }
         this._vmConsole.wmks('option', 'VCDProxyHandshakeVmxPath', response.vmx);

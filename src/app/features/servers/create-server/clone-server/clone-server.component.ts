@@ -16,7 +16,8 @@ import {
 import {
   Observable,
   Subscription
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   CoreDefinition,
@@ -145,11 +146,13 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
     this.dataStatusFactory.setInProgress();
     this.serversSubscription = this._serversRepository
       .findAllRecords()
-      .catch((error) => {
-        // Handle common error status code
-        this.dataStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.dataStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
         this.servers = (response as Server[]).filter((server) => server.clonable);
@@ -170,10 +173,12 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
     this.ipAddressStatusFactory.setInProgress();
     this._serversRepository
       .findRecordById(serverId)
-      .catch((error) => {
-        this.ipAddressStatusFactory.setSuccesfull();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          this.ipAddressStatusFactory.setSuccesfull();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this.ipAddressStatusFactory.setSuccesfull(response);
         let hasNics = !isNullOrEmpty(response) && !isNullOrEmpty(response.nics);

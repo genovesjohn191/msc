@@ -13,13 +13,15 @@ import {
   OnDestroy
 } from '@angular/core';
 import {
+  Subject,
+  Observable,
+  merge,
+  defer
+} from 'rxjs';
+import {
   takeUntil,
   startWith
 } from 'rxjs/operators';
-import {
-  Subject,
-  Observable
-} from 'rxjs/Rx';
 import { CoreDefinition } from '../../core';
 import {
   animateFactory,
@@ -74,8 +76,8 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   /**
    * Combine streams of all the selected item child's change event
    */
-  private readonly _optionsSelectionChanges: Observable<OptionComponent> = Observable.defer(() => {
-    return Observable.merge(...this._options.map((option) => option.selectionChange));
+  private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
+    return merge(...this._options.map((option) => option.selectionChange));
   });
 
   /**
@@ -164,7 +166,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    */
   private _listenToSelectionChange(): void {
     // Drops the current subscriptions and resets from scratch
-    let resetSubject = Observable.merge(this._options.changes, this._destroySubject);
+    let resetSubject = merge(this._options.changes, this._destroySubject);
     this._optionsSelectionChanges
       .pipe(startWith(null), takeUntil(resetSubject))
       .subscribe(() => {

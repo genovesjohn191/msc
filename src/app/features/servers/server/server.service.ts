@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServersService } from '../servers.service';
-import { BehaviorSubject } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs';
 import {
   Server,
   ServerPerformanceScale,

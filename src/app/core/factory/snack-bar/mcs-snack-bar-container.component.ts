@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   ViewChild,
-  EventEmitter,
   ComponentRef,
   EmbeddedViewRef,
   ChangeDetectorRef,
@@ -24,6 +23,7 @@ import { McsPortalTemplate } from '../portal/mcs-portal-template';
 import { McsSnackBarRefDirective } from './mcs-snack-bar-ref.directive';
 import { McsSnackBarConfig } from './mcs-snack-bar-config';
 import { McsPlacementType } from '../../core.types';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'mcs-snack-bar-container',
@@ -57,7 +57,7 @@ export class McsSnackBarContainerComponent implements OnInit {
   public portalHost: McsSnackBarRefDirective;
 
   /** Emits when an animation state changes. */
-  public animationStateChanged = new EventEmitter<AnimationEvent>();
+  public animationStateChanged = new Subject<AnimationEvent>();
 
   // Other variables
   public snackBarConfig: McsSnackBarConfig;
@@ -126,7 +126,7 @@ export class McsSnackBarContainerComponent implements OnInit {
    * @param event Animation event
    */
   public onAnimationStart(event: AnimationEvent) {
-    this.animationStateChanged.emit(event);
+    this.animationStateChanged.next(event);
   }
 
   /**
@@ -134,7 +134,7 @@ export class McsSnackBarContainerComponent implements OnInit {
    * @param event Animation event
    */
   public onAnimationDone(event: AnimationEvent) {
-    this.animationStateChanged.emit(event);
+    this.animationStateChanged.next(event);
   }
 
   /**

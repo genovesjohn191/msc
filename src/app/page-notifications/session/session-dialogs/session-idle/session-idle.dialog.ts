@@ -4,7 +4,10 @@ import {
   Inject,
   ViewEncapsulation
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  Observable,
+  timer
+} from 'rxjs';
 import {
   map,
   take
@@ -43,10 +46,10 @@ export class SessionIdleDialogComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.countDown = Observable.timer(0,1000).pipe(
-        take(this.dialogData),
-        map(() => this.dialogData--)
-      );
+    this.countDown = timer(0, 1000).pipe(
+      take(this.dialogData),
+      map(() => this.dialogData--)
+    );
   }
 
   /**

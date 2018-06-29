@@ -6,7 +6,7 @@ import {
 import {
   Subscription,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { LoaderService } from './loader.service';
 
 describe('LoaderDirective', () => {

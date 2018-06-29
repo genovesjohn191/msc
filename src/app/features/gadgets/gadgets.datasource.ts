@@ -1,8 +1,10 @@
 import {
   Observable,
   Subject,
-  BehaviorSubject
-} from 'rxjs/Rx';
+  BehaviorSubject,
+  merge
+} from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsPaginator,
   McsSearch,
@@ -36,19 +38,21 @@ export class GadgetsDataSource implements McsDataSource<any> {
       this._search.searchChangedStream,
     ];
 
-    return Observable.merge(...displayDataChanges)
-      .map(() => {
-        // Get all record by page settings
-        let pageData = this._exampleDatabase.data.slice();
-        let endIndex = (this._paginator.pageIndex + 1) * this._paginator.pageSize;
+    return merge(...displayDataChanges)
+      .pipe(
+        map(() => {
+          // Get all record by page settings
+          let pageData = this._exampleDatabase.data.slice();
+          let endIndex = (this._paginator.pageIndex + 1) * this._paginator.pageSize;
 
-        // Get all record by filter settings and return them
-        let actualData = pageData.splice(0, endIndex);
-        return actualData.slice().filter((item: UserData) => {
-          let searchStr = (item.name + item.color).toLowerCase();
-          return searchStr.indexOf(this._search.keyword.toLowerCase()) !== -1;
-        });
-      });
+          // Get all record by filter settings and return them
+          let actualData = pageData.splice(0, endIndex);
+          return actualData.slice().filter((item: UserData) => {
+            let searchStr = (item.name + item.color).toLowerCase();
+            return searchStr.indexOf(this._search.keyword.toLowerCase()) !== -1;
+          });
+        })
+      );
   }
 
   public disconnect() {

@@ -3,7 +3,10 @@ import {
   Subject,
   BehaviorSubject
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  map
+} from 'rxjs/operators';
 import { McsApiJob } from '../models/response/mcs-api-job';
 import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
 import { McsNotificationJobService } from './mcs-notification-job.service';
@@ -73,12 +76,14 @@ export class McsNotificationContextService implements McsInitializer {
     mcsApiRequestParameter.endPoint = '/jobs';
 
     return this._apiService.get(mcsApiRequestParameter)
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsApiJob[]>(McsApiJob, response);
-        return apiResponse ? apiResponse : new McsApiSuccessResponse<McsApiJob[]>();
-      })
+      .pipe(
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsApiJob[]>(McsApiJob, response);
+          return apiResponse ? apiResponse : new McsApiSuccessResponse<McsApiJob[]>();
+        })
+      )
       .subscribe((mcsApiResponse) => {
         if (mcsApiResponse.content) {
           this._notifications = mcsApiResponse.content.filter((notification) => {

@@ -8,7 +8,8 @@ import {
 import {
   Observable,
   Subscription
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {
   McsDialogService,
   McsTextContentProvider,
@@ -173,13 +174,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
             serverId: this.server.id
           }
         })
-        .catch((error) => {
-          this._serversService.clearServerSpinner(this.server, this.snapshot);
-          return Observable.throw(error);
-        })
-        .subscribe(() => {
-          // Subscribe to execute the service
-        });
+        .pipe(
+          catchError((error) => {
+            this._serversService.clearServerSpinner(this.server, this.snapshot);
+            return Observable.throw(error);
+          })
+        )
+        .subscribe();
     });
   }
 
@@ -195,13 +196,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
         .restoreServerSnapshot(this.server.id, {
           serverId: this.server.id
         })
-        .catch((error) => {
-          this._serversService.clearServerSpinner(this.server, this.snapshot);
-          return Observable.throw(error);
-        })
-        .subscribe(() => {
-          // Subscribe to execute the service
-        });
+        .pipe(
+          catchError((error) => {
+            this._serversService.clearServerSpinner(this.server, this.snapshot);
+            return Observable.throw(error);
+          })
+        )
+        .subscribe();
     }, snapshot);
   }
 
@@ -217,13 +218,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
         .deleteServerSnapshot(this.server.id, {
           serverId: this.server.id
         })
-        .catch((error) => {
-          this._serversService.clearServerSpinner(this.server, this.snapshot);
-          return Observable.throw(error);
-        })
-        .subscribe(() => {
-          // Subscribe to execute the service
-        });
+        .pipe(
+          catchError((error) => {
+            this._serversService.clearServerSpinner(this.server, this.snapshot);
+            return Observable.throw(error);
+          })
+        )
+        .subscribe();
     }, snapshot);
   }
 
@@ -330,11 +331,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
     this.dataStatusFactory.setInProgress();
     this.serverSnapshotsSubscription = this._serversRepository
       .findSnapshots(this.server)
-      .catch((error) => {
-        // Handle common error status code
-        this.dataStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.dataStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         // Subscribe to update the snapshots in server instance
         this.dataStatusFactory.setSuccesfull(response);

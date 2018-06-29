@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import {
   Observable,
   BehaviorSubject
-} from 'rxjs/Rx';
+} from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {
   McsAuthenticationIdentity,
   McsApiCompany,
@@ -105,10 +106,12 @@ export class SwitchAccountService {
 
       this._accountRepository
         .findRecordById(selectedAccountId)
-        .catch((error) => {
-          setDefaultAccount();
-          return Observable.throw(error);
-        })
+        .pipe(
+          catchError((error) => {
+            setDefaultAccount();
+            return Observable.throw(error);
+          })
+        )
         .subscribe((account) => {
           this.loadingAccount = false;
           this._activeAccount = account;

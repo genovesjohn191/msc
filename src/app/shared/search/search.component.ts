@@ -9,10 +9,14 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {
-  Observable,
   Subject,
-  Subscription
-} from 'rxjs/Rx';
+  Subscription,
+  concat
+} from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsSearch,
@@ -94,7 +98,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
   private _onSearchChanged() {
     this.showLoading(true);
-    this.searchChangedStream.next(this);
+    this.searchChangedStream.emit(this);
     this._changeDetectorRef.markForCheck();
   }
 
@@ -102,11 +106,13 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
     // Register stream event for the filtering,
     // This will invoke once the previous keyword and new keyword is not the same
     // @ the given amount of time
-    this._searchSubscription = Observable.concat(this._searchSubject)
-      .debounceTime(this.delayInSeconds === 'none' ?
-        CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000)
+    this._searchSubscription = concat(this._searchSubject)
+      .pipe(
+        debounceTime(this.delayInSeconds === 'none' ?
+          CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000)
+        ),
+        distinctUntilChanged()
       )
-      .distinctUntilChanged()
       .subscribe((searchTerm) => {
         this.keyword = searchTerm;
         this._onSearchChanged();

@@ -10,7 +10,9 @@ import {
 } from '@angular/core';
 import {
   Subject,
-  Observable
+  Observable,
+  merge,
+  defer
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -43,8 +45,8 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
   /**
    * Combine streams of all option selection change
    */
-  private readonly _optionsSelectionChanges: Observable<OptionComponent> = Observable.defer(() => {
-    return Observable.merge(...this._options.map((option) => option.selectionChange));
+  private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
+    return merge(...this._options.map((option) => option.selectionChange));
   });
 
   constructor(private _changeDetectorRef: ChangeDetectorRef) { }
@@ -63,7 +65,7 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
    */
   private _listenToOptionsSelectionChange(): void {
     // Drops the current subscriptions and resets from scratch
-    let resetSubject = Observable.merge(this._options.changes, this._destroySubject);
+    let resetSubject = merge(this._options.changes, this._destroySubject);
 
     this._optionsSelectionChanges.pipe(takeUntil(resetSubject))
       .subscribe((option: OptionComponent) => {

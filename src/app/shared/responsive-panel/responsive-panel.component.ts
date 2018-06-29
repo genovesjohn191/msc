@@ -15,7 +15,8 @@ import {
 } from '@angular/core';
 import {
   Observable,
-  Subject
+  Subject,
+  merge
 } from 'rxjs';
 import {
   startWith,
@@ -106,7 +107,7 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
    * Combine stream of all the selected item child's change event
    */
   public get itemsSelectionChanged(): Observable<ResponsivePanelItemDirective> {
-    return Observable.merge(...this.panelItems.map((item) => item.select));
+    return merge(...this.panelItems.map((item) => item.select));
   }
 
   constructor(

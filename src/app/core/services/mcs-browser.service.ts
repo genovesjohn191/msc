@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs';
 import { McsDeviceType } from '../enumerations/mcs-device-type.enum';
 import { McsSize } from '../models/mcs-size';
 import { CoreDefinition } from '../core.definition';

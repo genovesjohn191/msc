@@ -35,7 +35,8 @@
     "src/**/*.e2e.ts"
   ],
   "angularCompilerOptions": {
-    "skipMetadataEmit": true
+    "skipMetadataEmit": true,
+    "preserveWhitespaces": false
   },
   "compileOnSave": false,
   "buildOnSave": false,

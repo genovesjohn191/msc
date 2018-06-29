@@ -6,7 +6,7 @@ import {
   InjectionToken,
   ReflectiveInjector
 } from '@angular/core';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
 import { McsOverlayRef } from '../factory/overlay/mcs-overlay-ref';
 import { McsOverlayState } from '../factory/overlay/mcs-overlay-state';
 import { McsPortalComponent } from '../factory/portal/mcs-portal-component';

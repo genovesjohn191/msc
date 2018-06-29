@@ -2,8 +2,13 @@ import {
   Subject,
   Observable,
   Subscription,
-  Scheduler
-} from 'rxjs/Rx';
+  asyncScheduler,
+  of
+} from 'rxjs';
+import {
+  finalize,
+  map
+} from 'rxjs/operators';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
 import { McsSearch } from '../interfaces/mcs-search.interface';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
@@ -236,25 +241,27 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     });
     let requestRecordFromCache = !isNullOrEmpty(recordFoundFromCache) && fromCache;
     if (requestRecordFromCache) {
-      return Observable.of(recordFoundFromCache, Scheduler.async);
+      return of(recordFoundFromCache, asyncScheduler);
     }
 
     // Call the API if record has not been called once
     return this.getRecordById(id)
-      .finally(() => this._notifyAfterDataObtained())
-      .map((record) => {
-        let noRecordFound = isNullOrEmpty(record) || isNullOrEmpty(record.content);
-        if (noRecordFound) { return undefined; }
+      .pipe(
+        finalize(() => this._notifyAfterDataObtained()),
+        map((record) => {
+          let noRecordFound = isNullOrEmpty(record) || isNullOrEmpty(record.content);
+          if (noRecordFound) { return undefined; }
 
-        this.updateRecord(record.content);
-        let updatedRecord = this.dataRecords.find((recordInstance) =>
-          recordInstance.id === record.content.id
-        );
-        if (!isNullOrEmpty(updatedRecord)) {
-          this._updatedRecordsById.push(updatedRecord);
-        }
-        return updatedRecord;
-      });
+          this.updateRecord(record.content);
+          let updatedRecord = this.dataRecords.find((recordInstance) =>
+            recordInstance.id === record.content.id
+          );
+          if (!isNullOrEmpty(updatedRecord)) {
+            this._updatedRecordsById.push(updatedRecord);
+          }
+          return updatedRecord;
+        })
+      );
   }
 
   /**
@@ -284,11 +291,13 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
   private _findAllRecordsFromCache(recordsCount: number): Observable<T[]> {
     let pageData = this._dataRecords.slice();
     let actualData = pageData.splice(0, recordsCount);
-    return Observable.of(actualData, Scheduler.async)
-      .map((data) => {
-        this._filteredRecords = data;
-        return data;
-      });
+    return of(actualData, asyncScheduler)
+      .pipe(
+        map((data) => {
+          this._filteredRecords = data;
+          return data;
+        })
+      );
   }
 
   /**
@@ -303,28 +312,30 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     keyword: string): Observable<T[]> {
     // Get all records from API calls implemented under inherited class
     return this.getAllRecords(pageIndex, pageSize, keyword)
-      .finally(() => this._notifyAfterDataObtained())
-      .map((data) => {
-        if (isNullOrEmpty(data)) { return new Array(); }
-        this._totalRecordsCount = data.totalCount;
+      .pipe(
+        finalize(() => this._notifyAfterDataObtained()),
+        map((data) => {
+          if (isNullOrEmpty(data)) { return new Array(); }
+          this._totalRecordsCount = data.totalCount;
 
-        // Filter the unobtained records based on the updated records
-        let unobtainedRecords: T[];
-        unobtainedRecords = data.content && data.content.filter((record: T) => {
-          let dataExist = this._updatedRecordsById.find((updated: T) => updated.id === record.id);
-          return isNullOrEmpty(dataExist);
-        });
-
-        // We need to merge only the un-obtained records in order to retain the
-        // instance of the obtained records from the updated records
-        this._dataRecords = mergeArrays(this._dataRecords, unobtainedRecords,
-          (_first: T, _second: T) => {
-            let dataExist = isNullOrEmpty(_first.id) ? false : _first.id === _second.id;
-            return dataExist;
+          // Filter the unobtained records based on the updated records
+          let unobtainedRecords: T[];
+          unobtainedRecords = data.content && data.content.filter((record: T) => {
+            let dataExist = this._updatedRecordsById.find((updated: T) => updated.id === record.id);
+            return isNullOrEmpty(dataExist);
           });
-        this._filteredRecords = this._dataRecords;
-        return this._dataRecords;
-      });
+
+          // We need to merge only the un-obtained records in order to retain the
+          // instance of the obtained records from the updated records
+          this._dataRecords = mergeArrays(this._dataRecords, unobtainedRecords,
+            (_first: T, _second: T) => {
+              let dataExist = isNullOrEmpty(_first.id) ? false : _first.id === _second.id;
+              return dataExist;
+            });
+          this._filteredRecords = this._dataRecords;
+          return this._dataRecords;
+        })
+      );
   }
 
   /**

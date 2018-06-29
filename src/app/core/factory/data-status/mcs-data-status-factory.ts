@@ -2,7 +2,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import {
   BehaviorSubject,
   Subscription
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 import {
   isNullOrEmpty,

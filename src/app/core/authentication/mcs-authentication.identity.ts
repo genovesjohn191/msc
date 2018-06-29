@@ -3,7 +3,7 @@ import { McsApiCompany } from '../models/response/mcs-api-company';
 import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { AppState } from '../../app.service';
 import { CoreDefinition } from '../core.definition';
-import { BehaviorSubject } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs';
 import { McsAccountStatus } from '../enumerations/mcs-account-status.enum';
 import { McsCookieService } from '../services/mcs-cookie.service';
 

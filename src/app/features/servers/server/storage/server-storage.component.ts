@@ -9,7 +9,7 @@ import {
   Observable,
   Subscription,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import {
   startWith,
   takeUntil,
@@ -458,11 +458,13 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     this.dataStatusFactory.setInProgress();
     this._updateDiskSubscription = this._serversRepository
       .findServerDisks(this.server)
-      .catch((error) => {
-        // Handle common error status code
-        this.dataStatusFactory.setError();
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          // Handle common error status code
+          this.dataStatusFactory.setError();
+          return Observable.throw(error);
+        })
+      )
       .subscribe((response) => {
         this.dataStatusFactory.setSuccesfull(response);
       });

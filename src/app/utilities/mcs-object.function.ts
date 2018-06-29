@@ -1,7 +1,7 @@
 import {
   Subscription,
   Subject
-} from 'rxjs/Rx';
+} from 'rxjs';
 import { isNullOrUndefined } from 'util';
 
 /**

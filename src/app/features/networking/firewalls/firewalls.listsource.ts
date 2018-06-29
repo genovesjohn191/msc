@@ -1,4 +1,8 @@
-import { Observable } from 'rxjs/Rx';
+import {
+  Observable,
+  of,
+  merge
+} from 'rxjs';
 import {
   McsListSourceBase,
   McsSearch,
@@ -39,10 +43,10 @@ export class FirewallsListSource extends McsListSourceBase<Firewall> {
    */
   protected getStreams(): Observable<any> {
     const dataStreams = [
-      Observable.of(undefined),
+      of(undefined),
       this._search.searchChangedStream,
     ];
-    return Observable.merge(...dataStreams);
+    return merge(...dataStreams);
   }
 
   /**

@@ -4,9 +4,13 @@ import {
   CanActivate,
   RouterStateSnapshot
 } from '@angular/router';
-import { resolveEnvVar, isNullOrEmpty } from '../../utilities';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {
+  resolveEnvVar,
+  isNullOrEmpty
+} from '../../utilities';
 import { McsAuthenticationService } from './mcs-authentication.service';
-import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class McsAuthenticationGuard implements CanActivate {
@@ -35,13 +39,15 @@ export class McsAuthenticationGuard implements CanActivate {
     if (!isNullOrEmpty(authToken)) {
       if (this._enablePassingJwtInUrl) { this._authenticationService.setAuthToken(authToken); }
       return this._authenticationService.IsAuthenticated(authToken)
-        .map((response) => {
-          return response;
-        });
+        .pipe(
+          map((response) => {
+            return response;
+          })
+        );
     } else {
       // Redirect to login page of SSO (IDP)
       this._authenticationService.logIn();
-      return Observable.of(false);
+      return of(false);
     }
   }
 }

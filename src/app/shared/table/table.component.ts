@@ -25,10 +25,11 @@ import {
   Observable,
   Subject,
   Subscription
-} from 'rxjs/Rx';
+} from 'rxjs';
 import {
   takeUntil,
-  startWith
+  startWith,
+  catchError
 } from 'rxjs/operators';
 /** Core / Utilities */
 import {
@@ -395,11 +396,13 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    */
   private _getDatasourceData(): void {
     this._dataSourceSubscription = this.dataSource.connect()
-      .catch((error) => {
-        this.dataStatus = McsDataStatus.Error;
-        this._dataSource.onCompletion(this.dataStatus, undefined);
-        return Observable.throw(error);
-      })
+      .pipe(
+        catchError((error) => {
+          this.dataStatus = McsDataStatus.Error;
+          this._dataSource.onCompletion(this.dataStatus, undefined);
+          return Observable.throw(error);
+        })
+      )
       .subscribe((data) => {
         this._data = data;
         this._renderDataRows();

@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import {
+  map,
+  finalize
+} from 'rxjs/operators';
 /** Services and Models */
 import {
   McsApiService,
@@ -27,18 +31,20 @@ export class ConsolePageService {
     mcsApiRequestParameter.endPoint = `/servers/${id}/console`;
 
     return this._apiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<McsApiConsole>(McsApiConsole, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsApiConsole>(McsApiConsole, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 }

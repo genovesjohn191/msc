@@ -2,7 +2,8 @@ import {
   Injectable,
   EventEmitter
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse,
@@ -47,10 +48,13 @@ export class MediasRepository extends McsRepositoryBase<Media> {
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Media>> {
-    return this._mediasApiService.getMedia(recordId).map((response) => {
-      this._updateMediaFromCache(response.content);
-      return response;
-    });
+    return this._mediasApiService.getMedia(recordId)
+      .pipe(
+        map((response) => {
+          this._updateMediaFromCache(response.content);
+          return response;
+        })
+      );
   }
 
   /**

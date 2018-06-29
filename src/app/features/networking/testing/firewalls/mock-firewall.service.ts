@@ -1,7 +1,8 @@
 import {
   Observable,
-  Subject
-} from 'rxjs/Rx';
+  Subject,
+  of
+} from 'rxjs';
 import { McsApiSuccessResponse } from '../../../../core';
 import {
   Firewall,
@@ -19,7 +20,7 @@ export const mockFirewallService = {
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = new Firewall();
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
 
   getFirewallPolicies(_id: any): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
@@ -28,7 +29,7 @@ export const mockFirewallService = {
     mcsApiResponseMock.totalCount = 2;
     mcsApiResponseMock.content = new Array(new FirewallPolicy(), new FirewallPolicy());
 
-    return Observable.of(mcsApiResponseMock);
+    return of(mcsApiResponseMock);
   },
 
   setSelectedFirewall(_id: any): void {

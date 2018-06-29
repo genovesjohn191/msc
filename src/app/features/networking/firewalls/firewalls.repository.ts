@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse,
@@ -37,12 +38,14 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
         perPage: page.pageSize,
         searchKeyword: search.keyword
       })
-      .map((response) => {
-        activeFirewall.policies = !isNullOrEmpty(response.content) ?
-          response.content : new Array();
-        this.updateRecord(activeFirewall);
-        return response.content;
-      });
+      .pipe(
+        map((response) => {
+          activeFirewall.policies = !isNullOrEmpty(response.content) ?
+            response.content : new Array();
+          this.updateRecord(activeFirewall);
+          return response.content;
+        })
+      );
   }
 
   /**

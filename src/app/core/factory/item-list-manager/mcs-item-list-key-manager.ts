@@ -1,5 +1,5 @@
 import { QueryList } from '@angular/core';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
 import { isNullOrEmpty } from '../../../utilities';
 import { Key } from '../../enumerations/mcs-key.enum';
 import { McsItemListManager } from './mcs-item-list-manager';

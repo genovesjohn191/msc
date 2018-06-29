@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import {
+  map,
+  finalize
+} from 'rxjs/operators';
 /** Services and Models */
 import {
   McsApiService,
@@ -43,19 +47,21 @@ export class ProductsService {
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<ProductCatalog[]>(ProductCatalog, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<ProductCatalog[]>(ProductCatalog, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 
   /**
@@ -67,19 +73,21 @@ export class ProductsService {
     mcsApiRequestParameter.endPoint = '/catalogs/' + id;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<ProductCatalog>(ProductCatalog, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<ProductCatalog>(ProductCatalog, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 
   /**
@@ -107,19 +115,21 @@ export class ProductsService {
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<Product[]>(Product, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<Product[]>(Product, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 
   /**
@@ -131,18 +141,20 @@ export class ProductsService {
     mcsApiRequestParameter.endPoint = '/catalogs/products/' + id;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
-      .finally(() => {
-        this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-      })
-      .map((response) => {
-        // Deserialize json reponse
-        let apiResponse = McsApiSuccessResponse
-          .deserializeResponse<Product>(Product, response);
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<Product>(Product, response);
 
-        this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-        this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-        this._loggerService.traceInfo(`converted response:`, apiResponse);
-        return apiResponse;
-      });
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
   }
 }
