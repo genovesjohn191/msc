@@ -16,7 +16,6 @@ import { CoreDefinition } from '../core.definition';
 import {
   isUrlValid,
   isNullOrEmpty,
-  resolveEnvVar,
   convertMapToJsonObject
 } from '../../utilities';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
@@ -43,18 +42,12 @@ export class McsApiService {
     this._errorResponseStream = value;
   }
 
-  private _jwtCookieName: string;
-  private _jwtRefreshTokenCookieName: string;
-
   constructor(
     private _httpClient: HttpClient,
     private _cookieService: McsCookieService,
     @Optional() private _config: CoreConfig
   ) {
     this._errorResponseStream = new Subject<Response | any>();
-    this._jwtCookieName = resolveEnvVar('JWT_COOKIE_NAME', CoreDefinition.COOKIE_AUTH_TOKEN);
-    this._jwtRefreshTokenCookieName =
-      resolveEnvVar('JWT_REFRESH_TOKEN_COOKIE_NAME', CoreDefinition.COOKIE_REFRESH_TOKEN);
   }
 
   /**
@@ -232,7 +225,7 @@ export class McsApiService {
    * @param {Headers} headers Header Instance
    */
   private _setAuthorizationHeader(headers: Map<string, any>) {
-    let authToken = this._cookieService.getItem(this._jwtCookieName);
+    let authToken = this._cookieService.getItem(this._config.jwtCookieName);
 
     if (authToken) {
       headers.set(CoreDefinition.HEADER_AUTHORIZATION,
@@ -249,7 +242,7 @@ export class McsApiService {
    * @param {Headers} headers Header Instance
    */
   private _setRefreshTokenHeader(headers: Map<string, any>) {
-    let refreshToken = this._cookieService.getItem(this._jwtRefreshTokenCookieName);
+    let refreshToken = this._cookieService.getItem(this._config.jwtRefreshTokenCookieName);
 
     if (refreshToken) {
       headers.set(CoreDefinition.HEADER_REFRESH_TOKEN, refreshToken);

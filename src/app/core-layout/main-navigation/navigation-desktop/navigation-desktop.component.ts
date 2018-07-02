@@ -10,14 +10,12 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
+  CoreConfig,
   CoreDefinition,
   McsTextContentProvider,
   McsDataStatusFactory
 } from '../../../core';
-import {
-  resolveEnvVar,
-  isNullOrEmpty
-} from '../../../utilities';
+import { isNullOrEmpty } from '../../../utilities';
 import {
   Product,
   ProductCatalog,
@@ -48,6 +46,7 @@ export class NavigationDesktopComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _productCatalogRepository: ProductCatalogRepository
@@ -63,8 +62,8 @@ export class NavigationDesktopComponent implements OnInit {
   /**
    * Returns the macquarie view url
    */
-  public get macquarieViewUrl(): string {
-    return resolveEnvVar('MACQUARIE_VIEW_URL');
+  public get macviewUrl(): string {
+    return this._coreConfig.macviewUrl;
   }
 
   /**

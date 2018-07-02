@@ -6,10 +6,8 @@ import {
 } from '@angular/router';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  resolveEnvVar,
-  isNullOrEmpty
-} from '../../utilities';
+import { CoreConfig } from '../core.config';
+import { isNullOrEmpty } from '../../utilities';
 import { McsAuthenticationService } from './mcs-authentication.service';
 
 @Injectable()
@@ -17,10 +15,10 @@ export class McsAuthenticationGuard implements CanActivate {
 
   private _enablePassingJwtInUrl: boolean;
 
-  constructor(private _authenticationService: McsAuthenticationService) {
-    this._enablePassingJwtInUrl =
-      resolveEnvVar('ENABLE_PASSING_JWT_IN_URL', 'true').toLowerCase() === 'true';
-  }
+  constructor(
+    private _authenticationService: McsAuthenticationService,
+    private _coreConfig: CoreConfig
+  ) { }
 
   public canActivate(
     activatedRoute: ActivatedRouteSnapshot,
@@ -28,6 +26,9 @@ export class McsAuthenticationGuard implements CanActivate {
   ) {
     let authToken: string;
     let headerToken: any;
+
+    // Set enable passing JWT in url flag
+    this._enablePassingJwtInUrl = this._coreConfig.enablePassingJwtInUrl;
 
     // Set Return URL always
     this._authenticationService.setReturnUrl(routerState.url, activatedRoute.queryParams);

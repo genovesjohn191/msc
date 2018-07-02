@@ -4,10 +4,10 @@ import {
 } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
+  CoreConfig,
   McsDataSource,
   McsDataStatus
 } from '../../core';
-import { resolveEnvVar } from '../../utilities';
 import {
   Portal,
   PortalAccess
@@ -20,7 +20,10 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    */
   public dataLoadingStream: Subject<McsDataStatus>;
 
-  constructor(private _toolsRepository: ToolsRepository) { }
+  constructor(
+    private _coreConfig: CoreConfig,
+    private _toolsRepository: ToolsRepository
+  ) { }
 
   /**
    * Connect function called by the table to retrieve
@@ -39,7 +42,7 @@ export class ToolsDataSource implements McsDataSource<Portal> {
           macquarieView.name = 'Macquarie View';
           let macquarieViewPortalAccess = new PortalAccess();
           macquarieViewPortalAccess.name = macquarieView.name;
-          macquarieViewPortalAccess.url = resolveEnvVar('MACQUARIE_VIEW_URL');
+          macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
           macquarieView.portalAccess = Array(macquarieViewPortalAccess);
           partnerPortals.push(macquarieView);
 

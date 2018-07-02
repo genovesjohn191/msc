@@ -9,6 +9,15 @@ export class CoreConfig {
     this._apiHost = value;
   }
 
+  /** Macquarie View URL */
+  private _macviewUrl: string;
+  public get macviewUrl(): string {
+    return this._macviewUrl;
+  }
+  public set macviewUrl(value: string) {
+    this._macviewUrl = value;
+  }
+
   /**
    * Encryption public Key
    *
@@ -57,5 +66,50 @@ export class CoreConfig {
   }
   public set iconRoot(value: string) {
     this._iconRoot = value;
+  }
+
+  /** Orders URL */
+  private _macviewOrdersUrl: string;
+  public get macviewOrdersUrl(): string {
+    return this._macviewOrdersUrl;
+  }
+  public set macviewOrdersUrl(value: string) {
+    this._macviewOrdersUrl = value;
+  }
+
+  /** Change Password URL */
+  private _macviewChangePasswordUrl: string;
+  public get macviewChangePasswordUrl(): string {
+    return this._macviewChangePasswordUrl;
+  }
+  public set macviewChangePasswordUrl(value: string) {
+    this._macviewChangePasswordUrl = value;
+  }
+
+  /** Enable Passing JWT in URL */
+  private _enablePassingJwtInUrl: boolean;
+  public get enablePassingJwtInUrl(): boolean {
+    return this._enablePassingJwtInUrl;
+  }
+  public set enablePassingJwtInUrl(value: boolean) {
+    this._enablePassingJwtInUrl = value;
+  }
+
+  /** JWT Cookie Name */
+  private _jwtCookieName: string;
+  public get jwtCookieName(): string {
+    return this._jwtCookieName;
+  }
+  public set jwtCookieName(value: string) {
+    this._jwtCookieName = value;
+  }
+
+  /** JWT Refresh Token Cookie Name */
+  private _jwtRefreshTokenCookieName: string;
+  public get jwtRefreshTokenCookieName(): string {
+    return this._jwtRefreshTokenCookieName;
+  }
+  public set jwtRefreshTokenCookieName(value: string) {
+    this._jwtRefreshTokenCookieName = value;
   }
 }

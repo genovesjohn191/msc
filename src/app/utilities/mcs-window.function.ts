@@ -4,13 +4,15 @@ type environmentName =
   'PORT' |
   'LOGIN_URL' |
   'LOGOUT_URL' |
+  'MACVIEW_ORDERS_URL' |
+  'MACVIEW_CHANGE_PASSWORD_URL' |
   'JWT_COOKIE_NAME' |
   'JWT_REFRESH_TOKEN_COOKIE_NAME' |
   'ENABLE_PASSING_JWT_IN_URL' |
   'SENTRY_DSN' |
   'IMAGE_ROOT' |
   'ICON_ROOT' |
-  'MACQUARIE_VIEW_URL' |
+  'MACVIEW_URL' |
   'EK';
 import { isNullOrEmpty } from './mcs-object.function';
 
@@ -37,6 +39,12 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
     case 'LOGOUT_URL':
       overrideValue = window['ENV_CONFIG'].logoutUrl;
       break;
+    case 'MACVIEW_ORDERS_URL':
+      overrideValue = window['ENV_CONFIG'].macviewOrdersUrl;
+      break;
+    case 'MACVIEW_CHANGE_PASSWORD_URL':
+      overrideValue = window['ENV_CONFIG'].macviewChangePasswordUrl;
+      break;
     case 'JWT_COOKIE_NAME':
       overrideValue = window['ENV_CONFIG'].jwtCookieName;
       break;
@@ -55,8 +63,8 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
     case 'ICON_ROOT':
       overrideValue = window['ENV_CONFIG'].iconRoot;
       break;
-    case 'MACQUARIE_VIEW_URL':
-      overrideValue = window['ENV_CONFIG'].macquarieViewUrl;
+    case 'MACVIEW_URL':
+      overrideValue = window['ENV_CONFIG'].macviewUrl;
       break;
     case 'EK':
       overrideValue = window['ENV_CONFIG'].ek;
