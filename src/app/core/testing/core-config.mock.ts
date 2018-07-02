@@ -14,7 +14,15 @@ export class MockCoreConfig {
 
   public iconRoot: string = 'assets/icon/';
 
+  public macviewUrl: string = '#';
+
   public loginUrl: string = '#';
 
   public logoutUrl: string = '#';
+
+  public macviewOrdersUrl: string = '#';
+
+  public manageUsersUrl: string = '#';
+
+  public macviewChangePasswordUrl: string = '#';
 }

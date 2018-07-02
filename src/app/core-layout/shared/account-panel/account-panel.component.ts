@@ -5,7 +5,10 @@ import {
   EventEmitter,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { McsTextContentProvider } from '../../../core';
+import {
+  McsTextContentProvider,
+  CoreConfig
+} from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
 
 @Component({
@@ -22,7 +25,20 @@ export class AccountPanelComponent implements OnInit {
   @Output()
   public selectionChanged: EventEmitter<any>;
 
-  constructor(private _textContent: McsTextContentProvider) {
+  public get macviewOrdersUrl(): string {
+    return !isNullOrEmpty(this._coreConfig) ?
+      this._coreConfig.macviewOrdersUrl : '';
+  }
+
+  public get macviewChangePasswordUrl(): string {
+    return !isNullOrEmpty(this._coreConfig) ?
+      this._coreConfig.macviewChangePasswordUrl : '';
+  }
+
+  constructor(
+    private _coreConfig: CoreConfig,
+    private _textContent: McsTextContentProvider
+  ) {
     this.selectionChanged = new EventEmitter();
   }
 

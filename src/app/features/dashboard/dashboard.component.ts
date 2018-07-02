@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
 import {
   McsTextContentProvider,
   McsAuthenticationService,
+  CoreConfig,
   CoreDefinition
 } from '../../core';
-import { resolveEnvVar } from '../../utilities';
 
 @Component({
   selector: 'mcs-dashboard',
@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
 
   public constructor(
     private _router: Router,
+    private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContent: McsTextContentProvider,
     private _authenticationService: McsAuthenticationService
@@ -40,15 +41,15 @@ export class DashboardComponent implements OnInit {
   /**
    * Returns the macquarie view url
    */
-  public get macquarieViewUrl(): string {
-    return resolveEnvVar('MACQUARIE_VIEW_URL');
+  public get macviewUrl(): string {
+    return this._coreConfig.macviewUrl;
   }
 
   /**
    * Returns the user details url
    */
   public get userDetailsUrl(): string {
-    return `${this.macquarieViewUrl}/UserManagement/SearchUser.aspx`;
+    return `${this.macviewUrl}/UserManagement/SearchUser.aspx`;
   }
 
   /**

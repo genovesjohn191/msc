@@ -15,7 +15,6 @@ import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 import { McsLoggerService } from '../services/mcs-logger.service';
 import { AppState } from '../../app.service';
 import {
-  resolveEnvVar,
   isNullOrEmpty,
   getDomainName
 } from '../../utilities';
@@ -24,8 +23,6 @@ import {
 export class McsAuthenticationService {
 
   private _returnUrl: string; // Return url to be set privately
-  private _jwtCookieName: string;
-  private _enablePassingJwtInUrl: boolean;
 
   constructor(
     private _appState: AppState,
@@ -35,12 +32,7 @@ export class McsAuthenticationService {
     private _loggerService: McsLoggerService,
     private _locationService: Location,
     private _coreConfig: CoreConfig
-  ) {
-    // Listen for the error in API Response
-    this._jwtCookieName = resolveEnvVar('JWT_COOKIE_NAME', CoreDefinition.COOKIE_AUTH_TOKEN);
-    this._enablePassingJwtInUrl =
-      resolveEnvVar('ENABLE_PASSING_JWT_IN_URL', 'true').toLowerCase() === 'true';
-  }
+  ) { }
 
   /**
    * This will navigate to login page of SSO (IDP)
@@ -79,7 +71,7 @@ export class McsAuthenticationService {
     }
 
     // Return the token from the cookie
-    authToken = this._cookieService.getItem<string>(this._jwtCookieName);
+    authToken = this._cookieService.getItem<string>(this._coreConfig.jwtCookieName);
     if (authToken) { return authToken; }
   }
 
@@ -97,8 +89,8 @@ export class McsAuthenticationService {
    */
   public deleteCookieContent(): void {
     // Delete the token from Appstate and Cookie
-    if (this._enablePassingJwtInUrl) {
-      this._cookieService.removeItem(this._jwtCookieName);
+    if (this._coreConfig.enablePassingJwtInUrl) {
+      this._cookieService.removeItem(this._coreConfig.jwtCookieName);
     }
     this._cookieService.removeItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
   }
@@ -155,7 +147,7 @@ export class McsAuthenticationService {
   }
 
   private _setUserIdentity(authToken: string, identity: McsApiIdentity) {
-    if (this._enablePassingJwtInUrl) {
+    if (this._coreConfig.enablePassingJwtInUrl) {
       this.setAuthToken(authToken, identity.expiry);
     }
     this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
@@ -186,7 +178,7 @@ export class McsAuthenticationService {
 
     // Set cookie with expiration date
     this._cookieService.setItem(
-      this._jwtCookieName,
+      this._coreConfig.jwtCookieName,
       token,
       {
         domain: domainName,

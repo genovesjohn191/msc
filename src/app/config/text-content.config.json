@@ -909,7 +909,10 @@
   "accountPanel": {
     "accountSettings": "Account Settings",
     "profile": "Profile",
-    "tickets": "Tickets"
+    "tickets": "Tickets",
+    "orders": "Orders",
+    "manageUsers": "Manage Users",
+    "changePassword": "Change Password"
   },
   "switchAccount": {
     "header": "Switch Account",

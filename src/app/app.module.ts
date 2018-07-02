@@ -66,7 +66,8 @@ import { SharedModule } from './shared';
  */
 import {
   resolveEnvVar,
-  isNullOrEmpty
+  isNullOrEmpty,
+  coerceBoolean
 } from './utilities';
 
 /**
@@ -83,9 +84,18 @@ const APP_PROVIDERS = [
 export function coreConfig(): CoreConfig {
   return {
     apiHost: resolveEnvVar('API_HOST', API_URL),
+    macviewUrl: resolveEnvVar('MACVIEW_URL', MACVIEW_URL),
     loginUrl: resolveEnvVar('LOGIN_URL', LOGIN_URL),
     logoutUrl: resolveEnvVar('LOGOUT_URL', LOGOUT_URL),
-    imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
+    macviewOrdersUrl: resolveEnvVar('MACVIEW_ORDERS_URL', MACVIEW_ORDERS_URL),
+    macviewChangePasswordUrl: resolveEnvVar('MACVIEW_CHANGE_PASSWORD_URL',
+      MACVIEW_CHANGE_PASSWORD_URL),
+    enablePassingJwtInUrl: coerceBoolean(resolveEnvVar('ENABLE_PASSING_JWT_IN_URL',
+      ENABLE_PASSING_JWT_IN_URL)),
+    jwtCookieName: resolveEnvVar('JWT_COOKIE_NAME', JWT_COOKIE_NAME),
+    jwtRefreshTokenCookieName: resolveEnvVar('JWT_REFRESH_TOKEN_COOKIE_NAME',
+      JWT_REFRESH_TOKEN_COOKIE_NAME),
+      imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
     iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL),
     enryptionKey: resolveEnvVar('EK', EK)
   } as CoreConfig;

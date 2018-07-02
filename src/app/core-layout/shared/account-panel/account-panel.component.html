@@ -19,5 +19,24 @@
         {{ textContent.tickets }}
       </a>
     </mcs-list-item>
+    <mcs-list-item>
+      <a cursor="pointer" [href]="macviewOrdersUrl" target="_blank"
+        *mcsAccessControl="['OrderView']"
+        (click)="notifySelectionChange('orders')"
+        mcsEventTracker="navigate-to-orders"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">
+        {{ textContent.orders }}
+      </a>
+    </mcs-list-item>
+    <mcs-list-item>
+      <a cursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
+        (click)="notifySelectionChange('change-password')"
+        mcsEventTracker="navigate-to-change-password"
+        mcsEventCategory="navigation"
+        mcsEventLabel="user-panel">
+        {{ textContent.changePassword }}
+      </a>
+    </mcs-list-item>
   </mcs-list>
 </div>

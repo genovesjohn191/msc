@@ -24,6 +24,7 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
+  CoreConfig,
   CoreDefinition,
   McsApiCompany,
   McsAuthenticationIdentity,
@@ -32,7 +33,6 @@ import {
   McsDataStatusFactory
 } from '../../../core';
 import {
-  resolveEnvVar,
   registerEvent,
   unregisterEvent,
   unsubscribeSafely,
@@ -97,8 +97,8 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     return this._authenticationIdentity.activeAccount;
   }
 
-  public get macquarieViewUrl(): string {
-    return resolveEnvVar('MACQUARIE_VIEW_URL');
+  public get macviewUrl(): string {
+    return this._coreConfig.macviewUrl;
   }
 
   public get toggleIconKey(): string {
@@ -145,6 +145,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     private _elementRef: ElementRef,
     private _renderer: Renderer2,
     private _router: Router,
+    private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
     private _authenticationIdentity: McsAuthenticationIdentity,
     private _authenticationService: McsAuthenticationService,
