@@ -4,15 +4,17 @@ import {
   Subject
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ServerResource } from '../models';
-import { ServersResourcesRepository } from '../servers-resources.repository';
-import { VdcService } from '../vdc/vdc.service';
 import { McsTextContentProvider } from '../../../core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject
 } from '../../../utilities';
+import {
+  Resource,
+  ResourcesRepository
+} from '../../resources';
+import { VdcService } from '../vdc/vdc.service';
 
 export abstract class VdcDetailsBase {
   private _vdcSubscription: Subscription;
@@ -22,9 +24,9 @@ export abstract class VdcDetailsBase {
   /**
    * Selected VDC
    */
-  private _selectedVdc: ServerResource;
-  public get selectedVdc(): ServerResource { return this._selectedVdc; }
-  public set selectedVdc(value: ServerResource) {
+  private _selectedVdc: Resource;
+  public get selectedVdc(): Resource { return this._selectedVdc; }
+  public set selectedVdc(value: Resource) {
     this._selectedVdc = value;
     this._changeDetectorRef.markForCheck();
   }
@@ -38,12 +40,12 @@ export abstract class VdcDetailsBase {
   }
 
   constructor(
-    protected _serversResourcesRespository: ServersResourcesRepository,
+    protected _resourcesRespository: ResourcesRepository,
     protected _vdcService: VdcService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textContentProvider: McsTextContentProvider
   ) {
-    this.selectedVdc = new ServerResource();
+    this.selectedVdc = new Resource();
   }
 
   protected initialize(): void {
@@ -80,7 +82,7 @@ export abstract class VdcDetailsBase {
    * so that we could refresh the view of the corresponding component
    */
   private _listenToResourcesUpdate(): void {
-    this._resourcesUpdateSubscription = this._serversResourcesRespository
+    this._resourcesUpdateSubscription = this._resourcesRespository
       .dataRecordsChanged
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._changeDetectorRef.markForCheck());

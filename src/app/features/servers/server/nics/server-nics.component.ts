@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
-  Observable,
   Subscription,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
   startWith,
@@ -17,7 +17,10 @@ import {
   catchError
 } from 'rxjs/operators';
 import {
-  ServerNetwork,
+  ResourceNetwork,
+  ResourcesRepository
+} from '../../../resources';
+import {
   ServerNic,
   ServerCreateNic,
   ServerManageNetwork,
@@ -42,7 +45,6 @@ import { DeleteNicDialogComponent } from '../../shared';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
@@ -73,7 +75,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public currentIpAddress: string;
   public fcNetwork: FormControl;
   public manageNetwork: ServerManageNetwork;
-  public selectedNetwork: ServerNetwork;
+  public selectedNetwork: ResourceNetwork;
   public selectedNic: ServerNic;
   public dataStatusFactory: McsDataStatusFactory<ServerNic[]>;
   public manageNetworkTemplate: any[];
@@ -119,7 +121,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Returns all the resource networks
    */
-  public get resourceNetworks(): ServerNetwork[] {
+  public get resourceNetworks(): ResourceNetwork[] {
     return !isNullOrEmpty(this.serverResource.networks) ?
       this.serverResource.networks : new Array();
   }
@@ -137,7 +139,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   constructor(
-    _serversResourcesRepository: ServersResourcesRepository,
+    _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
@@ -148,7 +150,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     private _notificationEvents: McsNotificationEventsService
   ) {
     super(
-      _serversResourcesRepository,
+      _resourcesRepository,
       _serversRepository,
       _serversService,
       _serverService,
@@ -263,7 +265,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, nicValues);
           this._errorHandlerService.handleHttpRedirectionError(error);
-          return Observable.throw(error);
+          return throwError(error);
         })
       ).subscribe();
   }
@@ -295,7 +297,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server, this.selectedNic);
             this._errorHandlerService.handleHttpRedirectionError(error);
-            return Observable.throw(error);
+            return throwError(error);
           })
         ).subscribe();
     });
@@ -324,7 +326,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, this.selectedNic);
           this._errorHandlerService.handleHttpRedirectionError(error);
-          return Observable.throw(error);
+          return throwError(error);
         })
       ).subscribe();
   }
@@ -457,7 +459,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         catchError((error) => {
           // Handle common error status code
           this.dataStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -472,7 +474,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     let hasResource = !isNullOrEmpty(this.serverResource) && !isNullOrEmpty(this.serverResource.id);
     if (!hasResource) { return; }
 
-    this._networksSubscription = this._serversResourcesRespository
+    this._networksSubscription = this._resourcesRespository
       .findResourceNetworks(this.serverResource)
       .subscribe(() => {
         // Subscribe to update the snapshots in server instance

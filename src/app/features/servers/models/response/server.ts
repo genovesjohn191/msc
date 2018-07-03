@@ -1,7 +1,7 @@
 import { ServerOperatingSystemSummary } from './server-operating-system-summary';
 import { ServerHardware } from './server-hardware';
-import { ServerComputeSummary } from './server-compute-summary';
-import { ServerPlatformSummary } from './server-platform-summary';
+import { ServerCompute } from './server-compute';
+import { ServerPlatform } from './server-platform';
 import { ServerMedia } from './server-media';
 import { ServerStorageDevice } from './server-storage-device';
 import { ServerNic } from './server-nic';
@@ -38,13 +38,12 @@ export class Server extends McsEntityBase {
   public portalUrl: string;
   public vCloudId: string;
   public vCenterId: string;
-  public isTemplate: boolean;
 
   @JsonProperty({ type: ServerVmwareTools })
   public vmwareTools: ServerVmwareTools;
 
-  @JsonProperty({ type: ServerPlatformSummary })
-  public platform: ServerPlatformSummary;
+  @JsonProperty({ type: ServerPlatform })
+  public platform: ServerPlatform;
 
   @JsonProperty({ type: ServerNic })
   public nics: ServerNic[];
@@ -64,8 +63,8 @@ export class Server extends McsEntityBase {
   @JsonProperty({ type: ServerHardware })
   public hardware: ServerHardware;
 
-  @JsonProperty({ type: ServerComputeSummary })
-  public compute: ServerComputeSummary;
+  @JsonProperty({ type: ServerCompute })
+  public compute: ServerCompute;
 
   @JsonProperty({
     type: ServerPowerState,
@@ -109,7 +108,6 @@ export class Server extends McsEntityBase {
     this.portalUrl = undefined;
     this.vCloudId = undefined;
     this.vCenterId = undefined;
-    this.isTemplate = undefined;
     this.vmwareTools = undefined;
   }
 

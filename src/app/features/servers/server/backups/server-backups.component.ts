@@ -6,8 +6,8 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import {
-  Observable,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -32,6 +32,7 @@ import {
   InsufficientStorageSnapshotDialogComponent,
   DiskConflictSnapshotDialogComponent
 } from '../../shared';
+import { ResourcesRepository } from '../../../resources';
 import {
   ServerSnapshotDialogContent,
   ServerSnapshot,
@@ -40,7 +41,6 @@ import {
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
 import { ServerDetailsBase } from '../server-details.base';
 
 enum SnapshotDialogType {
@@ -108,7 +108,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   constructor(
-    _serversResourcesRepository: ServersResourcesRepository,
+    _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
@@ -120,7 +120,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     private _dialogService: McsDialogService
   ) {
     super(
-      _serversResourcesRepository,
+      _resourcesRepository,
       _serversRepository,
       _serversService,
       _serverService,
@@ -177,7 +177,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server, this.snapshot);
-            return Observable.throw(error);
+            return throwError(error);
           })
         )
         .subscribe();
@@ -199,7 +199,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server, this.snapshot);
-            return Observable.throw(error);
+            return throwError(error);
           })
         )
         .subscribe();
@@ -221,7 +221,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server, this.snapshot);
-            return Observable.throw(error);
+            return throwError(error);
           })
         )
         .subscribe();
@@ -335,7 +335,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
         catchError((error) => {
           // Handle common error status code
           this.dataStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

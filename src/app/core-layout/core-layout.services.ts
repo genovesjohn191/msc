@@ -2,15 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   finalize,
-  map,
-  catchError
+  map
 } from 'rxjs/operators';
 import {
   McsApiCompany,
   McsApiService,
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsApiErrorResponse,
   McsLoggerService
 } from '../core';
 import { isNullOrEmpty } from '../utilities';
@@ -61,8 +59,7 @@ export class CoreLayoutService {
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
           this._loggerService.traceInfo(`converted response:`, apiResponse);
           return apiResponse;
-        }),
-        catchError(this._handleServerError)
+        })
       );
   }
 
@@ -90,22 +87,5 @@ export class CoreLayoutService {
           return apiResponse;
         })
       );
-  }
-
-  /**
-   * This will handle all error that correspond to HTTP request
-   * @param error Error obtained
-   */
-  private _handleServerError(error: Response | any) {
-    let mcsApiErrorResponse: McsApiErrorResponse;
-
-    if (error instanceof Response) {
-      mcsApiErrorResponse = new McsApiErrorResponse();
-      mcsApiErrorResponse.message = error.statusText;
-      mcsApiErrorResponse.status = error.status;
-    } else {
-      mcsApiErrorResponse = error;
-    }
-    return Observable.throw(mcsApiErrorResponse);
   }
 }

@@ -1,7 +1,7 @@
-import { ServerStorage } from './response/server-storage';
+import { ResourceStorage } from '../../resources';
 
 export class ServerManageStorage {
-  public storage: ServerStorage;
+  public storage: ResourceStorage;
   public sizeMB: number;
   public valid: boolean;
 }

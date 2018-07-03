@@ -12,9 +12,9 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import {
-  Observable,
   Subscription,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
   startWith,
@@ -199,7 +199,7 @@ export class FirewallComponent
       .pipe(
         catchError((error) => {
           this.listStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -221,7 +221,7 @@ export class FirewallComponent
         catchError((error) => {
           // Handle common error status code
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

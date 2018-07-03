@@ -22,9 +22,9 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
-  Observable,
   Subject,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
   takeUntil,
@@ -400,7 +400,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
         catchError((error) => {
           this.dataStatus = McsDataStatus.Error;
           this._dataSource.onCompletion(this.dataStatus, undefined);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((data) => {

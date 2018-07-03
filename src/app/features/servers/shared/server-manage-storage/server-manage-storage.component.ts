@@ -25,10 +25,10 @@ import {
   McsTextContentProvider,
   McsUnitType
 } from '../../../../core';
+import { ResourceStorage } from '../../../resources';
 import {
   ServerManageStorage,
-  ServerInputManageType,
-  ServerStorage
+  ServerInputManageType
 } from '../../models';
 import {
   convertMbToGb,
@@ -67,24 +67,24 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public dataChange = new EventEmitter<ServerManageStorage>();
 
   @Output()
-  public selectedStorageChange = new EventEmitter<ServerStorage>();
+  public selectedStorageChange = new EventEmitter<ResourceStorage>();
 
   @Input()
   public detailsTemplate: TemplateRef<any>;
 
   @Input()
-  public storages: ServerStorage[];
+  public storages: ResourceStorage[];
 
   @Input()
-  public get selectedStorage(): ServerStorage { return this._selectedStorage; }
-  public set selectedStorage(value: ServerStorage) {
+  public get selectedStorage(): ResourceStorage { return this._selectedStorage; }
+  public set selectedStorage(value: ResourceStorage) {
     if (this._selectedStorage !== value) {
       this._selectedStorage = value;
       this.selectedStorageChange.emit(this._selectedStorage);
       this.reset();
     }
   }
-  private _selectedStorage: ServerStorage;
+  private _selectedStorage: ResourceStorage;
 
   @Input()
   public get minValueGB(): number { return this._minValueGB; }
@@ -295,7 +295,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    * Returns true when the selected storage has available storage
    * @param _storage Storage to be checked
    */
-  private _maxStorageChecking(_storage: ServerStorage) {
+  private _maxStorageChecking(_storage: ResourceStorage) {
     return this.hasAvailableMemory;
   }
 

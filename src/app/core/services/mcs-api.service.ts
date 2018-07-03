@@ -8,7 +8,8 @@ import {
 } from '@angular/common/http';
 import {
   Observable,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CoreConfig } from '../core.config';
@@ -159,7 +160,7 @@ export class McsApiService {
   public handleServerError(error: HttpResponse<any> | any) {
     // Rethrow to notify outside subscribers that an error occured
     this._errorResponseStream.next(error);
-    return Observable.throw(error);
+    return throwError(error);
   }
 
   /**

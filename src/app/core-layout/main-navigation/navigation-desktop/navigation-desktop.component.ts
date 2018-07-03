@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
@@ -91,7 +91,7 @@ export class NavigationDesktopComponent implements OnInit {
       .pipe(
         catchError((error) => {
           this.productsStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

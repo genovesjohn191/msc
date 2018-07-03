@@ -6,9 +6,9 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
-  Observable,
   Subscription,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
   startWith,
@@ -16,8 +16,11 @@ import {
   catchError
 } from 'rxjs/operators';
 import {
+  ResourceStorage,
+  ResourcesRepository
+} from '../../../resources';
+import {
   ServerManageStorage,
-  ServerStorage,
   ServerStorageDevice,
   ServerStorageDeviceUpdate
 } from '../../models';
@@ -43,7 +46,6 @@ import { DeleteStorageDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
@@ -73,7 +75,7 @@ const SERVER_DISK_STEP = 10;
 export class ServerStorageComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
   public manageStorage: ServerManageStorage;
-  public selectedStorage: ServerStorage;
+  public selectedStorage: ResourceStorage;
   public selectedDisk: ServerStorageDevice;
   public dataStatusFactory: McsDataStatusFactory<ServerStorageDevice[]>;
   public manageStorageTemplate: any[];
@@ -113,7 +115,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Returns all the resource storages
    */
-  public get resourceStorages(): ServerStorage[] {
+  public get resourceStorages(): ResourceStorage[] {
     return getSafeProperty(this.serverResource, (obj) => obj.storage);
   }
 
@@ -157,7 +159,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   }
 
   constructor(
-    _serversResourcesRepository: ServersResourcesRepository,
+    _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
@@ -168,7 +170,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super(
-      _serversResourcesRepository,
+      _resourcesRepository,
       _serversRepository,
       _serversService,
       _serverService,
@@ -281,7 +283,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, diskValues);
           this._errorHandlerService.handleHttpRedirectionError(error);
-          return Observable.throw(error);
+          return throwError(error);
         })
       ).subscribe();
   }
@@ -313,7 +315,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server, this.selectedDisk);
             this._errorHandlerService.handleHttpRedirectionError(error);
-            return Observable.throw(error);
+            return throwError(error);
           })
         ).subscribe();
     });
@@ -342,7 +344,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, this.selectedDisk);
           this._errorHandlerService.handleHttpRedirectionError(error);
-          return Observable.throw(error);
+          return throwError(error);
         })
       ).subscribe();
   }
@@ -462,7 +464,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         catchError((error) => {
           // Handle common error status code
           this.dataStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -477,7 +479,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     let hasResource = getSafeProperty(this.serverResource, (obj) => obj.id);
     if (!hasResource) { return; }
 
-    this._storagesSubscription = this._serversResourcesRespository
+    this._storagesSubscription = this._resourcesRespository
       .findResourceStorage(this.serverResource)
       .subscribe(() => {
         // Subscribe to update the storage to server resource

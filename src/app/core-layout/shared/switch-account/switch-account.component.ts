@@ -9,10 +9,10 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
-  Observable,
   Subscription,
   of,
-  merge
+  merge,
+  throwError
 } from 'rxjs';
 import {
   switchMap,
@@ -224,7 +224,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
         }),
         catchError((error) => {
           this.dataStatus = McsDataStatus.Error;
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

@@ -12,21 +12,15 @@ import {
   ActivatedRoute
 } from '@angular/router';
 import {
-  Observable,
   Subscription,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
   catchError
 } from 'rxjs/operators';
-import {
-  Server,
-  ServerResource,
-  ServerCommand,
-  ServerPlatformSummary
-} from '../models';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -41,8 +35,16 @@ import {
   unsubscribeSafely,
   compareStrings
 } from '../../../utilities';
+import {
+  Resource,
+  ResourcesRepository
+} from '../../resources';
+import {
+  Server,
+  ServerCommand,
+  ServerPlatform
+} from '../models';
 import { ServersRepository } from '../servers.repository';
-import { ServersResourcesRepository } from '../servers-resources.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 // Add another group type in here if you have addition tab
@@ -69,7 +71,7 @@ export class VdcComponent
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
   public listStatusFactory: McsDataStatusFactory<Map<string, Server[]>>;
-  public selectedPlatform: ServerPlatformSummary;
+  public selectedPlatform: ServerPlatform;
 
   // Subscription
   public vdcSubscription: Subscription;
@@ -78,15 +80,15 @@ export class VdcComponent
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  private _vdc: ServerResource;
-  public get vdc(): ServerResource { return this._vdc; }
-  public set vdc(value: ServerResource) {
+  private _vdc: Resource;
+  public get vdc(): Resource { return this._vdc; }
+  public set vdc(value: Resource) {
     this._vdc = value;
     this._changeDetectorRef.markForCheck();
   }
 
   private _destroySubject = new Subject<void>();
-  private _resourcesKeyMap: Map<string, ServerPlatformSummary>;
+  private _resourcesKeyMap: Map<string, ServerPlatform>;
 
   constructor(
     _router: Router,
@@ -94,12 +96,12 @@ export class VdcComponent
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
     private _serversRepository: ServersRepository,
-    private _serversResourceRepository: ServersResourcesRepository,
+    private _resourcesRepository: ResourcesRepository,
     private _errorHandlerService: McsErrorHandlerService,
     private _vdcService: VdcService
   ) {
     super(_router, _activatedRoute);
-    this.vdc = new ServerResource();
+    this.vdc = new Resource();
     this.serversMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory();
     this._resourcesKeyMap = new Map();
@@ -150,7 +152,7 @@ export class VdcComponent
   /**
    * Event that emits when VDC name is selected
    */
-  public onSelectVdcByName(event: MouseEvent, resource: ServerPlatformSummary): void {
+  public onSelectVdcByName(event: MouseEvent, resource: ServerPlatform): void {
     if (!isNullOrEmpty(event)) { event.stopPropagation(); }
     if (isNullOrEmpty(resource.resourceId)) { return; }
 
@@ -162,7 +164,7 @@ export class VdcComponent
    * Returns true if current group is selected
    * @param platform Platform to be selected
    */
-  public isSelected(platform: ServerPlatformSummary): boolean {
+  public isSelected(platform: ServerPlatform): boolean {
     if (isNullOrEmpty(this.selectedPlatform)) { return false; }
     return compareStrings(platform.resourceName, this.selectedPlatform.resourceName) === 0;
   }
@@ -187,7 +189,7 @@ export class VdcComponent
     // Set the selection iniatially when no selected item
     // in order for the header to show it immediately
     if (isNullOrEmpty(this.selectedPlatform)) {
-      let resourceExist = this._serversResourceRepository.dataRecords
+      let resourceExist = this._resourcesRepository.dataRecords
         .find((resourceId) => resourceId.id === this.paramId);
       this._setSelectedPlatformByResource(resourceExist);
     }
@@ -205,9 +207,9 @@ export class VdcComponent
     // Key function pointer for mapping objects
     let keyFn = (item: Server) => {
       let resourceName = isNullOrEmpty(item.platform) ? 'others' : item.platform.resourceName;
-      let resource: ServerPlatformSummary = this._resourcesKeyMap.get(resourceName);
+      let resource: ServerPlatform = this._resourcesKeyMap.get(resourceName);
       if (isNullOrEmpty(resource)) {
-        let resourceInstance = new ServerPlatformSummary();
+        let resourceInstance = new ServerPlatform();
         resourceInstance.resourceName = 'Others';
         resource = !isNullOrEmpty(item.platform.resourceName) ? item.platform : resourceInstance;
       }
@@ -220,7 +222,7 @@ export class VdcComponent
       .pipe(
         catchError((error) => {
           this.listStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -237,13 +239,13 @@ export class VdcComponent
    * @param vdcId VDC identification
    */
   private _getVdcById(vdcId: string): void {
-    this.vdcSubscription = this._serversResourceRepository
+    this.vdcSubscription = this._resourcesRepository
       .findRecordById(vdcId)
       .pipe(
         catchError((error) => {
           // Handle common error status code
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -258,7 +260,7 @@ export class VdcComponent
    * Sets the selected platform based on its name
    * @param resource Resource name to be the basis
    */
-  private _setSelectedPlatformByResource(resource: ServerResource): void {
+  private _setSelectedPlatformByResource(resource: Resource): void {
     if (isNullOrEmpty(resource)) { return; }
     let platform = this._resourcesKeyMap.get(resource.name);
     if (!isNullOrEmpty(platform)) {

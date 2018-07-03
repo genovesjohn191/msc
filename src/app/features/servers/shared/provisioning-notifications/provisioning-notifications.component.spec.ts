@@ -33,7 +33,7 @@ describe('ProvisioningNotificationsComponent', () => {
     notification.endedOn = null;
     notification.status = notificationStatus;
     notification.summaryInformation = 'Test Job 2 Summary';
-    notification.ownerFullName = 'Shaun Domingo';
+    notification.initiatorFullName = 'Shaun Domingo';
     notification.elapsedTimeInSeconds = 0;
     notification.description = 'mongo-db' + notificationId;
 

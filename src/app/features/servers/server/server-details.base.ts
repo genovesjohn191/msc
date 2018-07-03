@@ -19,16 +19,16 @@ import {
   unsubscribeSubject
 } from '../../../utilities';
 import {
-  Server,
-  ServerResource
-} from '../models';
-import { ServersResourcesRepository } from '../servers-resources.repository';
+  Resource,
+  ResourcesRepository
+} from '../../resources';
+import { Server } from '../models';
 import { ServersService } from '../servers.service';
 import { ServersRepository } from '../servers.repository';
 import { ServerService } from '../server/server.service';
 
 export abstract class ServerDetailsBase {
-  public serverResource: ServerResource;
+  public serverResource: Resource;
   public serverResourceSubscription: Subscription;
   private _baseJobSubject = new Subject<void>();
 
@@ -59,7 +59,7 @@ export abstract class ServerDetailsBase {
   }
 
   constructor(
-    protected _serversResourcesRespository: ServersResourcesRepository,
+    protected _resourcesRespository: ResourcesRepository,
     protected _serversRepository: ServersRepository,
     protected _serversService: ServersService,
     protected _serverService: ServerService,
@@ -68,7 +68,7 @@ export abstract class ServerDetailsBase {
     protected _errorHandlerService: McsErrorHandlerService
   ) {
     this.server = new Server();
-    this.serverResource = new ServerResource();
+    this.serverResource = new Resource();
     this.serverResourceSubscription = new Subscription();
   }
 
@@ -121,7 +121,7 @@ export abstract class ServerDetailsBase {
    */
   private _getServerResources(fromCache: boolean = true): void {
     unsubscribeSafely(this.serverResourceSubscription);
-    this.serverResourceSubscription = this._serversResourcesRespository
+    this.serverResourceSubscription = this._resourcesRespository
       .findRecordById(this.server.platform.resourceId, fromCache)
       .pipe(
         finalize(() => {

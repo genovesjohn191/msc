@@ -7,10 +7,13 @@ import {
 } from '@angular/core';
 import {
   Subscription,
-  Observable
+  throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ServerStorage } from '../../models';
+import {
+  ResourceStorage,
+  ResourcesRepository
+} from '../../../resources';
 import {
   CoreDefinition,
   McsTextContentProvider,
@@ -21,7 +24,6 @@ import {
   unsubscribeSafely,
   getSafeProperty
 } from '../../../../utilities';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 
@@ -36,7 +38,7 @@ import { VdcDetailsBase } from '../vdc-details.base';
 
 export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
-  public dataStatusFactory: McsDataStatusFactory<ServerStorage[]>;
+  public dataStatusFactory: McsDataStatusFactory<ResourceStorage[]>;
 
   public storagesSubscription: Subscription;
 
@@ -47,19 +49,19 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   /**
    * Returns all the resource storages
    */
-  public get resourceStorages(): ServerStorage[] {
+  public get resourceStorages(): ResourceStorage[] {
     return !isNullOrEmpty(this.selectedVdc.storage) ?
       this.selectedVdc.storage : new Array();
   }
 
   constructor(
-    _serversResourcesRespository: ServersResourcesRepository,
+    _resourcesRespository: ResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
     _textContentProvider: McsTextContentProvider
   ) {
     super(
-      _serversResourcesRespository,
+      _resourcesRespository,
       _vdcService,
       _changeDetectorRef,
       _textContentProvider
@@ -87,13 +89,13 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
 
     unsubscribeSafely(this.storagesSubscription);
     this.dataStatusFactory.setInProgress();
-    this.storagesSubscription = this._serversResourcesRespository
+    this.storagesSubscription = this._resourcesRespository
       .findResourceStorage(this.selectedVdc)
       .pipe(
         catchError((error) => {
           // Handle common error status code
           this.dataStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => this.dataStatusFactory.setSuccesfull(response));

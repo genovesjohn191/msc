@@ -106,6 +106,7 @@
         "networkInformation": {
           "title": "Network Information",
           "description": "All networks are fully operational",
+          "itemDescription": "Standard management network for this VDC.",
           "gateway": "Gateway"
         },
         "storageProfiles": {

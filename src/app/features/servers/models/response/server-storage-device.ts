@@ -12,10 +12,6 @@ export class ServerStorageDevice {
   public remoteHost: string;
   public remotePath: string;
 
-  // Additional flag not related to API response
-  public isProcessing: boolean;
-  public processingText: string;
-
   constructor() {
     this.id = undefined;
     this.name = undefined;
@@ -29,7 +25,5 @@ export class ServerStorageDevice {
     this.vendor = undefined;
     this.remoteHost = undefined;
     this.remotePath = undefined;
-    this.isProcessing = undefined;
-    this.processingText = undefined;
   }
 }

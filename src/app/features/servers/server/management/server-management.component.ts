@@ -13,7 +13,7 @@ import {
 import {
   Subscription,
   Subject,
-  Observable
+  throwError
 } from 'rxjs';
 import {
   takeUntil,
@@ -40,19 +40,20 @@ import {
 } from '../../../../utilities';
 import { DetachMediaDialogComponent } from '../../shared';
 import {
+  ResourceCatalogItemType,
+  ResourcesRepository
+} from '../../../resources';
+import {
   ServerNic,
   ServerMedia,
   ServerIpAllocationMode,
-  ServerCatalogItemType,
   ServerManageScale,
-  ServerUpdate,
-  ServerComputeSummary
+  ServerUpdate
 } from '../../models';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
 
 // Enumeration
 export enum ServerManagementView {
@@ -81,7 +82,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public serverThumbnail: string;
   public serverManagementView: ServerManagementView;
   public mediaStatusFactory: McsDataStatusFactory<ServerMedia[]>;
-  public computeStatusFactory: McsDataStatusFactory<ServerComputeSummary>;
   public selectedMedia: ServerMedia;
 
   private _newMedia: ServerMedia;
@@ -122,7 +122,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     _changeDetectorRef: ChangeDetectorRef,
-    _serversResourcesRepository: ServersResourcesRepository,
+    _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
     _serversService: ServersService,
     _serverService: ServerService,
@@ -132,7 +132,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     private _notificationEvents: McsNotificationEventsService
   ) {
     super(
-      _serversResourcesRepository,
+      _resourcesRepository,
       _serversRepository,
       _serversService,
       _serverService,
@@ -246,7 +246,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
           this._errorHandlerService.handleHttpRedirectionError(error);
-          return Observable.throw(error);
+          return throwError(error);
         })
       ).subscribe();
   }
@@ -293,7 +293,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
           this._errorHandlerService.handleHttpRedirectionError(error);
-          return Observable.throw(error);
+          return throwError(error);
         })
       ).subscribe();
   }
@@ -319,7 +319,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
           this._errorHandlerService.handleHttpRedirectionError(error);
-          return Observable.throw(error);
+          return throwError(error);
         })
       ).subscribe();
   }
@@ -389,7 +389,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         catchError((error) => {
           // Handle common error status code
           this.mediaStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe(() => {
@@ -404,7 +404,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     let resourceId = getSafeProperty(this.serverResource, (obj) => obj.id);
     if (isNullOrEmpty(resourceId)) { return; }
 
-    this._computeSubscription = this._serversResourcesRespository
+    this._computeSubscription = this._resourcesRespository
       .findResourceCompute(this.serverResource)
       .subscribe();
   }
@@ -418,7 +418,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     this._resourceMedias = new Array();
     resourceCatalogs.forEach((catalog) => {
-      if (catalog.itemType !== ServerCatalogItemType.Media) { return; }
+      if (catalog.itemType !== ResourceCatalogItemType.Media) { return; }
       let media = new ServerMedia();
       media.name = catalog.itemName;
       this._resourceMedias.push(media);

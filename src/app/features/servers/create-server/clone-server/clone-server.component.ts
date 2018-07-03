@@ -14,8 +14,8 @@ import {
   ParamMap
 } from '@angular/router';
 import {
-  Observable,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -34,8 +34,8 @@ import {
   ServerCreateType,
   ServerCreateDetails,
   ServerServiceType,
-  Server,
-  ServerIpAllocationMode
+  ServerIpAllocationMode,
+  Server
 } from '../../models';
 import { ServersRepository } from '../../servers.repository';
 import { CreateServerBase } from '../create-server.base';
@@ -150,7 +150,7 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
         catchError((error) => {
           // Handle common error status code
           this.dataStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -176,7 +176,7 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
       .pipe(
         catchError((error) => {
           this.ipAddressStatusFactory.setSuccesfull();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

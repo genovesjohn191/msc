@@ -9,8 +9,8 @@ import {
   FormControl
 } from '@angular/forms';
 import {
-  Observable,
-  Subscription
+  Subscription,
+  throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -24,25 +24,27 @@ import {
   replacePlaceholder,
   isNullOrEmpty,
   appendUnitSuffix,
-  convertMbToGb
+  convertMbToGb,
+  getSafeProperty
 } from '../../../../utilities';
+import {
+  Resource,
+  ResourceStorage,
+  ResourceCatalogItem,
+  ResourceCatalogItemType
+} from '../../../resources';
 import {
   ServerCreateType,
   ServerCreateDetails,
-  ServerResource,
   ServerOperatingSystem,
   ServerServiceType,
   ServerManageStorage,
   ServerImageType,
-  ServerCatalogItem,
-  ServerCatalogItemType,
   ServerManageNetwork,
-  ServerStorage,
   ServerManageScale
 } from '../../models';
 import { CreateServerBase } from '../create-server.base';
 import { ServersOsRepository } from '../../servers-os.repository';
-import { ServersService } from '../../servers.service';
 
 @Component({
   selector: 'mcs-new-server',
@@ -57,8 +59,8 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   public textHelpContent: any;
   public operatingSystemsMap: Map<string, ServerOperatingSystem[]>;
   public operatingSystemsSubscription: Subscription;
-  public selectedStorage: ServerStorage;
-  public customTemplates: ServerCatalogItem[];
+  public selectedStorage: ResourceStorage;
+  public customTemplates: ResourceCatalogItem[];
 
   // Form variables
   public fgNewServer: FormGroup;
@@ -70,18 +72,17 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
   public fcStorage: FormControl;
 
   @Input()
-  public get resource(): ServerResource { return this._resource; }
-  public set resource(value: ServerResource) {
+  public get resource(): Resource { return this._resource; }
+  public set resource(value: Resource) {
     if (this._resource !== value) {
       this._resource = value;
     }
   }
-  private _resource: ServerResource;
+  private _resource: Resource;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
-    private _serversService: ServersService,
     private _serversOsRepository: ServersOsRepository
   ) {
     super(ServerCreateType.New);
@@ -136,9 +137,8 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
    */
   public get storageMaxMemoryMB(): number {
     let currentSelectedScale = this.fcScale.value && this.fcScale.value.memoryMB;
-    return this._serversService.computeAvailableStorageMB(
-      this.selectedStorage, currentSelectedScale
-    );
+    let storageAvailable = getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0);
+    return Math.max(0, (storageAvailable - currentSelectedScale));
   }
 
   /**
@@ -227,7 +227,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
         catchError((error) => {
           // Handle common error status code
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response: ServerOperatingSystem[]) => {
@@ -265,7 +265,7 @@ export class NewServerComponent extends CreateServerBase implements OnInit, OnDe
     if (!hasCatalogItems) { return; }
 
     let filteredCatalogItems = this.resource.catalogItems.filter((catalog) => {
-      return catalog.itemType === ServerCatalogItemType.Template;
+      return catalog.itemType === ResourceCatalogItemType.Template;
     });
     if (!isNullOrEmpty(filteredCatalogItems)) {
       this.customTemplates = filteredCatalogItems;
