@@ -1,57 +1,61 @@
 import {
   Component,
   Input,
+  EventEmitter,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Output
 } from '@angular/core';
-import {
-  CoreDefinition,
-  McsFileInfo
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { CoreDefinition } from '../../core';
+import { coerceNumber, coerceBoolean } from '../../utilities';
 
 @Component({
   selector: 'mcs-file-download',
   templateUrl: 'file-download.component.html',
   styleUrls: ['./file-download.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'file-download-wrapper'
+  }
 })
 
 export class FileDownloadComponent {
-  @Input()
-  public file: McsFileInfo;
+  @Output()
+  public download = new EventEmitter<FileDownloadComponent>();
 
-  // TODO: Needs to be finalized once API is ready
   @Input()
-  public url: string;
+  public fileType: string;
 
+  @Input()
+  public get sizeMB(): number { return this._sizeMB; }
+  public set sizeMB(value: number) {
+    if (value !== this._sizeMB) {
+      this._sizeMB = coerceNumber(value);
+    }
+  }
+  private _sizeMB: number;
+
+  @Input()
+  public get downloading(): boolean { return this._downloading; }
+  public set downloading(value: boolean) {
+    if (value !== this._downloading) {
+      this._downloading = coerceBoolean(value);
+    }
+  }
+  private _downloading: boolean;
+
+  /**
+   * Returns the download icon key
+   */
   public get downloadIconKey(): string {
     return CoreDefinition.ASSETS_SVG_DOWNLOAD;
-  }
-
-  /**
-   * Get file type
-   */
-  public get fileType(): string {
-    if (isNullOrEmpty(this.file.fileContents)) { return ''; }
-    return this.file.fileContents.type.toUpperCase();
-  }
-
-  /**
-   * Get file size
-   */
-  public get fileSize(): number {
-    if (isNullOrEmpty(this.file.fileContents)) { return 0; }
-    return this.file.fileContents.size;
   }
 
   /**
    * Download the file
    */
   public downloadFile(): void {
-    if (isNullOrEmpty(this.url)) { return; }
-    window.open(this.url);
+    this.download.emit(this);
   }
-
 }

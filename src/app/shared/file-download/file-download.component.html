@@ -1,7 +1,9 @@
-<div class="file-download-content">
-  <mcs-icon [key]="downloadIconKey" size="xlarge"></mcs-icon>
-  <div class="file-download-info">
-    <a (click)="downloadFile()" cursor="pointer">{{ file?.filename }}</a>
-    <span read-only>{{ fileType }} - {{ fileSize | mcsDataSize }}</span>
+<mcs-icon [key]="downloadIconKey" size="xlarge"></mcs-icon>
+<div class="file-download-info">
+  <div class="file-download-name">
+    <a (click)="downloadFile()" cursor="pointer"
+      [disabled]="downloading"><ng-content></ng-content></a>
+    <span read-only *ngIf="fileType">({{ fileType }})</span>
   </div>
+  <span read-only *ngIf="sizeMB">{{ sizeMB | mcsDataSize: 'MB' }}</span>
 </div>

@@ -198,19 +198,19 @@ export class AppModule {
    * Initializes all authorized services
    */
   private _initializeAuthorizedServices(): void {
+    this._sessionHandlerService.initialize();
     this._notificationJobService.initialize();
     this._notificationContextService.initialize();
     this._googleAnalyticsEventsService.initialize();
     this._routeHandlerService.initialize();
-    this._sessionHandlerService.initialize();
   }
 
   /**
    * Destroy all services
    */
   private _releaseServices(): void {
+    this._sessionHandlerService.destroy();
     this._notificationJobService.destroy();
     this._notificationContextService.destroy();
-    this._sessionHandlerService.destroy();
   }
 }

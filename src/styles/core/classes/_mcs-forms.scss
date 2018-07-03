@@ -51,12 +51,16 @@ $form-field-size-large: 400px;
 
 .form-field-inline {
   @include display-flex(row);
-  @include flex-wrap(wrap);
   @include set-items-interval($form-field-inline-spacing, horizontal);
+
+  > * {
+    &:first-child {
+      white-space: nowrap;
+    }
+  }
 }
 
 .form-field-block {
   @include display-flex(column);
-  @include flex-wrap(wrap);
   @include set-items-interval($form-field-inline-spacing);
 }
