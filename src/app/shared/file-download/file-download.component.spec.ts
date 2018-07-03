@@ -10,8 +10,6 @@ import {
 import { FileDownloadModule } from './file-download.module';
 import { FileDownloadComponent } from './file-download.component';
 import { CoreTestingModule } from '../../core/testing';
-import { McsFileInfo } from '../../core';
-import { FileLikeObject } from 'ng2-file-upload';
 
 @Component({
   selector: 'mcs-test',
@@ -21,20 +19,12 @@ export class TestComponent {
   @ViewChild(FileDownloadComponent)
   public fileDownloadComponent: FileDownloadComponent;
 
-  public get file(): McsFileInfo {
-    let fileInfo = new McsFileInfo();
-    fileInfo.filename = 'VDCs in the Enterprise';
-    fileInfo.fileContents = {
-      name: 'VDCs in the Enterprise',
-      type: 'pdf',
-      size: 12000
-    } as FileLikeObject;
-
-    return fileInfo;
+  public fileType(): string {
+    return 'image/png';
   }
 
-  public get url(): string {
-    return 'https://scholar.harvard.edu/files/torman_personal/files/samplepptx.pptx';
+  public fileSize(): number {
+    return 1024;
   }
 }
 
@@ -63,7 +53,7 @@ describe('FileDownloadComponent', () => {
     TestBed.overrideComponent(TestComponent, {
       set: {
         template: `
-        <mcs-file-download [file]="file" [url]="url"></mcs-file-download>
+        <mcs-file-download [fileType]="fileType" [sizeMB]="fileSize"></mcs-file-download>
         `
       }
     });
@@ -80,17 +70,16 @@ describe('FileDownloadComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     it(`should create the mcs-file-download element`, () => {
-      let element: any;
-      element = document.querySelector('mcs-file-download');
+      let element = document.querySelector('mcs-file-download');
       expect(element).not.toBe(null);
     });
 
-    it(`file type should be defined`, () => {
+    it(`should define filetype`, () => {
       expect(component.fileDownloadComponent.fileType).toBeDefined();
     });
 
-    it(`file size should be defined`, () => {
-      expect(component.fileDownloadComponent.fileSize).toBeDefined();
+    it(`should define filesize`, () => {
+      expect(component.fileDownloadComponent.sizeMB).toBeDefined();
     });
   });
 });

@@ -118,7 +118,14 @@ export class Ticket extends McsEntityBase {
   /**
    * Returns true if the ticket is closed
    */
-  public get isClosed(): boolean {
+  public get closed(): boolean {
     return this.state === TicketStatus.Closed;
+  }
+
+  /**
+   * Returns true when the ticket is resolved
+   */
+  public get resolved(): boolean {
+    return this.state === TicketStatus.Resolved;
   }
 }

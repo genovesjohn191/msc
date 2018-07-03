@@ -60,10 +60,6 @@ export class TicketActivityComponent implements OnInit {
     }
   }
 
-  public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
-  }
-
   public get isWorkNotes(): boolean {
     return this.activity.commentType === TicketCommentType.WorkNotes;
   }

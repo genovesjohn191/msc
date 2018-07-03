@@ -28,6 +28,7 @@ import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
 import { McsApiService } from './mcs-api.service';
 import { McsLoggerService } from './mcs-logger.service';
+import { McsSessionHandlerService } from './mcs-session-handler.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
 import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
@@ -63,6 +64,7 @@ export class McsNotificationJobService implements McsInitializer {
   constructor(
     private _apiService: McsApiService,
     private _loggerService: McsLoggerService,
+    private _sessionHandlerService: McsSessionHandlerService,
     private _stompService: StompRService
   ) { }
 
@@ -70,6 +72,9 @@ export class McsNotificationJobService implements McsInitializer {
    * Initializes the websocket instance and connect
    */
   public initialize(): void {
+    // Prevent the stomp from connecting when the session is already timedout
+    let sessionTimedOut = this._sessionHandlerService.authTokenHasTimedOut;
+    if (sessionTimedOut) { return; }
     this._connectStomp();
   }
 

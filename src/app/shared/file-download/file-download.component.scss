@@ -1,12 +1,17 @@
 @import "../../../styles/shared/base";
 
-.file-download-content {
+.file-download-wrapper {
   @include display-flex(row);
   @include align-items(center);
-  @include set-items-interval($space-medium, horizontal);
+  @include set-items-interval($space-small, horizontal);
 
   .file-download-info {
     @include display-flex(column);
-    @include set-items-interval($space-xsmall, vertical);
+
+    .file-download-name {
+      @include display-flex(row);
+      @include align-items(center);
+      @include set-items-interval($space-xsmall, horizontal);
+    }
   }
 }

@@ -13,7 +13,8 @@ import {
 import { Observable } from 'rxjs';
 import {
   catchError,
-  switchMap
+  switchMap,
+  finalize
 } from 'rxjs/operators';
 import {
   CoreDefinition,
@@ -30,7 +31,6 @@ import {
 } from '../../../utilities';
 import {
   Ticket,
-  TicketStatus,
   TicketSubType,
   ticketSubTypeText,
   TicketAttachment,
@@ -56,13 +56,13 @@ export class TicketComponent implements OnInit, OnDestroy {
   public createCommentSubscription: any;
   public createAttachmentSubscription: any;
 
+  private _downloadingIdList: Set<string>;
+
   /**
    * An observable ticket data that obtained based on the given id
    */
   private _ticket: Ticket;
-  public get ticket(): Ticket {
-    return this._ticket;
-  }
+  public get ticket(): Ticket { return this._ticket; }
   public set ticket(value: Ticket) {
     if (this._ticket !== value) {
       unsubscribeSafely(this.ticketSubscription);
@@ -77,18 +77,12 @@ export class TicketComponent implements OnInit, OnDestroy {
    * List of activities of the ticket
    */
   private _activities: TicketActivity[];
-  public get activities(): TicketActivity[] {
-    return this._activities;
-  }
+  public get activities(): TicketActivity[] { return this._activities; }
   public set activities(value: TicketActivity[]) {
     if (this._activities !== value) {
       this._activities = value;
       this._changeDetectorRef.markForCheck();
     }
-  }
-
-  public get ticketResolved(): boolean {
-    return isNullOrEmpty(this.ticket) ? false : this.ticket.state === TicketStatus.Resolved;
   }
 
   public get ticketHeader(): string {
@@ -111,10 +105,6 @@ export class TicketComponent implements OnInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_USER;
   }
 
-  public get attachmentIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_ATTACHMENT;
-  }
-
   public get backIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
   }
@@ -123,14 +113,6 @@ export class TicketComponent implements OnInit, OnDestroy {
     return isNullOrEmpty(this.ticket) || isNullOrEmpty(this.ticket.requestor)
       ? `${this.textContent.missingRequestorLabel}`
       : `${this.ticket.requestor}`;
-  }
-
-  public get missingServices(): boolean {
-    return isNullOrEmpty(this.ticket.serviceId);
-  }
-
-  public get missingAttachments(): boolean {
-    return isNullOrEmpty(this.ticket.attachments);
   }
 
   public get missingActivities(): boolean {
@@ -147,6 +129,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   ) {
     this._ticket = new Ticket();
     this._activities = new Array();
+    this._downloadingIdList = new Set();
   }
 
   public ngOnInit() {
@@ -185,13 +168,28 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Returns true when the attachment is currently downloading
+   * @param attachmentId Attachment Id to be checked
+   */
+  public isDownloading(attachmentId: string): boolean {
+    return this._downloadingIdList.has(attachmentId);
+  }
+
+  /**
    * Download the file attachment based on the blob
    * @param attachment Attachment information of the file to download
    */
   public downloadAttachment(attachment: TicketAttachment) {
     if (isNullOrEmpty(attachment)) { return; }
+    this._downloadingIdList.add(attachment.id);
 
     this._ticketsService.getFileAttachment(this.ticket.id, attachment.id)
+      .pipe(
+        finalize(() => {
+          this._downloadingIdList.delete(attachment.id);
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe((blobResponse) => {
         saveAs(blobResponse, attachment.fileName);
       });
