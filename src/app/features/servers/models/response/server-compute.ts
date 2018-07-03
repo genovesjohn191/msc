@@ -4,46 +4,32 @@ import {
 } from '../../../../core';
 import { isNullOrEmpty } from '../../../../utilities';
 
-/**
- * @deprecated this compute is for resource model /compute endpoint,
- * planning to move it on resource
- */
 export class ServerCompute {
-  public cpuAllocation: number;
-  public cpuReservation: number;
-  public cpuLimit: number;
-  public cpuUsed: number;
-  public memoryAllocationMB: number;
-  public memoryReservationMB: number;
-  public memoryLimitMB: number;
-  public memoryUsedMB: number;
+  public cpuCount: number;
+  public coreCount: number;
+  public memoryMB: number;
 
   constructor() {
-    this.cpuAllocation = undefined;
-    this.cpuReservation = undefined;
-    this.cpuLimit = undefined;
-    this.cpuUsed = undefined;
-    this.memoryAllocationMB = undefined;
-    this.memoryReservationMB = undefined;
-    this.memoryLimitMB = undefined;
-    this.memoryUsedMB = undefined;
+    this.cpuCount = undefined;
+    this.coreCount = undefined;
+    this.memoryMB = undefined;
   }
 
   /**
-   * Returns the memoryLimitMB with its unit
+   * Returns cpu count with its unit
    */
-  public get memoryLimitMBLabel(): string {
-    return (!isNullOrEmpty(this.memoryLimitMB)) ?
-      `${this.memoryLimitMB} ${mcsUnitTypeText[McsUnitType.Megabyte]}` :
+  public get cpuCountLabel(): string {
+    return (!isNullOrEmpty(this.cpuCount) || !isNullOrEmpty(this.coreCount)) ?
+      `${this.cpuCount * this.coreCount} ${mcsUnitTypeText[McsUnitType.CPU]}` :
       undefined;
   }
 
   /**
-   * Returns the cpuLimitMB with its unit
+   * Returns cpu count with its unit
    */
-  public get cpuLimitMBLabel(): string {
-    return (!isNullOrEmpty(this.cpuLimit)) ?
-      `${this.cpuLimit} ${mcsUnitTypeText[McsUnitType.CPU]}` :
+  public get memoryMBLabel(): string {
+    return (!isNullOrEmpty(this.memoryMB)) ?
+      `${this.memoryMB} ${mcsUnitTypeText[McsUnitType.Megabyte]}` :
       undefined;
   }
 }

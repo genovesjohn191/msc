@@ -8,9 +8,9 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  Observable,
   Subscription,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
   startWith,
@@ -151,7 +151,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         catchError((error) => {
           this.listStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -179,7 +179,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
           // Handle common error status code
           this.productStatusFactory.setError();
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

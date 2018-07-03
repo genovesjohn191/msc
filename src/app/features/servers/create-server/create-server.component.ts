@@ -18,7 +18,8 @@ import {
 import {
   Observable,
   Subscription,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
   takeUntil,
@@ -42,12 +43,17 @@ import {
   isNullOrEmpty,
   replacePlaceholder,
   unsubscribeSafely,
-  clearArrayRecord
+  clearArrayRecord,
+  unsubscribeSubject
 } from '../../../utilities';
+import {
+  Resource,
+  ResourcesRepository,
+  ResourceServiceType
+} from '../../resources';
 import {
   ServerServiceType,
   serverServiceTypeText,
-  ServerResource,
   ServerCreateType,
   ServerCreateDetails,
   ServerClone,
@@ -58,7 +64,6 @@ import {
   ServerClientObject
 } from '../models';
 import { ServersService } from '../servers.service';
-import { ServersResourcesRepository } from '../servers-resources.repository';
 import { CreateServerBase } from './create-server.base';
 
 @Component({
@@ -79,7 +84,7 @@ export class CreateServerComponent implements
   public paramSubscription: Subscription;
   public resourcesSubscription: Subscription;
   public resourceSubscription: Subscription;
-  public selectedResource: ServerResource;
+  public selectedResource: Resource;
   public selectedTabIndex: ServerCreateType = ServerCreateType.New;
   public dataStatusFactory: McsDataStatusFactory<McsApiJob>;
   public errorResponse: McsApiErrorResponse;
@@ -93,8 +98,8 @@ export class CreateServerComponent implements
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
   }
 
-  public get resources(): ServerResource[] {
-    return this._serversResourceRepository.dataRecords;
+  public get resources(): Resource[] {
+    return this._resourceRepository.dataRecords;
   }
 
   public get serviceTypeEnum() {
@@ -119,7 +124,7 @@ export class CreateServerComponent implements
     private _errorHandlerService: McsErrorHandlerService,
     private _accessControlService: McsAccessControlService,
     private _serversService: ServersService,
-    private _serversResourceRepository: ServersResourcesRepository
+    private _resourceRepository: ResourcesRepository
   ) {
     this.faCreationForms = new FormArray([]);
     this.notifications = new Array();
@@ -138,8 +143,7 @@ export class CreateServerComponent implements
   public ngOnDestroy() {
     unsubscribeSafely(this.resourcesSubscription);
     unsubscribeSafely(this.resourceSubscription);
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   public ngAfterViewInit() {
@@ -165,11 +169,11 @@ export class CreateServerComponent implements
   /**
    * Returns true when corresponding resource has access to feature
    */
-  public resourceHasAccess(resource: ServerResource): boolean {
-    if (resource.serviceType === ServerServiceType.SelfManaged) { return true; }
+  public resourceHasAccess(resource: Resource): boolean {
+    if (resource.serviceType === ResourceServiceType.SelfManaged) { return true; }
     let allowedManagedServer = this._accessControlService
       .hasAccessToFeature('enableCreateManagedServer');
-    return resource.serviceType === ServerServiceType.Managed && allowedManagedServer;
+    return resource.serviceType === ResourceServiceType.Managed && allowedManagedServer;
   }
 
   /**
@@ -194,7 +198,7 @@ export class CreateServerComponent implements
   /**
    * Event that emits whenever a resource is selected
    */
-  public onChangeResource(_resource: ServerResource): void {
+  public onChangeResource(_resource: Resource): void {
     // We need to clear the server components instance here
     // in order to generate new component in the DOM and refresh everything
     clearArrayRecord(this.serverComponents);
@@ -205,7 +209,7 @@ export class CreateServerComponent implements
    * Returns the resource displayed text based on resource data
    * @param resource Resource to be displayed
    */
-  public getResourceDisplayedText(resource: ServerResource): string {
+  public getResourceDisplayedText(resource: Resource): string {
     let prefix = replacePlaceholder(
       this.textContent.vdcDropdownList.prefix,
       ['service_type', 'availability_zone'],
@@ -240,7 +244,7 @@ export class CreateServerComponent implements
               this.dataStatusFactory.setError();
               this.errorResponse = response.error;
               this._changeDetectorRef.markForCheck();
-              return Observable.throw(response);
+              return throwError(response);
             })
           )
           .subscribe((job) => {
@@ -312,12 +316,12 @@ export class CreateServerComponent implements
    * Gets the list of resources from repository
    */
   private _getAllResources(): void {
-    this.resourcesSubscription = this._serversResourceRepository
+    this.resourcesSubscription = this._resourceRepository
       .findAllRecords()
       .pipe(
         catchError((error) => {
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe(() => {
@@ -331,7 +335,7 @@ export class CreateServerComponent implements
   /**
    * Selects the first valid resource based on their access control
    */
-  private _selectTheFirstValidResource(resources: ServerResource[]): void {
+  private _selectTheFirstValidResource(resources: Resource[]): void {
     if (isNullOrEmpty(resources)) { return; }
     let validResource = resources.find((resource) => this.resourceHasAccess(resource));
     if (!isNullOrEmpty(validResource)) {
@@ -344,7 +348,7 @@ export class CreateServerComponent implements
    * @param resourceId Resource Id of the resource to get
    */
   private _getResourceById(resourceId: any): void {
-    this.resourceSubscription = this._serversResourceRepository
+    this.resourceSubscription = this._resourceRepository
       .findRecordById(resourceId)
       .subscribe((updatedResource) => {
         if (isNullOrEmpty(updatedResource)) { return; }

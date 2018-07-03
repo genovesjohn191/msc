@@ -10,7 +10,7 @@ import {
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import {
   catchError,
   switchMap,
@@ -275,7 +275,7 @@ export class TicketComponent implements OnInit, OnDestroy {
         catchError((error) => {
           // Handle common error status code
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

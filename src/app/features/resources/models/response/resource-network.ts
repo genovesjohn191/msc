@@ -1,19 +1,19 @@
 import { JsonProperty } from 'json-object-mapper';
-import { ServerNetworkIpAddress } from './server-network-ip-address';
+import { ResourceNetworkIpAddress } from './resource-network-ip-address';
+import { McsEntityBase } from '../../../../core';
 
-export class ServerNetwork {
-  public id: string;
+export class ResourceNetwork extends McsEntityBase {
   public name: string;
   public serviceId: string;
   public vlanId: number;
   public netmask: string;
   public gateway: string;
 
-  @JsonProperty({ type: ServerNetworkIpAddress })
-  public ipAddresses: ServerNetworkIpAddress[];
+  @JsonProperty({ type: ResourceNetworkIpAddress })
+  public ipAddresses: ResourceNetworkIpAddress[];
 
   constructor() {
-    this.id = undefined;
+    super();
     this.name = undefined;
     this.serviceId = undefined;
     this.vlanId = undefined;

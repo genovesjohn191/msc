@@ -3,10 +3,8 @@ import {
   of
 } from 'rxjs';
 import { McsApiSuccessResponse } from '../../../core';
-import {
-  Server,
-  ServerResource
-} from '../models';
+import { Resource } from '../../resources';
+import { Server } from '../models';
 
 export const mockServersService = {
 
@@ -22,8 +20,8 @@ export const mockServersService = {
 
     return of(mcsApiResponseMock);
   },
-  getResources(): Observable<ServerResource[]> {
-    let resources = new Array<ServerResource>();
+  getResources(): Observable<Resource[]> {
+    let resources = new Array<Resource>();
     return of(resources);
   }
 };

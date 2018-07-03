@@ -1,12 +1,12 @@
-import { ServerResource } from './server-resource';
+import { Resource } from '../../../resources';
 import { JsonProperty } from 'json-object-mapper';
 
 export class ServerEnvironment {
   public id: string;
   public name: string;
 
-  @JsonProperty({ type: ServerResource })
-  public resources: ServerResource[];
+  @JsonProperty({ type: Resource })
+  public resources: Resource[];
 
   constructor() {
     this.id = undefined;

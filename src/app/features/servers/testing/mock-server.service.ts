@@ -9,11 +9,11 @@ import {
   McsJobType,
   McsJobStatus
 } from '../../../core';
+import { Resource } from '../../resources';
 import {
   Server,
   ServerPowerState,
   ServerThumbnail,
-  ServerResource,
   ServerServiceType,
   ServerStorageDeviceUpdate,
   ServerCreateNic
@@ -65,10 +65,10 @@ export const mockServerService = {
   },
 
   getServerResources() {
-    let mcsApiResponseMock = new McsApiSuccessResponse<ServerResource[]>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<Resource[]>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 2;
-    mcsApiResponseMock.content = new Array<ServerResource>();
+    mcsApiResponseMock.content = new Array<Resource>();
 
     return of(mcsApiResponseMock);
   },
@@ -203,13 +203,13 @@ export const mockServerService = {
 
     return of(mcsApiResponseMock);
   },
-  convertResourceToMap(_resources: ServerResource[]): Map<string, ServerResource> {
-    return new Map<string, ServerResource>();
+  convertResourceToMap(_resources: Resource[]): Map<string, Resource> {
+    return new Map<string, Resource>();
   },
-  computeAvailableMemoryMB(_resource: ServerResource): number {
+  computeAvailableMemoryMB(_resource: Resource): number {
     return 0;
   },
-  computeAvailableCpu(_resource: ServerResource): number {
+  computeAvailableCpu(_resource: Resource): number {
     return 0;
   }
 };

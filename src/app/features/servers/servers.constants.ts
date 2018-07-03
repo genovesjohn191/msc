@@ -4,7 +4,6 @@ import { McsNavigateAwayGuard } from '../../core';
 import { ServerService } from './server/';
 import { ServersService } from './servers.service';
 import { ServersRepository } from './servers.repository';
-import { ServersResourcesRepository } from './servers-resources.repository';
 import { ServersOsRepository } from './servers-os.repository';
 /** Components */
 import { ServersComponent } from './servers.component';
@@ -34,7 +33,6 @@ export const serversProviders: any[] = [
   ServersService,
   ServerService,
   ServersRepository,
-  ServersResourcesRepository,
   ServersOsRepository,
   VdcService
 ];

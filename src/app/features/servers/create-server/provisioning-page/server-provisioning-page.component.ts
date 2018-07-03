@@ -11,7 +11,7 @@ import {
 } from '@angular/router';
 import {
   Subscription,
-  Observable
+  throwError
 } from 'rxjs';
 import {
   switchMap,
@@ -85,7 +85,7 @@ export class ServerProvisioningPageComponent implements OnInit, OnDestroy {
           // Handle common error status code
           this.dataStatusFactory.setError();
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         }),
         switchMap((params: ParamMap) => {
           let jobId = params.get('id');

@@ -1,6 +1,6 @@
 import { McsEntityBase } from '../../../../core';
 
-export class ServerVApp extends McsEntityBase {
+export class ResourceVApp extends McsEntityBase {
   public name: string;
 
   constructor() {

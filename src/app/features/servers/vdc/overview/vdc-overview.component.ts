@@ -7,12 +7,10 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  ServerResource,
-  ServerStorage,
-  ServerStorageStatus,
-  serverStorageStatusText
-} from '../../models';
-import { ServersResourcesRepository } from '../../servers-resources.repository';
+  Resource,
+  ResourceStorage,
+  ResourcesRepository
+} from '../../../resources';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
@@ -33,7 +31,6 @@ const VDC_LOW_STORAGE_PERCENTAGE = 85;
 })
 
 export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDestroy {
-
   public textContent: any;
   public hasResources: boolean;
 
@@ -67,19 +64,19 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   constructor(
-    _serversResourcesRespository: ServersResourcesRepository,
+    _resourcesRespository: ResourcesRepository,
     _vdcService: VdcService,
     _changeDetectorRef: ChangeDetectorRef,
     _textContentProvider: McsTextContentProvider,
     private _router: Router
   ) {
     super(
-      _serversResourcesRespository,
+      _resourcesRespository,
       _vdcService,
       _changeDetectorRef,
       _textContentProvider
     );
-    this.selectedVdc = new ServerResource();
+    this.selectedVdc = new Resource();
   }
 
   public ngOnInit(): void {
@@ -102,7 +99,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Red Icon - If current storage is more than 85%
    * @param storage VDC Storage
    */
-  public getStorageStatusIconKey(storage: ServerStorage): string {
+  public getStorageStatusIconKey(storage: ResourceStorage): string {
     let iconKey = '';
 
     let percentage = this._computeStoragePercentage(storage);
@@ -119,20 +116,10 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   /**
-   * Returns true if the VDC storage is enabled.
-   * @param storage VDC Storage
-   */
-  public getStorageStatus(storage: ServerStorage): string {
-    return storage.enabled ?
-      serverStorageStatusText[ServerStorageStatus.Enabled] :
-      serverStorageStatusText[ServerStorageStatus.Disabled];
-  }
-
-  /**
    * Returns true if the storage has more than 85% used memory
    * @param storage VDC Storage
    */
-  public isStorageProfileLow(storage: ServerStorage): boolean {
+  public isStorageProfileLow(storage: ResourceStorage): boolean {
     if (isNullOrEmpty(storage)) { return false; }
 
     return this._computeStoragePercentage(storage) > 85;
@@ -149,7 +136,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Computes the used memory percentage of the provided VDC storage
    * @param storage VDC Storage
    */
-  private _computeStoragePercentage(storage: ServerStorage): number {
+  private _computeStoragePercentage(storage: ResourceStorage): number {
     if (isNullOrEmpty(storage)) { return 0; }
     let percentage = 100 * storage.usedMB / storage.limitMB;
     return Math.round(percentage);
@@ -173,7 +160,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * and check whether the resource has self managed type
    */
   private _validateResources(): void {
-    this._serversResourcesRespository.findAllRecords()
+    this._resourcesRespository.findAllRecords()
       .subscribe((resources) => {
         this.hasResources = !isNullOrEmpty(resources);
         this._changeDetectorRef.markForCheck();

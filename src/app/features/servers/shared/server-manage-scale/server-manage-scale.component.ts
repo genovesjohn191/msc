@@ -29,13 +29,12 @@ import {
   McsTextContentProvider,
   CoreValidators
 } from '../../../../core';
+import { Resource } from '../../../resources';
 import {
   ServerManageScale,
-  ServerResource,
   ServerInputManageType,
-  ServerComputeSummary
+  ServerCompute
 } from '../../models';
-import { ServersService } from '../../servers.service';
 
 // Constants definition
 const DEFAULT_MB = 1024;
@@ -70,18 +69,17 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
   public dataChange = new EventEmitter<ServerManageScale>();
 
   @Input()
-  public resource: ServerResource;
+  public resource: Resource;
 
   @Input()
-  public serverCompute?: ServerComputeSummary;
+  public serverCompute?: ServerCompute;
 
   private _destroySubject = new Subject<void>();
   private _scaleOutput = new ServerManageScale();
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider,
-    private _serversService: ServersService
+    private _textContentProvider: McsTextContentProvider
   ) { }
 
   public ngOnInit() {
@@ -130,16 +128,18 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
    * Returns the resource available memory in MB
    */
   public get resourceAvailableMemoryMB(): number {
-    let calculatedResourceMemory = this._serversService.computeAvailableMemoryMB(this.resource);
-    return calculatedResourceMemory + this.serverMemoryUsedMB;
+    let resourceMemory = getSafeProperty(this.resource,
+      (obj) => obj.compute.memoryAvailableMB, 0);
+    return resourceMemory + this.serverMemoryUsedMB;
   }
 
   /**
    * Returns the resource available CPU
    */
   public get resourceAvailableCpu(): number {
-    let calculatedResourceCpu = this._serversService.computeAvailableCpu(this.resource);
-    return calculatedResourceCpu + this.serverCpuUsed;
+    let resourceCpu = getSafeProperty(this.resource,
+      (obj) => obj.compute.cpuAvailable, 0);
+    return resourceCpu + this.serverCpuUsed;
   }
 
   /**

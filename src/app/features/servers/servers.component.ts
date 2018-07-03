@@ -9,7 +9,10 @@ import {
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ServersResourcesRepository } from './servers-resources.repository';
+import {
+  ResourcesRepository,
+  ResourceServiceType
+} from '../resources';
 import { ServersRepository } from './servers.repository';
 import { ServersService } from './servers.service';
 import { ServersDataSource } from './servers.datasource';
@@ -17,7 +20,6 @@ import { ServersDataSource } from './servers.datasource';
 import {
   Server,
   ServerCommand,
-  ServerServiceType,
   serverServiceTypeText
 } from './models';
 /** Shared */
@@ -144,7 +146,7 @@ export class ServersComponent
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _serversRepository: ServersRepository,
-    private _serversResourceRepository: ServersResourcesRepository,
+    private _resourcesRepository: ResourcesRepository,
     private _accessControlService: McsAccessControlService,
     private _router: Router
   ) {
@@ -358,12 +360,12 @@ export class ServersComponent
    * and check whether the resource has self managed type
    */
   private _validateResources(): void {
-    this._serversResourceRepository.findAllRecords()
+    this._resourcesRepository.findAllRecords()
       .subscribe((resources) => {
         this.hasResources = !isNullOrEmpty(resources);
         if (!isNullOrEmpty(resources)) {
           this.hasManagedResource = !!resources.find(
-            (resource) => resource.serviceType === ServerServiceType.Managed
+            (resource) => resource.serviceType === ResourceServiceType.Managed
           );
         }
         this.changeDetectorRef.markForCheck();

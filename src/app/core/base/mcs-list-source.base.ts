@@ -1,7 +1,8 @@
 import {
   Observable,
   asyncScheduler,
-  of
+  of,
+  throwError
 } from 'rxjs';
 import {
   catchError,
@@ -29,7 +30,7 @@ export abstract class McsListSourceBase<T> {
    */
   public findAllRecordsMapStream(keyFn: (item: T) => any): Observable<Map<any, T[]>> {
     return this.findAllRecordsStream().pipe(
-      catchError((error) => Observable.throw(error)),
+      catchError((error) => throwError(error)),
       switchMap((records) => {
         if (isNullOrEmpty(records)) { return of(undefined); }
 
@@ -47,7 +48,7 @@ export abstract class McsListSourceBase<T> {
    */
   public findAllRecordsStream(): Observable<T[]> {
     return this.getStreams().pipe(
-      catchError((error) => Observable.throw(error)),
+      catchError((error) => throwError(error)),
       switchMap(() => this.getAllRecords().pipe(map((records) => records)))
     );
   }

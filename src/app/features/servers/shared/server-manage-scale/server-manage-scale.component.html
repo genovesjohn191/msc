@@ -13,7 +13,7 @@
   <!-- Slider selection mode -->
   <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Slider">
     <p>
-      <span>{{ textContent.sliderMessage }}</span>
+      <span>{{ textContent.sliderMessage }} </span>
       <span>This VDC has {{ resourceAvailableMemoryMB | mcsDataSize: 'MB' }}
         RAM and {{ resourceAvailableCpu }} vCPU available.</span>
     </p>

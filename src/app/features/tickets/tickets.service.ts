@@ -24,13 +24,16 @@ import {
   TicketComment
 } from './models';
 import {
+  Resource,
+  ResourcesRepository
+} from '../resources';
+import {
   Server,
-  ServersService,
-  ServerResource
+  ServersRepository
 } from '../servers';
 import {
   Firewall,
-  FirewallsService
+  FirewallsRepository
 } from '../networking';
 
 @Injectable()
@@ -38,8 +41,9 @@ export class TicketsService {
 
   constructor(
     private _mcsApiService: McsApiService,
-    private _serversService: ServersService,
-    private _firewallsService: FirewallsService,
+    private _resourcesRepository: ResourcesRepository,
+    private _serversRespository: ServersRepository,
+    private _firewallsRepository: FirewallsRepository,
     private _loggerService: McsLoggerService
   ) { }
 
@@ -88,8 +92,8 @@ export class TicketsService {
   /**
    * Get all server resources from the API
    */
-  public getServerResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
-    return this._serversService.getServerResources();
+  public getServerResources(): Observable<Resource[]> {
+    return this._resourcesRepository.findAllRecords();
   }
 
   /**
@@ -98,15 +102,8 @@ export class TicketsService {
    * @param perPageCount Size of item per page
    * @param keyword Keyword to be search during filtering
    */
-  public getServers(
-    pageIdx?: number,
-    perPageCount?: number,
-    keyword?: string): Observable<McsApiSuccessResponse<Server[]>> {
-    return this._serversService.getServers({
-      page: pageIdx,
-      perPage: perPageCount,
-      searchKeyword: keyword
-    });
+  public getServers(): Observable<Server[]> {
+    return this._serversRespository.findAllRecords();
   }
 
   /**
@@ -115,15 +112,8 @@ export class TicketsService {
    * @param perPageCount Size of item per page
    * @param keyword Keyword to be search during filtering
    */
-  public getFirewalls(
-    pageIdx?: number,
-    perPageCount?: number,
-    keyword?: string): Observable<McsApiSuccessResponse<Firewall[]>> {
-    return this._firewallsService.getFirewalls({
-      page: pageIdx,
-      perPage: perPageCount,
-      searchKeyword: keyword
-    });
+  public getFirewalls(): Observable<Firewall[]> {
+    return this._firewallsRepository.findAllRecords();
   }
 
   /**

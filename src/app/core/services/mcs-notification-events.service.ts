@@ -215,7 +215,7 @@ export class McsNotificationEventsService {
   private _notifyUser(_job: McsApiJob): void {
     if (isNullOrEmpty(_job)) { return; }
 
-    let userStartedTheJob = compareStrings(_job.ownerId,
+    let userStartedTheJob = compareStrings(_job.initiatorId,
       this._authenticationIdentity.user.userId) === 0;
     if (userStartedTheJob) {
       this.currentUserJob.next(_job);

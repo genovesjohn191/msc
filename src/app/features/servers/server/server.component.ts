@@ -13,8 +13,8 @@ import {
 } from '@angular/router';
 import {
   Subscription,
-  Observable,
-  Subject
+  Subject,
+  throwError
 } from 'rxjs';
 import {
   startWith,
@@ -24,7 +24,7 @@ import {
 import {
   Server,
   ServerCommand,
-  ServerPlatformSummary
+  ServerPlatform
 } from '../models';
 import {
   ResetPasswordDialogComponent,
@@ -99,7 +99,7 @@ export class ServerComponent
   }
 
   private _destroySubject = new Subject<void>();
-  private _resourcesKeyMap: Map<string, ServerPlatformSummary>;
+  private _resourcesKeyMap: Map<string, ServerPlatform>;
 
   constructor(
     _router: Router,
@@ -217,7 +217,7 @@ export class ServerComponent
   /**
    * Event that emits when VDC name is selected
    */
-  public onSelectVdcByName(event: MouseEvent, resource: ServerPlatformSummary): void {
+  public onSelectVdcByName(event: MouseEvent, resource: ServerPlatform): void {
     if (!isNullOrEmpty(event)) { event.stopPropagation(); }
     if (isNullOrEmpty(resource.resourceId)) { return; }
 
@@ -262,9 +262,9 @@ export class ServerComponent
     // Key function pointer for mapping objects
     let keyFn = (item: Server) => {
       let resourceName = isNullOrEmpty(item.platform) ? 'Others' : item.platform.resourceName;
-      let resource: ServerPlatformSummary = this._resourcesKeyMap.get(resourceName);
+      let resource: ServerPlatform = this._resourcesKeyMap.get(resourceName);
       if (isNullOrEmpty(resource)) {
-        let resourceInstance = new ServerPlatformSummary();
+        let resourceInstance = new ServerPlatform();
         resourceInstance.resourceName = 'Others';
         resource = !isNullOrEmpty(item.platform.resourceName) ? item.platform : resourceInstance;
       }
@@ -277,7 +277,7 @@ export class ServerComponent
       .pipe(
         catchError((error) => {
           this.listStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {
@@ -298,7 +298,7 @@ export class ServerComponent
         catchError((error) => {
           // Handle common error status code
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

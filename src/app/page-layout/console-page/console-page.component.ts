@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   Subscription,
-  Observable
+  throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -264,7 +264,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
         catchError((error) => {
           // Handle common error status code
           this.consoleStatus = VmConsoleStatus.Error;
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response: McsApiConsole) => {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
-  Observable,
-  BehaviorSubject
+  BehaviorSubject,
+  throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
@@ -109,7 +109,7 @@ export class SwitchAccountService {
         .pipe(
           catchError((error) => {
             setDefaultAccount();
-            return Observable.throw(error);
+            return throwError(error);
           })
         )
         .subscribe((account) => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import {
   finalize,
   map,
@@ -30,12 +30,6 @@ import {
   ServerClone,
   ServerUpdate,
   ServerCommand,
-  ServerResource,
-  ServerCompute,
-  ServerStorage,
-  ServerNetwork,
-  ServerCatalogItem,
-  ServerVApp,
   ServerOperatingSystem,
   ServerStorageDevice,
   ServerStorageDeviceUpdate,
@@ -746,31 +740,6 @@ export class ServersService {
   }
 
   /**
-   * Get Server Resources (MCS API Response)
-   */
-  public getServerResources(): Observable<McsApiSuccessResponse<ServerResource[]>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/resources';
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerResource[]>(ServerResource, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
    * Get server snapshots from API
    * @param id Server identification
    */
@@ -892,190 +861,6 @@ export class ServersService {
   }
 
   /**
-   * Get server resource by ID (MCS API Response)
-   * @param id Resource identification
-   */
-  public getResource(id: any): Observable<McsApiSuccessResponse<ServerResource>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${id}`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerResource>(ServerResource, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
-   * Get server resource compute by ID (MCS API Response)
-   * @param id Resource identification
-   */
-  public getResourceCompute(id: any): Observable<McsApiSuccessResponse<ServerCompute>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${id}/compute`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerCompute>(ServerCompute, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
-   * Get server resource storage by ID (MCS API Response)
-   * @param id Resource identification
-   */
-  public getResourceStorage(id: any): Observable<McsApiSuccessResponse<ServerStorage[]>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${id}/storage`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerStorage[]>(ServerStorage, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
-   * Get server resource networks by ID (MCS API Response)
-   * @param resourceId Resource identification
-   */
-  public getResourceNetworks(resourceId: any): Observable<McsApiSuccessResponse<ServerNetwork[]>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${resourceId}/networks`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerNetwork[]>(ServerNetwork, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
-   * Get server resource network details by ID (MCS API Response)
-   * @param resourceId Resource identification
-   * @param networkId Network identification
-   */
-  public getResourceNetwork(resourceId: any, networkId: any):
-    Observable<McsApiSuccessResponse<ServerNetwork>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${resourceId}/networks/${networkId}`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerNetwork>(ServerNetwork, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
-   * Get server resource catalog items by ID (MCS API Response)
-   * @param id Resource identification
-   */
-  public getResourceCatalogItems(id: any): Observable<McsApiSuccessResponse<ServerCatalogItem[]>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${id}/catalogitems`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerCatalogItem[]>(ServerCatalogItem, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
-   * Get server resource vApps by ID (MCS API Response)
-   * @param id Resource identification
-   */
-  public getResourceVApps(id: any): Observable<McsApiSuccessResponse<ServerVApp[]>> {
-    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/${id}/vapps`;
-
-    return this._mcsApiService.get(mcsApiRequestParameter)
-      .pipe(
-        finalize(() => {
-          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
-        }),
-        map((response) => {
-          // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ServerVApp[]>(ServerVApp, response);
-
-          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
-          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
-          this._loggerService.traceInfo(`converted response:`, apiResponse);
-          return apiResponse;
-        })
-      );
-  }
-
-  /**
    * Execute the server command according to inputs
    * @param data Data of the server to process the action
    * @param action Action to be execute
@@ -1116,7 +901,7 @@ export class ServersService {
           .pipe(
             catchError((error) => {
               this.clearServerSpinner(data.server);
-              return Observable.throw(error);
+              return throwError(error);
             })
           )
           .subscribe(() => {
@@ -1135,7 +920,7 @@ export class ServersService {
           .pipe(
             catchError((error) => {
               this.clearServerSpinner(data.server);
-              return Observable.throw(error);
+              return throwError(error);
             })
           )
           .subscribe();
@@ -1157,7 +942,7 @@ export class ServersService {
           .pipe(
             catchError((error) => {
               this.clearServerSpinner(data.server);
-              return Observable.throw(error);
+              return throwError(error);
             })
           )
           .subscribe(() => {
@@ -1176,7 +961,7 @@ export class ServersService {
           .pipe(
             catchError((error) => {
               this.clearServerSpinner(data.server);
-              return Observable.throw(error);
+              return throwError(error);
             })
           )
           .subscribe(() => {
@@ -1184,47 +969,6 @@ export class ServersService {
           });
         break;
     }
-  }
-
-  /**
-   * Calculate the available memory based on the given resource
-   * @deprecated This should be returned from api the available memory
-   * @param resource Resource where the calculation came from
-   */
-  public computeAvailableMemoryMB(resource: ServerResource): number {
-    let availableMemoryMB = 0;
-
-    if (!isNullOrEmpty(resource)) {
-      let resourceCompute = resource.compute;
-      availableMemoryMB = !isNullOrEmpty(resourceCompute) ?
-        resourceCompute.memoryLimitMB - resourceCompute.memoryUsedMB : 0;
-    }
-    return availableMemoryMB;
-  }
-
-  /**
-   * Calculate the available cpu or core based on the given resource
-   * @deprecated This should be returned from api the available cpu
-   * @param resource Resource where the calculation came from
-   */
-  public computeAvailableCpu(resource: ServerResource): number {
-    let availableCpu = 0;
-
-    if (!isNullOrEmpty(resource)) {
-      let resourceCompute = resource.compute;
-      availableCpu = !isNullOrEmpty(resourceCompute) ?
-        resourceCompute.cpuLimit - resourceCompute.cpuUsed : 0;
-    }
-    availableCpu = Math.max(0, availableCpu);
-    return availableCpu;
-  }
-
-  /**
-   * Calculate the available storage as MB
-   * @param storage Storage to calculate
-   */
-  public computeAvailableStorageMB(storage: ServerStorage, memoryMB: number): number {
-    return !isNullOrEmpty(storage) ? Math.max(0, (storage.availableMB - memoryMB)) : 0;
   }
 
   /**

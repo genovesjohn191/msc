@@ -20,7 +20,7 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
@@ -236,7 +236,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
       .pipe(
         catchError((error) => {
           this.productsStatusFactory.setError();
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe((response) => {

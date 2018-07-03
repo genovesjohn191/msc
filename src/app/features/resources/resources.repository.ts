@@ -5,20 +5,20 @@ import {
   McsRepositoryBase,
   McsApiSuccessResponse
 } from '../../core';
-import { ServersService } from './servers.service';
+import { ResourcesService } from './resources.service';
 import {
-  ServerResource,
-  ServerCompute,
-  ServerStorage,
-  ServerNetwork,
-  ServerCatalogItem,
-  ServerVApp
+  Resource,
+  ResourceCompute,
+  ResourceStorage,
+  ResourceNetwork,
+  ResourceCatalogItem,
+  ResourceVApp
 } from './models';
 
 @Injectable()
-export class ServersResourcesRepository extends McsRepositoryBase<ServerResource> {
+export class ResourcesRepository extends McsRepositoryBase<Resource> {
 
-  constructor(private _serversApiService: ServersService) {
+  constructor(private _resourcesApiService: ResourcesService) {
     super();
   }
 
@@ -27,8 +27,8 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceCompute(resource: ServerResource): Observable<ServerCompute> {
-    return this._serversApiService.getResourceCompute(resource.id)
+  public findResourceCompute(resource: Resource): Observable<ResourceCompute> {
+    return this._resourcesApiService.getResourceCompute(resource.id)
       .pipe(
         map((response) => {
           this.updateRecordProperty(resource.compute, response.content);
@@ -43,8 +43,8 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceStorage(resource: ServerResource): Observable<ServerStorage[]> {
-    return this._serversApiService.getResourceStorage(resource.id)
+  public findResourceStorage(resource: Resource): Observable<ResourceStorage[]> {
+    return this._resourcesApiService.getResourceStorage(resource.id)
       .pipe(
         map((response) => {
           this.updateRecordProperty(resource.storage, response.content);
@@ -59,8 +59,8 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceNetworks(resource: ServerResource): Observable<ServerNetwork[]> {
-    return this._serversApiService.getResourceNetworks(resource.id)
+  public findResourceNetworks(resource: Resource): Observable<ResourceNetwork[]> {
+    return this._resourcesApiService.getResourceNetworks(resource.id)
       .pipe(
         map((response) => {
           this.updateRecordProperty(resource.networks, response.content);
@@ -75,8 +75,8 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceCatalogItems(resource: ServerResource): Observable<ServerCatalogItem[]> {
-    return this._serversApiService.getResourceCatalogItems(resource.id)
+  public findResourceCatalogItems(resource: Resource): Observable<ResourceCatalogItem[]> {
+    return this._resourcesApiService.getResourceCatalogItems(resource.id)
       .pipe(
         map((response) => {
           this.updateRecordProperty(resource.catalogItems, response.content);
@@ -91,8 +91,8 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceVApps(resource: ServerResource): Observable<ServerVApp[]> {
-    return this._serversApiService.getResourceVApps(resource.id)
+  public findResourceVApps(resource: Resource): Observable<ResourceVApp[]> {
+    return this._resourcesApiService.getResourceVApps(resource.id)
       .pipe(
         map((response) => {
           this.updateRecordProperty(resource.vApps, response.content);
@@ -110,8 +110,8 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
     _pageIndex: number,
     _pageSize: number,
     _keyword: string
-  ): Observable<McsApiSuccessResponse<ServerResource[]>> {
-    return this._serversApiService.getServerResources();
+  ): Observable<McsApiSuccessResponse<Resource[]>> {
+    return this._resourcesApiService.getResources();
   }
 
   /**
@@ -119,8 +119,8 @@ export class ServersResourcesRepository extends McsRepositoryBase<ServerResource
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<ServerResource>> {
-    return this._serversApiService.getResource(recordId);
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Resource>> {
+    return this._resourcesApiService.getResource(recordId);
   }
 
   /**

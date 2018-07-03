@@ -4,7 +4,7 @@ import {
 } from '../enumerations/server-platform-type.enum';
 import { JsonProperty } from 'json-object-mapper';
 
-export class ServerPlatformSummary {
+export class ServerPlatform {
   public resourceId: string;
   public resourceName: string;
   public environmentName: string;

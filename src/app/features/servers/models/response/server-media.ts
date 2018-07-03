@@ -18,10 +18,6 @@ export class ServerMedia extends McsEntityBase {
   })
   public createdOn: Date;
 
-  // Additional flag not related to API response
-  public isProcessing: boolean;
-  public processingText: string;
-
   constructor() {
     super();
     this.name = undefined;
@@ -30,7 +26,5 @@ export class ServerMedia extends McsEntityBase {
     this.catalogName = undefined;
     this.sizeMB = undefined;
     this.createdOn = undefined;
-    this.isProcessing = undefined;
-    this.processingText = undefined;
   }
 }

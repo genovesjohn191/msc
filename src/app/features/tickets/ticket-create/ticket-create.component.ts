@@ -11,8 +11,8 @@ import {
   FormControl
 } from '@angular/forms';
 import {
-  Observable,
-  forkJoin
+  forkJoin,
+  throwError
 } from 'rxjs';
 import {
   finalize,
@@ -35,6 +35,7 @@ import {
   CoreDefinition
 } from '../../../core';
 import { FormGroupDirective } from '../../../shared';
+import { Resource } from '../../resources';
 import {
   TicketCreate,
   TicketCreateAttachment,
@@ -47,7 +48,6 @@ import { TicketsRepository } from '../tickets.repository';
 import { TicketCreateService } from './ticket-create.service';
 import {
   Server,
-  ServerResource,
   serverServiceTypeText
 } from '../../servers';
 import { Firewall } from '../../networking';
@@ -255,7 +255,7 @@ export class TicketCreateComponent implements
           this._changeDetectorRef.markForCheck();
           // Handle common error status code
           this._errorHandlerService.handleHttpRedirectionError(error.status);
-          return Observable.throw(error);
+          return throwError(error);
         })
       )
       .subscribe(() => this._router.navigate(['/tickets']));
@@ -319,8 +319,8 @@ export class TicketCreateComponent implements
    * Set the data of VDCs obtained from API
    */
   private _setVdcs(response: any): void {
-    if (isNullOrEmpty(response) || isNullOrEmpty(response.content)) { return; }
-    let vdcs = response.content as ServerResource[];
+    if (isNullOrEmpty(response)) { return; }
+    let vdcs = response as Resource[];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'VDCs';
@@ -345,8 +345,8 @@ export class TicketCreateComponent implements
    * Set the data of servers obtained from API
    */
   private _setServers(response: any): void {
-    if (isNullOrEmpty(response) || isNullOrEmpty(response.content)) { return; }
-    let servers = response.content as Server[];
+    if (isNullOrEmpty(response)) { return; }
+    let servers = response as Server[];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'Servers';
@@ -370,8 +370,8 @@ export class TicketCreateComponent implements
    * Set the data of firewalls obtained from API
    */
   private _setFirewalls(response: any): void {
-    if (isNullOrEmpty(response) || isNullOrEmpty(response.content)) { return; }
-    let firewalls = response.content as Firewall[];
+    if (isNullOrEmpty(response)) { return; }
+    let firewalls = response as Firewall[];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'Firewalls';

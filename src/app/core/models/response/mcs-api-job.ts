@@ -13,10 +13,10 @@ import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 import { McsEntityBase } from '../../base/mcs-entity.base';
 
 export class McsApiJob extends McsEntityBase  {
-  public ownerId: string;
-  public ownerFullName: string;
-  public ownerCompanyId: string;
-  public ownerCompanyName: string;
+  public initiatorId: string;
+  public initiatorFullName: string;
+  public initiatorCompanyId: string;
+  public initiatorCompanyName: string;
   public description: string;
   public summaryInformation: string;
   public errorMessage: string;
@@ -71,10 +71,10 @@ export class McsApiJob extends McsEntityBase  {
   constructor() {
     super();
     this.type = undefined;
-    this.ownerId = undefined;
-    this.ownerFullName = undefined;
-    this.ownerCompanyId = undefined;
-    this.ownerCompanyName = undefined;
+    this.initiatorId = undefined;
+    this.initiatorFullName = undefined;
+    this.initiatorCompanyId = undefined;
+    this.initiatorCompanyName = undefined;
     this.description = undefined;
     this.summaryInformation = undefined;
     this.errorMessage = undefined;

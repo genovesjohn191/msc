@@ -34,13 +34,15 @@ import {
   McsDataStatusFactory
 } from '../../../../core';
 import {
-  ServerNetwork,
+  ResourceNetwork,
+  ResourceNetworkIpAddress,
+  ResourcesService
+} from '../../../resources';
+import {
   ServerInputManageType,
   ServerIpAllocationMode,
-  ServerManageNetwork,
-  ServerNetworkIpAddress
+  ServerManageNetwork
 } from '../../models';
-import { ServersService } from '../../servers.service';
 
 // Constants
 const DEFAULT_GATEWAY = '192.168.0.1';
@@ -66,10 +68,10 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   public textContent: any;
   public netMask: any;
   public selectedIpAddress: ServerIpAllocationMode;
-  public ipAddressesInUsed: ServerNetworkIpAddress[];
+  public ipAddressesInUsed: ResourceNetworkIpAddress[];
   public ipAddressItems: McsOption[];
   public inputManageType: ServerInputManageType;
-  public ipAddressessStatusFactory = new McsDataStatusFactory<ServerNetworkIpAddress[]>();
+  public ipAddressessStatusFactory = new McsDataStatusFactory<ResourceNetworkIpAddress[]>();
 
   // Form variables
   public fgIpAddress: FormGroup;
@@ -79,20 +81,20 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   public dataChange = new EventEmitter<ServerManageNetwork>();
 
   @Output()
-  public selectedNetworkChange = new EventEmitter<ServerNetwork>();
+  public selectedNetworkChange = new EventEmitter<ResourceNetwork>();
 
   @Input()
   public resourceId: string;
 
   @Input()
-  public networks: ServerNetwork[];
+  public networks: ResourceNetwork[];
 
   @Input()
   public customIpAddress: string;
 
   @Input()
-  public get selectedNetwork(): ServerNetwork { return this._selectedNetwork; }
-  public set selectedNetwork(value: ServerNetwork) {
+  public get selectedNetwork(): ResourceNetwork { return this._selectedNetwork; }
+  public set selectedNetwork(value: ResourceNetwork) {
     if (this._selectedNetwork !== value) {
       this._selectedNetwork = value;
       this.selectedNetworkChange.emit(this._selectedNetwork);
@@ -101,7 +103,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
       this._setInUsedIpAddresses(this._selectedNetwork);
     }
   }
-  private _selectedNetwork: ServerNetwork;
+  private _selectedNetwork: ResourceNetwork;
 
   private _destroySubject = new Subject<void>();
   private _networkOutput = new ServerManageNetwork();
@@ -109,7 +111,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _serversService: ServersService
+    private _resourcesService: ResourcesService
   ) {
     this.inputManageType = ServerInputManageType.Buttons;
     this.ipAddressItems = new Array();
@@ -184,7 +186,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
    * Create the instance of the netmask based on the provided network
    * @param network Network to be considered
    */
-  private _createNetmaskByNetwork(network: ServerNetwork): void {
+  private _createNetmaskByNetwork(network: ResourceNetwork): void {
     if (isNullOrEmpty(network)) { return; }
     this.netMask = new Netmask(`${network.gateway}/${network.netmask}`);
   }
@@ -193,10 +195,10 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
    * Sets the ip-addresses in used in the current network selected
    * @param network Network currently selected
    */
-  private _setInUsedIpAddresses(network: ServerNetwork): void {
+  private _setInUsedIpAddresses(network: ResourceNetwork): void {
     if (isNullOrEmpty(network)) { return; }
     this.ipAddressessStatusFactory.setInProgress();
-    this._serversService.getResourceNetwork(this.resourceId, network.id)
+    this._resourcesService.getResourceNetwork(this.resourceId, network.id)
       .pipe(
         finalize(() => this.ipAddressessStatusFactory.setSuccesfull(this.ipAddressesInUsed))
       )
