@@ -16,10 +16,7 @@ import {
   FormControl
 } from '@angular/forms';
 import { Subject } from 'rxjs';
-import {
-  takeUntil,
-  startWith
-} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import {
   CoreValidators,
   McsTextContentProvider,
@@ -103,7 +100,12 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
   @Input()
   public get customStorageValue(): number { return this._customStorageValue; }
-  public set customStorageValue(value: number) { this._customStorageValue = coerceNumber(value); }
+  public set customStorageValue(value: number) {
+    if (value !== this._customStorageValue) {
+      this._customStorageValue = coerceNumber(value);
+      this._notifyDataChanged();
+    }
+  }
   private _customStorageValue: number = 0;
 
   private _destroySubject = new Subject<void>();
@@ -159,6 +161,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     this._registerFormGroup();
     this._setSelectedStorage();
     this._setCustomStorageValue();
+    this._notifyDataChanged();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -269,13 +272,8 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
     // Set the actual selected in case of storage selection changed
     this.fcSelectStorages.valueChanges
-      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((value) => this.selectedStorage = value);
-
-    // Notify data changed for every changes made in the status
-    this.fcCustomStorage.statusChanges
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._notifyDataChanged());
 
     // Create form group and bind the form controls
     this.fgServerStorage = new FormGroup({
@@ -321,6 +319,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
         this._storageOutput.valid = this.hasAvailableMemory;
         break;
     }
+
     // Emit changes
     this.dataChange.emit(this._storageOutput);
     this._changeDetectorRef.markForCheck();

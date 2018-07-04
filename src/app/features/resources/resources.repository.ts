@@ -31,7 +31,8 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
     return this._resourcesApiService.getResourceCompute(resource.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(resource.compute, response.content);
+          resource.compute = this.updateRecordProperty(
+            resource.compute, response.content);
           this.updateRecord(resource);
           return response.content;
         })
@@ -47,7 +48,8 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
     return this._resourcesApiService.getResourceStorage(resource.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(resource.storage, response.content);
+          resource.storage = this.updateRecordProperty(
+            resource.storage, response.content);
           this.updateRecord(resource);
           return response.content;
         })
@@ -63,7 +65,8 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
     return this._resourcesApiService.getResourceNetworks(resource.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(resource.networks, response.content);
+          resource.networks = this.updateRecordProperty(
+            resource.networks, response.content);
           this.updateRecord(resource);
           return response.content;
         })
@@ -79,7 +82,8 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
     return this._resourcesApiService.getResourceCatalogItems(resource.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(resource.catalogItems, response.content);
+          resource.catalogItems = this.updateRecordProperty(
+            resource.catalogItems, response.content);
           this.updateRecord(resource);
           return response.content;
         })
@@ -95,7 +99,8 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
     return this._resourcesApiService.getResourceVApps(resource.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(resource.vApps, response.content);
+          resource.vApps = this.updateRecordProperty(
+            resource.vApps, response.content);
           this.updateRecord(resource);
           return response.content;
         })

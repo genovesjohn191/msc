@@ -7,9 +7,14 @@ import {
 } from '@angular/core';
 import {
   Subscription,
-  throwError
+  throwError,
+  Subject
 } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {
+  catchError,
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
 import {
   McsDialogService,
   McsTextContentProvider,
@@ -22,7 +27,8 @@ import {
 } from '../../../../core';
 import {
   unsubscribeSafely,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSubject
 } from '../../../../utilities';
 import { StdDateFormatPipe } from '../../../../shared';
 import {
@@ -67,9 +73,9 @@ export class ServerBackupsComponent extends ServerDetailsBase
   public createSnapshotSubscription: Subscription;
   public deleteSnapshotSubscription: Subscription;
   public restoreSnapshotSubscription: Subscription;
-  public createJobSnapshotSubscription: Subscription;
-  public restoreJobSnapshotSubscription: Subscription;
-  public deleteJobSnapshotSubscription: Subscription;
+
+  private _newSnapshot: ServerSnapshot;
+  private _destroySubject = new Subject<void>();
 
   public get hasSnapshot(): boolean {
     return !isNullOrEmpty(this.server.snapshots);
@@ -81,7 +87,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   public get creatingSnapshot(): boolean {
-    return isNullOrEmpty(this.snapshot.createdOn);
+    return !isNullOrEmpty(this._newSnapshot);
   }
 
   public get enabledActions(): boolean {
@@ -94,9 +100,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
   private _snapshotProcessing: boolean = false;
   public get snapshotProcessing(): boolean {
-    return !this.hasSnapshot ? false :
-      this.server.snapshots[0].isProcessing ||
-      this._snapshotProcessing;
+    return this._snapshotProcessing;
   }
 
   public get warningIconKey(): string {
@@ -116,7 +120,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     private _standardDateFormatPipe: StdDateFormatPipe,
-    private _notificationsEventService: McsNotificationEventsService,
+    private _notificationEvents: McsNotificationEventsService,
     private _dialogService: McsDialogService
   ) {
     super(
@@ -132,16 +136,8 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.backups;
-    this.createJobSnapshotSubscription = this._notificationsEventService
-      .createServerSnapshot
-      .subscribe(this._onUpdateServerSnapshot.bind(this));
-    this.restoreJobSnapshotSubscription = this._notificationsEventService
-      .applyServerSnapshot
-      .subscribe(this._onUpdateServerSnapshot.bind(this));
-    this.deleteJobSnapshotSubscription = this._notificationsEventService
-      .deleteServerSnapshot
-      .subscribe(this._onUpdateServerSnapshot.bind(this));
     this.initialize();
+    this._registerJobEvents();
   }
 
   public ngOnDestroy() {
@@ -150,9 +146,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
     unsubscribeSafely(this.createSnapshotSubscription);
     unsubscribeSafely(this.deleteSnapshotSubscription);
     unsubscribeSafely(this.restoreSnapshotSubscription);
-    unsubscribeSafely(this.createJobSnapshotSubscription);
-    unsubscribeSafely(this.restoreJobSnapshotSubscription);
-    unsubscribeSafely(this.deleteJobSnapshotSubscription);
+    unsubscribeSubject(this._destroySubject);
     this.dispose();
   }
 
@@ -166,17 +160,16 @@ export class ServerBackupsComponent extends ServerDetailsBase
     this._showDialog(dialogType, () => {
       if (dialogType !== SnapshotDialogType.Create) { return; }
 
+      this._serversService.setServerSpinner(this.server);
       this.createSnapshotSubscription = this._serversService
         .createServerSnapshot(this.server.id, {
           preserveState: true,
           preserveMemory: true,
-          clientReferenceObject: {
-            serverId: this.server.id
-          }
+          clientReferenceObject: { serverId: this.server.id }
         })
         .pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server, this.snapshot);
+            this._serversService.clearServerSpinner(this.server);
             return throwError(error);
           })
         )
@@ -192,13 +185,14 @@ export class ServerBackupsComponent extends ServerDetailsBase
     if (isNullOrEmpty(snapshot)) { return; }
 
     this._showDialog(SnapshotDialogType.Restore, () => {
+      this._serversService.setServerSpinner(this.server);
       this.restoreSnapshotSubscription = this._serversService
         .restoreServerSnapshot(this.server.id, {
-          serverId: this.server.id
+          clientReferenceObject: { serverId: this.server.id }
         })
         .pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server, this.snapshot);
+            this._serversService.clearServerSpinner(this.server);
             return throwError(error);
           })
         )
@@ -214,13 +208,14 @@ export class ServerBackupsComponent extends ServerDetailsBase
     if (isNullOrEmpty(snapshot)) { return; }
 
     this._showDialog(SnapshotDialogType.Delete, () => {
+      this._serversService.setServerSpinner(this.server);
       this.deleteSnapshotSubscription = this._serversService
         .deleteServerSnapshot(this.server.id, {
-          serverId: this.server.id
+          clientReferenceObject: { serverId: this.server.id }
         })
         .pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server, this.snapshot);
+            this._serversService.clearServerSpinner(this.server);
             return throwError(error);
           })
         )
@@ -300,6 +295,44 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   /**
+   * Register disk jobs events
+   */
+  private _registerJobEvents(): void {
+    this._notificationEvents.createServerSnapshot
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(this._onCreateServerSnapshot.bind(this));
+
+    this._notificationEvents.applyServerSnapshot
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(this._onUpdateServerSnapshot.bind(this));
+
+    this._notificationEvents.deleteServerSnapshot
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(this._onUpdateServerSnapshot.bind(this));
+  }
+
+  /**
+   * Event that emits when creating a snapshot
+   * @param job Emitted job content
+   */
+  private _onCreateServerSnapshot(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
+
+    switch (job.dataStatus) {
+      case McsDataStatus.InProgress:
+        this._onCreatingSnapshot(job);
+        break;
+
+      case McsDataStatus.Success:
+        this.refreshServerResource();
+      case McsDataStatus.Error:
+      default:
+        this._newSnapshot = undefined;
+        break;
+    }
+  }
+
+  /**
    * Event that emits when either updating or deleting a server snapshot
    * @param job Emitted job content
    */
@@ -313,8 +346,20 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
     // Update the server snapshot
     if (job.dataStatus === McsDataStatus.Success) {
-      this._getServerSnapshots();
+      this.refreshServerResource();
     }
+  }
+
+  /**
+   * Will trigger if currently creating a snapshot
+   * @param job Emitted job content
+   */
+  private _onCreatingSnapshot(job: McsApiJob): void {
+    if (!this.serverIsActiveByJob(job)) { return; }
+
+    // Mock snapshot data based on job response
+    this._newSnapshot = new ServerSnapshot();
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

@@ -1,16 +1,12 @@
-import { ServerClientObject } from './server-client-object';
-import { JsonProperty } from 'json-object-mapper';
+import { McsApiJobRequestBase } from '../../../../core';
 
-export class ServerCreateSnapshot {
+export class ServerCreateSnapshot extends McsApiJobRequestBase {
   public preserveMemory: boolean;
   public preserveState: boolean;
 
-  @JsonProperty({ type: ServerClientObject })
-  public clientReferenceObject: ServerClientObject;
-
   constructor() {
+    super();
     this.preserveMemory = undefined;
     this.preserveState = undefined;
-    this.clientReferenceObject = undefined;
   }
 }

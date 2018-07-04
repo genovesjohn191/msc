@@ -51,7 +51,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     return this._serversApiService.getServerStorage(activeServer.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(activeServer.storageDevices, response.content);
+          activeServer.storageDevices = this.updateRecordProperty(
+            activeServer.storageDevices, response.content);
           this.updateRecord(activeServer);
           return response.content;
         })
@@ -67,7 +68,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     return this._serversApiService.getServerNics(activeServer.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(activeServer.nics, response.content);
+          activeServer.nics = this.updateRecordProperty(
+            activeServer.nics, response.content);
           this.updateRecord(activeServer);
           return response.content;
         })
@@ -83,7 +85,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     return this._serversApiService.getServerMedias(activeServer.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(activeServer.media, response.content);
+          activeServer.media = this.updateRecordProperty(
+            activeServer.media, response.content);
           this.updateRecord(activeServer);
           return response.content;
         })
@@ -98,7 +101,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     return this._serversApiService.getServerSnapshots(activeServer.id)
       .pipe(
         map((response) => {
-          this.updateRecordProperty(activeServer.snapshots, response.content);
+          activeServer.snapshots = this.updateRecordProperty(
+            activeServer.snapshots, response.content);
           this.updateRecord(activeServer);
           return response.content;
         })
@@ -431,18 +435,6 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      if (isNullOrEmpty(activeServer.snapshots)) {
-        // We need to fake the date in order for us to check
-        // when the snapshot is currently creating
-        let snapshot = new ServerSnapshot();
-        snapshot.isProcessing = activeServer.isProcessing;
-        activeServer.snapshots = [];
-        activeServer.snapshots.push(snapshot);
-      } else {
-        activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
-      }
-
       this.updateRecord(activeServer);
     }
   }
@@ -454,12 +446,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   private _onApplyServerSnapshot(job: McsApiJob): void {
     if (isNullOrEmpty(job)) { return; }
     let activeServer = this._getServerByJob(job);
+
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      if (!isNullOrEmpty(activeServer.snapshots)) {
-        activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
-      }
       this.updateRecord(activeServer);
     }
   }
@@ -471,16 +460,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   private _onDeleteServerSnapshot(job: McsApiJob): void {
     if (isNullOrEmpty(job)) { return; }
     let activeServer = this._getServerByJob(job);
+
     if (!isNullOrEmpty(activeServer)) {
       this._setServerProcessDetails(activeServer, job);
-
-      // Clear the snapshot as mock data on the repository in case of completion
-      if (!isNullOrEmpty(activeServer.snapshots)) {
-        activeServer.snapshots[0].isProcessing = this._getProcessingFlagByJob(job);
-      }
-      if (job.dataStatus === McsDataStatus.Success) {
-        activeServer.snapshots = undefined;
-      }
       this.updateRecord(activeServer);
     }
   }

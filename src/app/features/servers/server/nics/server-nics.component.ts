@@ -39,7 +39,8 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely,
-  animateFactory
+  animateFactory,
+  unsubscribeSubject
 } from '../../../../utilities';
 import { DeleteNicDialogComponent } from '../../shared';
 import { ServersService } from '../../servers.service';
@@ -172,8 +173,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
   public ngOnDestroy() {
     this.dispose();
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
     unsubscribeSafely(this._networksSubscription);
   }
 
@@ -264,7 +264,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, nicValues);
-          this._errorHandlerService.handleHttpRedirectionError(error);
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -296,7 +296,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server, this.selectedNic);
-            this._errorHandlerService.handleHttpRedirectionError(error);
+            this._errorHandlerService.handleHttpRedirectionError(error.status);
             return throwError(error);
           })
         ).subscribe();
@@ -325,7 +325,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, this.selectedNic);
-          this._errorHandlerService.handleHttpRedirectionError(error);
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
       ).subscribe();

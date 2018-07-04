@@ -104,11 +104,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
    * @param propertyTarget The target object to copy to.
    * @param propertyTarget The source object from which to copy records.
    */
-  public updateRecordProperty<P>(propertyTarget: P | any, propertySource: P | any): void {
-    let objectIsArrayType = !isNullOrEmpty(propertyTarget)
-      && !isNullOrEmpty(propertySource)
-      && Array.isArray(propertyTarget)
-      && Array.isArray(propertySource);
+  public updateRecordProperty<P>(propertyTarget: P | any, propertySource: P | any): P | any {
+    let objectIsArrayType = Array.isArray(propertySource) || Array.isArray(propertyTarget);
 
     if (objectIsArrayType) {
       let mergeMethod = (_first: McsEntityBase, _second: McsEntityBase) => _first.id === _second.id;
@@ -116,6 +113,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     } else {
       updateObjectData(propertyTarget, propertySource);
     }
+    return propertyTarget || propertySource;
   }
 
   /**
