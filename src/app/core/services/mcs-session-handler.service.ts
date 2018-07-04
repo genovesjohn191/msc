@@ -17,14 +17,14 @@ import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSubject,
+  coerceNumber
 } from '../../utilities';
 import { CoreDefinition } from '../core.definition';
 
 @Injectable()
 export class McsSessionHandlerService implements McsInitializer {
   private _authToken: string;
-  private _idleTimeInSeconds: number;
 
   private _sessionIdleCounter: number = 0;
   private _sessionIsIdle: boolean = false;
@@ -39,8 +39,8 @@ export class McsSessionHandlerService implements McsInitializer {
   /**
    * Returns the session cookie value
    */
-  public get sessionCookie(): string {
-    return this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_TIMER);
+  public get sessionCookie(): number {
+    return coerceNumber(this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_TIMER));
   }
 
   /**
@@ -56,8 +56,7 @@ export class McsSessionHandlerService implements McsInitializer {
    * Returns true if session is idle
    */
   public get sessionIsIdle(): boolean {
-    return (this._idleTimeInSeconds >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
-      && (this._sessionIdleCounter >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
+    return (this.sessionCookie >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
       && !this.authTokenHasTimedOut;
   }
 
@@ -67,17 +66,15 @@ export class McsSessionHandlerService implements McsInitializer {
   public get sessionTimedOut(): boolean {
     let idleLimitInSeconds = CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
       + CoreDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS;
-    return this.authTokenHasTimedOut
-      || ((this._idleTimeInSeconds >= idleLimitInSeconds)
-        && (this._sessionIdleCounter >= idleLimitInSeconds));
+    return this.authTokenHasTimedOut || (this.sessionCookie >= idleLimitInSeconds);
   }
 
   /**
    * Returns true if session was resumed
    */
   public get sessionResumed(): boolean {
-    return (this._idleTimeInSeconds < CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
-      && (this._idleTimeInSeconds < this._sessionIdleCounter);
+    return (this.sessionCookie < CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
+      && (this.sessionCookie < this._sessionIdleCounter);
   }
 
   constructor(
@@ -164,6 +161,7 @@ export class McsSessionHandlerService implements McsInitializer {
     interval(1000)
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
+        this._sessionIdleCounter = Math.min(this._sessionIdleCounter, this.sessionCookie);
         this._sessionIdleCounter++;
         this._checkSessionStatus();
       });
@@ -173,12 +171,6 @@ export class McsSessionHandlerService implements McsInitializer {
    * Real time checkin of session status
    */
   private _checkSessionStatus(): void {
-    // Read cookie value
-    this._idleTimeInSeconds = 0;
-    if (!isNullOrEmpty(this.sessionCookie)) {
-      this._idleTimeInSeconds = +this.sessionCookie;
-    }
-
     // Check resumed
     if (this.sessionResumed) {
       this._sessionIsIdle = false;

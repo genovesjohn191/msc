@@ -98,6 +98,8 @@ export class WebStompComponent implements OnInit {
    * Shows the stomp success status bar
    */
   private _showStompSuccessStatusBar(): void {
+    if (isNullOrEmpty(this._stompSucessStatusTemplate)) { return; }
+
     this.stompSuccessStatusBarRef = this._snackBarRefService.open(
       this._stompSucessStatusTemplate,
       {
@@ -113,6 +115,8 @@ export class WebStompComponent implements OnInit {
    * Shows the stomp error status bar in lower left as a snackbar
    */
   private _showStompErrorStatusBar(): void {
+    if (isNullOrEmpty(this._stompErrorStatusTemplate)) { return; }
+
     this.stompErrorStatusBarRef = this._snackBarRefService.open(
       this._stompErrorStatusTemplate,
       {
