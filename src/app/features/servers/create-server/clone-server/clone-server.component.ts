@@ -156,7 +156,7 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
         this.servers = (response as Server[]).filter((server) => server.clonable);
-        this.dataStatusFactory.setSuccesfull(response);
+        this.dataStatusFactory.setSuccessful(response);
       });
     this.serversSubscription.add(() => {
       this._listenToParamChange();
@@ -175,12 +175,12 @@ export class CloneServerComponent extends CreateServerBase implements OnInit, On
       .findRecordById(serverId)
       .pipe(
         catchError((error) => {
-          this.ipAddressStatusFactory.setSuccesfull();
+          this.ipAddressStatusFactory.setSuccessful();
           return throwError(error);
         })
       )
       .subscribe((response) => {
-        this.ipAddressStatusFactory.setSuccesfull(response);
+        this.ipAddressStatusFactory.setSuccessful(response);
         let hasNics = !isNullOrEmpty(response) && !isNullOrEmpty(response.nics);
         if (!hasNics) { return; }
         this.serverIsManuallyAssignedIp = !!response.nics

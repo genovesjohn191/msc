@@ -468,7 +468,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         })
       )
       .subscribe((response) => {
-        this.dataStatusFactory.setSuccesfull(response);
+        this.dataStatusFactory.setSuccessful(response);
       });
   }
 

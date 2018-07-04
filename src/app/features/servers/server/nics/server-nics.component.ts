@@ -463,7 +463,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         })
       )
       .subscribe((response) => {
-        this.dataStatusFactory.setSuccesfull(response);
+        this.dataStatusFactory.setSuccessful(response);
       });
   }
 

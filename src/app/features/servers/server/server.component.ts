@@ -283,7 +283,7 @@ export class ServerComponent
       .subscribe((response) => {
         this.serversMap = response;
         this.search.showLoading(false);
-        this.listStatusFactory.setSuccesfull(response);
+        this.listStatusFactory.setSuccessful(response);
       });
   }
 

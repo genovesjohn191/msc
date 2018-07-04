@@ -205,7 +205,7 @@ export class FirewallComponent
       .subscribe((response) => {
         this.firewallsMap = response;
         this.search.showLoading(false);
-        this.listStatusFactory.setSuccesfull(response);
+        this.listStatusFactory.setSuccessful(response);
       });
     this._changeDetectorRef.markForCheck();
   }

@@ -97,14 +97,14 @@ describe('DataStatusComponent', () => {
     });
 
     it(`should create the mcs-data-status-empty element in case of no records`, () => {
-      component.dataStatus.setSuccesfull();
+      component.dataStatus.setSuccessful();
       fixture.autoDetectChanges(true);
       let element = document.querySelector('mcs-data-status-empty');
       expect(element).not.toBe(null);
     });
 
     it(`should create the mcs-data-status-success element in case of no records`, () => {
-      component.dataStatus.setSuccesfull(['test']);
+      component.dataStatus.setSuccessful(['test']);
       fixture.autoDetectChanges(true);
       let element = document.querySelector('mcs-data-status-success');
       expect(element).not.toBe(null);

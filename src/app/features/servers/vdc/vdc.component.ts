@@ -228,7 +228,7 @@ export class VdcComponent
       .subscribe((response) => {
         this.serversMap = response;
         this.search.showLoading(false);
-        this.listStatusFactory.setSuccesfull(response);
+        this.listStatusFactory.setSuccessful(response);
         this._setSelectedPlatformByResource(this.vdc);
       });
     this._changeDetectorRef.markForCheck();

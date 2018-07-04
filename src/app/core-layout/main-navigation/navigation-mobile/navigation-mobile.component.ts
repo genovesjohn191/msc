@@ -240,7 +240,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((response) => {
-        this.productsStatusFactory.setSuccesfull(response);
+        this.productsStatusFactory.setSuccessful(response);
         if (isNullOrEmpty(response)) { return; }
         this.productCatalogs = response;
       });

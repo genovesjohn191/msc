@@ -96,7 +96,7 @@ export class ServerProvisioningPageComponent implements OnInit, OnDestroy {
         if (isNullOrEmpty(response)) { return; }
         this.job = response.content;
         this._validateJobType(this.job);
-        this.dataStatusFactory.setSuccesfull(response.content);
+        this.dataStatusFactory.setSuccessful(response.content);
         this._changeDetectorRef.markForCheck();
       });
   }
