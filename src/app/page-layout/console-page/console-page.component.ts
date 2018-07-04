@@ -11,21 +11,24 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  Subscription,
-  throwError
+  throwError,
+  Subject
 } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, takeUntil } from 'rxjs/operators';
 import {
   refreshView,
   isNullOrEmpty,
-  unsubscribeSafely,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSubject,
+  getSafeProperty,
+  clearArrayRecord
 } from '../../utilities';
 import {
   McsTextContentProvider,
   CoreDefinition,
   Key,
-  McsApiConsole
+  McsApiConsole,
+  McsNotificationEventsService
 } from '../../core';
 import {
   Server,
@@ -70,7 +73,6 @@ enum VmConsoleStatus {
 })
 
 export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
-
   public textContent: any;
   public stopping: boolean;
   public closingTime: number;
@@ -128,8 +130,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private _intervalId: number;
   private _vmConsole: any;
   private _serverId: string;
-  private _paramChangedSubscription: Subscription;
-  private _serverChangedSubscription: Subscription;
+  private _destroySubject = new Subject<void>();
 
   public get vmConsoleStatusEnum() {
     return VmConsoleStatus;
@@ -142,6 +143,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   public constructor(
     private _consoleRepository: ConsolePageRepository,
     private _textContentProvider: McsTextContentProvider,
+    private _notificationsEvents: McsNotificationEventsService,
     private _serversRepository: ServersRepository,
     private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
@@ -155,6 +157,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.textContent = this._textContentProvider.content.consolePage;
     this._listenToParamChanged();
     this._listenToServerChanged();
+    this._listenToResetVmPasswordEvent();
   }
 
   public ngAfterViewInit() {
@@ -165,8 +168,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._paramChangedSubscription);
-    unsubscribeSafely(this._serverChangedSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -366,25 +368,42 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
+   * Listen to parameter change event of the router
+   */
+  private _listenToParamChanged(): void {
+    this._activatedRoute.params
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((params) => {
+        this._serverId = params['id'];
+        this._getServerById(this._serverId);
+        this._connectVmConsole(this._serverId);
+      });
+  }
+
+  /**
    * Listen to servers data change in the repository
    */
   private _listenToServerChanged(): void {
-    this._serverChangedSubscription = this._serversRepository
-      .dataRecordsChanged
+    this._serversRepository.dataRecordsChanged
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         this._getServerById(this._serverId);
       });
   }
 
   /**
-   * Listen to parameter change event of the router
+   * Listens to reset vm password event
    */
-  private _listenToParamChanged(): void {
-    this._paramChangedSubscription = this._activatedRoute.params
-      .subscribe((params) => {
-        this._serverId = params['id'];
+  private _listenToResetVmPasswordEvent(): void {
+    // We need to clear the subscribers of the reset password event
+    // in order to get rid of the associated dialog box
+    clearArrayRecord(this._notificationsEvents.resetServerPasswordEvent.observers);
+    this._notificationsEvents.resetServerPasswordEvent
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((response) => {
+        let jobServerId = getSafeProperty(response, (obj) => obj.clientReferenceObject.serverId);
+        if (jobServerId !== this._serverId) { return; }
         this._getServerById(this._serverId);
-        this._connectVmConsole(this._serverId);
       });
   }
 }

@@ -208,8 +208,15 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * View the console page
    */
   public viewConsole(): void {
+    let percentOffset = 80 / 100;
+    let offsetedScreenHeight = percentOffset * +screen.height;
+    let offsetedScreenWidth = percentOffset * +screen.width;
     let windowFeatures = `directories=yes,titlebar=no,toolbar=no,
-      status=no,menubar=no,resizable=yes,scrollbars=yes`;
+      status=no,menubar=no,resizable=yes,scrollbars=yes,
+      left=0,top=0,
+      width=${offsetedScreenWidth},
+      height=${offsetedScreenHeight}`;
+
     window.open(`/console/${this.server.id}`, this.server.id, windowFeatures);
   }
 
