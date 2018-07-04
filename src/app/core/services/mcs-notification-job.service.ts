@@ -150,7 +150,7 @@ export class McsNotificationJobService implements McsInitializer {
   private _tryConnectToWebstomp(): void {
     try {
       this._stompService.initAndConnect();
-    } catch (error) {
+    } catch (_error) {
       this._tryConnectToWebstomp();
     }
   }
@@ -159,14 +159,17 @@ export class McsNotificationJobService implements McsInitializer {
    * Event that emits when the stomp is connected
    */
   private _onStompConnected(): void {
-    this._loggerService.trace(`Web stomp connected.`);
-    unsubscribeSafely(this._stompSubscription);
-    this._stompInstance = this._stompService.subscribe(this._jobConnection.destinationRoute);
+    try {
+      this._loggerService.trace(`Web stomp connected.`);
+      unsubscribeSafely(this._stompSubscription);
+      this._stompInstance = this._stompService.subscribe(this._jobConnection.destinationRoute);
 
-    this._stompSubscription = this._stompInstance
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(this._onStompMessage.bind(this));
-    this.connectionStatus = McsConnectionStatus.Success;
+      this._stompSubscription = this._stompInstance
+        .subscribe(this._onStompMessage.bind(this));
+      this.connectionStatus = McsConnectionStatus.Success;
+    } catch (_error) {
+      this._loggerService.trace(`Web stomp subscription encountered error.`);
+    }
   }
 
   /**
