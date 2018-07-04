@@ -286,8 +286,9 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
         this._scaleOutput.valid = true;
         break;
     }
-    this._scaleOutput.hasChanged = this.serverCpuUsed !== this._scaleOutput.cpuCount
-      || this.serverMemoryUsedMB !== this._scaleOutput.memoryMB;
+    this._scaleOutput.hasChanged = this._scaleOutput.valid
+      && (this.serverCpuUsed !== this._scaleOutput.cpuCount
+        || this.serverMemoryUsedMB !== this._scaleOutput.memoryMB);
 
     // Emit changes
     this.dataChange.emit(this._scaleOutput);
