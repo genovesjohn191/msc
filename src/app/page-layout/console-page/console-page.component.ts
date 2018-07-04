@@ -14,7 +14,10 @@ import {
   throwError,
   Subject
 } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
 import {
   refreshView,
   isNullOrEmpty,
