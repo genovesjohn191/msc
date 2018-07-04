@@ -282,7 +282,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, diskValues);
-          this._errorHandlerService.handleHttpRedirectionError(error);
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -314,7 +314,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         .pipe(
           catchError((error) => {
             this._serversService.clearServerSpinner(this.server, this.selectedDisk);
-            this._errorHandlerService.handleHttpRedirectionError(error);
+            this._errorHandlerService.handleHttpRedirectionError(error.status);
             return throwError(error);
           })
         ).subscribe();
@@ -343,7 +343,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server, this.selectedDisk);
-          this._errorHandlerService.handleHttpRedirectionError(error);
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -442,7 +442,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _onAddingDisk(job: McsApiJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
-    // Mock NIC data based on job response
+    // Mock disk data based on job response
     this._newDisk = new ServerStorageDevice();
     this._newDisk.id = this._inProgressDiskId;
     this._newDisk.name = job.clientReferenceObject.name;

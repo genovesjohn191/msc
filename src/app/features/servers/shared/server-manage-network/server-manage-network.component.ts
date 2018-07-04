@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnChanges,
-  OnDestroy,
   Input,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
@@ -14,18 +13,12 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-import { Subject } from 'rxjs';
-import {
-  takeUntil,
-  startWith,
-  finalize
-} from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import {
   replacePlaceholder,
   isNullOrEmpty,
   animateFactory,
-  clearArrayRecord,
-  unsubscribeSubject
+  clearArrayRecord
 } from '../../../../utilities';
 import {
   McsTextContentProvider,
@@ -64,7 +57,7 @@ const Netmask = require('netmask').Netmask;
   }
 })
 
-export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestroy {
+export class ServerManageNetworkComponent implements OnInit, OnChanges {
   public textContent: any;
   public netMask: any;
   public selectedIpAddress: ServerIpAllocationMode;
@@ -90,7 +83,14 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   public networks: ResourceNetwork[];
 
   @Input()
-  public customIpAddress: string;
+  public get customIpAddress(): string { return this._customIpAddress; }
+  public set customIpAddress(value: string) {
+    if (value !== this._customIpAddress) {
+      this._customIpAddress = value;
+      this._notifyDataChanged();
+    }
+  }
+  private _customIpAddress: string;
 
   @Input()
   public get selectedNetwork(): ResourceNetwork { return this._selectedNetwork; }
@@ -105,7 +105,6 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
   }
   private _selectedNetwork: ResourceNetwork;
 
-  private _destroySubject = new Subject<void>();
   private _networkOutput = new ServerManageNetwork();
 
   constructor(
@@ -125,6 +124,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
     this._registerFormGroup();
     this._setIpAddressItems();
     this._setSelectedNetwork();
+    this._notifyDataChanged();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -132,10 +132,6 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
     if (!isNullOrEmpty(networksChange)) {
       this._setSelectedNetwork();
     }
-  }
-
-  public ngOnDestroy() {
-    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -240,11 +236,6 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
       )
     ]);
 
-    // Notify data changed for every changes made in the status
-    this.fcIpdAdrress.statusChanges
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => this._notifyDataChanged());
-
     // Create form group and bind the form controls
     this.fgIpAddress = new FormGroup({
       fcIpdAdrress: this.fcIpdAdrress
@@ -304,6 +295,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges, OnDestro
         this._networkOutput.valid = true;
         break;
     }
+
     // Emit changes
     this.dataChange.emit(this._networkOutput);
     this._changeDetectorRef.markForCheck();

@@ -252,7 +252,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
-          this._errorHandlerService.handleHttpRedirectionError(error);
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -299,7 +299,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
-          this._errorHandlerService.handleHttpRedirectionError(error);
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
       ).subscribe();
@@ -325,7 +325,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
-          this._errorHandlerService.handleHttpRedirectionError(error);
+          this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
       ).subscribe();

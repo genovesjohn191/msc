@@ -15,14 +15,10 @@ export class ServerSnapshot extends McsEntityBase {
   })
   public createdOn: Date;
 
-  // Additional flag not related to API response
-  public isProcessing: boolean;
-
   constructor() {
     super();
     this.sizeMB = undefined;
     this.createdOn = undefined;
     this.poweredOn = undefined;
-    this.isProcessing = undefined;
   }
 }
