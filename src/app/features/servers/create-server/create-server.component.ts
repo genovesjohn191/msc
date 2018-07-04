@@ -249,7 +249,7 @@ export class CreateServerComponent implements
           )
           .subscribe((job) => {
             if (isNullOrEmpty(job)) { return; }
-            this.dataStatusFactory.setSuccesfull(job);
+            this.dataStatusFactory.setSuccessful(job);
             this.notifications.push(job);
             this._changeDetectorRef.markForCheck();
           });

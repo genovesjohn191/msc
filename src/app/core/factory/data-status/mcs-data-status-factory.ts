@@ -60,7 +60,7 @@ export class McsDataStatusFactory<T> {
   /**
    * Set data status to in success or empty based on the record provided
    */
-  public setSuccesfull(data?: T): void {
+  public setSuccessful(data?: T): void {
     unsubscribeSafely(this._statusSubscription);
     this.dataStatus = isNullOrEmpty(data) ?
       McsDataStatus.Empty : McsDataStatus.Success;

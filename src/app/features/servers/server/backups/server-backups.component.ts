@@ -342,7 +342,6 @@ export class ServerBackupsComponent extends ServerDetailsBase
     // We need to set the processing flag manually here in order to cater
     // from moving one server to another
     this._snapshotProcessing = job.dataStatus === McsDataStatus.InProgress;
-    this.dataStatusFactory.setSuccesfull(this.server.snapshots);
 
     // Update the server snapshot
     if (job.dataStatus === McsDataStatus.Success) {
@@ -385,7 +384,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
       )
       .subscribe((response) => {
         // Subscribe to update the snapshots in server instance
-        this.dataStatusFactory.setSuccesfull(response);
+        this.dataStatusFactory.setSuccessful(response);
         this._changeDetectorRef.markForCheck();
       });
   }

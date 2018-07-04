@@ -400,7 +400,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         })
       )
       .subscribe(() => {
-        this.mediaStatusFactory.setSuccesfull(this.serverMedias);
+        this.mediaStatusFactory.setSuccessful(this.serverMedias);
       });
   }
 
@@ -523,7 +523,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     // Update the media status factory to see the actual data
     if (!isNullOrEmpty(this.mediaStatusFactory)) {
-      this.mediaStatusFactory.setSuccesfull(this.serverMedias);
+      this.mediaStatusFactory.setSuccessful(this.serverMedias);
     }
   }
 

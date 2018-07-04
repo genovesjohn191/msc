@@ -157,7 +157,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((response) => {
         this.catalogs = response;
         this.search.showLoading(false);
-        this.listStatusFactory.setSuccesfull(response);
+        this.listStatusFactory.setSuccessful(response);
       });
     this._changeDetectorRef.markForCheck();
   }
@@ -185,7 +185,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((response) => {
         this.selectedProduct = response;
         this._productService.selectProduct(response);
-        this.productStatusFactory.setSuccesfull(response);
+        this.productStatusFactory.setSuccessful(response);
       });
   }
 }

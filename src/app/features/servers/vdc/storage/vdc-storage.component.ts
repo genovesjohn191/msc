@@ -98,6 +98,6 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
           return throwError(error);
         })
       )
-      .subscribe((response) => this.dataStatusFactory.setSuccesfull(response));
+      .subscribe((response) => this.dataStatusFactory.setSuccessful(response));
   }
 }

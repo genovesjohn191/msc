@@ -196,7 +196,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
     this.ipAddressessStatusFactory.setInProgress();
     this._resourcesService.getResourceNetwork(this.resourceId, network.id)
       .pipe(
-        finalize(() => this.ipAddressessStatusFactory.setSuccesfull(this.ipAddressesInUsed))
+        finalize(() => this.ipAddressessStatusFactory.setSuccessful(this.ipAddressesInUsed))
       )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
