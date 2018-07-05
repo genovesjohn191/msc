@@ -105,7 +105,7 @@ export class ScrollableDirective implements OnInit, OnDestroy, McsScrollable {
     // Set the parent element overflow
     let parentElement = (this._elementRef.nativeElement as HTMLElement).parentElement;
     if (!isNullOrEmpty(parentElement)) {
-      this._renderer.setStyle(parentElement, 'overflow', 'hidden');
+      this._renderer.setStyle(parentElement, 'overflow', 'auto');
     }
   }
 

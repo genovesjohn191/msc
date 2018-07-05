@@ -11,7 +11,7 @@ $navigation-mobile-bg-color: $color-black;
 // Items variables
 $navigation-mobile-item-active-bg-color: $color-white;
 $navigation-mobile-icon-padding: $space-small;
-$navigation-mobile-item-font-size: $h4-default-font-size;
+$navigation-mobile-item-font-size: 14;
 // Macquarie Link variables
 $navigation-mobile-macquarie-link-font: $circular-pro-bold;
 $navigation-mobile-macquarie-link-color: $color-white;
@@ -68,16 +68,9 @@ $navigation-mobile-macquarie-item-font: $circular-pro-bold;
 
 // Mobile navigation items from template binding
 .navigation-mobile-list {
-  position: fixed;
-  left: 0;
-  margin-top: -$navigation-mobile-top-offset;
   background: $navigation-mobile-bg-color;
-  height: 100%;
-  max-height: calc(100vh - 70px);
   width: 100%;
-  max-width: 80%;
-  z-index: $zindex-navigation;
-  overflow: auto;
+  height: 100%;
 
   // Apply common styling form mobile item here
   .navigation-mobile-item {

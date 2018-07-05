@@ -6,7 +6,8 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewEncapsulation
 } from '@angular/core';
 import {
   Subscription,
@@ -41,7 +42,11 @@ import { SwitchAccountRepository } from './switch-account.repository';
   selector: 'mcs-switch-account',
   templateUrl: './switch-account.component.html',
   styleUrls: ['./switch-account.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    'class': 'switch-account-wrapper'
+  }
 })
 
 export class SwitchAccountComponent implements AfterViewInit, OnDestroy {

@@ -1,10 +1,13 @@
 @import '../../../../styles/shared/base';
 
 // Header User-Panel
-$user-panel-item-height: 40px;
 $user-panel-item-padding: 0 $space-xlarge;
 $user-panel-item-divider-color: $color-grey-01;
 $notification-minimum-width: 350px;
+// Switch account popover
+$user-panel-switch-account-max-height: 80vh;
+$user-panel-switch-account-mobile-width: 80vw;
+$user-panel-switch-account-desktop-width: 400px;
 // Notification item variables
 $notification-item-label-bg-color: $color-primary-01;
 $notification-item-label-color: $color-black;
@@ -24,9 +27,7 @@ $notification-item-label-size: 18px;
   }
 
   .user-panel-item {
-    height: $user-panel-item-height;
     padding: $user-panel-item-padding;
-
     .caret-down {
       padding-left: $space-xsmall;
     }
@@ -89,7 +90,12 @@ $notification-item-label-size: 18px;
   @include set-items-divider($divider-dark-color);
   background-color: $color-black;
   color: $color-grey-05;
-  min-width: 200px;
+  width: $user-panel-switch-account-desktop-width;
+  max-height: $user-panel-switch-account-max-height;
+
+  @include breakpoint(small) {
+    width: $user-panel-switch-account-mobile-width;
+  }
 
   a {
     color: $color-grey-05;

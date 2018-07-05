@@ -180,10 +180,13 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Event that emits when notification panel is opened
    */
   public onOpenNotificationPanel(): void {
-    if (this.notificationsPopover &&
-      !this.hasNotification || this.deviceType !== McsDeviceType.Desktop) {
-      this.viewNotificationsPage();
-    }
+    let displayNotificationsPage = !this.hasNotification
+      || this.deviceType !== McsDeviceType.Desktop;
+    if (displayNotificationsPage) { this.viewNotificationsPage(); }
+
+    let mobileMode = this.deviceType !== McsDeviceType.Desktop
+      && !isNullOrEmpty(this.notificationsPopover);
+    if (mobileMode) { this.notificationsPopover.close(); }
   }
 
   /**
