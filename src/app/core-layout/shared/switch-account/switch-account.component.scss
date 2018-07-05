@@ -3,69 +3,8 @@
 $switch-account-bg-color: $color-black;
 $switch-account-color: $dark-bg-text-color;
 
-$switch-account-trigger-color: $color-primary-01;
-$switch-account-mobile-max-height: 100%;
-$switch-account-desktop-max-height: 350px;
-$switch-account-content-min-height: 100px;
-
-:host {
+.switch-account-wrapper {
   @include display-flex(column);
   color: $switch-account-color;
   background-color: $switch-account-bg-color;
-}
-
-.switch-account-wrapper {
-  @include display-flex(column);
-  @include set-items-interval($space-large);
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: $switch-account-desktop-max-height;
-  padding-right: $space-small;
-
-  @include breakpoint(small) {
-    // We need to force overflow hidden in mobile since the scrollable directive is
-    // forcing the parent element to overflow auto.
-    overflow: hidden !important;
-    max-height: $switch-account-mobile-max-height;
-  }
-
-  .account-action {
-    @include display-flex(row);
-    @include align-items(center);
-    @include set-items-interval($space-small, horizontal);
-    width: 100%;
-
-    &:hover {
-      color: $color-primary-01;
-    }
-
-    span {
-      word-break: break-word;
-    }
-
-    .arrow-right {
-      @include flex(0 0 auto);
-      margin-left: auto;
-      padding-left: $space-medium;
-    }
-  }
-
-  .account-details-content {
-    @include flex(0 0 auto);
-    @include display-flex(column);
-    @include set-items-interval($space-medium);
-  }
-
-  .companies-panel-content {
-    position: relative;
-    @include flex(0 0 auto);
-    @include display-flex(column);
-    @include set-items-interval($space-medium);
-
-    .company-list-wrapper {
-      position: relative;
-      min-height: $switch-account-content-min-height;
-      @include set-items-interval($space-large);
-    }
-  }
 }

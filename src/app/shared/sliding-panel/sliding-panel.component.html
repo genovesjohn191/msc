@@ -1,7 +1,16 @@
 <ng-container *ngIf="panelOpen">
   <div [@slideInPanel] class="sliding-panel-overlay" (click)="toggle()">
-    <div [@slideRight] class="sliding-panel-content" stop-propagation scrollable>
-      <ng-content></ng-content>
-    </div>
+
+    <ng-container [ngSwitch]="placement">
+      <div *ngSwitchCase="'right'" [@slideRight]
+        class="sliding-panel-content" stop-propagation scrollable>
+        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+      </div>
+      <div *ngSwitchCase="'left'" [@slideLeft]
+        class="sliding-panel-content" stop-propagation scrollable>
+        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+      </div>
+    </ng-container>
   </div>
 </ng-container>
+<ng-template #contentTemplate><ng-content></ng-content></ng-template>

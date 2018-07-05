@@ -12,9 +12,10 @@
         mcsEventLabel="user-panel">{{ textContent.signOut }}</a>
     </div>
 
-    <div *mcsAccessControl="['CompanyView']" class="switch-account-panel hidden-small">
-      <mcs-switch-account [ngStyle]="{width: '400px'}"
-        (selectionChanged)="userPopover?.close()">
+    <div *mcsAccessControl="['CompanyView']"
+      scrollable="dark" scrollbarSize="small"
+      class="switch-account-panel">
+      <mcs-switch-account (selectionChanged)="userPopover?.close()">
       </mcs-switch-account>
     </div>
   </div>
@@ -24,8 +25,7 @@
 <ng-template #notificationsContent>
   <ng-container *ngIf="notificationsPopover.componentRef">
     <div class="notifications-content-wrapper">
-      <div class="notification-item font-bold"
-        display-flex justify-content="flex-start" align-items="center">
+      <div class="notification-item">
         <span>{{ textContent.notifications.title }}</span>
       </div>
 
@@ -42,7 +42,7 @@
         </mcs-notification-panel>
       </div>
 
-      <div class="notification-item" display-flex justify-content="center" align-items="center">
+      <div class="notification-item text-center">
         <a (click)="viewNotificationsPage()"
           mcsEventTracker="view-notifications"
           mcsEventCategory="navigation"
@@ -56,9 +56,8 @@
 
 <div class="user-panel-wrapper">
   <!-- Notification bell icon -->
-  <div class="user-panel-item notification-item" display-flex align-items="center">
-    <a display-flex align-items="center" class="icon-content"
-
+  <div class="user-panel-item notification-item">
+    <a class="icon-content"
       mcsPopover #notificationsPopover="mcsPopover"
       (onOpen)="onOpenNotificationPanel()"
       maxWidth="350px" padding="none"
@@ -66,15 +65,15 @@
       [content]="notificationsContent">
 
       <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
-      <span *ngIf="hasNotification" display-flex align-items="center" justify-content="center">
+      <span *ngIf="hasNotification" class="text-center">
         {{ displayedNotifications.length }}
       </span>
     </a>
   </div>
 
   <!-- User icon -->
-  <div class="user-panel-item user-item" display-flex align-items="center">
-    <a flex="auto" display-flex="column" cursor="pointer"
+  <div class="user-panel-item user-item inline-items-small">
+    <a class="block-items" cursor="pointer"
       (click)="clickUser()"
       mcsEventTracker="user-dropdown-toggle"
       mcsEventCategory="navigation"
@@ -93,7 +92,7 @@
     </a>
 
     <!-- Popover will display here -->
-    <mcs-icon class="caret-down right-align" flex="none" display-flex flex-align="top"
+    <mcs-icon class="caret-down right-align"
       [key]="caretDownIconKey" color="white" cursor="pointer"
 
       mcsPopover #userPopover="mcsPopover"

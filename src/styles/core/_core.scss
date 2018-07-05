@@ -106,11 +106,8 @@ html {
         @include font-size($font-size-small, $line-height-small);
       }
 
-      &.unstyled-link {
-        text-decoration: none;
-        &.active {
-          text-decoration: none;
-        }
+      &:not([href]) {
+        text-decoration: underline;
       }
 
       &.active {
@@ -122,12 +119,10 @@ html {
         color: $link-hover-color;
       }
 
-      &:not([href]) {
-        text-decoration: underline;
-        &:hover {
-          text-decoration: underline;
-          cursor: pointer;
-          color: $link-hover-color;
+      &.unstyled-link {
+        text-decoration: none;
+        &.active {
+          text-decoration: none;
         }
       }
     }

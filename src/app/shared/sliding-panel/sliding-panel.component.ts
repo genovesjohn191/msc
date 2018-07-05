@@ -3,9 +3,7 @@ import {
   Input,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
-  ElementRef,
-  Renderer2
+  ViewEncapsulation
 } from '@angular/core';
 import {
   state,
@@ -20,8 +18,7 @@ import {
 import { McsPlacementType } from '../../core';
 import {
   coerceNumber,
-  animateFactory,
-  isNullOrEmpty
+  animateFactory
 } from '../../utilities';
 
 // Unique Id that generates during runtime
@@ -35,43 +32,49 @@ let nextUniqueId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     animateFactory.slideRight,
+    animateFactory.slideLeft,
     trigger('slideInPanel', [
       state('void', style({ opacity: 0 })),
       state('*', style({ opacity: 1 })),
       transition('void => *', group([
-        query('@slideRight', animateChild()),
+        query('@slideRight', animateChild(), { optional: true }),
+        query('@slideLeft', animateChild(), { optional: true }),
         animate('150ms cubic-bezier(0.25, 0.8, 0.25, 1)'),
       ])),
       transition('* => void', group([
-        query('@slideRight', animateChild()),
+        query('@slideRight', animateChild(), { optional: true }),
+        query('@slideLeft', animateChild(), { optional: true }),
         animate('250ms 100ms linear', style({ opacity: 0 }))
       ])),
     ])
   ],
   host: {
-    'class': 'sliding-panel-wrapper',
+    '[class]': 'hostClass',
     '[attr.id]': 'id',
     '[tabindex]': 'tabindex'
   }
 })
 
 export class SlidingPanelComponent {
+  public get hostClass(): string {
+    return `sliding-panel-wrapper
+     sliding-panel-${this.placement}
+     sliding-panel-offset-${this.offsetFrom}`;
+  }
+
   @Input()
   public id: string = `mcs-sliding-panel-${nextUniqueId++}`;
+
+  @Input()
+  public placement: McsPlacementType = 'left';
+
+  @Input()
+  public offsetFrom: 'header' | 'content' = 'content';
 
   @Input()
   public get tabindex(): number { return this._tabindex; }
   public set tabindex(value: number) { this._tabindex = coerceNumber(value); }
   private _tabindex: number = 0;
-
-  @Input()
-  public set placement(value: McsPlacementType) {
-    if (this._placement !== value) {
-      this._placement = value;
-      this._setPlacement();
-    }
-  }
-  private _placement: McsPlacementType;
 
   /**
    * Returns true when panel is currently opened, otherwise false
@@ -85,11 +88,7 @@ export class SlidingPanelComponent {
     }
   }
 
-  public constructor(
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _elementRef: ElementRef,
-    private _renderer: Renderer2
-  ) { }
+  public constructor(private _changeDetectorRef: ChangeDetectorRef) { }
 
   /**
    * Opens the panel
@@ -110,16 +109,5 @@ export class SlidingPanelComponent {
    */
   public toggle(): void {
     this._panelOpen ? this.close() : this.open();
-  }
-
-  /**
-   * Sets the placement
-   */
-  private _setPlacement(): void {
-    // TODO: Include the left placement for the mobile navigation and add additional color
-    // so that we could only use 1 component for both
-    if (isNullOrEmpty(this.placement)) { return; }
-    this._renderer.addClass(this._elementRef.nativeElement, `sliding-panel-${this._placement}`);
-    this._changeDetectorRef.markForCheck();
   }
 }

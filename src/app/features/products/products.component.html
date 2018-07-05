@@ -57,7 +57,7 @@
       [mcsLoaderText]="textContent.loadingDetails"
       mcsLoaderOrientation="top"></div>
 
-    <mcs-sliding-panel #slidingPanel class="visible-small">
+    <mcs-sliding-panel placement="right" #slidingPanel class="visible-small">
       <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
     </mcs-sliding-panel>
 
@@ -72,5 +72,7 @@
 
 <!-- Product Annex -->
 <ng-template #productAnnexTemplate>
-  <mcs-product-annex [product]="selectedProduct"></mcs-product-annex>
+  <div class="padding-medium">
+    <mcs-product-annex [product]="selectedProduct"></mcs-product-annex>
+  </div>
 </ng-template>

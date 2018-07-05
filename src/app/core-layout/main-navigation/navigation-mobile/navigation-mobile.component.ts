@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ElementRef,
-  Renderer2,
   ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -20,8 +18,14 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {
+  throwError,
+  Subject
+} from 'rxjs';
+import {
+  catchError,
+  takeUntil
+} from 'rxjs/operators';
 /** Providers / Services */
 import {
   CoreConfig,
@@ -33,16 +37,15 @@ import {
   McsDataStatusFactory
 } from '../../../core';
 import {
-  registerEvent,
-  unregisterEvent,
-  unsubscribeSafely,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSubject
 } from '../../../utilities';
 import {
   Product,
   ProductCatalog,
   ProductCatalogRepository
 } from '../../../features/products';
+import { SlidingPanelComponent } from '../../../shared';
 
 @Component({
   selector: 'mcs-navigation-mobile',
@@ -65,30 +68,14 @@ import {
 })
 
 export class NavigationMobileComponent implements OnInit, OnDestroy {
-
-  @ViewChild('navigationList')
-  public navigationList: ElementRef;
+  @ViewChild('slidingPanel')
+  public slidingPanel: SlidingPanelComponent;
 
   public textContent: any;
   public productCatalogs: ProductCatalog[];
   public productsStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
   public switchAccountAnimation: string;
-  private _routerSubscription: any;
-  private _activeAccountSubscription: any;
-
-  /**
-   * Show or hide the navigation element based on slide value
-   */
-  private _slideTrigger: string;
-  public get slideTrigger(): string {
-    return this._slideTrigger;
-  }
-  public set slideTrigger(value: string) {
-    if (this._slideTrigger !== value) {
-      this._slideTrigger = value;
-      this._changeDetectorRef.markForCheck();
-    }
-  }
+  private _destroySubject = new Subject<void>();
 
   /**
    * Get the currently active account
@@ -136,14 +123,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
     return this._productCatalogRepository.productCatalogFeatureIsOn;
   }
 
-  /**
-   * Event handler references
-   */
-  private _clickOutsideHandler = this.onClickOutside.bind(this);
-
   public constructor(
-    private _elementRef: ElementRef,
-    private _renderer: Renderer2,
     private _router: Router,
     private _coreConfig: CoreConfig,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -158,21 +138,13 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.navigation;
-    this._routerSubscription = this._router.events
-      .subscribe((event) => {
-        if (event instanceof NavigationStart) {
-          this.close();
-        }
-      });
-    registerEvent(document, 'click', this._clickOutsideHandler);
+    this._listenToRouterEvents();
     this._listenToSwitchAccount();
     this._getProductCatalogs();
   }
 
   public ngOnDestroy() {
-    unsubscribeSafely(this._routerSubscription);
-    unsubscribeSafely(this._activeAccountSubscription);
-    unregisterEvent(document, 'click', this._clickOutsideHandler);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -181,15 +153,6 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public logout(event): void {
     event.preventDefault();
     this._authenticationService.logOut();
-  }
-
-  /**
-   * Event that emits when user clicks outside the popover boundary
-   */
-  public onClickOutside(_event: any): void {
-    if (!this._elementRef.nativeElement.contains(_event.target)) {
-      this.close();
-    }
   }
 
   /**
@@ -205,17 +168,14 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    * Opens the navigation panel
    */
   public open(): void {
-    this._renderer.setStyle(this.navigationList.nativeElement, 'display', 'block');
-    this.slideTrigger = 'slideInLeft';
+    this.slidingPanel.open();
   }
 
   /**
    * Closes the navigation panel
    */
   public close(): void {
-    if (this.slideTrigger) {
-      this.slideTrigger = 'slideOutLeft';
-    }
+    this.slidingPanel.close();
   }
 
   /**
@@ -247,14 +207,27 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listens to account switching
+   * Listens to every account changes
    */
   private _listenToSwitchAccount(): void {
-    this._activeAccountSubscription = this._authenticationIdentity
-      .activeAccountChanged
+    this._authenticationIdentity.activeAccountChanged
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         // Refresh the page when account is selected
         this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  /**
+   * Listens to every router event changes
+   */
+  private _listenToRouterEvents(): void {
+    this._router.events
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          this.close();
+        }
       });
   }
 }

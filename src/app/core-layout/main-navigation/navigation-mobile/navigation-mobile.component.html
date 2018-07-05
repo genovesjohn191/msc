@@ -68,47 +68,24 @@
   </div>
 </div>
 
-<!-- Navigation list from template binding -->
-<div #navigationList class="navigation-mobile-list"
-  animate [trigger]="slideTrigger" style="display: none;"
-  scrollable="dark" scrollbarSize="small">
-
-  <!-- Title -->
-  <div class="navigation-mobile-item navigation-mobile-title">
-    <h3>{{ textContent.title }}</h3>
-    <mcs-icon [key]="closeIconKey" color="white"
-      cursor="pointer" (click)="close()"></mcs-icon>
-  </div>
-
-  <!-- Navigation items -->
-  <ng-content></ng-content>
-
-  <!-- Logout Item -->
-  <div class="navigation-item">
-    <mcs-icon [key]="caretRightIconKey" color="white"></mcs-icon>
-    <a cursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
-  </div>
-
-  <!-- Account panel Item -->
-  <div *mcsAccessControl="['CompanyView']"
-    class="navigation-mobile-item navigation-account-panel-wrapper" >
-    <div class="user-account-trigger">
-      <div class="labelled-icon" display-flex justify-content="space-between"
-        cursor="pointer" (click)="toggleAccountPanel()">
-        <a class="user-name text-light">{{ firstName }} {{ lastName }}</a>
-        <mcs-icon [@indicatorIcon]="switchAccountAnimation"
-          [key]="caretDownIconKey" color="white"></mcs-icon>
-      </div>
-      <small read-only>{{ activeAccount?.name }}</small>
+<mcs-sliding-panel placement="left" offsetFrom="header" class="visible-small" #slidingPanel>
+  <!-- Navigation list from template binding -->
+  <div class="navigation-mobile-list">
+    <!-- Title -->
+    <div class="navigation-mobile-item navigation-mobile-title">
+      <h4>{{ textContent.title }}</h4>
+      <mcs-icon [key]="closeIconKey" color="white"
+        cursor="pointer" (click)="close()"></mcs-icon>
     </div>
-    <div [@bodyExpansion]="switchAccountAnimation" class="switch-account-panel">
-      <div class="account-details">
-        <mcs-account-panel></mcs-account-panel>
-      </div>
 
-      <div class="switch-account-details">
-        <mcs-switch-account (selectionChanged)="close()"></mcs-switch-account>
-      </div>
+    <!-- Navigation items -->
+    <ng-content></ng-content>
+
+    <!-- Logout Item -->
+    <div class="navigation-item">
+      <mcs-icon [key]="caretRightIconKey" color="white"></mcs-icon>
+      <a cursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
     </div>
   </div>
-</div>
+</mcs-sliding-panel>
+
