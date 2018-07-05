@@ -65,7 +65,7 @@
       [content]="notificationsContent">
 
       <mcs-icon [key]="bellIconKey" size="small" color="white"></mcs-icon>
-      <span *ngIf="hasNotification" class="text-center">
+      <span *ngIf="hasNotification" class="inline-items-small justify-content-center">
         {{ displayedNotifications.length }}
       </span>
     </a>
@@ -79,7 +79,7 @@
       mcsEventCategory="navigation"
       mcsEventLabel="user-panel"
       stop-propagation>
-      <mcs-icon class="user-icon" [key]="userIconKey" size="medium"></mcs-icon>
+      <mcs-icon class="user-icon" [key]="userIconKey" size="small"></mcs-icon>
       <span class="hidden-small text-light">{{ firstName }} {{ lastName }}</span>
 
       <small *ngIf="!loadingAccount" class="user-info" read-only>{{ activeAccount?.name }}</small>
