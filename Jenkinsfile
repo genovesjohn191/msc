@@ -181,7 +181,7 @@ podTemplate(
                             proxyPassword: '',
                             proxyServer: '',
                             proxyUsername: '',
-                            scanName: "[job_name] - Jenkins Build [build_number] - ${qualys_was_type} Scan',
+                            scanName: "[job_name] - Jenkins Build [build_number] - ${qualys_was_type} Scan",
                             scanType: qualys_was_type,
                             webAppId: qualys_app_id
                         )
