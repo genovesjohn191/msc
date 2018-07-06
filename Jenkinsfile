@@ -30,8 +30,10 @@ if (!params.REGISTRY_LOCATION) {
                 booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.'),
                 string(defaultValue: 'latest', description: 'The image version to deploy.', name: 'IMAGE_VERSION'),
                 choice(defaultValue: 'None', description: 'Select the Type of Qualys Scan to execute.', choices: 'None\nVULNERABILITY\nDISCOVERY', name: 'QUALYS_WAS_TYPE'),
-                string(name: 'QUALYS_API_URL', defaultValue: 'https://qualysapi.qg2.apps.qualys.com', description: 'The URL for the Qualys API'),
-                string(name: 'QUALYS_APP_ID', defaultValue: '83074894', description: 'The App ID to invoke in Qualys for the Web Application Scan')
+                string(name: 'QUALYS_API_URL', defaultValue: 'https://qualysapi.qg2.apps.qualys.com', description: 'The URL for the Qualys API.'),
+                string(name: 'QUALYS_APP_ID', defaultValue: '83074894', description: 'The App ID to invoke in Qualys for the Web Application Scan.'),
+                string(name: 'QUALYS_AUTH_RECORD', default: 'ADMIN_CUSTOMER1_AUTH', description: 'The Qualys Authentication record to use as part of Web Application Scan.'),
+                string(name: 'QUALYS_AUTH_RECORD_ID', default: '346364', description: 'The Qualys Authentication record ID for the Web Application Scan.')
             ]),
             pipelineTriggers([])
         ]
@@ -54,6 +56,8 @@ def debug_sleep = params.DEBUG_SLEEP
 def qualys_was_type = params.QUALYS_WAS_TYPE
 def qualys_api_url = params.QUALYS_API_URL
 def qualys_app_id = params.QUALYS_APP_ID
+def qualys_auth_record = params.QUALYS_AUTH_RECORD
+def qualys_auth_record_id = params.QUALYS_AUTH_RECORD_ID
 
 echo "Building with the following configuration:"
 echo "\tRegistry: ${params.REGISTRY_LOCATION}\n\tDocker Sock: ${params.HOST_DOCKER_SOCK}\n\tDocker Binary: ${params.HOST_DOCKER_BIN}\n\tKubectl Binary: ${params.HOST_KUBECTL_BIN}"
@@ -168,8 +172,8 @@ podTemplate(
                             apiPass: QUALYS_API_PASSWORD,
                             apiServer: qualys_api_url,
                             apiUser: QUALYS_API_USERNAME,
-                            authRecord: 'useDefault',
-                            authRecordId: '',
+                            authRecord: qualys_auth_record,
+                            authRecordId: qualys_auth_record_id,
                             cancelHours: '1',
                             cancelOptions: 'xhours',
                             optionProfile: 'useDefault',
@@ -177,7 +181,7 @@ podTemplate(
                             proxyPassword: '',
                             proxyServer: '',
                             proxyUsername: '',
-                            scanName: '[job_name]_jenkins_build_[build_number]',
+                            scanName: "[job_name] - Jenkins Build [build_number] - ${qualys_was_type} Scan',
                             scanType: qualys_was_type,
                             webAppId: qualys_app_id
                         )
