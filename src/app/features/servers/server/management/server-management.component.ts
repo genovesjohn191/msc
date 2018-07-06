@@ -347,6 +347,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public getNicIpAddresses(nic: ServerNic): string[] {
     let nicAddresses = getSafeProperty(nic, (obj) => obj.ipAddresses);
     let vCloudIpAddresses = getSafeProperty(nic, (obj) => obj.vCloudIpAddress);
+
+    let noIpAddress = isNullOrEmpty(nicAddresses) && isNullOrEmpty(vCloudIpAddresses);
+    if (noIpAddress) { return undefined; }
     return isNullOrEmpty(nicAddresses) ? [vCloudIpAddresses] : nicAddresses;
   }
 

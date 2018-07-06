@@ -41,6 +41,14 @@ import 'core-js/es6/typed';
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
 
+/**
+ * .matches is not supported on IE we need to override it
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
+ */
+if (!Element.prototype.matches) {
+  Element.prototype.matches = Element.prototype.msMatchesSelector;
+}
+
 // Evergreen browsers require these.
 import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
