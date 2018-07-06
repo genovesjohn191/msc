@@ -161,15 +161,6 @@ podTemplate(
                 sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
                 sh "kubectl rollout status deployment ${kube_deployment}"
             }
-            stage('Deploy to k8s cluster') {
-                if (env.DEPLOYMENT_ENVIRONMENT != "LAB") {
-                    image_version = params.IMAGE_VERSION
-                }
-
-                echo "Update the deployed image"
-                sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
-                sh "kubectl rollout status deployment ${kube_deployment}"
-            }
             if (env.DEPLOYMENT_ENVIRONMENT == "LAB" && (qualys_was_type == 'VULNERABILITY' || qualys_was_type == 'DISCOVERY')) {
                 stage('Qualys Web Application Vulnerability Scan') {
                     withCredentials([usernamePassword(credentialsId: 'qualys-was-credentials', passwordVariable: 'QUALYS_API_PASSWORD', usernameVariable: 'QUALYS_API_USERNAME')]) {
