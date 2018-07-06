@@ -29,7 +29,7 @@ if (!params.REGISTRY_LOCATION) {
                 string(defaultValue: 'default', description: 'The namespace where kubernetes resources should be found and bound.', name: 'K8S_NAMESPACE'),
                 booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.'),
                 string(defaultValue: 'latest', description: 'The image version to deploy.', name: 'IMAGE_VERSION'),
-                choice(defaultValue: 'None', description: 'Triggers a Qualys Scan for the new Portal deployment after successful deployment.', choices: 'None\nVULNERABILITY\nDISCOVERY', description: 'Select the Type of Qualys Scan to execute.', name: 'QUALYS_WAS_TYPE'),
+                choice(defaultValue: 'None', description: 'Select the Type of Qualys Scan to execute.', choices: 'None\nVULNERABILITY\nDISCOVERY', name: 'QUALYS_WAS_TYPE'),
                 string(name: 'QUALYS_API_URL', defaultValue: 'https://qualysapi.qg2.apps.qualys.com', description: 'The URL for the Qualys API'),
                 string(name: 'QUALYS_APP_ID', defaultValue: '83074894', description: 'The App ID to invoke in Qualys for the Web Application Scan')
             ]),
