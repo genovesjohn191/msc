@@ -28,7 +28,10 @@ if (!params.REGISTRY_LOCATION) {
                 booleanParam(defaultValue: true, description: 'Whether to utilise the Google Container Registry as part of this build. If so searches for Google Service credentials mounted as a json file. Otherwise assumes a local insecure registry.', name: 'GOOGLE_CONTAINER_REGISTRY'),
                 string(defaultValue: 'default', description: 'The namespace where kubernetes resources should be found and bound.', name: 'K8S_NAMESPACE'),
                 booleanParam(name: 'DEBUG_SLEEP', defaultValue: false, description: 'Sleeps for 10 minutes at the end of a failed build for troubleshooting purposes.'),
-                string(defaultValue: 'latest', description: 'The image version to deploy.', name: 'IMAGE_VERSION')
+                string(defaultValue: 'latest', description: 'The image version to deploy.', name: 'IMAGE_VERSION'),
+                choice(defaultValue: 'None', description: 'Triggers a Qualys Scan for the new Portal deployment after successful deployment.', choices: 'None\nVULNERABILITY\nDISCOVERY', description: 'Select the Type of Qualys Scan to execute.', name: 'QUALYS_WAS_TYPE'),
+                string(name: 'QUALYS_API_URL', defaultValue: 'https://qualysapi.qg2.apps.qualys.com', description: 'The URL for the Qualys API'),
+                string(name: 'QUALYS_APP_ID', defaultValue: '83074894', description: 'The App ID to invoke in Qualys for the Web Application Scan')
             ]),
             pipelineTriggers([])
         ]
@@ -48,6 +51,9 @@ def kube_deployment = "portal"
 def slack_notify_on_success = true
 def label = "buildpod"
 def debug_sleep = params.DEBUG_SLEEP
+def qualys_was_type = params.QUALYS_WAS_TYPE
+def qualys_api_url = params.QUALYS_API_URL
+def qualys_app_id = params.QUALYS_APP_ID
 
 echo "Building with the following configuration:"
 echo "\tRegistry: ${params.REGISTRY_LOCATION}\n\tDocker Sock: ${params.HOST_DOCKER_SOCK}\n\tDocker Binary: ${params.HOST_DOCKER_BIN}\n\tKubectl Binary: ${params.HOST_KUBECTL_BIN}"
@@ -154,6 +160,37 @@ podTemplate(
                 echo "Update the deployed image"
                 sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
                 sh "kubectl rollout status deployment ${kube_deployment}"
+            }
+            stage('Deploy to k8s cluster') {
+                if (env.DEPLOYMENT_ENVIRONMENT != "LAB") {
+                    image_version = params.IMAGE_VERSION
+                }
+
+                echo "Update the deployed image"
+                sh "kubectl set image deployment ${kube_deployment} ${kube_deployment}=${registry_location}/${image_name}:${image_version} --record"
+                sh "kubectl rollout status deployment ${kube_deployment}"
+            }
+            if (env.DEPLOYMENT_ENVIRONMENT == "LAB" && (qualys_was_type == 'VULNERABILITY' || qualys_was_type == 'DISCOVERY')) {
+                stage('Qualys Web Application Vulnerability Scan') {
+                    withCredentials([usernamePassword(credentialsId: 'qualys-was-credentials', passwordVariable: 'QUALYS_API_PASSWORD', usernameVariable: 'QUALYS_API_USERNAME')]) {
+                        qualysWASScan
+                            apiPass: QUALYS_API_PASSWORD,
+                            apiServer: qualys_api_url,
+                            apiUser: QUALYS_API_USERNAME,
+                            authRecord: 'useDefault',
+                            authRecordId: '',
+                            cancelHours: '1',
+                            cancelOptions: 'xhours',
+                            optionProfile: 'useDefault',
+                            optionProfileId: '',
+                            proxyPassword: '',
+                            proxyServer: '',
+                            proxyUsername: '',
+                            scanName: '[job_name]_jenkins_build_[build_number]',
+                            scanType: qualys_was_type,
+                            webAppId: qualys_app_id
+                    }
+                }
             }
             if (slack_notify_on_success) {
                 stage('Notify') {
