@@ -173,7 +173,7 @@ podTemplate(
             if (env.DEPLOYMENT_ENVIRONMENT == "LAB" && (qualys_was_type == 'VULNERABILITY' || qualys_was_type == 'DISCOVERY')) {
                 stage('Qualys Web Application Vulnerability Scan') {
                     withCredentials([usernamePassword(credentialsId: 'qualys-was-credentials', passwordVariable: 'QUALYS_API_PASSWORD', usernameVariable: 'QUALYS_API_USERNAME')]) {
-                        qualysWASScan
+                        qualysWASScan(
                             apiPass: QUALYS_API_PASSWORD,
                             apiServer: qualys_api_url,
                             apiUser: QUALYS_API_USERNAME,
@@ -189,6 +189,7 @@ podTemplate(
                             scanName: '[job_name]_jenkins_build_[build_number]',
                             scanType: qualys_was_type,
                             webAppId: qualys_app_id
+                        )
                     }
                 }
             }
