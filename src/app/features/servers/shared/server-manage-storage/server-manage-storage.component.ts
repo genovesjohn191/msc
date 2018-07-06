@@ -16,7 +16,10 @@ import {
   FormControl
 } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
 import {
   CoreValidators,
   McsTextContentProvider,
@@ -272,8 +275,11 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
     // Set the actual selected in case of storage selection changed
     this.fcSelectStorages.valueChanges
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((value) => this.selectedStorage = value);
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe((value) => {
+        this.selectedStorage = value;
+        this._notifyDataChanged();
+      });
 
     // Create form group and bind the form controls
     this.fgServerStorage = new FormGroup({

@@ -14,6 +14,8 @@ import {
   ChangeDetectionStrategy,
   ContentChild
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider
@@ -24,8 +26,6 @@ import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-
 import {
   WizardTopPanelPlaceholderDirective
 } from './wizard-top-panel/wizard-top-panel-placeholder.directive';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'mcs-wizard',

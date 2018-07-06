@@ -57,15 +57,17 @@
                     mcsEventCategory="server"
                     mcsEventLabel="server-list-panel">
 
-                    <mcs-icon *ngIf="!server.isProcessing" size="small"
-                      [key]="server?.powerStateIconKey"></mcs-icon>
+                    <div class="form-field-inline">
+                      <mcs-icon *ngIf="!server.isProcessing" size="small"
+                        [key]="server?.powerStateIconKey"></mcs-icon>
 
-                    <mcs-icon *ngIf="server.isProcessing"
-                      size="small" [key]="spinnerIconKey"
-                      [mcsTooltip]="server.processingText"
-                      mcsTooltipPosition="right"></mcs-icon>
+                      <mcs-icon *ngIf="server.isProcessing"
+                        size="small" [key]="spinnerIconKey"
+                        [mcsTooltip]="server.processingText"
+                        mcsTooltipPosition="right"></mcs-icon>
 
-                    <span class="space-left-xsmall">{{ server.name }}</span>
+                      <span class="break-word-all">{{ server.name }}</span>
+                    </div>
                   </mcs-option>
                 </mcs-option-group>
               </ng-container>
