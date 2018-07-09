@@ -49,6 +49,16 @@ if (!Element.prototype.matches) {
   Element.prototype.matches = Element.prototype.msMatchesSelector;
 }
 
+/**
+ * .setPrototypeOf is not supported on IE we need to override it
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/
+ * Global_Objects/Object/setPrototypeOf
+ */
+Object.setPrototypeOf = Object.setPrototypeOf || function(obj, proto) {
+  obj.__proto__ = proto;
+  return obj;
+};
+
 // Evergreen browsers require these.
 import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
