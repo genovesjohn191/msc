@@ -24,8 +24,8 @@ export class ExclusiveForAccountDirective {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _authIdentityService: McsAuthenticationIdentity,
-    private _templateRef: TemplateRef<any>,
-    private _viewContainer: ViewContainerRef
+    public templateRef: TemplateRef<any>,
+    public viewContainer: ViewContainerRef
   ) { }
 
   /**
@@ -36,8 +36,8 @@ export class ExclusiveForAccountDirective {
     let showElement = !isNullOrEmpty(accountEnumName) &&
       containsString(this._authIdentityService.activeAccountStatus, accountEnumName);
     showElement ?
-      this._viewContainer.createEmbeddedView(this._templateRef) :
-      this._viewContainer.clear();
+      this.viewContainer.createEmbeddedView(this.templateRef) :
+      this.viewContainer.clear();
     this._changeDetectorRef.markForCheck();
   }
 }
