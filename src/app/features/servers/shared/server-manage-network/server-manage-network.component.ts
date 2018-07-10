@@ -101,6 +101,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
       this._resetFormGroup();
       this._createNetmaskByNetwork(this._selectedNetwork);
       this._setInUsedIpAddresses(this._selectedNetwork);
+      this._notifyDataChanged();
     }
   }
   private _selectedNetwork: ResourceNetwork;

@@ -82,6 +82,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       this._selectedStorage = value;
       this.selectedStorageChange.emit(this._selectedStorage);
       this.reset();
+      this._notifyDataChanged();
     }
   }
   private _selectedStorage: ResourceStorage;
