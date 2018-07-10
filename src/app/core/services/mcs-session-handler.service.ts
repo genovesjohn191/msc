@@ -57,6 +57,7 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public get sessionIsIdle(): boolean {
     return (this.sessionCookie >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
+      && (this._sessionIdleCounter >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
       && !this.authTokenHasTimedOut;
   }
 
@@ -66,7 +67,9 @@ export class McsSessionHandlerService implements McsInitializer {
   public get sessionTimedOut(): boolean {
     let idleLimitInSeconds = CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
       + CoreDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS;
-    return this.authTokenHasTimedOut || (this.sessionCookie >= idleLimitInSeconds);
+    return (this.sessionCookie >= idleLimitInSeconds
+      && this._sessionIdleCounter >= idleLimitInSeconds)
+      || this.authTokenHasTimedOut;
   }
 
   /**
