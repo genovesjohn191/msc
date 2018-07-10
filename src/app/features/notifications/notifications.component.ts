@@ -6,11 +6,12 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {
+  merge,
+  Subject
+} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
-/** Services */
-import { NotificationsRepository } from './notifications.repository';
-import { NotificationsDataSource } from './notifications.datasource';
 import {
   McsTextContentProvider,
   CoreDefinition,
@@ -24,8 +25,10 @@ import {
   refreshView,
   isNullOrEmpty,
   getRecordCountLabel,
-  unsubscribeSafely
+  unsubscribeSubject
 } from '../../utilities';
+import { NotificationsRepository } from './notifications.repository';
+import { NotificationsDataSource } from './notifications.datasource';
 
 @Component({
   selector: 'mcs-notifications',
@@ -41,8 +44,7 @@ export class NotificationsComponent
   public textContent: any;
 
   // Subscription
-  private _notificationsSubscription: Subscription;
-  private _accountSubscription: Subscription;
+  private _destroySubject = new Subject<void>();
 
   public get recordsFoundLabel(): string {
     return getRecordCountLabel(
@@ -77,7 +79,7 @@ export class NotificationsComponent
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.notifications;
-    this._listenToAccountUpdate();
+    this._listenToDataUpdate();
   }
 
   public ngAfterViewInit() {
@@ -88,8 +90,7 @@ export class NotificationsComponent
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSafely(this._accountSubscription);
-    unsubscribeSafely(this._notificationsSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -169,13 +170,14 @@ export class NotificationsComponent
   }
 
   /**
-   * Listener for the account update to refresh the view
+   * Listens for every data and account changed
    */
-  private _listenToAccountUpdate(): void {
-    this._accountSubscription = this._authenticationIdentity
-      .activeAccountChanged
-      .subscribe(() => {
-        this.changeDetectorRef.markForCheck();
-      });
+  private _listenToDataUpdate(): void {
+    let requestUpdate = merge(
+      this._notificationsRepository.dataRecordsChanged,
+      this._authenticationIdentity.activeAccountChanged);
+
+    requestUpdate.pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this.changeDetectorRef.markForCheck());
   }
 }

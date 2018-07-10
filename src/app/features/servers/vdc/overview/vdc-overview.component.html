@@ -96,11 +96,9 @@
                   mcsDataLabel"></span>
               </mcs-list-item>
               <mcs-list-item class="form-field-inline">
-                <div class="inline-items-xsmall">
-                  <span>{{ textContent.storageProfiles.utilisation }}:</span>
-                  <mcs-capacity-bar [(ngModel)]="storage.usedMB"
-                    [max]="storage.limitMB" flex="auto"></mcs-capacity-bar>
-                </div>
+                <span>{{ textContent.storageProfiles.utilisation }}:</span>
+                <mcs-capacity-bar [(ngModel)]="storage.usedMB"
+                  [max]="storage.limitMB" flex="auto"></mcs-capacity-bar>
               </mcs-list-item>
             </mcs-list>
 
