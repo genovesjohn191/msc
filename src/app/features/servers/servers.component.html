@@ -4,16 +4,18 @@
 
     <!-- Server Creation -->
     <ng-container *mcsAccessControl="['VmEdit']">
-      <mcs-top-panel-item *mcsTopPanelItemDef [disabled]="!hasResources">
-        <mcs-action-item id="ctaCreateNewServer"
-          (click)="onClickNewServerButton()"
-          mcsEventTracker="create-new-server"
-          mcsEventCategory="server"
-          mcsEventLabel="server-listing-top-panel">
-          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-          <span>{{ textContent.newServer }}</span>
-        </mcs-action-item>
-      </mcs-top-panel-item>
+      <ng-container *ngIf="hasResources">
+        <mcs-top-panel-item *mcsTopPanelItemDef>
+          <mcs-action-item id="ctaCreateNewServer"
+            (click)="onClickNewServerButton()"
+            mcsEventTracker="create-new-server"
+            mcsEventCategory="server"
+            mcsEventLabel="server-listing-top-panel">
+            <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+            <span>{{ textContent.newServer }}</span>
+          </mcs-action-item>
+        </mcs-top-panel-item>
+      </ng-container>
     </ng-container>
 
     <!-- Server Actions -->
