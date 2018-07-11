@@ -37,15 +37,17 @@ $left-panel-navigation-collapse-padding: 6px;
   .page-left-wrapper {
     overflow: hidden;
     @include transition(0.3s);
-    width: $left-panel-width;
     border-right: 1px solid $page-border-color;
 
     .horizontal-label {
       white-space: nowrap;
     }
 
+    &.left-panel-expanded {
+      width: $left-panel-width;
+    }
 
-    &.left-panel-collapse {
+    &.left-panel-collapsed {
       width: $left-panel-navigation-width;
 
       .left-panel-wrapper {
