@@ -66,7 +66,10 @@ export class McsErrorHandlerService implements McsInitializer {
       case McsHttpStatusCode.ServiceUnavailable:
         this._router.navigate(['**'], {
           skipLocationChange: true,
-          queryParams: { code: errorCode }
+          queryParams: {
+            code: errorCode,
+            preservedUrl: location.pathname
+          }
         });
         break;
       default:
