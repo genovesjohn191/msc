@@ -5,13 +5,15 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   McsHttpStatusCode
 } from '../../core';
-import { unsubscribeSafely } from '../../utilities';
+import { unsubscribeSubject, isNullOrEmpty } from '../../utilities';
 
 @Component({
   selector: 'mcs-http-error-page',
@@ -30,9 +32,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
   /**
    * Error code of the current http request
    */
-  public get errorCode(): McsHttpStatusCode {
-    return this._errorCode;
-  }
+  public get errorCode(): McsHttpStatusCode { return this._errorCode; }
   public set errorCode(value: McsHttpStatusCode) {
     if (this._errorCode !== value) {
       this._errorCode = value;
@@ -40,22 +40,41 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
     }
   }
   private _errorCode: McsHttpStatusCode = McsHttpStatusCode.Success;
-  private _routeSubscription: Subscription;
+  private _destroySubject = new Subject<void>();
   public get httpStatusCodeEnum(): any { return McsHttpStatusCode; }
 
   public constructor(
     private _textProvider: McsTextContentProvider,
     private _activatedRoute: ActivatedRoute,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _locationService: Location
   ) { }
 
   public ngOnInit() {
     this.textContentAll = this._textProvider.content.pageHttpError;
+    this._listenToParamChanges();
+  }
 
-    this._routeSubscription = this._activatedRoute.queryParamMap
+  public ngOnDestroy(): void {
+    unsubscribeSubject(this._destroySubject);
+  }
+
+  /**
+   * Refresh the page
+   */
+  public refreshPage(): void {
+    location.reload();
+  }
+
+  /**
+   * Listens to each param changes
+   */
+  private _listenToParamChanges(): void {
+    this._activatedRoute.queryParamMap
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((params) => {
         this.errorCode = +params.get('code');
-
+        this._preserveUrl(params.get('preservedUrl'));
         // We need to set manually the notFound error since there
         // are no parameter code in that case
         if (this.errorCode === 0) {
@@ -65,15 +84,14 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  public ngOnDestroy(): void {
-    unsubscribeSafely(this._routeSubscription);
-  }
-
   /**
-   * Refresh the page
+   * This will preserved the url since the skipLocation flag of router
+   * is not working as expected when the error was called under canActivate guard
+   * @param url Url to be preserved
    */
-  public refreshPage(): void {
-    location.reload();
+  private _preserveUrl(preservedUrl: string): void {
+    if (isNullOrEmpty(preservedUrl)) { return; }
+    this._locationService.replaceState(preservedUrl);
   }
 
   /**

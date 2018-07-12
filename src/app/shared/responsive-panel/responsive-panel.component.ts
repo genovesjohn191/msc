@@ -28,7 +28,8 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  refreshView,
+  unsubscribeSubject
 } from '../../utilities';
 import {
   ResponsivePanelBarComponent
@@ -120,7 +121,8 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   public ngAfterContentInit(): void {
     // We need to listen to changes on header
     // in order to cater the scenarios of dynamic adding of responsive panel item
-    this.panelItems.changes.pipe(startWith(null), takeUntil(this._destroySubject))
+    this.panelItems.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => {
         this._listenToSelectionChange();
         this._selectActivePanelItem();
@@ -146,8 +148,7 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
   }
 
   public ngOnDestroy(): void {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -206,9 +207,11 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
    * Update the pagination of the header
    */
   private _updatePagination() {
-    this._setPaginationStatus();
-    this._setPaginationControlStatus();
-    this._updateTabScrollPosition();
+    refreshView(() => {
+      this._setPaginationStatus();
+      this._setPaginationControlStatus();
+      this._updateTabScrollPosition();
+    });
   }
 
   /**
@@ -247,7 +250,9 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
    * Listen to selection changed of all the items
    */
   private _listenToSelectionChange(): void {
-    this.itemsSelectionChanged.pipe(takeUntil(this._destroySubject))
+    let resetSubject = merge(this.panelItems.changes, this._destroySubject);
+    this.itemsSelectionChanged
+      .pipe(takeUntil(resetSubject))
       .subscribe((item) => {
         refreshView(() => {
           this._selectedPanelItem = item;
@@ -266,7 +271,8 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
    * Listen to viewport resize change
    */
   private _listenToViewportChange(): void {
-    this._viewportService.change().pipe(startWith(null), takeUntil(this._destroySubject))
+    this._viewportService.change()
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._updatePagination());
   }
 }

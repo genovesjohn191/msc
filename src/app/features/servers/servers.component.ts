@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  map
+} from 'rxjs/operators';
 import {
   ResourcesRepository,
   ResourceServiceType
@@ -47,6 +50,7 @@ import {
   getRecordCountLabel,
   unsubscribeSubject
 } from '../../utilities';
+import { CreateServerService } from './create-server';
 
 @Component({
   selector: 'mcs-servers',
@@ -60,7 +64,7 @@ export class ServersComponent
 
   public textContent: any;
   public selection: McsSelection<Server>;
-  public hasResources: boolean;
+  public hasCreateResources: boolean;
   public hasManagedResource: boolean;
   private _destroySubject = new Subject<any>();
 
@@ -146,6 +150,7 @@ export class ServersComponent
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _serversRepository: ServersRepository,
+    private _createServerService: CreateServerService,
     private _resourcesRepository: ResourcesRepository,
     private _accessControlService: McsAccessControlService,
     private _router: Router
@@ -156,14 +161,14 @@ export class ServersComponent
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers;
+    this._setResourcesFlag();
+    this._listenToDeviceChanges();
+    this._listenToDataChange();
   }
 
   public ngAfterViewInit() {
     refreshView(() => {
       this.initializeDatasource();
-      this._validateResources();
-      this._listenToSelectionModeChange();
-      this._listenToDataChange();
     });
   }
 
@@ -359,23 +364,29 @@ export class ServersComponent
    * Initialize the server resources based on repository cache
    * and check whether the resource has self managed type
    */
-  private _validateResources(): void {
-    this._resourcesRepository.findAllRecords()
-      .subscribe((resources) => {
-        this.hasResources = !isNullOrEmpty(resources);
-        if (!isNullOrEmpty(resources)) {
-          this.hasManagedResource = !!resources.find(
-            (resource) => resource.serviceType === ResourceServiceType.Managed
-          );
-        }
-        this.changeDetectorRef.markForCheck();
-      });
+  private _setResourcesFlag(): void {
+    let managedResources = this._resourcesRepository.findAllRecords()
+      .pipe(
+        map((resources) => {
+          this.hasManagedResource = !!resources.find((_resource) =>
+            _resource.serviceType === ResourceServiceType.Managed);
+          this.changeDetectorRef.markForCheck();
+        })
+      );
+    let createServerResources = this._createServerService.getCreationResources()
+      .pipe(
+        map((response) => {
+          this.hasCreateResources = !isNullOrEmpty(response);
+          this.changeDetectorRef.markForCheck();
+        })
+      );
+    managedResources.subscribe(() => createServerResources.subscribe());
   }
 
   /**
-   * Listener to selection mode change in all servers
+   * Listener to device changes
    */
-  private _listenToSelectionModeChange(): void {
+  private _listenToDeviceChanges(): void {
     this.browserService.deviceTypeStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType) => {

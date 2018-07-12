@@ -17,6 +17,8 @@ import {
 } from './server';
 import {
   CreateServerComponent,
+  CreateServerService,
+  CreateServerGuard,
   ServerProvisioningPageComponent
 } from './create-server';
 import {
@@ -34,7 +36,9 @@ export const serversProviders: any[] = [
   ServerService,
   ServersRepository,
   ServersOsRepository,
-  VdcService
+  VdcService,
+  CreateServerService,
+  CreateServerGuard
 ];
 
 /**
@@ -47,6 +51,7 @@ export const serversRoutes: Routes = [
   {
     path: 'servers/create',
     component: CreateServerComponent,
+    canActivate: [CreateServerGuard],
     canDeactivate: [McsNavigateAwayGuard]
   },
   {

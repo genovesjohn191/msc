@@ -1,17 +1,24 @@
 import {
   Component,
   Input,
+  ChangeDetectorRef,
   ChangeDetectionStrategy,
   ViewChild,
   ContentChildren,
   AfterContentInit,
+  OnDestroy,
   QueryList,
   ElementRef,
   Renderer2
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
-  isNullOrEmpty,
-  coerceBoolean
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
+import {
+  coerceBoolean,
+  unsubscribeSubject
 } from '../../../utilities';
 import {
   TopPanelItemPlaceholderDirective
@@ -24,7 +31,6 @@ import {
   selector: 'mcs-top-panel',
   template: `
     <ng-container mcsTopPanelItemPlaceholder></ng-container>
-    <ng-content></ng-content>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -32,12 +38,10 @@ import {
   }
 })
 
-export class TopPanelComponent implements AfterContentInit {
+export class TopPanelComponent implements AfterContentInit, OnDestroy {
 
   @Input()
-  public get active(): boolean {
-    return this._active;
-  }
+  public get active(): boolean { return this._active; }
   public set active(value: boolean) {
     if (this._active !== value) {
       this._active = coerceBoolean(value);
@@ -52,17 +56,28 @@ export class TopPanelComponent implements AfterContentInit {
   @ContentChildren(TopPanelItemDefDirective)
   private _topPanelItemDefinition: QueryList<TopPanelItemDefDirective>;
 
+  private _destroySubject = new Subject<void>();
+
   constructor(
     private _elementRef: ElementRef,
-    private _renderer: Renderer2
+    private _renderer: Renderer2,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   public ngAfterContentInit() {
-    if (!isNullOrEmpty(this._topPanelItemDefinition)) {
-      this._topPanelItemDefinition.forEach((item) => {
-        this._topPanelItemPlaceholder.viewContainer.createEmbeddedView(item.template);
+    this._topPanelItemDefinition.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => {
+        this._topPanelItemPlaceholder.viewContainer.clear();
+        this._topPanelItemDefinition.forEach((item) => {
+          this._topPanelItemPlaceholder.viewContainer.createEmbeddedView(item.template);
+        });
+        this._changeDetectorRef.markForCheck();
       });
-    }
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSubject(this._destroySubject);
   }
 
   private _setActiveParentElement(value: boolean): void {
