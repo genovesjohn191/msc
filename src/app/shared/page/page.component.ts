@@ -152,7 +152,9 @@ export class PageComponent implements AfterContentInit {
    */
   private _initializeLeftPanelDisplay(): void {
     if (!this._pageService.leftPanelIsVisible) {
-      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
+      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapsed');
+    } else {
+      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-expanded');
     }
   }
 
@@ -162,10 +164,12 @@ export class PageComponent implements AfterContentInit {
    */
   private _changePanelDisplay(collapse: boolean) {
     if (collapse) {
-      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
+      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-collapsed');
+      this._renderer.removeClass(this.pageLeftElement.nativeElement, 'left-panel-expanded');
       this._pageService.leftPanelIsVisible = false;
     } else {
-      this._renderer.removeClass(this.pageLeftElement.nativeElement, 'left-panel-collapse');
+      this._renderer.addClass(this.pageLeftElement.nativeElement, 'left-panel-expanded');
+      this._renderer.removeClass(this.pageLeftElement.nativeElement, 'left-panel-collapsed');
       this._pageService.leftPanelIsVisible = true;
     }
     this._changeDetectorRef.markForCheck();
