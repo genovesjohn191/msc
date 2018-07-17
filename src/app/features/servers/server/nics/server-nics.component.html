@@ -1,11 +1,8 @@
-<div class="limited-view">
-  <!-- Loader settings -->
-  <div [mcsLoader]="serverResourceSubscription"
-    [mcsLoaderHideElement]="nicsContent"
-    [mcsLoaderText]="textContent.loading"
-    mcsLoaderOrientation="top"></div>
+<mcs-loader [subscriptions]="serverResourceSubscription"
+  [loadingText]="textContent.loading"
+  loadingPlacement="top">
 
-  <div class="container-wrapper" #nicsContent>
+  <div class="container-wrapper">
     <h4 class="container-header">{{ textContent.title }}</h4>
     <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
@@ -174,4 +171,4 @@
       </div>
     </ng-container>
   </div>
-</div>
+</mcs-loader>

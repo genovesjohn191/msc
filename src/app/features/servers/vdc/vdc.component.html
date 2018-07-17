@@ -74,14 +74,12 @@
       </mcs-tab-group>
 
       <!-- Tab content for routing tab -->
-      <div class="routing-tab-content-wrapper position-relative">
-        <!-- Loader settings -->
-        <div [mcsLoader]="vdcSubscription"
-          [mcsLoaderHideElement]="tabContent"
-          [mcsLoaderText]="textContent.loading"
-          mcsLoaderOrientation="top"></div>
-
-        <router-outlet #tabContent></router-outlet>
+      <div class="limited-view routing-tab-content-wrapper">
+        <mcs-loader [subscriptions]="vdcSubscription"
+          [loadingText]="textContent.loading"
+          [loadingPlacement]="top">
+          <router-outlet></router-outlet>
+        </mcs-loader>
       </div>
     </div>
   </mcs-content-panel>

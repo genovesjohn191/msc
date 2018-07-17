@@ -1,5 +1,8 @@
-$filter-search-max-width: 300px;
-$action-cell-width: 55px;
+// Extended view settings
+$listing-table-default-width: $limited-view-width;
+$listing-table-medium-width: 650px;
+$listing-table-small-width: 100%;
+$listing-table-search-max-width: 300px;
 
 .listing-table-wrapper {
   display: inline-block;
@@ -9,13 +12,24 @@ $action-cell-width: 55px;
     display: block;
   }
 
+  .mcs-table-wrapper {
+    max-width: 100%;
+    min-width: $listing-table-default-width;
+    @include breakpoint(medium) {
+      min-width: $listing-table-medium-width;
+    }
+    @include breakpoint(small) {
+      min-width: $listing-table-small-width;
+    }
+  }
+
   .filter-section {
     @include set-items-interval($space-medium, horizontal);
     @include display-flex(row);
     align-items: center;
 
-    mcs-search {
-      max-width: $filter-search-max-width;
+    .mcs-search-wrapper {
+      max-width: $listing-table-search-max-width;
     }
 
     .record-count {

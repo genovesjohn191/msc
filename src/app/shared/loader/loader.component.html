@@ -1,6 +1,11 @@
-<div class="loader-content" animate [trigger]="fadeOut" #wrapper>
-  <div class="block-items-small">
-      <mcs-icon [key]="spinnerIconKey" [size]="size"></mcs-icon>
-      <span *ngIf="text">{{ text }}</span>
-  </div>
+<!-- Content element that will when the loader has finished -->
+<div class="loader-inprogress-content" #targetElements>
+  <ng-content></ng-content>
 </div>
+
+<ng-container *mcsComponentHandler>
+  <div class="loader-content" [@fadeOut]>
+    <mcs-icon [key]="spinnerIconKey" [size]="iconSize"></mcs-icon>
+    <span *ngIf="loadingText">{{ loadingText }}</span>
+  </div>
+</ng-container>

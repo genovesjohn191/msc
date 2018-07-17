@@ -1,45 +1,59 @@
 @import "../../../styles/shared/base";
 
+$loader-bg-color: $light-bg-color;
+$loader-color: $light-bg-text-color;
 $loader-offset: 100px;
 $loader-size: $space-xxlarge;
+$loader-interval: 8px;
 
 .loader-wrapper {
+  display: block;
+}
+
+.loader-content {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: $zindex-loader;
+  @include display-flex(column);
+  @include align-items(center);
+  justify-content: center;
+  @include set-items-interval($loader-interval);
+  width: 100%;
+  height: 100%;
+  min-height: $loader-size;
+  background: $loader-bg-color;
+  color: $loader-color;
 
-  .loader-content {
-    background: $color-white;
-    position: absolute;
-    @include display-flex(0 0 auto);
-    @include display-flex(row);
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    min-height: $loader-size;
-
-    &.top-orientation {
-      @include align-items(flex-start);
-      padding-top: $loader-offset;
-    }
-
-    &.left-orientation {
-      justify-content: flex-start;
-      padding-left: $loader-offset;
-    }
-
-    &.right-orientation {
-      justify-content: flex-end;
-      padding-right: $loader-offset;
-    }
-
-    &.bottom-orientation {
-      @include align-items(flex-end);
-      padding-bottom: $loader-offset;
-    }
+  &.top-orientation {
+    justify-content: flex-start;
+    padding-top: $loader-offset;
   }
+
+  &.left-orientation {
+    @include align-items(flex-start);
+    padding-left: $loader-offset;
+  }
+
+  &.right-orientation {
+    @include align-items(flex-end);
+    padding-right: $loader-offset;
+  }
+
+  &.bottom-orientation {
+    justify-content: flex-end;
+    padding-bottom: $loader-offset;
+  }
+}
+
+.loader-inprogress-content {
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  visibility: hidden;
 }

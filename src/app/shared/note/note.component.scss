@@ -1,0 +1,11 @@
+@import "../../../styles/shared/base";
+
+$note-interval-size: 20px;
+
+.note-wrapper {
+  display: block;
+
+  .note-interval {
+    height: $note-interval-size;
+  }
+}

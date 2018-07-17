@@ -168,6 +168,14 @@ export class McsRouteHandlerService implements McsInitializer {
         documentTitle: documentTitleText.dashboard
       });
 
+    // Register /orders endpoint
+    this._routeTable.set('/orders',
+      {
+        category: McsRouteCategory.None, url: '/orders',
+        documentTitle: documentTitleText.orders,
+        featureFlag: 'enableOrdering'
+      });
+
     // Register /servers endpoint
     this._routeTable.set('/servers',
       {

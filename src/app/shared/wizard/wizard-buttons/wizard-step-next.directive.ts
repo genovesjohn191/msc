@@ -11,7 +11,7 @@ import { WizardComponent } from '../wizard.component';
   host: {
     'class': 'wizard-step-next-button-wrapper',
     '[type]': 'type',
-    '(click)': 'wizard.next()'
+    '(click)': 'next()'
   }
 })
 
@@ -19,5 +19,12 @@ export class WizardStepNextDirective {
   @Input()
   public type: any;
 
-  constructor(@Inject(forwardRef(() => WizardComponent)) public wizard) {}
+  constructor(@Inject(forwardRef(() => WizardComponent)) private _wizard) { }
+
+  /**
+   * Proceed to next step
+   */
+  public next(): void {
+    this._wizard.next();
+  }
 }

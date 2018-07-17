@@ -18,7 +18,9 @@
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">
         <div class="total-record-count right-align">
-          <span>{{ recordsFoundLabel }}</span>
+          <span>{{ totalRecordsCount | mcsPlural:
+                textContent.dataSingular : textContent.dataPlural }}
+          </span>
         </div>
       </div>
     </mcs-top-panel-item>
@@ -98,7 +100,7 @@
             {{ columnSettings.attachedTo.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
-            {{ getAttachedToCountLabel(row) }}
+            {{ row.attachedTo | mcsPlural: 'Server' }}
           </mcs-data-cell>
         </ng-container>
 
@@ -143,7 +145,7 @@
       <!-- Paginator -->
       <mcs-paginator #paginator
         [hidden]="isSearching"
-        [totalCount]="totalRecordCount"
+        [totalCount]="totalRecordsCount"
         [pageIndex]="0"
         [pageSize]="25">
       </mcs-paginator>

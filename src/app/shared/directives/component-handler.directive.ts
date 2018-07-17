@@ -2,9 +2,11 @@ import {
   Directive,
   OnInit,
   TemplateRef,
+  ElementRef,
   ViewContainerRef,
   ChangeDetectorRef
 } from '@angular/core';
+import { getSafeProperty } from '../../utilities';
 
 @Directive({
   selector: '[mcsComponentHandler]'
@@ -18,6 +20,13 @@ export class ComponentHandlerDirective implements OnInit {
 
   public ngOnInit() {
     this.createComponent();
+  }
+
+  /**
+   * Returns the elementref of the handler
+   */
+  public get elementRef(): ElementRef<any> {
+    return getSafeProperty(this._templateRef, (obj) => obj.elementRef);
   }
 
   /**

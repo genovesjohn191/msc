@@ -7,7 +7,7 @@
     *ngFor="let tab of tabs"
     [active]="activeTab?.id === tab.id"
     [ngClass]="tab?.customClass"
-    [class.custom-tab]="!tab.canSelect" (click)="selectTab(tab)">
+    [class.custom-tab]="!tab.canSelect" (click)="onClickTab(tab)">
 
     <ng-container *ngIf="tab.labelTemplate">
       <ng-container *ngTemplateOutlet="tab.labelTemplate.templateRef"></ng-container>

@@ -52,21 +52,22 @@
   </mcs-left-panel>
 
   <mcs-content-panel *mcsContentPanelDef>
-    <div [mcsLoader]="productStatusFactory?.statusSubscription"
-      [mcsLoaderHideElement]="productDetails"
-      [mcsLoaderText]="textContent.loadingDetails"
-      mcsLoaderOrientation="top"></div>
+    <mcs-loader [subscriptions]="productStatusFactory?.statusSubscription"
+      [loadingText]="textContent.loadingDetails"
+      loadingPlacement="top">
 
-    <mcs-sliding-panel placement="right" #slidingPanel class="visible-small">
-      <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
-    </mcs-sliding-panel>
-
-    <div #productDetails class="inline-items align-items-none">
-      <router-outlet></router-outlet>
-      <div class="space-left-xlarge hidden-small">
+      <mcs-sliding-panel placement="right" #slidingPanel class="visible-small">
         <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
+      </mcs-sliding-panel>
+
+      <div #productDetails class="inline-items align-items-none">
+        <router-outlet></router-outlet>
+        <div class="space-left-xlarge hidden-small">
+          <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
+        </div>
       </div>
-    </div>
+    </mcs-loader>
+
   </mcs-content-panel>
 </mcs-page>
 

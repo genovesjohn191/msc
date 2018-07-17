@@ -4,8 +4,10 @@ import {
   Output,
   OnDestroy,
   EventEmitter,
+  ViewChildren,
   ContentChildren,
   QueryList,
+  AfterViewInit,
   AfterContentInit,
   ChangeDetectorRef,
   ViewEncapsulation,
@@ -19,9 +21,10 @@ import {
 import { McsSelection } from '../../core';
 import {
   isNullOrEmpty,
-  refreshView
+  unsubscribeSubject
 } from '../../utilities';
 import { TabComponent } from './tab/tab.component';
+import { TabHeaderItemComponent } from './tab-header-item/tab-header-item.component';
 
 @Component({
   selector: 'mcs-tab-group',
@@ -34,8 +37,7 @@ import { TabComponent } from './tab/tab.component';
   }
 })
 
-export class TabGroupComponent implements AfterContentInit, OnDestroy {
-
+export class TabGroupComponent implements AfterViewInit, AfterContentInit, OnDestroy {
   @ContentChildren(TabComponent)
   public tabs: QueryList<TabComponent>;
 
@@ -51,10 +53,13 @@ export class TabGroupComponent implements AfterContentInit, OnDestroy {
     if (this._selectedTabId !== value) {
       this._selectedTabId = value;
       this.selectedTabIdChange.emit(this._selectedTabId);
-      refreshView(() => this._setActiveTab(value));
+      this._selectTabById(value);
     }
   }
   private _selectedTabId: any;
+
+  @ViewChildren(TabHeaderItemComponent)
+  private _tabHeaders: QueryList<TabHeaderItemComponent>;
 
   /** Selection model to determine which tab is selected */
   private _selectionModel: McsSelection<TabComponent>;
@@ -67,15 +72,17 @@ export class TabGroupComponent implements AfterContentInit, OnDestroy {
   public ngAfterContentInit(): void {
     this.tabs.changes
       .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe(() => {
-        refreshView(() => this._setActiveTab(this.selectedTabId));
-        this._changeDetectorRef.markForCheck();
-      });
+      .subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  public ngAfterViewInit() {
+    this._tabHeaders.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => this._initializeSelection());
   }
 
   public ngOnDestroy() {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -87,34 +94,49 @@ export class TabGroupComponent implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Select the tab based on input
+   * Event that emits when the tab is clicked manually
+   * @param tab Clicked tab to be set
+   */
+  public onClickTab(tab: TabComponent): void {
+    this._selectTab(tab);
+    this._selectedTabId = tab.id;
+    this.selectedTabIdChange.emit(this._selectedTabId);
+  }
+
+  /**
+   * Selects the tab based on its ID Provided
+   * @param tabId Tabid to be selected
+   */
+  private _selectTabById(tabId: string): void {
+    let noTabItems = isNullOrEmpty(this.tabs) || isNullOrEmpty(tabId);
+    if (noTabItems) { return; }
+    let tabFound = this.tabs.find((tab) => tab.id === tabId);
+    this._selectTab(tabFound);
+  }
+
+  /**
+   * Selects the tab based on the provided tab component
    * @param tab Tab to be selected
    */
-  public selectTab(tab: TabComponent): void {
+  private _selectTab(tab: TabComponent): void {
     if (isNullOrEmpty(tab) || !tab.canSelect) { return; }
     this._selectionModel.select(tab);
-
-    // Add the changing of selectedTabId to support two way binding [(selectedTabId)]
-    this.selectedTabId = tab.id;
     this.tabChanged.emit(tab);
     this._changeDetectorRef.markForCheck();
   }
 
   /**
-   * Set the active tab based on the given ID
-   * @param selectedId Id to be selected
+   * Set the initial selection of the tab component
    */
-  private _setActiveTab(selectedId: any): void {
-    if (isNullOrEmpty(this.tabs)) { return; }
+  private _initializeSelection(): void {
+    // Defer setting the value in order to avoid the "Expression
+    // has changed after it was checked" errors from Angular.
+    Promise.resolve().then(() => {
+      if (isNullOrEmpty(this.tabs)) { return; }
 
-    if (isNullOrEmpty(selectedId)) {
-      this.selectTab(this.tabs.toArray()[0]);
-    } else {
-      this.tabs.forEach((tab) => {
-        if (tab.id === selectedId) {
-          this.selectTab(tab);
-        }
-      });
-    }
+      isNullOrEmpty(this._selectedTabId) ?
+        this.onClickTab(this.tabs.toArray()[0]) :
+        this._selectTabById(this._selectedTabId);
+    });
   }
 }

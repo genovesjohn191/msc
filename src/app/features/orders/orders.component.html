@@ -1,0 +1,142 @@
+<mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Order Creation -->
+    <ng-container *mcsAccessControl="['OrderEdit']">
+      <mcs-top-panel-item *mcsTopPanelItemDef>
+        <mcs-action-item id="ctaCreateNewOrder"
+          (click)="onClickNewOrder()"
+          mcsEventTracker="create-new-order"
+          mcsEventCategory="order"
+          mcsEventLabel="order-listing-top-panel">
+          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+          <span>{{ textContent.newOrder }}</span>
+        </mcs-action-item>
+      </mcs-top-panel-item>
+    </ng-container>
+
+    <!-- Order Count -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count right-align">
+          <span>{{ totalRecordsCount | mcsPlural:
+                textContent.dataSingular : textContent.dataPlural }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey"
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+        <!-- Description Column -->
+        <ng-container mcsColumnDef="description">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.description.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <a (click)="navigateToOrder(row)"
+              mcsEventTracker="navigate-to-order"
+              mcsEventCategory="order"
+              mcsEventLabel="order-listing-page">
+              {{ row.description }}</a>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container mcsColumnDef="status" [mcsColumnDefHidden]="isColumnHidden('status')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+            {{ columnSettings.status.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+            {{ row.statusLabel }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Order ID Column -->
+        <ng-container mcsColumnDef="orderId" [mcsColumnDefHidden]="isColumnHidden('orderId')">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.orderId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.orderId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Created By Column -->
+        <ng-container mcsColumnDef="createdBy" [mcsColumnDefHidden]="isColumnHidden('createdBy')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+            {{ columnSettings.createdBy.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+            {{ row.createdBy }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Created On Column -->
+        <ng-container mcsColumnDef="createdOn" [mcsColumnDefHidden]="isColumnHidden('createdOn')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-xsmall">
+            {{ columnSettings.createdOn.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
+            {{ row.createdOn | mcsStdDateFormat }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.noOrders }} </span>
+            </div>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          cursor="pointer" (click)="navigateToOrder(row)"
+          mcsEventTracker="navigate-to-order"
+          mcsEventCategory="order"
+          mcsEventLabel="order-listing-page"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="isSearching"
+        [totalCount]="totalRecordsCount"
+        [pageIndex]="0"
+        [pageSize]="25">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

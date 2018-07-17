@@ -1,0 +1,35 @@
+<div class="block-items-large">
+  <ng-container *ngFor="let item of serverComponents">
+    <mcs-tab-group [(selectedTabId)]="selectedTabIndex">
+      <!-- New Server Tab -->
+      <mcs-tab [label]="textContent.newServer.title" [id]="serverCreateTypeEnum.New">
+        <p class="space-bottom-medium">{{ textContent.newServer.description }}</p>
+
+        <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.New">
+          <mcs-server-new #serverBase
+            [resource]="resource"
+            [serviceType]="resource?.serviceType"></mcs-server-new>
+        </ng-container>
+      </mcs-tab>
+
+      <!-- Clone Server Tab -->
+      <mcs-tab [label]="textContent.cloneServer.title" [id]="serverCreateTypeEnum.Clone">
+        <p class="space-bottom-medium">{{ textContent.cloneServer.description }}</p>
+
+        <ng-container *ngIf="selectedTabIndex === serverCreateTypeEnum.Clone">
+          <mcs-server-clone #serverBase
+            [serviceType]="resource?.serviceType"></mcs-server-clone>
+        </ng-container>
+      </mcs-tab>
+    </mcs-tab-group>
+  </ng-container>
+</div>
+
+<!-- Wizard Actions -->
+<div class="wizard-step-actions">
+  <button mcsWizardStepNext mcsButton size="small" arrow="right"
+    (click)="createServer()"
+    mcsEventTracker="step-1-next"
+    mcsEventCategory="server"
+    mcsEventLabel="create-new-server-page">Next</button>
+</div>

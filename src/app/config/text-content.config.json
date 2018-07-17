@@ -17,6 +17,7 @@
   },
   "documentTitle": {
     "dashboard": "Macquarie Cloud Services: Dashboard",
+    "orders": "Macquarie Cloud Services: Orders",
     "servers": "Macquarie Cloud Services: Servers",
     "medias": "Macquarie Cloud Services: Media Catalog",
     "firewalls": "Macquarie Cloud Services: Firewalls",
@@ -53,6 +54,18 @@
   "dashboard": {
     "header": "Dashboard",
     "description": "The following graphs roll up information based on the selected Virtual Data Centre."
+  },
+  "orders": {
+    "header": "Orders",
+    "leftPanelHeader": "Order Filter",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "newOrder": "New Order",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of orders.",
+    "noRecordsFoundMessage": "No orders to display.",
+    "retry": "Try again shortly",
+    "dataSingular": "Order",
+    "dataPlural": "Orders"
   },
   "servers": {
     "header": "Servers",
@@ -141,8 +154,9 @@
       "header": "Create a New Server",
       "backToServers": "Back To Servers",
       "vdcDropdownList": {
-        "name": "Virtual Data Centres",
-        "prefix": "{{service_type}} VDC - {{availability_zone}} "
+        "header": "Virtual Data Centres",
+        "prefix": "{{service_type}} VDC - {{zone}} ",
+        "helpText": "Virtual Data Center to deploy your server. You can deploy your server to any Virtual Data Center available in this list."
       },
       "serverDetailsStep": {
         "title": "Server Details",
@@ -152,16 +166,39 @@
         "title": "Add ons",
         "description": "Select the Add-Ons you'd like for this order and specify any relevant configuration options.",
         "antiMalwareAddOn": "Anti-Malware",
+        "antiMalwareAddOnHelp": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
         "disasterRecoveryAddOn": "Disaster Recovery",
-        "sqlServerAddOn": "SQL Server"
+        "disasterRecoveryAddOnHelp": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
+        "sqlServerAddOn": "SQL Server",
+        "sqlServerAddOnHelp": "Add additional storage on your server to save more data"
       },
       "serverConfirmStep": {
         "title": "Confirm",
         "header": "Confirm Order",
-        "description": "Review your order and associated charges below."
+        "description": "Confirm the details of your order and then continue.",
+        "billingDetails": "Billing Details",
+        "orderDetails": {
+          "header": "Order Details",
+          "description": "Review the charges for this order below.",
+          "noItemTypes": "No item types found.",
+          "errorItemTypes": "Sorry, something’s not right. We weren’t able to retrieve the list of item types.",
+          "columnHeaders": {
+            "charge": "Charge",
+            "monthlyFee": "Monthly Fee",
+            "oneOffCharge": "One-off Charge"
+          }
+        },
+        "orderActions": {
+          "header": "What would you like to do with this order?",
+          "submitOrder": "Submit this order for Provisioning",
+          "submitOrderNote": "By submitting this order, you agree to these charges and the",
+          "saveOrder": "Save this order as a Draft",
+          "mergeOrder": "Merge this order with an Existing draft Order"
+        }
       },
-      "serverGoStep": {
-        "title": "Go!"
+      "serverProvisioningStep": {
+        "title": "Go!",
+        "description": "Your server is deploying and will be available shortly. You can track progress from the notifications menu at the top of the portal."
       },
       "newServer": {
         "title": "New server",
@@ -229,7 +266,6 @@
         "errorGettingJob": "Sorry, something’s not right. We weren’t able to retrieve the creation details of the server."
       },
       "contextualHelp": {
-        "vdcField": "Virtual Data Center to deploy your server. You can deploy your server to any Virtual Data Center available in this list.",
         "serverNameField": "Choose a friendly name for your server. The server name must be 15 characters or less and can contain letters, numbers and hyphens.",
         "vAppField": "A vApp houses one or more servers. By default we create a vApp for each of your servers.",
         "intellicentre": "Virtual Data Centre to deploy this Server in.",
@@ -240,10 +276,7 @@
         "networkField": "Select the network to create a primary network interface for your server.\r\n\n Select a method for acquiring the server's private IP address. Selecting DHCP will allocate an IP address on boot. Static Pool will give you the next available IP in the static pool.",
         "cloneServer": "When you clone a server you get an identical copy of the existing server. it will have the same compute, storage and network characteristics. You can change the properties of server once it has been deployed.",
         "quickNavigateToCreatedServer": "You can go back to server listing page to view your newly created server",
-        "backToListing": "This link would take you back to your server listing page",
-        "antiMalwareAddOn": "Protect systems from malicious software, including signature-based malware detection, behaviour-based malware detection and sandboxing",
-        "disasterRecoveryAddOn": "Disaster recovery has a lot of benefits including faster recovery, financial saving, scalability, and security",
-        "sqlServerAddOn": "Add additional storage on your server to save more data"
+        "backToListing": "This link would take you back to your server listing page"
       }
     },
     "server": {

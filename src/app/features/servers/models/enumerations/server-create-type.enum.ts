@@ -2,9 +2,9 @@ import { McsEnumSerializationBase } from '../../../../core';
 import { CacheKey } from 'json-object-mapper';
 
 export enum ServerCreateType {
-  New = 0,
-  Copy = 1,
-  Clone = 2
+  New = 1,
+  Clone = 2,
+  Copy = 3
 }
 
 /**

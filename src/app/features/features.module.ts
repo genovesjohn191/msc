@@ -8,6 +8,7 @@ import { ProductsModule } from './products/products.module';
 import { MediasModule } from './medias/medias.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { OrdersModule } from './orders/orders.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
 import { HttpErrorPageModule } from './http-error-page/http-error-page.module';
 
@@ -29,6 +30,7 @@ import {
     MediasModule,
     NotificationsModule,
     GadgetsModule,
+    OrdersModule,
     HttpErrorPageModule
   ],
   providers: [

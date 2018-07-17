@@ -25,7 +25,7 @@
           </ng-container>
           <div class="record-count hidden-small" flex="none">
             <span>
-              {{ totalRecordCount | mcsPlural: textContent.dataSingular : textContent.dataPlural}}
+              {{ totalRecordsCount | mcsPlural: textContent.dataSingular : textContent.dataPlural}}
             </span>
           </div>
         </div>
@@ -208,7 +208,7 @@
         <!-- Paginator -->
         <mcs-paginator #paginator
           [hidden]="isSearching"
-          [totalCount]="totalRecordCount"
+          [totalCount]="totalRecordsCount"
           [pageIndex]="0"
           [pageSize]="10">
         </mcs-paginator>

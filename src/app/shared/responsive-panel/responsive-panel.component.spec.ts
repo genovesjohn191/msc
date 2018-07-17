@@ -64,7 +64,7 @@ describe('ResponsivePanelComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      component.responsivePanelComponent.ngAfterContentInit();
+      component.responsivePanelComponent.ngAfterViewInit();
       fixture.detectChanges();
     });
   }));

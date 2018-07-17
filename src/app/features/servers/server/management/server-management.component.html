@@ -1,11 +1,8 @@
-<div class="limited-view">
-  <!-- Loader settings -->
-  <div [mcsLoader]="serverResourceSubscription"
-    [mcsLoaderHideElement]="managementContent"
-    [mcsLoaderText]="textContent.loading"
-    mcsLoaderOrientation="top"></div>
+<mcs-loader [subscriptions]="serverResourceSubscription"
+  [loadingText]="textContent.loading"
+  loadingPlacement="top">
 
-  <div #managementContent>
+  <div>
     <ng-container [ngSwitch]="serverManagementView">
       <!-- Management view by default -->
       <div [@fadeIn] *ngSwitchDefault>
@@ -264,7 +261,8 @@
       </div>
 
       <!-- Manage Server Scale -->
-      <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageScale" class="container-wrapper">
+      <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageScale"
+        class="container-wrapper">
         <h4 class="container-header">{{ textContent.manageScale.header }}</h4>
         <p>{{ textContent.manageScale.description }}</p>
         <div class="container-wrapper">
@@ -340,4 +338,4 @@
       </div>
     </ng-container>
   </div>
-</div>
+</mcs-loader>

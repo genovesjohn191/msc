@@ -24,8 +24,8 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  getRecordCountLabel,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '../../utilities';
 import { NotificationsRepository } from './notifications.repository';
 import { NotificationsDataSource } from './notifications.datasource';
@@ -45,22 +45,6 @@ export class NotificationsComponent
 
   // Subscription
   private _destroySubject = new Subject<void>();
-
-  public get recordsFoundLabel(): string {
-    return getRecordCountLabel(
-      this.totalRecordCount,
-      this.textContent.dataSingular,
-      this.textContent.dataPlural);
-  }
-
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this._notificationsRepository) ? 0 :
-      this._notificationsRepository.totalRecordsCount;
-  }
-
-  public get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
-  }
 
   public get activeCompany(): McsApiCompany {
     return this._authenticationIdentity.activeAccount;
@@ -126,6 +110,21 @@ export class NotificationsComponent
     // observable merge work as expected, since it is closing the
     // subscription when error occured.
     this.initializeDatasource();
+  }
+
+  /**
+   * Returns the totals record found in notifications
+   */
+  protected get totalRecordsCount(): number {
+    return getSafeProperty(this._notificationsRepository,
+      (obj) => obj.totalRecordsCount, 0);
+  }
+
+  /**
+   * Returns the column settings key for the filter selector
+   */
+  protected get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_NOTIFICATIONS_LISTING;
   }
 
   /**

@@ -47,10 +47,10 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
-  getRecordCountLabel,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '../../utilities';
-import { CreateServerService } from './create-server';
+import { ServerCreateService } from './server-create';
 
 @Component({
   selector: 'mcs-servers',
@@ -80,18 +80,6 @@ export class ServersComponent
     return [ServerCommand.Scale, ServerCommand.Clone];
   }
 
-  public get recordsFoundLabel(): string {
-    return getRecordCountLabel(
-      this.totalRecordCount,
-      this.textContent.dataSingular,
-      this.textContent.dataPlural);
-  }
-
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this._serversRepository) ? 0 :
-      this._serversRepository.totalRecordsCount;
-  }
-
   /**
    * Returns the excluded columns in the listing
    */
@@ -105,10 +93,6 @@ export class ServersComponent
     if (!hasIpViewPermission) { excludedColumns.push('managementIp'); }
 
     return (!isNullOrEmpty(excludedColumns)) ? excludedColumns : undefined;
-  }
-
-  public get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_SERVER_LISTING;
   }
 
   public get spinnerIconKey(): string {
@@ -150,7 +134,7 @@ export class ServersComponent
     private _textProvider: McsTextContentProvider,
     private _serversService: ServersService,
     private _serversRepository: ServersRepository,
-    private _createServerService: CreateServerService,
+    private _serverCreateService: ServerCreateService,
     private _resourcesRepository: ResourcesRepository,
     private _accessControlService: McsAccessControlService,
     private _router: Router
@@ -348,6 +332,21 @@ export class ServersComponent
   }
 
   /**
+   * Returns the totals record found in orders
+   */
+  protected get totalRecordsCount(): number {
+    return getSafeProperty(this._serversRepository,
+      (obj) => obj.totalRecordsCount, 0);
+  }
+
+  /**
+   * Returns the column settings key for the filter selector
+   */
+  protected get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_SERVER_LISTING;
+  }
+
+  /**
    * Initialize the table datasource according to pagination and search settings
    */
   protected initializeDatasource(): void {
@@ -373,7 +372,7 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-    let createServerResources = this._createServerService.getCreationResources()
+    let createServerResources = this._serverCreateService.getCreationResources()
       .pipe(
         map((response) => {
           this.hasCreateResources = !isNullOrEmpty(response);

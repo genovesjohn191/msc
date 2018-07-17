@@ -47,9 +47,8 @@ export class ResponsivePanelBarComponent {
    * @param element Element to be the basis of the style
    */
   private _setStyles(element: HTMLElement) {
-    const left = element ? (element.offsetLeft || 0) + 'px' : '0';
-    const width = element ? (element.offsetWidth || 0) + 'px' : '0';
-
+    let left = element ? (element.offsetLeft || 0) + 'px' : '0';
+    let width = element ? (element.offsetWidth || 0) + 'px' : '0';
     this._renderer.setStyle(this._elementRef.nativeElement, 'left', left);
     this._renderer.setStyle(this._elementRef.nativeElement, 'width', width);
   }

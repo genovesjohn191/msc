@@ -1,0 +1,124 @@
+<div class="limited-view">
+  <div class="contextual-help-page-wrapper">
+    <h4>{{ textContent.header }}</h4>
+    <p>{{ textContent.description }}</p>
+
+    <!-- Billing Details -->
+    <div class="form-field-block">
+      <mcs-form-field>
+        <mcs-select [(ngModel)]="selectedTerm">
+          <mcs-select-item [value]="0">Contract Term</mcs-select-item>
+          <mcs-select-item [value]="1">30 Days</mcs-select-item>
+          <mcs-select-item [value]="2">Per Existing Contract</mcs-select-item>
+        </mcs-select>
+      </mcs-form-field>
+
+      <mcs-form-field>
+        <mcs-select [(ngModel)]="selectedEntity">
+          <mcs-select-item [value]="0">Billing Entity</mcs-select-item>
+          <mcs-select-item [value]="1">Macquarie Telecom Group</mcs-select-item>
+        </mcs-select>
+      </mcs-form-field>
+
+      <mcs-form-field>
+        <mcs-select [(ngModel)]="selectedSite">
+          <mcs-select-item [value]="0">Billing Site</mcs-select-item>
+          <mcs-select-item [value]="1">Macquarie Telecom Group</mcs-select-item>
+        </mcs-select>
+      </mcs-form-field>
+
+      <mcs-form-field>
+        <mcs-select [(ngModel)]="selectedCost">
+          <mcs-select-item [value]="0">Billing Cost Centre</mcs-select-item>
+          <mcs-select-item [value]="1">Macquarie Telecom Group</mcs-select-item>
+        </mcs-select>
+      </mcs-form-field>
+    </div>
+
+    <!-- Order Details -->
+    <div class="form-field-block">
+      <h4>{{ textContent.orderDetails.header }}</h4>
+      <mcs-form-field>
+        <input type="text" mcsInput>
+      </mcs-form-field>
+      <p>{{ textContent.orderDetails.description }}</p>
+
+      <mcs-table [dataSource]="orderDataSource">
+        <!-- Charge Column -->
+        <ng-container mcsColumnDef="charge">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.orderDetails.columnHeaders.charge }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.charge }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Monthly Fee Column -->
+        <ng-container mcsColumnDef="monthlyFee">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.orderDetails.columnHeaders.monthlyFee }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.monthlyFee }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- One-off Charge Column -->
+        <ng-container mcsColumnDef="oneOffCharge">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.orderDetails.columnHeaders.oneOffCharge }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.oneOffCharge }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ textContent.orderDetails.noItemTypes }} </span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <span>{{ textContent.orderDetails.errorItemTypes }}</span>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"></mcs-data-row>
+      </mcs-table>
+    </div>
+
+    <!-- Order Actions -->
+    <div class="form-field-block">
+      <span>{{ textContent.orderActions.header }}</span>
+      <mcs-radio-button-group orientation="vertical" [(ngModel)]="selectedAction">
+        <mcs-radio-button [value]="0">{{ textContent.orderActions.submitOrder }}</mcs-radio-button>
+        <mcs-radio-button [value]="1">{{ textContent.orderActions.saveOrder }}</mcs-radio-button>
+        <mcs-radio-button [value]="2">{{ textContent.orderActions.mergeOrder }}</mcs-radio-button>
+      </mcs-radio-button-group>
+
+      <ng-container [ngSwitch]="selectedAction">
+        <mcs-note *ngSwitchCase="0">
+          <span read-only>{{ textContent.orderActions.submitOrderNote }}</span><br>
+          <a>Macquarie Telecom Pty Ltd terms and conditions.</a>
+        </mcs-note>
+        <mcs-note *ngSwitchCase="2">
+          <mcs-form-field>
+            <mcs-select [(ngModel)]="selectedServer">
+              <mcs-select-item [value]="0">New Dedicated Server(120033)</mcs-select-item>
+              <mcs-select-item [value]="1">EOFS Runout Sale(188837)</mcs-select-item>
+            </mcs-select>
+          </mcs-form-field>
+        </mcs-note>
+      </ng-container>
+    </div>
+
+    <!-- Wizard action -->
+    <div class="wizard-step-actions">
+      <a mcsWizardStepPrevious>Back</a>
+      <button mcsButton size="small" arrow="right" mcsWizardStepNext>Next</button>
+    </div>
+  </div>
+</div>
