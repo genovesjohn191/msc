@@ -22,12 +22,17 @@ import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
 import { McsSnackBarRefDirective } from './mcs-snack-bar-ref.directive';
 import { McsSnackBarConfig } from './mcs-snack-bar-config';
-import { McsPlacementType } from '../../core.types';
+import { McsPlacementType, McsThemeType } from '../../core.types';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'mcs-snack-bar-container',
-  template: '<ng-template mcsSnackBarRef></ng-template>',
+  template: `
+    <ng-template mcsSnackBarRef></ng-template>
+    <div *ngIf="message">
+      <span>{{ message }}</span>
+    </div>
+  `,
   styleUrls: ['./mcs-snack-bar-container.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +51,8 @@ import { Subject } from 'rxjs';
     'class': 'snack-bar-container-wrapper box-shadow-medium',
     '[class.top-position]': 'verticalPlacement === "top"',
     '[class.bottom-position]': 'verticalPlacement === "bottom"',
+    '[class.snack-bar-light]': 'snackBarTheme === "light"',
+    '[class.snack-bar-dark]': 'snackBarTheme === "dark"',
     '[@snackBarSlide]': 'state',
     '(@snackBarSlide.start)': 'onAnimationStart($event)',
     '(@snackBarSlide.done)': 'onAnimationDone($event)'
@@ -62,6 +69,7 @@ export class McsSnackBarContainerComponent implements OnInit {
   // Other variables
   public snackBarConfig: McsSnackBarConfig;
   public state: string;
+  public message: string;
 
   // Dispose variables
   private _disposeFn: (() => void) | null;
@@ -71,6 +79,13 @@ export class McsSnackBarContainerComponent implements OnInit {
    */
   public get verticalPlacement(): McsPlacementType {
     return this.snackBarConfig.verticalPlacement;
+  }
+
+  /**
+   * Returns the snackbar theme
+   */
+  public get snackBarTheme(): McsThemeType {
+    return this.snackBarConfig.theme;
   }
 
   constructor(
@@ -119,6 +134,18 @@ export class McsSnackBarContainerComponent implements OnInit {
     // Set the dispose function to destroy the template itself
     this._disposeFn = (() => this.portalHost.viewContainerRef.clear());
     return templateRef;
+  }
+
+  /**
+   * Attached the message to snackbar
+   */
+  public attachMessage(_message: string): string {
+    if (isNullOrEmpty(_message)) { return; }
+    this.message = _message;
+
+    // Set the dispose function to destroy the message instance itself
+    this._disposeFn = (() => this.message = undefined);
+    return _message;
   }
 
   /**

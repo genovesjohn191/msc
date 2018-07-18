@@ -13,15 +13,20 @@ import { McsAuthenticationService } from '../authentication/mcs-authentication.s
 import { McsApiService } from './mcs-api.service';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
+import { McsSnackBarService } from './mcs-snack-bar.service';
+import { McsSnackBarConfig } from '../factory/snack-bar/mcs-snack-bar-config';
+
+const DEFAULT_READONLY_MODE_BAR_DURATION = 10000;
 
 @Injectable()
 export class McsErrorHandlerService implements McsInitializer {
   private _destroySubject = new Subject<void>();
 
   constructor(
+    private _router: Router,
     private _apiService: McsApiService,
     private _authService: McsAuthenticationService,
-    private _router: Router
+    private _snackbarService: McsSnackBarService
   ) { }
 
   /**
@@ -54,16 +59,16 @@ export class McsErrorHandlerService implements McsInitializer {
       });
       codeExist = !!(!isNullOrEmpty(handleCode));
     }
-
-    // Do nothing when the code is not exist
     if (!codeExist) { return; }
 
     switch (errorCode) {
-      case McsHttpStatusCode.InternalServerError:
-      case McsHttpStatusCode.NotFound:
-      case McsHttpStatusCode.Unprocessable:
-      case McsHttpStatusCode.Forbidden:
-      case McsHttpStatusCode.ServiceUnavailable:
+      // Show readonly mode snackbar
+      case McsHttpStatusCode.ReadOnlyMode:
+        this._showReadonlyModeBar();
+        break;
+
+      default:
+        // Redirect to error page
         this._router.navigate(['**'], {
           skipLocationChange: true,
           queryParams: {
@@ -72,10 +77,22 @@ export class McsErrorHandlerService implements McsInitializer {
           }
         });
         break;
-      default:
-        // Do nothing if its not HTTP request
-        break;
     }
+  }
+
+  /**
+   * Shows the readonly mode snackbar
+   */
+  private _showReadonlyModeBar(): void {
+    this._snackbarService.open(
+      'Unable to proccess your request',
+      {
+        id: 'snackbar-read-only-mode',
+        duration: DEFAULT_READONLY_MODE_BAR_DURATION,
+        verticalPlacement: 'bottom',
+        horizontalAlignment: 'center'
+      } as McsSnackBarConfig
+    );
   }
 
   /**

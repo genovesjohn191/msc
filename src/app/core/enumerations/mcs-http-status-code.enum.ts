@@ -8,6 +8,7 @@ export enum McsHttpStatusCode {
   Forbidden = 403,
   NotFound = 404,
   Unprocessable = 422,
+  ReadOnlyMode = 423,
   InternalServerError = 500,
   ServiceUnavailable = 503
 }

@@ -1,28 +1,15 @@
 @import "../../../styles/shared/base";
 
-$snack-bar-padding: $space-small $space-medium;
-// Dark theme
-$snack-bar-dark-bg-color: $dark-bg-color;
-$snack-bar-dark-color: $dark-bg-text-color;
-// Light theme
-$snack-bar-light-bg-color: $light-bg-color;
-$snack-bar-light-color: $light-bg-text-color;
+$snackbar-spacer-height: 1px;
+$snackbar-spacer-width: $space-medium;
 
 .snack-bar-wrapper {
   @include display-flex(row);
   @include align-items(center);
-  padding: $snack-bar-padding;
-  background: $snack-bar-light-bg-color;
-  color: $snack-bar-light-color;
-
-  &.snack-bar-dark {
-    background: $snack-bar-dark-bg-color;
-    color: $snack-bar-dark-color;
-  }
 
   .snack-bar-spacer {
-    width: $space-medium;
-    height: 1px;
+    width: $snackbar-spacer-width;
+    height: $snackbar-spacer-height;
   }
 
   .snack-bar-icon {

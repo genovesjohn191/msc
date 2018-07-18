@@ -27,6 +27,7 @@ import {
   getSafeProperty
 } from '../../utilities';
 
+// TODO: Change it to media, and create a medium for singular
 @Component({
   selector: 'mcs-medias',
   templateUrl: './medias.component.html',

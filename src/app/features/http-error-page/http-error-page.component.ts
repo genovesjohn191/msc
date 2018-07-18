@@ -40,14 +40,15 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
     }
   }
   private _errorCode: McsHttpStatusCode = McsHttpStatusCode.Success;
+
   private _destroySubject = new Subject<void>();
   public get httpStatusCodeEnum(): any { return McsHttpStatusCode; }
 
   public constructor(
-    private _textProvider: McsTextContentProvider,
+    private _locationService: Location,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _locationService: Location
+    private _textProvider: McsTextContentProvider
   ) { }
 
   public ngOnInit() {

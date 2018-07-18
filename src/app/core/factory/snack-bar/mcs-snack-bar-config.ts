@@ -1,7 +1,8 @@
 import { ViewContainerRef } from '@angular/core';
 import {
   McsPlacementType,
-  McsAlignmentType
+  McsAlignmentType,
+  McsThemeType
 } from '../../core.types';
 
 export class McsSnackBarConfig {
@@ -9,6 +10,7 @@ export class McsSnackBarConfig {
   public data?: any = null;
   public viewContainerRef?: ViewContainerRef;
   public duration?: number = null;
+  public theme: McsThemeType = 'dark';
   public verticalPlacement: McsPlacementType = 'bottom';
   public horizontalAlignment: McsAlignmentType = 'start';
   public customClass?: string;

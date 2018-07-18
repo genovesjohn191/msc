@@ -236,6 +236,7 @@ export class ServerCreateDetailsComponent implements
     serverCreate.network.ipAllocationMode = serverInput.serverNetwork.ipAllocationMode;
     serverCreate.network.ipAddress = serverInput.serverNetwork.customIpAddress;
 
+    // TODO: Add mapping of object for ordering fields
     if (this.resource.serviceType === ResourceServiceType.Managed) {
       // Create Order item
       let orderItem = new OrderItemCreate();
@@ -272,6 +273,7 @@ export class ServerCreateDetailsComponent implements
     serverClone.clientReferenceObject = new ServerClientObject();
     serverClone.clientReferenceObject.serverId = serverInput.targetServer.id;
 
+    // TODO: Add mapping of object for ordering fields
     if (this.resource.serviceType === ResourceServiceType.Managed) {
       // Create order item
       let orderItem = new OrderItemCreate();

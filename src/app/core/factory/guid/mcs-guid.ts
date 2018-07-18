@@ -57,11 +57,4 @@ export class McsGuid {
   public toString(): string {
     return this._value;
   }
-
-  /**
-   * Returns the JSON representation of the GUID
-   */
-  public toJSON(): any {
-    return { value: this._value };
-  }
 }
