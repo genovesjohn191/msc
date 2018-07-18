@@ -11,7 +11,7 @@ import {
   McsApiJob
 } from '../../../../core';
 import { unsubscribeSubject } from '../../../../utilities';
-import { ServerCreateService } from '../server-create.service';
+import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
 
 @Component({
   selector: 'mcs-server-create-provisioning',
@@ -27,7 +27,7 @@ export class ServerCreateProvisioningComponent implements OnInit, OnDestroy {
   constructor(
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,
-    private _serverCreateService: ServerCreateService
+    private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) { }
 
   public ngOnInit() {
@@ -44,7 +44,7 @@ export class ServerCreateProvisioningComponent implements OnInit, OnDestroy {
    * Listens to every jobs changes on the factory
    */
   private _listenToJobsChanges(): void {
-    this._serverCreateService.jobsChanges
+    this._serverCreateFlyweightContext.jobsChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => {
         this.jobs = response;

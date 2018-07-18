@@ -3,7 +3,7 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty, getSafeProperty } from '../../utilities';
 
 @Injectable()
 export class LoaderService {
@@ -62,9 +62,15 @@ export class LoaderService {
    * Returns true when all the subscriptions are removed
    */
   public isActive(): boolean {
-    let subscriptionEmpty = isNullOrEmpty(this._subscriptions)
-      || this._subscriptions.size === 0;
-    return !subscriptionEmpty;
+    let subscriptionsCount = getSafeProperty(this._subscriptions, (obj) => obj.size);
+    if (isNullOrEmpty(subscriptionsCount)) { return false; }
+
+    let hasActive: boolean = false;
+    this._subscriptions.forEach((subscription) => {
+      if (hasActive) { return; }
+      hasActive = getSafeProperty(subscription, (obj) => !obj.closed);
+    });
+    return hasActive;
   }
 
   /**

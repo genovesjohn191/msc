@@ -8,7 +8,8 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewInit,
+  AfterContentInit
 } from '@angular/core';
 import {
   Subscription,
@@ -51,7 +52,7 @@ let nextUniqueId = 0;
   }
 })
 
-export class LoaderComponent implements AfterViewInit, OnDestroy {
+export class LoaderComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   @Input()
   public id: string = `mcs-loader-${nextUniqueId++}`;
 
@@ -60,7 +61,8 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
   public set subscriptions(value: Subscription | Subscription[]) {
     if (this._subscriptions !== value) {
       this._subscriptions = value;
-      this._loaderService.setSubscribers(this.subscriptions);
+      this._loaderService.setSubscribers(this._subscriptions);
+      if (!this.subscriptionsActive) { this._hideLoader(); }
     }
   }
   private _subscriptions: Subscription | Subscription[];
@@ -99,6 +101,15 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
     this._targetElements = new Array();
   }
 
+  public ngAfterContentInit(): void {
+    // We really need this to set immediately in order to show
+    // the content elements before showing the loader
+    Promise.resolve().then(() => {
+      this._setTargetElements();
+      if (!this.subscriptionsActive) { this._hideLoader(); }
+    });
+  }
+
   public ngAfterViewInit(): void {
     Promise.resolve().then(() => {
       this._setTargetElements();
@@ -108,6 +119,13 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
 
   public ngOnDestroy(): void {
     unsubscribeSubject(this._destroySubject);
+  }
+
+  /**
+   * Returns true when there is an active subscriptions
+   */
+  public get subscriptionsActive(): boolean {
+    return this._loaderService.isActive();
   }
 
   /**
@@ -144,7 +162,9 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
 
     Promise.resolve().then(() => {
       this._hideTargetElements();
-      this._loaderComponentHandler.createComponent();
+      if (!isNullOrEmpty(this._loaderComponentHandler)) {
+        this._loaderComponentHandler.createComponent();
+      }
       this._loaderIsVisible = true;
       this._changeDetectorRef.markForCheck();
     });
@@ -158,7 +178,9 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
 
     Promise.resolve().then(() => {
       this._showTargetElements();
-      this._loaderComponentHandler.removeComponent();
+      if (!isNullOrEmpty(this._loaderComponentHandler)) {
+        this._loaderComponentHandler.removeComponent();
+      }
       this._loaderIsVisible = false;
       this._changeDetectorRef.markForCheck();
     });
@@ -194,7 +216,10 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
    * Sets the target element for reference
    */
   private _setTargetElements(): void {
-    if (isNullOrEmpty(this._targetElement)) { return; }
+    let targetElementsObtained = isNullOrEmpty(this._targetElement)
+      || !isNullOrEmpty(this._targetElements);
+    if (targetElementsObtained) { return; }
+
     let targetElement = this._targetElement.nativeElement as HTMLElement;
     clearArrayRecord(this._targetElements);
 

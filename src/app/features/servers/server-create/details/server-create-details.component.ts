@@ -62,8 +62,8 @@ import {
 } from '../../../orders';
 import { WizardStepNextDirective } from '../../../../shared';
 import { ServersService } from '../../servers.service';
-import { ServerCreateService } from '../server-create.service';
 import { ServerCreateDetailsBase } from './server-create-details.base';
+import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
 
 @Component({
   selector: 'mcs-server-create-details',
@@ -104,7 +104,7 @@ export class ServerCreateDetailsComponent implements
     private _textContentProvider: McsTextContentProvider,
     private _formGroupService: McsFormGroupService,
     private _errorHandlerService: McsErrorHandlerService,
-    private _createServerService: ServerCreateService,
+    private _serverCreateFlyweightContext: ServerCreateFlyweightContext,
     private _serversService: ServersService,
     private _ordersService: OrdersService
   ) {
@@ -130,7 +130,7 @@ export class ServerCreateDetailsComponent implements
             this.faCreationForms.push(creationDetails.getCreationForm());
           });
         }
-        this._createServerService.setCreationFormArray(this.faCreationForms);
+        this._serverCreateFlyweightContext.setCreationFormArray(this.faCreationForms);
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -200,8 +200,8 @@ export class ServerCreateDetailsComponent implements
           .subscribe((response) => {
             if (isNullOrEmpty(response)) { return; }
             response instanceof McsApiJob ?
-              this._createServerService.setJob(response) :
-              this._createServerService.setOrderDetails(response);
+              this._serverCreateFlyweightContext.setJob(response) :
+              this._serverCreateFlyweightContext.setOrderDetails(response);
             this._proceedToNextStep();
           });
       }
@@ -309,7 +309,7 @@ export class ServerCreateDetailsComponent implements
    * Listens to resource changes
    */
   private _listenToResourceChanges(): void {
-    this._createServerService.resourceChanges
+    this._serverCreateFlyweightContext.resourceChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe((updatedResource) => {
         // Clear the record in order to get a new instance of the base component

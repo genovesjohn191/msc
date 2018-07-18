@@ -130,7 +130,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Returns true when all jobs are completed
    */
   public get allJobsCompleted(): boolean {
-    let inProgressJob = this.jobs.find((job) => {
+    let inProgressJob = this.jobs && this.jobs.find((job) => {
       return job.dataStatus !== McsDataStatus.Success;
     });
     return isNullOrEmpty(inProgressJob) && this.hasJobs;
@@ -140,7 +140,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Returns true when some of the jobs is error
    */
   public get hasErrorJobs(): boolean {
-    let errorJob = this.jobs.find((job) => {
+    let errorJob = this.jobs && this.jobs.find((job) => {
       return job.dataStatus === McsDataStatus.Error;
     });
     return !isNullOrEmpty(errorJob) && this.hasJobs;
