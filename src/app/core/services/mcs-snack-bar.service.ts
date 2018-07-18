@@ -48,7 +48,7 @@ export class McsSnackBarService {
    * @param config Configuration of the snack-bar
    */
   public open<T>(
-    portal: McsComponentType<T> | TemplateRef<T>,
+    portal: McsComponentType<T> | TemplateRef<T> | string,
     config: McsSnackBarConfig = new McsSnackBarConfig()
   ): McsSnackBarRef<T> {
 
@@ -129,7 +129,7 @@ export class McsSnackBarService {
    * @param config Configuration of the snack-bar
    */
   private _attachSnackBarContent<T>(
-    portal: McsComponentType<T> | TemplateRef<T>,
+    portal: McsComponentType<T> | TemplateRef<T> | string,
     snackBarContainer: McsSnackBarContainerComponent,
     overlayRef: McsOverlayRef,
     config: McsSnackBarConfig
@@ -139,11 +139,17 @@ export class McsSnackBarService {
     // to modify and close it.
     let snackBarRef = new McsSnackBarRef<any>(overlayRef, snackBarContainer, config.id);
 
-    // Attach component or template based on portal type
+    // Attach component, template or string based on portal type
     if (portal instanceof TemplateRef) {
+
       let templateRef = snackBarContainer.attachTemplate(new McsPortalTemplate(portal, null!));
       snackBarRef.portalInstance = templateRef;
+    } else if (typeof portal === 'string') {
+
+      let messageInstance = snackBarContainer.attachMessage(portal as string);
+      snackBarRef.portalInstance = messageInstance;
     } else {
+
       let injector = this._createInjector<T>(config, snackBarRef, snackBarContainer);
       let componentRef = snackBarContainer.attachComponent(
         new McsPortalComponent(portal, undefined, undefined, injector)

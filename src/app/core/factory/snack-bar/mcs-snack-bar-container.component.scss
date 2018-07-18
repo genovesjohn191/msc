@@ -2,15 +2,29 @@
 
 $snack-bar-container-offset: 24px;
 $snack-bar-container-border-radius: $border-radius-small;
+$snack-bar-container-padding: $space-small $space-medium;
+// Dark theme
+$snack-bar-container-dark-bg-color: $dark-bg-color;
+$snack-bar-container-dark-color: $dark-bg-text-color;
+// Light theme
+$snack-bar-container-light-bg-color: $light-bg-color;
+$snack-bar-container-light-color: $light-bg-text-color;
 
 .snack-bar-container-wrapper {
   display: block;
-  border-radius: $snack-bar-container-border-radius;
-  box-sizing: border-box;
   overflow: hidden;
+  padding: $snack-bar-container-padding;
+  background: $snack-bar-container-dark-bg-color;
+  color: $snack-bar-container-dark-color;
+  @include border-radius($snack-bar-container-border-radius);
   @include transform(translateY(100%) translateY($snack-bar-container-offset));
 
   &.top-position {
     @include transform(translateY(-100%) translateY(-$snack-bar-container-offset));
+  }
+
+  &.snack-bar-container-dark {
+    background: $snack-bar-container-light-bg-color;
+    color: $snack-bar-container-light-color;
   }
 }
