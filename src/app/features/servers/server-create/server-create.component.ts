@@ -38,11 +38,13 @@ import {
 import { ServerServiceType } from '../models';
 import { ServerCreateService } from './server-create.service';
 import { ServerCreateDetailsComponent } from './details/server-create-details.component';
+import { ServerCreateFlyweightContext } from './server-create-flyweight.context';
 
 @Component({
   selector: 'mcs-server-create',
   templateUrl: 'server-create.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ServerCreateFlyweightContext]
 })
 
 export class ServerCreateComponent implements
@@ -76,7 +78,8 @@ export class ServerCreateComponent implements
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourceRepository: ResourcesRepository,
-    private _serverCreateService: ServerCreateService
+    private _serverCreateService: ServerCreateService,
+    private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) {
   }
 
@@ -166,7 +169,7 @@ export class ServerCreateComponent implements
       .subscribe((updatedResource) => {
         if (isNullOrEmpty(updatedResource)) { return; }
         this.selectedResource = updatedResource;
-        this._serverCreateService.setResource(this.selectedResource);
+        this._serverCreateFlyweightContext.setResource(this.selectedResource);
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -175,7 +178,7 @@ export class ServerCreateComponent implements
    * Listens to each form array changes
    */
   private _listenToFormArrayChanges(): void {
-    this._serverCreateService.formArrayChanges
+    this._serverCreateFlyweightContext.formArrayChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe((_formArray) => {
         this.faCreationForm = _formArray;

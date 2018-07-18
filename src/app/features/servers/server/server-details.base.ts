@@ -69,7 +69,6 @@ export abstract class ServerDetailsBase {
   ) {
     this.server = new Server();
     this.serverResource = new Resource();
-    this.serverResourceSubscription = new Subscription();
   }
 
   protected initialize(): void {
