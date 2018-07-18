@@ -10,24 +10,35 @@
         {{ textContent.profile }}
       </a>
     </mcs-list-item> -->
-    <mcs-list-item>
+    <mcs-list-item *mcsAccessControl="['TicketView']">
       <a cursor="pointer" [routerLink]="['/tickets']"
-        *mcsAccessControl="['TicketView']" (click)="notifySelectionChange('tickets')"
+        (click)="notifySelectionChange('tickets')"
         mcsEventTracker="navigate-to-tickets"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
         {{ textContent.tickets }}
       </a>
     </mcs-list-item>
-    <mcs-list-item>
-      <a cursor="pointer" [href]="macviewOrdersUrl" target="_blank"
-        *mcsAccessControl="['OrderView']"
-        (click)="notifySelectionChange('orders')"
-        mcsEventTracker="navigate-to-orders"
-        mcsEventCategory="navigation"
-        mcsEventLabel="user-panel">
-        {{ textContent.orders }}
-      </a>
+    <mcs-list-item *mcsAccessControl="['OrderView']">
+      <ng-container *mcsAccessControl="[]; feature: 'enableOrdering'; else: macviewOrdersTemplate">
+        <a cursor="pointer" [routerLink]="['/orders']"
+          (click)="notifySelectionChange('orders')"
+          mcsEventTracker="navigate-to-orders"
+          mcsEventCategory="navigation"
+          mcsEventLabel="user-panel">
+          {{ textContent.orders }}
+        </a>
+      </ng-container>
+
+      <ng-template #macviewOrdersTemplate>
+        <a cursor="pointer" [href]="macviewOrdersUrl" target="_blank"
+          (click)="notifySelectionChange('orders')"
+          mcsEventTracker="navigate-to-orders"
+          mcsEventCategory="navigation"
+          mcsEventLabel="user-panel">
+          {{ textContent.orders }}
+        </a>
+      </ng-template>
     </mcs-list-item>
     <mcs-list-item>
       <a cursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"

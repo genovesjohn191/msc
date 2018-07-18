@@ -21,7 +21,7 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
-  getRecordCountLabel
+  getSafeProperty
 } from '../../../utilities';
 
 @Component({
@@ -36,22 +36,6 @@ export class FirewallsComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  public get recordsFoundLabel(): string {
-    return getRecordCountLabel(
-      this.totalRecordCount,
-      this.textContent.dataSingular,
-      this.textContent.dataPlural);
-  }
-
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this._firewallsRepository) ? 0 :
-      this._firewallsRepository.totalRecordsCount;
-  }
-
-  public get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_FIREWALLS_LISTING;
-  }
 
   public get cogIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COG;
@@ -102,6 +86,21 @@ export class FirewallsComponent
     // observable merge work as expected, since it is closing the
     // subscription when error occured.
     this.initializeDatasource();
+  }
+
+  /**
+   * Returns the totals record found in firewalls
+   */
+  protected get totalRecordsCount(): number {
+    return getSafeProperty(this._firewallsRepository,
+      (obj) => obj.totalRecordsCount, 0);
+  }
+
+  /**
+   * Returns the column settings key for the filter selector
+   */
+  protected get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_FIREWALLS_LISTING;
   }
 
   /**

@@ -1,81 +1,76 @@
-<div class="limited-view">
-  <!-- Loader settings -->
-  <div [mcsLoader]="serverResourceSubscription"
-    [mcsLoaderHideElement]="snapshotContent"
-    [mcsLoaderText]="textContent.loading"
-    mcsLoaderOrientation="top"></div>
+<mcs-loader [subscriptions]="serverResourceSubscription"
+  [loadingText]="textContent.loading"
+  loadingPlacement="top">
 
-  <div #snapshotContent>
-    <div class="container-wrapper">
-      <h4 class="container-header">{{ textContent.snapshotHeader }}</h4>
-      <div class="vspace-medium space-between-inline-items">
-        <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
-        <div>
-          <button mcsButton size="small" arrow="right"
-            [disabled]="!enabledActions"
-            (click)="createSnapshot()">
-            {{ textContent.createSnapshot }}
-          </button>
-        </div>
-      </div>
+  <div class="container-wrapper">
+    <h4 class="container-header">{{ textContent.snapshotHeader }}</h4>
+    <div class="vspace-medium space-between-inline-items">
+      <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
       <div>
-        <strong class="space-bottom-small block">{{ textContent.snapshots }}</strong>
+        <button mcsButton size="small" arrow="right"
+          [disabled]="!enabledActions"
+          (click)="createSnapshot()">
+          {{ textContent.createSnapshot }}
+        </button>
+      </div>
+    </div>
+    <div>
+      <strong class="space-bottom-small block">{{ textContent.snapshots }}</strong>
 
-        <!-- Snapshots -->
-        <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-          <mcs-data-status-success mcsDataSuccess>
-            <ng-container [ngSwitch]="creatingSnapshot">
-              <ng-container *ngSwitchCase="false">
-                <div class="space-between-inline-items">
-                  <div class="inline-items-xsmall">
-                    <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
-                      size="small" [mcsTooltip]="server.processingText"></mcs-icon>
-                    <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
-                    <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
-                  </div>
-                  <div [disabled]="!enabledActions" class="inline-items-medium text-right">
-                    <a (click)="restoreSnapshot(snapshot)">
-                      {{ textContent.restoreSnapshot }}
-                    </a>
-                    <a (click)="deleteSnapshot(snapshot)" class="space-left-small">
-                      {{ textContent.deleteSnapshot }}
-                    </a>
-                  </div>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchDefault>
+      <!-- Snapshots -->
+      <mcs-data-status [dataStatusFactory]="dataStatusFactory">
+        <mcs-data-status-success mcsDataSuccess>
+          <ng-container [ngSwitch]="creatingSnapshot">
+            <ng-container *ngSwitchCase="false">
+              <div class="space-between-inline-items">
                 <div class="inline-items-xsmall">
                   <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
                     size="small" [mcsTooltip]="server.processingText"></mcs-icon>
-                  <span>{{ textContent.creatingSnapshot }}</span>
+                  <span>{{ snapshot.createdOn | mcsStdDateFormat }}</span>
+                  <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
                 </div>
-              </ng-container>
+                <div [disabled]="!enabledActions" class="inline-items-medium text-right">
+                  <a (click)="restoreSnapshot(snapshot)">
+                    {{ textContent.restoreSnapshot }}
+                  </a>
+                  <a (click)="deleteSnapshot(snapshot)" class="space-left-small">
+                    {{ textContent.deleteSnapshot }}
+                  </a>
+                </div>
+              </div>
             </ng-container>
-          </mcs-data-status-success>
+            <ng-container *ngSwitchDefault>
+              <div class="inline-items-xsmall">
+                <mcs-icon *ngIf="snapshotProcessing" [key]="spinnerIconKey"
+                  size="small" [mcsTooltip]="server.processingText"></mcs-icon>
+                <span>{{ textContent.creatingSnapshot }}</span>
+              </div>
+            </ng-container>
+          </ng-container>
+        </mcs-data-status-success>
 
-          <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ textContent.loadingContent }}</span>
-          </mcs-data-status-in-progress>
+        <mcs-data-status-in-progress mcsDataInProgress>
+          <span>{{ textContent.loadingContent }}</span>
+        </mcs-data-status-in-progress>
 
-          <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ textContent.noSnapshots }}</span>
-          </mcs-data-status-empty>
+        <mcs-data-status-empty mcsDataEmpty>
+          <span>{{ textContent.noSnapshots }}</span>
+        </mcs-data-status-empty>
 
-          <mcs-data-status-error mcsDataError>
-            <span>{{ textContent.errorGettingSnapshots }}</span>
-          </mcs-data-status-error>
-        </mcs-data-status>
-      </div>
-    </div>
-
-    <!-- Server Backups -->
-    <!-- TODO: Remove ngIf when Backups is working -->
-    <div *ngIf="false" class="container-wrapper">
-      <h4 class="container-header">{{ textContent.serverBackups }}</h4>
-      <p>{{ textContent.serverBackupsDescription }}</p>
-      <div>
-        <button mcsButton size="small" [disabled]="true">{{ textContent.requestRestore }}</button>
-      </div>
+        <mcs-data-status-error mcsDataError>
+          <span>{{ textContent.errorGettingSnapshots }}</span>
+        </mcs-data-status-error>
+      </mcs-data-status>
     </div>
   </div>
-</div>
+
+  <!-- Server Backups -->
+  <!-- TODO: Remove ngIf when Backups is working -->
+  <div *ngIf="false" class="container-wrapper">
+    <h4 class="container-header">{{ textContent.serverBackups }}</h4>
+    <p>{{ textContent.serverBackupsDescription }}</p>
+    <div>
+      <button mcsButton size="small" [disabled]="true">{{ textContent.requestRestore }}</button>
+    </div>
+  </div>
+</mcs-loader>

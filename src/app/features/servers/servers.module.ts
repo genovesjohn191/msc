@@ -39,13 +39,18 @@ import {
   ServerBackupsComponent,
   ServerServicesComponent
 } from './server/';
+/** Server Provisioning */
+import { ServerProvisioningComponent } from './server-provisioning/server-provisioning.component';
 /** Create Servers */
 import {
-  CreateServerComponent,
-  NewServerComponent,
-  CloneServerComponent,
-  ServerProvisioningPageComponent
-} from './create-server';
+  ServerCreateComponent,
+  ServerCreateDetailsComponent,
+  ServerNewComponent,
+  ServerCloneComponent,
+  ServerCreateAddOnsComponent,
+  ServerCreateConfirmComponent,
+  ServerCreateProvisioningComponent
+} from './server-create';
 /** VDC */
 import {
   VdcComponent,
@@ -93,10 +98,14 @@ import { SharedModule } from '../../shared';
     ServerManageNetworkComponent,
     ServerManageMediaComponent,
     ServerManageScaleComponent,
-    ServerProvisioningPageComponent,
-    CreateServerComponent,
-    NewServerComponent,
-    CloneServerComponent,
+    ServerProvisioningComponent,
+    ServerCreateComponent,
+    ServerCreateDetailsComponent,
+    ServerNewComponent,
+    ServerCloneComponent,
+    ServerCreateAddOnsComponent,
+    ServerCreateConfirmComponent,
+    ServerCreateProvisioningComponent,
     ProvisioningNotificationsComponent,
     VdcComponent,
     VdcOverviewComponent,

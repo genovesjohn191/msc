@@ -63,4 +63,5 @@ $form-field-size-large: 400px;
 .form-field-block {
   @include display-flex(column);
   @include set-items-interval($form-field-inline-spacing);
+  margin-bottom: $space-medium;
 }

@@ -64,6 +64,7 @@ import {
 } from './data';
 /** Datastatus */
 import { DataStatusDefDirective } from './data-status';
+import { TableArrayDataSource } from './table-array.datasource';
 
 @Component({
   selector: 'mcs-table',
@@ -89,12 +90,15 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * An observable datasource to bind inside the table data
    */
   @Input()
-  public get dataSource(): McsDataSource<T> { return this._dataSource; }
-  public set dataSource(value: McsDataSource<T>) {
+  public set dataSource(value: McsDataSource<T> | T[]) {
     if (this._dataSource !== value) {
-      this._listenToDataLoading(value);
-      this._switchDataSource(value);
-      this._dataSource = value;
+      // Convert the actual data source based on its type
+      let actualSource = Array.isArray(value) ?
+        new TableArrayDataSource(value) : value;
+
+      this._listenToDataLoading(actualSource);
+      this._switchDataSource(actualSource);
+      this._dataSource = actualSource;
     }
   }
   private _dataSource: McsDataSource<T>;
@@ -185,7 +189,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
 
   public ngAfterContentChecked() {
     this._updateTableData();
-    if (this.dataSource && !this._dataSourceSubscription) {
+    if (this._dataSource && !this._dataSourceSubscription) {
       this._getDatasourceData();
     }
   }
@@ -212,11 +216,11 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * @param newDatasource New Datasource obtained
    */
   private _switchDataSource(newDatasource: McsDataSource<T>) {
-    if (isNullOrEmpty(newDatasource) || isNullOrEmpty(this.dataSource)) { return; }
+    if (isNullOrEmpty(newDatasource) || isNullOrEmpty(this._dataSource)) { return; }
 
     this._data = [];
     if (newDatasource) {
-      this.dataSource.disconnect();
+      this._dataSource.disconnect();
     }
 
     // We need to set the subscription into null in order
@@ -395,7 +399,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * `@Note` This will run asynchronously
    */
   private _getDatasourceData(): void {
-    this._dataSourceSubscription = this.dataSource.connect()
+    this._dataSourceSubscription = this._dataSource.connect()
       .pipe(
         catchError((error) => {
           this.dataStatus = McsDataStatus.Error;

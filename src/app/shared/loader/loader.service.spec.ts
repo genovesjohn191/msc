@@ -9,7 +9,7 @@ import {
 } from 'rxjs';
 import { LoaderService } from './loader.service';
 
-describe('LoaderDirective', () => {
+describe('LoaderService', () => {
 
   /** Stub Services/Components */
   let loaderService: LoaderService;
@@ -45,21 +45,9 @@ describe('LoaderDirective', () => {
       expect(loaderService.isActive()).toBeTruthy();
     });
 
-    it(`should set the animation to undefined to re-display the loader`, () => {
-      expect(loaderService.fadeOut).toBeUndefined();
-    });
-
     it(`should set the active flag to false when the subscription is ended`, () => {
       if (subscription) { subscription.unsubscribe(); }
       expect(loaderService.isActive()).toBeFalsy();
-    });
-
-    it(`should set the animation to fadeOut when the subscription is ended`, () => {
-      if (subscription) {
-        subscription.unsubscribe();
-        loaderService.isActive();
-      }
-      expect(loaderService.fadeOut).toBe('fadeOut');
     });
   });
 
@@ -83,21 +71,10 @@ describe('LoaderDirective', () => {
       expect(loaderService.isActive()).toBeTruthy();
     });
 
-    it(`should set the animation to undefined to re-display the loader`, () => {
-      expect(loaderService.fadeOut).toBeUndefined();
-    });
-
     it(`should set the active flag to false when all of the subscriptions are ended`, () => {
       if (subscription1) { subscription1.unsubscribe(); }
       if (subscription2) { subscription2.unsubscribe(); }
       expect(loaderService.isActive()).toBeFalsy();
-    });
-
-    it(`should set the animation to fadeOut when all of the subscriptions are ended`, () => {
-      if (subscription1) { subscription1.unsubscribe(); }
-      if (subscription2) { subscription2.unsubscribe(); }
-      loaderService.isActive();
-      expect(loaderService.fadeOut).toBe('fadeOut');
     });
   });
 });

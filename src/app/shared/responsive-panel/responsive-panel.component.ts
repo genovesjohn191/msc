@@ -6,8 +6,8 @@ import {
   ElementRef,
   ChangeDetectorRef,
   Renderer2,
-  AfterContentInit,
-  AfterContentChecked,
+  AfterViewInit,
+  AfterViewChecked,
   OnDestroy,
   ContentChildren,
   QueryList,
@@ -57,7 +57,7 @@ let nextUniqueId = 0;
   }
 })
 
-export class ResponsivePanelComponent implements AfterContentInit, AfterContentChecked, OnDestroy {
+export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked, OnDestroy {
 
   @Input()
   public id: string = `mcs-responsive-panel-${nextUniqueId++}`;
@@ -118,7 +118,7 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
     private _viewportService: McsViewportService
   ) { }
 
-  public ngAfterContentInit(): void {
+  public ngAfterViewInit(): void {
     // We need to listen to changes on header
     // in order to cater the scenarios of dynamic adding of responsive panel item
     this.panelItems.changes
@@ -130,7 +130,7 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
     this._listenToViewportChange();
   }
 
-  public ngAfterContentChecked(): void {
+  public ngAfterViewChecked(): void {
     // If the number of action items have changed, check if scrolling should be enabled
     if (this._panelItemsCount !== this.panelItems.length) {
       this._updatePagination();
@@ -256,9 +256,7 @@ export class ResponsivePanelComponent implements AfterContentInit, AfterContentC
       .subscribe((item) => {
         refreshView(() => {
           this._selectedPanelItem = item;
-          if (this.showPaginationControls) {
-            this._scrollToElement(item);
-          }
+          if (this.showPaginationControls) { this._scrollToElement(item); }
           if (item.selectable) {
             this.panelBorderBar.alignToElement(item.elementRef);
           }

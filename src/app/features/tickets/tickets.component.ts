@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 import {
   isNullOrEmpty,
   refreshView,
-  getRecordCountLabel
+  getSafeProperty
 } from '../../utilities';
 import { TicketsRepository } from './tickets.repository';
 import { TicketsDataSource } from './tickets.datasource';
@@ -37,22 +37,6 @@ export class TicketsComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  public get recordsFoundLabel(): string {
-    return getRecordCountLabel(
-      this.totalRecordCount,
-      this.textContent.dataSingular,
-      this.textContent.dataPlural);
-  }
-
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this._ticketsRepository) ? 0 :
-      this._ticketsRepository.totalRecordsCount;
-  }
-
-  public get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_TICKET_LISTING;
-  }
 
   public get addIconKey(): string {
     return CoreDefinition.ASSETS_FONT_PLUS;
@@ -106,6 +90,21 @@ export class TicketsComponent
     // observable merge work as expected, since it is closing the
     // subscription when error occured.
     this.initializeDatasource();
+  }
+
+  /**
+   * Returns the totals record found in tickets
+   */
+  protected get totalRecordsCount(): number {
+    return getSafeProperty(this._ticketsRepository,
+      (obj) => obj.totalRecordsCount, 0);
+  }
+
+  /**
+   * Returns the column settings key for the filter selector
+   */
+  protected get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_TICKET_LISTING;
   }
 
   /**

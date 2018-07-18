@@ -23,8 +23,8 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
-  getRecordCountLabel,
-  unsubscribeSafely
+  unsubscribeSafely,
+  getSafeProperty
 } from '../../utilities';
 
 @Component({
@@ -42,22 +42,6 @@ export class MediasComponent
   // Subscription
   private _selectionModeSubscription: any;
   private _notificationsChangeSubscription: any;
-
-  public get recordsFoundLabel(): string {
-    return getRecordCountLabel(
-      this.totalRecordCount,
-      this.textContent.dataSingular,
-      this.textContent.dataPlural);
-  }
-
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this._mediasRepository) ? 0 :
-      this._mediasRepository.totalRecordsCount;
-  }
-
-  public get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_MEDIA_LISTING;
-  }
 
   public constructor(
     _browserService: McsBrowserService,
@@ -86,14 +70,6 @@ export class MediasComponent
   }
 
   /**
-   * Returns media attached to server count and label
-   * @param media Media
-   */
-  public getAttachedToCountLabel(media: Media): string {
-    return getRecordCountLabel(media.attachedTo, 'Server', 'Servers');
-  }
-
-  /**
    * This will navigate to new media page
    */
   public onClickNewMediaButton() {
@@ -117,6 +93,21 @@ export class MediasComponent
     // observable merge work as expected, since it is closing the
     // subscription when error occured.
     this.initializeDatasource();
+  }
+
+  /**
+   * Returns the totals record found in orders
+   */
+  protected get totalRecordsCount(): number {
+    return getSafeProperty(this._mediasRepository,
+      (obj) => obj.totalRecordsCount, 0);
+  }
+
+  /**
+   * Returns the column settings key for the filter selector
+   */
+  protected get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_MEDIA_LISTING;
   }
 
   /**

@@ -72,7 +72,6 @@ export * from './enumerations/mcs-http-method.enum';
 /** Interfaces */
 export * from './interfaces/mcs-data-source.interface';
 export * from './interfaces/mcs-paginator.interface';
-export * from './interfaces/mcs-loader.interface';
 export * from './interfaces/mcs-search.interface';
 export * from './interfaces/mcs-component-type.interface';
 export * from './interfaces/mcs-scrollable.interface';
@@ -102,6 +101,7 @@ export * from './factory/overlay/mcs-overlay-ref';
 export * from './factory/overlay/mcs-overlay-state';
 export * from './factory/portal/mcs-portal-component';
 export * from './factory/portal/mcs-portal-template';
+export * from './factory/guid/mcs-guid';
 export * from './factory/data-status/mcs-data-status-factory';
 export * from './factory/serialization/mcs-enum-serialization-base';
 export * from './factory/serialization/mcs-date-serialization';

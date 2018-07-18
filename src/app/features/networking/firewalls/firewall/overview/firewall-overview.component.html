@@ -1,102 +1,100 @@
-<div class="limited-view content-grid">
-  <div class="grid-row">
+<div class="grid-row">
+  <div class="grid-column container-wrapper break-on-small">
+    <h4 class="container-header">{{ textContent.properties.title }}</h4>
+    <mcs-list spacing="xsmall">
+      <!-- Model -->
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.properties.model }}:</span>
+        <span [innerHTML]="firewall.model | mcsDataLabel"></span>
+      </mcs-list-item>
+      <!-- CPU -->
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.properties.cpu }}:</span>
+        <span [innerHTML]="firewall.cpuCountLabel | mcsDataLabel"></span>
+      </mcs-list-item>
+      <!-- RAM -->
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.properties.ram }}:</span>
+        <span>{{ firewall.memoryMB | mcsDataSize: 'MB' }}</span>
+      </mcs-list-item>
+    </mcs-list>
+  </div>
+
+  <div class="grid-column container-wrapper break-on-small">
+    <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
+    <mcs-list spacing="xsmall">
+      <!-- Service -->
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.supportIdentifiers.service }}:</span>
+        <span [innerHTML]="firewall.serviceId | mcsDataLabel"></span>
+      </mcs-list-item>
+      <!-- Serial -->
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.supportIdentifiers.serial }}:</span>
+        <span [innerHTML]="firewall.serialNumber | mcsDataLabel"></span>
+      </mcs-list-item>
+    </mcs-list>
+  </div>
+</div>
+
+<div class="grid-row">
+  <div class="grid-column container-wrapper break-on-small">
+    <h4 class="container-header">{{ textContent.status.title }}</h4>
+    <mcs-list spacing="xsmall">
+      <!-- Device Status -->
+      <mcs-list-item class="form-field-inline">
+        <mcs-icon size="small" [key]="firewall.deviceStatusIconKey"></mcs-icon>
+        <span>{{ textContent.status.deviceStatus }}:</span>
+        <span>{{ firewall.deviceStatusLabel }}</span>
+      </mcs-list-item>
+      <!-- Connection Status -->
+      <mcs-list-item class="form-field-inline">
+        <mcs-icon size="small" [key]="firewall.connectionStatusIconKey"></mcs-icon>
+        <span>{{ textContent.status.connectionStatus }}:</span>
+        <span>{{ firewall.connectionStatusLabel }}</span>
+      </mcs-list-item>
+      <!-- Configuration Status -->
+      <mcs-list-item class="form-field-inline">
+        <mcs-icon size="small" [key]="firewall.configurationStatusIconKey"></mcs-icon>
+        <span>{{ textContent.status.configurationStatus }}:</span>
+        <span>{{ firewall.configurationStatusLabel }}</span>
+      </mcs-list-item>
+    </mcs-list>
+  </div>
+
+  <ng-container *ngIf="firewall?.utm?.hasUtmService; else topologyTemplate">
     <div class="grid-column container-wrapper break-on-small">
-      <h4 class="container-header">{{ textContent.properties.title }}</h4>
+      <h4 class="container-header">{{ textContent.utmServices.title }}</h4>
       <mcs-list spacing="xsmall">
-        <!-- Model -->
-        <mcs-list-item class="form-field-inline">
-          <span>{{ textContent.properties.model }}:</span>
-          <span [innerHTML]="firewall.model | mcsDataLabel"></span>
+        <!-- AV Expiry Date -->
+        <mcs-list-item *ngIf="firewall?.utm?.avExpiryDate" class="form-field-inline">
+          <mcs-icon size="small"
+            [key]="getLicenseIconKey(firewall?.utm?.avExpiryDate)"></mcs-icon>
+          <span>{{ textContent.utmServices.antivirus }}:</span>
+          <span>{{ getLicenseText(firewall?.utm?.avExpiryDate) }}</span>
         </mcs-list-item>
-        <!-- CPU -->
-        <mcs-list-item class="form-field-inline">
-          <span>{{ textContent.properties.cpu }}:</span>
-          <span [innerHTML]="firewall.cpuCountLabel | mcsDataLabel"></span>
+        <!-- Web Expiry Date -->
+        <mcs-list-item *ngIf="firewall?.utm?.webExpiryDate" class="form-field-inline">
+          <mcs-icon size="small"
+            [key]="getLicenseIconKey(firewall?.utm?.webExpiryDate)"></mcs-icon>
+          <span>{{ textContent.utmServices.webFiltering }}:</span>
+          <span>{{ getLicenseText(firewall?.utm?.webExpiryDate) }}</span>
         </mcs-list-item>
-        <!-- RAM -->
-        <mcs-list-item class="form-field-inline">
-          <span>{{ textContent.properties.ram }}:</span>
-          <span>{{ firewall.memoryMB | mcsDataSize: 'MB' }}</span>
+        <!-- Email Expiry Date -->
+        <mcs-list-item *ngIf="firewall?.utm?.emailExpiryDate" class="form-field-inline">
+          <mcs-icon size="small"
+            [key]="getLicenseIconKey(firewall?.utm?.emailExpiryDate)"></mcs-icon>
+          <span>{{ textContent.utmServices.emailFiltering }}:</span>
+          <span>{{ getLicenseText(firewall?.utm?.emailExpiryDate) }}</span>
         </mcs-list-item>
       </mcs-list>
     </div>
+  </ng-container>
+</div>
 
-    <div class="grid-column container-wrapper break-on-small">
-      <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
-      <mcs-list spacing="xsmall">
-        <!-- Service -->
-        <mcs-list-item class="form-field-inline">
-          <span>{{ textContent.supportIdentifiers.service }}:</span>
-          <span [innerHTML]="firewall.serviceId | mcsDataLabel"></span>
-        </mcs-list-item>
-        <!-- Serial -->
-        <mcs-list-item class="form-field-inline">
-          <span>{{ textContent.supportIdentifiers.serial }}:</span>
-          <span [innerHTML]="firewall.serialNumber | mcsDataLabel"></span>
-        </mcs-list-item>
-      </mcs-list>
-    </div>
-  </div>
-
-  <div class="grid-row">
-    <div class="grid-column container-wrapper break-on-small">
-      <h4 class="container-header">{{ textContent.status.title }}</h4>
-      <mcs-list spacing="xsmall">
-        <!-- Device Status -->
-        <mcs-list-item class="form-field-inline">
-          <mcs-icon size="small" [key]="firewall.deviceStatusIconKey"></mcs-icon>
-          <span>{{ textContent.status.deviceStatus }}:</span>
-          <span>{{ firewall.deviceStatusLabel }}</span>
-        </mcs-list-item>
-        <!-- Connection Status -->
-        <mcs-list-item class="form-field-inline">
-          <mcs-icon size="small" [key]="firewall.connectionStatusIconKey"></mcs-icon>
-          <span>{{ textContent.status.connectionStatus }}:</span>
-          <span>{{ firewall.connectionStatusLabel }}</span>
-        </mcs-list-item>
-        <!-- Configuration Status -->
-        <mcs-list-item class="form-field-inline">
-          <mcs-icon size="small" [key]="firewall.configurationStatusIconKey"></mcs-icon>
-          <span>{{ textContent.status.configurationStatus }}:</span>
-          <span>{{ firewall.configurationStatusLabel }}</span>
-        </mcs-list-item>
-      </mcs-list>
-    </div>
-
-    <ng-container *ngIf="firewall?.utm?.hasUtmService; else topologyTemplate">
-      <div class="grid-column container-wrapper break-on-small">
-        <h4 class="container-header">{{ textContent.utmServices.title }}</h4>
-        <mcs-list spacing="xsmall">
-          <!-- AV Expiry Date -->
-          <mcs-list-item *ngIf="firewall?.utm?.avExpiryDate" class="form-field-inline">
-            <mcs-icon size="small"
-              [key]="getLicenseIconKey(firewall?.utm?.avExpiryDate)"></mcs-icon>
-            <span>{{ textContent.utmServices.antivirus }}:</span>
-            <span>{{ getLicenseText(firewall?.utm?.avExpiryDate) }}</span>
-          </mcs-list-item>
-          <!-- Web Expiry Date -->
-          <mcs-list-item *ngIf="firewall?.utm?.webExpiryDate" class="form-field-inline">
-            <mcs-icon size="small"
-              [key]="getLicenseIconKey(firewall?.utm?.webExpiryDate)"></mcs-icon>
-            <span>{{ textContent.utmServices.webFiltering }}:</span>
-            <span>{{ getLicenseText(firewall?.utm?.webExpiryDate) }}</span>
-          </mcs-list-item>
-          <!-- Email Expiry Date -->
-          <mcs-list-item *ngIf="firewall?.utm?.emailExpiryDate" class="form-field-inline">
-            <mcs-icon size="small"
-              [key]="getLicenseIconKey(firewall?.utm?.emailExpiryDate)"></mcs-icon>
-            <span>{{ textContent.utmServices.emailFiltering }}:</span>
-            <span>{{ getLicenseText(firewall?.utm?.emailExpiryDate) }}</span>
-          </mcs-list-item>
-        </mcs-list>
-      </div>
-    </ng-container>
-  </div>
-
-  <div *ngIf="firewall?.utm?.hasUtmService" class="grid-row">
-    <ng-container *ngTemplateOutlet="topologyTemplate"></ng-container>
-    <div class="grid-column container-wrapper break-on-small"></div>
-  </div>
+<div *ngIf="firewall?.utm?.hasUtmService" class="grid-row">
+  <ng-container *ngTemplateOutlet="topologyTemplate"></ng-container>
+  <div class="grid-column container-wrapper break-on-small"></div>
 </div>
 
 <ng-template #topologyTemplate>

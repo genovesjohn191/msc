@@ -91,7 +91,7 @@ describe('TabGroupComponent', () => {
 
   describe('selectTab()', () => {
     beforeEach(async((() => {
-      component.tabGroupComponent.selectTab(
+      component.tabGroupComponent.onClickTab(
         component.tabGroupComponent.tabs.toArray()[1]
       );
     })));

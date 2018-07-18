@@ -4,7 +4,6 @@ import {
   TestBed
 } from '@angular/core/testing';
 import {
-  CoreDefinition,
   McsPaginator,
   McsSearch,
   McsDataStatus
@@ -69,19 +68,6 @@ describe('TicketsComponent', () => {
     });
   });
 
-  describe('totalRecordCount()', () => {
-    it('should get 0 to totalRecordCount', () => {
-      component.dataSource = undefined;
-      expect(component.totalRecordCount).toBe(0);
-    });
-  });
-
-  describe('columnSettingsKey()', () => {
-    it('should get the column settings key from the filter configuration', () => {
-      expect(component.columnSettingsKey).toBe(CoreDefinition.FILTERSELECTOR_TICKET_LISTING);
-    });
-  });
-
   describe('ngOnDestroy()', () => {
     it('should disconnect the datasource from connection', () => {
       spyOn(component.dataSource, 'disconnect');
@@ -126,11 +112,6 @@ describe('TicketsComponent', () => {
       spyOn(component.paginator, 'showLoading');
       component.dataSource.onCompletion(McsDataStatus.Success);
       expect(component.paginator.showLoading).toHaveBeenCalledTimes(1);
-    });
-
-    it('should set the totalRecordCount to 0 when disconnect method is called', () => {
-      component.dataSource.disconnect();
-      expect(component.totalRecordCount).toBe(0);
     });
   });
 });

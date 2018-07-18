@@ -2,14 +2,16 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   McsBrowserService,
   McsDeviceType
 } from '../services/mcs-browser.service';
 import {
   isNullOrEmpty,
-  unsubscribeSafely,
-  convertMapToJsonObject
+  convertMapToJsonObject,
+  unsubscribeSubject
 } from '../../utilities';
 import { McsSearch } from '../interfaces/mcs-search.interface';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
@@ -48,6 +50,8 @@ export abstract class McsTableListingBase<T> {
       this.changeDetectorRef.markForCheck();
     }
   }
+
+  private _baseDestroySubject = new Subject<void>();
 
   constructor(
     protected browserService: McsBrowserService,
@@ -109,6 +113,16 @@ export abstract class McsTableListingBase<T> {
   protected abstract initializeDatasource(): void;
 
   /**
+   * Returns the column settings filter key or the listing table
+   */
+  protected abstract get columnSettingsKey(): string;
+
+  /**
+   * Returns the total records count of the listing table
+   */
+  protected abstract get totalRecordsCount(): number;
+
+  /**
    * Retry the obtainment from the datasource when an error occured
    *
    * `@Note` Call this method when there is an error occured only
@@ -131,14 +145,15 @@ export abstract class McsTableListingBase<T> {
       this.dataColumns = [];
       this.dataColumns = null;
     }
-    unsubscribeSafely(this.browserServiceSubscription);
+    unsubscribeSubject(this._baseDestroySubject);
   }
 
   /**
    * Listen to any changes in size of the browser
    */
   private _listenToBroswerDeviceType(): void {
-    this.browserServiceSubscription = this.browserService.deviceTypeStream
+    this.browserService.deviceTypeStream
+      .pipe(takeUntil(this._baseDestroySubject))
       .subscribe((deviceType) => {
         this.isMobile = deviceType === McsDeviceType.MobileLandscape ||
           deviceType === McsDeviceType.MobilePortrait;

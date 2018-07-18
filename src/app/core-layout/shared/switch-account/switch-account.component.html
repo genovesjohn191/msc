@@ -15,22 +15,6 @@
     </mcs-list-item>
   </mcs-list>
 
-  <!-- Companies -->
-    <!-- Recent companies -->
-    <!-- TODO: not included in PH 1.0 -->
-    <!-- <mcs-list header="Recently accessed company accounts">
-      <mcs-list-item [ngStyle]="{position: 'relative'}" *ngIf="!companies">
-        <div [mcsLoader]="recentCompaniesSubscription"></div>
-      </mcs-list-item>
-      <mcs-list-item *ngFor="let item of (companies | mcsRecentCompaniesMax); trackBy: trackByFn">
-        <div class="labelled-icon switch-account-action" (click)="selectAccount(item)" cursor="pointer">
-          <mcs-icon color="white" [key]="userIconKey" size="small"></mcs-icon>
-          <span>{{ getTextFormat(item) }}</span>
-          <mcs-icon class="arrow-right" [key]="arrowRightBueIconKey" size="small"></mcs-icon>
-        </div>
-      </mcs-list-item>
-    </mcs-list> -->
-
   <!-- Company list -->
   <div class="block-items-medium">
     <mcs-search #search></mcs-search>

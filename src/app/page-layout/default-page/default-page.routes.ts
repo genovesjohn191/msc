@@ -10,7 +10,8 @@ import {
   toolsRoutes,
   productsRoutes,
   mediasRoutes,
-  httpErrorPageRoutes
+  httpErrorPageRoutes,
+  ordersRoutes
 } from '../../features';
 
 export const routes: Routes = [
@@ -28,8 +29,9 @@ export const routes: Routes = [
       ...toolsRoutes,
       ...productsRoutes,
       ...mediasRoutes,
+      ...ordersRoutes,
 
-      // New routes must be added on top of pageHttpErrorRoutes
+      // New routes must be added on top of this error route page
       ...httpErrorPageRoutes
     ]
   }

@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {
+  Subscription,
+  Subject
+} from 'rxjs';
 import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()
 export class LoaderService {
   /**
-   * Animation strategy for the loader and backdrop component
+   * Event that emits when the subscriptions data has changed
    */
-  private _fadeOut: string;
-  public get fadeOut(): string {
-    return this._fadeOut;
-  }
-  public set fadeOut(value: string) {
-    if (this._fadeOut !== value) {
-      this._fadeOut = value;
-    }
-  }
+  public subscriptionsChange = new Subject<Set<Subscription>>();
 
   /**
    * List of subscription to monitor by the loader
@@ -55,6 +50,7 @@ export class LoaderService {
     }
 
     // Add subscribers to all subscriptions
+    this.subscriptionsChange.next(this._subscriptions);
     this._subscriptions.forEach((item) => {
       if (item instanceof Subscription) {
         item.add(() => this._onCompletion(item));
@@ -63,15 +59,12 @@ export class LoaderService {
   }
 
   /**
-   * Determine whether the loader/subscriptions are still ongoing
+   * Returns true when all the subscriptions are removed
    */
   public isActive(): boolean {
-    if (isNullOrEmpty(this._subscriptions) || this._subscriptions.size === 0) {
-      this.fadeOut = 'fadeOut';
-      return false;
-    }
-    this.fadeOut = undefined;
-    return true;
+    let subscriptionEmpty = isNullOrEmpty(this._subscriptions)
+      || this._subscriptions.size === 0;
+    return !subscriptionEmpty;
   }
 
   /**
@@ -80,5 +73,6 @@ export class LoaderService {
    */
   private _onCompletion(_subscription: Subscription) {
     this._subscriptions.delete(_subscription);
+    this.subscriptionsChange.next(this._subscriptions);
   }
 }

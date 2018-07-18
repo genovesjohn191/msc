@@ -16,7 +16,8 @@ import {
 import {
   refreshView,
   isNullOrEmpty,
-  animateFactory
+  animateFactory,
+  getSafeProperty
 } from '../../../../../utilities';
 import { FirewallPolicy } from '../../models';
 import { FirewallsRepository } from '../../firewalls.repository';
@@ -48,23 +49,12 @@ export class FirewallPoliciesComponent
   public textContent: any;
   public selectedFirewallPolicy: FirewallPolicy;
 
-  public get columnSettingsKey(): string {
-    return CoreDefinition.FILTERSELECTOR_FIREWALL_POLICIES_LISTING;
-  }
-
   public get columnFilterIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
   }
 
   public get infoIconKey(): string {
     return CoreDefinition.ASSETS_SVG_CIRCLE_INFO_BLACK;
-  }
-
-  /**
-   * Returns the total record count of the policies
-   */
-  public get totalRecordCount(): number {
-    return isNullOrEmpty(this.dataSource) ? 0 : this.dataSource.totalRecordCount;
   }
 
   /**
@@ -145,6 +135,21 @@ export class FirewallPoliciesComponent
     // observable merge work as expected, since it is closing the
     // subscription when error occured.
     this.initializeDatasource();
+  }
+
+  /**
+   * Returns the total record count of the policies
+   */
+  protected get totalRecordsCount(): number {
+    return getSafeProperty(this.dataSource,
+      (obj) => obj.totalRecordCount, 0);
+  }
+
+  /**
+   * Returns the column settings key for the filter selector
+   */
+  protected get columnSettingsKey(): string {
+    return CoreDefinition.FILTERSELECTOR_FIREWALL_POLICIES_LISTING;
   }
 
   /**

@@ -15,12 +15,12 @@ import {
   ServerStorageComponent,
   ServerNicsComponent
 } from './server';
+import { ServerProvisioningComponent } from './server-provisioning/server-provisioning.component';
 import {
-  CreateServerComponent,
-  CreateServerService,
-  CreateServerGuard,
-  ServerProvisioningPageComponent
-} from './create-server';
+  ServerCreateComponent,
+  ServerCreateService,
+  ServerCreateGuard
+} from './server-create';
 import {
   VdcComponent,
   VdcOverviewComponent,
@@ -36,9 +36,9 @@ export const serversProviders: any[] = [
   ServerService,
   ServersRepository,
   ServersOsRepository,
-  VdcService,
-  CreateServerService,
-  CreateServerGuard
+  ServerCreateService,
+  ServerCreateGuard,
+  VdcService
 ];
 
 /**
@@ -50,13 +50,13 @@ export const serversRoutes: Routes = [
   },
   {
     path: 'servers/create',
-    component: CreateServerComponent,
-    canActivate: [CreateServerGuard],
+    component: ServerCreateComponent,
+    canActivate: [ServerCreateGuard],
     canDeactivate: [McsNavigateAwayGuard]
   },
   {
     path: 'servers/create/:id',
-    component: ServerProvisioningPageComponent
+    component: ServerProvisioningComponent
   },
   {
     path: 'servers/:id',

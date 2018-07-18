@@ -54,6 +54,7 @@ import { DirectivesModule } from './directives';
 import { FileDownloadModule } from './file-download/file-download.module';
 import { EventTrackerModule } from './event-tracker/event-tracker.module';
 import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
+import { NoteModule } from './note/note.module';
 
 @NgModule({
   imports: [
@@ -108,7 +109,8 @@ import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
     CapacityBarModule,
     FileDownloadModule,
     EventTrackerModule,
-    BusyRibbonModule
+    BusyRibbonModule,
+    NoteModule
   ],
   exports: [
     CommonModule,
@@ -162,7 +164,8 @@ import { BusyRibbonModule } from './busy-ribbon/busy-ribbon.module';
     CapacityBarModule,
     FileDownloadModule,
     EventTrackerModule,
-    BusyRibbonModule
+    BusyRibbonModule,
+    NoteModule
   ]
 })
 

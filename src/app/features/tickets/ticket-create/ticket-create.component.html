@@ -15,179 +15,178 @@
 
   <!-- Content Panel -->
   <mcs-content-panel *mcsContentPanelDef>
-
-    <!-- Loader settings -->
-    <div [mcsLoader]="createTicketSubscription"
-      [mcsLoaderHideElement]="createContent"
-      [mcsLoaderText]="textContent.creatingTicket"
-      mcsLoaderOrientation="top"></div>
-
     <p [innerHTML]="textContent.description | mcsNewLines"></p>
 
-    <div class="contextual-help-page-wrapper limited-view" #createContent>
-      <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">
-        <!-- Ticket Type -->
-        <div class="field">
-          <mcs-form-field>
-            <mcs-select id="type" [placeholder]="textContent.placeholders.type"
-              [formControl]="fcType" set-focus required
-              [mcsContextualHelp]="contextualContent.type">
-              <mcs-select-group header="Ticket Type">
-                <mcs-select-item *ngFor="let ticketType of ticketTypeList"
-                  [value]="ticketType.value">
-                  {{ ticketType.text }}
-                </mcs-select-item>
-              </mcs-select-group>
-            </mcs-select>
+    <mcs-loader [subscriptions]="createTicketSubscription"
+      [loadingText]="textContent.creatingTicket"
+      loadingPlacement="top">
 
-            <mcs-error mcsError errorState="required">
-              {{ textContent.errors.typeRequired }}
-            </mcs-error>
-          </mcs-form-field>
-        </div>
+      <div class="contextual-help-page-wrapper limited-view">
+        <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">
+          <!-- Ticket Type -->
+          <div class="field">
+            <mcs-form-field>
+              <mcs-select id="type" [placeholder]="textContent.placeholders.type"
+                [formControl]="fcType" set-focus required
+                [mcsContextualHelp]="contextualContent.type">
+                <mcs-select-group header="Ticket Type">
+                  <mcs-select-item *ngFor="let ticketType of ticketTypeList"
+                    [value]="ticketType.value">
+                    {{ ticketType.text }}
+                  </mcs-select-item>
+                </mcs-select-group>
+              </mcs-select>
 
-        <!-- Reference -->
-        <div class="field">
-          <mcs-form-field>
-            <input mcsInput #referenceInput
-              [placeholder]="textContent.placeholders.reference" maxlength="15"
-              [formControl]="fcReference"
-              [mcsContextualHelp]="contextualContent.reference">
+              <mcs-error mcsError errorState="required">
+                {{ textContent.errors.typeRequired }}
+              </mcs-error>
+            </mcs-form-field>
+          </div>
 
-            <mcs-hint mcsHint align="start">
-              {{ convertMaxCharText(textContent.hints.reference, referenceInput.maxLength) }}
-            </mcs-hint>
-            <mcs-hint mcsHint align="end">
-              {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
-            </mcs-hint>
-          </mcs-form-field>
-        </div>
-
-        <!-- Summary -->
-        <div class="field">
-          <mcs-form-field>
-            <input mcsInput #summaryInput required
-              [placeholder]="textContent.placeholders.summary" maxlength="80"
-              [formControl]="fcSummary"
-              [mcsContextualHelp]="contextualContent.summary">
+          <!-- Reference -->
+          <div class="field">
+            <mcs-form-field>
+              <input mcsInput #referenceInput
+                [placeholder]="textContent.placeholders.reference" maxlength="15"
+                [formControl]="fcReference"
+                [mcsContextualHelp]="contextualContent.reference">
 
               <mcs-hint mcsHint align="start">
-                {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
+                {{ convertMaxCharText(textContent.hints.reference, referenceInput.maxLength) }}
               </mcs-hint>
               <mcs-hint mcsHint align="end">
-                {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
+                {{ referenceInput.value.length }} / {{ referenceInput.maxLength }}
+              </mcs-hint>
+            </mcs-form-field>
+          </div>
+
+          <!-- Summary -->
+          <div class="field">
+            <mcs-form-field>
+              <input mcsInput #summaryInput required
+                [placeholder]="textContent.placeholders.summary" maxlength="80"
+                [formControl]="fcSummary"
+                [mcsContextualHelp]="contextualContent.summary">
+
+                <mcs-hint mcsHint align="start">
+                  {{ convertMaxCharText(textContent.hints.summary, summaryInput.maxLength) }}
+                </mcs-hint>
+                <mcs-hint mcsHint align="end">
+                  {{ summaryInput.value.length }} / {{ summaryInput.maxLength }}
+                </mcs-hint>
+                <mcs-error mcsError errorState="required">
+                  {{ textContent.errors.summaryRequired }}
+                </mcs-error>
+            </mcs-form-field>
+          </div>
+
+          <!-- Details -->
+          <div class="field">
+            <mcs-form-field>
+              <textarea mcsInput rows="3" #detailsInput required
+                [placeholder]="textContent.placeholders.details" maxlength="4000"
+                [formControl]="fcDetails"
+                [mcsContextualHelp]="contextualContent.details"></textarea>
+
+              <mcs-hint mcsHint align="start">
+                {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
+              </mcs-hint>
+              <mcs-hint mcsHint align="end">
+                {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
               </mcs-hint>
               <mcs-error mcsError errorState="required">
-                {{ textContent.errors.summaryRequired }}
+                {{ textContent.errors.detailsRequired }}
               </mcs-error>
-          </mcs-form-field>
-        </div>
-
-        <!-- Details -->
-        <div class="field">
-          <mcs-form-field>
-            <textarea mcsInput rows="3" #detailsInput required
-              [placeholder]="textContent.placeholders.details" maxlength="4000"
-              [formControl]="fcDetails"
-              [mcsContextualHelp]="contextualContent.details"></textarea>
-
-            <mcs-hint mcsHint align="start">
-              {{ convertMaxCharText(textContent.hints.details, detailsInput.maxLength) }}
-            </mcs-hint>
-            <mcs-hint mcsHint align="end">
-              {{ detailsInput.value.length }} / {{ detailsInput.maxLength }}
-            </mcs-hint>
-            <mcs-error mcsError errorState="required">
-              {{ textContent.errors.detailsRequired }}
-            </mcs-error>
-          </mcs-form-field>
-        </div>
-
-        <!-- Services -->
-        <div class="field">
-          <h4 class="space-bottom-small">{{ textContent.services }}</h4>
-          <div class="item">
-            <ng-container *ngIf="services">
-
-              <div display-flex="row" align-items="flex-start">
-                <!-- Tags -->
-                <mcs-form-field flex="auto">
-                  <mcs-tag-list [placeholder]="textContent.placeholders.services"
-                    [formControl]="fcService">
-
-                    <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
-                      [selectable]="true" [removable]="true"
-                      (removed)="selectService.removeSubSelection(subItem)">
-                      {{ subItem.text }}
-                    </mcs-tag>
-                  </mcs-tag-list>
-
-                  <mcs-error mcsError errorState="required">
-                    {{ textContent.errors.servicesRequired }}
-                  </mcs-error>
-                </mcs-form-field>
-
-                <!-- Icon trigger -->
-                <div cursor="pointer" id="ctaSelectService"
-                  class="space-left-small space-top-small" flex="none"
-                  (click)="servicePanelOpen = !servicePanelOpen" #trigger
-                  mcsEventTracker="toggle-service-panel"
-                  mcsEventCategory="ticket"
-                  mcsEventLabel="create-new-ticket-page">
-                  <mcs-icon [key]="toggleIconKey"></mcs-icon>
-                  <mcs-ripple class="icon-ripple-wrapper"
-                    mcsRipple
-                    [rippleTrigger]="trigger"
-                    [rippleCentered]="true">
-                  </mcs-ripple>
-                </div>
-              </div>
-
-              <div [@expansionVertical]="servicePanelOpen ? 'show' : 'void'">
-                <mcs-select-tag #selectService class="padding-small"
-                  (selectionChanged)="serviceItemSelectionChanged($event)">
-                  <mcs-select-tag-main-item *ngFor="let service of services"
-                    [header]="service.serviceName">
-
-                  <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
-                    [searchKey]="item.name" [value]="item">
-                    {{ item.name }}
-                  </mcs-select-tag-sub-item>
-                </mcs-select-tag-main-item>
-                </mcs-select-tag>
-              </div>
-            </ng-container>
+            </mcs-form-field>
           </div>
+
+          <!-- Services -->
+          <div class="field">
+            <h4 class="space-bottom-small">{{ textContent.services }}</h4>
+            <div class="item">
+              <ng-container *ngIf="services">
+
+                <div display-flex="row" align-items="flex-start">
+                  <!-- Tags -->
+                  <mcs-form-field flex="auto">
+                    <mcs-tag-list [placeholder]="textContent.placeholders.services"
+                      [formControl]="fcService">
+
+                      <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
+                        [selectable]="true" [removable]="true"
+                        (removed)="selectService.removeSubSelection(subItem)">
+                        {{ subItem.text }}
+                      </mcs-tag>
+                    </mcs-tag-list>
+
+                    <mcs-error mcsError errorState="required">
+                      {{ textContent.errors.servicesRequired }}
+                    </mcs-error>
+                  </mcs-form-field>
+
+                  <!-- Icon trigger -->
+                  <div cursor="pointer" id="ctaSelectService"
+                    class="space-left-small space-top-small" flex="none"
+                    (click)="servicePanelOpen = !servicePanelOpen" #trigger
+                    mcsEventTracker="toggle-service-panel"
+                    mcsEventCategory="ticket"
+                    mcsEventLabel="create-new-ticket-page">
+                    <mcs-icon [key]="toggleIconKey"></mcs-icon>
+                    <mcs-ripple class="icon-ripple-wrapper"
+                      mcsRipple
+                      [rippleTrigger]="trigger"
+                      [rippleCentered]="true">
+                    </mcs-ripple>
+                  </div>
+                </div>
+
+                <div [@expansionVertical]="servicePanelOpen ? 'show' : 'void'">
+                  <mcs-select-tag #selectService class="padding-small"
+                    (selectionChanged)="serviceItemSelectionChanged($event)">
+                    <mcs-select-tag-main-item *ngFor="let service of services"
+                      [header]="service.serviceName">
+
+                    <mcs-select-tag-sub-item *ngFor="let item of service.serviceItems"
+                      [searchKey]="item.name" [value]="item">
+                      {{ item.name }}
+                    </mcs-select-tag-sub-item>
+                  </mcs-select-tag-main-item>
+                  </mcs-select-tag>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </form>
+
+        <!-- Attachments -->
+        <div>
+          <h4 class="space-bottom-small">{{ textContent.attachments }}</h4>
+          <mcs-file-attachment attachedLimit="multiple"
+            [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
+            (attachedFilesChanged)="onChangedAttachments($event)"
+            [mcsContextualHelp]="contextualContent.attachments">
+          </mcs-file-attachment>
         </div>
-      </form>
 
-      <!-- Attachments -->
-      <div>
-        <h4 class="space-bottom-small">{{ textContent.attachments }}</h4>
-        <mcs-file-attachment attachedLimit="multiple"
-          [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
-          (attachedFilesChanged)="onChangedAttachments($event)"
-          [mcsContextualHelp]="contextualContent.attachments">
-        </mcs-file-attachment>
+        <!-- Ticket Action -->
+        <div class="space-between-inline-items">
+          <a (click)="gotoTickets()"
+            mcsEventTracker="cancel-ticket-creation"
+            mcsEventCategory="ticket"
+            mcsEventLabel="create-new-ticket-page">{{ textContent.cancelActivity }}</a>
+
+          <button mcsButton
+            id="ctaNewTicket"
+            arrow="right"
+            (click)="onLogTicket()"
+            mcsEventTracker="submit-new-ticket"
+            mcsEventCategory="ticket"
+            mcsEventLabel="create-new-ticket-page">
+            {{ textContent.newTicket }}
+          </button>
+        </div>
       </div>
+    </mcs-loader>
 
-      <!-- Ticket Action -->
-      <div class="space-between-inline-items">
-        <a (click)="gotoTickets()"
-          mcsEventTracker="cancel-ticket-creation"
-          mcsEventCategory="ticket"
-          mcsEventLabel="create-new-ticket-page">{{ textContent.cancelActivity }}</a>
-
-        <button mcsButton
-          id="ctaNewTicket"
-          arrow="right"
-          (click)="onLogTicket()"
-          mcsEventTracker="submit-new-ticket"
-          mcsEventCategory="ticket"
-          mcsEventLabel="create-new-ticket-page">
-          {{ textContent.newTicket }}
-        </button>
-      </div>
-    </div>
   </mcs-content-panel>
 </mcs-page>
