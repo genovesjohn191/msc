@@ -1,7 +1,15 @@
 <div class="limited-view">
   <h4>{{ textContent.header }}</h4>
 
-  <mcs-provisioning-notifications [jobs]="jobs">
-    <p mcsProvisioningText>{{ textContent.description }}</p>
-  </mcs-provisioning-notifications>
+  <ng-container *ngIf="!errorResponse; else errorTemplate">
+    <mcs-provisioning-notifications [jobs]="jobs">
+      <p mcsProvisioningText>{{ textContent.description }}</p>
+    </mcs-provisioning-notifications>
+  </ng-container>
+
+  <ng-template #errorTemplate>
+    <mcs-alert type="failed" [header]="errorResponse?.error?.message">
+      <span>{{ errorResponse?.message }}</span>
+    </mcs-alert>
+  </ng-template>
 </div>

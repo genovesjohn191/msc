@@ -31,8 +31,7 @@ import {
   McsSafeToNavigateAway,
   McsFormGroupService,
   McsApiJob,
-  McsGuid,
-  McsErrorHandlerService
+  McsGuid
 } from '../../../../core';
 import {
   unsubscribeSubject,
@@ -103,7 +102,6 @@ export class ServerCreateDetailsComponent implements
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _formGroupService: McsFormGroupService,
-    private _errorHandlerService: McsErrorHandlerService,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext,
     private _serversService: ServersService,
     private _ordersService: OrdersService
@@ -193,7 +191,7 @@ export class ServerCreateDetailsComponent implements
             catchError((error) => {
               // TODO: Need to think on how to handler error in case of the final creation
               // including /submit order
-              this._errorHandlerService.handleHttpRedirectionError(error.status);
+              this._serverCreateFlyweightContext.setError(error);
               return throwError(error);
             })
           )
