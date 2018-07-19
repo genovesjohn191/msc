@@ -21,6 +21,7 @@ import { ServerCreateFlyweightContext } from '../server-create-flyweight.context
 export class ServerCreateProvisioningComponent implements OnInit, OnDestroy {
   public textContent: any;
   public jobs: McsApiJob[];
+  public errorResponse: any;
 
   private _destroySubject = new Subject<void>();
 
@@ -34,6 +35,7 @@ export class ServerCreateProvisioningComponent implements OnInit, OnDestroy {
     this.textContent = this._textContentProvider.content.servers
       .createServer.serverProvisioningStep;
     this._listenToJobsChanges();
+    this._listenToErrorChanges();
   }
 
   public ngOnDestroy() {
@@ -41,13 +43,25 @@ export class ServerCreateProvisioningComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listens to every jobs changes on the factory
+   * Listens to every jobs changes on the flyweight
    */
   private _listenToJobsChanges(): void {
     this._serverCreateFlyweightContext.jobsChanges
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => {
         this.jobs = response;
+        this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  /**
+   * Listens to each error changes on the flyweight
+   */
+  private _listenToErrorChanges(): void {
+    this._serverCreateFlyweightContext.errorChanges
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((response) => {
+        this.errorResponse = response;
         this._changeDetectorRef.markForCheck();
       });
   }

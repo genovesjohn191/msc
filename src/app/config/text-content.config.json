@@ -941,6 +941,12 @@
       "description": "We're unable to proccess your request right now.",
       "retry": "Our team has been notified. Please try again later."
     },
+    "readOnlyMode": {
+      "header": "Oops",
+      "summary": "Unfortunately an error has occured",
+      "description": "We're unable to proccess your request right now.",
+      "retry": "Our team was already aware this issue and currently looking into the matter deeply and will take actions accordingly."
+    },
     "refresh": "Refresh the page",
     "home": "Go to home page"
   },

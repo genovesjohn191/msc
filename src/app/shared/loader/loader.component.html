@@ -4,10 +4,11 @@
 </div>
 
 <ng-container *ngIf="subscriptionsActive">
-  <ng-container *mcsComponentHandler>
-    <div class="loader-content" [@fadeOut]>
-      <mcs-icon [key]="spinnerIconKey" [size]="iconSize"></mcs-icon>
-      <span *ngIf="loadingText">{{ loadingText }}</span>
-    </div>
-  </ng-container>
+  <div class="loader-content"
+    [@fadeOut]
+    (@fadeOut.start)="onLoaderAnimationStart()"
+    (@fadeOut.done)="onLoaderAnimationDone()">
+    <mcs-icon [key]="spinnerIconKey" [size]="iconSize"></mcs-icon>
+    <span *ngIf="loadingText">{{ loadingText }}</span>
+  </div>
 </ng-container>

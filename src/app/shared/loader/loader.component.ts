@@ -4,12 +4,11 @@ import {
   Renderer2,
   ElementRef,
   ViewChild,
+  AfterViewInit,
   OnDestroy,
   ViewEncapsulation,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  AfterViewInit,
-  AfterContentInit
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   Subscription,
@@ -25,10 +24,9 @@ import {
   animateFactory,
   isNullOrEmpty,
   unsubscribeSubject,
-  getSafeProperty,
-  clearArrayRecord
+  clearArrayRecord,
+  refreshView
 } from '../../utilities';
-import { ComponentHandlerDirective } from '../directives';
 import { LoaderService } from './loader.service';
 
 // Unique Id that generates during runtime
@@ -47,23 +45,20 @@ let nextUniqueId = 0;
     animateFactory.fadeOut
   ],
   host: {
-    'class': 'loader-wrapper',
-    '[id]': 'id'
+    '[id]': 'id',
+    'class': 'loader-wrapper'
   }
 })
 
-export class LoaderComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class LoaderComponent implements AfterViewInit, OnDestroy {
   @Input()
   public id: string = `mcs-loader-${nextUniqueId++}`;
 
   @Input()
   public get subscriptions(): Subscription | Subscription[] { return this._subscriptions; }
   public set subscriptions(value: Subscription | Subscription[]) {
-    if (this._subscriptions !== value) {
-      this._subscriptions = value;
-      this._loaderService.setSubscribers(this._subscriptions);
-      if (!this.subscriptionsActive) { this._hideLoader(); }
-    }
+    this._subscriptions = value;
+    this._loaderService.setSubscribers(this._subscriptions);
   }
   private _subscriptions: Subscription | Subscription[];
 
@@ -82,15 +77,12 @@ export class LoaderComponent implements AfterContentInit, AfterViewInit, OnDestr
   public set iconSize(value: McsSizeType) { this._iconSize = value; }
   private _iconSize: McsSizeType = 'large';
 
-  @ViewChild(ComponentHandlerDirective)
-  private _loaderComponentHandler: ComponentHandlerDirective;
-
   @ViewChild('targetElements')
   private _targetElement: ElementRef<any>;
   private _targetElements: Element[];
 
   private _destroySubject = new Subject<void>();
-  private _loaderIsVisible: boolean = true;
+  private _targetElementsAreVisible = false;
 
   public constructor(
     private _renderer: Renderer2,
@@ -101,19 +93,11 @@ export class LoaderComponent implements AfterContentInit, AfterViewInit, OnDestr
     this._targetElements = new Array();
   }
 
-  public ngAfterContentInit(): void {
-    // We really need this to set immediately in order to show
-    // the content elements before showing the loader
-    Promise.resolve().then(() => {
-      this._setTargetElements();
-      if (!this.subscriptionsActive) { this._hideLoader(); }
-    });
-  }
-
   public ngAfterViewInit(): void {
-    Promise.resolve().then(() => {
+    refreshView(() => {
       this._setTargetElements();
       this._listenToSubscriptionsChanges();
+      if (!this.subscriptionsActive) { this._showTargetElements(); }
     });
   }
 
@@ -143,47 +127,28 @@ export class LoaderComponent implements AfterContentInit, AfterViewInit, OnDestr
   }
 
   /**
+   * Event that emits when the loader animation starts
+   */
+  public onLoaderAnimationStart(): void {
+    if (!this._targetElementsAreVisible) { return; }
+    Promise.resolve().then(() => this._hideTargetElements());
+  }
+
+  /**
+   * Event that emits when the loader animation ended
+   */
+  public onLoaderAnimationDone(): void {
+    if (this._targetElementsAreVisible) { return; }
+    Promise.resolve().then(() => this._showTargetElements());
+  }
+
+  /**
    * Listens for every subscriptions changes
    */
   private _listenToSubscriptionsChanges(): void {
     this._loaderService.subscriptionsChange
       .pipe(takeUntil(this._destroySubject))
-      .subscribe((_subscriptions) => {
-        let content = getSafeProperty(_subscriptions, (obj) => obj.size);
-        isNullOrEmpty(content) ? this._hideLoader() : this._showLoader();
-      });
-  }
-
-  /**
-   * Shows the loader
-   */
-  private _showLoader(): void {
-    if (this._loaderIsVisible) { return; }
-
-    Promise.resolve().then(() => {
-      this._hideTargetElements();
-      if (!isNullOrEmpty(this._loaderComponentHandler)) {
-        this._loaderComponentHandler.createComponent();
-      }
-      this._loaderIsVisible = true;
-      this._changeDetectorRef.markForCheck();
-    });
-  }
-
-  /**
-   * Hides the loader when all the subscriptions are done
-   */
-  private _hideLoader(): void {
-    if (!this._loaderIsVisible) { return; }
-
-    Promise.resolve().then(() => {
-      this._showTargetElements();
-      if (!isNullOrEmpty(this._loaderComponentHandler)) {
-        this._loaderComponentHandler.removeComponent();
-      }
-      this._loaderIsVisible = false;
-      this._changeDetectorRef.markForCheck();
-    });
+      .subscribe((_subscriptions) => this._changeDetectorRef.markForCheck());
   }
 
   /**
@@ -199,6 +164,8 @@ export class LoaderComponent implements AfterContentInit, AfterViewInit, OnDestr
         this.hostElement
       );
     });
+    this._targetElementsAreVisible = true;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -210,6 +177,8 @@ export class LoaderComponent implements AfterContentInit, AfterViewInit, OnDestr
     this._targetElements.forEach((element) => {
       this._renderer.appendChild(this._targetElement.nativeElement, element);
     });
+    this._targetElementsAreVisible = false;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**

@@ -28,6 +28,9 @@
     <div *ngSwitchCase="httpStatusCodeEnum.Forbidden">
       <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
     </div>
+    <div *ngSwitchCase="httpStatusCodeEnum.ReadOnlyMode">
+      <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
+    </div>
   </div>
 </div>
 

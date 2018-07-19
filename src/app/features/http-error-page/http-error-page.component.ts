@@ -116,6 +116,10 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         this.textContent = this.textContentAll.forbidden;
         break;
 
+      case McsHttpStatusCode.ReadOnlyMode:
+        this.textContent = this.textContentAll.readOnlyMode;
+        break;
+
       case McsHttpStatusCode.NotFound:
       default:
         this.textContent = this.textContentAll.notFound;

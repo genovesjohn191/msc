@@ -10,13 +10,9 @@ import {
   unsubscribeSubject
 } from '../../utilities';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
-import { McsApiService } from './mcs-api.service';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
-import { McsSnackBarService } from './mcs-snack-bar.service';
-import { McsSnackBarConfig } from '../factory/snack-bar/mcs-snack-bar-config';
-
-const DEFAULT_READONLY_MODE_BAR_DURATION = 10000;
+import { McsApiService } from './mcs-api.service';
 
 @Injectable()
 export class McsErrorHandlerService implements McsInitializer {
@@ -25,15 +21,14 @@ export class McsErrorHandlerService implements McsInitializer {
   constructor(
     private _router: Router,
     private _apiService: McsApiService,
-    private _authService: McsAuthenticationService,
-    private _snackbarService: McsSnackBarService
+    private _authService: McsAuthenticationService
   ) { }
 
   /**
    * Initialize all the error handlers to all the response
    */
   public initialize(): void {
-    this._listenToUnauthorizedResponse();
+    this._listenToApiResponse();
     this._listenToRouterEvent();
   }
 
@@ -61,49 +56,29 @@ export class McsErrorHandlerService implements McsInitializer {
     }
     if (!codeExist) { return; }
 
-    switch (errorCode) {
-      // Show readonly mode snackbar
-      case McsHttpStatusCode.ReadOnlyMode:
-        this._showReadonlyModeBar();
-        break;
-
-      default:
-        // Redirect to error page
-        this._router.navigate(['**'], {
-          skipLocationChange: true,
-          queryParams: {
-            code: errorCode,
-            preservedUrl: location.pathname
-          }
-        });
-        break;
-    }
+    // Redirect to error page
+    this._router.navigate(['**'], {
+      skipLocationChange: true,
+      queryParams: {
+        code: errorCode,
+        preservedUrl: location.pathname
+      }
+    });
   }
 
   /**
-   * Shows the readonly mode snackbar
+   * Listen to each api error response
    */
-  private _showReadonlyModeBar(): void {
-    this._snackbarService.open(
-      'Unable to proccess your request',
-      {
-        id: 'snackbar-read-only-mode',
-        duration: DEFAULT_READONLY_MODE_BAR_DURATION,
-        verticalPlacement: 'bottom',
-        horizontalAlignment: 'center'
-      } as McsSnackBarConfig
-    );
-  }
-
-  /**
-   * Listen to error response from api
-   */
-  private _listenToUnauthorizedResponse(): void {
+  private _listenToApiResponse(): void {
     this._apiService.errorResponseStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe((errorResponse) => {
         if (!errorResponse) { return; }
         switch (errorResponse.status) {
+          case McsHttpStatusCode.ReadOnlyMode:
+            this.handleHttpRedirectionError(McsHttpStatusCode.ReadOnlyMode);
+            break;
+
           case McsHttpStatusCode.Unauthorized:
             this._authService.logOut();
             break;

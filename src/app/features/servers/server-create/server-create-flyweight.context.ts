@@ -11,10 +11,12 @@ import {
 
 @Injectable()
 export class ServerCreateFlyweightContext {
+  public errorChanges = new BehaviorSubject<any>(undefined);
   public jobsChanges = new BehaviorSubject<McsApiJob[]>(undefined);
   public resourceChanges = new BehaviorSubject<Resource>(undefined);
   public formArrayChanges = new BehaviorSubject<FormArray>(undefined);
 
+  private _error: any;
   private _jobs: McsApiJob[];
   private _resource: Resource;
   private _formArray: FormArray;
@@ -58,6 +60,17 @@ export class ServerCreateFlyweightContext {
     if (isNullOrEmpty(job)) { return; }
     this._jobs.push(job);
     this.jobsChanges.next(this._jobs);
+  }
+
+  /**
+   * Sets the error as a global
+   * @ignore Do not use this as this serve as a temporary fixed for error handling
+   * @param error Error to be set
+   */
+  public setError(error: any): void {
+    if (isNullOrEmpty(error)) { return; }
+    this._error = error;
+    this.errorChanges.next(this._error);
   }
 
   public setAddOns(_addOns: any): void {
