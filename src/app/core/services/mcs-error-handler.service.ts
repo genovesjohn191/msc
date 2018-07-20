@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  Router,
-  NavigationEnd
+  Router
 } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -29,7 +28,6 @@ export class McsErrorHandlerService implements McsInitializer {
    */
   public initialize(): void {
     this._listenToApiResponse();
-    this._listenToRouterEvent();
   }
 
   /**
@@ -82,24 +80,6 @@ export class McsErrorHandlerService implements McsInitializer {
           case McsHttpStatusCode.Unauthorized:
             this._authService.logOut();
             break;
-        }
-      });
-  }
-
-  /**
-   * Listen to router events and check if the token is not expired
-   */
-  private _listenToRouterEvent(): void {
-    this._router.events
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((event) => {
-        if (event instanceof NavigationEnd) {
-          // This will check the token if its not expired.
-          // If the token is expired it will redirect automatic to login page
-          let authToken = this._authService.getAuthToken();
-          if (isNullOrEmpty(authToken)) {
-            this._authService.logOut();
-          }
         }
       });
   }
