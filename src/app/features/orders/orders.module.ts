@@ -4,10 +4,12 @@ import { SharedModule } from '../../shared';
 import { ordersProviders } from './orders.constants';
 /** Components */
 import { OrdersComponent } from './orders.component';
+import { OrderComponent } from './order/order.component';
 
 @NgModule({
   declarations: [
-    OrdersComponent
+    OrdersComponent,
+    OrderComponent
   ],
   imports: [
     SharedModule

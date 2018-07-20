@@ -70,7 +70,7 @@ export class OrdersService {
    */
   public getOrder(id: any): Observable<McsApiSuccessResponse<Order>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/order/${id}`;
+    mcsApiRequestParameter.endPoint = `/orders/${id}`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -203,7 +203,7 @@ export class OrdersService {
    * Deletes any existing order based on its inputted id
    * @param id Id of the order to be deleted
    */
-  public deleteServer(id: string): Observable<McsApiSuccessResponse<Order>> {
+  public deleteOrder(id: string): Observable<McsApiSuccessResponse<Order>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}`;
 

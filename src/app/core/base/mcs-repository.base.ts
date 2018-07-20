@@ -2,7 +2,6 @@ import {
   Subject,
   Observable,
   Subscription,
-  asyncScheduler,
   of
 } from 'rxjs';
 import {
@@ -239,7 +238,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     });
     let requestRecordFromCache = !isNullOrEmpty(recordFoundFromCache) && fromCache;
     if (requestRecordFromCache) {
-      return of(recordFoundFromCache, asyncScheduler);
+      return of(recordFoundFromCache);
     }
 
     // Call the API if record has not been called once
@@ -289,7 +288,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
   private _findAllRecordsFromCache(recordsCount: number): Observable<T[]> {
     let pageData = this._dataRecords.slice();
     let actualData = pageData.splice(0, recordsCount);
-    return of(actualData, asyncScheduler)
+    return of(actualData)
       .pipe(
         map((data) => {
           this._filteredRecords = data;
