@@ -21,14 +21,12 @@ import {
   coerceNumber
 } from '../../utilities';
 import { CoreDefinition } from '../core.definition';
+import { McsGuid } from '../factory/guid/mcs-guid';
 
 @Injectable()
 export class McsSessionHandlerService implements McsInitializer {
-  private _authToken: string;
-
   private _sessionIdleCounter: number = 0;
   private _sessionIsIdle: boolean = false;
-  private _sessionTimedOutToken: string;
 
   // Events subject
   private _onSessionIdle = new Subject<boolean>();
@@ -47,9 +45,9 @@ export class McsSessionHandlerService implements McsInitializer {
    * Returns true if the current auth token has already timed out
    */
   public get authTokenHasTimedOut(): boolean {
-    this._sessionTimedOutToken = this._cookieService
+    let sessionTimedOutToken = this._cookieService
       .getItem(CoreDefinition.COOKIE_SESSION_ID);
-    return this._authToken === this._sessionTimedOutToken;
+    return !isNullOrEmpty(sessionTimedOutToken);
   }
 
   /**
@@ -90,7 +88,6 @@ export class McsSessionHandlerService implements McsInitializer {
    * Initialize the session handler
    */
   public initialize(): void {
-    this._authToken = this._authService.getAuthToken();
     this._registerActivityEvents();
     this._registerRealTimeListener();
   }
@@ -190,7 +187,8 @@ export class McsSessionHandlerService implements McsInitializer {
     // Check session timed out
     if (this.sessionTimedOut) {
       this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_ID,
-        this._authToken, { expires: this._authIdentity.user.expiry });
+        McsGuid.newGuid().toString(), { expires: this._authIdentity.user.expiry });
+
       this._onSessionTimedOut.next(true);
     }
 

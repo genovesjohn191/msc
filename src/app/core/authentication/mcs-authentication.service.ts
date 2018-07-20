@@ -67,16 +67,13 @@ export class McsAuthenticationService {
     // Return token from the bearer snapshots
     if (routeParams) {
       authToken = routeParams[CoreDefinition.QUERY_PARAM_BEARER];
-      if (authToken) { return authToken; }
     }
 
-    // Return the token from the cookie
-    authToken = this._cookieService.getItem<string>(this._coreConfig.jwtCookieName);
     if (authToken) { return authToken; }
   }
 
   /**
-   * This will set the token to Cookie and Appstate
+   * This will set the token to Cookie
    * @param authToken Valid Authentication Token
    */
   public setAuthToken(authToken: string, expiration: Date = null): void {
@@ -88,7 +85,7 @@ export class McsAuthenticationService {
    * This will delete the content of the cookie that was created by MCS
    */
   public deleteCookieContent(): void {
-    // Delete the token from Appstate and Cookie
+    // Delete the token from Cookie
     if (this._coreConfig.enablePassingJwtInUrl) {
       this._cookieService.removeItem(this._coreConfig.jwtCookieName);
     }
@@ -122,13 +119,9 @@ export class McsAuthenticationService {
    *
    * Returns true if user is authenticated, and false if otherwise
    */
-  public IsAuthenticated(authToken: string): Observable<boolean> {
+  public IsAuthenticated(): Observable<boolean> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/identity';
-    mcsApiRequestParameter.optionalHeaders.set(
-      CoreDefinition.HEADER_AUTHORIZATION,
-      `${CoreDefinition.HEADER_BEARER} ${authToken}`
-    );
 
     return this._apiService.get(mcsApiRequestParameter)
       .pipe(
@@ -138,7 +131,7 @@ export class McsAuthenticationService {
             .deserializeResponse<McsApiIdentity>(McsApiIdentity, response);
 
           if (apiResponse && apiResponse.content) {
-            this._setUserIdentity(authToken, apiResponse.content);
+            this._setUserIdentity(apiResponse.content);
             return true;
           }
           return false;
@@ -146,10 +139,7 @@ export class McsAuthenticationService {
       );
   }
 
-  private _setUserIdentity(authToken: string, identity: McsApiIdentity) {
-    if (this._coreConfig.enablePassingJwtInUrl) {
-      this.setAuthToken(authToken, identity.expiry);
-    }
+  private _setUserIdentity(identity: McsApiIdentity) {
     this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
     this._authenticationIdentity.applyIdentity();
   }
