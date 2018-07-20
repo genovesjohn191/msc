@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   McsTextContentProvider,
   CoreDefinition,
@@ -14,10 +15,12 @@ import {
 } from '../../core';
 import {
   refreshView,
-  getSafeProperty
+  getSafeProperty,
+  isNullOrEmpty
 } from '../../utilities';
 import { OrdersRepository } from './repositories/orders.repository';
 import { OrdersDataSource } from './orders.datasource';
+import { Order } from './models';
 
 @Component({
   selector: 'mcs-orders',
@@ -34,6 +37,7 @@ export class OrdersComponent
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
+    private _router: Router,
     private _textProvider: McsTextContentProvider,
     private _ordersRepository: OrdersRepository
   ) {
@@ -64,6 +68,15 @@ export class OrdersComponent
    */
   public onClickNewOrder(): void {
     // Do the create order
+  }
+
+  /**
+   * Navigate to order details page
+   * @param order Order to view the details
+   */
+  public navigateToOrder(order: Order): void {
+    if (isNullOrEmpty(order)) { return; }
+    this._router.navigate(['/orders/', order.id]);
   }
 
   /**

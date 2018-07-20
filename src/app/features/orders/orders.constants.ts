@@ -5,6 +5,7 @@ import { OrdersRepository } from './repositories/orders.repository';
 import { OrderItemTypesRepository } from './repositories/order-item-types.repository';
 /** Components */
 import { OrdersComponent } from './orders.component';
+import { OrderComponent } from './order/order.component';
 
 /**
  * List of services for the main module
@@ -21,5 +22,9 @@ export const ordersProviders: any[] = [
 export const ordersRoutes: Routes = [
   {
     path: 'orders', component: OrdersComponent
+  },
+  {
+    path: 'orders/:id',
+    component: OrderComponent
   },
 ];

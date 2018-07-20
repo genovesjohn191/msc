@@ -8,4 +8,12 @@ export class OrderCharge {
     this.oneOff = undefined;
     this.upFront = undefined;
   }
+
+  /**
+   * Returns the currency symbol as USD
+   */
+  public get currencySymbol(): string {
+    // TODO: Need to be confirmed since the currency should depend on the country
+    return '$';
+  }
 }

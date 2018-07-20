@@ -1,0 +1,131 @@
+<mcs-page header="{{ textContent.header | mcsTextPlaceholder: 'orderId': order?.orderId }}">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to Orders -->
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <mcs-action-item class="right-align" (click)="gotoOrders()"
+        mcsEventTracker="navigate-to-order-listing"
+        mcsEventCategory="order"
+        mcsEventLabel="order-details-page">
+        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+        <span>{{ textContent.backToOrders }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+    <mcs-loader [subscriptions]="orderSubscription"
+      [loadingText]="textContent.loading"
+      loadingPlacement="top">
+
+      <!-- Order details -->
+      <div class="container-wrapper limited-view">
+        <h4 class="container-header">{{ textContent.description }}</h4>
+        <p class="space-between-inline-items">
+          <strong [innerHTML]="order.description | mcsNewLines"></strong>
+          <span class="inline-items-small">
+            <button mcsButton color="danger">Cancel</button>
+            <button mcsButton>Aprove</button>
+          </span>
+        </p>
+
+        <mcs-list spacing="xsmall">
+          <mcs-list-item class="form-field-inline">
+            <span>{{ textContent.contractDuration }}:</span>
+            <span>12</span>
+          </mcs-list-item>
+
+          <mcs-list-item class="form-field-inline">
+            <span>{{ textContent.status }}:</span>
+            <span [innerHTML]="order.statusLabel | mcsDataLabel"></span>
+          </mcs-list-item>
+
+          <mcs-list-item class="form-field-inline">
+            <span>{{ textContent.createdBy }}:</span>
+            <span>{{ order.createdBy }}</span>
+          </mcs-list-item>
+        </mcs-list>
+      </div>
+
+      <!-- Order Items -->
+      <mcs-table [dataSource]="order.items" class="limited-view">
+        <!-- Item ID Column -->
+        <ng-container mcsColumnDef="id">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.columnHeaders.id }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.orderItemId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container mcsColumnDef="type">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.columnHeaders.type }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <span class="word-wrap">{{ getOderTypeById(row.typeId) }}</span>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container mcsColumnDef="description">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.columnHeaders.description }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <span class="word-wrap">{{ row.description }}</span>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container mcsColumnDef="status">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.columnHeaders.status }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.statusLabel }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- One-off Charge Column -->
+        <ng-container mcsColumnDef="oneOffCharge">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.columnHeaders.oneOffCharge }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.charges?.currencySymbol }} {{ row.charges?.oneOff }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Monthly Charge Column -->
+        <ng-container mcsColumnDef="monthlyCharge">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ textContent.columnHeaders.monthlyCharge }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.charges?.currencySymbol }} {{ row.charges?.monthly }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ textContent.noOrderItems }} </span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <span>{{ textContent.errorOnOrderItems }}</span>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="orderItemsColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: orderItemsColumns;"></mcs-data-row>
+      </mcs-table>
+
+    </mcs-loader>
+  </mcs-content-panel>
+</mcs-page>

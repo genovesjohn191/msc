@@ -4,19 +4,29 @@ import {
   McsDateSerialization
 } from '../../../../core';
 import { OrderCharge } from './order-charge';
+import {
+  OrderStatus,
+  OrderStatusSerialization,
+  orderStatusText
+} from '../enumerations/order-status.enum';
 
 export class OrderItem extends McsEntityBase {
   public referenceId: string;
+  public parentReferenceId: string;
   public orderItemId: string;
   public typeId: string;
   public serviceId: string;
-  public status: string;
   public description: string;
-
-  // TODO: Check wheater this properties deserialized the actual model
   public properties: any;
   public createdBy: string;
   public modifiedBy: string;
+
+  @JsonProperty({
+    type: OrderStatus,
+    serializer: OrderStatusSerialization,
+    deserializer: OrderStatusSerialization
+  })
+  public status: OrderStatus;
 
   @JsonProperty({
     type: Date,
@@ -38,6 +48,7 @@ export class OrderItem extends McsEntityBase {
   constructor() {
     super();
     this.referenceId = undefined;
+    this.parentReferenceId = undefined;
     this.orderItemId = undefined;
     this.typeId = undefined;
     this.serviceId = undefined;
@@ -49,5 +60,12 @@ export class OrderItem extends McsEntityBase {
     this.createdOn = undefined;
     this.modifiedOn = undefined;
     this.charges = undefined;
+  }
+
+  /**
+   * Returns the order status label
+   */
+  public get statusLabel(): string {
+    return orderStatusText[this.status];
   }
 }

@@ -3,6 +3,7 @@ import {
   PipeTransform
 } from '@angular/core';
 import { replacePlaceholder } from '../../utilities';
+import { isNullOrUndefined } from 'util';
 
 @Pipe({
   name: 'mcsTextPlaceholder'
@@ -16,6 +17,7 @@ export class TextPlaceholderPipe implements PipeTransform {
    * @param value Corresponding value of the placeholder
    */
   public transform(textContent: string, placeHolder: string, value: any): any {
+    if (isNullOrUndefined(value)) { value = ''; }
     return replacePlaceholder(textContent, String(placeHolder), String(value));
   }
 }
