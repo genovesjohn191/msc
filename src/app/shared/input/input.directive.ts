@@ -118,11 +118,8 @@ export class InputDirective extends McsFormFieldControlBase<any>
   }
 
   public ngDoCheck(): void {
-    if (this.ngControl) {
-      this.updateErrorState();
-    } else {
-      this._dirtyCheckNativeValue();
-    }
+    if (this.ngControl) { this.updateErrorState(); }
+    this._dirtyCheckNativeValue();
   }
 
   public ngOnChanges(): void {

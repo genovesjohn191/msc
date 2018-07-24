@@ -23,8 +23,7 @@ import {
 import {
   ServerNic,
   ServerCreateNic,
-  ServerManageNetwork,
-  ServerIpAllocationMode
+  ServerManageNetwork
 } from '../../models';
 import {
   CoreDefinition,
@@ -200,27 +199,6 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public get addNicEnabled(): boolean {
     return !this.hasReachedNicsLimit
       && !isNullOrEmpty(this.resourceNetworks);
-  }
-
-  /**
-   * Returns true when the NIC data has been changed
-   */
-  public get editNicEnabled(): boolean {
-    let modeNotChanged = this.manageNetwork.network.name === this.selectedNic.logicalNetworkName
-      && this.manageNetwork.ipAllocationMode !== ServerIpAllocationMode.Manual
-      && this.manageNetwork.ipAllocationMode === this.selectedNic.ipAllocationMode;
-    if (modeNotChanged) { return false; }
-
-    let ipAddressHasChanged = !isNullOrEmpty(this.manageNetwork.customIpAddress)
-      && !isNullOrEmpty(this.selectedNic.ipAddresses)
-      && this.inputIsValid;
-    if (ipAddressHasChanged) {
-      let ipAddressFound = this.selectedNic.ipAddresses.find((ip) => {
-        return ip === this.manageNetwork.customIpAddress;
-      });
-      if (!isNullOrEmpty(ipAddressFound)) { return false; }
-    }
-    return this.inputIsValid;
   }
 
   /**

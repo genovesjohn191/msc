@@ -87,8 +87,6 @@
             <div class="action-box" *ngIf="canAddDisk" [disabled]="!server.executable">
               <mcs-server-manage-storage *ngFor="let item of manageStorageTemplate"
                 [storages]="resourceStorages"
-                [minValueGB]="0"
-                [(selectedStorage)]="selectedStorage"
                 (dataChange)="onStorageChanged($event)">
 
                 <ng-container mcsManageStorageHeader>
@@ -122,10 +120,8 @@
         <div class="action-box" [disabled]="!server.executable">
           <mcs-server-manage-storage
             [storages]="resourceStorages"
-            [minValueGB]="minimumGB"
-            [addedValueGB]="selectedDiskSizeGB"
+            [targetDisk]="selectedDisk"
             [detailsTemplate]="diskDetailsTemplate"
-            [(selectedStorage)]="selectedStorage"
             (dataChange)="onStorageChanged($event)">
 
             <ng-container mcsManageStorageHeader>
@@ -159,7 +155,7 @@
             </a>
 
             <button mcsButton id="ctaUpdateServerStorage" arrow="right" size="small"
-              [disabled]="!expandDiskEnabled" (click)="expandDisk()"
+              [disabled]="!manageStorage?.hasChanged" (click)="expandDisk()"
               mcsEventTracker="expand-disk"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">

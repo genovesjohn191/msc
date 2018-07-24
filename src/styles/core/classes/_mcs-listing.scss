@@ -12,6 +12,15 @@ $listing-table-search-max-width: 300px;
     display: block;
   }
 
+  .search-wrapper {
+    max-width: $listing-table-search-max-width;
+    width: 100%;
+
+    @include breakpoint(small) {
+      max-width: auto;
+    }
+  }
+
   .mcs-table-wrapper {
     max-width: 100%;
     min-width: $listing-table-default-width;
@@ -27,14 +36,6 @@ $listing-table-search-max-width: 300px;
     @include set-items-interval($space-medium, horizontal);
     @include display-flex(row);
     align-items: center;
-
-    .mcs-search-wrapper {
-      max-width: $listing-table-search-max-width;
-    }
-
-    .record-count {
-      margin-left: auto;
-    }
   }
 }
 

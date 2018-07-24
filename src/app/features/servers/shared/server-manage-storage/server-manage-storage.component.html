@@ -49,7 +49,6 @@
     <form [formGroup]="fgServerStorage" class="inline-items-small">
       <mcs-form-field class="form-field-size-small">
         <input mcsInput placeholder="Enter storage"
-          [(ngModel)]="customStorageValue"
           [formControl]="fcCustomStorage">
         <mcs-suffix mcsSuffix>{{ textContent.unit }}</mcs-suffix>
 

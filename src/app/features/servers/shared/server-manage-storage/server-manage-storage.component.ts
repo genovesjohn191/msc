@@ -16,10 +16,7 @@ import {
   FormControl
 } from '@angular/forms';
 import { Subject } from 'rxjs';
-import {
-  takeUntil,
-  startWith
-} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import {
   CoreValidators,
   McsTextContentProvider,
@@ -28,7 +25,8 @@ import {
 import { ResourceStorage } from '../../../resources';
 import {
   ServerManageStorage,
-  ServerInputManageType
+  ServerInputManageType,
+  ServerStorageDevice
 } from '../../models';
 import {
   convertMbToGb,
@@ -38,8 +36,12 @@ import {
   isNullOrEmpty,
   coerceNumber,
   animateFactory,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '../../../../utilities';
+
+// Constants
+const DEFAULT_STORAGE_STEPS = 10;
 
 @Component({
   selector: 'mcs-server-manage-storage',
@@ -66,9 +68,6 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   @Output()
   public dataChange = new EventEmitter<ServerManageStorage>();
 
-  @Output()
-  public selectedStorageChange = new EventEmitter<ResourceStorage>();
-
   @Input()
   public detailsTemplate: TemplateRef<any>;
 
@@ -76,41 +75,24 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public storages: ResourceStorage[];
 
   @Input()
-  public get selectedStorage(): ResourceStorage { return this._selectedStorage; }
-  public set selectedStorage(value: ResourceStorage) {
-    if (this._selectedStorage !== value) {
-      this._selectedStorage = value;
-      this.selectedStorageChange.emit(this._selectedStorage);
-      this.reset();
-      this._notifyDataChanged();
-    }
-  }
-  private _selectedStorage: ResourceStorage;
+  public targetDisk: ServerStorageDevice;
 
   @Input()
-  public get minValueGB(): number { return this._minValueGB; }
+  public get minValueGB(): number {
+    let exactMinValue = convertMbToGb(getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0));
+    exactMinValue += this._minValueGB;
+
+    let dividedValue = Math.floor(exactMinValue / DEFAULT_STORAGE_STEPS);
+    let isExactByStep = (exactMinValue % DEFAULT_STORAGE_STEPS) === 0;
+    return isExactByStep ? exactMinValue : (dividedValue + 1) * DEFAULT_STORAGE_STEPS;
+  }
   public set minValueGB(value: number) { this._minValueGB = coerceNumber(value); }
   private _minValueGB: number = 0;
-
-  @Input()
-  public get addedValueGB(): number { return this._addedValueGB; }
-  public set addedValueGB(value: number) { this._addedValueGB = coerceNumber(value); }
-  private _addedValueGB: number = 0;
 
   @Input()
   public get deductValueGB(): number { return this._deductValueGB; }
   public set deductValueGB(value: number) { this._deductValueGB = coerceNumber(value); }
   private _deductValueGB: number = 0;
-
-  @Input()
-  public get customStorageValue(): number { return this._customStorageValue; }
-  public set customStorageValue(value: number) {
-    if (value !== this._customStorageValue) {
-      this._customStorageValue = coerceNumber(value);
-      this._notifyDataChanged();
-    }
-  }
-  private _customStorageValue: number = 0;
 
   private _destroySubject = new Subject<void>();
   private _storageOutput = new ServerManageStorage();
@@ -120,9 +102,20 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    * and the deduction value provided by implementation
    */
   public get availableMemory(): number {
-    let memoryInGB = isNullOrEmpty(this.selectedStorage) ? 0 :
-      convertMbToGb(this.selectedStorage.availableMB);
-    return Math.max((memoryInGB + this.addedValueGB) - this.deductValueGB, 0);
+    let maxMemoryInGB = convertMbToGb(
+      getSafeProperty(this.selectedStorage, (obj) => obj.availableMB, 0)
+    );
+    let usedMemoryInGB = convertMbToGb(
+      getSafeProperty(this.targetDisk, (obj) => obj.sizeMB, 0)
+    );
+    return Math.max((maxMemoryInGB + usedMemoryInGB) - this.deductValueGB, 0);
+  }
+
+  /**
+   * Returns the selected storage based on the forms
+   */
+  public get selectedStorage(): ResourceStorage {
+    return getSafeProperty(this.fcSelectStorages, (obj) => obj.value);
   }
 
   /**
@@ -171,9 +164,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public ngOnChanges(changes: SimpleChanges) {
     let storagesChange = changes['storages'];
     if (!isNullOrEmpty(storagesChange)) {
-      this.selectedStorage = undefined;
       this._setSelectedStorage();
-      this._setCustomStorageValue();
     }
   }
 
@@ -215,32 +206,31 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   }
 
   /**
-   * Sets the selected storage if no network selected yet
+   * Sets the selected storage if no storage selected
    */
   private _setSelectedStorage(): void {
-    if (isNullOrEmpty(this.storages)) { return; }
-    let selectedStorageExist = this.storages.find((storage) => storage === this.selectedStorage);
-    if (!isNullOrEmpty(selectedStorageExist)) { return; }
+    let noStorages = isNullOrEmpty(this.storages);
+    if (noStorages) { return; }
 
-    Promise.resolve().then(() => {
-      if (!isNullOrEmpty(this.fcSelectStorages)) {
-        this.fcSelectStorages.setValue(this.storages[0]);
+    let targetStorageFound = this.storages.find((storage) =>
+      storage.name === getSafeProperty(this.targetDisk, (obj) => obj.storageProfile));
+    let targetStorageToSelect = isNullOrEmpty(targetStorageFound) ?
+      this.storages[0] : targetStorageFound;
 
-        let availableMemoryExceeded = !this.hasAvailableMemory;
-        if (availableMemoryExceeded) {
-          this.fcSelectStorages.markAsTouched();
-        }
-      }
-    });
+    if (!isNullOrEmpty(this.fcSelectStorages)) {
+      this.fcSelectStorages.setValue(targetStorageToSelect);
+
+      let availableMemoryExceeded = !this.hasAvailableMemory;
+      if (availableMemoryExceeded) { this.fcSelectStorages.markAsTouched(); }
+    }
   }
 
   /**
    * Sets the custom storage value if not yet provided
    */
   private _setCustomStorageValue(): void {
-    let hasCustomStorageValue = !isNullOrEmpty(this.customStorageValue);
-    if (hasCustomStorageValue) { return; }
-    this.customStorageValue = this.minValueGB;
+    this.fcCustomStorage.setValue(this.minValueGB);
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -266,6 +256,9 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
         'storageAvailable'
       )
     ]);
+    this.fcCustomStorage.valueChanges
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._notifyDataChanged());
 
     this.fcSelectStorages = new FormControl('', [
       CoreValidators.custom(
@@ -276,11 +269,8 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
 
     // Set the actual selected in case of storage selection changed
     this.fcSelectStorages.valueChanges
-      .pipe(startWith(null), takeUntil(this._destroySubject))
-      .subscribe((value) => {
-        this.selectedStorage = value;
-        this._notifyDataChanged();
-      });
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._notifyDataChanged());
 
     // Create form group and bind the form controls
     this.fgServerStorage = new FormGroup({
@@ -313,8 +303,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
       case ServerInputManageType.Custom:
         this._storageOutput.storage = this.selectedStorage;
         this._storageOutput.sizeMB = convertGbToMb(
-          coerceNumber(this.customStorageValue,
-            this.minValueGB)
+          coerceNumber(this.fcCustomStorage.value, this.minValueGB)
         );
         this._storageOutput.valid = this.fcCustomStorage.valid;
         break;
@@ -326,9 +315,19 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
         this._storageOutput.valid = this.hasAvailableMemory;
         break;
     }
+    this._setStorageHasChangedFlag();
 
     // Emit changes
     this.dataChange.emit(this._storageOutput);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Sets the storage has changed flag based on target nic
+   */
+  private _setStorageHasChangedFlag(): void {
+    if (isNullOrEmpty(this.targetDisk)) { return; }
+    this._storageOutput.hasChanged = this._storageOutput.valid &&
+      this._storageOutput.sizeMB > this.targetDisk.sizeMB;
   }
 }

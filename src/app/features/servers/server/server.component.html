@@ -101,26 +101,21 @@
 
       <mcs-tab-group [selectedTabId]="selectedRoutingTab" (tabChanged)="onTabChanged($event)">
         <!-- Management Tab -->
-        <mcs-tab [label]="textContent.management.label" id="management">
-        </mcs-tab>
+        <mcs-tab [label]="textContent.management.label" id="management"></mcs-tab>
 
         <!-- Storage Tab -->
-        <mcs-tab [label]="textContent.storage.label" id="storage">
-        </mcs-tab>
+        <mcs-tab [label]="textContent.storage.label" id="storage"></mcs-tab>
 
         <!-- Backup Tab -->
         <!-- TODO: Since the backups was not yet finished,
           use the "Snapshot" on the backups tab first
-          instead of textContent.backups.label
-         -->
+          instead of textContent.backups.label -->
         <ng-container *mcsAccessControl="['SnapshotAccess']">
-          <mcs-tab label="Snapshots" id="backups">
-          </mcs-tab>
+          <mcs-tab label="Snapshots" id="backups"></mcs-tab>
         </ng-container>
 
         <!-- Networks Tab -->
-        <mcs-tab [label]="textContent.nics.label" id="nics">
-        </mcs-tab>
+        <mcs-tab [label]="textContent.nics.label" id="nics"></mcs-tab>
 
         <!-- Action tab -->
         <mcs-tab [canSelect]="false" customClass="right-align"
@@ -138,7 +133,7 @@
         <mcs-loader [subscriptions]="serverSubscription"
           [loadingText]="textContent.loading"
           [loadingPlacement]="top">
-          <router-outlet></router-outlet>
+          <div><router-outlet></router-outlet></div>
         </mcs-loader>
       </div>
     </div>

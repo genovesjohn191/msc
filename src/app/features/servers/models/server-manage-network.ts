@@ -6,4 +6,5 @@ export class ServerManageNetwork {
   public customIpAddress: string;
   public ipAllocationMode: ServerIpAllocationMode;
   public valid: boolean;
+  public hasChanged: boolean;
 }

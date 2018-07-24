@@ -13,12 +13,17 @@ import {
   FormGroup,
   FormControl
 } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import {
+  finalize,
+  takeUntil
+} from 'rxjs/operators';
 import {
   replacePlaceholder,
   isNullOrEmpty,
   animateFactory,
-  clearArrayRecord
+  clearArrayRecord,
+  getSafeProperty
 } from '../../../../utilities';
 import {
   McsTextContentProvider,
@@ -34,7 +39,8 @@ import {
 import {
   ServerInputManageType,
   ServerIpAllocationMode,
-  ServerManageNetwork
+  ServerManageNetwork,
+  ServerNic
 } from '../../models';
 
 // Constants
@@ -60,15 +66,15 @@ const Netmask = require('netmask').Netmask;
 export class ServerManageNetworkComponent implements OnInit, OnChanges {
   public textContent: any;
   public netMask: any;
-  public selectedIpAddress: ServerIpAllocationMode;
+  public selectedIpAddressMode: ServerIpAllocationMode;
   public ipAddressesInUsed: ResourceNetworkIpAddress[];
   public ipAddressItems: McsOption[];
   public inputManageType: ServerInputManageType;
   public ipAddressessStatusFactory = new McsDataStatusFactory<ResourceNetworkIpAddress[]>();
 
   // Form variables
-  public fgIpAddress: FormGroup;
-  public fcIpdAdrress: FormControl;
+  public fgCustomIpAddress: FormGroup;
+  public fcCustomIpAddress: FormControl;
 
   @Output()
   public dataChange = new EventEmitter<ServerManageNetwork>();
@@ -83,14 +89,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   public networks: ResourceNetwork[];
 
   @Input()
-  public get customIpAddress(): string { return this._customIpAddress; }
-  public set customIpAddress(value: string) {
-    if (value !== this._customIpAddress) {
-      this._customIpAddress = value;
-      this._notifyDataChanged();
-    }
-  }
-  private _customIpAddress: string;
+  public targetNic: ServerNic;
 
   @Input()
   public get selectedNetwork(): ResourceNetwork { return this._selectedNetwork; }
@@ -107,6 +106,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   private _selectedNetwork: ResourceNetwork;
 
   private _networkOutput = new ServerManageNetwork();
+  private _destroySubject = new Subject<void>();
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -114,17 +114,19 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
     private _resourcesService: ResourcesService
   ) {
     this.inputManageType = ServerInputManageType.Buttons;
+    this.selectedIpAddressMode = ServerIpAllocationMode.Dhcp;
     this.ipAddressItems = new Array();
     this.ipAddressesInUsed = new Array();
     this.netMask = new Netmask(`${DEFAULT_GATEWAY}/${DEFAULT_NETMASK}`);
+    this._registerFormGroup();
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
       .servers.shared.manageNetwork;
-    this._registerFormGroup();
     this._setIpAddressItems();
     this._setSelectedNetwork();
+    this._initializeCurrentView();
     this._notifyDataChanged();
   }
 
@@ -166,7 +168,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
    * @param inputValue Server allocation mode of the radio button
    */
   public onRadioButtonChanged(inputValue: ServerIpAllocationMode) {
-    this.selectedIpAddress = inputValue;
+    this.selectedIpAddressMode = inputValue;
     this._notifyDataChanged();
   }
 
@@ -228,7 +230,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
    */
   private _registerFormGroup(): void {
     // Create form controls
-    this.fcIpdAdrress = new FormControl('', [
+    this.fcCustomIpAddress = new FormControl('', [
       CoreValidators.required,
       CoreValidators.ipAddress,
       CoreValidators.custom(
@@ -236,10 +238,13 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
         'ipRange'
       )
     ]);
+    this.fcCustomIpAddress.valueChanges
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._notifyDataChanged());
 
     // Create form group and bind the form controls
-    this.fgIpAddress = new FormGroup({
-      fcIpdAdrress: this.fcIpdAdrress
+    this.fgCustomIpAddress = new FormGroup({
+      fcCustomIpAddress: this.fcCustomIpAddress
     });
   }
 
@@ -248,9 +253,9 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
    */
   private _resetFormGroup(): void {
     clearArrayRecord(this.ipAddressesInUsed);
-    if (isNullOrEmpty(this.fgIpAddress)) { return; }
-    this.fgIpAddress.reset();
-    this.fcIpdAdrress.reset();
+    if (isNullOrEmpty(this.fgCustomIpAddress)) { return; }
+    this.fgCustomIpAddress.reset();
+    this.fcCustomIpAddress.reset();
   }
 
   /**
@@ -276,6 +281,23 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   }
 
   /**
+   * Initializes the current view of the component based on its target NIC
+   */
+  private _initializeCurrentView(): void {
+    let hasTargetNicToUpdate = !isNullOrEmpty(this.targetNic);
+    if (!hasTargetNicToUpdate) { return; }
+
+    this.inputManageType = this.targetNic.ipAllocationMode === ServerIpAllocationMode.Manual ?
+      ServerInputManageType.Custom :
+      ServerInputManageType.Buttons;
+    if (this.targetNic.ipAllocationMode !== ServerIpAllocationMode.Manual) {
+      this.selectedIpAddressMode = this.targetNic.ipAllocationMode;
+    }
+    this.fcCustomIpAddress.setValue(getSafeProperty(this.targetNic, (obj) => obj.ipAddresses[0]));
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
    * Event that emits when an input has been changed
    */
   private _notifyDataChanged() {
@@ -283,22 +305,44 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
     switch (this.inputManageType) {
       case ServerInputManageType.Custom:
         this._networkOutput.network = this.selectedNetwork;
-        this._networkOutput.customIpAddress = this.customIpAddress ? this.customIpAddress : null;
+        this._networkOutput.customIpAddress = this.fcCustomIpAddress.value;
         this._networkOutput.ipAllocationMode = ServerIpAllocationMode.Manual;
-        this._networkOutput.valid = this.fcIpdAdrress.valid;
+        this._networkOutput.valid = this.fcCustomIpAddress.valid &&
+          !isNullOrEmpty(this.selectedNetwork);
         break;
 
       case ServerInputManageType.Buttons:
       default:
         this._networkOutput.network = this.selectedNetwork;
         this._networkOutput.customIpAddress = null;
-        this._networkOutput.ipAllocationMode = this.selectedIpAddress;
-        this._networkOutput.valid = true;
+        this._networkOutput.ipAllocationMode = this.selectedIpAddressMode;
+        this._networkOutput.valid = !isNullOrEmpty(this.selectedNetwork) &&
+          !isNullOrEmpty(this.selectedIpAddressMode);
         break;
     }
+    this._setNetworkHasChangedFlag();
 
     // Emit changes
     this.dataChange.emit(this._networkOutput);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Sets the network has changed flag based on target nic
+   */
+  private _setNetworkHasChangedFlag(): void {
+    if (isNullOrEmpty(this.targetNic)) { return; }
+    this._networkOutput.hasChanged = this._networkOutput.valid
+      && (this._networkOutput.ipAllocationMode !== this.targetNic.ipAllocationMode
+        || this._networkOutput.network.name !== this.targetNic.logicalNetworkName);
+
+    let isCustomIpAddress = !this._networkOutput.hasChanged
+      && this._networkOutput.ipAllocationMode === ServerIpAllocationMode.Manual
+      && this._networkOutput.valid;
+    if (isCustomIpAddress) {
+      let ipAddressFound = this.targetNic.ipAddresses.find((ipAddress) =>
+        this._networkOutput.customIpAddress === ipAddress);
+      this._networkOutput.hasChanged = isNullOrEmpty(ipAddressFound);
+    }
   }
 }

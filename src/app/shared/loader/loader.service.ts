@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import {
   Subscription,
-  Subject
+  Subject,
+  Observable
 } from 'rxjs';
-import { isNullOrEmpty, getSafeProperty } from '../../utilities';
+import { distinctUntilChanged } from 'rxjs/operators';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '../../utilities';
 
 @Injectable()
 export class LoaderService {
@@ -19,9 +24,11 @@ export class LoaderService {
    * of the previous subscription not to be added again
    */
   private _subscriptions: Set<Subscription>;
+  private _activeChange: Subject<boolean>;
 
   constructor() {
     this._subscriptions = new Set();
+    this._activeChange = new Subject<boolean>();
   }
 
   /**
@@ -59,6 +66,13 @@ export class LoaderService {
   }
 
   /**
+   * An observable event that emits when the active flag has changed
+   */
+  public get activeChange(): Observable<boolean> {
+    return this._activeChange.pipe(distinctUntilChanged());
+  }
+
+  /**
    * Returns true when all the subscriptions are removed
    */
   public isActive(): boolean {
@@ -70,6 +84,7 @@ export class LoaderService {
       if (hasActive) { return; }
       hasActive = getSafeProperty(subscription, (obj) => !obj.closed);
     });
+    this._activeChange.next(hasActive);
     return hasActive;
   }
 

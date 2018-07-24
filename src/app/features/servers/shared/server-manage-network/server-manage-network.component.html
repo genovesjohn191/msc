@@ -31,7 +31,7 @@
     <span>{{ textContent.buttonMessage }}</span>
 
     <mcs-radio-button-group orientation="vertical"
-      [ngModel]="ipAddressValue" (ngModelChange)="onRadioButtonChanged($event)">
+      [ngModel]="selectedIpAddressMode" (ngModelChange)="onRadioButtonChanged($event)">
       <mcs-radio-button *ngFor="let item of ipAddressItems" [value]="item.value">
         {{ item.text }}
       </mcs-radio-button>
@@ -44,11 +44,9 @@
   <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom" class="block-items-medium">
     <span>{{ textContent.customMessage }}</span>
 
-    <form [formGroup]="fgIpAddress">
+    <form [formGroup]="fgCustomIpAddress">
       <mcs-form-field class="form-field-size-medium">
-        <input mcsInput placeholder="Enter IP Address" #customInput
-          [(ngModel)]="customIpAddress"
-          [formControl]="fcIpdAdrress">
+        <input mcsInput placeholder="Enter IP Address" #customInput [formControl]="fcCustomIpAddress">
 
         <mcs-hint mcsHint align="start" *ngIf="netMask">
           {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
