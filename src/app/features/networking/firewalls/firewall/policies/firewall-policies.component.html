@@ -6,11 +6,11 @@
     <div [@fadeIn] *ngSwitchCase="firewallPoliciesModeEnum.Listing">
       <div class="listing-table-wrapper">
         <!-- Search -->
-        <div class="filter-section">
-          <mcs-search #search flex="auto"></mcs-search>
+        <div class="inline-items-medium">
+          <mcs-search #search></mcs-search>
           <mcs-icon [key]="columnFilterIconKey" size="large" class="hidden-small pointer"
             mcsPopover placement="bottom" orientation="left" theme="light"
-            padding="narrow" [content]="filterSelector" flex="none" cursor="pointer">
+            padding="narrow" [content]="filterSelector" cursor="pointer">
           </mcs-icon>
           <ng-template #filterSelector>
             <mcs-filter-selector [key]="columnSettingsKey"
@@ -23,7 +23,7 @@
               (filtersChange)="updateColumnSettings($event)">
             </mcs-filter-selector>
           </ng-container>
-          <div class="record-count hidden-small" flex="none">
+          <div class="total-record-count right-align hidden-small">
             <span>
               {{ totalRecordsCount | mcsPlural: textContent.dataSingular : textContent.dataPlural}}
             </span>

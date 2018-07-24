@@ -14,7 +14,10 @@ import {
   Subscription,
   Subject
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
 import {
   CoreDefinition,
   McsSizeType,
@@ -95,7 +98,7 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
 
   public ngAfterViewInit(): void {
     refreshView(() => {
-      this._setTargetElements();
+      this._listenToActiveChanges();
       this._listenToSubscriptionsChanges();
       if (!this.subscriptionsActive) { this._showTargetElements(); }
     });
@@ -149,6 +152,18 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
     this._loaderService.subscriptionsChange
       .pipe(takeUntil(this._destroySubject))
       .subscribe((_subscriptions) => this._changeDetectorRef.markForCheck());
+  }
+
+  /**
+   * Listens for every active changes on the loader
+   */
+  private _listenToActiveChanges(): void {
+    this._loaderService.activeChange
+      .pipe(startWith(true), takeUntil(this._destroySubject))
+      .subscribe((isActive) => {
+        if (isActive) { this._setTargetElements(); }
+        this._changeDetectorRef.markForCheck();
+      });
   }
 
   /**

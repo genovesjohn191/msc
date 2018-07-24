@@ -139,7 +139,7 @@
             [networks]="resourceNetworks"
             [resourceId]="serverResource?.id"
             (dataChange)="onNetworkChanged($event)"
-            [customIpAddress]="currentIpAddress"
+            [targetNic]="selectedNic"
             [(selectedNetwork)]="selectedNetwork">
 
             <ng-container mcsManageNetworkHeader>
@@ -160,7 +160,7 @@
               mcsEventLabel="server-details-page">Cancel</a>
             <button *mcsAccessControl="['VmEdit']"
               mcsButton id="ctaUpdateServerNetwork" arrow="right" size="small"
-              [disabled]="!editNicEnabled" (click)="updateNic()"
+              [disabled]="!manageNetwork?.hasChanged" (click)="updateNic()"
                 mcsEventTracker="update-nic"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">

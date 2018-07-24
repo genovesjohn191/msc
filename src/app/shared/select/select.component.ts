@@ -47,7 +47,8 @@ import {
   ErrorStateMatcher,
   coerceBoolean,
   coerceNumber,
-  animateFactory
+  animateFactory,
+  unsubscribeSubject
 } from '../../utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
 
@@ -227,8 +228,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
 
   public ngOnDestroy(): void {
     unregisterEvent(document, 'click', this._closeOutsideHandler);
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
     this.stateChanges.complete();
   }
 
@@ -344,16 +344,16 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Listen to every selection changed event
    */
   private _listenToSelectionChange(): void {
-    let changedOrDestroyed = merge(this._items.changes, this._destroySubject);
+    let resetSubject = merge(this._items.changes, this._destroySubject);
     this.itemsSelectionChanged
-      .pipe(takeUntil(changedOrDestroyed))
+      .pipe(takeUntil(resetSubject))
       .subscribe((item) => {
         this._selectItem(item);
         this.closePanel();
       });
 
     this.groupsSelectionChanged
-      .pipe(takeUntil(changedOrDestroyed))
+      .pipe(takeUntil(resetSubject))
       .subscribe((item) => {
         this._toggleItemPanel(item);
       });

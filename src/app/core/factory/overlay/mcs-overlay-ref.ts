@@ -179,10 +179,14 @@ export class McsOverlayRef {
     if (this._overlayState.pointerEvents) {
       this._overlayElementItem.style.pointerEvents = 'none';
     }
+
     // Remove the current item of the overlay
-    if (!isNullOrEmpty(this._overlayElementWrapper)) {
+    let hasParentElement = !isNullOrEmpty(this._overlayElementWrapper)
+      && !isNullOrEmpty(this._overlayElementWrapper.parentElement);
+    if (hasParentElement) {
       this._overlayElementWrapper.parentElement.removeChild(this._overlayElementWrapper);
     }
+
     // Remove the current overlay after detaching the background
     if (!isNullOrEmpty(this.overlayElementItem.parentNode)) {
       this.overlayElementItem.parentNode.removeChild(this._overlayElementItem);

@@ -39,7 +39,6 @@ import {
   unsubscribeSafely,
   unsubscribeSubject,
   animateFactory,
-  convertMbToGb,
   getSafeProperty
 } from '../../../../utilities';
 import { DeleteStorageDialogComponent } from '../../shared';
@@ -58,7 +57,6 @@ export enum ServerDiskMethodType {
 
 // Constants
 const SERVER_MAXIMUM_DISKS = 14;
-const SERVER_DISK_STEP = 10;
 
 @Component({
   selector: 'mcs-server-storage',
@@ -138,26 +136,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     }
   }
 
-  /**
-   * Returns the minimum GB required
-   */
-  public get minimumGB(): number {
-    if (isNullOrEmpty(this.selectedDisk)) { return 0; }
-
-    let exactMinValue = convertMbToGb(this.selectedDisk.sizeMB);
-    let dividedValue = Math.floor(exactMinValue / SERVER_DISK_STEP);
-    let isExactByStep = (exactMinValue % SERVER_DISK_STEP) === 0;
-    return isExactByStep ? exactMinValue : (dividedValue + 1) * SERVER_DISK_STEP;
-  }
-
-  /**
-   * Returns the selected disk size in GB
-   */
-  public get selectedDiskSizeGB(): number {
-    if (isNullOrEmpty(this.selectedDisk)) { return 0; }
-    return convertMbToGb(this.selectedDisk.sizeMB);
-  }
-
   constructor(
     _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
@@ -203,6 +181,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public onStorageChanged(manageStorage: ServerManageStorage): void {
     if (isNullOrEmpty(manageStorage)) { return; }
     this.manageStorage = manageStorage;
+    this.selectedStorage = this.manageStorage.storage;
   }
 
   /**
