@@ -35,6 +35,7 @@ import {
   unsubscribeSafely,
   unsubscribeSubject
 } from '../../../../utilities';
+import { ComponentHandlerDirective } from '../../../../shared';
 import { Firewall } from '../models';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
@@ -57,6 +58,9 @@ export class FirewallComponent
 
   @ViewChild('search')
   public search: McsSearch;
+
+  @ViewChild(ComponentHandlerDirective)
+  public componentHandler: ComponentHandlerDirective;
 
   public firewallsTextContent: any;
   public firewallTextContent: any;
@@ -140,7 +144,7 @@ export class FirewallComponent
   public onFirewallSelect(firewall: Firewall): void {
     if (isNullOrEmpty(firewall)) { return; }
 
-    this._setSelectedFirewallInfo(firewall);
+    this._setSelectedFirewallById(firewall.id);
     this._changeDetectorRef.markForCheck();
     this.router.navigate(['/networking/firewalls', firewall.id]);
   }
@@ -172,10 +176,14 @@ export class FirewallComponent
    */
   protected onParamIdChanged(id: string): void {
     if (isNullOrEmpty(id)) { return; }
-    // We need to set the ID in here so that the firewall id
-    // is not null when the user tries to refresh the page while on policies
-    this._setSelectedFirewallInfo({ id } as Firewall);
+
+    // We need to recreate the component in order for the
+    // component to generate new instance
+    if (!isNullOrEmpty(this.componentHandler)) {
+      this.componentHandler.recreateComponent();
+    }
     this._getFirewallById(id);
+    this._setSelectedFirewallById(id);
   }
 
   /**
@@ -225,19 +233,25 @@ export class FirewallComponent
         })
       )
       .subscribe((response) => {
-        this._setSelectedFirewallInfo(response);
-        unsubscribeSafely(this.firewallSubscription);
+        this._setSelectedFirewallById(response.id);
         this._changeDetectorRef.markForCheck();
       });
   }
 
   /**
-   * This will set the selected firewall details every selection
+   * This will set the selected firewall details for every selection
    */
-  private _setSelectedFirewallInfo(selectedFirewall: Firewall): void {
-    if (isNullOrEmpty(selectedFirewall)) { return; }
-    this.selectedFirewall = selectedFirewall;
+  private _setSelectedFirewallById(firewallId: string): void {
+    if (isNullOrEmpty(firewallId)) { return; }
+    // Set the selection of firewall based on its ID
+    let firewallFound = this._firewallsRepository.dataRecords
+      .find((firewall) => firewall.id === firewallId);
+    if (isNullOrEmpty(firewallFound)) {
+      this.selectedFirewall = { id: firewallId } as Firewall;
+      return;
+    }
+
+    this.selectedFirewall = firewallFound;
     this._firewallService.setSelectedFirewall(this.selectedFirewall);
-    this._changeDetectorRef.markForCheck();
   }
 }

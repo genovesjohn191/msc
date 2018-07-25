@@ -240,12 +240,12 @@ export class ServerComponent
    */
   protected onParamIdChanged(id: string) {
     if (isNullOrEmpty(id)) { return; }
+
     // We need to recreate the component in order for the
     // component to generate new instance
     if (!isNullOrEmpty(this.componentHandler)) {
       this.componentHandler.recreateComponent();
     }
-
     this._getServerById(id);
     this._setSelectedServerById(id);
   }
@@ -302,7 +302,6 @@ export class ServerComponent
         })
       )
       .subscribe((response) => {
-        unsubscribeSafely(this.serverSubscription);
         this._setSelectedServerById(response.id);
         this._changeDetectorRef.markForCheck();
       });

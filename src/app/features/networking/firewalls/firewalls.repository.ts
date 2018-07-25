@@ -30,7 +30,7 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
     activeFirewall: Firewall,
     page?: McsPaginator,
     search?: McsSearch
-  ): Observable<FirewallPolicy[]> {
+  ): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
     return this._firewallsService.getFirewallPolicies(
       activeFirewall.id,
       {
@@ -43,7 +43,7 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
           activeFirewall.policies = !isNullOrEmpty(response.content) ?
             response.content : new Array();
           this.updateRecord(activeFirewall);
-          return response.content;
+          return response;
         })
       );
   }

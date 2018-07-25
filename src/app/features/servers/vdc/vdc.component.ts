@@ -35,6 +35,7 @@ import {
   unsubscribeSafely,
   compareStrings
 } from '../../../utilities';
+import { ComponentHandlerDirective } from '../../../shared';
 import {
   Resource,
   ResourcesRepository
@@ -64,6 +65,9 @@ export class VdcComponent
 
   @ViewChild('search')
   public search: McsSearch;
+
+  @ViewChild(ComponentHandlerDirective)
+  public componentHandler: ComponentHandlerDirective;
 
   public textContent: any;
   public serversTextContent: any;
@@ -184,10 +188,13 @@ export class VdcComponent
    */
   protected onParamIdChanged(id: string): void {
     if (isNullOrEmpty(id)) { return; }
-    this._getVdcById(id);
+    // We need to recreate the component in order for the
+    // component to generate new instance
+    if (!isNullOrEmpty(this.componentHandler)) {
+      this.componentHandler.recreateComponent();
+    }
 
-    // Set the selection iniatially when no selected item
-    // in order for the header to show it immediately
+    this._getVdcById(id);
     if (isNullOrEmpty(this.selectedPlatform)) {
       let resourceExist = this._resourcesRepository.dataRecords
         .find((resourceId) => resourceId.id === this.paramId);
@@ -252,7 +259,6 @@ export class VdcComponent
         this.vdc = response;
         this._setSelectedPlatformByResource(this.vdc);
         this._vdcService.setSelectedVdc(this.vdc);
-        unsubscribeSafely(this.vdcSubscription);
       });
   }
 
