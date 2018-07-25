@@ -1,13 +1,14 @@
 <mcs-page [header]="selectedProduct?.name">
 
   <!-- Top Panel -->
-  <mcs-top-panel *mcsTopPanelDef class="visible-small">
+  <!-- TODO: Removed temporarily for production release -->
+  <!-- <mcs-top-panel *mcsTopPanelDef class="visible-small">
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <mcs-action-item class="right-align" (click)="onToggleSlidingPanel()">
         <mcs-icon [key]="toggleIconKey"></mcs-icon>
       </mcs-action-item>
     </mcs-top-panel-item>
-  </mcs-top-panel>
+  </mcs-top-panel> -->
 
   <!-- Left Panel -->
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
@@ -56,15 +57,18 @@
       [loadingText]="textContent.loadingDetails"
       loadingPlacement="top">
 
-      <mcs-sliding-panel placement="right" #slidingPanel class="visible-small">
+      <!-- TODO: Removed temporarily for production release -->
+      <!-- <mcs-sliding-panel placement="right" #slidingPanel class="visible-small">
         <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
-      </mcs-sliding-panel>
+      </mcs-sliding-panel> -->
 
       <div #productDetails class="inline-items align-items-none">
         <router-outlet></router-outlet>
-        <div class="space-left-xlarge hidden-small">
+
+        <!-- TODO: Removed temporarily for production release -->
+        <!-- <div class="space-left-xlarge hidden-small">
           <ng-container *ngTemplateOutlet="productAnnexTemplate"></ng-container>
-        </div>
+        </div> -->
       </div>
     </mcs-loader>
 

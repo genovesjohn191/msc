@@ -14,10 +14,13 @@ import {
   McsPaginator,
   McsSearch
 } from '../../../../../core';
-import { isNullOrEmpty } from '../../../../../utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '../../../../../utilities';
 import { FirewallPolicy } from '../../models';
-import { FirewallService } from '../firewall.service';
 import { FirewallsRepository } from '../../firewalls.repository';
+import { FirewallService } from '../firewall.service';
 
 export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy> {
   /**
@@ -73,8 +76,8 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
             this._search)
             .pipe(
               map((response) => {
-                this._totalRecordCount = response.length;
-                return response;
+                this._totalRecordCount = getSafeProperty(response, (obj) => obj.totalCount, 0);
+                return getSafeProperty(response, (obj) => obj.content);
               })
             );
         })
