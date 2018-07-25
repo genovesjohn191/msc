@@ -1,6 +1,5 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsDateSerialization } from '../../../../../core';
-import { isNullOrEmpty } from '../../../../../utilities';
 
 export class FirewallUtm {
   @JsonProperty({
@@ -42,7 +41,11 @@ export class FirewallUtm {
    * Returns true if firewall has one or more UTM service
    */
   public get hasUtmService(): boolean {
-    return !isNullOrEmpty(this.avExpiryDate) || !isNullOrEmpty(this.ipsExpiryDate)
-      || !isNullOrEmpty(this.emailExpiryDate) || !isNullOrEmpty(this.webExpiryDate);
+    /**
+     * TODO: Temporarily removed as per Shaun's information
+     */
+    // return !isNullOrEmpty(this.avExpiryDate) || !isNullOrEmpty(this.ipsExpiryDate)
+    //   || !isNullOrEmpty(this.emailExpiryDate) || !isNullOrEmpty(this.webExpiryDate);
+    return false;
   }
 }
