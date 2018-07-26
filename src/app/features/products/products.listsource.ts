@@ -12,13 +12,10 @@ import {
 import {
   compareStrings,
   containsString,
-  isNullOrEmpty
+  isNullOrEmpty,
+  createNewObject
 } from '../../utilities';
-import {
-  ProductCatalog,
-  Product,
-  ProductCategory
-} from './models';
+import { ProductCatalog } from './models';
 import { ProductCatalogRepository } from './product-catalog.repository';
 
 export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> {
@@ -65,54 +62,32 @@ export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> 
     return this._catalogRepository.findAllRecords()
       .pipe(
         map((response) => {
-          let filteredCatalog: ProductCatalog[] = [];
-          response.forEach((catalog) => {
-            let filteredItems = this._filterByCatalog(this._search.keyword, catalog);
-            if (!isNullOrEmpty(filteredItems)) { filteredCatalog.push(filteredItems); }
-          });
-          return filteredCatalog;
+          // Create new object of response so that we won't touch the original object
+          let newObject = createNewObject<ProductCatalog[]>(ProductCatalog, response);
+          return newObject.filter(this._filterCatalog.bind(this));
         })
       );
   }
 
   /**
-   * Filter all record from repository based on its source catalog and keyword
+   * Filters the catalog items going to products and return true
+   * when the record in under the catalog
+   * @param _sourceCatalog Source catalog from which the record should be filtered
    */
-  private _filterByCatalog(keyword: string, sourceCatalog: ProductCatalog): ProductCatalog {
-    if (isNullOrEmpty(sourceCatalog)) { return undefined; }
-    let _catalog = Object.assign({}, sourceCatalog);
+  private _filterCatalog(_sourceCatalog: ProductCatalog): boolean {
+    if (isNullOrEmpty(_sourceCatalog)) { return true; }
+    if (containsString(_sourceCatalog.name, this._search.keyword)) { return true; }
 
-    // Return the whole catalog when the name is the found
-    if (containsString(sourceCatalog.name, keyword)) { return _catalog; }
+    let filteredCategories = _sourceCatalog.categories.filter((_category) => {
+      if (containsString(_category.name, this._search.keyword)) { return true; }
 
-    _catalog.categories = [];
-    sourceCatalog.categories.forEach((category) => {
-      let filteredCategory = this._filterByCategory(keyword, category);
-      if (isNullOrEmpty(filteredCategory)) { return; }
-      _catalog.categories.push(filteredCategory);
+      let filteredProducts = _category.products.filter((_product) =>
+        containsString(_product.name, this._search.keyword)
+      );
+      _category.products = filteredProducts;
+      return !isNullOrEmpty(filteredProducts);
     });
-    return isNullOrEmpty(_catalog.categories) ? undefined : _catalog;
-  }
-
-  /**
-   * Filter all record from repository based on its source category and keyword
-   */
-  private _filterByCategory(keyword: string, sourceCategory: ProductCategory): ProductCategory {
-    if (isNullOrEmpty(sourceCategory)) { return undefined; }
-    let targetCategory = Object.assign({}, sourceCategory);
-
-    // Return the whole category when the name is the found
-    if (containsString(sourceCategory.name, keyword)) { return targetCategory; }
-
-    targetCategory.products = this._filterByProducts(keyword, sourceCategory.products);
-    return isNullOrEmpty(targetCategory.products) ? undefined : targetCategory;
-  }
-
-  /**
-   * Filter all record from repository based on its source products and keyword
-   */
-  private _filterByProducts(keyword: string, sourceProducts: Product[]): Product[] {
-    if (isNullOrEmpty(sourceProducts)) { return undefined; }
-    return sourceProducts.filter((product) => containsString(product.name, keyword));
+    _sourceCatalog.categories = filteredCategories;
+    return !isNullOrEmpty(filteredCategories);
   }
 }

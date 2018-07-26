@@ -7,7 +7,8 @@ import {
   unsubscribeSafely,
   unsubscribeSubject,
   updateObjectData,
-  getSafeProperty
+  getSafeProperty,
+  createNewObject
 } from './mcs-object.function';
 
 describe('OBJECT Functions', () => {
@@ -106,9 +107,22 @@ describe('OBJECT Functions', () => {
 
     it(`should return undefined value when the object is null or undefined
       and no provided fail value`, () => {
-      let objectData: any;
-      let failValue = getSafeProperty(objectData, (obj) => obj.first);
-      expect(failValue).toBeUndefined();
+        let objectData: any;
+        let failValue = getSafeProperty(objectData, (obj) => obj.first);
+        expect(failValue).toBeUndefined();
+      });
+  });
+
+  describe('createNewObject()', () => {
+    it('should create a new object based on the source provided', () => {
+      class TestClass {
+        public name: string;
+        public age: string;
+      }
+      let sourceInstance = { name: 'Arrian', age: '27' } as TestClass;
+      let targetInstance = createNewObject(TestClass, sourceInstance);
+      expect(targetInstance).toBeDefined();
+      expect(targetInstance).not.toBe(sourceInstance);
     });
   });
 });

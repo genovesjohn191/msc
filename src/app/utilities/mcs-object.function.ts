@@ -3,6 +3,7 @@ import {
   Subject
 } from 'rxjs';
 import { isNullOrUndefined } from 'util';
+import { deserializeJsonToObject } from './mcs-json.function';
 
 /**
  * This will check if the inputted object is null/undefined or empty,
@@ -46,6 +47,15 @@ export function unsubscribeSubject(subject: Subject<any>): void {
 export function updateObjectData(target: any, ...source: any[]): void {
   if (isNullOrUndefined(source)) { return; }
   target = Object.assign(target || {}, ...source);
+}
+
+/**
+ * Creates new object from source object by deserializing its content
+ * @param objectType Object type to be created
+ * @param sourceObject Source object from which to copy the object
+ */
+export function createNewObject<T>(objectType: new () => any, sourceObject: T): T {
+  return deserializeJsonToObject<T>(objectType, sourceObject);
 }
 
 /**

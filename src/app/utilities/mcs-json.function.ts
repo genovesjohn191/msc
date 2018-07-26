@@ -42,7 +42,7 @@ export function serializeObjectToJson<T>(object: T): string {
  * @param json JSON content to be converted as type "T"
  */
 export function deserializeJsonToObject<T>(
-  classType: new () => T,
+  classType: new () => any,
   json: any): T {
   let convertedObject: any;
 
