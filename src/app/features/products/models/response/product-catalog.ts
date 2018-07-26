@@ -4,6 +4,7 @@ import { McsEntityBase } from '../../../../core';
 
 export class ProductCatalog extends McsEntityBase {
   public name: string;
+  public displayOrder: number;
 
   @JsonProperty({ type: ProductCategory })
   public categories: ProductCategory[];
@@ -11,6 +12,7 @@ export class ProductCatalog extends McsEntityBase {
   constructor() {
     super();
     this.name = undefined;
+    this.displayOrder = undefined;
     this.categories = undefined;
   }
 }
