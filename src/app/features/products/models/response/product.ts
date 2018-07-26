@@ -19,6 +19,7 @@ export class Product extends McsEntityBase {
   public serviceIdPrefix: string;
   public elementCode: string;
   public name: string;
+  public displayOrder: number;
   public catalogId: string;
   public categoryId: string;
 
@@ -42,6 +43,7 @@ export class Product extends McsEntityBase {
     this.serviceIdPrefix = undefined;
     this.elementCode = undefined;
     this.name = undefined;
+    this.displayOrder = undefined;
     this.catalogId = undefined;
     this.categoryId = undefined;
   }

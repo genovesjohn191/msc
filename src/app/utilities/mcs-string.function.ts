@@ -118,8 +118,8 @@ export function compareStrings(firstString: string, secondString: string): numbe
 
 /**
  * Returns true when the target text found in source text.
- * @param source Source text where the target string be compared
- * @param target Target text to be compared
+ * @param source Source text where the target string will be compared
+ * @param target Target text or keyword to be compared
  */
 export function containsString(source: string, target: string): boolean {
   if (!source) { source = ''; }
