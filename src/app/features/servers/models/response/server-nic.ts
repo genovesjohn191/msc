@@ -4,6 +4,7 @@ import {
   serverIpAllocationModeText
 } from '../enumerations/server-ip-allocation-mode.enum';
 import { JsonProperty } from 'json-object-mapper';
+import { isNullOrEmpty } from '../../../../utilities';
 
 export class ServerNic {
   public id: string;
@@ -62,5 +63,14 @@ export class ServerNic {
    */
   public get ipAllocationModeLabel(): string {
     return serverIpAllocationModeText[this.ipAllocationMode];
+  }
+
+  /**
+   * Returns the logical ip addresses of the nic
+   */
+  public get logicalIpAddresses(): string[] {
+    let noIpAddress = isNullOrEmpty(this.ipAddresses) && isNullOrEmpty(this.vCloudIpAddress);
+    if (noIpAddress) { return undefined; }
+    return isNullOrEmpty(this.ipAddresses) ? [this.vCloudIpAddress] : this.ipAddresses;
   }
 }

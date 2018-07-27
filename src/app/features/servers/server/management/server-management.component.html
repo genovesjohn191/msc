@@ -104,8 +104,7 @@
               <div class="form-field-inline">
                 <span>{{ textContent.storage.title }}</span>
                 <ng-container *mcsAccessControl="['VmEdit']">
-                  <a *mcsIsSelfManagedServer="server"
-                    [disabled]="!server.executable"
+                  <a [disabled]="!server.executable"
                     [routerLink]="['../storage']">
                     {{ textContent.storage.manage }}
                   </a>
@@ -131,7 +130,17 @@
 
           <!-- VM NICs -->
           <div class="grid-column container-wrapper break-on-small">
-            <h4 class="container-header">{{ textContent.nics.title }}</h4>
+            <h4 class="container-header">
+              <div class="form-field-inline">
+                <span>{{ textContent.nics.title }}</span>
+                <ng-container *mcsAccessControl="['VmNicEdit']">
+                  <a [disabled]="!server.executable"
+                    [routerLink]="['../nics']">
+                    {{ textContent.nics.manage }}
+                  </a>
+                </ng-container>
+              </div>
+            </h4>
             <ng-container *ngIf="server.nics | mcsIsNullOrEmpty; else nicsTemplate">
               <mcs-data-status-empty>
                 {{ textContent.nics.noContentMessage }}
@@ -154,9 +163,9 @@
                     </div>
                     <div class="form-field-inline">
                       <span>{{ textContent.nics.ipAddresses }}:</span>
-                      <ng-container *ngIf="getNicIpAddresses(nic); else noIpAddressTemplate">
+                      <ng-container *ngIf="nic.logicalIpAddresses; else noIpAddressTemplate">
                         <mcs-list spacing="auto">
-                          <mcs-list-item *ngFor="let item of getNicIpAddresses(nic)">
+                          <mcs-list-item *ngFor="let item of nic.logicalIpAddresses">
                             {{ item }}
                           </mcs-list-item>
                         </mcs-list>
@@ -187,8 +196,7 @@
               <div class="form-field-inline">
                 <span>{{ textContent.media.title }}</span>
                 <ng-container *mcsAccessControl="['VmEdit']">
-                  <a *mcsIsSelfManagedServer="server"
-                    (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
+                  <a (click)="setViewMode(serverManagementViewEnum.ManageMedia)"
                     [disabled]="!attachMediaEnabled"
                     mcsEventTracker="attach-media-option"
                     mcsEventCategory="server"
@@ -204,19 +212,17 @@
                 <mcs-list spacing="xsmall">
                   <mcs-list-item *ngFor="let media of serverMedias" class="form-field-inline">
                     <ng-container *mcsAccessControl="['VmEdit']">
-                      <ng-container *mcsIsSelfManagedServer="server">
-                        <mcs-icon *ngIf="mediaIsDetaching(media)"
-                          [key]="spinnerIconKey" size="small"
-                          [mcsTooltip]="jobSummaryInfo"></mcs-icon>
+                      <mcs-icon *ngIf="mediaIsDetaching(media)"
+                        [key]="spinnerIconKey" size="small"
+                        [mcsTooltip]="jobSummaryInfo"></mcs-icon>
 
-                        <mcs-icon *ngIf="!mediaIsDetaching(media)" cursor="pointer"
-                          [key]="removeIconKey" size="small"
-                          (click)="showDetachMediaDialog(media)"
-                          [mcsTooltip]="textContent.media.detach"
-                          mcsEventTracker="detach-media-option"
-                          mcsEventCategory="server"
-                          mcsEventLabel="server-details-page"></mcs-icon>
-                      </ng-container>
+                      <mcs-icon *ngIf="!mediaIsDetaching(media)" cursor="pointer"
+                        [key]="removeIconKey" size="small"
+                        (click)="showDetachMediaDialog(media)"
+                        [mcsTooltip]="textContent.media.detach"
+                        mcsEventTracker="detach-media-option"
+                        mcsEventCategory="server"
+                        mcsEventLabel="server-details-page"></mcs-icon>
                     </ng-container>
                     <span>{{ media.name }}</span>
                   </mcs-list-item>
