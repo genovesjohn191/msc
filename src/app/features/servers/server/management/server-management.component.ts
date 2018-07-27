@@ -44,7 +44,6 @@ import {
   ResourcesRepository
 } from '../../../resources';
 import {
-  ServerNic,
   ServerMedia,
   ServerIpAllocationMode,
   ServerManageScale,
@@ -338,19 +337,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public setViewMode(viewMode: ServerManagementView) {
     this.serverManagementView = viewMode;
     this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Returns the corresponding NICs of the server
-   * @param nic NIC to be checked if it has ip-addresses
-   */
-  public getNicIpAddresses(nic: ServerNic): string[] {
-    let nicAddresses = getSafeProperty(nic, (obj) => obj.ipAddresses);
-    let vCloudIpAddresses = getSafeProperty(nic, (obj) => obj.vCloudIpAddress);
-
-    let noIpAddress = isNullOrEmpty(nicAddresses) && isNullOrEmpty(vCloudIpAddresses);
-    if (noIpAddress) { return undefined; }
-    return isNullOrEmpty(nicAddresses) ? [vCloudIpAddresses] : nicAddresses;
   }
 
   /**

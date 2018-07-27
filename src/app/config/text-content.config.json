@@ -322,6 +322,7 @@
         },
         "nics": {
           "title": "NICs",
+          "manage": "Manage",
           "publicIp": "Public IP",
           "interface": "NIC",
           "primary": "Primary",

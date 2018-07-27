@@ -48,7 +48,7 @@
                   </td>
                   <td>
                     <mcs-list spacing="none">
-                      <mcs-list-item *ngFor="let ipAddress of nic.ipAddresses">
+                      <mcs-list-item *ngFor="let ipAddress of nic.logicalIpAddresses">
                         <span [innerHTML]="ipAddress | mcsDataLabel"></span>
                       </mcs-list-item>
                     </mcs-list>
