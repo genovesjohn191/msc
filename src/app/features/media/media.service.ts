@@ -15,10 +15,10 @@ import {
 import { isNullOrEmpty } from '../../utilities';
 
 /**
- * Media Services Class
+ * Media Service Class
  */
 @Injectable()
-export class MediasService {
+export class MediaService {
 
   constructor(
     private _mcsApiService: McsApiService,
@@ -46,7 +46,7 @@ export class MediasService {
     searchParams.set('search_keyword', args.searchKeyword);
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = '/servers/resources/media';
+    mcsApiRequestParameter.endPoint = '/resources/media';
     mcsApiRequestParameter.searchParameters = searchParams;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
@@ -73,7 +73,7 @@ export class MediasService {
    */
   public getMedia(id: any): Observable<McsApiSuccessResponse<Media>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/servers/resources/media/${id}`;
+    mcsApiRequestParameter.endPoint = `/resources/media/${id}`;
 
     mcsApiRequestParameter.responseType = 'json';
 

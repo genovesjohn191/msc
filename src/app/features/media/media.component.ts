@@ -7,13 +7,6 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
-/** Models */
-import { Media } from './models';
-/** Repository */
-import { MediasRepository } from './medias.repository';
-/** Datasource */
-import { MediasDataSource } from './medias.datasource';
-/** Core */
 import {
   McsTextContentProvider,
   CoreDefinition,
@@ -23,32 +16,29 @@ import {
 import {
   isNullOrEmpty,
   refreshView,
-  unsubscribeSafely,
   getSafeProperty
 } from '../../utilities';
+import { Media } from './models';
+import { MediaRepository } from './repositories/media.repository';
+import { MediaDataSource } from './media.datasource';
 
-// TODO: Change it to media, and create a medium for singular
 @Component({
-  selector: 'mcs-medias',
-  templateUrl: './medias.component.html',
+  selector: 'mcs-media',
+  templateUrl: './media.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class MediasComponent
-  extends McsTableListingBase<MediasDataSource>
+export class MediaComponent
+  extends McsTableListingBase<MediaDataSource>
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-
-  // Subscription
-  private _selectionModeSubscription: any;
-  private _notificationsChangeSubscription: any;
 
   public constructor(
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _mediasRepository: MediasRepository,
+    private _mediasRepository: MediaRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
@@ -66,8 +56,6 @@ export class MediasComponent
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSafely(this._selectionModeSubscription);
-    unsubscribeSafely(this._notificationsChangeSubscription);
   }
 
   /**
@@ -116,7 +104,7 @@ export class MediasComponent
    */
   protected initializeDatasource(): void {
     // Set datasource instance
-    this.dataSource = new MediasDataSource(
+    this.dataSource = new MediaDataSource(
       this._mediasRepository,
       this.paginator,
       this.search

@@ -50,7 +50,7 @@
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
-        <!-- Media Column -->
+        <!-- Media Name Column -->
         <ng-container mcsColumnDef="media">
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.media.text }}
@@ -60,7 +60,7 @@
               mcsEventTracker="navigate-to-media"
               mcsEventCategory="media"
               mcsEventLabel="media-listing-page">
-              {{ row.itemName }}</a>
+              {{ row.name }}</a>
           </mcs-data-cell>
         </ng-container>
 
@@ -70,17 +70,7 @@
             {{ columnSettings.catalog.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell hidden-small">
-            {{ row.name }}
-          </mcs-data-cell>
-        </ng-container>
-
-        <!-- Location Column -->
-        <ng-container mcsColumnDef="location" [mcsColumnDefHidden]="isColumnHidden('location')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-            {{ columnSettings.location.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
-            {{ row.resourceName }}
+            {{ row.catalogName }}
           </mcs-data-cell>
         </ng-container>
 
@@ -94,13 +84,24 @@
           </mcs-data-cell>
         </ng-container>
 
+        <!-- Uploaded Date Column -->
+        <ng-container mcsColumnDef="uploadedDate"
+          [mcsColumnDefHidden]="isColumnHidden('uploadedDate')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.uploadedDate.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.createdOn | mcsStdDateFormat }}
+          </mcs-data-cell>
+        </ng-container>
+
         <!-- Attached To Column -->
         <ng-container mcsColumnDef="attachedTo" [mcsColumnDefHidden]="isColumnHidden('attachedTo')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.attachedTo.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
-            {{ row.attachedTo | mcsPlural: 'Server' }}
+            {{ row.servers?.length | mcsPlural: 'Server' }}
           </mcs-data-cell>
         </ng-container>
 

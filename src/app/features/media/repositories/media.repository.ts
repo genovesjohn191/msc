@@ -8,19 +8,18 @@ import {
   McsRepositoryBase,
   McsApiSuccessResponse,
   McsNotificationEventsService
-} from '../../core';
-import { MediasService } from './medias.service';
-import { Media } from './models';
-import { isNullOrEmpty } from '../../utilities';
+} from '../../../core';
+import { MediaService } from '../media.service';
+import { Media } from '../models';
 
 @Injectable()
-export class MediasRepository extends McsRepositoryBase<Media> {
+export class MediaRepository extends McsRepositoryBase<Media> {
 
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
 
   constructor(
-    private _mediasApiService: MediasService,
+    private _mediaApiService: MediaService,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super();
@@ -35,7 +34,7 @@ export class MediasRepository extends McsRepositoryBase<Media> {
     pageSize: number,
     keyword: string
   ): Observable<McsApiSuccessResponse<Media[]>> {
-    return this._mediasApiService.getMedias({
+    return this._mediaApiService.getMedias({
       page: pageIndex,
       perPage: pageSize,
       searchKeyword: keyword
@@ -48,13 +47,8 @@ export class MediasRepository extends McsRepositoryBase<Media> {
    * @param recordId Record id to find
    */
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Media>> {
-    return this._mediasApiService.getMedia(recordId)
-      .pipe(
-        map((response) => {
-          this._updateMediaFromCache(response.content);
-          return response;
-        })
-      );
+    return this._mediaApiService.getMedia(recordId)
+      .pipe(map((response) => response));
   }
 
   /**
@@ -65,25 +59,5 @@ export class MediasRepository extends McsRepositoryBase<Media> {
    */
   protected afterDataObtained(): void {
     this._notificationEvents.notifyNotificationsSubscribers();
-  }
-
-  /**
-   * Update the corresponding media based on cache data considering all
-   * the current status of the media
-   *
-   * `@Note:` This is needed since the obtained media doesn't have yet the
-   * local properties settings in which the basis of the media if it has
-   * an on-going job.
-   * @param record Record to be updated
-   */
-  private _updateMediaFromCache(record: Media): void {
-    if (isNullOrEmpty(this.dataRecords)) { return; }
-
-    let recordFound = this.dataRecords.find((media) => {
-      return record.id === media.id;
-    });
-    if (isNullOrEmpty(recordFound)) { return; }
-    record.isProcessing = recordFound.isProcessing;
-    record.processingText = recordFound.processingText;
   }
 }

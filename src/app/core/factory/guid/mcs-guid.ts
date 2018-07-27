@@ -2,6 +2,7 @@ import { isNullOrEmpty } from '../../../utilities';
 
 const GUID_EMPTY = '00000000-0000-0000-0000-000000000000';
 const GUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const GUID_CRYPTO = window.crypto || (window as any).msCrypto;
 
 export class McsGuid {
   /**
@@ -16,7 +17,7 @@ export class McsGuid {
     let pattern = ([1e7] as any + -1e3 + -4e3 + -8e3 + -1e11);
     let generatedGuid = pattern.replace(/[018]/g, (value: any) =>
       // tslint:disable-next-line:no-bitwise
-      (value ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> value / 4).toString(16)
+      (value ^ GUID_CRYPTO.getRandomValues(new Uint8Array(1))[0] & 15 >> value / 4).toString(16)
     );
     return new McsGuid(generatedGuid);
   }
