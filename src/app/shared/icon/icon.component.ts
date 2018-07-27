@@ -193,7 +193,6 @@ export class IconComponent implements OnChanges {
     this._renderer.setStyle(imageElement, 'display', 'block');
     this._renderer.setStyle(imageElement, 'height', 'auto');
     this._renderer.setStyle(imageElement, 'width', this._iconActualSize);
-    this._renderer.setStyle(imageElement, 'max-width', '100%');
 
     this._renderer.appendChild(parentContainer, imageElement);
     return of(parentContainer);

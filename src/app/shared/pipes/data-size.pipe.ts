@@ -30,9 +30,9 @@ export class DataSizePipe implements PipeTransform {
    * @param dataSizeUnit Data unit to be the basis of the datasize, the default value is Kilobyte
    */
   public transform(dataSize: number, dataSizeUnit: McsDataSizeType = 'KB'): string {
-    // Check the possible data size based on content in case of undefined/null,
-    // the return should be unknowm
-    if (dataSize < 1) { return `${dataSize} ${dataSizeUnit}`; }
+    if (dataSize < 1) {
+      return `${this._decimalPipe.transform(dataSize, '1.0-2')} ${dataSizeUnit}`;
+    }
     if (isNullOrEmpty(dataSize)) { return `Unknown`; }
 
     let sizeInBytes: number = this._convertDataSizeToByte(dataSize, dataSizeUnit);
