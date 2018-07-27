@@ -9,7 +9,7 @@ import {
   networkingRoutes,
   toolsRoutes,
   productsRoutes,
-  mediasRoutes,
+  mediaRoutes,
   httpErrorPageRoutes,
   ordersRoutes
 } from '../../features';
@@ -28,7 +28,7 @@ export const routes: Routes = [
       ...networkingRoutes,
       ...toolsRoutes,
       ...productsRoutes,
-      ...mediasRoutes,
+      ...mediaRoutes,
       ...ordersRoutes,
 
       // New routes must be added on top of this error route page

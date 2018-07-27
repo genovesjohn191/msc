@@ -12,17 +12,17 @@ import {
   McsSearch
 } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
+import { MediaRepository } from './repositories/media.repository';
 import { Media } from './models';
-import { MediasRepository } from './medias.repository';
 
-export class MediasDataSource implements McsDataSource<Media> {
+export class MediaDataSource implements McsDataSource<Media> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
   public dataLoadingStream: Subject<McsDataStatus>;
 
   constructor(
-    private _mediasRepository: MediasRepository,
+    private _mediaRepository: MediaRepository,
     private _paginator: McsPaginator,
     private _search: McsSearch
   ) {
@@ -36,7 +36,7 @@ export class MediasDataSource implements McsDataSource<Media> {
   public connect(): Observable<Media[]> {
     const displayDataChanges = [
       of(undefined), // Add undefined observable to make way of retry when error occured
-      this._mediasRepository.dataRecordsChanged,
+      this._mediaRepository.dataRecordsChanged,
       this._paginator.pageChangedStream,
       this._search.searchChangedStream
     ];
@@ -53,7 +53,7 @@ export class MediasDataSource implements McsDataSource<Media> {
           }
 
           // Find all records based on settings provided in the input
-          return this._mediasRepository.findAllRecords(this._paginator, this._search);
+          return this._mediaRepository.findAllRecords(this._paginator, this._search);
         })
       );
   }
@@ -80,8 +80,8 @@ export class MediasDataSource implements McsDataSource<Media> {
    * @param mediaId Media Id to obtained
    */
   public getDisplayedMediaById(mediaId: any): Media {
-    if (isNullOrEmpty(this._mediasRepository.dataRecords)) { return; }
-    return this._mediasRepository.dataRecords
+    if (isNullOrEmpty(this._mediaRepository.dataRecords)) { return; }
+    return this._mediaRepository.dataRecords
       .find((media) => media.id === mediaId);
   }
 }

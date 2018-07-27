@@ -5,7 +5,7 @@ import { TicketsModule } from './tickets/tickets.module';
 import { NetworkingModule } from './networking/networking.module';
 import { ToolsModule } from './tools/tools.module';
 import { ProductsModule } from './products/products.module';
-import { MediasModule } from './medias/medias.module';
+import { MediaModule } from './media/media.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { OrdersModule } from './orders/orders.module';
@@ -27,7 +27,7 @@ import {
     NetworkingModule,
     ToolsModule,
     ProductsModule,
-    MediasModule,
+    MediaModule,
     NotificationsModule,
     GadgetsModule,
     OrdersModule,

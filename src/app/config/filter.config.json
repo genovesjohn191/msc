@@ -209,12 +209,12 @@
       "text": "Catalog",
       "value": true
     },
-    "location": {
-      "text": "Location",
-      "value": true
-    },
     "size": {
       "text": "Media Size",
+      "value": true
+    },
+    "uploadedDate": {
+      "text": "Upload Date",
       "value": true
     },
     "attachedTo": {
