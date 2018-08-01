@@ -10,8 +10,10 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 /** Providers / Services */
 import {
+  CoreRoutes,
   CoreConfig,
   CoreDefinition,
+  McsRouteKey,
   McsTextContentProvider,
   McsDataStatusFactory
 } from '../../../core';
@@ -79,7 +81,7 @@ export class NavigationDesktopComponent implements OnInit {
    */
   public gotoProduct(_product: Product) {
     if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate(['/products/', _product.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Products), _product.id]);
   }
 
   /**

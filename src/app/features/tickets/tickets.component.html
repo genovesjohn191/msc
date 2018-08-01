@@ -57,7 +57,7 @@
             {{ columnSettings.crispTicketNumber.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a [routerLink]="['/tickets', row.id]">{{ row.crispTicketNumber }}</a>
+            <a (click)="navigateToTicket(row)">{{ row.crispTicketNumber }}</a>
           </mcs-data-cell>
         </ng-container>
 

@@ -7,7 +7,8 @@ import {
 } from '@angular/core';
 import {
   McsTextContentProvider,
-  CoreConfig
+  CoreConfig,
+  McsRouteKey
 } from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
 
@@ -24,6 +25,10 @@ export class AccountPanelComponent implements OnInit {
 
   @Output()
   public selectionChanged: EventEmitter<any>;
+
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
 
   constructor(
     private _coreConfig: CoreConfig,

@@ -32,7 +32,9 @@ import {
   McsErrorHandlerService,
   McsSafeToNavigateAway,
   CoreValidators,
-  CoreDefinition
+  CoreDefinition,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import { FormGroupDirective } from '../../../shared';
 import { Resource } from '../../resources';
@@ -50,7 +52,7 @@ import {
   Server,
   serverServiceTypeText
 } from '../../servers';
-import { Firewall } from '../../networking';
+import { Firewall } from '../../firewalls';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -200,7 +202,7 @@ export class TicketCreateComponent implements
    * Navigate to ticket listing
    */
   public gotoTickets(): void {
-    this._router.navigate(['/tickets']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets)]);
   }
 
   /**
@@ -258,7 +260,7 @@ export class TicketCreateComponent implements
           return throwError(error);
         })
       )
-      .subscribe(() => this._router.navigate(['/tickets']));
+      .subscribe(() => this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets)]));
   }
 
   /**

@@ -11,7 +11,9 @@ import {
 import { Router } from '@angular/router';
 import {
   McsFileInfo,
-  McsTextContentProvider
+  McsTextContentProvider,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../../core';
 import { isNullOrEmpty } from '../../../../utilities';
 import {
@@ -78,6 +80,6 @@ export class ProductAnnexComponent implements OnInit, OnChanges, OnDestroy {
    */
   public onClickDependency(dependency: ProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
-    this._router.navigate(['/products/', dependency.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Products), dependency.id]);
   }
 }

@@ -11,7 +11,7 @@
       </a>
     </mcs-list-item> -->
     <mcs-list-item *mcsAccessControl="['TicketView']">
-      <a cursor="pointer" [routerLink]="['/tickets']"
+      <a cursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
         (click)="notifySelectionChange('tickets')"
         mcsEventTracker="navigate-to-tickets"
         mcsEventCategory="navigation"
@@ -21,7 +21,7 @@
     </mcs-list-item>
     <mcs-list-item *mcsAccessControl="['OrderView']">
       <ng-container *mcsAccessControl="[]; feature: 'enableOrdering'; else: macviewOrdersTemplate">
-        <a cursor="pointer" [routerLink]="['/orders']"
+        <a cursor="pointer" [mcsRouterLink]="routeKeyEnum.Orders"
           (click)="notifySelectionChange('orders')"
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"

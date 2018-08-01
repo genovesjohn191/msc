@@ -17,7 +17,9 @@ import {
   McsApiJob,
   McsAuthenticationIdentity,
   McsLoggerService,
-  McsApiJobRequestBase
+  McsApiJobRequestBase,
+  CoreRoutes,
+  McsRouteKey
 } from '../../core/';
 import {
   serializeObjectToJson,
@@ -873,15 +875,17 @@ export class ServersService {
         break;
 
       case ServerCommand.Scale:
-        this._router.navigate(
-          [`/servers/${data.server.id}/management`],
-          { queryParams: { scale: true } }
+        this._router.navigate([
+          CoreRoutes.getPath(McsRouteKey.Servers),
+          data.server.id,
+          CoreRoutes.getPath(McsRouteKey.ServerDetailManagement)
+        ], { queryParams: { scale: true } }
         );
         break;
 
       case ServerCommand.Clone:
         this._router.navigate(
-          [`/servers/create`],
+          [CoreRoutes.getPath(McsRouteKey.ServerCreate)],
           { queryParams: { clone: data.server.id } }
         );
         break;
@@ -919,9 +923,8 @@ export class ServersService {
               this.clearServerSpinner(data.server);
               return throwError(error);
             })
-          )
-          .subscribe();
-        this._router.navigate(['/servers']);
+          ).subscribe();
+        this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers)]);
         break;
 
       case ServerCommand.Rename:
@@ -941,10 +944,7 @@ export class ServersService {
               this.clearServerSpinner(data.server);
               return throwError(error);
             })
-          )
-          .subscribe(() => {
-            // Subscribe to execute the Rename server
-          });
+          ).subscribe();
         break;
 
       default:
@@ -960,10 +960,7 @@ export class ServersService {
               this.clearServerSpinner(data.server);
               return throwError(error);
             })
-          )
-          .subscribe(() => {
-            // Subscribe to execute the command post
-          });
+          ).subscribe();
         break;
     }
   }

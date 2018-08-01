@@ -1,0 +1,226 @@
+{
+  "dashboard": {
+    "enumKey": "Dashboard",
+    "routePath": "dashboard",
+    "referenceRoutePath": "dashboard",
+    "documentTitle": "Macquarie Cloudservices - Dashboard"
+  },
+  "servers": {
+    "enumCategory": "Compute",
+    "enumKey": "Servers",
+    "routePath": "compute/virtual",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Virtual"
+  },
+  "serverDetail": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerDetail",
+    "routePath": "compute/virtual/:id",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Virtual Details"
+  },
+  "serverDetailManagement": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerDetailManagement",
+    "routePath": "management",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Virtual Management"
+  },
+  "serverDetailStorage": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerDetailStorage",
+    "routePath": "storage",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Virtual Storage"
+  },
+  "serverDetailBackups": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerDetailBackups",
+    "routePath": "snapshots",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Virtual Snapshots"
+  },
+  "serverDetailNics": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerDetailNics",
+    "routePath": "nics",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Virtual NICs"
+  },
+  "serverCreate": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerCreate",
+    "routePath": "compute/virtual/create",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmEdit"],
+    "documentTitle": "Macquarie Cloudservices - Create Server"
+  },
+  "serverCreateProvisioning": {
+    "enumCategory": "Compute",
+    "enumKey": "ServerCreateProvisioning",
+    "routePath": "compute/virtual/create/:id",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Server Provisioning"
+  },
+  "vdc": {
+    "enumCategory": "Compute",
+    "enumKey": "Vdc",
+    "routePath": "compute/virtual/vdc",
+    "referenceRoutePath": "compute/virtual",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Server VDC"
+  },
+  "vdcDetail": {
+    "enumCategory": "Compute",
+    "enumKey": "VdcDetail",
+    "routePath": "compute/virtual/vdc/:id",
+    "referenceRoutePath": "compute/virtual/vdc",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Server VDC Details"
+  },
+  "vdcDetailOverview": {
+    "enumCategory": "Compute",
+    "enumKey": "VdcDetailOverview",
+    "routePath": "overview",
+    "referenceRoutePath": "compute/virtual/vdc",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Server VDC Overview"
+  },
+  "vdcDetailStorage": {
+    "enumCategory": "Compute",
+    "enumKey": "VdcDetailStorage",
+    "routePath": "storage",
+    "referenceRoutePath": "compute/virtual/vdc",
+    "requiredPermissions": ["VmAccess"],
+    "documentTitle": "Macquarie Cloudservices - Virtual VDC Storage"
+  },
+  "media": {
+    "enumCategory": "Compute",
+    "enumKey": "Media",
+    "routePath": "compute/media",
+    "referenceRoutePath": "compute/media",
+    "requiredFeatureFlag": "enableMediaCatalog",
+    "documentTitle": "Macquarie Cloudservices - Media Catalog"
+  },
+  "mediaDetail": {
+    "enumCategory": "Compute",
+    "enumKey": "MediaDetail",
+    "routePath": "compute/media/:id",
+    "referenceRoutePath": "compute/media",
+    "requiredFeatureFlag": "enableMediaCatalog",
+    "documentTitle": "Macquarie Cloudservices - Media Catalog Details"
+  },
+  "mediaCreate": {
+    "enumCategory": "Compute",
+    "enumKey": "MediaCreate",
+    "referenceRoutePath": "compute/media/create",
+    "routePath": "compute/media/create",
+    "requiredFeatureFlag": "enableMediaCatalog",
+    "documentTitle": "Macquarie Cloudservices - Create Media"
+  },
+  "firewalls": {
+    "enumCategory": "Network",
+    "enumKey": "Firewalls",
+    "routePath": "network/firewalls",
+    "referenceRoutePath": "network/firewalls",
+    "requiredPermissions": ["FirewallConfigurationView"],
+    "documentTitle": "Macquarie Cloudservices - Firewalls"
+  },
+  "firewallDetail": {
+    "enumCategory": "Network",
+    "enumKey": "FirewallDetail",
+    "routePath": "network/firewalls/:id",
+    "referenceRoutePath": "network/firewalls",
+    "requiredPermissions": ["FirewallConfigurationView"],
+    "documentTitle": "Macquarie Cloudservices - Firewall Detail"
+  },
+  "firewallDetailOverview": {
+    "enumCategory": "Network",
+    "enumKey": "FirewallDetailOverview",
+    "routePath": "overview",
+    "referenceRoutePath": "network/firewalls",
+    "requiredPermissions": ["FirewallConfigurationView"],
+    "documentTitle": "Macquarie Cloudservices - Firewall Overview"
+  },
+  "firewallDetailPolicies": {
+    "enumCategory": "Network",
+    "enumKey": "FirewallDetailPolicies",
+    "routePath": "policies",
+    "referenceRoutePath": "network/firewalls",
+    "requiredPermissions": ["FirewallConfigurationView"],
+    "documentTitle": "Macquarie Cloudservices - Firewall Policies"
+  },
+  "tickets": {
+    "enumKey": "Tickets",
+    "routePath": "tickets",
+    "requiredPermissions": ["TicketView"],
+    "documentTitle": "Macquarie Cloudservices - Tickets"
+  },
+  "ticketDetail": {
+    "enumKey": "TicketDetail",
+    "routePath": "tickets/:id",
+    "referenceRoutePath": "tickets",
+    "requiredPermissions": ["TicketView"],
+    "documentTitle": "Macquarie Cloudservices - Ticket Detail"
+  },
+  "ticketCreate": {
+    "enumKey": "TicketCreate",
+    "routePath": "tickets/create",
+    "referenceRoutePath": "tickets/create",
+    "requiredPermissions": ["TicketView"],
+    "documentTitle": "Macquarie Cloudservices - Raise a ticket"
+  },
+  "notifications": {
+    "enumKey": "Notifications",
+    "routePath": "notifications",
+    "referenceRoutePath": "notifications",
+    "documentTitle": "Macquarie Cloudservices - Notifications"
+  },
+  "products": {
+    "enumKey": "Products",
+    "routePath": "products",
+    "referenceRoutePath": "products",
+    "requiredFeatureFlag": "enableProductCatalog",
+    "documentTitle": "Macquarie Cloudservices - Products"
+  },
+  "productDetail": {
+    "enumKey": "ProductDetail",
+    "routePath": "products/:id",
+    "referenceRoutePath": "products",
+    "requiredFeatureFlag": "enableProductCatalog",
+    "documentTitle": "Macquarie Cloudservices - Product Details"
+  },
+  "orders": {
+    "enumKey": "Orders",
+    "routePath": "orders",
+    "referenceRoutePath": "orders",
+    "requiredFeatureFlag": "enableOrdering",
+    "documentTitle": "Macquarie Cloudservices - Orders"
+  },
+  "orderDetail": {
+    "enumKey": "OrderDetail",
+    "routePath": "orders/:id",
+    "referenceRoutePath": "orders",
+    "requiredFeatureFlag": "enableOrdering",
+    "documentTitle": "Macquarie Cloudservices - Order Detail"
+  },
+  "otherTools": {
+    "enumKey": "OtherTools",
+    "routePath": "others",
+    "referenceRoutePath": "others",
+    "documentTitle": "Macquarie Cloudservices - Other tools"
+  },
+  "httpErrorPage": {
+    "enumKey": "HttpErrorPage",
+    "routePath": "**",
+    "referenceRoutePath": "**",
+    "documentTitle": "Macquarie Cloudservices - Error"
+  }
+}

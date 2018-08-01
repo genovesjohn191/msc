@@ -16,7 +16,7 @@ import {
 import { isNullOrEmpty } from '../../utilities';
 
 @Component({
-  selector: 'mcs-session-component',
+  selector: 'mcs-session',
   template: ''
 })
 

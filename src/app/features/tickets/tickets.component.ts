@@ -11,7 +11,9 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
-  McsTableListingBase
+  McsTableListingBase,
+  CoreRoutes,
+  McsRouteKey
 } from '../../core';
 import { Router } from '@angular/router';
 import {
@@ -72,14 +74,14 @@ export class TicketsComponent
    */
   public navigateToTicket(ticket: Ticket): void {
     if (isNullOrEmpty(ticket)) { return; }
-    this._router.navigate(['/tickets/', ticket.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets), ticket.id]);
   }
 
   /**
    * This will navigate to ticket creation page
    */
   public onClickNewTicket(): void {
-    this._router.navigate(['./tickets/create']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.TicketCreate)]);
   }
 
   /**

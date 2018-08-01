@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+import {
+  CoreRoutes,
+  McsRouteKey
+} from '../../core';
 /** Components */
 import { ToolsComponent } from './tools.component';
 /** Services */
@@ -17,5 +21,8 @@ export const toolsProviders: any[] = [
  * List of routes for the main module
  */
 export const toolsRoutes: Routes = [
-  { path: 'tools', component: ToolsComponent }
+  {
+    path: CoreRoutes.getPath(McsRouteKey.OtherTools),
+    component: ToolsComponent
+  }
 ];

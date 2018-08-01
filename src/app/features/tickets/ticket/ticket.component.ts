@@ -21,7 +21,9 @@ import {
   McsTextContentProvider,
   McsFileInfo,
   McsComment,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -147,7 +149,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Navigate to ticket listing
    */
   public gotoTickets(): void {
-    this._router.navigate(['/tickets']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets)]);
   }
 
   /**

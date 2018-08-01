@@ -4,6 +4,7 @@ export * from './core.config';
 export * from './core.types';
 export * from './core.definition';
 export * from './core.validators';
+export * from './core.routes';
 /** Guards */
 export * from './guards/mcs-navigate-away.guard';
 /** Services */
@@ -66,7 +67,8 @@ export * from './enumerations/mcs-task-type.enum';
 export * from './enumerations/mcs-data-status.enum';
 export * from './enumerations/mcs-company-status.enum';
 export * from './enumerations/mcs-unit-type.enum';
-export * from './enumerations/mcs-router-category.enum';
+export * from './enumerations/mcs-route-category.enum';
+export * from './enumerations/mcs-route-key.enum';
 export * from './enumerations/mcs-account-status.enum';
 export * from './enumerations/mcs-http-method.enum';
 /** Interfaces */

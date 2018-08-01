@@ -34,7 +34,9 @@ import {
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsTextContentProvider,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -184,7 +186,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    */
   public gotoProduct(_product: Product) {
     if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate(['/products/', _product.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Products), _product.id]);
   }
 
   /**

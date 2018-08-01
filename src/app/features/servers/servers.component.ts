@@ -42,7 +42,9 @@ import {
   McsSelection,
   McsTableListingBase,
   McsDialogService,
-  McsAccessControlService
+  McsAccessControlService,
+  CoreRoutes,
+  McsRouteKey
 } from '../../core';
 import {
   isNullOrEmpty,
@@ -291,7 +293,7 @@ export class ServersComponent
    * This will navigate to new server page
    */
   public onClickNewServerButton() {
-    this._router.navigate(['./servers/create']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.ServerCreate)]);
   }
 
   /**
@@ -308,7 +310,10 @@ export class ServersComponent
    */
   public navigateToResource(server: Server): void {
     if (isNullOrEmpty(server.platform)) { return; }
-    this._router.navigate(['/servers/vdc', server.platform.resourceId]);
+    this._router.navigate([
+      CoreRoutes.getPath(McsRouteKey.VdcDetail),
+      server.platform.resourceId
+    ]);
   }
 
   /**
@@ -318,7 +323,7 @@ export class ServersComponent
   public navigateToServer(server: Server): void {
     // Do not navigate to server details when server is deleting
     if (isNullOrEmpty(server) || this.serverDeleting(server)) { return; }
-    this._router.navigate(['/servers/', server.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers), server.id]);
   }
 
   /**

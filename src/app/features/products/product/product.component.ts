@@ -13,7 +13,9 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  McsFileInfo
+  McsFileInfo,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import { isNullOrEmpty } from '../../../utilities';
 import {
@@ -80,7 +82,7 @@ export class ProductComponent implements OnInit, OnDestroy {
    */
   public onClickDependency(dependency: ProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
-    this._router.navigate(['/products/', dependency.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Products), dependency.id]);
   }
 
   /**

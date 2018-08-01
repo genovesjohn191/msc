@@ -18,7 +18,7 @@
       <div class="navigation-item" routerLinkActive="active">
         <mcs-icon [key]="caretRightIconKey" color="white"
           size="medium" class="navigation-mobile"></mcs-icon>
-        <a [routerLink]="['/dashboard']"
+        <a [mcsRouterLink]="routeKeyEnum.Dashboard"
           mcsEventTracker="navigate-to-dashboard"
           mcsEventCategory="navigation"
           mcsEventLabel="main-nav">
@@ -28,32 +28,34 @@
     </ng-template>
 
     <!-- Compute Category -->
-    <div class="navigation-item" [class.active]="selectedCategory === routerCategoryEnum.Compute"
+    <div class="navigation-item"
+      [class.active]="selectedCategory === routerCategoryEnum.Compute"
       *mcsAccessControl="['VmAccess']">
 
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/servers']">
+      <a [mcsRouterLink]="routeKeyEnum.Servers">
         {{ getCategoryLabel(routerCategoryEnum.Compute) }}
       </a>
     </div>
 
     <!-- Networking Category -->
-    <div class="navigation-item" [class.active]="selectedCategory === routerCategoryEnum.Network"
+    <div class="navigation-item"
+      [class.active]="selectedCategory === routerCategoryEnum.Network"
       *mcsAccessControl="['FirewallConfigurationView']">
 
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/networking/firewalls']">
+      <a [mcsRouterLink]="routeKeyEnum.Firewalls">
         {{ getCategoryLabel(routerCategoryEnum.Network) }}
       </a>
     </div>
 
     <!-- Other Tools -->
-    <div class="navigation-item hidden-small" routerLinkActive="active">
+    <div class="navigation-item hidden-small" mcsRouterLinkActive="active">
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [routerLink]="['/tools']"
+      <a [mcsRouterLink]="routeKeyEnum.OtherTools"
         mcsEventTracker="navigate-to-other-tools"
         mcsEventCategory="navigation"
         mcsEventLabel="main-nav">

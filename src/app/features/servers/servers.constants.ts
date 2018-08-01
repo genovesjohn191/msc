@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
-import { McsNavigateAwayGuard } from '../../core';
+import {
+  McsNavigateAwayGuard,
+  CoreRoutes,
+  McsRouteKey
+} from '../../core';
 /** Services */
 import { ServerService } from './server/';
 import { ServersService } from './servers.service';
@@ -11,7 +15,6 @@ import {
   ServerBackupsComponent,
   ServerComponent,
   ServerManagementComponent,
-  ServerServicesComponent,
   ServerStorageComponent,
   ServerNicsComponent
 } from './server';
@@ -46,37 +49,63 @@ export const serversProviders: any[] = [
  */
 export const serversRoutes: Routes = [
   {
-    path: 'servers', component: ServersComponent
+    path: CoreRoutes.getPath(McsRouteKey.Servers),
+    component: ServersComponent
   },
   {
-    path: 'servers/create',
+    path: CoreRoutes.getPath(McsRouteKey.ServerCreate),
     component: ServerCreateComponent,
     canActivate: [ServerCreateGuard],
     canDeactivate: [McsNavigateAwayGuard]
   },
   {
-    path: 'servers/create/:id',
+    path: CoreRoutes.getPath(McsRouteKey.ServerCreateProvisioning),
     component: ServerProvisioningComponent
   },
   {
-    path: 'servers/:id',
+    path: CoreRoutes.getPath(McsRouteKey.ServerDetail),
     component: ServerComponent,
     children: [
-      { path: '', redirectTo: 'management', pathMatch: 'full' },
-      { path: 'management', component: ServerManagementComponent },
-      { path: 'services', component: ServerServicesComponent },
-      { path: 'storage', component: ServerStorageComponent },
-      { path: 'nics', component: ServerNicsComponent },
-      { path: 'backups', component: ServerBackupsComponent }
+      {
+        path: '',
+        redirectTo: CoreRoutes.getPath(McsRouteKey.ServerDetailManagement),
+        pathMatch: 'full'
+      },
+      {
+        path: CoreRoutes.getPath(McsRouteKey.ServerDetailManagement),
+        component: ServerManagementComponent
+      },
+      {
+        path: CoreRoutes.getPath(McsRouteKey.ServerDetailStorage),
+        component: ServerStorageComponent
+      },
+      {
+        path: CoreRoutes.getPath(McsRouteKey.ServerDetailNics),
+        component: ServerNicsComponent
+      },
+      {
+        path: CoreRoutes.getPath(McsRouteKey.ServerDetailBackups),
+        component: ServerBackupsComponent
+      }
     ]
   },
   {
-    path: 'servers/vdc/:id',
+    path: CoreRoutes.getPath(McsRouteKey.VdcDetail),
     component: VdcComponent,
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: VdcOverviewComponent },
-      { path: 'storage', component: VdcStorageComponent }
+      {
+        path: '',
+        redirectTo: CoreRoutes.getPath(McsRouteKey.VdcDetailOverview),
+        pathMatch: 'full'
+      },
+      {
+        path: CoreRoutes.getPath(McsRouteKey.VdcDetailOverview),
+        component: VdcOverviewComponent
+      },
+      {
+        path: CoreRoutes.getPath(McsRouteKey.VdcDetailStorage),
+        component: VdcStorageComponent
+      }
     ]
   }
 ];

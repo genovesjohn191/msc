@@ -34,7 +34,7 @@ import {
 import {
   Firewall,
   FirewallsRepository
-} from '../networking';
+} from '../firewalls';
 
 @Injectable()
 export class TicketsService {

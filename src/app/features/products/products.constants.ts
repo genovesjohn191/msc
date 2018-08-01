@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+import {
+  CoreRoutes,
+  McsRouteKey
+} from '../../core';
 /** Components */
 import { ProductsComponent } from './products.component';
 import { ProductComponent } from './product/product.component';
@@ -23,7 +27,7 @@ export const productsProviders: any[] = [
  */
 export const productsRoutes: Routes = [
   {
-    path: 'products/:id',
+    path: CoreRoutes.getPath(McsRouteKey.ProductDetail),
     component: ProductsComponent,
     children: [
       { path: '', component: ProductComponent }

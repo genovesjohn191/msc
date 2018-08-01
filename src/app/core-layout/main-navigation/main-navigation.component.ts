@@ -6,17 +6,23 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
+  CoreDefinition,
+  CoreRoutes,
   McsTextContentProvider,
   McsRouteCategory,
   mcsRouteCategoryText,
   McsRouteHandlerService,
-  CoreDefinition,
-  McsAccessControlService
+  McsAccessControlService,
+  McsRouteKey
 } from '../../core';
-import { unsubscribeSubject } from '../../utilities';
+import {
+  unsubscribeSubject,
+  isNullOrEmpty
+} from '../../utilities';
 
 @Component({
   selector: 'mcs-main-navigation',
@@ -41,9 +47,14 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     return McsRouteCategory;
   }
 
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
+
   private _destroySubject = new Subject<void>();
 
   public constructor(
+    private _router: Router,
     private _changeDetectorRef: ChangeDetectorRef,
     private _routerHandlerService: McsRouteHandlerService,
     private _textProvider: McsTextContentProvider,
@@ -68,6 +79,14 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Navigate to the given path key
+   */
+  public navigateTo(routeKey: McsRouteKey): void {
+    if (isNullOrEmpty(routeKey)) { return; }
+    this._router.navigate([CoreRoutes.getPath(routeKey)]);
+  }
+
+  /**
    * Returns the route category label
    * @param routeCategory Route category to obtain
    */
@@ -82,7 +101,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     this._routerHandlerService.onActiveRoute
       .pipe(takeUntil(this._destroySubject))
       .subscribe((activeRoute) => {
-        this.selectedCategory = activeRoute.category;
+        this.selectedCategory = activeRoute.enumCategory;
         this._changeDetectorRef.markForCheck();
       });
   }

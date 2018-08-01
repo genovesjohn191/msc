@@ -22,7 +22,9 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsErrorHandlerService,
-  McsSafeToNavigateAway
+  McsSafeToNavigateAway,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -109,7 +111,7 @@ export class ServerCreateComponent implements
    * Navigate to servers listing page
    */
   public gotoServers() {
-    this._router.navigate(['/servers']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers)]);
   }
 
   /**

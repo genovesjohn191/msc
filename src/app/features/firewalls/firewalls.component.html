@@ -1,0 +1,158 @@
+<mcs-page [header]="textContent.header">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <div class="listing-action-wrapper">
+        <div class="total-record-count right-align">
+          <span>{{ totalRecordsCount | mcsPlural:
+                textContent.dataSingular : textContent.dataPlural }}
+          </span>
+        </div>
+      </div>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Left Panel -->
+  <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
+    <!-- Search -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef>
+      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+    </mcs-left-panel-item>
+
+    <!-- Column Filter -->
+    <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
+      <mcs-filter-selector [key]="columnSettingsKey"
+        (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
+    </mcs-left-panel-item>
+  </mcs-left-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <div class="listing-table-wrapper">
+      <!-- Search -->
+      <mcs-search *ngIf="isMobile" #search></mcs-search>
+
+      <!-- Table -->
+      <mcs-table [dataSource]="dataSource">
+        <!-- Firewall Column -->
+        <ng-container mcsColumnDef="firewall">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.firewall.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
+            <div class="inline-items-small">
+              <mcs-icon [key]="row.connectionStatusIconKey" size="small"></mcs-icon>
+              <a (click)="navigateToFirewall(row)">{{ row.managementName }}</a>
+            </div>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Serial Number Column -->
+        <ng-container mcsColumnDef="serialNumber" >
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.serialNumber.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            <span [innerHTML]="row.serialNumber | mcsDataLabel: 'Unavailable'"></span>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Firmware Version Column -->
+        <ng-container mcsColumnDef="firmwareVersion"
+          [mcsColumnDefHidden]="isColumnHidden('firmwareVersion')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.firmwareVersion.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.osVendor }} {{ row.osRelease }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- IP Address Column -->
+        <ng-container mcsColumnDef="ipAddress" [mcsColumnDefHidden]="isColumnHidden('ipAddress')">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+            {{ columnSettings.ipAddress.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+            {{ row.managementIpAddress }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container mcsColumnDef="role" [mcsColumnDefHidden]="isColumnHidden('role')">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.role.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.haRole }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Service ID Column -->
+        <ng-container mcsColumnDef="serviceId" [mcsColumnDefHidden]="isColumnHidden('serviceId')">
+          <mcs-header-cell *mcsHeaderCellDef>
+            {{ columnSettings.serviceId.text }}
+          </mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row">
+            {{ row.serviceId }}
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Action Column TODO: add restriction here -->
+        <ng-container mcsColumnDef="action">
+          <mcs-header-cell *mcsHeaderCellDef class="hidden-small"></mcs-header-cell>
+          <mcs-data-cell *mcsDataCellDef="let row" class="text-center hidden-small">
+            <mcs-icon class="action" stop-propagation [key]="cogIconKey" size="medium"
+              mcsPopover placement="bottom" orientation="left" theme="light"
+              padding="none" [content]="actionContent" cursor="pointer">
+            </mcs-icon>
+            <ng-template #actionContent>
+              <div class="cog-container">
+                <a
+                  [href]="row.url"
+                  target="_blank"
+                  mcsEventTracker="view-in-portal"
+                  mcsEventCategory="firewall"
+                  mcsEventLabel="firewall-listing-page">
+                  View in Portal
+                </a>
+              </div>
+            </ng-template>
+          </mcs-data-cell>
+        </ng-container>
+
+        <!-- Data Status Integration -->
+        <ng-container mcsDataStatusDef>
+          <mcs-data-empty *mcsDataEmptyDef>
+            <span>{{ textContent.noFirewalls }}</span>
+          </mcs-data-empty>
+          <mcs-data-error *mcsDataErrorDef>
+            <div class="listing-status-wrapper">
+              <span>{{ textContent.errorMessage }}</span>
+              <a (click)="retryDatasource()"
+                mcsEventTracker="retry-loading-firewall-list"
+                mcsEventCategory="firewall"
+                mcsEventLabel="firewall-listing-page">{{ textContent.retry }}</a>.
+            </div>
+          </mcs-data-error>
+        </ng-container>
+
+        <!-- Header and Data row -->
+        <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
+        <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
+          cursor="pointer"
+          (click)="navigateToFirewall(row)"
+          mcsEventTracker="navigate-to-firewall"
+          mcsEventCategory="firewall"
+          mcsEventLabel="firewall-listing-page"></mcs-data-row>
+      </mcs-table>
+
+      <!-- Paginator -->
+      <mcs-paginator #paginator
+        [hidden]="isSearching"
+        [totalCount]="totalRecordsCount">
+      </mcs-paginator>
+    </div>
+  </mcs-content-panel>
+</mcs-page>

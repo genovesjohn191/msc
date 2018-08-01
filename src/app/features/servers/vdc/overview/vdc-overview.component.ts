@@ -14,8 +14,10 @@ import {
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
+  CoreRoutes,
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsRouteKey
 } from '../../../../core';
 import {
   isNullOrEmpty,
@@ -36,6 +38,10 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
+  }
+
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
   }
 
   /**
@@ -90,6 +96,18 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   /**
+   * Navigate details tab into given key route
+   * @param keyRoute Keyroute where to navigate
+   */
+  public navigateVdcDetailTo(keyRoute: McsRouteKey): void {
+    this._router.navigate([
+      CoreRoutes.getPath(McsRouteKey.VdcDetail),
+      this.selectedVdc.id,
+      CoreRoutes.getPath(keyRoute)
+    ]);
+  }
+
+  /**
    * Returns the icon key based on the current status
    * of the capacity of VDC storage.
    * Green Icon - If current storage is below 75%
@@ -129,7 +147,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Redirects to create new server page
    */
   public createNewServer(): void {
-    this._router.navigate(['/servers/create']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.ServerCreate)]);
   }
 
   /**

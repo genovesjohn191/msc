@@ -28,7 +28,9 @@ import {
   McsNotificationEventsService,
   McsApiJob,
   McsDataStatus,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  McsRouteKey,
+  CoreRoutes
 } from '../../../../core';
 import {
   isNullOrEmpty,
@@ -101,6 +103,10 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
   public get removeIconKey(): string {
     return CoreDefinition.ASSETS_FONT_TRASH;
+  }
+
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
   }
 
   /**
@@ -186,10 +192,22 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   /**
+   * Navigate details tab into given key route
+   * @param keyRoute Keyroute where to navigate
+   */
+  public navigateServerDetailsTo(keyRoute: McsRouteKey): void {
+    this._router.navigate([
+      CoreRoutes.getPath(McsRouteKey.Servers),
+      this.server.id,
+      CoreRoutes.getPath(keyRoute)
+    ]);
+  }
+
+  /**
    * Event that emits when the scale has been cancelled
    */
   public onCancelScale(): void {
-    this._router.navigate(['servers', this.server.id, 'management']);
+    this.navigateServerDetailsTo(McsRouteKey.ServerDetailManagement);
     this.setViewMode(ServerManagementView.None);
   }
 

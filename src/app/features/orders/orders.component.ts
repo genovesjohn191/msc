@@ -11,7 +11,9 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
-  McsTableListingBase
+  McsTableListingBase,
+  CoreRoutes,
+  McsRouteKey
 } from '../../core';
 import {
   refreshView,
@@ -76,7 +78,7 @@ export class OrdersComponent
    */
   public navigateToOrder(order: Order): void {
     if (isNullOrEmpty(order)) { return; }
-    this._router.navigate(['/orders/', order.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Orders), order.id]);
   }
 
   /**

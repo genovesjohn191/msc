@@ -7,8 +7,11 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 /** Services/Providers */
 import {
+  CoreRoutes,
   CoreDefinition,
   McsTextContentProvider,
   McsApiJob,
@@ -18,18 +21,18 @@ import {
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsApiCompany,
-  McsDataStatus
+  McsDataStatus,
+  McsRouteKey
 } from '../../../core';
 import { SwitchAccountService } from '../../shared';
 import {
   refreshView,
   isNullOrEmpty,
-  unsubscribeSafely,
   addOrUpdateArrayRecord,
   compareDates,
-  replacePlaceholder
+  replacePlaceholder,
+  unsubscribeSubject
 } from '../../../utilities';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'mcs-user-panel',
@@ -50,10 +53,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   @ViewChild('userPopover')
   public userPopover: any;
 
-  private _notificationsSubscription: Subscription;
-  private _notificationsConnectionSubscription: any;
-  private _browserSubscription: any;
-  private _activeAccountSubscription: any;
+  private _destroySubject = new Subject<void>();
 
   /**
    * Returns the displayed notifications and ignore those who are already closed
@@ -143,17 +143,14 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this._notificationsSubscription);
-    unsubscribeSafely(this._notificationsConnectionSubscription);
-    unsubscribeSafely(this._browserSubscription);
-    unsubscribeSafely(this._activeAccountSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
    * Navigate to notifications page to see all the jobs
    */
   public viewNotificationsPage(): void {
-    this._router.navigate(['./notifications']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Notifications)]);
   }
 
   /**
@@ -203,8 +200,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Listen to current user job triggered
    */
   private _listenToCurrentUserJob(): void {
-    this._notificationsSubscription = this._notificationEvents
-      .currentUserJob
+    this._notificationEvents.currentUserJob
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((notification) => {
         if (isNullOrEmpty(notification)) { return; }
 
@@ -226,7 +223,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   private _listenToBrowserResize(): void {
     // Subscribe to browser service
-    this._browserSubscription = this._browserService.deviceTypeStream
+    this._browserService.deviceTypeStream
+      .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType: McsDeviceType) => {
         this.deviceType = deviceType;
         this._changeDetectorRef.markForCheck();
@@ -237,8 +235,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Listen when user switch account to update the company name under user name
    */
   private _listenToSwitchAccount(): void {
-    this._activeAccountSubscription = this._switchAccountService
-      .activeAccountStream
+    this._switchAccountService.activeAccountStream
+      .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
         // Refresh the page when account is selected
         this._changeDetectorRef.markForCheck();
