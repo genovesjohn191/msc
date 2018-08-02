@@ -15,6 +15,13 @@ export const dashboardProviders: any[] = [
 ];
 
 /**
+ * List of all the entry components
+ */
+export const dashboardRoutesComponents: any[] = [
+  DashboardComponent
+];
+
+/**
  * List of routes for the main module
  */
 export const dashboardRoutes: Routes = [

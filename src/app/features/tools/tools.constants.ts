@@ -18,6 +18,13 @@ export const toolsProviders: any[] = [
 ];
 
 /**
+ * List of all the entry components
+ */
+export const toolsRoutesComponents: any[] = [
+  ToolsComponent
+];
+
+/**
  * List of routes for the main module
  */
 export const toolsRoutes: Routes = [

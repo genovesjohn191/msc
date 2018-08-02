@@ -27,6 +27,15 @@ export const ticketsProviders: any[] = [
 ];
 
 /**
+ * List of all the entry components
+ */
+export const ticketsRoutesComponents: any[] = [
+  TicketsComponent,
+  TicketComponent,
+  TicketCreateComponent
+];
+
+/**
  * List of routes for the main module
  */
 export const ticketsRoutes: Routes = [

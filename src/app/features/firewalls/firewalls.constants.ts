@@ -24,6 +24,16 @@ export const firewallProviders: any[] = [
 ];
 
 /**
+ * List of all the entry components
+ */
+export const firewallsRoutesComponents: any[] = [
+  FirewallsComponent,
+  FirewallComponent,
+  FirewallOverviewComponent,
+  FirewallPoliciesComponent
+];
+
+/**
  * List of routes for the main module
  */
 export const firewallRoutes: Routes = [

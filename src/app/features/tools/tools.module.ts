@@ -1,12 +1,17 @@
 import { NgModule } from '@angular/core';
-/** Modules */
 import { SharedModule } from '../../shared';
 /** Components */
 import { ToolsComponent } from './tools.component';
 /** Providers List */
-import { toolsProviders } from './tools.constants';
+import {
+  toolsProviders,
+  toolsRoutesComponents
+} from './tools.constants';
 
 @NgModule({
+  entryComponents: [
+    ...toolsRoutesComponents
+  ],
   declarations: [
     ToolsComponent,
   ],

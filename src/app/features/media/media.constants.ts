@@ -16,6 +16,14 @@ export const mediaProviders: any[] = [
   MediaService,
   MediaRepository
 ];
+
+/**
+ * List of all the entry components
+ */
+export const mediaRoutesComponents: any[] = [
+  MediaComponent
+];
+
 /**
  * List of routes for the main module
  */

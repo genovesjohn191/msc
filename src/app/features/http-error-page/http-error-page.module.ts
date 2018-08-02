@@ -5,8 +5,12 @@ import { ButtonModule } from '../../shared/button/button.module';
 import { DirectivesModule } from '../../shared/directives/directives.module';
 /** Components */
 import { HttpErrorPageComponent } from './http-error-page.component';
+import { httpErrorRoutesComponents } from './http-error-page.constants';
 
 @NgModule({
+  entryComponents: [
+    ...httpErrorRoutesComponents
+  ],
   declarations: [
     HttpErrorPageComponent
   ],

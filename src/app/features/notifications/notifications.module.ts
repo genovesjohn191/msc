@@ -1,12 +1,17 @@
 import { NgModule } from '@angular/core';
+import { SharedModule } from '../../shared';
 /** Components */
 import { NotificationsComponent } from './notifications.component';
-/** Modules */
-import { SharedModule } from '../../shared';
 /** Providers List */
-import { notificationsProviders } from './notifications.constants';
+import {
+  notificationsProviders,
+  notificationsRoutesComponents
+} from './notifications.constants';
 
 @NgModule({
+  entryComponents: [
+    ...notificationsRoutesComponents
+  ],
   declarations: [
     NotificationsComponent
   ],
