@@ -1,22 +1,18 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-/** Modules */
 import { SharedModule } from '../../shared';
 /** Components */
 import { ConsolePageComponent } from './console-page.component';
-/** Constants */
-import {
-  consolePageRoutes,
-  constantsProviders
-} from './console-page.constants';
+import { constantsProviders } from './console-page.constants';
 
 @NgModule({
+  entryComponents: [
+    ConsolePageComponent
+  ],
   declarations: [
     ConsolePageComponent
   ],
   imports: [
-    SharedModule,
-    RouterModule.forChild(consolePageRoutes)
+    SharedModule
   ],
   providers: [
     ...constantsProviders

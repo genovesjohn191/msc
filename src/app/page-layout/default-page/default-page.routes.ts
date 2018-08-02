@@ -18,7 +18,7 @@ import {
   ordersRoutes
 } from '../../features';
 
-export const routes: Routes = [
+export const defaultPageRoutes: Routes = [
   {
     path: '',
     component: DefaultPageComponent,

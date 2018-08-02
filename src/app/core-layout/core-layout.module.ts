@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 /** Modules */
 import { SharedModule } from '../shared';
@@ -54,7 +53,6 @@ import { coreLayoutProviders } from './core-layout.constants';
   ],
   imports: [
     CommonModule,
-    RouterModule,
     FormsModule,
     SharedModule
   ],
@@ -75,7 +73,6 @@ import { coreLayoutProviders } from './core-layout.constants';
     SubNavigationDesktopComponent,
     SubNavigationMobileComponent,
     CommonModule,
-    RouterModule,
     FormsModule
   ],
   providers: [

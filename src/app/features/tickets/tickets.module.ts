@@ -1,17 +1,20 @@
 import { NgModule } from '@angular/core';
+import { SharedModule } from '../../shared';
 /** Components */
+import { TicketActivityComponent } from './shared';
 import { TicketsComponent } from './tickets.component';
 import { TicketComponent } from './ticket/ticket.component';
-/** Modules */
-import { SharedModule } from '../../shared';
-/** Providers List */
-import { ticketsProviders } from './tickets.constants';
-/** Shared Components */
-import { TicketActivityComponent } from './shared';
 /** Create Ticket */
 import { TicketCreateComponent } from './ticket-create';
+import {
+  ticketsProviders,
+  ticketsRoutesComponents
+} from './tickets.constants';
 
 @NgModule({
+  entryComponents:[
+    ...ticketsRoutesComponents
+  ],
   declarations: [
     TicketsComponent,
     TicketComponent,

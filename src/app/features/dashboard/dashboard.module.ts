@@ -1,12 +1,17 @@
 import { NgModule } from '@angular/core';
+import { SharedModule } from '../../shared';
 /** Components */
 import { DashboardComponent } from './dashboard.component';
-/** Modules */
-import { SharedModule } from '../../shared';
 /** Providers List */
-import { dashboardProviders } from './dashboard.constants';
+import {
+  dashboardProviders,
+  dashboardRoutesComponents
+} from './dashboard.constants';
 
 @NgModule({
+  entryComponents: [
+    ...dashboardRoutesComponents
+  ],
   declarations: [
     DashboardComponent
   ],

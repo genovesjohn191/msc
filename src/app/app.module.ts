@@ -5,7 +5,10 @@ import {
   ErrorHandler
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
+import {
+  Router,
+  RouterModule
+} from '@angular/router';
 import { CookieModule } from 'ngx-cookie';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -95,7 +98,7 @@ export function coreConfig(): CoreConfig {
     jwtCookieName: resolveEnvVar('JWT_COOKIE_NAME', JWT_COOKIE_NAME),
     jwtRefreshTokenCookieName: resolveEnvVar('JWT_REFRESH_TOKEN_COOKIE_NAME',
       JWT_REFRESH_TOKEN_COOKIE_NAME),
-      imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
+    imageRoot: resolveEnvVar('IMAGE_ROOT', IMAGE_URL),
     iconRoot: resolveEnvVar('ICON_ROOT', ICON_URL),
     enryptionKey: resolveEnvVar('EK', EK)
   } as CoreConfig;
@@ -119,7 +122,7 @@ export function coreConfig(): CoreConfig {
     ConsolePageModule,
     DefaultPageModule,
     PageNotificationsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot([])
   ],
   providers: [
     environment.ENV_PROVIDERS,
@@ -132,6 +135,7 @@ export class AppModule {
   private _destroySubject = new Subject<void>();
 
   constructor(
+    private _router: Router,
     private _authIdentity: McsAuthenticationIdentity,
     private _routeHandlerService: McsRouteHandlerService,
     private _errorHandlerService: McsErrorHandlerService,
@@ -140,6 +144,7 @@ export class AppModule {
     private _googleAnalyticsEventsService: GoogleAnalyticsEventsService,
     private _sessionHandlerService: McsSessionHandlerService
   ) {
+    this._initializeRoutes();
     this._initializeDependentServices();
     this._listenToUserChanges();
     this._listenToSessionTimedOut();
@@ -185,6 +190,16 @@ export class AppModule {
       `${this._authIdentity.user.firstName} ${this._authIdentity.user.lastName}`,
       this._authIdentity.user.email
     );
+  }
+
+  /**
+   * Initializes all the routes on the application
+   *
+   * `@Note`: This is needed in order for the
+   * dynamic routing work in AOT as expected
+   */
+  private _initializeRoutes(): void {
+    this._router.resetConfig(routes);
   }
 
   /**

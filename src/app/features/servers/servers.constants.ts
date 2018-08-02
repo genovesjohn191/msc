@@ -45,6 +45,23 @@ export const serversProviders: any[] = [
 ];
 
 /**
+ * List of all the entry components for the servers
+ */
+export const serversRoutesComponents: any[] = [
+  ServersComponent,
+  ServerCreateComponent,
+  ServerProvisioningComponent,
+  ServerComponent,
+  ServerManagementComponent,
+  ServerStorageComponent,
+  ServerNicsComponent,
+  ServerBackupsComponent,
+  VdcComponent,
+  VdcOverviewComponent,
+  VdcStorageComponent
+];
+
+/**
  * List of routes for the main module
  */
 export const serversRoutes: Routes = [

@@ -5,9 +5,15 @@ import { ProductsComponent } from './products.component';
 import { ProductComponent } from './product/product.component';
 import { ProductAnnexComponent } from './shared';
 /** Providers List */
-import { productsProviders } from './products.constants';
+import {
+  productsProviders,
+  productsRoutesComponents
+} from './products.constants';
 
 @NgModule({
+  entryComponents: [
+    ...productsRoutesComponents
+  ],
   declarations: [
     ProductsComponent,
     ProductComponent,

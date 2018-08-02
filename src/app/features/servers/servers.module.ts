@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-/** Servers */
+import { SharedModule } from '../../shared';
 import { ServersComponent } from './servers.component';
 /** Shared */
 import {
@@ -57,13 +57,14 @@ import {
   VdcOverviewComponent,
   VdcStorageComponent
 } from './vdc';
-/** Services */
-import { serversProviders } from './servers.constants';
-/** Modules */
-import { SharedModule } from '../../shared';
+import {
+  serversProviders,
+  serversRoutesComponents
+} from './servers.constants';
 
 @NgModule({
   entryComponents: [
+    ...serversRoutesComponents,
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,
     DeleteStorageDialogComponent,
@@ -110,6 +111,13 @@ import { SharedModule } from '../../shared';
     VdcComponent,
     VdcOverviewComponent,
     VdcStorageComponent,
+    IsSelfManagedServerDirective,
+    AntiMalwareAddOnComponent,
+    DisasterRecoveryAddOnComponent,
+    SqlServerAddOnComponent,
+    InfrastructureMonitoringAddOnComponent,
+    HidsAddOnComponent,
+
     ResetPasswordDialogComponent,
     ResetPasswordFinishedDialogComponent,
     DeleteStorageDialogComponent,
@@ -123,13 +131,7 @@ import { SharedModule } from '../../shared';
     RestoreSnapshotDialogComponent,
     DiskConflictSnapshotDialogComponent,
     SuspendServerDialogComponent,
-    ResumeServerDialogComponent,
-    IsSelfManagedServerDirective,
-    AntiMalwareAddOnComponent,
-    DisasterRecoveryAddOnComponent,
-    SqlServerAddOnComponent,
-    InfrastructureMonitoringAddOnComponent,
-    HidsAddOnComponent
+    ResumeServerDialogComponent
   ],
   imports: [
     SharedModule

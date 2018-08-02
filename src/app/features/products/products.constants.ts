@@ -23,6 +23,14 @@ export const productsProviders: any[] = [
 ];
 
 /**
+ * List of all the entry components
+ */
+export const productsRoutesComponents: any[] = [
+  ProductsComponent,
+  ProductComponent
+];
+
+/**
  * List of routes for the main module
  */
 export const productsRoutes: Routes = [

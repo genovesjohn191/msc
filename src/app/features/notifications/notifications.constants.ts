@@ -18,6 +18,13 @@ export const notificationsProviders: any[] = [
 ];
 
 /**
+ * List of all the entry components
+ */
+export const notificationsRoutesComponents: any[] = [
+  NotificationsComponent
+];
+
+/**
  * List of routes for the main module
  */
 export const notificationsRoutes: Routes = [
