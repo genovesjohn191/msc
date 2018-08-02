@@ -1,12 +1,16 @@
 import { Routes } from '@angular/router';
-import { McsAuthenticationGuard } from '../../core';
+import {
+  McsAuthenticationGuard,
+  CoreRoutes,
+  McsRouteKey
+} from '../../core';
 import { DefaultPageComponent } from './default-page.component';
 import {
   dashboardRoutes,
   serversRoutes,
   ticketsRoutes,
   notificationsRoutes,
-  networkingRoutes,
+  firewallRoutes,
   toolsRoutes,
   productsRoutes,
   mediaRoutes,
@@ -20,12 +24,16 @@ export const routes: Routes = [
     component: DefaultPageComponent,
     canActivate: [McsAuthenticationGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: '',
+        redirectTo: CoreRoutes.getPath(McsRouteKey.Dashboard),
+        pathMatch: 'full'
+      },
       ...dashboardRoutes,
       ...serversRoutes,
       ...ticketsRoutes,
       ...notificationsRoutes,
-      ...networkingRoutes,
+      ...firewallRoutes,
       ...toolsRoutes,
       ...productsRoutes,
       ...mediaRoutes,

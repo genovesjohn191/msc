@@ -105,7 +105,7 @@
                 <span>{{ textContent.storage.title }}</span>
                 <ng-container *mcsAccessControl="['VmEdit']">
                   <a [disabled]="!server.executable"
-                    [routerLink]="['../storage']">
+                    (click)="navigateServerDetailsTo(routeKeyEnum.ServerDetailStorage)">
                     {{ textContent.storage.manage }}
                   </a>
                 </ng-container>
@@ -135,7 +135,7 @@
                 <span>{{ textContent.nics.title }}</span>
                 <ng-container *mcsAccessControl="['VmNicEdit']">
                   <a [disabled]="!server.executable"
-                    [routerLink]="['../nics']">
+                    (click)="navigateServerDetailsTo(routeKeyEnum.ServerDetailNics)">
                     {{ textContent.nics.manage }}
                   </a>
                 </ng-container>

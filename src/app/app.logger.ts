@@ -2,7 +2,10 @@ import {
   ErrorHandler,
   isDevMode
 } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import {
+  HttpResponse,
+  HttpErrorResponse
+} from '@angular/common/http';
 import { resolveEnvVar } from './utilities';
 const RAVEN = require('raven-js');
 let ravenInstalled: boolean = false;
@@ -15,7 +18,10 @@ let ravenInstalled: boolean = false;
  */
 class RavenErrorHandler implements ErrorHandler {
   public handleError(error: HttpResponse<any> | any): void {
-    if (!isDevMode() && !(error instanceof HttpResponse)) {
+    let isHttpResponse = (error instanceof HttpResponse) ||
+      (error instanceof HttpErrorResponse);
+
+    if (!isDevMode() && !isHttpResponse) {
       RAVEN.captureException(error.originalError || error);
     }
   }

@@ -9,6 +9,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
+  McsRouteKey,
   McsRouteCategory,
   McsRouteHandlerService,
   McsTextContentProvider
@@ -45,6 +46,13 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Returns the route key enumeration
+   */
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
+
+  /**
    * Returns true when the sub-navigation is displayed
    */
   public get showSubNavigation(): boolean {
@@ -76,7 +84,7 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
     this._routerHandlerService.onActiveRoute
       .pipe(takeUntil(this._destroySubject))
       .subscribe((_activeRoute) => {
-        this.activeRouteCategory = _activeRoute.category;
+        this.activeRouteCategory = _activeRoute.enumCategory;
         this._changeDetectorRef.markForCheck();
       });
   }

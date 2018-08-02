@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { ResourcesModule } from './resources/resources.module';
 import { ServersModule } from './servers/servers.module';
 import { TicketsModule } from './tickets/tickets.module';
-import { NetworkingModule } from './networking/networking.module';
+import { FirewallsModule } from './firewalls/firewalls.module';
 import { ToolsModule } from './tools/tools.module';
 import { ProductsModule } from './products/products.module';
 import { MediaModule } from './media/media.module';
@@ -24,7 +24,7 @@ import {
     ResourcesModule,
     ServersModule,
     TicketsModule,
-    NetworkingModule,
+    FirewallsModule,
     ToolsModule,
     ProductsModule,
     MediaModule,

@@ -9,8 +9,10 @@ import {
   McsJobStatus,
   McsJobStatusSerialization
 } from '../../enumerations/mcs-job-status.enum';
+import { CoreRoutes } from '../../core.routes';
 import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 import { McsEntityBase } from '../../base/mcs-entity.base';
+import { McsRouteKey } from '../../enumerations/mcs-route-key.enum';
 
 export class McsApiJob extends McsEntityBase  {
   public initiatorId: string;
@@ -126,7 +128,7 @@ export class McsApiJob extends McsEntityBase  {
     switch (this.type) {
       case McsJobType.CreateServer:
       case McsJobType.CloneServer:
-        jobLink = `./servers/create/${this.id}`;
+        jobLink = `${CoreRoutes.getPath(McsRouteKey.ServerCreate)}/${this.id}`;
         break;
 
       // Add more link here when a job has requested page

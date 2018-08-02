@@ -8,7 +8,7 @@ export * from './services';
 export * from './servers/servers.constants';
 export * from './tickets/tickets.constants';
 export * from './notifications/notifications.constants';
-export * from './networking/networking.constants';
+export * from './firewalls/firewalls.constants';
 export * from './tools/tools.constants';
 export * from './gadgets/gadgets.constants';
 export * from './dashboard/dashboard.constants';

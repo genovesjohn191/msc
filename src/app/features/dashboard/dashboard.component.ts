@@ -9,7 +9,9 @@ import {
   McsTextContentProvider,
   McsAuthenticationService,
   CoreConfig,
-  CoreDefinition
+  CoreDefinition,
+  CoreRoutes,
+  McsRouteKey
 } from '../../core';
 
 @Component({
@@ -63,6 +65,6 @@ export class DashboardComponent implements OnInit {
    * Navigates to create ticket page
    */
   public gotoCreateTicket(): void {
-    this._router.navigate(['./tickets/create']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.TicketCreate)]);
   }
 }

@@ -40,7 +40,9 @@ import {
   McsDialogService,
   McsRoutingTabBase,
   McsErrorHandlerService,
-  McsDataStatusFactory
+  McsDataStatusFactory,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -150,7 +152,7 @@ export class ServerComponent
 
     // this._setSelectedServerInfo(_server);
     this._changeDetectorRef.markForCheck();
-    this.router.navigate(['/servers', _server.id]);
+    this.router.navigate([CoreRoutes.getPath(McsRouteKey.Servers), _server.id]);
   }
 
   /**
@@ -222,7 +224,10 @@ export class ServerComponent
     if (isNullOrEmpty(resource.resourceId)) { return; }
 
     this._changeDetectorRef.markForCheck();
-    this.router.navigate(['servers/vdc/', resource.resourceId]);
+    this.router.navigate([
+      CoreRoutes.getPath(McsRouteKey.Vdc),
+      resource.resourceId
+    ]);
   }
 
   /**
@@ -230,8 +235,11 @@ export class ServerComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    // Navigate route based on current active tab
-    this.router.navigate(['servers', this.paramId, tab.id]);
+    this.router.navigate([
+      CoreRoutes.getPath(McsRouteKey.Servers),
+      this.paramId,
+      tab.id
+    ]);
   }
 
   /**

@@ -27,13 +27,16 @@ import {
   McsSearch,
   McsRoutingTabBase,
   McsDataStatusFactory,
-  McsErrorHandlerService
+  McsErrorHandlerService,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import {
   isNullOrEmpty,
   refreshView,
   unsubscribeSafely,
-  compareStrings
+  compareStrings,
+  unsubscribeSubject
 } from '../../../utilities';
 import { ComponentHandlerDirective } from '../../../shared';
 import {
@@ -132,8 +135,7 @@ export class VdcComponent
   public ngOnDestroy() {
     super.onDestroy();
     unsubscribeSafely(this.vdcSubscription);
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -142,7 +144,10 @@ export class VdcComponent
    */
   public onServerSelect(server: Server) {
     if (isNullOrEmpty(server)) { return; }
-    this.router.navigate(['/servers', server.id]);
+    this.router.navigate([
+      CoreRoutes.getPath(McsRouteKey.Servers),
+      server.id
+    ]);
   }
 
   /**
@@ -161,7 +166,10 @@ export class VdcComponent
     if (isNullOrEmpty(resource.resourceId)) { return; }
 
     this._changeDetectorRef.markForCheck();
-    this.router.navigate(['servers/vdc/', resource.resourceId]);
+    this.router.navigate([
+      CoreRoutes.getPath(McsRouteKey.Vdc),
+      resource.resourceId
+    ]);
   }
 
   /**
@@ -178,8 +186,11 @@ export class VdcComponent
    * @param tab Active tab
    */
   protected onTabChanged(tab: any) {
-    // Navigate route based on current active tab
-    this.router.navigate(['servers/vdc/', this.paramId, tab.id]);
+    this.router.navigate([
+      CoreRoutes.getPath(McsRouteKey.Vdc),
+      this.paramId,
+      tab.id
+    ]);
   }
 
   /**

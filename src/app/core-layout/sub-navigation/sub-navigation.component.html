@@ -17,7 +17,7 @@
   <div [ngSwitch]="activeRouteCategory" class="sub-navigation-content ">
     <!-- Compute Category -->
     <ng-container *ngSwitchCase="routeCategoryEnum.Compute">
-      <a [routerLink]="['/servers']" routerLinkActive="active"
+      <a [mcsRouterLink]="routeKeyEnum.Servers" mcsRouterLinkActive="active"
         class="sub-navigation-item unstyled-link"
         mcsEventTracker="navigate-to-servers"
         mcsEventCategory="navigation"
@@ -25,7 +25,7 @@
         {{ textContent.virtual }}
       </a>
 
-      <a [routerLink]="['/compute/media']" routerLinkActive="active"
+      <a [mcsRouterLink]="routeKeyEnum.Media" mcsRouterLinkActive="active"
         *mcsAccessControl="[]; feature: 'enableMediaCatalog'"
         class="sub-navigation-item unstyled-link"
         mcsEventTracker="navigate-to-firewalls"
@@ -37,7 +37,7 @@
 
     <!-- Network Category -->
     <ng-container *ngSwitchCase="routeCategoryEnum.Network">
-      <a [routerLink]="['/networking/firewalls']" routerLinkActive="active"
+      <a [mcsRouterLink]="routeKeyEnum.Firewalls" mcsRouterLinkActive="active"
         *mcsAccessControl="['FirewallConfigurationView']"
         class="sub-navigation-item unstyled-link"
         mcsEventTracker="navigate-to-firewalls"

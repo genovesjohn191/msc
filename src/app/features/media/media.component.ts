@@ -11,7 +11,9 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
-  McsTableListingBase
+  McsTableListingBase,
+  CoreRoutes,
+  McsRouteKey
 } from '../../core';
 import {
   isNullOrEmpty,
@@ -62,7 +64,7 @@ export class MediaComponent
    * This will navigate to new media page
    */
   public onClickNewMediaButton() {
-    this._router.navigate(['./media/new']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.MediaCreate)]);
   }
 
   /**
@@ -71,7 +73,7 @@ export class MediaComponent
    */
   public navigateToMedia(media: Media): void {
     if (isNullOrEmpty(media)) { return; }
-    this._router.navigate(['/media/', media.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Media), media.id]);
   }
 
   /**

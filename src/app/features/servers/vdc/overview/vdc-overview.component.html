@@ -68,7 +68,7 @@
       display-flex="row" align-items="center">
       <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
       <span>{{ textContent.storageProfiles.title }}</span>
-      <a [routerLink]="['../storage']">
+      <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailStorage)">
         {{ textContent.storageProfiles.manageLink }}
       </a>
     </h4>

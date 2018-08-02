@@ -22,7 +22,9 @@ import {
 import {
   McsTextContentProvider,
   McsErrorHandlerService,
-  CoreDefinition
+  CoreDefinition,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -86,7 +88,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Navigate to order listing
    */
   public gotoOrders(): void {
-    this._router.navigate(['/orders']);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Orders)]);
   }
 
   /**

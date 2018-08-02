@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { ticketsProviders } from '../tickets.constants';
 /** Modules */
 import { ServersTestingModule } from '../../servers/testing';
-import { NetworkingTestingModule } from '../../networking/testing';
+import { FirewallsTestingModule } from '../../firewalls/testing';
 import { ResourcesTestingModule } from '../../resources/testing';
 import { CoreTestingModule } from '../../../core/testing';
 
@@ -12,7 +12,7 @@ import { CoreTestingModule } from '../../../core/testing';
     CoreTestingModule,
     ResourcesTestingModule,
     ServersTestingModule,
-    NetworkingTestingModule
+    FirewallsTestingModule
   ],
   providers: [
     /** Tickets Services */

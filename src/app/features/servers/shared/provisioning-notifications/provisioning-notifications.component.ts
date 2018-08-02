@@ -26,7 +26,9 @@ import {
   McsApiTask,
   McsTaskType,
   McsDataStatus,
-  McsNotificationEventsService
+  McsNotificationEventsService,
+  CoreRoutes,
+  McsRouteKey
 } from '../../../../core';
 import {
   isNullOrEmpty,
@@ -188,8 +190,9 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    */
   public onViewServerPage(tasks: McsApiTask[]): void {
     let serverId = this._getCreatedServerId(tasks);
-    let route = !isNullOrEmpty(serverId) ? `/servers/${serverId}` : '/servers';
-    this._router.navigate([route]);
+    !isNullOrEmpty(serverId) ?
+      this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers), serverId]) :
+      this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers)]);
   }
 
   /**

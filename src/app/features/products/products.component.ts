@@ -28,7 +28,9 @@ import {
   McsDataStatusFactory,
   McsSearch,
   McsErrorHandlerService,
-  CoreDefinition
+  CoreDefinition,
+  CoreRoutes,
+  McsRouteKey
 } from '../../core';
 import {
   unsubscribeSafely,
@@ -134,7 +136,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _navigateToProduct(product: Product): void {
     if (isNullOrEmpty(product)) { return; }
-    this._router.navigate(['/products/', product.id]);
+    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Products), product.id]);
   }
 
   /**

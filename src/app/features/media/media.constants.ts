@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+import {
+  CoreRoutes,
+  McsRouteKey
+} from '../../core';
 /** Components */
 import { MediaComponent } from './media.component';
 /** Services */
@@ -17,6 +21,7 @@ export const mediaProviders: any[] = [
  */
 export const mediaRoutes: Routes = [
   {
-    path: 'compute/media', component: MediaComponent
+    path: CoreRoutes.getPath(McsRouteKey.Media),
+    component: MediaComponent
   }
 ];

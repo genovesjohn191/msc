@@ -13,33 +13,30 @@ import {
   isNullOrEmpty,
   unsubscribeSubject
 } from '../../utilities';
+import { CoreRoutes } from '../core.routes';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsLoggerService } from '../services/mcs-logger.service';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
-import { McsTextContentProvider } from '../providers/mcs-text-content.provider';
-import { McsRouteCategory } from '../enumerations/mcs-router-category.enum';
-import { McsRouteDetails } from '../models/mcs-route-details';
+import { McsRouteCategory } from '../enumerations/mcs-route-category.enum';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
+import { McsRouteInfo } from '../models/mcs-route-info';
 
 @Injectable()
 export class McsRouteHandlerService implements McsInitializer {
 
-  public activeRoute: McsRouteDetails;
-  public onActiveRoute = new BehaviorSubject<McsRouteDetails>(undefined);
+  public onActiveRoute = new BehaviorSubject<McsRouteInfo>(undefined);
 
+  private _activeRoute: McsRouteInfo;
   private _destroySubject = new Subject<void>();
-  private _routeTable: Map<string, McsRouteDetails>;
 
   constructor(
     private _router: Router,
     private _titleService: Title,
-    private _textContentProvider: McsTextContentProvider,
     private _loggerService: McsLoggerService,
     private _accessControlService: McsAccessControlService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
-    this._routeTable = new Map();
   }
 
   /**
@@ -47,8 +44,6 @@ export class McsRouteHandlerService implements McsInitializer {
    */
   public initialize(): void {
     this._loggerService.traceInfo(`Route checking initialized.`);
-    this._createRouteTable();
-
     this._router.events
       .pipe(takeUntil(this._destroySubject))
       .subscribe((event) => {
@@ -69,46 +64,11 @@ export class McsRouteHandlerService implements McsInitializer {
   /**
    * Event that emits when navigation ended
    */
-  private _onNavigateEnd(navStart: NavigationEnd) {
-    this._setMainActiveRoute(navStart.urlAfterRedirects);
-    this._guardRoutePermissions(this.activeRoute);
-    this._updateDocumentTitle(this.activeRoute);
-  }
-
-  /**
-   * Guards the route if it has permission, otherwise it will redirect to access denied page.
-   */
-  private _guardRoutePermissions(_activeRouteDetails: McsRouteDetails): void {
-    if (isNullOrEmpty(_activeRouteDetails)) { return; }
-    this._loggerService.traceInfo(`Checking permission...`);
-    this._loggerService.traceInfo(
-      `Route Required Permissions: `,
-      _activeRouteDetails.url,
-      _activeRouteDetails.requiredPermissions);
-
-    // Check user Permission
-    if (!isNullOrEmpty(_activeRouteDetails.requiredPermissions)) {
-      let hasRoutePermission = this._accessControlService
-        .hasPermission(_activeRouteDetails.requiredPermissions);
-      if (!hasRoutePermission) { this._navigateToForbiddenPage(); }
-    }
-
-    // Check feature Flag
-    if (!isNullOrEmpty(_activeRouteDetails.featureFlag)) {
-      let featureFlagIsEnabled = this._accessControlService
-        .hasAccessToFeature(_activeRouteDetails.featureFlag);
-      if (!featureFlagIsEnabled) { this._navigateToNotFoundPage(); }
-    }
-  }
-
-  /**
-   * Updates the currently displayed title based on category
-   * @param _activeRouteDetails Active route details
-   */
-  private _updateDocumentTitle(_activeRouteDetails: McsRouteDetails): void {
-    if (isNullOrEmpty(_activeRouteDetails)) { return; }
-    this._loggerService.traceInfo(`Displaying title for ${_activeRouteDetails.url}`);
-    this._titleService.setTitle(_activeRouteDetails.documentTitle);
+  private _onNavigateEnd(navEnd: NavigationEnd) {
+    this._setMainActiveRoute(navEnd.urlAfterRedirects);
+    this._validateRoutePermissions(this._activeRoute);
+    this._validateRouteFeatureFlag(this._activeRoute);
+    this._updateDocumentTitle(this._activeRoute);
   }
 
   /**
@@ -118,25 +78,65 @@ export class McsRouteHandlerService implements McsInitializer {
   private _setMainActiveRoute(fullUrl: string): void {
     if (isNullOrEmpty(fullUrl)) { return; }
 
-    // Find the key url based on the fullUrl
-    let keyUrl: string;
-    this._routeTable.forEach((_value, _key) => {
-      let keyExist = fullUrl.includes(_key);
-      if (!keyExist) { return; }
-      keyUrl = _key;
-    });
-    if (isNullOrEmpty(keyUrl)) { keyUrl = fullUrl; }
+    let routeInfo = CoreRoutes.getRouteInfoByUrl(fullUrl);
 
-    // Sets the main active url by key url
-    let routeDetails = this._routeTable.get(keyUrl);
-    if (isNullOrEmpty(routeDetails)) {
-      routeDetails = new McsRouteDetails();
-      routeDetails.category = McsRouteCategory.None;
-      routeDetails.url = keyUrl;
-      routeDetails.requiredPermissions = [];
+    if (isNullOrEmpty(routeInfo)) {
+      routeInfo = new McsRouteInfo();
+      routeInfo.routePath = fullUrl;
+      routeInfo.enumCategory = McsRouteCategory.None;
     }
-    this.activeRoute = routeDetails;
-    this.onActiveRoute.next(routeDetails);
+    this._activeRoute = routeInfo;
+    this.onActiveRoute.next(this._activeRoute);
+  }
+
+  /**
+   * Validates the current route based on its permissions,
+   * and navigate to not forbidden page instead
+   */
+  private _validateRoutePermissions(_activeRouteDetails: McsRouteInfo): void {
+    if (isNullOrEmpty(_activeRouteDetails)) { return; }
+    this._loggerService.traceInfo(`Checking permission...`);
+    this._loggerService.traceInfo(
+      `Route Required Permissions: `,
+      _activeRouteDetails.routePath,
+      _activeRouteDetails.requiredPermissions);
+
+    // Check user Permission
+    if (!isNullOrEmpty(_activeRouteDetails.requiredPermissions)) {
+      let hasRoutePermission = this._accessControlService
+        .hasPermission(_activeRouteDetails.requiredPermissions);
+      if (!hasRoutePermission) { this._navigateToForbiddenPage(); }
+    }
+  }
+
+  /**
+   * Validates the current route based on its feature flag,
+   * and navigate to not found page instead
+   */
+  private _validateRouteFeatureFlag(_activeRouteDetails: McsRouteInfo): void {
+    if (isNullOrEmpty(_activeRouteDetails)) { return; }
+    this._loggerService.traceInfo(`Checking feature flag...`);
+    this._loggerService.traceInfo(
+      `Route Required Feature Flag: `,
+      _activeRouteDetails.routePath,
+      _activeRouteDetails.requiredFeatureFlag);
+
+    // Check feature Flag
+    if (!isNullOrEmpty(_activeRouteDetails.requiredFeatureFlag)) {
+      let featureFlagIsEnabled = this._accessControlService
+        .hasAccessToFeature(_activeRouteDetails.requiredFeatureFlag);
+      if (!featureFlagIsEnabled) { this._navigateToNotFoundPage(); }
+    }
+  }
+
+  /**
+   * Updates the currently displayed title based on category
+   * @param _activeRouteDetails Active route details
+   */
+  private _updateDocumentTitle(_activeRouteDetails: McsRouteInfo): void {
+    if (isNullOrEmpty(_activeRouteDetails)) { return; }
+    this._loggerService.traceInfo(`Displaying title for ${_activeRouteDetails.routePath}`);
+    this._titleService.setTitle(_activeRouteDetails.documentTitle);
   }
 
   /**
@@ -153,93 +153,5 @@ export class McsRouteHandlerService implements McsInitializer {
   private _navigateToNotFoundPage() {
     this._loggerService.traceInfo('FEATURE FLAG IS TURNED OFF!');
     this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.NotFound);
-  }
-
-  /**
-   * Creates route table based on url path
-   */
-  private _createRouteTable(): void {
-    let documentTitleText = this._textContentProvider.content.documentTitle;
-
-    // Register /dashboard endpoint
-    this._routeTable.set('/dashboard',
-      {
-        category: McsRouteCategory.None, url: '/dashboard',
-        documentTitle: documentTitleText.dashboard
-      });
-
-    // Register /orders endpoint
-    this._routeTable.set('/orders',
-      {
-        category: McsRouteCategory.None, url: '/orders',
-        documentTitle: documentTitleText.orders,
-        featureFlag: 'enableOrdering'
-      });
-
-    // Register /servers endpoint
-    this._routeTable.set('/servers',
-      {
-        category: McsRouteCategory.Compute, url: '/servers',
-        documentTitle: documentTitleText.servers,
-        requiredPermissions: ['VmAccess']
-      });
-
-    // Register /servers/create endpoint
-    this._routeTable.set('/servers/create',
-      {
-        category: McsRouteCategory.Compute, url: '/servers/create',
-        documentTitle: documentTitleText.servers,
-        requiredPermissions: ['VmEdit']
-      });
-
-    // Register /media endpoint
-    this._routeTable.set('/medias',
-      {
-        category: McsRouteCategory.Compute, url: '/medias',
-        documentTitle: documentTitleText.medias,
-        requiredPermissions: [],
-        featureFlag: 'enableMediaCatalog'
-      });
-
-    // Register /tickets endpoint
-    this._routeTable.set('/tickets',
-      {
-        category: McsRouteCategory.None, url: '/tickets',
-        documentTitle: documentTitleText.tickets,
-        requiredPermissions: ['TicketView']
-      });
-
-    // Register /other tools endpoint
-    this._routeTable.set('/tools',
-      {
-        category: McsRouteCategory.None, url: '/tools',
-        documentTitle: documentTitleText.tools,
-        requiredPermissions: []
-      });
-
-    // Register /products tools endpoint
-    this._routeTable.set('/products',
-      {
-        category: McsRouteCategory.None, url: '/products',
-        documentTitle: documentTitleText.products,
-        requiredPermissions: [],
-        featureFlag: 'enableProductCatalog'
-      });
-
-    // Register /notifications tools endpoint
-    this._routeTable.set('/notifications',
-      {
-        category: McsRouteCategory.None, url: '/notifications',
-        documentTitle: documentTitleText.notifications,
-        requiredPermissions: []
-      });
-
-    // Register /networking/firewalls endpoint
-    this._routeTable.set('/networking/firewalls',
-      {
-        category: McsRouteCategory.Network, url: '/networking/firewalls',
-        documentTitle: documentTitleText.firewalls,
-        requiredPermissions: ['FirewallConfigurationView']
-      });
   }
 }

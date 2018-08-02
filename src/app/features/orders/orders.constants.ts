@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+import {
+  CoreRoutes,
+  McsRouteKey
+} from '../../core';
 /** Services */
 import { OrdersService } from './orders.service';
 import { OrdersRepository } from './repositories/orders.repository';
@@ -21,10 +25,11 @@ export const ordersProviders: any[] = [
  */
 export const ordersRoutes: Routes = [
   {
-    path: 'orders', component: OrdersComponent
+    path: CoreRoutes.getPath(McsRouteKey.Orders),
+    component: OrdersComponent
   },
   {
-    path: 'orders/:id',
+    path: CoreRoutes.getPath(McsRouteKey.OrderDetail),
     component: OrderComponent
   },
 ];
