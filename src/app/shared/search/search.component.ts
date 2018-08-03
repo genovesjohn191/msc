@@ -8,21 +8,21 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import {
-  Subject,
-  Subscription,
-  concat
-} from 'rxjs';
+import { Subject } from 'rxjs';
 import {
   debounceTime,
-  distinctUntilChanged
+  distinctUntilChanged,
+  takeUntil
 } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsSearch,
   McsTextContentProvider
 } from '../../core';
-import { unsubscribeSafely } from '../../utilities';
+import { unsubscribeSubject } from '../../utilities';
+
+// Unique Id that generates during runtime
+let nextUniqueId = 0;
 
 @Component({
   selector: 'mcs-search',
@@ -31,11 +31,14 @@ import { unsubscribeSafely } from '../../utilities';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'search-wrapper'
+    'class': 'search-wrapper',
+    '[attr.id]': 'id'
   }
 })
 
 export class SearchComponent implements OnInit, OnDestroy, McsSearch {
+  @Input()
+  public id: string = `mcs-search-${nextUniqueId++}`;
 
   @Input()
   public delayInSeconds: number | 'none' = 'none';
@@ -51,7 +54,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
   /** Search subscription */
   private _searchSubject: Subject<string>;
-  private _searchSubscription: Subscription;
+  private _destroySubject = new Subject<void>();
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -65,29 +68,35 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
 
   public ngOnInit(): void {
     this.textContent = this._textContentProvider.content.shared.search;
-    this._createSearchSubscription();
+    this._createSearchSubject();
   }
 
   public ngOnDestroy(): void {
-    unsubscribeSafely(this._searchSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
+  /**
+   * Event that emits when the key has been chaged
+   */
   public onChangeKeyEvent(key: any): void {
-    // Register the event for the searching when it is closed already
-    if (this._searchSubscription.closed) {
-      this._createSearchSubscription();
-    }
     this._searchSubject.next(key);
   }
 
+  /**
+   * Event that emits when the ENTER key is pressed
+   * @param key Key value entered
+   */
   public onEnterKeyUpEvent(key: any): void {
-    // We need to unsubcribed to the current subject in order for the
-    // event not to trigger anymore
-    unsubscribeSafely(this._searchSubscription);
-    this.keyword = key;
-    this._onSearchChanged();
+    if (key === this.keyword) { return; }
+    this._searchSubject.next(key);
+    this._destroySubject.next();
+    this._createSearchSubject();
   }
 
+  /**
+   * Show/Hide the loader according to its display flag
+   * @param showLoading Loading flag to be set as the basis
+   */
   public showLoading(showLoading: boolean): void {
     this.searching = showLoading;
     this.iconKey = showLoading ?
@@ -96,20 +105,16 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
     this._changeDetectorRef.markForCheck();
   }
 
-  private _onSearchChanged() {
-    this.showLoading(true);
-    this.searchChangedStream.emit(this);
-    this._changeDetectorRef.markForCheck();
-  }
-
-  private _createSearchSubscription(): void {
-    // Register stream event for the filtering,
-    // This will invoke once the previous keyword and new keyword is not the same
-    // @ the given amount of time
-    this._searchSubscription = concat(this._searchSubject)
+  /**
+   * Creates the search subject for searching
+   */
+  private _createSearchSubject(): void {
+    this._searchSubject
       .pipe(
+        takeUntil(this._destroySubject),
         debounceTime(this.delayInSeconds === 'none' ?
-          CoreDefinition.SEARCH_TIME : (this.delayInSeconds as number * 1000)
+          CoreDefinition.SEARCH_TIME :
+          (this.delayInSeconds as number * 1000)
         ),
         distinctUntilChanged()
       )
@@ -117,5 +122,14 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
         this.keyword = searchTerm;
         this._onSearchChanged();
       });
+  }
+
+  /**
+   * Emits all changes on the search and notify all subscribers
+   */
+  private _onSearchChanged() {
+    this.showLoading(true);
+    this.searchChangedStream.emit(this);
+    this._changeDetectorRef.markForCheck();
   }
 }

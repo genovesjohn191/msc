@@ -7,7 +7,7 @@
       <div class="listing-table-wrapper">
         <!-- Search -->
         <div class="inline-items-medium">
-          <mcs-search #search></mcs-search>
+          <mcs-search #search id="firewall-policy-search"></mcs-search>
           <mcs-icon [key]="columnFilterIconKey" size="large" class="hidden-small pointer"
             mcsPopover placement="bottom" orientation="left" theme="light"
             padding="narrow" [content]="filterSelector" cursor="pointer">
@@ -19,7 +19,8 @@
           </ng-template>
           <!-- Note: This is required for generating policies table -->
           <ng-container>
-            <mcs-filter-selector [hidden]="true" [key]="columnSettingsKey"
+            <mcs-filter-selector [hidden]="true"
+              [key]="columnSettingsKey"
               (filtersChange)="updateColumnSettings($event)">
             </mcs-filter-selector>
           </ng-container>

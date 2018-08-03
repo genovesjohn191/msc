@@ -173,13 +173,13 @@ export class CoreDefinition {
   public static ASSETS_IMAGE_USER_PERMISSIONS = 'user-permissions';
 
   /** Filter Selector */
-  public static FILTERSELECTOR_SERVER_LISTING = 'serversListingFilter';
-  public static FILTERSELECTOR_NOTIFICATIONS_LISTING = 'notificationsListingFilter';
-  public static FILTERSELECTOR_TICKET_LISTING = 'ticketsListingFilter';
-  public static FILTERSELECTOR_FIREWALLS_LISTING = 'firewallsListingFilter';
-  public static FILTERSELECTOR_FIREWALL_POLICIES_LISTING = 'firewallPoliciesListingFilter';
-  public static FILTERSELECTOR_MEDIA_LISTING = 'mediasListingFilter';
-  public static FILTERSELECTOR_ORDER_LISTING = 'ordersListingFilter';
+  public static FILTERSELECTOR_SERVER_LISTING = 'serverFilter';
+  public static FILTERSELECTOR_NOTIFICATIONS_LISTING = 'notificationFilter';
+  public static FILTERSELECTOR_TICKET_LISTING = 'ticketFilter';
+  public static FILTERSELECTOR_FIREWALLS_LISTING = 'firewallFilter';
+  public static FILTERSELECTOR_FIREWALL_POLICIES_LISTING = 'firewallPolicyFilter';
+  public static FILTERSELECTOR_MEDIA_LISTING = 'mediaFilter';
+  public static FILTERSELECTOR_ORDER_LISTING = 'orderFilter';
 
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;

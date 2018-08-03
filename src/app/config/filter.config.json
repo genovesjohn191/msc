@@ -1,27 +1,5 @@
 {
-  "columnMainFilter": {
-    "serverName": {
-      "text": "Server Name",
-      "value": true
-    },
-    "networking": {
-      "text": "Networking",
-      "value": true
-    },
-    "catalog": {
-      "text": "Catalog",
-      "value": true
-    },
-    "others": {
-      "text": "Others",
-      "value": false
-    },
-    "dashboard": {
-      "text": "Dashboard",
-      "value": false
-    }
-  },
-  "serversListingFilter": {
+  "serverFilter": {
     "select": {
       "text": "Select",
       "value": true,
@@ -70,7 +48,7 @@
       "exclude": true
     }
   },
-  "notificationsListingFilter": {
+  "notificationFilter": {
     "notification": {
       "text": "Notification",
       "value": true,
@@ -90,7 +68,7 @@
       "value": true
     }
   },
-  "ticketsListingFilter": {
+  "ticketFilter": {
     "crispTicketNumber": {
       "text": "Ticket Number",
       "value": true
@@ -121,7 +99,7 @@
       "value": true
     }
   },
-  "firewallsListingFilter": {
+  "firewallFilter": {
     "firewall": {
       "text": "Firewall",
       "value": true,
@@ -154,7 +132,7 @@
       "exclude": true
     }
   },
-  "firewallPoliciesListingFilter": {
+  "firewallPolicyFilter": {
     "action": {
       "text": "Action",
       "value": true
@@ -199,7 +177,7 @@
       "value": true
     }
   },
-  "mediasListingFilter": {
+  "mediaFilter": {
     "media": {
       "text": "Media",
       "value": true,
@@ -227,7 +205,7 @@
       "exclude": true
     }
   },
-  "ordersListingFilter": {
+  "orderFilter": {
     "description": {
       "text": "Description",
       "value": true,

@@ -1,5 +1,6 @@
 <mcs-form-field>
   <input mcsInput type="text" #search placeholder="Type to search..."
-    (keyup)="onChangeKeyEvent(search.value)" (keyup.enter)="onEnterKeyUpEvent(search.value)">
+    (keyup)="onChangeKeyEvent(search.value)"
+    (keyup.enter)="onEnterKeyUpEvent(search.value)">
   <mcs-icon [key]="iconKey" size="small"></mcs-icon>
 </mcs-form-field>

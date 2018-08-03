@@ -18,7 +18,7 @@
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
-      <mcs-search *ngIf="!isMobile" #search></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search id="notifications-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -32,7 +32,7 @@
   <mcs-content-panel *mcsContentPanelDef>
     <div class="listing-table-wrapper">
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search></mcs-search>
+      <mcs-search *ngIf="isMobile" #search id="notifications-mobile-search"></mcs-search>
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
