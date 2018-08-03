@@ -56,7 +56,7 @@
     </ng-container>
 
     <!-- Remove temporarily -->
-    <ng-container *mcsIsSelfManagedServer="server">
+    <ng-container *ngIf="server.isSelfManaged">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Scale)">
         <a (click)="onExecuteCommand(serverCommandEnum.Scale)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Scale)"
@@ -68,7 +68,7 @@
       </ng-container>
     </ng-container>
 
-    <ng-container *mcsIsSelfManagedServer="server">
+    <ng-container *ngIf="server.isSelfManaged">
       <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Clone)">
         <a (click)="onExecuteCommand(serverCommandEnum.Clone)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Clone)"
@@ -80,7 +80,7 @@
       </ng-container>
     </ng-container>
 
-    <ng-container *mcsIsSelfManagedServer="server">
+    <ng-container *ngIf="server.isSelfManaged">
       <a (click)="onExecuteCommand(serverCommandEnum.Rename)"
         [disabled]="!getEnabledCommand(serverCommandEnum.Rename)"
         mcsEventTracker="rename"
@@ -91,7 +91,7 @@
     </ng-container>
 
     <ng-container *ngIf="getIncludedCommand(serverCommandEnum.Delete)">
-      <ng-container *mcsIsSelfManagedServer="server">
+      <ng-container *ngIf="server.isSelfManaged">
         <a (click)="onExecuteCommand(serverCommandEnum.Delete)"
           [disabled]="!getEnabledCommand(serverCommandEnum.Delete)"
           mcsEventTracker="delete"

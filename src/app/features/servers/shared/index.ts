@@ -20,8 +20,6 @@ export * from './server-dialogs/restore-snapshot/restore-snapshot.dialog';
 export * from './server-dialogs/suspend-server/suspend-server.dialog';
 export * from './server-dialogs/resume-server/resume-server.dialog';
 export * from './server-dialogs/disk-conflict-snapshot/disk-conflict-snapshot.dialog';
-/** Directives */
-export * from './directives/is-self-managed-server.directive';
 /** Add Ons */
 export * from './server-addons/anti-malware/anti-malware.addon';
 export * from './server-addons/disaster-recovery/disaster-recovery.addon';
