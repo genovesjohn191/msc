@@ -32,7 +32,7 @@
                 <span> / </span>
                 <span [innerHTML]="server.compute?.cpuCountLabel | mcsDataLabel"></span>
                 <ng-container *mcsAccessControl="['VmEdit']">
-                  <ng-container *mcsIsSelfManagedServer="server">
+                  <ng-container *ngIf="server.isSelfManaged">
                     <mcs-icon *ngIf="scaleInProgress"
                       [key]="spinnerIconKey" size="small"
                       [mcsTooltip]="textContent.manageScale.scaling"></mcs-icon>

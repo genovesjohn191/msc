@@ -316,6 +316,15 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   }
 
   /**
+   * Returns true when the edit nic link is enabled
+   * @param nic Nic to be checked
+   */
+  public isEditNicEnabled(nic: ServerNic): boolean {
+    if (isNullOrEmpty(nic)) { return false; }
+    return this.server.isSelfManaged || !nic.isPrimary;
+  }
+
+  /**
    * Event that emits when the server selection was changed
    * `@Note:` Base implementation
    */

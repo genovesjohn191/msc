@@ -55,8 +55,9 @@
                   </td>
                   <td>
                     <div *mcsAccessControl="['VmNicEdit']" class="inline-items-small flex-nowrap">
-                      <span *mcsIsSelfManagedServer="server">
-                        <a [disabled]="!server.executable" (click)="openEditNicWindow(nic)"
+                      <span *ngIf="isEditNicEnabled(nic)">
+                        <a [disabled]="!server.executable"
+                            (click)="openEditNicWindow(nic)"
                             mcsEventTracker="edit-nic"
                             mcsEventCategory="server"
                             mcsEventLabel="server-details-page">
