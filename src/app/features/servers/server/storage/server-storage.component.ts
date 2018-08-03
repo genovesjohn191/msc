@@ -310,10 +310,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     diskValues.sizeMB = this.manageStorage.sizeMB;
     diskValues.clientReferenceObject = {
       serverId: this.server.id,
-      diskId: this.selectedDisk.id,
-      name: this.selectedStorage.name,
-      storageProfile: this.selectedDisk.storageProfile,
-      sizeMB: this.selectedDisk.sizeMB
+      diskId: this.selectedDisk.id
     };
 
     this.closeExpandDiskWindow();

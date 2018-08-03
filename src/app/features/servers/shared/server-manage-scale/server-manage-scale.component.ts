@@ -23,7 +23,8 @@ import {
   isNullOrEmpty,
   animateFactory,
   unsubscribeSubject,
-  getSafeProperty
+  getSafeProperty,
+  coerceBoolean
 } from '../../../../utilities';
 import {
   McsTextContentProvider,
@@ -40,6 +41,8 @@ import {
 const DEFAULT_MB = 1024;
 const DEFAULT_MEMORY_MULTIPLIER = 2048;
 const DEFAULT_CPU_MULTIPLIER = 2;
+const DEFAULT_MIN_MEMORY = 2048;
+const DEFAULT_MIN_CPU = 2;
 
 @Component({
   selector: 'mcs-server-manage-scale',
@@ -73,6 +76,13 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
 
   @Input()
   public serverCompute?: ServerCompute;
+
+  @Input()
+  public get allowScaleDown(): boolean { return this._allowScaleDown; }
+  public set allowScaleDown(value: boolean) {
+    this._allowScaleDown = coerceBoolean(value);
+  }
+  private _allowScaleDown: boolean;
 
   private _destroySubject = new Subject<void>();
   private _scaleOutput = new ServerManageScale();
@@ -110,10 +120,25 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   /**
+   * Returns the minimum memory MB used
+   */
+  public get minimumMemoryMB(): number {
+    return this.allowScaleDown ? DEFAULT_MIN_MEMORY : this.serverMemoryUsedMB;
+  }
+
+  /**
+   * Returns the minimum cpu used
+   */
+  public get minimumCpuUsed(): number {
+    return this.allowScaleDown ? DEFAULT_MIN_CPU : this.serverCpuUsed;
+  }
+
+  /**
    * Returns the current server memory used
    */
   public get serverMemoryUsedMB(): number {
-    return getSafeProperty(this.serverCompute, (obj) => obj.memoryMB, 0);
+    return getSafeProperty(this.serverCompute,
+      (obj) => obj.memoryMB, DEFAULT_MIN_MEMORY);
   }
 
   /**
@@ -121,7 +146,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
    */
   public get serverCpuUsed(): number {
     return getSafeProperty(this.serverCompute,
-      (obj) => obj.cpuCount * obj.coreCount, 0);
+      (obj) => obj.cpuCount * obj.coreCount, DEFAULT_MIN_CPU);
   }
 
   /**
@@ -199,9 +224,9 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
 
     // Filter applicable values on the table
     this.sliderTable = table.filter((scale) => {
-      return (scale.memoryMB >= this.serverMemoryUsedMB
+      return (scale.memoryMB >= this.minimumMemoryMB
         && scale.memoryMB <= this.resourceAvailableMemoryMB)
-        && (scale.cpuCount >= this.serverCpuUsed
+        && (scale.cpuCount >= this.minimumCpuUsed
           && scale.cpuCount <= this.resourceAvailableCpu);
     });
     if (isNullOrEmpty(this.sliderTable)) {
@@ -219,7 +244,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
     // Create custom storage control and register the listener
     this.fcCustomMemory = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.min(this.serverMemoryUsedMB),
+      CoreValidators.min(this.minimumMemoryMB),
       CoreValidators.max(this.resourceAvailableMemoryMB),
       CoreValidators.numeric,
       CoreValidators.custom(
@@ -230,7 +255,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
 
     this.fcCustomCpu = new FormControl('', [
       CoreValidators.required,
-      CoreValidators.min(this.serverCpuUsed),
+      CoreValidators.min(this.minimumCpuUsed),
       CoreValidators.max(this.resourceAvailableCpu),
       CoreValidators.numeric,
       CoreValidators.custom(

@@ -99,9 +99,11 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
   }
 
   /**
-   * Updates the record property according to its structure
+   * Updates the record property according to its structure,
+   * if the record is array, it will automatically appended and will not remove
+   * the previous instance of the array, and same thing with the object.
    * @param propertyTarget The target object to copy to.
-   * @param propertyTarget The source object from which to copy records.
+   * @param propertySource The source object from which to copy records.
    */
   public updateRecordProperty<P>(propertyTarget: P | any, propertySource: P | any): P | any {
     let objectIsArrayType = Array.isArray(propertySource) || Array.isArray(propertyTarget);

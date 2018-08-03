@@ -21,7 +21,8 @@ import {
   ServerMedia,
   ServerStorageDevice,
   ServerNic,
-  ServerSnapshot
+  ServerSnapshot,
+  ServerCompute
 } from './models';
 import { isNullOrEmpty } from '../../utilities';
 import { ResetPasswordFinishedDialogComponent } from './shared';
@@ -70,6 +71,25 @@ export class ServersRepository extends McsRepositoryBase<Server> {
         map((response) => {
           activeServer.nics = this.updateRecordProperty(
             activeServer.nics, response.content);
+          this.updateRecord(activeServer);
+          return response.content;
+        })
+      );
+  }
+
+  /**
+   * This will obtain the server compute values from API
+   * and update the compute of the active server
+   * @param activeServer Active server to set the compute
+   * @description TODO: Haven't implemented this because the update is not real time
+   * waiting for the orch to implement this endpoint
+   */
+  public findServerCompute(activeServer: Server): Observable<ServerCompute> {
+    return this._serversApiService.getServerCompute(activeServer.id)
+      .pipe(
+        map((response) => {
+          activeServer.compute = this.updateRecordProperty(
+            activeServer.compute, response.content);
           this.updateRecord(activeServer);
           return response.content;
         })

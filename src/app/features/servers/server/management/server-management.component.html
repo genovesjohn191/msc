@@ -275,6 +275,7 @@
           <div class="action-box" [disabled]="!server.executable">
             <mcs-server-manage-scale [resource]="serverResource"
               [serverCompute]="server.compute"
+              [allowScaleDown]="server.isSelfManaged"
               (dataChange)="onScaleChanged($event)">
 
               <ng-container mcsManageScaleHeader>

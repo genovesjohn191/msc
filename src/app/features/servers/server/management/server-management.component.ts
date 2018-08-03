@@ -87,7 +87,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
   private _newMedia: ServerMedia;
   private _resourceMedias: ServerMedia[];
-  private _serverMediasSubscription: Subscription;
+  private _serverMediaSubscription: Subscription;
   private _serverThumbnailSubscription: Subscription;
   private _computeSubscription: Subscription;
   private _destroySubject = new Subject<void>();
@@ -159,7 +159,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public ngOnDestroy() {
     this.dispose();
     unsubscribeSubject(this._destroySubject);
-    unsubscribeSafely(this._serverMediasSubscription);
+    unsubscribeSafely(this._serverMediaSubscription);
     unsubscribeSafely(this._serverThumbnailSubscription);
     unsubscribeSafely(this._computeSubscription);
   }
@@ -364,7 +364,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   protected serverSelectionChanged(): void {
     this._getServerThumbnail();
     this._getResourceCompute();
-    this._getResourceMedias();
+    this._getResourceMedia();
     this._getServerMedias();
     this._checkScaleParamMode();
   }
@@ -394,10 +394,10 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Get the server medias
    */
   private _getServerMedias(): void {
-    unsubscribeSafely(this._serverMediasSubscription);
+    unsubscribeSafely(this._serverMediaSubscription);
 
     this.mediaStatusFactory.setInProgress();
-    this._serverMediasSubscription = this._serversRepository
+    this._serverMediaSubscription = this._serversRepository
       .findServerMedias(this.server)
       .pipe(
         catchError((error) => {
@@ -426,7 +426,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * Get the resource media list
    */
-  private _getResourceMedias(): void {
+  private _getResourceMedia(): void {
     let resourceCatalogs = getSafeProperty(this.serverResource, (obj) => obj.catalogItems);
     if (isNullOrEmpty(resourceCatalogs)) { return; }
 

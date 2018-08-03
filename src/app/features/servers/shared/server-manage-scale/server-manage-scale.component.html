@@ -49,7 +49,7 @@
         </mcs-error>
         <mcs-error mcsError errorState="min">
           {{ textContent.errors.ramMin |
-             mcsTextPlaceholder: 'min_value': serverMemoryUsedMB }}
+             mcsTextPlaceholder: 'min_value': minimumMemoryMB }}
         </mcs-error>
         <mcs-error mcsError errorState="max">
           {{ textContent.errors.ramMax |
@@ -76,7 +76,7 @@
         </mcs-error>
         <mcs-error mcsError errorState="min">
           {{ textContent.errors.cpuMin |
-              mcsTextPlaceholder: 'min_value': serverCpuUsed }}
+              mcsTextPlaceholder: 'min_value': minimumCpuUsed }}
         </mcs-error>
         <mcs-error mcsError errorState="max">
           {{ textContent.errors.cpuMax |

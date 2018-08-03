@@ -7,6 +7,7 @@ $notification-minimum-width: 350px;
 // Switch account popover
 $user-panel-switch-account-max-height: 80vh;
 $user-panel-switch-account-mobile-width: 80vw;
+$user-panel-switch-account-desktop-min-width: 250px;
 $user-panel-switch-account-desktop-width: 400px;
 // Notification item variables
 $notification-item-label-bg-color: $color-primary-01;
@@ -90,12 +91,8 @@ $notification-item-label-size: 18px;
   @include set-items-divider($divider-dark-color);
   background-color: $color-black;
   color: $color-grey-05;
-  width: $user-panel-switch-account-desktop-width;
+  min-width: $user-panel-switch-account-desktop-min-width;
   max-height: $user-panel-switch-account-max-height;
-
-  @include breakpoint(small) {
-    width: $user-panel-switch-account-mobile-width;
-  }
 
   a {
     color: $color-grey-05;
@@ -110,5 +107,13 @@ $notification-item-label-size: 18px;
   .switch-account-panel,
   .logout-panel {
     padding: $space-medium;
+  }
+
+  .switch-account-panel {
+    width: $user-panel-switch-account-desktop-width;
+
+    @include breakpoint(small) {
+      width: $user-panel-switch-account-mobile-width;
+    }
   }
 }

@@ -213,8 +213,8 @@
   },
   "otherTools": {
     "enumKey": "OtherTools",
-    "routePath": "others",
-    "referenceRoutePath": "others",
+    "routePath": "tools",
+    "referenceRoutePath": "tools",
     "documentTitle": "Macquarie Cloudservices - Other tools"
   },
   "httpErrorPage": {
