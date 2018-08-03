@@ -43,7 +43,8 @@ import {
   ServerSnapshot,
   ServerCreateSnapshot,
   ServerMedia,
-  ServerAttachMedia
+  ServerAttachMedia,
+  ServerCompute
 } from './models';
 
 /**
@@ -642,6 +643,31 @@ export class ServersService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsApiJob>(McsApiJob, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * This will get the server compute from the API
+   */
+  public getServerCompute(serverId: any): Observable<McsApiSuccessResponse<ServerCompute>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/servers/${serverId}/compute`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<ServerCompute>(ServerCompute, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

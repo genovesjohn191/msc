@@ -112,6 +112,13 @@ export class Server extends McsEntityBase {
   }
 
   /**
+   * Returns true when the server is self-managed
+   */
+  public get isSelfManaged(): boolean {
+    return this.serviceType === ServerServiceType.SelfManaged;
+  }
+
+  /**
    * Returns true when the server is powered on
    */
   public get isPoweredOn(): boolean {

@@ -232,9 +232,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
       serverId: this.server.id,
-      networkName: this.manageNetwork.network.name,
-      ipAllocationMode: this.manageNetwork.ipAllocationMode,
-      ipAddress: this.manageNetwork.customIpAddress
+      nicName: nicValues.name,
+      nicIpAllocationMode: nicValues.ipAllocationMode,
+      nicIpAddress: nicValues.ipAddress
     };
 
     this._serversService.setServerSpinner(this.server, nicValues);
@@ -291,10 +291,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
     nicValues.clientReferenceObject = {
       serverId: this.server.id,
-      nicId: this.selectedNic.id,
-      networkName: this.manageNetwork.network.name,
-      ipAllocationMode: this.manageNetwork.ipAllocationMode,
-      ipAddress: this.manageNetwork.customIpAddress
+      nicId: this.selectedNic.id
     };
 
     this.closeEditNicWindow();
@@ -419,8 +416,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
     // Mock NIC data based on job response
     this._newNic = new ServerNic();
-    this._newNic.logicalNetworkName = job.clientReferenceObject.networkName;
-    this._newNic.ipAllocationMode = job.clientReferenceObject.ipAllocationMode;
+    this._newNic.logicalNetworkName = job.clientReferenceObject.nicName;
+    this._newNic.ipAllocationMode = job.clientReferenceObject.nicIpAllocationMode;
+    this._newNic.ipAddresses = [job.clientReferenceObject.nicIpAddress];
     this._changeDetectorRef.markForCheck();
   }
 
