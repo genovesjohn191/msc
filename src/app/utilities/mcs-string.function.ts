@@ -50,7 +50,7 @@ export function replacePlaceholder(
   let replacedString: string = fullString;
   for (let index = 0; index < placeholders.length; index++) {
     replacedString = replacedString.replace(
-      new RegExp(`{{${placeholders[index]}}}`, 'g') , values[index]
+      new RegExp(`{{${placeholders[index]}}}`, 'g'), values[index]
     );
   }
   return replacedString;
@@ -128,4 +128,11 @@ export function containsString(source: string, target: string): boolean {
   let sourceString = source.toLowerCase();
   let targetString = target.toLowerCase();
   return sourceString.indexOf(targetString) !== -1;
+}
+
+/**
+ * Returns the converted string spaces to dash
+ */
+export function convertSpacesToDash(source: string): string {
+  return source.replace(/\s+/g, '-').toLowerCase();
 }

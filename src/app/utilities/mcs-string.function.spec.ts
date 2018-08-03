@@ -5,7 +5,8 @@ import {
   getEnumString,
   getRecordCountLabel,
   compareStrings,
-  containsString
+  containsString,
+  convertSpacesToDash
 } from './mcs-string.function';
 
 describe('STRING Functions', () => {
@@ -48,48 +49,55 @@ describe('STRING Functions', () => {
   });
 
   describe('getRecordCountLabel()', () => {
-    it(`return empty string if count is 0`, () => {
+    it(`should return empty string if count is 0`, () => {
       let recordCountLabel = getRecordCountLabel(0, 'Singular', 'Plural');
       expect(recordCountLabel).toBe('');
     });
 
-    it(`return singular suffix if count is 1`, () => {
+    it(`should return singular suffix if count is 1`, () => {
       let recordCountLabel = getRecordCountLabel(1, 'Singular', 'Plural');
       expect(recordCountLabel).toBe('1 Singular');
     });
 
-    it(`return plural if count is greater than 1`, () => {
+    it(`should return plural if count is greater than 1`, () => {
       let recordCountLabel = getRecordCountLabel(5, 'Singular', 'Plural');
       expect(recordCountLabel).toBe('5 Plural');
     });
   });
 
   describe('compareStrings()', () => {
-    it(`return -1 if firstString < secondString`, () => {
+    it(`should return -1 if firstString < secondString`, () => {
       let result = compareStrings('Alpha', 'Beta');
       expect(result).toBe(-1);
     });
 
-    it(`return 0 if firstString and secondString are the same`, () => {
+    it(`should return 0 if firstString and secondString are the same`, () => {
       let result = compareStrings('Alpha', 'Alpha');
       expect(result).toBe(0);
     });
 
-    it(`return 1 if firstString > secondString`, () => {
+    it(`should return 1 if firstString > secondString`, () => {
       let result = compareStrings('Beta', 'Alpha');
       expect(result).toBe(1);
     });
   });
 
   describe('containsString()', () => {
-    it(`return true when source text contains target text.`, () => {
+    it(`should return true when source text contains target text.`, () => {
       let result = containsString('Something to check', 'check');
       expect(result).toBeTruthy();
     });
 
-    it(`return false when source text does not contain target text.`, () => {
+    it(`should return false when source text does not contain target text.`, () => {
       let result = containsString('Something to check', 'hello');
       expect(result).toBeFalsy();
+    });
+  });
+
+  describe('convertSpacesToDash()', () => {
+    it(`should return the converted string spaces into dash.`, () => {
+      let result = convertSpacesToDash('Something to check');
+      expect(result).toBeTruthy('something-to-check');
     });
   });
 });

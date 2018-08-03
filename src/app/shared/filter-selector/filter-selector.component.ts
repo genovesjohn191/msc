@@ -19,7 +19,8 @@ import {
   isNullOrEmpty,
   convertJsonToMapObject,
   convertMapToJsonObject,
-  animateFactory
+  animateFactory,
+  convertSpacesToDash
 } from '../../utilities';
 
 @Component({
@@ -82,6 +83,13 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
     if (!isNullOrEmpty(excludedKeyChanges)) {
       this.onNotifyGetFilters();
     }
+  }
+
+  /**
+   * Returns the generated id based on the label given
+   */
+  public generateIdByLabel(label: string): string {
+    return `${this.key}-${convertSpacesToDash(label)}`;
   }
 
   /**
