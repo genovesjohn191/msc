@@ -85,31 +85,4 @@ export class CoreConfig {
   public set macviewChangePasswordUrl(value: string) {
     this._macviewChangePasswordUrl = value;
   }
-
-  /** Enable Passing JWT in URL */
-  private _enablePassingJwtInUrl: boolean;
-  public get enablePassingJwtInUrl(): boolean {
-    return this._enablePassingJwtInUrl;
-  }
-  public set enablePassingJwtInUrl(value: boolean) {
-    this._enablePassingJwtInUrl = value;
-  }
-
-  /** JWT Cookie Name */
-  private _jwtCookieName: string;
-  public get jwtCookieName(): string {
-    return this._jwtCookieName;
-  }
-  public set jwtCookieName(value: string) {
-    this._jwtCookieName = value;
-  }
-
-  /** JWT Refresh Token Cookie Name */
-  private _jwtRefreshTokenCookieName: string;
-  public get jwtRefreshTokenCookieName(): string {
-    return this._jwtRefreshTokenCookieName;
-  }
-  public set jwtRefreshTokenCookieName(value: string) {
-    this._jwtRefreshTokenCookieName = value;
-  }
 }
