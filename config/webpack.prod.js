@@ -16,6 +16,7 @@ const commonConfig = require('./webpack.common.js');
 const SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssSafeParser = require('postcss-safe-parser');
 const HashedModuleIdsPlugin = require('webpack/lib/HashedModuleIdsPlugin')
 const PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin;
 const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
@@ -182,7 +183,12 @@ module.exports = function (env) {
       new OptimizeCssAssetsPlugin({
         assetNameRegExp: /\.(css|scss)$/g,
         cssProcessor: require('cssnano'),
-        cssProcessorOptions: { safe: true, discardComments: { removeAll: true } },
+        cssProcessorOptions: {
+          parser: CssSafeParser,
+          discardComments: {
+            removeAll: true
+          }
+        },
         canPrint: true
       }),
 

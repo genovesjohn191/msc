@@ -121,7 +121,10 @@ export function coreConfig(): CoreConfig {
   providers: [
     environment.ENV_PROVIDERS,
     APP_PROVIDERS,
-    { provide: ErrorHandler, useFactory: errorHandlerProvider }
+    {
+      provide: ErrorHandler,
+      useFactory: errorHandlerProvider
+    }
   ]
 })
 

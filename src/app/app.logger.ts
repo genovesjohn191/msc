@@ -7,6 +7,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { resolveEnvVar } from './utilities';
+
 const RAVEN = require('raven-js');
 let ravenInstalled: boolean = false;
 
@@ -32,16 +33,8 @@ class RavenErrorHandler implements ErrorHandler {
  * environment settings (Production or Development) mode
  */
 export function errorHandlerProvider() {
-  if (!isDevMode()) {
-    // Configure Raven Logger
-    if (!ravenInstalled) {
-      RAVEN.config(resolveEnvVar('SENTRY_DSN', SENTRY_DSN)).install();
-      ravenInstalled = true;
-    }
-    return new RavenErrorHandler();
-  } else {
-    return new ErrorHandler();
-  }
+  let displayErrorToSentry = !isDevMode() && ravenInstalled;
+  return displayErrorToSentry ? new RavenErrorHandler() : new ErrorHandler();
 }
 
 /**
@@ -53,11 +46,12 @@ export function errorHandlerProvider() {
  * @param userEmail User Email of the current email
  */
 export function setUserIdentity(userId: any, userName: string, userEmail: string) {
-  if (!isDevMode()) {
-    RAVEN.setUserContext({
-      email: userEmail,
-      id: userId,
-      username: userName
-    });
-  }
+  if (isDevMode()) { return; }
+  RAVEN.setUserContext({
+    email: userEmail,
+    id: userId,
+    username: userName
+  });
+  RAVEN.config(resolveEnvVar('SENTRY_DSN', SENTRY_DSN)).install();
+  ravenInstalled = true;
 }
