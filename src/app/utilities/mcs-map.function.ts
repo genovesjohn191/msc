@@ -19,6 +19,7 @@ export function compareMaps(
   // Initialization for undefined and null record
   if (isNullOrEmpty(firstMap)) { firstMap = new Map(); }
   if (isNullOrEmpty(secondMap)) { secondMap = new Map(); }
+  if (!Object.is(firstMap, secondMap)) { return -1; }
 
   let firstMapString = JSON.stringify(convertMapToJsonObject(firstMap));
   let secondMapString = JSON.stringify(convertMapToJsonObject(secondMap));

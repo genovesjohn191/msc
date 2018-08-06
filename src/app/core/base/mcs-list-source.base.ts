@@ -12,15 +12,6 @@ import {
 import { isNullOrEmpty } from '../../utilities';
 
 export abstract class McsListSourceBase<T> {
-
-  /**
-   * Returns all the records obtained from API
-   */
-  public get dataRecords(): T[] { return this._cachedRecords; }
-
-  private _recordsMap = new Map<any, T[]>();
-  private _cachedRecords = new Array<T>();
-
   /**
    * Find all the records from the api provided or the repository
    * and group the results based on keyFn provided
@@ -32,11 +23,8 @@ export abstract class McsListSourceBase<T> {
     return this.findAllRecordsStream().pipe(
       catchError((error) => throwError(error)),
       switchMap((records) => {
-        if (isNullOrEmpty(records)) { return of(undefined); }
-
-        let recordsHaveChanged = this._cachedRecords.length !== records.length;
-        if (recordsHaveChanged) { this._setMapRecords(records, keyFn); }
-        return of(this._recordsMap, asyncScheduler);
+        let recordsMap = this._convertToMapRecords(records, keyFn);
+        return of(recordsMap, asyncScheduler);
       })
     );
   }
@@ -54,13 +42,6 @@ export abstract class McsListSourceBase<T> {
   }
 
   /**
-   * Clears the cache records
-   */
-  public clearRecords(): void {
-    this._recordsMap.clear();
-  }
-
-  /**
    * Gets all records from inherited class
    */
   protected abstract getAllRecords(): Observable<T[]>;
@@ -71,23 +52,23 @@ export abstract class McsListSourceBase<T> {
   protected abstract getStreams(): Observable<any>;
 
   /**
-   * Sets the map records based on the result provided
+   * Convert the array object into map records
    * @param records Records to be mapped
    * @param keyFn Key function to be served as key in the map
    */
-  private _setMapRecords(records: T[], keyFn: (item: T) => any): void {
-    if (isNullOrEmpty(records)) { return; }
+  private _convertToMapRecords(records: T[], keyFn: (item: T) => any): Map<any, T[]> {
+    if (isNullOrEmpty(records)) { return undefined; }
+    let _recordsMap = new Map<any, T[]>();
 
-    this._cachedRecords = new Array(...records);
-    this.clearRecords();
     records.forEach((record) => {
       let key = keyFn(record);
 
-      let listContent = this._recordsMap.get(key);
+      let listContent = _recordsMap.get(key);
       if (isNullOrEmpty(listContent)) { listContent = new Array(); }
 
       listContent.push(record);
-      this._recordsMap.set(key, listContent);
+      _recordsMap.set(key, listContent);
     });
+    return _recordsMap;
   }
 }

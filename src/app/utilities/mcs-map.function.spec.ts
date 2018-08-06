@@ -8,7 +8,7 @@ describe('MAP Functions', () => {
       let firstMap = new Map<string, any>();
       firstMap.set('key', { 'sample1': 'sample1', 'sample2': 'sample2' });
 
-      let secondMap = new Map<string, any>();
+      let secondMap = firstMap;
       secondMap.set('key', { 'sample1': 'sample1', 'sample2': 'sample2' });
 
       let comparisonValue = compareMaps(firstMap, secondMap);
@@ -27,7 +27,7 @@ describe('MAP Functions', () => {
       expect(comparisonValue).toBe(-1);
     });
 
-    it(`should return +1 when second map has alot of data with compare to first map
+    it(`should return not equal to 0 when second map has alot of data with compare to first map
       or both maps data are different`, () => {
       let firstMap = new Map<string, any>();
       firstMap.set('key', { 'sample1': 'sample1', 'sample2': 'sample2' });
@@ -36,7 +36,7 @@ describe('MAP Functions', () => {
       secondMap.set('key', { 'sample1': 'sample1', 'sample2': 'sample2', 'sample3': 'sample3' });
 
       let comparisonValue = compareMaps(firstMap, secondMap);
-      expect(comparisonValue).toBe(1);
+      expect(comparisonValue).not.toBe(0);
     });
   });
 });

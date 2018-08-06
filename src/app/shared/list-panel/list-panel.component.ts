@@ -24,7 +24,7 @@ import { OptionGroupComponent } from '../option-group/option-group.component';
 
 @Component({
   selector: 'mcs-list-panel',
-  templateUrl: './list-panel.component.html',
+  template: `<ng-content></ng-content>`,
   styleUrls: ['./list-panel.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +34,6 @@ import { OptionGroupComponent } from '../option-group/option-group.component';
 })
 
 export class ListPanelComponent implements AfterContentInit, OnDestroy {
-
   @ContentChildren(OptionGroupComponent, { descendants: true })
   private _optionGroups: QueryList<OptionGroupComponent>;
 
@@ -82,8 +81,7 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
     if (isNullOrEmpty(this._optionGroups)) { return; }
     this._optionGroups.forEach((optionGroup) => {
       let hasOption = optionGroup.hasOption(_activeOption);
-      if (hasOption) { return; }
-      optionGroup.closePanel();
+      hasOption ? optionGroup.openPanel() : optionGroup.closePanel();
     });
   }
 

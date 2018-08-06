@@ -3,14 +3,10 @@ import {
   PipeTransform
 } from '@angular/core';
 import { McsKeyValuePair } from '../../core';
-import {
-  isNullOrEmpty,
-  compareMaps
-} from '../../utilities';
+import { isNullOrEmpty } from '../../utilities';
 
 @Pipe({
-  name: 'mcsMapIterable',
-  pure: false
+  name: 'mcsMapIterable'
 })
 
 /**
@@ -19,31 +15,21 @@ import {
  * @description value as _value of the map iterator
  */
 export class MapIterablePipe implements PipeTransform {
-  /**
-   * Array cache of the actual data
-   */
-  private _cacheArray: McsKeyValuePair[];
-  private _cacheMap: Map<any, any>;
 
   public transform(records: Map<any, any>): McsKeyValuePair[] {
     if (isNullOrEmpty(records)) { return []; }
-
-    let resetCache = isNullOrEmpty(this._cacheMap) ||
-      compareMaps(this._cacheMap, records) !== 0;
-    if (resetCache) {
-      this._cacheMap = new Map(records);
-      this._resetCache(records);
-    }
-    return this._cacheArray;
+    return this._convertMapToKeyValuPair(records);
   }
 
   /**
    * Resets the cache of the map
    */
-  private _resetCache(collections: Map<any, any>): void {
-    this._cacheArray = new Array();
+  private _convertMapToKeyValuPair(collections: Map<any, any>): McsKeyValuePair[] {
+    let convertedArray: McsKeyValuePair[] = new Array();
+
     collections.forEach((_value, _key) => {
-      this._cacheArray.push({ key: _key, value: _value });
+      convertedArray.push({ key: _key, value: _value });
     });
+    return convertedArray;
   }
 }
