@@ -68,6 +68,7 @@ export class ServersComponent
   public selection: McsSelection<Server>;
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
+  public excludedColumns: string[];
   private _destroySubject = new Subject<any>();
 
   public get serverServiceTypeText(): any {
@@ -80,21 +81,6 @@ export class ServersComponent
 
   public get excludedCommands(): ServerCommand[] {
     return [ServerCommand.Scale, ServerCommand.Clone];
-  }
-
-  /**
-   * Returns the excluded columns in the listing
-   */
-  public get excludedColumns(): string[] {
-    let excludedColumns = new Array();
-
-    if (!this.hasManagedResource) { excludedColumns.push('serviceId'); }
-    // TODO: FUSION-1726 - Waiting for the permission to view managementIp for internal users
-    let hasIpViewPermission = this.hasManagedResource &&
-      this._accessControlService.hasPermission(['CompanyView']);
-    if (!hasIpViewPermission) { excludedColumns.push('managementIp'); }
-
-    return (!isNullOrEmpty(excludedColumns)) ? excludedColumns : undefined;
   }
 
   public get spinnerIconKey(): string {
@@ -142,6 +128,7 @@ export class ServersComponent
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
+    this.excludedColumns = new Array();
     this.selection = new McsSelection<Server>(true);
   }
 
@@ -384,7 +371,28 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-    managedResources.subscribe(() => createServerResources.subscribe());
+
+    let resourcesSubscription = managedResources
+      .subscribe(() => createServerResources.subscribe());
+    resourcesSubscription.add(() => this._setExcludedColumns());
+  }
+
+  /**
+   * Sets the excluded filter columns definition
+   */
+  private _setExcludedColumns(): void {
+    let _excludedColumns = new Array();
+
+    if (!this.hasManagedResource) {
+      _excludedColumns.push('serviceId');
+    }
+
+    // TODO: FUSION-1726 - Waiting for the permission to view managementIp for internal users
+    let hasIpViewPermission = this.hasManagedResource &&
+      this._accessControlService.hasPermission(['CompanyView']);
+    if (!hasIpViewPermission) { _excludedColumns.push('managementIp'); }
+    this.excludedColumns = _excludedColumns;
+    this.changeDetectorRef.markForCheck();
   }
 
   /**

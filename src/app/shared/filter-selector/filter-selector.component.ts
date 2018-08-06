@@ -51,18 +51,7 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
    * Completed Filter items map
    */
   public filterItemsMap: Map<string, McsFilterInfo>;
-
-  /**
-   * Returns the displayed filter items
-   */
-  public get displayedItemsMap(): Map<string, McsFilterInfo> {
-    if (isNullOrEmpty(this.excludedFilterKeys)) { return this.filterItemsMap; }
-
-    // Removed the excluded items in the map list
-    let filteredMap = new Map<string, McsFilterInfo>(this.filterItemsMap);
-    this.excludedFilterKeys.forEach((excludedItemKey) => filteredMap.delete(excludedItemKey));
-    return filteredMap;
-  }
+  public displayedItemsMap: Map<string, McsFilterInfo>;
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -75,12 +64,14 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     this._getFilterItems();
+    this._initializeDisplayedFilters();
     this.onNotifyGetFilters();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     let excludedKeyChanges = changes['excludedFilterKeys'];
     if (!isNullOrEmpty(excludedKeyChanges)) {
+      this._initializeDisplayedFilters();
       this.onNotifyGetFilters();
     }
   }
@@ -100,6 +91,19 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
     this._storageService.setItem(this.key, convertMapToJsonObject(this.filterItemsMap));
     this.filtersChange.emit(this.displayedItemsMap);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Initializes displayed filters based on excluded items
+   */
+  private _initializeDisplayedFilters(): void {
+    let filteredMap = new Map<string, McsFilterInfo>(this.filterItemsMap);
+    if (!isNullOrEmpty(this.excludedFilterKeys)) {
+      this.excludedFilterKeys.forEach(
+        (excludedItemKey) => filteredMap.delete(excludedItemKey)
+      );
+    }
+    this.displayedItemsMap = filteredMap;
   }
 
   /**

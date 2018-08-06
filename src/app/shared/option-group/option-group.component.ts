@@ -105,9 +105,9 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   ) { }
 
   public ngAfterContentInit(): void {
-    this._options.changes.pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._changeDetectorRef.markForCheck());
-    this._listenToSelectionChange();
+    this._options.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() => this._listenToSelectionChange());
   }
 
   public ngOnDestroy(): void {
@@ -165,8 +165,8 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    * Listen to every selection changed event
    */
   private _listenToSelectionChange(): void {
-    // Drops the current subscriptions and resets from scratch
     let resetSubject = merge(this._options.changes, this._destroySubject);
+
     this._optionsSelectionChanges
       .pipe(startWith(null), takeUntil(resetSubject))
       .subscribe(() => {
