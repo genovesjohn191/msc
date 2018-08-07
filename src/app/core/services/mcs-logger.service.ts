@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { McsCookieService } from './mcs-cookie.service';
+import { isNullOrEmpty } from '../../utilities';
 
 // Constant declaration
 const LOGGING_ENABLE_DEF = '_enableMcsObserver';
@@ -67,7 +68,9 @@ export class McsLoggerService {
   public traceEnd(message?: any, ...optionalParams: any[]): void {
     if (!this.logIsEnabled) { return; }
 
-    console.log(message, ...optionalParams);
+    if (!isNullOrEmpty(message)) {
+      console.log(message, ...optionalParams);
+    }
     console.groupEnd();
   }
 

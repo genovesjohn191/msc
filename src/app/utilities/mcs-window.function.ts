@@ -6,6 +6,7 @@ type environmentName =
   'LOGOUT_URL' |
   'MACVIEW_ORDERS_URL' |
   'MACVIEW_CHANGE_PASSWORD_URL' |
+  'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS' |
   'SENTRY_DSN' |
   'IMAGE_ROOT' |
   'ICON_ROOT' |
@@ -41,6 +42,9 @@ export function resolveEnvVar(envName: environmentName, defaultValue: string = '
       break;
     case 'MACVIEW_CHANGE_PASSWORD_URL':
       overrideValue = window['ENV_CONFIG'].macviewChangePasswordUrl;
+      break;
+    case 'MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS':
+      overrideValue = window['ENV_CONFIG'].sessionExtensionWindowInSeconds;
       break;
     case 'SENTRY_DSN':
       overrideValue = window['ENV_CONFIG'].sentryDsn;
