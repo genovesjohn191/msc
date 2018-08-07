@@ -4,13 +4,15 @@ import {
   Subject,
   fromEvent,
   merge,
-  interval
+  interval,
+  timer
 } from 'rxjs';
 import {
   takeUntil,
   filter,
   distinctUntilChanged
 } from 'rxjs/operators';
+import { McsLoggerService } from '../services/mcs-logger.service';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsCookieService } from './mcs-cookie.service';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
@@ -18,7 +20,8 @@ import { McsAuthenticationService } from '../authentication/mcs-authentication.s
 import {
   isNullOrEmpty,
   unsubscribeSubject,
-  coerceNumber
+  coerceNumber,
+  resolveEnvVar
 } from '../../utilities';
 import { CoreDefinition } from '../core.definition';
 import { McsGuid } from '../factory/guid/mcs-guid';
@@ -32,7 +35,9 @@ export class McsSessionHandlerService implements McsInitializer {
   private _onSessionIdle = new Subject<boolean>();
   private _onSessionTimedOut = new Subject<boolean>();
   private _onSessionResumed = new Subject<boolean>();
+  private _onSessionAboutToExpire = new Subject<void>();
   private _destroySubject = new Subject<void>();
+  private _timerSubject = new Subject<void>();
 
   /**
    * Returns the session cookie value
@@ -81,7 +86,8 @@ export class McsSessionHandlerService implements McsInitializer {
   constructor(
     private _cookieService: McsCookieService,
     private _authIdentity: McsAuthenticationIdentity,
-    private _authService: McsAuthenticationService
+    private _authService: McsAuthenticationService,
+    private _loggerService: McsLoggerService
   ) { }
 
   /**
@@ -90,6 +96,9 @@ export class McsSessionHandlerService implements McsInitializer {
   public initialize(): void {
     this._registerActivityEvents();
     this._registerRealTimeListener();
+    this._setupExtendSessionRequestScheduler();
+    this._listenToSessionIdleChange();
+    this._listenToSessionResumeChange();
   }
 
   /**
@@ -97,6 +106,7 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public destroy(): void {
     unsubscribeSubject(this._destroySubject);
+    unsubscribeSubject(this._timerSubject);
   }
 
   /**
@@ -112,22 +122,26 @@ export class McsSessionHandlerService implements McsInitializer {
   /**
    * Observable that triggers when session was resumed
    */
-  public onSessionResumed(): Observable<boolean> {
+  public onSessionResumeChange(): Observable<boolean> {
     return this._onSessionResumed.pipe(distinctUntilChanged());
   }
 
   /**
    * Observable that triggers when session is idle
    */
-  public onSessionIdle(): Observable<boolean> {
+  public onSessionIdleChange(): Observable<boolean> {
     return this._onSessionIdle.pipe(distinctUntilChanged());
   }
 
   /**
    * Observable that triggers when session has timed out
    */
-  public onSessionTimedOut(): Observable<boolean> {
+  public onSessionTimeOutChange(): Observable<boolean> {
     return this._onSessionTimedOut;
+  }
+
+  public onSessionAboutToExpire(): Observable<void> {
+    return this._onSessionAboutToExpire;
   }
 
   public renewSession(): void {
@@ -165,6 +179,69 @@ export class McsSessionHandlerService implements McsInitializer {
         this._sessionIdleCounter++;
         this._checkSessionStatus();
       });
+  }
+
+  private _setupExtendSessionRequestScheduler() {
+    this._loggerService.traceStart('Session Expiry Listener');
+
+    // Get expiry in seconds
+    let now = new Date();
+    let expiry = new Date(this._authIdentity.user.expiry);
+    let expiryInSeconds: any = (expiry.getTime() - now.getTime()) / 1000;
+
+    // Calculate time in seconds before we trigger about to expire event
+    let sessionExtensionWindowInSeconds =
+      coerceNumber(resolveEnvVar('MCS_SESSION_EXTENSION_WINDOW_IN_SECONDS'));
+    let extensionCounterInSeconds = 1;
+    if (expiryInSeconds > sessionExtensionWindowInSeconds) {
+      extensionCounterInSeconds = expiryInSeconds - sessionExtensionWindowInSeconds;
+    }
+
+    this._loggerService.traceInfo(
+      `Session Expiry Date: ${expiry}`);
+    this._loggerService.traceInfo(
+      `Session Expiry: ${expiryInSeconds} seconds`);
+    this._loggerService.traceInfo(
+      `Session Extension Window: ${sessionExtensionWindowInSeconds} seconds`);
+    this._loggerService.traceInfo(
+      `Counting ${extensionCounterInSeconds} seconds until session extension triggers`);
+    this._loggerService.traceEnd();
+
+    // Setup a timer to trigger session extension event
+    timer(extensionCounterInSeconds *  1000)
+      .pipe(takeUntil(this._timerSubject))
+      .subscribe(() => this._requestSessionExtension());
+  }
+
+  private _listenToSessionIdleChange() {
+    this.onSessionIdleChange()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._stopSessionExtensionCountdown());
+  }
+
+  private _listenToSessionResumeChange() {
+    this.onSessionResumeChange()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => {
+        if (this.sessionResumed) {
+          this._setupExtendSessionRequestScheduler();
+        }
+      });
+  }
+
+  private _stopSessionExtensionCountdown() {
+    if (this.sessionIsIdle) {
+      this._loggerService.traceInfo(`Session extension countdown is stopped.`);
+      this._timerSubject.next();
+    }
+  }
+
+  private _requestSessionExtension() {
+    this._loggerService.traceInfo(`Raising session extension request event`);
+    // Do session extension routine here
+    this._onSessionAboutToExpire.next();
+    // TODO: We should setup the scheduler again after successful extension
+    // Create a listener to identity expiry changes
   }
 
   /**
