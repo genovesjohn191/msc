@@ -170,7 +170,7 @@ export class AppModule {
    * Listens to sessioned timed out
    */
   private _listenToSessionTimedOut(): void {
-    this._sessionHandlerService.onSessionTimeOutChange()
+    this._sessionHandlerService.onSessionTimeOut()
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => {
         if (!response) { return; }

@@ -38,7 +38,7 @@ export class SessionComponent implements OnInit {
    * Listen to session idle
    */
   private _listenToSessionIdle(): void {
-    this._sessionHandlerService.onSessionIdleChange()
+    this._sessionHandlerService.onSessionIdle()
       .pipe(filter((result) => result))
       .subscribe(this._showIdleDialog.bind(this));
   }
@@ -47,7 +47,7 @@ export class SessionComponent implements OnInit {
    * Listen to session resumed
    */
   private _listenToSessionResumed(): void {
-    this._sessionHandlerService.onSessionResumeChange()
+    this._sessionHandlerService.onSessionActivated()
       .subscribe(this._closeIdleDialog.bind(this));
   }
 
@@ -55,7 +55,7 @@ export class SessionComponent implements OnInit {
    * Listen to session timed out
    */
   private _listenToSessionTimedOut(): void {
-    this._sessionHandlerService.onSessionTimeOutChange()
+    this._sessionHandlerService.onSessionTimeOut()
       .pipe(filter((result) => result))
       .subscribe(this._showTimeOutDialog.bind(this));
   }
@@ -71,7 +71,7 @@ export class SessionComponent implements OnInit {
 
     this._sessionIdleDialogRef.afterClosed().subscribe((result) => {
       if (isNullOrEmpty(result)) { return; }
-      this._sessionHandlerService.resetTimer();
+      this._sessionHandlerService.resumeSession();
     });
   }
 
