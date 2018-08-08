@@ -73,7 +73,7 @@ export class McsNotificationJobService implements McsInitializer {
    */
   public initialize(): void {
     // Prevent the stomp from connecting when the session is already timedout
-    let sessionTimedOut = this._sessionHandlerService.authTokenHasTimedOut;
+    let sessionTimedOut = this._sessionHandlerService.sessionTimedOut;
     if (sessionTimedOut) { return; }
     this._connectStomp();
   }

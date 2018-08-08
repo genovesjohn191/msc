@@ -15,8 +15,10 @@ import {
 import { McsLoggerService } from '../services/mcs-logger.service';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsCookieService } from './mcs-cookie.service';
+import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
+
 import {
   isNullOrEmpty,
   unsubscribeSubject,
@@ -24,7 +26,6 @@ import {
   resolveEnvVar
 } from '../../utilities';
 import { CoreDefinition } from '../core.definition';
-import { McsGuid } from '../factory/guid/mcs-guid';
 
 @Injectable()
 export class McsSessionHandlerService implements McsInitializer {
@@ -33,54 +34,43 @@ export class McsSessionHandlerService implements McsInitializer {
 
   // Events subject
   private _onSessionIdle = new Subject<boolean>();
-  private _onSessionTimedOut = new Subject<boolean>();
-  private _onSessionResumed = new Subject<boolean>();
-  private _onSessionAboutToExpire = new Subject<void>();
+  private _onSessionTimeOut = new Subject<boolean>();
+  private _onSessionActivated = new Subject<boolean>();
+  private _onRequestSessionExtension = new Subject<void>();
   private _destroySubject = new Subject<void>();
   private _timerSubject = new Subject<void>();
 
   /**
-   * Returns the session cookie value
+   * Amount of time in seconds the user is considered idle
    */
-  public get sessionCookie(): number {
-    return coerceNumber(this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_TIMER));
+  public get idleTimeInSeconds(): number {
+    let cookieSessionIdleTime =
+      coerceNumber(this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_TIMER));
+    return Math.min(cookieSessionIdleTime, this._sessionIdleCounter);
   }
 
   /**
-   * Returns true if the current auth token has already timed out
-   */
-  public get authTokenHasTimedOut(): boolean {
-    let sessionTimedOutToken = this._cookieService
-      .getItem(CoreDefinition.COOKIE_SESSION_ID);
-    return !isNullOrEmpty(sessionTimedOutToken);
-  }
-
-  /**
-   * Returns true if session is idle
+   * Returns true if session is currently idle
    */
   public get sessionIsIdle(): boolean {
-    return (this.sessionCookie >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
-      && (this._sessionIdleCounter >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
-      && !this.authTokenHasTimedOut;
+    return this.idleTimeInSeconds >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
+      || this._sessionIsIdle;
   }
 
   /**
-   * Returns true if session has timed out
+   * Returns true is session has timedout
    */
   public get sessionTimedOut(): boolean {
-    let idleLimitInSeconds = CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
+    let maxIAllowedIdleTimeInSeconds = CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
       + CoreDefinition.SESSION_TIMEOUT_COUNTDOWN_IN_SECONDS;
-    return (this.sessionCookie >= idleLimitInSeconds
-      && this._sessionIdleCounter >= idleLimitInSeconds)
-      || this.authTokenHasTimedOut;
+    let hasTimedOutIndicatiorCookie =
+      !isNullOrEmpty(this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_ID));
+
+    return this.idleTimeInSeconds >= maxIAllowedIdleTimeInSeconds || hasTimedOutIndicatiorCookie;
   }
 
-  /**
-   * Returns true if session was resumed
-   */
-  public get sessionResumed(): boolean {
-    return (this.sessionCookie < CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS)
-      && (this.sessionCookie < this._sessionIdleCounter);
+  public get sessionActive(): boolean {
+    return (this.idleTimeInSeconds < CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS);
   }
 
   constructor(
@@ -90,67 +80,70 @@ export class McsSessionHandlerService implements McsInitializer {
     private _loggerService: McsLoggerService
   ) { }
 
-  /**
-   * Initialize the session handler
-   */
   public initialize(): void {
     this._registerActivityEvents();
-    this._registerRealTimeListener();
-    this._setupExtendSessionRequestScheduler();
-    this._listenToSessionIdleChange();
-    this._listenToSessionResumeChange();
+    this._initializeSessionStatusObserver();
+    this._setupEventHandlers();
+    this._onSessionActivated.next(true);
   }
 
-  /**
-   * Unsubscribe session idle subscription
-   */
   public destroy(): void {
     unsubscribeSubject(this._destroySubject);
     unsubscribeSubject(this._timerSubject);
   }
 
   /**
-   * Reset idle timer
+   * Resets idle counter and resumes the session
    */
-  public resetTimer(): void {
+  public resumeSession(): void {
     this._sessionIdleCounter = 0;
     this._sessionIsIdle = false;
     this._onSessionIdle.next(false);
-    this._onSessionTimedOut.next(false);
+    this._onSessionTimeOut.next(false);
+    this._onSessionActivated.next(true);
   }
 
   /**
-   * Observable that triggers when session was resumed
+   * Triggers when session is activated
    */
-  public onSessionResumeChange(): Observable<boolean> {
-    return this._onSessionResumed.pipe(distinctUntilChanged());
+  public onSessionActivated(): Observable<boolean> {
+    return this._onSessionActivated
+      .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
   /**
-   * Observable that triggers when session is idle
+   * Triggers when session is idle
    */
-  public onSessionIdleChange(): Observable<boolean> {
-    return this._onSessionIdle.pipe(distinctUntilChanged());
+  public onSessionIdle(): Observable<boolean> {
+    return this._onSessionIdle
+      .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
   /**
-   * Observable that triggers when session has timed out
+   * Triggers when session has timed out
    */
-  public onSessionTimeOutChange(): Observable<boolean> {
-    return this._onSessionTimedOut;
+  public onSessionTimeOut(): Observable<boolean> {
+    return this._onSessionTimeOut
+      .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
-  public onSessionAboutToExpire(): Observable<void> {
-    return this._onSessionAboutToExpire;
+  /**
+   * Triggers when session is requesting for extension
+   */
+  public onRequestSessionExtension(): Observable<void> {
+    return this._onRequestSessionExtension;
   }
 
+  /**
+   * Resets session monitoring state and logs out the user
+   */
   public renewSession(): void {
     this._cookieService.removeItem(CoreDefinition.COOKIE_SESSION_ID);
     this._authService.logOut();
   }
 
   /**
-   * Register activity events
+   * Register all the events that constitutes to an active session here
    */
   private _registerActivityEvents(): void {
     merge(
@@ -160,29 +153,97 @@ export class McsSessionHandlerService implements McsInitializer {
     )
       .pipe(
         takeUntil(this._destroySubject),
-        filter(() => !this._sessionIsIdle)
+        filter(() => !this.sessionIsIdle)
       )
       .subscribe((_events: any) => {
         if (isNullOrEmpty(_events)) { return; }
-        this.resetTimer();
+
+        this.resumeSession();
       });
   }
 
   /**
-   * Register real time listener
+   * Setup a timer that monitors user activity changes
    */
-  private _registerRealTimeListener(): void {
+  private _initializeSessionStatusObserver(): void {
     interval(1000)
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
-        this._sessionIdleCounter = Math.min(this._sessionIdleCounter, this.sessionCookie);
-        this._sessionIdleCounter++;
-        this._checkSessionStatus();
+        this._updateSessionIdleCounter();
+        this._triggerEvents();
       });
   }
 
+  private _setupEventHandlers() {
+    this._authIdentity.userChanged
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((identity) => this._sessionUserIdentityUpdated(identity));
+
+    this.onSessionIdle()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._sessionIdleEventHandler());
+
+    this.onSessionActivated()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._sessionActivedEventHandler());
+  }
+
+  private _sessionUserIdentityUpdated(identity: McsApiIdentity) {
+    let sessionId = identity.hashedId + identity.expiry;
+    let hashedId = this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_SESSION_ID);
+    if (sessionId !== hashedId) {
+      this._cookieService.removeItem(CoreDefinition.COOKIE_SESSION_ID);
+    }
+  }
+
+  private _sessionIdleEventHandler() {
+    this._loggerService.traceStart('Session Is Idle');
+
+    this._stopSessionExtensionRequestCountdown();
+    this._onSessionActivated.next(false);
+
+    this._loggerService.traceEnd();
+  }
+
+  private _sessionActivedEventHandler() {
+    this._loggerService.traceStart('Session Active');
+
+    this._setupExtendSessionRequestScheduler();
+
+    this._loggerService.traceEnd();
+  }
+
+  /**
+   * Updates idle counter and synchronizes with cookie
+   */
+  private _updateSessionIdleCounter() {
+    this._sessionIdleCounter = this.idleTimeInSeconds;
+    this._sessionIdleCounter++;
+
+    // Update the cookie
+    if (this._sessionIdleCounter >= 1) {
+      this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_TIMER,
+        this._sessionIdleCounter, { expires: this._authIdentity.user.expiry });
+    }
+  }
+
+  private _triggerEvents(): void {
+    // Trigger idle event
+    this._onSessionIdle.next(this.sessionIsIdle);
+
+    // Trigger activated event
+    this._onSessionActivated.next(!this.sessionIsIdle);
+
+    // Trigger timedout event
+    if (this.sessionTimedOut) {
+      this._loggerService.traceStart('Session Timed Out');
+      this._createSessionId();
+    }
+    this._onSessionTimeOut.next(this.sessionTimedOut);
+  }
+
   private _setupExtendSessionRequestScheduler() {
-    this._loggerService.traceStart('Session Expiry Listener');
+    this._loggerService.traceStart('Start Session Extension Countdown');
 
     // Get expiry in seconds
     let now = new Date();
@@ -207,72 +268,36 @@ export class McsSessionHandlerService implements McsInitializer {
       `Counting ${extensionCounterInSeconds} seconds until session extension triggers`);
     this._loggerService.traceEnd();
 
-    // Setup a timer to trigger session extension event
-    timer(extensionCounterInSeconds *  1000)
+    this._initializeSessionExtensionRequestCountdownTimer(extensionCounterInSeconds);
+  }
+
+  private _initializeSessionExtensionRequestCountdownTimer(remainingTimeInSeconds: number) {
+    timer(remainingTimeInSeconds *  1000)
       .pipe(takeUntil(this._timerSubject))
       .subscribe(() => this._requestSessionExtension());
   }
 
-  private _listenToSessionIdleChange() {
-    this.onSessionIdleChange()
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._stopSessionExtensionCountdown());
+  private _createSessionId() {
+    let sessionId = this._authIdentity.user.hashedId + this._authIdentity.user.expiry;
+
+    this._cookieService.setEncryptedItem(CoreDefinition.COOKIE_SESSION_ID,
+      sessionId, { expires: this._authIdentity.user.expiry });
   }
 
-  private _listenToSessionResumeChange() {
-    this.onSessionResumeChange()
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => {
-        if (this.sessionResumed) {
-          this._setupExtendSessionRequestScheduler();
-        }
-      });
-  }
-
-  private _stopSessionExtensionCountdown() {
-    if (this.sessionIsIdle) {
-      this._loggerService.traceInfo(`Session extension countdown is stopped.`);
-      this._timerSubject.next();
-    }
+  private _stopSessionExtensionRequestCountdown() {
+    this._loggerService.traceStart('Stop Session Extension Countdown');
+    this._loggerService.traceInfo(`Session extension countdown is stopped.`);
+    this._timerSubject.next();
+    this._loggerService.traceEnd();
   }
 
   private _requestSessionExtension() {
+    this._loggerService.traceStart('Trigger Session Extension Request');
     this._loggerService.traceInfo(`Raising session extension request event`);
     // Do session extension routine here
-    this._onSessionAboutToExpire.next();
+    this._onRequestSessionExtension.next();
     // TODO: We should setup the scheduler again after successful extension
     // Create a listener to identity expiry changes
-  }
-
-  /**
-   * Real time checkin of session status
-   */
-  private _checkSessionStatus(): void {
-    // Check resumed
-    if (this.sessionResumed) {
-      this._sessionIsIdle = false;
-      this._onSessionResumed.next(true);
-    }
-
-    // Check idle timer
-    if (this.sessionIsIdle) {
-      this._sessionIsIdle = true;
-      this._onSessionResumed.next(false);
-      this._onSessionIdle.next(true);
-    }
-
-    // Check session timed out
-    if (this.sessionTimedOut) {
-      this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_ID,
-        McsGuid.newGuid().toString(), { expires: this._authIdentity.user.expiry });
-
-      this._onSessionTimedOut.next(true);
-    }
-
-    // Set the cookie service
-    if (this._sessionIdleCounter >= 1) {
-      this._cookieService.setItem(CoreDefinition.COOKIE_SESSION_TIMER,
-        this._sessionIdleCounter, { expires: this._authIdentity.user.expiry });
-    }
+    this._loggerService.traceEnd();
   }
 }
