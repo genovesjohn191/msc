@@ -238,6 +238,7 @@ export class VdcComponent
     // Listen to all records changed
     this.serverListSource.findAllRecordsMapStream(keyFn)
       .pipe(
+        takeUntil(this._destroySubject),
         catchError((error) => {
           this.listStatusFactory.setError();
           return throwError(error);

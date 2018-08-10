@@ -7,6 +7,11 @@ import {
 } from './media.constants';
 /** Components */
 import { MediaComponent } from './media.component';
+import {
+  MediumComponent,
+  MediumOverviewComponent,
+  MediumServersComponent
+} from './medium';
 /** Shared */
 import { MediaCommandComponent } from './shared';
 
@@ -16,6 +21,9 @@ import { MediaCommandComponent } from './shared';
   ],
   declarations: [
     MediaComponent,
+    MediumComponent,
+    MediumOverviewComponent,
+    MediumServersComponent,
     MediaCommandComponent
   ],
   imports: [

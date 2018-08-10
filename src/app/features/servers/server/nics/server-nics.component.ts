@@ -4,6 +4,7 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  ViewChild,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
@@ -14,7 +15,8 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  switchMap
 } from 'rxjs/operators';
 import {
   ResourceNetwork,
@@ -31,7 +33,6 @@ import {
   McsDialogService,
   McsApiJob,
   McsNotificationEventsService,
-  McsDataStatusFactory,
   McsErrorHandlerService,
   McsDataStatus
 } from '../../../../core';
@@ -41,10 +42,14 @@ import {
   animateFactory,
   unsubscribeSubject
 } from '../../../../utilities';
+import {
+  TableDataSource,
+  ComponentHandlerDirective
+} from '../../../../shared';
 import { DeleteNicDialogComponent } from '../../shared';
 import { ServersService } from '../../servers.service';
-import { ServerService } from '../server.service';
 import { ServersRepository } from '../../servers.repository';
+import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
@@ -77,14 +82,19 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public manageNetwork: ServerManageNetwork;
   public selectedNetwork: ResourceNetwork;
   public selectedNic: ServerNic;
-  public dataStatusFactory: McsDataStatusFactory<ServerNic[]>;
+
+  public nicsDataSource: TableDataSource<ServerNic>;
+  public nicsColumns: string[];
   public manageNetworkTemplate: any[];
 
-  private _updateNicsSubscription: Subscription;
   private _networksSubscription: Subscription;
   private _newNic: ServerNic;
   private _inProgressNicId: string;
   private _destroySubject = new Subject<void>();
+  private _requestNicsSubject = new Subject<void>();
+
+  @ViewChild(ComponentHandlerDirective)
+  private _componentHandler: ComponentHandlerDirective;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_SPINNER;
@@ -158,21 +168,25 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _textProvider,
       _errorHandlerService
     );
+    this._newNic = new ServerNic();
+    this.nicsColumns = new Array();
+    this.nicsDataSource = new TableDataSource([]);
     this.manageNetworkTemplate = [{}];
     this.manageNetwork = new ServerManageNetwork();
-    this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
     this.nicMethodType = ServerNicMethodType.AddNic;
   }
 
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.nics;
     this.initialize();
+    this._setDataColumns();
     this._registerJobEvents();
   }
 
   public ngOnDestroy() {
     this.dispose();
     unsubscribeSubject(this._destroySubject);
+    unsubscribeSubject(this._requestNicsSubject);
     unsubscribeSafely(this._networksSubscription);
   }
 
@@ -269,11 +283,11 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         nicId: this.selectedNic.id
       };
 
-      this._serversService.setServerSpinner(this.server, this.selectedNic);
+      this._serversService.setServerSpinner(this.server);
       this._serversService.deleteServerNic(this.server.id, this.selectedNic.id, nicValues)
         .pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server, this.selectedNic);
+            this._serversService.clearServerSpinner(this.server);
             this._errorHandlerService.handleHttpRedirectionError(error.status);
             return throwError(error);
           })
@@ -295,11 +309,11 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     };
 
     this.closeEditNicWindow();
-    this._serversService.setServerSpinner(this.server, this.selectedNic);
+    this._serversService.setServerSpinner(this.server);
     this._serversService.updateServerNic(this.server.id, this.selectedNic.id, nicValues)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server, this.selectedNic);
+          this._serversService.clearServerSpinner(this.server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -331,7 +345,14 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   protected serverSelectionChanged(): void {
     this._resetNetworkValues();
     this._getResourceNetworks();
-    this._getServerNics();
+    this._initializeDataSource();
+  }
+
+  /**
+   * Initializes the data source of the nics table
+   */
+  private _initializeDataSource(): void {
+    this.nicsDataSource = new TableDataSource(this._getServerNics());
   }
 
   /**
@@ -341,10 +362,9 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     this.nicMethodType = ServerNicMethodType.AddNic;
     this.manageNetwork = new ServerManageNetwork();
     this.currentIpAddress = undefined;
-
-    // We need to set the first instance of the template
-    // in order to re-initialize the network component and have fresh data
-    this.manageNetworkTemplate[0] = {};
+    if (!isNullOrEmpty(this._componentHandler)) {
+      this._componentHandler.recreateComponent();
+    }
   }
 
   /**
@@ -394,7 +414,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
         this.refreshServerResource();
       case McsDataStatus.Error:
       default:
-        this._newNic = undefined;
+        this.nicsDataSource.deleteRecord(this._newNic);
         break;
     }
   }
@@ -424,32 +444,30 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock NIC data based on job response
-    this._newNic = new ServerNic();
     this._newNic.logicalNetworkName = job.clientReferenceObject.nicName;
     this._newNic.ipAllocationMode = job.clientReferenceObject.nicIpAllocationMode;
     this._newNic.ipAddresses = [job.clientReferenceObject.nicIpAddress];
-    this._changeDetectorRef.markForCheck();
+    this.nicsDataSource.addRecord(this._newNic);
   }
 
   /**
-   * This will get and update the list of server nics
+   * Sets data column for the corresponding table
    */
-  private _getServerNics(): void {
-    unsubscribeSafely(this._updateNicsSubscription);
+  private _setDataColumns(): void {
+    this.nicsColumns = Object.keys(this.textContent.columnHeaders);
+    if (isNullOrEmpty(this.nicsColumns)) {
+      throw new Error('column definition for disks was not defined');
+    }
+  }
 
-    this.dataStatusFactory.setInProgress();
-    this._updateNicsSubscription = this._serversRepository
-      .findServerNics(this.server)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this.dataStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.dataStatusFactory.setSuccessful(response);
-      });
+  /**
+   * Get Server NICs from API
+   */
+  private _getServerNics() {
+    return this._requestNicsSubject.pipe(
+      startWith(null),
+      switchMap(() => this._serversRepository.findServerNics(this.server))
+    );
   }
 
   /**

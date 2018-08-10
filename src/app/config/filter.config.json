@@ -183,10 +183,6 @@
       "value": true,
       "exclude": true
     },
-    "catalog": {
-      "text": "Catalog",
-      "value": true
-    },
     "size": {
       "text": "Media Size",
       "value": true

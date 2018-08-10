@@ -1,0 +1,39 @@
+<div class="grid-row">
+
+  <!-- Media Properties -->
+  <div class="grid-column container-wrapper break-on-small">
+    <h4 class="container-header">{{ textContent.mediaProperties.title }}</h4>
+    <mcs-list spacing="xsmall">
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.mediaProperties.name }}:</span>
+        <span [innerHTML]="selectedMedium.name | mcsDataLabel"></span>
+      </mcs-list-item>
+
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.mediaProperties.status }}:</span>
+        <span [innerHTML]="selectedMedium.statusLabel | mcsDataLabel"></span>
+      </mcs-list-item>
+
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.mediaProperties.dateAdded }}:</span>
+        <span [innerHTML]="selectedMedium.createdOn | mcsStdDateFormat"></span>
+      </mcs-list-item>
+
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.mediaProperties.description }}:</span>
+        <span [innerHTML]="selectedMedium.description | mcsDataLabel"></span>
+      </mcs-list-item>
+    </mcs-list>
+  </div>
+
+  <!-- Storage Properties -->
+  <div class="grid-column container-wrapper break-on-small">
+    <h4 class="container-header">{{ textContent.storageProperties.title }}</h4>
+    <mcs-list spacing="xsmall">
+      <mcs-list-item class="form-field-inline">
+        <span>{{ textContent.storageProperties.size }}:</span>
+        <span [innerHTML]="selectedMedium.sizeMB | mcsDataSize: 'MB'"></span>
+      </mcs-list-item>
+    </mcs-list>
+  </div>
+</div>

@@ -89,7 +89,7 @@
   "servers": {
     "header": "Virtual",
     "description": "View and manage any Managed or Self-Managed VDC servers. Dedicated and physical servers will be displayed in future versions of the portal.",
-    "leftPanelHeader": "Virtual Filter",
+    "leftPanelHeader": "Virtual Server Filter",
     "newServer": "New Server",
     "loading": "Loading servers.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of servers.",
@@ -118,7 +118,7 @@
       "action": "Action"
     },
     "vdc": {
-      "leftPanelHeader": "Server Filter",
+      "leftPanelHeader": "Virtual Server Filter",
       "loading": "Loading VDC details.",
       "overview": {
         "label": "Overview",
@@ -243,7 +243,7 @@
         },
         "errors": {
           "serverNameRequired": "Enter a server name.",
-          "invalidServerName": "Server name can only contain letters, numbers or hypen.",
+          "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
           "selectVappRequired": "Virtual application is required.",
           "selectImageRequired": "You must select an image.",
           "selectNetworkRequired": "You must select a network."
@@ -269,7 +269,7 @@
         },
         "errors": {
           "serverNameRequired": "Enter a server name.",
-          "invalidServerName": "Server name can only contain letters, numbers or hypen.",
+          "invalidServerName": "Server name can only contain letters, numbers or hyphens.",
           "selectServerRequired": "You must select a server.",
           "manuallyAssignedIpWarning": "{{server_name}} has a manually-assigned IP address.\r\n Your new server may not be usable until {{server_name}} is stopped or its IP address is dissociated."
         }
@@ -301,7 +301,7 @@
     "server": {
       "header": "Servers",
       "loading": "Loading server details.",
-      "leftPanelHeader": "Server Filter",
+      "leftPanelHeader": "Virtual Server Filter",
       "serverBusyLabel": "This server is currently busy and some actions may be temporarily unavailable.",
       "management": {
         "label": "Management",
@@ -381,9 +381,6 @@
         "description": "Manage the disks attached to your server. You can delete or expand existing disks, or you can add a new disk.",
         "primary": "Primary",
         "other": "Other",
-        "storageDevice": "Storage Device",
-        "storageProfile": "Storage Profile",
-        "capacity": "Capacity",
         "diskName": "Hard disk",
         "addButton": "Attach",
         "updateButton": "Update",
@@ -393,6 +390,12 @@
         "expandStorageLink": "Expand",
         "deleteStorageLink": "Delete",
         "reachedStorageLimit": "You've reached the maximum number of disks for this server.",
+        "columnHeaders": {
+          "storageDevice": "Storage Device",
+          "storageProfile": "Storage Profile",
+          "capacity": "Capacity",
+          "action": ""
+        },
         "noDisks": "No disks are attached to this server.",
         "errorGettingDisks": "Sorry, something’s not right. We weren’t able to retrieve the list of disks.",
         "fullStorageSpace": "This disk cannot be created due to insufficient storage space (0 GB remaining)."
@@ -420,11 +423,6 @@
         "loadingContent": "Loading NICs.",
         "title": "Manage NICs",
         "description": "",
-        "nic": "NIC",
-        "network": "Network",
-        "primary": "Primary",
-        "ipMode": "IP Mode",
-        "ipAddresses": "IP Addresses",
         "editLink": "Edit",
         "deleteLink": "Delete",
         "addHeading": "Add NIC",
@@ -432,15 +430,13 @@
         "updateButton": "Update",
         "editHeading": "Edit NIC",
         "editButton": "Update",
-        "primaryCheckbox": "Make this the primary NIC for this server",
-        "networkSelect": {
-          "header": "Networks",
-          "placeholder": "Select a Network"
-        },
-        "ipAllocationMode": {
-          "static": "Static - IP Pool",
-          "dynamic": "Dynamic - IP Pool",
-          "dhcp": "DHCP"
+        "columnHeaders": {
+          "nic": "NIC",
+          "network": "Network",
+          "primary": "Primary",
+          "ipMode": "IP Mode",
+          "ipAddresses": "IP Addresses",
+          "action": ""
         },
         "noNics": "There are no NICs to display for this server.",
         "warningEditingNic": "This server may need to be restarted before any NIC changes are made effective.",
@@ -679,6 +675,48 @@
       }
     }
   },
+  "media": {
+    "header": "Media",
+    "leftPanelHeader": "Media Filter",
+    "newMedia": "New Media",
+    "loading": "Loading Medias.",
+    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
+    "noMedias": "No media to display.",
+    "retry": "Try again shortly",
+    "filterColumn": "Filter Column",
+    "tableSearch": "Table Search",
+    "dataSingular": "Item",
+    "dataPlural": "Items",
+    "medium": {
+      "loading": "Loading Media Details.",
+      "leftPanelHeader": "Media Filter",
+      "overview": {
+        "label": "Overview",
+        "mediaProperties": {
+          "title": "Media Properties",
+          "name": "Name",
+          "status": "Status",
+          "dateAdded": "Date Added",
+          "description": "Description"
+        },
+        "storageProperties": {
+          "title": "Storage Properties",
+          "size": "Size"
+        }
+      },
+      "servers": {
+        "label": "Servers",
+        "title": "Attached Servers",
+        "description": "Let me ask for the description of this one",
+        "noMediaServers": "No attached servers to display.",
+        "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
+        "columnHeaders": {
+          "name": "Name",
+          "action": ""
+        }
+      }
+    }
+  },
   "tickets": {
     "header": "Tickets",
     "leftPanelHeader": "Ticket Filter",
@@ -850,19 +888,6 @@
     "product": {
       "loading": "Loading product details."
     }
-  },
-  "medias": {
-    "header": "Media",
-    "leftPanelHeader": "Catalog Filter",
-    "newMedia": "New Media",
-    "loading": "Loading Medias.",
-    "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of medias.",
-    "noMedias": "No medias to display.",
-    "retry": "Try again shortly",
-    "filterColumn": "Filter Column",
-    "tableSearch": "Table Search",
-    "dataSingular": "Item",
-    "dataPlural": "Items"
   },
   "tools": {
     "header": "Other Tools",

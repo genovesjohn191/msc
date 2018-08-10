@@ -11,6 +11,9 @@ export class Media extends McsEntityBase {
   public resourceName: string;
   public catalogName: string;
   public sizeMB: number;
+  public status: string;      // TODO: This should be enumeration
+  public description: string;
+  public usageCount: number;
 
   @JsonProperty({ type: MediaServer })
   public servers: MediaServer[];
@@ -29,7 +32,17 @@ export class Media extends McsEntityBase {
     this.resourceName = undefined;
     this.catalogName = undefined;
     this.sizeMB = undefined;
+    this.status = undefined;
+    this.description = undefined;
+    this.usageCount = undefined;
     this.servers = undefined;
     this.createdOn = undefined;
+  }
+
+  /**
+   * Returns the enumeration equivalent of the status
+   */
+  public get statusLabel(): string {
+    return this.status;
   }
 }

@@ -262,7 +262,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
 
     this._setServerProcessDetails(activeServer, job);
     if (job.dataStatus === McsDataStatus.Success) {
-      this.deleteRecordById(job.clientReferenceObject.serverId);
+      this.deleteRecordById(activeServer.id);
+      return;
     }
     this.updateRecord(activeServer);
   }

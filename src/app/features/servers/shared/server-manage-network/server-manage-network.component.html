@@ -16,7 +16,7 @@
 
 <!-- Network switcher -->
 <div class="space-between-inline-items">
-  <h4 class="space-buttom-small auto-width">IP address</h4>
+  <h4 class="space-bottom-small auto-width">IP address</h4>
   <a *ngIf="inputManageType === inputManageTypeEnum.Custom"
     (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
     {{ textContent.buttonSwitch }}</a>
@@ -44,13 +44,13 @@
   <div [@fadeIn] *ngSwitchCase="inputManageTypeEnum.Custom" class="block-items-medium">
     <span>{{ textContent.customMessage }}</span>
 
-    <form [formGroup]="fgCustomIpAddress">
+    <form [formGroup]="fgCustomIpAddress" class="form-field-block">
+      <span read-only *ngIf="netMask">
+        {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
+      </span>
       <mcs-form-field class="form-field-size-medium">
-        <input mcsInput placeholder="Enter IP Address" #customInput [formControl]="fcCustomIpAddress">
-
-        <mcs-hint mcsHint align="start" *ngIf="netMask">
-          {{ textContent.hints.ipRange }}: {{ netMask.first }} - {{ netMask.last }}
-        </mcs-hint>
+        <input mcsInput placeholder="Enter IP Address" #customInput
+          [formControl]="fcCustomIpAddress">
 
         <mcs-error mcsError errorState="required">
           {{ textContent.errors.ipAddressRequired }}

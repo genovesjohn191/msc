@@ -214,6 +214,7 @@ export class FirewallComponent
     // Listen to all records changed
     this.firewallsListSource.findAllRecordsMapStream(keyFn)
       .pipe(
+        takeUntil(this._destroySubject),
         catchError((error) => {
           this.listStatusFactory.setError();
           return throwError(error);
