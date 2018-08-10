@@ -10,7 +10,10 @@ import {
   McsNotificationEventsService
 } from '../../../core';
 import { MediaService } from '../media.service';
-import { Media } from '../models';
+import {
+  Media,
+  MediaServer
+} from '../models';
 
 @Injectable()
 export class MediaRepository extends McsRepositoryBase<Media> {
@@ -23,6 +26,23 @@ export class MediaRepository extends McsRepositoryBase<Media> {
     private _notificationEvents: McsNotificationEventsService
   ) {
     super();
+  }
+
+  /**
+   * This will obtain the servers attached to the media from API
+   * and update the existing media in the repository
+   * @param activeMedia Active media to set the Servers
+   */
+  public findMediaServers(activeMedia: Media): Observable<MediaServer[]> {
+    return this._mediaApiService.getMediaServers(activeMedia.id)
+      .pipe(
+        map((response) => {
+          activeMedia.servers = this.updateRecordProperty(
+            activeMedia.servers, response.content);
+          this.updateRecord(activeMedia);
+          return response.content;
+        })
+      );
   }
 
   /**

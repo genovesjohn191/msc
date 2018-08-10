@@ -24,7 +24,9 @@ import {
 import {
   Subject,
   Subscription,
-  throwError
+  throwError,
+  isObservable,
+  Observable
 } from 'rxjs';
 import {
   takeUntil,
@@ -64,7 +66,7 @@ import {
 } from './data';
 /** Datastatus */
 import { DataStatusDefDirective } from './data-status';
-import { TableArrayDataSource } from './table-array.datasource';
+import { TableDataSource } from './table.datasource';
 
 @Component({
   selector: 'mcs-table',
@@ -90,15 +92,19 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * An observable datasource to bind inside the table data
    */
   @Input()
-  public set dataSource(value: McsDataSource<T> | T[]) {
-    if (this._dataSource !== value) {
+  public set dataSource(value: McsDataSource<T> | Observable<T[]> | T[]) {
+    let dataSourceHasBeenChanged = this._dataSource !== value;
+    if (dataSourceHasBeenChanged) {
       // Convert the actual data source based on its type
-      let actualSource = Array.isArray(value) ?
-        new TableArrayDataSource(value) : value;
+      let actualDataSource = Array.isArray(value) || isObservable(value) ?
+        new TableDataSource(value) : value;
+      if (isNullOrEmpty(actualDataSource)) {
+        actualDataSource = new TableDataSource(undefined);
+      }
 
-      this._listenToDataLoading(actualSource);
-      this._switchDataSource(actualSource);
-      this._dataSource = actualSource;
+      this._listenToDataLoading(actualDataSource);
+      this._switchDataSource(actualDataSource);
+      this._dataSource = actualDataSource;
     }
   }
   private _dataSource: McsDataSource<T>;
@@ -228,7 +234,8 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     unsubscribeSafely(this._dataSourceSubscription);
     this._dataSourceSubscription = null;
 
-    if (!newDatasource) {
+    if (!isNullOrEmpty(newDatasource)) {
+      if (this._dataDiffer) { this._dataDiffer.diff([]); }
       this._dataPlaceholder.viewContainer.clear();
     }
   }
@@ -410,7 +417,6 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
       .subscribe((data) => {
         this._data = data;
         this._renderDataRows();
-
         this.dataStatus = isNullOrEmpty(data) ?
           McsDataStatus.Empty :
           McsDataStatus.Success;

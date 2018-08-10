@@ -3,7 +3,8 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewChild
 } from '@angular/core';
 import {
   Subscription,
@@ -13,7 +14,8 @@ import {
 import {
   startWith,
   takeUntil,
-  catchError
+  catchError,
+  switchMap
 } from 'rxjs/operators';
 import {
   ResourceStorage,
@@ -41,6 +43,10 @@ import {
   animateFactory,
   getSafeProperty
 } from '../../../../utilities';
+import {
+  TableDataSource,
+  ComponentHandlerDirective
+} from '../../../../shared';
 import { DeleteStorageDialogComponent } from '../../shared';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
@@ -75,14 +81,20 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public manageStorage: ServerManageStorage;
   public selectedStorage: ResourceStorage;
   public selectedDisk: ServerStorageDevice;
+
+  public disksDataSource: TableDataSource<ServerStorageDevice>;
+  public disksColumns: string[];
   public dataStatusFactory: McsDataStatusFactory<ServerStorageDevice[]>;
   public manageStorageTemplate: any[];
 
-  private _updateDiskSubscription: Subscription;
   private _storagesSubscription: Subscription;
   private _newDisk: ServerStorageDevice;
   private _inProgressDiskId: string;
   private _destroySubject = new Subject<void>();
+  private _requestDisksSubject = new Subject<void>();
+
+  @ViewChild(ComponentHandlerDirective)
+  private _componentHandler: ComponentHandlerDirective;
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
@@ -156,6 +168,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       _textProvider,
       _errorHandlerService
     );
+    this._newDisk = new ServerStorageDevice();
+    this.disksColumns = new Array();
+    this.disksDataSource = new TableDataSource([]);
     this.manageStorageTemplate = [{}];
     this.manageStorage = new ServerManageStorage();
     this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
@@ -165,12 +180,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public ngOnInit() {
     this.textContent = this._textProvider.content.servers.server.storage;
     this.initialize();
+    this._setDataColumns();
     this._registerJobEvents();
   }
 
   public ngOnDestroy() {
     this.dispose();
     unsubscribeSubject(this._destroySubject);
+    unsubscribeSubject(this._requestDisksSubject);
     unsubscribeSafely(this._storagesSubscription);
   }
 
@@ -256,11 +273,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       sizeMB: this.manageStorage.sizeMB
     };
 
-    this._serversService.setServerSpinner(this.server, diskValues);
+    this._serversService.setServerSpinner(this.server);
     this._serversService.createServerStorage(this.server.id, diskValues)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server, diskValues);
+          this._serversService.clearServerSpinner(this.server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -288,11 +305,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         storageProfile: this.selectedDisk.storageProfile,
         sizeMB: this.selectedDisk.sizeMB
       };
-      this._serversService.setServerSpinner(this.server, this.selectedDisk);
+      this._serversService.setServerSpinner(this.server);
       this._serversService.deleteServerStorage(this.server.id, this.selectedDisk.id, diskValues)
         .pipe(
           catchError((error) => {
-            this._serversService.clearServerSpinner(this.server, this.selectedDisk);
+            this._serversService.clearServerSpinner(this.server);
             this._errorHandlerService.handleHttpRedirectionError(error.status);
             return throwError(error);
           })
@@ -314,11 +331,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     };
 
     this.closeExpandDiskWindow();
-    this._serversService.setServerSpinner(this.server, this.selectedDisk);
+    this._serversService.setServerSpinner(this.server);
     this._serversService.updateServerStorage(this.server.id, this.selectedDisk.id, diskValues)
       .pipe(
         catchError((error) => {
-          this._serversService.clearServerSpinner(this.server, this.selectedDisk);
+          this._serversService.clearServerSpinner(this.server);
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
@@ -341,7 +358,14 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   protected serverSelectionChanged(): void {
     this._resetStorageValues();
     this._getResourceStorage();
-    this._getServerDisks();
+    this._initializeDataSource();
+  }
+
+  /**
+   * Initializes the data source of the disks table
+   */
+  private _initializeDataSource(): void {
+    this.disksDataSource = new TableDataSource(this._getServerDisks());
   }
 
   /**
@@ -350,10 +374,9 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   private _resetStorageValues(): void {
     this.diskMethodType = ServerDiskMethodType.AddDisk;
     this.manageStorage = new ServerManageStorage();
-
-    // We need to set the first instance of the template
-    // in order to re-initialize the storage component and have fresh data
-    this.manageStorageTemplate[0] = {};
+    if (!isNullOrEmpty(this._componentHandler)) {
+      this._componentHandler.recreateComponent();
+    }
   }
 
   /**
@@ -389,7 +412,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
         this.refreshServerResource();
       case McsDataStatus.Error:
       default:
-        this._newDisk = undefined;
+        this.disksDataSource.deleteRecord(this._newDisk);
         break;
     }
   }
@@ -419,33 +442,31 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock disk data based on job response
-    this._newDisk = new ServerStorageDevice();
     this._newDisk.id = this._inProgressDiskId;
     this._newDisk.name = job.clientReferenceObject.name;
     this._newDisk.sizeMB = job.clientReferenceObject.sizeMB;
     this._newDisk.storageProfile = job.clientReferenceObject.storageProfile;
-    this._changeDetectorRef.markForCheck();
+    this.disksDataSource.addRecord(this._newDisk);
   }
 
   /**
-   * This will update the list of server disks
+   * Sets data column for the corresponding table
    */
-  private _getServerDisks(): void {
-    unsubscribeSafely(this._updateDiskSubscription);
+  private _setDataColumns(): void {
+    this.disksColumns = Object.keys(this.textContent.columnHeaders);
+    if (isNullOrEmpty(this.disksColumns)) {
+      throw new Error('column definition for disks was not defined');
+    }
+  }
 
-    this.dataStatusFactory.setInProgress();
-    this._updateDiskSubscription = this._serversRepository
-      .findServerDisks(this.server)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this.dataStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => {
-        this.dataStatusFactory.setSuccessful(response);
-      });
+  /**
+   * Get Server Disks from API
+   */
+  private _getServerDisks() {
+    return this._requestDisksSubject.pipe(
+      startWith(null),
+      switchMap(() => this._serversRepository.findServerDisks(this.server))
+    );
   }
 
   /**

@@ -64,16 +64,6 @@
           </mcs-data-cell>
         </ng-container>
 
-        <!-- Catalog Column -->
-        <ng-container mcsColumnDef="catalog" [mcsColumnDefHidden]="isColumnHidden('catalog')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-            {{ columnSettings.catalog.text }}
-          </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell hidden-small">
-            {{ row.catalogName }}
-          </mcs-data-cell>
-        </ng-container>
-
         <!-- Size Column -->
         <ng-container mcsColumnDef="size" [mcsColumnDefHidden]="isColumnHidden('size')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
@@ -97,11 +87,12 @@
 
         <!-- Attached To Column -->
         <ng-container mcsColumnDef="attachedTo" [mcsColumnDefHidden]="isColumnHidden('attachedTo')">
-          <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+          <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.attachedTo.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="hidden-xsmall">
-            {{ row.servers?.length | mcsPlural: 'Server' }}
+          <mcs-data-cell *mcsDataCellDef="let row">
+            <span [innerHTML]="(row.usageCount | mcsPlural: 'Server') | mcsDataLabel: 'None'">
+            </span>
           </mcs-data-cell>
         </ng-container>
 
@@ -118,7 +109,7 @@
         <ng-container mcsDataStatusDef>
           <mcs-data-empty *mcsDataEmptyDef>
             <div class="listing-status-wrapper">
-              <span>{{ textContent.noMedias }} </span>
+              <span>{{ textContent.noMedia }} </span>
               <span *ngIf="!isSearching">
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->

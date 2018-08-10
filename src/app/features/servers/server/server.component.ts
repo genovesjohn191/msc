@@ -131,7 +131,8 @@ export class ServerComponent
 
   public ngAfterViewInit() {
     refreshView(() => {
-      this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
+      this.search.searchChangedStream
+        .pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
       this._initializeListsource();
     });
@@ -149,9 +150,6 @@ export class ServerComponent
    */
   public onServerSelect(_server: Server) {
     if (isNullOrEmpty(_server)) { return; }
-
-    // this._setSelectedServerInfo(_server);
-    this._changeDetectorRef.markForCheck();
     this.router.navigate([CoreRoutes.getPath(McsRouteKey.Servers), _server.id]);
   }
 
@@ -283,6 +281,7 @@ export class ServerComponent
     // Listen to all records changed
     this.serverListSource.findAllRecordsMapStream(keyFn)
       .pipe(
+        takeUntil(this._destroySubject),
         catchError((error) => {
           this.listStatusFactory.setError();
           return throwError(error);

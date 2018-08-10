@@ -59,7 +59,7 @@ $table-information-border-color: $color-grey-05;
 
       &.action-header-cell {
         min-width: $table-action-cell-size;
-        max-width: $table-action-cell-size;
+        width: $table-action-cell-size;
         padding: 0;
       }
     }
@@ -85,7 +85,7 @@ $table-information-border-color: $color-grey-05;
 
       &.action-data-cell {
         min-width: $table-action-cell-size;
-        max-width: $table-action-cell-size;
+        width: $table-action-cell-size;
         padding: 0;
       }
 

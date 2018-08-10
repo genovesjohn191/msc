@@ -40,14 +40,14 @@ export class MediaComponent
     _browserService: McsBrowserService,
     _changeDetectorRef: ChangeDetectorRef,
     private _textProvider: McsTextContentProvider,
-    private _mediasRepository: MediaRepository,
+    private _mediaRepository: MediaRepository,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
   }
 
   public ngOnInit() {
-    this.textContent = this._textProvider.content.medias;
+    this.textContent = this._textProvider.content.media;
   }
 
   public ngAfterViewInit() {
@@ -90,7 +90,7 @@ export class MediaComponent
    * Returns the totals record found in orders
    */
   protected get totalRecordsCount(): number {
-    return getSafeProperty(this._mediasRepository,
+    return getSafeProperty(this._mediaRepository,
       (obj) => obj.totalRecordsCount, 0);
   }
 
@@ -107,7 +107,7 @@ export class MediaComponent
   protected initializeDatasource(): void {
     // Set datasource instance
     this.dataSource = new MediaDataSource(
-      this._mediasRepository,
+      this._mediaRepository,
       this.paginator,
       this.search
     );

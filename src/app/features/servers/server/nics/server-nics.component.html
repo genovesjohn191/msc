@@ -9,94 +9,117 @@
     <ng-container [ngSwitch]="nicMethodType">
       <div [@fadeIn] *ngSwitchCase="serverNicMethodTypeEnum.AddNic" class="block-items-large">
         <!-- NICs Table -->
-        <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-          <mcs-data-status-success mcsDataSuccess>
-            <table class="basic-table no-gutter">
-              <thead>
-                <tr>
-                  <th class="hidden-small">{{ textContent.nic }}</th>
-                  <th>{{ textContent.network }}</th>
-                  <th>{{ textContent.primary }}</th>
-                  <th class="hidden-small">{{ textContent.ipMode }}</th>
-                  <th>{{ textContent.ipAddresses }}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let nic of serverNics">
-                  <td class="hidden-small">
-                    <ng-container *ngIf="nicIsInProgress(nic); else nicIndex">
-                      <mcs-icon [key]="spinnerIconKey" size="small"
-                        [mcsTooltip]="jobSummaryInfo"
-                        mcsTooltipPosition="right"></mcs-icon>
-                    </ng-container>
-                    <ng-template #nicIndex>
-                      <span>{{ nic.index }}</span>
-                    </ng-template>
-                  </td>
-                  <td>
-                    <span class="break-word-all"
-                      [innerHTML]="nic.logicalNetworkName | mcsDataLabel">
-                    </span>
-                  </td>
-                  <td>
-                    <mcs-icon *ngIf="nic.isPrimary" class="space-left-medium"
-                      [key]="checkIconKey" size="small"></mcs-icon>
-                  </td>
-                  <td class="hidden-small">
-                    <span [innerHTML]="nic.ipAllocationModeLabel | mcsDataLabel"></span>
-                  </td>
-                  <td>
-                    <mcs-list spacing="none">
-                      <mcs-list-item *ngFor="let ipAddress of nic.logicalIpAddresses">
-                        <span [innerHTML]="ipAddress | mcsDataLabel"></span>
-                      </mcs-list-item>
-                    </mcs-list>
-                  </td>
-                  <td>
-                    <div *mcsAccessControl="['VmNicEdit']" class="inline-items-small flex-nowrap">
-                      <span *ngIf="isEditNicEnabled(nic)">
-                        <a [disabled]="!server.executable"
-                            (click)="openEditNicWindow(nic)"
-                            mcsEventTracker="edit-nic"
-                            mcsEventCategory="server"
-                            mcsEventLabel="server-details-page">
-                          {{ textContent.editLink }}
-                        </a>
-                      </span>
-                      <span>
-                        <a *ngIf="!nic.isPrimary"
-                          [disabled]="!server.executable" (click)="deleteNic(nic)"
-                          mcsEventTracker="delete-nic"
-                          mcsEventCategory="server"
-                          mcsEventLabel="server-details-page">
-                          {{ textContent.deleteLink }}
-                        </a>
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </mcs-data-status-success>
+        <mcs-table [dataSource]="nicsDataSource">
+          <!-- NIC Column -->
+          <ng-container mcsColumnDef="nic">
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+              {{ textContent.columnHeaders.nic }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              <ng-container *ngIf="nicIsInProgress(row); else nicIndexTemplate">
+                <mcs-icon [key]="spinnerIconKey" size="small"
+                  [mcsTooltip]="jobSummaryInfo"
+                  mcsTooltipPosition="right"></mcs-icon>
+              </ng-container>
+              <ng-template #nicIndexTemplate>
+                <span>{{ row.index }}</span>
+              </ng-template>
+            </mcs-data-cell>
+          </ng-container>
 
-          <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ textContent.loadingContent }}</span>
-          </mcs-data-status-in-progress>
+          <!-- Network Column -->
+          <ng-container mcsColumnDef="network">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ textContent.columnHeaders.network }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
+              <span [innerHTML]="row.logicalNetworkName | mcsDataLabel">
+              </span>
+            </mcs-data-cell>
+          </ng-container>
 
-          <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ textContent.noNics }}</span>
-          </mcs-data-status-empty>
+          <!-- Primary Column -->
+          <ng-container mcsColumnDef="primary">
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+              {{ textContent.columnHeaders.primary }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              <mcs-icon *ngIf="row.isPrimary" class="space-left-medium"
+                [key]="checkIconKey" size="small"></mcs-icon>
+            </mcs-data-cell>
+          </ng-container>
 
-          <mcs-data-status-error mcsDataError>
-            <span>{{ textContent.errorGettingNics }}</span>
-          </mcs-data-status-error>
-        </mcs-data-status>
+          <!-- IP Mode Column -->
+          <ng-container mcsColumnDef="ipMode">
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+              {{ textContent.columnHeaders.ipMode }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              <span [innerHTML]="row.ipAllocationModeLabel | mcsDataLabel"></span>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- IP Addresses Column -->
+          <ng-container mcsColumnDef="ipAddresses">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ textContent.columnHeaders.ipAddresses }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <mcs-list spacing="none">
+                <mcs-list-item *ngFor="let ipAddress of row.logicalIpAddresses">
+                  <span [innerHTML]="ipAddress | mcsDataLabel"></span>
+                </mcs-list-item>
+              </mcs-list>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container mcsColumnDef="action">
+            <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <div *mcsAccessControl="['VmNicEdit']" class="inline-items-small flex-nowrap">
+                <span *ngIf="isEditNicEnabled(row)">
+                  <a [disabled]="!server.executable"
+                      (click)="openEditNicWindow(row)"
+                      mcsEventTracker="edit-nic"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-details-page">
+                    {{ textContent.editLink }}
+                  </a>
+                </span>
+                <span>
+                  <a *ngIf="!row.isPrimary"
+                    [disabled]="!server.executable" (click)="deleteNic(row)"
+                    mcsEventTracker="delete-nic"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                    {{ textContent.deleteLink }}
+                  </a>
+                </span>
+              </div>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Data Status Integration -->
+          <ng-container mcsDataStatusDef>
+            <mcs-data-empty *mcsDataEmptyDef>
+              <span>{{ textContent.noNics }} </span>
+            </mcs-data-empty>
+            <mcs-data-error *mcsDataErrorDef>
+              <span>{{ textContent.errorGettingNics }}</span>
+            </mcs-data-error>
+          </ng-container>
+
+          <!-- Header and Data row -->
+          <mcs-header-row *mcsHeaderRowDef="nicsColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: nicsColumns;"></mcs-data-row>
+        </mcs-table>
 
         <!-- Adding NIC -->
         <ng-container *mcsAccessControl="['VmNicEdit']">
           <div class="action-box" *ngIf="addNicEnabled" [disabled]="!server.executable">
-            <mcs-server-manage-network *ngFor="let item of manageNetworkTemplate"
+            <mcs-server-manage-network *mcsComponentHandler
               [resourceId]="serverResource?.id"
               [networks]="resourceNetworks"
               (dataChange)="onNetworkChanged($event)"

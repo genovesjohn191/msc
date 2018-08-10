@@ -16,7 +16,9 @@ export enum McsRouteKey {
   VdcDetailStorage,
 
   Media,
-  MediaDetail,
+  Medium,
+  MediumOverview,
+  MediumServers,
   MediaCreate,
 
   Firewalls,

@@ -8,84 +8,97 @@
 
     <ng-container [ngSwitch]="diskMethodType">
       <div [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk" class="block-items-large">
-        <!-- Disks Table -->
-        <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-          <mcs-data-status-success mcsDataSuccess>
-            <table class="basic-table no-gutter">
-              <thead>
-                <tr>
-                  <th>{{ textContent.storageDevice }}</th>
-                  <th>{{ textContent.storageProfile }}</th>
-                  <th>{{ textContent.capacity }}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let storage of serverDisks">
-                  <td>
-                    <div class="inline-items-xsmall">
-                      <ng-container *ngIf="diskIsInProgress(storage); else defaultStorageIcon">
-                        <mcs-icon [key]="spinnerIconKey" size="small"
-                          [mcsTooltip]="jobSummaryInfo"
-                          mcsTooltipPosition="right"></mcs-icon>
-                      </ng-container>
-                      <ng-template #defaultStorageIcon>
-                        <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
-                      </ng-template>
-                      <span class="break-word-all" [innerHTML]="storage.name | mcsDataLabel"></span>
-                    </div>
-                  </td>
-                  <td>
-                    <span [innerHTML]="storage.storageProfile | mcsDataLabel"></span>
-                  </td>
-                  <td>
-                    <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
-                  </td>
-                  <td>
-                    <div class="inline-items-small flex-nowrap">
-                      <span *mcsAccessControl="['VmEdit']">
-                        <a [disabled]="!server.executable"
-                            (click)="openExpandDiskWindow(storage)"
-                            mcsEventTracker="show-expand-disk"
-                            mcsEventCategory="server"
-                            mcsEventLabel="server-details-page">
-                          {{ textContent.expandStorageLink }}
-                        </a>
-                      </span>
-                      <span *mcsAccessControl="['VmEdit']" >
-                        <a *ngIf="canDeleteDisk"
-                          [disabled]="!server.executable"
-                          (click)="deleteDisk(storage)"
-                          mcsEventTracker="delete-disk"
-                          mcsEventCategory="server"
-                          mcsEventLabel="server-details-page">
-                          {{ textContent.deleteStorageLink }}
-                        </a>
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </mcs-data-status-success>
 
-          <mcs-data-status-in-progress mcsDataInProgress>
-            <span>{{ textContent.loadingContent }}</span>
-          </mcs-data-status-in-progress>
+        <!-- DISKs Table -->
+        <mcs-table [dataSource]="disksDataSource">
+          <!-- Storage Device Column -->
+          <ng-container mcsColumnDef="storageDevice">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ textContent.columnHeaders.storageDevice }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
+              <div class="inline-items-xsmall">
+                <ng-container *ngIf="diskIsInProgress(row); else defaultStorageIconTemplate">
+                  <mcs-icon [key]="spinnerIconKey" size="small"
+                    [mcsTooltip]="jobSummaryInfo"
+                    mcsTooltipPosition="right"></mcs-icon>
+                </ng-container>
+                <ng-template #defaultStorageIconTemplate>
+                  <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
+                </ng-template>
+                <span [innerHTML]="row.name | mcsDataLabel"></span>
+              </div>
+            </mcs-data-cell>
+          </ng-container>
 
-          <mcs-data-status-empty mcsDataEmpty>
-            <span>{{ textContent.noDisks }}</span>
-          </mcs-data-status-empty>
+          <!-- Storage Profile Column -->
+          <ng-container mcsColumnDef="storageProfile">
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+              {{ textContent.columnHeaders.storageProfile }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap hidden-small">
+              <span [innerHTML]="row.storageProfile | mcsDataLabel"></span>
+            </mcs-data-cell>
+          </ng-container>
 
-          <mcs-data-status-error mcsDataError>
-            <span>{{ textContent.errorGettingDisks }}</span>
-          </mcs-data-status-error>
-        </mcs-data-status>
+          <!-- Capacity Column -->
+          <ng-container mcsColumnDef="capacity">
+            <mcs-header-cell *mcsHeaderCellDef>
+              {{ textContent.columnHeaders.capacity }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <span [innerHTML]="(row.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Action Column -->
+          <ng-container mcsColumnDef="action">
+            <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row">
+              <div class="inline-items-small flex-nowrap">
+                <span *mcsAccessControl="['VmEdit']">
+                  <a [disabled]="!server.executable"
+                      (click)="openExpandDiskWindow(row)"
+                      mcsEventTracker="show-expand-disk"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-details-page">
+                    {{ textContent.expandStorageLink }}
+                  </a>
+                </span>
+                <span *mcsAccessControl="['VmEdit']" >
+                  <a *ngIf="canDeleteDisk"
+                    [disabled]="!server.executable"
+                    (click)="deleteDisk(row)"
+                    mcsEventTracker="delete-disk"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
+                    {{ textContent.deleteStorageLink }}
+                  </a>
+                </span>
+              </div>
+            </mcs-data-cell>
+          </ng-container>
+
+          <!-- Data Status Integration -->
+          <ng-container mcsDataStatusDef>
+            <mcs-data-empty *mcsDataEmptyDef>
+              <span>{{ textContent.noDisks }} </span>
+            </mcs-data-empty>
+            <mcs-data-error *mcsDataErrorDef>
+              <span>{{ textContent.errorGettingDisks }}</span>
+            </mcs-data-error>
+          </ng-container>
+
+          <!-- Header and Data row -->
+          <mcs-header-row *mcsHeaderRowDef="disksColumns"></mcs-header-row>
+          <mcs-data-row *mcsDataRowDef="let row; columns: disksColumns;"></mcs-data-row>
+        </mcs-table>
 
         <!-- Adding Disk -->
         <ng-container *mcsAccessControl="['VmEdit']">
           <div class="action-box" *ngIf="canAddDisk" [disabled]="!server.executable">
-            <mcs-server-manage-storage *ngFor="let item of manageStorageTemplate"
+            <mcs-server-manage-storage *mcsComponentHandler
               [storages]="resourceStorages"
               (dataChange)="onStorageChanged($event)">
 
@@ -131,15 +144,15 @@
           <ng-template #diskDetailsTemplate>
             <mcs-list spacing="auto">
               <mcs-list-item class="form-field-inline">
-                <strong>{{ textContent.storageDevice }}:</strong>
+                <strong>{{ textContent.columnHeaders.storageDevice }}:</strong>
                 <span>{{ selectedDisk.name }}</span>
               </mcs-list-item>
               <mcs-list-item class="form-field-inline">
-                <strong>{{ textContent.storageProfile }}:</strong>
+                <strong>{{ textContent.columnHeaders.storageProfile }}:</strong>
                 <span>{{ selectedDisk.storageProfile }}</span>
               </mcs-list-item>
               <mcs-list-item class="form-field-inline">
-                <strong>{{ textContent.capacity }}:</strong>
+                <strong>{{ textContent.columnHeaders.capacity }}:</strong>
                 <span>{{ selectedDisk.sizeMB | mcsDataSize: 'MB' }}</span>
               </mcs-list-item>
             </mcs-list>

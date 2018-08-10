@@ -5,7 +5,10 @@ import {
   map
 } from 'rxjs/operators';
 /** Services and Models */
-import { Media } from './models';
+import {
+  Media,
+  MediaServer
+} from './models';
 import {
   McsApiService,
   McsApiSuccessResponse,
@@ -86,6 +89,31 @@ export class MediaService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<Media>(Media, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Get the attached servers from the media
+   */
+  public getMediaServers(mediaId: any): Observable<McsApiSuccessResponse<MediaServer[]>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/resources/media/${mediaId}/servers`;
+
+    return this._mcsApiService.get(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<MediaServer[]>(MediaServer, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

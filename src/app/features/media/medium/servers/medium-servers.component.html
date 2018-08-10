@@ -1,0 +1,39 @@
+<div class="container-wrapper">
+  <h4 class="container-header">{{ textContent.title }}</h4>
+  <p *ngIf="textContent.description">{{ textContent.description }}</p>
+
+  <mcs-table [dataSource]="serversDataSource">
+    <!-- Name Column -->
+    <ng-container mcsColumnDef="name">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ textContent.columnHeaders.name }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        {{ row.name }}
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container mcsColumnDef="action">
+      <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row">
+        <a>Detach</a>
+      </mcs-data-cell>
+    </ng-container>
+
+    <!-- Data Status Integration -->
+    <ng-container mcsDataStatusDef>
+      <mcs-data-empty *mcsDataEmptyDef>
+        <span>{{ textContent.noMediaServers }} </span>
+      </mcs-data-empty>
+      <mcs-data-error *mcsDataErrorDef>
+        <span>{{ textContent.errorMediaServers }}</span>
+      </mcs-data-error>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <mcs-header-row *mcsHeaderRowDef="serversColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: serversColumns;"></mcs-data-row>
+  </mcs-table>
+</div>
