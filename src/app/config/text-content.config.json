@@ -707,7 +707,6 @@
       "servers": {
         "label": "Servers",
         "title": "Attached Servers",
-        "description": "Let me ask for the description of this one",
         "noMediaServers": "No attached servers to display.",
         "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
         "columnHeaders": {
