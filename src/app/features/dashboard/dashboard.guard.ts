@@ -26,13 +26,13 @@ export class DashboardGuard implements CanActivate {
   ): Observable<boolean> | Promise<boolean> | boolean {
     let hasVmAccess = this._accesscontrolService.hasPermission(['VmAccess']);
     if (hasVmAccess) {
-      this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers)]);
+      this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
       return false;
     }
 
     let hasFirewallAccess = this._accesscontrolService.hasPermission(['FirewallConfigurationView']);
     if (hasFirewallAccess) {
-      this._router.navigate([CoreRoutes.getPath(McsRouteKey.Firewalls)]);
+      this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Firewalls)]);
       return false;
     }
     return true;

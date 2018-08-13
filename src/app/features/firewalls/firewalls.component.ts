@@ -76,7 +76,7 @@ export class FirewallsComponent
    */
   public navigateToFirewall(firewall: Firewall): void {
     if (isNullOrEmpty(firewall)) { return; }
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Firewalls), firewall.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.FirewallDetail), firewall.id]);
   }
 
   /**

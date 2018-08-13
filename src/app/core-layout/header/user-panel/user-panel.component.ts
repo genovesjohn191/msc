@@ -150,7 +150,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Navigate to notifications page to see all the jobs
    */
   public viewNotificationsPage(): void {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Notifications)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Notifications)]);
   }
 
   /**

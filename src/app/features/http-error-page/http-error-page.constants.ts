@@ -18,7 +18,8 @@ export const httpErrorRoutesComponents: any[] = [
  */
 export const httpErrorPageRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.HttpErrorPage),
-    component: HttpErrorPageComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.HttpErrorPage),
+    component: HttpErrorPageComponent,
+    data: { routeId: McsRouteKey.HttpErrorPage }
   }
 ];

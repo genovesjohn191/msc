@@ -26,8 +26,9 @@ export const dashboardRoutesComponents: any[] = [
  */
 export const dashboardRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.Dashboard),
+    path: CoreRoutes.getNavigationPath(McsRouteKey.Dashboard),
     component: DashboardComponent,
-    canActivate: [DashboardGuard]
+    canActivate: [DashboardGuard],
+    data: { routeId: McsRouteKey.Dashboard }
   }
 ];

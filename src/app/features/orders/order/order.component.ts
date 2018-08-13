@@ -88,7 +88,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Navigate to order listing
    */
   public gotoOrders(): void {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Orders)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Orders)]);
   }
 
   /**

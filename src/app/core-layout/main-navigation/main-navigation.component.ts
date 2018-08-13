@@ -83,7 +83,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
    */
   public navigateTo(routeKey: McsRouteKey): void {
     if (isNullOrEmpty(routeKey)) { return; }
-    this._router.navigate([CoreRoutes.getPath(routeKey)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(routeKey)]);
   }
 
   /**
@@ -101,6 +101,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
     this._routerHandlerService.onActiveRoute
       .pipe(takeUntil(this._destroySubject))
       .subscribe((activeRoute) => {
+        if (isNullOrEmpty(activeRoute)) { return; }
         this.selectedCategory = activeRoute.enumCategory;
         this._changeDetectorRef.markForCheck();
       });

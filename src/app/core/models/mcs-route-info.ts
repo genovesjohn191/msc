@@ -4,7 +4,7 @@ import { McsRouteKey } from '../enumerations/mcs-route-key.enum';
 export class McsRouteInfo {
   public enumCategory?: McsRouteCategory;
   public enumKey?: McsRouteKey;
-  public referenceRoutePath?: string;
+  public navigationPath?: string;
   public routePath?: string;
   public documentTitle?: string;
   public requiredFeatureFlag?: string;

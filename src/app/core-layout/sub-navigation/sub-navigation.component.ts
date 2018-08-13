@@ -83,8 +83,9 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
   private _listenToRouteChanges(): void {
     this._routerHandlerService.onActiveRoute
       .pipe(takeUntil(this._destroySubject))
-      .subscribe((_activeRoute) => {
-        this.activeRouteCategory = _activeRoute.enumCategory;
+      .subscribe((activeRoute) => {
+        if (isNullOrEmpty(activeRoute)) { return; }
+        this.activeRouteCategory = activeRoute.enumCategory;
         this._changeDetectorRef.markForCheck();
       });
   }

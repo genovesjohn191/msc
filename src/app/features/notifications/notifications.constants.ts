@@ -29,7 +29,8 @@ export const notificationsRoutesComponents: any[] = [
  */
 export const notificationsRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.Notifications),
-    component: NotificationsComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.Notifications),
+    component: NotificationsComponent,
+    data: { routeId: McsRouteKey.Notifications }
   }
 ];

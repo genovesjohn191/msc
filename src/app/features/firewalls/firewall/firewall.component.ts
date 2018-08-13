@@ -149,7 +149,7 @@ export class FirewallComponent
     this._setSelectedFirewallById(firewall.id);
     this._changeDetectorRef.markForCheck();
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Firewalls),
+      CoreRoutes.getNavigationPath(McsRouteKey.FirewallDetail),
       firewall.id
     ]);
   }
@@ -173,7 +173,7 @@ export class FirewallComponent
   protected onTabChanged(tab: any) {
     // Navigate route based on current active tab
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Firewalls),
+      CoreRoutes.getNavigationPath(McsRouteKey.FirewallDetail),
       this.paramId,
       tab.id
     ]);

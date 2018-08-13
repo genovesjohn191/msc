@@ -312,7 +312,8 @@
           "image": "Image",
           "zone": "Zone",
           "configuration": "Configuration",
-          "vmwareTools": "Tools Version"
+          "vmwareTools": "Tools Version",
+          "vApp": "vApp"
         },
         "vmConsole": {
           "title": "VM Console",

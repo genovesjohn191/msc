@@ -59,6 +59,11 @@
                   </mcs-data-status-empty>
                 </ng-template>
               </mcs-list-item>
+
+              <mcs-list-item class="form-field-inline" *ngIf="server.vApp">
+                <span>{{ textContent.vmProperties.vApp }}:</span>
+                <span [innerHTML]="server.vApp"></span>
+              </mcs-list-item>
             </mcs-list>
           </div>
 

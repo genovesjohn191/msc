@@ -26,7 +26,7 @@ export const defaultPageRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getPath(McsRouteKey.Dashboard),
+        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.Dashboard),
         pathMatch: 'full'
       },
       ...dashboardRoutes,

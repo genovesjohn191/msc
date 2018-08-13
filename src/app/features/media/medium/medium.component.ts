@@ -118,7 +118,7 @@ export class MediumComponent
    * Navigate to media listing
    */
   public gotoMedia(): void {
-    this.router.navigate([CoreRoutes.getPath(McsRouteKey.Media)]);
+    this.router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Media)]);
   }
 
   /**
@@ -127,7 +127,7 @@ export class MediumComponent
    */
   public onMediumSelect(medium: Media): void {
     if (isNullOrEmpty(medium)) { return; }
-    this.router.navigate([CoreRoutes.getPath(McsRouteKey.Media), medium.id]);
+    this.router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Medium), medium.id]);
   }
 
   /**
@@ -136,7 +136,7 @@ export class MediumComponent
    */
   protected onTabChanged(tab: any) {
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Media),
+      CoreRoutes.getNavigationPath(McsRouteKey.Medium),
       this.paramId,
       tab.id
     ]);

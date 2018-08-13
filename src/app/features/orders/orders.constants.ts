@@ -33,11 +33,13 @@ export const ordersRoutesComponents: any[] = [
  */
 export const ordersRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.Orders),
-    component: OrdersComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.Orders),
+    component: OrdersComponent,
+    data: { routeId: McsRouteKey.Orders }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.OrderDetail),
-    component: OrderComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.OrderDetail),
+    component: OrderComponent,
+    data: { routeId: McsRouteKey.OrderDetail }
   },
 ];

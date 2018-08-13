@@ -38,25 +38,29 @@ export const firewallsRoutesComponents: any[] = [
  */
 export const firewallRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.Firewalls),
-    component: FirewallsComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.Firewalls),
+    component: FirewallsComponent,
+    data: { routeId: McsRouteKey.Firewalls }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.FirewallDetail),
+    path: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetail),
     component: FirewallComponent,
+    data: { routeId: McsRouteKey.FirewallDetail },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getPath(McsRouteKey.FirewallDetailOverview),
+        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetailOverview),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.FirewallDetailOverview),
-        component: FirewallOverviewComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetailOverview),
+        component: FirewallOverviewComponent,
+        data: { routeId: McsRouteKey.FirewallDetailOverview }
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.FirewallDetailPolicies),
-        component: FirewallPoliciesComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetailPolicies),
+        component: FirewallPoliciesComponent,
+        data: { routeId: McsRouteKey.FirewallDetailPolicies }
       }
     ]
   }

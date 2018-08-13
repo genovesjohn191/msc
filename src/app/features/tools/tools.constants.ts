@@ -29,7 +29,8 @@ export const toolsRoutesComponents: any[] = [
  */
 export const toolsRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.OtherTools),
-    component: ToolsComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.OtherTools),
+    component: ToolsComponent,
+    data: { routeId: McsRouteKey.OtherTools }
   }
 ];

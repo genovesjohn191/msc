@@ -150,7 +150,7 @@ export class ServerComponent
    */
   public onServerSelect(_server: Server) {
     if (isNullOrEmpty(_server)) { return; }
-    this.router.navigate([CoreRoutes.getPath(McsRouteKey.Servers), _server.id]);
+    this.router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail), _server.id]);
   }
 
   /**
@@ -223,7 +223,7 @@ export class ServerComponent
 
     this._changeDetectorRef.markForCheck();
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Vdc),
+      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
       resource.resourceId
     ]);
   }
@@ -234,7 +234,7 @@ export class ServerComponent
    */
   protected onTabChanged(tab: any) {
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Servers),
+      CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail),
       this.paramId,
       tab.id
     ]);

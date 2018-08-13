@@ -1,6 +1,8 @@
 export enum McsRouteKey {
   Dashboard = 1,
 
+  Console,
+
   Servers,
   ServerDetail,
   ServerDetailManagement,
@@ -10,7 +12,6 @@ export enum McsRouteKey {
   ServerCreate,
   ServerCreateProvisioning,
 
-  Vdc,
   VdcDetail,
   VdcDetailOverview,
   VdcDetailStorage,
@@ -32,7 +33,6 @@ export enum McsRouteKey {
 
   Notifications,
 
-  Products,
   ProductDetail,
 
   Orders,
