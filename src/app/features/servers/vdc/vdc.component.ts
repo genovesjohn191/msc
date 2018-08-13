@@ -145,7 +145,7 @@ export class VdcComponent
   public onServerSelect(server: Server) {
     if (isNullOrEmpty(server)) { return; }
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Servers),
+      CoreRoutes.getNavigationPath(McsRouteKey.Servers),
       server.id
     ]);
   }
@@ -167,7 +167,7 @@ export class VdcComponent
 
     this._changeDetectorRef.markForCheck();
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Vdc),
+      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
       resource.resourceId
     ]);
   }
@@ -187,7 +187,7 @@ export class VdcComponent
    */
   protected onTabChanged(tab: any) {
     this.router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Vdc),
+      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
       this.paramId,
       tab.id
     ]);

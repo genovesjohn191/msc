@@ -14,7 +14,7 @@ import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 import { McsEntityBase } from '../../base/mcs-entity.base';
 import { McsRouteKey } from '../../enumerations/mcs-route-key.enum';
 
-export class McsApiJob extends McsEntityBase  {
+export class McsApiJob extends McsEntityBase {
   public initiatorId: string;
   public initiatorFullName: string;
   public initiatorCompanyId: string;
@@ -124,17 +124,19 @@ export class McsApiJob extends McsEntityBase  {
    * Do we need to use base class and extend it?
    */
   public get link(): string {
-    let jobLink: string;
+    let jobLink: string = '';
     switch (this.type) {
       case McsJobType.CreateServer:
       case McsJobType.CloneServer:
-        jobLink = `${CoreRoutes.getPath(McsRouteKey.ServerCreate)}/${this.id}`;
+        jobLink = `
+          ${CoreRoutes.getNavigationPath(McsRouteKey.ServerCreateProvisioning)}/${this.id}
+        `;
         break;
 
       // Add more link here when a job has requested page
       default:
         break;
     }
-    return jobLink;
+    return jobLink.trim();
   }
 }

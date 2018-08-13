@@ -111,7 +111,7 @@ export class ServerCreateComponent implements
    * Navigate to servers listing page
    */
   public gotoServers() {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
   }
 
   /**

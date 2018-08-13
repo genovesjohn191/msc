@@ -40,16 +40,19 @@ export const ticketsRoutesComponents: any[] = [
  */
 export const ticketsRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.Tickets),
-    component: TicketsComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.Tickets),
+    component: TicketsComponent,
+    data: { routeId: McsRouteKey.Tickets }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.TicketCreate),
+    path: CoreRoutes.getRoutePath(McsRouteKey.TicketCreate),
     component: TicketCreateComponent,
-    canDeactivate: [McsNavigateAwayGuard]
+    canDeactivate: [McsNavigateAwayGuard],
+    data: { routeId: McsRouteKey.TicketCreate }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.TicketDetail),
-    component: TicketComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.TicketDetail),
+    component: TicketComponent,
+    data: { routeId: McsRouteKey.TicketDetail }
   }
 ];

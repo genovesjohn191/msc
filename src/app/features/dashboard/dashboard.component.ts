@@ -65,6 +65,6 @@ export class DashboardComponent implements OnInit {
    * Navigates to create ticket page
    */
   public gotoCreateTicket(): void {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.TicketCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.TicketCreate)]);
   }
 }

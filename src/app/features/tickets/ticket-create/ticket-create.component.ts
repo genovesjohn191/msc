@@ -202,7 +202,7 @@ export class TicketCreateComponent implements
    * Navigate to ticket listing
    */
   public gotoTickets(): void {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Tickets)]);
   }
 
   /**
@@ -260,7 +260,7 @@ export class TicketCreateComponent implements
           return throwError(error);
         })
       )
-      .subscribe(() => this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets)]));
+      .subscribe(() => this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Tickets)]));
   }
 
   /**

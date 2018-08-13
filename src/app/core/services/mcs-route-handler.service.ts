@@ -1,6 +1,7 @@
 import {
   Router,
-  NavigationEnd
+  NavigationEnd,
+  ActivatedRoute
 } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
@@ -8,19 +9,21 @@ import {
   Subject,
   BehaviorSubject
 } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {
+  takeUntil,
+  filter
+} from 'rxjs/operators';
 import {
   isNullOrEmpty,
   unsubscribeSubject
 } from '../../utilities';
-import { CoreRoutes } from '../core.routes';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsLoggerService } from '../services/mcs-logger.service';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
-import { McsRouteCategory } from '../enumerations/mcs-route-category.enum';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsRouteInfo } from '../models/mcs-route-info';
+import { CoreRoutes } from '../core.routes';
 
 @Injectable()
 export class McsRouteHandlerService implements McsInitializer {
@@ -32,6 +35,7 @@ export class McsRouteHandlerService implements McsInitializer {
 
   constructor(
     private _router: Router,
+    private _activatedRoute: ActivatedRoute,
     private _titleService: Title,
     private _loggerService: McsLoggerService,
     private _accessControlService: McsAccessControlService,
@@ -45,13 +49,11 @@ export class McsRouteHandlerService implements McsInitializer {
   public initialize(): void {
     this._loggerService.traceInfo(`Route checking initialized.`);
     this._router.events
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((event) => {
-        if (event instanceof NavigationEnd) {
-          this._loggerService.traceInfo(`Route navigation ended.`, event.urlAfterRedirects);
-          this._onNavigateEnd(event);
-        }
-      });
+      .pipe(
+        takeUntil(this._destroySubject),
+        filter((event) => event instanceof NavigationEnd)
+      )
+      .subscribe(() => this._setMainActiveRoute());
   }
 
   /**
@@ -62,31 +64,29 @@ export class McsRouteHandlerService implements McsInitializer {
   }
 
   /**
-   * Event that emits when navigation ended
+   * Event that emits when the route has been navigated and
+   * apply the corresponding settings on the route
    */
-  private _onNavigateEnd(navEnd: NavigationEnd) {
-    this._setMainActiveRoute(navEnd.urlAfterRedirects);
+  private _applyRouteSettings() {
     this._validateRoutePermissions(this._activeRoute);
     this._validateRouteFeatureFlag(this._activeRoute);
     this._updateDocumentTitle(this._activeRoute);
   }
 
   /**
-   * Sets the active route based on the string url
-   * @param fullUrl The FullUrl to be set as active route
+   * Sets the active main route based on the string url
    */
-  private _setMainActiveRoute(fullUrl: string): void {
-    if (isNullOrEmpty(fullUrl)) { return; }
-
-    let routeInfo = CoreRoutes.getRouteInfoByUrl(fullUrl);
-
-    if (isNullOrEmpty(routeInfo)) {
-      routeInfo = new McsRouteInfo();
-      routeInfo.routePath = fullUrl;
-      routeInfo.enumCategory = McsRouteCategory.None;
+  private _setMainActiveRoute(): void {
+    let activateRouteKey = this._activatedRoute.root;
+    while (activateRouteKey.firstChild) {
+      activateRouteKey = activateRouteKey.firstChild;
     }
-    this._activeRoute = routeInfo;
-    this.onActiveRoute.next(this._activeRoute);
+    activateRouteKey.data.subscribe((response) => {
+      if (isNullOrEmpty(response)) { return; }
+      this._activeRoute = CoreRoutes.getRouteInfoByKey(+response.routeId);
+      this.onActiveRoute.next(this._activeRoute);
+      this._applyRouteSettings();
+    });
   }
 
   /**

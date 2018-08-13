@@ -197,9 +197,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    */
   public navigateServerDetailsTo(keyRoute: McsRouteKey): void {
     this._router.navigate([
-      CoreRoutes.getPath(McsRouteKey.Servers),
+      CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail),
       this.server.id,
-      CoreRoutes.getPath(keyRoute)
+      CoreRoutes.getNavigationPath(keyRoute)
     ]);
   }
 
@@ -234,7 +234,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       width=${offsetedScreenWidth},
       height=${offsetedScreenHeight}`;
 
-    window.open(`/console/${this.server.id}`, this.server.id, windowFeatures);
+    window.open(`${CoreRoutes.getNavigationPath(McsRouteKey.Console)}/${this.server.id}`,
+      this.server.id, windowFeatures);
   }
 
   /**

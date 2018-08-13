@@ -101,9 +101,9 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    */
   public navigateVdcDetailTo(keyRoute: McsRouteKey): void {
     this._router.navigate([
-      CoreRoutes.getPath(McsRouteKey.VdcDetail),
+      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
       this.selectedVdc.id,
-      CoreRoutes.getPath(keyRoute)
+      CoreRoutes.getNavigationPath(keyRoute)
     ]);
   }
 
@@ -147,7 +147,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Redirects to create new server page
    */
   public createNewServer(): void {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.ServerCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerCreate)]);
   }
 
   /**

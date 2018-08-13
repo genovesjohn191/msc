@@ -186,7 +186,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    */
   public gotoProduct(_product: Product) {
     if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Products), _product.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), _product.id]);
   }
 
   /**

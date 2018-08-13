@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
-import { McsAuthenticationGuard } from '../../core';
+import {
+  McsAuthenticationGuard,
+  CoreRoutes,
+  McsRouteKey
+} from '../../core';
 import { serversProviders } from '../../features/servers/servers.constants';
 import { ConsolePageService } from './console-page.service';
 import { ConsolePageRepository } from './console-page.repository';
@@ -11,9 +15,10 @@ import { ConsolePageComponent } from './console-page.component';
  */
 export const consolePageRoutes: Routes = [
   {
-    path: 'console/:id',
+    path: CoreRoutes.getRoutePath(McsRouteKey.Console),
     component: ConsolePageComponent,
-    canActivate: [McsAuthenticationGuard]
+    canActivate: [McsAuthenticationGuard],
+    data: { routeId: McsRouteKey.Console }
   }
 ];
 

@@ -74,14 +74,14 @@ export class TicketsComponent
    */
   public navigateToTicket(ticket: Ticket): void {
     if (isNullOrEmpty(ticket)) { return; }
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets), ticket.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.TicketDetail), ticket.id]);
   }
 
   /**
    * This will navigate to ticket creation page
    */
   public onClickNewTicket(): void {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.TicketCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.TicketCreate)]);
   }
 
   /**

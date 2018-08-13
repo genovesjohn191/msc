@@ -39,25 +39,29 @@ export const mediaRoutesComponents: any[] = [
  */
 export const mediaRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.Media),
-    component: MediaComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.Media),
+    component: MediaComponent,
+    data: { routeId: McsRouteKey.Media }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.Medium),
+    path: CoreRoutes.getRoutePath(McsRouteKey.Medium),
     component: MediumComponent,
+    data: { routeId: McsRouteKey.Medium },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getPath(McsRouteKey.MediumOverview),
+        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.MediumOverview),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.MediumOverview),
-        component: MediumOverviewComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.MediumOverview),
+        component: MediumOverviewComponent,
+        data: { routeId: McsRouteKey.MediumOverview }
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.MediumServers),
-        component: MediumServersComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.MediumServers),
+        component: MediumServersComponent,
+        data: { routeId: McsRouteKey.MediumServers }
       }
     ]
   }

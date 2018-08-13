@@ -149,7 +149,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Navigate to ticket listing
    */
   public gotoTickets(): void {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Tickets)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Tickets)]);
   }
 
   /**

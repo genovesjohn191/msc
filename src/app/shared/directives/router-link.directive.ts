@@ -59,7 +59,7 @@ export class RouterLinkDirective implements OnInit {
     this._routerLinkKey.forEach((link) => {
       stringUrls.push(
         (typeof link === 'string') ?
-          link : CoreRoutes.getPath(link)
+          link : CoreRoutes.getRoutePath(link)
       );
     });
     return this._router.createUrlTree(stringUrls).toString();

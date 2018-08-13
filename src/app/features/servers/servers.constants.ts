@@ -66,62 +66,73 @@ export const serversRoutesComponents: any[] = [
  */
 export const serversRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.Servers),
-    component: ServersComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.Servers),
+    component: ServersComponent,
+    data: { routeId: McsRouteKey.Servers }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.ServerCreate),
+    path: CoreRoutes.getRoutePath(McsRouteKey.ServerCreate),
     component: ServerCreateComponent,
     canActivate: [ServerCreateGuard],
-    canDeactivate: [McsNavigateAwayGuard]
+    canDeactivate: [McsNavigateAwayGuard],
+    data: { routeId: McsRouteKey.ServerCreate }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.ServerCreateProvisioning),
-    component: ServerProvisioningComponent
+    path: CoreRoutes.getRoutePath(McsRouteKey.ServerCreateProvisioning),
+    component: ServerProvisioningComponent,
+    data: { routeId: McsRouteKey.ServerCreateProvisioning }
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.ServerDetail),
+    path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetail),
     component: ServerComponent,
+    data: { routeId: McsRouteKey.ServerDetail },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getPath(McsRouteKey.ServerDetailManagement),
+        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailManagement),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.ServerDetailManagement),
-        component: ServerManagementComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailManagement),
+        component: ServerManagementComponent,
+        data: { routeId: McsRouteKey.ServerDetailManagement }
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.ServerDetailStorage),
-        component: ServerStorageComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailStorage),
+        component: ServerStorageComponent,
+        data: { routeId: McsRouteKey.ServerDetailStorage }
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.ServerDetailNics),
-        component: ServerNicsComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailNics),
+        component: ServerNicsComponent,
+        data: { routeId: McsRouteKey.ServerDetailNics }
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.ServerDetailBackups),
-        component: ServerBackupsComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailBackups),
+        component: ServerBackupsComponent,
+        data: { routeId: McsRouteKey.ServerDetailBackups }
       }
     ]
   },
   {
-    path: CoreRoutes.getPath(McsRouteKey.VdcDetail),
+    path: CoreRoutes.getRoutePath(McsRouteKey.VdcDetail),
     component: VdcComponent,
+    data: { routeId: McsRouteKey.VdcDetail },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getPath(McsRouteKey.VdcDetailOverview),
+        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.VdcDetailOverview),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.VdcDetailOverview),
-        component: VdcOverviewComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.VdcDetailOverview),
+        component: VdcOverviewComponent,
+        data: { routeId: McsRouteKey.VdcDetailOverview }
       },
       {
-        path: CoreRoutes.getPath(McsRouteKey.VdcDetailStorage),
-        component: VdcStorageComponent
+        path: CoreRoutes.getRoutePath(McsRouteKey.VdcDetailStorage),
+        component: VdcStorageComponent,
+        data: { routeId: McsRouteKey.VdcDetailStorage }
       }
     ]
   }

@@ -1,41 +1,36 @@
-import { isNullOrEmpty, containsString } from '../utilities';
+import { isNullOrEmpty } from '../utilities';
 import { McsRouteKey } from './enumerations/mcs-route-key.enum';
 import { McsRouteInfo } from './models/mcs-route-info';
 import { McsRouteCategory } from './enumerations/mcs-route-category.enum';
 
 export class CoreRoutes {
   /**
-   * Returns the route path of the given router key
-   * @param keyPath Router key from where the path will be obtained
-   *
-   * `@Note`: This will automatically removed the :id url
+   * Gets the route information based on the key provided
+   * @param keyPath Router key from where the router information will be extracted
    */
-  public static getPath(keyPath: McsRouteKey): string {
+  public static getRouteInfoByKey(keyPath: McsRouteKey): McsRouteInfo {
     this._createRoutePathTable();
     let pathNotExist = !this._routePathTable.has(keyPath);
-    if (pathNotExist) { throw new Error(`Key path was not registered: ${McsRouteKey[keyPath]}`); }
-
-    return this._routePathTable.get(keyPath).routePath;
+    if (pathNotExist) {
+      throw new Error(`Key path was not registered: ${McsRouteKey[keyPath]}`);
+    }
+    return this._routePathTable.get(keyPath);
   }
 
   /**
-   * Returns the route information based on the url given
-   * @param fullUrl Url to be served as the basis of the route
+   * Returns the route path of the given router key
+   * @param keyPath Router key from where the path will be obtained
    */
-  public static getRouteInfoByUrl(fullUrl: string): McsRouteInfo {
-    this._createRoutePathTable();
-    if (isNullOrEmpty(fullUrl)) { return undefined; }
-    let routeInfoFound: McsRouteInfo;
+  public static getRoutePath(keyPath: McsRouteKey): string {
+    return this.getRouteInfoByKey(keyPath).routePath;
+  }
 
-    this._routePathTable.forEach((_route) => {
-      if (!isNullOrEmpty(routeInfoFound)) { return; }
-      let routePath = _route.routePath.slice().replace('/:id', '');
-
-      let routePathMatched = containsString(fullUrl, routePath) &&
-        containsString(fullUrl, _route.referenceRoutePath);
-      if (routePathMatched) { routeInfoFound = _route; }
-    });
-    return routeInfoFound;
+  /**
+   * Returns the navigation path of the route key
+   * @param keyPath Router key from where the path will be obtained
+   */
+  public static getNavigationPath(keyPath: McsRouteKey): string {
+    return this.getRouteInfoByKey(keyPath).navigationPath;
   }
 
   private static _routePathTable: Map<McsRouteKey, McsRouteInfo>;
@@ -58,7 +53,7 @@ export class CoreRoutes {
         +McsRouteCategory[jsonRouteInfo.enumCategory];
       routeInfo.enumKey = jsonRouteInfo.enumKey &&
         +McsRouteKey[jsonRouteInfo.enumKey];
-      routeInfo.referenceRoutePath = jsonRouteInfo.referenceRoutePath;
+      routeInfo.navigationPath = jsonRouteInfo.navigationPath;
       routeInfo.routePath = jsonRouteInfo.routePath;
       routeInfo.documentTitle = jsonRouteInfo.documentTitle;
       this._routePathTable.set(routeInfo.enumKey, routeInfo);

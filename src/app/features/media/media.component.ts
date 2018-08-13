@@ -64,7 +64,7 @@ export class MediaComponent
    * This will navigate to new media page
    */
   public onClickNewMediaButton() {
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.MediaCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.MediaCreate)]);
   }
 
   /**
@@ -73,7 +73,7 @@ export class MediaComponent
    */
   public navigateToMedia(media: Media): void {
     if (isNullOrEmpty(media)) { return; }
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Media), media.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Medium), media.id]);
   }
 
   /**

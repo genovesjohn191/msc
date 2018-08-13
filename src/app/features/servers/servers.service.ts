@@ -902,16 +902,16 @@ export class ServersService {
 
       case ServerCommand.Scale:
         this._router.navigate([
-          CoreRoutes.getPath(McsRouteKey.Servers),
+          CoreRoutes.getNavigationPath(McsRouteKey.Servers),
           data.server.id,
-          CoreRoutes.getPath(McsRouteKey.ServerDetailManagement)
+          CoreRoutes.getNavigationPath(McsRouteKey.ServerDetailManagement)
         ], { queryParams: { scale: true } }
         );
         break;
 
       case ServerCommand.Clone:
         this._router.navigate(
-          [CoreRoutes.getPath(McsRouteKey.ServerCreate)],
+          [CoreRoutes.getNavigationPath(McsRouteKey.ServerCreate)],
           { queryParams: { clone: data.server.id } }
         );
         break;
@@ -950,7 +950,7 @@ export class ServersService {
               return throwError(error);
             })
           ).subscribe();
-        this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers)]);
+        this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
         break;
 
       case ServerCommand.Rename:

@@ -136,7 +136,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private _navigateToProduct(product: Product): void {
     if (isNullOrEmpty(product)) { return; }
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Products), product.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), product.id]);
   }
 
   /**

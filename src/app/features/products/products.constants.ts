@@ -35,8 +35,9 @@ export const productsRoutesComponents: any[] = [
  */
 export const productsRoutes: Routes = [
   {
-    path: CoreRoutes.getPath(McsRouteKey.ProductDetail),
+    path: CoreRoutes.getRoutePath(McsRouteKey.ProductDetail),
     component: ProductsComponent,
+    data: { routeId: McsRouteKey.ProductDetail },
     children: [
       { path: '', component: ProductComponent }
     ]

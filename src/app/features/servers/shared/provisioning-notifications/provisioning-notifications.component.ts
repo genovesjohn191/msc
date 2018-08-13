@@ -191,8 +191,8 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   public onViewServerPage(tasks: McsApiTask[]): void {
     let serverId = this._getCreatedServerId(tasks);
     !isNullOrEmpty(serverId) ?
-      this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers), serverId]) :
-      this._router.navigate([CoreRoutes.getPath(McsRouteKey.Servers)]);
+      this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail), serverId]) :
+      this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
   }
 
   /**

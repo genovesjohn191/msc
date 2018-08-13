@@ -78,7 +78,7 @@ export class OrdersComponent
    */
   public navigateToOrder(order: Order): void {
     if (isNullOrEmpty(order)) { return; }
-    this._router.navigate([CoreRoutes.getPath(McsRouteKey.Orders), order.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.OrderDetail), order.id]);
   }
 
   /**
