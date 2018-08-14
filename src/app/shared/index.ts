@@ -6,6 +6,7 @@ export * from './pipes';
 export * from './table';
 export * from './directives';
 export * from './wizard';
+export * from './dialog';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

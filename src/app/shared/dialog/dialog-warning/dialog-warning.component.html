@@ -1,0 +1,20 @@
+<mcs-dialog>
+  <mcs-dialog-header>
+    <h3 [innerHTML]="dialogTitle"></h3>
+  </mcs-dialog-header>
+
+  <mcs-dialog-content>
+    <div class="labelled-icon">
+      <mcs-icon [key]="warningIconKey"></mcs-icon>
+      <div class="block-items-medium">
+        <span [innerHTML]="dialogMessage"></span>
+      </div>
+    </div>
+  </mcs-dialog-content>
+
+  <mcs-dialog-actions>
+    <a id="ctaCancelDialog" (click)="closeDialog()">Cancel</a>
+    <button mcsButton id="ctaConfirmDialog" arrow="right"
+      size="small" (click)="confirmDialog()">Confirm</button>
+  </mcs-dialog-actions>
+</mcs-dialog>

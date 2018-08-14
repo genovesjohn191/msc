@@ -1,0 +1,30 @@
+<!-- Manage Server header -->
+<div><ng-content select="[mcsManageServerHeader]"></ng-content></div>
+
+<!-- Manage Server selection list -->
+<!-- TODO: It should be a tag to apply multiple selection of servers -->
+<mcs-data-status [dataStatusFactory]="dataStatusFactory">
+  <mcs-data-status-success mcsDataSuccess>
+    <mcs-form-field>
+      <mcs-select [(ngModel)]="selectedServer" placeholder="Select server">
+        <mcs-select-group header="Servers">
+          <mcs-select-item *ngFor="let server of servers" [value]="server">
+            {{ server.name }}
+          </mcs-select-item>
+        </mcs-select-group>
+      </mcs-select>
+    </mcs-form-field>
+  </mcs-data-status-success>
+
+  <mcs-data-status-in-progress mcsDataInProgress>
+    <span>{{ textContent.loadingContent }}</span>
+  </mcs-data-status-in-progress>
+
+  <mcs-data-status-empty mcsDataEmpty>
+    <span>{{ textContent.noServers }}</span>
+  </mcs-data-status-empty>
+
+  <mcs-data-status-error mcsDataError>
+    <span>{{ textContent.errorGettingServers }}</span>
+  </mcs-data-status-error>
+</mcs-data-status>

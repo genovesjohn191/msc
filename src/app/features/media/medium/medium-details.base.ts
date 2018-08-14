@@ -2,10 +2,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   unsubscribeSubject,
-  isNullOrEmpty
+  isNullOrEmpty,
+  getSafeProperty
 } from '../../../utilities';
 import { Media } from '../models';
 import { MediumService } from './medium.service';
+import { McsApiJob } from '../../../core';
 
 export abstract class MediumDetailsBase {
   public selectedMedium: Media;
@@ -27,6 +29,27 @@ export abstract class MediumDetailsBase {
    */
   protected destroyBase(): void {
     unsubscribeSubject(this._baseDestroySubject);
+  }
+
+  /**
+   * Returns true when the active job is based on currently selected media
+   * @param mediaJob Job to be checked for the active media
+   */
+  protected isMediaActive(mediaJob: McsApiJob): boolean {
+    if (isNullOrEmpty(mediaJob) || isNullOrEmpty(this.selectedMedium)) { return false; }
+    let jobMediaId = getSafeProperty(mediaJob, (obj) => obj.clientReferenceObject.mediaId);
+    let selectedMediaId = getSafeProperty(this.selectedMedium, (obj) => obj.id);
+    let isActive = jobMediaId === selectedMediaId;
+    return isActive;
+  }
+
+  /**
+   * Set selected medium state (true: spinner, false: normal)
+   * @param state State to be set in the processing flag of media
+   */
+  protected setSelectedMediumState(state: boolean): void {
+    if (isNullOrEmpty(this.selectedMedium)) { return; }
+    this.selectedMedium.isProcessing = state;
   }
 
   protected abstract mediumSelectionChange(): void;

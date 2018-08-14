@@ -13,9 +13,15 @@ import {
   McsApiService,
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsLoggerService
+  McsLoggerService,
+  McsApiJobRequestBase,
+  McsApiJob
 } from '../../core/';
 import { isNullOrEmpty } from '../../utilities';
+import {
+  ServersService,
+  ServerAttachMedia
+} from '../servers';
 
 /**
  * Media Service Class
@@ -25,7 +31,8 @@ export class MediaService {
 
   constructor(
     private _mcsApiService: McsApiService,
-    private _loggerService: McsLoggerService
+    private _loggerService: McsLoggerService,
+    private _serversService: ServersService
   ) { }
 
   /**
@@ -121,5 +128,35 @@ export class MediaService {
           return apiResponse;
         })
       );
+  }
+
+  /**
+   * Detaches the server to the existing media
+   * *Note: This will send a job (notification)
+   *
+   * @param serverId Server Identification to be detached from the media
+   * @param mediaId Media Identification where the server will be detached
+   * @param referenceObject Reference object to be returned from the job
+   */
+  public detachServerMedia(
+    serverId: any,
+    mediaId: any,
+    referenceObject?: McsApiJobRequestBase
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    return this._serversService.detachServerMedia(serverId, mediaId, referenceObject);
+  }
+
+  /**
+   * Attaches the server to the existing media
+   * *Note: This will send a job (notification)
+   *
+   * @param serverId Server Identification
+   * @param mediaData Server media data
+   */
+  public attachServerMedia(
+    serverId: any,
+    mediaDetails: ServerAttachMedia
+  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    return this._serversService.attachServerMedia(serverId, mediaDetails);
   }
 }
