@@ -13,7 +13,10 @@ import {
   MediumServersComponent
 } from './medium';
 /** Shared */
-import { MediaCommandComponent } from './shared';
+import {
+  MediaCommandComponent,
+  MediaManageServersComponent
+} from './shared';
 
 @NgModule({
   entryComponents: [
@@ -24,7 +27,8 @@ import { MediaCommandComponent } from './shared';
     MediumComponent,
     MediumOverviewComponent,
     MediumServersComponent,
-    MediaCommandComponent
+    MediaCommandComponent,
+    MediaManageServersComponent
   ],
   imports: [
     SharedModule

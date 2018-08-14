@@ -7,13 +7,16 @@ import { map } from 'rxjs/operators';
 import {
   McsRepositoryBase,
   McsApiSuccessResponse,
-  McsNotificationEventsService
+  McsNotificationEventsService,
+  McsApiJob,
+  McsDataStatus
 } from '../../../core';
 import { MediaService } from '../media.service';
 import {
   Media,
   MediaServer
 } from '../models';
+import { isNullOrEmpty } from '../../../utilities';
 
 @Injectable()
 export class MediaRepository extends McsRepositoryBase<Media> {
@@ -26,6 +29,7 @@ export class MediaRepository extends McsRepositoryBase<Media> {
     private _notificationEvents: McsNotificationEventsService
   ) {
     super();
+    this._registerJobEvents();
   }
 
   /**
@@ -78,6 +82,49 @@ export class MediaRepository extends McsRepositoryBase<Media> {
    * we will get notified by the jobs when data is obtained
    */
   protected afterDataObtained(): void {
-    this._notificationEvents.notifyNotificationsSubscribers();
+    // Check if this is necessary
+  }
+
+  /**
+   * Register jobs/notifications events
+   */
+  private _registerJobEvents(): void {
+    this._notificationEvents.detachServerMediaEvent
+      .subscribe(this._onSetServerMediaStatus.bind(this));
+
+    this._notificationEvents.attachServerMediaEvent
+      .subscribe(this._onSetServerMediaStatus.bind(this));
+  }
+
+  /**
+   * Event that emits when detaching a server to a media
+   * @param job Emitted job content
+   */
+  private _onSetServerMediaStatus(job: McsApiJob): void {
+    let activeMedia = this._getMediaByJob(job);
+    if (isNullOrEmpty(activeMedia)) { return; }
+    this._setMediaProcessDetails(activeMedia, job);
+  }
+
+  /**
+   * Get the media based on job client reference object
+   * @param job Emitted job content
+   */
+  private _getMediaByJob(job: McsApiJob): Media {
+    if (isNullOrEmpty(job)) { return undefined; }
+    return this.dataRecords.find((serverItem) => {
+      return !isNullOrEmpty(job) && !isNullOrEmpty(job.clientReferenceObject)
+        && serverItem.id === job.clientReferenceObject.mediaId;
+    });
+  }
+
+  /**
+   * Set the server process details to display in the view
+   * @param job Emitted job content
+   */
+  private _setMediaProcessDetails(activeMedia: Media, job: McsApiJob): void {
+    if (isNullOrEmpty(job)) { return; }
+    activeMedia.isProcessing = job.dataStatus === McsDataStatus.InProgress;
+    activeMedia.processingText = job.summaryInformation;
   }
 }

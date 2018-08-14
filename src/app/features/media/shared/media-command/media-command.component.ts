@@ -28,6 +28,7 @@ let nextUniqueId = 0;
     '[attr.id]': 'id'
   }
 })
+
 export class MediaCommandComponent implements OnInit {
   @Input()
   public media: Media;

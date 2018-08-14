@@ -710,10 +710,24 @@
         "title": "Attached Servers",
         "noMediaServers": "No attached servers to display.",
         "errorMediaServers": "Sorry, something’s not right. We weren’t able to retrieve the list of attached servers.",
+        "attachServersHeader": "Attach to Media",
+        "attachAction": "Attach",
+        "detachAction": "Detach",
         "columnHeaders": {
           "name": "Name",
           "action": ""
+        },
+        "detachDialog": {
+          "title": "Detach Server",
+          "message": "Are you sure you want to detach <b>{{server_name}}</b>?"
         }
+      }
+    },
+    "shared": {
+      "manageServer": {
+        "loadingContent": "Loading servers.",
+        "noServers": "No servers to attach.",
+        "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach."
       }
     }
   },
