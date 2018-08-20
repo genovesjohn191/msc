@@ -19,8 +19,12 @@
       mcsEventTracker="cancel"
       mcsEventCategory="server"
       mcsEventLabel="delete-snapshot-dialog">{{ textContent.cancel }}</a>
-    <button mcsButton id="ctaDeleteSnapshot" arrow="right"
-      size="small" (click)="deleteSnapshot()"
+    <button mcsButton
+      id="ctaDeleteSnapshot"
+      arrow="right"
+      color="danger"
+      size="small"
+      (click)="deleteSnapshot()"
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="delete-snapshot-dialog">

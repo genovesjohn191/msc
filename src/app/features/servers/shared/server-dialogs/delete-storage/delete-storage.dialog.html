@@ -19,8 +19,12 @@
       mcsEventTracker="cancel"
       mcsEventCategory="server"
       mcsEventLabel="delete-storage-dialog">{{ textContent.cancel }}</a>
-    <button mcsButton id="ctaDeleteStorage" arrow="right"
-      size="small" (click)="deleteStorage()"
+    <button mcsButton
+      id="ctaDeleteStorage"
+      arrow="right"
+      color="danger"
+      size="small"
+      (click)="deleteStorage()"
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="delete-storage-dialog">
