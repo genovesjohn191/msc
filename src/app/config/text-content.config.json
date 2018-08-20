@@ -718,7 +718,7 @@
           "action": ""
         },
         "detachDialog": {
-          "title": "Detach Server",
+          "title": "Detach From Server",
           "message": "Are you sure you want to detach <b>{{server_name}}</b>?"
         }
       }
