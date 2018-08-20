@@ -19,8 +19,11 @@
       mcsEventTracker="cancel"
       mcsEventCategory="server"
       mcsEventLabel="delete-server-dialog">{{ textContent.cancel }}</a>
-    <button mcsButton id="ctaDeleteServer" arrow="right"
-      size="small" (click)="deleteServer()"
+    <button mcsButton id="ctaDeleteServer"
+      arrow="right"
+      size="small"
+      color="danger"
+      (click)="deleteServer()"
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="delete-server-dialog">

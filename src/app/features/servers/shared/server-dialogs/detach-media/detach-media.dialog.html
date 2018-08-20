@@ -14,8 +14,12 @@
     mcsEventTracker="cancel"
     mcsEventCategory="server"
     mcsEventLabel="detach-media-dialog">{{ textContent.cancel }}</a>
-    <button mcsButton id="ctaDetachMedia" arrow="right"
-      size="small" (click)="detachMedia()"
+    <button mcsButton
+      id="ctaDetachMedia"
+      arrow="right"
+      color="danger"
+      size="small"
+      (click)="detachMedia()"
       mcsEventTracker="confirm"
       mcsEventCategory="server"
       mcsEventLabel="detach-media-dialog">
