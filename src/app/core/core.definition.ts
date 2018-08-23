@@ -25,6 +25,7 @@ export class CoreDefinition {
 
   /** AppState Properties */
   public static APPSTATE_AUTH_IDENTITY = 'AuthIdentity';
+  public static APPSTATE_RETURN_URL_KEY = 'Return-Url';
 
   /** Cookie Names */
   public static COOKIE_AUTH_TOKEN = 'JWTBearer';
@@ -32,6 +33,7 @@ export class CoreDefinition {
   public static COOKIE_ACTIVE_ACCOUNT = 'MCSACC';
   public static COOKIE_SESSION_TIMER = 'mcsSessionTimer';
   public static COOKIE_SESSION_ID = 'mcsSessionId';
+  public static COOKIE_USER_STATE_ID = 'mcsStateId';
 
   /** Query Parameters */
   public static QUERY_PARAM_BEARER = 'bearer';

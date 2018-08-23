@@ -33,6 +33,7 @@ export class McsSessionHandlerService implements McsInitializer {
   private _sessionIsIdle: boolean = false;
 
   // Events subject
+  private _onUserChanged = new Subject<boolean>();
   private _onSessionIdle = new Subject<boolean>();
   private _onSessionTimeOut = new Subject<boolean>();
   private _onSessionActivated = new Subject<boolean>();
@@ -73,6 +74,12 @@ export class McsSessionHandlerService implements McsInitializer {
     return (this.idleTimeInSeconds < CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS);
   }
 
+  public get userChanged(): boolean {
+    let userId = this._authIdentity.user.hashedId;
+    let stateId = this._cookieService.getItem(CoreDefinition.COOKIE_USER_STATE_ID);
+    return userId !== stateId;
+  }
+
   constructor(
     private _cookieService: McsCookieService,
     private _authIdentity: McsAuthenticationIdentity,
@@ -83,7 +90,7 @@ export class McsSessionHandlerService implements McsInitializer {
   public initialize(): void {
     this._registerActivityEvents();
     this._initializeSessionStatusObserver();
-    this._setupEventHandlers();
+    this._registerEventHandlers();
     this._onSessionActivated.next(true);
   }
 
@@ -101,6 +108,15 @@ export class McsSessionHandlerService implements McsInitializer {
     this._onSessionIdle.next(false);
     this._onSessionTimeOut.next(false);
     this._onSessionActivated.next(true);
+    this._onUserChanged.next(this.userChanged);
+  }
+
+  /**
+   * Triggers when user changed
+   */
+  public onUserChanged(): Observable<boolean> {
+    return this._onUserChanged
+      .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
   /**
@@ -174,7 +190,13 @@ export class McsSessionHandlerService implements McsInitializer {
       });
   }
 
-  private _setupEventHandlers() {
+  private _registerEventHandlers() {
+    this.onUserChanged()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => {
+        location.reload();
+      });
+
     this._authIdentity.userChanged
       .pipe(takeUntil(this._destroySubject))
       .subscribe((identity) => this._sessionUserIdentityUpdated(identity));
@@ -228,6 +250,9 @@ export class McsSessionHandlerService implements McsInitializer {
   }
 
   private _triggerEvents(): void {
+    // Trigger user changed event
+    this._onUserChanged.next(this.userChanged);
+
     // Trigger idle event
     this._onSessionIdle.next(this.sessionIsIdle);
 

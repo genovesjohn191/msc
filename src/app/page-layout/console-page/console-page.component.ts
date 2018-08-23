@@ -31,7 +31,9 @@ import {
   CoreDefinition,
   Key,
   McsApiConsole,
-  McsNotificationEventsService
+  McsNotificationEventsService,
+  McsSessionHandlerService,
+  McsApiJob
 } from '../../core';
 import {
   Server,
@@ -147,6 +149,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _consoleRepository: ConsolePageRepository,
     private _textContentProvider: McsTextContentProvider,
     private _notificationsEvents: McsNotificationEventsService,
+    private _sessionHandler: McsSessionHandlerService,
     private _serversRepository: ServersRepository,
     private _serversService: ServersService,
     private _activatedRoute: ActivatedRoute,
@@ -158,9 +161,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.consolePage;
-    this._listenToParamChanged();
-    this._listenToServerChanged();
-    this._listenToResetVmPasswordEvent();
+    this._registerEventHandlers();
   }
 
   public ngAfterViewInit() {
@@ -193,6 +194,46 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isNullOrEmpty(action)) { return; }
     this.stopping = action === ServerCommand.Stop;
     this._serversService.executeServerCommand({ server: this.server }, action);
+  }
+
+  private _registerEventHandlers() {
+    this._sessionHandler.onUserChanged()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._onUserChangedEventHandler());
+
+    this._activatedRoute.params
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((params) => this._paramChangedEventHandler(params));
+
+    this._serversRepository.dataRecordsChanged
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._serverChangedEventHandler());
+
+    clearArrayRecord(this._notificationsEvents.resetServerPasswordEvent.observers);
+    this._notificationsEvents.resetServerPasswordEvent
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe((response) => this._resetVmPasswordEventHandler(response));
+  }
+
+  private _onUserChangedEventHandler() {
+    this.closingTime = 0;
+    this._closeWindow();
+  }
+
+  private _paramChangedEventHandler(params: any) {
+    this._serverId = params['id'];
+    this._getServerById(this._serverId);
+    this._connectVmConsole(this._serverId);
+  }
+
+  private _serverChangedEventHandler() {
+    this._getServerById(this._serverId);
+  }
+
+  private _resetVmPasswordEventHandler(response: McsApiJob) {
+    let jobServerId = getSafeProperty(response, (obj) => obj.clientReferenceObject.serverId);
+    if (jobServerId !== this._serverId) { return; }
+    this._getServerById(this._serverId);
   }
 
   /**
@@ -368,45 +409,5 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     window.close();
-  }
-
-  /**
-   * Listen to parameter change event of the router
-   */
-  private _listenToParamChanged(): void {
-    this._activatedRoute.params
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((params) => {
-        this._serverId = params['id'];
-        this._getServerById(this._serverId);
-        this._connectVmConsole(this._serverId);
-      });
-  }
-
-  /**
-   * Listen to servers data change in the repository
-   */
-  private _listenToServerChanged(): void {
-    this._serversRepository.dataRecordsChanged
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => {
-        this._getServerById(this._serverId);
-      });
-  }
-
-  /**
-   * Listens to reset vm password event
-   */
-  private _listenToResetVmPasswordEvent(): void {
-    // We need to clear the subscribers of the reset password event
-    // in order to get rid of the associated dialog box
-    clearArrayRecord(this._notificationsEvents.resetServerPasswordEvent.observers);
-    this._notificationsEvents.resetServerPasswordEvent
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((response) => {
-        let jobServerId = getSafeProperty(response, (obj) => obj.clientReferenceObject.serverId);
-        if (jobServerId !== this._serverId) { return; }
-        this._getServerById(this._serverId);
-      });
   }
 }

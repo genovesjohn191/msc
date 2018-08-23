@@ -34,7 +34,8 @@ export class McsAuthenticationService {
     if (isNullOrEmpty(this._coreConfig.loginUrl)) {
       throw new Error(`Invalid login url of ${this._coreConfig.loginUrl}`);
     }
-    window.location.href = (this._coreConfig.loginUrl + this._returnUrl);
+
+    window.location.href = this._getLoginPath();
   }
 
   /**
@@ -101,5 +102,12 @@ export class McsAuthenticationService {
   private _setUserIdentity(identity: McsApiIdentity) {
     this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
     this._authenticationIdentity.applyIdentity();
+    this._cookieService.setItem(
+      CoreDefinition.COOKIE_USER_STATE_ID, this._authenticationIdentity.user.hashedId);
+  }
+
+  private _getLoginPath(): string {
+    this._returnUrl = '?returnurl=' + this._appState.get(CoreDefinition.APPSTATE_RETURN_URL_KEY);
+    return this._coreConfig.loginUrl + this._returnUrl;
   }
 }
