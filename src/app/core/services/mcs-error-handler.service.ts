@@ -78,7 +78,8 @@ export class McsErrorHandlerService implements McsInitializer {
             break;
 
           case McsHttpStatusCode.Unauthorized:
-            this._authService.logOut();
+            this._authService.logIn();
+
             break;
         }
       });
