@@ -4,7 +4,14 @@
 
   <div class="container-wrapper">
     <h4 class="container-header">{{ textContent.title }}</h4>
-    <p>{{ textContent.description }}</p>
+
+    <!-- Description -->
+    <ng-container *ngIf="hasEditableDisk;else noEditableDiskTemplate">
+      <p>{{ textContent.hasEditableDiskDescription }}</p>
+    </ng-container>
+    <ng-template #noEditableDiskTemplate>
+      <p>{{ textContent.noEditableDiskDescription }}</p>
+    </ng-template>
 
     <ng-container [ngSwitch]="diskMethodType">
       <div [@fadeIn] *ngSwitchCase="serverDiskMethodTypeEnum.AddDisk" class="block-items-large">
@@ -67,7 +74,7 @@
                   </a>
                 </span>
                 <span *mcsAccessControl="['VmEdit']" >
-                  <a *ngIf="canDeleteDisk"
+                  <a *ngIf="hasEditableDisk"
                     [disabled]="!server.executable"
                     (click)="deleteDisk(row)"
                     mcsEventTracker="delete-disk"

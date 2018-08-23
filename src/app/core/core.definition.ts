@@ -110,6 +110,8 @@ export class CoreDefinition {
   public static ASSETS_SVG_STOP = 'stop';
   public static ASSETS_SVG_SUSPEND = 'suspend';
   public static ASSETS_SVG_RESUME = 'resume';
+  public static ASSETS_SVG_EJECT_BLUE = 'eject-blue';
+  public static ASSETS_SVG_EJECT_BLACK = 'eject-black';
   public static ASSETS_SVG_LOGOUT_WHITE = 'logout-white';
   public static ASSETS_SVG_USER_WHITE = 'user-white';
   public static ASSETS_SVG_CIRCLE_INFO_BLACK = 'circle-info-black';

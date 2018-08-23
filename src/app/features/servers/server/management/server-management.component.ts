@@ -101,8 +101,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
-  public get removeIconKey(): string {
-    return CoreDefinition.ASSETS_FONT_TRASH;
+  public get ejectIconKey(): string {
+    return CoreDefinition.ASSETS_SVG_EJECT_BLUE;
   }
 
   public get routeKeyEnum(): any {
