@@ -34,7 +34,8 @@ import {
   McsDialogService,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  McsDataStatus
+  McsDataStatus,
+  McsAccessControlService
 } from '../../../../core';
 import {
   isNullOrEmpty,
@@ -157,7 +158,8 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     private _dialogService: McsDialogService,
-    private _notificationEvents: McsNotificationEventsService
+    private _notificationEvents: McsNotificationEventsService,
+    private _accessControlService: McsAccessControlService
   ) {
     super(
       _resourcesRepository,
@@ -215,6 +217,21 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public get canDeleteDisk(): boolean {
     return isNullOrEmpty(this.server.storageDevices) ? false :
       this.server.storageDevices.length > 1;
+  }
+
+  /**
+   * Returns true when server has readched more than 1 disk
+   */
+  public get hasMoreThanOneDisk(): boolean {
+    return getSafeProperty(this.server,
+      (obj) => obj.storageDevices.length, 0) > 1;
+  }
+
+  /**
+   * Returns true when the server contains editable disks
+   */
+  public get hasEditableDisk(): boolean {
+    return this._accessControlService.hasPermission(['VmEdit']);
   }
 
   /**

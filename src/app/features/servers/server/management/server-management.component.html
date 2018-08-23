@@ -222,7 +222,7 @@
                         [mcsTooltip]="jobSummaryInfo"></mcs-icon>
 
                       <mcs-icon *ngIf="!mediaIsDetaching(media)" cursor="pointer"
-                        [key]="removeIconKey" size="small"
+                        [key]="ejectIconKey" size="small"
                         (click)="showDetachMediaDialog(media)"
                         [mcsTooltip]="textContent.media.detach"
                         mcsEventTracker="detach-media-option"

@@ -73,6 +73,8 @@
     "stop": "stop.svg",
     "suspend": "suspend.svg",
     "resume": "resume.svg",
+    "eject-blue": "eject-blue.svg",
+    "eject-black": "eject-black.svg",
     "user-white": "user-white.svg",
     "logout-white": "logout-white.svg",
     "circle-info-black": "circle-info-black.svg",
