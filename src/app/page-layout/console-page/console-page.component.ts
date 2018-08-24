@@ -199,7 +199,11 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   private _registerEventHandlers() {
     this._sessionHandler.onUserChanged()
       .pipe(takeUntil(this._destroySubject))
-      .subscribe(() => this._onUserChangedEventHandler());
+      .subscribe(() => this._onSessionChangedEventHandler());
+
+    this._sessionHandler.onTargetCompanyChanged()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => this._onSessionChangedEventHandler());
 
     this._activatedRoute.params
       .pipe(takeUntil(this._destroySubject))
@@ -215,7 +219,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((response) => this._resetVmPasswordEventHandler(response));
   }
 
-  private _onUserChangedEventHandler() {
+  private _onSessionChangedEventHandler() {
     this.closingTime = 0;
     this._closeWindow();
   }

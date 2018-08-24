@@ -31,8 +31,10 @@ import { CoreDefinition } from '../core.definition';
 export class McsSessionHandlerService implements McsInitializer {
   private _sessionIdleCounter: number = 0;
   private _sessionIsIdle: boolean = false;
+  private _previousTargetCompanyId: string;
 
   // Events subject
+  private _onTargetCompanyChanged = new Subject<boolean>();
   private _onUserChanged = new Subject<boolean>();
   private _onSessionIdle = new Subject<boolean>();
   private _onSessionTimeOut = new Subject<boolean>();
@@ -80,6 +82,15 @@ export class McsSessionHandlerService implements McsInitializer {
     return userId !== stateId;
   }
 
+  public get targetCompanyChanged(): boolean {
+    let cookieTargetCompanyId: string =
+      this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+    let targetCompanyHasChanged = this._previousTargetCompanyId !== cookieTargetCompanyId;
+    this._previousTargetCompanyId = cookieTargetCompanyId;
+
+    return targetCompanyHasChanged;
+  }
+
   constructor(
     private _cookieService: McsCookieService,
     private _authIdentity: McsAuthenticationIdentity,
@@ -88,6 +99,10 @@ export class McsSessionHandlerService implements McsInitializer {
   ) { }
 
   public initialize(): void {
+    // Get current target company to be used for company switch detection
+    this._previousTargetCompanyId =
+      this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+
     this._registerActivityEvents();
     this._initializeSessionStatusObserver();
     this._registerEventHandlers();
@@ -109,6 +124,7 @@ export class McsSessionHandlerService implements McsInitializer {
     this._onSessionTimeOut.next(false);
     this._onSessionActivated.next(true);
     this._onUserChanged.next(this.userChanged);
+    this._onTargetCompanyChanged.next(this.targetCompanyChanged);
   }
 
   /**
@@ -116,6 +132,14 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public onUserChanged(): Observable<boolean> {
     return this._onUserChanged
+      .pipe(distinctUntilChanged(), filter((response) => response));
+  }
+
+  /**
+   * Triggers when target company changed
+   */
+  public onTargetCompanyChanged(): Observable<boolean> {
+    return this._onTargetCompanyChanged
       .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
@@ -194,6 +218,16 @@ export class McsSessionHandlerService implements McsInitializer {
     this.onUserChanged()
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => {
+        this._loggerService.traceStart(`Change User`);
+        this._loggerService.traceEnd();
+        location.reload();
+      });
+
+    this.onTargetCompanyChanged()
+      .pipe(takeUntil(this._destroySubject))
+      .subscribe(() => {
+        this._loggerService.traceStart(`Switched Company`);
+        this._loggerService.traceEnd();
         location.reload();
       });
 
@@ -252,6 +286,9 @@ export class McsSessionHandlerService implements McsInitializer {
   private _triggerEvents(): void {
     // Trigger user changed event
     this._onUserChanged.next(this.userChanged);
+
+    // Trigger target company changed event
+    this._onTargetCompanyChanged.next(this.targetCompanyChanged);
 
     // Trigger idle event
     this._onSessionIdle.next(this.sessionIsIdle);
