@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { CoreDefinition } from '../core.definition';
 import { CoreConfig } from '../core.config';
 import { McsCookieService } from '../services/mcs-cookie.service';
@@ -16,8 +15,6 @@ import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()
 export class McsAuthenticationService {
-
-  private _returnUrl: string; // Return url to be set privately
 
   constructor(
     private _appState: AppState,
@@ -34,7 +31,6 @@ export class McsAuthenticationService {
     if (isNullOrEmpty(this._coreConfig.loginUrl)) {
       throw new Error(`Invalid login url of ${this._coreConfig.loginUrl}`);
     }
-
     window.location.href = this._getLoginPath();
   }
 
@@ -99,6 +95,10 @@ export class McsAuthenticationService {
       );
   }
 
+  /**
+   * Sets the user identity to cookie based on the provided user information
+   * @param identity Currently login user information
+   */
   private _setUserIdentity(identity: McsApiIdentity) {
     this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
     this._authenticationIdentity.applyIdentity();
@@ -106,8 +106,11 @@ export class McsAuthenticationService {
       CoreDefinition.COOKIE_USER_STATE_ID, this._authenticationIdentity.user.hashedId);
   }
 
+  /**
+   * Get the login path based on the saved return url in the appstate
+   */
   private _getLoginPath(): string {
-    this._returnUrl = '?returnurl=' + this._appState.get(CoreDefinition.APPSTATE_RETURN_URL_KEY);
-    return this._coreConfig.loginUrl + this._returnUrl;
+    let _returnUrl = `?returnurl=${this._appState.get(CoreDefinition.APPSTATE_RETURN_URL_KEY)}`;
+    return `${this._coreConfig.loginUrl}${_returnUrl}`;
   }
 }

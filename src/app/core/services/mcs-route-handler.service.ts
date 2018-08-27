@@ -24,6 +24,8 @@ import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsRouteInfo } from '../models/mcs-route-info';
 import { CoreRoutes } from '../core.routes';
+import { AppState } from '../../app.service';
+import { CoreDefinition } from '../core.definition';
 
 @Injectable()
 export class McsRouteHandlerService implements McsInitializer {
@@ -32,9 +34,11 @@ export class McsRouteHandlerService implements McsInitializer {
 
   private _activeRoute: McsRouteInfo;
   private _destroySubject = new Subject<void>();
+  private _urlSubject = new Subject<void>();
 
   constructor(
     private _router: Router,
+    private _appState: AppState,
     private _activatedRoute: ActivatedRoute,
     private _titleService: Title,
     private _loggerService: McsLoggerService,
@@ -61,6 +65,7 @@ export class McsRouteHandlerService implements McsInitializer {
    */
   public destroy(): void {
     unsubscribeSubject(this._destroySubject);
+    unsubscribeSubject(this._urlSubject);
   }
 
   /**
@@ -71,6 +76,7 @@ export class McsRouteHandlerService implements McsInitializer {
     this._validateRoutePermissions(this._activeRoute);
     this._validateRouteFeatureFlag(this._activeRoute);
     this._updateDocumentTitle(this._activeRoute);
+    this._updateReturnUrl();
   }
 
   /**
@@ -137,6 +143,13 @@ export class McsRouteHandlerService implements McsInitializer {
     if (isNullOrEmpty(_activeRouteDetails)) { return; }
     this._loggerService.traceInfo(`Displaying title for ${_activeRouteDetails.routePath}`);
     this._titleService.setTitle(_activeRouteDetails.documentTitle);
+  }
+
+  /**
+   * Updates the return url saved in the app state
+   */
+  private _updateReturnUrl(): void {
+    this._appState.set(CoreDefinition.APPSTATE_RETURN_URL_KEY, this._router.url);
   }
 
   /**

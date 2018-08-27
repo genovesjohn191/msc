@@ -13,6 +13,7 @@ import { CoreRoutes } from '../../core.routes';
 import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 import { McsEntityBase } from '../../base/mcs-entity.base';
 import { McsRouteKey } from '../../enumerations/mcs-route-key.enum';
+import { isNullOrEmpty } from '../../../utilities';
 
 export class McsApiJob extends McsEntityBase {
   public initiatorId: string;
@@ -138,5 +139,12 @@ export class McsApiJob extends McsEntityBase {
         break;
     }
     return jobLink.trim();
+  }
+
+  /**
+   * Returns true when the job has link url
+   */
+  public get hasLink(): boolean {
+    return !isNullOrEmpty(this.link);
   }
 }
