@@ -13,8 +13,11 @@ export class McsAuthenticationGuard implements CanActivate {
 
   public canActivate(
     _activatedRoute: ActivatedRouteSnapshot,
-    _routerState: RouterStateSnapshot,
+    _routerState: RouterStateSnapshot
   ) {
+    // We need to update the return url here in order to cater the scenario
+    // where the user manually entered the url while no user logged-in
+    this._authenticationService.updateLoginReturnUrl(_routerState.url);
     return this._authenticationService.IsAuthenticated();
   }
 }

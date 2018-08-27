@@ -46,6 +46,14 @@ export class McsAuthenticationService {
   }
 
   /**
+   * Updates the login return url to be called by SSO
+   * @param url Url to be set in returnl url
+   */
+  public updateLoginReturnUrl(url: string): void {
+    this._appState.set(CoreDefinition.APPSTATE_RETURN_URL_KEY, url);
+  }
+
+  /**
    * This will get the tokens from the following:
    * 1. Router Parameters for the bearer (if provided)
    * 2. Token from the Cookie
