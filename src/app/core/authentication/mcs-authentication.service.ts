@@ -110,7 +110,7 @@ export class McsAuthenticationService {
    * Get the login path based on the saved return url in the appstate
    */
   private _getLoginPath(): string {
-    let _returnUrl = `?returnurl=${this._appState.get(CoreDefinition.APPSTATE_RETURN_URL_KEY)}`;
+    let _returnUrl = this._appState.get(CoreDefinition.APPSTATE_RETURN_URL_KEY);
     return `${this._coreConfig.loginUrl}${_returnUrl}`;
   }
 }
