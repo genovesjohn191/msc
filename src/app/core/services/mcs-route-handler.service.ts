@@ -19,13 +19,12 @@ import {
 } from '../../utilities';
 import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
+import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsLoggerService } from '../services/mcs-logger.service';
 import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
 import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
 import { McsRouteInfo } from '../models/mcs-route-info';
 import { CoreRoutes } from '../core.routes';
-import { AppState } from '../../app.service';
-import { CoreDefinition } from '../core.definition';
 
 @Injectable()
 export class McsRouteHandlerService implements McsInitializer {
@@ -38,14 +37,13 @@ export class McsRouteHandlerService implements McsInitializer {
 
   constructor(
     private _router: Router,
-    private _appState: AppState,
     private _activatedRoute: ActivatedRoute,
     private _titleService: Title,
     private _loggerService: McsLoggerService,
     private _accessControlService: McsAccessControlService,
+    private _authenticationService: McsAuthenticationService,
     private _errorHandlerService: McsErrorHandlerService
-  ) {
-  }
+  ) { }
 
   /**
    * Initializes all the router handler/guard events
@@ -76,7 +74,7 @@ export class McsRouteHandlerService implements McsInitializer {
     this._validateRoutePermissions(this._activeRoute);
     this._validateRouteFeatureFlag(this._activeRoute);
     this._updateDocumentTitle(this._activeRoute);
-    this._updateReturnUrl();
+    this._updateLoginReturnUrl();
   }
 
   /**
@@ -148,8 +146,8 @@ export class McsRouteHandlerService implements McsInitializer {
   /**
    * Updates the return url saved in the app state
    */
-  private _updateReturnUrl(): void {
-    this._appState.set(CoreDefinition.APPSTATE_RETURN_URL_KEY, this._router.url);
+  private _updateLoginReturnUrl(): void {
+    this._authenticationService.updateLoginReturnUrl(this._router.url);
   }
 
   /**

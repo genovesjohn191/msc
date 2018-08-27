@@ -142,7 +142,7 @@ export class AppModule {
     private _sessionHandlerService: McsSessionHandlerService
   ) {
     this._initializeRoutes();
-    this._initializeDependentServices();
+    this._initializeInDependentServices();
     this._listenToUserChanges();
     this._listenToSessionTimedOut();
   }
@@ -200,9 +200,9 @@ export class AppModule {
   }
 
   /**
-   * Initializes all dependent services, this doesn't require authentication to work on
+   * Initializes all independent services, this doesn't require authentication to work on
    */
-  private _initializeDependentServices(): void {
+  private _initializeInDependentServices(): void {
     this._errorHandlerService.initialize();
   }
 
