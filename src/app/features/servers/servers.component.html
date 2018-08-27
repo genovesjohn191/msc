@@ -246,14 +246,14 @@
           </mcs-data-cell>
         </ng-container>
 
-        <!-- VDC Column -->
-        <ng-container mcsColumnDef="vdc" [mcsColumnDefHidden]="isColumnHidden('vdc')">
+        <!-- Resource Column -->
+        <ng-container mcsColumnDef="resource" [mcsColumnDefHidden]="isColumnHidden('resource')">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
-            {{ columnSettings.vdc.text }}
+            {{ columnSettings.resource.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
             <a (click)="navigateToResource(row)"
-              mcsEventTracker="navigate-to-vdc"
+              mcsEventTracker="navigate-to-resource"
               mcsEventCategory="server"
               mcsEventLabel="server-listing-page">
               {{ row.platform?.resourceName }}

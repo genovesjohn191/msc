@@ -34,8 +34,8 @@
       "text": "Service ID",
       "value": true
     },
-    "vdc": {
-      "text": "VDC",
+    "resource": {
+      "text": "Resource",
       "value": true
     },
     "vApp": {
