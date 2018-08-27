@@ -1,7 +1,7 @@
 <div class="notification-panel-content-wrapper"
   animate [trigger]="animationTrigger"
   cursor="pointer"
-  [triggerCursorIf]="notification.link"
+  [triggerCursorIf]="notification.hasLink"
   (click)="onClickNotification()"
   mcsEventTracker="navigate-to-notification"
   mcsEventCategory="notification"

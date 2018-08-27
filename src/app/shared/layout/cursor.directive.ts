@@ -1,11 +1,12 @@
 import {
   Directive,
+  OnInit,
   Input,
   Renderer2,
-  ElementRef,
-  OnInit
+  ElementRef
 } from '@angular/core';
 import { coerceBoolean } from '../../utilities';
+import { isNullOrUndefined } from 'util';
 
 @Directive({
   selector: '[cursor]'
@@ -28,9 +29,12 @@ export class CursorDirective implements OnInit {
   @Input()
   public get triggerCursorIf(): boolean { return this._triggerCursorIf; }
   public set triggerCursorIf(value: boolean) {
-    if (value !== this._triggerCursorIf) { this._triggerCursorIf = coerceBoolean(value); }
+    if (value !== this._triggerCursorIf) {
+      this._triggerCursorIf = coerceBoolean(value);
+      this.triggerCursorIf ? this._setStyledCursor() : this._setDefaultCursor();
+    }
   }
-  private _triggerCursorIf: boolean = true;
+  private _triggerCursorIf: boolean;
 
   constructor(
     private _renderer: Renderer2,
@@ -39,8 +43,8 @@ export class CursorDirective implements OnInit {
     this.cursor = 'auto';
   }
 
-  public ngOnInit() {
-    this.triggerCursorIf ? this._setStyledCursor() : this._setDefaultCursor();
+  public ngOnInit(): void {
+    if (isNullOrUndefined(this._triggerCursorIf)) { this._setStyledCursor(); }
   }
 
   /**

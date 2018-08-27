@@ -107,7 +107,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           cursor="pointer"
-          [triggerCursorIf]="row.link"
+          [triggerCursorIf]="row.hasLink"
           (click)="tryNavigateTo(row.link)"
           mcsEventTracker="try-navigate-to-job-details"
           mcsEventCategory="notification"
