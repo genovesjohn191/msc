@@ -13,7 +13,7 @@
           <div class="inline-items-small">
             <ng-container *ngIf="serverIsInProgress(row)">
               <mcs-icon [key]="spinnerIconKey" size="small"
-                [mcsTooltip]="row.processingText"></mcs-icon>
+                [mcsTooltip]="selectedMedium.processingText"></mcs-icon>
             </ng-container>
             <span>{{ row.name }}</span>
           </div>
