@@ -102,7 +102,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   public get ejectIconKey(): string {
-    return CoreDefinition.ASSETS_SVG_EJECT_BLUE;
+    return CoreDefinition.ASSETS_SVG_EJECT_BLACK;
   }
 
   public get routeKeyEnum(): any {
