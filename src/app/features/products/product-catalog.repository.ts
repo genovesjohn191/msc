@@ -6,7 +6,8 @@ import {
 import {
   McsRepositoryBase,
   McsApiSuccessResponse,
-  McsAccessControlService
+  McsAccessControlService,
+  CoreDefinition
 } from '../../core';
 import { ProductCatalog } from './models';
 import { ProductsService } from './products.service';
@@ -25,7 +26,8 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
    * Returns true when feature flag is on for product catalog
    */
   public get productCatalogFeatureIsOn(): boolean {
-    return this._accessControlService.hasAccessToFeature('enableProductCatalog');
+    return this._accessControlService.hasAccessToFeature
+    (CoreDefinition.FEATURE_FLAG_ENABLE_PRODUCT_CATALOG);
   }
 
   /**

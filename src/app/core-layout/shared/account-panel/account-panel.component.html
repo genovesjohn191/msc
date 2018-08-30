@@ -20,7 +20,7 @@
       </a>
     </mcs-list-item>
     <mcs-list-item *mcsAccessControl="['OrderView']">
-      <ng-container *mcsAccessControl="[]; feature: 'enableOrdering'; else: macviewOrdersTemplate">
+      <ng-container *mcsAccessControl="[]; feature: 'EnableOrdering'; else: macviewOrdersTemplate">
         <a cursor="pointer" [mcsRouterLink]="routeKeyEnum.Orders"
           (click)="notifySelectionChange('orders')"
           mcsEventTracker="navigate-to-orders"

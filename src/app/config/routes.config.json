@@ -104,7 +104,7 @@
     "enumKey": "Media",
     "routePath": "compute/media",
     "navigationPath": "compute/media",
-    "requiredFeatureFlag": "enableMediaCatalog",
+    "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Catalog - Macquarie Cloud Services"
   },
   "medium": {
@@ -112,7 +112,7 @@
     "enumKey": "Medium",
     "routePath": "compute/media/:id",
     "navigationPath": "compute/media",
-    "requiredFeatureFlag": "enableMediaCatalog",
+    "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Details - Macquarie Cloud Services"
   },
   "mediumOverview": {
@@ -120,7 +120,7 @@
     "enumKey": "MediumOverview",
     "routePath": "overview",
     "navigationPath": "overview",
-    "requiredFeatureFlag": "enableMediaCatalog",
+    "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Management - Macquarie Cloud Services"
   },
   "mediumServers": {
@@ -128,7 +128,7 @@
     "enumKey": "MediumServers",
     "routePath": "servers",
     "navigationPath": "servers",
-    "requiredFeatureFlag": "enableMediaCatalog",
+    "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Servers - Macquarie Cloud Services"
   },
   "mediaCreate": {
@@ -136,7 +136,7 @@
     "enumKey": "MediaCreate",
     "routePath": "compute/media/create",
     "navigationPath": "compute/media/create",
-    "requiredFeatureFlag": "enableMediaCatalog",
+    "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Create Media - Macquarie Cloud Services"
   },
   "firewalls": {
@@ -202,21 +202,21 @@
     "enumKey": "ProductDetail",
     "routePath": "products/:id",
     "navigationPath": "products",
-    "requiredFeatureFlag": "enableProductCatalog",
+    "requiredFeatureFlag": "EnableProductCatalog",
     "documentTitle": "Product Details - Macquarie Cloud Services"
   },
   "orders": {
     "enumKey": "Orders",
     "routePath": "orders",
     "navigationPath": "orders",
-    "requiredFeatureFlag": "enableOrdering",
+    "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Orders - Macquarie Cloud Services"
   },
   "orderDetail": {
     "enumKey": "OrderDetail",
     "routePath": "orders/:id",
     "navigationPath": "orders",
-    "requiredFeatureFlag": "enableOrdering",
+    "requiredFeatureFlag": "EnableOrdering",
     "documentTitle": "Order Details - Macquarie Cloud Services"
   },
   "otherTools": {

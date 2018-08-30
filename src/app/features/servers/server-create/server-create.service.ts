@@ -7,7 +7,10 @@ import {
   ResourcesRepository,
   ResourceServiceType
 } from '../../resources';
-import { McsAccessControlService } from '../../../core';
+import {
+  McsAccessControlService,
+  CoreDefinition
+} from '../../../core';
 
 @Injectable()
 export class ServerCreateService {
@@ -25,7 +28,7 @@ export class ServerCreateService {
       .pipe(
         map((resources) => {
           let managedFeatureIsOn = this._accessControlService
-            .hasAccessToFeature('enableCreateManagedServer');
+            .hasAccessToFeature(CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
           return resources.filter((resource) => {
             return resource.serviceType === ResourceServiceType.SelfManaged ||
               (managedFeatureIsOn && resource.serviceType === ResourceServiceType.Managed);
