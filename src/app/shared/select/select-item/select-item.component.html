@@ -15,8 +15,7 @@
 </div>
 
 <!-- Sub-group content -->
-<ng-container *ngIf="subGroupOpen">
-  <div [@expansionVertical] class="select-item-subgroup-panel">
-    <ng-content select="[sub-group]"></ng-content>
-  </div>
-</ng-container>
+<div [@expansionVertical]="subGroupOpen ? 'expanded' : 'collapsed'"
+  class="select-item-subgroup-panel">
+  <ng-content select="[sub-group]"></ng-content>
+</div>

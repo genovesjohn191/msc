@@ -774,7 +774,7 @@
     },
     "createTicket": {
       "header": "Create New Ticket",
-      "description": "<h4>We all need help from time to time.</h4>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.\r\n\n Provide us with as much information as you can and we'll take a look.\r\n\n Existing tickets can be viewed and managed in MacquarieView.",
+      "description": "<h2>We all need help from time to time.</h2>\r\n Our qualified team of Hosting Management Centre professionals are on standby 24x7 to help you get to the bottom of your issue.\r\n\n Provide us with as much information as you can and we'll take a look.\r\n\n Existing tickets can be viewed and managed in MacquarieView.",
       "type": "Ticket Type",
       "services": "Services",
       "attachments": "Attachments",

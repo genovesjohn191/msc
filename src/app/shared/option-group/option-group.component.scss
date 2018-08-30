@@ -34,8 +34,11 @@ $option-group-selected-color: $selected-bg-color;
     }
   }
 
-  .option-group-wrapper,
-  .option-wrapper {
+  .option-group-wrapper {
     margin-left: $space-small;
+  }
+
+  .option-wrapper {
+    margin-left: $space-medium;
   }
 }

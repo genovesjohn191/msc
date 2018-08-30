@@ -9,7 +9,7 @@
         <div class="grid-row">
           <!-- VM Properties -->
           <div class="grid-column container-wrapper break-on-small">
-            <h4 class="container-header">{{ textContent.vmProperties.title }}</h4>
+            <h2 class="container-header">{{ textContent.vmProperties.title }}</h2>
             <mcs-list spacing="xsmall">
               <mcs-list-item class="form-field-inline">
                 <span>{{ textContent.vmProperties.status }}:</span>
@@ -69,7 +69,7 @@
 
           <!-- VM Console -->
           <div class="grid-column container-wrapper break-on-small hidden-small">
-            <h4 class="container-header">{{ textContent.vmConsole.title }}</h4>
+            <h2 class="container-header">{{ textContent.vmConsole.title }}</h2>
             <ng-container *ngIf="!server.consoleEnabled; else consoleTemplate">
               <div class="form-field-block">
                 <div>
@@ -105,7 +105,7 @@
         <div class="grid-row">
           <!-- VM Storage -->
           <div class="grid-column container-wrapper break-on-small">
-            <h4 class="container-header">
+            <h2 class="container-header">
               <div class="form-field-inline">
                 <span>{{ textContent.storage.title }}</span>
                 <ng-container *mcsAccessControl="['VmEdit']">
@@ -115,7 +115,7 @@
                   </a>
                 </ng-container>
               </div>
-            </h4>
+            </h2>
             <ng-container *ngIf="server.storageDevices | mcsIsNullOrEmpty; else storagesTemplate">
               <mcs-data-status-empty>
                 {{ textContent.storage.noContentMessage }}
@@ -135,7 +135,7 @@
 
           <!-- VM NICs -->
           <div class="grid-column container-wrapper break-on-small">
-            <h4 class="container-header">
+            <h2 class="container-header">
               <div class="form-field-inline">
                 <span>{{ textContent.nics.title }}</span>
                 <ng-container *mcsAccessControl="['VmNicEdit']">
@@ -145,7 +145,7 @@
                   </a>
                 </ng-container>
               </div>
-            </h4>
+            </h2>
             <ng-container *ngIf="server.nics | mcsIsNullOrEmpty; else nicsTemplate">
               <mcs-data-status-empty>
                 {{ textContent.nics.noContentMessage }}
@@ -197,7 +197,7 @@
         <div class="grid-row">
           <!-- VM Medias -->
           <div class="grid-column container-wrapper break-on-small">
-            <h4 class="container-header">
+            <h2 class="container-header">
               <div class="form-field-inline">
                 <span>{{ textContent.media.title }}</span>
                 <ng-container *mcsAccessControl="['VmEdit']">
@@ -210,7 +210,7 @@
                   </a>
                 </ng-container>
               </div>
-            </h4>
+            </h2>
 
             <mcs-data-status [dataStatusFactory]="mediaStatusFactory">
               <mcs-data-status-success mcsDataSuccess>
@@ -250,7 +250,7 @@
 
           <!-- VM Support Identifiers -->
           <div class="grid-column container-wrapper break-on-small">
-            <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
+            <h2 class="container-header">{{ textContent.supportIdentifiers.title }}</h2>
             <mcs-list spacing="xsmall">
               <mcs-list-item class="form-field-inline">
                 <span>{{ textContent.supportIdentifiers.vdc }}:</span>
@@ -274,7 +274,7 @@
       <!-- Manage Server Scale -->
       <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageScale"
         class="container-wrapper">
-        <h4 class="container-header">{{ textContent.manageScale.header }}</h4>
+        <h2 class="container-header">{{ textContent.manageScale.header }}</h2>
         <p>{{ textContent.manageScale.description }}</p>
         <div class="container-wrapper">
           <div class="action-box" [disabled]="!server.executable">
@@ -284,7 +284,7 @@
               (dataChange)="onScaleChanged($event)">
 
               <ng-container mcsManageScaleHeader>
-                <h4>Scaling {{ server.name }}</h4>
+                <h2>Scaling {{ server.name }}</h2>
               </ng-container>
             </mcs-server-manage-scale>
 
@@ -316,14 +316,14 @@
 
       <!-- Manage Server Media -->
       <div [@fadeIn] *ngSwitchCase="serverManagementViewEnum.ManageMedia" class="container-wrapper">
-        <h4 class="container-header">{{ textContent.media.manageHeader }}</h4>
+        <h2 class="container-header">{{ textContent.media.manageHeader }}</h2>
         <div class="container-wrapper">
           <div class="action-box" [disabled]="!server.executable">
             <mcs-server-manage-media [medias]="resourceMedias"
               [(selectedMedia)]="selectedMedia">
 
               <ng-container mcsManageMediaHeader>
-                <h4>{{ textContent.media.attachHeading }}</h4>
+                <h2>{{ textContent.media.attachHeading }}</h2>
               </ng-container>
             </mcs-server-manage-media>
 

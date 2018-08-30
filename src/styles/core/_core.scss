@@ -1,12 +1,24 @@
 @import "../shared/base";
 @import "fonts";
 @import "animations/mcs-animations";
+
 @import "layout/mcs-reset";
 @import "layout/mcs-space";
 @import "layout/mcs-color";
 @import "layout/mcs-alignment";
 @import "layout/mcs-box-shadow";
 @import "layout/mcs-layout";
+
+@import "elements/mcs-anchor";
+@import "elements/mcs-bold";
+@import "elements/mcs-button";
+@import "elements/mcs-form-field";
+@import "elements/mcs-heading";
+@import "elements/mcs-paragraph";
+@import "elements/mcs-small";
+@import "elements/mcs-strong";
+@import "elements/mcs-table";
+
 @import "classes/mcs-container";
 @import "classes/mcs-panel";
 @import "classes/mcs-contextual-help";
@@ -22,7 +34,6 @@
 @import "classes/mcs-grid";
 @import "classes/mcs-list";
 @import "classes/mcs-ripple";
-@import "classes/mcs-table";
 @import "classes/mcs-image";
 
 *,
@@ -40,194 +51,9 @@ html {
     overflow: hidden;
     font-family: $font-default;
     color: $color-black;
-    @include font-size($font-size-default, $line-height-default);
+    @include font-size($font-size-default);
     @include breakpoint(small) {
-      @include font-size($font-size-small, $line-height-small);
+      @include font-size($font-size-small);
     }
-
-    h1, h2, h3, h4 {
-      width: 100%;
-      font-family: $header-font;
-    }
-
-    h1 {
-      @include font-size($h1-default-font-size, $h1-default-line-height);
-      @include breakpoint(medium) {
-        @include font-size($h1-medium-font-size, $h1-medium-line-height);
-      }
-      @include breakpoint(small) {
-        @include font-size($h1-small-font-size, $h1-small-line-height);
-      }
-    }
-
-    h2 {
-      @include font-size($h2-default-font-size, $h2-default-line-height);
-      @include breakpoint(small) {
-        @include font-size($h2-small-font-size, $h2-small-line-height);
-      }
-    }
-
-    h3 {
-      @include font-size($h3-default-font-size, $h3-default-line-height);
-      @include breakpoint(small) {
-        @include font-size($h3-small-font-size, $h3-small-line-height);
-      }
-    }
-
-    h4 {
-      @include font-size($h4-default-font-size, $h4-default-line-height);
-      @include breakpoint(small) {
-        @include font-size($h4-small-font-size, $h4-small-line-height);
-      }
-    }
-
-    small {
-      font-family: $caption-default-font;
-      @include font-size($caption-default-font-size, $caption-default-line-height);
-      @include breakpoint(small) {
-        @include font-size($caption-small-font-size, $caption-small-line-height);
-      }
-      @include breakpoint(xsmall) {
-        @include font-size($caption-xsmall-font-size, $caption-xsmall-line-height);
-      }
-    }
-
-    strong, b {
-      font-family: $strong-font;
-      font-weight: $strong-font-weight;
-    }
-
-    a {
-      font-family: $link-font;
-      color: inherit;
-      text-decoration: underline;
-      @include font-size($link-default-font-size, $link-default-line-height);
-      @include breakpoint(small) {
-        @include font-size($font-size-small, $line-height-small);
-      }
-
-      &:not([href]) {
-        text-decoration: underline;
-      }
-
-      &.active {
-        font-family: $base-font-bold;
-      }
-
-      &:hover {
-        cursor: pointer;
-        color: $link-hover-color;
-      }
-
-      &.unstyled-link {
-        text-decoration: none;
-        &.active {
-          text-decoration: none;
-        }
-      }
-    }
-
-    input,
-    textarea,
-    select,
-    input.form-control,
-    textarea.form-control,
-    select.form-control {
-      font-family: $input-font;
-      @include font-size($input-font-size, $input-line-height);
-      color: $input-text-color;
-      border-width: $input-border-width;
-      border-style: $input-border-style;
-      border-color: $input-border-color;
-      padding: $input-padding;
-      @include border-radius($input-border-radius);
-      @include set-placeholder-color($input-placeholder-text-color);
-
-      &:focus {
-        outline: none;
-        border-color: $input-border-color-focused;
-      }
-    }
-
-    p {
-      margin-bottom: $space-medium;
-    }
-
-    input::-ms-clear{
-      display: none;
-    }
-
-    button, button.btn {
-      font-family: $button-font;
-      @include font-size($button-font-size);
-    }
-
-    header {
-      background-color: $color-black;
-      color: $color-white;
-    }
-
-    footer {
-      &.dark {
-        background-color: $color-black;
-        color: $color-white;
-
-        a {
-          color: $color-white;
-        }
-      }
-
-      &.light {
-        background-color: $color-white;
-        color: $color-black;
-      }
-    }
-  }
-}
-
-ul.unstyled-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.icon-label-wrapper {
-  @include display-flex(row);
-  align-items: center;
-  @include set-items-interval($space-small, horizontal);
-}
-
-.enable-pointer {
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.metadata {
-  font-size: 11px;
-  background-color: $color-grey-07;
-  padding: 2px 5px;
-  margin-bottom: $space-xsmall;
-}
-
-.squishy-cell {
-  @include breakpoint(small) {
-    word-break: break-all;
-    white-space: normal;
-  }
-}
-
-.squishy {
-  word-break: break-word;
-  white-space: normal;
-}
-
-.no-wrap {
-  white-space: nowrap !important;
-}
-
-.with-hover-background {
-  &:hover {
-    background-color: $color-grey-07;
   }
 }

@@ -40,7 +40,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.firewall.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
+          <mcs-data-cell *mcsDataCellDef="let row">
             <div class="inline-items-small">
               <mcs-icon [key]="row.connectionStatusIconKey" size="small"></mcs-icon>
               <a (click)="navigateToFirewall(row)">{{ row.managementName }}</a>

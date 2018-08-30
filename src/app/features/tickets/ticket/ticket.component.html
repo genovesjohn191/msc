@@ -23,14 +23,14 @@
       <div class="limited-view">
         <!-- Ticket description -->
         <div class="container-wrapper">
-          <h4 class="container-header">{{ textContent.description }}</h4>
+          <h2 class="container-header">{{ textContent.description }}</h2>
           <p><strong [innerHTML]="ticket.shortDescription | mcsNewLines"></strong></p>
           <p [innerHTML]="ticket.description | mcsNewLines"></p>
         </div>
 
         <!-- Ticket details -->
         <div class="container-wrapper">
-          <h4 class="container-header">{{ textContent.information }}</h4>
+          <h2 class="container-header">{{ textContent.information }}</h2>
           <div class="grid-row vspace-medium">
             <div class="grid-column">
               <mcs-list spacing="xsmall">
@@ -71,7 +71,7 @@
 
         <!-- Ticket closure details -->
         <div class="container-wrapper" *ngIf="ticket.closed">
-          <h4 class="container-header">{{ textContent.closureDetails }}</h4>
+          <h2 class="container-header">{{ textContent.closureDetails }}</h2>
 
           <div class="grid-row">
             <div class="grid-column">
@@ -111,7 +111,7 @@
         <!-- Ticket Services and Attachments -->
         <div class="grid-row">
           <div class="container-wrapper grid-column break-on-small">
-            <h4 class="container-header">{{ textContent.services }}</h4>
+            <h2 class="container-header">{{ textContent.services }}</h2>
             <ng-container *ngIf="ticket.serviceId | mcsIsNullOrEmpty; else servicesTemplate">
               <mcs-data-status-empty>
                 {{ textContent.missingServicesLabel }}
@@ -128,7 +128,7 @@
           </div>
 
           <div class="container-wrapper grid-column break-on-small">
-            <h4 class="container-header">{{ textContent.attachments }}</h4>
+            <h2 class="container-header">{{ textContent.attachments }}</h2>
             <ng-container *ngIf="ticket.attachments | mcsIsNullOrEmpty; else attachmentsTemplate">
               <mcs-data-status-empty>
                 {{ textContent.missingAttachmentsLabel }}
@@ -154,7 +154,7 @@
 
         <!-- Ticket Activities -->
         <div class="container-wrapper">
-          <h4 class="container-header">{{ textContent.activity }}</h4>
+          <h2 class="container-header">{{ textContent.activity }}</h2>
         </div>
         <div class="block-items-medium">
           <ng-container *mcsAccessControl="['TicketEdit']">

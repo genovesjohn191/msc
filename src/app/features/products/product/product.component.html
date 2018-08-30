@@ -1,27 +1,25 @@
 <!-- Content Panel -->
-<div class="limited-view">
-  <div *ngIf="selectedProduct?.shortDescription" class="container-wrapper">
-    <h4 class="container-header">Product Short Description</h4>
-    <p [innerHTML]="selectedProduct.shortDescription | mcsNewLines"></p>
-  </div>
+<div *ngIf="selectedProduct?.shortDescription" class="container-wrapper">
+  <h2 class="container-header">Product Short Description</h2>
+  <p [innerHTML]="selectedProduct.shortDescription"></p>
+</div>
 
-  <div *ngIf="selectedProduct?.description" class="container-wrapper">
-    <h4 class="container-header">Product Description</h4>
-    <p [innerHTML]="selectedProduct.description | mcsNewLines"></p>
-  </div>
+<div *ngIf="selectedProduct?.description" class="container-wrapper">
+  <h2 class="container-header">Product Description</h2>
+  <p [innerHTML]="selectedProduct.description"></p>
+</div>
 
-  <div *ngIf="selectedProduct?.useCases" class="container-wrapper">
-    <h4 class="container-header">Use Cases</h4>
-    <div [innerHTML]="selectedProduct.useCases"></div>
-  </div>
+<div *ngIf="selectedProduct?.useCases" class="container-wrapper">
+  <h2 class="container-header">Use Cases</h2>
+  <div [innerHTML]="selectedProduct.useCases"></div>
+</div>
 
-  <div *ngIf="selectedProduct?.pciDetails" class="container-wrapper">
-    <h4 class="container-header">PCI Compliance</h4>
-    <p [innerHTML]="selectedProduct.pciDetails | mcsNewLines"></p>
-  </div>
+<div *ngIf="selectedProduct?.pciDetails" class="container-wrapper">
+  <h2 class="container-header">PCI Compliance</h2>
+  <p [innerHTML]="selectedProduct.pciDetails"></p>
+</div>
 
-  <div *ngIf="selectedProduct?.featureBenefitMatrix" class="container-wrapper">
-    <h4 class="container-header">Feature Benefit Matrix</h4>
-    <p [innerHTML]="selectedProduct.featureBenefitMatrix | mcsNewLines"></p>
-  </div>
+<div *ngIf="selectedProduct?.featureBenefitMatrix" class="container-wrapper">
+  <h2 class="container-header">Feature Benefit Matrix</h2>
+  <p [innerHTML]="selectedProduct.featureBenefitMatrix"></p>
 </div>

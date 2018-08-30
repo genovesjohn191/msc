@@ -6,7 +6,7 @@
         <div class="inline-items-medium bordered align-items-none">
           <ng-container *ngFor="let catalog of productCatalogs">
             <div class="container-wrapper flex-auto block-items-medium">
-              <h4 class="container-header">{{ catalog.name }}</h4>
+              <h2 class="container-header">{{ catalog.name }}</h2>
                 <mcs-list [header]="category.name" itemsOffset="small"
                   *ngFor="let category of catalog.categories">
                   <mcs-list-item *ngFor="let product of category.products">

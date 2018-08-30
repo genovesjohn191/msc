@@ -3,7 +3,7 @@
   loadingPlacement="top">
 
   <div class="container-wrapper">
-    <h4 class="container-header">{{ textContent.snapshotHeader }}</h4>
+    <h2 class="container-header">{{ textContent.snapshotHeader }}</h2>
     <div class="vspace-medium space-between-inline-items">
       <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
       <div>
@@ -67,7 +67,7 @@
   <!-- Server Backups -->
   <!-- TODO: Remove ngIf when Backups is working -->
   <div *ngIf="false" class="container-wrapper">
-    <h4 class="container-header">{{ textContent.serverBackups }}</h4>
+    <h2 class="container-header">{{ textContent.serverBackups }}</h2>
     <p>{{ textContent.serverBackupsDescription }}</p>
     <div>
       <button mcsButton size="small" [disabled]="true">{{ textContent.requestRestore }}</button>

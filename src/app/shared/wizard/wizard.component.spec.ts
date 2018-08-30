@@ -45,13 +45,13 @@ describe('WizardComponent', () => {
         template: `
           <mcs-wizard>
             <mcs-wizard-step stepTitle="First Step" id="1">
-              <h4>First Header</h4>
+              <h2>First Header</h2>
             </mcs-wizard-step>
             <mcs-wizard-step stepTitle="Second Step" id="2">
-              <h4>Second Header</h4>
+              <h2>Second Header</h2>
             </mcs-wizard-step>
             <mcs-wizard-step stepTitle="Third Step" id="3">
-              <h4>Third Header</h4>
+              <h2>Third Header</h2>
             </mcs-wizard-step>
           </mcs-wizard>
         `

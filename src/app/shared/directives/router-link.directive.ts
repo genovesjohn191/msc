@@ -11,13 +11,16 @@ import {
 import { isNullOrEmpty } from '../../utilities';
 
 @Directive({
-  selector: '[mcsRouterLink]',
+  selector: 'a[mcsRouterLink]',
   host: {
-    '(click)': 'navigateToLink()'
+    '(click)': 'navigateToLink()',
+    '[attr.href]': 'hrefUrl'
   }
 })
 
 export class RouterLinkDirective implements OnInit {
+  public hrefUrl: string;
+
   @Input('mcsRouterLink')
   public set routerLinkKey(value: any[] | McsRouteKey | string) {
     Array.isArray(value) ?
@@ -31,6 +34,7 @@ export class RouterLinkDirective implements OnInit {
 
   public ngOnInit() {
     this._routerLink = this._createRouterUrl();
+    this.hrefUrl = this._routerLink;
   }
 
   /**
@@ -43,12 +47,13 @@ export class RouterLinkDirective implements OnInit {
   /**
    * Navigates to the current link based on its definition
    */
-  public navigateToLink(): void {
+  public navigateToLink(): boolean {
     if (isNullOrEmpty(this.routeLink)) {
       throw new Error(`Could not find the associated routerlink
         ${McsRouteKey[this.routeLink]}`);
     }
     this._router.navigate([this.routeLink]);
+    return false;
   }
 
   /**
@@ -59,7 +64,7 @@ export class RouterLinkDirective implements OnInit {
     this._routerLinkKey.forEach((link) => {
       stringUrls.push(
         (typeof link === 'string') ?
-          link : CoreRoutes.getRoutePath(link)
+          link : CoreRoutes.getNavigationPath(link)
       );
     });
     return this._router.createUrlTree(stringUrls).toString();

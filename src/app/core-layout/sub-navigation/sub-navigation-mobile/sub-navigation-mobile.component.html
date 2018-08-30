@@ -8,8 +8,6 @@
 </div>
 
 <!-- Mobile navigation content -->
-<ng-container *ngIf="panelOpen">
-  <div [@expansionVertical] class="block-items">
-    <ng-content></ng-content>
-  </div>
-</ng-container>
+<div [@expansionVertical]="panelOpen ? 'expanded' : 'collapsed'" class="block-items">
+  <ng-content></ng-content>
+</div>

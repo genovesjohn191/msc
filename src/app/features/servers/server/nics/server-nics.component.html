@@ -3,7 +3,7 @@
   loadingPlacement="top">
 
   <div class="container-wrapper">
-    <h4 class="container-header">{{ textContent.title }}</h4>
+    <h2 class="container-header">{{ textContent.title }}</h2>
     <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
     <ng-container [ngSwitch]="nicMethodType">
@@ -126,7 +126,7 @@
               [(selectedNetwork)]="selectedNetwork">
 
               <ng-container mcsManageNetworkHeader>
-                <h4>{{ textContent.addHeading }}</h4>
+                <h2>{{ textContent.addHeading }}</h2>
               </ng-container>
 
               <ng-container mcsManageNetworkWarning>
@@ -167,7 +167,7 @@
             [(selectedNetwork)]="selectedNetwork">
 
             <ng-container mcsManageNetworkHeader>
-              <h4>{{ textContent.editHeading }} {{ selectedNic.index }}</h4>
+              <h2>{{ textContent.editHeading }} {{ selectedNic.index }}</h2>
             </ng-container>
 
             <ng-container mcsManageNetworkWarning>

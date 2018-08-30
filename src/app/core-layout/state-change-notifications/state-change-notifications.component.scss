@@ -6,7 +6,7 @@ $state-change-medium-notifications-width: 400px;
 $state-change-small-notifications-width: 90%;
 $state-change-notifications-margin: 20px;
 
-.state-change-notifications-container {
+.state-change-notifications-content {
   position: fixed;
   left: $state-change-notifications-margin;
   bottom: $state-change-notifications-margin;
@@ -19,9 +19,7 @@ $state-change-notifications-margin: 20px;
   }
   z-index: $zindex-notifications;
 
-  ul {
-    li {
-      margin: $space-small 0;
-    }
+  .state-change-notification-item {
+    margin: $space-small 0;
   }
 }

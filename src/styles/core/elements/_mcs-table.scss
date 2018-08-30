@@ -22,6 +22,7 @@ $table-cell-divider-opacity: 0.70;
 %cell-style {
   display: table-cell;
   border-right: 1px solid rgba($table-cell-divider-color, $table-cell-divider-opacity);
+  font-weight: normal;
   &:last-child {
     border-right: none;
   }

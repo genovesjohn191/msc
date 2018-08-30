@@ -139,18 +139,6 @@ export class VdcComponent
   }
 
   /**
-   * Event that emits when the server is selected on the list panel
-   * @param _server Selected server instance
-   */
-  public onServerSelect(server: Server) {
-    if (isNullOrEmpty(server)) { return; }
-    this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.Servers),
-      server.id
-    ]);
-  }
-
-  /**
    * Return true when the server is currently deleting, otherwise false
    * @param server Server to be deleted
    */
