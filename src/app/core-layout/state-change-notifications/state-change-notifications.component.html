@@ -1,12 +1,12 @@
 <div *ngIf="visible" #stateChangeNotificationsElement
-  class="state-change-notifications-container">
-  <ul class="unstyled-list">
-    <li *ngFor="let notification of (displayedNotifications | mcsArrayTakeMax: 3)">
-      <mcs-notification-panel
-        type="statechange"
-        [notification]="notification"
-        (remove)="removeNotification($event)">
-      </mcs-notification-panel>
-    </li>
-  </ul>
+  class="state-change-notifications-content">
+
+  <div *ngFor="let notification of (displayedNotifications | mcsArrayTakeMax: 3)"
+    class="state-change-notification-item">
+    <mcs-notification-panel
+      type="statechange"
+      [notification]="notification"
+      (remove)="removeNotification($event)">
+    </mcs-notification-panel>
+  </div>
 </div>

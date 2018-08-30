@@ -71,6 +71,10 @@ export class MediumComponent
   public listStatusFactory: McsDataStatusFactory<Map<string, Media[]>>;
   private _destroySubject = new Subject<void>();
 
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
+
   public constructor(
     _router: Router,
     _activatedRoute: ActivatedRoute,
@@ -119,15 +123,6 @@ export class MediumComponent
    */
   public gotoMedia(): void {
     this.router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Media)]);
-  }
-
-  /**
-   * Event that emits when the media is selected on the list panel
-   * @param media Selected media instance
-   */
-  public onMediumSelect(medium: Media): void {
-    if (isNullOrEmpty(medium)) { return; }
-    this.router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Medium), medium.id]);
   }
 
   /**

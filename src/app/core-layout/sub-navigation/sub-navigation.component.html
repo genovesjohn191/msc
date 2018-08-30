@@ -1,16 +1,15 @@
-<ng-container *ngIf="showSubNavigation">
-  <div [@expansionVertical] class="box-shadow-bottom-small full-width">
-    <!-- Sub-navigation desktop mode -->
-    <mcs-sub-navigation-desktop>
-      <ng-container *ngTemplateOutlet="subNavigationItemsTemplate"></ng-container>
-    </mcs-sub-navigation-desktop>
+<div [@expansionVertical]="showSubNavigation ? 'expanded' : 'collapsed'"
+  class="box-shadow-bottom-small full-width">
+  <!-- Sub-navigation desktop mode -->
+  <mcs-sub-navigation-desktop>
+    <ng-container *ngTemplateOutlet="subNavigationItemsTemplate"></ng-container>
+  </mcs-sub-navigation-desktop>
 
-    <!-- Sub-navigation mobile mode -->
-    <mcs-sub-navigation-mobile [routeCategory]="activeRouteCategory">
-      <ng-container *ngTemplateOutlet="subNavigationItemsTemplate"></ng-container>
-    </mcs-sub-navigation-mobile>
-  </div>
-</ng-container>
+  <!-- Sub-navigation mobile mode -->
+  <mcs-sub-navigation-mobile [routeCategory]="activeRouteCategory">
+    <ng-container *ngTemplateOutlet="subNavigationItemsTemplate"></ng-container>
+  </mcs-sub-navigation-mobile>
+</div>
 
 <!-- Router templates -->
 <ng-template #subNavigationItemsTemplate>

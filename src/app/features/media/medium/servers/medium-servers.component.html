@@ -1,5 +1,5 @@
 <div class="container-wrapper">
-  <h4 class="container-header">{{ textContent.title }}</h4>
+  <h2 class="container-header">{{ textContent.title }}</h2>
   <p *ngIf="textContent.description">{{ textContent.description }}</p>
 
   <div class="block-items-large">
@@ -50,7 +50,7 @@
     <div class="action-box" [disabled]="selectedMedium.isProcessing">
       <mcs-media-manage-servers (dataChange)="onChangeManageServers($event)">
         <ng-container mcsManageServerHeader>
-          <h4>{{ textContent.attachServersHeader }}</h4>
+          <h2>{{ textContent.attachServersHeader }}</h2>
         </ng-container>
       </mcs-media-manage-servers>
 

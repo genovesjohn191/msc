@@ -1,0 +1,13 @@
+@import "../../../../styles/shared/base";
+@import "../../../../styles/core/elements/mcs-heading";
+@import "../../../../styles/core/elements/mcs-strong";
+@import "../../../../styles/core/elements/mcs-bold";
+@import "../../../../styles/core/elements/mcs-table";
+@import "../../../../styles/core/classes/mcs-container";
+
+$product-max-width: 95%;
+
+:host {
+  display: block;
+  max-width: $product-max-width;
+}

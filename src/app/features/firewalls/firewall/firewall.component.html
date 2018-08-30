@@ -14,20 +14,25 @@
                 mcsSortArray: firewallsListSource?.firewallGroupSortMethod" class="position-relative">
                 <mcs-option-group *ngIf="iterator.value?.length > 1"
                   [label]="getFirewallGroupName(iterator.key)">
-                  <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
-                    [value]="firewall"
-                    [selected]="selectedFirewall?.id === firewall.id"
-                    (click)="onFirewallSelect(firewall)"
-                    mcsEventTracker="select-firewall"
-                    mcsEventCategory="firewall"
-                    mcsEventLabel="firewall-list-panel">
 
-                    <div class="inline-items-xsmall">
-                      <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
-                      <span>{{ firewall.managementName }}</span>
-                      <span read-only>{{ firewall.haRole }}</span>
-                    </div>
-                  </mcs-option>
+                  <ng-container *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)">
+                    <a [mcsRouterLink]="[routeKeyEnum.FirewallDetail, firewall.id]"
+                      mcsEventTracker="select-firewall"
+                      mcsEventCategory="firewall"
+                      mcsEventLabel="firewall-list-panel">
+
+                      <mcs-option [value]="firewall"
+                        [selected]="selectedFirewall?.id === firewall.id">
+                        <div class="inline-items-xsmall">
+                          <mcs-icon size="small"
+                            [key]="firewall?.connectionStatusIconKey">
+                          </mcs-icon>
+                          <span>{{ firewall.managementName }}</span>
+                          <span read-only>{{ firewall.haRole }}</span>
+                        </div>
+                      </mcs-option>
+                    </a>
+                  </ng-container>
                 </mcs-option-group>
               </div>
 
@@ -35,19 +40,22 @@
               <div *ngFor="let iterator of (firewallsMap | mcsMapIterable) |
                 mcsSortArray: firewallsListSource?.firewallGroupSortMethod" class="position-relative">
                 <ng-container *ngIf="iterator.value?.length === 1">
-                  <mcs-option *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)"
-                    [value]="firewall"
-                    [selected]="selectedFirewall?.id === firewall.id"
-                    (click)="onFirewallSelect(firewall)"
-                    mcsEventTracker="select-firewall"
-                    mcsEventCategory="firewall"
-                    mcsEventLabel="firewall-list-panel">
 
-                    <div class="inline-items-xsmall">
-                      <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
-                      <span>{{ firewall.managementName }}</span>
-                    </div>
-                  </mcs-option>
+                  <ng-container *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)">
+                    <a [mcsRouterLink]="[routeKeyEnum.FirewallDetail, firewall.id]"
+                      mcsEventTracker="select-firewall"
+                      mcsEventCategory="firewall"
+                      mcsEventLabel="firewall-list-panel">
+
+                      <mcs-option [value]="firewall"
+                        [selected]="selectedFirewall?.id === firewall.id">
+                        <div class="inline-items-xsmall">
+                          <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
+                          <span>{{ firewall.managementName }}</span>
+                        </div>
+                      </mcs-option>
+                    </a>
+                  </ng-container>
                 </ng-container>
               </div>
             </mcs-list-panel>

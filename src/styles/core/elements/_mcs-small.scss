@@ -1,0 +1,10 @@
+small {
+  font-family: $caption-default-font;
+  @include font-size($caption-default-font-size);
+  @include breakpoint(small) {
+    @include font-size($caption-small-font-size);
+  }
+  @include breakpoint(xsmall) {
+    @include font-size($caption-xsmall-font-size);
+  }
+}

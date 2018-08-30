@@ -84,7 +84,7 @@
       (dataChange)="onScaleChanged($event)">
 
       <ng-container mcsManageScaleHeader>
-        <h4>{{ textContent.computeSizeLabel }}</h4>
+        <h2>{{ textContent.computeSizeLabel }}</h2>
       </ng-container>
     </mcs-server-manage-scale>
   </div>
@@ -99,7 +99,7 @@
       [mcsContextualHelp]="textHelpContent.storageField">
 
       <ng-container mcsManageStorageHeader>
-        <h4>{{ textContent.storageLabel }}</h4>
+        <h2>{{ textContent.storageLabel }}</h2>
       </ng-container>
       <ng-container mcsManageStorageWarning>
         <span>{{ storageWarning }}</span>
@@ -115,7 +115,7 @@
     [mcsContextualHelp]="textHelpContent.networkField">
 
     <ng-container mcsManageNetworkHeader>
-      <h4>{{ textContent.networkLabel }}</h4>
+      <h2>{{ textContent.networkLabel }}</h2>
     </ng-container>
   </mcs-server-manage-network>
 </form>

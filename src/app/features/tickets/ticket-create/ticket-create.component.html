@@ -102,7 +102,7 @@
 
           <!-- Services -->
           <div class="field">
-            <h4 class="space-bottom-small">{{ textContent.services }}</h4>
+            <h2 class="space-bottom-small">{{ textContent.services }}</h2>
             <div class="item">
               <ng-container *ngIf="services">
 
@@ -140,7 +140,7 @@
                   </div>
                 </div>
 
-                <div [@expansionVertical]="servicePanelOpen ? 'show' : 'void'">
+                <div [@expansionVertical]="servicePanelOpen ? 'expanded' : 'collapsed'">
                   <mcs-select-tag #selectService class="padding-small"
                     (selectionChanged)="serviceItemSelectionChanged($event)">
                     <mcs-select-tag-main-item *ngFor="let service of services"
@@ -160,7 +160,7 @@
 
         <!-- Attachments -->
         <div>
-          <h4 class="space-bottom-small">{{ textContent.attachments }}</h4>
+          <h2 class="space-bottom-small">{{ textContent.attachments }}</h2>
           <mcs-file-attachment attachedLimit="multiple"
             [allowedMimeType]="['image/jpeg', 'image/png', 'image/bmp', 'text/plain']"
             (attachedFilesChanged)="onChangedAttachments($event)"

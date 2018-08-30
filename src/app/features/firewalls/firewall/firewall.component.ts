@@ -85,6 +85,10 @@ export class FirewallComponent
     return !isNullOrEmpty(this.selectedFirewall);
   }
 
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
+
   /**
    * Selected Firewall based on the selected in the listing panel
    */
@@ -136,22 +140,6 @@ export class FirewallComponent
     super.onDestroy();
     unsubscribeSubject(this._destroySubject);
     unsubscribeSafely(this.firewallSubscription);
-  }
-
-  /**
-   * Navigate on the selected firewall overview page and
-   * set the selected firewall to update selectedFirewallStream
-   * @param firewall Selected firewall instance
-   */
-  public onFirewallSelect(firewall: Firewall): void {
-    if (isNullOrEmpty(firewall)) { return; }
-
-    this._setSelectedFirewallById(firewall.id);
-    this._changeDetectorRef.markForCheck();
-    this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.FirewallDetail),
-      firewall.id
-    ]);
   }
 
   /**

@@ -50,7 +50,7 @@ describe('AccordionComponent', () => {
           <mcs-accordion-panel>
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="notification-bell"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h2>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
             <span>
@@ -62,7 +62,7 @@ describe('AccordionComponent', () => {
           <mcs-accordion-panel>
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="calendar"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h2>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
             <span>
@@ -76,7 +76,7 @@ describe('AccordionComponent', () => {
           <mcs-accordion-panel>
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="notification-bell"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h2>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
             <span>
@@ -88,7 +88,7 @@ describe('AccordionComponent', () => {
           <mcs-accordion-panel>
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon key="calendar"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h2>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
             <span>

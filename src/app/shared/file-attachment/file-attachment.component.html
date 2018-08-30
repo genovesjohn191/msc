@@ -2,7 +2,7 @@
 <ng-template #errorDialogTemplate let-message="data.message">
   <mcs-dialog>
     <mcs-dialog-header [dialogRefTemplate]="errorDialogRef">
-      <h3>{{ textContent.errorCaption }}</h3>
+      <h1>{{ textContent.errorCaption }}</h1>
     </mcs-dialog-header>
 
     <mcs-dialog-content>
@@ -51,7 +51,7 @@
 <div class="attached-files-wrapper" *ngIf="attachedFiles">
   <ul class="inline-list rollover">
     <li (click)="removeAttachment(attachedItem)"
-      class="enable-pointer"
+      cursor="pointer"
       *ngFor="let attachedItem of attachedFiles">
       <mcs-icon [key]="closeIconKey" size="small"></mcs-icon>
       <span>{{ attachedItem?.file.name }}</span>

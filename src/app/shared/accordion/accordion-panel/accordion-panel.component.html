@@ -2,7 +2,7 @@
 <ng-content select="[mcsPanelHeaderDef]"></ng-content>
 
 <!-- Content Panel -->
-<div [@expansionVertical]="panelOpen ? 'show' : 'void'"
+<div [@expansionVertical]="panelOpen ? 'expanded' : 'collapsed'"
   class="accordion-content-panel-wrapper">
   <div class="accordion-content-panel">
     <ng-content></ng-content>

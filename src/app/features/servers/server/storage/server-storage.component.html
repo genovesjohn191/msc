@@ -3,7 +3,7 @@
   loadingPlacement="top">
 
   <div class="container-wrapper">
-    <h4 class="container-header">{{ textContent.title }}</h4>
+    <h2 class="container-header">{{ textContent.title }}</h2>
 
     <!-- Description -->
     <ng-container *ngIf="hasEditableDisk;else noEditableDiskTemplate">
@@ -110,7 +110,7 @@
               (dataChange)="onStorageChanged($event)">
 
               <ng-container mcsManageStorageHeader>
-                <h4>{{ textContent.addStorageHeading }}</h4>
+                <h2>{{ textContent.addStorageHeading }}</h2>
               </ng-container>
               <ng-container mcsManageStorageWarning>
                 <span>{{ textContent.fullStorageSpace }}</span>
@@ -144,7 +144,7 @@
             (dataChange)="onStorageChanged($event)">
 
             <ng-container mcsManageStorageHeader>
-              <h4>{{ textContent.expandStorageHeading }}</h4>
+              <h2>{{ textContent.expandStorageHeading }}</h2>
             </ng-container>
           </mcs-server-manage-storage>
 

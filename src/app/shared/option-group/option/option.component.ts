@@ -8,7 +8,6 @@ import {
   ElementRef
 } from '@angular/core';
 import {
-  isNullOrEmpty,
   isElementVisible,
   coerceBoolean
 } from '../../../utilities';
@@ -29,7 +28,7 @@ let nextUniqueId = 0;
     '[attr.tabindex]': '0',
     '[class.option-selected]': 'selected',
     '[class.option-active]': 'active',
-    '(click)': 'onClick($event)'
+    '(click)': 'select()'
   }
 })
 
@@ -54,13 +53,10 @@ export class OptionComponent {
   @Input()
   public get selected(): boolean { return this._selected; }
   public set selected(value: boolean) {
-    this._selected = coerceBoolean(value);
-
-    // We need to check if the option selected state is true
-    // to mitigate the problem of collapsing other group panel
-    // because the click event will notify the subscribers
-    // and we don't want to emit the selection stream twice
-    if (value) { this.selectionChange.emit(this); }
+    if (value !== this._selected) {
+      this._selected = coerceBoolean(value);
+      this.selectionChange.emit(this);
+    }
   }
   private _selected: boolean;
 
@@ -93,18 +89,16 @@ export class OptionComponent {
    * Selects the option
    */
   public select(): void {
-    this._selected = true;
+    this.selected = true;
     this._changeDetectorRef.markForCheck();
-    this.selectionChange.emit(this);
   }
 
   /**
    * Deselects the option
    */
   public deselect(): void {
-    this._selected = false;
+    this.selected = false;
     this._changeDetectorRef.markForCheck();
-    this.selectionChange.emit(this);
   }
 
   /**
@@ -129,14 +123,5 @@ export class OptionComponent {
   public setInActiveState(): void {
     this._active = false;
     this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Event that emits when this component is clicked
-   * @param event Mouse event instance
-   */
-  public onClick(event?: MouseEvent): void {
-    if (!isNullOrEmpty(event)) { event.stopPropagation(); }
-    this.select();
   }
 }

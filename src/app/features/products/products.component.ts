@@ -19,7 +19,6 @@ import {
   catchError
 } from 'rxjs/operators';
 import {
-  Router,
   ActivatedRoute,
   ParamMap
 } from '@angular/router';
@@ -29,13 +28,13 @@ import {
   McsSearch,
   McsErrorHandlerService,
   CoreDefinition,
-  CoreRoutes,
   McsRouteKey
 } from '../../core';
 import {
   unsubscribeSafely,
   refreshView,
-  isNullOrEmpty
+  isNullOrEmpty,
+  unsubscribeSubject
 } from '../../utilities';
 import { SlidingPanelComponent } from '../../shared';
 import {
@@ -76,8 +75,11 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
     return CoreDefinition.ASSETS_FONT_ELLIPSIS_VERTICAL;
   }
 
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
+
   constructor(
-    private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
@@ -107,19 +109,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngOnDestroy() {
     unsubscribeSafely(this.catalogSubscription);
-    this._destroySubject.next();
-    this._destroySubject.complete();
-  }
-
-  /**
-   * Event that emits when user clicks on product
-   * @param product Product to view
-   */
-  public onClickProduct(product: Product): void {
-    if (isNullOrEmpty(product)) { return; }
-    this.selectedProduct = product;
-    this._navigateToProduct(product);
-    this._changeDetectorRef.markForCheck();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -128,15 +118,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   public onToggleSlidingPanel(): void {
     if (isNullOrEmpty(this.slidingPanel)) { return; }
     this.slidingPanel.toggle();
-  }
-
-  /**
-   * Navigate to product catalog
-   * @param product Product to be navigated
-   */
-  private _navigateToProduct(product: Product): void {
-    if (isNullOrEmpty(product)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), product.id]);
   }
 
   /**
