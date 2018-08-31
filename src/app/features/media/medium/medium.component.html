@@ -2,11 +2,11 @@
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
     <div class="inline-items-small">
-      <div><h3>{{ selectedMedium?.catalogName }}</h3></div>
+      <div><h1>{{ selectedMedium?.catalogName }}</h1></div>
       <div *ngIf="selectedMedium">
         <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       </div>
-      <div><h3>{{ selectedMedium?.name }}</h3></div>
+      <div><h1>{{ selectedMedium?.name }}</h1></div>
     </div>
   </ng-container>
 
@@ -29,17 +29,22 @@
                     <span>{{ iterator.key }}</span>
                   </ng-container>
 
-                  <mcs-option *ngFor="let medium of (iterator.value |
-                    mcsSortArray: mediaListSource?.mediaSortMethod)"
-                    [value]="medium"
-                    [selected]="selectedMedium?.id === medium.id"
-                    (click)="onMediumSelect(medium)"
-                    mcsEventTracker="select-media"
-                    mcsEventCategory="media"
-                    mcsEventLabel="media-list-panel">
+                  <ng-container *ngFor="let medium of (iterator.value |
+                    mcsSortArray: mediaListSource?.mediaSortMethod)">
+                    <a [mcsRouterLink]="[routeKeyEnum.Media, medium.id]"
+                      mcsEventTracker="select-media"
+                      mcsEventCategory="media"
+                      mcsEventLabel="media-list-panel">
 
-                    <span class="break-word-all">{{ medium.name }}</span>
-                  </mcs-option>
+                      <mcs-option [value]="medium"
+                        [selected]="selectedMedium?.id === medium.id">
+                        <div class="space-left-xsmall">
+                          <span class="word-wrap">{{ medium.name }}</span>
+                        </div>
+                      </mcs-option>
+                    </a>
+                  </ng-container>
+
                 </mcs-option-group>
               </ng-container>
             </mcs-list-panel>

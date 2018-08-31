@@ -100,6 +100,10 @@ export class ServerComponent
     return CoreDefinition.ASSETS_SVG_NEXT_ARROW;
   }
 
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
+
   private _destroySubject = new Subject<void>();
   private _resourcesKeyMap: Map<string, ServerPlatform>;
 
@@ -142,15 +146,6 @@ export class ServerComponent
     super.onDestroy();
     unsubscribeSafely(this.serverSubscription);
     unsubscribeSubject(this._destroySubject);
-  }
-
-  /**
-   * Event that emits when the server is selected on the list panel
-   * @param _server Selected server instance
-   */
-  public onServerSelect(_server: Server) {
-    if (isNullOrEmpty(_server)) { return; }
-    this.router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail), _server.id]);
   }
 
   /**

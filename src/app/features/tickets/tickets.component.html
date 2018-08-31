@@ -76,7 +76,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.summary.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell word-wrap">
+          <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
             <a (click)="navigateToTicket(row)"
             mcsEventTracker="navigate-to-ticket"
             mcsEventCategory="ticket"

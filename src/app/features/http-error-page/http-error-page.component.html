@@ -1,8 +1,8 @@
 <div display-flex="column" align-items="center"
   class="text-center http-error-page-content vertical-items-spacing-medium">
 
-  <h1>{{ textContent?.header }}</h1>
-  <h4>{{ textContent?.summary }}</h4>
+  <span class="http-error-page-header">{{ textContent?.header }}</span>
+  <h2>{{ textContent?.summary }}</h2>
   <div>
     <span *ngIf="textContent?.description">
       {{ textContent?.description }}<br/>
@@ -36,9 +36,9 @@
 
 <!-- Home button -->
 <ng-template #homeButtonTemplate>
-  <button mcsButton id="ctaReturnHome" size="small" [mcsRouterLink]="['/']">
+  <a mcsButton id="ctaReturnHome" size="small" [mcsRouterLink]="['/']">
     {{ textContentAll.home }}
-  </button>
+  </a>
 </ng-template>
 
 <!-- Refresh button -->

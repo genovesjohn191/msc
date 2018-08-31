@@ -42,7 +42,7 @@
           <mcs-header-cell *mcsHeaderCellDef>
             {{ columnSettings.notification.text }}
           </mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" class="squishy-cell">
+          <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
             <div class="inline-items-small">
               <mcs-icon [key]="getStatusIconKey(row.dataStatus)" class="top-align"
                 [color]="getStatusIconColor(row.dataStatus)" size="small"></mcs-icon>

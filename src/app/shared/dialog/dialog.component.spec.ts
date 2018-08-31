@@ -46,7 +46,7 @@ describe('DialogComponent', () => {
         template: `
         <mcs-dialog>
           <mcs-dialog-header>
-            <h3>Dialog Title</h3>
+            <h1>Dialog Title</h1>
           </mcs-dialog-header>
 
           <mcs-dialog-content>

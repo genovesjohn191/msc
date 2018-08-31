@@ -20,7 +20,10 @@ $http-error-page-header-font-size: 100;
 }
 
 .http-error-page-content {
-  h1 {
+  @include display-flex(column);
+  @include align-items(center);
+
+  .http-error-page-header {
     @include font-size($http-error-page-header-font-size);
     color: $http-error-page-header-color;
   }

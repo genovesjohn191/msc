@@ -1,6 +1,6 @@
 <div class="grid-row">
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="container-header">{{ textContent.vdcProperties.title }}</h4>
+    <h2 class="container-header">{{ textContent.vdcProperties.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Service Type -->
       <mcs-list-item class="form-field-inline">
@@ -24,7 +24,7 @@
 
   <!-- VCloud -->
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h4>
+    <h2 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h2>
     <mcs-list spacing="xsmall">
       <ng-container *mcsAccessControl="['VmEdit']">
         <mcs-list-item *ngIf="hasResources">
@@ -44,7 +44,7 @@
 
 <div class="grid-row">
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="container-header container-header">{{ textContent.networkInformation.title }}</h4>
+    <h2 class="container-header container-header">{{ textContent.networkInformation.title }}</h2>
     <div class="vertical-items-spacing-medium">
       <span>{{ textContent.networkInformation.description }}</span>
       <mcs-accordion [multi]="true">
@@ -64,14 +64,14 @@
   </div>
 
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="horizontal-items-spacing-small container-header"
+    <h2 class="horizontal-items-spacing-small container-header"
       display-flex="row" align-items="center">
       <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
       <span>{{ textContent.storageProfiles.title }}</span>
       <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailStorage)">
         {{ textContent.storageProfiles.manageLink }}
       </a>
-    </h4>
+    </h2>
 
     <div class="vertical-items-spacing-medium">
       <span *ngIf="hasLowStorage">{{ storageSummary }}</span>

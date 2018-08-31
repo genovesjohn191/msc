@@ -24,12 +24,22 @@
               <mcs-option-group [label]="catalog.name" *ngFor="let catalog of catalogs">
                 <mcs-option-group [label]="category.name"
                   *ngFor="let category of catalog.categories">
-                  <mcs-option *ngFor="let product of category.products"
-                    [value]="product"
-                    [selected]="selectedProduct?.id === product.id"
-                    (click)="onClickProduct(product)">
-                    <span>{{ product.name }}</span>
-                  </mcs-option>
+
+                  <ng-container *ngFor="let product of category.products">
+                    <a [mcsRouterLink]="[routeKeyEnum.ProductDetail, product.id]"
+                      mcsEventTracker="select-product"
+                      mcsEventCategory="product"
+                      mcsEventLabel="product-list-panel">
+
+                      <mcs-option [value]="product"
+                        [selected]="selectedProduct?.id === product.id">
+                        <div class="space-left-xsmall">
+                          <span class="word-wrap">{{ product.name }}</span>
+                        </div>
+                      </mcs-option>
+                    </a>
+                  </ng-container>
+
                 </mcs-option-group>
               </mcs-option-group>
             </mcs-list-panel>

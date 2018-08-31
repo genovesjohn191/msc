@@ -7,7 +7,6 @@ import {
   ContentChildren,
   ChangeDetectionStrategy,
   ViewEncapsulation,
-  EventEmitter,
   ChangeDetectorRef,
   AfterContentInit,
   OnDestroy
@@ -46,17 +45,11 @@ import { OptionGroupLabelDirective } from './option-group-label.directive';
     'class': 'option-group-wrapper',
     '[class.option-group-selected]': 'selected',
     '[class.option-group-expanded]': 'panelOpen',
-    'role': 'group',
-    '(click)': 'onClick($event)'
+    'role': 'group'
   }
 })
 
 export class OptionGroupComponent implements AfterContentInit, OnDestroy {
-  /**
-   * Event emitted when the option group is selected or deselected
-   */
-  public selectionChange = new EventEmitter<OptionGroupComponent>();
-
   @Input()
   public label: string;
 
@@ -149,7 +142,6 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   public onClick(event: MouseEvent) {
     if (!isNullOrEmpty(event)) { event.stopPropagation(); }
     this.toggle();
-    this.selectionChange.emit(this);
   }
 
   /**
@@ -172,7 +164,6 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
       .subscribe(() => {
         let selectedOptions = this._options.filter((option) => option.selected);
         isNullOrEmpty(selectedOptions) ? this.closePanel() : this.openPanel();
-        this.selectionChange.emit(this);
       });
   }
 }

@@ -200,7 +200,7 @@ podTemplate(
                 stage('Notify') {
                     slackSend (
                         color: '#00ff00', //green
-                        message: "BUILD SUCCESS: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
+                        message: "BUILD SUCCESS: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}][${params.BUILD_TARGET}]>\n" +
                             ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ?
                                 "${commitSHAShort} ${commitAuthor}\n" :
                                 "") +
@@ -215,7 +215,7 @@ podTemplate(
             currentBuild.result = "BUILD FAILED"
             slackSend (
                 color: '#ff0000', //red
-                message: "*BUILD FAILURE*: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}]>\n" +
+                message: "*BUILD FAILURE*: <${env.BUILD_URL}console|${env.JOB_NAME} #[${env.BUILD_NUMBER}][${params.BUILD_TARGET}]>\n" +
                     ((env.DEPLOYMENT_ENVIRONMENT == "LAB") ?
                         "${commitSHAShort} ${commitAuthor}:\n" +
                         "> Msg: ${commitMsg}\n" :

@@ -1,5 +1,5 @@
 <!-- Option group label -->
-<div>
+<div (click)="onClick($event)">
   <div class="option-group-label" #groupLabelTemplate>
     <div class="option-group-icon" [@rotate45]="panelOpen ? 'rotate' : 'void'">
       <mcs-icon size="small" [key]="caretRightIconKey"></mcs-icon>
@@ -16,8 +16,6 @@
 </div>
 
 <!-- Option group content -->
-<ng-container *ngIf="panelOpen">
-  <div [@expansionVertical]="panelOpen ? 'show' : 'void'" class="option-group-content">
-    <ng-content></ng-content>
-  </div>
-</ng-container>
+<div [@expansionVertical]="panelOpen ? 'expanded' : 'collapsed'">
+  <ng-content></ng-content>
+</div>

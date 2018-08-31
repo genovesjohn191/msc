@@ -7,7 +7,6 @@ $listing-table-search-max-width: 300px;
 .listing-table-wrapper {
   display: inline-block;
   @include set-items-interval($space-xlarge);
-
   @include breakpoint(small) {
     display: block;
   }
@@ -15,9 +14,8 @@ $listing-table-search-max-width: 300px;
   .search-wrapper {
     max-width: $listing-table-search-max-width;
     width: 100%;
-
     @include breakpoint(small) {
-      max-width: auto;
+      max-width: 100%;
     }
   }
 

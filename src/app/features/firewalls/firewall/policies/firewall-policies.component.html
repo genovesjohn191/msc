@@ -1,5 +1,5 @@
 <div class="container-wrapper">
-  <h4 class="container-header">{{ textContent.header }}</h4>
+  <h2 class="container-header">{{ textContent.header }}</h2>
 
   <ng-container [ngSwitch]="firewallPoliciesMode">
     <!-- Firewall Policies Listing  -->
@@ -67,11 +67,11 @@
               {{ columnSettings.sourceInterfaces.text }}
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row" class="text-left hidden-small">
-              <ul class="unstyled-list">
-                <li *ngFor="let sourceInterfaces of row.sourceInterfaces">
-                  <span>{{ sourceInterfaces }}</span>
-                </li>
-              </ul>
+              <mcs-list spacing="auto">
+                <mcs-list-item *ngFor="let sourceInterfaces of row.sourceInterfaces">
+                    <span>{{ sourceInterfaces }}</span>
+                </mcs-list-item>
+              </mcs-list>
             </mcs-data-cell>
           </ng-container>
 
@@ -95,7 +95,7 @@
             <mcs-header-cell *mcsHeaderCellDef>
               {{ columnSettings.source.text }}
             </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell">
+            <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
               <strong class="visible-small">Address</strong>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let source of row.sourceAddresses">
@@ -118,7 +118,7 @@
             <mcs-header-cell *mcsHeaderCellDef>
               {{ columnSettings.destination.text }}
             </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell">
+            <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
               <strong class="visible-small">Address</strong>
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let destination of row.destinationAddresses">
@@ -164,7 +164,7 @@
             <mcs-header-cell *mcsHeaderCellDef>
               {{ columnSettings.service.text }}
             </mcs-header-cell>
-            <mcs-data-cell *mcsDataCellDef="let row" class="text-left squishy-cell">
+            <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let service of row.service">
                   {{ service }}

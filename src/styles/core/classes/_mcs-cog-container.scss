@@ -2,11 +2,12 @@
   @include display-flex(column);
 
   a {
-    @extend .no-wrap;
-    @extend .with-hover-background;
-
     padding: $space-xsmall $space-medium;
     text-decoration: none;
+    white-space: nowrap;
+    &:hover {
+      background-color: $color-grey-07;
+    }
 
     &:not([href]):not([tabindex]) {
       text-decoration: none;

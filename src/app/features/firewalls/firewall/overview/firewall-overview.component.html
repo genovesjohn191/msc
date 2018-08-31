@@ -1,6 +1,6 @@
 <div class="grid-row">
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="container-header">{{ textContent.properties.title }}</h4>
+    <h2 class="container-header">{{ textContent.properties.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Model -->
       <mcs-list-item class="form-field-inline">
@@ -21,7 +21,7 @@
   </div>
 
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="container-header">{{ textContent.supportIdentifiers.title }}</h4>
+    <h2 class="container-header">{{ textContent.supportIdentifiers.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Service -->
       <mcs-list-item class="form-field-inline">
@@ -39,7 +39,7 @@
 
 <div class="grid-row">
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="container-header">{{ textContent.status.title }}</h4>
+    <h2 class="container-header">{{ textContent.status.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Device Status -->
       <mcs-list-item class="form-field-inline">
@@ -64,7 +64,7 @@
 
   <ng-container *ngIf="firewall?.utm?.hasUtmService; else topologyTemplate">
     <div class="grid-column container-wrapper break-on-small">
-      <h4 class="container-header">{{ textContent.utmServices.title }}</h4>
+      <h2 class="container-header">{{ textContent.utmServices.title }}</h2>
       <mcs-list spacing="xsmall">
         <!-- AV Expiry Date -->
         <mcs-list-item *ngIf="firewall?.utm?.avExpiryDate" class="form-field-inline">
@@ -99,7 +99,7 @@
 
 <ng-template #topologyTemplate>
   <div class="grid-column container-wrapper break-on-small">
-    <h4 class="container-header">{{ textContent.topology.title }}</h4>
+    <h2 class="container-header">{{ textContent.topology.title }}</h2>
     <ng-container *ngIf="firewall?.haRole; else noTopologyInfo">
       <mcs-list spacing="xsmall">
         <!-- HA Role -->

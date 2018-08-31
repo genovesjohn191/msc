@@ -26,21 +26,29 @@
                     </ng-container>
                   </ng-container>
 
-                  <mcs-option *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)"
-                    [value]="server"
-                    [disabled]="serverDeleting(server)"
-                    (click)="onServerSelect(server)">
+                  <ng-container *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)">
+                    <a [mcsRouterLink]="[routeKeyEnum.ServerDetail, server.id]"
+                      [disabled]="serverDeleting(server)"
+                      mcsEventTracker="select-server"
+                      mcsEventCategory="server"
+                      mcsEventLabel="server-list-panel">
 
-                    <mcs-icon *ngIf="!server.isProcessing" size="small"
-                      [key]="server.powerStateIconKey"></mcs-icon>
+                      <mcs-option [value]="server"
+                        [selected]="selectedServer?.id === server.id">
+                        <div class="form-field-inline">
+                          <mcs-icon *ngIf="!server.isProcessing" size="small"
+                            [key]="server?.powerStateIconKey"></mcs-icon>
 
-                    <mcs-icon *ngIf="server.isProcessing"
-                      size="small" [key]="spinnerIconKey"
-                      [mcsTooltip]="server.processingText"
-                      mcsTooltipPosition="right"></mcs-icon>
+                          <mcs-icon *ngIf="server.isProcessing"
+                            size="small" [key]="spinnerIconKey"
+                            [mcsTooltip]="server.processingText"
+                            mcsTooltipPosition="right"></mcs-icon>
 
-                    <span class="space-left-xsmall">{{ server.name }}</span>
-                  </mcs-option>
+                          <span class="word-wrap">{{ server.name }}</span>
+                        </div>
+                      </mcs-option>
+                    </a>
+                  </ng-container>
                 </mcs-option-group>
               </ng-container>
             </mcs-list-panel>

@@ -1,0 +1,4 @@
+button, button.btn {
+  font-family: $button-font;
+  @include font-size($button-font-size);
+}

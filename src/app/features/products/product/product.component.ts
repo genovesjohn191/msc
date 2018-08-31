@@ -3,7 +3,8 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewEncapsulation
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -17,7 +18,10 @@ import {
   CoreRoutes,
   McsRouteKey
 } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSubject
+} from '../../../utilities';
 import {
   Product,
   ProductDownload,
@@ -28,7 +32,12 @@ import { ProductService } from './product.service';
 @Component({
   selector: 'mcs-product',
   templateUrl: 'product.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./product.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.ShadowDom,
+  host: {
+    'class': 'product-wrapper'
+  }
 })
 
 export class ProductComponent implements OnInit, OnDestroy {
@@ -57,8 +66,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**

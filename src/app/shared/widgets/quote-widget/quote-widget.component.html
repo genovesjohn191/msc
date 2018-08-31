@@ -1,11 +1,9 @@
 <!-- Collapsible content -->
-<ng-container *ngIf="!collapse">
-  <div #panelElement [@expansionVertical]>
-    <div class="quote-widget-panel">
-      <ng-content></ng-content>
-    </div>
+<div #panelElement [@expansionVertical]="collapse ? 'collapsed' : 'expanded'">
+  <div class="quote-widget-panel">
+    <ng-content></ng-content>
   </div>
-</ng-container>
+</div>
 
 <!-- Quote widget handler -->
 <div class="quote-widget-header" cursor="pointer" (click)="toggleWidget()">

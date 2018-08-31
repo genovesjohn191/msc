@@ -5,7 +5,7 @@
 
       <!-- Icons -->
       <div class="gadgets-container-item">
-        <h3 class="title">ICONS</h3>
+        <h1 class="title">ICONS</h1>
         <h5>GIF Icons</h5>
         <div class="all-icons">
           <mcs-icon *ngFor="let icon of gifIcons"
@@ -27,12 +27,12 @@
 
       <!-- Wizard -->
       <div class="gadgets-container-item">
-        <h3 class="title">WIZARD</h3>
+        <h1 class="title">WIZARD</h1>
 
         <mcs-wizard cancelText="Return" completedText="Done" [ngStyle]="{position: 'relative'}">
             <!-- Step 1  -->
             <mcs-wizard-step stepTitle="1. Name">
-              <h3>Cutomer name details</h3>
+              <h1>Cutomer name details</h1>
 
               <form [formGroup]="fgTestWizard" mcsFormGroup>
                 <label>First Name: </label>
@@ -57,7 +57,7 @@
 
             <!-- Step 2  -->
             <mcs-wizard-step stepTitle="2. Contact Details">
-              <h3>Contact Information</h3>
+              <h1>Contact Information</h1>
               <form [formGroup]="fgWizardSecondForm">
                 <label>Email Address: </label>
                 <mcs-form-field>
@@ -75,7 +75,7 @@
 
             <!-- Step 3  -->
             <mcs-wizard-step stepTitle="3. Summary">
-              <h3>Summary: </h3>
+              <h1>Summary: </h1>
 
               <h5>Full Name: </h5>
               <span>{{ fcFirstName.value }}
@@ -92,11 +92,11 @@
 
       <!-- Fonts -->
       <div class="gadgets-container-item">
-        <h3 class="title">FONTS</h3>
+        <h1 class="title">FONTS</h1>
         <h1>The quick brown fox jumps over the lazy dog. - H1</h1>
         <h2>The quick brown fox jumps over the lazy dog. - H2</h2>
-        <h3>The quick brown fox jumps over the lazy dog. - H3</h3>
-        <h4>The quick brown fox jumps over the lazy dog. - H4</h4>
+        <h1>The quick brown fox jumps over the lazy dog. - H3</h1>
+        <h2>The quick brown fox jumps over the lazy dog. - H4</h2>
         <a href="#">The quick brown fox jumps over the lazy dog.</a>
         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
           Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
@@ -110,7 +110,7 @@
       <div class="row">
         <div class="col">
           <div class="gadgets-container-item">
-            <h3 class="title">Popover Top and Bottom</h3>
+            <h1 class="title">Popover Top and Bottom</h1>
             <div class="content">
               <small><em>Hover me to display dark Popover</em></small> <br/>
               <ng-template #tipContent> Hello guys <br/> this is just a sample tooltip</ng-template>
@@ -136,7 +136,7 @@
               </mcs-form-field>
             </ng-template>
 
-            <h3 class="title">Popover Left and Right</h3>
+            <h1 class="title">Popover Left and Right</h1>
             <div class="content">
               <small><em>Popover left placement and bottom orientation</em></small> <br/>
               <button mcsButton mcsPopover
@@ -160,7 +160,7 @@
               <button mcsButton size="small" width="200">Search</button>
             </ng-template>
 
-            <h3 class="title">Popover Top and Bottom</h3>
+            <h1 class="title">Popover Top and Bottom</h1>
             <div class="content">
               <small><em>Popover top placement and left orientation</em></small> <br/>
               <button mcsButton mcsPopover
@@ -179,13 +179,13 @@
 
       <!-- List Panel -->
       <div class="gadgets-container-item">
-        <h3 class="title">LIST PANEL</h3>
+        <h1 class="title">LIST PANEL</h1>
         <mcs-search #listPanelSearch [delayInSeconds]="0" [style.width]="'300px'"></mcs-search>
       </div>
 
       <!-- Table -->
       <div class="gadgets-container-item">
-        <h3 class="title">TABLE</h3>
+        <h1 class="title">TABLE</h1>
         <div class="table-container">
           <mcs-search #search [style.width]="'300px'"></mcs-search>
 
@@ -227,7 +227,7 @@
 
       <!-- Filter Selector -->
       <div class="gadgets-container-item">
-        <h3 class="title">FILTER SELECTOR</h3>
+        <h1 class="title">FILTER SELECTOR</h1>
         <mcs-filter-selector key="columnMainFilter"
           (filtersChange)="onGetFilterItems($event)"></mcs-filter-selector>
        <table class="mcs-table table">
@@ -245,7 +245,7 @@
 
       <!-- Progressbar -->
       <div class="gadgets-container-item">
-        <h3 class="title">PROGRESSBAR</h3>
+        <h1 class="title">PROGRESSBAR</h1>
         <mcs-form-field [ngStyle]="{width: '200px'}">
           <input mcsInput placeholder="Type to search..."
             [(ngModel)]="progressValue"
@@ -257,7 +257,7 @@
 
       <!-- Radio button group -->
       <div class="gadgets-container-item">
-        <h3 class="title">RADIO BUTTON GROUP</h3>
+        <h1 class="title">RADIO BUTTON GROUP</h1>
 
         <span>Horizontal orientation</span>
         <mcs-radio-button-group
@@ -282,7 +282,7 @@
 
       <!-- Buttons -->
       <div class="gadgets-container-item">
-        <h3 class="title">BUTTONS</h3>
+        <h1 class="title">BUTTONS</h1>
 
         <div class="vertical-items-spacing-medium">
             <div>
@@ -352,7 +352,7 @@
 
       <!-- Slider -->
       <div class="gadgets-container-item">
-        <h3 class="title">SLIDER</h3>
+        <h1 class="title">SLIDER</h1>
 
         <span class="title font-weight-bold">Storage :</span>
         <mcs-slider [step]="10"
@@ -362,7 +362,7 @@
 
       <!-- Alerts -->
       <div class="gadgets-container-item">
-        <h3 class="title">ALERTS</h3>
+        <h1 class="title">ALERTS</h1>
 
         <span class="title font-weight-bold">Alert Success</span>
         <mcs-alert type="success" title="All Done">
@@ -387,7 +387,7 @@
 
       <!-- Textbox -->
       <div class="gadgets-container-item">
-        <h3 class="title">TEXTBOXES</h3>
+        <h1 class="title">TEXTBOXES</h1>
 
         <form [ngStyle]="{width: '300px'}">
           <label for="textDefault"><strong>Default Textbox</strong></label> <br/>
@@ -425,7 +425,7 @@
 
       <!-- Accordion -->
     <div class="gadgets-container-item">
-      <h3 class="title">ACCORDION</h3>
+      <h1 class="title">ACCORDION</h1>
 
       <div class="accordion-sample-wrapper">
         <mcs-accordion [ngStyle]="{width: '600px'}">
@@ -433,7 +433,7 @@
           <mcs-accordion-panel>
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon [key]="notificationBellSvgKey"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Single Panel Expanded</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Single Panel Expanded</h2>
             </mcs-accordion-panel-header>
 
             <span>Standard management network for this VDC.</span>
@@ -446,7 +446,7 @@
           <mcs-accordion-panel [expanded]="true">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon [key]="calendarIconKey"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h2>
             </mcs-accordion-panel-header>
 
             <span>Standard management network for this VDC.</span>
@@ -461,7 +461,7 @@
           <mcs-accordion-panel [expanded]="true">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon [key]="notificationBellSvgKey"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Multiple Panel Expanded</h2>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
             <span>
@@ -473,7 +473,7 @@
           <mcs-accordion-panel [expanded]="true">
             <mcs-accordion-panel-header mcsPanelHeaderDef>
               <mcs-icon [key]="calendarIconKey"></mcs-icon>
-              <h4 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h4>
+              <h2 [ngStyle]="{'margin': '0px', 'padding-left': '20px'}">Customer_MGMT27124449</h2>
             </mcs-accordion-panel-header>
             <span>Standard management network for this VDC.</span>
             <span>
@@ -487,7 +487,7 @@
 
       <!-- Select -->
       <div class="gadgets-container-item">
-        <h3 class="title">SELECT</h3>
+        <h1 class="title">SELECT</h1>
 
           <mcs-select [(ngModel)]="selectedValue" placeholder="Hello placeholder"
             [ngStyle]="{width: '300px'}">
@@ -516,7 +516,7 @@
 
       <!-- Form -->
       <div class="gadgets-container-item">
-        <h3 class="title">FORMS</h3>
+        <h1 class="title">FORMS</h1>
 
         <form>
           <div class="form-group">

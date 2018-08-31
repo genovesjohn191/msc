@@ -63,13 +63,12 @@ export class ListPanelComponent implements AfterContentInit, OnDestroy {
    * Listens to every selection of option to close the previous selection
    */
   private _listenToOptionsSelectionChange(): void {
-    // Drops the current subscriptions and resets from scratch
     let resetSubject = merge(this._options.changes, this._destroySubject);
 
     this._optionsSelectionChanges.pipe(takeUntil(resetSubject))
       .subscribe((option: OptionComponent) => {
-        this._closeGroupsPanel(option);
         this._clearOptionSelection(option);
+        this._closeGroupsPanel(option);
         this._changeDetectorRef.markForCheck();
       });
   }
