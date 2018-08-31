@@ -1,36 +1,18 @@
 import { EventEmitter } from '@angular/core';
 import {
   async,
-  TestBed,
-  getTestBed
+  TestBed
 } from '@angular/core/testing';
 import { ServerComponent } from './server.component';
-import { Router } from '@angular/router';
 import {
   ServersTestingModule,
   mockServerService
 } from '../testing';
-import {
-  Server,
-  ServerPowerState,
-  ServerServiceType
-} from '../models';
 import { ServerService } from '../server/server.service';
 
 describe('ServerComponent', () => {
   /** Stub Services/Components */
   let component: ServerComponent;
-  let router: Router;
-  let mockServerDetails = {
-    id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
-    name: 'contoso-lin01',
-    platform: {
-      environmentName: 'Macquarie_Telecom_Contoso_100320',
-      resourceName: 'M1VDC27117001'
-    },
-    serviceType: ServerServiceType.Managed,
-    powerState: ServerPowerState.PoweredOn,
-  } as Server;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -70,7 +52,6 @@ describe('ServerComponent', () => {
         searching: false,
         showLoading() { return true; }
       };
-      router = getTestBed().get(Router);
     });
   }));
 
@@ -82,19 +63,6 @@ describe('ServerComponent', () => {
 
     it('should set the value of server', () => {
       expect(component.selectedServer).toBeDefined();
-    });
-  });
-
-  describe('onServerSelect()', () => {
-    it('should set the value of server from the selected server', () => {
-      component.onServerSelect(mockServerDetails);
-      expect(component.selectedServer).toBeDefined();
-    });
-
-    it('should navigate to the selected server management page', () => {
-      spyOn(router, 'navigate');
-      component.onServerSelect(mockServerDetails);
-      expect(router.navigate).toHaveBeenCalled();
     });
   });
 });
