@@ -12,12 +12,11 @@ $button-default-font-size: 12;
 $button-medium-font-size: 14;
 $button-font-family: $circular-pro-bold;
 // Theme colors
-$button-color-white: $color-white;
-$button-color-primary: $color-primary-01;
-$button-color-success: $color-green-00;
-$button-color-warning: $color-yellow-00;
-$button-color-danger: $color-red-00;
-$button-color-disabled: rgba(0,0,0,.12);
+$button-white-bg-color: $color-white;
+$button-primary-bg-color: $color-primary-01;
+$button-success-bg-color: $color-green-00;
+$button-warning-bg-color: $color-yellow-00;
+$button-danger-bg-color: $color-red-00;
 
 // Reset button settings mixin
 @mixin mcs-button-reset {
@@ -88,8 +87,6 @@ $button-color-disabled: rgba(0,0,0,.12);
   &[disabled] {
     box-shadow: none;
     cursor: default;
-    color: rgba(0,0,0,.26);
-    background-color: $button-color-disabled;
   }
 
   &::-moz-focus-inner {
@@ -106,35 +103,35 @@ $button-color-disabled: rgba(0,0,0,.12);
 .button-wrapper.raised {
   &.white {
     @include mcs-button-raised-color-setting(
-      $button-color-white,
+      $button-white-bg-color,
       $color-black
     );
   }
 
   &.primary {
     @include mcs-button-raised-color-setting(
-      $button-color-primary,
+      $button-primary-bg-color,
       $color-white
     );
   }
 
   &.success {
     @include mcs-button-raised-color-setting(
-      $button-color-success,
+      $button-success-bg-color,
       $color-white
     );
   }
 
   &.warning {
     @include mcs-button-raised-color-setting(
-      $button-color-warning,
+      $button-warning-bg-color,
       $color-white
     );
   }
 
   &.danger {
     @include mcs-button-raised-color-setting(
-      $button-color-danger,
+      $button-danger-bg-color,
       $color-white
     );
   }
@@ -152,19 +149,19 @@ $button-color-disabled: rgba(0,0,0,.12);
   }
 
   &.primary {
-    @include mcs-button-basic-color-setting($button-color-primary);
+    @include mcs-button-basic-color-setting($button-primary-bg-color);
   }
 
   &.success {
-    @include mcs-button-basic-color-setting($button-color-success);
+    @include mcs-button-basic-color-setting($button-success-bg-color);
   }
 
   &.warning {
-    @include mcs-button-basic-color-setting($button-color-warning);
+    @include mcs-button-basic-color-setting($button-warning-bg-color);
   }
 
   &.danger {
-    @include mcs-button-basic-color-setting($button-color-danger);
+    @include mcs-button-basic-color-setting($button-danger-bg-color);
   }
 }
 

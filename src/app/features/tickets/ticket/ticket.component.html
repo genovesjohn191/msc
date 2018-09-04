@@ -112,30 +112,24 @@
         <div class="grid-row">
           <div class="container-wrapper grid-column">
             <h2 class="container-header">{{ textContent.services }}</h2>
-            <ng-container *ngIf="ticket.serviceId | mcsIsNullOrEmpty; else servicesTemplate">
-              <mcs-data-status-empty>
-                {{ textContent.missingServicesLabel }}
-              </mcs-data-status-empty>
-            </ng-container>
-
-            <ng-template #servicesTemplate>
+            <ng-container *ngIf="ticket.serviceId | mcsIsNotNullOrEmpty; else noServices">
               <mcs-list spacing="auto">
                 <mcs-list-item *ngFor="let service of ticket.serviceId">
                   <span>{{ service }}</span>
                 </mcs-list-item>
               </mcs-list>
+            </ng-container>
+
+            <ng-template #noServices>
+              <mcs-data-status-empty>
+                {{ textContent.missingServicesLabel }}
+              </mcs-data-status-empty>
             </ng-template>
           </div>
 
           <div class="container-wrapper grid-column">
             <h2 class="container-header">{{ textContent.attachments }}</h2>
-            <ng-container *ngIf="ticket.attachments | mcsIsNullOrEmpty; else attachmentsTemplate">
-              <mcs-data-status-empty>
-                {{ textContent.missingAttachmentsLabel }}
-              </mcs-data-status-empty>
-            </ng-container>
-
-            <ng-template #attachmentsTemplate>
+            <ng-container *ngIf="ticket.attachments | mcsIsNotNullOrEmpty; else noAttachments">
               <mcs-list spacing="small">
                 <mcs-list-item *ngFor="let attachment of ticket.attachments">
                   <mcs-file-download [fileType]="attachment.contentType"
@@ -148,6 +142,12 @@
                   </mcs-file-download>
                 </mcs-list-item>
               </mcs-list>
+            </ng-container>
+
+            <ng-template #noAttachments>
+              <mcs-data-status-empty>
+                {{ textContent.missingAttachmentsLabel }}
+              </mcs-data-status-empty>
             </ng-template>
           </div>
         </div>
@@ -172,12 +172,7 @@
             </div>
           </ng-container>
 
-          <ng-container *ngIf="activities | mcsIsNullOrEmpty; else activitiesTemplate">
-            <mcs-data-status-empty>
-              {{ textContent.missingActivitiesLabel }}
-            </mcs-data-status-empty>
-          </ng-container>
-          <ng-template #activitiesTemplate>
+          <ng-container *ngIf="activities | mcsIsNotNullOrEmpty; else noActivities">
             <div>
               <mcs-ticket-activity [ticketId]="ticket.id"
                 class="vspace-xsmall"
@@ -185,6 +180,11 @@
                 [activity]="activity">
               </mcs-ticket-activity>
             </div>
+          </ng-container>
+          <ng-template #noActivities>
+            <mcs-data-status-empty>
+              {{ textContent.missingActivitiesLabel }}
+            </mcs-data-status-empty>
           </ng-template>
         </div>
       </div>

@@ -64,8 +64,7 @@
   </div>
 
   <div class="grid-column container-wrapper">
-    <h2 class="horizontal-items-spacing-small container-header"
-      display-flex="row" align-items="center">
+    <h2 class="inline-items-small container-header">
       <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
       <span>{{ textContent.storageProfiles.title }}</span>
       <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailStorage)">
@@ -102,8 +101,7 @@
           </mcs-list>
 
           <div *ngIf="isStorageProfileLow(storage)"
-            class="horizontal-items-spacing-small vspace-small"
-            display-flex="row" align-items="center" justify-content="center">
+            class="inline-items-small vspace-small">
             <mcs-icon [key]="warningIconKey"></mcs-icon>
             <span>{{ textContent.storageProfiles.lowStorageProfile }}</span>
           </div>

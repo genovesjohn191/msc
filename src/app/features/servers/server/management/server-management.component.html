@@ -116,13 +116,7 @@
                 </ng-container>
               </div>
             </h2>
-            <ng-container *ngIf="server.storageDevices | mcsIsNullOrEmpty; else storagesTemplate">
-              <mcs-data-status-empty>
-                {{ textContent.storage.noContentMessage }}
-              </mcs-data-status-empty>
-            </ng-container>
-
-            <ng-template #storagesTemplate>
+            <ng-container *ngIf="server.storageDevices | mcsIsNotNullOrEmpty; else noDisks">
               <mcs-list spacing="xsmall">
                 <mcs-list-item *ngFor="let storage of server.storageDevices"
                   class="form-field-inline">
@@ -130,6 +124,12 @@
                   <span [innerHTML]="(storage.sizeMB | mcsDataSize: 'MB') | mcsDataLabel"></span>
                 </mcs-list-item>
               </mcs-list>
+            </ng-container>
+
+            <ng-template #noDisks>
+              <mcs-data-status-empty>
+                {{ textContent.storage.noContentMessage }}
+              </mcs-data-status-empty>
             </ng-template>
           </div>
 
@@ -146,13 +146,7 @@
                 </ng-container>
               </div>
             </h2>
-            <ng-container *ngIf="server.nics | mcsIsNullOrEmpty; else nicsTemplate">
-              <mcs-data-status-empty>
-                {{ textContent.nics.noContentMessage }}
-              </mcs-data-status-empty>
-            </ng-container>
-
-            <ng-template #nicsTemplate>
+            <ng-container *ngIf="server.nics | mcsIsNotNullOrEmpty; else noContentMessage">
               <mcs-accordion [multi]="true">
                 <mcs-accordion-panel *ngFor="let nic of server.nics; let i = index"
                   [expanded]="i === 0">
@@ -190,6 +184,12 @@
                   </div>
                 </mcs-accordion-panel>
               </mcs-accordion>
+            </ng-container>
+
+            <ng-template #noContentMessage>
+              <mcs-data-status-empty>
+                {{ textContent.nics.noContentMessage }}
+              </mcs-data-status-empty>
             </ng-template>
           </div>
         </div>

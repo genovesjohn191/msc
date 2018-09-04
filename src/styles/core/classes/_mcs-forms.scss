@@ -51,6 +51,7 @@ $form-field-size-large: 400px;
 
 .form-field-inline {
   @include display-flex(row);
+  @include align-items(center);
   @include set-items-interval($form-field-inline-spacing, horizontal);
 
   > * {

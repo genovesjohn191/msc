@@ -1,5 +1,4 @@
-<div display-flex="column" align-items="center"
-  class="text-center http-error-page-content vertical-items-spacing-medium">
+<div class="http-error-page-content block-items-medium centered text-center">
 
   <span class="http-error-page-header">{{ textContent?.header }}</span>
   <h2>{{ textContent?.summary }}</h2>
@@ -12,7 +11,7 @@
     </span>
   </div>
 
-  <div [ngSwitch]="errorCode" display-flex align-items="center" justify-content="space-between">
+  <div [ngSwitch]="errorCode">
     <div *ngSwitchCase="httpStatusCodeEnum.NotFound">
       <ng-container *ngTemplateOutlet="homeButtonTemplate"></ng-container>
     </div>

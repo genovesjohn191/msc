@@ -4,12 +4,15 @@
 @import "../../../../styles/core/elements/mcs-bold";
 @import "../../../../styles/core/elements/mcs-table";
 @import "../../../../styles/core/classes/mcs-grid";
-@import "../../../../styles/core/layout/mcs-color";
-@import "../../../../styles/core/layout/mcs-space";
-@import "../../../../styles/core/layout/mcs-alignment";
-@import "../../../../styles/core/layout/mcs-divider";
+@import "../../../../styles/core/classes/mcs-color";
+@import "../../../../styles/core/classes/mcs-space";
+@import "../../../../styles/core/classes/mcs-alignment";
+@import "../../../../styles/core/classes/mcs-divider";
+@import "../../../../styles/core/classes/mcs-layout";
+@import "../../../../styles/core/classes/mcs-theme";
 
 $product-max-width: 100%;
+$product-catalog-pricing-size: 350px;
 
 :host {
   position: absolute;
@@ -20,29 +23,55 @@ $product-max-width: 100%;
   max-width: $product-max-width;
 }
 
-.product-catalog-text-blue {
-  color: $color-primary-00;
-}
-
 .product-catalog-item {
   padding: $space-large;
 }
 
+.product-catalog-banner {
+  @include display-flex(column);
+  @include align-items(center);
+  justify-content: center;
+
+  @include breakpoint(small) {
+    position: absolute;
+  }
+}
+
+.product-catalog-widget-wrapper {
+  float: right;
+  @include set-items-interval($space-medium);
+  width: 100%;
+  max-width: $product-catalog-pricing-size;
+  margin: $space-large;
+  @include display-flex(column);
+
+  @include breakpoint(small) {
+    float: none;
+    margin: 0;
+  }
+
+  .product-catalog-widget {
+    .product-catalog-widget-item {
+      border-left: 1px solid $border-color-light;
+      border-right: 1px solid $border-color-light;
+      border-bottom: 1px solid $border-color-light;
+      padding: $space-small;
+      @include display-flex(column);
+      @include set-items-interval($space-xsmall);
+    }
+  }
+}
+
 .product-catalog-pricing-wrapper {
+  float: right;
   @include display-flex(column);
   width: 100%;
-  max-width: 350px;
+  max-width: $product-catalog-pricing-size;
+  margin: $space-large;
 
-  .product-catalog-pricing-header {
-    @include display-flex(row);
-    @include align-items(center);
-    justify-content: center;
-    border-left: 1px solid $border-color-light;
-    border-right: 1px solid $border-color-light;
-    border-bottom: 1px solid $border-color-light;
-    padding: $space-small;
-    background: $dark-bg-color;
-    color: $dark-bg-text-color;
+  @include breakpoint(small) {
+    float: none;
+    margin: 0;
   }
 
   .product-catalog-pricing-item {

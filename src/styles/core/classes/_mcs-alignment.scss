@@ -85,3 +85,16 @@
 .text-left {
   text-align: left;
 }
+
+// Item alignment
+.right-align {
+  margin-left: auto !important;
+}
+
+.left-align {
+  margin-right: auto !important;
+}
+
+.top-align {
+  vertical-align: top !important;
+}

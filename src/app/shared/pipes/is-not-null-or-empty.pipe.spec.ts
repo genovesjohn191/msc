@@ -8,7 +8,7 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { IsNullOrEmptyPipe } from './is-null-or-empty.pipe';
+import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
 
 @Component({
   selector: 'mcs-test',
@@ -21,8 +21,8 @@ export class TestComponent {
   @ViewChild('testElement2')
   public testElement2: ElementRef;
 
-  @ViewChild(IsNullOrEmptyPipe)
-  public pipe: IsNullOrEmptyPipe;
+  @ViewChild(IsNotNullOrEmptyPipe)
+  public pipe: IsNotNullOrEmptyPipe;
 
   public textValue1 = 'sample data';
   public textValue2 = undefined;
@@ -42,7 +42,7 @@ describe('IsNullOrEmptyPipe', () => {
     TestBed.configureTestingModule({
       declarations: [
         TestComponent,
-        IsNullOrEmptyPipe
+        IsNotNullOrEmptyPipe
       ]
     });
 
@@ -52,8 +52,8 @@ describe('IsNullOrEmptyPipe', () => {
         template: `
         <div>ComponentHandlerDirective Template</div>
         <div>
-          <span #testElement1 *ngIf="!(textValue1 | mcsIsNullOrEmpty)"></span>
-          <span #testElement2 *ngIf="!(textValue2 | mcsIsNullOrEmpty)"></span>
+          <span #testElement1 *ngIf="textValue1 | mcsIsNotNullOrEmpty"></span>
+          <span #testElement2 *ngIf="textValue2 | mcsIsNotNullOrEmpty"></span>
         </div>
         `
       }

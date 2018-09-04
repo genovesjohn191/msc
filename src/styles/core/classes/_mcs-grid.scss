@@ -34,7 +34,7 @@
 
   &.center-orientation {
     @include display-flex(row);
-    @include align-items(flex-start);
+    @include align-items(center);
     justify-content: center;
   }
 
