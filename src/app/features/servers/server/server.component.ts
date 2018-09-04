@@ -210,20 +210,6 @@ export class ServerComponent
   }
 
   /**
-   * Event that emits when VDC name is selected
-   */
-  public onSelectVdcByName(event: MouseEvent, resource: ServerPlatform): void {
-    if (!isNullOrEmpty(event)) { event.stopPropagation(); }
-    if (isNullOrEmpty(resource.resourceId)) { return; }
-
-    this._changeDetectorRef.markForCheck();
-    this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
-      resource.resourceId
-    ]);
-  }
-
-  /**
    * Event that emits when the tab is changed in the routing tabgroup
    * @param tab Active tab
    */

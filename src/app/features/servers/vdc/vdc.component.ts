@@ -87,6 +87,10 @@ export class VdcComponent
     return CoreDefinition.ASSETS_GIF_SPINNER;
   }
 
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
+
   private _vdc: Resource;
   public get vdc(): Resource { return this._vdc; }
   public set vdc(value: Resource) {

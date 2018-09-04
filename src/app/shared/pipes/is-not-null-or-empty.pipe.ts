@@ -5,15 +5,15 @@ import {
 import { isNullOrEmpty } from '../../utilities';
 
 @Pipe({
-  name: 'mcsIsNullOrEmpty'
+  name: 'mcsIsNotNullOrEmpty'
 })
 
-export class IsNullOrEmptyPipe implements PipeTransform {
+export class IsNotNullOrEmptyPipe implements PipeTransform {
   /**
    * Transform the given data into boolean type that returns true when the data is null or empty
    * @param data Data to be transformed
    */
   public transform(data: any): boolean {
-    return isNullOrEmpty(data);
+    return !isNullOrEmpty(data);
   }
 }

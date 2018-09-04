@@ -9,7 +9,7 @@ import { StdDateFormatPipe } from './std-date-format.pipe';
 import { ArrayTakeMaxPipe } from './array-take-max.pipe';
 import { PluralPipe } from './plural.pipe';
 import { TextPlaceholderPipe } from './text-placeholder.pipe';
-import { IsNullOrEmptyPipe } from './is-null-or-empty.pipe';
+import { IsNotNullOrEmptyPipe } from './is-not-null-or-empty.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import { IsNullOrEmptyPipe } from './is-null-or-empty.pipe';
     ArrayTakeMaxPipe,
     PluralPipe,
     TextPlaceholderPipe,
-    IsNullOrEmptyPipe
+    IsNotNullOrEmptyPipe
   ],
   exports: [
     NewLinesPipe,
@@ -34,7 +34,7 @@ import { IsNullOrEmptyPipe } from './is-null-or-empty.pipe';
     ArrayTakeMaxPipe,
     PluralPipe,
     TextPlaceholderPipe,
-    IsNullOrEmptyPipe
+    IsNotNullOrEmptyPipe
   ],
   providers: [
     DecimalPipe,

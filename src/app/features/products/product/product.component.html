@@ -1,13 +1,12 @@
 <!-- Short Description -->
-<div class="product-catalog-item bg-color-grey-08">
+<div class="product-catalog-item grey-panel">
   <div class="grid-row">
-    <div class="grid-column">
-      <mcs-image size="xxlarge" [key]="productCatalogBannerKey"></mcs-image>
+    <div class="grid-column center-orientation">
+      <div [innerHTML]="selectedProduct.shortDescription"></div>
     </div>
 
-    <div class="grid-column">
-      <h1 class="color-primary-01">{{ selectedProduct.name }}</h1>
-      <div [innerHTML]="selectedProduct.shortDescription"></div>
+    <div class="right-align product-catalog-banner">
+      <mcs-image size="xlarge" [key]="productCatalogBannerKey"></mcs-image>
     </div>
   </div>
 </div>
@@ -15,93 +14,102 @@
 <!-- Description -->
 <div class="product-catalog-item">
 
-  <div class="grid-row">
-    <div class="grid-column">
-      <div [innerHTML]="selectedProduct.description"></div>
+  <div class="product-catalog-widget-wrapper">
+    <!-- TODO: Remove the pricing for phase 1 -->
+    <div class="product-catalog-widget" *ngIf="false">
+      <div class="product-catalog-widget-item dark-panel text-center">
+        <strong>Pricing</strong>
+      </div>
+
+      <div class="product-catalog-widget-item">
+        <div class="space-between-inline-items">
+          <span>Price</span>
+          <strong class="blue-text">
+            ${{ selectedProduct.price }}
+          </strong>
+        </div>
+        <div class="divider"></div>
+
+        <div class="space-between-inline-items">
+          <span>Retail Price</span>
+          <strong class="blue-text">
+            ${{ selectedProduct.retailPrice }}
+          </strong>
+        </div>
+        <div class="divider"></div>
+
+        <div class="space-between-inline-items">
+          <span>Recurring Price</span>
+          <strong class="blue-text">
+            ${{ selectedProduct.recurringPrice }}
+          </strong>
+        </div>
+        <div class="divider"></div>
+
+        <div class="block-items-small">
+          <button mcsButton [disabled]="true">Buy Now</button>
+          <button mcsButton [disabled]="true">Make a Change</button>
+        </div>
+      </div>
     </div>
 
-    <div class="grid-column center-orientation">
-      <div class="product-catalog-pricing-wrapper">
-        <div class="product-catalog-pricing-header">
-          <strong>Pricing</strong>
+    <div class="product-catalog-widget">
+      <div class="product-catalog-widget-item dark-panel text-center">
+        <strong>Recommendations</strong>
+      </div>
+
+      <div class="product-catalog-widget-item">
+        <div class="block-items-xsmall">
+          <a [mcsRouterLink]="[routeKeyEnum.Servers]"
+            mcsEventTracker="select-vm-instance"
+            mcsEventCategory="product"
+            mcsEventLabel="product-list-panel">VDC VM Instance</a>
+          <a [mcsRouterLink]="[routeKeyEnum.Firewalls]"
+            mcsEventTracker="select-firewalls"
+            mcsEventCategory="product"
+            mcsEventLabel="product-list-panel">Managed Firewalls</a>
         </div>
-        <div class="product-catalog-pricing-item">
-          <div class="space-between-inline-items">
-            <span>Price</span>
-            <strong class="product-catalog-text-blue">
-              ${{ selectedProduct.price }}
-            </strong>
-          </div>
-          <div class="divider"></div>
+      </div>
+    </div>
 
-          <div class="space-between-inline-items">
-            <span>Retail Price</span>
-            <strong class="product-catalog-text-blue">
-              ${{ selectedProduct.retailPrice }}
-            </strong>
-          </div>
-          <div class="divider"></div>
-
-          <div class="space-between-inline-items">
-            <span>Recurring Price</span>
-            <strong class="product-catalog-text-blue">
-              ${{ selectedProduct.recurringPrice }}
-            </strong>
-          </div>
-          <div class="divider"></div>
-
-          <div class="block-items-small">
-            <button mcsButton [disabled]="true">Buy Now</button>
-            <button mcsButton [disabled]="true">Make a Change</button>
-          </div>
-        </div>
-
-        <div class="product-catalog-pricing-item">
-          <strong>We also recommend</strong>
-          <div class="block-items-xsmall">
-            <a [mcsRouterLink]="[routeKeyEnum.Servers]"
-              mcsEventTracker="select-vm-instance"
-              mcsEventCategory="product"
-              mcsEventLabel="product-list-panel">VDC VM Instance</a>
-            <a [mcsRouterLink]="[routeKeyEnum.Firewalls]"
-              mcsEventTracker="select-firewalls"
-              mcsEventCategory="product"
-              mcsEventLabel="product-list-panel">Managed Firewalls</a>
-          </div>
-        </div>
-
-        <div class="product-catalog-pricing-item"
-          *ngIf="!(selectedProduct.dependentProducts | mcsIsNullOrEmpty)">
-          <strong>Dependencies</strong>
-          <div class="block-items-xsmall">
-            <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
-              [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
-              mcsEventTracker="select-product-dependency"
-              mcsEventCategory="product"
-              mcsEventLabel="product-list-panel">
-              {{ dependentProduct.name }}
-            </a>
-          </div>
+    <div class="product-catalog-widget"
+      *ngIf="selectedProduct.dependentProducts | mcsIsNotNullOrEmpty">
+      <div class="product-catalog-widget-item dark-panel text-center">
+        <strong>Dependencies</strong>
+      </div>
+      <div class="product-catalog-widget-item">
+        <div class="block-items-xsmall">
+          <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
+            [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
+            mcsEventTracker="select-product-dependency"
+            mcsEventCategory="product"
+            mcsEventLabel="product-list-panel">
+            {{ dependentProduct.name }}
+          </a>
         </div>
       </div>
     </div>
   </div>
+  <div [innerHTML]="selectedProduct.description"></div>
 </div>
 
 <!-- Use Cases -->
-<div class="product-catalog-item bg-color-grey-08">
-  <h1 class="color-primary-01">Use Cases</h1>
+<div class="product-catalog-item grey-panel"
+  *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
+  <h1 class="blue-text">Use Cases</h1>
   <div [innerHTML]="selectedProduct.useCases"></div>
 </div>
 
 <!-- PCI Compliance -->
-<div class="product-catalog-item">
-  <h1 class="color-primary-01">PCI Compliance</h1>
+<div class="product-catalog-item"
+  *ngIf="selectedProduct.pciDetails | mcsIsNotNullOrEmpty">
+  <h1 class="blue-text">PCI Compliance</h1>
   <div [innerHTML]="selectedProduct.pciDetails"></div>
 </div>
 
 <!-- Feature Benefit Matrix -->
-<div class="product-catalog-item">
-  <h1 class="color-primary-01">Feature Benefit Matrix</h1>
+<div class="product-catalog-item"
+  *ngIf="selectedProduct.featureBenefitMatrix | mcsIsNotNullOrEmpty">
+  <h1 class="blue-text">Feature Benefit Matrix</h1>
   <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
 </div>

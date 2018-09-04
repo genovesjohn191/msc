@@ -81,7 +81,7 @@
       mcsEventLabel="user-panel"
       stop-propagation>
       <mcs-icon class="user-icon" [key]="userIconKey" size="small"></mcs-icon>
-      <span class="hidden-small text-light">{{ firstName }} {{ lastName }}</span>
+      <span class="hidden-small grey-text">{{ firstName }} {{ lastName }}</span>
 
       <small *ngIf="!loadingAccount" class="user-info" read-only>{{ activeAccount?.name }}</small>
       <small *ngIf="loadingAccount" class="user-info" read-only>

@@ -2,14 +2,7 @@
 @import "fonts";
 @import "animations/mcs-animations";
 
-@import "layout/mcs-reset";
-@import "layout/mcs-space";
-@import "layout/mcs-color";
-@import "layout/mcs-alignment";
-@import "layout/mcs-box-shadow";
-@import "layout/mcs-divider";
-@import "layout/mcs-layout";
-
+@import "elements/mcs-reset";
 @import "elements/mcs-anchor";
 @import "elements/mcs-bold";
 @import "elements/mcs-button";
@@ -19,6 +12,18 @@
 @import "elements/mcs-small";
 @import "elements/mcs-strong";
 @import "elements/mcs-table";
+
+@import "classes/mcs-space";
+@import "classes/mcs-color";
+@import "classes/mcs-alignment";
+@import "classes/mcs-box-shadow";
+@import "classes/mcs-divider";
+@import "classes/mcs-flexbox";
+@import "classes/mcs-font";
+@import "classes/mcs-text";
+@import "classes/mcs-theme";
+@import "classes/mcs-visibility";
+@import "classes/mcs-layout";
 
 @import "classes/mcs-container";
 @import "classes/mcs-panel";

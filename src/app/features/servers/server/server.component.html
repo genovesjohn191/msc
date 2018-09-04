@@ -1,7 +1,7 @@
 <mcs-page>
   <!-- Page template header -->
   <ng-container *mcsPageHeader>
-    <div class="horizontal-items-spacing-small" display-flex="row" align-items="center">
+    <div class="inline-items-small">
       <div>
         <a (click)="onSelectVdcByName($event, selectedServer.platform)"
           mcsEventTracker="select-vdc"
@@ -36,7 +36,7 @@
                 <mcs-option-group>
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
-                      <a (click)="onSelectVdcByName($event, iterator.key)"
+                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]"
                         mcsEventTracker="select-vdc"
                         mcsEventCategory="vdc"
                         mcsEventLabel="server-list-panel">

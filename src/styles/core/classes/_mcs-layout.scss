@@ -1,0 +1,79 @@
+// Layout width
+.full-width {
+  width: 100%;
+}
+
+.auto-width {
+  width: auto;
+}
+
+// Outlines
+.outline-none {
+  outline: none;
+}
+
+// Position
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+// Status
+.read-only {
+  color: $readonly-color;
+}
+
+// Special effects
+.rotate-sideways {
+  @include transform(translateX(-50%) translateY(-50%) rotate(-90deg));
+}
+
+// Icon with label
+.labelled-icon {
+  @include flex(0 0 auto);
+  @include display-flex(row);
+  @include set-items-interval($space-small, horizontal);
+}
+
+.dropzone {
+  border: 5px dashed transparent;
+
+  &.file-hover {
+    border: 5px dashed $color-grey-04;
+  }
+}
+
+// Limited view to all the page
+.limited-view {
+  @include flex(0 0 auto !important); // Force the page to not apply flex auto
+  width: $limited-view-width;
+  @include breakpoint(medium) {
+    width: 100%;
+  }
+}
+
+// Action items
+.action-items {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: space-between;
+  margin-top: $space-medium;
+
+  > :only-child {
+    margin-left: auto;
+  }
+}
+
+// Disabled element
+.disabled-element {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+// Hide element
+.hide-element {
+  display: none !important;
+}
