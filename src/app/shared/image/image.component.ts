@@ -178,10 +178,11 @@ export class ImageComponent implements OnChanges {
    */
   private _renderImageElement(parentContainer: HTMLElement): Observable<HTMLElement> {
     let imageElement = this._renderer.createElement('img');
+    let imageSize = this._imageActualSize === 'auto' ? '100%' : this._imageActualSize;
     this._renderer.setAttribute(imageElement, 'src', this._image.value);
     this._renderer.setStyle(imageElement, 'display', 'block');
     this._renderer.setStyle(imageElement, 'height', 'auto');
-    this._renderer.setStyle(imageElement, 'width', this._imageActualSize);
+    this._renderer.setStyle(imageElement, 'width', imageSize);
     this._renderer.setStyle(imageElement, 'max-width', '100%');
 
     this._renderer.appendChild(parentContainer, imageElement);

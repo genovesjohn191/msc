@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import {
+  Injectable,
+  isDevMode
+} from '@angular/core';
 import {
   Observable,
   Subject,
@@ -156,7 +159,7 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public onSessionIdle(): Observable<boolean> {
     return this._onSessionIdle
-      .pipe(distinctUntilChanged(), filter((response) => response));
+      .pipe(distinctUntilChanged(), filter((response) => response && !isDevMode()));
   }
 
   /**
@@ -164,7 +167,7 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public onSessionTimeOut(): Observable<boolean> {
     return this._onSessionTimeOut
-      .pipe(distinctUntilChanged(), filter((response) => response));
+      .pipe(distinctUntilChanged(), filter((response) => response && !isDevMode()));
   }
 
   /**
@@ -214,6 +217,9 @@ export class McsSessionHandlerService implements McsInitializer {
       });
   }
 
+  /**
+   * Registers all the event handlers
+   */
   private _registerEventHandlers() {
     this.onUserChanged()
       .pipe(takeUntil(this._destroySubject))
@@ -233,7 +239,7 @@ export class McsSessionHandlerService implements McsInitializer {
 
     this._authIdentity.userChanged
       .pipe(takeUntil(this._destroySubject))
-      .subscribe((identity) => this._sessionUserIdentityUpdated(identity));
+      .subscribe((identity) => this._sessionUserValidation(identity));
 
     this.onSessionIdle()
       .pipe(takeUntil(this._destroySubject))
@@ -244,7 +250,10 @@ export class McsSessionHandlerService implements McsInitializer {
       .subscribe(() => this._sessionActivedEventHandler());
   }
 
-  private _sessionUserIdentityUpdated(identity: McsApiIdentity) {
+  /**
+   * Validates the user and remove it from the cookie when the user has been changed
+   */
+  private _sessionUserValidation(identity: McsApiIdentity) {
     let sessionId = identity.hashedId + identity.expiry;
     let hashedId = this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_SESSION_ID);
     if (sessionId !== hashedId) {
@@ -334,7 +343,7 @@ export class McsSessionHandlerService implements McsInitializer {
   }
 
   private _initializeSessionExtensionRequestCountdownTimer(remainingTimeInSeconds: number) {
-    timer(remainingTimeInSeconds *  1000)
+    timer(remainingTimeInSeconds * 1000)
       .pipe(takeUntil(this._timerSubject))
       .subscribe(() => this._requestSessionExtension());
   }

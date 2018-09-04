@@ -1,5 +1,5 @@
 <div class="grid-row">
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="container-header">{{ textContent.properties.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Model -->
@@ -20,7 +20,7 @@
     </mcs-list>
   </div>
 
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="container-header">{{ textContent.supportIdentifiers.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Service -->
@@ -38,7 +38,7 @@
 </div>
 
 <div class="grid-row">
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="container-header">{{ textContent.status.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Device Status -->
@@ -63,7 +63,7 @@
   </div>
 
   <ng-container *ngIf="firewall?.utm?.hasUtmService; else topologyTemplate">
-    <div class="grid-column container-wrapper break-on-small">
+    <div class="grid-column container-wrapper">
       <h2 class="container-header">{{ textContent.utmServices.title }}</h2>
       <mcs-list spacing="xsmall">
         <!-- AV Expiry Date -->
@@ -94,11 +94,11 @@
 
 <div *ngIf="firewall?.utm?.hasUtmService" class="grid-row">
   <ng-container *ngTemplateOutlet="topologyTemplate"></ng-container>
-  <div class="grid-column container-wrapper break-on-small"></div>
+  <div class="grid-column container-wrapper"></div>
 </div>
 
 <ng-template #topologyTemplate>
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="container-header">{{ textContent.topology.title }}</h2>
     <ng-container *ngIf="firewall?.haRole; else noTopologyInfo">
       <mcs-list spacing="xsmall">

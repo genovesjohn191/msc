@@ -5,10 +5,13 @@
   @include align-items(center);
   justify-content: center;
   vertical-align: middle;
+  width: 100%;
 }
 
 .image-container {
   @include display-flex(row);
-  align-items: center;
+  @include align-items(center);
+  justify-content: center;
+  width: 100%;
   background-repeat: no-repeat;
 }

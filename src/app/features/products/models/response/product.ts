@@ -1,10 +1,13 @@
+import { JsonProperty } from 'json-object-mapper';
 import { McsEntityBase } from '../../../../core';
+import { ProductDependency } from './product-dependency';
 
 export class Product extends McsEntityBase {
   public version: number;
   public order: number;
-  public shortDescription: string;
+  public parentProduct: string;   // This should be a parentProductId
   public description: string;
+  public shortDescription: string;
   public useCases: string;
   public pciDetails: string;
   public featureBenefitMatrix: string;
@@ -12,16 +15,19 @@ export class Product extends McsEntityBase {
   public proposalDetails: string;
   public competitiveIntelligence: string;
   public targetMarketInfo: string;
-  public price: number;
-  public retailPrice: number;
-  public recurringPrice: number;
+  public price: string;
+  public retailPrice: string;
+  public recurringPrice: string;
   public locations: string;
   public serviceIdPrefix: string;
-  public elementCode: string;
+  public elementCode: number;
   public name: string;
   public displayOrder: number;
   public catalogId: string;
   public categoryId: string;
+
+  @JsonProperty({ type: ProductDependency })
+  public dependentProducts: ProductDependency[];
 
   constructor() {
     super();
@@ -46,5 +52,6 @@ export class Product extends McsEntityBase {
     this.displayOrder = undefined;
     this.catalogId = undefined;
     this.categoryId = undefined;
+    this.dependentProducts = undefined;
   }
 }

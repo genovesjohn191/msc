@@ -183,6 +183,7 @@ export class CoreDefinition {
   public static ASSETS_IMAGE_MCS_LIGHT_LOGO = 'light-mcs-logo';
   public static ASSETS_IMAGE_MCS_DARK_LOGO = 'dark-mcs-logo';
   public static ASSETS_IMAGE_USER_PERMISSIONS = 'user-permissions';
+  public static ASSETS_IMAGE_PRODUCT_CATALOG_BANNER = 'product-catalog-banner';
 
   /** Filter Selector */
   public static FILTERSELECTOR_SERVER_LISTING = 'serverFilter';

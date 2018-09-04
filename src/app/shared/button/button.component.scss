@@ -17,7 +17,7 @@ $button-color-primary: $color-primary-01;
 $button-color-success: $color-green-00;
 $button-color-warning: $color-yellow-00;
 $button-color-danger: $color-red-00;
-$button-color-disabled: $color-grey-02;
+$button-color-disabled: rgba(0,0,0,.12);
 
 // Reset button settings mixin
 @mixin mcs-button-reset {
@@ -87,6 +87,9 @@ $button-color-disabled: $color-grey-02;
 
   &[disabled] {
     box-shadow: none;
+    cursor: default;
+    color: rgba(0,0,0,.26);
+    background-color: $button-color-disabled;
   }
 
   &::-moz-focus-inner {

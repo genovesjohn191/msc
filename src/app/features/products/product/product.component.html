@@ -1,25 +1,107 @@
-<!-- Content Panel -->
-<div *ngIf="selectedProduct?.shortDescription" class="container-wrapper">
-  <h2 class="container-header">Product Short Description</h2>
-  <p [innerHTML]="selectedProduct.shortDescription"></p>
+<!-- Short Description -->
+<div class="product-catalog-item bg-color-grey-08">
+  <div class="grid-row">
+    <div class="grid-column">
+      <mcs-image size="xxlarge" [key]="productCatalogBannerKey"></mcs-image>
+    </div>
+
+    <div class="grid-column">
+      <h1 class="color-primary-01">{{ selectedProduct.name }}</h1>
+      <div [innerHTML]="selectedProduct.shortDescription"></div>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="selectedProduct?.description" class="container-wrapper">
-  <h2 class="container-header">Product Description</h2>
-  <p [innerHTML]="selectedProduct.description"></p>
+<!-- Description -->
+<div class="product-catalog-item">
+
+  <div class="grid-row">
+    <div class="grid-column">
+      <div [innerHTML]="selectedProduct.description"></div>
+    </div>
+
+    <div class="grid-column center-orientation">
+      <div class="product-catalog-pricing-wrapper">
+        <div class="product-catalog-pricing-header">
+          <strong>Pricing</strong>
+        </div>
+        <div class="product-catalog-pricing-item">
+          <div class="space-between-inline-items">
+            <span>Price</span>
+            <strong class="product-catalog-text-blue">
+              ${{ selectedProduct.price }}
+            </strong>
+          </div>
+          <div class="divider"></div>
+
+          <div class="space-between-inline-items">
+            <span>Retail Price</span>
+            <strong class="product-catalog-text-blue">
+              ${{ selectedProduct.retailPrice }}
+            </strong>
+          </div>
+          <div class="divider"></div>
+
+          <div class="space-between-inline-items">
+            <span>Recurring Price</span>
+            <strong class="product-catalog-text-blue">
+              ${{ selectedProduct.recurringPrice }}
+            </strong>
+          </div>
+          <div class="divider"></div>
+
+          <div class="block-items-small">
+            <button mcsButton [disabled]="true">Buy Now</button>
+            <button mcsButton [disabled]="true">Make a Change</button>
+          </div>
+        </div>
+
+        <div class="product-catalog-pricing-item">
+          <strong>We also recommend</strong>
+          <div class="block-items-xsmall">
+            <a [mcsRouterLink]="[routeKeyEnum.Servers]"
+              mcsEventTracker="select-vm-instance"
+              mcsEventCategory="product"
+              mcsEventLabel="product-list-panel">VDC VM Instance</a>
+            <a [mcsRouterLink]="[routeKeyEnum.Firewalls]"
+              mcsEventTracker="select-firewalls"
+              mcsEventCategory="product"
+              mcsEventLabel="product-list-panel">Managed Firewalls</a>
+          </div>
+        </div>
+
+        <div class="product-catalog-pricing-item"
+          *ngIf="!(selectedProduct.dependentProducts | mcsIsNullOrEmpty)">
+          <strong>Dependencies</strong>
+          <div class="block-items-xsmall">
+            <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
+              [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
+              mcsEventTracker="select-product-dependency"
+              mcsEventCategory="product"
+              mcsEventLabel="product-list-panel">
+              {{ dependentProduct.name }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div *ngIf="selectedProduct?.useCases" class="container-wrapper">
-  <h2 class="container-header">Use Cases</h2>
+<!-- Use Cases -->
+<div class="product-catalog-item bg-color-grey-08">
+  <h1 class="color-primary-01">Use Cases</h1>
   <div [innerHTML]="selectedProduct.useCases"></div>
 </div>
 
-<div *ngIf="selectedProduct?.pciDetails" class="container-wrapper">
-  <h2 class="container-header">PCI Compliance</h2>
-  <p [innerHTML]="selectedProduct.pciDetails"></p>
+<!-- PCI Compliance -->
+<div class="product-catalog-item">
+  <h1 class="color-primary-01">PCI Compliance</h1>
+  <div [innerHTML]="selectedProduct.pciDetails"></div>
 </div>
 
-<div *ngIf="selectedProduct?.featureBenefitMatrix" class="container-wrapper">
-  <h2 class="container-header">Feature Benefit Matrix</h2>
-  <p [innerHTML]="selectedProduct.featureBenefitMatrix"></p>
+<!-- Feature Benefit Matrix -->
+<div class="product-catalog-item">
+  <h1 class="color-primary-01">Feature Benefit Matrix</h1>
+  <div [innerHTML]="selectedProduct.featureBenefitMatrix"></div>
 </div>
