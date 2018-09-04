@@ -16,7 +16,8 @@ import {
   McsTextContentProvider,
   McsFileInfo,
   CoreRoutes,
-  McsRouteKey
+  McsRouteKey,
+  CoreDefinition
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -45,6 +46,14 @@ export class ProductComponent implements OnInit, OnDestroy {
   public textContent: any;
   public productSubscription: Subscription;
   private _destroySubject = new Subject<void>();
+
+  public get productCatalogBannerKey(): string {
+    return CoreDefinition.ASSETS_IMAGE_PRODUCT_CATALOG_BANNER;
+  }
+
+  public get routeKeyEnum(): any {
+    return McsRouteKey;
+  }
 
   /**
    * Returns the selected product from the list panel

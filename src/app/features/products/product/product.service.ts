@@ -19,6 +19,10 @@ export class ProductService {
   private _selectedProduct: Product;
   public get selectedProduct(): Product { return this._selectedProduct; }
 
+  constructor() {
+    this._selectedProduct = new Product();
+  }
+
   /**
    * Select the product and notify the selection change
    * @param product Product to be selected

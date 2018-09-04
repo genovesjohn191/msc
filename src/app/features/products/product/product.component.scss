@@ -3,11 +3,54 @@
 @import "../../../../styles/core/elements/mcs-strong";
 @import "../../../../styles/core/elements/mcs-bold";
 @import "../../../../styles/core/elements/mcs-table";
-@import "../../../../styles/core/classes/mcs-container";
+@import "../../../../styles/core/classes/mcs-grid";
+@import "../../../../styles/core/layout/mcs-color";
+@import "../../../../styles/core/layout/mcs-space";
+@import "../../../../styles/core/layout/mcs-alignment";
+@import "../../../../styles/core/layout/mcs-divider";
 
-$product-max-width: 95%;
+$product-max-width: 100%;
 
 :host {
-  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  @include display-flex(column);
   max-width: $product-max-width;
+}
+
+.product-catalog-text-blue {
+  color: $color-primary-00;
+}
+
+.product-catalog-item {
+  padding: $space-large;
+}
+
+.product-catalog-pricing-wrapper {
+  @include display-flex(column);
+  width: 100%;
+  max-width: 350px;
+
+  .product-catalog-pricing-header {
+    @include display-flex(row);
+    @include align-items(center);
+    justify-content: center;
+    border-left: 1px solid $border-color-light;
+    border-right: 1px solid $border-color-light;
+    border-bottom: 1px solid $border-color-light;
+    padding: $space-small;
+    background: $dark-bg-color;
+    color: $dark-bg-text-color;
+  }
+
+  .product-catalog-pricing-item {
+    border-left: 1px solid $border-color-light;
+    border-right: 1px solid $border-color-light;
+    border-bottom: 1px solid $border-color-light;
+    padding: $space-small;
+    @include display-flex(column);
+    @include set-items-interval($space-xsmall);
+  }
 }

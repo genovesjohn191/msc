@@ -237,12 +237,6 @@
   position: absolute;
 }
 
-// Divider
-.divider {
-  border-bottom: 1px solid $divider-light-color;
-  margin: $space-medium 0;
-}
-
 // Action items
 .action-items {
   @include display-flex(row);

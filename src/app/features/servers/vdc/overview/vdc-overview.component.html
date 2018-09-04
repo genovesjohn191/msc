@@ -1,5 +1,5 @@
 <div class="grid-row">
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="container-header">{{ textContent.vdcProperties.title }}</h2>
     <mcs-list spacing="xsmall">
       <!-- Service Type -->
@@ -23,7 +23,7 @@
   </div>
 
   <!-- VCloud -->
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="thumbnail-title container-header">{{ textContent.vcloud.title }}</h2>
     <mcs-list spacing="xsmall">
       <ng-container *mcsAccessControl="['VmEdit']">
@@ -43,7 +43,7 @@
 </div>
 
 <div class="grid-row">
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="container-header container-header">{{ textContent.networkInformation.title }}</h2>
     <div class="vertical-items-spacing-medium">
       <span>{{ textContent.networkInformation.description }}</span>
@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <div class="grid-column container-wrapper break-on-small">
+  <div class="grid-column container-wrapper">
     <h2 class="horizontal-items-spacing-small container-header"
       display-flex="row" align-items="center">
       <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>

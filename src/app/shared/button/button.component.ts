@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnInit,
   Renderer2,
   ElementRef,
   ChangeDetectorRef,
@@ -22,13 +23,11 @@ import {
   host: {
     'class': 'button-wrapper',
     '[attr.id]': 'id',
-    '[class.primary]': 'color === "primary"',
-    '[class.raised]': 'type === "raised"',
     '[class.button-disabled]': 'disabled'
   }
 })
 
-export class ButtonComponent {
+export class ButtonComponent implements OnInit {
 
   @Input()
   public id: string;
@@ -82,6 +81,10 @@ export class ButtonComponent {
     protected _changeDetectorRef: ChangeDetectorRef
   ) { }
 
+  public ngOnInit() {
+    this._initializeButton();
+  }
+
   public get hostElement(): HTMLElement {
     return this._elementRef.nativeElement;
   }
@@ -90,13 +93,19 @@ export class ButtonComponent {
     this._elementRef.nativeElement.focus();
   }
 
+  private _initializeButton(): void {
+    this._setColor(this.color);
+    this._setType(this.type);
+    this._setSize(this.size);
+  }
+
   private _setSize(size: string): void {
     if (isNullOrEmpty(size)) { return; }
     this._renderer.addClass(this._elementRef.nativeElement, size);
   }
 
   private _setColor(color: string): void {
-    if (isNullOrEmpty(color)) { return; }
+    if (isNullOrEmpty(color) || this.disabled) { return; }
     this._renderer.addClass(this._elementRef.nativeElement, color);
   }
 

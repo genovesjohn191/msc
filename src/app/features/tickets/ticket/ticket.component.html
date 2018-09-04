@@ -110,7 +110,7 @@
 
         <!-- Ticket Services and Attachments -->
         <div class="grid-row">
-          <div class="container-wrapper grid-column break-on-small">
+          <div class="container-wrapper grid-column">
             <h2 class="container-header">{{ textContent.services }}</h2>
             <ng-container *ngIf="ticket.serviceId | mcsIsNullOrEmpty; else servicesTemplate">
               <mcs-data-status-empty>
@@ -127,7 +127,7 @@
             </ng-template>
           </div>
 
-          <div class="container-wrapper grid-column break-on-small">
+          <div class="container-wrapper grid-column">
             <h2 class="container-header">{{ textContent.attachments }}</h2>
             <ng-container *ngIf="ticket.attachments | mcsIsNullOrEmpty; else attachmentsTemplate">
               <mcs-data-status-empty>
