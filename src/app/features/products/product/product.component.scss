@@ -25,6 +25,21 @@ $product-catalog-pricing-size: 350px;
 
 .product-catalog-item {
   padding: $space-large;
+
+  // Override the table hover when the panel is grey scale
+  &.grey-panel {
+    table {
+
+      tbody,
+      thead {
+        tr {
+          &:hover:not(th) {
+            background-color: $color-white;
+          }
+        }
+      }
+    }
+  }
 }
 
 .product-catalog-banner {
@@ -59,27 +74,5 @@ $product-catalog-pricing-size: 350px;
       @include display-flex(column);
       @include set-items-interval($space-xsmall);
     }
-  }
-}
-
-.product-catalog-pricing-wrapper {
-  float: right;
-  @include display-flex(column);
-  width: 100%;
-  max-width: $product-catalog-pricing-size;
-  margin: $space-large;
-
-  @include breakpoint(small) {
-    float: none;
-    margin: 0;
-  }
-
-  .product-catalog-pricing-item {
-    border-left: 1px solid $border-color-light;
-    border-right: 1px solid $border-color-light;
-    border-bottom: 1px solid $border-color-light;
-    padding: $space-small;
-    @include display-flex(column);
-    @include set-items-interval($space-xsmall);
   }
 }
