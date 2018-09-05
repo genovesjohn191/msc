@@ -139,7 +139,8 @@ podTemplate(
                             returnStdout: true,
                             script: "git --no-pager show -s --format='%an <%ae>' HEAD"
                         ).trim()
-                    image_version = commitSHAShort + "-" + System.currentTimeMillis()
+                    build_target = params.BUILD_TARGET.replaceAll( 'origin/', '' )
+                    image_version = build_target + "-" + commitSHAShort + "-" + System.currentTimeMillis()
                 }
 
                 echo "Building ${image_name} with version ${image_version}."
