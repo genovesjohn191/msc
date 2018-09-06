@@ -29,7 +29,7 @@ $product-panel-color: $color-grey-08;
 .product-catalog-item {
   padding: $space-large;
 
-  &:nth-child(odd) {
+  &:nth-of-type(odd) {
     background-color: $product-panel-color;
   }
 }
