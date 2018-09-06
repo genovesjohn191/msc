@@ -1,5 +1,5 @@
 <!-- Short Description -->
-<div class="product-catalog-item grey-panel">
+<div class="product-catalog-item">
   <div class="grid-row">
     <div class="grid-column center-orientation">
       <div [innerHTML]="selectedProduct.shortDescription"></div>
@@ -94,7 +94,7 @@
 </div>
 
 <!-- Use Cases -->
-<div class="product-catalog-item grey-panel"
+<div class="product-catalog-item"
   *ngIf="selectedProduct.useCases | mcsIsNotNullOrEmpty">
   <h1 class="blue-text">Use Cases</h1>
   <div [innerHTML]="selectedProduct.useCases"></div>

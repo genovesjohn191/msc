@@ -2,10 +2,6 @@ a {
   font-family: $link-font;
   color: inherit;
   text-decoration: underline;
-  @include font-size($link-default-font-size);
-  @include breakpoint(small) {
-    @include font-size($font-size-small);
-  }
 
   &:not([href]) {
     text-decoration: underline;
