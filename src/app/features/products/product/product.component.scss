@@ -1,4 +1,6 @@
 @import "../../../../styles/shared/base";
+@import "../../../../styles/core/elements/mcs-list";
+@import "../../../../styles/core/elements/mcs-anchor";
 @import "../../../../styles/core/elements/mcs-heading";
 @import "../../../../styles/core/elements/mcs-strong";
 @import "../../../../styles/core/elements/mcs-bold";
@@ -12,7 +14,8 @@
 @import "../../../../styles/core/classes/mcs-theme";
 
 $product-max-width: 100%;
-$product-catalog-pricing-size: 350px;
+$product-catalog-widget-size: 350px;
+$product-panel-color: $color-grey-08;
 
 :host {
   position: absolute;
@@ -26,19 +29,8 @@ $product-catalog-pricing-size: 350px;
 .product-catalog-item {
   padding: $space-large;
 
-  // Override the table hover when the panel is grey scale
-  &.grey-panel {
-    table {
-
-      tbody,
-      thead {
-        tr {
-          &:hover:not(th) {
-            background-color: $color-white;
-          }
-        }
-      }
-    }
+  &:nth-child(odd) {
+    background-color: $product-panel-color;
   }
 }
 
@@ -56,7 +48,7 @@ $product-catalog-pricing-size: 350px;
   float: right;
   @include set-items-interval($space-medium);
   width: 100%;
-  max-width: $product-catalog-pricing-size;
+  max-width: $product-catalog-widget-size;
   margin: $space-large;
   @include display-flex(column);
 
