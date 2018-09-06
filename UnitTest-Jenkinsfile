@@ -116,7 +116,14 @@ podTemplate(
         try {
             if (env.DEPLOYMENT_ENVIRONMENT == "LAB") {
                 stage('Checkout code') {
-                    checkout scm
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "${params.BUILD_TARGET}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: 'mcs-deploy-staging',
+                        url: 'git@bitbucket.org:macquariecloudservices/mcs.portal.frontend.git']]])
 
                     // Retrieve git properties for use in notifications
                     commitSHA = sh(
