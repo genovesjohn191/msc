@@ -146,7 +146,7 @@ export class PaginatorComponent implements McsPaginator, OnInit, AfterViewInit {
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   public nextPage() {

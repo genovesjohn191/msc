@@ -11,6 +11,6 @@ export class OrderCreate {
   constructor() {
     this.description = undefined;
     this.contractDuration = undefined;
-    this.items = undefined;
+    this.items = [];
   }
 }

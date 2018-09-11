@@ -108,7 +108,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   constructor(

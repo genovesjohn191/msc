@@ -26,9 +26,10 @@
 </div>
 
 <!-- Wizard Actions -->
-<div class="wizard-step-actions">
-  <button mcsWizardStepNext mcsButton size="small" arrow="right"
-    (click)="createServer()"
+<div class="action-items">
+  <button mcsButton size="small" arrow="right"
+    mcsWizardStepNext
+    [mcsWizardStepNextWhen]="createServerFunc"
     mcsEventTracker="step-1-next"
     mcsEventCategory="server"
     mcsEventLabel="create-new-server-page">Next</button>

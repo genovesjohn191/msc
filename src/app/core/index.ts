@@ -80,6 +80,7 @@ export * from './interfaces/mcs-scrollable.interface';
 export * from './interfaces/mcs-safe-to-navigate-away.interface';
 export * from './interfaces/mcs-property-type.interface';
 export * from './interfaces/mcs-initializer.interface';
+export * from './interfaces/mcs-delegate.interface';
 /** Base */
 export * from './base/mcs-routing-tab.base';
 export * from './base/mcs-table-listing.base';

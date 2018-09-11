@@ -20,7 +20,11 @@ import {
   CoreDefinition,
   McsTextContentProvider
 } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  unsubscribeSubject,
+  coerceBoolean
+} from '../../utilities';
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
 import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-def.directive';
 import {
@@ -44,17 +48,22 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   public isCompleted: boolean;
   public activeStep: WizardStepComponent;
 
-  @Output()
-  public change: EventEmitter<WizardStepComponent>;
-
-  @Output()
-  public completed: EventEmitter<any>;
-
   @Input()
   public header: string;
 
   @Input()
   public headerTemplate: TemplateRef<any>;
+
+  @Output()
+  public stepChange: EventEmitter<WizardStepComponent>;
+
+  @Output()
+  public completed: EventEmitter<any>;
+
+  @Input()
+  public get disabled(): boolean { return this._disabled; }
+  public set disabled(value: boolean) { this._disabled = coerceBoolean(value); }
+  private _disabled: boolean = false;
 
   @ViewChild(WizardTopPanelPlaceholderDirective)
   private _topPanelPlaceholder: WizardTopPanelPlaceholderDirective;
@@ -76,7 +85,7 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   ) {
     this.isCompleted = false;
     this.activeStep = new WizardStepComponent();
-    this.change = new EventEmitter<WizardStepComponent>();
+    this.stepChange = new EventEmitter<WizardStepComponent>();
     this.completed = new EventEmitter<any>();
   }
 
@@ -101,8 +110,7 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this._destroySubject.next();
-    this._destroySubject.complete();
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -152,22 +160,23 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
    * @param step Step to be active
    */
   private _setActiveStep(step: WizardStepComponent): void {
-    if (this.activeStep !== step) {
-      // Set the previous step to inactive
-      this.activeStep.isActive = false;
+    let stepIsNotValid = this.disabled || this.activeStep === step;
+    if (stepIsNotValid) { return; }
 
-      // Set the new step to active
-      step.isActive = true;
-      this.activeStep = step;
-      this.activeStep.enabled = true;
+    // Set the previous step to inactive
+    this.activeStep.isActive = false;
 
-      // Set the active step index
-      this.activeStepIndex = this.steps.indexOf(this.activeStep);
-      if (this.activeStepIndex === (this.steps.length - 1)) {
-        this.stepsCompleted();
-      }
-      this.change.emit(this.activeStep);
-      this._changeDetectorRef.markForCheck();
+    // Set the new step to active
+    step.isActive = true;
+    this.activeStep = step;
+    this.activeStep.enabled = true;
+
+    // Set the active step index
+    this.activeStepIndex = this.steps.indexOf(this.activeStep);
+    if (this.activeStepIndex === (this.steps.length - 1)) {
+      this.stepsCompleted();
     }
+    this.stepChange.emit(this.activeStep);
+    this._changeDetectorRef.markForCheck();
   }
 }

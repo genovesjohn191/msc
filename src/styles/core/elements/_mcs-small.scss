@@ -1,3 +1,9 @@
+// Captions
+$caption-default-font: $base-font;
+$caption-default-font-size: 12;
+$caption-small-font-size: 12;
+$caption-xsmall-font-size: 10;
+
 small {
   font-family: $caption-default-font;
   @include font-size($caption-default-font-size);

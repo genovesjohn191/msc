@@ -70,7 +70,7 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
    * Returns status icon key
    */
   public get statusIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   /**

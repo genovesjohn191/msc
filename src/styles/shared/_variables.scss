@@ -45,11 +45,7 @@ $mobile-landscape-min-width: 544px;
 $mobile-portrait-max-width: 543px;
 $mobile-portrait-min-width: 320px;
 
-// Container Sizes
-$container-large: $desktop-min-width;
-$container-medium: $tablet-min-width;
-$container-small: 100%;
-
+// Max View Width
 $limited-view-width: 800px;
 
 // Spacer
@@ -88,55 +84,6 @@ $border-color-dark: $color-grey-01;
 // Border Radius
 $border-radius-small: 2px;
 $border-radius-medium: 4px;
-
-// Captions
-$caption-default-font: $base-font;
-$caption-default-font-size: 12;
-$caption-default-line-height: 14;
-$caption-small-font-size: 12;
-$caption-small-line-height: 14;
-$caption-xsmall-font-size: 10;
-$caption-xsmall-line-height: 13;
-
-// Headers
-$header-font: $base-font-bold;
-$header-large-size: 8;
-$header-medium-size: 7;
-$header-small-size: 7;
-$header-scale-size: 2;
-
-// Links
-$link-font:  $base-font;
-$link-default-font-size: $font-size-default;
-$link-default-line-height: $line-height-default;
-$link-small-font-size: 12;
-$link-small-line-height: 14;
-$link-hover-color: $color-primary-01;
-
-$strong-font: $base-font-bold;
-$strong-font-weight: normal;
-
-$icon-large-font-size: 20;
-$icon-medium-font-size: 15;
-$icon-small-font-size: $font-size-default;
-
-// Input
-$input-font: $base-font;
-$input-font-size: $font-size-default;
-$input-line-height: $line-height-default;
-$input-border-width: 1px;
-$input-border-style: solid;
-$input-border-color: $color-black;
-$input-border-color-focused: $color-primary-01;
-$input-text-color: $color-black;
-$input-placeholder-text-color: $color-grey-02;
-$input-background-color: $color-white;
-$input-border-radius: $border-radius-small;
-$input-padding: $space-small $space-medium;
-$input-padding-small: $space-xsmall $space-small;
-$input-font: $base-font;
-$input-font-size: $font-size-default;
-$input-line-height: $line-height-default;
 
 // Button
 $button-font: $base-font-bold;

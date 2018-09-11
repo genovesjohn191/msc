@@ -83,7 +83,8 @@ export class CoreDefinition {
 
   /** Assets Provider Key Definitions */
   // GIF Icons
-  public static ASSETS_GIF_SPINNER = 'spinner';
+  public static ASSETS_GIF_LOADER_SPINNER = 'loader-spinner';
+  public static ASSETS_GIF_LOADER_ELLIPSIS = 'loader-ellipsis';
 
   // SVG Icons
   public static ASSETS_SVG_NO_ICON_AVAILABLE = 'no-icon-available';

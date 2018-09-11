@@ -24,7 +24,8 @@ import {
   McsErrorHandlerService,
   McsSafeToNavigateAway,
   CoreRoutes,
-  McsRouteKey
+  McsRouteKey,
+  McsDataStatus
 } from '../../../core';
 import {
   isNullOrEmpty,
@@ -56,6 +57,7 @@ export class ServerCreateComponent implements
   public resourceSubscription: Subscription;
   public selectedResource: Resource;
   public faCreationForm: FormArray;
+  public stepRequestInProgress: boolean;
 
   private _destroySubject = new Subject<void>();
 
@@ -82,12 +84,12 @@ export class ServerCreateComponent implements
     private _resourceRepository: ResourcesRepository,
     private _serverCreateService: ServerCreateService,
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext
-  ) {
-  }
+  ) { }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers.createServer;
     this._getAllResources();
+    this._listenToStatusChange();
   }
 
   public ngAfterContentInit() {
@@ -185,6 +187,16 @@ export class ServerCreateComponent implements
       .subscribe((_formArray) => {
         this.faCreationForm = _formArray;
         this._changeDetectorRef.markForCheck();
+      });
+  }
+
+  /**
+   * Listens to each step request status changes
+   */
+  private _listenToStatusChange(): void {
+    this._serverCreateFlyweightContext.requestStatusChange
+      .subscribe((status) => {
+        this.stepRequestInProgress = status === McsDataStatus.InProgress;
       });
   }
 }

@@ -32,10 +32,11 @@ import {
 } from '../../../../../utilities';
 import {
   ServerCreateType,
-  ServerCreateDetails,
   ServerServiceType,
   ServerIpAllocationMode,
-  Server
+  Server,
+  ServerClone,
+  ServerClientObject
 } from '../../../models';
 import { ServersRepository } from '../../../servers.repository';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
@@ -45,7 +46,10 @@ import { ServerCreateDetailsBase } from '../server-create-details.base';
   templateUrl: 'server-clone.component.html'
 })
 
-export class ServerCloneComponent extends ServerCreateDetailsBase implements OnInit, OnDestroy {
+export class ServerCloneComponent
+  extends ServerCreateDetailsBase<ServerClone>
+  implements OnInit, OnDestroy {
+
   @Input()
   public serviceType: ServerServiceType;
 
@@ -128,14 +132,15 @@ export class ServerCloneComponent extends ServerCreateDetailsBase implements OnI
   /**
    * Returns the creation details input
    */
-  public getCreationInputs(): ServerCreateDetails {
+  public getCreationInputs(): ServerClone {
     let formIsValid = !isNullOrEmpty(this.fgCloneServer) && this.fgCloneServer.valid;
     if (!formIsValid) { return; }
 
-    let cloneServerInputs = new ServerCreateDetails();
-    cloneServerInputs.serverName = this.fcServerName.value;
-    cloneServerInputs.targetServer = this.fcTargetServer.value;
-    return cloneServerInputs;
+    let serverClone = new ServerClone();
+    serverClone.name = this.fcServerName.value;
+    serverClone.clientReferenceObject = new ServerClientObject();
+    serverClone.clientReferenceObject.serverId = this.fcTargetServer.value.id;
+    return serverClone;
   }
 
   /**

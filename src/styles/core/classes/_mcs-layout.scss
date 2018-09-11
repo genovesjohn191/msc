@@ -60,11 +60,21 @@
   @include display-flex(row);
   @include align-items(center);
   justify-content: space-between;
-  margin-top: $space-medium;
+  margin-bottom: $space-medium;
 
   > :only-child {
     margin-left: auto;
   }
+}
+
+// Bordered elements
+.bordered {
+  border: 1px solid $border-color-light;
+}
+
+// Removes the border of the element
+.no-border {
+  border: none !important;
 }
 
 // Disabled element

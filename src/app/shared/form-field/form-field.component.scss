@@ -4,10 +4,10 @@
 $form-field-content-min-height: 40px;
 $form-field-content-focus-color: $color-primary-00;
 $form-field-content-error-color: $color-red-00;
-$form-field-content-border-width: $input-border-width;
-$form-field-content-border-style: $input-border-style;
-$form-field-content-border-color: $input-border-color;
-$form-field-content-border-radius: $input-border-radius;
+$form-field-content-border-width: 1px;
+$form-field-content-border-style: solid;
+$form-field-content-border-color: $color-black;
+$form-field-content-border-radius: $border-radius-small;
 $form-field-content-spacing-size: $space-small;
 $form-field-content-bg-color: $color-white;
 $form-field-content-input-offset-right: $space-xlarge;

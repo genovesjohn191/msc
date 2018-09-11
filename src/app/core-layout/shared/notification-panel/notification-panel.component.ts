@@ -192,7 +192,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   private initializeNotification(notification: McsApiJob): void {
     switch (notification.dataStatus) {
       case McsDataStatus.InProgress:
-        this.iconStatusKey = CoreDefinition.ASSETS_GIF_SPINNER;
+        this.iconStatusKey = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
         this.iconStatusColor = 'black';
         break;
       case McsDataStatus.Error:

@@ -981,14 +981,19 @@
     "serverError": {
       "header": "500",
       "summary": "Sorry, something’s not right",
-      "description": "We're experiencing internal server problem.",
-      "retry": "Please try again later."
+      "description": "We're currently experiencing a server issue.",
+      "retry": "Out team has been notified. Please try again later."
     },
     "unprocessable": {
       "header": "422",
-      "summary": "The changes you wanted was rejected",
-      "description": "Some of your inputs was not right.",
-      "retry": "Please double check your inputs and try again."
+      "summary": "Your changes could not be made",
+      "description": "One or more inputs provided were invalid or malformed.",
+      "retry": "Please check your inputs and try again."
+    },
+    "unauthorized": {
+      "header": "401",
+      "summary": "You are unauthorized to access this page.",
+      "retry": "Please check the address and try again."
     },
     "forbidden": {
       "header": "403",
@@ -997,15 +1002,15 @@
     },
     "serviceUnavailable": {
       "header": "Oops",
-      "summary": "Unfortunately an error has occured",
+      "summary": "Unfortunately an error has occurred",
       "description": "We're unable to proccess your request right now.",
       "retry": "Our team has been notified. Please try again later."
     },
     "readOnlyMode": {
       "header": "Oops",
-      "summary": "Unfortunately an error has occured",
-      "description": "We're unable to proccess your request right now.",
-      "retry": "Our team was already aware this issue and currently looking into the matter deeply and will take actions accordingly."
+      "summary": "Unfortunately an error has occurred",
+      "description": "We are currently undergoing critical maintenance. Some actions may be temporarily unavailable.",
+      "retry": "Please try again later."
     },
     "refresh": "Refresh the page",
     "home": "Go to home page"

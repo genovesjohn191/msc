@@ -109,7 +109,7 @@ describe('IconComponent', () => {
 
   describe('ngOnChanges() when icon type is Image(jpeg, png, gif)', () => {
     beforeEach(async(() => {
-      component.key = CoreDefinition.ASSETS_GIF_SPINNER;
+      component.key = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
       component.size = 'small';
       component.ngOnChanges();
     }));

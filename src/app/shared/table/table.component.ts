@@ -170,7 +170,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   public get dataStatusEnum(): any {

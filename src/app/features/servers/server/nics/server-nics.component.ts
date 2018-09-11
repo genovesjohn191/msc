@@ -97,7 +97,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   private _componentHandler: ComponentHandlerDirective;
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   public get checkIconKey(): string {

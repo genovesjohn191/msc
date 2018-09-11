@@ -84,7 +84,7 @@ export class ServersComponent
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   public get addIconKey(): string {
