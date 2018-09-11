@@ -1,7 +1,14 @@
+$link-font:  $base-font;
+$link-hover-color: $color-primary-01;
+
 a {
   font-family: $link-font;
   color: inherit;
   text-decoration: underline;
+  @include font-size($font-size-default);
+  @include breakpoint(small) {
+    @include font-size($font-size-small);
+  }
 
   &:not([href]) {
     text-decoration: underline;

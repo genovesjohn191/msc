@@ -1,80 +1,91 @@
-<mcs-wizard [header]="textContent.header">
+<mcs-page [header]="textContent.header" [disabled]="stepRequestInProgress">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
 
-  <!-- Top panel action -->
-  <ng-container *mcsWizardTopPanelDef>
-    <mcs-action-item class="right-align" (click)="gotoServers()"
-      mcsEventTracker="back-to-server-listing"
-      mcsEventCategory="server"
-      mcsEventLabel="create-new-server-page">
-      <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
-      <span>{{ textContent.backToServers }}</span>
-    </mcs-action-item>
-  </ng-container>
+    <!-- Back to Servers -->
+    <mcs-top-panel-item *mcsTopPanelItemDef class="no-border">
+      <mcs-action-item class="right-align" (click)="gotoServers()"
+        mcsEventTracker="back-to-server-listing"
+        mcsEventCategory="server"
+        mcsEventLabel="create-new-server-page">
+        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+        <span>{{ textContent.backToServers }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
 
-  <!-- Server details -->
-  <mcs-wizard-step [stepTitle]="textContent.serverDetailsStep.title"
-    [stepControl]="faCreationForm">
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
 
-    <div class="limited-view">
-      <mcs-loader [subscriptions]="[resourceSubscription]"
-        [loadingText]="textContent.serverDetailsStep.loading">
+    <mcs-wizard [header]="textContent.header">
 
-          <div class="contextual-help-page-wrapper">
-            <mcs-form-field class="space-bottom-medium">
-              <mcs-select placeholder="Select a VDC"
-                [(ngModel)]="selectedResource"
-                (change)="onChangeResource($event)"
-                [mcsContextualHelp]="textContent.vdcDropdownList.helpText">
-                <mcs-select-group [header]="textContent.vdcDropdownList.header">
-                  <ng-container *ngFor="let item of resources">
-                    <mcs-select-item [value]="item">
-                      {{ getResourceDisplayedText(item) }}
-                    </mcs-select-item>
-                  </ng-container>
-                </mcs-select-group>
-              </mcs-select>
-            </mcs-form-field>
+      <!-- Server Details Step-->
+      <mcs-wizard-step [stepTitle]="textContent.serverDetailsStep.title"
+        [stepControl]="faCreationForm">
 
-            <mcs-server-create-details></mcs-server-create-details>
-          </div>
-      </mcs-loader>
-    </div>
-  </mcs-wizard-step>
+        <div class="limited-view">
+          <mcs-loader [subscriptions]="[resourceSubscription]"
+            [loadingText]="textContent.serverDetailsStep.loading">
 
-  <!-- Add-ons Step -->
-  <mcs-wizard-step *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed"
-    [stepTitle]="textContent.serverAddOnsStep.title">
-    <mcs-server-create-addons></mcs-server-create-addons>
-  </mcs-wizard-step>
+              <div class="contextual-help-page-wrapper">
+                <mcs-form-field class="space-bottom-medium">
+                  <mcs-select placeholder="Select a VDC"
+                    [(ngModel)]="selectedResource"
+                    (change)="onChangeResource($event)"
+                    [mcsContextualHelp]="textContent.vdcDropdownList.helpText">
+                    <mcs-select-group [header]="textContent.vdcDropdownList.header">
+                      <ng-container *ngFor="let item of resources">
+                        <mcs-select-item [value]="item">
+                          {{ getResourceDisplayedText(item) }}
+                        </mcs-select-item>
+                      </ng-container>
+                    </mcs-select-group>
+                  </mcs-select>
+                </mcs-form-field>
 
-  <!-- Confirm Step  -->
-  <mcs-wizard-step *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed"
-    [stepTitle]="textContent.serverConfirmStep.title">
-    <mcs-server-create-confirm></mcs-server-create-confirm>
-  </mcs-wizard-step>
+                <mcs-server-create-details></mcs-server-create-details>
+              </div>
+          </mcs-loader>
+        </div>
+      </mcs-wizard-step>
 
-  <!-- Go! Step  -->
-  <mcs-wizard-step [stepTitle]="textContent.serverProvisioningStep.title">
-    <mcs-server-create-provisioning></mcs-server-create-provisioning>
-  </mcs-wizard-step>
-</mcs-wizard>
+      <!-- Add-ons Step -->
+      <mcs-wizard-step *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed"
+        [stepTitle]="textContent.serverAddOnsStep.title">
+        <mcs-server-create-addons></mcs-server-create-addons>
+      </mcs-wizard-step>
 
-<!-- Quote Widget -->
-<!-- TODO: The value should be changed when order endpoint was finalized -->
-<ng-container *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed">
-  <mcs-quote-widget>
-    <ng-container mcsQuoteWidgetHeader>
-      <span>Total Cost: $200</span>
+      <!-- Confirm Step  -->
+      <mcs-wizard-step *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed"
+        [stepTitle]="textContent.serverConfirmStep.title">
+        <mcs-server-create-confirm></mcs-server-create-confirm>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step [stepTitle]="textContent.serverProvisioningStep.title">
+        <mcs-server-create-provisioning></mcs-server-create-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+    <!-- Quote Widget -->
+    <!-- TODO: The value should be changed when order endpoint was finalized -->
+    <ng-container *ngIf="selectedResource?.serviceType === serviceTypeEnum.Managed">
+      <mcs-quote-widget>
+        <ng-container mcsQuoteWidgetHeader>
+          <span>Total Cost: $200</span>
+        </ng-container>
+
+        <div class="space-between-inline-items">
+          <span>- Monthly cost</span>
+          <span>: $150</span>
+        </div>
+
+        <div class="space-between-inline-items">
+          <span>- One-off cost</span>
+          <span>: $50</span>
+        </div>
+      </mcs-quote-widget>
     </ng-container>
 
-    <div class="space-between-inline-items">
-      <span>- Monthly cost</span>
-      <span>: $150</span>
-    </div>
-
-    <div class="space-between-inline-items">
-      <span>- One-off cost</span>
-      <span>: $50</span>
-    </div>
-  </mcs-quote-widget>
-</ng-container>
+  </mcs-content-panel>
+</mcs-page>

@@ -112,6 +112,10 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         this.textContent = this.textContentAll.serviceUnavailable;
         break;
 
+      case McsHttpStatusCode.Unauthorized:
+        this.textContent = this.textContentAll.unauthorized;
+        break;
+
       case McsHttpStatusCode.Forbidden:
         this.textContent = this.textContentAll.forbidden;
         break;

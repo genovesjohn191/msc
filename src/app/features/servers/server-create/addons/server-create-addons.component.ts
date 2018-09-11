@@ -5,7 +5,6 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { McsTextContentProvider } from '../../../../core';
-import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
 
 @Component({
   selector: 'mcs-server-create-addons',
@@ -17,8 +16,7 @@ export class ServerCreateAddOnsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _serverCreateFlyweightContext: ServerCreateFlyweightContext
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   public ngOnInit() {
@@ -32,6 +30,5 @@ export class ServerCreateAddOnsComponent implements OnInit, OnDestroy {
 
   public createAddOns(): void {
     // Do the creation of add-ons here
-    this._serverCreateFlyweightContext.setOrderDetails(this._serverCreateFlyweightContext.order);
   }
 }

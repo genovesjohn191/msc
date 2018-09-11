@@ -1,4 +1,7 @@
+$bold-font: $base-font-bold;
+$bold-font-weight: normal;
+
 b {
-  font-family: $strong-font;
-  font-weight: $strong-font-weight;
+  font-family: $bold-font;
+  font-weight: $bold-font-weight;
 }

@@ -1,10 +1,7 @@
-import {
-  ServerCreateType,
-  ServerCreateDetails
-} from '../../models';
 import { FormGroup } from '@angular/forms';
+import { ServerCreateType } from '../../models';
 
-export abstract class ServerCreateDetailsBase {
+export abstract class ServerCreateDetailsBase<T> {
 
   /**
    * Returns the specific creation type of the server
@@ -14,7 +11,7 @@ export abstract class ServerCreateDetailsBase {
   /**
    * Returns the creation inputs of the server
    */
-  public abstract getCreationInputs(): ServerCreateDetails;
+  public abstract getCreationInputs(): T;
 
   /**
    * Returns the creation form group including form fields

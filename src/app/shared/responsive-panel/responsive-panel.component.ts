@@ -28,8 +28,8 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  refreshView,
-  unsubscribeSubject
+  unsubscribeSubject,
+  refreshView
 } from '../../utilities';
 import {
   ResponsivePanelBarComponent
@@ -79,7 +79,6 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   public showPaginationControls: boolean = false;
 
   private _scrollDistanceChanged: boolean;
-  private _panelItemsCount: number;
   private _destroySubject = new Subject<void>();
   private _selectedPanelItem: ResponsivePanelItemDirective;
 
@@ -124,6 +123,7 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
     this.panelItems.changes
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => {
+        this._updatePagination();
         this._listenToSelectionChange();
         this._selectActivePanelItem();
       });
@@ -131,13 +131,6 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
   }
 
   public ngAfterViewChecked(): void {
-    // If the number of action items have changed, check if scrolling should be enabled
-    if (this._panelItemsCount !== this.panelItems.length) {
-      this._updatePagination();
-      this._panelItemsCount = this.panelItems.length;
-      this._changeDetectorRef.markForCheck();
-    }
-
     // If the scroll distance has been changed (tab selected, focused, scroll controls activated),
     // then translate the header to reflect this.
     if (this._scrollDistanceChanged) {
@@ -207,7 +200,7 @@ export class ResponsivePanelComponent implements AfterViewInit, AfterViewChecked
    * Update the pagination of the header
    */
   private _updatePagination() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this._setPaginationStatus();
       this._setPaginationControlStatus();
       this._updateTabScrollPosition();

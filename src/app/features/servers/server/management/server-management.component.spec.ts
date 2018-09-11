@@ -104,7 +104,7 @@ describe('ServerManagementComponent', () => {
 
   describe('IconKey() | Properties', () => {
     it('should get the spinner icon key definition', () => {
-      expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_GIF_SPINNER);
+      expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_GIF_LOADER_SPINNER);
     });
   });
 });

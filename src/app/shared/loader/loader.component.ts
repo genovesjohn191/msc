@@ -119,7 +119,7 @@ export class LoaderComponent implements AfterViewInit, OnDestroy {
    * Returns the spinner icon key as string
    */
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   /**

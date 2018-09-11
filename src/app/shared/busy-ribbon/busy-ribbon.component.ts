@@ -36,6 +36,6 @@ export class BusyRibbonComponent {
    * Returns the spinner icon key
    */
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 }

@@ -9,6 +9,7 @@ export * from './request/order-create';
 export * from './request/order-item-create';
 export * from './request/order-merge';
 export * from './request/order-update';
+export * from './request/order-item-update';
 
 /** Enumerations */
 export * from './enumerations/order-origin.enum';

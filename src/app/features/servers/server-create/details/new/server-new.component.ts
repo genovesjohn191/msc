@@ -35,13 +35,15 @@ import {
 } from '../../../../resources';
 import {
   ServerCreateType,
-  ServerCreateDetails,
   ServerOperatingSystem,
   ServerServiceType,
   ServerManageStorage,
   ServerManageNetwork,
   ServerManageScale,
-  ServerImageType
+  ServerImageType,
+  ServerCreate,
+  ServerCreateStorage,
+  ServerCreateNic
 } from '../../../models';
 import { ServersOsRepository } from '../../../servers-os.repository';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
@@ -54,7 +56,10 @@ const DEFAULT_SELF_MANAGE_STORAGE_MINIMUM = 30;
   templateUrl: 'server-new.component.html'
 })
 
-export class ServerNewComponent extends ServerCreateDetailsBase implements OnInit, OnDestroy {
+export class ServerNewComponent
+  extends ServerCreateDetailsBase<ServerCreate>
+  implements OnInit, OnDestroy {
+
   @Input()
   public serviceType: ServerServiceType;
 
@@ -206,28 +211,45 @@ export class ServerNewComponent extends ServerCreateDetailsBase implements OnIni
   /**
    * Returns the creation details input
    */
-  public getCreationInputs(): ServerCreateDetails {
+  public getCreationInputs(): ServerCreate {
     let formIsValid = !isNullOrEmpty(this.fgNewServer) && this.fgNewServer.valid;
     if (!formIsValid) { return; }
 
     // Set the corresponding attribute to create the server
-    let newServerInputs = new ServerCreateDetails();
-    newServerInputs.serverName = this.fcServerName.value;
-    newServerInputs.vApp = this.fcVApp.value;
-    newServerInputs.serverScale = this.fcScale.value;
-    newServerInputs.serverManageStorage = this.fcStorage.value;
-    newServerInputs.serverNetwork = this.fcNetwork.value;
+    let serverCreate = new ServerCreate();
+    serverCreate.platform = this.resource.platformLabel;
+    serverCreate.resource = this.resource.name;
+    serverCreate.name = this.fcServerName.value;
+    serverCreate.target = this.fcVApp.value;
 
-    // Set image based on type Os/Template
+    // Scale
+    let serverScale = this.fcScale.value as ServerManageScale;
+    serverCreate.cpuCount = serverScale.cpuCount;
+    serverCreate.memoryMB = serverScale.memoryMB;
+
+    // Storage
+    let serverStorage = this.fcStorage.value as ServerManageStorage;
+    serverCreate.storage = new ServerCreateStorage();
+    serverCreate.storage.name = serverStorage.storage.name;
+    serverCreate.storage.sizeMB = serverStorage.sizeMB;
+
+    // Network
+    let serverNetwork = this.fcNetwork.value as ServerManageNetwork;
+    serverCreate.network = new ServerCreateNic();
+    serverCreate.network.name = serverNetwork.network.name;
+    serverCreate.network.ipAllocationMode = serverNetwork.ipAllocationMode;
+    serverCreate.network.ipAddress = serverNetwork.customIpAddress;
+
+    // VM Image
     let selectedImage = this.fcImage.value;
     if (selectedImage instanceof ServerOperatingSystem) {
-      newServerInputs.image = selectedImage.name;
-      newServerInputs.imageType = ServerImageType.Os;
+      serverCreate.image = selectedImage.name;
+      serverCreate.imageType = ServerImageType.Os;
     } else {
-      newServerInputs.image = selectedImage.itemName;
-      newServerInputs.imageType = ServerImageType.Template;
+      serverCreate.image = selectedImage.itemName;
+      serverCreate.imageType = ServerImageType.Template;
     }
-    return newServerInputs;
+    return serverCreate;
   }
 
   /**

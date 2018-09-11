@@ -90,7 +90,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   }
 
   public get spinnerIconKey(): string {
-    return CoreDefinition.ASSETS_GIF_SPINNER;
+    return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
   }
 
   public get closeIconKey(): string {

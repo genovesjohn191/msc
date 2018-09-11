@@ -150,7 +150,7 @@ export class NotificationsComponent
 
     switch (dataStatus) {
       case McsDataStatus.InProgress:
-        iconKey = CoreDefinition.ASSETS_GIF_SPINNER;
+        iconKey = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
         iconColor = 'black';
         break;
       case McsDataStatus.Error:

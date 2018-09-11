@@ -92,7 +92,8 @@
     "dos-prompt-grey": "dos-prompt-grey.svg"
   },
   "gifIcons": {
-    "spinner": "spinner.gif"
+    "loader-spinner": "loader-spinner.gif",
+    "loader-ellipsis": "loader-ellipsis.gif"
   },
   "images": {
     "light-mcs-logo-svg": "light-mcs-logo.svg",

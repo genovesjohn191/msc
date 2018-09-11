@@ -1,54 +1,56 @@
-<!-- Steps template declaration -->
-<ng-template #stepsTemplate>
-  <div class="wizard-steps-items" scrollable scrollbarId="wizard-items">
-    <div class="step-item" *ngFor="let step of steps; let idx = index"
-      (click)="moveStepTo(step)"
-      [hidden]="step.hidden"
-      [ngClass]="{
-        'active': step.isActive,
-        'enabled': step.enabled,
-        'disabled': !step.enabled,
-        'completed': isCompleted
-      }">
-      <div class="step-completed-icon">
-        <mcs-icon *ngIf="step.completed" [key]="checkIconKey"
-          size="small" color="primary"></mcs-icon>
-      </div>
-      <div class="step-title">
-        <strong>{{ (idx + 1) }}</strong>
-        <strong>{{ step.stepTitle }}</strong>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
 <!-- Left panel wrapper in case of desktop -->
-<div class="wizard-left-panel-wrapper hidden-small">
-  <div class="wizard-steps-header">
-    <h2 read-only>{{ textContent.steps }}</h2>
+<div class="wizard-steps-desktop hidden-medium">
+  <div class="wizard-steps-header"><h2 read-only>{{ textContent.steps }}</h2></div>
+  <div>
+    <ng-container *ngFor="let step of steps; let idx = index">
+      <div class="wizard-step-item"
+        (click)="moveStepTo(step)" [hidden]="step.hidden"
+        [ngClass]="{
+          'wizard-step-active': step.isActive,
+          'wizard-step-enabled': step.enabled,
+          'wizard-step-disabled': !step.enabled,
+          'wizard-step-completed': isCompleted
+        }">
+        <div class="wizard-step-completed-icon">
+          <mcs-icon *ngIf="step.completed" [key]="checkIconKey"
+            size="small" color="primary"></mcs-icon>
+        </div>
+        <div class="wizard-step-title">
+          <strong>{{ (idx + 1) }}</strong>
+          <strong>{{ step.stepTitle }}</strong>
+        </div>
+      </div>
+    </ng-container>
   </div>
-  <ng-container *ngTemplateOutlet="stepsTemplate"></ng-container>
+</div>
+
+<!-- Top panel wrapper in case of Mobile -->
+<div class="wizard-steps-mobile visible-medium">
+  <mcs-responsive-panel>
+    <ng-container *ngFor="let step of steps; let idx = index">
+      <div class="wizard-step-item"
+        mcsResponsivePanelItem
+        (click)="moveStepTo(step)" [hidden]="step.hidden"
+        [ngClass]="{
+          'wizard-step-active': step.isActive,
+          'wizard-step-enabled': step.enabled,
+          'wizard-step-disabled': !step.enabled,
+          'wizard-step-completed': isCompleted
+        }">
+        <div class="wizard-step-completed-icon">
+          <mcs-icon *ngIf="step.completed" [key]="checkIconKey"
+            size="small" color="primary"></mcs-icon>
+        </div>
+        <div class="wizard-step-title">
+          <strong>{{ (idx + 1) }}</strong>
+          <strong>{{ step.stepTitle }}</strong>
+        </div>
+      </div>
+    </ng-container>
+  </mcs-responsive-panel>
 </div>
 
 <!-- Content panel generation -->
 <div class="wizard-content-panel-wrapper">
-  <div class="wizard-top-header">
-    <ng-container *ngIf="headerTemplate">
-      <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="!headerTemplate">
-      <h1>{{ header }}</h1>
-    </ng-container>
-    <ng-container mcsWizardTopPanelPlaceholder></ng-container>
-  </div>
-
-  <!-- Top panel wrapper in case of mobile -->
-  <div class="wizard-top-panel-mobile-wrapper">
-    <ng-container *ngTemplateOutlet="stepsTemplate"></ng-container>
-  </div>
-
-  <!-- Active steps content -->
-  <div class="wizard-steps-content" scrollable scrollbarId="wizard-content">
-    <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
-  </div>
+  <ng-template [ngTemplateOutlet]="activeStep?.templateRef"></ng-template>
 </div>

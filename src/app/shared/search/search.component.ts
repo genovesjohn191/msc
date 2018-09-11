@@ -100,7 +100,7 @@ export class SearchComponent implements OnInit, OnDestroy, McsSearch {
   public showLoading(showLoading: boolean): void {
     this.searching = showLoading;
     this.iconKey = showLoading ?
-      CoreDefinition.ASSETS_GIF_SPINNER :
+      CoreDefinition.ASSETS_GIF_LOADER_SPINNER :
       CoreDefinition.ASSETS_FONT_SEARCH;
     this._changeDetectorRef.markForCheck();
   }
