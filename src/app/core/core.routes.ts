@@ -56,6 +56,8 @@ export class CoreRoutes {
       routeInfo.navigationPath = jsonRouteInfo.navigationPath;
       routeInfo.routePath = jsonRouteInfo.routePath;
       routeInfo.documentTitle = jsonRouteInfo.documentTitle;
+      routeInfo.requiredPermissions = jsonRouteInfo.requiredPermissions;
+      routeInfo.requiredFeatureFlag = jsonRouteInfo.requiredFeatureFlag;
       this._routePathTable.set(routeInfo.enumKey, routeInfo);
     });
   }
