@@ -366,7 +366,7 @@
         "supportIdentifiers": {
           "title": "Support Identifiers",
           "vdc": "Resource",
-          "macViewServiceId": "MacView Service ID",
+          "serviceId": "Service ID",
           "vmWareId": "VMWare ID"
         },
         "manageServices": {
