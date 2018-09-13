@@ -1,18 +1,18 @@
-import { McsEnumSerializationBase } from '../../../../core';
 import { CacheKey } from 'json-object-mapper';
+import { McsEnumSerializationBase } from '../../../../core';
 
 export enum ServerNicDeviceType {
   Unknown = 0,
   Vmxnet3 = 1,
-  E100 = 2,
-  E100e = 3
+  E1000 = 2,
+  E1000e = 3
 }
 
 export const serverNicDeviceTypeText = {
   [ServerNicDeviceType.Unknown]: 'Unknown',
   [ServerNicDeviceType.Vmxnet3]: 'VMXNET3',
-  [ServerNicDeviceType.E100]: 'E100',
-  [ServerNicDeviceType.E100e]: 'E100e'
+  [ServerNicDeviceType.E1000]: 'E1000',
+  [ServerNicDeviceType.E1000e]: 'E1000e'
 };
 
 /**
