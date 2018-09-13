@@ -529,8 +529,7 @@ export class ServersService {
   /**
    * This will get the server networks from the API
    */
-  public getServerNics(
-    serverId: any): Observable<McsApiSuccessResponse<ServerNic[]>> {
+  public getServerNics(serverId: any): Observable<McsApiSuccessResponse<ServerNic[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${serverId}/nics`;
 
