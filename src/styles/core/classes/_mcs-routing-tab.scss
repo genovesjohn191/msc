@@ -1,5 +1,3 @@
-$grid-row-spacing: 50px;
-$action-box-border-color: $color-grey-00;
 $routing-routing-tab-content-min-height: 300px;
 
 .routing-tab-wrapper {
@@ -11,12 +9,5 @@ $routing-routing-tab-content-min-height: 300px;
   .routing-tab-content-wrapper {
     position: relative;
     min-height: $routing-routing-tab-content-min-height;
-
-    .action-box {
-      @include set-items-interval($space-medium, vertical);
-      border: 1px solid $action-box-border-color;
-      @include border-radius($input-border-radius);
-      padding: $space-large;
-    }
   }
 }

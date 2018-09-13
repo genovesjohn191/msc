@@ -85,7 +85,6 @@ export class ServerComponent
   public serversMap: Map<string, Server[]>;
   public selectedGroupName: string;
   public selectedServer: Server;
-  public selectedServerName: string;
   public serversTextContent: any;
   public serverListSource: ServersListSource | null;
   public serverSubscription: Subscription;
@@ -311,7 +310,6 @@ export class ServerComponent
 
     this.selectedServer = serverFound;
     this._serverService.setSelectedServer(this.selectedServer);
-    this.selectedServerName = this.selectedServer.name;
     let hasResourceName = !isNullOrEmpty(
       getSafeProperty(this.selectedServer, (obj) => obj.platform.resourceName)
     );

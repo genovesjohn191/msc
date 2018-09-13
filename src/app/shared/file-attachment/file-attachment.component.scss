@@ -11,7 +11,12 @@ $attachment-filezone-padding: $space-medium;
 // File wrapper variables
 $attachment-files-padding: $space-medium 0;
 
-.attachment-wrapper {
+.file-attachment-wrapper {
+  @include display-flex(column);
+  @include set-items-interval($space-small);
+}
+
+.file-attachment-dropzone-wrapper {
   height: $attachment-height;
   width: 100%;
   @include display-flex(row);
@@ -33,10 +38,4 @@ $attachment-files-padding: $space-medium 0;
       display: none;
     }
   }
-}
-
-.attached-files-wrapper {
-  @include display-flex(column);
-  @include set-items-interval($space-small);
-  padding: $attachment-files-padding;
 }

@@ -59,30 +59,26 @@
           </ng-container>
 
           <!-- Action Column -->
-          <ng-container mcsColumnDef="action">
+          <ng-container mcsColumnDef="action" *mcsAccessControl="['VmEdit']">
             <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
               <div class="inline-items-small flex-nowrap">
-                <span *mcsAccessControl="['VmEdit']">
-                  <a [disabled]="!server.executable"
-                      (click)="openExpandDiskWindow(row)"
-                      mcsEventTracker="show-expand-disk"
-                      mcsEventCategory="server"
-                      mcsEventLabel="server-details-page">
-                    {{ textContent.expandStorageLink }}
-                  </a>
-                </span>
-                <span *mcsAccessControl="['VmEdit']" >
-                  <a *ngIf="hasEditableDisk"
-                    [disabled]="!server.executable"
-                    (click)="deleteDisk(row)"
-                    mcsEventTracker="delete-disk"
+                <a [disabled]="!server.executable"
+                    (click)="openExpandDiskWindow(row)"
+                    mcsEventTracker="show-expand-disk"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
-                    {{ textContent.deleteStorageLink }}
-                  </a>
-                </span>
+                  {{ textContent.expandStorageLink }}
+                </a>
+                <a *ngIf="hasEditableDisk"
+                  [disabled]="!server.executable"
+                  (click)="deleteDisk(row)"
+                  mcsEventTracker="delete-disk"
+                  mcsEventCategory="server"
+                  mcsEventLabel="server-details-page">
+                  {{ textContent.deleteStorageLink }}
+                </a>
               </div>
             </mcs-data-cell>
           </ng-container>

@@ -29,7 +29,7 @@
         <span [innerHTML]="firewall.serviceId | mcsDataLabel"></span>
       </mcs-list-item>
       <!-- Serial -->
-      <mcs-list-item class="form-field-inline">
+      <mcs-list-item class="form-field-inline" *mcsAccessControl="['FirewallSerialNumberView']">
         <span>{{ textContent.supportIdentifiers.serial }}:</span>
         <span [innerHTML]="firewall.serialNumber | mcsDataLabel"></span>
       </mcs-list-item>

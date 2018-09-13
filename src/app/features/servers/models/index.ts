@@ -59,3 +59,4 @@ export * from './enumerations/server-service-type.enum';
 export * from './enumerations/server-image-type.enum';
 export * from './enumerations/server-running-status.enum';
 export * from './enumerations/server-version-status.enum';
+export * from './enumerations/server-nic-device-type.enum';

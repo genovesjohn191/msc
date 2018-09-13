@@ -5,6 +5,11 @@ import {
 } from '../enumerations/server-ip-allocation-mode.enum';
 import { JsonProperty } from 'json-object-mapper';
 import { isNullOrEmpty } from '../../../../utilities';
+import {
+  ServerNicDeviceType,
+  ServerNicDeviceTypeSerialization,
+  serverNicDeviceTypeText
+} from '../enumerations/server-nic-device-type.enum';
 
 export class ServerNic {
   public id: string;
@@ -24,7 +29,13 @@ export class ServerNic {
   public portgroup: string;
   public portgroupName: string;
   public logicalNetworkName: string;
-  public deviceType: string;
+
+  @JsonProperty({
+    type: ServerNicDeviceType,
+    serializer: ServerNicDeviceTypeSerialization,
+    deserializer: ServerNicDeviceTypeSerialization
+  })
+  public deviceType: ServerNicDeviceType;
 
   @JsonProperty({
     type: ServerIpAllocationMode,
@@ -63,6 +74,13 @@ export class ServerNic {
    */
   public get ipAllocationModeLabel(): string {
     return serverIpAllocationModeText[this.ipAllocationMode];
+  }
+
+  /**
+   * Returns the device type label
+   */
+  public get deviceTypeLabel(): string {
+    return serverNicDeviceTypeText[this.deviceType];
   }
 
   /**

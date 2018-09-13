@@ -14,7 +14,7 @@
         <mcs-icon [key]="angleDoubleRightIconKey" size="xsmall"></mcs-icon>
       </div>
       <div>
-        <h1>{{ selectedServerName }}</h1>
+        <h1>{{ selectedServer?.name }}</h1>
       </div>
     </div>
   </ng-container>
@@ -112,7 +112,7 @@
         <!-- TODO: Since the backups was not yet finished,
           use the "Snapshot" on the backups tab first
           instead of textContent.backups.label -->
-        <ng-container *mcsAccessControl="['SnapshotAccess']">
+        <ng-container *mcsAccessControl="['VmSnapshotAccess']">
           <mcs-tab label="Snapshots" id="snapshots"></mcs-tab>
         </ng-container>
 

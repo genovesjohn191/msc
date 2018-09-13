@@ -37,7 +37,11 @@ export abstract class McsListSourceBase<T> {
   public findAllRecordsStream(): Observable<T[]> {
     return this.getStreams().pipe(
       catchError((error) => throwError(error)),
-      switchMap(() => this.getAllRecords().pipe(map((records) => records)))
+      switchMap(() =>
+        this.getAllRecords().pipe(
+          map((records) => records.filter(this.filterMethod.bind(this)))
+        )
+      )
     );
   }
 
@@ -50,6 +54,12 @@ export abstract class McsListSourceBase<T> {
    * Gets all implemented streams from inherited class
    */
   protected abstract getStreams(): Observable<any>;
+
+  /**
+   * Filter predicate method to which will be obtained
+   * @param _record Record to be checked
+   */
+  protected abstract filterMethod(_record: T): boolean;
 
   /**
    * Convert the array object into map records

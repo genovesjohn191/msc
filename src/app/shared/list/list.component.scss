@@ -2,7 +2,15 @@
 
 .list-wrapper {
   @include flex(0 0 auto);
-  @include display-flex(column);
+  @include flex-wrap(wrap);
+
+  &.list-horizontal {
+    @include display-flex(row);
+  }
+
+  &.list-vertical {
+    @include display-flex(column);
+  }
 
   &.xsmall {
     @include set-items-interval($space-xsmall);

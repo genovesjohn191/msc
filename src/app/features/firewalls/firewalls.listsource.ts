@@ -8,7 +8,11 @@ import {
   McsSearch,
   McsKeyValuePair
 } from '../../core';
-import { compareStrings } from '../../utilities';
+import {
+  compareStrings,
+  isNullOrEmpty,
+  containsString
+} from '../../utilities';
 import { Firewall } from './models';
 import { FirewallsRepository } from './repositories/firewalls.repository';
 
@@ -53,6 +57,15 @@ export class FirewallsListSource extends McsListSourceBase<Firewall> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<Firewall[]> {
-    return this._firewallsRepository.findAllRecords(undefined, this._search);
+    return this._firewallsRepository.findAllRecords();
+  }
+
+  /**
+   * Filters all the records based on searched keyword
+   * @param _record Record to be checked if it is included
+   */
+  protected filterMethod(_record: Firewall): boolean {
+    if (isNullOrEmpty(_record)) { return true; }
+    return containsString(_record.managementName, this._search.keyword);
   }
 }

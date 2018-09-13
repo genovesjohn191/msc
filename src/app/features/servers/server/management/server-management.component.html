@@ -28,9 +28,9 @@
 
               <mcs-list-item class="form-field-inline">
                 <span>{{ textContent.vmProperties.configuration }}:</span>
-                <span [innerHTML]="server.compute?.memoryMBLabel | mcsDataLabel"></span>
+                <span>{{ server.compute?.memoryMB | number }} MB</span>
                 <span> / </span>
-                <span [innerHTML]="server.compute?.cpuCountLabel | mcsDataLabel"></span>
+                <span>{{ server.compute?.cpuCount | number }} vCPU</span>
                 <ng-container *mcsAccessControl="['VmEdit']">
                   <ng-container *ngIf="server.isSelfManaged">
                     <mcs-icon *ngIf="scaleInProgress"

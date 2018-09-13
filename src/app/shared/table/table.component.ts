@@ -128,6 +128,13 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   /**
+   * Returns all the displayed columns of the table
+   */
+  public get displayedColumns(): QueryList<ColumnDefDirective> {
+    return this._columnDefinitions;
+  }
+
+  /**
    * Placeholders within the table template where the header and rows data will be inserted
    */
   @ViewChild(HeaderPlaceholderDirective)

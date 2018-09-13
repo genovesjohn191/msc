@@ -19,6 +19,9 @@ export type McsPlacementType = 'left' | 'right' | 'top' | 'bottom' | 'center';
 // Alignment Type
 export type McsAlignmentType = 'start' | 'center' | 'end';
 
+// Orientation Type
+export type McsOrientationType = 'horizontal' | 'vertical';
+
 // Data Size Type
 export type McsDataSizeType = 'B' | 'KB' | 'MB' | 'GB' | 'TB';
 

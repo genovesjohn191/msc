@@ -37,13 +37,10 @@ $color-yellow-00: #efc225;
 $color-red-00: #ed1d2b;
 
 // Responsive Dimension Settings
-$desktop-min-width: 970px;
-$tablet-max-width: 969px;
-$tablet-min-width: 720px;
-$mobile-landscape-max-width: 719px;
-$mobile-landscape-min-width: 544px;
-$mobile-portrait-max-width: 543px;
-$mobile-portrait-min-width: 320px;
+$large-platform-width: 970px;
+$medium-platform-width: 720px;
+$small-platform-width: 543px;
+$xmall-platform-width: 320px;
 
 // Max View Width
 $limited-view-width: 800px;
@@ -79,7 +76,7 @@ $disabled-opacity: 0.65;
 
 // Border colors
 $border-color-light: $color-grey-04;
-$border-color-dark: $color-grey-01;
+$border-color-dark: $color-grey-00;
 
 // Border Radius
 $border-radius-small: 2px;

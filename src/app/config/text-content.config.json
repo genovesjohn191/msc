@@ -436,6 +436,7 @@
           "nic": "NIC",
           "network": "Network",
           "primary": "Primary",
+          "type": "Type",
           "ipMode": "IP Mode",
           "ipAddresses": "IP Addresses",
           "action": ""
@@ -1055,18 +1056,6 @@
     "title": "Always show the following columns."
   },
   "shared": {
-    "validationMessage": {
-      "ipAddress": "Please enter a valid IP Address.",
-      "numeric": "Please enter a valid number.",
-      "alphaNumeric": "Please enter alphanumeric only.",
-      "required": "This field is required",
-      "email": "Please enter a valid email address.",
-      "pattern": "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number",
-      "minlength": "Minimum length {{min_length}}",
-      "maxlength": "Maximum length {{max_length}}",
-      "min": "The minimum value that can be entered is {{min_value}}",
-      "max": "Maximum value can be entered is upto {{max_value}}"
-    },
     "safeToNavigateAway": {
       "message": "Your changes may not be saved. Are you sure you want to leave this page?"
     },
@@ -1083,14 +1072,15 @@
     "search": {
       "placeholder": "Type to search..."
     },
-    "attachment": {
+    "fileAttachment": {
       "chooseFile": "Choose File",
       "dragDropZone": "Drag & drop file here",
       "ok": "OK",
       "errorCaption": "Selection error",
       "errorFileType": "Invalid file type selected.",
       "errorFileSize": "The file you are trying to attach exceeds the {{max_size}}MB attachment limit.",
-      "errorGeneral": "Unexpected error occured."
+      "errorGeneral": "Unexpected error occured.",
+      "detachTooltip": "Click to remove"
     },
     "commentBox": {
       "chooseFile": "Attach file",

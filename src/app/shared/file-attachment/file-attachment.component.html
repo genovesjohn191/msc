@@ -24,7 +24,7 @@
 </ng-template>
 
 <!-- File Attachment Dropzone -->
-<div class="attachment-wrapper dropzone"
+<div class="file-attachment-dropzone-wrapper dropzone"
   ng2FileDrop [ngClass]="{'file-hover': hasDropZone}"
   (fileOver)="onFileOver($event)"
   [uploader]="fileUploader">
@@ -48,13 +48,14 @@
 </div>
 
 <!-- Attached files -->
-<div class="attached-files-wrapper" *ngIf="attachedFiles">
-  <ul class="inline-list rollover">
-    <li (click)="removeAttachment(attachedItem)"
-      cursor="pointer"
-      *ngFor="let attachedItem of attachedFiles">
-      <mcs-icon [key]="closeIconKey" size="small"></mcs-icon>
-      <span>{{ attachedItem?.file.name }}</span>
-    </li>
-  </ul>
+<div *ngIf="attachedFiles">
+  <mcs-list spacing="auto" orientation="horizontal">
+    <mcs-list-item *ngFor="let attachedItem of attachedFiles">
+      <mcs-action-item (click)="removeAttachment(attachedItem)"
+        [mcsTooltip]="textContent.detachTooltip">
+        <mcs-icon [key]="closeIconKey" size="small"></mcs-icon>
+        <span>{{ attachedItem?.file.name }}</span>
+      </mcs-action-item>
+    </mcs-list-item>
+  </mcs-list>
 </div>

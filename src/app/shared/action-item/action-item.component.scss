@@ -11,7 +11,7 @@ $action-item-active-color: $color-grey-06;
 .action-item-content {
   position: relative;
   white-space: nowrap;
-  padding: 0 $space-large;
+  padding: $space-xsmall $space-medium;
   cursor: pointer;
   height: 100%;
   @include display-flex(row);

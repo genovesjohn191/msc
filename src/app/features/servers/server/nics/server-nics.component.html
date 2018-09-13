@@ -49,6 +49,16 @@
             </mcs-data-cell>
           </ng-container>
 
+          <!-- Type Column -->
+          <ng-container mcsColumnDef="type">
+            <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+              {{ textContent.columnHeaders.type }}
+            </mcs-header-cell>
+            <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+              <span [innerHTML]="row.deviceTypeLabel | mcsDataLabel"></span>
+            </mcs-data-cell>
+          </ng-container>
+
           <!-- IP Mode Column -->
           <ng-container mcsColumnDef="ipMode">
             <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
@@ -74,11 +84,11 @@
           </ng-container>
 
           <!-- Action Column -->
-          <ng-container mcsColumnDef="action">
+          <ng-container mcsColumnDef="action" *mcsAccessControl="['VmNicEdit']">
             <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
             </mcs-header-cell>
             <mcs-data-cell *mcsDataCellDef="let row">
-              <div *mcsAccessControl="['VmNicEdit']" class="inline-items-small flex-nowrap">
+              <div class="inline-items-small flex-nowrap">
                 <span *ngIf="isEditNicEnabled(row)">
                   <a [disabled]="!server.executable"
                       (click)="openEditNicWindow(row)"
@@ -90,7 +100,8 @@
                 </span>
                 <span>
                   <a *ngIf="!row.isPrimary"
-                    [disabled]="!server.executable" (click)="deleteNic(row)"
+                    [disabled]="!server.executable"
+                    (click)="deleteNic(row)"
                     mcsEventTracker="delete-nic"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
