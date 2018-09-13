@@ -31,7 +31,7 @@ $step-disabled-color: $color-grey-02;
   right: 0;
   bottom: 0;
   @include display-flex(row);
-  @include breakpoint(medium) {
+  @include breakpoint(small) {
     display: block;
   }
 }
@@ -45,13 +45,13 @@ $step-disabled-color: $color-grey-02;
   padding-left: $space-medium;
   min-width: $step-item-min-width;
 
-  @include breakpoint(medium) {
+  @include breakpoint(small) {
     padding: $step-item-small-padding;
   }
 
   .wizard-step-completed-icon {
     min-width: $step-icon-check-min-width;
-    @include breakpoint(medium) {
+    @include breakpoint(small) {
       min-width: auto;
     }
   }
@@ -93,7 +93,7 @@ $step-disabled-color: $color-grey-02;
       font-size: 0;
       line-height: 0;
 
-      @include breakpoint(medium) {
+      @include breakpoint(small) {
         position: absolute;
         bottom: 0;
         left: 50%;
@@ -130,7 +130,7 @@ $step-disabled-color: $color-grey-02;
   left: $wizard-left-panel-width;
   padding: $space-large;
 
-  @include breakpoint(medium) {
+  @include breakpoint(small) {
     left: 0;
   }
 }

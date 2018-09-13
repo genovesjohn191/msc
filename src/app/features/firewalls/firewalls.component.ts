@@ -4,11 +4,10 @@ import {
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FirewallsRepository } from './repositories/firewalls.repository';
-import { FirewallsDataSource } from './firewalls.datasource';
 /** Models */
 import { Firewall } from './models';
 /** Core */
@@ -22,9 +21,11 @@ import {
 } from '../../core';
 import {
   isNullOrEmpty,
-  refreshView,
   getSafeProperty
 } from '../../utilities';
+import { TableComponent } from '../../shared';
+import { FirewallsRepository } from './repositories/firewalls.repository';
+import { FirewallsDataSource } from './firewalls.datasource';
 
 @Component({
   selector: 'mcs-firewalls',
@@ -37,6 +38,9 @@ export class FirewallsComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
+
+  @ViewChild('firewallsTable')
+  public firewallsTable: TableComponent<any>;
 
   public get cogIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COG;
@@ -61,7 +65,7 @@ export class FirewallsComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.initializeDatasource();
     });
   }

@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   OnChanges,
+  OnDestroy,
   Input,
   Output,
   EventEmitter,
@@ -10,6 +11,11 @@ import {
   ChangeDetectorRef,
   SimpleChanges
 } from '@angular/core';
+import {
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import {
   McsStorageService,
   McsFilterProvider,
@@ -20,8 +26,11 @@ import {
   convertJsonToMapObject,
   convertMapToJsonObject,
   animateFactory,
-  convertSpacesToDash
+  convertSpacesToDash,
+  unsubscribeSubject
 } from '../../utilities';
+import { TableComponent } from '../table/table.component';
+import { ColumnDefDirective } from '../table';
 
 @Component({
   selector: 'mcs-filter-selector',
@@ -37,12 +46,12 @@ import {
   }
 })
 
-export class FilterSelectorComponent implements OnInit, OnChanges {
+export class FilterSelectorComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public key: string;
 
   @Input()
-  public excludedFilterKeys: string[];
+  public associatedTable: TableComponent<any>;
 
   @Output()
   public filtersChange: EventEmitter<Map<string, McsFilterInfo>>;
@@ -52,6 +61,8 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
    */
   public filterItemsMap: Map<string, McsFilterInfo>;
   public displayedItemsMap: Map<string, McsFilterInfo>;
+
+  private _destroySubject = new Subject<void>();
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -65,15 +76,17 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
   public ngOnInit() {
     this._getFilterItems();
     this._initializeDisplayedFilters();
-    this.onNotifyGetFilters();
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    let excludedKeyChanges = changes['excludedFilterKeys'];
-    if (!isNullOrEmpty(excludedKeyChanges)) {
-      this._initializeDisplayedFilters();
-      this.onNotifyGetFilters();
+  public ngOnChanges(_changes: SimpleChanges) {
+    let _associatedTable = _changes['associatedTable'];
+    if (!isNullOrEmpty(_associatedTable)) {
+      this._listenToTableColumnChanges();
     }
+  }
+
+  public ngOnDestroy() {
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -91,19 +104,6 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
     this._storageService.setItem(this.key, convertMapToJsonObject(this.filterItemsMap));
     this.filtersChange.emit(this.displayedItemsMap);
     this._changeDetectorRef.markForCheck();
-  }
-
-  /**
-   * Initializes displayed filters based on excluded items
-   */
-  private _initializeDisplayedFilters(): void {
-    let filteredMap = new Map<string, McsFilterInfo>(this.filterItemsMap);
-    if (!isNullOrEmpty(this.excludedFilterKeys)) {
-      this.excludedFilterKeys.forEach(
-        (excludedItemKey) => filteredMap.delete(excludedItemKey)
-      );
-    }
-    this.displayedItemsMap = filteredMap;
   }
 
   /**
@@ -137,5 +137,37 @@ export class FilterSelectorComponent implements OnInit, OnChanges {
     return JSON.stringify(filters)
       .replace(/,"value":true/gi, '')
       .replace(/,"value":false/gi, '');
+  }
+
+  /**
+   * Listens to every table column changes
+   */
+  private _listenToTableColumnChanges(): void {
+    if (isNullOrEmpty(this.associatedTable)) { return; }
+
+    this.associatedTable.displayedColumns.changes
+      .pipe(startWith(null), takeUntil(this._destroySubject))
+      .subscribe(() =>
+        this._initializeDisplayedFilters(this.associatedTable.displayedColumns.toArray())
+      );
+  }
+
+  /**
+   * Initializes displayed filters based on excluded items
+   */
+  private _initializeDisplayedFilters(columnsDef?: ColumnDefDirective[]): void {
+    let filteredMap = new Map<string, McsFilterInfo>(this.filterItemsMap);
+    let hasColumnDefinition = !isNullOrEmpty(this.associatedTable) && !isNullOrEmpty(columnsDef);
+
+    if (hasColumnDefinition) {
+      let deletedItems: string[] = [];
+      filteredMap.forEach((_filterValue, _filterKey) => {
+        let filterFound = columnsDef.find((_column) => _column.name === _filterKey);
+        if (isNullOrEmpty(filterFound)) { deletedItems.push(_filterKey); }
+      });
+      deletedItems.forEach((deletedItem) => filteredMap.delete(deletedItem));
+    }
+    this.displayedItemsMap = filteredMap;
+    this.onNotifyGetFilters();
   }
 }

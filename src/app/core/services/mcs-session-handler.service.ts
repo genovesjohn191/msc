@@ -59,8 +59,9 @@ export class McsSessionHandlerService implements McsInitializer {
    * Returns true if session is currently idle
    */
   public get sessionIsIdle(): boolean {
-    return this.idleTimeInSeconds >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
-      || this._sessionIsIdle;
+    return !isDevMode()
+      && (this.idleTimeInSeconds >= CoreDefinition.SESSION_IDLE_TIME_IN_SECONDS
+        || this._sessionIsIdle);
   }
 
   /**
@@ -72,7 +73,9 @@ export class McsSessionHandlerService implements McsInitializer {
     let hasTimedOutIndicatiorCookie =
       !isNullOrEmpty(this._cookieService.getItem(CoreDefinition.COOKIE_SESSION_ID));
 
-    return this.idleTimeInSeconds >= maxIAllowedIdleTimeInSeconds || hasTimedOutIndicatiorCookie;
+    return !isDevMode()
+      && (this.idleTimeInSeconds >= maxIAllowedIdleTimeInSeconds
+        || hasTimedOutIndicatiorCookie);
   }
 
   public get sessionActive(): boolean {
@@ -159,7 +162,7 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public onSessionIdle(): Observable<boolean> {
     return this._onSessionIdle
-      .pipe(distinctUntilChanged(), filter((response) => response && !isDevMode()));
+      .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
   /**
@@ -167,7 +170,7 @@ export class McsSessionHandlerService implements McsInitializer {
    */
   public onSessionTimeOut(): Observable<boolean> {
     return this._onSessionTimeOut
-      .pipe(distinctUntilChanged(), filter((response) => response && !isDevMode()));
+      .pipe(distinctUntilChanged(), filter((response) => response));
   }
 
   /**

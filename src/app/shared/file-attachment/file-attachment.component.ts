@@ -36,7 +36,7 @@ const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'block',
+    'class': 'file-attachment-wrapper',
   }
 })
 
@@ -89,7 +89,7 @@ export class FileAttachmentComponent implements OnInit {
 
   public ngOnInit() {
     // Initialize text content provider and file loader settings
-    this.textContent = this._textContentProvider.content.shared.attachment;
+    this.textContent = this._textContentProvider.content.shared.fileAttachment;
     this.fileUploader = new FileUploader({
       autoUpload: false,
       queueLimit: this.attachedLimit === 'single' ? 1 : undefined,

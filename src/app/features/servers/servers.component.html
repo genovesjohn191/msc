@@ -114,7 +114,7 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey"
-        [excludedFilterKeys]="excludedColumns"
+        [associatedTable]="serversTable"
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -128,7 +128,7 @@
       <mcs-search *ngIf="isMobile" #search id="virtual-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource">
+      <mcs-table [dataSource]="dataSource" #serversTable>
         <!-- Selection Column -->
         <ng-container mcsColumnDef="select" *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef
@@ -217,7 +217,8 @@
 
         <!-- Management IP Column -->
         <ng-container mcsColumnDef="managementIp"
-          [mcsColumnDefHidden]="isColumnHidden('managementIp')">
+          [mcsColumnDefHidden]="isColumnHidden('managementIp')"
+          *mcsAccessControl="['VmManagementIpView']">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.managementIp.text }}
           </mcs-header-cell>
@@ -237,7 +238,9 @@
         </ng-container>
 
         <!-- Service ID Column -->
-        <ng-container mcsColumnDef="serviceId" [mcsColumnDefHidden]="isColumnHidden('serviceId')">
+        <ng-container mcsColumnDef="serviceId"
+          [mcsColumnDefHidden]="isColumnHidden('serviceId')"
+          *ngIf="hasManagedResource">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.serviceId.text }}
           </mcs-header-cell>

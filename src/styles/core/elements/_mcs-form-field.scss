@@ -26,6 +26,10 @@ select.form-control {
   @include border-radius($input-border-radius);
   @include set-placeholder-color($input-placeholder-text-color);
 
+  @include breakpoint(small) {
+    @include font-size($font-size-small);
+  }
+
   &:focus {
     outline: none;
     border-color: $input-border-color-focused;

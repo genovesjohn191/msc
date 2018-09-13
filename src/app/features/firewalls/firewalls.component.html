@@ -22,6 +22,7 @@
     <!-- Column Filter -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.filterColumn" offset="medium">
       <mcs-filter-selector [key]="columnSettingsKey"
+        [associatedTable]="firewallsTable"
         (filtersChange)="updateColumnSettings($event)"></mcs-filter-selector>
     </mcs-left-panel-item>
   </mcs-left-panel>
@@ -34,7 +35,7 @@
       <mcs-search *ngIf="isMobile" #search id="firewalls-mobile-search"></mcs-search>
 
       <!-- Table -->
-      <mcs-table [dataSource]="dataSource">
+      <mcs-table [dataSource]="dataSource" #firewallsTable>
         <!-- Firewall Column -->
         <ng-container mcsColumnDef="firewall">
           <mcs-header-cell *mcsHeaderCellDef>
@@ -49,7 +50,7 @@
         </ng-container>
 
         <!-- Serial Number Column -->
-        <ng-container mcsColumnDef="serialNumber" >
+        <ng-container mcsColumnDef="serialNumber" *mcsAccessControl="['FirewallSerialNumberView']">
           <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
             {{ columnSettings.serialNumber.text }}
           </mcs-header-cell>

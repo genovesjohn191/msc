@@ -4,7 +4,8 @@ import {
   OnDestroy,
   AfterViewInit,
   ChangeDetectorRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -42,7 +43,6 @@ import {
   McsSelection,
   McsTableListingBase,
   McsDialogService,
-  McsAccessControlService,
   CoreRoutes,
   McsRouteKey
 } from '../../core';
@@ -52,6 +52,7 @@ import {
   unsubscribeSubject,
   getSafeProperty
 } from '../../utilities';
+import { TableComponent } from '../../shared';
 import { ServerCreateService } from './server-create';
 
 @Component({
@@ -68,7 +69,10 @@ export class ServersComponent
   public selection: McsSelection<Server>;
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
-  public excludedColumns: string[];
+
+  @ViewChild('serversTable')
+  public serversTable: TableComponent<any>;
+
   private _destroySubject = new Subject<any>();
 
   public get serverServiceTypeText(): any {
@@ -124,11 +128,9 @@ export class ServersComponent
     private _serversRepository: ServersRepository,
     private _serverCreateService: ServerCreateService,
     private _resourcesRepository: ResourcesRepository,
-    private _accessControlService: McsAccessControlService,
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
-    this.excludedColumns = new Array();
     this.selection = new McsSelection<Server>(true);
   }
 
@@ -371,28 +373,7 @@ export class ServersComponent
           this.changeDetectorRef.markForCheck();
         })
       );
-
-    let resourcesSubscription = managedResources
-      .subscribe(() => createServerResources.subscribe());
-    resourcesSubscription.add(() => this._setExcludedColumns());
-  }
-
-  /**
-   * Sets the excluded filter columns definition
-   */
-  private _setExcludedColumns(): void {
-    let _excludedColumns = new Array();
-
-    if (!this.hasManagedResource) {
-      _excludedColumns.push('serviceId');
-    }
-
-    // TODO: FUSION-1726 - Waiting for the permission to view managementIp for internal users
-    let hasIpViewPermission = this.hasManagedResource &&
-      this._accessControlService.hasPermission(['CompanyView']);
-    if (!hasIpViewPermission) { _excludedColumns.push('managementIp'); }
-    this.excludedColumns = _excludedColumns;
-    this.changeDetectorRef.markForCheck();
+    managedResources.subscribe(() => createServerResources.subscribe());
   }
 
   /**

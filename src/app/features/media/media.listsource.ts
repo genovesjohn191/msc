@@ -8,7 +8,11 @@ import {
   McsSearch,
   McsKeyValuePair
 } from '../../core';
-import { compareStrings } from '../../utilities';
+import {
+  compareStrings,
+  isNullOrEmpty,
+  containsString
+} from '../../utilities';
 import { Media } from './models';
 import { MediaRepository } from './repositories/media.repository';
 
@@ -53,6 +57,15 @@ export class MediaListSource extends McsListSourceBase<Media> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<Media[]> {
-    return this._mediaRepository.findAllRecords(undefined, this._search);
+    return this._mediaRepository.findAllRecords();
+  }
+
+  /**
+   * Filters all the records based on searched keyword
+   * @param _record Record to be checked if it is included
+   */
+  protected filterMethod(_record: Media): boolean {
+    if (isNullOrEmpty(_record)) { return true; }
+    return containsString(_record.name, this._search.keyword);
   }
 }

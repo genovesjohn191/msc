@@ -2,7 +2,7 @@
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
     <!-- Server Creation -->
-    <mcs-top-panel-item *mcsTopPanelItemDef>
+    <mcs-top-panel-item *mcsTopPanelItemDef class="no-border">
       <mcs-action-item class="right-align" (click)="gotoTickets()"
         mcsEventTracker="navigate-to-ticket-listing"
         mcsEventCategory="ticket"
@@ -21,8 +21,8 @@
       [loadingText]="textContent.creatingTicket"
       loadingPlacement="top">
 
-      <div class="contextual-help-page-wrapper limited-view">
-        <form [formGroup]="fgCreateTicket" mcsFormGroup class="create-ticket-form">
+      <div class="contextual-help-page-wrapper limited-view block-items-large">
+        <form [formGroup]="fgCreateTicket" mcsFormGroup>
           <!-- Ticket Type -->
           <div class="field">
             <mcs-form-field>
@@ -169,14 +169,13 @@
         </div>
 
         <!-- Ticket Action -->
-        <div class="space-between-inline-items">
+        <div class="action-items">
           <a (click)="gotoTickets()"
             mcsEventTracker="cancel-ticket-creation"
             mcsEventCategory="ticket"
             mcsEventLabel="create-new-ticket-page">{{ textContent.cancelActivity }}</a>
 
-          <button mcsButton
-            id="ctaNewTicket"
+          <button mcsButton id="ctaNewTicket"
             arrow="right"
             (click)="onLogTicket()"
             mcsEventTracker="submit-new-ticket"

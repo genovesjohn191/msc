@@ -67,12 +67,17 @@
   }
 }
 
+.action-box {
+  border: 1px solid $border-color-dark;
+  @include border-radius($border-radius-small);
+  padding: $space-large;
+}
+
 // Bordered elements
-.bordered {
+.bordered-container {
   border: 1px solid $border-color-light;
 }
 
-// Removes the border of the element
 .no-border {
   border: none !important;
 }

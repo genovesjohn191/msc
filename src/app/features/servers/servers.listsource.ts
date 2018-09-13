@@ -8,7 +8,11 @@ import {
   McsSearch,
   McsKeyValuePair
 } from '../../core';
-import { compareStrings } from '../../utilities';
+import {
+  compareStrings,
+  containsString,
+  isNullOrEmpty
+} from '../../utilities';
 import { Server } from './models';
 import { ServersRepository } from './servers.repository';
 
@@ -53,6 +57,15 @@ export class ServersListSource extends McsListSourceBase<Server> {
    * Get all records from repository
    */
   protected getAllRecords(): Observable<Server[]> {
-    return this._serversRepository.findAllRecords(undefined, this._search);
+    return this._serversRepository.findAllRecords();
+  }
+
+  /**
+   * Filters all the records based on searched keyword
+   * @param _record Record to be checked if it is included
+   */
+  protected filterMethod(_record: Server): boolean {
+    if (isNullOrEmpty(_record)) { return true; }
+    return containsString(_record.name, this._search.keyword);
   }
 }

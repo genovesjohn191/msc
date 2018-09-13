@@ -62,23 +62,23 @@ export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> 
     return this._catalogRepository.findAllRecords()
       .pipe(
         map((response) => {
-          // Create new object of response so that we won't touch the original object
-          let newObject = createNewObject<ProductCatalog[]>(ProductCatalog, response);
-          return newObject.filter(this._filterCatalog.bind(this));
+          // We need to create a new product object in here
+          // because we are eliminating other products that are
+          // not in the keyword.
+          return createNewObject<ProductCatalog[]>(ProductCatalog, response);
         })
       );
   }
 
   /**
-   * Filters the catalog items going to products and return true
-   * when the record in under the catalog
-   * @param _sourceCatalog Source catalog from which the record should be filtered
+   * Filters all the records based on searched keyword
+   * @param _record Record to be checked if it is included
    */
-  private _filterCatalog(_sourceCatalog: ProductCatalog): boolean {
-    if (isNullOrEmpty(_sourceCatalog)) { return true; }
-    if (containsString(_sourceCatalog.name, this._search.keyword)) { return true; }
+  protected filterMethod(_record: ProductCatalog): boolean {
+    if (isNullOrEmpty(_record)) { return true; }
+    if (containsString(_record.name, this._search.keyword)) { return true; }
 
-    let filteredCategories = _sourceCatalog.categories.filter((_category) => {
+    let filteredCategories = _record.categories.filter((_category) => {
       if (containsString(_category.name, this._search.keyword)) { return true; }
 
       let filteredProducts = _category.products.filter((_product) =>
@@ -87,7 +87,7 @@ export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> 
       _category.products = filteredProducts;
       return !isNullOrEmpty(filteredProducts);
     });
-    _sourceCatalog.categories = filteredCategories;
+    _record.categories = filteredCategories;
     return !isNullOrEmpty(filteredCategories);
   }
 }

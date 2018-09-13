@@ -9,7 +9,10 @@ import {
   ContentChild,
   TemplateRef
 } from '@angular/core';
-import { McsSizeType } from '../../core';
+import {
+  McsSizeType,
+  McsOrientationType
+} from '../../core';
 import { ListHeaderDirective } from './list-header.directive';
 
 @Component({
@@ -19,13 +22,18 @@ import { ListHeaderDirective } from './list-header.directive';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'list-wrapper'
+    'class': 'list-wrapper',
+    '[class.list-horizontal]': 'orientation === "horizontal"',
+    '[class.list-vertical]': 'orientation === "vertical"'
   }
 })
 
 export class ListComponent implements AfterViewInit {
   @Input()
   public header: string;
+
+  @Input()
+  public orientation: McsOrientationType;
 
   @Input()
   public spacing: McsSizeType;
@@ -42,6 +50,7 @@ export class ListComponent implements AfterViewInit {
   ) {
     this.spacing = 'small';
     this.itemsOffset = 'auto';
+    this.orientation = 'vertical';
   }
 
   public ngAfterViewInit(): void {

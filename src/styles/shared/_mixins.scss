@@ -8,16 +8,16 @@
 // }
 @mixin breakpoint($point) {
   @if $point == large {
-    @media screen and (min-width: $desktop-min-width) { @content; }
+    @media screen and (min-width: $large-platform-width) { @content; }
   }
   @else if $point == medium {
-    @media screen and (max-width: $tablet-max-width) { @content; }
+    @media screen and (max-width: $medium-platform-width) { @content; }
   }
   @else if $point == small {
-    @media screen and (max-width: $mobile-landscape-max-width) { @content; }
+    @media screen and (max-width: $small-platform-width) { @content; }
   }
   @else if $point == xsmall {
-    @media screen and (max-width: $mobile-portrait-max-width) { @content; }
+    @media screen and (max-width: $xmall-platform-width) { @content; }
   }
 }
 

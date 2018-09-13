@@ -23,8 +23,8 @@
       (ngModelChange)="onSliderChanged($event)"></mcs-slider>
     <div class="inline-items centered">
       <strong>
-        {{ sliderValue?.memoryMB }} {{ textContent.ramUnit }} {{ textContent.ramLabel }} /
-        {{ sliderValue?.cpuCount }} {{ textContent.cpuUnit }}
+        {{ sliderValue?.memoryMB | number }} {{ textContent.ramUnit }} {{ textContent.ramLabel }} /
+        {{ sliderValue?.cpuCount | number}} {{ textContent.cpuUnit }}
       </strong>
     </div>
   </div>
