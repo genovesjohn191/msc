@@ -44,9 +44,6 @@ export class ServerNic {
   })
   public ipAllocationMode: ServerIpAllocationMode;
 
-  // Additional flag not related to API response
-  public isProcessing: boolean;
-
   constructor() {
     this.id = undefined;
     this.vCloudNicId = undefined;

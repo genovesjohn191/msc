@@ -46,13 +46,12 @@ import {
 } from '../../../core';
 import {
   isNullOrEmpty,
-  refreshView,
   getSafeProperty,
   unsubscribeSafely,
   unsubscribeSubject
 } from '../../../utilities';
 import { ComponentHandlerDirective } from '../../../shared';
-import { ServersRepository } from '../servers.repository';
+import { ServersRepository } from '../repositories/servers.repository';
 import { ServersService } from '../servers.service';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
@@ -82,13 +81,12 @@ export class ServerComponent
   public componentHandler: ComponentHandlerDirective;
 
   public textContent: any;
+  public serversTextContent: any;
   public serversMap: Map<string, Server[]>;
   public selectedGroupName: string;
   public selectedServer: Server;
-  public serversTextContent: any;
   public serverListSource: ServersListSource | null;
   public serverSubscription: Subscription;
-  public serversSubscription: Subscription;
   public listStatusFactory: McsDataStatusFactory<Map<string, Server[]>>;
 
   public get spinnerIconKey(): string {
@@ -133,7 +131,7 @@ export class ServerComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.search.searchChangedStream
         .pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
@@ -279,6 +277,7 @@ export class ServerComponent
    * @param serverId Server ID to be the basis of the server
    */
   private _getServerById(serverId: string): void {
+    unsubscribeSafely(this.serverSubscription);
     this.serverSubscription = this._serversRepository
       .findRecordById(serverId)
       .pipe(

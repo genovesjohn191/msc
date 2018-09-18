@@ -38,7 +38,7 @@ import {
   ServerClone,
   ServerClientObject
 } from '../../../models';
-import { ServersRepository } from '../../../servers.repository';
+import { ServersRepository } from '../../../repositories/servers.repository';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 @Component({

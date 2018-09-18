@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  EventEmitter
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -12,8 +9,8 @@ import {
   McsDataStatus,
   McsDialogService,
   McsAuthenticationIdentity
-} from '../../core';
-import { ServersService } from './servers.service';
+} from '../../../core';
+import { isNullOrEmpty } from '../../../utilities';
 import {
   Server,
   ServerCommand,
@@ -23,15 +20,12 @@ import {
   ServerNic,
   ServerSnapshot,
   ServerCompute
-} from './models';
-import { isNullOrEmpty } from '../../utilities';
-import { ResetPasswordFinishedDialogComponent } from './shared';
+} from '../models';
+import { ServersService } from '../servers.service';
+import { ResetPasswordFinishedDialogComponent } from '../shared';
 
 @Injectable()
 export class ServersRepository extends McsRepositoryBase<Server> {
-
-  /** Event that emits when notifications job changes */
-  public notificationsChanged = new EventEmitter<any>();
 
   constructor(
     private _serversApiService: ServersService,
@@ -155,22 +149,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   }
 
   /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   *
-   * `@Note:` We need to register the events after obtaining the data so that
-   * we will get notified by the jobs when data is obtained
-   */
-  protected afterDataObtained(): void {
-    this._notificationEvents.notifyNotificationsSubscribers();
-  }
-
-  /**
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
-    this._notificationEvents.notificationsEvent
-      .subscribe(this._onNotificationsChanged.bind(this));
-
     this._notificationEvents.createServerEvent
       .subscribe(this._onCreateServer.bind(this));
 
@@ -193,37 +174,37 @@ export class ServersRepository extends McsRepositoryBase<Server> {
       .subscribe(this._onScaleServer.bind(this));
 
     this._notificationEvents.attachServerMediaEvent
-      .subscribe(this._onAttachServerMedia.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.detachServerMediaEvent
-      .subscribe(this._onDetachServerMedia.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.createServerDisk
-      .subscribe(this._onCreateServerDisk.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.updateServerDisk
-      .subscribe(this._onUpdateServerDisk.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.deleteServerDisk
-      .subscribe(this._onUpdateServerDisk.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.createServerNic
-      .subscribe(this._onCreateServerNic.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.updateServerNic
-      .subscribe(this._onModifyServerNic.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.deleteServerNic
-      .subscribe(this._onModifyServerNic.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.createServerSnapshot
-      .subscribe(this._onCreateServerSnapshot.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.applyServerSnapshot
-      .subscribe(this._onApplyServerSnapshot.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.deleteServerSnapshot
-      .subscribe(this._onDeleteServerSnapshot.bind(this));
+      .subscribe(this._updateServerStatusByJob.bind(this));
   }
 
   /**
@@ -231,7 +212,8 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @param job Emitted job content
    */
   private _onCreateServer(job: McsApiJob): void {
-    if (isNullOrEmpty(job) || job.dataStatus !== McsDataStatus.Success) { return; }
+    let successfullyCreated = !isNullOrEmpty(job) && job.dataStatus === McsDataStatus.Success;
+    if (!successfullyCreated) { return; }
     this.refreshRecords();
   }
 
@@ -260,12 +242,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
-    this._setServerProcessDetails(activeServer, job);
+    this._updateServerStatusByJob(job);
     if (job.dataStatus === McsDataStatus.Success) {
       this.deleteRecordById(activeServer.id);
-      return;
     }
-    this.updateRecord(activeServer);
   }
 
   /**
@@ -276,11 +256,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
-    this._setServerProcessDetails(activeServer, job);
     if (job.dataStatus === McsDataStatus.Success) {
       activeServer.name = job.clientReferenceObject.newName;
     }
-    this.updateRecord(activeServer);
+    this._updateServerStatusByJob(job);
   }
 
   /**
@@ -291,11 +270,10 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
-    this._setServerProcessDetails(activeServer, job);
     if (job.dataStatus === McsDataStatus.Success) {
       this._updateServerPowerState(activeServer);
     }
-    this.updateRecord(activeServer);
+    this._updateServerStatusByJob(job);
   }
 
   /**
@@ -305,9 +283,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   private _onResetServerPassword(job: McsApiJob): void {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
+    this._updateServerStatusByJob(job);
 
     let resetSuccessfully = job.dataStatus === McsDataStatus.Success
       && job.clientReferenceObject.userId === this._authIdentity.user.userId
@@ -332,136 +308,12 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
-    this._setServerProcessDetails(activeServer, job);
     if (job.dataStatus === McsDataStatus.Success && !isNullOrEmpty(activeServer.compute)) {
       activeServer.compute.memoryMB = job.clientReferenceObject.memoryMB;
       activeServer.compute.cpuCount = job.clientReferenceObject.cpuCount;
       activeServer.compute.coreCount = 1;
     }
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when attaching a server media
-   * @param job Emitted job content
-   */
-  private _onAttachServerMedia(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when detaching a server media
-   * @param job Emitted job content
-   */
-  private _onDetachServerMedia(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when creating a server disk
-   * @param job Emitted job content
-   */
-  private _onCreateServerDisk(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when either updating or deleting a server disk
-   * @param job Emitted job content
-   */
-  private _onUpdateServerDisk(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when adding a server nic
-   * @param job Emitted job content
-   */
-  private _onCreateServerNic(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when either updating or deleting a server nic
-   * @param job Emitted job content
-   */
-  private _onModifyServerNic(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    let hasServerNics = !isNullOrEmpty(activeServer.nics);
-    if (!hasServerNics) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    let nic = activeServer.nics.find((result) => {
-      return result.id === job.clientReferenceObject.nicId;
-    });
-    if (!isNullOrEmpty(nic)) { nic.isProcessing = activeServer.isProcessing; }
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when create server snapshot triggered
-   * @param job Emitted job content
-   */
-  private _onCreateServerSnapshot(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when applying server snapshot triggered
-   * @param job Emitted job content
-   */
-  private _onApplyServerSnapshot(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when deleting server snapshot triggered
-   * @param job Emitted job content
-   */
-  private _onDeleteServerSnapshot(job: McsApiJob): void {
-    let activeServer = this._getServerByJob(job);
-    if (isNullOrEmpty(activeServer)) { return; }
-
-    this._setServerProcessDetails(activeServer, job);
-    this.updateRecord(activeServer);
-  }
-
-  /**
-   * Event that emits when any notifications changes
-   * @param jobs Emitted jobs content
-   */
-  private _onNotificationsChanged(jobs: McsApiJob[]): void {
-    this.notificationsChanged.emit(jobs);
+    this._updateServerStatusByJob(job);
   }
 
   /**
@@ -473,6 +325,15 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     activeServer.isProcessing = this._getProcessingFlagByJob(job);
     activeServer.commandAction = job.clientReferenceObject.commandAction;
     activeServer.processingText = job.summaryInformation;
+  }
+
+  /**
+   * Updates the server status based on the job
+   */
+  private _updateServerStatusByJob(job: McsApiJob): void {
+    let activeServer = this._getServerByJob(job);
+    this._setServerProcessDetails(activeServer, job);
+    this.updateRecord(activeServer);
   }
 
   /**

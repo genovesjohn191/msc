@@ -35,11 +35,4 @@ export class ConsolePageRepository extends McsRepositoryBase<McsApiConsole> {
     this.clearRecords();
     return this._consoleApiService.getServerConsole(recordId);
   }
-
-  /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   */
-  protected afterDataObtained(): void {
-    // Implement initialization of events here
-  }
 }

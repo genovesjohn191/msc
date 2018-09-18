@@ -38,11 +38,4 @@ export class ProductsRepository extends McsRepositoryBase<Product> {
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Product>> {
     return this._productsService.getProduct(recordId);
   }
-
-  /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   */
-  protected afterDataObtained(): void {
-    // Implement initialization of events here
-  }
 }

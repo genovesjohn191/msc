@@ -48,7 +48,7 @@ import {
   ServerCommand,
   ServerPlatform
 } from '../models';
-import { ServersRepository } from '../servers.repository';
+import { ServersRepository } from '../repositories/servers.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 // Add another group type in here if you have addition tab

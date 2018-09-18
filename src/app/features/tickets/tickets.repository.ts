@@ -38,11 +38,4 @@ export class TicketsRepository extends McsRepositoryBase<Ticket> {
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Ticket>> {
     return this._ticketsApiService.getTicket(recordId);
   }
-
-  /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   */
-  protected afterDataObtained(): void {
-    // Implement initialization of events here
-  }
 }

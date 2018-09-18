@@ -72,11 +72,4 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Firewall>> {
     return this._firewallsService.getFirewall(recordId);
   }
-
-  /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   */
-  protected afterDataObtained(): void {
-    // Implement initialization of events here
-  }
 }

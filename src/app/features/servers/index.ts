@@ -1,5 +1,5 @@
 export * from './models';
 export * from './servers.module';
 export * from './servers.service';
-export * from './servers.repository';
-export * from './servers-os.repository';
+export * from './repositories/servers.repository';
+export * from './repositories/servers-os.repository';
