@@ -24,7 +24,7 @@ import {
 } from '../../resources';
 import { Server } from '../models';
 import { ServersService } from '../servers.service';
-import { ServersRepository } from '../servers.repository';
+import { ServersRepository } from '../repositories/servers.repository';
 import { ServerService } from '../server/server.service';
 
 export abstract class ServerDetailsBase {

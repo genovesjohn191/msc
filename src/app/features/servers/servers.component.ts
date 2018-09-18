@@ -17,7 +17,7 @@ import {
   ResourcesRepository,
   ResourceServiceType
 } from '../resources';
-import { ServersRepository } from './servers.repository';
+import { ServersRepository } from './repositories/servers.repository';
 import { ServersService } from './servers.service';
 import { ServersDataSource } from './servers.datasource';
 /** Models */

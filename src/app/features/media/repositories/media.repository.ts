@@ -76,16 +76,6 @@ export class MediaRepository extends McsRepositoryBase<Media> {
   }
 
   /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   *
-   * `@Note:` We need to register the events after obtaining the data so that
-   * we will get notified by the jobs when data is obtained
-   */
-  protected afterDataObtained(): void {
-    // Check if this is necessary
-  }
-
-  /**
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {

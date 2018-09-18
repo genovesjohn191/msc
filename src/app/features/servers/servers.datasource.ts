@@ -13,7 +13,7 @@ import {
 } from '../../core';
 import { isNullOrEmpty } from '../../utilities';
 import { Server } from './models';
-import { ServersRepository } from './servers.repository';
+import { ServersRepository } from './repositories/servers.repository';
 
 export class ServersDataSource implements McsDataSource<Server> {
   /**

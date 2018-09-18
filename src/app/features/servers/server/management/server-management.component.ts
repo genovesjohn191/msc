@@ -54,7 +54,7 @@ import {
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
-import { ServersRepository } from '../../servers.repository';
+import { ServersRepository } from '../../repositories/servers.repository';
 
 // Enumeration
 export enum ServerManagementView {

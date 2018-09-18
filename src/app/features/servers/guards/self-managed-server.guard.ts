@@ -10,7 +10,7 @@ import {
   McsErrorHandlerService,
   McsHttpStatusCode
 } from '../../../core';
-import { ServersRepository } from '../servers.repository';
+import { ServersRepository } from '../repositories/servers.repository';
 import { ServerServiceType } from '../models';
 
 @Injectable()

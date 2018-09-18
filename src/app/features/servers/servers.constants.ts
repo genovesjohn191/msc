@@ -7,8 +7,8 @@ import {
 /** Services */
 import { ServerService } from './server/';
 import { ServersService } from './servers.service';
-import { ServersRepository } from './servers.repository';
-import { ServersOsRepository } from './servers-os.repository';
+import { ServersRepository } from './repositories/servers.repository';
+import { ServersOsRepository } from './repositories/servers-os.repository';
 /** Components */
 import { ServersComponent } from './servers.component';
 import {

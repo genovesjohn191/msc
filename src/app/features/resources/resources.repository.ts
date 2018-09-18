@@ -127,11 +127,4 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
   protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Resource>> {
     return this._resourcesApiService.getResource(recordId);
   }
-
-  /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   */
-  protected afterDataObtained(): void {
-    // Implement initialization of events here
-  }
 }

@@ -45,7 +45,7 @@ import {
   ServerCreateStorage,
   ServerCreateNic
 } from '../../../models';
-import { ServersOsRepository } from '../../../servers-os.repository';
+import { ServersOsRepository } from '../../../repositories/servers-os.repository';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;

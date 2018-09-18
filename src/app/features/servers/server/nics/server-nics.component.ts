@@ -48,7 +48,7 @@ import {
 } from '../../../../shared';
 import { DeleteNicDialogComponent } from '../../shared';
 import { ServersService } from '../../servers.service';
-import { ServersRepository } from '../../servers.repository';
+import { ServersRepository } from '../../repositories/servers.repository';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 

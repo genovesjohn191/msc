@@ -42,11 +42,4 @@ export class ToolsRepository extends McsRepositoryBase<Portal> {
     }
     return of(apiRecord);
   }
-
-  /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   */
-  protected afterDataObtained(): void {
-    // Implement initialization of events here
-  }
 }

@@ -4,10 +4,7 @@ import {
   Subscription,
   of
 } from 'rxjs';
-import {
-  finalize,
-  map
-} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { McsPaginator } from '../interfaces/mcs-paginator.interface';
 import { McsSearch } from '../interfaces/mcs-search.interface';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
@@ -246,7 +243,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     // Call the API if record has not been called once
     return this.getRecordById(id)
       .pipe(
-        finalize(() => this._notifyAfterDataObtained()),
         map((record) => {
           let noRecordFound = isNullOrEmpty(record) || isNullOrEmpty(record.content);
           if (noRecordFound) { return undefined; }
@@ -279,11 +275,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
   protected abstract getRecordById(recordId: string): Observable<McsApiSuccessResponse<T>>;
 
   /**
-   * Event that emits after the data obtained in getting all records or getting individual records
-   */
-  protected abstract afterDataObtained(): void;
-
-  /**
    * Find all records from datarecords cache based on the record count
    * @param recordsCount Records count to pull in the cache
    */
@@ -312,7 +303,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
     // Get all records from API calls implemented under inherited class
     return this.getAllRecords(pageIndex, pageSize, keyword)
       .pipe(
-        finalize(() => this._notifyAfterDataObtained()),
         map((data) => {
           if (isNullOrEmpty(data)) { return new Array(); }
           this._totalRecordsCount = data.totalCount;
@@ -350,13 +340,6 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
    */
   private _notifyDataRecordsChanged(): void {
     this._dataRecordsChanged.next(this._dataRecords);
-  }
-
-  /**
-   * Notify after data obtained abstract method
-   */
-  private _notifyAfterDataObtained(): void {
-    this.afterDataObtained();
   }
 
   /**

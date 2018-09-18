@@ -6,9 +6,9 @@ import {
 import {
   McsRepositoryBase,
   McsApiSuccessResponse
-} from '../../core';
-import { ServersService } from './servers.service';
-import { ServerOperatingSystem } from './models';
+} from '../../../core';
+import { ServersService } from '../servers.service';
+import { ServerOperatingSystem } from '../models';
 
 @Injectable()
 export class ServersOsRepository extends McsRepositoryBase<ServerOperatingSystem> {
@@ -38,12 +38,5 @@ export class ServersOsRepository extends McsRepositoryBase<ServerOperatingSystem
   protected getRecordById(_recordId: string):
     Observable<McsApiSuccessResponse<ServerOperatingSystem>> {
     return of(undefined);
-  }
-
-  /**
-   * This will be automatically called when data was obtained in getAllRecords or getRecordById
-   */
-  protected afterDataObtained(): void {
-    // Implement initialization of events here
   }
 }

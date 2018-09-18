@@ -46,7 +46,7 @@ import {
 } from '../../models';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
-import { ServersRepository } from '../../servers.repository';
+import { ServersRepository } from '../../repositories/servers.repository';
 import { ServerDetailsBase } from '../server-details.base';
 
 enum SnapshotDialogType {
