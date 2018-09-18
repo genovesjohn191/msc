@@ -1,32 +1,5 @@
-function HtmlElementsPlugin(locations) {
-  this.locations = locations;
-}
-
-HtmlElementsPlugin.prototype.apply = function (compiler) {
-  var self = this;
-  compiler.hooks.compilation.tap('compilation', (compilation) => {
-
-    compilation.options.htmlElements = compilation.options.htmlElements || {};
-    compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync(
-      'compilation',
-      (htmlPluginData, callback) => {
-        const locations = self.locations;
-
-        if (locations) {
-          const publicPath = htmlPluginData.assets.publicPath;
-
-          Object.getOwnPropertyNames(locations).forEach(function (loc) {
-            compilation.options.htmlElements[loc] = getHtmlElementString(
-              locations[loc], publicPath
-            );
-          });
-        }
-        callback(null, htmlPluginData);
-      });
-  });
-};
-
 const RE_ENDS_WITH_BS = /\/$/;
+
 
 /**
  * Create an HTML tag with attributes from a map.
@@ -39,7 +12,7 @@ const RE_ENDS_WITH_BS = /\/$/;
  * @param publicPath a path to add to eh start of static asset url
  * @returns {string}
  */
-function createTag(tagName, attrMap, publicPath) {
+function _createTag(tagName, attrMap, publicPath) {
   publicPath = publicPath || '';
 
   /**
@@ -97,15 +70,15 @@ function createTag(tagName, attrMap, publicPath) {
  *
  * @returns {string}
  */
-function getHtmlElementString(dataSource, publicPath) {
+function _getHtmlElementString(dataSource, publicPath) {
   return Object.getOwnPropertyNames(dataSource)
     .map(function (name) {
       if (Array.isArray(dataSource[name])) {
         return dataSource[name].map(
-          function (attrs) { return createTag(name, attrs, publicPath); }
+          function (attrs) { return _createTag(name, attrs, publicPath); }
         );
       } else {
-        return [createTag(name, dataSource[name], publicPath)];
+        return [_createTag(name, dataSource[name], publicPath)];
       }
     })
     .reduce(function (arr, curr) {
@@ -113,4 +86,39 @@ function getHtmlElementString(dataSource, publicPath) {
     }, [])
     .join('\n\t');
 }
+
+class HtmlElementsPlugin {
+  constructor(locations) {
+    this.locations = locations;
+  }
+
+  /**
+   * Applies all the HTML Elements Information derived from head-config.common.js
+   * `@Note`: This will be called automatically by the plugin caller module
+   * @param {*} compiler Compiler of the plugin
+   */
+  apply(compiler) {
+    compiler.hooks.compilation.tap('HtmlElementsPlugin', (compilation) => {
+      compilation.options.htmlElements = compilation.options.htmlElements || {};
+      compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync(
+        'HtmlElementsPlugin',
+        (htmlPluginData, callback) => {
+          const locations = this.locations;
+
+          if (locations) {
+            const publicPath = htmlPluginData.assets.publicPath;
+
+            Object.getOwnPropertyNames(locations).forEach(function (loc) {
+              compilation.options.htmlElements[loc] = _getHtmlElementString(
+                locations[loc],
+                publicPath
+              );
+            });
+          }
+          callback(null, htmlPluginData);
+        });
+    });
+  }
+}
+
 module.exports = HtmlElementsPlugin;

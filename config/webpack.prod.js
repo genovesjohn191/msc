@@ -21,6 +21,7 @@ const HashedModuleIdsPlugin = require('webpack/lib/HashedModuleIdsPlugin')
 const PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin;
 const ModuleConcatenationPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const ExposeSassPlugin = require('./expose-sass-plugin');
 
 function getUglifyOptions(supportES2015) {
   const uglifyCompressOptions = {
@@ -195,6 +196,7 @@ module.exports = function (env) {
       new PurifyPlugin(), /* buildOptimizer */
       new HashedModuleIdsPlugin(),
       new ModuleConcatenationPlugin(),
+      new ExposeSassPlugin(),
 
       /**
        * Plugin: UglifyJsPlugin
@@ -209,7 +211,6 @@ module.exports = function (env) {
         sourceMap: false,
         uglifyOptions: getUglifyOptions(supportES2015)
       })
-
     ],
 
     /**
