@@ -30,6 +30,7 @@ import { McsApiService } from './mcs-api.service';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsSessionHandlerService } from './mcs-session-handler.service';
 import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { McsJobType } from '../enumerations/mcs-job-type.enum';
 import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
 import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 
@@ -220,6 +221,12 @@ export class McsNotificationJobService implements McsInitializer {
     if (isNullOrEmpty(bodyContent)) { return; }
     let updatedNotification: McsApiJob;
     updatedNotification = deserializeJsonToObject(McsApiJob, JSON.parse(bodyContent));
+
+    // Do not proceed if job type is not supported
+    let unsupportedJobType = isNullOrEmpty(updatedNotification.type)
+      || updatedNotification.type === McsJobType.Undefined;
+    if (unsupportedJobType) { return; }
+
     this.notificationStream.next(updatedNotification);
   }
 
