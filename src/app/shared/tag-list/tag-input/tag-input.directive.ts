@@ -7,11 +7,11 @@ import {
   Inject,
   forwardRef
 } from '@angular/core';
-import { Key } from '../../../core';
+import { Key } from '@app/models';
 import {
   isNullOrEmpty,
   coerceBoolean
-} from '../../../utilities';
+} from '@app/utilities';
 import { TagListComponent } from '../tag-list.component';
 
 @Directive({

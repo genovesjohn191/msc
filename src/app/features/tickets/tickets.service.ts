@@ -7,34 +7,28 @@ import {
 /** Services and Models */
 import {
   McsApiService,
-  McsApiSuccessResponse,
-  McsApiRequestParameter,
   McsLoggerService
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   serializeObjectToJson
-} from '../../utilities';
+} from '@app/utilities';
 import {
-  Ticket,
-  TicketCreateAttachment,
-  TicketAttachment,
-  TicketCreate,
-  TicketCreateComment,
-  TicketComment
-} from './models';
-import {
-  Resource,
-  ResourcesRepository
-} from '../resources';
-import {
-  Server,
-  ServersRepository
-} from '../servers';
-import {
-  Firewall,
-  FirewallsRepository
-} from '../firewalls';
+  McsApiSuccessResponse,
+  McsApiRequestParameter,
+  McsFirewall,
+  McsTicket,
+  McsTicketCreateAttachment,
+  McsTicketAttachment,
+  McsTicketCreate,
+  McsTicketCreateComment,
+  McsTicketComment,
+  McsResource,
+  McsServer
+} from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
+import { ServersRepository } from '@app/features/servers';
+import { FirewallsRepository } from '@app/features/firewalls';
 
 @Injectable()
 export class TicketsService {
@@ -57,7 +51,7 @@ export class TicketsService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<Ticket[]>> {
+  }): Observable<McsApiSuccessResponse<McsTicket[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -79,7 +73,7 @@ export class TicketsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Ticket[]>(Ticket, response);
+            .deserializeResponse<McsTicket[]>(McsTicket, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -92,7 +86,7 @@ export class TicketsService {
   /**
    * Get all server resources from the API
    */
-  public getServerResources(): Observable<Resource[]> {
+  public getServerResources(): Observable<McsResource[]> {
     return this._resourcesRepository.findAllRecords();
   }
 
@@ -102,7 +96,7 @@ export class TicketsService {
    * @param perPageCount Size of item per page
    * @param keyword Keyword to be search during filtering
    */
-  public getServers(): Observable<Server[]> {
+  public getServers(): Observable<McsServer[]> {
     return this._serversRespository.findAllRecords();
   }
 
@@ -112,7 +106,7 @@ export class TicketsService {
    * @param perPageCount Size of item per page
    * @param keyword Keyword to be search during filtering
    */
-  public getFirewalls(): Observable<Firewall[]> {
+  public getFirewalls(): Observable<McsFirewall[]> {
     return this._firewallsRepository.findAllRecords();
   }
 
@@ -120,7 +114,7 @@ export class TicketsService {
    * Get the ticket from the API
    * @param id ID of the ticket to obtain
    */
-  public getTicket(id: any): Observable<McsApiSuccessResponse<Ticket>> {
+  public getTicket(id: any): Observable<McsApiSuccessResponse<McsTicket>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/tickets/' + id;
 
@@ -132,7 +126,7 @@ export class TicketsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Ticket>(Ticket, response);
+            .deserializeResponse<McsTicket>(McsTicket, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -146,8 +140,8 @@ export class TicketsService {
    * This will create the new ticket based on the inputted information
    * @param ticketData Ticket data to be created
    */
-  public createTicket(ticketData: TicketCreate):
-    Observable<McsApiSuccessResponse<TicketCreate>> {
+  public createTicket(ticketData: McsTicketCreate):
+    Observable<McsApiSuccessResponse<McsTicketCreate>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets`;
@@ -161,7 +155,7 @@ export class TicketsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<TicketCreate>(TicketCreate, response);
+            .deserializeResponse<McsTicketCreate>(McsTicketCreate, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -175,8 +169,8 @@ export class TicketsService {
    * This will create the new comment based on the inputted information
    * @param commentData Comment data to be created
    */
-  public createComment(ticketId: any, commentData: TicketCreateComment):
-    Observable<McsApiSuccessResponse<TicketComment>> {
+  public createComment(ticketId: any, commentData: McsTicketCreateComment):
+    Observable<McsApiSuccessResponse<McsTicketComment>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/comments`;
@@ -190,7 +184,7 @@ export class TicketsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<TicketComment>(TicketComment, response);
+            .deserializeResponse<McsTicketComment>(McsTicketComment, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -204,8 +198,8 @@ export class TicketsService {
    * This will create the new attachment based on the inputted information
    * @param attachmentData Attachment data to be created
    */
-  public createAttachment(ticketId: any, attachmentData: TicketCreateAttachment):
-    Observable<McsApiSuccessResponse<TicketAttachment>> {
+  public createAttachment(ticketId: any, attachmentData: McsTicketCreateAttachment):
+    Observable<McsApiSuccessResponse<McsTicketAttachment>> {
 
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/tickets/${ticketId}/attachments`;
@@ -219,7 +213,7 @@ export class TicketsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<TicketAttachment>(TicketAttachment, response);
+            .deserializeResponse<McsTicketAttachment>(McsTicketAttachment, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

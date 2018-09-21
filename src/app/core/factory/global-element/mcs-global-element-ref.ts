@@ -10,11 +10,11 @@ import {
   isNullOrEmpty,
   getElementPositionFromHost,
   unsubscribeSafely
-} from '../../../utilities';
+} from '@app/utilities';
 import { McsGlobalElementOption } from './mcs-global-element-option';
+import { McsScrollDispatcherService } from '../../services/mcs-scroll-dispatcher.service';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
-import { McsScrollDispatcherService } from '../../services/mcs-scroll-dispatcher.service';
 
 // placement type enumerations
 type PlacementAttribute = {

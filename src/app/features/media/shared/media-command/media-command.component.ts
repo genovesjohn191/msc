@@ -10,12 +10,12 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider
-} from '../../../../core';
+} from '@app/core';
+import { McsResourceMedia } from '@app/models';
 import {
-  Media,
   MediaCommand,
   mediaCommandText
-} from '../../models';
+} from './media-command.enum';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -31,7 +31,7 @@ let nextUniqueId = 0;
 
 export class MediaCommandComponent implements OnInit {
   @Input()
-  public media: Media;
+  public media: McsResourceMedia;
 
   @Input()
   public id: string;

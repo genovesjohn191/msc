@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 /** Modules */
-import { SharedModule } from '../shared';
+import { SharedModule } from '@app/shared';
 /** Multiple Components */
 import { StateChangeNotificationsComponent } from './state-change-notifications';
 import {

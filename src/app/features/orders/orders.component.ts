@@ -12,17 +12,19 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   refreshView,
   getSafeProperty,
   isNullOrEmpty
-} from '../../utilities';
+} from '@app/utilities';
+import {
+  McsRouteKey,
+  McsOrder
+} from '@app/models';
 import { OrdersRepository } from './repositories/orders.repository';
 import { OrdersDataSource } from './orders.datasource';
-import { Order } from './models';
 
 @Component({
   selector: 'mcs-orders',
@@ -76,7 +78,7 @@ export class OrdersComponent
    * Navigate to order details page
    * @param order Order to view the details
    */
-  public navigateToOrder(order: Order): void {
+  public navigateToOrder(order: McsOrder): void {
     if (isNullOrEmpty(order)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.OrderDetail), order.id]);
   }

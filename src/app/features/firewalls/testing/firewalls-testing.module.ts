@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-/** Modules */
-import { CoreTestingModule } from '../../../core/testing';
-/** Constants */
+import { CoreTestingModule } from '@app/core/testing';
 import { firewallProviders } from '../firewalls.constants';
 
 @NgModule({

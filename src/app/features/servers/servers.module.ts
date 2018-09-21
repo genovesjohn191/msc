@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../../shared';
+import { SharedModule } from '@app/shared';
 import { ServersComponent } from './servers.component';
 /** Shared */
 import {

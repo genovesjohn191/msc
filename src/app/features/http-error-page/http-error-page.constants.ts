@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import {
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+import { CoreRoutes } from '@app/core';
+import { McsRouteKey } from '@app/models';
 /** Components */
 import { HttpErrorPageComponent } from './http-error-page.component';
 

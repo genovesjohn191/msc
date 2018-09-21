@@ -1,6 +1,6 @@
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
-import { isNullOrEmpty } from '../../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 export abstract class McsItemListManager<T> {
 

@@ -7,15 +7,21 @@ import {
 /** Services and Models */
 import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import {
+  serializeObjectToJson,
+  isNullOrEmpty
+} from '@app/utilities';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsLoggerService
-} from '../../core';
-import { Order, OrderItemType } from './models';
-import { OrderCreate } from './models/request/order-create';
-import { serializeObjectToJson, isNullOrEmpty } from '../../utilities';
-import { OrderUpdate } from './models/request/order-update';
-import { OrderMerge } from './models/request/order-merge';
+  McsOrder,
+  McsOrderItemType,
+  McsOrderCreate,
+  McsOrderUpdate,
+  McsOrderMerge
+} from '@app/models';
 
 @Injectable()
 export class OrdersService {
@@ -32,7 +38,7 @@ export class OrdersService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<Order[]>> {
+  }): Observable<McsApiSuccessResponse<McsOrder[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -54,7 +60,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Order[]>(Order, response);
+            .deserializeResponse<McsOrder[]>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -68,7 +74,7 @@ export class OrdersService {
    * Get Order by ID (MCS API Response)
    * @param id Order identification
    */
-  public getOrder(id: any): Observable<McsApiSuccessResponse<Order>> {
+  public getOrder(id: any): Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}`;
 
@@ -80,7 +86,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Order>(Order, response);
+            .deserializeResponse<McsOrder>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -93,7 +99,7 @@ export class OrdersService {
   /**
    * Get the order items types (MCS API Response)
    */
-  public getOrderItemTypes(): Observable<McsApiSuccessResponse<OrderItemType[]>> {
+  public getOrderItemTypes(): Observable<McsApiSuccessResponse<McsOrderItemType[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/orders/items/types';
 
@@ -105,7 +111,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<OrderItemType[]>(Order, response);
+            .deserializeResponse<McsOrderItemType[]>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -119,7 +125,7 @@ export class OrdersService {
    * Get order item type by ID (MCS API Response)
    * @param id Order identification
    */
-  public getOrderItemType(id: any): Observable<McsApiSuccessResponse<OrderItemType>> {
+  public getOrderItemType(id: any): Observable<McsApiSuccessResponse<McsOrderItemType>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/order/items/types/${id}`;
 
@@ -131,7 +137,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<OrderItemType>(Order, response);
+            .deserializeResponse<McsOrderItemType>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -145,7 +151,7 @@ export class OrdersService {
    * This will create the new order based on the inputted information
    * @param orderData Order data to be created
    */
-  public createOrder(orderData: OrderCreate): Observable<McsApiSuccessResponse<Order>> {
+  public createOrder(orderData: McsOrderCreate): Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/orders';
     mcsApiRequestParameter.recordData = serializeObjectToJson(orderData);
@@ -158,7 +164,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Order>(Order, response);
+            .deserializeResponse<McsOrder>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -175,8 +181,8 @@ export class OrdersService {
    */
   public updateOrder(
     id: any,
-    orderUpdate: OrderUpdate
-  ): Observable<McsApiSuccessResponse<Order>> {
+    orderUpdate: McsOrderUpdate
+  ): Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(orderUpdate);
@@ -189,7 +195,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Order>(Order, response);
+            .deserializeResponse<McsOrder>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -203,7 +209,7 @@ export class OrdersService {
    * Deletes any existing order based on its inputted id
    * @param id Id of the order to be deleted
    */
-  public deleteOrder(id: string): Observable<McsApiSuccessResponse<Order>> {
+  public deleteOrder(id: string): Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}`;
 
@@ -215,7 +221,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Order>(Order, response);
+            .deserializeResponse<McsOrder>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -229,7 +235,7 @@ export class OrdersService {
    * Submits the order to orchestration
    * @param orderData Order data to be created
    */
-  public submitOrder(id: any): Observable<McsApiSuccessResponse<Order>> {
+  public submitOrder(id: any): Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}/submit`;
 
@@ -241,7 +247,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Order>(Order, response);
+            .deserializeResponse<McsOrder>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -255,7 +261,8 @@ export class OrdersService {
    * Submits the order to orchestration
    * @param orderData Order data to be created
    */
-  public mergeOrder(id: any, mergeOrder: OrderMerge): Observable<McsApiSuccessResponse<Order>> {
+  public mergeOrder(id: any, mergeOrder: McsOrderMerge):
+    Observable<McsApiSuccessResponse<McsOrder>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/orders/${id}/merge`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(mergeOrder);
@@ -268,7 +275,7 @@ export class OrdersService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Order>(Order, response);
+            .deserializeResponse<McsOrder>(McsOrder, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

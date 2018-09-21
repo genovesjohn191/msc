@@ -6,7 +6,7 @@ import {
 import {
   CoreConfig,
   McsTextContentProvider
-} from '../../core';
+} from '@app/core';
 import { ToolsRepository } from './tools.repository';
 import { ToolsDataSource } from './tools.datasource';
 

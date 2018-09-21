@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import { QuoteWidgetComponent } from './quote-widget.component';
 import { WidgetsModule } from '../widgets.module';
-import { CoreTestingModule } from '../../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-quote-widget',

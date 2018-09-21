@@ -13,16 +13,16 @@ import {
   CoreRoutes,
   CoreConfig,
   CoreDefinition,
-  McsRouteKey,
   McsTextContentProvider,
   McsDataStatusFactory
-} from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+} from '@app/core';
 import {
-  Product,
-  ProductCatalog,
-  ProductCatalogRepository
-} from '../../../features/products';
+  McsRouteKey,
+  McsProduct,
+  McsProductCatalog
+} from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
+import { ProductCatalogRepository } from '@app/features/products';
 
 @Component({
   selector: 'mcs-navigation-desktop',
@@ -35,8 +35,8 @@ import {
 export class NavigationDesktopComponent implements OnInit {
 
   public textContent: any;
-  public productCatalogs: ProductCatalog[];
-  public productsStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
+  public productCatalogs: McsProductCatalog[];
+  public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
 
   public get arrowUpIconKey(): string {
     return CoreDefinition.ASSETS_SVG_ARROW_UP_WHITE;
@@ -79,7 +79,7 @@ export class NavigationDesktopComponent implements OnInit {
    * Navigate to product catalog
    * @param product Product to be navigated
    */
-  public gotoProduct(_product: Product) {
+  public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), _product.id]);
   }

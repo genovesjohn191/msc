@@ -17,16 +17,18 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  McsDataStatus,
-  McsAuthenticationIdentity,
-  McsApiCompany
-} from '../../core';
+  McsAuthenticationIdentity
+} from '@app/core';
+import {
+  McsCompany,
+  McsDataStatus
+} from '@app/models';
 import {
   refreshView,
   isNullOrEmpty,
   unsubscribeSubject,
   getSafeProperty
-} from '../../utilities';
+} from '@app/utilities';
 import { NotificationsRepository } from './notifications.repository';
 import { NotificationsDataSource } from './notifications.datasource';
 
@@ -46,7 +48,7 @@ export class NotificationsComponent
   // Subscription
   private _destroySubject = new Subject<void>();
 
-  public get activeCompany(): McsApiCompany {
+  public get activeCompany(): McsCompany {
     return this._authenticationIdentity.activeAccount;
   }
 

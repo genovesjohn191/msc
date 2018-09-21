@@ -24,30 +24,30 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsSearch,
   McsRoutingTabBase,
   McsDataStatusFactory,
   McsErrorHandlerService,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   refreshView,
   unsubscribeSafely,
   compareStrings,
   unsubscribeSubject
-} from '../../../utilities';
-import { ComponentHandlerDirective } from '../../../shared';
+} from '@app/utilities';
 import {
-  Resource,
-  ResourcesRepository
-} from '../../resources';
+  Search,
+  ComponentHandlerDirective
+} from '@app/shared';
 import {
-  Server,
   ServerCommand,
-  ServerPlatform
-} from '../models';
+  McsResource,
+  McsRouteKey,
+  McsServer,
+  McsServerPlatform
+} from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
 import { ServersRepository } from '../repositories/servers.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
@@ -67,18 +67,18 @@ export class VdcComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
-  public search: McsSearch;
+  public search: Search;
 
   @ViewChild(ComponentHandlerDirective)
   public componentHandler: ComponentHandlerDirective;
 
   public textContent: any;
   public serversTextContent: any;
-  public serversMap: Map<string, Server[]>;
+  public serversMap: Map<string, McsServer[]>;
   public serverTextContent: any;
   public serverListSource: ServersListSource | null;
-  public listStatusFactory: McsDataStatusFactory<Map<string, Server[]>>;
-  public selectedPlatform: ServerPlatform;
+  public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
+  public selectedPlatform: McsServerPlatform;
 
   // Subscription
   public vdcSubscription: Subscription;
@@ -91,15 +91,15 @@ export class VdcComponent
     return McsRouteKey;
   }
 
-  private _vdc: Resource;
-  public get vdc(): Resource { return this._vdc; }
-  public set vdc(value: Resource) {
+  private _vdc: McsResource;
+  public get vdc(): McsResource { return this._vdc; }
+  public set vdc(value: McsResource) {
     this._vdc = value;
     this._changeDetectorRef.markForCheck();
   }
 
   private _destroySubject = new Subject<void>();
-  private _resourcesKeyMap: Map<string, ServerPlatform>;
+  private _resourcesKeyMap: Map<string, McsServerPlatform>;
 
   constructor(
     _router: Router,
@@ -112,7 +112,7 @@ export class VdcComponent
     private _vdcService: VdcService
   ) {
     super(_router, _activatedRoute);
-    this.vdc = new Resource();
+    this.vdc = new McsResource();
     this.serversMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory();
     this._resourcesKeyMap = new Map();
@@ -146,14 +146,14 @@ export class VdcComponent
    * Return true when the server is currently deleting, otherwise false
    * @param server Server to be deleted
    */
-  public serverDeleting(server: Server): boolean {
+  public serverDeleting(server: McsServer): boolean {
     return server.commandAction === ServerCommand.Delete && server.isProcessing;
   }
 
   /**
    * Event that emits when VDC name is selected
    */
-  public onSelectVdcByName(event: MouseEvent, resource: ServerPlatform): void {
+  public onSelectVdcByName(event: MouseEvent, resource: McsServerPlatform): void {
     if (!isNullOrEmpty(event)) { event.stopPropagation(); }
     if (isNullOrEmpty(resource.resourceId)) { return; }
 
@@ -168,7 +168,7 @@ export class VdcComponent
    * Returns true if current group is selected
    * @param platform Platform to be selected
    */
-  public isSelected(platform: ServerPlatform): boolean {
+  public isSelected(platform: McsServerPlatform): boolean {
     if (isNullOrEmpty(this.selectedPlatform)) { return false; }
     return compareStrings(platform.resourceName, this.selectedPlatform.resourceName) === 0;
   }
@@ -215,11 +215,11 @@ export class VdcComponent
     );
 
     // Key function pointer for mapping objects
-    let keyFn = (item: Server) => {
+    let keyFn = (item: McsServer) => {
       let resourceName = isNullOrEmpty(item.platform) ? 'others' : item.platform.resourceName;
-      let resource: ServerPlatform = this._resourcesKeyMap.get(resourceName);
+      let resource: McsServerPlatform = this._resourcesKeyMap.get(resourceName);
       if (isNullOrEmpty(resource)) {
-        let resourceInstance = new ServerPlatform();
+        let resourceInstance = new McsServerPlatform();
         resourceInstance.resourceName = 'Others';
         resource = !isNullOrEmpty(item.platform.resourceName) ? item.platform : resourceInstance;
       }
@@ -270,7 +270,7 @@ export class VdcComponent
    * Sets the selected platform based on its name
    * @param resource Resource name to be the basis
    */
-  private _setSelectedPlatformByResource(resource: Resource): void {
+  private _setSelectedPlatformByResource(resource: McsResource): void {
     if (isNullOrEmpty(resource)) { return; }
     let platform = this._resourcesKeyMap.get(resource.name);
     if (!isNullOrEmpty(platform)) {

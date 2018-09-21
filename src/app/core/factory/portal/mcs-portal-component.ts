@@ -3,7 +3,7 @@ import {
   Injector,
   TemplateRef
 } from '@angular/core';
-import { McsComponentType } from '../../interfaces/mcs-component-type.interface';
+import { McsComponentType } from '@app/utilities';
 
 /**
  * Portal Component to create the component in DOM

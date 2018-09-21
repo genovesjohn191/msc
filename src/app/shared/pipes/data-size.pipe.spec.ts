@@ -13,7 +13,7 @@ import { DataSizePipe } from './data-size.pipe';
 import {
   convertKbToMb,
   convertMbToGb
-} from '../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-test',

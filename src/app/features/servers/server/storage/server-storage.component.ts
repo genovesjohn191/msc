@@ -18,37 +18,37 @@ import {
   switchMap
 } from 'rxjs/operators';
 import {
-  ResourceStorage,
-  ResourcesRepository
-} from '../../../resources';
-import {
-  ServerManageStorage,
-  ServerStorageDevice,
-  ServerStorageDeviceUpdate
-} from '../../models';
-import {
   CoreDefinition,
   McsTextContentProvider,
   McsNotificationEventsService,
-  McsApiJob,
   McsDialogService,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  McsDataStatus,
   McsAccessControlService
-} from '../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject,
   animateFactory,
   getSafeProperty
-} from '../../../../utilities';
+} from '@app/utilities';
 import {
   TableDataSource,
   ComponentHandlerDirective
-} from '../../../../shared';
-import { DeleteStorageDialogComponent } from '../../shared';
+} from '@app/shared';
+import {
+  McsJob,
+  McsDataStatus,
+  McsResourceStorage,
+  McsServerStorageDevice,
+  McsServerStorageDeviceUpdate
+} from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
+import {
+  DeleteStorageDialogComponent,
+  ServerManageStorage
+} from '../../shared';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../repositories/servers.repository';
@@ -80,16 +80,16 @@ const SERVER_MAXIMUM_DISKS = 14;
 export class ServerStorageComponent extends ServerDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
   public manageStorage: ServerManageStorage;
-  public selectedStorage: ResourceStorage;
-  public selectedDisk: ServerStorageDevice;
+  public selectedStorage: McsResourceStorage;
+  public selectedDisk: McsServerStorageDevice;
 
-  public disksDataSource: TableDataSource<ServerStorageDevice>;
+  public disksDataSource: TableDataSource<McsServerStorageDevice>;
   public disksColumns: string[];
-  public dataStatusFactory: McsDataStatusFactory<ServerStorageDevice[]>;
+  public dataStatusFactory: McsDataStatusFactory<McsServerStorageDevice[]>;
   public manageStorageTemplate: any[];
 
   private _storagesSubscription: Subscription;
-  private _newDisk: ServerStorageDevice;
+  private _newDisk: McsServerStorageDevice;
   private _inProgressDiskId: string;
   private _destroySubject = new Subject<void>();
   private _requestDisksSubject = new Subject<void>();
@@ -116,7 +116,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Returns all the server disks including the newly created disk as a mock data
    */
-  public get serverDisks(): ServerStorageDevice[] {
+  public get serverDisks(): McsServerStorageDevice[] {
     if (isNullOrEmpty(this.server.storageDevices)) { return new Array(); }
     return isNullOrEmpty(this._newDisk) ?
       this.server.storageDevices :
@@ -126,7 +126,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   /**
    * Returns all the resource storages
    */
-  public get resourceStorages(): ResourceStorage[] {
+  public get resourceStorages(): McsResourceStorage[] {
     return getSafeProperty(this.serverResource, (obj) => obj.storage);
   }
 
@@ -170,7 +170,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
       _textProvider,
       _errorHandlerService
     );
-    this._newDisk = new ServerStorageDevice();
+    this._newDisk = new McsServerStorageDevice();
     this.disksColumns = new Array();
     this.disksDataSource = new TableDataSource([]);
     this.manageStorageTemplate = [{}];
@@ -263,7 +263,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Opens the expand disk window
    * @param disk Disk to be edited
    */
-  public openExpandDiskWindow(disk: ServerStorageDevice): void {
+  public openExpandDiskWindow(disk: McsServerStorageDevice): void {
     if (isNullOrEmpty(disk)) { return; }
     this.selectedDisk = disk;
     this.diskMethodType = ServerDiskMethodType.ExpandDisk;
@@ -280,7 +280,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Add disk to the current server
    */
   public addDisk(): void {
-    let diskValues = new ServerStorageDeviceUpdate();
+    let diskValues = new McsServerStorageDeviceUpdate();
     diskValues.storageProfile = this.manageStorage.storage.name;
     diskValues.sizeMB = this.manageStorage.sizeMB;
     diskValues.clientReferenceObject = {
@@ -305,7 +305,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Deletes the selected disk
    * @param disk Storage disk to be deleted
    */
-  public deleteDisk(disk: ServerStorageDevice): void {
+  public deleteDisk(disk: McsServerStorageDevice): void {
     let dialogRef = this._dialogService.open(DeleteStorageDialogComponent, {
       data: disk,
       size: 'medium'
@@ -315,7 +315,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     dialogRef.afterClosed().subscribe((result) => {
       if (isNullOrEmpty(result)) { return; }
 
-      let diskValues = new ServerStorageDeviceUpdate();
+      let diskValues = new McsServerStorageDeviceUpdate();
       diskValues.clientReferenceObject = {
         serverId: this.server.id,
         diskId: this.selectedDisk.id,
@@ -338,7 +338,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Expands the storage of the selected disk
    */
   public expandDisk(): void {
-    let diskValues = new ServerStorageDeviceUpdate();
+    let diskValues = new McsServerStorageDeviceUpdate();
     diskValues.name = this.selectedStorage.name;
     diskValues.storageProfile = this.selectedStorage.name;
     diskValues.sizeMB = this.manageStorage.sizeMB;
@@ -363,7 +363,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Returns true when inputted disk is currently in-progress
    * @param disk Disk to be checked
    */
-  public diskIsInProgress(disk: ServerStorageDevice): boolean {
+  public diskIsInProgress(disk: McsServerStorageDevice): boolean {
     if (isNullOrEmpty(disk)) { return false; }
     return disk.id === this._inProgressDiskId;
   }
@@ -417,7 +417,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Event that emits when creating a server disk
    * @param job Emitted job content
    */
-  private _onCreateServerDisk(job: McsApiJob): void {
+  private _onCreateServerDisk(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
@@ -438,7 +438,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Event that emits when updating a server disk
    * @param job Emitted job content
    */
-  private _onUpdateServerDisk(job: McsApiJob): void {
+  private _onUpdateServerDisk(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Refresh the data when the disk in-progress is already completed
@@ -455,7 +455,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
    * Will trigger if currently adding a disk
    * @param job Emitted job content
    */
-  private _onAddingDisk(job: McsApiJob): void {
+  private _onAddingDisk(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock disk data based on job response

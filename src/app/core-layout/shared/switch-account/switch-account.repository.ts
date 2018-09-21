@@ -6,14 +6,16 @@ import {
 import { map } from 'rxjs/operators';
 import {
   McsRepositoryBase,
-  McsApiCompany,
-  McsApiSuccessResponse,
   McsAccessControlService
-} from '../../../core';
+} from '@app/core';
+import {
+  McsCompany,
+  McsApiSuccessResponse,
+} from '@app/models';
 import { CoreLayoutService } from '../../core-layout.services';
 
 @Injectable()
-export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
+export class SwitchAccountRepository extends McsRepositoryBase<McsCompany> {
 
   private _hasPermission: boolean;
 
@@ -35,8 +37,8 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<McsApiCompany[]>> {
-    let emptyResponse = new McsApiSuccessResponse<McsApiCompany[]>();
+  ): Observable<McsApiSuccessResponse<McsCompany[]>> {
+    let emptyResponse = new McsApiSuccessResponse<McsCompany[]>();
     emptyResponse.content = [];
     return !this._hasPermission ? of(emptyResponse) :
       this._coreLayoutService.getCompanies({
@@ -51,7 +53,7 @@ export class SwitchAccountRepository extends McsRepositoryBase<McsApiCompany> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsApiCompany>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsCompany>> {
     return this._coreLayoutService.getCompany(recordId)
       .pipe(
         map((response) => {

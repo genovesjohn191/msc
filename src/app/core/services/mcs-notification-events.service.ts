@@ -4,16 +4,18 @@ import {
   ReplaySubject,
   Subscription
 } from 'rxjs';
-import { McsNotificationContextService } from './mcs-notification-context.service';
-import { McsApiJob } from '../models/response/mcs-api-job';
-import { McsJobType } from '../enumerations/mcs-job-type.enum';
-import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import {
   compareNumbers,
   compareStrings,
   isNullOrEmpty,
   unsubscribeSafely
-} from '../../utilities';
+} from '@app/utilities';
+import {
+  McsJob,
+  McsJobType
+} from '@app/models';
+import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
+import { McsNotificationContextService } from './mcs-notification-context.service';
 
 const DEFAULT_CACHE_BUFFER = 25;
 
@@ -21,64 +23,64 @@ const DEFAULT_CACHE_BUFFER = 25;
 export class McsNotificationEventsService {
 
   /** Event that emits when create server executed */
-  public createServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public createServerEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when clone server executed */
-  public cloneServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public cloneServerEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when rename server executed */
-  public renameServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public renameServerEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server executed */
-  public deleteServerEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public deleteServerEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when reset server password is executed */
-  public resetServerPasswordEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public resetServerPasswordEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when power state is executed on server  */
-  public changeServerPowerStateEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public changeServerPowerStateEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when scale server executed */
-  public updateServerComputeEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public updateServerComputeEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when attach server media executed */
-  public attachServerMediaEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public attachServerMediaEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when detach server media executed */
-  public detachServerMediaEvent = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public detachServerMediaEvent = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when create server disk executed */
-  public createServerDisk = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public createServerDisk = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when update server disk executed */
-  public updateServerDisk = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public updateServerDisk = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server disk executed */
-  public deleteServerDisk = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public deleteServerDisk = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when create server network executed */
-  public createServerNic = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public createServerNic = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when update server network executed */
-  public updateServerNic = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public updateServerNic = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server network executed */
-  public deleteServerNic = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public deleteServerNic = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when create server snapshot executed */
-  public createServerSnapshot = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public createServerSnapshot = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when apply server snapshot executed */
-  public applyServerSnapshot = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public applyServerSnapshot = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits when delete server snapshot executed */
-  public deleteServerSnapshot = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public deleteServerSnapshot = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits only when current user triggered a job */
-  public currentUserJob = new ReplaySubject<McsApiJob>(DEFAULT_CACHE_BUFFER);
+  public currentUserJob = new ReplaySubject<McsJob>(DEFAULT_CACHE_BUFFER);
 
   /** Event that emits all jobs */
-  public notificationsEvent = new BehaviorSubject<McsApiJob[]>(undefined);
+  public notificationsEvent = new BehaviorSubject<McsJob[]>(undefined);
 
   /** Subscriptions */
   private _notificationsSubscription: Subscription;
@@ -110,7 +112,7 @@ export class McsNotificationEventsService {
 
         // Notify Individual Notifications
         updatedNotifications.sort(
-          (_first: McsApiJob, _second: McsApiJob) => {
+          (_first: McsJob, _second: McsJob) => {
             return compareNumbers(_first.type, _second.type);
           });
         this._notifyEventListeners(updatedNotifications);
@@ -121,7 +123,7 @@ export class McsNotificationEventsService {
    * Notify all event subscribers to set their functionalities
    * @param notifications Notification jobs to emit
    */
-  private _notifyEventListeners(notifications: McsApiJob[]): void {
+  private _notifyEventListeners(notifications: McsJob[]): void {
     if (isNullOrEmpty(notifications)) { return; }
 
     notifications.forEach((notification) => {
@@ -212,7 +214,7 @@ export class McsNotificationEventsService {
    * Notify the current user for its specific job
    * @param _job JOB to be notified
    */
-  private _notifyUser(_job: McsApiJob): void {
+  private _notifyUser(_job: McsJob): void {
     if (isNullOrEmpty(_job)) { return; }
 
     let userStartedTheJob = compareStrings(_job.initiatorId,

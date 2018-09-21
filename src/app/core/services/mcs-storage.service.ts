@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 
 @Injectable()

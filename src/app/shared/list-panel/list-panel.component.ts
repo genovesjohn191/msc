@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs/operators';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import { OptionComponent } from '../option-group/option/option.component';
 import { OptionGroupComponent } from '../option-group/option-group.component';
 

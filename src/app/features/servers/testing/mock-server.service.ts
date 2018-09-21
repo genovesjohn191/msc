@@ -4,27 +4,26 @@ import {
   of
 } from 'rxjs';
 import {
+  VmPowerState,
+  ServiceType,
   McsApiSuccessResponse,
-  McsApiJob,
+  McsJob,
   McsJobType,
-  McsJobStatus
-} from '../../../core';
-import { Resource } from '../../resources';
-import {
-  Server,
-  ServerPowerState,
-  ServerThumbnail,
-  ServerServiceType,
-  ServerStorageDeviceUpdate,
-  ServerCreateNic
-} from '../models';
+  McsJobStatus,
+  McsResource,
+  McsServer,
+  McsServerThumbnail,
+  McsServerStorageDeviceUpdate,
+  McsServerCreateNic
+} from '@app/models';
+import {  } from '@app/features/resources';
 
 export const mockServerService = {
 
   selectedServerStream: new Subject<any>(),
-  getServer(_id: any): Observable<McsApiSuccessResponse<Server>> {
+  getServer(_id: any): Observable<McsApiSuccessResponse<McsServer>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<Server>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsServer>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 1;
     mcsApiResponseMock.content = {
@@ -34,23 +33,23 @@ export const mockServerService = {
         environmentName: 'Macquarie_Telecom_Contoso_100320',
         resourceName: 'M1VDC27117001'
       },
-      serviceType: ServerServiceType.Managed,
-      powerState: ServerPowerState.PoweredOn,
-    } as Server;
+      serviceType: ServiceType.Managed,
+      powerState: VmPowerState.PoweredOn,
+    } as McsServer;
 
     return of(mcsApiResponseMock);
   },
-  setSelectedServer(server: Server) {
+  setSelectedServer(server: McsServer) {
     this.selectedServerStream.next(server);
   },
   setPerformanceScale(
     _serverId: any,
-    _cpuSizeScale: any): Observable<McsApiSuccessResponse<McsApiJob>> {
+    _cpuSizeScale: any): Observable<McsApiSuccessResponse<McsJob>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsJob>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 2;
-    mcsApiResponseMock.content = new McsApiJob();
+    mcsApiResponseMock.content = new McsJob();
 
     return of(mcsApiResponseMock);
   },
@@ -60,26 +59,26 @@ export const mockServerService = {
         file: 'aaaBBBcccDDD',
         fileType: 'image/png',
         encoding: 'base64'
-      } as ServerThumbnail
+      } as McsServerThumbnail
     });
   },
 
   getServerResources() {
-    let mcsApiResponseMock = new McsApiSuccessResponse<Resource[]>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsResource[]>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 2;
-    mcsApiResponseMock.content = new Array<Resource>();
+    mcsApiResponseMock.content = new Array<McsResource>();
 
     return of(mcsApiResponseMock);
   },
   createServerStorage(
     _serverId: any,
-    _storageData: ServerStorageDeviceUpdate
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    _storageData: McsServerStorageDeviceUpdate
+  ): Observable<McsApiSuccessResponse<McsJob>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsJob>();
 
-    let mcsApiJobMock = new McsApiJob();
+    let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
     mcsApiJobMock.type = McsJobType.CreateServerDisk;
     mcsApiJobMock.status = McsJobStatus.Active;
@@ -97,12 +96,12 @@ export const mockServerService = {
   updateServerStorage(
     _serverId: any,
     _storageId: any,
-    _storageData: ServerStorageDeviceUpdate
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    _storageData: McsServerStorageDeviceUpdate
+  ): Observable<McsApiSuccessResponse<McsJob>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsJob>();
 
-    let mcsApiJobMock = new McsApiJob();
+    let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
     mcsApiJobMock.type = McsJobType.UpdateServerDisk;
     mcsApiJobMock.status = McsJobStatus.Active;
@@ -119,11 +118,11 @@ export const mockServerService = {
   deleteServerStorage(
     _serverId: any,
     _storageId: any
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+  ): Observable<McsApiSuccessResponse<McsJob>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsJob>();
 
-    let mcsApiJobMock = new McsApiJob();
+    let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
     mcsApiJobMock.type = McsJobType.UpdateServerDisk;
     mcsApiJobMock.status = McsJobStatus.Active;
@@ -139,12 +138,12 @@ export const mockServerService = {
   },
   addServerNetwork(
     _serverId: any,
-    _networkData: ServerCreateNic
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    _networkData: McsServerCreateNic
+  ): Observable<McsApiSuccessResponse<McsJob>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsJob>();
 
-    let mcsApiJobMock = new McsApiJob();
+    let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
     mcsApiJobMock.type = McsJobType.CreateServerNic;
     mcsApiJobMock.status = McsJobStatus.Active;
@@ -161,12 +160,12 @@ export const mockServerService = {
   updateServerNetwork(
     _serverId: any,
     _networkId: any,
-    _networkData: ServerCreateNic
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    _networkData: McsServerCreateNic
+  ): Observable<McsApiSuccessResponse<McsJob>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsJob>();
 
-    let mcsApiJobMock = new McsApiJob();
+    let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
     mcsApiJobMock.type = McsJobType.UpdateServerNic;
     mcsApiJobMock.status = McsJobStatus.Active;
@@ -184,12 +183,12 @@ export const mockServerService = {
   deleteServerNetwork(
     _serverId: any,
     _networkId: any,
-    _networkData: ServerCreateNic
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    _networkData: McsServerCreateNic
+  ): Observable<McsApiSuccessResponse<McsJob>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<McsApiJob>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsJob>();
 
-    let mcsApiJobMock = new McsApiJob();
+    let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
     mcsApiJobMock.type = McsJobType.DeleteServerNic;
     mcsApiJobMock.status = McsJobStatus.Active;
@@ -203,13 +202,13 @@ export const mockServerService = {
 
     return of(mcsApiResponseMock);
   },
-  convertResourceToMap(_resources: Resource[]): Map<string, Resource> {
-    return new Map<string, Resource>();
+  convertResourceToMap(_resources: McsResource[]): Map<string, McsResource> {
+    return new Map<string, McsResource>();
   },
-  computeAvailableMemoryMB(_resource: Resource): number {
+  computeAvailableMemoryMB(_resource: McsResource): number {
     return 0;
   },
-  computeAvailableCpu(_resource: Resource): number {
+  computeAvailableCpu(_resource: McsResource): number {
     return 0;
   }
 };

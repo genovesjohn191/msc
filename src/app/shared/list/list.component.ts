@@ -12,7 +12,7 @@ import {
 import {
   McsSizeType,
   McsOrientationType
-} from '../../core';
+} from '@app/utilities';
 import { ListHeaderDirective } from './list-header.directive';
 
 @Component({

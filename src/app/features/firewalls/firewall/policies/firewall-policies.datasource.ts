@@ -8,21 +8,21 @@ import {
   map,
   switchMap
 } from 'rxjs/operators';
-import {
-  McsDataSource,
-  McsDataStatus,
-  McsPaginator,
-  McsSearch
-} from '../../../../core';
+import { McsDataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   getSafeProperty
-} from '../../../../utilities';
-import { FirewallPolicy } from '../../models';
+} from '@app/utilities';
+import {
+  McsDataSource,
+  Paginator,
+  Search
+} from '@app/shared';
+import { McsFirewallPolicy } from '@app/models';
 import { FirewallsRepository } from '../../repositories/firewalls.repository';
 import { FirewallService } from '../firewall.service';
 
-export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy> {
+export class FirewallPoliciesDataSource implements McsDataSource<McsFirewallPolicy> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -40,8 +40,8 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
   constructor(
     private _firewallsRepository: FirewallsRepository,
     private _firewallService: FirewallService,
-    private _paginator: McsPaginator,
-    private _search: McsSearch
+    private _paginator: Paginator,
+    private _search: Search
   ) {
     this._totalRecordCount = 0;
     this.dataLoadingStream = new Subject<McsDataStatus>();
@@ -51,7 +51,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<FirewallPolicy>
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<FirewallPolicy[]> {
+  public connect(): Observable<McsFirewallPolicy[]> {
     const displayDataChanges = [
       of(undefined),
       this._paginator.pageChangedStream,

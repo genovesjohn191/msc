@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import { WizardModule } from './wizard.module';
 import { WizardComponent } from './wizard.component';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-wizard-test',

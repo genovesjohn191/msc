@@ -2,7 +2,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '../../core';
+import { CoreDefinition } from '@app/core';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {

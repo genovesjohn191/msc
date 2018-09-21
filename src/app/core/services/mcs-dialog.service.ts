@@ -7,21 +7,21 @@ import {
   ReflectiveInjector
 } from '@angular/core';
 import { Subject } from 'rxjs';
+import {
+  isNullOrEmpty,
+  registerEvent,
+  unregisterEvent,
+  McsComponentType
+} from '@app/utilities';
+import { Key } from '@app/models';
+import { McsOverlayService } from './mcs-overlay.service';
 import { McsOverlayRef } from '../factory/overlay/mcs-overlay-ref';
 import { McsOverlayState } from '../factory/overlay/mcs-overlay-state';
 import { McsPortalComponent } from '../factory/portal/mcs-portal-component';
 import { McsPortalTemplate } from '../factory/portal/mcs-portal-template';
-import { McsOverlayService } from './mcs-overlay.service';
-import { McsComponentType } from '../interfaces/mcs-component-type.interface';
 import { McsDialogRef } from '../factory/dialog/mcs-dialog-ref';
 import { McsDialogConfig } from '../factory/dialog/mcs-dialog-config';
 import { McsDialogContainerComponent } from '../factory/dialog/mcs-dialog-container.component';
-import {
-  isNullOrEmpty,
-  registerEvent,
-  unregisterEvent
-} from '../../utilities';
-import { Key } from '../../core';
 
 // Injection token definition list for dialog
 export const MCS_DIALOG_DATA = new InjectionToken<any>('McsDialogData');

@@ -15,14 +15,12 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import {
-  Key,
-  CoreDefinition
-} from '../../../core';
+import { CoreDefinition } from '@app/core';
+import { Key } from '@app/models';
 import {
   coerceBoolean,
   isNullOrEmpty
-} from '../../../utilities';
+} from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

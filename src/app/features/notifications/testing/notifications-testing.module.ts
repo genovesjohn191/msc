@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 /** Providers list */
 import { notificationsProviders } from '../notifications.constants';
 /** Modules */
-import { CoreTestingModule } from '../../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @NgModule({
   imports: [

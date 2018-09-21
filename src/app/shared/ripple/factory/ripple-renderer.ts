@@ -5,8 +5,8 @@ import {
 import { RippleConfig } from './ripple-config';
 import { RippleRef } from './ripple-ref';
 import { RippleState } from './ripple-state.enum';
-import { isNullOrEmpty } from '../../../utilities';
-import { McsPlatformService } from '../../../core';
+import { isNullOrEmpty } from '@app/utilities';
+import { McsPlatformService } from '@app/core';
 
 /** Fade in and out duration constants */
 export const RIPPLE_FADE_IN_DURATION = 450;

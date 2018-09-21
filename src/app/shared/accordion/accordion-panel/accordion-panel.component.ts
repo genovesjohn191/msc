@@ -13,7 +13,7 @@ import {
   isNullOrEmpty,
   coerceBoolean,
   animateFactory
-} from '../../../utilities';
+} from '@app/utilities';
 import {
   AccordionPanelHeaderComponent
 } from '../accordion-panel-header/accordion-panel-header.component';

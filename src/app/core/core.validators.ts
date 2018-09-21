@@ -5,7 +5,7 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import { CoreDefinition } from './core.definition';
-import { McsPropertyType } from './interfaces/mcs-property-type.interface';
+import { McsPropertyType } from '@app/utilities';
 
 export class CoreValidators {
 

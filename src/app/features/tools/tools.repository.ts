@@ -3,16 +3,16 @@ import {
   Observable,
   of
 } from 'rxjs';
+import { McsRepositoryBase } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsRepositoryBase,
-  McsApiSuccessResponse
-} from '../../core';
+  McsApiSuccessResponse,
+  McsPortal
+} from '@app/models';
 import { ToolsService } from './tools.service';
-import { Portal } from './models';
-import { isNullOrEmpty } from 'app/utilities';
 
 @Injectable()
-export class ToolsRepository extends McsRepositoryBase<Portal> {
+export class ToolsRepository extends McsRepositoryBase<McsPortal> {
 
   constructor(private _toolsApiService: ToolsService) {
     super();
@@ -22,7 +22,7 @@ export class ToolsRepository extends McsRepositoryBase<Portal> {
    * This will be automatically called in the repoistory based class
    * to populate the data obtained
    */
-  protected getAllRecords(): Observable<McsApiSuccessResponse<Portal[]>> {
+  protected getAllRecords(): Observable<McsApiSuccessResponse<McsPortal[]>> {
     return this._toolsApiService.getPortals();
   }
 
@@ -31,8 +31,8 @@ export class ToolsRepository extends McsRepositoryBase<Portal> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Portal>> {
-    let apiRecord = new McsApiSuccessResponse<Portal>();
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsPortal>> {
+    let apiRecord = new McsApiSuccessResponse<McsPortal>();
     let portalRecord = this.dataRecords.find((result) => {
       return result.name === recordId;
     });

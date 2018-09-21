@@ -8,12 +8,12 @@ import {
   McsDialogRef,
   CoreDefinition,
   McsTextContentProvider
-} from '../../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
-} from '../../../../../utilities';
-import { ServerCredential } from '../../../models';
+} from '@app/utilities';
+import { McsServerCredential } from '@app/models';
 
 @Component({
   selector: 'mcs-reset-password-finished-dialog',
@@ -26,7 +26,7 @@ import { ServerCredential } from '../../../models';
 
 export class ResetPasswordFinishedDialogComponent {
   public textContent: any;
-  public serverCredential: ServerCredential;
+  public serverCredential: McsServerCredential;
 
   public get checkIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CHECK;
@@ -42,7 +42,7 @@ export class ResetPasswordFinishedDialogComponent {
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.resetPasswordFinishedDialog;
-    this.serverCredential = this.dialogData as ServerCredential;
+    this.serverCredential = this.dialogData as McsServerCredential;
   }
 
   /**

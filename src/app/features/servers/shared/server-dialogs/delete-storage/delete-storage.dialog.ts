@@ -8,12 +8,12 @@ import {
   McsDialogRef,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
-} from '../../../../../utilities';
-import { ServerStorageDevice } from '../../../models';
+} from '@app/utilities';
+import { McsServerStorageDevice } from '@app/models';
 
 @Component({
   selector: 'mcs-delete-storage-dialog',
@@ -26,12 +26,12 @@ import { ServerStorageDevice } from '../../../models';
 
 export class DeleteStorageDialogComponent {
   public textContent: any;
-  public storage: ServerStorageDevice;
+  public storage: McsServerStorageDevice;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<DeleteStorageDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: ServerStorageDevice
+    @Inject(MCS_DIALOG_DATA) public dialogData: McsServerStorageDevice
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.deleteStorageDialog;
     this.storage = this.dialogData;

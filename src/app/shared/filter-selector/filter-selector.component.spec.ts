@@ -9,8 +9,8 @@ import { FilterSelectorComponent } from './filter-selector.component';
 import {
   McsStorageService,
   McsFilterProvider
-} from '../../core';
-import { CoreTestingModule } from '../../core/testing';
+} from '@app/core';
+import { CoreTestingModule } from '@app/core/testing';
 
 describe('FilterSelectorComponent', () => {
   let mockFlag = 0;

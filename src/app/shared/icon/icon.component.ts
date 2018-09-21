@@ -15,11 +15,13 @@ import {
 import { map } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsSizeType,
-  McsColorType,
   McsAssetsProvider
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+} from '@app/core';
+import {
+  isNullOrEmpty,
+  McsSizeType,
+  McsColorType
+} from '@app/utilities';
 import {
   IconType,
   Icon,

@@ -7,8 +7,8 @@ import {
   AfterContentInit
 } from '@angular/core';
 import { FormControlDirective } from '@angular/forms';
-import { McsScrollDispatcherService } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { McsScrollDispatcherService } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

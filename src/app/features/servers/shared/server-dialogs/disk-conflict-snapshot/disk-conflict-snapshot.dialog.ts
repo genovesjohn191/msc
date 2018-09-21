@@ -8,8 +8,8 @@ import {
   McsDialogRef,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../../core';
-import { ServerSnapshotDialogContent } from '../../../models';
+} from '@app/core';
+import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
 
 @Component({
   selector: 'mcs-disk-conflict-snapshot-dialog',

@@ -19,12 +19,12 @@ import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
   McsTextContentProvider
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject,
   coerceBoolean
-} from '../../utilities';
+} from '@app/utilities';
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
 import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-def.directive';
 import {

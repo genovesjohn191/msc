@@ -27,7 +27,7 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../../utilities';
+} from '@app/utilities';
 
 @Directive({
   selector: '[mcsColumnDef]'

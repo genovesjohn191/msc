@@ -10,16 +10,15 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation
 } from '@angular/core';
-/** Services/Providers */
+import { CoreDefinition } from '@app/core';
 import {
-  McsApiJob,
+  McsJob,
   McsDataStatus,
-  CoreDefinition
-} from '../../../core';
+} from '@app/models';
 import {
   refreshView,
   isNullOrEmpty
-} from '../../../utilities';
+} from '@app/utilities';
 import { Router } from '@angular/router';
 
 // Notification type
@@ -48,13 +47,13 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   public iconStatusColor: any;
 
   @Input()
-  public notification: McsApiJob = new McsApiJob();
+  public notification: McsJob = new McsJob();
 
   @Input()
   public pauseOnHover: boolean = true;
 
   @Output()
-  public remove = new EventEmitter<McsApiJob>();
+  public remove = new EventEmitter<McsJob>();
 
   /**
    * Type of the notification panel to be displayed
@@ -189,7 +188,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   /**
    * Initializes the notification settings based on input
    */
-  private initializeNotification(notification: McsApiJob): void {
+  private initializeNotification(notification: McsJob): void {
     switch (notification.dataStatus) {
       case McsDataStatus.InProgress:
         this.iconStatusKey = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;

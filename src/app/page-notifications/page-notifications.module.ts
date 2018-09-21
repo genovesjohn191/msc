@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /** Modules */
-import { SharedModule } from '../shared';
+import { SharedModule } from '@app/shared';
 /** Components */
 import { PageNotificationsComponent } from './page-notifications.component';
 import { WebStompComponent } from './web-stomp/web-stomp.component';

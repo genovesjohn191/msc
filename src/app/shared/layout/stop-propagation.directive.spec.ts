@@ -8,7 +8,7 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { triggerEvent } from '../../utilities';
+import { triggerEvent } from '@app/utilities';
 import { StopPropagationDirective } from './stop-propagation.directive';
 
 @Component({

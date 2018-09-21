@@ -15,20 +15,19 @@ import {
   filter,
   distinctUntilChanged
 } from 'rxjs/operators';
-import { McsLoggerService } from '../services/mcs-logger.service';
-import { McsInitializer } from '../interfaces/mcs-initializer.interface';
-import { McsCookieService } from './mcs-cookie.service';
-import { McsApiIdentity } from '../models/response/mcs-api-identity';
-import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
-import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
-
 import {
   isNullOrEmpty,
   unsubscribeSubject,
   coerceNumber,
-  resolveEnvVar
-} from '../../utilities';
+  resolveEnvVar,
+  McsInitializer
+} from '@app/utilities';
+import { McsIdentity } from '@app/models';
 import { CoreDefinition } from '../core.definition';
+import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
+import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
+import { McsLoggerService } from './mcs-logger.service';
+import { McsCookieService } from './mcs-cookie.service';
 
 @Injectable()
 export class McsSessionHandlerService implements McsInitializer {
@@ -256,7 +255,7 @@ export class McsSessionHandlerService implements McsInitializer {
   /**
    * Validates the user and remove it from the cookie when the user has been changed
    */
-  private _sessionUserValidation(identity: McsApiIdentity) {
+  private _sessionUserValidation(identity: McsIdentity) {
     let sessionId = identity.hashedId + identity.expiry;
     let hashedId = this._cookieService.getEncryptedItem(CoreDefinition.COOKIE_SESSION_ID);
     if (sessionId !== hashedId) {

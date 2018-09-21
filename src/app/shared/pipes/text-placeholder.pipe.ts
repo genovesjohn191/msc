@@ -2,7 +2,7 @@ import {
   Pipe,
   PipeTransform
 } from '@angular/core';
-import { replacePlaceholder } from '../../utilities';
+import { replacePlaceholder } from '@app/utilities';
 import { isNullOrUndefined } from 'util';
 
 @Pipe({

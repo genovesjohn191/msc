@@ -15,17 +15,17 @@ import {
   FileItem
 } from 'ng2-file-upload';
 import {
-  McsFileInfo,
   McsTextContentProvider,
   McsDialogService,
   McsDialogRef,
   CoreDefinition
-} from '../../core';
+} from '@app/core';
+import { McsFileInfo } from '@app/models';
 import {
   isNullOrEmpty,
   coerceNumber,
   replacePlaceholder
-} from '../../utilities';
+} from '@app/utilities';
 
 const DEFAULT_MAX_FILE_SIZE_IN_MB = 20;
 

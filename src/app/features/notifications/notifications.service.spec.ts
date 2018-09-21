@@ -6,7 +6,7 @@ import {
 import { HttpTestingController } from '@angular/common/http/testing';
 /** Services and Models */
 import { NotificationsService } from './notifications.service';
-import { McsApiSuccessResponse } from '../../core/';
+import { McsApiSuccessResponse } from '@app/models';
 import { NotificationsTestingModule } from './testing';
 
 describe('NotificationsService', () => {

@@ -7,10 +7,10 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsTextContentProvider,
-  McsApiJob
-} from '../../../../core';
-import { unsubscribeSubject } from '../../../../utilities';
+  McsTextContentProvider
+} from '@app/core';
+import { unsubscribeSubject } from '@app/utilities';
+import { McsJob } from '@app/models';
 import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
 
 @Component({
@@ -20,7 +20,7 @@ import { ServerCreateFlyweightContext } from '../server-create-flyweight.context
 
 export class ServerCreateProvisioningComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public jobs: McsApiJob[];
+  public jobs: McsJob[];
   public errorResponse: any;
 
   private _destroySubject = new Subject<void>();

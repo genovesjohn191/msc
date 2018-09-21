@@ -4,11 +4,9 @@ import {
   OnInit
 } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  McsRouteKey,
-  CoreRoutes
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { CoreRoutes } from '@app/core';
+import { McsRouteKey } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Directive({
   selector: 'a[mcsRouterLink]',

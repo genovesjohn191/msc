@@ -4,15 +4,16 @@ import {
   finalize,
   map
 } from 'rxjs/operators';
-/** Services and Models */
 import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsApiJob,
-  McsLoggerService
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+  McsJob,
+} from '@app/models';
 
 @Injectable()
 export class NotificationsService {
@@ -32,7 +33,7 @@ export class NotificationsService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsApiJob[]>> {
+  }): Observable<McsApiSuccessResponse<McsJob[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -54,7 +55,7 @@ export class NotificationsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiJob[]>(McsApiJob, response);
+            .deserializeResponse<McsJob[]>(McsJob, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -68,7 +69,7 @@ export class NotificationsService {
    * Get notification by ID (MCS API Response)
    * @param id Notification identification
    */
-  public getNotification(id: any): Observable<McsApiSuccessResponse<McsApiJob>> {
+  public getNotification(id: any): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/job/' + id;
 
@@ -80,7 +81,7 @@ export class NotificationsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiJob>(McsApiJob, response);
+            .deserializeResponse<McsJob>(McsJob, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

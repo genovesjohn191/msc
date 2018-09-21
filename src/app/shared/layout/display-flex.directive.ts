@@ -5,7 +5,7 @@ import {
   ElementRef,
   OnInit
 } from '@angular/core';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 type DisplayFlexType = 'row' | 'column';
 type AlignmentFlexType = 'flex-start' | 'center' | 'flex-end' | 'none';

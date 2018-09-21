@@ -13,16 +13,16 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsScrollDispatcherService,
-  McsPaginator
-} from '../../core';
+  McsScrollDispatcherService
+} from '@app/core';
 import {
   coerceNumber,
   coerceBoolean,
   isNullOrEmpty,
   refreshView,
   triggerEvent
-} from '../../utilities';
+} from '@app/utilities';
+import { Paginator } from './paginator.interface';
 
 // Constants default
 const PAGINATOR_DEFAULT_PAGE_SIZE = 25;
@@ -39,7 +39,7 @@ const PAGINATOR_DEFAULT_LOAD_OFFSET = 10;
   }
 })
 
-export class PaginatorComponent implements McsPaginator, OnInit, AfterViewInit {
+export class PaginatorComponent implements Paginator, OnInit, AfterViewInit {
 
   public loading: boolean;
   public textContent: any;

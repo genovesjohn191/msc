@@ -7,15 +7,17 @@ import {
 import { switchMap } from 'rxjs/operators';
 import {
   McsDataSource,
+  Paginator,
+  Search
+} from '@app/shared';
+import { isNullOrEmpty } from '@app/utilities';
+import {
   McsDataStatus,
-  McsPaginator,
-  McsSearch
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
-import { Server } from './models';
+  McsServer
+} from '@app/models';
 import { ServersRepository } from './repositories/servers.repository';
 
-export class ServersDataSource implements McsDataSource<Server> {
+export class ServersDataSource implements McsDataSource<McsServer> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -24,15 +26,15 @@ export class ServersDataSource implements McsDataSource<Server> {
   /**
    * Returns the currently displayed records based on search pattern or paging.
    */
-  public get displayedRecords(): Server[] {
+  public get displayedRecords(): McsServer[] {
     return isNullOrEmpty(this._serversRepository.filteredRecords) ? [] :
       this._serversRepository.filteredRecords;
   }
 
   constructor(
     private _serversRepository: ServersRepository,
-    private _paginator: McsPaginator,
-    private _search: McsSearch
+    private _paginator: Paginator,
+    private _search: Search
   ) {
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
@@ -41,7 +43,7 @@ export class ServersDataSource implements McsDataSource<Server> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<Server[]> {
+  public connect(): Observable<McsServer[]> {
     const displayDataChanges = [
       of(undefined), // Add undefined observable to make way of retry when error occured
       this._serversRepository.dataRecordsChanged,
@@ -78,7 +80,7 @@ export class ServersDataSource implements McsDataSource<Server> {
    * This will invoke when the data obtainment is completed
    * @param servers Data to be provided when the datasource is connected
    */
-  public onCompletion(_status: McsDataStatus, _record: Server[]): void {
+  public onCompletion(_status: McsDataStatus, _record: McsServer[]): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);

@@ -2,7 +2,7 @@ import { ViewContainerRef } from '@angular/core';
 import {
   McsThemeType,
   McsSizeType
-} from '../../core.types';
+} from '@app/utilities';
 
 export class McsDialogConfig {
   public id?: string;

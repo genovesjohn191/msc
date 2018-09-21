@@ -9,16 +9,16 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { McsNotificationEventsService } from '@app/core';
 import {
-  McsApiJob,
-  McsNotificationEventsService,
-  McsDataStatus,
-} from '../../core';
+  McsJob,
+  McsDataStatus
+} from '@app/models';
 import {
   unsubscribeSafely,
   addOrUpdateArrayRecord,
   isNullOrEmpty
-} from '../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-state-change-notifications',
@@ -38,15 +38,15 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
   public stateChangeNotificationsElement: ElementRef;
 
   // Notifications variable
-  public notifications: McsApiJob[];
-  public closedNotifications: McsApiJob[];
+  public notifications: McsJob[];
+  public closedNotifications: McsJob[];
   public notificationsSubscription: any;
   public visible: boolean;
 
   /**
    * Returns the displayed notifications and ignore those who are already closed
    */
-  public get displayedNotifications(): McsApiJob[] {
+  public get displayedNotifications(): McsJob[] {
     return this.notifications.filter((job) => {
       let jobClosed = this.closedNotifications
         .find((closedJob) => job.id === closedJob.id);
@@ -81,7 +81,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
    * Event that emits when notification is removed
    * @param _job Job to be removed
    */
-  public removeNotification(_job: McsApiJob): void {
+  public removeNotification(_job: McsJob): void {
     if (isNullOrEmpty(_job)) { return; }
     this.closedNotifications.push(_job);
     this._changeDetectorRef.markForCheck();
@@ -120,7 +120,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
           this.notifications,
           notification,
           false,
-          (_existingJob: McsApiJob) => {
+          (_existingJob: McsJob) => {
             return _existingJob.id === notification.id;
           });
         this._changeDetectorRef.markForCheck();

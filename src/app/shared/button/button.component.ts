@@ -7,11 +7,11 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { CoreDefinition } from '../../core';
+import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   coerceBoolean
-} from '../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: `button[mcsButtonIcon], button[mcsButtonRaised], button[mcsButton]`,

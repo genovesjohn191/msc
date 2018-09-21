@@ -7,8 +7,10 @@ import {
 import {
   Observable
 } from 'rxjs';
-import { McsDelegate } from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+import {
+  isNullOrEmpty,
+  McsDelegate
+} from '@app/utilities';
 import { WizardComponent } from '../wizard.component';
 
 @Directive({

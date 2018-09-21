@@ -14,14 +14,14 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
   Key,
   McsPoint
-} from '../../core';
+} from '@app/models';
 import {
   isNullOrEmpty,
   coerceNumber,
   coerceBoolean,
   registerEvent,
   unregisterEvent
-} from '../../utilities';
+} from '@app/utilities';
 
 /** The slider orientation type */
 type sliderOrientation = 'horizontal' | 'vertical';

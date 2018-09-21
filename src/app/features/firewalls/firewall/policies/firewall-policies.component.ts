@@ -11,13 +11,13 @@ import {
   McsTextContentProvider,
   McsBrowserService,
   McsTableListingBase
-} from '../../../../core';
+} from '@app/core';
 import {
   refreshView,
   animateFactory,
   getSafeProperty
-} from '../../../../utilities';
-import { FirewallPolicy } from '../../models';
+} from '@app/utilities';
+import { McsFirewallPolicy } from '@app/models';
 import { FirewallsRepository } from '../../repositories/firewalls.repository';
 import { FirewallService } from '../firewall.service';
 import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
@@ -45,7 +45,7 @@ export class FirewallPoliciesComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-  public selectedFirewallPolicy: FirewallPolicy;
+  public selectedFirewallPolicy: McsFirewallPolicy;
 
   public get columnFilterIconKey(): string {
     return CoreDefinition.ASSETS_SVG_COLUMNS_BLACK;
@@ -82,7 +82,7 @@ export class FirewallPoliciesComponent
     private _firewallsRepository: FirewallsRepository
   ) {
     super(_browserService, _changeDetectorRef);
-    this.selectedFirewallPolicy = new FirewallPolicy();
+    this.selectedFirewallPolicy = new McsFirewallPolicy();
   }
 
   public ngOnInit() {
@@ -103,7 +103,7 @@ export class FirewallPoliciesComponent
    * Display the selected firewall policy details
    * @param policy Firewall Policy data
    */
-  public showFirewallPolicyDetails(policy: FirewallPolicy): void {
+  public showFirewallPolicyDetails(policy: McsFirewallPolicy): void {
     this.selectedFirewallPolicy = policy;
     this.firewallPoliciesMode = FirewallPoliciesMode.Details;
   }

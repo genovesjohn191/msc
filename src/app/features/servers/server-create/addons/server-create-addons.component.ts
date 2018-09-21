@@ -4,7 +4,7 @@ import {
   OnDestroy,
   ChangeDetectorRef
 } from '@angular/core';
-import { McsTextContentProvider } from '../../../../core';
+import { McsTextContentProvider } from '@app/core';
 
 @Component({
   selector: 'mcs-server-create-addons',

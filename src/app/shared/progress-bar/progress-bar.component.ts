@@ -10,7 +10,7 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { coerceNumber } from '../../utilities';
+import { coerceNumber } from '@app/utilities';
 
 @Component({
   selector: 'mcs-progress-bar',

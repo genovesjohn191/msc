@@ -7,11 +7,13 @@ import {
 /** Services and Models */
 import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsApiConsole,
-  McsLoggerService
-} from '../../core';
+  McsConsole,
+} from '@app/models';
 
 @Injectable()
 export class ConsolePageService {
@@ -26,7 +28,7 @@ export class ConsolePageService {
    * * Note: This will return the url of the console
    * @param id Server identification
    */
-  public getServerConsole(id: any): Observable<McsApiSuccessResponse<McsApiConsole>> {
+  public getServerConsole(id: any): Observable<McsApiSuccessResponse<McsConsole>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/servers/${id}/console`;
 
@@ -38,7 +40,7 @@ export class ConsolePageService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiConsole>(McsApiConsole, response);
+            .deserializeResponse<McsConsole>(McsConsole, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { McsRepositoryBase } from '@app/core';
 import {
-  McsRepositoryBase,
-  McsApiSuccessResponse
-} from '../../../core';
+  McsApiSuccessResponse,
+  McsOrderItemType
+} from '@app/models';
 import { OrdersService } from '../orders.service';
-import { OrderItemType } from '../models';
 
 @Injectable()
-export class OrderItemTypesRepository extends McsRepositoryBase<OrderItemType> {
+export class OrderItemTypesRepository extends McsRepositoryBase<McsOrderItemType> {
 
   constructor(private _ordersApiService: OrdersService) {
     super();
@@ -22,7 +22,7 @@ export class OrderItemTypesRepository extends McsRepositoryBase<OrderItemType> {
     _pageIndex: number,
     _pageSize: number,
     _keyword: string
-  ): Observable<McsApiSuccessResponse<OrderItemType[]>> {
+  ): Observable<McsApiSuccessResponse<McsOrderItemType[]>> {
     return this._ordersApiService.getOrderItemTypes();
   }
 
@@ -31,7 +31,7 @@ export class OrderItemTypesRepository extends McsRepositoryBase<OrderItemType> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<OrderItemType>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsOrderItemType>> {
     return this._ordersApiService.getOrderItemType(recordId);
   }
 }

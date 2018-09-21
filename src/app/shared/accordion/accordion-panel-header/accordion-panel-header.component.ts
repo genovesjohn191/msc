@@ -6,11 +6,11 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '../../../core';
+import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory
-} from '../../../utilities';
+} from '@app/utilities';
 import { AccordionPanelComponent } from '../accordion-panel/accordion-panel.component';
 
 @Component({

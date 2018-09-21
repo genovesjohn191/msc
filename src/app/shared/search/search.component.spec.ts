@@ -5,8 +5,8 @@ import {
   fakeAsync
 } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
-import { CoreDefinition } from '../../core';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreDefinition } from '@app/core';
+import { CoreTestingModule } from '@app/core/testing';
 
 describe('SearchComponent', () => {
 

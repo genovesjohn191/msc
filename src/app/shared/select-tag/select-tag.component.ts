@@ -17,17 +17,20 @@ import {
   merge,
   Subject
 } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
 import {
-  McsSearch,
-  McsSelection,
-  McsOption,
-  CoreDefinition
-} from '../../core';
+  startWith,
+  takeUntil
+} from 'rxjs/operators';
+import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
+import { Search } from '@app/shared';
+import {
+  McsSelection,
+  McsOption,
+} from '@app/models';
 
 // Child Items of the select tag
 import { SelectTagMainItemComponent } from './select-tag-main-item/select-tag-main-item.component';
@@ -54,7 +57,7 @@ export class SelectTagComponent implements AfterViewInit, AfterContentInit, OnDe
   private _subItemsPlaceholder: SelectTagSubItemPlaceholderDirective;
 
   @ViewChild('search')
-  private _search: McsSearch;
+  private _search: Search;
 
   @ContentChildren(SelectTagMainItemComponent)
   private _mainItems: QueryList<SelectTagMainItemComponent>;

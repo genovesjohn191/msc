@@ -10,14 +10,14 @@ import { catchError } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   McsDataStatusFactory
-} from '../../../../core';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  Order,
-  OrderItemTypesRepository,
-  OrderItemType
-} from '../../../orders';
+  McsOrder,
+  McsOrderItemType
+} from '@app/models';
+import { OrderItemTypesRepository } from '@app/features/orders';
 import { ServerOrderDetail } from './server-order-detail';
-import { isNullOrEmpty } from '../../../../utilities';
 
 @Component({
   selector: 'mcs-server-create-confirm',
@@ -28,7 +28,7 @@ export class ServerCreateConfirmComponent implements OnInit, OnDestroy {
   public textContent: any;
 
   @Input()
-  public order: Order;
+  public order: McsOrder;
 
   // Model binding (should be enum type)
   public selectedTerm: number = 0;
@@ -38,7 +38,7 @@ export class ServerCreateConfirmComponent implements OnInit, OnDestroy {
   public selectedAction: number = 0;
   public selectedServer: number = 0;
 
-  public itemTypesStatusFactory: McsDataStatusFactory<OrderItemType[]>;
+  public itemTypesStatusFactory: McsDataStatusFactory<McsOrderItemType[]>;
   public orderDataSource: ServerOrderDetail[];
   public dataColumns = ['charge', 'monthlyFee', 'oneOffCharge'];
 
@@ -91,7 +91,7 @@ export class ServerCreateConfirmComponent implements OnInit, OnDestroy {
    * Creates the order table based on order data and item types
    * @param orderItemTypes Order item type from where to get the order item details
    */
-  private _createOrdersTable(orderItemTypes: OrderItemType[]): void {
+  private _createOrdersTable(orderItemTypes: McsOrderItemType[]): void {
     let orderIsEmpty = isNullOrEmpty(orderItemTypes) || isNullOrEmpty(this.order);
     if (orderIsEmpty) { return; }
 

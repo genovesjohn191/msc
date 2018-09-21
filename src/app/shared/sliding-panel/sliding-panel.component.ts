@@ -15,11 +15,11 @@ import {
   trigger,
   animate
 } from '@angular/animations';
-import { McsPlacementType } from '../../core';
 import {
   coerceNumber,
-  animateFactory
-} from '../../utilities';
+  animateFactory,
+  McsPlacementType
+} from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

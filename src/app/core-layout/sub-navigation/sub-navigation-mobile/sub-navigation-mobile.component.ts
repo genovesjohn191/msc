@@ -14,15 +14,15 @@ import {
 } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CoreDefinition } from '@app/core';
 import {
   unsubscribeSubject,
   animateFactory
-} from '../../../utilities';
+} from '@app/utilities';
 import {
-  CoreDefinition,
   McsRouteCategory,
   mcsRouteCategoryText
-} from '../../../core';
+} from '@app/models';
 
 @Component({
   selector: 'mcs-sub-navigation-mobile',

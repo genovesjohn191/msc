@@ -7,10 +7,10 @@ import {
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
-import { triggerEvent } from '../../utilities';
+import { triggerEvent } from '@app/utilities';
+import { CoreTestingModule } from '@app/core/testing';
 import { AccordionComponent } from './accordion.component';
 import { AccordionModule } from './accordion.module';
-import { CoreTestingModule } from '../../core/testing';
 
 @Component({
   selector: 'mcs-test-accordion',

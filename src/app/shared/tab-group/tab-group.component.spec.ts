@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import { TabGroupComponent } from './tab-group.component';
 import { TabGroupModule } from './tab-group.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-tab-group',

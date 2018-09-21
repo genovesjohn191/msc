@@ -5,7 +5,7 @@ import {
 import {
   isNullOrEmpty,
   formatDate
-} from '../../utilities';
+} from '@app/utilities';
 
 const DEFAULT_DATE_FORMAT = 'ddd, DD MMM YYYY, LT';
 

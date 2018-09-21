@@ -6,7 +6,7 @@ import {
   ViewContainerRef,
   ChangeDetectorRef
 } from '@angular/core';
-import { getSafeProperty } from '../../utilities';
+import { getSafeProperty } from '@app/utilities';
 
 @Directive({
   selector: '[mcsComponentHandler]'

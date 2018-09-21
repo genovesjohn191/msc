@@ -9,7 +9,7 @@ import {
 } from '@angular/core/testing';
 import { FileAttachmentComponent } from './file-attachment.component';
 import { FileAttachmentModule } from './file-attachment.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-attachment',

@@ -16,34 +16,34 @@ import {
   switchMap,
   finalize
 } from 'rxjs/operators';
+import { saveAs } from 'file-saver';
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsFileInfo,
-  McsComment,
   McsErrorHandlerService,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   compareDates,
   replacePlaceholder,
   unsubscribeSafely
-} from '../../../utilities';
+} from '@app/utilities';
 import {
-  Ticket,
+  CommentCategory,
+  CommentType,
+  McsFileInfo,
+  McsComment,
+  McsRouteKey,
+  McsTicket,
   TicketSubType,
   ticketSubTypeText,
-  TicketAttachment,
-  TicketActivity,
-  TicketCommentCategory,
-  TicketCommentType,
-  TicketCreateComment,
-  TicketCreateAttachment
-} from '../models';
+  McsTicketAttachment,
+  McsTicketCreateComment,
+  McsTicketCreateAttachment
+} from '@app/models';
 import { TicketsService } from '../tickets.service';
-import { saveAs } from 'file-saver';
+import { TicketActivity } from '../shared';
 
 @Component({
   selector: 'mcs-ticket',
@@ -63,9 +63,9 @@ export class TicketComponent implements OnInit, OnDestroy {
   /**
    * An observable ticket data that obtained based on the given id
    */
-  private _ticket: Ticket;
-  public get ticket(): Ticket { return this._ticket; }
-  public set ticket(value: Ticket) {
+  private _ticket: McsTicket;
+  public get ticket(): McsTicket { return this._ticket; }
+  public set ticket(value: McsTicket) {
     if (this._ticket !== value) {
       unsubscribeSafely(this.ticketSubscription);
 
@@ -129,7 +129,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this._ticket = new Ticket();
+    this._ticket = new McsTicket();
     this._activities = new Array();
     this._downloadingIdList = new Set();
   }
@@ -181,7 +181,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Download the file attachment based on the blob
    * @param attachment Attachment information of the file to download
    */
-  public downloadAttachment(attachment: TicketAttachment) {
+  public downloadAttachment(attachment: McsTicketAttachment) {
     if (isNullOrEmpty(attachment)) { return; }
     this._downloadingIdList.add(attachment.id);
 
@@ -219,9 +219,9 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(content)) { return; }
 
     // Create comment
-    let newComment = new TicketCreateComment();
-    newComment.category = TicketCommentCategory.Task;
-    newComment.type = TicketCommentType.Comments;
+    let newComment = new McsTicketCreateComment();
+    newComment.category = CommentCategory.Task;
+    newComment.type = CommentType.Comments;
     newComment.value = content;
 
     this.createCommentSubscription = this._ticketsService
@@ -243,7 +243,7 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (isNullOrEmpty(attachedFile)) { return; }
 
     // Create attachment
-    let newAttachment = new TicketCreateAttachment();
+    let newAttachment = new McsTicketCreateAttachment();
 
     newAttachment.fileName = attachedFile.filename;
     newAttachment.contents = attachedFile.base64Contents;
@@ -305,7 +305,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Set the activities of the ticket and sort it by created date
    * @param ticket Ticket to get the comments/attachment from
    */
-  private _setActivities(ticket: Ticket): void {
+  private _setActivities(ticket: McsTicket): void {
     if (isNullOrEmpty(ticket)) { return; }
     let ticketActivities: TicketActivity[] = new Array();
 

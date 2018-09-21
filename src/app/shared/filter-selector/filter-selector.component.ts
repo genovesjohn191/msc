@@ -18,9 +18,9 @@ import {
 import { Subject } from 'rxjs';
 import {
   McsStorageService,
-  McsFilterProvider,
-  McsFilterInfo
-} from '../../core';
+  McsFilterProvider
+} from '@app/core';
+import { McsFilterInfo } from '@app/models';
 import {
   isNullOrEmpty,
   convertJsonToMapObject,
@@ -28,7 +28,7 @@ import {
   animateFactory,
   convertSpacesToDash,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import { TableComponent } from '../table/table.component';
 import { ColumnDefDirective } from '../table';
 

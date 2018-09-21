@@ -12,8 +12,8 @@ import {
   McsDialogService,
   McsDialogRef,
   McsSessionHandlerService
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Component({
   selector: 'mcs-session',

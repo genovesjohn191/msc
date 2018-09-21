@@ -8,9 +8,9 @@ import {
   McsDialogRef,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../../core';
-import { replacePlaceholder } from '../../../../../utilities';
-import { ServerSnapshotDialogContent } from '../../../models';
+} from '@app/core';
+import { replacePlaceholder } from '@app/utilities';
+import { ServerSnapshotDialogContent } from '../../server-snapshot-dialog-content';
 
 @Component({
   selector: 'mcs-insufficient-storage-snapshot-dialog',

@@ -8,7 +8,7 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { ScrollableDirective } from './scrollable.directive';
 
 @Component({

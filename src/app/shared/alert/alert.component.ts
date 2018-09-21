@@ -5,11 +5,11 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
+import { CoreDefinition } from '@app/core';
 import {
-  CoreDefinition,
   McsStatusType,
   McsColorType
-} from '../../core';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-alert',

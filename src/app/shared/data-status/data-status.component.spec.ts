@@ -7,8 +7,8 @@ import {
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
-import { McsDataStatusFactory } from '../../core';
-import { CoreTestingModule } from '../../core/testing';
+import { McsDataStatusFactory } from '@app/core';
+import { CoreTestingModule } from '@app/core/testing';
 import { DataStatusComponent } from './data-status.component';
 import { DataStatusModule } from './data-status.module';
 

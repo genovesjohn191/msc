@@ -19,16 +19,16 @@ import {
   FileItem
 } from 'ng2-file-upload';
 import {
-  McsFileInfo,
-  McsComment,
   McsTextContentProvider,
   McsDialogService,
   McsDialogRef,
   CoreDefinition
-} from '../../core';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  isNullOrEmpty
-} from '../../utilities';
+  McsFileInfo,
+  McsComment
+} from '@app/models';
 
 @Component({
   selector: 'mcs-comment-box',

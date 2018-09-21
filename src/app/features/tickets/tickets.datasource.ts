@@ -7,15 +7,17 @@ import {
 import { switchMap } from 'rxjs/operators';
 import {
   McsDataSource,
+  Paginator,
+  Search
+} from '@app/shared';
+import { isNullOrEmpty } from '@app/utilities';
+import {
   McsDataStatus,
-  McsPaginator,
-  McsSearch
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
-import { Ticket } from './models';
+  McsTicket
+} from '@app/models';
 import { TicketsRepository } from './tickets.repository';
 
-export class TicketsDataSource implements McsDataSource<Ticket> {
+export class TicketsDataSource implements McsDataSource<McsTicket> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -23,8 +25,8 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
 
   constructor(
     private _ticketRepository: TicketsRepository,
-    private _paginator: McsPaginator,
-    private _search: McsSearch
+    private _paginator: Paginator,
+    private _search: Search
   ) {
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
@@ -33,7 +35,7 @@ export class TicketsDataSource implements McsDataSource<Ticket> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<Ticket[]> {
+  public connect(): Observable<McsTicket[]> {
     const displayDataChanges = [
       of(undefined), // Add undefined observable to make way of retry when error occured
       this._ticketRepository.dataRecordsChanged,

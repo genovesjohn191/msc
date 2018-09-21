@@ -6,22 +6,20 @@ import {
 } from 'rxjs/operators';
 /** Services and Models */
 import {
-  Media,
-  MediaServer
-} from './models';
-import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsLoggerService,
   McsApiJobRequestBase,
-  McsApiJob
-} from '../../core/';
-import { isNullOrEmpty } from '../../utilities';
-import {
-  ServersService,
-  ServerAttachMedia
-} from '../servers';
+  McsJob,
+  McsResourceMedia,
+  McsResourceMediaServer,
+  McsServerAttachMedia
+} from '@app/models';
+import { ServersService } from '@app/features/servers';
 
 /**
  * Media Service Class
@@ -45,7 +43,7 @@ export class MediaService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<Media[]>> {
+  }): Observable<McsApiSuccessResponse<McsResourceMedia[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -67,7 +65,7 @@ export class MediaService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Media[]>(Media, response);
+            .deserializeResponse<McsResourceMedia[]>(McsResourceMedia, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -81,7 +79,7 @@ export class MediaService {
    * Get media by ID (MCS API Response)
    * @param id Media identification
    */
-  public getMedia(id: any): Observable<McsApiSuccessResponse<Media>> {
+  public getMedia(id: any): Observable<McsApiSuccessResponse<McsResourceMedia>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/media/${id}`;
 
@@ -95,7 +93,7 @@ export class MediaService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Media>(Media, response);
+            .deserializeResponse<McsResourceMedia>(McsResourceMedia, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -108,7 +106,8 @@ export class MediaService {
   /**
    * Get the attached servers from the media
    */
-  public getMediaServers(mediaId: any): Observable<McsApiSuccessResponse<MediaServer[]>> {
+  public getMediaServers(mediaId: any):
+    Observable<McsApiSuccessResponse<McsResourceMediaServer[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/media/${mediaId}/servers`;
 
@@ -120,7 +119,7 @@ export class MediaService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<MediaServer[]>(MediaServer, response);
+            .deserializeResponse<McsResourceMediaServer[]>(McsResourceMediaServer, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -142,7 +141,7 @@ export class MediaService {
     serverId: any,
     mediaId: any,
     referenceObject?: McsApiJobRequestBase
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+  ): Observable<McsApiSuccessResponse<McsJob>> {
     return this._serversService.detachServerMedia(serverId, mediaId, referenceObject);
   }
 
@@ -155,8 +154,8 @@ export class MediaService {
    */
   public attachServerMedia(
     serverId: any,
-    mediaDetails: ServerAttachMedia
-  ): Observable<McsApiSuccessResponse<McsApiJob>> {
+    mediaDetails: McsServerAttachMedia
+  ): Observable<McsApiSuccessResponse<McsJob>> {
     return this._serversService.attachServerMedia(serverId, mediaDetails);
   }
 }

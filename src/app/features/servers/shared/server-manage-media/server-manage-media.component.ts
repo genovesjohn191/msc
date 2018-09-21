@@ -9,13 +9,13 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
+import { McsTextContentProvider } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
   unsubscribeSubject
-} from '../../../../utilities';
-import { McsTextContentProvider } from '../../../../core';
-import { ServerMedia } from '../../models';
+} from '@app/utilities';
+import { McsServerMedia } from '@app/models';
 
 @Component({
   selector: 'mcs-server-manage-media',
@@ -33,20 +33,20 @@ export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy 
   public textContent: any;
 
   @Output()
-  public selectedMediaChange = new EventEmitter<ServerMedia>();
+  public selectedMediaChange = new EventEmitter<McsServerMedia>();
 
   @Input()
-  public medias: ServerMedia[];
+  public medias: McsServerMedia[];
 
   @Input()
-  public get selectedMedia(): ServerMedia { return this._selectedMedia; }
-  public set selectedMedia(value: ServerMedia) {
+  public get selectedMedia(): McsServerMedia { return this._selectedMedia; }
+  public set selectedMedia(value: McsServerMedia) {
     if (this._selectedMedia !== value) {
       this._selectedMedia = value;
       this.selectedMediaChange.emit(this._selectedMedia);
     }
   }
-  private _selectedMedia: ServerMedia;
+  private _selectedMedia: McsServerMedia;
 
   constructor(private _textContentProvider: McsTextContentProvider) { }
 

@@ -26,12 +26,9 @@ import {
   CoreDefinition,
   McsDialogService,
   McsNotificationEventsService,
-  McsApiJob,
-  McsDataStatus,
   McsDataStatusFactory,
-  McsRouteKey,
   CoreRoutes
-} from '../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -39,18 +36,21 @@ import {
   unsubscribeSubject,
   getEncodedUrl,
   getSafeProperty
-} from '../../../../utilities';
-import { DetachMediaDialogComponent } from '../../shared';
+} from '@app/utilities';
 import {
-  ResourceCatalogItemType,
-  ResourcesRepository
-} from '../../../resources';
+  CatalogItemType,
+  IpAllocationMode,
+  McsJob,
+  McsDataStatus,
+  McsRouteKey,
+  McsServerUpdate,
+  McsServerMedia
+} from '@app/models';
 import {
-  ServerMedia,
-  ServerIpAllocationMode,
-  ServerManageScale,
-  ServerUpdate
-} from '../../models';
+  DetachMediaDialogComponent,
+  ServerManageScale
+} from '../../shared';
+import { ResourcesRepository } from '@app/features/resources';
 import { ServerDetailsBase } from '../server-details.base';
 import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
@@ -82,11 +82,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   public serversTextContent: any;
   public serverThumbnail: string;
   public serverManagementView: ServerManagementView;
-  public mediaStatusFactory: McsDataStatusFactory<ServerMedia[]>;
-  public selectedMedia: ServerMedia;
+  public mediaStatusFactory: McsDataStatusFactory<McsServerMedia[]>;
+  public selectedMedia: McsServerMedia;
 
-  private _newMedia: ServerMedia;
-  private _resourceMedias: ServerMedia[];
+  private _newMedia: McsServerMedia;
+  private _resourceMedias: McsServerMedia[];
   private _serverMediaSubscription: Subscription;
   private _serverThumbnailSubscription: Subscription;
   private _computeSubscription: Subscription;
@@ -120,7 +120,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Returns the enum type of the ip allocation mode
    */
   public get ipAllocationModeEnum(): any {
-    return ServerIpAllocationMode;
+    return IpAllocationMode;
   }
 
   constructor(
@@ -169,15 +169,16 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    *
    * `@Note`: All medias created doesn't have id, be carefull in using them
    */
-  public get resourceMedias(): ServerMedia[] {
+  public get resourceMedias(): McsServerMedia[] {
     return this._resourceMedias;
   }
 
   /**
    * Returns all the server medias including the newly created media as a mock data
    */
-  public get serverMedias(): ServerMedia[] {
-    return isNullOrEmpty(this._newMedia) ?
+  public get serverMedias(): McsServerMedia[] {
+    return isNullOrEmpty(this._newMedia) ||
+      isNullOrEmpty(this.server.media) ?
       this.server.media :
       [...this.server.media, this._newMedia];
   }
@@ -242,7 +243,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Returns true when the provided media is detaching
    * @param media Media to be checked
    */
-  public mediaIsDetaching(media: ServerMedia): boolean {
+  public mediaIsDetaching(media: McsServerMedia): boolean {
     if (isNullOrEmpty(media)) { return false; }
     return media.id === this._detachingMediaId;
   }
@@ -266,7 +267,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
           memoryMB: this.manageScale.memoryMB,
           cpuCount: this.manageScale.cpuCount
         }
-      } as ServerUpdate)
+      } as McsServerUpdate)
       .pipe(
         catchError((error) => {
           this._serversService.clearServerSpinner(this.server);
@@ -280,7 +281,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Shows the detach media dialog box
    * @param media Media to be displayed in dialog box
    */
-  public showDetachMediaDialog(media: ServerMedia): void {
+  public showDetachMediaDialog(media: McsServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
     let dialogRef = this._dialogService
       .open(DetachMediaDialogComponent, {
@@ -297,7 +298,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Attach media from the selected server
    * @param media Media to be attached
    */
-  public attachMedia(media: ServerMedia): void {
+  public attachMedia(media: McsServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
     // Set reference object to be expected
     let expectedJobObject = {
@@ -327,7 +328,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Detaches the media from the selected server
    * @param media Media to be detached
    */
-  public detachMedia(media: ServerMedia): void {
+  public detachMedia(media: McsServerMedia): void {
     if (isNullOrEmpty(media)) { return; }
     // Set reference object to be expected
     let expectedJobObject = {
@@ -433,8 +434,8 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     this._resourceMedias = new Array();
     resourceCatalogs.forEach((catalog) => {
-      if (catalog.itemType !== ResourceCatalogItemType.Media) { return; }
-      let media = new ServerMedia();
+      if (catalog.itemType !== CatalogItemType.Media) { return; }
+      let media = new McsServerMedia();
       media.name = catalog.itemName;
       this._resourceMedias.push(media);
     });
@@ -474,7 +475,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Event that emits when updating scale server
    * @param job Emitted job content
    */
-  private _onUpdateServerCompute(job: McsApiJob): void {
+  private _onUpdateServerCompute(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
@@ -496,7 +497,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * Update the server compute data based on the job
    */
-  private _updateServerComputeByJob(job: McsApiJob): void {
+  private _updateServerComputeByJob(job: McsJob): void {
     let referenceObject = getSafeProperty(job, (obj) => obj.clientReferenceObject);
     if (isNullOrEmpty(referenceObject)) { return; }
 
@@ -514,7 +515,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Event that emits when attaching media content
    * @param job Emitted job content
    */
-  private _onAttachMedia(job: McsApiJob): void {
+  private _onAttachMedia(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
     switch (job.dataStatus) {
       case McsDataStatus.InProgress:
@@ -539,7 +540,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Event that emits when detaching media content
    * @param job Emitted job content
    */
-  private _onDetachMedia(job: McsApiJob): void {
+  private _onDetachMedia(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Refresh the data when the detaching media was already completed
@@ -556,11 +557,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Add mock media for the server
    * @param job Emitted job content
    */
-  private _addMockMedia(job: McsApiJob): void {
+  private _addMockMedia(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock media data based on job response
-    this._newMedia = new ServerMedia();
+    this._newMedia = new McsServerMedia();
     this._newMedia.name = job.clientReferenceObject.mediaName;
     this._changeDetectorRef.markForCheck();
   }

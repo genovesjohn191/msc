@@ -12,7 +12,7 @@ import {
   isNullOrEmpty,
   registerEvent,
   unregisterEvent
-} from '../../utilities';
+} from '@app/utilities';
 
 @Directive({
   selector: '[animate]'

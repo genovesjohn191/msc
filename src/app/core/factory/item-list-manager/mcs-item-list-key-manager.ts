@@ -1,8 +1,8 @@
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
-import { isNullOrEmpty } from '../../../utilities';
-import { Key } from '../../enumerations/mcs-key.enum';
-import { McsItemListManager } from './mcs-item-list-manager';
+import { isNullOrEmpty } from '@app/utilities';
+import { Key } from '@app/models';
+import { McsItemListManager } from '../item-list-manager/mcs-item-list-manager';
 
 export class McsItemListKeyManager<T> extends McsItemListManager<T> {
   /**

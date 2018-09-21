@@ -10,7 +10,7 @@ import {
 import {
   isElementVisible,
   coerceBoolean
-} from '../../../utilities';
+} from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

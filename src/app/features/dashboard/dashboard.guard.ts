@@ -8,9 +8,9 @@ import {
 import { Observable } from 'rxjs';
 import {
   McsAccessControlService,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
+import { McsRouteKey } from '@app/models';
 
 @Injectable()
 export class DashboardGuard implements CanActivate {

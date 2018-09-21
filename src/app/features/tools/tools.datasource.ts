@@ -3,18 +3,16 @@ import {
   Subject
 } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CoreConfig } from '@app/core';
+import { McsDataSource } from '@app/shared';
 import {
-  CoreConfig,
-  McsDataSource,
-  McsDataStatus
-} from '../../core';
-import {
-  Portal,
-  PortalAccess
-} from './models';
+  McsDataStatus,
+  McsPortal,
+  McsPortalAccess
+} from '@app/models';
 import { ToolsRepository } from './tools.repository';
 
-export class ToolsDataSource implements McsDataSource<Portal> {
+export class ToolsDataSource implements McsDataSource<McsPortal> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -29,18 +27,18 @@ export class ToolsDataSource implements McsDataSource<Portal> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<Portal[]> {
+  public connect(): Observable<McsPortal[]> {
     this.dataLoadingStream.next(McsDataStatus.InProgress);
     return this._toolsRepository.findAllRecords(undefined, undefined)
       .pipe(
         map((portals) => {
-          let partnerPortals: Portal[] = [];
-          let otherServices: Portal[] = [];
+          let partnerPortals: McsPortal[] = [];
+          let otherServices: McsPortal[] = [];
 
           // Add Macquarie View
-          let macquarieView = new Portal();
+          let macquarieView = new McsPortal();
           macquarieView.name = 'Macquarie View';
-          let macquarieViewPortalAccess = new PortalAccess();
+          let macquarieViewPortalAccess = new McsPortalAccess();
           macquarieViewPortalAccess.name = macquarieView.name;
           macquarieViewPortalAccess.url = this._coreConfig.macviewUrl;
           macquarieView.portalAccess = Array(macquarieViewPortalAccess);

@@ -7,11 +7,11 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { triggerEvent } from '../../utilities';
+import { triggerEvent } from '@app/utilities';
 
 import { ContextualHelpDirective } from './contextual-help.directive';
 import { ContextualHelpModule } from './contextual-help.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-contextualhelp',

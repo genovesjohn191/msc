@@ -7,11 +7,11 @@ import {
   Component,
   ViewChild
 } from '@angular/core';
-import { triggerEvent } from '../../utilities';
+import { triggerEvent } from '@app/utilities';
 
 import { TooltipDirective } from './tooltip.directive';
 import { TooltipModule } from './tooltip.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-tooltip',

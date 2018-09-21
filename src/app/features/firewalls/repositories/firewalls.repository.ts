@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { McsRepositoryBase } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsRepositoryBase,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
   McsApiSuccessResponse,
-  McsPaginator,
-  McsSearch
-} from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+  McsFirewall,
+  McsFirewallPolicy
+} from '@app/models';
 import { FirewallsService } from '../firewalls.service';
-import {
-  Firewall,
-  FirewallPolicy
-} from '../models';
 
 @Injectable()
-export class FirewallsRepository extends McsRepositoryBase<Firewall> {
+export class FirewallsRepository extends McsRepositoryBase<McsFirewall> {
 
   constructor(private _firewallsService: FirewallsService) {
     super();
@@ -27,10 +27,10 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
    * @param activeFirewall Active firewall to set policies
    */
   public findFirewallPolicies(
-    activeFirewall: Firewall,
-    page?: McsPaginator,
-    search?: McsSearch
-  ): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
+    activeFirewall: McsFirewall,
+    page?: Paginator,
+    search?: Search
+  ): Observable<McsApiSuccessResponse<McsFirewallPolicy[]>> {
     return this._firewallsService.getFirewallPolicies(
       activeFirewall.id,
       {
@@ -56,7 +56,7 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<Firewall[]>> {
+  ): Observable<McsApiSuccessResponse<McsFirewall[]>> {
     return this._firewallsService.getFirewalls({
       page: pageIndex,
       perPage: pageSize,
@@ -69,7 +69,7 @@ export class FirewallsRepository extends McsRepositoryBase<Firewall> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Firewall>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsFirewall>> {
     return this._firewallsService.getFirewall(recordId);
   }
 }

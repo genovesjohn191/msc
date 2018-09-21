@@ -21,13 +21,13 @@ import {
   takeUntil,
   startWith
 } from 'rxjs/operators';
-import { CoreDefinition } from '../../core';
+import { CoreDefinition } from '@app/core';
 import {
   animateFactory,
   isNullOrEmpty,
   coerceBoolean,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import { OptionComponent } from './option/option.component';
 import { OptionGroupLabelDirective } from './option-group-label.directive';
 

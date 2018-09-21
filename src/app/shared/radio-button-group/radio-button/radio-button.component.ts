@@ -9,11 +9,11 @@ import {
   ChangeDetectorRef,
   ViewChild
 } from '@angular/core';
-import { CoreDefinition } from '../../../core';
+import { CoreDefinition } from '@app/core';
 import {
   coerceBoolean,
   isNullOrEmpty
-} from '../../../utilities';
+} from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

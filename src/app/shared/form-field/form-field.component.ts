@@ -18,8 +18,8 @@ import {
   trigger
 } from '@angular/animations';
 import { startWith } from 'rxjs/operators';
-import { McsFormFieldControlBase } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { McsFormFieldControlBase } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   HintComponent,
   ErrorComponent,

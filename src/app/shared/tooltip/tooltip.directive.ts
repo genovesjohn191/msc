@@ -14,14 +14,14 @@ import {
   McsOverlayState,
   McsOverlayService,
   McsPortalComponent
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   registerEvent,
   unregisterEvent,
   coerceBoolean,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import {
   TooltipComponent,
   TooltipPosition,

@@ -10,15 +10,15 @@ import { takeUntil } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   formatDate,
   compareDates,
   getExpiryLabel,
   unsubscribeSubject
-} from '../../../../utilities';
-import { Firewall } from '../../models';
+} from '@app/utilities';
+import { McsFirewall } from '@app/models';
 import { FirewallService } from '../firewall.service';
 
 @Component({
@@ -32,7 +32,7 @@ import { FirewallService } from '../firewall.service';
 
 export class FirewallOverviewComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public firewall: Firewall;
+  public firewall: McsFirewall;
 
   private _destroySubject = new Subject<void>();
 
@@ -41,7 +41,7 @@ export class FirewallOverviewComponent implements OnInit, OnDestroy {
     private _firewallService: FirewallService,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
-    this.firewall = new Firewall();
+    this.firewall = new McsFirewall();
   }
 
   public ngOnInit(): void {

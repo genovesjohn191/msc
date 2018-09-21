@@ -11,9 +11,9 @@ import {
 import {
   CoreDefinition,
   McsCookieService
-} from '../../../core';
+} from '@app/core';
 import { ExclusiveForAccountDirective } from './exclusive-for-account.directive';
-import { CoreTestingModule } from '../../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test',

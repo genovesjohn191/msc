@@ -7,11 +7,11 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { FirewallPolicy } from '../../../models';
 import {
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../../core';
+} from '@app/core';
+import { McsFirewallPolicy } from '@app/models';
 
 @Component({
   selector: 'mcs-firewall-policy',
@@ -26,14 +26,14 @@ export class FirewallPolicyComponent implements OnInit {
   public close = new EventEmitter<void>();
 
   @Input()
-  public get firewallPolicy(): FirewallPolicy { return this._firewallPolicy; }
-  public set firewallPolicy(value: FirewallPolicy) {
+  public get firewallPolicy(): McsFirewallPolicy { return this._firewallPolicy; }
+  public set firewallPolicy(value: McsFirewallPolicy) {
     if (value !== this.firewallPolicy) {
       this._firewallPolicy = value;
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _firewallPolicy: FirewallPolicy;
+  private _firewallPolicy: McsFirewallPolicy;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,

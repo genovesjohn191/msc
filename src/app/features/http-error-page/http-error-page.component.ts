@@ -9,11 +9,12 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { McsTextContentProvider } from '@app/core';
+import { McsHttpStatusCode } from '@app/models';
 import {
-  McsTextContentProvider,
-  McsHttpStatusCode
-} from '../../core';
-import { unsubscribeSubject, isNullOrEmpty } from '../../utilities';
+  unsubscribeSubject,
+  isNullOrEmpty
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-http-error-page',

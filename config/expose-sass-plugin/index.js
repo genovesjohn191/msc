@@ -3,8 +3,8 @@ const sass = require('node-sass');
 const helpers = require('../helpers');
 
 // Constant Definitions
-const EXPOSE_SASS_SOURCE_PATH = `${helpers.root('src')}/app`;
-const EXPOSE_SASS_TARGET_PATH = `${helpers.root('dist')}/assets/css`;
+const EXPOSE_SASS_SOURCE_PATH = helpers.root('src/app');
+const EXPOSE_SASS_TARGET_PATH = helpers.root('dist/assets/css');
 
 // Target pages table to create styling
 const targetSassComponents = [
@@ -48,7 +48,7 @@ class ExposeSassPlugin {
    * @param {*} compiler Compiler of the plugin
    */
   apply(compiler) {
-    compiler.hooks.done.tapAsync('done', (_params) => {
+    compiler.hooks.done.tap('done', (_params) => {
       _exposeSassStyles();
     });
   }

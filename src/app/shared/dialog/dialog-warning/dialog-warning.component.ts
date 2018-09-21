@@ -7,8 +7,8 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   CoreDefinition
-} from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import { DialogWarningData } from './dialog-warning-data';
 
 @Component({

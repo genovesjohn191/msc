@@ -6,7 +6,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 // The styling of this component is under the shared scss (classes).
 // The reason why the styling is under common because the directive element

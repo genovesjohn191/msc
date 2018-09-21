@@ -25,22 +25,24 @@ import {
   unsubscribeSubject,
   getSafeProperty,
   clearArrayRecord
-} from '../../utilities';
+} from '@app/utilities';
 import {
   McsTextContentProvider,
   CoreDefinition,
-  Key,
-  McsApiConsole,
   McsNotificationEventsService,
-  McsSessionHandlerService,
-  McsApiJob
-} from '../../core';
+  McsSessionHandlerService
+} from '@app/core';
 import {
-  Server,
+  Key,
+  McsConsole,
+  McsJob,
+  McsServer,
+  ServerCommand
+} from '@app/models';
+import {
   ServersRepository,
   ServersService,
-  ServerCommand
-} from '../../features/servers';
+} from '@app/features/servers';
 import { ConsolePageRepository } from './console-page.repository';
 
 // JQuery script implementation
@@ -124,9 +126,9 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * VM console server
    */
-  private _server: Server;
-  public get server(): Server { return this._server; }
-  public set server(value: Server) {
+  private _server: McsServer;
+  public get server(): McsServer { return this._server; }
+  public set server(value: McsServer) {
     this._server = value;
     this._serverStatusChanged();
   }
@@ -234,7 +236,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._getServerById(this._serverId);
   }
 
-  private _resetVmPasswordEventHandler(response: McsApiJob) {
+  private _resetVmPasswordEventHandler(response: McsJob) {
     let jobServerId = getSafeProperty(response, (obj) => obj.clientReferenceObject.serverId);
     if (jobServerId !== this._serverId) { return; }
     this._getServerById(this._serverId);
@@ -317,7 +319,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
           return throwError(error);
         })
       )
-      .subscribe((response: McsApiConsole) => {
+      .subscribe((response: McsConsole) => {
         if (isNullOrEmpty(response)) { return; }
         this._vmConsole.wmks('option', 'VCDProxyHandshakeVmxPath', response.vmx);
         this._vmConsole.wmks('connect', response.url);

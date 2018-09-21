@@ -10,9 +10,9 @@ import {
   McsAuthenticationService,
   CoreConfig,
   CoreDefinition,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
+import { McsRouteKey } from '@app/models';
 
 @Component({
   selector: 'mcs-dashboard',

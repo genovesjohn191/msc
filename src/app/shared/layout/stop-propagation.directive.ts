@@ -8,7 +8,7 @@ import {
   registerEvent,
   unregisterEvent,
   isNullOrEmpty
-} from '../../utilities';
+} from '@app/utilities';
 
 @Directive({
   selector: '[stop-propagation]'

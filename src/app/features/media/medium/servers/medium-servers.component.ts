@@ -19,28 +19,28 @@ import {
   McsDialogService,
   McsErrorHandlerService,
   McsNotificationEventsService,
-  McsApiJob,
-  McsDataStatus,
   CoreDefinition
-} from '../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
-} from '../../../../utilities';
+} from '@app/utilities';
 import {
   TableDataSource,
   DialogWarningComponent,
   DialogWarningData
-} from '../../../../shared';
-import { Server } from '../../../servers';
+} from '@app/shared';
 import {
-  MediaServer,
-  MediaManageServers
-} from '../../models';
+  McsJob,
+  McsDataStatus,
+  McsResourceMediaServer,
+  McsServer
+} from '@app/models';
 import { MediaRepository } from '../../repositories/media.repository';
 import { MediaService } from '../../media.service';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
+import { MediaManageServers } from '../../shared';
 
 @Component({
   selector: 'mcs-medium-servers',
@@ -51,11 +51,11 @@ import { MediumDetailsBase } from '../medium-details.base';
 export class MediumServersComponent extends MediumDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
   public serversColumns: string[];
-  public serversDataSource: TableDataSource<MediaServer>;
+  public serversDataSource: TableDataSource<McsResourceMediaServer>;
   public manageServers: MediaManageServers;
 
   private _inProgressServerId: any;
-  private _newAttachServer: MediaServer;
+  private _newAttachServer: McsResourceMediaServer;
   private _destroySubject = new Subject<void>();
 
   constructor(
@@ -69,7 +69,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     private _textContentProvider: McsTextContentProvider,
   ) {
     super(_mediumService);
-    this._newAttachServer = new MediaServer();
+    this._newAttachServer = new McsResourceMediaServer();
     this.serversColumns = new Array();
     this.serversDataSource = new TableDataSource([]);
   }
@@ -102,14 +102,14 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Shows the detach server dialog
    * @param server Server to be detached
    */
-  public showDetachDialog(attachedServer: MediaServer): void {
+  public showDetachDialog(attachedServer: McsResourceMediaServer): void {
     let dialogData = {
       data: attachedServer,
       title: this.textContent.detachDialog.title,
       message: replacePlaceholder(
         this.textContent.detachDialog.message,
         'server_name', attachedServer.name)
-    } as DialogWarningData<MediaServer>;
+    } as DialogWarningData<McsResourceMediaServer>;
 
     let detachDialogRef = this._dialogService
       .open(DialogWarningComponent, {
@@ -128,7 +128,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Returns true when inputted server is currently in-progress
    * @param server SERVER to be checked
    */
-  public serverIsInProgress(server: MediaServer): boolean {
+  public serverIsInProgress(server: McsResourceMediaServer): boolean {
     if (isNullOrEmpty(server)) { return false; }
     return server.id === this._inProgressServerId;
   }
@@ -202,7 +202,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   /**
    * Attaches the server to the current media
    */
-  private _attachServer(serverDetails: Server): void {
+  private _attachServer(serverDetails: McsServer): void {
     if (isNullOrEmpty(serverDetails)) { return; }
     let expectedJobObject = {
       mediaId: this.selectedMedium.id,
@@ -243,7 +243,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Event that emits when the attach media has an on-going job
    * @param job Job to be checked for an existing process
    */
-  private _onAttachServerMedia(job: McsApiJob): void {
+  private _onAttachServerMedia(job: McsJob): void {
     if (!this.isMediaActive(job)) { return; }
 
     switch (job.dataStatus) {
@@ -265,7 +265,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
    * Event that emits when the detach media has an on-going job
    * @param job Job to be checked for an existing process
    */
-  private _onDetachServerMedia(job: McsApiJob): void {
+  private _onDetachServerMedia(job: McsJob): void {
     if (!this.isMediaActive(job)) { return; }
 
     // Refresh the data when the serevr in-progress is already completed

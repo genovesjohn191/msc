@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {
   Observable,
   of
@@ -8,14 +9,11 @@ import {
   map,
   share
 } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-
-/** Core Configuration */
-import { CoreConfig } from '../core.config';
 import {
   isNullOrEmpty,
   createSvgElement
-} from '../../utilities';
+} from '@app/utilities';
+import { CoreConfig } from '../core.config';
 
 @Injectable()
 export class McsAssetsProvider {

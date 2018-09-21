@@ -3,18 +3,18 @@ import {
   TestBed,
   getTestBed
 } from '@angular/core/testing';
-import { ServerManagementComponent } from './server-management.component';
-import {
-  Server,
-  ServerServiceType
-} from '../../models';
 import {
   CoreDefinition,
-  McsNotificationContextService,
-  McsApiJob,
-  McsJobStatus
-} from '../../../../core';
+  McsNotificationContextService
+} from '@app/core';
+import {
+  McsJob,
+  McsJobStatus,
+  McsServer,
+  ServiceType
+} from '@app/models';
 import { ServerService } from '../server.service';
+import { ServerManagementComponent } from './server-management.component';
 import {
   mockServerService,
   ServersTestingModule
@@ -32,7 +32,7 @@ describe('ServerManagementComponent', () => {
       environmentName: 'Macquarie_Telecom_Contoso_100320',
       resourceName: 'M1VDC27117001'
     },
-    serviceType: ServerServiceType.Managed
+    serviceType: ServiceType.Managed
   };
 
   beforeEach(async(() => {
@@ -76,8 +76,8 @@ describe('ServerManagementComponent', () => {
   /** Test Implementation */
   describe('ngOnInit()', () => {
     beforeEach(async(() => {
-      let notifications: McsApiJob[] = new Array();
-      let notificationActive = new McsApiJob();
+      let notifications: McsJob[] = new Array();
+      let notificationActive = new McsJob();
       notificationActive.id = '5';
       notificationActive.status = McsJobStatus.Active;
       notificationActive.clientReferenceObject = {
@@ -86,7 +86,7 @@ describe('ServerManagementComponent', () => {
       notifications.push(notificationActive);
       notificationContextService.notificationsStream.next(notifications);
 
-      serverService.selectedServerStream.next(mockServerDetails as Server);
+      serverService.selectedServerStream.next(mockServerDetails as McsServer);
     }));
 
     it('should define the text content values to serverManagementTextContent', () => {

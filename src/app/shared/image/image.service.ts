@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { McsAssetsProvider } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { McsAssetsProvider } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 
 export enum ImageType {
   Svg = 0,

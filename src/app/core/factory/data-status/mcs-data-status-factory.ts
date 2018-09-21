@@ -3,11 +3,11 @@ import {
   BehaviorSubject,
   Subscription
 } from 'rxjs';
-import { McsDataStatus } from '../../enumerations/mcs-data-status.enum';
 import {
   isNullOrEmpty,
   unsubscribeSafely
-} from '../../../utilities';
+} from '@app/utilities';
+import { McsDataStatus } from '@app/models';
 
 export class McsDataStatusFactory<T> {
   /**

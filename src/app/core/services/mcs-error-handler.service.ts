@@ -6,11 +6,11 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
-} from '../../utilities';
+  unsubscribeSubject,
+  McsInitializer
+} from '@app/utilities';
+import { McsHttpStatusCode } from '@app/models';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
-import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
-import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 import { McsApiService } from './mcs-api.service';
 
 @Injectable()

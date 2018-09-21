@@ -19,11 +19,11 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
-import { isNullOrEmpty } from '../../../utilities';
-import { McsDialogRefDirective } from './mcs-dialog-ref.directive';
 import { McsDialogConfig } from './mcs-dialog-config';
+import { McsDialogRefDirective } from './mcs-dialog-ref.directive';
 
 @Component({
   selector: 'mcs-dialog-container',

@@ -5,13 +5,13 @@ import {
 } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CoreDefinition } from '../core.definition';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../utilities';
-import { McsInitializer } from '../interfaces/mcs-initializer.interface';
+} from '@app/utilities';
+import { CoreDefinition } from '../core.definition';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
+import { McsInitializer } from '@app/utilities';
 
 declare let dataLayer: any;
 

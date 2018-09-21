@@ -16,10 +16,10 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsSearch,
   McsTextContentProvider
-} from '../../core';
-import { unsubscribeSubject } from '../../utilities';
+} from '@app/core';
+import { unsubscribeSubject } from '@app/utilities';
+import { Search } from './search.interface';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -36,7 +36,7 @@ let nextUniqueId = 0;
   }
 })
 
-export class SearchComponent implements OnInit, OnDestroy, McsSearch {
+export class SearchComponent implements OnInit, OnDestroy, Search {
   @Input()
   public id: string = `mcs-search-${nextUniqueId++}`;
 

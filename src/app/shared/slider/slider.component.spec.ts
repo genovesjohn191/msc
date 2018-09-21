@@ -8,12 +8,12 @@ import {
 } from '@angular/core/testing';
 import { SliderComponent } from './slider.component';
 import { SliderModule } from './slider.module';
-import { Key } from '../../core';
+import { Key } from '@app/models';
 import {
   triggerEvent,
   createMouseEvent,
   createKeyboardEvent
-} from '../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-test-slider',

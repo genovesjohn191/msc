@@ -3,7 +3,7 @@ import {
   McsPlacementType,
   McsAlignmentType,
   McsThemeType
-} from '../../core.types';
+} from '@app/utilities';
 
 export class McsSnackBarConfig {
   public id?: string;

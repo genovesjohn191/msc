@@ -24,7 +24,7 @@ import {
   McsOverlayRef,
   McsOverlayState,
   McsPortalComponent
-} from '../../core';
+} from '@app/core';
 import {
   getElementPositionFromHost,
   getElementPosition,
@@ -33,7 +33,7 @@ import {
   unregisterEvent,
   getElementOffset,
   unsubscribeSafely
-} from '../../utilities';
+} from '@app/utilities';
 import { PopoverComponent } from './popover.component';
 import { PopoverService } from './popover.service';
 

@@ -8,15 +8,15 @@ import {
   McsDialogRef,
   CoreDefinition,
   McsTextContentProvider
-} from '../../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
-} from '../../../../../utilities';
+} from '@app/utilities';
 import {
-  Server,
-  ServerPowerState
-} from '../../../models';
+  McsServer,
+  VmPowerState
+} from '@app/models';
 
 @Component({
   selector: 'mcs-reset-password-dialog',
@@ -29,10 +29,10 @@ import {
 
 export class ResetPasswordDialogComponent {
   public textContent: any;
-  public server: Server;
+  public server: McsServer;
 
   public get powerStateEnum(): any {
-    return ServerPowerState;
+    return VmPowerState;
   }
 
   public get warningIconKey(): string {
@@ -45,7 +45,7 @@ export class ResetPasswordDialogComponent {
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.resetPasswordDialog;
-    this.server = this.dialogData as Server[][0];
+    this.server = this.dialogData as McsServer[][0];
   }
 
   /**

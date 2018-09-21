@@ -5,26 +5,24 @@ import {
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 /** Services and Models */
-import {
-  Server,
-  ServerThumbnail,
-  ServerUpdate,
-  ServerClientObject,
-  ServerCommand,
-  ServerStorageDevice,
-  ServerStorageDeviceUpdate,
-  ServerNic,
-  ServerCreateNic,
-  ServerCreate,
-  ServerClone,
-  ServerOperatingSystem,
-  ServerAttachMedia
-} from './models';
 import { ServersService } from './servers.service';
 import {
-  McsApiJob,
-  McsApiSuccessResponse
-} from '../../core';
+  McsJob,
+  McsApiSuccessResponse,
+  McsServer,
+  McsServerThumbnail,
+  McsServerUpdate,
+  McsServerClientObject,
+  ServerCommand,
+  McsServerStorageDevice,
+  McsServerStorageDeviceUpdate,
+  McsServerNic,
+  McsServerCreateNic,
+  McsServerCreate,
+  McsServerClone,
+  McsServerOperatingSystem,
+  McsServerAttachMedia
+} from '@app/models';
 import { ServersTestingModule } from './testing';
 
 describe('ServersService', () => {
@@ -41,7 +39,7 @@ describe('ServersService', () => {
     referenceObject: {
       commandAction: 1,
       processingText: 'process'
-    } as ServerClientObject
+    } as McsServerClientObject
   };
 
   beforeEach(async(() => {
@@ -82,7 +80,7 @@ describe('ServersService', () => {
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<Server[]>();
+      let responseData = new McsApiSuccessResponse<McsServer[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       httpRequest.flush(responseData);
@@ -103,7 +101,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<Server>();
+      let responseData = new McsApiSuccessResponse<McsServer>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -127,7 +125,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -150,7 +148,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -173,7 +171,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -184,7 +182,7 @@ describe('ServersService', () => {
     it('should put the server command to process the server through API calls', () => {
       serversService.updateServerCompute(
         requestOptions.id,
-        new ServerUpdate()
+        new McsServerUpdate()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -196,7 +194,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -206,7 +204,7 @@ describe('ServersService', () => {
   describe('createServer()', () => {
     it('should create a server through API calls', () => {
       serversService.createServer(
-        new ServerCreate()
+        new McsServerCreate()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -218,7 +216,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -229,7 +227,7 @@ describe('ServersService', () => {
     it('should clone a server through API calls', () => {
       serversService.cloneServer(
         requestOptions.id.toString(),
-        new ServerClone()
+        new McsServerClone()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -241,7 +239,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -262,7 +260,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerOperatingSystem[]>();
+      let responseData = new McsApiSuccessResponse<McsServerOperatingSystem[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       mockRequest.flush(responseData);
@@ -283,7 +281,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerStorageDevice[]>();
+      let responseData = new McsApiSuccessResponse<McsServerStorageDevice[]>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -294,7 +292,7 @@ describe('ServersService', () => {
     it('should create server storage through API calls', () => {
       serversService.createServerStorage(
         requestOptions.id,
-        new ServerStorageDeviceUpdate()
+        new McsServerStorageDeviceUpdate()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -306,7 +304,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -319,7 +317,7 @@ describe('ServersService', () => {
       serversService.updateServerStorage(
         requestOptions.id,
         storageId,
-        new ServerStorageDeviceUpdate()
+        new McsServerStorageDeviceUpdate()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -331,7 +329,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -344,7 +342,7 @@ describe('ServersService', () => {
       serversService.deleteServerStorage(
         requestOptions.id,
         storageId,
-        new ServerStorageDeviceUpdate()
+        new McsServerStorageDeviceUpdate()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -356,7 +354,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('DELETE');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -377,7 +375,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerThumbnail>();
+      let responseData = new McsApiSuccessResponse<McsServerThumbnail>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -398,7 +396,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<ServerNic[]>();
+      let responseData = new McsApiSuccessResponse<McsServerNic[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       mockRequest.flush(responseData);
@@ -409,7 +407,7 @@ describe('ServersService', () => {
     it('should add the server network through API calls', () => {
       serversService.addServerNic(
         requestOptions.id,
-        new ServerCreateNic()
+        new McsServerCreateNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -421,7 +419,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -435,7 +433,7 @@ describe('ServersService', () => {
       serversService.updateServerNic(
         requestOptions.id,
         networkId,
-        new ServerCreateNic()
+        new McsServerCreateNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -447,7 +445,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('PUT');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -461,7 +459,7 @@ describe('ServersService', () => {
       serversService.deleteServerNic(
         requestOptions.id,
         networkId,
-        new ServerCreateNic()
+        new McsServerCreateNic()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -473,7 +471,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('DELETE');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -484,7 +482,7 @@ describe('ServersService', () => {
     it('should attach server media through API calls', () => {
       serversService.attachServerMedia(
         requestOptions.id,
-        new ServerAttachMedia()
+        new McsServerAttachMedia()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -496,7 +494,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('POST');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -510,7 +508,7 @@ describe('ServersService', () => {
       serversService.detachServerMedia(
         requestOptions.id,
         mediaId,
-        new ServerAttachMedia()
+        new McsServerAttachMedia()
       ).subscribe((response) => {
         expect(response).toBeDefined();
         expect(response.status).toBe(200);
@@ -522,7 +520,7 @@ describe('ServersService', () => {
       expect(mockRequest.request.method).toEqual('DELETE');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiJob>();
+      let responseData = new McsApiSuccessResponse<McsJob>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);

@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 import {
   McsTextContentProvider,
-  CoreConfig,
-  McsRouteKey
-} from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+  CoreConfig
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import { McsRouteKey } from '@app/models';
 
 @Component({
   selector: 'mcs-account-panel',

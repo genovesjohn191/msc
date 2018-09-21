@@ -9,9 +9,9 @@ import {
   ViewChild,
   ContentChild
 } from '@angular/core';
-import { McsPortalTemplate } from '../../../core';
+import { McsPortalTemplate } from '@app/core';
 import { TabLabelDirective } from './tab-label.directive';
-import { coerceBoolean } from '../../../utilities';
+import { coerceBoolean } from '@app/utilities';
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;

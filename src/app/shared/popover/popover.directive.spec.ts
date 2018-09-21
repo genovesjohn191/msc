@@ -8,12 +8,12 @@ import {
   ViewChild,
   DebugElement
 } from '@angular/core';
-import { triggerEvent } from '../../utilities';
+import { triggerEvent } from '@app/utilities';
 import { By } from '@angular/platform-browser';
 
 import { PopoverDirective } from './popover.directive';
 import { PopoverModule } from './popover.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test',

@@ -8,12 +8,12 @@ import {
   McsDialogRef,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
-} from '../../../../../utilities';
-import { ServerNic } from '../../../models';
+} from '@app/utilities';
+import { McsServerNic } from '@app/models';
 
 @Component({
   selector: 'mcs-delete-nic-dialog',
@@ -26,12 +26,12 @@ import { ServerNic } from '../../../models';
 
 export class DeleteNicDialogComponent {
   public textContent: any;
-  public nic: ServerNic;
+  public nic: McsServerNic;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<DeleteNicDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: ServerNic
+    @Inject(MCS_DIALOG_DATA) public dialogData: McsServerNic
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.deleteNicDialog;
     this.nic = this.dialogData;

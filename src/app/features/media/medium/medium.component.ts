@@ -26,20 +26,24 @@ import {
   McsErrorHandlerService,
   CoreDefinition,
   CoreRoutes,
-  McsRouteKey,
   McsRoutingTabBase,
-  McsSearch,
   McsDataStatusFactory
-} from '../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject,
   getSafeProperty
-} from '../../../utilities';
-import { Media } from '../models';
+} from '@app/utilities';
+import {
+  McsRouteKey,
+  McsResourceMedia
+} from '@app/models';
+import {
+  Search,
+  ComponentHandlerDirective
+} from '@app/shared';
 import { MediaRepository } from '../repositories/media.repository';
-import { ComponentHandlerDirective } from '../../../shared';
 import { MediaListSource } from '../media.listsource';
 import { MediumService } from './medium.service';
 
@@ -57,18 +61,18 @@ export class MediumComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
-  public search: McsSearch;
+  public search: Search;
 
   @ViewChild(ComponentHandlerDirective)
   public componentHandler: ComponentHandlerDirective;
 
   public textContent: any;
   public mediaTextContent: any;
-  public selectedMedium: Media;
+  public selectedMedium: McsResourceMedia;
   public mediumSubscription: Subscription;
   public mediaListSource: MediaListSource | null;
-  public mediaMap: Map<string, Media[]>;
-  public listStatusFactory: McsDataStatusFactory<Map<string, Media[]>>;
+  public mediaMap: Map<string, McsResourceMedia[]>;
+  public listStatusFactory: McsDataStatusFactory<Map<string, McsResourceMedia[]>>;
   private _destroySubject = new Subject<void>();
 
   public get routeKeyEnum(): any {
@@ -85,7 +89,7 @@ export class MediumComponent
     private _mediumService: MediumService
   ) {
     super(_router, _activatedRoute);
-    this.selectedMedium = new Media();
+    this.selectedMedium = new McsResourceMedia();
     this.listStatusFactory = new McsDataStatusFactory(_changeDetectorRef);
   }
 
@@ -176,7 +180,7 @@ export class MediumComponent
     let mediumFound = this._mediaRepository.dataRecords
       .find((server) => server.id === mediumId);
     if (isNullOrEmpty(mediumFound)) {
-      this.selectedMedium = { id: mediumId } as Media;
+      this.selectedMedium = { id: mediumId } as McsResourceMedia;
       return;
     }
     this.selectedMedium = mediumFound;
@@ -194,7 +198,7 @@ export class MediumComponent
     );
 
     // Key function pointer for mapping objects
-    let keyFn = (item: Media) => {
+    let keyFn = (item: McsResourceMedia) => {
       return getSafeProperty(item, (obj) => obj.catalogName, 'Others');
     };
 

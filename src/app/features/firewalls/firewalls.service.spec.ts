@@ -4,10 +4,11 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-/** Services and Models */
-import { Firewall } from './models';
+import {
+  McsApiSuccessResponse,
+  McsFirewall
+} from '@app/models';
 import { FirewallsService } from './firewalls.service';
-import { McsApiSuccessResponse } from '../../core';
 import { FirewallsTestingModule } from './testing';
 
 describe('FirewallsService', () => {
@@ -60,7 +61,7 @@ describe('FirewallsService', () => {
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<Firewall[]>();
+      let responseData = new McsApiSuccessResponse<McsFirewall[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       httpRequest.flush(responseData);
@@ -81,7 +82,7 @@ describe('FirewallsService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<Firewall>();
+      let responseData = new McsApiSuccessResponse<McsFirewall>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);
@@ -107,7 +108,7 @@ describe('FirewallsService', () => {
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<Firewall[]>();
+      let responseData = new McsApiSuccessResponse<McsFirewall[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       httpRequest.flush(responseData);

@@ -4,16 +4,14 @@ import {
   Subject
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { McsTextContentProvider } from '../../../core';
+import { McsTextContentProvider } from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject
-} from '../../../utilities';
-import {
-  Resource,
-  ResourcesRepository
-} from '../../resources';
+} from '@app/utilities';
+import { McsResource } from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
 import { VdcService } from '../vdc/vdc.service';
 
 export abstract class VdcDetailsBase {
@@ -24,9 +22,9 @@ export abstract class VdcDetailsBase {
   /**
    * Selected VDC
    */
-  private _selectedVdc: Resource;
-  public get selectedVdc(): Resource { return this._selectedVdc; }
-  public set selectedVdc(value: Resource) {
+  private _selectedVdc: McsResource;
+  public get selectedVdc(): McsResource { return this._selectedVdc; }
+  public set selectedVdc(value: McsResource) {
     this._selectedVdc = value;
     this._changeDetectorRef.markForCheck();
   }
@@ -45,7 +43,7 @@ export abstract class VdcDetailsBase {
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textContentProvider: McsTextContentProvider
   ) {
-    this.selectedVdc = new Resource();
+    this.selectedVdc = new McsResource();
   }
 
   protected initialize(): void {

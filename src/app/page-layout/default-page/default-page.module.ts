@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 /** Modules */
-import { CoreLayoutModule } from '../../core-layout';
-import { FeaturesModule } from '../../features';
+import { CoreLayoutModule } from '@app/core-layout';
+import { FeaturesModule } from '@app/features';
 /** Components */
 import { DefaultPageComponent } from './default-page.component';
 

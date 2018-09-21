@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import { PageComponent } from './page.component';
 import { PageModule } from './page.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-page',

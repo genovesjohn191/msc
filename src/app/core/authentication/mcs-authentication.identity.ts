@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { McsApiCompany } from '../models/response/mcs-api-company';
-import { McsApiIdentity } from '../models/response/mcs-api-identity';
-import { AppState } from '../../app.service';
-import { CoreDefinition } from '../core.definition';
 import { BehaviorSubject } from 'rxjs';
-import { McsAccountStatus } from '../enumerations/mcs-account-status.enum';
+import {
+  McsCompany,
+  McsIdentity,
+  McsAccountStatus
+} from '@app/models';
+import { AppState } from '@app/app.service';
+import { CoreDefinition } from '../core.definition';
 import { McsCookieService } from '../services/mcs-cookie.service';
 
 @Injectable()
@@ -13,35 +15,35 @@ export class McsAuthenticationIdentity {
   /**
    * Event that triggers when the identity applied or changed
    */
-  private _userChanged: BehaviorSubject<McsApiIdentity>;
-  public get userChanged(): BehaviorSubject<McsApiIdentity> { return this._userChanged; }
+  private _userChanged: BehaviorSubject<McsIdentity>;
+  public get userChanged(): BehaviorSubject<McsIdentity> { return this._userChanged; }
 
   /**
    * Event that triggers when the active account was found or set
    */
-  private _activeAccountChanged: BehaviorSubject<McsApiCompany>;
-  public get activeAccountChanged(): BehaviorSubject<McsApiCompany> {
+  private _activeAccountChanged: BehaviorSubject<McsCompany>;
+  public get activeAccountChanged(): BehaviorSubject<McsCompany> {
     return this._activeAccountChanged;
   }
 
   /**
    * Identity of the user logged in
    */
-  private _user: McsApiIdentity;
-  public get user(): McsApiIdentity { return this._user; }
+  private _user: McsIdentity;
+  public get user(): McsIdentity { return this._user; }
 
   /**
    * Currently active account (switched account)
    */
-  private _activeAccount: McsApiCompany;
-  public get activeAccount(): McsApiCompany { return this._activeAccount; }
+  private _activeAccount: McsCompany;
+  public get activeAccount(): McsCompany { return this._activeAccount; }
 
   /**
    * Returns the active account current status [default, impersonator]
    */
   public get activeAccountStatus(): McsAccountStatus {
     let hasActiveAccount = this._cookieService
-      .getEncryptedItem<McsApiCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      .getEncryptedItem<McsCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
     return hasActiveAccount ? McsAccountStatus.Impersonator : McsAccountStatus.Default;
   }
 
@@ -51,8 +53,8 @@ export class McsAuthenticationIdentity {
   ) {
     this._activeAccountChanged = new BehaviorSubject(undefined);
     this._userChanged = new BehaviorSubject(undefined);
-    this._user = new McsApiIdentity();
-    this._activeAccount = new McsApiCompany();
+    this._user = new McsIdentity();
+    this._activeAccount = new McsCompany();
   }
 
   /**
@@ -69,7 +71,7 @@ export class McsAuthenticationIdentity {
    * Sets the active acount on the identity
    * @param company The company to be active
    */
-  public setActiveAccount(company: McsApiCompany): void {
+  public setActiveAccount(company: McsCompany): void {
     this._activeAccount = company;
     this._activeAccountChanged.next(company);
   }

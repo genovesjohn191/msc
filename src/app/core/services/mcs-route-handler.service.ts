@@ -15,16 +15,18 @@ import {
 } from 'rxjs/operators';
 import {
   isNullOrEmpty,
-  unsubscribeSubject
-} from '../../utilities';
-import { McsInitializer } from '../interfaces/mcs-initializer.interface';
+  unsubscribeSubject,
+  McsInitializer
+} from '@app/utilities';
+import {
+  McsHttpStatusCode,
+  McsRouteInfo
+} from '@app/models';
+import { CoreRoutes } from '../core.routes';
 import { McsAccessControlService } from '../authentication/mcs-access-control.service';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
-import { McsLoggerService } from '../services/mcs-logger.service';
-import { McsErrorHandlerService } from '../services/mcs-error-handler.service';
-import { McsHttpStatusCode } from '../enumerations/mcs-http-status-code.enum';
-import { McsRouteInfo } from '../models/mcs-route-info';
-import { CoreRoutes } from '../core.routes';
+import { McsLoggerService } from './mcs-logger.service';
+import { McsErrorHandlerService } from './mcs-error-handler.service';
 
 @Injectable()
 export class McsRouteHandlerService implements McsInitializer {

@@ -3,24 +3,24 @@ import {
   of,
   merge
 } from 'rxjs';
-import {
-  McsListSourceBase,
-  McsSearch,
-  McsKeyValuePair
-} from '../../core';
+import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
   isNullOrEmpty,
   containsString
-} from '../../utilities';
-import { Firewall } from './models';
+} from '@app/utilities';
+import { Search } from '@app/shared';
+import {
+  McsKeyValuePair,
+  McsFirewall
+} from '@app/models';
 import { FirewallsRepository } from './repositories/firewalls.repository';
 
-export class FirewallsListSource extends McsListSourceBase<Firewall> {
+export class FirewallsListSource extends McsListSourceBase<McsFirewall> {
 
   constructor(
     private _firewallsRepository: FirewallsRepository,
-    private _search: McsSearch) {
+    private _search: Search) {
     super();
   }
 
@@ -38,7 +38,7 @@ export class FirewallsListSource extends McsListSourceBase<Firewall> {
    * @param first First record of the list
    * @param second Second record of the list
    */
-  public firewallSortMethod(first: Firewall, second: Firewall): number {
+  public firewallSortMethod(first: McsFirewall, second: McsFirewall): number {
     return compareStrings(first.managementName, second.managementName);
   }
 
@@ -56,7 +56,7 @@ export class FirewallsListSource extends McsListSourceBase<Firewall> {
   /**
    * Get all records from repository
    */
-  protected getAllRecords(): Observable<Firewall[]> {
+  protected getAllRecords(): Observable<McsFirewall[]> {
     return this._firewallsRepository.findAllRecords();
   }
 
@@ -64,7 +64,7 @@ export class FirewallsListSource extends McsListSourceBase<Firewall> {
    * Filters all the records based on searched keyword
    * @param _record Record to be checked if it is included
    */
-  protected filterMethod(_record: Firewall): boolean {
+  protected filterMethod(_record: McsFirewall): boolean {
     if (isNullOrEmpty(_record)) { return true; }
     return containsString(_record.managementName, this._search.keyword);
   }

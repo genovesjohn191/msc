@@ -6,7 +6,7 @@ import {
   AfterContentInit,
   QueryList
 } from '@angular/core';
-import { isNullOrEmpty } from '../../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   LeftPanelItemDefDirective
 } from './left-panel-item/left-panel-item-def.directive';

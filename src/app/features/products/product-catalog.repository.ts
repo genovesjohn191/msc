@@ -5,15 +5,17 @@ import {
 } from 'rxjs';
 import {
   McsRepositoryBase,
-  McsApiSuccessResponse,
   McsAccessControlService,
   CoreDefinition
-} from '../../core';
-import { ProductCatalog } from './models';
+} from '@app/core';
+import {
+  McsApiSuccessResponse,
+  McsProductCatalog
+} from '@app/models';
 import { ProductsService } from './products.service';
 
 @Injectable()
-export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> {
+export class ProductCatalogRepository extends McsRepositoryBase<McsProductCatalog> {
 
   constructor(
     private _productsService: ProductsService,
@@ -27,7 +29,7 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
    */
   public get productCatalogFeatureIsOn(): boolean {
     return this._accessControlService.hasAccessToFeature
-    (CoreDefinition.FEATURE_FLAG_ENABLE_PRODUCT_CATALOG);
+      (CoreDefinition.FEATURE_FLAG_ENABLE_PRODUCT_CATALOG);
   }
 
   /**
@@ -38,7 +40,7 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<ProductCatalog[]>> {
+  ): Observable<McsApiSuccessResponse<McsProductCatalog[]>> {
     if (!this.productCatalogFeatureIsOn) { return of(undefined); }
     return this._productsService.getCatalogs({
       page: pageIndex,
@@ -52,7 +54,7 @@ export class ProductCatalogRepository extends McsRepositoryBase<ProductCatalog> 
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<ProductCatalog>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsProductCatalog>> {
     if (!this.productCatalogFeatureIsOn) { return of(undefined); }
     return this._productsService.getCatalog(recordId);
   }

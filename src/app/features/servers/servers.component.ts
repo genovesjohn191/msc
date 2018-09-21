@@ -13,19 +13,10 @@ import {
   takeUntil,
   map
 } from 'rxjs/operators';
-import {
-  ResourcesRepository,
-  ResourceServiceType
-} from '../resources';
+import { ResourcesRepository } from '@app/features/resources';
 import { ServersRepository } from './repositories/servers.repository';
 import { ServersService } from './servers.service';
 import { ServersDataSource } from './servers.datasource';
-/** Models */
-import {
-  Server,
-  ServerCommand,
-  serverServiceTypeText
-} from './models';
 /** Shared */
 import {
   ResetPasswordDialogComponent,
@@ -39,20 +30,26 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
-  McsDeviceType,
-  McsSelection,
   McsTableListingBase,
   McsDialogService,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   refreshView,
   unsubscribeSubject,
   getSafeProperty
-} from '../../utilities';
-import { TableComponent } from '../../shared';
+} from '@app/utilities';
+import {
+  ServiceType,
+  serviceTypeText,
+  ServerCommand,
+  McsDeviceType,
+  McsSelection,
+  McsRouteKey,
+  McsServer
+} from '@app/models';
+import { TableComponent } from '@app/shared';
 import { ServerCreateService } from './server-create';
 
 @Component({
@@ -66,7 +63,7 @@ export class ServersComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   public textContent: any;
-  public selection: McsSelection<Server>;
+  public selection: McsSelection<McsServer>;
   public hasCreateResources: boolean;
   public hasManagedResource: boolean;
 
@@ -76,7 +73,7 @@ export class ServersComponent
   private _destroySubject = new Subject<any>();
 
   public get serverServiceTypeText(): any {
-    return serverServiceTypeText;
+    return serviceTypeText;
   }
 
   public get serverCommand() {
@@ -131,7 +128,7 @@ export class ServersComponent
     private _router: Router
   ) {
     super(_browserService, _changeDetectorRef);
-    this.selection = new McsSelection<Server>(true);
+    this.selection = new McsSelection<McsServer>(true);
   }
 
   public ngOnInit() {
@@ -201,7 +198,7 @@ export class ServersComponent
    */
   public executeTopPanelAction(action: ServerCommand) {
     if (!this.selection.hasValue()) { return; }
-    let selectedServers: Server[] = new Array();
+    let selectedServers: McsServer[] = new Array();
 
     // Get selected servers based on selection model
     this.selection.selected.forEach((selectedServer) => {
@@ -219,9 +216,9 @@ export class ServersComponent
    * @param servers Servers to process the action
    * @param action Action to be execute
    */
-  public executeServerCommand(servers: Server | Server[], action: ServerCommand): void {
+  public executeServerCommand(servers: McsServer | McsServer[], action: ServerCommand): void {
     if (isNullOrEmpty(servers)) { return; }
-    let serverItems: Server[] = new Array();
+    let serverItems: McsServer[] = new Array();
     let dialogComponent = null;
     this.selection.clear();
 
@@ -289,7 +286,7 @@ export class ServersComponent
    * Return true when the server is currently deleting, otherwise false
    * @param server Server to be deleted
    */
-  public serverDeleting(server: Server): boolean {
+  public serverDeleting(server: McsServer): boolean {
     return server.commandAction === ServerCommand.Delete && server.isProcessing;
   }
 
@@ -297,7 +294,7 @@ export class ServersComponent
    * Navigate to server resouce page
    * @param server Server to be used as the data of the page
    */
-  public navigateToResource(server: Server): void {
+  public navigateToResource(server: McsServer): void {
     if (isNullOrEmpty(server.platform)) { return; }
     this._router.navigate([
       CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
@@ -309,7 +306,7 @@ export class ServersComponent
    * Navigate to server details page
    * @param server Server to checked the details
    */
-  public navigateToServer(server: Server): void {
+  public navigateToServer(server: McsServer): void {
     // Do not navigate to server details when server is deleting
     if (isNullOrEmpty(server) || this.serverDeleting(server)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers), server.id]);
@@ -362,7 +359,7 @@ export class ServersComponent
       .pipe(
         map((resources) => {
           this.hasManagedResource = !!resources.find((_resource) =>
-            _resource.serviceType === ResourceServiceType.Managed);
+            _resource.serviceType === ServiceType.Managed);
           this.changeDetectorRef.markForCheck();
         })
       );
@@ -385,7 +382,7 @@ export class ServersComponent
       .subscribe((deviceType) => {
         let multipleSelection = !(deviceType === McsDeviceType.MobileLandscape ||
           deviceType === McsDeviceType.MobilePortrait);
-        this.selection = new McsSelection<Server>(multipleSelection);
+        this.selection = new McsSelection<McsServer>(multipleSelection);
       });
   }
 

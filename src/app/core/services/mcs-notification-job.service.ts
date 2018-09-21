@@ -16,23 +16,25 @@ import {
   StompState
 } from '@stomp/ng2-stompjs';
 import { StompHeaders } from '@stomp/stompjs';
-import { CoreDefinition } from '../core.definition';
 import {
   unsubscribeSafely,
   deserializeJsonToObject,
   isNullOrEmpty,
-  unsubscribeSubject
+  unsubscribeSubject,
+  McsInitializer
 } from '../../utilities';
-import { McsApiJob } from '../models/response/mcs-api-job';
-import { McsInitializer } from '../interfaces/mcs-initializer.interface';
-import { McsConnectionStatus } from '../enumerations/mcs-connection-status.enum';
+import {
+  McsJob,
+  McsJobConnection,
+  McsJobType,
+  McsApiSuccessResponse,
+  McsNetworkStatus,
+  McsApiRequestParameter
+} from '@app/models';
 import { McsApiService } from './mcs-api.service';
 import { McsLoggerService } from './mcs-logger.service';
 import { McsSessionHandlerService } from './mcs-session-handler.service';
-import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
-import { McsJobType } from '../enumerations/mcs-job-type.enum';
-import { McsApiJobConnection } from '../models/response/mcs-api-job-connection';
-import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
+import { CoreDefinition } from '../core.definition';
 
 const DEFAULT_HEARTBEAT_IN = 0;
 const DEFAULT_HEARTBEAT_OUT = 20000;
@@ -44,20 +46,20 @@ const DEFAULT_HEARTBEAT_OUT = 20000;
  */
 @Injectable()
 export class McsNotificationJobService implements McsInitializer {
-  public notificationStream = new BehaviorSubject<McsApiJob>(new McsApiJob());
-  public connectionStatusStream = new Subject<McsConnectionStatus>();
+  public notificationStream = new BehaviorSubject<McsJob>(new McsJob());
+  public connectionStatusStream = new Subject<McsNetworkStatus>();
 
   private _apiSubscription: any;
   private _stompInstance: Observable<any>;
   private _stompSubscription: Subscription;
-  private _jobConnection: McsApiJobConnection;
+  private _jobConnection: McsJobConnection;
   private _destroySubject = new Subject<void>();
 
   /**
    * Returns the connection status of websocket
    */
-  private _connectionStatus: McsConnectionStatus;
-  public set connectionStatus(value: McsConnectionStatus) {
+  private _connectionStatus: McsNetworkStatus;
+  public set connectionStatus(value: McsNetworkStatus) {
     this._connectionStatus = value;
     this.connectionStatusStream.next(this._connectionStatus);
   }
@@ -106,7 +108,7 @@ export class McsNotificationJobService implements McsInitializer {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiJobConnection>(McsApiJobConnection, response);
+            .deserializeResponse<McsJobConnection>(McsJobConnection, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -117,12 +119,12 @@ export class McsNotificationJobService implements McsInitializer {
       .subscribe((details) => {
         if (isNullOrEmpty(details)) {
           this._loggerService.traceEnd(`No connection details data found.`);
-          this.connectionStatus = McsConnectionStatus.NoData;
+          this.connectionStatus = McsNetworkStatus.NoData;
           return;
         }
 
         this._jobConnection = details.content;
-        this.connectionStatus = McsConnectionStatus.Connecting;
+        this.connectionStatus = McsNetworkStatus.Connecting;
         this._initializeWebstomp();
         this._listenToStateChange();
       });
@@ -167,7 +169,7 @@ export class McsNotificationJobService implements McsInitializer {
 
       this._stompSubscription = this._stompInstance
         .subscribe(this._onStompMessage.bind(this));
-      this.connectionStatus = McsConnectionStatus.Success;
+      this.connectionStatus = McsNetworkStatus.Success;
     } catch (_error) {
       this._loggerService.trace(`Web stomp subscription encountered error.`);
     }
@@ -178,7 +180,7 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _onStompError(): void {
     this._loggerService.trace(`Web stomp error.`);
-    this.connectionStatus = McsConnectionStatus.Failed;
+    this.connectionStatus = McsNetworkStatus.Failed;
   }
 
   /**
@@ -219,8 +221,8 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _updateNotification(bodyContent: any) {
     if (isNullOrEmpty(bodyContent)) { return; }
-    let updatedNotification: McsApiJob;
-    updatedNotification = deserializeJsonToObject(McsApiJob, JSON.parse(bodyContent));
+    let updatedNotification: McsJob;
+    updatedNotification = deserializeJsonToObject(McsJob, JSON.parse(bodyContent));
 
     // Do not proceed if job type is not supported
     let unsupportedJobType = isNullOrEmpty(updatedNotification.type)

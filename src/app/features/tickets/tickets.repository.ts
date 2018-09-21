@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { McsRepositoryBase } from '@app/core';
 import {
-  McsRepositoryBase,
-  McsApiSuccessResponse
-} from '../../core';
+  McsApiSuccessResponse,
+  McsTicket
+} from '@app/models';
 import { TicketsService } from './tickets.service';
-import { Ticket } from './models';
 
 @Injectable()
-export class TicketsRepository extends McsRepositoryBase<Ticket> {
+export class TicketsRepository extends McsRepositoryBase<McsTicket> {
 
   constructor(private _ticketsApiService: TicketsService) {
     super();
@@ -22,7 +22,7 @@ export class TicketsRepository extends McsRepositoryBase<Ticket> {
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<Ticket[]>> {
+  ): Observable<McsApiSuccessResponse<McsTicket[]>> {
     return this._ticketsApiService.getTickets({
       page: pageIndex,
       perPage: pageSize,
@@ -35,7 +35,7 @@ export class TicketsRepository extends McsRepositoryBase<Ticket> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Ticket>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsTicket>> {
     return this._ticketsApiService.getTicket(recordId);
   }
 }

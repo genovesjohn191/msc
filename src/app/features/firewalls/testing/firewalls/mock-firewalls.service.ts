@@ -2,16 +2,18 @@ import {
   Observable,
   of
 } from 'rxjs';
-import { McsApiSuccessResponse } from '../../../../core';
-import { Firewall } from '../../models';
+import {
+  McsApiSuccessResponse,
+  McsFirewall
+} from '@app/models';
 
 export const mockFirewallsService = {
 
-  getFirewalls(): Observable<McsApiSuccessResponse<Firewall[]>> {
-    let mcsApiResponseMock = new McsApiSuccessResponse<Firewall[]>();
+  getFirewalls(): Observable<McsApiSuccessResponse<McsFirewall[]>> {
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsFirewall[]>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 2;
-    mcsApiResponseMock.content = new Array(new Firewall(), new Firewall());
+    mcsApiResponseMock.content = new Array(new McsFirewall(), new McsFirewall());
 
     return of(mcsApiResponseMock);
   }

@@ -25,12 +25,12 @@ import {
 import {
   CoreDefinition,
   McsViewportService
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject,
   refreshView
-} from '../../utilities';
+} from '@app/utilities';
 import {
   ResponsivePanelBarComponent
 } from './responsive-panel-bar/responsive-panel-bar.component';

@@ -30,24 +30,24 @@ import {
 import {
   CoreConfig,
   CoreDefinition,
-  McsApiCompany,
   McsAuthenticationIdentity,
   McsAuthenticationService,
   McsTextContentProvider,
   McsDataStatusFactory,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../../utilities';
+} from '@app/utilities';
 import {
-  Product,
-  ProductCatalog,
-  ProductCatalogRepository
-} from '../../../features/products';
-import { SlidingPanelComponent } from '../../../shared';
+  McsCompany,
+  McsRouteKey,
+  McsProduct,
+  McsProductCatalog
+} from '@app/models';
+import { SlidingPanelComponent } from '@app/shared';
+import { ProductCatalogRepository } from '@app/features/products';
 
 @Component({
   selector: 'mcs-navigation-mobile',
@@ -74,15 +74,15 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
   public slidingPanel: SlidingPanelComponent;
 
   public textContent: any;
-  public productCatalogs: ProductCatalog[];
-  public productsStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
+  public productCatalogs: McsProductCatalog[];
+  public productsStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
   public switchAccountAnimation: string;
   private _destroySubject = new Subject<void>();
 
   /**
    * Get the currently active account
    */
-  public get activeAccount(): McsApiCompany {
+  public get activeAccount(): McsCompany {
     return this._authenticationIdentity.activeAccount;
   }
 
@@ -184,7 +184,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    * Navigate to product catalog
    * @param product Product to be navigated
    */
-  public gotoProduct(_product: Product) {
+  public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), _product.id]);
   }

@@ -4,9 +4,9 @@ import {
   getTestBed
 } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
+import { McsApiRequestParameter } from '@app/models';
 import { CoreConfig } from '../core.config';
-import { McsApiService } from './mcs-api.service';
-import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
+import { McsApiService } from '../services/mcs-api.service';
 import { CoreTestingModule } from '../testing';
 
 describe('McsApiService', () => {
@@ -81,8 +81,8 @@ describe('McsApiService', () => {
 
       mcsApiService.get(mcsApiRequestParameter)
         .subscribe(
-        (response) => { expect(response).toBeDefined(); },
-        (error) => { expect(error).toBeDefined(); }
+          (response) => { expect(response).toBeDefined(); },
+          (error) => { expect(error).toBeDefined(); }
         );
 
       // Create request to the backend and expect that the request happened
@@ -125,8 +125,8 @@ describe('McsApiService', () => {
 
       mcsApiService.post(mcsApiRequestParameter)
         .subscribe(
-        (response) => { expect(response).toBeDefined(); },
-        (error) => { expect(error).toBeDefined(); }
+          (response) => { expect(response).toBeDefined(); },
+          (error) => { expect(error).toBeDefined(); }
         );
 
       // Create request to the backend and expect that the request happened
@@ -169,8 +169,8 @@ describe('McsApiService', () => {
 
       mcsApiService.patch(mcsApiRequestParameter)
         .subscribe(
-        (response) => { expect(response).toBeDefined(); },
-        (error) => { expect(error).toBeDefined(); }
+          (response) => { expect(response).toBeDefined(); },
+          (error) => { expect(error).toBeDefined(); }
         );
 
       // Create request to the backend and expect that the request happened
@@ -213,8 +213,8 @@ describe('McsApiService', () => {
 
       mcsApiService.put(mcsApiRequestParameter)
         .subscribe(
-        (response) => { expect(response).toBeDefined(); },
-        (error) => { expect(error).toBeDefined(); }
+          (response) => { expect(response).toBeDefined(); },
+          (error) => { expect(error).toBeDefined(); }
         );
 
       // Create request to the backend and expect that the request happened
@@ -257,8 +257,8 @@ describe('McsApiService', () => {
 
       mcsApiService.delete(mcsApiRequestParameter)
         .subscribe(
-        (response) => { expect(response).toBeDefined(); },
-        (error) => { expect(error).toBeDefined(); }
+          (response) => { expect(response).toBeDefined(); },
+          (error) => { expect(error).toBeDefined(); }
         );
 
       // Create request to the backend and expect that the request happened

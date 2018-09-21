@@ -9,7 +9,7 @@ import {
 } from '@angular/core/testing';
 import { ButtonComponent } from './button.component';
 import { ButtonModule } from './button.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-button',

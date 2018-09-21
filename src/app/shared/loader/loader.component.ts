@@ -18,18 +18,16 @@ import {
   takeUntil,
   startWith
 } from 'rxjs/operators';
-import {
-  CoreDefinition,
-  McsSizeType,
-  McsPlacementType
-} from '../../core';
+import { CoreDefinition } from '@app/core';
 import {
   animateFactory,
   isNullOrEmpty,
   unsubscribeSubject,
   clearArrayRecord,
-  refreshView
-} from '../../utilities';
+  refreshView,
+  McsSizeType,
+  McsPlacementType
+} from '@app/utilities';
 import { LoaderService } from './loader.service';
 
 // Unique Id that generates during runtime

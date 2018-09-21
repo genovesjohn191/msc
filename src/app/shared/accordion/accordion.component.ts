@@ -20,7 +20,7 @@ import {
 import {
   coerceBoolean,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import { AccordionPanelComponent } from './accordion-panel/accordion-panel.component';
 
 @Component({

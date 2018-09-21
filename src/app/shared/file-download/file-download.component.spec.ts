@@ -9,7 +9,7 @@ import {
 } from '@angular/core/testing';
 import { FileDownloadModule } from './file-download.module';
 import { FileDownloadComponent } from './file-download.component';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test',

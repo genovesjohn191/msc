@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { McsAssetsProvider } from '../../core';
+import { McsAssetsProvider } from '@app/core';
 
 /**
  * Icon type for determining the type of Icon

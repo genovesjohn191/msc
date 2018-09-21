@@ -21,20 +21,24 @@ import {
 } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsApiCompany,
-  McsCompanyStatus,
-  McsPaginator,
-  McsSearch,
-  McsTextContentProvider,
-  McsDataStatus
-} from '../../../core';
+  McsTextContentProvider
+} from '@app/core';
 import {
   isNullOrEmpty,
   getEnumString,
   unsubscribeSafely,
   deleteArrayRecord,
   getArrayCount
-} from '../../../utilities';
+} from '@app/utilities';
+import {
+  Paginator,
+  Search
+} from '@app/shared';
+import {
+  McsCompany,
+  McsCompanyStatus,
+  McsDataStatus
+} from '@app/models';
 import { SwitchAccountService } from './switch-account.service';
 import { SwitchAccountRepository } from './switch-account.repository';
 
@@ -52,18 +56,18 @@ import { SwitchAccountRepository } from './switch-account.repository';
 export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('search')
-  public search: McsSearch;
+  public search: Search;
 
   @ViewChild('paginator')
-  public paginator: McsPaginator;
+  public paginator: Paginator;
 
   @Output()
   public selectionChanged: EventEmitter<any>;
 
   // Companies
-  public displayedCompanies: McsApiCompany[];
-  public recentCompanies: McsApiCompany[];
-  public activeAccount: McsApiCompany;
+  public displayedCompanies: McsCompany[];
+  public recentCompanies: McsCompany[];
+  public activeAccount: McsCompany;
 
   // Subscriptions
   public companiesSubscription: Subscription;
@@ -72,7 +76,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
 
   // Others
   public textContent: any;
-  public get companies(): McsApiCompany[] {
+  public get companies(): McsCompany[] {
     return this._switchAccountService.companies;
   }
 
@@ -167,11 +171,11 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     return getEnumString(McsCompanyStatus, status);
   }
 
-  public get defaultAccount(): McsApiCompany {
+  public get defaultAccount(): McsCompany {
     return this._switchAccountService.defaultAccount;
   }
 
-  public getTextFormat(company: McsApiCompany): string {
+  public getTextFormat(company: McsCompany): string {
     if (isNullOrEmpty(company)) { return ''; }
     return `${company.name} (${company.id})`;
   }
@@ -188,7 +192,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   /**
    * Select the corresponding account and refresh the page
    */
-  public selectAccount(account: McsApiCompany): void {
+  public selectAccount(account: McsCompany): void {
     if (isNullOrEmpty(account)) { return; }
     this._switchAccountService.switchAccount(account);
     this.selectionChanged.emit(account);

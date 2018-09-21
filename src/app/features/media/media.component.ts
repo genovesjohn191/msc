@@ -12,15 +12,17 @@ import {
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   refreshView,
   getSafeProperty
-} from '../../utilities';
-import { Media } from './models';
+} from '@app/utilities';
+import {
+  McsRouteKey,
+  McsResourceMedia
+} from '@app/models';
 import { MediaRepository } from './repositories/media.repository';
 import { MediaDataSource } from './media.datasource';
 
@@ -71,7 +73,7 @@ export class MediaComponent
    * Navigate to media details page
    * @param media Media to view the details
    */
-  public navigateToMedia(media: Media): void {
+  public navigateToMedia(media: McsResourceMedia): void {
     if (isNullOrEmpty(media)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Medium), media.id]);
   }

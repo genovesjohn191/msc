@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
-import {
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+import { CoreRoutes } from '../../core';
+import { McsRouteKey } from '@app/models';
 /** Components/Services */
 import { FirewallsService } from './firewalls.service';
 import { FirewallsRepository } from './repositories/firewalls.repository';

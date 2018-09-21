@@ -2,11 +2,15 @@
 export * from './shared.module';
 
 /** Shared */
+export * from './button';
 export * from './pipes';
 export * from './table';
 export * from './directives';
 export * from './wizard';
 export * from './dialog';
+export * from './paginator';
+export * from './search';
+export * from './layout';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

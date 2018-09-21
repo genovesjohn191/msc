@@ -17,7 +17,7 @@ import {
   McsDialogRef,
   McsTextContentProvider,
   CoreDefinition
-} from '../../../../core';
+} from '@app/core';
 
 @Component({
   selector: 'mcs-session-idle-dialog',

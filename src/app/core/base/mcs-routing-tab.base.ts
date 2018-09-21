@@ -7,7 +7,7 @@ import {
 import {
   isNullOrEmpty,
   unsubscribeSafely
-} from '../../utilities';
+} from '@app/utilities';
 
 export abstract class McsRoutingTabBase<T> {
 

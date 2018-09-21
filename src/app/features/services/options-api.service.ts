@@ -5,12 +5,10 @@ import {
 } from 'rxjs';
 import {
   McsApiSuccessResponse,
-  McsHttpStatusCode
-} from '../../core';
-import {
-  ServerSqlOptions,
-  ServerHidsOptions
-} from '../servers/models';
+  McsHttpStatusCode,
+  McsServerSqlOptions,
+  McsServerHidsOptions
+} from '@app/models';
 
 @Injectable()
 export class OptionsApiService {
@@ -46,8 +44,8 @@ export class OptionsApiService {
    * Get sql server options
    * TODO: Will update this one when API is ready
    */
-  public getSqlServerOptions(): Observable<McsApiSuccessResponse<ServerSqlOptions>> {
-    let response = new McsApiSuccessResponse<ServerSqlOptions>();
+  public getSqlServerOptions(): Observable<McsApiSuccessResponse<McsServerSqlOptions>> {
+    let response = new McsApiSuccessResponse<McsServerSqlOptions>();
     response.status = McsHttpStatusCode.Success;
     response.content = {
       versions: ['2008 SP4', '2008 R2 SP3', '2012 SP3', '2016 SP1'],
@@ -75,8 +73,8 @@ export class OptionsApiService {
    * Get host intrusion detection options
    * TODO: Will update this one when API is ready
    */
-  public getHidsOptions(): Observable<McsApiSuccessResponse<ServerHidsOptions>> {
-    let response = new McsApiSuccessResponse<ServerHidsOptions>();
+  public getHidsOptions(): Observable<McsApiSuccessResponse<McsServerHidsOptions>> {
+    let response = new McsApiSuccessResponse<McsServerHidsOptions>();
     response.status = McsHttpStatusCode.Success;
     response.content = {
       serviceVariants: ['Standard', 'Self-Managed'],

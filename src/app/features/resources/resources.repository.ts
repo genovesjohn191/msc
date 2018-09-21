@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { McsRepositoryBase } from '@app/core';
 import {
-  McsRepositoryBase,
-  McsApiSuccessResponse
-} from '../../core';
+  McsApiSuccessResponse,
+  McsResource,
+  McsResourceCompute,
+  McsResourceStorage,
+  McsResourceNetwork,
+  McsResourceCatalogItem,
+  McsResourceVApp
+} from '@app/models';
 import { ResourcesService } from './resources.service';
-import {
-  Resource,
-  ResourceCompute,
-  ResourceStorage,
-  ResourceNetwork,
-  ResourceCatalogItem,
-  ResourceVApp
-} from './models';
 
 @Injectable()
-export class ResourcesRepository extends McsRepositoryBase<Resource> {
+export class ResourcesRepository extends McsRepositoryBase<McsResource> {
 
   constructor(private _resourcesApiService: ResourcesService) {
     super();
@@ -27,7 +25,7 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceCompute(resource: Resource): Observable<ResourceCompute> {
+  public findResourceCompute(resource: McsResource): Observable<McsResourceCompute> {
     return this._resourcesApiService.getResourceCompute(resource.id)
       .pipe(
         map((response) => {
@@ -44,7 +42,7 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceStorage(resource: Resource): Observable<ResourceStorage[]> {
+  public findResourceStorage(resource: McsResource): Observable<McsResourceStorage[]> {
     return this._resourcesApiService.getResourceStorage(resource.id)
       .pipe(
         map((response) => {
@@ -61,7 +59,7 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceNetworks(resource: Resource): Observable<ResourceNetwork[]> {
+  public findResourceNetworks(resource: McsResource): Observable<McsResourceNetwork[]> {
     return this._resourcesApiService.getResourceNetworks(resource.id)
       .pipe(
         map((response) => {
@@ -78,7 +76,7 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceCatalogItems(resource: Resource): Observable<ResourceCatalogItem[]> {
+  public findResourceCatalogItems(resource: McsResource): Observable<McsResourceCatalogItem[]> {
     return this._resourcesApiService.getResourceCatalogItems(resource.id)
       .pipe(
         map((response) => {
@@ -95,7 +93,7 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
    * and update the instance of the data record from source
    * @param resource Instance of the resource from data records
    */
-  public findResourceVApps(resource: Resource): Observable<ResourceVApp[]> {
+  public findResourceVApps(resource: McsResource): Observable<McsResourceVApp[]> {
     return this._resourcesApiService.getResourceVApps(resource.id)
       .pipe(
         map((response) => {
@@ -115,7 +113,7 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
     _pageIndex: number,
     _pageSize: number,
     _keyword: string
-  ): Observable<McsApiSuccessResponse<Resource[]>> {
+  ): Observable<McsApiSuccessResponse<McsResource[]>> {
     return this._resourcesApiService.getResources();
   }
 
@@ -124,7 +122,7 @@ export class ResourcesRepository extends McsRepositoryBase<Resource> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Resource>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsResource>> {
     return this._resourcesApiService.getResource(recordId);
   }
 }

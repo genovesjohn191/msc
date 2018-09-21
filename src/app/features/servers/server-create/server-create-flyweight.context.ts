@@ -13,56 +13,52 @@ import {
   tap
 } from 'rxjs/operators';
 import {
-  McsApiJob,
-  McsDataStatus,
   McsGuid,
   McsErrorHandlerService
-} from '../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   getSafeProperty
-} from '../../../utilities';
+} from '@app/utilities';
 import {
-  Resource,
-  ResourceServiceType
-} from '../../resources';
-import {
-  Order,
-  OrdersService,
-  OrderUpdate,
-  OrderItemUpdate,
-  OrderCreate,
-  OrderItemCreate,
-  OrderIdType
-} from '../../orders';
-import {
-  ServerCreate,
-  ServerClone
-} from '../models';
+  OrderIdType,
+  ServiceType,
+  McsJob,
+  McsDataStatus,
+  McsOrder,
+  McsOrderUpdate,
+  McsOrderItemUpdate,
+  McsOrderCreate,
+  McsOrderItemCreate,
+  McsServerCreate,
+  McsServerClone,
+  McsResource
+} from '@app/models';
+import { OrdersService } from '@app/features/orders';
 import { ServersService } from '../servers.service';
 
 @Injectable()
 export class ServerCreateFlyweightContext {
   public errorChanges = new BehaviorSubject<any>(undefined);
-  public jobsChanges = new BehaviorSubject<McsApiJob[]>(undefined);
-  public resourceChanges = new BehaviorSubject<Resource>(undefined);
+  public jobsChanges = new BehaviorSubject<McsJob[]>(undefined);
+  public resourceChanges = new BehaviorSubject<McsResource>(undefined);
   public formArrayChanges = new BehaviorSubject<FormArray>(undefined);
 
   private _error: any;
-  private _jobs: McsApiJob[];
-  private _resource: Resource;
+  private _jobs: McsJob[];
+  private _resource: McsResource;
   private _formArray: FormArray;
 
   /**
    * Returns the current order details
    */
-  public get order(): Order { return this._order; }
-  private _order: Order;
+  public get order(): McsOrder { return this._order; }
+  private _order: McsOrder;
 
-  public get orderChange(): Observable<Order> {
+  public get orderChange(): Observable<McsOrder> {
     return this._orderChange.pipe(distinctUntilChanged());
   }
-  private _orderChange: Subject<Order>;
+  private _orderChange: Subject<McsOrder>;
 
   public get requestStatusChange(): Observable<McsDataStatus> {
     return this._requestStatusChange.pipe(distinctUntilChanged());
@@ -93,7 +89,7 @@ export class ServerCreateFlyweightContext {
    * Sets the resource instance to the subject
    * @param resource Resource to be set and will notify the changes made
    */
-  public setResource(resource: Resource): void {
+  public setResource(resource: McsResource): void {
     if (this._resource === resource) { return; }
     this._resource = resource;
     this.resourceChanges.next(this._resource);
@@ -103,7 +99,7 @@ export class ServerCreateFlyweightContext {
    * Sets / Add the job provided to the instance of the jobs
    * @param job Job to be added
    */
-  public setJob(job: McsApiJob): void {
+  public setJob(job: McsJob): void {
     if (isNullOrEmpty(job)) { return; }
     this._jobs.push(job);
     this.jobsChanges.next(this._jobs);
@@ -124,10 +120,10 @@ export class ServerCreateFlyweightContext {
    * Updates the inputted order based on its item list
    * @param _updatedOrder Updated order to be requested
    */
-  public updateOrder(_updatedOrder: Order): void {
+  public updateOrder(_updatedOrder: McsOrder): void {
     if (isNullOrEmpty(_updatedOrder)) { return; }
 
-    let targetOrder = new OrderUpdate();
+    let targetOrder = new McsOrderUpdate();
 
     /* TODO: 09112018
        1. Set based on requirements
@@ -137,7 +133,7 @@ export class ServerCreateFlyweightContext {
     */
 
     _updatedOrder.items.forEach((updatedItem) => {
-      let targetItem = new OrderItemUpdate();
+      let targetItem = new McsOrderItemUpdate();
       targetItem.parentReferenceId = updatedItem.parentReferenceId;
       targetItem.parentServiceId = updatedItem.serviceId;
       targetItem.productOrderType = updatedItem.typeId;
@@ -163,30 +159,30 @@ export class ServerCreateFlyweightContext {
   }
 
   public createServer(
-    serverModel: ServerCreate | ServerClone,
-    serviceType: ResourceServiceType,
+    serverModel: McsServerCreate | McsServerClone,
+    serviceType: ServiceType,
     resourceName: string
-  ): Observable<McsApiJob | Order> {
+  ): Observable<McsJob | McsOrder> {
     if (isNullOrEmpty(serverModel)) { return; }
-    let serverInstance: Observable<McsApiJob | Order>;
+    let serverInstance: Observable<McsJob | McsOrder>;
 
-    if (serviceType === ResourceServiceType.SelfManaged) {
+    if (serviceType === ServiceType.SelfManaged) {
 
       // Create the server based on its intance
-      serverInstance = serverModel instanceof ServerCreate ?
+      serverInstance = serverModel instanceof McsServerCreate ?
         this._createNewSelfManageServer(serverModel) :
         this._createCloneSelfManagedServer(serverModel);
     } else {
 
       // Create Order item
-      let orderItem = new OrderItemCreate();
+      let orderItem = new McsOrderItemCreate();
       orderItem.productOrderType = OrderIdType.CreateManagedServer;
       orderItem.referenceId = McsGuid.newGuid().toString();
       orderItem.parentServiceId = resourceName;
       orderItem.properties = serverModel;
 
       // Create order
-      let order = new OrderCreate();
+      let order = new McsOrderCreate();
       order.description = 'Create Managed Server';
       order.contractDuration = 12;
       order.items = [orderItem];
@@ -197,7 +193,7 @@ export class ServerCreateFlyweightContext {
     this._requestStatusChange.next(McsDataStatus.InProgress);
     return serverInstance.pipe(
       tap((response) => {
-        response instanceof McsApiJob ?
+        response instanceof McsJob ?
           this.setJob(response) :
           this._setOrderDetails(response);
         this._requestStatusChange.next(McsDataStatus.Success);
@@ -214,7 +210,7 @@ export class ServerCreateFlyweightContext {
    * Sets the order details if changes has been made
    * @param _orderDetails Update order details to be
    */
-  private _setOrderDetails(_orderDetails: Order): void {
+  private _setOrderDetails(_orderDetails: McsOrder): void {
     if (isNullOrEmpty(_orderDetails)) { return undefined; }
     this._order = _orderDetails;
     this._orderChange.next(_orderDetails);
@@ -224,7 +220,7 @@ export class ServerCreateFlyweightContext {
    * Creates new server based on server input
    * @param serverInput Server input based on the form data
    */
-  private _createNewSelfManageServer(serverCreateModel: ServerCreate): Observable<McsApiJob> {
+  private _createNewSelfManageServer(serverCreateModel: McsServerCreate): Observable<McsJob> {
     if (isNullOrEmpty(serverCreateModel)) { return; }
     return this._serversService.createServer(serverCreateModel)
       .pipe(map((response) => getSafeProperty(response, (obj) => obj.content)));
@@ -234,7 +230,7 @@ export class ServerCreateFlyweightContext {
    * Clones a server based on server input
    * @param serverCloneModel Server input based on the form data
    */
-  private _createCloneSelfManagedServer(serverCloneModel: ServerClone): Observable<McsApiJob> {
+  private _createCloneSelfManagedServer(serverCloneModel: McsServerClone): Observable<McsJob> {
     if (isNullOrEmpty(serverCloneModel)) { return; }
     return this._serversService
       .cloneServer(serverCloneModel.clientReferenceObject.serverId, serverCloneModel)

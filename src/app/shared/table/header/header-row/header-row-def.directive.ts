@@ -8,7 +8,7 @@ import {
   IterableChanges,
   SimpleChanges
 } from '@angular/core';
-import { coerceArray } from '../../../../utilities';
+import { coerceArray } from '@app/utilities';
 
 @Directive({
   selector: '[mcsHeaderRowDef]'

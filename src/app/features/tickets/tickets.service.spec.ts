@@ -3,11 +3,13 @@ import {
   TestBed,
   getTestBed
 } from '@angular/core/testing';
-/** Services and Models */
-import { Ticket } from './models';
-import { TicketsService } from './tickets.service';
-import { McsApiSuccessResponse } from '../../core';
 import { HttpTestingController } from '@angular/common/http/testing';
+/** Services and Models */
+import {
+  McsApiSuccessResponse,
+  McsTicket
+} from '@app/models';
+import { TicketsService } from './tickets.service';
 import { TicketsTestingModule } from './testing';
 
 describe('TicketsService', () => {
@@ -60,7 +62,7 @@ describe('TicketsService', () => {
       expect(httpRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<Ticket[]>();
+      let responseData = new McsApiSuccessResponse<McsTicket[]>();
       responseData.status = 200;
       responseData.totalCount = 2;
       httpRequest.flush(responseData);
@@ -81,7 +83,7 @@ describe('TicketsService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<Ticket>();
+      let responseData = new McsApiSuccessResponse<McsTicket>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);

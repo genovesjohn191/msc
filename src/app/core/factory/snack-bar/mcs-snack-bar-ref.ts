@@ -3,9 +3,9 @@ import {
   Subject
 } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsOverlayRef } from '../overlay/mcs-overlay-ref';
 import { McsSnackBarContainerComponent } from './mcs-snack-bar-container.component';
-import { isNullOrEmpty } from '../../../utilities';
 
 // Counter for unique snackbar ids.
 let nextUniqueId = 0;
@@ -62,7 +62,7 @@ export class McsSnackBarRef<T> {
    */
   public closeAfter(duration: number): void {
     if (isNullOrEmpty(duration)) { return; }
-    this._durationTimeoutId  = setTimeout(this.close.bind(this), duration);
+    this._durationTimeoutId = setTimeout(this.close.bind(this), duration);
   }
 
   /**

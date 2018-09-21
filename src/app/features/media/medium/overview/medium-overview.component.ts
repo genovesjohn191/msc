@@ -5,9 +5,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
+import { McsTextContentProvider } from '@app/core';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
-import { McsTextContentProvider } from '../../../../core';
 
 @Component({
   selector: 'mcs-medium-overview',

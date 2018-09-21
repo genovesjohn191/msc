@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import { ResponsivePanelComponent } from './responsive-panel.component';
 import { ResponsivePanelModule } from './responsive-panel.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-responsive-panel',

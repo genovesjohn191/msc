@@ -5,11 +5,11 @@ import {
   Input,
   ChangeDetectorRef
 } from '@angular/core';
-import { McsAuthenticationIdentity } from '../../../core';
+import { McsAuthenticationIdentity } from '@app/core';
 import {
   isNullOrEmpty,
   containsString
-} from '../../../utilities';
+} from '@app/utilities';
 
 @Directive({
   selector: '[mcsExclusiveForAccount]'

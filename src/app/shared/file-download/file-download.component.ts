@@ -6,8 +6,8 @@ import {
   ViewEncapsulation,
   Output
 } from '@angular/core';
-import { CoreDefinition } from '../../core';
-import { coerceNumber, coerceBoolean } from '../../utilities';
+import { CoreDefinition } from '@app/core';
+import { coerceNumber, coerceBoolean } from '@app/utilities';
 
 @Component({
   selector: 'mcs-file-download',

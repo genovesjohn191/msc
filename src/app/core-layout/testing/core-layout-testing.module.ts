@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-/** Modules */
-import { CoreTestingModule } from '../../core/testing';
-/** Services */
+import { CoreTestingModule } from '@app/core/testing';
 import { coreLayoutProviders } from '../core-layout.constants';
 
 @NgModule({

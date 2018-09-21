@@ -14,20 +14,20 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  McsFileInfo,
   CoreRoutes,
-  McsRouteKey,
   CoreDefinition
-} from '../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../../utilities';
+} from '@app/utilities';
 import {
-  Product,
-  ProductDownload,
-  ProductDependency
-} from '../models';
+  McsRouteKey,
+  McsFileInfo,
+  McsProduct,
+  McsProductDownload,
+  McsProductDependency
+} from '@app/models';
 import { ProductService } from './product.service';
 
 @Component({
@@ -58,7 +58,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   /**
    * Returns the selected product from the list panel
    */
-  public get selectedProduct(): Product {
+  public get selectedProduct(): McsProduct {
     return this._productService.selectedProduct;
   }
 
@@ -82,7 +82,7 @@ export class ProductComponent implements OnInit, OnDestroy {
    * Returns the configuration file for download component
    * @param download Product download details
    */
-  public getFileInfo(download: ProductDownload): McsFileInfo {
+  public getFileInfo(download: McsProductDownload): McsFileInfo {
     if (isNullOrEmpty(download)) { return undefined; }
     return {
       filename: download.name,
@@ -97,7 +97,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   /**
    * Event that emits when dependency is clicked
    */
-  public onClickDependency(dependency: ProductDependency): void {
+  public onClickDependency(dependency: McsProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), dependency.id]);
   }

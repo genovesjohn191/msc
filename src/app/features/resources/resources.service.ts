@@ -4,21 +4,20 @@ import {
   map,
   finalize
 } from 'rxjs/operators';
-/** Services and Models */
 import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsLoggerService
-} from '../../core';
-import {
-  Resource,
-  ResourceCompute,
-  ResourceStorage,
-  ResourceNetwork,
-  ResourceCatalogItem,
-  ResourceVApp
-} from './models';
+  McsResource,
+  McsResourceCompute,
+  McsResourceStorage,
+  McsResourceNetwork,
+  McsResourceCatalogItem,
+  McsResourceVApp
+} from '@app/models';
 
 @Injectable()
 export class ResourcesService {
@@ -31,7 +30,7 @@ export class ResourcesService {
   /**
    * Get Resources (MCS API Response)
    */
-  public getResources(): Observable<McsApiSuccessResponse<Resource[]>> {
+  public getResources(): Observable<McsApiSuccessResponse<McsResource[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/resources';
 
@@ -43,7 +42,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Resource[]>(Resource, response);
+            .deserializeResponse<McsResource[]>(McsResource, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -57,7 +56,7 @@ export class ResourcesService {
    * Get resource by ID (MCS API Response)
    * @param id Resource identification
    */
-  public getResource(id: any): Observable<McsApiSuccessResponse<Resource>> {
+  public getResource(id: any): Observable<McsApiSuccessResponse<McsResource>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/${id}`;
 
@@ -69,7 +68,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Resource>(Resource, response);
+            .deserializeResponse<McsResource>(McsResource, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -83,7 +82,7 @@ export class ResourcesService {
    * Get resource compute by ID (MCS API Response)
    * @param id Resource identification
    */
-  public getResourceCompute(id: any): Observable<McsApiSuccessResponse<ResourceCompute>> {
+  public getResourceCompute(id: any): Observable<McsApiSuccessResponse<McsResourceCompute>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/${id}/compute`;
 
@@ -95,7 +94,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ResourceCompute>(ResourceCompute, response);
+            .deserializeResponse<McsResourceCompute>(McsResourceCompute, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -109,7 +108,7 @@ export class ResourcesService {
    * Get resource storage by ID (MCS API Response)
    * @param id Resource identification
    */
-  public getResourceStorage(id: any): Observable<McsApiSuccessResponse<ResourceStorage[]>> {
+  public getResourceStorage(id: any): Observable<McsApiSuccessResponse<McsResourceStorage[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/${id}/storage`;
 
@@ -121,7 +120,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ResourceStorage[]>(ResourceStorage, response);
+            .deserializeResponse<McsResourceStorage[]>(McsResourceStorage, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -136,7 +135,7 @@ export class ResourcesService {
    * @param resourceId Resource identification
    */
   public getResourceNetworks(resourceId: any):
-    Observable<McsApiSuccessResponse<ResourceNetwork[]>> {
+    Observable<McsApiSuccessResponse<McsResourceNetwork[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/${resourceId}/networks`;
 
@@ -148,7 +147,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ResourceNetwork[]>(ResourceNetwork, response);
+            .deserializeResponse<McsResourceNetwork[]>(McsResourceNetwork, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -164,7 +163,7 @@ export class ResourcesService {
    * @param networkId Network identification
    */
   public getResourceNetwork(resourceId: any, networkId: any):
-    Observable<McsApiSuccessResponse<ResourceNetwork>> {
+    Observable<McsApiSuccessResponse<McsResourceNetwork>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/${resourceId}/networks/${networkId}`;
 
@@ -176,7 +175,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ResourceNetwork>(ResourceNetwork, response);
+            .deserializeResponse<McsResourceNetwork>(McsResourceNetwork, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -191,7 +190,7 @@ export class ResourcesService {
    * @param id Resource identification
    */
   public getResourceCatalogItems(id: any):
-    Observable<McsApiSuccessResponse<ResourceCatalogItem[]>> {
+    Observable<McsApiSuccessResponse<McsResourceCatalogItem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/${id}/catalogitems`;
 
@@ -203,7 +202,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ResourceCatalogItem[]>(ResourceCatalogItem, response);
+            .deserializeResponse<McsResourceCatalogItem[]>(McsResourceCatalogItem, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -217,7 +216,7 @@ export class ResourcesService {
    * Get resource vApps by ID (MCS API Response)
    * @param id Resource identification
    */
-  public getResourceVApps(id: any): Observable<McsApiSuccessResponse<ResourceVApp[]>> {
+  public getResourceVApps(id: any): Observable<McsApiSuccessResponse<McsResourceVApp[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/resources/${id}/vapps`;
 
@@ -229,7 +228,7 @@ export class ResourcesService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ResourceVApp[]>(ResourceVApp, response);
+            .deserializeResponse<McsResourceVApp[]>(McsResourceVApp, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

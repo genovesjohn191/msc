@@ -2,9 +2,8 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-
 import { AlertComponent } from './alert.component';
-import { CoreDefinition } from '../../core';
+import { CoreDefinition } from '@app/core';
 
 describe('AlertComponent', () => {
 

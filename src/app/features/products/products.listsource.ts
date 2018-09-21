@@ -4,25 +4,25 @@ import {
   of
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  McsListSourceBase,
-  McsSearch,
-  McsKeyValuePair
-} from '../../core';
+import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
   containsString,
   isNullOrEmpty,
   createNewObject
-} from '../../utilities';
-import { ProductCatalog } from './models';
+} from '@app/utilities';
+import { Search } from '@app/shared';
+import {
+  McsKeyValuePair,
+  McsProductCatalog
+} from '@app/models';
 import { ProductCatalogRepository } from './product-catalog.repository';
 
-export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> {
+export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalog> {
 
   constructor(
     private _catalogRepository: ProductCatalogRepository,
-    private _search: McsSearch) {
+    private _search: Search) {
     super();
   }
 
@@ -40,7 +40,7 @@ export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> 
    * @param first First record of the list
    * @param second Second record of the list
    */
-  public catalogSortMethod(first: ProductCatalog, second: ProductCatalog): number {
+  public catalogSortMethod(first: McsProductCatalog, second: McsProductCatalog): number {
     return compareStrings(first.name, second.name);
   }
 
@@ -58,14 +58,14 @@ export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> 
   /**
    * Get all records from repository
    */
-  protected getAllRecords(): Observable<ProductCatalog[]> {
+  protected getAllRecords(): Observable<McsProductCatalog[]> {
     return this._catalogRepository.findAllRecords()
       .pipe(
         map((response) => {
           // We need to create a new product object in here
           // because we are eliminating other products that are
           // not in the keyword.
-          return createNewObject<ProductCatalog[]>(ProductCatalog, response);
+          return createNewObject<McsProductCatalog[]>(McsProductCatalog, response);
         })
       );
   }
@@ -74,7 +74,7 @@ export class ProductCatalogListSource extends McsListSourceBase<ProductCatalog> 
    * Filters all the records based on searched keyword
    * @param _record Record to be checked if it is included
    */
-  protected filterMethod(_record: ProductCatalog): boolean {
+  protected filterMethod(_record: McsProductCatalog): boolean {
     if (isNullOrEmpty(_record)) { return true; }
     if (containsString(_record.name, this._search.keyword)) { return true; }
 

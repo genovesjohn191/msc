@@ -5,9 +5,9 @@ import {
 import { ServerCommandComponent } from './server-command.component';
 import {
   CoreDefinition,
-  GoogleAnalyticsEventsService } from '../../../../core';
-import { googleAnalyticsEventsMock } from '../../../../core/testing';
-import { ServerCommand } from '../../models';
+  GoogleAnalyticsEventsService } from '@app/core';
+import { googleAnalyticsEventsMock } from '@app/core/testing';
+import { ServerCommand } from '@app/models';
 import { ServersTestingModule } from '../../testing';
 
 describe('ServerCommandComponent', () => {

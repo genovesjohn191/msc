@@ -22,23 +22,23 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   McsErrorHandlerService,
-  McsSafeToNavigateAway,
-  CoreRoutes,
+  CoreRoutes
+} from '@app/core';
+import {
+  ServiceType,
   McsRouteKey,
-  McsDataStatus
-} from '../../../core';
+  McsDataStatus,
+  McsResource
+} from '@app/models';
 import {
   isNullOrEmpty,
   replacePlaceholder,
   unsubscribeSafely,
   unsubscribeSubject,
-  getSafeProperty
-} from '../../../utilities';
-import {
-  Resource,
-  ResourcesRepository
-} from '../../resources';
-import { ServerServiceType } from '../models';
+  getSafeProperty,
+  McsSafeToNavigateAway
+} from '@app/utilities';
+import { ResourcesRepository } from '@app/features/resources';
 import { ServerCreateService } from './server-create.service';
 import { ServerCreateDetailsComponent } from './details/server-create-details.component';
 import { ServerCreateFlyweightContext } from './server-create-flyweight.context';
@@ -55,7 +55,7 @@ export class ServerCreateComponent implements
   public textContent: any;
   public resourcesSubscription: Subscription;
   public resourceSubscription: Subscription;
-  public selectedResource: Resource;
+  public selectedResource: McsResource;
   public faCreationForm: FormArray;
   public stepRequestInProgress: boolean;
 
@@ -65,13 +65,13 @@ export class ServerCreateComponent implements
     return CoreDefinition.ASSETS_FONT_CHEVRON_LEFT;
   }
 
-  public get serviceTypeEnum() { return ServerServiceType; }
+  public get serviceTypeEnum() { return ServiceType; }
 
   /**
    * Returns the resources list
    */
-  public get resources(): Resource[] { return this._resources; }
-  private _resources: Resource[];
+  public get resources(): McsResource[] { return this._resources; }
+  private _resources: McsResource[];
 
   @ViewChild(ServerCreateDetailsComponent)
   private _detailsStep: ServerCreateDetailsComponent;
@@ -119,7 +119,7 @@ export class ServerCreateComponent implements
   /**
    * Event that emits whenever a resource is selected
    */
-  public onChangeResource(_resource: Resource): void {
+  public onChangeResource(_resource: McsResource): void {
     if (isNullOrEmpty(_resource)) { return; }
     this._getResourceById(_resource.id);
   }
@@ -128,7 +128,7 @@ export class ServerCreateComponent implements
    * Returns the resource displayed text based on resource data
    * @param resource Resource to be displayed
    */
-  public getResourceDisplayedText(resource: Resource): string {
+  public getResourceDisplayedText(resource: McsResource): string {
     let prefix = replacePlaceholder(
       this.textContent.vdcDropdownList.prefix,
       ['service_type', 'zone'],
@@ -158,7 +158,7 @@ export class ServerCreateComponent implements
   /**
    * Selects the first element on the resources
    */
-  private _setInitialSelection(resources: Resource[]): void {
+  private _setInitialSelection(resources: McsResource[]): void {
     if (isNullOrEmpty(resources)) { return; }
     this.onChangeResource(resources[0]);
   }

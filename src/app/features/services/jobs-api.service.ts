@@ -5,13 +5,15 @@ import {
   map
 } from 'rxjs/operators';
 import {
-  McsApiJob,
   McsApiService,
-  McsApiSuccessResponse,
-  McsApiRequestParameter,
   McsLoggerService
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import {
+  McsJob,
+  McsApiSuccessResponse,
+  McsApiRequestParameter
+} from '@app/models';
 
 @Injectable()
 export class JobsApiService {
@@ -31,7 +33,7 @@ export class JobsApiService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<McsApiJob[]>> {
+  }): Observable<McsApiSuccessResponse<McsJob[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -53,7 +55,7 @@ export class JobsApiService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiJob[]>(McsApiJob, response);
+            .deserializeResponse<McsJob[]>(McsJob, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -67,7 +69,7 @@ export class JobsApiService {
    * Get job by ID (MCS API Response)
    * @param id JOB identification
    */
-  public getJob(id: any): Observable<McsApiSuccessResponse<McsApiJob>> {
+  public getJob(id: any): Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/jobs/${id}`;
 
@@ -79,7 +81,7 @@ export class JobsApiService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiJob>(McsApiJob, response);
+            .deserializeResponse<McsJob>(McsJob, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

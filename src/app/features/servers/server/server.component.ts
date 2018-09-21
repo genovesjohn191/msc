@@ -22,11 +22,6 @@ import {
   catchError
 } from 'rxjs/operators';
 import {
-  Server,
-  ServerCommand,
-  ServerPlatform
-} from '../models';
-import {
   ResetPasswordDialogComponent,
   DeleteServerDialogComponent,
   RenameServerDialogComponent,
@@ -36,21 +31,28 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsSearch,
   McsDialogService,
   McsRoutingTabBase,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   getSafeProperty,
   unsubscribeSafely,
   unsubscribeSubject
-} from '../../../utilities';
-import { ComponentHandlerDirective } from '../../../shared';
+} from '@app/utilities';
+import {
+  Search,
+  ComponentHandlerDirective
+} from '@app/shared';
+import {
+  ServerCommand,
+  McsRouteKey,
+  McsServer,
+  McsServerPlatform
+} from '@app/models';
 import { ServersRepository } from '../repositories/servers.repository';
 import { ServersService } from '../servers.service';
 import { ServerService } from './server.service';
@@ -75,19 +77,19 @@ export class ServerComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
-  public search: McsSearch;
+  public search: Search;
 
   @ViewChild(ComponentHandlerDirective)
   public componentHandler: ComponentHandlerDirective;
 
   public textContent: any;
   public serversTextContent: any;
-  public serversMap: Map<string, Server[]>;
+  public serversMap: Map<string, McsServer[]>;
   public selectedGroupName: string;
-  public selectedServer: Server;
+  public selectedServer: McsServer;
   public serverListSource: ServersListSource | null;
   public serverSubscription: Subscription;
-  public listStatusFactory: McsDataStatusFactory<Map<string, Server[]>>;
+  public listStatusFactory: McsDataStatusFactory<Map<string, McsServer[]>>;
 
   public get spinnerIconKey(): string {
     return CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
@@ -102,7 +104,7 @@ export class ServerComponent
   }
 
   private _destroySubject = new Subject<void>();
-  private _resourcesKeyMap: Map<string, ServerPlatform>;
+  private _resourcesKeyMap: Map<string, McsServerPlatform>;
 
   constructor(
     _router: Router,
@@ -117,7 +119,7 @@ export class ServerComponent
   ) {
     super(_router, _activatedRoute);
     this._resourcesKeyMap = new Map();
-    this.selectedServer = new Server();
+    this.selectedServer = new McsServer();
     this.serversMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
   }
@@ -150,7 +152,7 @@ export class ServerComponent
    * @param servers Servers to process the action
    * @param action Action to be execute
    */
-  public executeServerCommand(serverItem: Server, action: ServerCommand): void {
+  public executeServerCommand(serverItem: McsServer, action: ServerCommand): void {
     if (isNullOrEmpty(serverItem)) { return; }
     let dialogComponent = null;
 
@@ -202,7 +204,7 @@ export class ServerComponent
    * Return true when the server is currently deleting, otherwise false
    * @param server Server to be deleted
    */
-  public serverDeleting(server: Server): boolean {
+  public serverDeleting(server: McsServer): boolean {
     return server.commandAction === ServerCommand.Delete && server.isProcessing;
   }
 
@@ -244,11 +246,11 @@ export class ServerComponent
     );
 
     // Key function pointer for mapping objects
-    let keyFn = (item: Server) => {
+    let keyFn = (item: McsServer) => {
       let resourceName = isNullOrEmpty(item.platform) ? 'Others' : item.platform.resourceName;
-      let resource: ServerPlatform = this._resourcesKeyMap.get(resourceName);
+      let resource: McsServerPlatform = this._resourcesKeyMap.get(resourceName);
       if (isNullOrEmpty(resource)) {
-        let resourceInstance = new ServerPlatform();
+        let resourceInstance = new McsServerPlatform();
         resourceInstance.resourceName = 'Others';
         resource = !isNullOrEmpty(item.platform.resourceName) ? item.platform : resourceInstance;
       }
@@ -303,7 +305,7 @@ export class ServerComponent
     let serverFound = this._serversRepository.dataRecords
       .find((server) => server.id === serverId);
     if (isNullOrEmpty(serverFound)) {
-      this.selectedServer = { id: serverId } as Server;
+      this.selectedServer = { id: serverId } as McsServer;
       return;
     }
 

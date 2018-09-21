@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 import {
   McsAuthenticationGuard,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
-import { serversProviders } from '../../features/servers/servers.constants';
+  CoreRoutes
+} from '@app/core';
+import { McsRouteKey } from '@app/models';
+import { serversProviders } from '@app/features/servers';
 import { ConsolePageService } from './console-page.service';
 import { ConsolePageRepository } from './console-page.repository';
 /** Components */
