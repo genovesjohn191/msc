@@ -21,16 +21,18 @@ import {
 import {
   McsTextContentProvider,
   McsErrorHandlerService,
-  McsApiJob,
   CoreDefinition,
-  McsJobType,
-  McsHttpStatusCode,
   McsDataStatusFactory
-} from '../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../../utilities';
+} from '@app/utilities';
+import {
+  McsJob,
+  McsJobType,
+  McsHttpStatusCode,
+} from '@app/models';
 import { JobsApiService } from '../../services';
 
 @Component({
@@ -41,8 +43,8 @@ import { JobsApiService } from '../../services';
 
 export class ServerProvisioningComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public job: McsApiJob;
-  public dataStatusFactory: McsDataStatusFactory<McsApiJob>;
+  public job: McsJob;
+  public dataStatusFactory: McsDataStatusFactory<McsJob>;
 
   private _destroySubject = new Subject<void>();
 
@@ -91,7 +93,7 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
           let jobId = params.get('id');
           return this._jobApiService.getJob(jobId);
         }),
-    )
+      )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
         this.job = response.content;
@@ -105,7 +107,7 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
    * Validate job type and return the error page in case
    * the job type is non-create server
    */
-  private _validateJobType(job: McsApiJob): void {
+  private _validateJobType(job: McsJob): void {
     if (isNullOrEmpty(job)) { return; }
     let createServerType = job.type === McsJobType.CreateServer
       || job.type === McsJobType.CloneServer;

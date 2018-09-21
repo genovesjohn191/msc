@@ -1,5 +1,3 @@
-/** Models */
-export * from './models';
 /** Firewalls */
 export * from './firewalls.component';
 export * from './firewalls.service';

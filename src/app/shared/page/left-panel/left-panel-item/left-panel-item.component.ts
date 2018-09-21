@@ -7,7 +7,7 @@ import {
   Renderer2,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { isNullOrEmpty } from '../../../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 type offsetType = 'small' | 'medium' | 'large';
 

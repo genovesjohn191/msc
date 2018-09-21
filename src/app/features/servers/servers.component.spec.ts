@@ -2,7 +2,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '../../core';
+import { CoreDefinition } from '@app/core';
 import { ServersComponent } from './servers.component';
 import { ServersService } from './servers.service';
 import {

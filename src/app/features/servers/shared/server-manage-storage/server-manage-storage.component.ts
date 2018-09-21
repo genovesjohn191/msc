@@ -19,15 +19,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   CoreValidators,
-  McsTextContentProvider,
-  McsUnitType
-} from '../../../../core';
-import { ResourceStorage } from '../../../resources';
-import {
-  ServerManageStorage,
-  ServerInputManageType,
-  ServerStorageDevice
-} from '../../models';
+  McsTextContentProvider
+} from '@app/core';
 import {
   convertMbToGb,
   convertGbToMb,
@@ -38,7 +31,14 @@ import {
   animateFactory,
   unsubscribeSubject,
   getSafeProperty
-} from '../../../../utilities';
+} from '@app/utilities';
+import {
+  InputManageType,
+  McsUnitType,
+  McsResourceStorage,
+  McsServerStorageDevice
+} from '@app/models';
+import { ServerManageStorage } from './server-manage-storage';
 
 // Constants
 const DEFAULT_STORAGE_STEPS = 10;
@@ -57,7 +57,7 @@ const DEFAULT_STORAGE_STEPS = 10;
 
 export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestroy {
   public textContent: any;
-  public inputManageType: ServerInputManageType;
+  public inputManageType: InputManageType;
   public storageValue: number;
 
   // Forms
@@ -72,10 +72,10 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public detailsTemplate: TemplateRef<any>;
 
   @Input()
-  public storages: ResourceStorage[];
+  public storages: McsResourceStorage[];
 
   @Input()
-  public targetDisk: ServerStorageDevice;
+  public targetDisk: McsServerStorageDevice;
 
   @Input()
   public get minValueGB(): number {
@@ -114,7 +114,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   /**
    * Returns the selected storage based on the forms
    */
-  public get selectedStorage(): ResourceStorage {
+  public get selectedStorage(): McsResourceStorage {
     return getSafeProperty(this.fcSelectStorages, (obj) => obj.value);
   }
 
@@ -178,20 +178,20 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   public reset(): void {
     this._resetFormGroup();
     this.storageValue = this.minValueGB;
-    this.inputManageType = ServerInputManageType.Slider;
+    this.inputManageType = InputManageType.Slider;
   }
 
   /**
    * Returns the server input managetype enumeration instance
    */
   public get inputManageTypeEnum(): any {
-    return ServerInputManageType;
+    return InputManageType;
   }
 
   /**
    * Event that emits when the input manage type has been changed
    */
-  public onChangeInputManageType(inputManageType: ServerInputManageType) {
+  public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
     this._notifyDataChanged();
   }
@@ -290,7 +290,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
    * Returns true when the selected storage has available storage
    * @param _storage Storage to be checked
    */
-  private _maxStorageChecking(_storage: ResourceStorage) {
+  private _maxStorageChecking(_storage: McsResourceStorage) {
     return this.hasAvailableMemory;
   }
 
@@ -300,7 +300,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
   private _notifyDataChanged() {
     // Set model data based on management type
     switch (this.inputManageType) {
-      case ServerInputManageType.Custom:
+      case InputManageType.Custom:
         this._storageOutput.storage = this.selectedStorage;
         this._storageOutput.sizeMB = convertGbToMb(
           coerceNumber(this.fcCustomStorage.value, this.minValueGB)
@@ -308,7 +308,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
         this._storageOutput.valid = this.fcCustomStorage.valid;
         break;
 
-      case ServerInputManageType.Slider:
+      case InputManageType.Slider:
       default:
         this._storageOutput.storage = this.selectedStorage;
         this._storageOutput.sizeMB = convertGbToMb(this.storageValue);

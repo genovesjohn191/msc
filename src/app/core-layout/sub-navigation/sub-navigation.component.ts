@@ -9,16 +9,18 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsRouteKey,
-  McsRouteCategory,
   McsRouteHandlerService,
   McsTextContentProvider
-} from '../../core';
+} from '@app/core';
 import {
   unsubscribeSubject,
   isNullOrEmpty,
   animateFactory
-} from '../../utilities';
+} from '@app/utilities';
+import {
+  McsRouteKey,
+  McsRouteCategory
+} from '@app/models';
 
 @Component({
   selector: 'mcs-sub-navigation',

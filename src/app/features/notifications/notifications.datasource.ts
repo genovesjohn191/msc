@@ -5,17 +5,19 @@ import {
   merge
 } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   McsDataSource,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
   McsDataStatus,
-  McsPaginator,
-  McsSearch,
-  McsApiJob
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+  McsJob
+} from '@app/models';
 import { NotificationsRepository } from './notifications.repository';
 
-export class NotificationsDataSource implements McsDataSource<McsApiJob> {
+export class NotificationsDataSource implements McsDataSource<McsJob> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -23,8 +25,8 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
 
   constructor(
     private _notificationsRepository: NotificationsRepository,
-    private _paginator: McsPaginator,
-    private _search: McsSearch
+    private _paginator: Paginator,
+    private _search: Search
   ) {
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
@@ -33,7 +35,7 @@ export class NotificationsDataSource implements McsDataSource<McsApiJob> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<McsApiJob[]> {
+  public connect(): Observable<McsJob[]> {
     const displayDataChanges = [
       of(undefined), // Add undefined observable to make way of retry when error occured
       this._notificationsRepository.dataRecordsChanged,

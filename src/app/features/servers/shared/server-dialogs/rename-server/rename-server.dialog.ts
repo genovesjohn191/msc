@@ -10,12 +10,12 @@ import {
   CoreDefinition,
   McsTextContentProvider,
   CoreValidators
-} from '../../../../../core';
+} from '@app/core';
 import {
   replacePlaceholder,
   isNullOrEmpty
-} from '../../../../../utilities';
-import { Server } from '../../../models';
+} from '@app/utilities';
+import { McsServer } from '@app/models';
 
 @Component({
   selector: 'mcs-rename-server-dialog',
@@ -28,7 +28,7 @@ import { Server } from '../../../models';
 
 export class RenameServerDialogComponent {
   public textContent: any;
-  public server: Server;
+  public server: McsServer;
   public fcServerName: FormControl;
 
   /**
@@ -44,7 +44,7 @@ export class RenameServerDialogComponent {
     @Inject(MCS_DIALOG_DATA) public dialogData
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.renameServerDialog;
-    this.server = this.dialogData as Server[][0];
+    this.server = this.dialogData as McsServer[][0];
     this._registerFormControl();
   }
 

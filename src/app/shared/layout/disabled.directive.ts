@@ -4,7 +4,7 @@ import {
   Renderer2,
   ElementRef
 } from '@angular/core';
-import { coerceBoolean } from '../../utilities';
+import { coerceBoolean } from '@app/utilities';
 
 @Directive({
   selector: '[disabled]'

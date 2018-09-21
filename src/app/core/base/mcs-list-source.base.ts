@@ -9,7 +9,7 @@ import {
   switchMap,
   map
 } from 'rxjs/operators';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 export abstract class McsListSourceBase<T> {
   /**

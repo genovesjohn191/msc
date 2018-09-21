@@ -17,34 +17,33 @@ import {
   McsErrorHandlerService,
   McsTextContentProvider,
   CoreDefinition,
-  CoreValidators,
-  McsUnitType
-} from '../../../../../core';
+  CoreValidators
+} from '@app/core';
 import {
   replacePlaceholder,
   isNullOrEmpty,
   appendUnitSuffix,
   convertMbToGb,
   getSafeProperty
-} from '../../../../../utilities';
+} from '@app/utilities';
 import {
-  Resource,
-  ResourceStorage,
-  ResourceCatalogItem,
-  ResourceCatalogItemType
-} from '../../../../resources';
+  CatalogItemType,
+  ServiceType,
+  ServerImageType,
+  McsUnitType,
+  McsResource,
+  McsResourceStorage,
+  McsResourceCatalogItem,
+  McsServerCreate,
+  McsServerCreateStorage,
+  McsServerCreateNic,
+  McsServerOperatingSystem
+} from '@app/models';
 import {
-  ServerCreateType,
-  ServerOperatingSystem,
-  ServerServiceType,
   ServerManageStorage,
   ServerManageNetwork,
   ServerManageScale,
-  ServerImageType,
-  ServerCreate,
-  ServerCreateStorage,
-  ServerCreateNic
-} from '../../../models';
+} from '../../../shared';
 import { ServersOsRepository } from '../../../repositories/servers-os.repository';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
@@ -57,18 +56,18 @@ const DEFAULT_SELF_MANAGE_STORAGE_MINIMUM = 30;
 })
 
 export class ServerNewComponent
-  extends ServerCreateDetailsBase<ServerCreate>
+  extends ServerCreateDetailsBase<McsServerCreate>
   implements OnInit, OnDestroy {
 
   @Input()
-  public serviceType: ServerServiceType;
+  public serviceType: ServiceType;
 
   public textContent: any;
   public textHelpContent: any;
-  public operatingSystemsMap: Map<string, ServerOperatingSystem[]>;
+  public operatingSystemsMap: Map<string, McsServerOperatingSystem[]>;
   public operatingSystemsSubscription: Subscription;
-  public selectedStorage: ResourceStorage;
-  public customTemplates: ResourceCatalogItem[];
+  public selectedStorage: McsResourceStorage;
+  public customTemplates: McsResourceCatalogItem[];
 
   // Form variables
   public fgNewServer: FormGroup;
@@ -80,13 +79,13 @@ export class ServerNewComponent
   public fcStorage: FormControl;
 
   @Input()
-  public get resource(): Resource { return this._resource; }
-  public set resource(value: Resource) {
+  public get resource(): McsResource { return this._resource; }
+  public set resource(value: McsResource) {
     if (this._resource !== value) {
       this._resource = value;
     }
   }
-  private _resource: Resource;
+  private _resource: McsResource;
 
   constructor(
     private _textContentProvider: McsTextContentProvider,
@@ -94,7 +93,7 @@ export class ServerNewComponent
     private _serversOsRepository: ServersOsRepository
   ) {
     super();
-    this.operatingSystemsMap = new Map<string, ServerOperatingSystem[]>();
+    this.operatingSystemsMap = new Map<string, McsServerOperatingSystem[]>();
   }
 
   public ngOnInit() {
@@ -129,7 +128,7 @@ export class ServerNewComponent
    * Returns the minimum storage in GB
    */
   public get minimumStorageInGB(): number {
-    return this.serviceType === ServerServiceType.Managed ?
+    return this.serviceType === ServiceType.Managed ?
       DEFAULT_MANAGE_STORAGE_MINIMUM :
       DEFAULT_SELF_MANAGE_STORAGE_MINIMUM;
   }
@@ -202,21 +201,14 @@ export class ServerNewComponent
   }
 
   /**
-   * Returns the create type based on the selected service type
-   */
-  public getCreationType(): ServerCreateType {
-    return ServerCreateType.New;
-  }
-
-  /**
    * Returns the creation details input
    */
-  public getCreationInputs(): ServerCreate {
+  public getCreationInputs(): McsServerCreate {
     let formIsValid = !isNullOrEmpty(this.fgNewServer) && this.fgNewServer.valid;
     if (!formIsValid) { return; }
 
     // Set the corresponding attribute to create the server
-    let serverCreate = new ServerCreate();
+    let serverCreate = new McsServerCreate();
     serverCreate.platform = this.resource.platformLabel;
     serverCreate.resource = this.resource.name;
     serverCreate.name = this.fcServerName.value;
@@ -229,20 +221,20 @@ export class ServerNewComponent
 
     // Storage
     let serverStorage = this.fcStorage.value as ServerManageStorage;
-    serverCreate.storage = new ServerCreateStorage();
+    serverCreate.storage = new McsServerCreateStorage();
     serverCreate.storage.name = serverStorage.storage.name;
     serverCreate.storage.sizeMB = serverStorage.sizeMB;
 
     // Network
     let serverNetwork = this.fcNetwork.value as ServerManageNetwork;
-    serverCreate.network = new ServerCreateNic();
+    serverCreate.network = new McsServerCreateNic();
     serverCreate.network.name = serverNetwork.network.name;
     serverCreate.network.ipAllocationMode = serverNetwork.ipAllocationMode;
     serverCreate.network.ipAddress = serverNetwork.customIpAddress;
 
     // VM Image
     let selectedImage = this.fcImage.value;
-    if (selectedImage instanceof ServerOperatingSystem) {
+    if (selectedImage instanceof McsServerOperatingSystem) {
       serverCreate.image = selectedImage.name;
       serverCreate.imageType = ServerImageType.Os;
     } else {
@@ -271,7 +263,7 @@ export class ServerNewComponent
           return throwError(error);
         })
       )
-      .subscribe((response: ServerOperatingSystem[]) => {
+      .subscribe((response: McsServerOperatingSystem[]) => {
         this._filterOsGroup(response);
       });
   }
@@ -280,7 +272,7 @@ export class ServerNewComponent
    * Filters the OS group and create the mapping
    * @param operatingSystems Operating systems to be grouped
    */
-  private _filterOsGroup(operatingSystems: ServerOperatingSystem[]): void {
+  private _filterOsGroup(operatingSystems: McsServerOperatingSystem[]): void {
     if (isNullOrEmpty(operatingSystems)) { return; }
 
     operatingSystems.forEach((operatingSystem) => {
@@ -288,7 +280,7 @@ export class ServerNewComponent
 
       let keyString = operatingSystem.name.split(CoreDefinition.REGEX_SPACE_AND_DASH);
       if (isNullOrEmpty(keyString)) { return; }
-      let groupedOs: ServerOperatingSystem[];
+      let groupedOs: McsServerOperatingSystem[];
 
       let existingOs = this.operatingSystemsMap.get(keyString[0]);
       groupedOs = isNullOrEmpty(existingOs) ? new Array() : existingOs;
@@ -306,7 +298,7 @@ export class ServerNewComponent
     if (!hasCatalogItems) { return; }
 
     let filteredCatalogItems = this.resource.catalogItems.filter((catalog) => {
-      return catalog.itemType === ResourceCatalogItemType.Template;
+      return catalog.itemType === CatalogItemType.Template;
     });
     if (!isNullOrEmpty(filteredCatalogItems)) {
       this.customTemplates = filteredCatalogItems;

@@ -3,18 +3,18 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
+import { unsubscribeSafely } from '@app/utilities';
 import {
-  McsPaginator,
-  McsSearch,
-  McsDataStatus
-} from '../../core';
+  Paginator,
+  Search
+} from '@app/shared';
+import { McsDataStatus } from '@app/models';
 import {
   TicketsTestingModule,
   mockTicketsService
 } from './testing';
 import { TicketsComponent } from './tickets.component';
 import { TicketsService } from './tickets.service';
-import { unsubscribeSafely } from '../../utilities';
 
 describe('TicketsComponent', () => {
 
@@ -84,7 +84,7 @@ describe('TicketsComponent', () => {
         pageSize: 10,
         totalCount: 100,
         showLoading() { return; }
-      } as McsPaginator;
+      } as Paginator;
 
       component.search = {
         keyword: undefined,
@@ -93,7 +93,7 @@ describe('TicketsComponent', () => {
         },
         searchChangedStream: new EventEmitter(),
         searching: false
-      } as McsSearch;
+      } as Search;
 
       component.ngAfterViewInit();
     }));

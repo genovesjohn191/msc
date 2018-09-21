@@ -9,7 +9,7 @@ import {
   Observable,
   Subject
 } from 'rxjs';
-import { animateFactory } from '../../utilities';
+import { animateFactory } from '@app/utilities';
 
 @Component({
   selector: 'mcs-contextual-help',

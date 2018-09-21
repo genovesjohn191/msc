@@ -5,7 +5,7 @@ import {
   ChangeDetectorRef,
   Directive
 } from '@angular/core';
-import { coerceBoolean } from '../../../utilities';
+import { coerceBoolean } from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OrdersService } from '../../orders';
-import {
-  Resource,
-  ResourcesRepository,
-  ResourceServiceType
-} from '../../resources';
 import {
   McsAccessControlService,
   CoreDefinition
-} from '../../../core';
+} from '@app/core';
+import {
+  ServiceType,
+  McsResource
+} from '@app/models';
+import { OrdersService } from '@app/features/orders';
+import { ResourcesRepository } from '@app/features/resources';
 
 @Injectable()
 export class ServerCreateService {
@@ -23,15 +23,15 @@ export class ServerCreateService {
   /**
    * Returns the resources applicable to create server (Filtered based on feature flag)
    */
-  public getCreationResources(): Observable<Resource[]> {
+  public getCreationResources(): Observable<McsResource[]> {
     return this._resourcesRepository.findAllRecords()
       .pipe(
         map((resources) => {
           let managedFeatureIsOn = this._accessControlService
             .hasAccessToFeature(CoreDefinition.FEATURE_FLAG_ENABLE_CREATE_MANAGED_SERVER);
           return resources.filter((resource) => {
-            return resource.serviceType === ResourceServiceType.SelfManaged ||
-              (managedFeatureIsOn && resource.serviceType === ResourceServiceType.Managed);
+            return resource.serviceType === ServiceType.SelfManaged ||
+              (managedFeatureIsOn && resource.serviceType === ServiceType.Managed);
           });
         })
       );

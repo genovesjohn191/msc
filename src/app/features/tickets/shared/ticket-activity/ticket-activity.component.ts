@@ -10,12 +10,10 @@ import { saveAs } from 'file-saver';
 import {
   CoreDefinition,
   McsTextContentProvider
-} from '../../../../core';
-import {
-  TicketActivity,
-  TicketActivityType,
-  TicketCommentType
-} from '../../models';
+} from '@app/core';
+import { CommentType } from '@app/models';
+import { TicketActivity } from './ticket-activity';
+import { TicketActivityType } from './ticket-activity-type.enum';
 import { TicketsService } from '../../tickets.service';
 
 @Component({
@@ -61,7 +59,7 @@ export class TicketActivityComponent implements OnInit {
   }
 
   public get isWorkNotes(): boolean {
-    return this.activity.commentType === TicketCommentType.WorkNotes;
+    return this.activity.commentType === CommentType.WorkNotes;
   }
 
   private _ticketId: any;

@@ -18,11 +18,11 @@ import {
   startWith,
   takeUntil
 } from 'rxjs/operators';
-import { McsSelection } from '../../core';
+import { McsSelection } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import { TabComponent } from './tab/tab.component';
 import { TabHeaderItemComponent } from './tab-header-item/tab-header-item.component';
 

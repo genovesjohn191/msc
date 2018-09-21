@@ -19,19 +19,24 @@ import {
   McsDialogService,
   McsTextContentProvider,
   McsNotificationEventsService,
-  McsApiJob,
   McsDataStatusFactory,
   CoreDefinition,
-  McsDataStatus,
   McsErrorHandlerService
-} from '../../../../core';
+} from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../../../utilities';
-import { StdDateFormatPipe } from '../../../../shared';
+} from '@app/utilities';
+import { StdDateFormatPipe } from '@app/shared';
 import {
+  McsJob,
+  McsDataStatus,
+  McsServerSnapshot,
+  McsServerStorageDevice
+} from '@app/models';
+import {
+  ServerSnapshotDialogContent,
   CreateSnapshotDialogComponent,
   DeleteSnapshotDialogComponent,
   RestoreSnapshotDialogComponent,
@@ -39,11 +44,6 @@ import {
   DiskConflictSnapshotDialogComponent
 } from '../../shared';
 import { ResourcesRepository } from '../../../resources';
-import {
-  ServerSnapshotDialogContent,
-  ServerSnapshot,
-  ServerStorageDevice
-} from '../../models';
 import { ServerService } from '../server.service';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../repositories/servers.repository';
@@ -66,7 +66,7 @@ enum SnapshotDialogType {
 export class ServerBackupsComponent extends ServerDetailsBase
   implements OnInit, OnDestroy {
 
-  public dataStatusFactory: McsDataStatusFactory<ServerSnapshot[]>;
+  public dataStatusFactory: McsDataStatusFactory<McsServerSnapshot[]>;
 
   public textContent: any;
   public serverSnapshotsSubscription: Subscription;
@@ -74,16 +74,16 @@ export class ServerBackupsComponent extends ServerDetailsBase
   public deleteSnapshotSubscription: Subscription;
   public restoreSnapshotSubscription: Subscription;
 
-  private _newSnapshot: ServerSnapshot;
+  private _newSnapshot: McsServerSnapshot;
   private _destroySubject = new Subject<void>();
 
   public get hasSnapshot(): boolean {
     return !isNullOrEmpty(this.server.snapshots);
   }
 
-  public get snapshot(): ServerSnapshot {
+  public get snapshot(): McsServerSnapshot {
     return this.hasSnapshot ?
-      this.server.snapshots[0] : new ServerSnapshot();
+      this.server.snapshots[0] : new McsServerSnapshot();
   }
 
   public get creatingSnapshot(): boolean {
@@ -181,7 +181,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Restore snapshot based on server snapshot details
    * @param snapshot Snapshot to be restored
    */
-  public restoreSnapshot(snapshot: ServerSnapshot) {
+  public restoreSnapshot(snapshot: McsServerSnapshot) {
     if (isNullOrEmpty(snapshot)) { return; }
 
     this._showDialog(SnapshotDialogType.Restore, () => {
@@ -204,7 +204,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Delete the existing snapshot of the server
    * @param snapshot Snapshot to be deleted
    */
-  public deleteSnapshot(snapshot: ServerSnapshot) {
+  public deleteSnapshot(snapshot: McsServerSnapshot) {
     if (isNullOrEmpty(snapshot)) { return; }
 
     this._showDialog(SnapshotDialogType.Delete, () => {
@@ -241,7 +241,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   private _showDialog(
     dialogType: SnapshotDialogType,
     dialogCallback: () => void,
-    _snapshot?: ServerSnapshot
+    _snapshot?: McsServerSnapshot
   ): void {
     if (isNullOrEmpty(dialogType)) { return; }
 
@@ -315,7 +315,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Event that emits when creating a snapshot
    * @param job Emitted job content
    */
-  private _onCreateServerSnapshot(job: McsApiJob): void {
+  private _onCreateServerSnapshot(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
@@ -336,7 +336,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Event that emits when either updating or deleting a server snapshot
    * @param job Emitted job content
    */
-  private _onUpdateServerSnapshot(job: McsApiJob): void {
+  private _onUpdateServerSnapshot(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // We need to set the processing flag manually here in order to cater
@@ -353,11 +353,11 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * Will trigger if currently creating a snapshot
    * @param job Emitted job content
    */
-  private _onCreatingSnapshot(job: McsApiJob): void {
+  private _onCreatingSnapshot(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock snapshot data based on job response
-    this._newSnapshot = new ServerSnapshot();
+    this._newSnapshot = new McsServerSnapshot();
     this._changeDetectorRef.markForCheck();
   }
 
@@ -394,7 +394,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
    * has disks with multiple storage profiles
    * @param disks Server disks
    */
-  private _hasDiskConflict(disks: ServerStorageDevice[]): boolean {
+  private _hasDiskConflict(disks: McsServerStorageDevice[]): boolean {
     if (isNullOrEmpty(disks)) { return false; }
 
     let storageProfile = disks[0].storageProfile;

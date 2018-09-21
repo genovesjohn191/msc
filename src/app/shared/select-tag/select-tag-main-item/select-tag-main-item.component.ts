@@ -17,7 +17,7 @@ import {
   animate,
 } from '@angular/animations';
 import { SelectTagSubItemComponent } from '../select-tag-sub-item/select-tag-sub-item.component';
-import { CoreDefinition } from '../../../core';
+import { CoreDefinition } from '@app/core';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

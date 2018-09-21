@@ -11,8 +11,8 @@ import {
   Renderer2,
   ViewContainerRef
 } from '@angular/core';
-import { CoreDefinition } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { CoreDefinition } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import { PageHeaderDirective } from './page-header.directive';
 import {
   ContentPanelDefDirective,

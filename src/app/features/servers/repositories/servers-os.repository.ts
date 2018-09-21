@@ -3,15 +3,15 @@ import {
   Observable,
   of
 } from 'rxjs';
+import { McsRepositoryBase } from '@app/core';
 import {
-  McsRepositoryBase,
-  McsApiSuccessResponse
-} from '../../../core';
+  McsApiSuccessResponse,
+  McsServerOperatingSystem
+} from '@app/models';
 import { ServersService } from '../servers.service';
-import { ServerOperatingSystem } from '../models';
 
 @Injectable()
-export class ServersOsRepository extends McsRepositoryBase<ServerOperatingSystem> {
+export class ServersOsRepository extends McsRepositoryBase<McsServerOperatingSystem> {
 
   constructor(private _serversApiService: ServersService) {
     super();
@@ -25,7 +25,7 @@ export class ServersOsRepository extends McsRepositoryBase<ServerOperatingSystem
     _pageIndex: number,
     _pageSize: number,
     _keyword: string
-  ): Observable<McsApiSuccessResponse<ServerOperatingSystem[]>> {
+  ): Observable<McsApiSuccessResponse<McsServerOperatingSystem[]>> {
     return this._serversApiService.getServerOs();
   }
 
@@ -36,7 +36,7 @@ export class ServersOsRepository extends McsRepositoryBase<ServerOperatingSystem
    * @param recordId Record id to find
    */
   protected getRecordById(_recordId: string):
-    Observable<McsApiSuccessResponse<ServerOperatingSystem>> {
+    Observable<McsApiSuccessResponse<McsServerOperatingSystem>> {
     return of(undefined);
   }
 }

@@ -5,17 +5,19 @@ import {
   merge
 } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   McsDataSource,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
   McsDataStatus,
-  McsPaginator,
-  McsSearch
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
-import { Order } from './models';
+  McsOrder
+} from '@app/models';
 import { OrdersRepository } from './repositories/orders.repository';
 
-export class OrdersDataSource implements McsDataSource<Order> {
+export class OrdersDataSource implements McsDataSource<McsOrder> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -23,8 +25,8 @@ export class OrdersDataSource implements McsDataSource<Order> {
 
   constructor(
     private _ordersRepository: OrdersRepository,
-    private _paginator: McsPaginator,
-    private _search: McsSearch
+    private _paginator: Paginator,
+    private _search: Search
   ) {
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
@@ -33,7 +35,7 @@ export class OrdersDataSource implements McsDataSource<Order> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<Order[]> {
+  public connect(): Observable<McsOrder[]> {
     const displayDataChanges = [
       of(undefined), // Add undefined observable to make way of retry when error occured
       this._ordersRepository.dataRecordsChanged,
@@ -69,7 +71,7 @@ export class OrdersDataSource implements McsDataSource<Order> {
   /**
    * This will invoke when the data obtainment is completed
    */
-  public onCompletion(_status: McsDataStatus, _record: Order[]): void {
+  public onCompletion(_status: McsDataStatus, _record: McsOrder[]): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);

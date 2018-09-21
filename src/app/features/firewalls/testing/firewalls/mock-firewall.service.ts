@@ -3,37 +3,37 @@ import {
   Subject,
   of
 } from 'rxjs';
-import { McsApiSuccessResponse } from '../../../../core';
 import {
-  Firewall,
-  FirewallPolicy
-} from '../../models';
+  McsApiSuccessResponse,
+  McsFirewall,
+  McsFirewallPolicy
+} from '@app/models';
 
 export const mockFirewallService = {
 
-  selectedFirewallStream: new Subject<Firewall>(),
-  selectedFirewall: new Firewall(),
+  selectedFirewallStream: new Subject<McsFirewall>(),
+  selectedFirewall: new McsFirewall(),
 
-  getFirewall(_id: any): Observable<McsApiSuccessResponse<Firewall>> {
-    let mcsApiResponseMock = new McsApiSuccessResponse<Firewall>();
+  getFirewall(_id: any): Observable<McsApiSuccessResponse<McsFirewall>> {
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsFirewall>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 1;
-    mcsApiResponseMock.content = new Firewall();
+    mcsApiResponseMock.content = new McsFirewall();
 
     return of(mcsApiResponseMock);
   },
 
-  getFirewallPolicies(_id: any): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
-    let mcsApiResponseMock = new McsApiSuccessResponse<FirewallPolicy[]>();
+  getFirewallPolicies(_id: any): Observable<McsApiSuccessResponse<McsFirewallPolicy[]>> {
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsFirewallPolicy[]>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 2;
-    mcsApiResponseMock.content = new Array(new FirewallPolicy(), new FirewallPolicy());
+    mcsApiResponseMock.content = new Array(new McsFirewallPolicy(), new McsFirewallPolicy());
 
     return of(mcsApiResponseMock);
   },
 
   setSelectedFirewall(_id: any): void {
-    return this.selectedFirewallStream.next(new Firewall());
+    return this.selectedFirewallStream.next(new McsFirewall());
   }
 
 };

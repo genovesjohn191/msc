@@ -8,16 +8,14 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsTextContentProvider } from '../../../../../core';
+import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
-} from '../../../../../utilities';
+} from '@app/utilities';
+import { McsServerSqlOptions } from '@app/models';
 import { OptionsApiService } from '../../../../services';
-import {
-  ServerSqlOptions,
-  ServerSql
-} from '../../../models';
+import { ServerSql } from './server-sql';
 
 @Component({
   selector: 'mcs-sql-server-addon',
@@ -31,7 +29,7 @@ import {
 
 export class SqlServerAddOnComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public sqlServerOptions: ServerSqlOptions;
+  public sqlServerOptions: McsServerSqlOptions;
   public sqlServer: ServerSql;
   public sqlServerVersions: string[];
   public sqlServerEditions: string[];
@@ -50,7 +48,7 @@ export class SqlServerAddOnComponent implements OnInit, OnDestroy {
     private _textProvider: McsTextContentProvider,
     private _optionsApiService: OptionsApiService
   ) {
-    this.sqlServerOptions = new ServerSqlOptions();
+    this.sqlServerOptions = new McsServerSqlOptions();
     this.sqlServerVersions = new Array();
     this.sqlServerEditions = new Array();
     this.sqlServerArchitectures = new Array();

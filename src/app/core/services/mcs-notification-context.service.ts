@@ -7,21 +7,23 @@ import {
   takeUntil,
   map
 } from 'rxjs/operators';
-import { McsApiJob } from '../models/response/mcs-api-job';
-import { McsDataStatus } from '../enumerations/mcs-data-status.enum';
-import { McsNotificationJobService } from './mcs-notification-job.service';
-import { CoreDefinition } from '../core.definition';
-import { McsApiService } from './mcs-api.service';
-import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
-import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
 import {
   getTimeDifference,
   addOrUpdateArrayRecord,
   deleteArrayRecord,
   isNullOrEmpty,
-  unsubscribeSubject
-} from '../../utilities';
-import { McsInitializer } from '../interfaces/mcs-initializer.interface';
+  unsubscribeSubject,
+  McsInitializer
+} from '@app/utilities';
+import {
+  McsJob,
+  McsDataStatus,
+  McsApiRequestParameter,
+  McsApiSuccessResponse
+} from '@app/models';
+import { CoreDefinition } from '../core.definition';
+import { McsNotificationJobService } from './mcs-notification-job.service';
+import { McsApiService } from './mcs-api.service';
 
 /**
  * MCS notification context service
@@ -31,16 +33,16 @@ import { McsInitializer } from '../interfaces/mcs-initializer.interface';
 @Injectable()
 export class McsNotificationContextService implements McsInitializer {
   private _destroySubject = new Subject<void>();
-  private _notifications: McsApiJob[];
+  private _notifications: McsJob[];
 
   /**
    * Subscribe to get the updated notifications in real-time
    */
-  private _notificationsStream: BehaviorSubject<McsApiJob[]>;
-  public get notificationsStream(): BehaviorSubject<McsApiJob[]> {
+  private _notificationsStream: BehaviorSubject<McsJob[]>;
+  public get notificationsStream(): BehaviorSubject<McsJob[]> {
     return this._notificationsStream;
   }
-  public set notificationsStream(value: BehaviorSubject<McsApiJob[]>) {
+  public set notificationsStream(value: BehaviorSubject<McsJob[]>) {
     this._notificationsStream = value;
   }
 
@@ -49,7 +51,7 @@ export class McsNotificationContextService implements McsInitializer {
     private _apiService: McsApiService
   ) {
     this._notifications = new Array();
-    this._notificationsStream = new BehaviorSubject<McsApiJob[]>(new Array());
+    this._notificationsStream = new BehaviorSubject<McsJob[]>(new Array());
   }
 
   /**
@@ -80,8 +82,8 @@ export class McsNotificationContextService implements McsInitializer {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiJob[]>(McsApiJob, response);
-          return apiResponse ? apiResponse : new McsApiSuccessResponse<McsApiJob[]>();
+            .deserializeResponse<McsJob[]>(McsJob, response);
+          return apiResponse ? apiResponse : new McsApiSuccessResponse<McsJob[]>();
         })
       )
       .subscribe((mcsApiResponse) => {
@@ -124,16 +126,16 @@ export class McsNotificationContextService implements McsInitializer {
    * there are new job or a job was ended
    * @param updatedNotification Updated notifications (jobs) to update
    */
-  private _updateNotifications(updatedNotification: McsApiJob) {
+  private _updateNotifications(updatedNotification: McsJob) {
     if (updatedNotification && updatedNotification.id) {
       if (this._isSameJobReceived(updatedNotification)) { return; }
 
       // Comparer method for the jobs
-      let jobsComparer = (_job: McsApiJob) => _job.id === updatedNotification.id;
+      let jobsComparer = (_job: McsJob) => _job.id === updatedNotification.id;
 
       // Update corresponding notification if it is exist else
       // add it to the list of notifications
-      addOrUpdateArrayRecord<McsApiJob>(
+      addOrUpdateArrayRecord<McsJob>(
         this._notifications, updatedNotification, false, jobsComparer, 0);
       this._notificationsStream.next(this._notifications);
     }
@@ -143,7 +145,7 @@ export class McsNotificationContextService implements McsInitializer {
    * This will remove all completed jobs after emitting the original one
    */
   private _removeCompletedJobs(): void {
-    deleteArrayRecord(this._notifications, (job: McsApiJob) => {
+    deleteArrayRecord(this._notifications, (job: McsJob) => {
       return job.dataStatus !== McsDataStatus.InProgress;
     });
   }
@@ -154,7 +156,7 @@ export class McsNotificationContextService implements McsInitializer {
    * `@Note:` This is needed in order for the notifications
    * not blinking when the same job is received
    */
-  private _isSameJobReceived(updatedJob: McsApiJob): boolean {
+  private _isSameJobReceived(updatedJob: McsJob): boolean {
     let jobExists = this._notifications.find((_job) => {
       return _job.id === updatedJob.id &&
         _job.dataStatus === updatedJob.dataStatus &&

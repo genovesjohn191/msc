@@ -23,21 +23,20 @@ import {
   CoreDefinition,
   CoreValidators,
   McsDataStatusFactory
-} from '../../../../../core';
+} from '@app/core';
 import {
   replacePlaceholder,
   isNullOrEmpty,
   unsubscribeSafely,
   refreshView
-} from '../../../../../utilities';
+} from '@app/utilities';
 import {
-  ServerCreateType,
-  ServerServiceType,
-  ServerIpAllocationMode,
-  Server,
-  ServerClone,
-  ServerClientObject
-} from '../../../models';
+  ServiceType,
+  IpAllocationMode,
+  McsServer,
+  McsServerClone,
+  McsServerClientObject
+} from '@app/models';
 import { ServersRepository } from '../../../repositories/servers.repository';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
@@ -47,20 +46,20 @@ import { ServerCreateDetailsBase } from '../server-create-details.base';
 })
 
 export class ServerCloneComponent
-  extends ServerCreateDetailsBase<ServerClone>
+  extends ServerCreateDetailsBase<McsServerClone>
   implements OnInit, OnDestroy {
 
   @Input()
-  public serviceType: ServerServiceType;
+  public serviceType: ServiceType;
 
   public textContent: any;
   public textHelpContent: any;
   public targetServerId: string;
-  public servers: Server[];
+  public servers: McsServer[];
   public serversSubscription: Subscription;
   public parameterSubscription: Subscription;
-  public dataStatusFactory: McsDataStatusFactory<Server[]>;
-  public ipAddressStatusFactory: McsDataStatusFactory<Server>;
+  public dataStatusFactory: McsDataStatusFactory<McsServer[]>;
+  public ipAddressStatusFactory: McsDataStatusFactory<McsServer>;
 
   // Form variables
   public fgCloneServer: FormGroup;
@@ -70,9 +69,9 @@ export class ServerCloneComponent
   /**
    * Selected server property
    */
-  private _selectedServer: Server;
-  public get selectedServer(): Server { return this._selectedServer; }
-  public set selectedServer(value: Server) {
+  private _selectedServer: McsServer;
+  public get selectedServer(): McsServer { return this._selectedServer; }
+  public set selectedServer(value: McsServer) {
     if (this._selectedServer !== value) {
       this._selectedServer = value;
       this._getServerById(this._selectedServer.id);
@@ -123,22 +122,15 @@ export class ServerCloneComponent
   }
 
   /**
-   * Returns the create type based on the selected service type
-   */
-  public getCreationType(): ServerCreateType {
-    return ServerCreateType.Clone;
-  }
-
-  /**
    * Returns the creation details input
    */
-  public getCreationInputs(): ServerClone {
+  public getCreationInputs(): McsServerClone {
     let formIsValid = !isNullOrEmpty(this.fgCloneServer) && this.fgCloneServer.valid;
     if (!formIsValid) { return; }
 
-    let serverClone = new ServerClone();
+    let serverClone = new McsServerClone();
     serverClone.name = this.fcServerName.value;
-    serverClone.clientReferenceObject = new ServerClientObject();
+    serverClone.clientReferenceObject = new McsServerClientObject();
     serverClone.clientReferenceObject.serverId = this.fcTargetServer.value.id;
     return serverClone;
   }
@@ -167,7 +159,7 @@ export class ServerCloneComponent
       )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
-        this.servers = (response as Server[]).filter((server) => server.clonable);
+        this.servers = (response as McsServer[]).filter((server) => server.clonable);
         this.dataStatusFactory.setSuccessful(response);
       });
     this.serversSubscription.add(() => {
@@ -196,7 +188,7 @@ export class ServerCloneComponent
         let hasNics = !isNullOrEmpty(response) && !isNullOrEmpty(response.nics);
         if (!hasNics) { return; }
         this.serverIsManuallyAssignedIp = !!response.nics
-          .find((nic) => nic.ipAllocationMode === ServerIpAllocationMode.Manual);
+          .find((nic) => nic.ipAllocationMode === IpAllocationMode.Manual);
       });
   }
 

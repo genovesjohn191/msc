@@ -6,11 +6,13 @@ import {
 } from 'rxjs/operators';
 import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsLoggerService
-} from '../../core';
-import { Portal } from './models';
+  McsPortal
+} from '@app/models';
 
 @Injectable()
 export class ToolsService {
@@ -23,7 +25,7 @@ export class ToolsService {
   /**
    * Get all the portals from the API
    */
-  public getPortals(): Observable<McsApiSuccessResponse<Portal[]>> {
+  public getPortals(): Observable<McsApiSuccessResponse<McsPortal[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/portals';
 
@@ -35,7 +37,7 @@ export class ToolsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Portal[]>(Portal, response);
+            .deserializeResponse<McsPortal[]>(McsPortal, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

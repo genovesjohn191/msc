@@ -5,11 +5,11 @@ import {
   ViewContainerRef,
   OnChanges
 } from '@angular/core';
-import { McsAccessControlService } from '../../../core';
+import { McsAccessControlService } from '@app/core';
 import {
   coerceArray,
   isNullOrEmpty
-} from '../../../utilities';
+} from '@app/utilities';
 
 @Directive({
   selector: '[mcsAccessControl]'

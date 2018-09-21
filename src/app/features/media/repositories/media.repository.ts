@@ -6,20 +6,20 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   McsRepositoryBase,
-  McsApiSuccessResponse,
-  McsNotificationEventsService,
-  McsApiJob,
-  McsDataStatus
-} from '../../../core';
-import { MediaService } from '../media.service';
+  McsNotificationEventsService
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  Media,
-  MediaServer
-} from '../models';
-import { isNullOrEmpty } from '../../../utilities';
+  McsApiSuccessResponse,
+  McsJob,
+  McsDataStatus,
+  McsResourceMedia,
+  McsResourceMediaServer
+} from '@app/models';
+import { MediaService } from '../media.service';
 
 @Injectable()
-export class MediaRepository extends McsRepositoryBase<Media> {
+export class MediaRepository extends McsRepositoryBase<McsResourceMedia> {
 
   /** Event that emits when notifications job changes */
   public notificationsChanged = new EventEmitter<any>();
@@ -37,7 +37,7 @@ export class MediaRepository extends McsRepositoryBase<Media> {
    * and update the existing media in the repository
    * @param activeMedia Active media to set the Servers
    */
-  public findMediaServers(activeMedia: Media): Observable<MediaServer[]> {
+  public findMediaServers(activeMedia: McsResourceMedia): Observable<McsResourceMediaServer[]> {
     return this._mediaApiService.getMediaServers(activeMedia.id)
       .pipe(
         map((response) => {
@@ -57,7 +57,7 @@ export class MediaRepository extends McsRepositoryBase<Media> {
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<Media[]>> {
+  ): Observable<McsApiSuccessResponse<McsResourceMedia[]>> {
     return this._mediaApiService.getMedias({
       page: pageIndex,
       perPage: pageSize,
@@ -70,7 +70,7 @@ export class MediaRepository extends McsRepositoryBase<Media> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Media>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsResourceMedia>> {
     return this._mediaApiService.getMedia(recordId)
       .pipe(map((response) => response));
   }
@@ -90,7 +90,7 @@ export class MediaRepository extends McsRepositoryBase<Media> {
    * Event that emits when detaching a server to a media
    * @param job Emitted job content
    */
-  private _onSetServerMediaStatus(job: McsApiJob): void {
+  private _onSetServerMediaStatus(job: McsJob): void {
     let activeMedia = this._getMediaByJob(job);
     if (isNullOrEmpty(activeMedia)) { return; }
     this._setMediaProcessDetails(activeMedia, job);
@@ -100,7 +100,7 @@ export class MediaRepository extends McsRepositoryBase<Media> {
    * Get the media based on job client reference object
    * @param job Emitted job content
    */
-  private _getMediaByJob(job: McsApiJob): Media {
+  private _getMediaByJob(job: McsJob): McsResourceMedia {
     if (isNullOrEmpty(job)) { return undefined; }
     return this.dataRecords.find((serverItem) => {
       return !isNullOrEmpty(job) && !isNullOrEmpty(job.clientReferenceObject)
@@ -112,7 +112,7 @@ export class MediaRepository extends McsRepositoryBase<Media> {
    * Set the server process details to display in the view
    * @param job Emitted job content
    */
-  private _setMediaProcessDetails(activeMedia: Media, job: McsApiJob): void {
+  private _setMediaProcessDetails(activeMedia: McsResourceMedia, job: McsJob): void {
     if (isNullOrEmpty(job)) { return; }
     activeMedia.isProcessing = job.dataStatus === McsDataStatus.InProgress;
     activeMedia.processingText = job.summaryInformation;

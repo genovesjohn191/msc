@@ -9,22 +9,23 @@ import {
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import {
+  McsJob,
+  McsDeviceType,
+  McsCompany,
+  McsDataStatus,
+  McsRouteKey
+} from '@app/models';
 /** Services/Providers */
 import {
   CoreRoutes,
   CoreDefinition,
   McsTextContentProvider,
-  McsApiJob,
   McsNotificationEventsService,
   McsBrowserService,
-  McsDeviceType,
   McsAuthenticationIdentity,
   McsAuthenticationService,
-  McsApiCompany,
-  McsDataStatus,
-  McsRouteKey
-} from '../../../core';
-import { SwitchAccountService } from '../../shared';
+} from '@app/core';
 import {
   refreshView,
   isNullOrEmpty,
@@ -32,7 +33,8 @@ import {
   compareDates,
   replacePlaceholder,
   unsubscribeSubject
-} from '../../../utilities';
+} from '@app/utilities';
+import { SwitchAccountService } from '../../shared';
 
 @Component({
   selector: 'mcs-user-panel',
@@ -42,7 +44,7 @@ import {
 })
 
 export class UserPanelComponent implements OnInit, OnDestroy {
-  public notifications: McsApiJob[];
+  public notifications: McsJob[];
   public hasConnectionError: boolean;
   public textContent: any;
   public deviceType: McsDeviceType;
@@ -58,7 +60,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   /**
    * Returns the displayed notifications and ignore those who are already closed
    */
-  public get displayedNotifications(): McsApiJob[] {
+  public get displayedNotifications(): McsJob[] {
     return this.notifications.filter((job) => {
       return job.dataStatus === McsDataStatus.InProgress;
     });
@@ -110,7 +112,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     return this._authenticationIdentity.user.lastName;
   }
 
-  public get activeAccount(): McsApiCompany {
+  public get activeAccount(): McsCompany {
     return this._switchAccountService.activeAccount;
   }
 
@@ -191,7 +193,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   private _sortNotifications(): void {
     if (isNullOrEmpty(this.notifications)) { return; }
-    this.notifications.sort((_first: McsApiJob, _second: McsApiJob) => {
+    this.notifications.sort((_first: McsJob, _second: McsJob) => {
       return compareDates(_second.createdOn, _first.createdOn);
     });
   }
@@ -210,7 +212,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
           this.notifications,
           notification,
           false,
-          (_existingJob: McsApiJob) => {
+          (_existingJob: McsJob) => {
             return _existingJob.id === notification.id;
           });
         this._sortNotifications();

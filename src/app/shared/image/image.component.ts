@@ -15,10 +15,12 @@ import {
 import { map } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsSizeType,
   McsAssetsProvider
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+} from '@app/core';
+import {
+  isNullOrEmpty,
+  McsSizeType
+} from '@app/utilities';
 import {
   Image,
   ImageType,

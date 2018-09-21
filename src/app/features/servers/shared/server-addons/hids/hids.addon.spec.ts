@@ -11,7 +11,7 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { HidsAddOnComponent } from './hids.addon';
-import { CoreTestingModule } from '../../../../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { OptionsApiService } from '../../../../services';
 
 @Component({

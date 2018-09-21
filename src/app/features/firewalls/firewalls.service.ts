@@ -4,19 +4,17 @@ import {
   finalize,
   map
 } from 'rxjs/operators';
-// Services Declarations
 import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import {
   McsApiRequestParameter,
   McsApiSuccessResponse,
-  McsLoggerService
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
-// Models
-import {
-  Firewall,
-  FirewallPolicy
-} from './models';
+  McsFirewall,
+  McsFirewallPolicy
+} from '@app/models';
 
 @Injectable()
 export class FirewallsService {
@@ -36,7 +34,7 @@ export class FirewallsService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<Firewall[]>> {
+  }): Observable<McsApiSuccessResponse<McsFirewall[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -58,7 +56,7 @@ export class FirewallsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Firewall[]>(Firewall, response);
+            .deserializeResponse<McsFirewall[]>(McsFirewall, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -72,7 +70,7 @@ export class FirewallsService {
    * Get firewall by ID (MCS API Response)
    * @param id Firewall identification
    */
-  public getFirewall(id: any): Observable<McsApiSuccessResponse<Firewall>> {
+  public getFirewall(id: any): Observable<McsApiSuccessResponse<McsFirewall>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = `/firewalls/${id}`;
 
@@ -84,7 +82,7 @@ export class FirewallsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Firewall>(Firewall, response);
+            .deserializeResponse<McsFirewall>(McsFirewall, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -107,7 +105,7 @@ export class FirewallsService {
       page?: number,
       perPage?: number,
       searchKeyword?: string
-    }): Observable<McsApiSuccessResponse<FirewallPolicy[]>> {
+    }): Observable<McsApiSuccessResponse<McsFirewallPolicy[]>> {
     let searchParams = new Map<string, any>();
     searchParams.set('page', args.page ? args.page.toString() : undefined);
     searchParams.set('per_page', args.perPage ? args.perPage.toString() : undefined);
@@ -125,7 +123,7 @@ export class FirewallsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<FirewallPolicy[]>(FirewallPolicy, response);
+            .deserializeResponse<McsFirewallPolicy[]>(McsFirewallPolicy, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

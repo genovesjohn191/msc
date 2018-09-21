@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CoreDefinition } from '../core.definition';
+import {
+  McsApiRequestParameter,
+  McsApiSuccessResponse,
+  McsIdentity
+} from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
+import { AppState } from '@app/app.service';
 import { CoreConfig } from '../core.config';
+import { CoreDefinition } from '../core.definition';
 import { McsCookieService } from '../services/mcs-cookie.service';
 import { McsApiService } from '../services/mcs-api.service';
-import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
-import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
-import { McsApiIdentity } from '../models/response/mcs-api-identity';
 import { McsAuthenticationIdentity } from './mcs-authentication.identity';
-import { AppState } from '../../app.service';
-import { isNullOrEmpty } from '../../utilities';
 
 @Injectable()
 export class McsAuthenticationService {
@@ -92,7 +94,7 @@ export class McsAuthenticationService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsApiIdentity>(McsApiIdentity, response);
+            .deserializeResponse<McsIdentity>(McsIdentity, response);
 
           if (apiResponse && apiResponse.content) {
             this._setUserIdentity(apiResponse.content);
@@ -107,7 +109,7 @@ export class McsAuthenticationService {
    * Sets the user identity to cookie based on the provided user information
    * @param identity Currently login user information
    */
-  private _setUserIdentity(identity: McsApiIdentity) {
+  private _setUserIdentity(identity: McsIdentity) {
     this._appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, identity);
     this._authenticationIdentity.applyIdentity();
     this._cookieService.setItem(

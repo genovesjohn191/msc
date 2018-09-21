@@ -6,17 +6,17 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { isNullOrEmpty } from '../../utilities';
 import {
   McsSnackBarRef,
   McsSnackBarService,
   McsNotificationJobService,
-  McsConnectionStatus,
   McsSnackBarConfig,
   McsTextContentProvider,
   CoreDefinition,
   McsNotificationContextService
-} from '../../core';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import { McsNetworkStatus } from '@app/models';
 
 const DEFAULT_SUCCESS_SNACKBAR_DURATION = 5000;
 
@@ -75,7 +75,7 @@ export class WebStompComponent implements OnInit {
       .subscribe((connectionStatus) => {
         // Stomp is connected
         let stompIsConnected = !isNullOrEmpty(this.stompErrorStatusBarRef)
-          && (connectionStatus === McsConnectionStatus.Success)
+          && (connectionStatus === McsNetworkStatus.Success)
           && this._encounteredError;
         if (stompIsConnected) {
           this._hideStompErrorStatusBar();

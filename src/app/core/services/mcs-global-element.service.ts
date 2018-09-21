@@ -4,7 +4,7 @@ import {
   ApplicationRef,
   Injector
 } from '@angular/core';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsGlobalElementOption } from '../factory/global-element/mcs-global-element-option';
 import { McsGlobalElementRef } from '../factory/global-element/mcs-global-element-ref';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';

@@ -34,16 +34,13 @@ import {
   catchError
 } from 'rxjs/operators';
 /** Core / Utilities */
-import {
-  McsDataSource,
-  McsDataStatus,
-  CoreDefinition
-} from '../../core';
+import { CoreDefinition } from '@app/core';
+import { McsDataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 /** Shared Directives */
 import {
   CellOutletDirective,
@@ -67,6 +64,7 @@ import {
 /** Datastatus */
 import { DataStatusDefDirective } from './data-status';
 import { TableDataSource } from './table.datasource';
+import { McsDataSource } from './mcs-data-source.interface';
 
 @Component({
   selector: 'mcs-table',

@@ -12,14 +12,12 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import {
-  CoreDefinition,
-  McsColorType
-} from '../../core';
+import { CoreDefinition } from '@app/core';
 import {
   coerceBoolean,
-  coerceNumber
-} from '../../utilities';
+  coerceNumber,
+  McsColorType
+} from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

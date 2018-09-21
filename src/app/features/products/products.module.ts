@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../../shared';
+import { SharedModule } from '@app/shared';
 /** Components */
 import { ProductsComponent } from './products.component';
 import { ProductComponent } from './product/product.component';

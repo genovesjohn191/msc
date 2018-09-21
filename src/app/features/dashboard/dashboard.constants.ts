@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
-import {
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
-/** Components */
+import { CoreRoutes } from '@app/core';
+import { McsRouteKey } from '@app/models';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardGuard } from './dashboard.guard';
 

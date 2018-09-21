@@ -27,10 +27,8 @@ import {
   NgControl,
   NgForm
 } from '@angular/forms';
-import {
-  Key,
-  McsFormFieldControlBase
-} from '../../core';
+import { McsFormFieldControlBase } from '@app/core';
+import { Key } from '@app/models';
 import {
   isNullOrEmpty,
   refreshView,
@@ -38,7 +36,7 @@ import {
   coerceBoolean,
   ErrorStateMatcher,
   unsubscribeSafely
-} from '../../utilities';
+} from '@app/utilities';
 import { TagComponent } from './tag/tag.component';
 import { TagInputDirective } from './tag-input/tag-input.directive';
 

@@ -9,14 +9,12 @@ import {
   switchMap,
   map
 } from 'rxjs/operators';
-import {
-  McsDataSource,
-  McsDataStatus
-} from '../../core';
+import { McsDataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
+import { McsDataSource } from './mcs-data-source.interface';
 
 export class TableDataSource<T> implements McsDataSource<T> {
   /**

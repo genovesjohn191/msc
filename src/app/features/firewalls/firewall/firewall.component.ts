@@ -24,21 +24,25 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsSearch,
   McsRoutingTabBase,
   McsErrorHandlerService,
   McsDataStatusFactory,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   refreshView,
   unsubscribeSafely,
   unsubscribeSubject
-} from '../../../utilities';
-import { ComponentHandlerDirective } from '../../../shared';
-import { Firewall } from '../models';
+} from '@app/utilities';
+import {
+  ComponentHandlerDirective,
+  Search
+} from '@app/shared';
+import {
+  McsRouteKey,
+  McsFirewall
+} from '@app/models';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
 import { FirewallsRepository } from '../repositories/firewalls.repository';
@@ -59,7 +63,7 @@ export class FirewallComponent
   implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
-  public search: McsSearch;
+  public search: Search;
 
   @ViewChild(ComponentHandlerDirective)
   public componentHandler: ComponentHandlerDirective;
@@ -67,8 +71,8 @@ export class FirewallComponent
   public firewallsTextContent: any;
   public firewallTextContent: any;
   public firewallsListSource: FirewallsListSource | null;
-  public firewallsMap: Map<string, Firewall[]>;
-  public listStatusFactory: McsDataStatusFactory<Map<string, Firewall[]>>;
+  public firewallsMap: Map<string, McsFirewall[]>;
+  public listStatusFactory: McsDataStatusFactory<Map<string, McsFirewall[]>>;
 
   // Subscription
   public firewallSubscription: Subscription;
@@ -92,9 +96,9 @@ export class FirewallComponent
   /**
    * Selected Firewall based on the selected in the listing panel
    */
-  private _selectedFirewall: Firewall;
-  public get selectedFirewall(): Firewall { return this._selectedFirewall; }
-  public set selectedFirewall(value: Firewall) {
+  private _selectedFirewall: McsFirewall;
+  public get selectedFirewall(): McsFirewall { return this._selectedFirewall; }
+  public set selectedFirewall(value: McsFirewall) {
     if (this._selectedFirewall !== value) {
       this._selectedFirewall = value;
       this._changeDetectorRef.markForCheck();
@@ -112,7 +116,7 @@ export class FirewallComponent
     private _firewallsRepository: FirewallsRepository
   ) {
     super(_router, _activatedRoute);
-    this.selectedFirewall = new Firewall();
+    this.selectedFirewall = new McsFirewall();
     this.firewallsMap = new Map();
     this.listStatusFactory = new McsDataStatusFactory();
   }
@@ -193,7 +197,7 @@ export class FirewallComponent
     );
 
     // Key function pointer for mapping objects
-    let keyFn = (item: Firewall) => {
+    let keyFn = (item: McsFirewall) => {
       let resourseName = isNullOrEmpty(item.managementIpAddress) ? '' :
         item.managementIpAddress;
       return resourseName;
@@ -245,7 +249,7 @@ export class FirewallComponent
     let firewallFound = this._firewallsRepository.dataRecords
       .find((firewall) => firewall.id === firewallId);
     if (isNullOrEmpty(firewallFound)) {
-      this.selectedFirewall = { id: firewallId } as Firewall;
+      this.selectedFirewall = { id: firewallId } as McsFirewall;
       return;
     }
 

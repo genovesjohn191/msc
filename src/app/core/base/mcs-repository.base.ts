@@ -5,10 +5,6 @@ import {
   of
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { McsPaginator } from '../interfaces/mcs-paginator.interface';
-import { McsSearch } from '../interfaces/mcs-search.interface';
-import { McsApiSuccessResponse } from '../models/response/mcs-api-success-response';
-import { McsEntityBase } from './mcs-entity.base';
 import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
@@ -18,7 +14,15 @@ import {
   mergeArrays,
   unsubscribeSafely,
   updateObjectData
-} from '../../utilities';
+} from '@app/utilities';
+import {
+  Search,
+  Paginator
+} from '@app/shared';
+import {
+  McsEntityBase,
+  McsApiSuccessResponse,
+} from '@app/models';
 
 const DEFAULT_PAGE_INDEX = 1;
 const DEFAULT_PAGE_SIZE = 1000;
@@ -187,8 +191,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
    * @param fromCache Flag to determine where the data should get from
    */
   public findAllRecords(
-    page?: McsPaginator,
-    search?: McsSearch,
+    page?: Paginator,
+    search?: Search,
     fromCache: boolean = true
   ): Observable<T[]> {
     // We need to clear the records when searching to be able to get the data from api again
@@ -346,7 +350,7 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
    * Reset repository paging
    * @param paginator
    */
-  private _resetPaging(paginator: McsPaginator): void {
+  private _resetPaging(paginator: Paginator): void {
     if (isNullOrEmpty(paginator)) { return; }
     paginator.pageIndex = 0;
   }

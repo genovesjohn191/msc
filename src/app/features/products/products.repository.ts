@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { McsRepositoryBase } from '@app/core';
 import {
-  McsRepositoryBase,
-  McsApiSuccessResponse
-} from '../../core';
-import { Product } from './models';
+  McsApiSuccessResponse,
+  McsProduct
+} from '@app/models';
 import { ProductsService } from './products.service';
 
 @Injectable()
-export class ProductsRepository extends McsRepositoryBase<Product> {
+export class ProductsRepository extends McsRepositoryBase<McsProduct> {
 
   constructor(private _productsService: ProductsService) {
     super();
@@ -22,7 +22,7 @@ export class ProductsRepository extends McsRepositoryBase<Product> {
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<Product[]>> {
+  ): Observable<McsApiSuccessResponse<McsProduct[]>> {
     return this._productsService.getProducts({
       page: pageIndex,
       perPage: pageSize,
@@ -35,7 +35,7 @@ export class ProductsRepository extends McsRepositoryBase<Product> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Product>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsProduct>> {
     return this._productsService.getProduct(recordId);
   }
 }

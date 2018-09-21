@@ -6,11 +6,9 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  McsHttpStatusCode,
-  McsErrorHandlerService
-} from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+import { McsErrorHandlerService } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import { McsHttpStatusCode } from '@app/models';
 import { ServerCreateService } from './server-create.service';
 
 @Injectable()

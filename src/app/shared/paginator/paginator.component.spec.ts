@@ -2,9 +2,9 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { PaginatorComponent } from './paginator.component';
-import { McsPaginator } from '../../core';
-import { CoreTestingModule } from '../../core/testing';
+import { Paginator } from './paginator.interface';
 
 describe('PaginatorComponent', () => {
 
@@ -14,7 +14,7 @@ describe('PaginatorComponent', () => {
     totalCount: 100,
     pageIndex: 0,
     pageSize: 10
-  } as McsPaginator;
+  } as Paginator;
 
   beforeEach(async(() => {
     /** Testbed Reset Module */

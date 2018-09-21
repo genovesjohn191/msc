@@ -3,24 +3,24 @@ import {
   merge,
   of
 } from 'rxjs';
-import {
-  McsListSourceBase,
-  McsSearch,
-  McsKeyValuePair
-} from '../../core';
+import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
   containsString,
   isNullOrEmpty
-} from '../../utilities';
-import { Server } from './models';
+} from '@app/utilities';
+import { Search } from '@app/shared';
+import {
+  McsKeyValuePair,
+  McsServer
+} from '@app/models';
 import { ServersRepository } from './repositories/servers.repository';
 
-export class ServersListSource extends McsListSourceBase<Server> {
+export class ServersListSource extends McsListSourceBase<McsServer> {
 
   constructor(
     private _serversRepository: ServersRepository,
-    private _search: McsSearch) {
+    private _search: Search) {
     super();
   }
 
@@ -38,7 +38,7 @@ export class ServersListSource extends McsListSourceBase<Server> {
    * @param first First record of the list
    * @param second Second record of the list
    */
-  public serversSortMethod(first: Server, second: Server): number {
+  public serversSortMethod(first: McsServer, second: McsServer): number {
     return compareStrings(first.name, second.name);
   }
 
@@ -56,7 +56,7 @@ export class ServersListSource extends McsListSourceBase<Server> {
   /**
    * Get all records from repository
    */
-  protected getAllRecords(): Observable<Server[]> {
+  protected getAllRecords(): Observable<McsServer[]> {
     return this._serversRepository.findAllRecords();
   }
 
@@ -64,7 +64,7 @@ export class ServersListSource extends McsListSourceBase<Server> {
    * Filters all the records based on searched keyword
    * @param _record Record to be checked if it is included
    */
-  protected filterMethod(_record: Server): boolean {
+  protected filterMethod(_record: McsServer): boolean {
     if (isNullOrEmpty(_record)) { return true; }
     return containsString(_record.name, this._search.keyword);
   }

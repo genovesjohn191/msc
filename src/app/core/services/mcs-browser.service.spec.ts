@@ -3,10 +3,10 @@ import {
   TestBed,
   getTestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '../core.definition';
-import { McsDeviceType } from '../enumerations/mcs-device-type.enum';
-import { McsBrowserService } from './mcs-browser.service';
+import { McsDeviceType } from '@app/models';
 import { CoreTestingModule } from '../testing';
+import { McsBrowserService } from '../services/mcs-browser.service';
+import { CoreDefinition } from '../core.definition';
 
 describe('MscBrowserService', () => {
 

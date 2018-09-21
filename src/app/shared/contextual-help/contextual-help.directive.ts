@@ -15,12 +15,12 @@ import {
   McsGlobalElementOption,
   McsGlobalElementService,
   McsPortalComponent
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   coerceBoolean,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import { ContextualHelpComponent } from './contextual-help.component';
 
 @Directive({

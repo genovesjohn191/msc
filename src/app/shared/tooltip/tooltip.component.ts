@@ -11,7 +11,7 @@ import {
   Observable,
   Subject
 } from 'rxjs';
-import { animateFactory } from '../../utilities';
+import { animateFactory } from '@app/utilities';
 
 /** Tooltips declaration type */
 export type TooltipPosition = 'left' | 'right' | 'top' | 'bottom';

@@ -8,8 +8,8 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { ConsolePageService } from './console-page.service';
 import {
   McsApiSuccessResponse,
-  McsApiConsole
-} from '../../core';
+  McsConsole
+} from '@app/models';
 import { ConsolePageTestingModule } from './testing';
 
 describe('ConsoleService', () => {
@@ -54,7 +54,7 @@ describe('ConsoleService', () => {
       expect(mockRequest.request.method).toEqual('GET');
 
       // Create response data and transmit, expect the result should go to subscribe callback
-      let responseData = new McsApiSuccessResponse<McsApiConsole>();
+      let responseData = new McsApiSuccessResponse<McsConsole>();
       responseData.status = 200;
       responseData.totalCount = 1;
       mockRequest.flush(responseData);

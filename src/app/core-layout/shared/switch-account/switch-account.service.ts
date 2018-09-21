@@ -6,32 +6,34 @@ import {
 import { catchError } from 'rxjs/operators';
 import {
   McsAuthenticationIdentity,
-  McsApiCompany,
   CoreDefinition,
-  McsDataStatus,
   McsCookieService,
   McsAccessControlService
-} from '../../../core';
+} from '@app/core';
+import {
+  McsCompany,
+  McsDataStatus
+} from '@app/models';
 import {
   isNullOrEmpty,
   refreshView
-} from '../../../utilities';
+} from '@app/utilities';
 import { SwitchAccountRepository } from './switch-account.repository';
 
 @Injectable()
 export class SwitchAccountService {
 
   // Streams for data events
-  public recentCompaniesStream: BehaviorSubject<McsApiCompany[]>;
-  public activeAccountStream: BehaviorSubject<McsApiCompany>;
+  public recentCompaniesStream: BehaviorSubject<McsCompany[]>;
+  public activeAccountStream: BehaviorSubject<McsCompany>;
 
   // Company List
-  public companies: McsApiCompany[];
+  public companies: McsCompany[];
   public loadingAccount: boolean = false;
   public companiesStatus: McsDataStatus;
 
   // Others
-  private _activeAccount: McsApiCompany;
+  private _activeAccount: McsCompany;
   private _hasPermission: boolean;
 
   constructor(
@@ -58,24 +60,24 @@ export class SwitchAccountService {
   /**
    * Default company setting
    */
-  public get defaultAccount(): McsApiCompany {
+  public get defaultAccount(): McsCompany {
     return {
       id: this._authIdentity.user.companyId,
       name: this._authIdentity.user.companyName
-    } as McsApiCompany;
+    } as McsCompany;
   }
 
   /**
    * Active account
    */
-  public get activeAccount(): McsApiCompany {
+  public get activeAccount(): McsCompany {
     return isNullOrEmpty(this._activeAccount) ? this.defaultAccount : this._activeAccount;
   }
 
   /**
    * Select the company to be switched and notify the stream
    */
-  public switchAccount(company: McsApiCompany) {
+  public switchAccount(company: McsCompany) {
     if (isNullOrEmpty(company)) { return; }
     this._activeAccount = company;
     this._saveAccountIdToCookie();

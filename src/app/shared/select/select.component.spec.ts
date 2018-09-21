@@ -7,10 +7,10 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { triggerEvent } from '../../utilities';
+import { triggerEvent } from '@app/utilities';
 import { SelectComponent } from './select.component';
 import { SelectModule } from './select.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-select',

@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { animateFactory } from '../../utilities';
+import { animateFactory } from '@app/utilities';
 
 @Component({
   selector: 'mcs-note',

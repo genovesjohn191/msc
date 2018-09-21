@@ -5,7 +5,7 @@ import {
 import {
   getRecordCountLabel,
   isNullOrEmpty
-} from '../../utilities';
+} from '@app/utilities';
 
 @Pipe({
   name: 'mcsPlural'

@@ -2,8 +2,8 @@ import {
   Pipe,
   PipeTransform
 } from '@angular/core';
-import { McsKeyValuePair } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { McsKeyValuePair } from '@app/models';
+import { isNullOrEmpty } from '@app/utilities';
 
 @Pipe({
   name: 'mcsMapIterable'

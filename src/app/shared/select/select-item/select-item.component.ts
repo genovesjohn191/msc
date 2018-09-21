@@ -12,12 +12,12 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
-import { CoreDefinition } from '../../../core';
+import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
   isElementVisible
-} from '../../../utilities';
+} from '@app/utilities';
 import { SelectGroupComponent } from '../select-group/select-group.component';
 
 // Unique Id that generates during runtime

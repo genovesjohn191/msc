@@ -17,12 +17,12 @@ import {
 import {
   McsFormFieldControlBase,
   McsPlatformService
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   ErrorStateMatcher,
   coerceBoolean
-} from '../../utilities';
+} from '@app/utilities';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

@@ -3,8 +3,10 @@ import {
   PipeTransform
 } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-import { McsDataSizeType } from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import {
+  isNullOrEmpty,
+  McsDataSizeType
+} from '@app/utilities';
 
 @Pipe({
   name: 'mcsDataSize'

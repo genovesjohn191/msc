@@ -13,16 +13,18 @@ import {
   CoreDefinition,
   CoreRoutes,
   McsTextContentProvider,
-  McsRouteCategory,
-  mcsRouteCategoryText,
   McsRouteHandlerService,
   McsAccessControlService,
-  McsRouteKey
-} from '../../core';
+} from '@app/core';
+import {
+  McsRouteKey,
+  McsRouteCategory,
+  mcsRouteCategoryText
+} from '@app/models';
 import {
   unsubscribeSubject,
   isNullOrEmpty
-} from '../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-main-navigation',

@@ -7,8 +7,8 @@ import {
 import { HttpTestingController } from '@angular/common/http/testing';
 import { ImageComponent } from './image.component';
 import { ImageService } from './image.service';
-import { CoreDefinition } from '../../core';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreDefinition } from '@app/core';
+import { CoreTestingModule } from '@app/core/testing';
 
 describe('ImageComponent', () => {
 

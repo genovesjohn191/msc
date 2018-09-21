@@ -7,13 +7,13 @@ import {
   OnDestroy,
   SimpleChanges
 } from '@angular/core';
-import { McsPlatformService } from '../../core';
+import { McsPlatformService } from '@app/core';
 import { RippleRenderer } from './factory/ripple-renderer';
 import { RippleConfig } from './factory/ripple-config';
 import {
   coerceBoolean,
   coerceNumber
-} from '../../utilities';
+} from '@app/utilities';
 
 @Directive({
   selector: '[mcsRipple]',

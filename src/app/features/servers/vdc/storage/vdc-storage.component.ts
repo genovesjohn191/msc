@@ -11,19 +11,17 @@ import {
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
-  ResourceStorage,
-  ResourcesRepository
-} from '../../../resources';
-import {
   CoreDefinition,
   McsTextContentProvider,
   McsDataStatusFactory
-} from '../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   getSafeProperty
-} from '../../../../utilities';
+} from '@app/utilities';
+import { McsResourceStorage } from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 
@@ -38,7 +36,7 @@ import { VdcDetailsBase } from '../vdc-details.base';
 
 export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
-  public dataStatusFactory: McsDataStatusFactory<ResourceStorage[]>;
+  public dataStatusFactory: McsDataStatusFactory<McsResourceStorage[]>;
 
   public storagesSubscription: Subscription;
 
@@ -49,7 +47,7 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
   /**
    * Returns all the resource storages
    */
-  public get resourceStorages(): ResourceStorage[] {
+  public get resourceStorages(): McsResourceStorage[] {
     return !isNullOrEmpty(this.selectedVdc.storage) ?
       this.selectedVdc.storage : new Array();
   }

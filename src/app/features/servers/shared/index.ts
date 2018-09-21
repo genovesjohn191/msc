@@ -26,3 +26,8 @@ export * from './server-addons/disaster-recovery/disaster-recovery.addon';
 export * from './server-addons/sql-server/sql-server.addon';
 export * from './server-addons/infrastructure-monitoring/infrastructure-monitoring.addon';
 export * from './server-addons/hids/hids.addon';
+/** Models */
+export * from './server-snapshot-dialog-content';
+export * from './server-manage-network/server-manage-network';
+export * from './server-manage-scale/server-manage-scale';
+export * from './server-manage-storage/server-manage-storage';

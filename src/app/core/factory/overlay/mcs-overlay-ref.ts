@@ -10,15 +10,13 @@ import { Subject } from 'rxjs';
 import {
   isNullOrEmpty,
   registerEvent,
-  getElementPositionFromHost
-} from '../../../utilities';
-import {
+  getElementPositionFromHost,
   McsPlacementType,
   McsAlignmentType
-} from '../../core.types';
-import { McsOverlayState } from './mcs-overlay-state';
+} from '@app/utilities';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
+import { McsOverlayState } from './mcs-overlay-state';
 
 /**
  * Overlay Reference class that supports the functionalities to attach and detach

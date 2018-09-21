@@ -22,21 +22,23 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider,
-  McsApiJob,
-  McsApiTask,
-  McsTaskType,
-  McsDataStatus,
   McsNotificationEventsService,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject,
   addOrUpdateArrayRecord,
   animateFactory
-} from '../../../../utilities';
+} from '@app/utilities';
+import {
+  McsJob,
+  McsTask,
+  McsTaskType,
+  McsDataStatus,
+  McsRouteKey
+} from '@app/models';
 
 @Component({
   selector: 'mcs-provisioning-notifications',
@@ -58,15 +60,15 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Returns all the jobs of the current provisioning
    */
   @Input()
-  public get jobs(): McsApiJob[] { return this._jobs; }
-  public set jobs(value: McsApiJob[]) {
+  public get jobs(): McsJob[] { return this._jobs; }
+  public set jobs(value: McsJob[]) {
     if (value !== this._jobs) {
       this._jobs = value;
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _jobs: McsApiJob[];
-  private _jobsDiffer: IterableDiffer<McsApiJob>;
+  private _jobs: McsJob[];
+  private _jobsDiffer: IterableDiffer<McsJob>;
 
   // Subscription
   private _timerSubscription: Subscription;
@@ -172,7 +174,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Returns true when the job was completed
    * @param job Job to be checked
    */
-  public isJobCompleted(job: McsApiJob): boolean {
+  public isJobCompleted(job: McsJob): boolean {
     return job.dataStatus !== McsDataStatus.InProgress;
   }
 
@@ -180,7 +182,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Returns true when the job was successful
    * @param job Job to be checked
    */
-  public isJobSuccessful(job: McsApiJob): boolean {
+  public isJobSuccessful(job: McsJob): boolean {
     return job.dataStatus === McsDataStatus.Success;
   }
 
@@ -188,7 +190,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * View the server page based on tasks provided
    * @param tasks Tasks to be checked and navigated to
    */
-  public onViewServerPage(tasks: McsApiTask[]): void {
+  public onViewServerPage(tasks: McsTask[]): void {
     let serverId = this._getCreatedServerId(tasks);
     !isNullOrEmpty(serverId) ?
       this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail), serverId]) :
@@ -199,7 +201,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Returns the redirection link text based on tasks provided
    * @param tasks Tasks to be checked where the server will get from
    */
-  public getRedirectionLinkText(tasks: McsApiTask[]): string {
+  public getRedirectionLinkText(tasks: McsTask[]): string {
     let serverId = this._getCreatedServerId(tasks);
     return !isNullOrEmpty(serverId) ?
       this.textContent.viewServerLink : this.textContent.viewServersLink;
@@ -209,7 +211,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * Returns the created server id when the job is done
    * @param tasks Tasks to get the server details from
    */
-  private _getCreatedServerId(tasks: McsApiTask[]): string {
+  private _getCreatedServerId(tasks: McsTask[]): string {
     if (isNullOrEmpty(tasks)) { return ''; }
 
     let completedTask = tasks.find((task) => {
@@ -262,7 +264,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
 
         // Update the existing job
         addOrUpdateArrayRecord(this.jobs, job, true,
-          (_existingJob: McsApiJob) => _existingJob.id === job.id);
+          (_existingJob: McsJob) => _existingJob.id === job.id);
 
         // Exit progressbar
         if (this.allJobsCompleted) { this._removeProgressbar(McsDataStatus.Success); }

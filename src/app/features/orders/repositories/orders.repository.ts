@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { McsRepositoryBase } from '@app/core';
 import {
-  McsRepositoryBase,
-  McsApiSuccessResponse
-} from '../../../core';
+  McsApiSuccessResponse,
+  McsOrder
+} from '@app/models';
 import { OrdersService } from '../orders.service';
-import { Order } from '../models';
 
 @Injectable()
-export class OrdersRepository extends McsRepositoryBase<Order> {
+export class OrdersRepository extends McsRepositoryBase<McsOrder> {
 
   constructor(private _ordersApiService: OrdersService) {
     super();
@@ -22,7 +22,7 @@ export class OrdersRepository extends McsRepositoryBase<Order> {
     _pageIndex: number,
     _pageSize: number,
     _keyword: string
-  ): Observable<McsApiSuccessResponse<Order[]>> {
+  ): Observable<McsApiSuccessResponse<McsOrder[]>> {
     return this._ordersApiService.getOrders({
       page: _pageIndex,
       perPage: _pageSize,
@@ -35,7 +35,7 @@ export class OrdersRepository extends McsRepositoryBase<Order> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Order>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsOrder>> {
     return this._ordersApiService.getOrder(recordId);
   }
 }

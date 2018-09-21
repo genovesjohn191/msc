@@ -10,8 +10,8 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { DisasterRecoveryAddOnComponent } from './disaster-recovery.addon';
-import { CoreTestingModule } from '../../../../../core/testing';
 import { OptionsApiService } from '../../../../services';
 
 @Component({

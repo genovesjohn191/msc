@@ -9,13 +9,13 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsTextContentProvider } from '../../../../../core';
+import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
-} from '../../../../../utilities';
+} from '@app/utilities';
 import { OptionsApiService } from '../../../../services';
-import { ServerDisasterRecovery } from '../../../models';
+import { ServerDisasterRecovery } from './server-disaster-recovery';
 
 @Component({
   selector: 'mcs-disaster-recovery-addon',

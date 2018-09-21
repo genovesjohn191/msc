@@ -1,8 +1,8 @@
 import {
   Directive,
   Input } from '@angular/core';
-import { GoogleAnalyticsEventsService } from '../../core';
-import { coerceNumber } from '../../utilities';
+import { GoogleAnalyticsEventsService } from '@app/core';
+import { coerceNumber } from '@app/utilities';
 
 @Directive({
   selector: '[mcsEventTracker]',

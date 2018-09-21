@@ -25,17 +25,17 @@ import {
   unsubscribeSubject,
   getSafeProperty,
   coerceBoolean
-} from '../../../../utilities';
+} from '@app/utilities';
 import {
   McsTextContentProvider,
   CoreValidators
-} from '../../../../core';
-import { Resource } from '../../../resources';
+} from '@app/core';
 import {
-  ServerManageScale,
-  ServerInputManageType,
-  ServerCompute
-} from '../../models';
+  InputManageType,
+  McsResource,
+  McsServerCompute
+} from '@app/models';
+import { ServerManageScale } from './server-manage-scale';
 
 // Constants definition
 const DEFAULT_MB = 1024;
@@ -58,7 +58,7 @@ const DEFAULT_MIN_CPU = 2;
 
 export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy {
   public textContent: any;
-  public inputManageType: ServerInputManageType;
+  public inputManageType: InputManageType;
   public sliderValueIndex: number;
   public sliderValue: ServerManageScale;
   public sliderTable: ServerManageScale[];
@@ -72,10 +72,10 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
   public dataChange = new EventEmitter<ServerManageScale>();
 
   @Input()
-  public resource: Resource;
+  public resource: McsResource;
 
   @Input()
-  public serverCompute?: ServerCompute;
+  public serverCompute?: McsServerCompute;
 
   @Input()
   public get allowScaleDown(): boolean { return this._allowScaleDown; }
@@ -116,7 +116,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
    * Returns the server input managetype enumeration instance
    */
   public get inputManageTypeEnum(): any {
-    return ServerInputManageType;
+    return InputManageType;
   }
 
   /**
@@ -170,7 +170,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
   /**
    * Event that emits when the input manage type has been changed
    */
-  public onChangeInputManageType(inputManageType: ServerInputManageType) {
+  public onChangeInputManageType(inputManageType: InputManageType) {
     this.inputManageType = inputManageType;
     this._notifyDataChanged();
   }
@@ -192,7 +192,7 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
     this._resetFormGroup();
     this.sliderValueIndex = 0;
     this.sliderValue = this.sliderTable[this.sliderValueIndex];
-    this.inputManageType = ServerInputManageType.Slider;
+    this.inputManageType = InputManageType.Slider;
   }
 
   /**
@@ -298,13 +298,13 @@ export class ServerManageScaleComponent implements OnInit, OnChanges, OnDestroy 
   private _notifyDataChanged() {
     // Set model data based on management type
     switch (this.inputManageType) {
-      case ServerInputManageType.Custom:
+      case InputManageType.Custom:
         this._scaleOutput.memoryMB = +this.fcCustomMemory.value;
         this._scaleOutput.cpuCount = +this.fcCustomCpu.value;
         this._scaleOutput.valid = this.fgServerScale.valid;
         break;
 
-      case ServerInputManageType.Slider:
+      case InputManageType.Slider:
       default:
         this._scaleOutput.memoryMB = this.sliderValue.memoryMB;
         this._scaleOutput.cpuCount = this.sliderValue.cpuCount;

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../../shared';
+import { SharedModule } from '@app/shared';
 /** Components */
 import { TicketActivityComponent } from './shared';
 import { TicketsComponent } from './tickets.component';

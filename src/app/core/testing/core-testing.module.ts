@@ -5,12 +5,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-/** Mocks */
-import { MockCoreConfig } from './core-config.mock';
-/** Core Services and Modules */
-import { AppState } from '../../app.service';
+import { AppState } from '@app/app.service';
 import { CoreConfig } from '../core.config';
 import { coreProviders } from '../core.constants';
+import { MockCoreConfig } from './core-config.mock';
 
 @NgModule({
   imports: [

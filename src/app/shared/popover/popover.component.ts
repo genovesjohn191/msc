@@ -16,7 +16,7 @@ import {
   registerEvent,
   unregisterEvent,
   isNullOrEmpty
-} from '../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-popover',

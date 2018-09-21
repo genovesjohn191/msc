@@ -11,11 +11,9 @@ import {
   Observable,
   Subject
 } from 'rxjs';
-import {
-  McsScrollDispatcherService,
-  McsScrollable
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+import { McsScrollDispatcherService } from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import { Scrollable } from './scrollable.interface';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -28,7 +26,7 @@ type ScrollbarStyle = 'default' | 'dark';
   }
 })
 
-export class ScrollableDirective implements OnInit, OnDestroy, McsScrollable {
+export class ScrollableDirective implements OnInit, OnDestroy, Scrollable {
   @Input()
   public scrollbarId: string = `mcs-scrollbar-item-${nextUniqueId++}`;
 

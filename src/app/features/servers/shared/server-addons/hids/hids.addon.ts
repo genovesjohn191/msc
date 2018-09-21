@@ -8,16 +8,14 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsTextContentProvider } from '../../../../../core';
+import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
-} from '../../../../../utilities';
+} from '@app/utilities';
+import { McsServerHidsOptions } from '@app/models';
 import { OptionsApiService } from '../../../../services';
-import {
-  ServerHidsOptions,
-  ServerHids
-} from '../../../models';
+import { ServerHids } from './server-hids';
 
 @Component({
   selector: 'mcs-hids-addon',
@@ -31,7 +29,7 @@ import {
 
 export class HidsAddOnComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public hidsOptions: ServerHidsOptions;
+  public hidsOptions: McsServerHidsOptions;
   public hids: ServerHids;
   public hidsServiceVariants: string[];
   public hidsProtectionLevels: string[];
@@ -50,7 +48,7 @@ export class HidsAddOnComponent implements OnInit, OnDestroy {
     private _textProvider: McsTextContentProvider,
     private _optionsApiService: OptionsApiService
   ) {
-    this.hidsOptions = new ServerHidsOptions();
+    this.hidsOptions = new McsServerHidsOptions();
     this.hidsServiceVariants = new Array();
     this.hidsProtectionLevels = new Array();
     this.hidsPolicyTemplates = new Array();

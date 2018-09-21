@@ -7,10 +7,12 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsSnackBarRef,
+  McsSnackBarRef
+} from '@app/core';
+import {
+  coerceBoolean,
   McsThemeType
-} from '../../core';
-import { coerceBoolean } from '../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-snack-bar',

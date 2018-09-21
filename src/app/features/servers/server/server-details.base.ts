@@ -9,35 +9,35 @@ import {
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  McsErrorHandlerService,
-  McsApiJob
-} from '../../../core';
+  McsErrorHandlerService
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   getSafeProperty,
   unsubscribeSubject
-} from '../../../utilities';
+} from '@app/utilities';
 import {
-  Resource,
-  ResourcesRepository
-} from '../../resources';
-import { Server } from '../models';
+  McsJob,
+  McsResource,
+  McsServer
+} from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
 import { ServersService } from '../servers.service';
 import { ServersRepository } from '../repositories/servers.repository';
 import { ServerService } from '../server/server.service';
 
 export abstract class ServerDetailsBase {
-  public serverResource: Resource;
+  public serverResource: McsResource;
   public serverResourceSubscription: Subscription;
   private _baseJobSubject = new Subject<void>();
 
   /**
    * Selected Server
    */
-  private _server: Server;
-  public get server(): Server { return this._server; }
-  public set server(value: Server) {
+  private _server: McsServer;
+  public get server(): McsServer { return this._server; }
+  public set server(value: McsServer) {
     if (value !== this._server) {
       this._server = value;
       this._changeDetectorRef.markForCheck();
@@ -67,8 +67,8 @@ export abstract class ServerDetailsBase {
     protected _textProvider: McsTextContentProvider,
     protected _errorHandlerService: McsErrorHandlerService
   ) {
-    this.server = new Server();
-    this.serverResource = new Resource();
+    this.server = new McsServer();
+    this.serverResource = new McsResource();
   }
 
   protected initialize(): void {
@@ -96,7 +96,7 @@ export abstract class ServerDetailsBase {
    * Returns true when the server is activated by job process
    * @param job Emitted job to be checked
    */
-  protected serverIsActiveByJob(job: McsApiJob): boolean {
+  protected serverIsActiveByJob(job: McsJob): boolean {
     if (isNullOrEmpty(job) || isNullOrEmpty(this.server)) { return false; }
     let jobServerId = getSafeProperty(job, (obj) => obj.clientReferenceObject.serverId);
     let selectedServerId = getSafeProperty(this.server, (obj) => obj.id);

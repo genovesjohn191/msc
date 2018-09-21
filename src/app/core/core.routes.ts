@@ -1,7 +1,9 @@
-import { isNullOrEmpty } from '../utilities';
-import { McsRouteKey } from './enumerations/mcs-route-key.enum';
-import { McsRouteInfo } from './models/mcs-route-info';
-import { McsRouteCategory } from './enumerations/mcs-route-category.enum';
+import { isNullOrEmpty } from '@app/utilities';
+import {
+  McsRouteKey,
+  McsRouteInfo,
+  McsRouteCategory
+} from '@app/models';
 
 export class CoreRoutes {
   /**

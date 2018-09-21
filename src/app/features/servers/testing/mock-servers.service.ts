@@ -2,26 +2,28 @@ import {
   Observable,
   of
 } from 'rxjs';
-import { McsApiSuccessResponse } from '../../../core';
-import { Resource } from '../../resources';
-import { Server } from '../models';
+import {
+  McsApiSuccessResponse,
+  McsResource,
+  McsServer
+} from '@app/models';
 
 export const mockServersService = {
 
   getServers(
     _page?: number,
     _perPage?: number,
-    _serverName?: string): Observable<McsApiSuccessResponse<Server[]>> {
+    _serverName?: string): Observable<McsApiSuccessResponse<McsServer[]>> {
 
-    let mcsApiResponseMock = new McsApiSuccessResponse<Server[]>();
+    let mcsApiResponseMock = new McsApiSuccessResponse<McsServer[]>();
     mcsApiResponseMock.status = 200;
     mcsApiResponseMock.totalCount = 2;
-    mcsApiResponseMock.content = new Array(new Server(), new Server());
+    mcsApiResponseMock.content = new Array(new McsServer(), new McsServer());
 
     return of(mcsApiResponseMock);
   },
-  getResources(): Observable<Resource[]> {
-    let resources = new Array<Resource>();
+  getResources(): Observable<McsResource[]> {
+    let resources = new Array<McsResource>();
     return of(resources);
   }
 };

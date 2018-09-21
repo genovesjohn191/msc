@@ -5,9 +5,9 @@ import {
   NgZone,
   Injector
 } from '@angular/core';
-import { McsOverlayState } from '../factory/overlay/mcs-overlay-state';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsOverlayRef } from '../factory/overlay/mcs-overlay-ref';
-import { isNullOrEmpty } from '../../utilities';
+import { McsOverlayState } from '../factory/overlay/mcs-overlay-state';
 
 /** Next overlay unique ID. */
 let nextUniqueId = 0;

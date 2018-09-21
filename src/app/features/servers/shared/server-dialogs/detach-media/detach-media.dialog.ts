@@ -7,12 +7,12 @@ import {
   MCS_DIALOG_DATA,
   McsDialogRef,
   McsTextContentProvider
-} from '../../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
-} from '../../../../../utilities';
-import { ServerMedia } from '../../../models';
+} from '@app/utilities';
+import { McsServerMedia } from '@app/models';
 
 @Component({
   selector: 'mcs-detach-media-dialog',
@@ -25,7 +25,7 @@ import { ServerMedia } from '../../../models';
 
 export class DetachMediaDialogComponent {
   public textContent: any;
-  public media: ServerMedia;
+  public media: McsServerMedia;
 
   /**
    * Dialog title
@@ -42,7 +42,7 @@ export class DetachMediaDialogComponent {
   constructor(
     private _textContentProvider: McsTextContentProvider,
     public dialogRef: McsDialogRef<DetachMediaDialogComponent>,
-    @Inject(MCS_DIALOG_DATA) public dialogData: ServerMedia
+    @Inject(MCS_DIALOG_DATA) public dialogData: McsServerMedia
   ) {
     this.textContent = this._textContentProvider.content.servers.shared.detachMediaDialog;
     this.media = this.dialogData;

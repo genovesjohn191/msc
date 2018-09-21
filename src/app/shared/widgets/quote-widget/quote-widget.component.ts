@@ -10,8 +10,8 @@ import {
 import {
   coerceBoolean,
   animateFactory,
-} from '../../../utilities';
-import { CoreDefinition } from '../../../core';
+} from '@app/utilities';
+import { CoreDefinition } from '@app/core';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;

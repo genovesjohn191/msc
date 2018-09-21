@@ -7,11 +7,13 @@ import {
 } from '@angular/core/testing';
 import { UserPanelComponent } from './user-panel.component';
 import {
-  McsApiJob,
   McsNotificationContextService,
-  CoreDefinition,
+  CoreDefinition
+} from '@app/core';
+import {
+  McsJob,
   McsJobStatus
-} from '../../../core';
+} from '@app/models';
 import { CoreLayoutTestingModule } from '../../testing';
 
 describe('UserPanelComponent', () => {
@@ -76,9 +78,9 @@ describe('UserPanelComponent', () => {
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
-          let notifications: McsApiJob[] = new Array();
+          let notifications: McsJob[] = new Array();
 
-          let notificationActive = new McsApiJob();
+          let notificationActive = new McsJob();
           notificationActive.id = '5';
           notificationActive.status = McsJobStatus.Active;
           notifications.push(notificationActive);
@@ -93,9 +95,9 @@ describe('UserPanelComponent', () => {
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
-          let notifications: McsApiJob[] = new Array();
+          let notifications: McsJob[] = new Array();
 
-          let notificationPending = new McsApiJob();
+          let notificationPending = new McsJob();
           notificationPending.id = '5';
           notificationPending.status = McsJobStatus.Pending;
           notifications.push(notificationPending);
@@ -110,9 +112,9 @@ describe('UserPanelComponent', () => {
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
-          let notifications: McsApiJob[] = new Array();
+          let notifications: McsJob[] = new Array();
 
-          let notificationFailed = new McsApiJob();
+          let notificationFailed = new McsJob();
           notificationFailed.id = '5';
           notificationFailed.status = McsJobStatus.Failed;
           notifications.push(notificationFailed);
@@ -127,9 +129,9 @@ describe('UserPanelComponent', () => {
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
-          let notifications: McsApiJob[] = new Array();
+          let notifications: McsJob[] = new Array();
 
-          let notificationFailed = new McsApiJob();
+          let notificationFailed = new McsJob();
           notificationFailed.id = '5';
           notificationFailed.status = McsJobStatus.Timedout;
           notifications.push(notificationFailed);
@@ -144,9 +146,9 @@ describe('UserPanelComponent', () => {
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
-          let notifications: McsApiJob[] = new Array();
+          let notifications: McsJob[] = new Array();
 
-          let notificationFailed = new McsApiJob();
+          let notificationFailed = new McsJob();
           notificationFailed.id = '5';
           notificationFailed.status = McsJobStatus.Cancelled;
           notifications.push(notificationFailed);
@@ -161,9 +163,9 @@ describe('UserPanelComponent', () => {
       fakeAsync((inject([McsNotificationContextService],
         (notificationContextService: McsNotificationContextService) => {
 
-          let notifications: McsApiJob[] = new Array();
+          let notifications: McsJob[] = new Array();
 
-          let notificationCompleted = new McsApiJob();
+          let notificationCompleted = new McsJob();
           notificationCompleted.id = '5';
           notificationCompleted.status = McsJobStatus.Completed;
           notifications.push(notificationCompleted);

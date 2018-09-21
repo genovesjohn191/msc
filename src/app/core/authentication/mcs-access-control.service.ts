@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import {
   isNullOrEmpty,
   getSafeProperty
-} from '../../utilities';
-import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
-import { McsApiIdentity } from '../models/response/mcs-api-identity';
-import { McsKeyValuePair } from '../models/mcs-key-value-pair';
+} from '@app/utilities';
+import {
+  McsIdentity,
+  McsKeyValuePair
+} from '@app/models';
+import { McsAuthenticationIdentity } from './mcs-authentication.identity';
 
 @Injectable()
 export class McsAccessControlService {
 
-  constructor(private _authenticationIdentity: McsAuthenticationIdentity) {
-  }
+  constructor(private _authenticationIdentity: McsAuthenticationIdentity) { }
 
   /**
    * Checks both permission and feature
@@ -36,7 +37,7 @@ export class McsAccessControlService {
     let user = this._authenticationIdentity.user;
 
     // Check user existing permissions
-    let userPermissions = getSafeProperty<McsApiIdentity, string[]>(
+    let userPermissions = getSafeProperty<McsIdentity, string[]>(
       user, (obj) => obj.permissions
     );
     if (isNullOrEmpty(userPermissions)) { return false; }
@@ -63,7 +64,7 @@ export class McsAccessControlService {
     let user = this._authenticationIdentity.user;
 
     // Check existing features
-    let features = getSafeProperty<McsApiIdentity, McsKeyValuePair[]>(
+    let features = getSafeProperty<McsIdentity, McsKeyValuePair[]>(
       user, (obj) => obj.features
     );
     if (isNullOrEmpty(features)) { return false; }

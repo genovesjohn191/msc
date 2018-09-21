@@ -8,7 +8,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import {
   isNullOrEmpty,
   getSafeProperty
-} from '../../utilities';
+} from '@app/utilities';
 
 @Injectable()
 export class LoaderService {

@@ -6,23 +6,23 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  Resource,
-  ResourceStorage,
-  ResourcesRepository
-} from '../../../resources';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 import {
   CoreRoutes,
   CoreDefinition,
-  McsTextContentProvider,
-  McsRouteKey
-} from '../../../../core';
+  McsTextContentProvider
+} from '@app/core';
 import {
   isNullOrEmpty,
   replacePlaceholder
-} from '../../../../utilities';
+} from '@app/utilities';
+import {
+  McsRouteKey,
+  McsResource,
+  McsResourceStorage
+} from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
 
@@ -82,7 +82,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
       _changeDetectorRef,
       _textContentProvider
     );
-    this.selectedVdc = new Resource();
+    this.selectedVdc = new McsResource();
   }
 
   public ngOnInit(): void {
@@ -117,7 +117,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Red Icon - If current storage is more than 85%
    * @param storage VDC Storage
    */
-  public getStorageStatusIconKey(storage: ResourceStorage): string {
+  public getStorageStatusIconKey(storage: McsResourceStorage): string {
     let iconKey = '';
 
     let percentage = this._computeStoragePercentage(storage);
@@ -137,7 +137,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Returns true if the storage has more than 85% used memory
    * @param storage VDC Storage
    */
-  public isStorageProfileLow(storage: ResourceStorage): boolean {
+  public isStorageProfileLow(storage: McsResourceStorage): boolean {
     if (isNullOrEmpty(storage)) { return false; }
 
     return this._computeStoragePercentage(storage) > 85;
@@ -154,7 +154,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Computes the used memory percentage of the provided VDC storage
    * @param storage VDC Storage
    */
-  private _computeStoragePercentage(storage: ResourceStorage): number {
+  private _computeStoragePercentage(storage: McsResourceStorage): number {
     if (isNullOrEmpty(storage)) { return 0; }
     let percentage = 100 * storage.usedMB / storage.limitMB;
     return Math.round(percentage);

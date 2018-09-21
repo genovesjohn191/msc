@@ -6,24 +6,26 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { Router } from '@angular/router';
 /** Services */
 import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
-import { Router } from '@angular/router';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   refreshView,
   getSafeProperty
-} from '../../utilities';
+} from '@app/utilities';
+import {
+  McsRouteKey,
+  McsTicket
+} from '@app/models';
 import { TicketsRepository } from './tickets.repository';
 import { TicketsDataSource } from './tickets.datasource';
-import { Ticket } from './models';
 
 @Component({
   selector: 'mcs-tickets',
@@ -72,7 +74,7 @@ export class TicketsComponent
    * Navigate to ticket details page
    * @param ticket Ticket to view the details
    */
-  public navigateToTicket(ticket: Ticket): void {
+  public navigateToTicket(ticket: McsTicket): void {
     if (isNullOrEmpty(ticket)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.TicketDetail), ticket.id]);
   }

@@ -32,13 +32,15 @@ import {
   takeUntil
 } from 'rxjs/operators';
 import {
-  Key,
-  McsSelection,
   CoreDefinition,
   McsFormFieldControlBase,
   McsItemListKeyManager,
   McsScrollDispatcherService
-} from '../../core';
+} from '@app/core';
+import {
+  Key,
+  McsSelection
+} from '@app/models';
 import {
   isNullOrEmpty,
   triggerEvent,
@@ -49,7 +51,7 @@ import {
   coerceNumber,
   animateFactory,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
 
 const SELECT_PANEL_MAX_HEIGHT = 400;

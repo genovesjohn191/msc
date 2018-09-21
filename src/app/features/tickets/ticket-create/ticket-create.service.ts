@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { McsTicketCreate } from '@app/models';
 import { TicketsService } from '../tickets.service';
-import { TicketCreate } from '../models';
 
 @Injectable()
 export class TicketCreateService {
@@ -32,7 +32,7 @@ export class TicketCreateService {
    * Create ticket according to inputted data
    * @param ticket Ticket to be created
    */
-  public createTicket(ticket: TicketCreate) {
+  public createTicket(ticket: McsTicketCreate) {
     return this._ticketsService.createTicket(ticket);
   }
 }

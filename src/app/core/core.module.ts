@@ -6,14 +6,10 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-/** Configuration */
 import { CoreConfig } from './core.config';
-/** Services/Providers */
 import { coreProviders } from './core.constants';
-/** Dialog */
 import { McsDialogContainerComponent } from './factory/dialog/mcs-dialog-container.component';
 import { McsDialogRefDirective } from './factory/dialog/mcs-dialog-ref.directive';
-/** Snack Bar */
 import {
   McsSnackBarContainerComponent
 } from './factory/snack-bar/mcs-snack-bar-container.component';

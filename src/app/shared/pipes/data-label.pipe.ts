@@ -2,7 +2,7 @@ import {
   Pipe,
   PipeTransform
 } from '@angular/core';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 // Definition
 const DEFAULT_UNAVAILABLE_DATA_LABEL = 'Unavailable';

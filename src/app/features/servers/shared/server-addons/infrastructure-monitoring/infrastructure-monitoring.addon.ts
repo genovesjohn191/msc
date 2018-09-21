@@ -8,13 +8,13 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { McsTextContentProvider } from '../../../../../core';
+import { McsTextContentProvider } from '@app/core';
 import {
   unsubscribeSafely,
   isNullOrEmpty
-} from '../../../../../utilities';
+} from '@app/utilities';
 import { OptionsApiService } from '../../../../services';
-import { ServerInfrastructure } from '../../../models';
+import { ServerInfrastructure } from './server-infrastructure';
 
 @Component({
   selector: 'mcs-infrastructure-monitoring-addon',

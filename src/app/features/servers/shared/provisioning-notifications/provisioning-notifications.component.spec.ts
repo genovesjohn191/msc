@@ -6,14 +6,14 @@ import {
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ProvisioningNotificationsComponent } from './provisioning-notifications.component';
+import { McsTextContentProvider } from '@app/core';
+import { getEnumString } from '@app/utilities';
 import {
-  McsTextContentProvider,
-  McsApiJob,
+  McsJob,
   McsJobStatus,
-  McsApiTask
-} from '../../../../core';
-import { CoreTestingModule } from '../../../../core/testing';
-import { getEnumString } from '../../../../utilities';
+  McsTask
+} from '@app/models';
+import { CoreTestingModule } from '@app/core/testing';
 
 describe('ProvisioningNotificationsComponent', () => {
 
@@ -23,7 +23,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
   // Creation of notification based on id and status
   let createNotification = (notificationId: string, notificationStatus: McsJobStatus) => {
-    let notification: McsApiJob = new McsApiJob();
+    let notification: McsJob = new McsJob();
 
     notification.id = notificationId;
     notification.errorMessage = getEnumString(McsJobStatus, notificationStatus);
@@ -38,7 +38,7 @@ describe('ProvisioningNotificationsComponent', () => {
     notification.description = 'mongo-db' + notificationId;
 
     notification.tasks = new Array();
-    let task = new McsApiTask();
+    let task = new McsTask();
     task.description = 'new task';
     task.ectInSeconds = 5;
     task.elapsedTimeInSeconds = 0;

@@ -25,18 +25,22 @@ import {
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
-  McsSafeToNavigateAway,
   McsFormGroupService
-} from '../../../../core';
+} from '@app/core';
 import {
   unsubscribeSubject,
   isNullOrEmpty,
-  clearArrayRecord
-} from '../../../../utilities';
-import { Resource } from '../../../resources';
-import { ServerCreateType } from '../../models';
+  clearArrayRecord,
+  McsSafeToNavigateAway
+} from '@app/utilities';
+import { McsResource } from '@app/models';
 import { ServerCreateDetailsBase } from './server-create-details.base';
 import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
+
+enum ServerCreateType {
+  New = 1,
+  Clone = 2
+}
 
 @Component({
   selector: 'mcs-server-create-details',
@@ -58,9 +62,9 @@ export class ServerCreateDetailsComponent implements
   /**
    * Returns the current selected resource
    */
-  public get resource(): Resource { return this._resource; }
-  public set resource(value: Resource) { this._resource = value; }
-  private _resource: Resource;
+  public get resource(): McsResource { return this._resource; }
+  public set resource(value: McsResource) { this._resource = value; }
+  private _resource: McsResource;
 
   @ViewChildren('serverBase')
   private _createServerItems: QueryList<ServerCreateDetailsBase<any>>;

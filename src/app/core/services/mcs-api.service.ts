@@ -12,16 +12,18 @@ import {
   throwError
 } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { CoreConfig } from '../core.config';
-import { CoreDefinition } from '../core.definition';
 import {
   isUrlValid,
   isNullOrEmpty,
   convertMapToJsonObject
-} from '../../utilities';
-import { McsApiRequestParameter } from '../models/request/mcs-api-request-parameter';
-import { McsApiCompany } from '../models/response/mcs-api-company';
-import { McsCookieService } from './mcs-cookie.service';
+} from '@app/utilities';
+import {
+  McsApiRequestParameter,
+  McsCompany
+} from '@app/models';
+import { CoreConfig } from '../core.config';
+import { CoreDefinition } from '../core.definition';
+import { McsCookieService } from '../services/mcs-cookie.service';
 
 /**
  * Macquarie Portal Api Service class
@@ -209,7 +211,7 @@ export class McsApiService {
    */
   private _setAccountHeader(headers: Map<string, any>) {
     let activeAccountId = this._cookieService
-      .getEncryptedItem<McsApiCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
+      .getEncryptedItem<McsCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
     if (activeAccountId) {
       headers.set(CoreDefinition.HEADER_COMPANY_ID, activeAccountId);
     }

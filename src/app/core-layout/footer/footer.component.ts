@@ -2,12 +2,10 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-
-/** Providers */
 import {
   McsTextContentProvider,
   McsAssetsProvider
-} from '../../core';
+} from '@app/core';
 
 @Component({
   selector: 'mcs-footer',

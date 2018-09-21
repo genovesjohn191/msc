@@ -6,11 +6,11 @@ import {
   CookieService,
   CookieOptions
 } from 'ngx-cookie';
-import { CoreConfig } from '../core.config';
 import {
   isNullOrEmpty,
   isJson
-} from '../../utilities';
+} from '@app/utilities';
+import { CoreConfig } from '../core.config';
 import { McsPlatformService } from '../services/mcs-platform.service';
 let cryptoJS = require('crypto-js');
 

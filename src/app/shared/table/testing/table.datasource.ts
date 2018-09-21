@@ -3,10 +3,8 @@ import {
   Subject,
   of
 } from 'rxjs';
-import {
-  McsDataSource,
-  McsDataStatus
-} from '../../../core';
+import { McsDataSource } from '../mcs-data-source.interface';
+import { McsDataStatus } from '@app/models';
 import { TableUserData } from './table-userdata';
 
 export class TableDatasource implements McsDataSource<any> {

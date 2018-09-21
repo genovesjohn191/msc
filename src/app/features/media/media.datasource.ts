@@ -5,17 +5,19 @@ import {
   merge
 } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { isNullOrEmpty } from '@app/utilities';
 import {
   McsDataSource,
+  Paginator,
+  Search
+} from '@app/shared';
+import {
   McsDataStatus,
-  McsPaginator,
-  McsSearch
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
+  McsResourceMedia
+} from '@app/models';
 import { MediaRepository } from './repositories/media.repository';
-import { Media } from './models';
 
-export class MediaDataSource implements McsDataSource<Media> {
+export class MediaDataSource implements McsDataSource<McsResourceMedia> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -23,8 +25,8 @@ export class MediaDataSource implements McsDataSource<Media> {
 
   constructor(
     private _mediaRepository: MediaRepository,
-    private _paginator: McsPaginator,
-    private _search: McsSearch
+    private _paginator: Paginator,
+    private _search: Search
   ) {
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
@@ -33,7 +35,7 @@ export class MediaDataSource implements McsDataSource<Media> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<Media[]> {
+  public connect(): Observable<McsResourceMedia[]> {
     const displayDataChanges = [
       of(undefined), // Add undefined observable to make way of retry when error occured
       this._mediaRepository.dataRecordsChanged,
@@ -69,7 +71,7 @@ export class MediaDataSource implements McsDataSource<Media> {
   /**
    * This will invoke when the data obtainment is completed
    */
-  public onCompletion(_status: McsDataStatus, _record: Media[]): void {
+  public onCompletion(_status: McsDataStatus, _record: McsResourceMedia[]): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);
@@ -79,7 +81,7 @@ export class MediaDataSource implements McsDataSource<Media> {
    * Get the displayed media by ID
    * @param mediaId Media Id to obtained
    */
-  public getDisplayedMediaById(mediaId: any): Media {
+  public getDisplayedMediaById(mediaId: any): McsResourceMedia {
     if (isNullOrEmpty(this._mediaRepository.dataRecords)) { return; }
     return this._mediaRepository.dataRecords
       .find((media) => media.id === mediaId);

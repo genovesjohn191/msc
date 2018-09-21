@@ -11,7 +11,7 @@ import {
   ElementRef
 } from '@angular/core';
 import { SetFocusDirective } from './set-focus.directive';
-import { CoreDefinition } from '../../core';
+import { CoreDefinition } from '@app/core';
 
 @Component({
   selector: 'mcs-test',

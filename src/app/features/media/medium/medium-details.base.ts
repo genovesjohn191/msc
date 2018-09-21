@@ -4,17 +4,19 @@ import {
   unsubscribeSubject,
   isNullOrEmpty,
   getSafeProperty
-} from '../../../utilities';
-import { Media } from '../models';
+} from '@app/utilities';
+import {
+  McsJob,
+  McsResourceMedia
+} from '@app/models';
 import { MediumService } from './medium.service';
-import { McsApiJob } from '../../../core';
 
 export abstract class MediumDetailsBase {
-  public selectedMedium: Media;
+  public selectedMedium: McsResourceMedia;
   private _baseDestroySubject = new Subject<void>();
 
   constructor(protected _mediumService: MediumService) {
-    this.selectedMedium = new Media();
+    this.selectedMedium = new McsResourceMedia();
   }
 
   /**
@@ -35,7 +37,7 @@ export abstract class MediumDetailsBase {
    * Returns true when the active job is based on currently selected media
    * @param mediaJob Job to be checked for the active media
    */
-  protected isMediaActive(mediaJob: McsApiJob): boolean {
+  protected isMediaActive(mediaJob: McsJob): boolean {
     if (isNullOrEmpty(mediaJob) || isNullOrEmpty(this.selectedMedium)) { return false; }
     let jobMediaId = getSafeProperty(mediaJob, (obj) => obj.clientReferenceObject.mediaId);
     let selectedMediaId = getSafeProperty(this.selectedMedium, (obj) => obj.id);

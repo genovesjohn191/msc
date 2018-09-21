@@ -9,14 +9,14 @@ import {
 import { Subject } from 'rxjs';
 import {
   isNullOrEmpty,
-  clearArrayRecord
-} from '../../utilities';
+  clearArrayRecord,
+  McsComponentType
+} from '@app/utilities';
+import { McsOverlayService } from './mcs-overlay.service';
 import { McsOverlayRef } from '../factory/overlay/mcs-overlay-ref';
 import { McsOverlayState } from '../factory/overlay/mcs-overlay-state';
 import { McsPortalComponent } from '../factory/portal/mcs-portal-component';
 import { McsPortalTemplate } from '../factory/portal/mcs-portal-template';
-import { McsOverlayService } from './mcs-overlay.service';
-import { McsComponentType } from '../interfaces/mcs-component-type.interface';
 import { McsSnackBarRef } from '../factory/snack-bar/mcs-snack-bar-ref';
 import { McsSnackBarConfig } from '../factory/snack-bar/mcs-snack-bar-config';
 import {

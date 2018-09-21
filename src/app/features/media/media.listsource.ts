@@ -3,24 +3,24 @@ import {
   merge,
   of
 } from 'rxjs';
-import {
-  McsListSourceBase,
-  McsSearch,
-  McsKeyValuePair
-} from '../../core';
+import { McsListSourceBase } from '@app/core';
 import {
   compareStrings,
   isNullOrEmpty,
   containsString
-} from '../../utilities';
-import { Media } from './models';
+} from '@app/utilities';
+import { Search } from '@app/shared';
+import {
+  McsKeyValuePair,
+  McsResourceMedia
+} from '@app/models';
 import { MediaRepository } from './repositories/media.repository';
 
-export class MediaListSource extends McsListSourceBase<Media> {
+export class MediaListSource extends McsListSourceBase<McsResourceMedia> {
 
   constructor(
     private _mediaRepository: MediaRepository,
-    private _search: McsSearch) {
+    private _search: Search) {
     super();
   }
 
@@ -38,7 +38,7 @@ export class MediaListSource extends McsListSourceBase<Media> {
    * @param first First record of the list
    * @param second Second record of the list
    */
-  public mediaSortMethod(first: Media, second: Media): number {
+  public mediaSortMethod(first: McsResourceMedia, second: McsResourceMedia): number {
     return compareStrings(first.name, second.name);
   }
 
@@ -56,7 +56,7 @@ export class MediaListSource extends McsListSourceBase<Media> {
   /**
    * Get all records from repository
    */
-  protected getAllRecords(): Observable<Media[]> {
+  protected getAllRecords(): Observable<McsResourceMedia[]> {
     return this._mediaRepository.findAllRecords();
   }
 
@@ -64,7 +64,7 @@ export class MediaListSource extends McsListSourceBase<Media> {
    * Filters all the records based on searched keyword
    * @param _record Record to be checked if it is included
    */
-  protected filterMethod(_record: Media): boolean {
+  protected filterMethod(_record: McsResourceMedia): boolean {
     if (isNullOrEmpty(_record)) { return true; }
     return containsString(_record.name, this._search.keyword);
   }

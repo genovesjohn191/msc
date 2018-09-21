@@ -8,12 +8,12 @@ import {
   McsDialogRef,
   CoreDefinition,
   McsTextContentProvider
-} from '../../../../../core';
-import { Server } from '../../../models';
+} from '@app/core';
+import { McsServer } from '@app/models';
 import {
   replacePlaceholder,
   isNullOrEmpty
-} from '../../../../../utilities';
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-suspend-server-dialog',
@@ -26,7 +26,7 @@ import {
 
 export class SuspendServerDialogComponent {
   public textContent: any;
-  public servers: Server[];
+  public servers: McsServer[];
 
   public get warningIconKey(): string {
     return CoreDefinition.ASSETS_SVG_WARNING;
@@ -83,7 +83,7 @@ export class SuspendServerDialogComponent {
 
   private _initialize(): void {
     this.textContent = this._textContentProvider.content.servers.shared.suspendServerDialog;
-    this.servers = new Array<Server>();
+    this.servers = new Array<McsServer>();
 
     if (Array.isArray(this.dialogData)) {
       this.servers = this.dialogData;

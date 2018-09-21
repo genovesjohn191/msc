@@ -3,8 +3,8 @@ import {
   ElementRef,
   AfterViewInit
 } from '@angular/core';
-import { refreshView } from '../../utilities';
-import { CoreDefinition } from '../../core';
+import { refreshView } from '@app/utilities';
+import { CoreDefinition } from '@app/core';
 
 @Directive({
   selector: '[set-focus]'

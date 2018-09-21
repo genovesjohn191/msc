@@ -9,7 +9,7 @@ import {
 import { TableComponent } from './table.component';
 import { TableModule } from './table.module';
 import { TableDatasource } from './testing';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-table',

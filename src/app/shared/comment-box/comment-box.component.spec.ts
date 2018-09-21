@@ -9,7 +9,7 @@ import {
 } from '@angular/core/testing';
 import { CommentBoxComponent } from './comment-box.component';
 import { CommentBoxModule } from './comment-box.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-comment-box',

@@ -5,17 +5,19 @@ import {
   merge
 } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsDataSource,
-  McsPaginator,
-  McsSearch,
-  McsDataStatus
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
-import { Firewall } from './models';
+  Paginator,
+  Search,
+  McsDataSource
+} from '@app/shared';
+import {
+  McsDataStatus,
+  McsFirewall
+} from '@app/models';
 import { FirewallsRepository } from './repositories/firewalls.repository';
 
-export class FirewallsDataSource implements McsDataSource<Firewall> {
+export class FirewallsDataSource implements McsDataSource<McsFirewall> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
@@ -23,8 +25,8 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
 
   constructor(
     private _firewallsRepository: FirewallsRepository,
-    private _paginator: McsPaginator,
-    private _search: McsSearch
+    private _paginator: Paginator,
+    private _search: Search
   ) {
     this.dataLoadingStream = new Subject<McsDataStatus>();
   }
@@ -33,7 +35,7 @@ export class FirewallsDataSource implements McsDataSource<Firewall> {
    * Connect function called by the table to retrieve
    * one stream containing the data to render.
    */
-  public connect(): Observable<Firewall[]> {
+  public connect(): Observable<McsFirewall[]> {
     const displayDataChanges = [
       of(undefined), // Add undefined observable to make way of retry when error occured
       this._firewallsRepository.dataRecordsChanged,

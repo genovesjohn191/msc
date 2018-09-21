@@ -9,7 +9,7 @@ import {
   McsTextContentProvider,
   CoreDefinition,
   McsSessionHandlerService
-} from '../../../../core';
+} from '@app/core';
 
 @Component({
   selector: 'mcs-session-timeout-dialog',

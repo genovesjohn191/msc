@@ -17,7 +17,7 @@ import {
   takeUntil,
   startWith
 } from 'rxjs/operators';
-import { isNullOrEmpty } from '../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { RouterLinkDirective } from './router-link.directive';
 
 @Directive({

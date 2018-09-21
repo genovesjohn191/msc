@@ -6,7 +6,7 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 import { RippleDirective } from './ripple.directive';
 import { RippleModule } from './ripple.module';
 

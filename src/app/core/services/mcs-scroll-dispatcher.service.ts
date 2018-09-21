@@ -10,8 +10,8 @@ import {
   fromEvent
 } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
-import { isNullOrEmpty } from '../../utilities';
-import { McsScrollable } from '../interfaces/mcs-scrollable.interface';
+import { isNullOrEmpty } from '@app/utilities';
+import { Scrollable } from '@app/shared';
 
 const DEFAULT_SCROLL_TIME = 20;
 
@@ -23,11 +23,11 @@ export class McsScrollDispatcherService {
 
   // Other variables
   private _globalSubscription: Subscription;
-  private _scrollableMap: Map<McsScrollable, Subscription>;
+  private _scrollableMap: Map<Scrollable, Subscription>;
 
   constructor(private _ngZone: NgZone) {
     this.scrolledStream = new Subject();
-    this._scrollableMap = new Map<McsScrollable, Subscription>();
+    this._scrollableMap = new Map<Scrollable, Subscription>();
   }
 
   /**
@@ -35,7 +35,7 @@ export class McsScrollDispatcherService {
    * scrollable is scrolled, the service emits the event in its scrolled observable.
    * @param scrollable Scrollable instance to be registered.
    */
-  public register(scrollable: McsScrollable): void {
+  public register(scrollable: Scrollable): void {
     if (isNullOrEmpty(scrollable)) { return; }
     let scrollableSubscription = scrollable.elementScrolled()
       .subscribe(() => this._notifyStream());
@@ -47,7 +47,7 @@ export class McsScrollDispatcherService {
    * Deregisters a Scrollable reference and unsubscribes from its scroll event observable.
    * @param scrollable Scrollable instance to be deregistered.
    */
-  public deregister(scrollable: McsScrollable): void {
+  public deregister(scrollable: Scrollable): void {
     if (isNullOrEmpty(scrollable)) { return; }
     let scrollableReference = this._scrollableMap.get(scrollable);
 
@@ -96,10 +96,10 @@ export class McsScrollDispatcherService {
    * Returns all registered Scrollables that contain the provided element
    * @param elementRef Element Reference of the container
    */
-  public getScrollContainers(elementRef: ElementRef | HTMLElement): McsScrollable[] {
-    let scrollingContainers: McsScrollable[] = new Array();
+  public getScrollContainers(elementRef: ElementRef | HTMLElement): Scrollable[] {
+    let scrollingContainers: Scrollable[] = new Array();
 
-    this._scrollableMap.forEach((_subscription: Subscription, _scrollable: McsScrollable) => {
+    this._scrollableMap.forEach((_subscription: Subscription, _scrollable: Scrollable) => {
       if (this.scrollableContainsElement(_scrollable, elementRef)) {
         scrollingContainers.push(_scrollable);
       }
@@ -113,7 +113,7 @@ export class McsScrollDispatcherService {
    * @param elementRef Element Reference to check the scrollabe content
    */
   public scrollableContainsElement(
-    scrollable: McsScrollable,
+    scrollable: Scrollable,
     elementRef: ElementRef | HTMLElement
   ): boolean {
     let isExist: boolean = false;

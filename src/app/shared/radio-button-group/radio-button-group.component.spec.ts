@@ -9,7 +9,7 @@ import {
 } from '@angular/core/testing';
 import { RadioButtonGroupComponent } from './radio-button-group.component';
 import { RadioButtonGroupModule } from './radio-button-group.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-radio-button-group',

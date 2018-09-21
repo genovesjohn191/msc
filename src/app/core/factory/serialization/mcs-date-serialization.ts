@@ -2,7 +2,7 @@ import {
   Serializer,
   Deserializer
 } from 'json-object-mapper';
-import { isNullOrEmpty } from '../../../utilities';
+import { isNullOrEmpty } from '@app/utilities';
 
 export class McsDateSerialization implements Serializer, Deserializer {
 

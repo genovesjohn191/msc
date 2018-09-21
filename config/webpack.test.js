@@ -52,8 +52,14 @@ module.exports = function (options) {
       /**
        * Make sure root is src
        */
-      modules: [helpers.root('src'), 'node_modules']
+      modules: [helpers.root('src'), 'node_modules'],
 
+      /**
+       * Resolve the absolute path on the unit test
+       */
+      alias: {
+        '@app': helpers.root('src/app')
+      }
     },
 
     /**

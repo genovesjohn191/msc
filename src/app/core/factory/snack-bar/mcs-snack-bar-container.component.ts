@@ -17,13 +17,16 @@ import {
   animate,
   style
 } from '@angular/animations';
-import { isNullOrEmpty } from '../../../utilities';
+import { Subject } from 'rxjs';
+import {
+  isNullOrEmpty,
+  McsPlacementType,
+  McsThemeType
+} from '@app/utilities';
 import { McsPortalComponent } from '../portal/mcs-portal-component';
 import { McsPortalTemplate } from '../portal/mcs-portal-template';
 import { McsSnackBarRefDirective } from './mcs-snack-bar-ref.directive';
 import { McsSnackBarConfig } from './mcs-snack-bar-config';
-import { McsPlacementType, McsThemeType } from '../../core.types';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'mcs-snack-bar-container',

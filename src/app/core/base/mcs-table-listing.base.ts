@@ -5,25 +5,27 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  McsBrowserService,
-  McsDeviceType
-} from '../services/mcs-browser.service';
-import {
   isNullOrEmpty,
   convertMapToJsonObject,
   unsubscribeSubject
-} from '../../utilities';
-import { McsSearch } from '../interfaces/mcs-search.interface';
-import { McsPaginator } from '../interfaces/mcs-paginator.interface';
-import { McsFilterInfo } from '../models/mcs-filter-info';
+} from '@app/utilities';
+import {
+  McsFilterInfo,
+  McsDeviceType
+} from '@app/models';
+import {
+  Search,
+  Paginator
+} from '@app/shared';
+import { McsBrowserService } from '../services/mcs-browser.service';
 
 export abstract class McsTableListingBase<T> {
 
   @ViewChild('search')
-  public search: McsSearch;
+  public search: Search;
 
   @ViewChild('paginator')
-  public paginator: McsPaginator;
+  public paginator: Paginator;
 
   // Subscription
   public browserServiceSubscription: any;

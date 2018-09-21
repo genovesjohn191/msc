@@ -8,22 +8,22 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-/** Models */
-import { Firewall } from './models';
-/** Core */
 import {
   McsTextContentProvider,
   CoreDefinition,
   McsBrowserService,
   McsTableListingBase,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   getSafeProperty
-} from '../../utilities';
-import { TableComponent } from '../../shared';
+} from '@app/utilities';
+import { TableComponent } from '@app/shared';
+import {
+  McsRouteKey,
+  McsFirewall
+} from '@app/models';
 import { FirewallsRepository } from './repositories/firewalls.repository';
 import { FirewallsDataSource } from './firewalls.datasource';
 
@@ -78,7 +78,7 @@ export class FirewallsComponent
    * Navigate to firewall details page
    * @param firewall Firewall to view the details
    */
-  public navigateToFirewall(firewall: Firewall): void {
+  public navigateToFirewall(firewall: McsFirewall): void {
     if (isNullOrEmpty(firewall)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.FirewallDetail), firewall.id]);
   }

@@ -1,6 +1,6 @@
-import { OrderCharge } from '../../../orders';
+import { McsOrderCharge } from '@app/models';
 
 export class ServerOrderDetail {
   public header: string;
-  public charges: OrderCharge;
+  public charges: McsOrderCharge;
 }

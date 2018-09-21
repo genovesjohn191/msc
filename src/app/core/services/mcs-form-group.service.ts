@@ -3,8 +3,8 @@ import {
   FormGroup,
   FormArray
 } from '@angular/forms';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsScrollDispatcherService } from './mcs-scroll-dispatcher.service';
-import { isNullOrEmpty } from '../../utilities';
 
 const FORM_GROUP_SCROLL_OFFSET = 10;
 

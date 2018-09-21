@@ -19,34 +19,34 @@ import {
   switchMap
 } from 'rxjs/operators';
 import {
-  ResourceNetwork,
-  ResourcesRepository
-} from '../../../resources';
-import {
-  ServerNic,
-  ServerCreateNic,
-  ServerManageNetwork
-} from '../../models';
-import {
   CoreDefinition,
   McsTextContentProvider,
   McsDialogService,
-  McsApiJob,
   McsNotificationEventsService,
   McsErrorHandlerService,
-  McsDataStatus
-} from '../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   animateFactory,
   unsubscribeSubject
-} from '../../../../utilities';
+} from '@app/utilities';
 import {
   TableDataSource,
   ComponentHandlerDirective
-} from '../../../../shared';
-import { DeleteNicDialogComponent } from '../../shared';
+} from '@app/shared';
+import {
+  McsJob,
+  McsDataStatus,
+  McsResourceNetwork,
+  McsServerNic,
+  McsServerCreateNic
+} from '@app/models';
+import { ResourcesRepository } from '@app/features/resources';
+import {
+  DeleteNicDialogComponent,
+  ServerManageNetwork
+} from '../../shared';
 import { ServersService } from '../../servers.service';
 import { ServersRepository } from '../../repositories/servers.repository';
 import { ServerService } from '../server.service';
@@ -80,15 +80,15 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   public currentIpAddress: string;
   public fcNetwork: FormControl;
   public manageNetwork: ServerManageNetwork;
-  public selectedNetwork: ResourceNetwork;
-  public selectedNic: ServerNic;
+  public selectedNetwork: McsResourceNetwork;
+  public selectedNic: McsServerNic;
 
-  public nicsDataSource: TableDataSource<ServerNic>;
+  public nicsDataSource: TableDataSource<McsServerNic>;
   public nicsColumns: string[];
   public manageNetworkTemplate: any[];
 
   private _networksSubscription: Subscription;
-  private _newNic: ServerNic;
+  private _newNic: McsServerNic;
   private _inProgressNicId: string;
   private _destroySubject = new Subject<void>();
   private _requestNicsSubject = new Subject<void>();
@@ -122,7 +122,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Returns all the server nics including the newly created nic as a mock data
    */
-  public get serverNics(): ServerNic[] {
+  public get serverNics(): McsServerNic[] {
     return isNullOrEmpty(this._newNic) ?
       this.server.nics :
       [...this.server.nics, this._newNic];
@@ -131,7 +131,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   /**
    * Returns all the resource networks
    */
-  public get resourceNetworks(): ResourceNetwork[] {
+  public get resourceNetworks(): McsResourceNetwork[] {
     return !isNullOrEmpty(this.serverResource.networks) ?
       this.serverResource.networks : new Array();
   }
@@ -168,7 +168,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
       _textProvider,
       _errorHandlerService
     );
-    this._newNic = new ServerNic();
+    this._newNic = new McsServerNic();
     this.nicsColumns = new Array();
     this.nicsDataSource = new TableDataSource([]);
     this.manageNetworkTemplate = [{}];
@@ -219,7 +219,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Opens the edit nic window
    * @param nic NIC to be edited
    */
-  public openEditNicWindow(nic: ServerNic): void {
+  public openEditNicWindow(nic: McsServerNic): void {
     if (isNullOrEmpty(nic)) { return; }
     this.selectedNic = nic;
     this.nicMethodType = ServerNicMethodType.EditNic;
@@ -240,7 +240,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Add NIC to the current server
    */
   public addNic(): void {
-    let nicValues = new ServerCreateNic();
+    let nicValues = new McsServerCreateNic();
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
@@ -266,7 +266,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Deletes the selected NIC
    * @param nic NIC to be deleted
    */
-  public deleteNic(nic: ServerNic): void {
+  public deleteNic(nic: McsServerNic): void {
     let dialogRef = this._dialogService.open(DeleteNicDialogComponent, {
       data: nic,
       size: 'medium'
@@ -276,7 +276,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     dialogRef.afterClosed().subscribe((result) => {
       if (isNullOrEmpty(result)) { return; }
 
-      let nicValues = new ServerCreateNic();
+      let nicValues = new McsServerCreateNic();
       nicValues.name = this.selectedNic.logicalNetworkName;
       nicValues.clientReferenceObject = {
         serverId: this.server.id,
@@ -299,7 +299,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Updates the NIC data based on the selected NIC
    */
   public updateNic(): void {
-    let nicValues = new ServerCreateNic();
+    let nicValues = new McsServerCreateNic();
     nicValues.name = this.manageNetwork.network.name;
     nicValues.ipAllocationMode = this.manageNetwork.ipAllocationMode;
     nicValues.ipAddress = this.manageNetwork.customIpAddress;
@@ -324,7 +324,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Returns true when inputted nic is currently in-progress
    * @param nic NIC to be checked
    */
-  public nicIsInProgress(nic: ServerNic): boolean {
+  public nicIsInProgress(nic: McsServerNic): boolean {
     if (isNullOrEmpty(nic)) { return false; }
     return nic.id === this._inProgressNicId;
   }
@@ -333,7 +333,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Returns true when the edit nic link is enabled
    * @param nic Nic to be checked
    */
-  public isEditNicEnabled(nic: ServerNic): boolean {
+  public isEditNicEnabled(nic: McsServerNic): boolean {
     if (isNullOrEmpty(nic)) { return false; }
     return this.server.isSelfManaged || !nic.isPrimary;
   }
@@ -402,7 +402,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Event that emits when adding a server nic
    * @param job Emitted job content
    */
-  private _onCreateServerNic(job: McsApiJob): void {
+  private _onCreateServerNic(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
@@ -423,7 +423,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Event that emits when either updating or deleting a server nic
    * @param job Emitted job content
    */
-  private _onModifyServerNic(job: McsApiJob): void {
+  private _onModifyServerNic(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Refresh the data when the nic in-progress is already completed
@@ -440,7 +440,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
    * Will trigger if currently adding a NIC
    * @param job Emitted job content
    */
-  private _onAddingNic(job: McsApiJob): void {
+  private _onAddingNic(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
 
     // Mock NIC data based on job response

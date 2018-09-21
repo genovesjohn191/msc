@@ -10,17 +10,17 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  McsFileInfo,
   McsTextContentProvider,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../../core';
-import { isNullOrEmpty } from '../../../../utilities';
+  CoreRoutes
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  Product,
-  ProductDownload,
-  ProductDependency
-} from '../../models';
+  McsRouteKey,
+  McsFileInfo,
+  McsProduct,
+  McsProductDownload,
+  McsProductDependency
+} from '@app/models';
 
 @Component({
   selector: 'mcs-product-annex',
@@ -34,7 +34,7 @@ import {
 export class ProductAnnexComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
-  public product: Product;
+  public product: McsProduct;
 
   public textContent: any;
 
@@ -63,7 +63,7 @@ export class ProductAnnexComponent implements OnInit, OnChanges, OnDestroy {
    * Returns the configuration file for download component
    * @param download Product download details
    */
-  public getFileInfo(download: ProductDownload): McsFileInfo {
+  public getFileInfo(download: McsProductDownload): McsFileInfo {
     if (isNullOrEmpty(download)) { return undefined; }
     return {
       filename: download.name,
@@ -78,7 +78,7 @@ export class ProductAnnexComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Event that emits when dependency is clicked
    */
-  public onClickDependency(dependency: ProductDependency): void {
+  public onClickDependency(dependency: McsProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), dependency.id]);
   }

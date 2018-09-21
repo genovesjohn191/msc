@@ -25,22 +25,24 @@ import {
 import {
   McsTextContentProvider,
   McsDataStatusFactory,
-  McsSearch,
   McsErrorHandlerService,
-  CoreDefinition,
-  McsRouteKey
-} from '../../core';
+  CoreDefinition
+} from '@app/core';
 import {
   unsubscribeSafely,
   refreshView,
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../utilities';
-import { SlidingPanelComponent } from '../../shared';
+} from '@app/utilities';
 import {
-  ProductCatalog,
-  Product
-} from './models';
+  Search,
+  SlidingPanelComponent
+} from '@app/shared';
+import {
+  McsRouteKey,
+  McsProduct,
+  McsProductCatalog
+} from '@app/models';
 import { ProductCatalogRepository } from './product-catalog.repository';
 import { ProductCatalogListSource } from './products.listsource';
 import { ProductsRepository } from './products.repository';
@@ -55,20 +57,20 @@ import { ProductService } from './product/product.service';
 export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('search')
-  public search: McsSearch;
+  public search: Search;
 
   @ViewChild('slidingPanel')
   public slidingPanel: SlidingPanelComponent;
 
   public textContent: any;
 
-  public catalogs: ProductCatalog[];
+  public catalogs: McsProductCatalog[];
   public catalogListSource: ProductCatalogListSource | null;
   public catalogSubscription: Subscription;
-  public selectedProduct: Product;
+  public selectedProduct: McsProduct;
 
-  public listStatusFactory: McsDataStatusFactory<ProductCatalog[]>;
-  public productStatusFactory: McsDataStatusFactory<Product>;
+  public listStatusFactory: McsDataStatusFactory<McsProductCatalog[]>;
+  public productStatusFactory: McsDataStatusFactory<McsProduct>;
   private _destroySubject = new Subject<void>();
 
   public get toggleIconKey(): string {
@@ -155,7 +157,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
         switchMap((params: ParamMap) => {
           this.productStatusFactory.setInProgress();
           let productId = params.get('id');
-          this.selectedProduct = { id: productId } as Product;
+          this.selectedProduct = { id: productId } as McsProduct;
           return this._productsRepository.findRecordById(productId);
         }),
         catchError((error) => {

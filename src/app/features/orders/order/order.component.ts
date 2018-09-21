@@ -23,15 +23,17 @@ import {
   McsTextContentProvider,
   McsErrorHandlerService,
   CoreDefinition,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../core';
+  CoreRoutes
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
   unsubscribeSubject
-} from '../../../utilities';
-import { Order } from '../models';
+} from '@app/utilities';
+import {
+  McsRouteKey,
+  McsOrder
+} from '@app/models';
 import { OrdersRepository } from '../repositories/orders.repository';
 
 @Component({
@@ -43,7 +45,7 @@ import { OrdersRepository } from '../repositories/orders.repository';
 export class OrderComponent implements OnInit, OnDestroy {
   public textContent: any;
 
-  public order: Order;
+  public order: McsOrder;
   public orderSubscription: Subscription;
   public orderItemsColumns: string[];
   private _destroySubject = new Subject<void>();
@@ -56,7 +58,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     private _errorHandlerService: McsErrorHandlerService,
     private _ordersRepository: OrdersRepository
   ) {
-    this.order = new Order();
+    this.order = new McsOrder();
   }
 
   public ngOnInit() {

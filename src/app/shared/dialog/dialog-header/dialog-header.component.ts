@@ -8,8 +8,8 @@ import {
 import {
   CoreDefinition,
   McsDialogRef
-} from '../../../core';
-import { coerceBoolean } from '../../../utilities';
+} from '@app/core';
+import { coerceBoolean } from '@app/utilities';
 
 @Component({
   selector: 'mcs-dialog-header',

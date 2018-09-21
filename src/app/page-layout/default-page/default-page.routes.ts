@@ -1,10 +1,8 @@
 import { Routes } from '@angular/router';
 import {
   McsAuthenticationGuard,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
-import { DefaultPageComponent } from './default-page.component';
+  CoreRoutes
+} from '@app/core';
 import {
   dashboardRoutes,
   serversRoutes,
@@ -16,7 +14,9 @@ import {
   mediaRoutes,
   httpErrorPageRoutes,
   ordersRoutes
-} from '../../features';
+} from '@app/features';
+import { McsRouteKey } from '@app/models';
+import { DefaultPageComponent } from './default-page.component';
 
 export const defaultPageRoutes: Routes = [
   {

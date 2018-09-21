@@ -10,12 +10,12 @@ import {
 import {
   CoreDefinition,
   McsTextContentProvider
-} from '../../../../core';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  ServerCommand,
-  Server
-} from '../../models';
-import { isNullOrEmpty } from '../../../../utilities';
+  McsServer,
+  ServerCommand
+} from '@app/models';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -30,7 +30,7 @@ let nextUniqueId = 0;
 })
 export class ServerCommandComponent implements OnInit {
   @Input()
-  public server: Server;
+  public server: McsServer;
 
   @Input()
   public excluded: ServerCommand[];

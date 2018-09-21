@@ -7,12 +7,15 @@ import {
 /** Services and Models */
 import {
   McsApiService,
+  McsLoggerService
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
+import {
   McsApiSuccessResponse,
   McsApiRequestParameter,
-  McsLoggerService
-} from '../../core';
-import { isNullOrEmpty } from '../../utilities';
-import { ProductCatalog, Product } from './models';
+  McsProduct,
+  McsProductCatalog
+} from '@app/models';
 
 @Injectable()
 export class ProductsService {
@@ -32,7 +35,7 @@ export class ProductsService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<ProductCatalog[]>> {
+  }): Observable<McsApiSuccessResponse<McsProductCatalog[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -54,7 +57,7 @@ export class ProductsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ProductCatalog[]>(ProductCatalog, response);
+            .deserializeResponse<McsProductCatalog[]>(McsProductCatalog, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -68,7 +71,7 @@ export class ProductsService {
    * Get Catalog by ID (MCS API Response)
    * @param id Catalog identification
    */
-  public getCatalog(id: any): Observable<McsApiSuccessResponse<ProductCatalog>> {
+  public getCatalog(id: any): Observable<McsApiSuccessResponse<McsProductCatalog>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/' + id;
 
@@ -80,7 +83,7 @@ export class ProductsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<ProductCatalog>(ProductCatalog, response);
+            .deserializeResponse<McsProductCatalog>(McsProductCatalog, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -100,7 +103,7 @@ export class ProductsService {
     page?: number,
     perPage?: number,
     searchKeyword?: string
-  }): Observable<McsApiSuccessResponse<Product[]>> {
+  }): Observable<McsApiSuccessResponse<McsProduct[]>> {
 
     // Set default values if null
     if (isNullOrEmpty(args)) { args = {}; }
@@ -122,7 +125,7 @@ export class ProductsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Product[]>(Product, response);
+            .deserializeResponse<McsProduct[]>(McsProduct, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -136,7 +139,7 @@ export class ProductsService {
    * Get Product by ID (MCS API Response)
    * @param id Product identification
    */
-  public getProduct(id: any): Observable<McsApiSuccessResponse<Product>> {
+  public getProduct(id: any): Observable<McsApiSuccessResponse<McsProduct>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint = '/catalogs/products/' + id;
 
@@ -148,7 +151,7 @@ export class ProductsService {
         map((response) => {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<Product>(Product, response);
+            .deserializeResponse<McsProduct>(McsProduct, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

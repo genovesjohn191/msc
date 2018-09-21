@@ -1,19 +1,19 @@
 import { Routes } from '@angular/router';
 import {
   McsNavigateAwayGuard,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
+import { McsRouteKey } from '@app/models';
 /** Components */
 import { TicketsComponent } from './tickets.component';
 import { TicketComponent } from './ticket/ticket.component';
 import { TicketCreateComponent } from './ticket-create';
 /** Services */
+import { ServersService } from '@app/features/servers';
+import { FirewallsService } from '@app/features/firewalls';
 import { TicketsService } from './tickets.service';
 import { TicketsRepository } from './tickets.repository';
 import { TicketCreateService } from './ticket-create';
-import { ServersService } from '../servers';
-import { FirewallsService } from '../firewalls';
 
 /**
  * List of services for the main module

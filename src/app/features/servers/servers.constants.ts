@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import {
   McsNavigateAwayGuard,
-  CoreRoutes,
-  McsRouteKey
-} from '../../core';
+  CoreRoutes
+} from '@app/core';
+import { McsRouteKey } from '@app/models';
 /** Services */
 import { ServerService } from './server/';
 import { ServersService } from './servers.service';

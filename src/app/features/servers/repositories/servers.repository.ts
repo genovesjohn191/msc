@@ -3,29 +3,29 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   McsRepositoryBase,
-  McsApiSuccessResponse,
   McsNotificationEventsService,
-  McsApiJob,
-  McsDataStatus,
   McsDialogService,
   McsAuthenticationIdentity
-} from '../../../core';
-import { isNullOrEmpty } from '../../../utilities';
+} from '@app/core';
+import { isNullOrEmpty } from '@app/utilities';
 import {
-  Server,
+  McsApiSuccessResponse,
+  McsJob,
+  McsDataStatus,
+  McsServer,
   ServerCommand,
-  ServerPowerState,
-  ServerMedia,
-  ServerStorageDevice,
-  ServerNic,
-  ServerSnapshot,
-  ServerCompute
-} from '../models';
+  VmPowerState,
+  McsServerMedia,
+  McsServerStorageDevice,
+  McsServerNic,
+  McsServerSnapshot,
+  McsServerCompute
+} from '@app/models';
 import { ServersService } from '../servers.service';
 import { ResetPasswordFinishedDialogComponent } from '../shared';
 
 @Injectable()
-export class ServersRepository extends McsRepositoryBase<Server> {
+export class ServersRepository extends McsRepositoryBase<McsServer> {
 
   constructor(
     private _serversApiService: ServersService,
@@ -42,7 +42,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * and update the storage device of the active server
    * @param activeServer Active server to set storage device
    */
-  public findServerDisks(activeServer: Server): Observable<ServerStorageDevice[]> {
+  public findServerDisks(activeServer: McsServer): Observable<McsServerStorageDevice[]> {
     return this._serversApiService.getServerStorage(activeServer.id)
       .pipe(
         map((response) => {
@@ -59,7 +59,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * and update the nics of the active server
    * @param activeServer Active server to set the NICs
    */
-  public findServerNics(activeServer: Server): Observable<ServerNic[]> {
+  public findServerNics(activeServer: McsServer): Observable<McsServerNic[]> {
     return this._serversApiService.getServerNics(activeServer.id)
       .pipe(
         map((response) => {
@@ -78,7 +78,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * @description TODO: Haven't implemented this because the update is not real time
    * waiting for the orch to implement this endpoint
    */
-  public findServerCompute(activeServer: Server): Observable<ServerCompute> {
+  public findServerCompute(activeServer: McsServer): Observable<McsServerCompute> {
     return this._serversApiService.getServerCompute(activeServer.id)
       .pipe(
         map((response) => {
@@ -95,7 +95,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * and update the media of the active server
    * @param activeServer Active server to set the media
    */
-  public findServerMedias(activeServer: Server): Observable<ServerMedia[]> {
+  public findServerMedias(activeServer: McsServer): Observable<McsServerMedia[]> {
     return this._serversApiService.getServerMedias(activeServer.id)
       .pipe(
         map((response) => {
@@ -111,7 +111,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Find all related snapshots from the server
    * @param serverId Server id where to get the snapshots
    */
-  public findSnapshots(activeServer: Server): Observable<ServerSnapshot[]> {
+  public findSnapshots(activeServer: McsServer): Observable<McsServerSnapshot[]> {
     return this._serversApiService.getServerSnapshots(activeServer.id)
       .pipe(
         map((response) => {
@@ -131,7 +131,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<Server[]>> {
+  ): Observable<McsApiSuccessResponse<McsServer[]>> {
     return this._serversApiService.getServers({
       page: pageIndex,
       perPage: pageSize,
@@ -144,7 +144,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<Server>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsServer>> {
     return this._serversApiService.getServer(recordId);
   }
 
@@ -211,7 +211,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when new server created
    * @param job Emitted job content
    */
-  private _onCreateServer(job: McsApiJob): void {
+  private _onCreateServer(job: McsJob): void {
     let successfullyCreated = !isNullOrEmpty(job) && job.dataStatus === McsDataStatus.Success;
     if (!successfullyCreated) { return; }
     this.refreshRecords();
@@ -221,7 +221,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when cloning a server
    * @param job Emitted job content
    */
-  private _onCloneServer(job: McsApiJob): void {
+  private _onCloneServer(job: McsJob): void {
     if (isNullOrEmpty(job)) { return; }
 
     let clonedServer = this._getServerByJob(job);
@@ -238,7 +238,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when the server deleted
    * @param job Emitted job content
    */
-  private _onDeleteServer(job: McsApiJob): void {
+  private _onDeleteServer(job: McsJob): void {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
@@ -252,7 +252,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when server is renamed
    * @param job Emitted job content
    */
-  private _onRenameServer(job: McsApiJob): void {
+  private _onRenameServer(job: McsJob): void {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
@@ -266,7 +266,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when the server command is executed
    * @param job Emitted job content
    */
-  private _onPowerStateServer(job: McsApiJob): void {
+  private _onPowerStateServer(job: McsJob): void {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
@@ -280,7 +280,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when the server reset password command is executed
    * @param job Emitted job content
    */
-  private _onResetServerPassword(job: McsApiJob): void {
+  private _onResetServerPassword(job: McsJob): void {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
     this._updateServerStatusByJob(job);
@@ -304,7 +304,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Event that emits when scaling a server
    * @param job Emitted job content
    */
-  private _onScaleServer(job: McsApiJob): void {
+  private _onScaleServer(job: McsJob): void {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
@@ -320,8 +320,9 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Set the server process details to display in the view
    * @param job Emitted job content
    */
-  private _setServerProcessDetails(activeServer: Server, job: McsApiJob): void {
-    if (isNullOrEmpty(job)) { return; }
+  private _setServerProcessDetails(activeServer: McsServer, job: McsJob): void {
+    let noActiveServer = isNullOrEmpty(activeServer) || isNullOrEmpty(job);
+    if (noActiveServer) { return; }
     activeServer.isProcessing = this._getProcessingFlagByJob(job);
     activeServer.commandAction = job.clientReferenceObject.commandAction;
     activeServer.processingText = job.summaryInformation;
@@ -330,7 +331,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   /**
    * Updates the server status based on the job
    */
-  private _updateServerStatusByJob(job: McsApiJob): void {
+  private _updateServerStatusByJob(job: McsJob): void {
     let activeServer = this._getServerByJob(job);
     this._setServerProcessDetails(activeServer, job);
     this.updateRecord(activeServer);
@@ -341,22 +342,22 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * based on the command action
    * @param activeServer Active server
    */
-  private _updateServerPowerState(activeServer: Server): void {
+  private _updateServerPowerState(activeServer: McsServer): void {
     if (isNullOrEmpty(activeServer)) { return; }
 
     switch (activeServer.commandAction) {
       case ServerCommand.Start:
       case ServerCommand.Restart:
       case ServerCommand.Resume:
-        activeServer.powerState = ServerPowerState.PoweredOn;
+        activeServer.powerState = VmPowerState.PoweredOn;
         break;
 
       case ServerCommand.Stop:
-        activeServer.powerState = ServerPowerState.PoweredOff;
+        activeServer.powerState = VmPowerState.PoweredOff;
         break;
 
       case ServerCommand.Suspend:
-        activeServer.powerState = ServerPowerState.Suspended;
+        activeServer.powerState = VmPowerState.Suspended;
         break;
 
       default:
@@ -369,7 +370,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
    * Get the server based on job client reference object
    * @param job Emitted job content
    */
-  private _getServerByJob(job: McsApiJob): Server {
+  private _getServerByJob(job: McsJob): McsServer {
     if (isNullOrEmpty(job)) { return undefined; }
     return this.dataRecords.find((serverItem) => {
       return !isNullOrEmpty(job) && !isNullOrEmpty(job.clientReferenceObject)
@@ -380,7 +381,7 @@ export class ServersRepository extends McsRepositoryBase<Server> {
   /**
    * Returns the processing flag based on job status
    */
-  private _getProcessingFlagByJob(job: McsApiJob): boolean {
+  private _getProcessingFlagByJob(job: McsJob): boolean {
     if (isNullOrEmpty(job)) { return false; }
     return job.dataStatus === McsDataStatus.InProgress;
   }

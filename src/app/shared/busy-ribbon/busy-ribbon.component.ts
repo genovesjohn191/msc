@@ -4,11 +4,11 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
+import { CoreDefinition } from '@app/core';
 import {
-  CoreDefinition,
-  McsThemeType
-} from '../../core';
-import { animateFactory } from '../../utilities';
+  McsThemeType,
+  animateFactory
+} from '@app/utilities';
 
 @Component({
   selector: 'mcs-busy-ribbon',

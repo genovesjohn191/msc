@@ -12,16 +12,14 @@ import { catchError } from 'rxjs/operators';
 import {
   McsTextContentProvider,
   McsDataStatusFactory
-} from '../../../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   unsubscribeSubject
-} from '../../../../utilities';
-import {
-  Server,
-  ServersRepository
-} from '../../../servers';
-import { MediaManageServers } from '../../models';
+} from '@app/utilities';
+import { McsServer } from '@app/models';
+import { ServersRepository } from '@app/features/servers';
+import { MediaManageServers } from './media-manage-servers';
 
 @Component({
   selector: 'mcs-media-manage-servers',
@@ -33,8 +31,8 @@ import { MediaManageServers } from '../../models';
 })
 export class MediaManageServersComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public servers: Server[];
-  public dataStatusFactory: McsDataStatusFactory<Server[]>;
+  public servers: McsServer[];
+  public dataStatusFactory: McsDataStatusFactory<McsServer[]>;
 
   @Output()
   public dataChange = new EventEmitter<MediaManageServers>();
@@ -44,9 +42,9 @@ export class MediaManageServersComponent implements OnInit, OnDestroy {
   /**
    * Get or set the selected server in the dropdown
    */
-  private _selectedServer: Server;
-  public get selectedServer(): Server { return this._selectedServer; }
-  public set selectedServer(value: Server) {
+  private _selectedServer: McsServer;
+  public get selectedServer(): McsServer { return this._selectedServer; }
+  public set selectedServer(value: McsServer) {
     if (this._selectedServer !== value) {
       this._selectedServer = value;
       this._notifyDataChange();

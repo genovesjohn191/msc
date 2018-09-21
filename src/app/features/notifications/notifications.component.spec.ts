@@ -2,12 +2,11 @@ import {
   async,
   TestBed
 } from '@angular/core/testing';
-import { CoreDefinition } from '../../core';
+import { CoreDefinition } from '@app/core';
 import {
   NotificationsTestingModule,
   mockNotificationsService
 } from './testing';
-
 import { NotificationsComponent } from './notifications.component';
 import { NotificationsService } from './notifications.service';
 

@@ -9,7 +9,7 @@ import {
 } from '@angular/core/testing';
 import { DialogComponent } from './dialog.component';
 import { DialogModule } from './dialog.module';
-import { CoreTestingModule } from '../../core/testing';
+import { CoreTestingModule } from '@app/core/testing';
 
 @Component({
   selector: 'mcs-test-dialog',

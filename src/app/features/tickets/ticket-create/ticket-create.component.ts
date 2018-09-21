@@ -20,39 +20,39 @@ import {
 } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
+  McsTextContentProvider,
+  McsErrorHandlerService,
+  CoreValidators,
+  CoreDefinition,
+  CoreRoutes
+} from '@app/core';
+import {
   isNullOrEmpty,
   replacePlaceholder,
   unsubscribeSafely,
-  animateFactory
-} from '../../../utilities';
+  animateFactory,
+  McsSafeToNavigateAway
+} from '@app/utilities';
+import { FormGroupDirective } from '@app/shared';
 import {
-  McsTextContentProvider,
+  TicketSubType,
+  ticketSubTypeText,
+  serviceTypeText,
   McsFileInfo,
   McsOption,
-  McsErrorHandlerService,
-  McsSafeToNavigateAway,
-  CoreValidators,
-  CoreDefinition,
-  CoreRoutes,
-  McsRouteKey
-} from '../../../core';
-import { FormGroupDirective } from '../../../shared';
-import { Resource } from '../../resources';
+  McsRouteKey,
+  McsFirewall,
+  McsResource,
+  McsServer,
+  McsTicketCreate,
+  McsTicketCreateAttachment
+} from '@app/models';
 import {
-  TicketCreate,
-  TicketCreateAttachment,
   TicketService,
   TicketServiceData,
-  TicketSubType,
-  ticketSubTypeText
-} from '../models';
+} from '../shared';
 import { TicketsRepository } from '../tickets.repository';
 import { TicketCreateService } from './ticket-create.service';
-import {
-  Server,
-  serverServiceTypeText
-} from '../../servers';
-import { Firewall } from '../../firewalls';
 
 @Component({
   selector: 'mcs-ticket-create',
@@ -213,7 +213,7 @@ export class TicketCreateComponent implements
     this.fgCreateDirective.validateFormControls(true);
     if (!this.fgCreateDirective.isValid()) { return; }
 
-    let ticket = new TicketCreate();
+    let ticket = new McsTicketCreate();
 
     // Set ticket data information
     ticket.subType = this.fcType.value;
@@ -227,7 +227,7 @@ export class TicketCreateComponent implements
     if (!isNullOrEmpty(this.fileAttachments)) {
       ticket.attachments = new Array();
       this.fileAttachments.forEach((attachment) => {
-        let attachmentData = new TicketCreateAttachment();
+        let attachmentData = new McsTicketCreateAttachment();
 
         attachmentData.fileName = attachment.filename;
         attachmentData.contents = attachment.base64Contents;
@@ -322,7 +322,7 @@ export class TicketCreateComponent implements
    */
   private _setVdcs(response: any): void {
     if (isNullOrEmpty(response)) { return; }
-    let vdcs = response as Resource[];
+    let vdcs = response as McsResource[];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'VDCs';
@@ -331,7 +331,7 @@ export class TicketCreateComponent implements
       if (isNullOrEmpty(vdc.name)) { return; }
       let serviceData = new TicketServiceData();
 
-      serviceData.name = `${serverServiceTypeText[vdc.serviceType]} VDC (${vdc.name})`;
+      serviceData.name = `${serviceTypeText[vdc.serviceType]} VDC (${vdc.name})`;
       serviceData.isChecked = false;
       serviceData.serviceId = vdc.name;
       service.serviceItems.push(serviceData);
@@ -348,7 +348,7 @@ export class TicketCreateComponent implements
    */
   private _setServers(response: any): void {
     if (isNullOrEmpty(response)) { return; }
-    let servers = response as Server[];
+    let servers = response as McsServer[];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'Servers';
@@ -373,7 +373,7 @@ export class TicketCreateComponent implements
    */
   private _setFirewalls(response: any): void {
     if (isNullOrEmpty(response)) { return; }
-    let firewalls = response as Firewall[];
+    let firewalls = response as McsFirewall[];
     let service: TicketService = new TicketService();
 
     service.serviceName = 'Firewalls';

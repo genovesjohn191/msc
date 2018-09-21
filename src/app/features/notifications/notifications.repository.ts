@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   McsRepositoryBase,
-  McsApiJob,
-  McsApiSuccessResponse,
   McsNotificationEventsService
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   compareDates
-} from '../../utilities';
+} from '@app/utilities';
+import {
+  McsJob,
+  McsApiSuccessResponse
+} from '@app/models';
 import { NotificationsService } from './notifications.service';
 
 @Injectable()
-export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
+export class NotificationsRepository extends McsRepositoryBase<McsJob> {
 
   constructor(
     private _notificationsApiService: NotificationsService,
@@ -31,7 +33,7 @@ export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
     pageIndex: number,
     pageSize: number,
     keyword: string
-  ): Observable<McsApiSuccessResponse<McsApiJob[]>> {
+  ): Observable<McsApiSuccessResponse<McsJob[]>> {
     return this._notificationsApiService.getNotifications({
       page: pageIndex,
       perPage: pageSize,
@@ -44,7 +46,7 @@ export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
    * to populate the data obtained using record id given when finding individual record
    * @param recordId Record id to find
    */
-  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsApiJob>> {
+  protected getRecordById(recordId: string): Observable<McsApiSuccessResponse<McsJob>> {
     return this._notificationsApiService.getNotification(recordId);
   }
 
@@ -61,7 +63,7 @@ export class NotificationsRepository extends McsRepositoryBase<McsApiJob> {
         }
 
         // Create sort predicate definition
-        let sortPredicate = (_first: McsApiJob, _second: McsApiJob) => {
+        let sortPredicate = (_first: McsJob, _second: McsJob) => {
           return compareDates(_second.createdOn, _first.createdOn);
         };
         this.sortRecords(sortPredicate);

@@ -12,12 +12,14 @@ import {
 } from '@angular/core';
 import {
   CoreDefinition,
-  McsApiIdentity,
-  McsAuthenticationIdentity,
+  McsAuthenticationIdentity
+} from '@app/core';
+import {
+  McsIdentity,
   McsKeyValuePair
-} from '../../../core';
-import { CoreTestingModule } from '../../../core/testing';
-import { AppState } from '../../../app.service';
+} from '@app/models';
+import { CoreTestingModule } from '@app/core/testing';
+import { AppState } from '@app/app.service';
 import { AccessControlDirective } from './access-control.directive';
 
 @Component({
@@ -73,7 +75,7 @@ describe('AccessControlDirective', () => {
 
   describe('ngOnChanges()', () => {
     it(`should render the element when permission required is present`, fakeAsync(() => {
-      let userIdentity = new McsApiIdentity();
+      let userIdentity = new McsIdentity();
       userIdentity.permissions = ['VmAccess', 'VmEdit'];
       userIdentity.features = [];
       appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, userIdentity);
@@ -87,7 +89,7 @@ describe('AccessControlDirective', () => {
     }));
 
     it(`should render the element when feature required is enabled`, fakeAsync(() => {
-      let userIdentity = new McsApiIdentity();
+      let userIdentity = new McsIdentity();
       userIdentity.permissions = ['VmAccess'];
       let feature = new McsKeyValuePair();
       feature.key = 'createServer';
@@ -105,7 +107,7 @@ describe('AccessControlDirective', () => {
     }));
 
     it(`should not render the element if permission is missing`, fakeAsync(() => {
-      let userIdentity = new McsApiIdentity();
+      let userIdentity = new McsIdentity();
       userIdentity.permissions = ['VmAccess'];
       userIdentity.features = [];
       appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, userIdentity);
@@ -119,7 +121,7 @@ describe('AccessControlDirective', () => {
     }));
 
     it(`should not render the element if feature is disabled`, fakeAsync(() => {
-      let userIdentity = new McsApiIdentity();
+      let userIdentity = new McsIdentity();
       userIdentity.permissions = ['VmAccess'];
       userIdentity.features = [];
       appState.set(CoreDefinition.APPSTATE_AUTH_IDENTITY, userIdentity);

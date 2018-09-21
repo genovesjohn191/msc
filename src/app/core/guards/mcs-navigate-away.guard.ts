@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
+import { McsSafeToNavigateAway } from '@app/utilities';
 import { McsTextContentProvider } from '../providers/mcs-text-content.provider';
-import { McsSafeToNavigateAway } from '../interfaces/mcs-safe-to-navigate-away.interface';
 
 @Injectable()
 export class McsNavigateAwayGuard implements CanDeactivate<McsSafeToNavigateAway> {
 
-  constructor(private _textContent: McsTextContentProvider) {}
+  constructor(private _textContent: McsTextContentProvider) { }
 
   public canDeactivate(target: McsSafeToNavigateAway) {
     if (!target.safeToNavigateAway()) {

@@ -14,15 +14,15 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   McsDataStatusFactory,
-  McsDataStatus,
   McsTextContentProvider,
   CoreDefinition
-} from '../../core';
+} from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
   unsubscribeSubject
-} from '../../utilities';
+} from '@app/utilities';
+import { McsDataStatus } from '@app/models';
 import { DataStatusErrorComponent } from './data-status-error/data-status-error.component';
 
 @Component({

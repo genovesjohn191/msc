@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation
 } from '@angular/core';
-import { CoreDefinition } from '../../../core';
+import { CoreDefinition } from '@app/core';
 
 @Component({
   selector: 'mcs-data-status-warning, mcs-data-status-empty',

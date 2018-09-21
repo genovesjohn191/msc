@@ -9,8 +9,8 @@ import {
   TestBed,
   ComponentFixture
 } from '@angular/core/testing';
-import { CoreTestingModule } from '../../core/testing';
-import { triggerEvent } from '../../utilities';
+import { CoreTestingModule } from '@app/core/testing';
+import { triggerEvent } from '@app/utilities';
 import { FormFieldModule } from '../form-field/form-field.module';
 import { TagListComponent } from './tag-list.component';
 import { TagComponent } from './tag/tag.component';

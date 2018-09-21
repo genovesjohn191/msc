@@ -19,7 +19,7 @@ import {
 import {
   coerceBoolean,
   unsubscribeSubject
-} from '../../../utilities';
+} from '@app/utilities';
 import {
   TopPanelItemPlaceholderDirective
 } from './top-panel-item/top-panel-item-placeholder.directive';
