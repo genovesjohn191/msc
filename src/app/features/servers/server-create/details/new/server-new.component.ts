@@ -212,7 +212,7 @@ export class ServerNewComponent
     serverCreate.platform = this.resource.platformLabel;
     serverCreate.resource = this.resource.name;
     serverCreate.name = this.fcServerName.value;
-    serverCreate.target = this.fcVApp.value;
+    serverCreate.target = getSafeProperty(this.fcVApp, (obj) => obj.value.name);
 
     // Scale
     let serverScale = this.fcScale.value as ServerManageScale;
