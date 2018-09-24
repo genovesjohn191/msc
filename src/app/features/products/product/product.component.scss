@@ -1,24 +1,21 @@
 @import "../../../../styles/shared/base";
 @import "../../../../styles/core/fonts";
-@import "../../../../styles/core/elements/mcs-list";
 @import "../../../../styles/core/elements/mcs-anchor";
-@import "../../../../styles/core/elements/mcs-heading";
-@import "../../../../styles/core/elements/mcs-strong";
 @import "../../../../styles/core/elements/mcs-bold";
+@import "../../../../styles/core/elements/mcs-button";
+@import "../../../../styles/core/elements/mcs-form-field";
+@import "../../../../styles/core/elements/mcs-heading";
+@import "../../../../styles/core/elements/mcs-list";
+@import "../../../../styles/core/elements/mcs-paragraph";
+@import "../../../../styles/core/elements/mcs-small";
+@import "../../../../styles/core/elements/mcs-strong";
 @import "../../../../styles/core/elements/mcs-table";
-@import "../../../../styles/core/classes/mcs-grid";
-@import "../../../../styles/core/classes/mcs-color";
-@import "../../../../styles/core/classes/mcs-space";
-@import "../../../../styles/core/classes/mcs-alignment";
-@import "../../../../styles/core/classes/mcs-divider";
-@import "../../../../styles/core/classes/mcs-layout";
-@import "../../../../styles/core/classes/mcs-theme";
 
 $product-max-width: 100%;
 $product-catalog-widget-size: 350px;
 $product-panel-color: $color-grey-08;
 
-:host {
+.product-wrapper {
   position: absolute;
   left: 0;
   top: 0;
@@ -68,4 +65,10 @@ $product-panel-color: $color-grey-08;
       @include set-items-interval($space-xsmall);
     }
   }
+}
+
+// Header settings
+h1, h2, h3, h4, h5, h6 {
+  margin-top: $space-medium;
+  margin-bottom: $space-medium;
 }
