@@ -35,7 +35,7 @@ import { ProductService } from './product.service';
   templateUrl: 'product.component.html',
   styleUrls: ['./product.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.ShadowDom,
+  encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'product-wrapper'
   }

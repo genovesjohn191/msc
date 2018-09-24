@@ -1,6 +1,48 @@
 $list-item-margin: 3px;
+$list-left-offset: 30px;
+$list-vertical-offset: 15px;
+$list-children-vertical-offset: 5px;
 
 li {
   margin-top: $list-item-margin;
   margin-bottom: $list-item-margin;
+
+  li:first-child {
+    margin-top: 0;
+  }
+}
+
+ol, ul {
+  margin-left: $list-left-offset;
+  margin-top: $list-vertical-offset;
+  margin-bottom: $list-vertical-offset;
+
+  ol, ul {
+    margin-top: $list-children-vertical-offset;
+    margin-bottom: $list-children-vertical-offset;
+  }
+}
+
+ol {
+  list-style: decimal;
+
+  ol {
+    list-style: lower-alpha;
+
+    ol {
+      list-style: lower-roman;
+    }
+  }
+}
+
+ul {
+  list-style: disc;
+
+  ul {
+    list-style: circle;
+
+    ul {
+      list-style: square;
+    }
+  }
 }

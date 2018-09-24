@@ -29,7 +29,7 @@
 }
 
 // Align Items
-.align-items-flex-start {
+.align-items-start {
   @include align-items(flex-start);
 }
 
@@ -37,7 +37,7 @@
   @include align-items(center);
 }
 
-.align-items-flex-end {
+.align-items-end {
   @include align-items(flex-end);
 }
 
@@ -46,7 +46,7 @@
 }
 
 // Justify Content
-.justify-content-flex-start {
+.justify-content-start {
   justify-content: flex-start;
 }
 
@@ -54,7 +54,7 @@
   justify-content: center;
 }
 
-.justify-content-flex-end {
+.justify-content-end {
   justify-content: flex-end;
 }
 
