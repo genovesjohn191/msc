@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   Subject,
-  BehaviorSubject
+  BehaviorSubject,
+  Observable
 } from 'rxjs';
 import {
   takeUntil,
@@ -13,13 +14,15 @@ import {
   deleteArrayRecord,
   isNullOrEmpty,
   unsubscribeSubject,
-  McsInitializer
+  McsInitializer,
+  getSafeProperty
 } from '@app/utilities';
 import {
   McsJob,
   McsDataStatus,
   McsApiRequestParameter,
-  McsApiSuccessResponse
+  McsApiSuccessResponse,
+  McsJobType
 } from '@app/models';
 import { CoreDefinition } from '../core.definition';
 import { McsNotificationJobService } from './mcs-notification-job.service';
@@ -33,25 +36,31 @@ import { McsApiService } from './mcs-api.service';
 @Injectable()
 export class McsNotificationContextService implements McsInitializer {
   private _destroySubject = new Subject<void>();
+  private _excludedJobTypes: McsJobType[];
   private _notifications: McsJob[];
-
-  /**
-   * Subscribe to get the updated notifications in real-time
-   */
   private _notificationsStream: BehaviorSubject<McsJob[]>;
-  public get notificationsStream(): BehaviorSubject<McsJob[]> {
-    return this._notificationsStream;
-  }
-  public set notificationsStream(value: BehaviorSubject<McsJob[]>) {
-    this._notificationsStream = value;
-  }
 
   constructor(
     private _notificationJobService: McsNotificationJobService,
     private _apiService: McsApiService
   ) {
+    this._excludedJobTypes = new Array();
     this._notifications = new Array();
     this._notificationsStream = new BehaviorSubject<McsJob[]>(new Array());
+  }
+
+  /**
+   * Subscribe to get the updated notifications in real-time
+   */
+  public get notificationsStream(): Observable<McsJob[]> {
+    return this._notificationsStream.pipe(
+      // Need to filter the system jobs being sent from rabbitMQ
+      map((jobs) => jobs.filter((job) => {
+        let jobType = getSafeProperty(job, (obj) => obj.type);
+        return isNullOrEmpty(this._excludedJobTypes
+          .find((filteredType) => filteredType === jobType));
+      }))
+    );
   }
 
   /**
@@ -59,6 +68,7 @@ export class McsNotificationContextService implements McsInitializer {
    */
   public initialize(): void {
     this.getAllActiveJobs();
+    this._createFilteredJobList();
     this._listenToJobChanged();
   }
 
@@ -132,11 +142,13 @@ export class McsNotificationContextService implements McsInitializer {
 
       // Comparer method for the jobs
       let jobsComparer = (_job: McsJob) => _job.id === updatedNotification.id;
-
-      // Update corresponding notification if it is exist else
-      // add it to the list of notifications
       addOrUpdateArrayRecord<McsJob>(
-        this._notifications, updatedNotification, false, jobsComparer, 0);
+        this._notifications,
+        updatedNotification,
+        false,
+        jobsComparer,
+        0
+      );
       this._notificationsStream.next(this._notifications);
     }
   }
@@ -163,6 +175,14 @@ export class McsNotificationContextService implements McsInitializer {
         _job.summaryInformation === updatedJob.summaryInformation;
     });
     return !isNullOrEmpty(jobExists);
+  }
+
+  /**
+   * Creates filtered job
+   */
+  private _createFilteredJobList(): void {
+    this._excludedJobTypes.push(McsJobType.Undefined);
+    this._excludedJobTypes.push(McsJobType.RefreshProductCatalogCache);
   }
 
   /**
