@@ -140,8 +140,9 @@
             </mcs-checkbox>
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row"
-            [disabled]="row.isProcessing" stop-propagation
-            cursor="default"
+            [disabled]="row.isProcessing"
+            mcsCursor="default"
+            mcsStopPropagation
             class="text-center action-data-cell hidden-small">
             <mcs-checkbox
               [checked]="selection.isSelected(row)"
@@ -277,8 +278,9 @@
         <!-- Action Column -->
         <ng-container mcsColumnDef="action" *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-header-cell *mcsHeaderCellDef class="action-header-cell"></mcs-header-cell>
-          <mcs-data-cell *mcsDataCellDef="let row" stop-propagation
-            cursor="default"
+          <mcs-data-cell *mcsDataCellDef="let row"
+            mcsCursor="default"
+            mcsStopPropagation
             class="text-center action-data-cell">
             <mcs-server-command [server]="row"
               [excluded]="excludedCommands"
@@ -315,7 +317,7 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          cursor="pointer"
+          mcsCursor="pointer"
           [disabled]="serverDeleting(row)"
           [ngClass]="{'active-data-row': selection.isSelected(row)}"
           (click)="navigateToServer(row)"

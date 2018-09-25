@@ -44,7 +44,7 @@
   <div class="comment-action">
     <div *ngIf="showAttachButton"
       animate trigger="fadeIn" class="comment-attach-file-area"
-      cursor="pointer" (click)="chooFileElement.click()">
+      mcsCursor="pointer" (click)="chooFileElement.click()">
       <mcs-icon [key]="attachmentIconKey">
         <input #chooFileElement type="file" [accept]="allowedMimeType"
           ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
@@ -54,7 +54,7 @@
 
     <div *ngIf="!showAttachButton"
       animate trigger="fadeIn" class="comment-attach-file-area">
-      <mcs-icon [key]="closeIconKey" cursor="pointer"
+      <mcs-icon [key]="closeIconKey" mcsCursor="pointer"
         (click)="removeAttachment(attachedFiles[0])"></mcs-icon>
       <span>{{ attachedFiles[0]?.file.name }}</span>
     </div>
@@ -72,7 +72,7 @@
   *ngIf="hasAttachment && allowMultiple">
   <mcs-list spacing="xsmall">
     <mcs-list-item *ngFor="let attachedItem of attachedFiles">
-      <mcs-icon [key]="closeIconKey" size="small" cursor="pointer"
+      <mcs-icon [key]="closeIconKey" size="small" mcsCursor="pointer"
         (click)="removeAttachment(attachedItem)"></mcs-icon>
       <span>{{ attachedItem?.file.name }}</span>
     </mcs-list-item>

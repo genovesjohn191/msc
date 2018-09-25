@@ -24,7 +24,7 @@ import {
   McsRouteKey,
   McsTicket
 } from '@app/models';
-import { TicketsRepository } from './tickets.repository';
+import { TicketsRepository } from '@app/services';
 import { TicketsDataSource } from './tickets.datasource';
 
 @Component({

@@ -4,11 +4,7 @@ import {
 } from '@angular/core/testing';
 import { CoreDefinition } from '@app/core';
 import { ServersComponent } from './servers.component';
-import { ServersService } from './servers.service';
-import {
-  ServersTestingModule,
-  mockServersService
-} from './testing';
+import { ServersTestingModule } from './testing';
 
 describe('ServersComponent', () => {
 
@@ -31,7 +27,7 @@ describe('ServersComponent', () => {
     });
 
     /** Testbed Onverriding of Providers */
-    TestBed.overrideProvider(ServersService, { useValue: mockServersService });
+    // TestBed.overrideProvider(ServersApiService, { useValue: mockServersService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(ServersComponent, {

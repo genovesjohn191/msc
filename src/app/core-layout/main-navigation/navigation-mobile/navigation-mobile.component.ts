@@ -47,7 +47,7 @@ import {
   McsProductCatalog
 } from '@app/models';
 import { SlidingPanelComponent } from '@app/shared';
-import { ProductCatalogRepository } from '@app/features/products';
+import { ProductCatalogRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-navigation-mobile',

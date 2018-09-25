@@ -5,7 +5,7 @@
   <!-- Default account -->
   <mcs-list header="Default">
     <mcs-list-item class="inline-items-xsmall"
-      (click)="selectAccount(defaultAccount)" cursor="pointer"
+      (click)="selectAccount(defaultAccount)" mcsCursor="pointer"
       mcsEventTracker="use-default-account"
       mcsEventCategory="navigation"
       mcsEventLabel="switch-account-panel">
@@ -31,7 +31,7 @@
 
       <mcs-list-item *ngFor="let item of displayedCompanies; trackBy: trackByFn"
         class="inline-items-xsmall"
-        (click)="selectAccount(item)" cursor="pointer"
+        (click)="selectAccount(item)" mcsCursor="pointer"
         mcsEventTracker="switch-to-account"
         mcsEventCategory="navigation"
         mcsEventLabel="switch-account-panel"
@@ -44,7 +44,7 @@
 
     <!-- Data obtainment status -->
     <ng-container *ngIf="dataStatus !== dataStatusEnum.Success">
-      <div [ngSwitch]="dataStatus" display-flex align-items="center" justify-content="center">
+      <div [ngSwitch]="dataStatus" class="inline-items-small centered">
         <div *ngSwitchCase="dataStatusEnum.InProgress">
           <mcs-icon [key]="spinnerIconKey" size="small"></mcs-icon>
         </div>

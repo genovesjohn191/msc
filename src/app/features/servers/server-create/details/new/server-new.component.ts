@@ -39,12 +39,12 @@ import {
   McsServerCreateNic,
   McsServerOperatingSystem
 } from '@app/models';
+import { ServersOsRepository } from '@app/services';
 import {
   ServerManageStorage,
   ServerManageNetwork,
   ServerManageScale,
 } from '../../../shared';
-import { ServersOsRepository } from '../../../repositories/servers-os.repository';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 const DEFAULT_MANAGE_STORAGE_MINIMUM = 50;

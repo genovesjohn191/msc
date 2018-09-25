@@ -42,7 +42,7 @@ import {
   McsTicketCreateComment,
   McsTicketCreateAttachment
 } from '@app/models';
-import { TicketsService } from '../tickets.service';
+import { TicketsApiService } from '@app/services';
 import { TicketActivity } from '../shared';
 
 @Component({
@@ -124,7 +124,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   public constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _ticketsService: TicketsService,
+    private _ticketsService: TicketsApiService,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _changeDetectorRef: ChangeDetectorRef

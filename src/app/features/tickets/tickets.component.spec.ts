@@ -14,7 +14,7 @@ import {
   mockTicketsService
 } from './testing';
 import { TicketsComponent } from './tickets.component';
-import { TicketsService } from './tickets.service';
+import { TicketsApiService } from '@app/services';
 
 describe('TicketsComponent', () => {
 
@@ -36,7 +36,7 @@ describe('TicketsComponent', () => {
     });
 
     /** Testbed Onverriding of Providers */
-    TestBed.overrideProvider(TicketsService, { useValue: mockTicketsService });
+    TestBed.overrideProvider(TicketsApiService, { useValue: mockTicketsService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(TicketsComponent, {

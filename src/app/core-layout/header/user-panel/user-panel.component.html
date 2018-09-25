@@ -6,15 +6,15 @@
     </div>
 
     <div class="logout-panel">
-      <a cursor="pointer" (click)="logout($event)"
+      <a mcsCursor="pointer" (click)="logout($event)"
         mcsEventTracker="logout"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">{{ textContent.signOut }}</a>
     </div>
 
     <div *mcsAccessControl="['CompanyView']"
-      scrollable="dark"
-      scrollbarSize="small"
+      mcsScrollable="dark"
+      mcsScrollbarSize="small"
       class="switch-account-panel">
       <mcs-switch-account (selectionChanged)="userPopover?.close()">
       </mcs-switch-account>
@@ -74,12 +74,12 @@
 
   <!-- User icon -->
   <div class="user-panel-item user-item inline-items-small">
-    <a class="block-items" cursor="pointer"
+    <a class="block-items" mcsCursor="pointer"
       (click)="clickUser()"
       mcsEventTracker="user-dropdown-toggle"
       mcsEventCategory="navigation"
       mcsEventLabel="user-panel"
-      stop-propagation>
+      mcsStopPropagation>
       <mcs-icon class="user-icon" [key]="userIconKey" size="small"></mcs-icon>
       <span class="hidden-small grey-text">{{ firstName }} {{ lastName }}</span>
 
@@ -94,7 +94,7 @@
 
     <!-- Popover will display here -->
     <mcs-icon class="caret-down right-align"
-      [key]="caretDownIconKey" color="white" cursor="pointer"
+      [key]="caretDownIconKey" color="white" mcsCursor="pointer"
 
       mcsPopover #userPopover="mcsPopover"
       padding="none" placement="bottom" orientation="left"

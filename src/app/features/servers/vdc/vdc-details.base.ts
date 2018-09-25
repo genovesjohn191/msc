@@ -11,7 +11,7 @@ import {
   unsubscribeSubject
 } from '@app/utilities';
 import { McsResource } from '@app/models';
-import { ResourcesRepository } from '@app/features/resources';
+import { ResourcesRepository } from '@app/services';
 import { VdcService } from '../vdc/vdc.service';
 
 export abstract class VdcDetailsBase {

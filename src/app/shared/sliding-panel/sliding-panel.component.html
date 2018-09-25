@@ -3,11 +3,11 @@
 
     <ng-container [ngSwitch]="placement">
       <div *ngSwitchCase="'right'" [@slideRight]
-        class="sliding-panel-content" stop-propagation scrollable>
+        class="sliding-panel-content" mcsStopPropagation mcsScrollable>
         <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
       </div>
       <div *ngSwitchCase="'left'" [@slideLeft]
-        class="sliding-panel-content" stop-propagation scrollable>
+        class="sliding-panel-content" mcsStopPropagation mcsScrollable>
         <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
       </div>
     </ng-container>

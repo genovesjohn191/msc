@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutModule } from '../layout';
+import { DirectivesModule } from '../directives';
 import { RippleModule } from '../ripple/ripple.module';
 import { IconModule } from '../icon/icon.module';
 import { ResponsivePanelModule } from '../responsive-panel/responsive-panel.module';
@@ -26,7 +26,7 @@ import { TabBodyComponent } from './tab-body/tab-body.component';
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     RippleModule,
     ResponsivePanelModule
   ],
@@ -38,7 +38,7 @@ import { TabBodyComponent } from './tab-body/tab-body.component';
     TabBodyComponent,
     TabBorderBarComponent,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     RippleModule,
     ResponsivePanelModule
   ]

@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
-/** Provider contants */
-import { resourcesProviders } from '../resources.constants';
 
 @NgModule({
   providers: [
-    ...resourcesProviders
+    // Add the provider list here
   ],
 })
 

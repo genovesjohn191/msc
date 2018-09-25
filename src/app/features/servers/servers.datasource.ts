@@ -15,7 +15,7 @@ import {
   McsDataStatus,
   McsServer
 } from '@app/models';
-import { ServersRepository } from './repositories/servers.repository';
+import { ServersRepository } from '@app/services';
 
 export class ServersDataSource implements McsDataSource<McsServer> {
   /**

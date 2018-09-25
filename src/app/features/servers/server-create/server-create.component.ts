@@ -38,7 +38,7 @@ import {
   getSafeProperty,
   McsSafeToNavigateAway
 } from '@app/utilities';
-import { ResourcesRepository } from '@app/features/resources';
+import { ResourcesRepository } from '@app/services';
 import { ServerCreateService } from './server-create.service';
 import { ServerCreateDetailsComponent } from './details/server-create-details.component';
 import { ServerCreateFlyweightContext } from './server-create-flyweight.context';

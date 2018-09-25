@@ -124,7 +124,7 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          cursor="pointer" (click)="navigateToOrder(row)"
+          mcsCursor="pointer" (click)="navigateToOrder(row)"
           mcsEventTracker="navigate-to-order"
           mcsEventCategory="order"
           mcsEventLabel="order-listing-page"></mcs-data-row>

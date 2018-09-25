@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { PipesModule } from '../pipes/pipes.module';
 import { FileDownloadComponent } from './file-download.component';
 
@@ -12,13 +12,13 @@ import { FileDownloadComponent } from './file-download.component';
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     PipesModule
   ],
   exports: [
     CommonModule,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     PipesModule,
     FileDownloadComponent
   ]

@@ -5,8 +5,7 @@
 
 <!-- Selection trigger -->
 <div class="select-trigger" [ngClass]="size"
-  display-flex justify-content="space-between"
-  align-items="center" cursor="pointer" (click)="toggle()">
+  mcsCursor="pointer" (click)="toggle()">
 
   <span *ngIf="selection?.hasValue();else placeholderTemplate">
     {{ displayedText }}
@@ -16,7 +15,7 @@
 
 <!-- Group Items container -->
 <div *ngIf="panelOpen">
-  <div #panelElement [@transformVertical] scrollable class="select-group-panel-wrapper">
+  <div #panelElement [@transformVertical] mcsScrollable class="select-group-panel-wrapper">
     <div [@fadeIn]>
       <ng-content></ng-content>
     </div>

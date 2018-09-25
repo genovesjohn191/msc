@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { RippleModule } from '../ripple/ripple.module';
 import { SnackBarComponent } from './snack-bar.component';
 
@@ -12,13 +12,13 @@ import { SnackBarComponent } from './snack-bar.component';
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     RippleModule
   ],
   exports: [
     SnackBarComponent,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     RippleModule
   ]
 })

@@ -10,7 +10,7 @@ export * from './wizard';
 export * from './dialog';
 export * from './paginator';
 export * from './search';
-export * from './layout';
+export * from './directives';
 
 /** Expose directives */
 export * from './form-field/form-group.directive';

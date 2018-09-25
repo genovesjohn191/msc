@@ -36,8 +36,10 @@ import {
   McsResourceMediaServer,
   McsServer
 } from '@app/models';
-import { MediaRepository } from '../../repositories/media.repository';
-import { MediaService } from '../../media.service';
+import {
+  MediaApiService,
+  MediaRepository
+} from '@app/services';
 import { MediumService } from '../medium.service';
 import { MediumDetailsBase } from '../medium-details.base';
 import { MediaManageServers } from '../../shared';
@@ -60,7 +62,7 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
   constructor(
     _mediumService: MediumService,
-    private _mediaService: MediaService,
+    private _mediaService: MediaApiService,
     private _mediaRepository: MediaRepository,
     private _dialogService: McsDialogService,
     private _errorHandlerService: McsErrorHandlerService,

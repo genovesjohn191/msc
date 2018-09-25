@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '@app/shared';
 /** Services */
-import {
-  ordersProviders,
-  ordersRoutesComponents
-} from './orders.constants';
+import { ordersRoutesComponents } from './orders.constants';
 /** Components */
 import { OrdersComponent } from './orders.component';
 import { OrderComponent } from './order/order.component';
@@ -19,9 +16,6 @@ import { OrderComponent } from './order/order.component';
   ],
   imports: [
     SharedModule
-  ],
-  providers: [
-    ...ordersProviders
   ]
 })
 

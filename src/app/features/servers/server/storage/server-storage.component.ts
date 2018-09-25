@@ -44,14 +44,16 @@ import {
   McsServerStorageDevice,
   McsServerStorageDeviceUpdate
 } from '@app/models';
-import { ResourcesRepository } from '@app/features/resources';
+import {
+  ServersApiService,
+  ServersRepository,
+  ResourcesRepository
+} from '@app/services';
 import {
   DeleteStorageDialogComponent,
   ServerManageStorage
 } from '../../shared';
 import { ServerService } from '../server.service';
-import { ServersService } from '../../servers.service';
-import { ServersRepository } from '../../repositories/servers.repository';
 import { ServerDetailsBase } from '../server-details.base';
 
 // Enumeration
@@ -152,7 +154,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   constructor(
     _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
-    _serversService: ServersService,
+    _serversService: ServersApiService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,

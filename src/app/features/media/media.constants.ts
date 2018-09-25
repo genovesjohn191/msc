@@ -8,17 +8,12 @@ import {
   MediumOverviewComponent,
   MediumServersComponent
 } from './medium';
-/** Services */
-import { MediaService } from './media.service';
-import { MediaRepository } from './repositories/media.repository';
 import { MediumService } from './medium/medium.service';
 
 /**
  * List of services for the main module
  */
 export const mediaProviders: any[] = [
-  MediaService,
-  MediaRepository,
   MediumService
 ];
 

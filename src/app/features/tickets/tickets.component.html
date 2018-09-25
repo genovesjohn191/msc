@@ -156,7 +156,7 @@
         <!-- Header and Data row -->
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-          cursor="pointer" (click)="navigateToTicket(row)"
+          mcsCursor="pointer" (click)="navigateToTicket(row)"
           mcsEventTracker="navigate-to-ticket"
           mcsEventCategory="ticket"
           mcsEventLabel="ticket-listing-page"></mcs-data-row>

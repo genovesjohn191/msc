@@ -3,17 +3,6 @@ import { CoreRoutes } from '@app/core';
 import { McsRouteKey } from '@app/models';
 /** Components */
 import { ToolsComponent } from './tools.component';
-/** Services */
-import { ToolsService } from './tools.service';
-import { ToolsRepository } from './tools.repository';
-
-/**
- * List of services for the main module
- */
-export const toolsProviders: any[] = [
-  ToolsService,
-  ToolsRepository
-];
 
 /**
  * List of all the entry components

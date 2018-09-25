@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
 /** Widgets */
 import { QuoteWidgetComponent } from './quote-widget/quote-widget.component';
@@ -11,11 +11,11 @@ import { QuoteWidgetComponent } from './quote-widget/quote-widget.component';
   ],
   imports: [
     CommonModule,
-    LayoutModule,
+    DirectivesModule,
     IconModule
   ],
   exports: [
-    LayoutModule,
+    DirectivesModule,
     IconModule,
     QuoteWidgetComponent
   ]

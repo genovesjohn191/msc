@@ -10,7 +10,7 @@
           <mcs-search #search id="firewall-policy-search"></mcs-search>
           <mcs-icon [key]="columnFilterIconKey" size="large" class="hidden-small pointer"
             mcsPopover placement="bottom" orientation="left" theme="light"
-            padding="narrow" [content]="filterSelector" cursor="pointer">
+            padding="narrow" [content]="filterSelector" mcsCursor="pointer">
           </mcs-icon>
           <ng-template #filterSelector>
             <mcs-filter-selector [key]="columnSettingsKey"
@@ -184,7 +184,7 @@
                 mcsEventTracker="select-policy"
                 mcsEventCategory="firewall"
                 mcsEventLabel="firewall-details-page"
-                cursor="pointer"></mcs-icon>
+                mcsCursor="pointer"></mcs-icon>
             </mcs-data-cell>
           </ng-container>
 
@@ -203,7 +203,7 @@
 
           <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
           <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
-            cursor="pointer" (click)="showFirewallPolicyDetails(row)"></mcs-data-row>
+            mcsCursor="pointer" (click)="showFirewallPolicyDetails(row)"></mcs-data-row>
         </mcs-table>
 
         <!-- Paginator -->

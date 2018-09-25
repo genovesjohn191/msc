@@ -11,12 +11,6 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { OrdersModule } from './orders/orders.module';
 import { HttpErrorPageModule } from './http-error-page/http-error-page.module';
 
-/** Service */
-import {
-  JobsApiService,
-  OptionsApiService
-} from './services';
-
 @NgModule({
   imports: [
     DashboardModule,
@@ -30,10 +24,6 @@ import {
     NotificationsModule,
     OrdersModule,
     HttpErrorPageModule
-  ],
-  providers: [
-    JobsApiService,
-    OptionsApiService
   ]
 })
 

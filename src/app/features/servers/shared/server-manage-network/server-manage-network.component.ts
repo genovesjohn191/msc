@@ -38,7 +38,7 @@ import {
   McsResourceNetwork,
   McsResourceNetworkIpAddress,
 } from '@app/models';
-import { ResourcesService } from '@app/features/resources';
+import { ResourcesApiService } from '@app/services';
 import { ServerManageNetwork } from './server-manage-network';
 
 // Constants
@@ -109,7 +109,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
-    private _resourcesService: ResourcesService
+    private _resourcesService: ResourcesApiService
   ) {
     this.inputManageType = InputManageType.Buttons;
     this.selectedIpAddressMode = IpAllocationMode.Dhcp;

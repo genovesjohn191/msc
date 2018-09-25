@@ -50,11 +50,13 @@ import {
   DetachMediaDialogComponent,
   ServerManageScale
 } from '../../shared';
-import { ResourcesRepository } from '@app/features/resources';
+import {
+  ServersApiService,
+  ServersRepository,
+  ResourcesRepository
+} from '@app/services';
 import { ServerDetailsBase } from '../server-details.base';
-import { ServersService } from '../../servers.service';
 import { ServerService } from '../server.service';
-import { ServersRepository } from '../../repositories/servers.repository';
 
 // Enumeration
 export enum ServerManagementView {
@@ -129,7 +131,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     _changeDetectorRef: ChangeDetectorRef,
     _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
-    _serversService: ServersService,
+    _serversService: ServersApiService,
     _serverService: ServerService,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
@@ -501,8 +503,6 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     let referenceObject = getSafeProperty(job, (obj) => obj.clientReferenceObject);
     if (isNullOrEmpty(referenceObject)) { return; }
 
-    // TODO: This is just temporary measure while waiting for the
-    // /compute endpoint from API
     this.server.compute.memoryMB = referenceObject.memoryMB;
     if (this.server.compute.cpuCount > 1) {
       this.server.compute.cpuCount = referenceObject.cpuCount;

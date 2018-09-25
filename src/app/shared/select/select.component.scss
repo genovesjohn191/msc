@@ -41,6 +41,9 @@ $select-sub-group-expanded-bg-color: $color-white;
 }
 
 .select-trigger {
+  @include display-flex(row);
+  @include align-items(center);
+  justify-content: space-between;
   border: 1px solid $select-trigger-border-color;
   @include border-radius($select-trigger-border-radius);
 

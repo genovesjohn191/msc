@@ -23,7 +23,7 @@ import {
   McsRouteKey,
   McsResourceMedia
 } from '@app/models';
-import { MediaRepository } from './repositories/media.repository';
+import { MediaRepository } from '@app/services';
 import { MediaDataSource } from './media.datasource';
 
 @Component({

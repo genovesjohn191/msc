@@ -21,7 +21,7 @@ import {
   getSafeProperty
 } from '@app/utilities';
 import { McsResourceStorage } from '@app/models';
-import { ResourcesRepository } from '@app/features/resources';
+import { ResourcesRepository } from '@app/services';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 

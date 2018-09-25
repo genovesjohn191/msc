@@ -14,7 +14,7 @@ import {
   McsKeyValuePair,
   McsServer
 } from '@app/models';
-import { ServersRepository } from './repositories/servers.repository';
+import { ServersRepository } from '@app/services';
 
 export class ServersListSource extends McsListSourceBase<McsServer> {
 

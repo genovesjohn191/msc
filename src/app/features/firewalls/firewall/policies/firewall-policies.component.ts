@@ -18,7 +18,7 @@ import {
   getSafeProperty
 } from '@app/utilities';
 import { McsFirewallPolicy } from '@app/models';
-import { FirewallsRepository } from '../../repositories/firewalls.repository';
+import { FirewallsRepository } from '@app/services';
 import { FirewallService } from '../firewall.service';
 import { FirewallPoliciesDataSource } from './firewall-policies.datasource';
 

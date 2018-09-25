@@ -22,7 +22,7 @@ import {
   McsResource,
   McsResourceStorage
 } from '@app/models';
-import { ResourcesRepository } from '@app/features/resources';
+import { ResourcesRepository } from '@app/services';
 
 const VDC_LOW_STORAGE_PERCENTAGE = 85;
 

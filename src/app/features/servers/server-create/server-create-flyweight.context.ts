@@ -34,8 +34,10 @@ import {
   McsServerClone,
   McsResource
 } from '@app/models';
-import { OrdersService } from '@app/features/orders';
-import { ServersService } from '../servers.service';
+import {
+  ServersApiService,
+  OrdersApiService
+} from '@app/services';
 
 @Injectable()
 export class ServerCreateFlyweightContext {
@@ -66,8 +68,8 @@ export class ServerCreateFlyweightContext {
   private _requestStatusChange: Subject<McsDataStatus>;
 
   constructor(
-    private _ordersService: OrdersService,
-    private _serversService: ServersService,
+    private _ordersService: OrdersApiService,
+    private _serversService: ServersApiService,
     private _errorHandlerService: McsErrorHandlerService
   ) {
     this._jobs = new Array();

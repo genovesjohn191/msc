@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { ButtonModule } from '../button/button.module';
 import { DialogComponent } from './dialog.component';
 // Dialog Header
@@ -27,7 +27,7 @@ import { DialogWarningComponent } from './dialog-warning/dialog-warning.componen
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     ButtonModule
   ],
   exports: [
@@ -36,7 +36,7 @@ import { DialogWarningComponent } from './dialog-warning/dialog-warning.componen
     DialogContentComponent,
     DialogActionsComponent,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     ButtonModule
   ]
 })

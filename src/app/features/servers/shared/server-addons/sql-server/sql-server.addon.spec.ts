@@ -12,7 +12,7 @@ import {
 } from '@angular/core/testing';
 import { SqlServerAddOnComponent } from './sql-server.addon';
 import { CoreTestingModule } from '@app/core/testing';
-import { OptionsApiService } from '../../../../services';
+import { OptionsApiService } from '@app/services';
 
 @Component({
   selector: 'mcs-test',

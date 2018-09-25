@@ -27,7 +27,7 @@
           <div class="field">
             <mcs-form-field>
               <mcs-select id="type" [placeholder]="textContent.placeholders.type"
-                [formControl]="fcType" set-focus required
+                [formControl]="fcType" mcsSetFocus required
                 [mcsContextualHelp]="contextualContent.type">
                 <mcs-select-group header="Ticket Type">
                   <mcs-select-item *ngFor="let ticketType of ticketTypeList"
@@ -108,7 +108,7 @@
 
                 <div class="inline-items-small">
                   <!-- Tags -->
-                  <mcs-form-field flex="auto">
+                  <mcs-form-field class="full-width">
                     <mcs-tag-list [placeholder]="textContent.placeholders.services"
                       [formControl]="fcService">
 
@@ -125,8 +125,8 @@
                   </mcs-form-field>
 
                   <!-- Icon trigger -->
-                  <div cursor="pointer" id="ctaSelectService"
-                    class="space-left-small space-top-small" flex="none"
+                  <div mcsCursor="pointer" id="ctaSelectService"
+                    class="space-left-small space-top-small"
                     (click)="servicePanelOpen = !servicePanelOpen" #trigger
                     mcsEventTracker="toggle-service-panel"
                     mcsEventCategory="ticket"

@@ -23,7 +23,7 @@ import {
   McsRouteKey,
   McsOrder
 } from '@app/models';
-import { OrdersRepository } from './repositories/orders.repository';
+import { OrdersRepository } from '@app/services';
 import { OrdersDataSource } from './orders.datasource';
 
 @Component({

@@ -7,7 +7,6 @@ import {
 } from '@angular/forms';
 /** Modules */
 import { RippleModule } from './ripple/ripple.module';
-import { LayoutModule } from './layout/layout.module';
 import { ButtonModule } from './button/button.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { FilterSelectorModule } from './filter-selector/filter-selector.module';
@@ -65,7 +64,6 @@ import { NoteModule } from './note/note.module';
     PipesModule,
     DirectivesModule,
     RippleModule,
-    LayoutModule,
     PopoverModule,
     IconModule,
     AlertModule,
@@ -120,7 +118,6 @@ import { NoteModule } from './note/note.module';
     PipesModule,
     DirectivesModule,
     RippleModule,
-    LayoutModule,
     PopoverModule,
     IconModule,
     AlertModule,

@@ -15,7 +15,7 @@ import {
   McsDataStatus,
   McsFirewall
 } from '@app/models';
-import { FirewallsRepository } from './repositories/firewalls.repository';
+import { FirewallsRepository } from '@app/services';
 
 export class FirewallsDataSource implements McsDataSource<McsFirewall> {
   /**

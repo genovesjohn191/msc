@@ -43,7 +43,7 @@
             [disabled]="!server?.stoppable"
             [mcsTooltip]="textContent.stop"
             mcsTooltipPosition="left"
-            cursor="pointer"
+            mcsCursor="pointer"
             (click)="executeServerCommand(serverCommandEnum.Stop)"></mcs-icon>
 
           <!-- Restart -->
@@ -51,7 +51,7 @@
             [disabled]="!server?.restartable"
             [mcsTooltip]="textContent.restart"
             mcsTooltipPosition="left"
-            cursor="pointer"
+            mcsCursor="pointer"
             (click)="executeServerCommand(serverCommandEnum.Restart)"></mcs-icon>
         </div>
 
@@ -59,7 +59,7 @@
         <mcs-icon [key]="keyboardIconKey"
           [mcsTooltip]="textContent.sendCtrlAltDelete"
           mcsTooltipPosition="left"
-          cursor="pointer"
+          mcsCursor="pointer"
           (click)="onClickCtrlAltDelete()">
         </mcs-icon>
       </div>

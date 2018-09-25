@@ -43,10 +43,12 @@ import {
   InsufficientStorageSnapshotDialogComponent,
   DiskConflictSnapshotDialogComponent
 } from '../../shared';
-import { ResourcesRepository } from '../../../resources';
+import {
+  ServersApiService,
+  ServersRepository,
+  ResourcesRepository
+} from '@app/services';
 import { ServerService } from '../server.service';
-import { ServersService } from '../../servers.service';
-import { ServersRepository } from '../../repositories/servers.repository';
 import { ServerDetailsBase } from '../server-details.base';
 
 enum SnapshotDialogType {
@@ -114,7 +116,7 @@ export class ServerBackupsComponent extends ServerDetailsBase
   constructor(
     _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
-    _serversService: ServersService,
+    _serversService: ServersApiService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,

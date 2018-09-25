@@ -4,7 +4,7 @@ import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { FormFieldComponent } from './form-field.component';
 import { FormGroupDirective } from './form-group.directive';
 // Shared components
@@ -26,7 +26,7 @@ import {
   ],
   imports: [
     CommonModule,
-    LayoutModule,
+    DirectivesModule,
     FormsModule,
     ReactiveFormsModule
   ],
@@ -37,7 +37,7 @@ import {
     HintComponent,
     PrefixComponent,
     SuffixComponent,
-    LayoutModule,
+    DirectivesModule,
     FormsModule,
     ReactiveFormsModule
   ]

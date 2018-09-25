@@ -4,7 +4,6 @@ import {
   CoreRoutes
 } from '@app/core';
 import { McsRouteKey } from '@app/models';
-import { serversProviders } from '@app/features/servers';
 import { ConsolePageService } from './console-page.service';
 import { ConsolePageRepository } from './console-page.repository';
 /** Components */
@@ -26,7 +25,6 @@ export const consolePageRoutes: Routes = [
  * List of services for the main module
  */
 export const constantsProviders: any[] = [
-  ...serversProviders,
   ConsolePageService,
   ConsolePageRepository
 ];

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { IconModule } from '../icon/icon.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 /** Components/Services */
 import { AlertComponent } from './alert.component';
 
@@ -10,7 +10,7 @@ import { AlertComponent } from './alert.component';
   ],
   imports: [
     IconModule,
-    LayoutModule
+    DirectivesModule
   ],
   exports: [
     AlertComponent

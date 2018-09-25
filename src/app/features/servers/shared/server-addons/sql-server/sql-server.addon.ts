@@ -14,7 +14,7 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { McsServerSqlOptions } from '@app/models';
-import { OptionsApiService } from '../../../../services';
+import { OptionsApiService } from '@app/services';
 import { ServerSql } from './server-sql';
 
 @Component({

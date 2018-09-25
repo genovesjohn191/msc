@@ -43,7 +43,7 @@ import {
   Search,
   ComponentHandlerDirective
 } from '@app/shared';
-import { MediaRepository } from '../repositories/media.repository';
+import { MediaRepository } from '@app/services';
 import { MediaListSource } from '../media.listsource';
 import { MediumService } from './medium.service';
 

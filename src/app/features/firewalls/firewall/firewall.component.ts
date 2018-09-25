@@ -43,9 +43,9 @@ import {
   McsRouteKey,
   McsFirewall
 } from '@app/models';
+import { FirewallsRepository } from '@app/services';
 import { FirewallService } from './firewall.service';
 import { FirewallsListSource } from '../firewalls.listsource';
-import { FirewallsRepository } from '../repositories/firewalls.repository';
 
 // Add another group type in here if you have addition tab
 type tabGroupType = 'overview' | 'policies';

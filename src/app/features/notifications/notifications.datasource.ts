@@ -15,7 +15,7 @@ import {
   McsDataStatus,
   McsJob
 } from '@app/models';
-import { NotificationsRepository } from './notifications.repository';
+import { NotificationsRepository } from '@app/services';
 
 export class NotificationsDataSource implements McsDataSource<McsJob> {
   /**

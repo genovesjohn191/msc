@@ -1,7 +1,7 @@
 <div class="notification-panel-content-wrapper"
   animate [trigger]="animationTrigger"
-  cursor="pointer"
-  [triggerCursorIf]="notification.hasLink"
+  mcsCursor="pointer"
+  [mcsTriggerCursorIf]="notification.hasLink"
   (click)="onClickNotification()"
   mcsEventTracker="navigate-to-notification"
   mcsEventCategory="notification"
@@ -40,7 +40,7 @@
   <!-- Close button -->
   <ng-container *ngIf="type === 'statechange'">
     <div class="notification-panel-close">
-      <mcs-icon cursor="pointer"
+      <mcs-icon mcsCursor="pointer"
         (click)="removeNotification()"
         mcsEventTracker="close-panel"
         mcsEventCategory="notification"

@@ -43,9 +43,11 @@ import {
   McsProduct,
   McsProductCatalog
 } from '@app/models';
-import { ProductCatalogRepository } from './product-catalog.repository';
+import {
+  ProductsRepository,
+  ProductCatalogRepository
+} from '@app/services';
 import { ProductCatalogListSource } from './products.listsource';
-import { ProductsRepository } from './products.repository';
 import { ProductService } from './product/product.service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutModule } from '../layout';
+import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
 /** Page */
 import { PageHeaderDirective } from './page-header.directive';
@@ -53,7 +53,7 @@ import {
   ],
   imports: [
     CommonModule,
-    LayoutModule,
+    DirectivesModule,
     IconModule
   ],
   exports: [

@@ -16,7 +16,7 @@ import {
   McsOrder,
   McsOrderItemType
 } from '@app/models';
-import { OrderItemTypesRepository } from '@app/features/orders';
+import { OrderItemTypesRepository } from '@app/services';
 import { ServerOrderDetail } from './server-order-detail';
 
 @Component({
