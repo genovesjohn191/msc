@@ -3,6 +3,8 @@ import { CacheKey } from 'json-object-mapper';
 
 export enum McsJobType {
   Undefined = 0,
+  // System Caching
+  RefreshProductCatalogCache = 1,
 
   // Jobs for "/servers" endpoint must use prefix 100XXX followed by 3 digit number
   CreateServer = 100001,
@@ -10,6 +12,7 @@ export enum McsJobType {
   DeleteServer = 100003,
   CloneServer = 100004,
   RenameServer = 100005,
+  ProvisionCreateServer = 100006,
 
   // Server Snapshot
   CreateServerSnapshot = 100051,

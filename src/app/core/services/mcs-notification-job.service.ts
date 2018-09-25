@@ -22,11 +22,10 @@ import {
   isNullOrEmpty,
   unsubscribeSubject,
   McsInitializer
-} from '../../utilities';
+} from '@app/utilities';
 import {
   McsJob,
   McsJobConnection,
-  McsJobType,
   McsApiSuccessResponse,
   McsNetworkStatus,
   McsApiRequestParameter
@@ -223,12 +222,6 @@ export class McsNotificationJobService implements McsInitializer {
     if (isNullOrEmpty(bodyContent)) { return; }
     let updatedNotification: McsJob;
     updatedNotification = deserializeJsonToObject(McsJob, JSON.parse(bodyContent));
-
-    // Do not proceed if job type is not supported
-    let unsupportedJobType = isNullOrEmpty(updatedNotification.type)
-      || updatedNotification.type === McsJobType.Undefined;
-    if (unsupportedJobType) { return; }
-
     this.notificationStream.next(updatedNotification);
   }
 
