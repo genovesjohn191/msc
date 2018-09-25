@@ -7,7 +7,7 @@ import {
   CoreConfig,
   McsTextContentProvider
 } from '@app/core';
-import { ToolsRepository } from './tools.repository';
+import { ToolsRepository } from '@app/services';
 import { ToolsDataSource } from './tools.datasource';
 
 @Component({

@@ -14,7 +14,7 @@ import {
   unsubscribeSafely,
   isNullOrEmpty
 } from '@app/utilities';
-import { OptionsApiService } from '../../../../services';
+import { OptionsApiService } from '@app/services';
 import { ServerDisasterRecovery } from './server-disaster-recovery';
 
 @Component({

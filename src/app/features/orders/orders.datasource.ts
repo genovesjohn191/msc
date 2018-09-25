@@ -15,7 +15,7 @@ import {
   McsDataStatus,
   McsOrder
 } from '@app/models';
-import { OrdersRepository } from './repositories/orders.repository';
+import { OrdersRepository } from '@app/services';
 
 export class OrdersDataSource implements McsDataSource<McsOrder> {
   /**

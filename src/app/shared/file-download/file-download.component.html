@@ -1,7 +1,7 @@
 <mcs-icon [key]="downloadIconKey" size="xlarge"></mcs-icon>
 <div class="file-download-info">
   <div class="file-download-name">
-    <a (click)="downloadFile()" cursor="pointer"
+    <a (click)="downloadFile()" mcsCursor="pointer"
       [disabled]="downloading"><ng-content></ng-content></a>
     <span read-only *ngIf="fileType">({{ fileType }})</span>
   </div>

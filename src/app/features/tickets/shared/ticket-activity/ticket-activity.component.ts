@@ -12,9 +12,9 @@ import {
   McsTextContentProvider
 } from '@app/core';
 import { CommentType } from '@app/models';
+import { TicketsApiService } from '@app/services';
 import { TicketActivity } from './ticket-activity';
 import { TicketActivityType } from './ticket-activity-type.enum';
-import { TicketsService } from '../../tickets.service';
 
 @Component({
   selector: 'mcs-ticket-activity',
@@ -71,7 +71,7 @@ export class TicketActivityComponent implements OnInit {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _ticketsService: TicketsService,
+    private _ticketsService: TicketsApiService,
     private _textContentProvider: McsTextContentProvider
   ) {
     this._activity = new TicketActivity();

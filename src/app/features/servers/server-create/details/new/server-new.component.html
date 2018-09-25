@@ -2,7 +2,7 @@
   <!-- Server Name Input -->
   <div class="field">
     <mcs-form-field>
-      <input mcsInput #serverNameInput set-focus required
+      <input mcsInput #serverNameInput mcsSetFocus required
         placeholder="Enter a server name" maxlength="15"
         [formControl]="fcServerName"
         [mcsContextualHelp]="textHelpContent.serverNameField">

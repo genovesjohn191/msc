@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { AccordionComponent } from './accordion.component';
 // Accordion panel
 import { AccordionPanelComponent } from './accordion-panel/accordion-panel.component';
@@ -19,14 +19,14 @@ import {
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule
+    DirectivesModule
   ],
   exports: [
     AccordionComponent,
     AccordionPanelComponent,
     AccordionPanelHeaderComponent,
     IconModule,
-    LayoutModule
+    DirectivesModule
   ]
 })
 

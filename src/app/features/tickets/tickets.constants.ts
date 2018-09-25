@@ -9,21 +9,13 @@ import { TicketsComponent } from './tickets.component';
 import { TicketComponent } from './ticket/ticket.component';
 import { TicketCreateComponent } from './ticket-create';
 /** Services */
-import { ServersService } from '@app/features/servers';
-import { FirewallsService } from '@app/features/firewalls';
-import { TicketsService } from './tickets.service';
-import { TicketsRepository } from './tickets.repository';
 import { TicketCreateService } from './ticket-create';
 
 /**
  * List of services for the main module
  */
 export const ticketsProviders: any[] = [
-  TicketsService,
-  TicketsRepository,
-  TicketCreateService,
-  ServersService,
-  FirewallsService
+  TicketCreateService
 ];
 
 /**

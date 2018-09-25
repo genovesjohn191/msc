@@ -8,7 +8,7 @@ import {
   mockNotificationsService
 } from './testing';
 import { NotificationsComponent } from './notifications.component';
-import { NotificationsService } from './notifications.service';
+import { JobsApiService } from '@app/services';
 
 describe('NotificationsComponent', () => {
 
@@ -31,7 +31,7 @@ describe('NotificationsComponent', () => {
     });
 
     /** Testbed Onverriding of Providers */
-    TestBed.overrideProvider(NotificationsService, { useValue: mockNotificationsService });
+    TestBed.overrideProvider(JobsApiService, { useValue: mockNotificationsService });
 
     /** Testbed Onverriding of Components */
     TestBed.overrideComponent(NotificationsComponent, {

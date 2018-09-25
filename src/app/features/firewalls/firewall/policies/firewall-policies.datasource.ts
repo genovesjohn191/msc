@@ -19,7 +19,7 @@ import {
   Search
 } from '@app/shared';
 import { McsFirewallPolicy } from '@app/models';
-import { FirewallsRepository } from '../../repositories/firewalls.repository';
+import { FirewallsRepository } from '@app/services';
 import { FirewallService } from '../firewall.service';
 
 export class FirewallPoliciesDataSource implements McsDataSource<McsFirewallPolicy> {

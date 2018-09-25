@@ -37,7 +37,7 @@ import {
   McsServerClone,
   McsServerClientObject
 } from '@app/models';
-import { ServersRepository } from '../../../repositories/servers.repository';
+import { ServersRepository } from '@app/services';
 import { ServerCreateDetailsBase } from '../server-create-details.base';
 
 @Component({

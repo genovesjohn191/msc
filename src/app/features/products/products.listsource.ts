@@ -16,7 +16,7 @@ import {
   McsKeyValuePair,
   McsProductCatalog
 } from '@app/models';
-import { ProductCatalogRepository } from './product-catalog.repository';
+import { ProductCatalogRepository } from '@app/services';
 
 export class ProductCatalogListSource extends McsListSourceBase<McsProductCatalog> {
 

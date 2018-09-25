@@ -9,13 +9,15 @@ import {
   ServiceType,
   McsResource
 } from '@app/models';
-import { OrdersService } from '@app/features/orders';
-import { ResourcesRepository } from '@app/features/resources';
+import {
+  OrdersApiService,
+  ResourcesRepository
+} from '@app/services';
 
 @Injectable()
 export class ServerCreateService {
   constructor(
-    _ordersService: OrdersService,
+    _ordersApiService: OrdersApiService,
     private _accessControlService: McsAccessControlService,
     private _resourcesRepository: ResourcesRepository
   ) { }

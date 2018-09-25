@@ -1,6 +1,6 @@
 <!-- Products Mega Menu Pop-over -->
 <ng-template #productMegaMenuTemplate>
-  <div class="product-megamenu-mobile-wrapper" scrollable>
+  <div class="product-megamenu-mobile-wrapper" mcsScrollable>
     <mcs-data-status [dataStatusFactory]="productsStatusFactory">
       <mcs-data-status-success mcsDataSuccess>
         <mcs-accordion [multi]="true">
@@ -75,7 +75,7 @@
     <div class="navigation-mobile-item navigation-mobile-title">
       <h2>{{ textContent.title }}</h2>
       <mcs-icon [key]="closeIconKey" color="white"
-        cursor="pointer" (click)="close()"></mcs-icon>
+        mcsCursor="pointer" (click)="close()"></mcs-icon>
     </div>
 
     <!-- Navigation items -->
@@ -84,7 +84,7 @@
     <!-- Logout Item -->
     <div class="navigation-item">
       <mcs-icon [key]="caretRightIconKey" color="white"></mcs-icon>
-      <a cursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
+      <a mcsCursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
     </div>
   </div>
 </mcs-sliding-panel>

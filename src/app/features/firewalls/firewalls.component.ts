@@ -24,7 +24,7 @@ import {
   McsRouteKey,
   McsFirewall
 } from '@app/models';
-import { FirewallsRepository } from './repositories/firewalls.repository';
+import { FirewallsRepository } from '@app/services';
 import { FirewallsDataSource } from './firewalls.datasource';
 
 @Component({

@@ -53,8 +53,10 @@ import {
   McsServer,
   McsServerPlatform
 } from '@app/models';
-import { ServersRepository } from '../repositories/servers.repository';
-import { ServersService } from '../servers.service';
+import {
+  ServersApiService,
+  ServersRepository
+} from '@app/services';
 import { ServerService } from './server.service';
 import { ServersListSource } from '../servers.listsource';
 
@@ -111,7 +113,7 @@ export class ServerComponent
     _activatedRoute: ActivatedRoute,
     private _dialogService: McsDialogService,
     private _serversRepository: ServersRepository,
-    private _serversService: ServersService,
+    private _serversService: ServersApiService,
     private _serverService: ServerService,
     private _textContentProvider: McsTextContentProvider,
     private _changeDetectorRef: ChangeDetectorRef,

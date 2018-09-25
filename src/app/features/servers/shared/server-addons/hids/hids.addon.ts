@@ -14,7 +14,7 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import { McsServerHidsOptions } from '@app/models';
-import { OptionsApiService } from '../../../../services';
+import { OptionsApiService } from '@app/services';
 import { ServerHids } from './server-hids';
 
 @Component({

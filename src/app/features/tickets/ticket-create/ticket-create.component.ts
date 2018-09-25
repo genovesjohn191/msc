@@ -47,11 +47,11 @@ import {
   McsTicketCreate,
   McsTicketCreateAttachment
 } from '@app/models';
+import { TicketsRepository } from '@app/services';
 import {
   TicketService,
   TicketServiceData,
 } from '../shared';
-import { TicketsRepository } from '../tickets.repository';
 import { TicketCreateService } from './ticket-create.service';
 
 @Component({

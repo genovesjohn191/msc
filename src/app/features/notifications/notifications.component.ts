@@ -29,7 +29,7 @@ import {
   unsubscribeSubject,
   getSafeProperty
 } from '@app/utilities';
-import { NotificationsRepository } from './notifications.repository';
+import { NotificationsRepository } from '@app/services';
 import { NotificationsDataSource } from './notifications.datasource';
 
 @Component({

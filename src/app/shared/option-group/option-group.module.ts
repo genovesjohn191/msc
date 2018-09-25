@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { RippleModule } from '../ripple/ripple.module';
 /** Options */
 import { OptionGroupComponent } from './option-group.component';
@@ -17,7 +17,7 @@ import { OptionComponent } from './option/option.component';
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     RippleModule
   ],
   exports: [
@@ -26,7 +26,7 @@ import { OptionComponent } from './option/option.component';
     OptionComponent,
     CommonModule,
     IconModule,
-    LayoutModule,
+    DirectivesModule,
     RippleModule
   ]
 })

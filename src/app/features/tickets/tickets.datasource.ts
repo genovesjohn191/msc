@@ -15,7 +15,7 @@ import {
   McsDataStatus,
   McsTicket
 } from '@app/models';
-import { TicketsRepository } from './tickets.repository';
+import { TicketsRepository } from '@app/services';
 
 export class TicketsDataSource implements McsDataSource<McsTicket> {
   /**

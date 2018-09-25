@@ -23,8 +23,7 @@ import {
   isNullOrEmpty,
   replacePlaceholder,
   unsubscribeSubject,
-  getSafeProperty,
-  clearArrayRecord
+  getSafeProperty
 } from '@app/utilities';
 import {
   McsTextContentProvider,
@@ -41,8 +40,8 @@ import {
 } from '@app/models';
 import {
   ServersRepository,
-  ServersService,
-} from '@app/features/servers';
+  ServersApiService,
+} from '@app/services';
 import { ConsolePageRepository } from './console-page.repository';
 
 // JQuery script implementation
@@ -153,7 +152,7 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     private _notificationsEvents: McsNotificationEventsService,
     private _sessionHandler: McsSessionHandlerService,
     private _serversRepository: ServersRepository,
-    private _serversService: ServersService,
+    private _serversService: ServersApiService,
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef
   ) {
@@ -215,7 +214,6 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this._destroySubject))
       .subscribe(() => this._serverChangedEventHandler());
 
-    clearArrayRecord(this._notificationsEvents.resetServerPasswordEvent.observers);
     this._notificationsEvents.resetServerPasswordEvent
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => this._resetVmPasswordEventHandler(response));
@@ -236,6 +234,10 @@ export class ConsolePageComponent implements OnInit, AfterViewInit, OnDestroy {
     this._getServerById(this._serverId);
   }
 
+  /**
+   * Event that emits when the reset VM password has triggered
+   * @param response Job response to be check
+   */
   private _resetVmPasswordEventHandler(response: McsJob) {
     let jobServerId = getSafeProperty(response, (obj) => obj.clientReferenceObject.serverId);
     if (jobServerId !== this._serverId) { return; }

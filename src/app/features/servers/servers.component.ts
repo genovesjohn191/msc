@@ -13,9 +13,8 @@ import {
   takeUntil,
   map
 } from 'rxjs/operators';
-import { ResourcesRepository } from '@app/features/resources';
-import { ServersRepository } from './repositories/servers.repository';
-import { ServersService } from './servers.service';
+
+import { ServersServices } from './servers.service';
 import { ServersDataSource } from './servers.datasource';
 /** Shared */
 import {
@@ -50,6 +49,10 @@ import {
   McsServer
 } from '@app/models';
 import { TableComponent } from '@app/shared';
+import {
+  ResourcesRepository,
+  ServersRepository
+} from '@app/services';
 import { ServerCreateService } from './server-create';
 
 @Component({
@@ -121,7 +124,7 @@ export class ServersComponent
     _changeDetectorRef: ChangeDetectorRef,
     private _dialogService: McsDialogService,
     private _textProvider: McsTextContentProvider,
-    private _serversService: ServersService,
+    private _serversService: ServersServices,
     private _serversRepository: ServersRepository,
     private _serverCreateService: ServerCreateService,
     private _resourcesRepository: ResourcesRepository,

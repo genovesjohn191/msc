@@ -57,6 +57,7 @@ import {
   GoogleAnalyticsEventsService,
   McsSessionHandlerService
 } from './core';
+import { ServicesModule } from './services';
 import {
   ConsolePageModule,
   DefaultPageModule
@@ -112,11 +113,12 @@ export function coreConfig(): CoreConfig {
     BrowserAnimationsModule,
     CookieModule.forRoot(),
     CoreModule.forRoot(coreConfig),
+    ServicesModule,
     SharedModule,
     ConsolePageModule,
     DefaultPageModule,
     PageNotificationsModule,
-    RouterModule.forRoot([])
+    RouterModule.forRoot([]),
   ],
   providers: [
     environment.ENV_PROVIDERS,

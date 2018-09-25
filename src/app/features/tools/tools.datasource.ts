@@ -10,7 +10,7 @@ import {
   McsPortal,
   McsPortalAccess
 } from '@app/models';
-import { ToolsRepository } from './tools.repository';
+import { ToolsRepository } from '@app/services';
 
 export class ToolsDataSource implements McsDataSource<McsPortal> {
   /**

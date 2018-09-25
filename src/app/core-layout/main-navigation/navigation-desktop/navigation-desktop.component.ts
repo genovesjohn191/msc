@@ -22,7 +22,7 @@ import {
   McsProductCatalog
 } from '@app/models';
 import { isNullOrEmpty } from '@app/utilities';
-import { ProductCatalogRepository } from '@app/features/products';
+import { ProductCatalogRepository } from '@app/services';
 
 @Component({
   selector: 'mcs-navigation-desktop',

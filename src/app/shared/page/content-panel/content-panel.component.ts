@@ -7,9 +7,9 @@ import {
   selector: 'mcs-content-panel',
   template: `
   <div class="content-panel-wrapper"
-    set-focus
+    mcsSetFocus
     tabindex="-1"
-    scrollable scrollbarId="page-content">
+    mcsScrollable mcsScrollbarId="page-content">
     <ng-content></ng-content>
   </div>
   `,

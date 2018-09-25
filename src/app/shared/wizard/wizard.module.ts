@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
 import { ButtonModule } from '../button/button.module';
 import { TabGroupModule } from '../tab-group/tab-group.module';
@@ -30,7 +30,7 @@ import {
   imports: [
     CommonModule,
     TabGroupModule,
-    LayoutModule,
+    DirectivesModule,
     IconModule,
     ButtonModule
   ],
@@ -43,7 +43,7 @@ import {
     WizardTopPanelDefDirective,
     WizardTopPanelPlaceholderDirective,
     TabGroupModule,
-    LayoutModule,
+    DirectivesModule,
     IconModule,
     ButtonModule
   ]

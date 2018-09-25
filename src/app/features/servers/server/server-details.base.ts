@@ -22,9 +22,11 @@ import {
   McsResource,
   McsServer
 } from '@app/models';
-import { ResourcesRepository } from '@app/features/resources';
-import { ServersService } from '../servers.service';
-import { ServersRepository } from '../repositories/servers.repository';
+import {
+  ServersApiService,
+  ServersRepository,
+  ResourcesRepository
+} from '@app/services';
 import { ServerService } from '../server/server.service';
 
 export abstract class ServerDetailsBase {
@@ -61,7 +63,7 @@ export abstract class ServerDetailsBase {
   constructor(
     protected _resourcesRespository: ResourcesRepository,
     protected _serversRepository: ServersRepository,
-    protected _serversService: ServersService,
+    protected _serversService: ServersApiService,
     protected _serverService: ServerService,
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textProvider: McsTextContentProvider,

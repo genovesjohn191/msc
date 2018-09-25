@@ -3,10 +3,7 @@ import { SharedModule } from '@app/shared';
 /** Components */
 import { ToolsComponent } from './tools.component';
 /** Providers List */
-import {
-  toolsProviders,
-  toolsRoutesComponents
-} from './tools.constants';
+import { toolsRoutesComponents } from './tools.constants';
 
 @NgModule({
   entryComponents: [
@@ -17,9 +14,6 @@ import {
   ],
   imports: [
     SharedModule
-  ],
-  providers: [
-    ...toolsProviders
   ]
 })
 

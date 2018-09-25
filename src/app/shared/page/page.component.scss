@@ -110,7 +110,9 @@ $left-panel-navigation-collapse-padding: 6px;
 
     // Top Panel and Items Styling
     .page-top-wrapper {
+      @include display-flex(row);
       @include align-items(center);
+      @include flex(none);
       border-bottom: 1px solid $page-border-color;
       height: $top-panel-height;
       background-color: $top-panel-bg-color;

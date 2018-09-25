@@ -7,7 +7,7 @@ import {
 @Component({
   selector: 'mcs-dialog-content',
   template: `
-    <div class="dialog-content-wrapper" scrollable>
+    <div class="dialog-content-wrapper" mcsScrollable>
       <ng-content></ng-content>
     </div>
   `,

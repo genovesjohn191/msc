@@ -1,18 +1,13 @@
 import { NgModule } from '@angular/core';
+import { CoreTestingModule } from '@app/core/testing';
+import { ServicesTestingModule } from '@app/services/testing';
 /** Providers list */
 import { ticketsProviders } from '../tickets.constants';
-/** Modules */
-import { ServersTestingModule } from '@app/features/servers/testing';
-import { FirewallsTestingModule } from '@app/features/firewalls/testing';
-import { ResourcesTestingModule } from '@app/features/resources/testing';
-import { CoreTestingModule } from '@app/core/testing';
 
 @NgModule({
   imports: [
     CoreTestingModule,
-    ResourcesTestingModule,
-    ServersTestingModule,
-    FirewallsTestingModule
+    ServicesTestingModule
   ],
   providers: [
     /** Tickets Services */

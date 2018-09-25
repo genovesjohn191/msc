@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { SlidingPanelComponent } from './sliding-panel.component';
 
 @NgModule({
@@ -9,11 +9,11 @@ import { SlidingPanelComponent } from './sliding-panel.component';
   ],
   imports: [
     CommonModule,
-    LayoutModule
+    DirectivesModule
   ],
   exports: [
     CommonModule,
-    LayoutModule,
+    DirectivesModule,
     SlidingPanelComponent
   ]
 })

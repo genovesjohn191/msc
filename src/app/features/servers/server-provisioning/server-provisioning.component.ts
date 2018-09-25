@@ -33,7 +33,7 @@ import {
   McsJobType,
   McsHttpStatusCode,
 } from '@app/models';
-import { JobsApiService } from '../../services';
+import { JobsApiService } from '@app/services';
 
 @Component({
   selector: 'mcs-server-provisioning',

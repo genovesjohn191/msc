@@ -1,9 +1,6 @@
 /** Modules */
 export * from './features.module';
 
-/** Services */
-export * from './services';
-
 /** Contants */
 export * from './servers/servers.constants';
 export * from './tickets/tickets.constants';

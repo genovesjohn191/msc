@@ -47,8 +47,11 @@ import {
   McsServer,
   McsServerPlatform
 } from '@app/models';
-import { ResourcesRepository } from '@app/features/resources';
-import { ServersRepository } from '../repositories/servers.repository';
+import {
+  ResourcesRepository,
+  ServersRepository
+} from '@app/services';
+import { } from '../repositories/servers.repository';
 import { ServersListSource } from '../servers.listsource';
 import { VdcService } from './vdc.service';
 // Add another group type in here if you have addition tab

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { McsTicketCreate } from '@app/models';
-import { TicketsService } from '../tickets.service';
+import { TicketsApiService } from '@app/services';
 
 @Injectable()
 export class TicketCreateService {
 
-  constructor(private _ticketsService: TicketsService) { }
+  constructor(private _ticketsService: TicketsApiService) { }
 
   /**
    * Get server resources based from servers service

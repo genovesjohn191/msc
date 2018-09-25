@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from '../dialog/dialog.module';
 import { ButtonModule } from '../button/button.module';
 import { ListModule } from '../list/list.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { InputModule } from '../input/input.module';
 import { FormFieldModule } from '../form-field/form-field.module';
 /** External modules */
@@ -20,7 +20,7 @@ import { CommentBoxComponent } from './comment-box.component';
     DialogModule,
     ButtonModule,
     ListModule,
-    LayoutModule,
+    DirectivesModule,
     InputModule,
     FormFieldModule
   ],
@@ -30,7 +30,7 @@ import { CommentBoxComponent } from './comment-box.component';
     DialogModule,
     ButtonModule,
     ListModule,
-    LayoutModule,
+    DirectivesModule,
     InputModule,
     FormFieldModule
   ]

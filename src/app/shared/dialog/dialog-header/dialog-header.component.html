@@ -2,6 +2,6 @@
   <ng-content></ng-content>
 </div>
 <div class="right-align" *ngIf="!hideCloseButton">
-  <mcs-icon [key]="closeIconKey" size="small" cursor="pointer"
+  <mcs-icon [key]="closeIconKey" size="small" mcsCursor="pointer"
     (click)="dialogRef?.close(dialogResult)"></mcs-icon>
 </div>

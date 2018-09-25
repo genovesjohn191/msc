@@ -6,7 +6,7 @@
 </div>
 
 <!-- Quote widget handler -->
-<div class="quote-widget-header" cursor="pointer" (click)="toggleWidget()">
+<div class="quote-widget-header" mcsCursor="pointer" (click)="toggleWidget()">
   <ng-content select="[mcsQuoteWidgetHeader]"></ng-content>
   <div class="quote-widget-toggle">
     <mcs-icon [@rotate180]="collapse ? 'void' : 'show'"

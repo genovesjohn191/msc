@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CoreTestingModule } from '@app/core/testing';
+import { ServicesTestingModule } from '@app/services/testing';
 import { firewallProviders } from '../firewalls.constants';
 
 @NgModule({
   imports: [
-    CoreTestingModule
+    CoreTestingModule,
+    ServicesTestingModule
   ],
   providers: [
     /** Firewalls Services */

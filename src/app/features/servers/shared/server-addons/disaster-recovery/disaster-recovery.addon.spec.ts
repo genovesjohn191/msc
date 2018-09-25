@@ -11,8 +11,8 @@ import {
   TestBed
 } from '@angular/core/testing';
 import { CoreTestingModule } from '@app/core/testing';
+import { OptionsApiService } from '@app/services';
 import { DisasterRecoveryAddOnComponent } from './disaster-recovery.addon';
-import { OptionsApiService } from '../../../../services';
 
 @Component({
   selector: 'mcs-test',

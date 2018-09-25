@@ -6,9 +6,7 @@ import {
 import { McsRouteKey } from '@app/models';
 /** Services */
 import { ServerService } from './server/';
-import { ServersService } from './servers.service';
-import { ServersRepository } from './repositories/servers.repository';
-import { ServersOsRepository } from './repositories/servers-os.repository';
+import { ServersServices } from './servers.service';
 /** Components */
 import { ServersComponent } from './servers.component';
 import {
@@ -35,10 +33,8 @@ import {
  * List of services for the main module
  */
 export const serversProviders: any[] = [
-  ServersService,
+  ServersServices,
   ServerService,
-  ServersRepository,
-  ServersOsRepository,
   ServerCreateService,
   ServerCreateGuard,
   VdcService

@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 import { CoreRoutes } from '../../core';
 import { McsRouteKey } from '@app/models';
 /** Components/Services */
-import { FirewallsService } from './firewalls.service';
-import { FirewallsRepository } from './repositories/firewalls.repository';
 import { FirewallsComponent } from './firewalls.component';
 import {
   FirewallService,
@@ -16,9 +14,7 @@ import {
  * List of services for the main module
  */
 export const firewallProviders: any[] = [
-  FirewallsService,
-  FirewallService,
-  FirewallsRepository
+  FirewallService
 ];
 
 /**

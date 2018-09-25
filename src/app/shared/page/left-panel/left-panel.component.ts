@@ -17,7 +17,7 @@ import {
 @Component({
   selector: 'mcs-left-panel',
   template: `
-    <div class="left-panel-wrapper" scrollable>
+    <div class="left-panel-wrapper" mcsScrollable>
       <ng-container mcsLeftPanelItemPlaceholder></ng-container>
       <ng-content></ng-content>
     </div>

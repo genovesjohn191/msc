@@ -18,7 +18,7 @@ import {
   unsubscribeSubject
 } from '@app/utilities';
 import { McsServer } from '@app/models';
-import { ServersRepository } from '@app/features/servers';
+import { ServersRepository } from '@app/services';
 import { MediaManageServers } from './media-manage-servers';
 
 @Component({

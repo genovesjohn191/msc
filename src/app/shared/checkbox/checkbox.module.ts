@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RippleModule } from '../ripple/ripple.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { IconModule } from '../icon/icon.module';
 import { CheckboxComponent } from './checkbox.component';
 
@@ -14,7 +14,7 @@ import { CheckboxComponent } from './checkbox.component';
     CommonModule,
     FormsModule,
     RippleModule,
-    LayoutModule,
+    DirectivesModule,
     IconModule
   ],
   exports: [
@@ -22,7 +22,7 @@ import { CheckboxComponent } from './checkbox.component';
     CommonModule,
     FormsModule,
     RippleModule,
-    LayoutModule,
+    DirectivesModule,
     IconModule
   ]
 })

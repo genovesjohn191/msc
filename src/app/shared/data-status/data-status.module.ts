@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
-import { LayoutModule } from '../layout/layout.module';
+import { DirectivesModule } from '../directives/directives.module';
 import { DataStatusComponent } from './data-status.component';
 import { DataStatusWarningComponent } from './data-status-warning/data-status-warning.component';
 import { DataStatusErrorComponent } from './data-status-error/data-status-error.component';
@@ -21,7 +21,7 @@ import {
   imports: [
     CommonModule,
     IconModule,
-    LayoutModule
+    DirectivesModule
   ],
   exports: [
     DataStatusComponent,

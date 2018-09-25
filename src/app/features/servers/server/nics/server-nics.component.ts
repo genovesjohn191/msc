@@ -42,13 +42,15 @@ import {
   McsServerNic,
   McsServerCreateNic
 } from '@app/models';
-import { ResourcesRepository } from '@app/features/resources';
+import {
+  ServersApiService,
+  ServersRepository,
+  ResourcesRepository
+} from '@app/services';
 import {
   DeleteNicDialogComponent,
   ServerManageNetwork
 } from '../../shared';
-import { ServersService } from '../../servers.service';
-import { ServersRepository } from '../../repositories/servers.repository';
 import { ServerService } from '../server.service';
 import { ServerDetailsBase } from '../server-details.base';
 
@@ -151,7 +153,7 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
   constructor(
     _resourcesRepository: ResourcesRepository,
     _serversRepository: ServersRepository,
-    _serversService: ServersService,
+    _serversService: ServersApiService,
     _serverService: ServerService,
     _changeDetectorRef: ChangeDetectorRef,
     _textProvider: McsTextContentProvider,

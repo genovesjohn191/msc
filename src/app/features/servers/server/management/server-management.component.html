@@ -87,13 +87,13 @@
             </ng-container>
 
             <ng-template #consoleTemplate>
-              <div class="inline-block" cursor="pointer"
+              <div class="inline-block" mcsCursor="pointer"
                 [disabled]="server.isProcessing"
                 (click)="viewConsole()"
                 mcsEventTracker="view-console"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
-                <div class="image-thumbnail dark" cursor="pointer">
+                <div class="image-thumbnail dark" mcsCursor="pointer">
                   <img class="block full-width" [attr.src]="serverThumbnail"/>
                 </div>
                 <a>{{ textContent.vmConsole.link }}</a>
@@ -221,7 +221,7 @@
                         [key]="spinnerIconKey" size="small"
                         [mcsTooltip]="jobSummaryInfo"></mcs-icon>
 
-                      <mcs-icon *ngIf="!mediaIsDetaching(media)" cursor="pointer"
+                      <mcs-icon *ngIf="!mediaIsDetaching(media)" mcsCursor="pointer"
                         [key]="ejectIconKey" size="small"
                         (click)="showDetachMediaDialog(media)"
                         [mcsTooltip]="textContent.media.detach"

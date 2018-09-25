@@ -1,17 +1,13 @@
 import { NgModule } from '@angular/core';
-/** Providers list */
-import { notificationsProviders } from '../notifications.constants';
 /** Modules */
 import { CoreTestingModule } from '@app/core/testing';
+import { ServicesTestingModule } from '@app/services/testing';
 
 @NgModule({
   imports: [
-    CoreTestingModule
-  ],
-  providers: [
-    /** Notifications Services */
-    ...notificationsProviders
-  ],
+    CoreTestingModule,
+    ServicesTestingModule
+  ]
 })
 
 export class NotificationsTestingModule { }

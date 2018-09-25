@@ -1,17 +1,17 @@
 <div class="account-panel-wrapper">
   <mcs-list header="Account">
     <!-- <mcs-list-item>
-      <a cursor="pointer" (click)="notifySelectionChange('settings')">
+      <a mcsCursor="pointer" (click)="notifySelectionChange('settings')">
         {{ textContent.accountSettings }}
       </a>
     </mcs-list-item>
     <mcs-list-item>
-      <a cursor="pointer" (click)="notifySelectionChange('profile')">
+      <a mcsCursor="pointer" (click)="notifySelectionChange('profile')">
         {{ textContent.profile }}
       </a>
     </mcs-list-item> -->
     <mcs-list-item *mcsAccessControl="['TicketView']">
-      <a cursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
+      <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
         (click)="notifySelectionChange('tickets')"
         mcsEventTracker="navigate-to-tickets"
         mcsEventCategory="navigation"
@@ -21,7 +21,7 @@
     </mcs-list-item>
     <mcs-list-item *mcsAccessControl="['OrderView']">
       <ng-container *mcsAccessControl="[]; feature: 'EnableOrdering'; else: macviewOrdersTemplate">
-        <a cursor="pointer" [mcsRouterLink]="routeKeyEnum.Orders"
+        <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Orders"
           (click)="notifySelectionChange('orders')"
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
@@ -31,7 +31,7 @@
       </ng-container>
 
       <ng-template #macviewOrdersTemplate>
-        <a cursor="pointer" [href]="macviewOrdersUrl" target="_blank"
+        <a mcsCursor="pointer" [href]="macviewOrdersUrl" target="_blank"
           (click)="notifySelectionChange('orders')"
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
@@ -41,7 +41,7 @@
       </ng-template>
     </mcs-list-item>
     <mcs-list-item>
-      <a cursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
+      <a mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
         (click)="notifySelectionChange('change-password')"
         mcsEventTracker="navigate-to-change-password"
         mcsEventCategory="navigation"

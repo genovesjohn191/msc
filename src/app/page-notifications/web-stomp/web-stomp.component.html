@@ -3,7 +3,7 @@
   <mcs-snack-bar [snackBarRef]="stompErrorStatusBarRef" theme="dark" [hideCloseButton]="true">
     <div class="inline-items-small">
       <span>{{ textContent.connectionError }}</span>
-      <span (click)="reconnectWebsocket()" cursor="pointer" class="color-primary-01">
+      <span (click)="reconnectWebsocket()" mcsCursor="pointer" class="color-primary-01">
         {{ textContent.connectionRetryButton }}
       </span>
     </div>
