@@ -8,6 +8,7 @@ import { ProductsApiService } from './api-services/products-api.service';
 import { ResourcesApiService } from './api-services/resources-api.service';
 import { ServersApiService } from './api-services/servers-api.service';
 import { TicketsApiService } from './api-services/tickets-api.service';
+import { ToolsApiService } from './api-services/tools-api.service';
 
 import { FirewallsRepository } from './repositories/firewalls.repository';
 import { MediaRepository } from './repositories/media.repository';
@@ -35,6 +36,7 @@ export const servicesProviders: any[] = [
   ResourcesApiService,
   ServersApiService,
   TicketsApiService,
+  ToolsApiService,
 
   FirewallsRepository,
   MediaRepository,

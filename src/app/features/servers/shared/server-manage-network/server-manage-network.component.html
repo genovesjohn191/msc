@@ -64,10 +64,10 @@
       </mcs-form-field>
     </form>
 
-    <mcs-data-status [dataStatusFactory]="ipAddressessStatusFactory">
+    <mcs-data-status [dataStatusFactory]="ipAddressesStatusFactory"
+      *ngIf="isIpAddressInUsed(customInput?.value)">
       <mcs-data-status-success mcsDataSuccess class="inline-block">
-        <mcs-data-status-warning class="justify-content-start"
-          *ngIf="isIpAddressInUsed(customInput?.value)" [@fadeInOut]>
+        <mcs-data-status-warning class="justify-content-start" [@fadeInOut]>
           <span [innerHTML]="textContent.inUsedEnteredIpMessage | mcsNewLines"></span>
         </mcs-data-status-warning>
       </mcs-data-status-success>

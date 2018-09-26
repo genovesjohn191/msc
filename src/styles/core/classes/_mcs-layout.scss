@@ -71,6 +71,8 @@
   border: 1px solid $border-color-dark;
   @include border-radius($border-radius-small);
   padding: $space-large;
+  @include display-flex(column);
+  @include set-items-interval($space-medium);
 }
 
 // Bordered elements
