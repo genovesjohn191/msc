@@ -68,7 +68,7 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
   public ipAddressesInUsed: McsResourceNetworkIpAddress[];
   public ipAddressItems: McsOption[];
   public inputManageType: InputManageType;
-  public ipAddressessStatusFactory = new McsDataStatusFactory<McsResourceNetworkIpAddress[]>();
+  public ipAddressesStatusFactory = new McsDataStatusFactory<McsResourceNetworkIpAddress[]>();
 
   // Form variables
   public fgCustomIpAddress: FormGroup;
@@ -194,10 +194,10 @@ export class ServerManageNetworkComponent implements OnInit, OnChanges {
    */
   private _setInUsedIpAddresses(network: McsResourceNetwork): void {
     if (isNullOrEmpty(network)) { return; }
-    this.ipAddressessStatusFactory.setInProgress();
+    this.ipAddressesStatusFactory.setInProgress();
     this._resourcesService.getResourceNetwork(this.resourceId, network.id)
       .pipe(
-        finalize(() => this.ipAddressessStatusFactory.setSuccessful(this.ipAddressesInUsed))
+        finalize(() => this.ipAddressesStatusFactory.setSuccessful(this.ipAddressesInUsed))
       )
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
