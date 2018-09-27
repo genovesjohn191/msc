@@ -41,8 +41,8 @@ import {
   CatalogItemType,
   IpAllocationMode,
   McsJob,
-  McsDataStatus,
-  McsRouteKey,
+  DataStatus,
+  RouteKey,
   McsServerUpdate,
   McsServerMedia
 } from '@app/models';
@@ -108,7 +108,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   /**
@@ -178,7 +178,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   /**
    * Returns all the server medias including the newly created media as a mock data
    */
-  public get serverMedias(): McsServerMedia[] {
+  public get serverMedia(): McsServerMedia[] {
     return isNullOrEmpty(this._newMedia) ||
       isNullOrEmpty(this.server.media) ?
       this.server.media :
@@ -189,7 +189,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Returns true when the attach media button should be enabled
    */
   public get attachMediaEnabled(): boolean {
-    return isNullOrEmpty(this.serverMedias)
+    return isNullOrEmpty(this.serverMedia)
       && this.server.executable
       && !isNullOrEmpty(this.resourceMedias);
   }
@@ -198,9 +198,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Navigate details tab into given key route
    * @param keyRoute Keyroute where to navigate
    */
-  public navigateServerDetailsTo(keyRoute: McsRouteKey): void {
+  public navigateServerDetailsTo(keyRoute: RouteKey): void {
     this._router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail),
+      CoreRoutes.getNavigationPath(RouteKey.ServerDetail),
       this.server.id,
       CoreRoutes.getNavigationPath(keyRoute)
     ]);
@@ -210,7 +210,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
    * Event that emits when the scale has been cancelled
    */
   public onCancelScale(): void {
-    this.navigateServerDetailsTo(McsRouteKey.ServerDetailManagement);
+    this.navigateServerDetailsTo(RouteKey.ServerDetailManagement);
     this.setViewMode(ServerManagementView.None);
   }
 
@@ -237,7 +237,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
       width=${offsetedScreenWidth},
       height=${offsetedScreenHeight}`;
 
-    window.open(`${CoreRoutes.getNavigationPath(McsRouteKey.Console)}/${this.server.id}`,
+    window.open(`${CoreRoutes.getNavigationPath(RouteKey.Console)}/${this.server.id}`,
       this.server.id, windowFeatures);
   }
 
@@ -369,7 +369,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     this._getServerThumbnail();
     this._getResourceCompute();
     this._getResourceMedia();
-    this._getServerMedias();
+    this._getServerMedia();
     this._checkScaleParamMode();
   }
 
@@ -395,9 +395,9 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   }
 
   /**
-   * Get the server medias
+   * Get the server media
    */
-  private _getServerMedias(): void {
+  private _getServerMedia(): void {
     unsubscribeSafely(this._serverMediaSubscription);
 
     this.mediaStatusFactory.setInProgress();
@@ -411,7 +411,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
         })
       )
       .subscribe(() => {
-        this.mediaStatusFactory.setSuccessful(this.serverMedias);
+        this.mediaStatusFactory.setSuccessful(this.serverMedia);
       });
   }
 
@@ -481,14 +481,14 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         this.scaleInProgress = true;
         break;
 
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         this._updateServerComputeByJob(job);
         this.refreshServerResource();
-      case McsDataStatus.Error:
+      case DataStatus.Error:
       default:
         this.scaleInProgress = false;
         break;
@@ -518,13 +518,13 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
   private _onAttachMedia(job: McsJob): void {
     if (!this.serverIsActiveByJob(job)) { return; }
     switch (job.dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         this._addMockMedia(job);
         break;
 
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         this.refreshServerResource();
-      case McsDataStatus.Error:
+      case DataStatus.Error:
       default:
         this._newMedia = undefined;
         break;
@@ -532,7 +532,7 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     // Update the media status factory to see the actual data
     if (!isNullOrEmpty(this.mediaStatusFactory)) {
-      this.mediaStatusFactory.setSuccessful(this.serverMedias);
+      this.mediaStatusFactory.setSuccessful(this.serverMedia);
     }
   }
 
@@ -545,11 +545,11 @@ export class ServerManagementComponent extends ServerDetailsBase implements OnIn
 
     // Refresh the data when the detaching media was already completed
     let detachingMediaEnded = !isNullOrEmpty(this._detachingMediaId)
-      && job.dataStatus === McsDataStatus.Success;
+      && job.dataStatus === DataStatus.Success;
     if (detachingMediaEnded) { this.refreshServerResource(); }
 
     // Set the inprogress media ID to be checked
-    this._detachingMediaId = job.dataStatus === McsDataStatus.InProgress ?
+    this._detachingMediaId = job.dataStatus === DataStatus.InProgress ?
       job.clientReferenceObject.mediaId : undefined;
   }
 

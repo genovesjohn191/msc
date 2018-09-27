@@ -54,8 +54,7 @@ export class JobsApiService {
         }),
         map((response) => {
           // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsJob[]>(McsJob, response);
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJob[]>(McsJob, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
@@ -80,8 +79,7 @@ export class JobsApiService {
         }),
         map((response) => {
           // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse
-            .deserializeResponse<McsJob>(McsJob, response);
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJob>(McsJob, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

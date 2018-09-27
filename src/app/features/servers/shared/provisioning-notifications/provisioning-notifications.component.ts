@@ -35,9 +35,9 @@ import {
 import {
   McsJob,
   McsTask,
-  McsTaskType,
-  McsDataStatus,
-  McsRouteKey
+  TaskType,
+  DataStatus,
+  RouteKey
 } from '@app/models';
 
 @Component({
@@ -83,7 +83,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   }
 
   public get dataStatusEnum(): any {
-    return McsDataStatus;
+    return DataStatus;
   }
 
   // Icons
@@ -135,7 +135,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    */
   public get allJobsCompleted(): boolean {
     let inProgressJob = this.jobs && this.jobs.find((job) => {
-      return job.dataStatus !== McsDataStatus.Success;
+      return job.dataStatus !== DataStatus.Success;
     });
     return isNullOrEmpty(inProgressJob) && this.hasJobs;
   }
@@ -145,7 +145,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    */
   public get hasErrorJobs(): boolean {
     let errorJob = this.jobs && this.jobs.find((job) => {
-      return job.dataStatus === McsDataStatus.Error;
+      return job.dataStatus === DataStatus.Error;
     });
     return !isNullOrEmpty(errorJob) && this.hasJobs;
   }
@@ -175,7 +175,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * @param job Job to be checked
    */
   public isJobCompleted(job: McsJob): boolean {
-    return job.dataStatus !== McsDataStatus.InProgress;
+    return job.dataStatus !== DataStatus.InProgress;
   }
 
   /**
@@ -183,7 +183,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
    * @param job Job to be checked
    */
   public isJobSuccessful(job: McsJob): boolean {
-    return job.dataStatus === McsDataStatus.Success;
+    return job.dataStatus === DataStatus.Success;
   }
 
   /**
@@ -193,8 +193,8 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   public onViewServerPage(tasks: McsTask[]): void {
     let serverId = this._getCreatedServerId(tasks);
     !isNullOrEmpty(serverId) ?
-      this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail), serverId]) :
-      this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
+      this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ServerDetail), serverId]) :
+      this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers)]);
   }
 
   /**
@@ -215,8 +215,8 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
     if (isNullOrEmpty(tasks)) { return ''; }
 
     let completedTask = tasks.find((task) => {
-      return (task.type === McsTaskType.CreateServer || task.type === McsTaskType.CloneServer)
-        && task.dataStatus === McsDataStatus.Success && !isNullOrEmpty(task.referenceObject);
+      return (task.type === TaskType.CreateServer || task.type === TaskType.CloneServer)
+        && task.dataStatus === DataStatus.Success && !isNullOrEmpty(task.referenceObject);
     });
     return !isNullOrEmpty(completedTask) ?
       completedTask.referenceObject.resourceId : '';
@@ -259,7 +259,7 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
     this._notificationsEvents.currentUserJob
       .pipe(takeUntil(this._destroySubject))
       .subscribe((job) => {
-        let inProgressJob = isNullOrEmpty(job) || job.dataStatus === McsDataStatus.InProgress;
+        let inProgressJob = isNullOrEmpty(job) || job.dataStatus === DataStatus.InProgress;
         if (inProgressJob) { return; }
 
         // Update the existing job
@@ -267,8 +267,8 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
           (_existingJob: McsJob) => _existingJob.id === job.id);
 
         // Exit progressbar
-        if (this.allJobsCompleted) { this._removeProgressbar(McsDataStatus.Success); }
-        if (this.hasErrorJobs) { this._removeProgressbar(McsDataStatus.Error); }
+        if (this.allJobsCompleted) { this._removeProgressbar(DataStatus.Success); }
+        if (this.hasErrorJobs) { this._removeProgressbar(DataStatus.Error); }
         this._changeDetectorRef.markForCheck();
       });
   }
@@ -276,13 +276,13 @@ export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDe
   /**
    * Remove the progressbar when all the job was finished
    */
-  private _removeProgressbar(status: McsDataStatus): void {
+  private _removeProgressbar(status: DataStatus): void {
     switch (status) {
-      case McsDataStatus.Error:
+      case DataStatus.Error:
         this._endTimer(0);
         break;
 
-      case McsDataStatus.Success:
+      case DataStatus.Success:
       default:
         this._endTimer(this.progressMax);
         break;

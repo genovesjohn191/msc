@@ -12,7 +12,7 @@ import {
   Search
 } from '@app/shared';
 import {
-  McsDataStatus,
+  DataStatus,
   McsOrder
 } from '@app/models';
 import { OrdersRepository } from '@app/services';
@@ -21,14 +21,14 @@ export class OrdersDataSource implements McsDataSource<McsOrder> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<McsDataStatus>;
+  public dataLoadingStream: Subject<DataStatus>;
 
   constructor(
     private _ordersRepository: OrdersRepository,
     private _paginator: Paginator,
     private _search: Search
   ) {
-    this.dataLoadingStream = new Subject<McsDataStatus>();
+    this.dataLoadingStream = new Subject<DataStatus>();
   }
 
   /**
@@ -51,7 +51,7 @@ export class OrdersDataSource implements McsDataSource<McsOrder> {
           // and we need to check it here since the component can be recreated during runtime
           let isSearching = !isNullOrEmpty(instance) && instance.searching;
           if (!isSearching) {
-            this.dataLoadingStream.next(McsDataStatus.InProgress);
+            this.dataLoadingStream.next(DataStatus.InProgress);
           }
 
           // Find all records based on settings provided in the input
@@ -71,7 +71,7 @@ export class OrdersDataSource implements McsDataSource<McsOrder> {
   /**
    * This will invoke when the data obtainment is completed
    */
-  public onCompletion(_status: McsDataStatus, _record: McsOrder[]): void {
+  public onCompletion(_status: DataStatus, _record: McsOrder[]): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);

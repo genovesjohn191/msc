@@ -12,7 +12,7 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsResourceMedia,
   McsResourceMediaServer
 } from '@app/models';
@@ -114,7 +114,7 @@ export class MediaRepository extends McsRepositoryBase<McsResourceMedia> {
    */
   private _setMediaProcessDetails(activeMedia: McsResourceMedia, job: McsJob): void {
     if (isNullOrEmpty(job)) { return; }
-    activeMedia.isProcessing = job.dataStatus === McsDataStatus.InProgress;
+    activeMedia.isProcessing = job.dataStatus === DataStatus.InProgress;
     activeMedia.processingText = job.summaryInformation;
   }
 }

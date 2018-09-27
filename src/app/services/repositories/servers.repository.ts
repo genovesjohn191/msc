@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import {
+  map,
+  takeUntil,
+  startWith
+} from 'rxjs/operators';
 import {
   McsRepositoryBase,
   McsNotificationEventsService
@@ -9,7 +13,7 @@ import { isNullOrEmpty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsServer,
   ServerCommand,
   VmPowerState,
@@ -24,12 +28,14 @@ import { ServersApiService } from '../api-services/servers-api.service';
 @Injectable()
 export class ServersRepository extends McsRepositoryBase<McsServer> {
 
+  private _resetSubject = new Subject<void>();
+
   constructor(
     private _serversApiService: ServersApiService,
     private _notificationEvents: McsNotificationEventsService
   ) {
     super();
-    this._registerJobEvents();
+    this._listenToAfterDataObtain();
   }
 
   /**
@@ -144,61 +150,91 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
   }
 
   /**
+   * Listens to after data obtained from api event
+   */
+  private _listenToAfterDataObtain(): void {
+    this.afterDataObtainedFromApi.pipe(startWith(null))
+      .subscribe(() => {
+        // Drop the current subscription to prevent memory leak.
+        this._resetSubject.next();
+        this._registerJobEvents();
+      });
+  }
+
+  /**
    * Register jobs/notifications events
    */
   private _registerJobEvents(): void {
     this._notificationEvents.createServerEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._onCreateServer.bind(this));
 
     this._notificationEvents.cloneServerEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._onCloneServer.bind(this));
 
     this._notificationEvents.renameServerEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._onRenameServer.bind(this));
 
     this._notificationEvents.deleteServerEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._onDeleteServer.bind(this));
 
     this._notificationEvents.changeServerPowerStateEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._onPowerStateServer.bind(this));
 
     this._notificationEvents.updateServerComputeEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._onScaleServer.bind(this));
 
     this._notificationEvents.resetServerPasswordEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.attachServerMediaEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.detachServerMediaEvent
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.createServerDisk
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.updateServerDisk
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.deleteServerDisk
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.createServerNic
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.updateServerNic
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.deleteServerNic
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.createServerSnapshot
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.applyServerSnapshot
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
 
     this._notificationEvents.deleteServerSnapshot
+      .pipe(takeUntil(this._resetSubject))
       .subscribe(this._updateServerStatusByJob.bind(this));
   }
 
@@ -207,7 +243,7 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
    * @param job Emitted job content
    */
   private _onCreateServer(job: McsJob): void {
-    let successfullyCreated = !isNullOrEmpty(job) && job.dataStatus === McsDataStatus.Success;
+    let successfullyCreated = !isNullOrEmpty(job) && job.dataStatus === DataStatus.Success;
     if (!successfullyCreated) { return; }
     this.refreshRecords();
   }
@@ -224,7 +260,7 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
       this._setServerProcessDetails(clonedServer, job);
     }
 
-    if (job.dataStatus === McsDataStatus.Success) {
+    if (job.dataStatus === DataStatus.Success) {
       this.refreshRecords();
     }
   }
@@ -238,7 +274,7 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
     if (isNullOrEmpty(activeServer)) { return; }
 
     this._updateServerStatusByJob(job);
-    if (job.dataStatus === McsDataStatus.Success) {
+    if (job.dataStatus === DataStatus.Success) {
       this.deleteRecordById(activeServer.id);
     }
   }
@@ -251,7 +287,7 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
-    if (job.dataStatus === McsDataStatus.Success) {
+    if (job.dataStatus === DataStatus.Success) {
       activeServer.name = job.clientReferenceObject.newName;
     }
     this._updateServerStatusByJob(job);
@@ -265,7 +301,7 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
-    if (job.dataStatus === McsDataStatus.Success) {
+    if (job.dataStatus === DataStatus.Success) {
       this._updateServerPowerState(activeServer);
     }
     this._updateServerStatusByJob(job);
@@ -279,7 +315,7 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
     let activeServer = this._getServerByJob(job);
     if (isNullOrEmpty(activeServer)) { return; }
 
-    if (job.dataStatus === McsDataStatus.Success && !isNullOrEmpty(activeServer.compute)) {
+    if (job.dataStatus === DataStatus.Success && !isNullOrEmpty(activeServer.compute)) {
       activeServer.compute.memoryMB = job.clientReferenceObject.memoryMB;
       activeServer.compute.cpuCount = job.clientReferenceObject.cpuCount;
       activeServer.compute.coreCount = 1;
@@ -354,6 +390,6 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
    */
   private _getProcessingFlagByJob(job: McsJob): boolean {
     if (isNullOrEmpty(job)) { return false; }
-    return job.dataStatus === McsDataStatus.InProgress;
+    return job.dataStatus === DataStatus.InProgress;
   }
 }

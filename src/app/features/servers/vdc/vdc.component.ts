@@ -43,7 +43,7 @@ import {
 import {
   ServerCommand,
   McsResource,
-  McsRouteKey,
+  RouteKey,
   McsServer,
   McsServerPlatform
 } from '@app/models';
@@ -91,7 +91,7 @@ export class VdcComponent
   }
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   private _vdc: McsResource;
@@ -162,7 +162,7 @@ export class VdcComponent
 
     this._changeDetectorRef.markForCheck();
     this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
       resource.resourceId
     ]);
   }
@@ -182,7 +182,7 @@ export class VdcComponent
    */
   protected onTabChanged(tab: any) {
     this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
       this.paramId,
       tab.id
     ]);

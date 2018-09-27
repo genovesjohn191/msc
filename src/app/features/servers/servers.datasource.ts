@@ -12,7 +12,7 @@ import {
 } from '@app/shared';
 import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsDataStatus,
+  DataStatus,
   McsServer
 } from '@app/models';
 import { ServersRepository } from '@app/services';
@@ -21,7 +21,7 @@ export class ServersDataSource implements McsDataSource<McsServer> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<McsDataStatus>;
+  public dataLoadingStream: Subject<DataStatus>;
 
   /**
    * Returns the currently displayed records based on search pattern or paging.
@@ -36,7 +36,7 @@ export class ServersDataSource implements McsDataSource<McsServer> {
     private _paginator: Paginator,
     private _search: Search
   ) {
-    this.dataLoadingStream = new Subject<McsDataStatus>();
+    this.dataLoadingStream = new Subject<DataStatus>();
   }
 
   /**
@@ -59,7 +59,7 @@ export class ServersDataSource implements McsDataSource<McsServer> {
           // and we need to check it here since the component can be recreated during runtime
           let isSearching = !isNullOrEmpty(instance) && instance.searching;
           if (!isSearching) {
-            this.dataLoadingStream.next(McsDataStatus.InProgress);
+            this.dataLoadingStream.next(DataStatus.InProgress);
           }
 
           // Find all records based on settings provided in the input
@@ -80,7 +80,7 @@ export class ServersDataSource implements McsDataSource<McsServer> {
    * This will invoke when the data obtainment is completed
    * @param servers Data to be provided when the datasource is connected
    */
-  public onCompletion(_status: McsDataStatus, _record: McsServer[]): void {
+  public onCompletion(_status: DataStatus, _record: McsServer[]): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);

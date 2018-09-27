@@ -15,7 +15,7 @@ import {
   httpErrorPageRoutes,
   ordersRoutes
 } from '@app/features';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 import { DefaultPageComponent } from './default-page.component';
 
 export const defaultPageRoutes: Routes = [
@@ -26,7 +26,7 @@ export const defaultPageRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.Dashboard),
+        redirectTo: CoreRoutes.getRoutePath(RouteKey.Dashboard),
         pathMatch: 'full'
       },
       ...dashboardRoutes,

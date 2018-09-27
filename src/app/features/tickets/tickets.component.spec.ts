@@ -8,7 +8,7 @@ import {
   Paginator,
   Search
 } from '@app/shared';
-import { McsDataStatus } from '@app/models';
+import { DataStatus } from '@app/models';
 import {
   TicketsTestingModule,
   mockTicketsService
@@ -110,7 +110,7 @@ describe('TicketsComponent', () => {
 
     it('should set the paginator completed when onCompleted method is called', () => {
       spyOn(component.paginator, 'showLoading');
-      component.dataSource.onCompletion(McsDataStatus.Success);
+      component.dataSource.onCompletion(DataStatus.Success);
       expect(component.paginator.showLoading).toHaveBeenCalledTimes(1);
     });
   });

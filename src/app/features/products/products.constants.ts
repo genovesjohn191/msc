@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoreRoutes } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Components */
 import { ProductsComponent } from './products.component';
 import { ProductComponent } from './product/product.component';
@@ -27,9 +27,9 @@ export const productsRoutesComponents: any[] = [
  */
 export const productsRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.ProductDetail),
+    path: CoreRoutes.getRoutePath(RouteKey.ProductDetail),
     component: ProductsComponent,
-    data: { routeId: McsRouteKey.ProductDetail },
+    data: { routeId: RouteKey.ProductDetail },
     children: [
       { path: '', component: ProductComponent }
     ]

@@ -4,7 +4,10 @@ import {
   Subscription,
   of
 } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  map,
+  finalize
+} from 'rxjs/operators';
 import {
   isNullOrEmpty,
   addOrUpdateArrayRecord,
@@ -12,8 +15,7 @@ import {
   clearArrayRecord,
   compareStrings,
   mergeArrays,
-  unsubscribeSafely,
-  updateObjectData
+  unsubscribeSafely
 } from '@app/utilities';
 import {
   Search,
@@ -55,10 +57,16 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
   private _filteredRecords: T[] = new Array();
 
   /**
-   * Stream that emits when record changes
+   * Event that emits when record changes
    */
   public get dataRecordsChanged(): Subject<T[]> { return this._dataRecordsChanged; }
   private _dataRecordsChanged: Subject<T[]> = new Subject<T[]>();
+
+  /**
+   * Event that emits after data obtained from API
+   */
+  public get afterDataObtainedFromApi(): Subject<void> { return this._afterDataObtainedFromApi; }
+  private _afterDataObtainedFromApi: Subject<void> = new Subject<void>();
 
   /**
    * Returns true when data records has content, otherwise false
@@ -111,11 +119,16 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
 
     if (objectIsArrayType) {
       let mergeMethod = (_first: McsEntityBase, _second: McsEntityBase) => _first.id === _second.id;
-      updateObjectData(propertyTarget, mergeArrays(propertyTarget, propertySource, mergeMethod));
+      let mergedRecords = mergeArrays(propertyTarget, propertySource, mergeMethod)
+        .filter((_record) => {
+          return !isNullOrEmpty(propertySource
+            .find((sourceRecord) => sourceRecord.id === _record.id));
+        });
+      propertyTarget = Object.assign(mergedRecords);
     } else {
-      updateObjectData(propertyTarget, propertySource);
+      propertyTarget = Object.assign(propertySource);
     }
-    return propertyTarget || propertySource;
+    return propertyTarget;
   }
 
   /**
@@ -259,7 +272,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
             this._updatedRecordsById.push(updatedRecord);
           }
           return updatedRecord;
-        })
+        }),
+        finalize(() => this._afterDataObtainedFromApi.next())
       );
   }
 
@@ -327,7 +341,8 @@ export abstract class McsRepositoryBase<T extends McsEntityBase> {
             });
           this._filteredRecords = this._dataRecords;
           return this._dataRecords;
-        })
+        }),
+        finalize(() => this._afterDataObtainedFromApi.next())
       );
   }
 

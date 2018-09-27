@@ -12,7 +12,7 @@ import {
 } from '@app/core';
 import {
   McsCompany,
-  McsDataStatus
+  DataStatus
 } from '@app/models';
 import {
   isNullOrEmpty,
@@ -30,7 +30,7 @@ export class SwitchAccountService {
   // Company List
   public companies: McsCompany[];
   public loadingAccount: boolean = false;
-  public companiesStatus: McsDataStatus;
+  public companiesStatus: DataStatus;
 
   // Others
   private _activeAccount: McsCompany;

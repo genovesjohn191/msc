@@ -9,7 +9,7 @@ import {
   unsubscribeSubject,
   McsInitializer
 } from '@app/utilities';
-import { McsHttpStatusCode } from '@app/models';
+import { HttpStatusCode } from '@app/models';
 import { McsAuthenticationService } from '../authentication/mcs-authentication.service';
 import { McsApiService } from './mcs-api.service';
 
@@ -73,11 +73,11 @@ export class McsErrorHandlerService implements McsInitializer {
       .subscribe((errorResponse) => {
         if (!errorResponse) { return; }
         switch (errorResponse.status) {
-          case McsHttpStatusCode.ReadOnlyMode:
-            this.handleHttpRedirectionError(McsHttpStatusCode.ReadOnlyMode);
+          case HttpStatusCode.ReadOnlyMode:
+            this.handleHttpRedirectionError(HttpStatusCode.ReadOnlyMode);
             break;
 
-          case McsHttpStatusCode.Unauthorized:
+          case HttpStatusCode.Unauthorized:
             this._authService.logIn();
             break;
         }

@@ -1,8 +1,10 @@
 import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
-export enum McsTaskType {
+export enum JobType {
   Undefined = 0,
+  // System Caching
+  RefreshProductCatalogCache = 1,
 
   // Jobs for "/servers" endpoint must use prefix 100XXX followed by 3 digit number
   CreateServer = 100001,
@@ -10,6 +12,7 @@ export enum McsTaskType {
   DeleteServer = 100003,
   CloneServer = 100004,
   RenameServer = 100005,
+  ProvisionCreateServer = 100006,
 
   // Server Snapshot
   CreateServerSnapshot = 100051,
@@ -28,9 +31,9 @@ export enum McsTaskType {
   ResetServerPassword = 100201,
 
   // Server Network Management
-  CreateServerNetwork = 100251,
-  UpdateServerNetwork = 100252,
-  DeleteServerNetwork = 100253,
+  CreateServerNic = 100251,
+  UpdateServerNic = 100252,
+  DeleteServerNic = 100253,
 
   // Server Media Management
   AttachServerMedia = 100301,
@@ -40,8 +43,8 @@ export enum McsTaskType {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsTaskTypeSerialization')
-export class McsTaskTypeSerialization
-  extends McsEnumSerializationBase<McsTaskType> {
-  constructor() { super(McsTaskType); }
+@CacheKey('JobTypeSerialization')
+export class JobTypeSerialization
+  extends McsEnumSerializationBase<JobType> {
+  constructor() { super(JobType); }
 }

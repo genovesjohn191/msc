@@ -1,7 +1,7 @@
 import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
-export enum McsCompanyStatus {
+export enum CompanyStatus {
   Internal = 0,
   Cancelling = 1,
   Cancelled = 2,
@@ -14,8 +14,8 @@ export enum McsCompanyStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsCompanyStatusSerialization')
-export class McsCompanyStatusSerialization
-  extends McsEnumSerializationBase<McsCompanyStatus> {
-  constructor() { super(McsCompanyStatus); }
+@CacheKey('CompanyStatusSerialization')
+export class CompanyStatusSerialization
+  extends McsEnumSerializationBase<CompanyStatus> {
+  constructor() { super(CompanyStatus); }
 }

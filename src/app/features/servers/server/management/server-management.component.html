@@ -215,7 +215,7 @@
             <mcs-data-status [dataStatusFactory]="mediaStatusFactory">
               <mcs-data-status-success mcsDataSuccess>
                 <mcs-list spacing="xsmall">
-                  <mcs-list-item *ngFor="let media of serverMedias" class="form-field-inline">
+                  <mcs-list-item *ngFor="let media of serverMedia" class="form-field-inline">
                     <ng-container *mcsAccessControl="['VmEdit']">
                       <mcs-icon *ngIf="mediaIsDetaching(media)"
                         [key]="spinnerIconKey" size="small"
@@ -319,7 +319,7 @@
         <h2 class="container-header">{{ textContent.media.manageHeader }}</h2>
         <div class="container-wrapper">
           <div class="action-box" [disabled]="!server.executable">
-            <mcs-server-manage-media [medias]="resourceMedias"
+            <mcs-server-manage-media [media]="resourceMedias"
               [(selectedMedia)]="selectedMedia">
 
               <ng-container mcsManageMediaHeader>

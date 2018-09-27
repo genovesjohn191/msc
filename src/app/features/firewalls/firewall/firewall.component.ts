@@ -40,7 +40,7 @@ import {
   Search
 } from '@app/shared';
 import {
-  McsRouteKey,
+  RouteKey,
   McsFirewall
 } from '@app/models';
 import { FirewallsRepository } from '@app/services';
@@ -90,7 +90,7 @@ export class FirewallComponent
   }
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   /**
@@ -165,7 +165,7 @@ export class FirewallComponent
   protected onTabChanged(tab: any) {
     // Navigate route based on current active tab
     this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.FirewallDetail),
+      CoreRoutes.getNavigationPath(RouteKey.FirewallDetail),
       this.paramId,
       tab.id
     ]);

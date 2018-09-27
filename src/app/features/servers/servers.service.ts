@@ -12,12 +12,12 @@ import {
 import { isNullOrEmpty, getSafeProperty } from '@app/utilities';
 import {
   ServerCommand,
-  McsRouteKey,
+  RouteKey,
   McsServer,
   McsServerClientObject,
   McsJob,
-  McsJobType,
-  McsDataStatus
+  JobType,
+  DataStatus
 } from '@app/models';
 import { ServersApiService } from '@app/services';
 import { ResetPasswordFinishedDialogComponent } from './shared';
@@ -55,16 +55,16 @@ export class ServersServices {
 
       case ServerCommand.Scale:
         this._router.navigate([
-          CoreRoutes.getNavigationPath(McsRouteKey.Servers),
+          CoreRoutes.getNavigationPath(RouteKey.Servers),
           data.server.id,
-          CoreRoutes.getNavigationPath(McsRouteKey.ServerDetailManagement)
+          CoreRoutes.getNavigationPath(RouteKey.ServerDetailManagement)
         ], { queryParams: { scale: true } }
         );
         break;
 
       case ServerCommand.Clone:
         this._router.navigate(
-          [CoreRoutes.getNavigationPath(McsRouteKey.ServerCreate)],
+          [CoreRoutes.getNavigationPath(RouteKey.ServerCreate)],
           { queryParams: { clone: data.server.id } }
         );
         break;
@@ -103,7 +103,7 @@ export class ServersServices {
               return throwError(error);
             })
           ).subscribe();
-        this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
+        this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers)]);
         break;
 
       case ServerCommand.Rename:
@@ -199,10 +199,10 @@ export class ServersServices {
       .subscribe((job: McsJob) => {
         let jobIsResetVmPassword: boolean;
         jobIsResetVmPassword = getSafeProperty(job, (obj) => obj.type)
-          === McsJobType.ResetServerPassword;
+          === JobType.ResetServerPassword;
         if (!jobIsResetVmPassword) { return; }
 
-        if (job.dataStatus === McsDataStatus.Success) {
+        if (job.dataStatus === DataStatus.Success) {
           let credentialObject = job.tasks[0].referenceObject.credential;
           this._dialogService.open(ResetPasswordFinishedDialogComponent, {
             id: 'reset-vm-password-confirmation',

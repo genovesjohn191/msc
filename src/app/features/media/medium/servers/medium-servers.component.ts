@@ -32,7 +32,7 @@ import {
 } from '@app/shared';
 import {
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsResourceMediaServer,
   McsServer
 } from '@app/models';
@@ -249,14 +249,14 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
     if (!this.isMediaActive(job)) { return; }
 
     switch (job.dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         this._newAttachServer.name = job.clientReferenceObject.serverName;
         this.serversDataSource.addRecord(this._newAttachServer);
         break;
 
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         this.mediumSelectionChange();
-      case McsDataStatus.Error:
+      case DataStatus.Error:
       default:
         this.serversDataSource.deleteRecord(this._newAttachServer);
         break;
@@ -272,11 +272,11 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
 
     // Refresh the data when the serevr in-progress is already completed
     let inProgressServerId = !isNullOrEmpty(this._inProgressServerId)
-      && job.dataStatus === McsDataStatus.Success;
+      && job.dataStatus === DataStatus.Success;
     if (inProgressServerId) { this.mediumSelectionChange(); }
 
     // Set the inprogress server ID to be checked
-    this._inProgressServerId = job.dataStatus === McsDataStatus.InProgress ?
+    this._inProgressServerId = job.dataStatus === DataStatus.InProgress ?
       job.clientReferenceObject.serverId : undefined;
     this._changeDetectorRef.markForCheck();
   }

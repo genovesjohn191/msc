@@ -3,7 +3,7 @@ import {
   McsNavigateAwayGuard,
   CoreRoutes
 } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Components */
 import { TicketsComponent } from './tickets.component';
 import { TicketComponent } from './ticket/ticket.component';
@@ -32,19 +32,19 @@ export const ticketsRoutesComponents: any[] = [
  */
 export const ticketsRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.Tickets),
+    path: CoreRoutes.getRoutePath(RouteKey.Tickets),
     component: TicketsComponent,
-    data: { routeId: McsRouteKey.Tickets }
+    data: { routeId: RouteKey.Tickets }
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.TicketCreate),
+    path: CoreRoutes.getRoutePath(RouteKey.TicketCreate),
     component: TicketCreateComponent,
     canDeactivate: [McsNavigateAwayGuard],
-    data: { routeId: McsRouteKey.TicketCreate }
+    data: { routeId: RouteKey.TicketCreate }
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.TicketDetail),
+    path: CoreRoutes.getRoutePath(RouteKey.TicketDetail),
     component: TicketComponent,
-    data: { routeId: McsRouteKey.TicketDetail }
+    data: { routeId: RouteKey.TicketDetail }
   }
 ];

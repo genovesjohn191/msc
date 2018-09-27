@@ -1,7 +1,7 @@
 import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
-export enum McsJobStatus {
+export enum JobStatus {
   Pending = 0,
   Active = 1,
   Completed = 2,
@@ -14,8 +14,8 @@ export enum McsJobStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsJobStatusSerialization')
-export class McsJobStatusSerialization
-  extends McsEnumSerializationBase<McsJobStatus> {
-  constructor() { super(McsJobStatus); }
+@CacheKey('JobStatusSerialization')
+export class JobStatusSerialization
+  extends McsEnumSerializationBase<JobStatus> {
+  constructor() { super(JobStatus); }
 }

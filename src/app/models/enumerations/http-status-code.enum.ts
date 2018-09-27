@@ -1,7 +1,7 @@
 import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
-export enum McsHttpStatusCode {
+export enum HttpStatusCode {
   Success = 200,
   BadRequest = 400,
   Unauthorized = 401,
@@ -16,8 +16,8 @@ export enum McsHttpStatusCode {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsHttpStatusCodeSerialization')
-export class McsHttpStatusCodeSerialization
-  extends McsEnumSerializationBase<McsHttpStatusCode> {
-  constructor() { super(McsHttpStatusCode); }
+@CacheKey('HttpStatusCodeSerialization')
+export class HttpStatusCodeSerialization
+  extends McsEnumSerializationBase<HttpStatusCode> {
+  constructor() { super(HttpStatusCode); }
 }

@@ -1,18 +1,8 @@
 import {
   async,
-  TestBed,
-  getTestBed
+  TestBed
 } from '@angular/core/testing';
-import {
-  CoreDefinition,
-  McsNotificationContextService
-} from '@app/core';
-import {
-  McsJob,
-  McsJobStatus,
-  McsServer,
-  ServiceType
-} from '@app/models';
+import { CoreDefinition } from '@app/core';
 import { ServerService } from '../server.service';
 import { ServerManagementComponent } from './server-management.component';
 import {
@@ -23,17 +13,6 @@ import {
 describe('ServerManagementComponent', () => {
   /** Stub Services/Components */
   let component: ServerManagementComponent;
-  let serverService: ServerService;
-  let notificationContextService: McsNotificationContextService;
-  let mockServerDetails = {
-    id: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
-    name: 'contoso-lin01',
-    platform: {
-      environmentName: 'Macquarie_Telecom_Contoso_100320',
-      resourceName: 'M1VDC27117001'
-    },
-    serviceType: ServiceType.Managed
-  };
 
   beforeEach(async(() => {
     /** Testbed Reset Module */
@@ -68,40 +47,10 @@ describe('ServerManagementComponent', () => {
       fixture.detectChanges();
 
       component = fixture.componentInstance;
-      serverService = getTestBed().get(ServerService);
-      notificationContextService = getTestBed().get(McsNotificationContextService);
     });
   }));
 
   /** Test Implementation */
-  describe('ngOnInit()', () => {
-    beforeEach(async(() => {
-      let notifications: McsJob[] = new Array();
-      let notificationActive = new McsJob();
-      notificationActive.id = '5';
-      notificationActive.status = McsJobStatus.Active;
-      notificationActive.clientReferenceObject = {
-        activeServerId: mockServerDetails.id
-      };
-      notifications.push(notificationActive);
-      notificationContextService.notificationsStream.next(notifications);
-
-      serverService.selectedServerStream.next(mockServerDetails as McsServer);
-    }));
-
-    it('should define the text content values to serverManagementTextContent', () => {
-      expect(component.textContent).toBeDefined();
-    });
-
-    it('should set the value of server', () => {
-      expect(component.server).toBeDefined();
-    });
-
-    it('should set the serverThumbnail value to undefined since the process is in progress', () => {
-      expect(component.serverThumbnail).toBeUndefined();
-    });
-  });
-
   describe('IconKey() | Properties', () => {
     it('should get the spinner icon key definition', () => {
       expect(component.spinnerIconKey).toBe(CoreDefinition.ASSETS_GIF_LOADER_SPINNER);

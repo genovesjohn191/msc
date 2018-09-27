@@ -19,10 +19,10 @@ import {
 } from '@app/utilities';
 import {
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsApiRequestParameter,
   McsApiSuccessResponse,
-  McsJobType
+  JobType
 } from '@app/models';
 import { CoreDefinition } from '../core.definition';
 import { McsNotificationJobService } from './mcs-notification-job.service';
@@ -36,7 +36,7 @@ import { McsApiService } from './mcs-api.service';
 @Injectable()
 export class McsNotificationContextService implements McsInitializer {
   private _destroySubject = new Subject<void>();
-  private _excludedJobTypes: McsJobType[];
+  private _excludedJobTypes: JobType[];
   private _notifications: McsJob[];
   private _notificationsStream: BehaviorSubject<McsJob[]>;
 
@@ -103,11 +103,11 @@ export class McsNotificationContextService implements McsInitializer {
 
             // Filtered all the notification based on the status type and time duration
             switch (notification.dataStatus) {
-              case McsDataStatus.InProgress:
+              case DataStatus.InProgress:
                 jobIncluded = true;
                 break;
 
-              case McsDataStatus.Error:
+              case DataStatus.Error:
                 if (notification.endedOn &&
                   getTimeDifference(notification.endedOn, new Date()) <
                   CoreDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS) {
@@ -115,7 +115,7 @@ export class McsNotificationContextService implements McsInitializer {
                 }
                 break;
 
-              case McsDataStatus.Success:
+              case DataStatus.Success:
               default:
                 if (notification.endedOn &&
                   getTimeDifference(notification.endedOn, new Date()) <
@@ -158,7 +158,7 @@ export class McsNotificationContextService implements McsInitializer {
    */
   private _removeCompletedJobs(): void {
     deleteArrayRecord(this._notifications, (job: McsJob) => {
-      return job.dataStatus !== McsDataStatus.InProgress;
+      return job.dataStatus !== DataStatus.InProgress;
     });
   }
 
@@ -181,8 +181,8 @@ export class McsNotificationContextService implements McsInitializer {
    * Creates filtered job
    */
   private _createFilteredJobList(): void {
-    this._excludedJobTypes.push(McsJobType.Undefined);
-    this._excludedJobTypes.push(McsJobType.RefreshProductCatalogCache);
+    this._excludedJobTypes.push(JobType.Undefined);
+    this._excludedJobTypes.push(JobType.RefreshProductCatalogCache);
   }
 
   /**

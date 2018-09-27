@@ -36,7 +36,7 @@ export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy 
   public selectedMediaChange = new EventEmitter<McsServerMedia>();
 
   @Input()
-  public medias: McsServerMedia[];
+  public media: McsServerMedia[];
 
   @Input()
   public get selectedMedia(): McsServerMedia { return this._selectedMedia; }
@@ -69,10 +69,10 @@ export class ServerManageMediaComponent implements OnInit, OnChanges, OnDestroy 
    * Sets the selected media if no media selected yet
    */
   private _setSelectedMedia(): void {
-    if (isNullOrEmpty(this.medias)) { return; }
+    if (isNullOrEmpty(this.media)) { return; }
     let hasSelectedMedia = !isNullOrEmpty(this.selectedMedia)
-      && !isNullOrEmpty(this.medias.find((network) => network === this.selectedMedia));
+      && !isNullOrEmpty(this.media.find((network) => network === this.selectedMedia));
     if (hasSelectedMedia) { return; }
-    this.selectedMedia = this.medias[0];
+    this.selectedMedia = this.media[0];
   }
 }

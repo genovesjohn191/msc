@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoreRoutes } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardGuard } from './dashboard.guard';
 
@@ -23,9 +23,9 @@ export const dashboardRoutesComponents: any[] = [
  */
 export const dashboardRoutes: Routes = [
   {
-    path: CoreRoutes.getNavigationPath(McsRouteKey.Dashboard),
+    path: CoreRoutes.getNavigationPath(RouteKey.Dashboard),
     component: DashboardComponent,
     canActivate: [DashboardGuard],
-    data: { routeId: McsRouteKey.Dashboard }
+    data: { routeId: RouteKey.Dashboard }
   }
 ];

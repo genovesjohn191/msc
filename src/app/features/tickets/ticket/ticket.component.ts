@@ -34,7 +34,7 @@ import {
   CommentType,
   McsFileInfo,
   McsComment,
-  McsRouteKey,
+  RouteKey,
   McsTicket,
   TicketSubType,
   ticketSubTypeText,
@@ -149,7 +149,7 @@ export class TicketComponent implements OnInit, OnDestroy {
    * Navigate to ticket listing
    */
   public gotoTickets(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Tickets)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]);
   }
 
   /**

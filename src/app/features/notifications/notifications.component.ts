@@ -21,7 +21,7 @@ import {
 } from '@app/core';
 import {
   McsCompany,
-  McsDataStatus
+  DataStatus
 } from '@app/models';
 import {
   refreshView,
@@ -92,7 +92,7 @@ export class NotificationsComponent
    * Get the status icon key based on job
    * @param dataStatus Status that serve as the basis
    */
-  public getStatusIconKey(dataStatus: McsDataStatus): string {
+  public getStatusIconKey(dataStatus: DataStatus): string {
     return this._getStatusIcon(dataStatus).key;
   }
 
@@ -100,7 +100,7 @@ export class NotificationsComponent
    * Get the status icon color based on job
    * @param dataStatus Status that serve as the basis
    */
-  public getStatusIconColor(dataStatus: McsDataStatus): string {
+  public getStatusIconColor(dataStatus: DataStatus): string {
     return this._getStatusIcon(dataStatus).color;
   }
 
@@ -146,20 +146,20 @@ export class NotificationsComponent
    * Get the status icon key based on the job
    * @param dataStatus Status that serve as the basis
    */
-  private _getStatusIcon(dataStatus: McsDataStatus): { key, color } {
+  private _getStatusIcon(dataStatus: DataStatus): { key, color } {
     let iconKey: string;
     let iconColor: string;
 
     switch (dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         iconKey = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
         iconColor = 'black';
         break;
-      case McsDataStatus.Error:
+      case DataStatus.Error:
         iconKey = CoreDefinition.ASSETS_FONT_CLOSE;
         iconColor = 'red';
         break;
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         iconKey = CoreDefinition.ASSETS_FONT_CHECK;
         iconColor = 'green';
         break;

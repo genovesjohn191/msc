@@ -5,7 +5,7 @@ import {
 } from 'rxjs';
 import {
   McsApiSuccessResponse,
-  McsHttpStatusCode,
+  HttpStatusCode,
   McsServerSqlOptions,
   McsServerHidsOptions
 } from '@app/models';
@@ -20,7 +20,7 @@ export class OptionsApiService {
    */
   public getAntiMalwareServiceOptions(): Observable<McsApiSuccessResponse<string[]>> {
     let response = new McsApiSuccessResponse<string[]>();
-    response.status = McsHttpStatusCode.Success;
+    response.status = HttpStatusCode.Success;
     response.totalCount = 2;
     response.content = ['Standard', 'Self-Managed'];
 
@@ -33,7 +33,7 @@ export class OptionsApiService {
    */
   public getDisasterRecoveryOptions(): Observable<McsApiSuccessResponse<string[]>> {
     let response = new McsApiSuccessResponse<string[]>();
-    response.status = McsHttpStatusCode.Success;
+    response.status = HttpStatusCode.Success;
     response.totalCount = 1;
     response.content = ['Contoso MMAZG00001'];
 
@@ -46,7 +46,7 @@ export class OptionsApiService {
    */
   public getSqlServerOptions(): Observable<McsApiSuccessResponse<McsServerSqlOptions>> {
     let response = new McsApiSuccessResponse<McsServerSqlOptions>();
-    response.status = McsHttpStatusCode.Success;
+    response.status = HttpStatusCode.Success;
     response.content = {
       versions: ['2008 SP4', '2008 R2 SP3', '2012 SP3', '2016 SP1'],
       editions: ['Web', 'Standard', 'Enterprise', 'Datacenter'],
@@ -62,7 +62,7 @@ export class OptionsApiService {
    */
   public getInfrastructureServiceLevelOptions(): Observable<McsApiSuccessResponse<string[]>> {
     let response = new McsApiSuccessResponse<string[]>();
-    response.status = McsHttpStatusCode.Success;
+    response.status = HttpStatusCode.Success;
     response.totalCount = 2;
     response.content = ['Standard', 'Premium'];
 
@@ -75,7 +75,7 @@ export class OptionsApiService {
    */
   public getHidsOptions(): Observable<McsApiSuccessResponse<McsServerHidsOptions>> {
     let response = new McsApiSuccessResponse<McsServerHidsOptions>();
-    response.status = McsHttpStatusCode.Success;
+    response.status = HttpStatusCode.Success;
     response.content = {
       serviceVariants: ['Standard', 'Self-Managed'],
       protectionLevels: ['Detect', 'Protect'],

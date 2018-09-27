@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import {
   McsCompany,
   McsIdentity,
-  McsAccountStatus
+  AccountStatus
 } from '@app/models';
 import { AppState } from '@app/app.service';
 import { CoreDefinition } from '../core.definition';
@@ -41,10 +41,10 @@ export class McsAuthenticationIdentity {
   /**
    * Returns the active account current status [default, impersonator]
    */
-  public get activeAccountStatus(): McsAccountStatus {
+  public get activeAccountStatus(): AccountStatus {
     let hasActiveAccount = this._cookieService
       .getEncryptedItem<McsCompany>(CoreDefinition.COOKIE_ACTIVE_ACCOUNT);
-    return hasActiveAccount ? McsAccountStatus.Impersonator : McsAccountStatus.Default;
+    return hasActiveAccount ? AccountStatus.Impersonator : AccountStatus.Default;
   }
 
   constructor(

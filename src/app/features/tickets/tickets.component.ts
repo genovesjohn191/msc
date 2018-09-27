@@ -21,7 +21,7 @@ import {
   getSafeProperty
 } from '@app/utilities';
 import {
-  McsRouteKey,
+  RouteKey,
   McsTicket
 } from '@app/models';
 import { TicketsRepository } from '@app/services';
@@ -76,14 +76,14 @@ export class TicketsComponent
    */
   public navigateToTicket(ticket: McsTicket): void {
     if (isNullOrEmpty(ticket)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.TicketDetail), ticket.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketDetail), ticket.id]);
   }
 
   /**
    * This will navigate to ticket creation page
    */
   public onClickNewTicket(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.TicketCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketCreate)]);
   }
 
   /**

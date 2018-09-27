@@ -20,8 +20,8 @@ import {
   animateFactory
 } from '@app/utilities';
 import {
-  McsRouteCategory,
-  mcsRouteCategoryText
+  RouteCategory,
+  routeCategoryText
 } from '@app/models';
 
 @Component({
@@ -40,7 +40,7 @@ import {
 
 export class SubNavigationMobileComponent implements OnInit, OnDestroy {
   @Input()
-  public routeCategory: McsRouteCategory;
+  public routeCategory: RouteCategory;
 
   /**
    * Returns true when panel is opened, otherwise false
@@ -65,7 +65,7 @@ export class SubNavigationMobileComponent implements OnInit, OnDestroy {
    * Returns the category text label based on input
    */
   public get routeCategoryLabel(): string {
-    return mcsRouteCategoryText[this.routeCategory];
+    return routeCategoryText[this.routeCategory];
   }
 
   private _destroySubject = new Subject<void>();

@@ -1,9 +1,9 @@
-import { McsRouteCategory } from '@app/models';
+import { RouteCategory } from '@app/models';
 
 export class McsRouteDetails {
   public url?: string;
   public documentTitle?: string;
-  public category?: McsRouteCategory;
+  public category?: RouteCategory;
   public requiredPermissions?: string[];
   public featureFlag?: string;
 }

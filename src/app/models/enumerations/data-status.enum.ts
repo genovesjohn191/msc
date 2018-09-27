@@ -1,7 +1,7 @@
 import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
-export enum McsDataStatus {
+export enum DataStatus {
   Error = -1,
   Success = 0,
   InProgress = 1,
@@ -11,8 +11,8 @@ export enum McsDataStatus {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsDataStatusSerialization')
-export class McsDataStatusSerialization
-  extends McsEnumSerializationBase<McsDataStatus> {
-  constructor() { super(McsDataStatus); }
+@CacheKey('DataStatusSerialization')
+export class DataStatusSerialization
+  extends McsEnumSerializationBase<DataStatus> {
+  constructor() { super(DataStatus); }
 }

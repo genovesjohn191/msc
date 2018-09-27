@@ -12,7 +12,7 @@ import {
 import { McsNotificationEventsService } from '@app/core';
 import {
   McsJob,
-  McsDataStatus
+  DataStatus
 } from '@app/models';
 import {
   unsubscribeSafely,
@@ -113,7 +113,7 @@ export class StateChangeNotificationsComponent implements OnInit, OnDestroy {
     this.notificationsSubscription = this._notificationEvents.currentUserJob
       .subscribe((notification) => {
         if (isNullOrEmpty(notification) ||
-          notification.dataStatus === McsDataStatus.InProgress) { return; }
+          notification.dataStatus === DataStatus.InProgress) { return; }
 
         // Update or add the new notification based on job ID
         this.notifications = addOrUpdateArrayRecord(

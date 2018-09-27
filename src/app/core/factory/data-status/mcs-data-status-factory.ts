@@ -7,15 +7,15 @@ import {
   isNullOrEmpty,
   unsubscribeSafely
 } from '@app/utilities';
-import { McsDataStatus } from '@app/models';
+import { DataStatus } from '@app/models';
 
 export class McsDataStatusFactory<T> {
   /**
    * Get the data status of the model
    */
-  private _dataStatus: McsDataStatus;
-  public get dataStatus(): McsDataStatus { return this._dataStatus; }
-  public set dataStatus(value: McsDataStatus) {
+  private _dataStatus: DataStatus;
+  public get dataStatus(): DataStatus { return this._dataStatus; }
+  public set dataStatus(value: DataStatus) {
     if (this._dataStatus !== value) {
       this._dataStatus = value;
       this._notifyStatusChanged();
@@ -28,8 +28,8 @@ export class McsDataStatusFactory<T> {
   /**
    * Event that emits when status has changed
    */
-  private _statusChanged = new BehaviorSubject<McsDataStatus>(undefined);
-  public get statusChanged(): BehaviorSubject<McsDataStatus> { return this._statusChanged; }
+  private _statusChanged = new BehaviorSubject<DataStatus>(undefined);
+  public get statusChanged(): BehaviorSubject<DataStatus> { return this._statusChanged; }
 
   /**
    * Returns the instance of subscription when the status is in-progress
@@ -38,7 +38,7 @@ export class McsDataStatusFactory<T> {
   public get statusSubscription(): Subscription { return this._statusSubscription; }
 
   constructor(private _changeDetectorRef?: ChangeDetectorRef) {
-    this._dataStatus = McsDataStatus.Success;
+    this._dataStatus = DataStatus.Success;
   }
 
   /**
@@ -46,7 +46,7 @@ export class McsDataStatusFactory<T> {
    */
   public setInProgress(): void {
     this._statusSubscription = new Subscription();
-    this.dataStatus = McsDataStatus.InProgress;
+    this.dataStatus = DataStatus.InProgress;
   }
 
   /**
@@ -54,7 +54,7 @@ export class McsDataStatusFactory<T> {
    */
   public setError(): void {
     unsubscribeSafely(this._statusSubscription);
-    this.dataStatus = McsDataStatus.Error;
+    this.dataStatus = DataStatus.Error;
   }
 
   /**
@@ -63,7 +63,7 @@ export class McsDataStatusFactory<T> {
   public setSuccessful(data?: T): void {
     unsubscribeSafely(this._statusSubscription);
     this.dataStatus = isNullOrEmpty(data) ?
-      McsDataStatus.Empty : McsDataStatus.Success;
+      DataStatus.Empty : DataStatus.Success;
   }
 
   /**

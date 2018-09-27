@@ -9,7 +9,7 @@ import {
   switchMap,
   map
 } from 'rxjs/operators';
-import { McsDataStatus } from '@app/models';
+import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSubject
@@ -20,7 +20,7 @@ export class TableDataSource<T> implements McsDataSource<T> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<McsDataStatus>;
+  public dataLoadingStream: Subject<DataStatus>;
 
   private _cacheDataRecords: T[];
   private _fakeDataRecords: Set<T>;
@@ -29,7 +29,7 @@ export class TableDataSource<T> implements McsDataSource<T> {
 
   constructor(_providedRecords: T[] | Observable<T[]>) {
     this._fakeDataRecords = new Set();
-    this.dataLoadingStream = new Subject<McsDataStatus>();
+    this.dataLoadingStream = new Subject<DataStatus>();
     this._dataRecords = isObservable(_providedRecords) ?
       _providedRecords : of(_providedRecords);
   }
@@ -46,7 +46,7 @@ export class TableDataSource<T> implements McsDataSource<T> {
         switchMap((requestorInstance) => {
           // We want the table to be load only when the record is coming from API
           if (isNullOrEmpty(requestorInstance)) {
-            this.dataLoadingStream.next(McsDataStatus.InProgress);
+            this.dataLoadingStream.next(DataStatus.InProgress);
           }
           return this._dataRecords.pipe(
             map((response) => response.concat(Array.from(this._fakeDataRecords)))
@@ -72,7 +72,7 @@ export class TableDataSource<T> implements McsDataSource<T> {
    * This will invoke when the data obtainment is completed
    * @param servers Data to be provided when the datasource is connected
    */
-  public onCompletion(_status: McsDataStatus, _record: T[]): void {
+  public onCompletion(_status: DataStatus, _record: T[]): void {
     this.dataLoadingStream.next(_status);
   }
 

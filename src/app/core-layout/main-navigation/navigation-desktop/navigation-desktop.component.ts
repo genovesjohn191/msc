@@ -17,7 +17,7 @@ import {
   McsDataStatusFactory
 } from '@app/core';
 import {
-  McsRouteKey,
+  RouteKey,
   McsProduct,
   McsProductCatalog
 } from '@app/models';
@@ -81,7 +81,7 @@ export class NavigationDesktopComponent implements OnInit {
    */
   public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), _product.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetail), _product.id]);
   }
 
   /**

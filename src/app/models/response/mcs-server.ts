@@ -1,4 +1,5 @@
 import { CoreDefinition } from '@app/core';
+import { JsonProperty } from 'json-object-mapper';
 import { McsServerOperatingSystemSummary } from './mcs-server-operating-system-summary';
 import { McsServerHardware } from './mcs-server-hardware';
 import { McsServerCompute } from './mcs-server-compute';
@@ -21,7 +22,6 @@ import {
   ServerCommand,
   serverCommandActiveText
 } from '../enumerations/server-command.enum';
-import { JsonProperty } from 'json-object-mapper';
 import { McsEntityBase } from '../mcs-entity.base';
 
 export class McsServer extends McsEntityBase {

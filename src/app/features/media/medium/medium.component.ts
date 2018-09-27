@@ -36,7 +36,7 @@ import {
   getSafeProperty
 } from '@app/utilities';
 import {
-  McsRouteKey,
+  RouteKey,
   McsResourceMedia
 } from '@app/models';
 import {
@@ -76,7 +76,7 @@ export class MediumComponent
   private _destroySubject = new Subject<void>();
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   public constructor(
@@ -126,7 +126,7 @@ export class MediumComponent
    * Navigate to media listing
    */
   public gotoMedia(): void {
-    this.router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Media)]);
+    this.router.navigate([CoreRoutes.getNavigationPath(RouteKey.Media)]);
   }
 
   /**
@@ -135,7 +135,7 @@ export class MediumComponent
    */
   protected onTabChanged(tab: any) {
     this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.Medium),
+      CoreRoutes.getNavigationPath(RouteKey.Medium),
       this.paramId,
       tab.id
     ]);

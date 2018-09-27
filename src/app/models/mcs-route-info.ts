@@ -1,11 +1,11 @@
 import {
-  McsRouteKey,
-  McsRouteCategory
+  RouteKey,
+  RouteCategory
 } from '@app/models';
 
 export class McsRouteInfo {
-  public enumCategory?: McsRouteCategory;
-  public enumKey?: McsRouteKey;
+  public enumCategory?: RouteCategory;
+  public enumKey?: RouteKey;
   public navigationPath?: string;
   public routePath?: string;
   public documentTitle?: string;

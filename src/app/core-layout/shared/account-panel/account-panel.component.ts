@@ -10,7 +10,7 @@ import {
   CoreConfig
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 
 @Component({
   selector: 'mcs-account-panel',
@@ -27,7 +27,7 @@ export class AccountPanelComponent implements OnInit {
   public selectionChanged: EventEmitter<any>;
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   constructor(

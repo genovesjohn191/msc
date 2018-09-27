@@ -1,4 +1,4 @@
-import { McsUnitType } from '@app/models';
+import { UnitType } from '@app/models';
 import {
   appendUnitSuffix,
   convertMbToGb,
@@ -11,7 +11,7 @@ describe('SIZE Functions', () => {
     it(`should return the size value together with its unit as a string`, () => {
       let value = 250;
       let expectedString = '250 GB';
-      let result = appendUnitSuffix(value, McsUnitType.Gigabyte);
+      let result = appendUnitSuffix(value, UnitType.Gigabyte);
       expect(result).toBe(expectedString);
     });
   });

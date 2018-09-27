@@ -27,7 +27,7 @@ import {
   McsJob,
   McsJobConnection,
   McsApiSuccessResponse,
-  McsNetworkStatus,
+  NetworkStatus,
   McsApiRequestParameter
 } from '@app/models';
 import { McsApiService } from './mcs-api.service';
@@ -46,7 +46,7 @@ const DEFAULT_HEARTBEAT_OUT = 20000;
 @Injectable()
 export class McsNotificationJobService implements McsInitializer {
   public notificationStream = new BehaviorSubject<McsJob>(new McsJob());
-  public connectionStatusStream = new Subject<McsNetworkStatus>();
+  public connectionStatusStream = new Subject<NetworkStatus>();
 
   private _apiSubscription: any;
   private _stompInstance: Observable<any>;
@@ -57,8 +57,8 @@ export class McsNotificationJobService implements McsInitializer {
   /**
    * Returns the connection status of websocket
    */
-  private _connectionStatus: McsNetworkStatus;
-  public set connectionStatus(value: McsNetworkStatus) {
+  private _connectionStatus: NetworkStatus;
+  public set connectionStatus(value: NetworkStatus) {
     this._connectionStatus = value;
     this.connectionStatusStream.next(this._connectionStatus);
   }
@@ -118,12 +118,12 @@ export class McsNotificationJobService implements McsInitializer {
       .subscribe((details) => {
         if (isNullOrEmpty(details)) {
           this._loggerService.traceEnd(`No connection details data found.`);
-          this.connectionStatus = McsNetworkStatus.NoData;
+          this.connectionStatus = NetworkStatus.NoData;
           return;
         }
 
         this._jobConnection = details.content;
-        this.connectionStatus = McsNetworkStatus.Connecting;
+        this.connectionStatus = NetworkStatus.Connecting;
         this._initializeWebstomp();
         this._listenToStateChange();
       });
@@ -168,7 +168,7 @@ export class McsNotificationJobService implements McsInitializer {
 
       this._stompSubscription = this._stompInstance
         .subscribe(this._onStompMessage.bind(this));
-      this.connectionStatus = McsNetworkStatus.Success;
+      this.connectionStatus = NetworkStatus.Success;
     } catch (_error) {
       this._loggerService.trace(`Web stomp subscription encountered error.`);
     }
@@ -179,7 +179,7 @@ export class McsNotificationJobService implements McsInitializer {
    */
   private _onStompError(): void {
     this._loggerService.trace(`Web stomp error.`);
-    this.connectionStatus = McsNetworkStatus.Failed;
+    this.connectionStatus = NetworkStatus.Failed;
   }
 
   /**

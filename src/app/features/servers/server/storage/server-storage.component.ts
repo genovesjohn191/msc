@@ -39,7 +39,7 @@ import {
 } from '@app/shared';
 import {
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsResourceStorage,
   McsServerStorageDevice,
   McsServerStorageDeviceUpdate
@@ -423,13 +423,13 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         this._onAddingDisk(job);
         break;
 
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         this.refreshServerResource();
-      case McsDataStatus.Error:
+      case DataStatus.Error:
       default:
         this.disksDataSource.deleteRecord(this._newDisk);
         break;
@@ -445,11 +445,11 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
 
     // Refresh the data when the disk in-progress is already completed
     let inProgressDiskEnded = !isNullOrEmpty(this._inProgressDiskId)
-      && job.dataStatus === McsDataStatus.Success;
+      && job.dataStatus === DataStatus.Success;
     if (inProgressDiskEnded) { this.refreshServerResource(); }
 
     // Set the inprogress disk ID to be checked
-    this._inProgressDiskId = job.dataStatus === McsDataStatus.InProgress ?
+    this._inProgressDiskId = job.dataStatus === DataStatus.InProgress ?
       job.clientReferenceObject.diskId : undefined;
   }
 

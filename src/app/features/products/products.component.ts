@@ -39,7 +39,7 @@ import {
   SlidingPanelComponent
 } from '@app/shared';
 import {
-  McsRouteKey,
+  RouteKey,
   McsProduct,
   McsProductCatalog
 } from '@app/models';
@@ -80,7 +80,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   constructor(

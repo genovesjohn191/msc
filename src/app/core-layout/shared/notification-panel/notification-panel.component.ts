@@ -13,7 +13,7 @@ import {
 import { CoreDefinition } from '@app/core';
 import {
   McsJob,
-  McsDataStatus,
+  DataStatus,
 } from '@app/models';
 import {
   refreshView,
@@ -93,7 +93,7 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
   }
 
   public get dataStatusEnum(): any {
-    return McsDataStatus;
+    return DataStatus;
   }
 
   public constructor(
@@ -190,16 +190,16 @@ export class NotificationPanelComponent implements OnInit, OnChanges {
    */
   private initializeNotification(notification: McsJob): void {
     switch (notification.dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         this.iconStatusKey = CoreDefinition.ASSETS_GIF_LOADER_SPINNER;
         this.iconStatusColor = 'black';
         break;
-      case McsDataStatus.Error:
+      case DataStatus.Error:
         this.iconStatusKey = CoreDefinition.ASSETS_FONT_CLOSE;
         this.iconStatusColor = 'red';
         this._timeOutInMilliSeconds = CoreDefinition.NOTIFICATION_FAILED_TIMEOUT_IN_MS;
         break;
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         this.iconStatusKey = CoreDefinition.ASSETS_FONT_CHECK;
         this.iconStatusColor = 'green';
         this._timeOutInMilliSeconds = CoreDefinition.NOTIFICATION_COMPLETED_TIMEOUT_IN_MS;

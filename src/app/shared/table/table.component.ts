@@ -35,7 +35,7 @@ import {
 } from 'rxjs/operators';
 /** Core / Utilities */
 import { CoreDefinition } from '@app/core';
-import { McsDataStatus } from '@app/models';
+import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   unsubscribeSafely,
@@ -115,9 +115,9 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   /**
    * Get/Set the data obtainment status based on observables
    */
-  private _dataStatus: McsDataStatus;
-  public get dataStatus(): McsDataStatus { return this._dataStatus; }
-  public set dataStatus(value: McsDataStatus) {
+  private _dataStatus: DataStatus;
+  public get dataStatus(): DataStatus { return this._dataStatus; }
+  public set dataStatus(value: DataStatus) {
     if (this._dataStatus !== value) {
       this._dataStatus = value;
       this._switchDataStatus(value);
@@ -171,7 +171,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     this._columnDefinitionsMap = new Map<string, ColumnDefDirective>();
 
     // Add loader while table is initializing
-    this.dataStatus = McsDataStatus.InProgress;
+    this.dataStatus = DataStatus.InProgress;
   }
 
   public get spinnerIconKey(): string {
@@ -179,7 +179,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
   }
 
   public get dataStatusEnum(): any {
-    return McsDataStatus;
+    return DataStatus;
   }
 
   public ngOnInit() {
@@ -250,18 +250,18 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
    * `@Note:` This will remove the previous status in the DOM
    * @param newDataStatus New datastatus to be set
    */
-  private _switchDataStatus(newDataStatus: McsDataStatus) {
+  private _switchDataStatus(newDataStatus: DataStatus) {
     if (isNullOrEmpty(this._dataStatusDefinition)) { return; }
     this._dataStatusPlaceholder.viewContainer.clear();
 
     switch (newDataStatus) {
-      case McsDataStatus.Empty:
+      case DataStatus.Empty:
         if (isNullOrEmpty(this._dataStatusDefinition.dataEmptyDef)) { break; }
         this._dataStatusPlaceholder.viewContainer
           .createEmbeddedView(this._dataStatusDefinition.dataEmptyDef.template);
         break;
 
-      case McsDataStatus.Error:
+      case DataStatus.Error:
         if (isNullOrEmpty(this._dataStatusDefinition.dataErrorDef)) { break; }
         this._dataStatusPlaceholder.viewContainer
           .createEmbeddedView(this._dataStatusDefinition.dataErrorDef.template);
@@ -414,7 +414,7 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
     this._dataSourceSubscription = this._dataSource.connect()
       .pipe(
         catchError((error) => {
-          this.dataStatus = McsDataStatus.Error;
+          this.dataStatus = DataStatus.Error;
           this._dataSource.onCompletion(this.dataStatus, undefined);
           return throwError(error);
         })
@@ -423,8 +423,8 @@ export class TableComponent<T> implements OnInit, AfterContentInit, AfterContent
         this._data = data;
         this._renderDataRows();
         this.dataStatus = isNullOrEmpty(data) ?
-          McsDataStatus.Empty :
-          McsDataStatus.Success;
+          DataStatus.Empty :
+          DataStatus.Success;
         this._dataSource.onCompletion(this.dataStatus, data);
       });
   }

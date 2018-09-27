@@ -36,8 +36,8 @@ import {
 } from '@app/shared';
 import {
   McsCompany,
-  McsCompanyStatus,
-  McsDataStatus
+  CompanyStatus,
+  DataStatus
 } from '@app/models';
 import { SwitchAccountService } from './switch-account.service';
 import { SwitchAccountRepository } from './switch-account.repository';
@@ -83,9 +83,9 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   /**
    * Data status
    */
-  private _dataStatus: McsDataStatus;
-  public get dataStatus(): McsDataStatus { return this._dataStatus; }
-  public set dataStatus(value: McsDataStatus) {
+  private _dataStatus: DataStatus;
+  public get dataStatus(): DataStatus { return this._dataStatus; }
+  public set dataStatus(value: DataStatus) {
     if (value !== this._dataStatus) {
       this._dataStatus = value;
       this._changeDetectorRef.markForCheck();
@@ -93,7 +93,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
   }
 
   public get dataStatusEnum(): any {
-    return McsDataStatus;
+    return DataStatus;
   }
 
   public get totalRecordsCount(): number { return this._totalRecordsCount; }
@@ -144,22 +144,22 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     unsubscribeSafely(this.activeAccountSubscription);
   }
 
-  public getUserIconKey(status: McsCompanyStatus) {
+  public getUserIconKey(status: CompanyStatus) {
     let userIcon: string;
     switch (status) {
-      case McsCompanyStatus.Internal:
-      case McsCompanyStatus.Subsidiary:
-      case McsCompanyStatus.Customer:
+      case CompanyStatus.Internal:
+      case CompanyStatus.Subsidiary:
+      case CompanyStatus.Customer:
         userIcon = CoreDefinition.ASSETS_SVG_PERSON_GREEN;
         break;
 
-      case McsCompanyStatus.Cancelling:
+      case CompanyStatus.Cancelling:
         userIcon = CoreDefinition.ASSETS_SVG_PERSON_RED;
         break;
 
-      case McsCompanyStatus.Cancelled:
-      case McsCompanyStatus.Prospect:
-      case McsCompanyStatus.NoLonger:
+      case CompanyStatus.Cancelled:
+      case CompanyStatus.Prospect:
+      case CompanyStatus.NoLonger:
       default:
         userIcon = CoreDefinition.ASSETS_SVG_PERSON_YELLOW;
         break;
@@ -167,8 +167,8 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
     return userIcon;
   }
 
-  public getStatusText(status: McsCompanyStatus) {
-    return getEnumString(McsCompanyStatus, status);
+  public getStatusText(status: CompanyStatus) {
+    return getEnumString(CompanyStatus, status);
   }
 
   public get defaultAccount(): McsCompany {
@@ -225,14 +225,14 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
           // and we need to check it here since the component can be recreated during runtime
           let isSearching = !isNullOrEmpty(instance) && instance.searching;
           if (!isSearching) {
-            this.dataStatus = McsDataStatus.InProgress;
+            this.dataStatus = DataStatus.InProgress;
           }
 
           // Find all records based on settings provided in the input
           return this._switchAccountRepository.findAllRecords(this.paginator, this.search);
         }),
         catchError((error) => {
-          this.dataStatus = McsDataStatus.Error;
+          this.dataStatus = DataStatus.Error;
           return throwError(error);
         })
       )
@@ -244,7 +244,7 @@ export class SwitchAccountComponent implements AfterViewInit, OnDestroy {
         this.search.showLoading(false);
         this.paginator.showLoading(false);
         this.dataStatus = isNullOrEmpty(this.displayedCompanies) ?
-          McsDataStatus.Empty : McsDataStatus.Success;
+          DataStatus.Empty : DataStatus.Success;
       });
   }
 

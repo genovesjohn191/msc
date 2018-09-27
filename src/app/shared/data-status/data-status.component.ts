@@ -22,7 +22,7 @@ import {
   animateFactory,
   unsubscribeSubject
 } from '@app/utilities';
-import { McsDataStatus } from '@app/models';
+import { DataStatus } from '@app/models';
 import { DataStatusErrorComponent } from './data-status-error/data-status-error.component';
 
 @Component({
@@ -64,9 +64,9 @@ export class DataStatusComponent implements OnInit, OnDestroy {
   /**
    * Returns the data status based on the factory class
    */
-  public get dataStatus(): McsDataStatus {
+  public get dataStatus(): DataStatus {
     return isNullOrEmpty(this.dataStatusFactory) ?
-      McsDataStatus.Success : this.dataStatusFactory.dataStatus;
+      DataStatus.Success : this.dataStatusFactory.dataStatus;
   }
 
   private _destroySubject = new Subject<void>();
@@ -87,7 +87,7 @@ export class DataStatusComponent implements OnInit, OnDestroy {
   }
 
   public get dataStatusEnum(): any {
-    return McsDataStatus;
+    return DataStatus;
   }
 
   // Returns the spinner icon key

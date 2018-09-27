@@ -1,4 +1,4 @@
-import { McsUnitType } from '@app/models';
+import { UnitType } from '@app/models';
 
 let gbToMbMultiplier = 1024;
 let kbToMbMultiplier = 1024;
@@ -9,23 +9,23 @@ let kbToMbMultiplier = 1024;
  * @param unit Unit type of the value
  * @param value Size value
  */
-export function appendUnitSuffix(value: number, unit: McsUnitType): string {
+export function appendUnitSuffix(value: number, unit: UnitType): string {
   let unitValue: string;
 
   switch (unit) {
-    case McsUnitType.Kilobyte:
+    case UnitType.Kilobyte:
       unitValue = 'KB';
       break;
 
-    case McsUnitType.Megabyte:
+    case UnitType.Megabyte:
       unitValue = 'MB';
       break;
 
-    case McsUnitType.Gigabyte:
+    case UnitType.Gigabyte:
       unitValue = 'GB';
       break;
 
-    case McsUnitType.CPU:
+    case UnitType.CPU:
       unitValue = 'vCPU';
       break;
 

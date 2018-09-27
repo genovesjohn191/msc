@@ -20,7 +20,7 @@ import {
   isNullOrEmpty
 } from '@app/utilities';
 import {
-  McsRouteKey,
+  RouteKey,
   McsOrder
 } from '@app/models';
 import { OrdersRepository } from '@app/services';
@@ -80,7 +80,7 @@ export class OrdersComponent
    */
   public navigateToOrder(order: McsOrder): void {
     if (isNullOrEmpty(order)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.OrderDetail), order.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.OrderDetail), order.id]);
   }
 
   /**

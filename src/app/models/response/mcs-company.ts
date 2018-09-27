@@ -1,9 +1,9 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsEntityBase } from '../mcs-entity.base';
 import {
-  McsCompanyStatus,
-  McsCompanyStatusSerialization
-} from '@app/models';
+  CompanyStatus,
+  CompanyStatusSerialization
+} from '../enumerations/company-status.enum';
 
 export class McsCompany extends McsEntityBase  {
   public name: string;
@@ -13,11 +13,11 @@ export class McsCompany extends McsEntityBase  {
   public hasMobile: boolean;
 
   @JsonProperty({
-    type: McsCompanyStatus,
-    serializer: McsCompanyStatusSerialization,
-    deserializer: McsCompanyStatusSerialization
+    type: CompanyStatus,
+    serializer: CompanyStatusSerialization,
+    deserializer: CompanyStatusSerialization
   })
-  public status: McsCompanyStatus;
+  public status: CompanyStatus;
 
   constructor() {
     super();

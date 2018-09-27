@@ -17,9 +17,9 @@ import {
   McsAccessControlService,
 } from '@app/core';
 import {
-  McsRouteKey,
-  McsRouteCategory,
-  mcsRouteCategoryText
+  RouteKey,
+  RouteCategory,
+  routeCategoryText
 } from '@app/models';
 import {
   unsubscribeSubject,
@@ -39,18 +39,18 @@ import {
 
 export class MainNavigationComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public selectedCategory: McsRouteCategory;
+  public selectedCategory: RouteCategory;
 
   public get caretRightIconKey(): string {
     return CoreDefinition.ASSETS_FONT_CARET_RIGHT;
   }
 
   public get routerCategoryEnum(): any {
-    return McsRouteCategory;
+    return RouteCategory;
   }
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   private _destroySubject = new Subject<void>();
@@ -83,7 +83,7 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
   /**
    * Navigate to the given path key
    */
-  public navigateTo(routeKey: McsRouteKey): void {
+  public navigateTo(routeKey: RouteKey): void {
     if (isNullOrEmpty(routeKey)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(routeKey)]);
   }
@@ -92,8 +92,8 @@ export class MainNavigationComponent implements OnInit, OnDestroy {
    * Returns the route category label
    * @param routeCategory Route category to obtain
    */
-  public getCategoryLabel(routeCategory: McsRouteCategory): string {
-    return mcsRouteCategoryText[routeCategory];
+  public getCategoryLabel(routeCategory: RouteCategory): string {
+    return routeCategoryText[routeCategory];
   }
 
   /**
