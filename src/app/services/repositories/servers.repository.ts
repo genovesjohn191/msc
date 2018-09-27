@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import {
+  Observable,
+  Subject
+} from 'rxjs';
 import {
   map,
-  takeUntil,
-  startWith
+  takeUntil
 } from 'rxjs/operators';
 import {
   McsRepositoryBase,
   McsNotificationEventsService
 } from '@app/core';
-import { isNullOrEmpty } from '@app/utilities';
+import {
+  isNullOrEmpty,
+  getSafeProperty
+} from '@app/utilities';
 import {
   McsApiSuccessResponse,
   McsJob,
@@ -153,12 +158,16 @@ export class ServersRepository extends McsRepositoryBase<McsServer> {
    * Listens to after data obtained from api event
    */
   private _listenToAfterDataObtain(): void {
-    this.afterDataObtainedFromApi.pipe(startWith(null))
-      .subscribe(() => {
-        // Drop the current subscription to prevent memory leak.
-        this._resetSubject.next();
-        this._registerJobEvents();
-      });
+    this.afterDataObtainedFromApi.subscribe(() => {
+      let alreadyRegistered = !isNullOrEmpty(
+        getSafeProperty(this._resetSubject, (obj) => obj.observers.length)
+      );
+      if (alreadyRegistered) { return; }
+
+      // Drop the current subscription to prevent memory leak.
+      this._resetSubject.next();
+      this._registerJobEvents();
+    });
   }
 
   /**
