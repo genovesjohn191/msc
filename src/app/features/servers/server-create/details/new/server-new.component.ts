@@ -30,7 +30,7 @@ import {
   CatalogItemType,
   ServiceType,
   ServerImageType,
-  McsUnitType,
+  UnitType,
   McsResource,
   McsResourceStorage,
   McsResourceCatalogItem,
@@ -142,7 +142,7 @@ export class ServerNewComponent
     return replacePlaceholder(
       this.textContent.fullStorageSpace,
       'remaining_memory',
-      appendUnitSuffix(maxMemoryInGb, McsUnitType.Gigabyte)
+      appendUnitSuffix(maxMemoryInGb, UnitType.Gigabyte)
     );
   }
 

@@ -20,7 +20,7 @@ import {
   getSafeProperty
 } from '@app/utilities';
 import {
-  McsRouteKey,
+  RouteKey,
   McsResourceMedia
 } from '@app/models';
 import { MediaRepository } from '@app/services';
@@ -66,7 +66,7 @@ export class MediaComponent
    * This will navigate to new media page
    */
   public onClickNewMediaButton() {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.MediaCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.MediaCreate)]);
   }
 
   /**
@@ -75,7 +75,7 @@ export class MediaComponent
    */
   public navigateToMedia(media: McsResourceMedia): void {
     if (isNullOrEmpty(media)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Medium), media.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Medium), media.id]);
   }
 
   /**

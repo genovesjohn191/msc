@@ -31,7 +31,7 @@ import {
   unsubscribeSubject
 } from '@app/utilities';
 import {
-  McsRouteKey,
+  RouteKey,
   McsOrder
 } from '@app/models';
 import { OrdersRepository } from '@app/services';
@@ -90,7 +90,7 @@ export class OrderComponent implements OnInit, OnDestroy {
    * Navigate to order listing
    */
   public gotoOrders(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Orders)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Orders)]);
   }
 
   /**

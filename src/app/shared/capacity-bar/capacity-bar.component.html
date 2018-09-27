@@ -1,6 +1,12 @@
 <div class="capacity-bar-wrapper" (blur)="onBlur()">
   <div class="capacity-bar" [ngClass]="{'low': isLow}" [ngStyle]="{width: percentage}"></div>
-  <span [ngClass]="{'low': isLow}">
-    {{ value | mcsDataSize: 'MB' }} / {{ max | mcsDataSize: 'MB' }}
-  </span>
+  <div [ngClass]="{'low': isLow}" class="capacity-bar-label">
+    <span *ngIf="(value | mcsIsNotNullOrEmpty); else emptyLabel">
+      {{ value | mcsDataSize: 'MB' }}</span>
+    <ng-template #emptyLabel>
+      <span [innerHTML]="value | mcsDataLabel"></span>
+    </ng-template>
+    <span> / </span>
+    <span>{{ max | mcsDataSize: 'MB' }}</span>
+  </div>
 </div>

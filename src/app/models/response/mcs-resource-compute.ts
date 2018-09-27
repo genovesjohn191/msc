@@ -1,8 +1,8 @@
 import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsUnitType,
-  mcsUnitTypeText
-} from '../enumerations/mcs-unit-type.enum';
+  UnitType,
+  unitTypeText
+} from '../enumerations/unit-type.enum';
 
 export class McsResourceCompute {
   public cpuAllocation: number;
@@ -34,7 +34,7 @@ export class McsResourceCompute {
    */
   public get memoryLimitMBLabel(): string {
     return (!isNullOrEmpty(this.memoryLimitMB)) ?
-      `${this.memoryLimitMB} ${mcsUnitTypeText[McsUnitType.Megabyte]}` :
+      `${this.memoryLimitMB} ${unitTypeText[UnitType.Megabyte]}` :
       undefined;
   }
 
@@ -43,7 +43,7 @@ export class McsResourceCompute {
    */
   public get cpuLimitMBLabel(): string {
     return (!isNullOrEmpty(this.cpuLimit)) ?
-      `${this.cpuLimit} ${mcsUnitTypeText[McsUnitType.CPU]}` :
+      `${this.cpuLimit} ${unitTypeText[UnitType.CPU]}` :
       undefined;
   }
 }

@@ -10,7 +10,7 @@ import { McsTextContentProvider } from '@app/core';
 import { getEnumString } from '@app/utilities';
 import {
   McsJob,
-  McsJobStatus,
+  JobStatus,
   McsTask
 } from '@app/models';
 import { CoreTestingModule } from '@app/core/testing';
@@ -22,11 +22,11 @@ describe('ProvisioningNotificationsComponent', () => {
   let component: ProvisioningNotificationsComponent;
 
   // Creation of notification based on id and status
-  let createNotification = (notificationId: string, notificationStatus: McsJobStatus) => {
+  let createNotification = (notificationId: string, notificationStatus: JobStatus) => {
     let notification: McsJob = new McsJob();
 
     notification.id = notificationId;
-    notification.errorMessage = getEnumString(McsJobStatus, notificationStatus);
+    notification.errorMessage = getEnumString(JobStatus, notificationStatus);
     notification.createdOn = new Date('2017-04-26T01:51:34Z');
     notification.startedOn = new Date('2017-04-26T01:51:34Z');
     notification.updatedOn = new Date('2017-04-26T01:55:12Z');
@@ -82,9 +82,9 @@ describe('ProvisioningNotificationsComponent', () => {
       component = fixture.componentInstance;
 
       component.jobs = new Array();
-      component.jobs.push(createNotification('12345', McsJobStatus.Active));
-      component.jobs.push(createNotification('12346', McsJobStatus.Failed));
-      component.jobs.push(createNotification('12347', McsJobStatus.Completed));
+      component.jobs.push(createNotification('12345', JobStatus.Active));
+      component.jobs.push(createNotification('12346', JobStatus.Failed));
+      component.jobs.push(createNotification('12347', JobStatus.Completed));
     });
   }));
 
@@ -148,19 +148,19 @@ describe('ProvisioningNotificationsComponent', () => {
   describe('isJobCompleted()', () => {
     it(`should return false when job is active`, () => {
       let jobCompleted = component.isJobCompleted(
-        createNotification('12348', McsJobStatus.Active));
+        createNotification('12348', JobStatus.Active));
       expect(jobCompleted).toBeFalsy();
     });
 
     it(`should return false when job is pending`, () => {
       let jobCompleted = component.isJobCompleted(
-        createNotification('12348', McsJobStatus.Pending));
+        createNotification('12348', JobStatus.Pending));
       expect(jobCompleted).toBeFalsy();
     });
 
     it(`should return true when job is not active | pending`, () => {
       let jobCompleted = component.isJobCompleted(
-        createNotification('12348', McsJobStatus.Completed));
+        createNotification('12348', JobStatus.Completed));
       expect(jobCompleted).toBeTruthy();
     });
   });
@@ -168,13 +168,13 @@ describe('ProvisioningNotificationsComponent', () => {
   describe('isJobError()', () => {
     it(`should return true when job is completed/successful`, () => {
       let jobSuccess = component.isJobSuccessful(
-        createNotification('12348', McsJobStatus.Completed));
+        createNotification('12348', JobStatus.Completed));
       expect(jobSuccess).toBeTruthy();
     });
 
     it(`should return false when job is not completed/successful`, () => {
       let jobSuccess = component.isJobSuccessful(
-        createNotification('12348', McsJobStatus.Failed));
+        createNotification('12348', JobStatus.Failed));
       expect(jobSuccess).toBeFalsy();
     });
   });

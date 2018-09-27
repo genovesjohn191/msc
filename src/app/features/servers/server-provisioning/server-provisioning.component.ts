@@ -30,8 +30,8 @@ import {
 } from '@app/utilities';
 import {
   McsJob,
-  McsJobType,
-  McsHttpStatusCode,
+  JobType,
+  HttpStatusCode,
 } from '@app/models';
 import { JobsApiService } from '@app/services';
 
@@ -109,10 +109,10 @@ export class ServerProvisioningComponent implements OnInit, OnDestroy {
    */
   private _validateJobType(job: McsJob): void {
     if (isNullOrEmpty(job)) { return; }
-    let createServerType = job.type === McsJobType.CreateServer
-      || job.type === McsJobType.CloneServer;
+    let createServerType = job.type === JobType.CreateServer
+      || job.type === JobType.CloneServer;
     if (!createServerType) {
-      this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.NotFound);
+      this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.NotFound);
     }
   }
 }

@@ -1,6 +1,6 @@
-import { JsonProperty } from 'json-object-mapper';
-import { McsKeyValuePair } from '@app/models';
 import { McsDateSerialization } from '@app/core';
+import { JsonProperty } from 'json-object-mapper';
+import { McsKeyValuePair } from '../mcs-key-value-pair';
 
 export class McsIdentity {
   public hashedId: string;

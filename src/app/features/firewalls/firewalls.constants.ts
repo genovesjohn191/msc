@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoreRoutes } from '../../core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Components/Services */
 import { FirewallsComponent } from './firewalls.component';
 import {
@@ -32,29 +32,29 @@ export const firewallsRoutesComponents: any[] = [
  */
 export const firewallRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.Firewalls),
+    path: CoreRoutes.getRoutePath(RouteKey.Firewalls),
     component: FirewallsComponent,
-    data: { routeId: McsRouteKey.Firewalls }
+    data: { routeId: RouteKey.Firewalls }
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetail),
+    path: CoreRoutes.getRoutePath(RouteKey.FirewallDetail),
     component: FirewallComponent,
-    data: { routeId: McsRouteKey.FirewallDetail },
+    data: { routeId: RouteKey.FirewallDetail },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetailOverview),
+        redirectTo: CoreRoutes.getRoutePath(RouteKey.FirewallDetailOverview),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetailOverview),
+        path: CoreRoutes.getRoutePath(RouteKey.FirewallDetailOverview),
         component: FirewallOverviewComponent,
-        data: { routeId: McsRouteKey.FirewallDetailOverview }
+        data: { routeId: RouteKey.FirewallDetailOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.FirewallDetailPolicies),
+        path: CoreRoutes.getRoutePath(RouteKey.FirewallDetailPolicies),
         component: FirewallPoliciesComponent,
-        data: { routeId: McsRouteKey.FirewallDetailPolicies }
+        data: { routeId: RouteKey.FirewallDetailPolicies }
       }
     ]
   }

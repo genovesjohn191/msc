@@ -34,7 +34,7 @@ export class CapacityBarComponent implements ControlValueAccessor {
   private _max: number;
 
   /**
-   * IsChecked Flag
+   * Returns the current value of the capacity bar
    */
   private _value: number;
   public get value(): number {

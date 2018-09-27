@@ -11,10 +11,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   McsJob,
-  McsDeviceType,
+  DeviceMode,
   McsCompany,
-  McsDataStatus,
-  McsRouteKey
+  DataStatus,
+  RouteKey
 } from '@app/models';
 /** Services/Providers */
 import {
@@ -47,7 +47,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   public notifications: McsJob[];
   public hasConnectionError: boolean;
   public textContent: any;
-  public deviceType: McsDeviceType;
+  public deviceType: DeviceMode;
 
   @ViewChild('notificationsPopover')
   public notificationsPopover: any;
@@ -62,7 +62,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public get displayedNotifications(): McsJob[] {
     return this.notifications.filter((job) => {
-      return job.dataStatus === McsDataStatus.InProgress;
+      return job.dataStatus === DataStatus.InProgress;
     });
   }
 
@@ -132,7 +132,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   ) {
     this.hasConnectionError = false;
     this.notifications = new Array();
-    this.deviceType = McsDeviceType.Desktop;
+    this.deviceType = DeviceMode.Desktop;
   }
 
   public ngOnInit(): void {
@@ -152,7 +152,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    * Navigate to notifications page to see all the jobs
    */
   public viewNotificationsPage(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Notifications)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Notifications)]);
   }
 
   /**
@@ -180,10 +180,10 @@ export class UserPanelComponent implements OnInit, OnDestroy {
    */
   public onOpenNotificationPanel(): void {
     let displayNotificationsPage = !this.hasNotification
-      || this.deviceType !== McsDeviceType.Desktop;
+      || this.deviceType !== DeviceMode.Desktop;
     if (displayNotificationsPage) { this.viewNotificationsPage(); }
 
-    let mobileMode = this.deviceType !== McsDeviceType.Desktop
+    let mobileMode = this.deviceType !== DeviceMode.Desktop
       && !isNullOrEmpty(this.notificationsPopover);
     if (mobileMode) { this.notificationsPopover.close(); }
   }
@@ -227,7 +227,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     // Subscribe to browser service
     this._browserService.deviceTypeStream
       .pipe(takeUntil(this._destroySubject))
-      .subscribe((deviceType: McsDeviceType) => {
+      .subscribe((deviceType: DeviceMode) => {
         this.deviceType = deviceType;
         this._changeDetectorRef.markForCheck();
       });

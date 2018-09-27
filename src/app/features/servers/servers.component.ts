@@ -43,9 +43,9 @@ import {
   ServiceType,
   serviceTypeText,
   ServerCommand,
-  McsDeviceType,
+  DeviceMode,
   McsSelection,
-  McsRouteKey,
+  RouteKey,
   McsServer
 } from '@app/models';
 import { TableComponent } from '@app/shared';
@@ -282,7 +282,7 @@ export class ServersComponent
    * This will navigate to new server page
    */
   public onClickNewServerButton() {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ServerCreate)]);
   }
 
   /**
@@ -300,7 +300,7 @@ export class ServersComponent
   public navigateToResource(server: McsServer): void {
     if (isNullOrEmpty(server.platform)) { return; }
     this._router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
       server.platform.resourceId
     ]);
   }
@@ -312,7 +312,7 @@ export class ServersComponent
   public navigateToServer(server: McsServer): void {
     // Do not navigate to server details when server is deleting
     if (isNullOrEmpty(server) || this.serverDeleting(server)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers), server.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers), server.id]);
   }
 
   /**
@@ -383,8 +383,8 @@ export class ServersComponent
     this.browserService.deviceTypeStream
       .pipe(takeUntil(this._destroySubject))
       .subscribe((deviceType) => {
-        let multipleSelection = !(deviceType === McsDeviceType.MobileLandscape ||
-          deviceType === McsDeviceType.MobilePortrait);
+        let multipleSelection = !(deviceType === DeviceMode.MobileLandscape ||
+          deviceType === DeviceMode.MobilePortrait);
         this.selection = new McsSelection<McsServer>(multipleSelection);
       });
   }

@@ -8,8 +8,8 @@ import {
   ServiceType,
   McsApiSuccessResponse,
   McsJob,
-  McsJobType,
-  McsJobStatus,
+  JobType,
+  JobStatus,
   McsResource,
   McsServer,
   McsServerThumbnail,
@@ -79,8 +79,8 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = McsJobType.CreateServerDisk;
-    mcsApiJobMock.status = McsJobStatus.Active;
+    mcsApiJobMock.type = JobType.CreateServerDisk;
+    mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
       storageProfile: 'T2000-PVDC0301',
@@ -102,8 +102,8 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = McsJobType.UpdateServerDisk;
-    mcsApiJobMock.status = McsJobStatus.Active;
+    mcsApiJobMock.type = JobType.UpdateServerDisk;
+    mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
       diskId: '1d6d55d7-0b02-4341-9359-2e4bc783d9b1'
@@ -123,8 +123,8 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = McsJobType.UpdateServerDisk;
-    mcsApiJobMock.status = McsJobStatus.Active;
+    mcsApiJobMock.type = JobType.UpdateServerDisk;
+    mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
       diskId: '1d6d55d7-0b02-4341-9359-2e4bc783d9b1'
@@ -144,8 +144,8 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = McsJobType.CreateServerNic;
-    mcsApiJobMock.status = McsJobStatus.Active;
+    mcsApiJobMock.type = JobType.CreateServerNic;
+    mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
       networkName: 'Customer_100320-V1012-Web-M1VLN27117001'
@@ -166,8 +166,8 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = McsJobType.UpdateServerNic;
-    mcsApiJobMock.status = McsJobStatus.Active;
+    mcsApiJobMock.type = JobType.UpdateServerNic;
+    mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
       networkId: 'ff474c18-9d3e-4214-b33f-f434a689bca4',
@@ -189,8 +189,8 @@ export const mockServerService = {
 
     let mcsApiJobMock = new McsJob();
     mcsApiJobMock.id = '5';
-    mcsApiJobMock.type = McsJobType.DeleteServerNic;
-    mcsApiJobMock.status = McsJobStatus.Active;
+    mcsApiJobMock.type = JobType.DeleteServerNic;
+    mcsApiJobMock.status = JobStatus.Active;
     mcsApiJobMock.clientReferenceObject = {
       serverId: '52381b70-ed47-4ab5-8f6f-0365d4f76148',
       networkId: 'ff474c18-9d3e-4214-b33f-f434a689bca4',

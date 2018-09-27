@@ -34,7 +34,7 @@ import {
 } from '@app/utilities';
 import {
   InputManageType,
-  McsUnitType,
+  UnitType,
   McsResourceStorage,
   McsServerStorageDevice
 } from '@app/models';
@@ -132,7 +132,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return replacePlaceholder(
       this.textContent.errors.storageAvailable,
       'available_storage',
-      appendUnitSuffix(this.availableMemory, McsUnitType.Gigabyte)
+      appendUnitSuffix(this.availableMemory, UnitType.Gigabyte)
     );
   }
 
@@ -143,7 +143,7 @@ export class ServerManageStorageComponent implements OnInit, OnChanges, OnDestro
     return replacePlaceholder(
       this.textContent.errors.storageMin,
       'min_value',
-      appendUnitSuffix(this.minValueGB, McsUnitType.Gigabyte)
+      appendUnitSuffix(this.minValueGB, UnitType.Gigabyte)
     );
   }
 

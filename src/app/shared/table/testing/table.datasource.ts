@@ -4,14 +4,14 @@ import {
   of
 } from 'rxjs';
 import { McsDataSource } from '../mcs-data-source.interface';
-import { McsDataStatus } from '@app/models';
+import { DataStatus } from '@app/models';
 import { TableUserData } from './table-userdata';
 
 export class TableDatasource implements McsDataSource<any> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<McsDataStatus>;
+  public dataLoadingStream: Subject<DataStatus>;
   public loading: boolean;
 
   constructor() {

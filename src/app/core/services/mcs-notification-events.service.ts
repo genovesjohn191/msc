@@ -12,7 +12,7 @@ import {
 } from '@app/utilities';
 import {
   McsJob,
-  McsJobType
+  JobType
 } from '@app/models';
 import { McsAuthenticationIdentity } from '../authentication/mcs-authentication.identity';
 import { McsNotificationContextService } from './mcs-notification-context.service';
@@ -132,75 +132,75 @@ export class McsNotificationEventsService {
 
       // Notify job per type
       switch (notification.type) {
-        case McsJobType.CreateServer:
+        case JobType.CreateServer:
           this.createServerEvent.next(notification);
           break;
 
-        case McsJobType.CloneServer:
+        case JobType.CloneServer:
           this.cloneServerEvent.next(notification);
           break;
 
-        case McsJobType.RenameServer:
+        case JobType.RenameServer:
           this.renameServerEvent.next(notification);
           break;
 
-        case McsJobType.DeleteServer:
+        case JobType.DeleteServer:
           this.deleteServerEvent.next(notification);
           break;
 
-        case McsJobType.ResetServerPassword:
+        case JobType.ResetServerPassword:
           this.resetServerPasswordEvent.next(notification);
           break;
 
-        case McsJobType.ChangeServerPowerState:
+        case JobType.ChangeServerPowerState:
           this.changeServerPowerStateEvent.next(notification);
           break;
 
-        case McsJobType.UpdateServerCompute:
+        case JobType.UpdateServerCompute:
           this.updateServerComputeEvent.next(notification);
           break;
 
-        case McsJobType.AttachServerMedia:
+        case JobType.AttachServerMedia:
           this.attachServerMediaEvent.next(notification);
           break;
 
-        case McsJobType.DetachServerMedia:
+        case JobType.DetachServerMedia:
           this.detachServerMediaEvent.next(notification);
           break;
 
-        case McsJobType.CreateServerDisk:
+        case JobType.CreateServerDisk:
           this.createServerDisk.next(notification);
           break;
 
-        case McsJobType.UpdateServerDisk:
+        case JobType.UpdateServerDisk:
           this.updateServerDisk.next(notification);
           break;
 
-        case McsJobType.DeleteServerDisk:
+        case JobType.DeleteServerDisk:
           this.deleteServerDisk.next(notification);
           break;
 
-        case McsJobType.CreateServerNic:
+        case JobType.CreateServerNic:
           this.createServerNic.next(notification);
           break;
 
-        case McsJobType.UpdateServerNic:
+        case JobType.UpdateServerNic:
           this.updateServerNic.next(notification);
           break;
 
-        case McsJobType.DeleteServerNic:
+        case JobType.DeleteServerNic:
           this.deleteServerNic.next(notification);
           break;
 
-        case McsJobType.CreateServerSnapshot:
+        case JobType.CreateServerSnapshot:
           this.createServerSnapshot.next(notification);
           break;
 
-        case McsJobType.ApplyServerSnapshot:
+        case JobType.ApplyServerSnapshot:
           this.applyServerSnapshot.next(notification);
           break;
 
-        case McsJobType.DeleteServerSnapshot:
+        case JobType.DeleteServerSnapshot:
           this.deleteServerSnapshot.next(notification);
           break;
 

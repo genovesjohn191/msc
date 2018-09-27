@@ -12,7 +12,7 @@ import {
   Search
 } from '@app/shared';
 import {
-  McsDataStatus,
+  DataStatus,
   McsResourceMedia
 } from '@app/models';
 import { MediaRepository } from '@app/services';
@@ -21,14 +21,14 @@ export class MediaDataSource implements McsDataSource<McsResourceMedia> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<McsDataStatus>;
+  public dataLoadingStream: Subject<DataStatus>;
 
   constructor(
     private _mediaRepository: MediaRepository,
     private _paginator: Paginator,
     private _search: Search
   ) {
-    this.dataLoadingStream = new Subject<McsDataStatus>();
+    this.dataLoadingStream = new Subject<DataStatus>();
   }
 
   /**
@@ -51,7 +51,7 @@ export class MediaDataSource implements McsDataSource<McsResourceMedia> {
           // and we need to check it here since the component can be recreated during runtime
           let isSearching = !isNullOrEmpty(instance) && instance.searching;
           if (!isSearching) {
-            this.dataLoadingStream.next(McsDataStatus.InProgress);
+            this.dataLoadingStream.next(DataStatus.InProgress);
           }
 
           // Find all records based on settings provided in the input
@@ -71,7 +71,7 @@ export class MediaDataSource implements McsDataSource<McsResourceMedia> {
   /**
    * This will invoke when the data obtainment is completed
    */
-  public onCompletion(_status: McsDataStatus, _record: McsResourceMedia[]): void {
+  public onCompletion(_status: DataStatus, _record: McsResourceMedia[]): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);

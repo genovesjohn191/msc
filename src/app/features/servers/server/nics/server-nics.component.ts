@@ -37,7 +37,7 @@ import {
 } from '@app/shared';
 import {
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsResourceNetwork,
   McsServerNic,
   McsServerCreateNic
@@ -408,13 +408,13 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         this._onAddingNic(job);
         break;
 
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         this.refreshServerResource();
-      case McsDataStatus.Error:
+      case DataStatus.Error:
       default:
         this.nicsDataSource.deleteRecord(this._newNic);
         break;
@@ -430,11 +430,11 @@ export class ServerNicsComponent extends ServerDetailsBase implements OnInit, On
 
     // Refresh the data when the nic in-progress is already completed
     let inProgressNicEnded = !isNullOrEmpty(this._inProgressNicId)
-      && job.dataStatus === McsDataStatus.Success;
+      && job.dataStatus === DataStatus.Success;
     if (inProgressNicEnded) { this.refreshServerResource(); }
 
     // Set the inprogress nic ID to be checked
-    this._inProgressNicId = job.dataStatus === McsDataStatus.InProgress ?
+    this._inProgressNicId = job.dataStatus === DataStatus.InProgress ?
       job.clientReferenceObject.nicId : undefined;
   }
 

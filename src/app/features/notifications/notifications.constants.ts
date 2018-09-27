@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoreRoutes } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Components */
 import { NotificationsComponent } from './notifications.component';
 
@@ -16,8 +16,8 @@ export const notificationsRoutesComponents: any[] = [
  */
 export const notificationsRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.Notifications),
+    path: CoreRoutes.getRoutePath(RouteKey.Notifications),
     component: NotificationsComponent,
-    data: { routeId: McsRouteKey.Notifications }
+    data: { routeId: RouteKey.Notifications }
   }
 ];

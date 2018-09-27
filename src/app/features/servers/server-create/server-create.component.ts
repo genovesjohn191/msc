@@ -26,8 +26,8 @@ import {
 } from '@app/core';
 import {
   ServiceType,
-  McsRouteKey,
-  McsDataStatus,
+  RouteKey,
+  DataStatus,
   McsResource
 } from '@app/models';
 import {
@@ -113,7 +113,7 @@ export class ServerCreateComponent implements
    * Navigate to servers listing page
    */
   public gotoServers() {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers)]);
   }
 
   /**
@@ -196,7 +196,7 @@ export class ServerCreateComponent implements
   private _listenToStatusChange(): void {
     this._serverCreateFlyweightContext.requestStatusChange
       .subscribe((status) => {
-        this.stepRequestInProgress = status === McsDataStatus.InProgress;
+        this.stepRequestInProgress = status === DataStatus.InProgress;
       });
   }
 }

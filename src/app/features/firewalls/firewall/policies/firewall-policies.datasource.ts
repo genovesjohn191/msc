@@ -8,7 +8,7 @@ import {
   map,
   switchMap
 } from 'rxjs/operators';
-import { McsDataStatus } from '@app/models';
+import { DataStatus } from '@app/models';
 import {
   isNullOrEmpty,
   getSafeProperty
@@ -26,7 +26,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<McsFirewallPoli
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<McsDataStatus>;
+  public dataLoadingStream: Subject<DataStatus>;
 
   /**
    * Returns the total record count obtained in the datasource
@@ -44,7 +44,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<McsFirewallPoli
     private _search: Search
   ) {
     this._totalRecordCount = 0;
-    this.dataLoadingStream = new Subject<McsDataStatus>();
+    this.dataLoadingStream = new Subject<DataStatus>();
   }
 
   /**
@@ -66,7 +66,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<McsFirewallPoli
           // and we need to check it here since the component can be recreated during runtime
           let isSearching = !isNullOrEmpty(instance) && (instance as any).searching;
           if (!isSearching) {
-            this.dataLoadingStream.next(McsDataStatus.InProgress);
+            this.dataLoadingStream.next(DataStatus.InProgress);
           }
 
           // Find all records based on settings provided in the input
@@ -96,7 +96,7 @@ export class FirewallPoliciesDataSource implements McsDataSource<McsFirewallPoli
    * This will invoke when the data obtainment is completed
    * @param policies Data to be provided when the datasource is connected
    */
-  public onCompletion(_status: McsDataStatus): void {
+  public onCompletion(_status: DataStatus): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);

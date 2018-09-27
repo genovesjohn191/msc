@@ -18,8 +18,8 @@ import {
   animateFactory
 } from '@app/utilities';
 import {
-  McsRouteKey,
-  McsRouteCategory
+  RouteKey,
+  RouteCategory
 } from '@app/models';
 
 @Component({
@@ -38,20 +38,20 @@ import {
 
 export class SubNavigationComponent implements OnInit, OnDestroy {
   public textContent: any;
-  public activeRouteCategory: McsRouteCategory;
+  public activeRouteCategory: RouteCategory;
 
   /**
    * Returns the route category enumeration
    */
   public get routeCategoryEnum(): any {
-    return McsRouteCategory;
+    return RouteCategory;
   }
 
   /**
    * Returns the route key enumeration
    */
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   /**
@@ -59,7 +59,7 @@ export class SubNavigationComponent implements OnInit, OnDestroy {
    */
   public get showSubNavigation(): boolean {
     return !isNullOrEmpty(this.activeRouteCategory)
-      && this.activeRouteCategory !== McsRouteCategory.None;
+      && this.activeRouteCategory !== RouteCategory.None;
   }
 
   private _destroySubject = new Subject<void>();

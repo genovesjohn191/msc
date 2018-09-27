@@ -1,7 +1,7 @@
 import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
-export enum McsDeviceType {
+export enum DeviceMode {
   Desktop,
   Tablet,
   MobileLandscape,
@@ -11,8 +11,8 @@ export enum McsDeviceType {
 /**
  * Enumeration serializer and deserializer methods
  */
-@CacheKey('McsDeviceTypeSerialization')
-export class McsDeviceTypeSerialization
-  extends McsEnumSerializationBase<McsDeviceType> {
-  constructor() { super(McsDeviceType); }
+@CacheKey('DeviceModeSerialization')
+export class DeviceModeSerialization
+  extends McsEnumSerializationBase<DeviceMode> {
+  constructor() { super(DeviceMode); }
 }

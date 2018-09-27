@@ -15,7 +15,7 @@ import {
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
 import {
-  McsRouteKey,
+  RouteKey,
   McsFileInfo,
   McsProduct,
   McsProductDownload,
@@ -80,6 +80,6 @@ export class ProductAnnexComponent implements OnInit, OnChanges, OnDestroy {
    */
   public onClickDependency(dependency: McsProductDependency): void {
     if (isNullOrEmpty(dependency)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), dependency.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetail), dependency.id]);
   }
 }

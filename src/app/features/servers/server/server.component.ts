@@ -49,7 +49,7 @@ import {
 } from '@app/shared';
 import {
   ServerCommand,
-  McsRouteKey,
+  RouteKey,
   McsServer,
   McsServerPlatform
 } from '@app/models';
@@ -102,7 +102,7 @@ export class ServerComponent
   }
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   private _destroySubject = new Subject<void>();
@@ -216,7 +216,7 @@ export class ServerComponent
    */
   protected onTabChanged(tab: any) {
     this.router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.ServerDetail),
+      CoreRoutes.getNavigationPath(RouteKey.ServerDetail),
       this.paramId,
       tab.id
     ]);

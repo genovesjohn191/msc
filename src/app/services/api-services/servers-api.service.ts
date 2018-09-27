@@ -27,7 +27,7 @@ import {
   McsApiRequestParameter,
   McsJob,
   McsApiJobRequestBase,
-  McsRouteKey,
+  RouteKey,
   McsServerCreate,
   McsServerRename,
   McsServerClone,
@@ -902,16 +902,16 @@ export class ServersApiService {
 
       case ServerCommand.Scale:
         this._router.navigate([
-          CoreRoutes.getNavigationPath(McsRouteKey.Servers),
+          CoreRoutes.getNavigationPath(RouteKey.Servers),
           data.server.id,
-          CoreRoutes.getNavigationPath(McsRouteKey.ServerDetailManagement)
+          CoreRoutes.getNavigationPath(RouteKey.ServerDetailManagement)
         ], { queryParams: { scale: true } }
         );
         break;
 
       case ServerCommand.Clone:
         this._router.navigate(
-          [CoreRoutes.getNavigationPath(McsRouteKey.ServerCreate)],
+          [CoreRoutes.getNavigationPath(RouteKey.ServerCreate)],
           { queryParams: { clone: data.server.id } }
         );
         break;
@@ -950,7 +950,7 @@ export class ServersApiService {
               return throwError(error);
             })
           ).subscribe();
-        this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Servers)]);
+        this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Servers)]);
         break;
 
       case ServerCommand.Rename:

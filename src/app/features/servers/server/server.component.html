@@ -3,7 +3,7 @@
   <ng-container *mcsPageHeader>
     <div class="inline-items-small">
       <div>
-        <a (click)="onSelectVdcByName($event, selectedServer.platform)"
+        <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, selectedServer?.platform?.resourceId]"
           mcsEventTracker="select-vdc"
           mcsEventCategory="vdc"
           mcsEventLabel="server-details-page">

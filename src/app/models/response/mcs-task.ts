@@ -1,12 +1,14 @@
 import { JsonProperty } from 'json-object-mapper';
 import { McsDateSerialization } from '@app/core';
 import {
-  McsDataStatus,
-  McsJobStatus,
-  McsJobStatusSerialization,
-  McsTaskType,
-  McsTaskTypeSerialization
-} from '@app/models';
+  TaskType,
+  TaskTypeSerialization
+} from '../enumerations/task-type.enum';
+import {
+  JobStatus,
+  JobStatusSerialization,
+} from '../enumerations/job-status.enum';
+import { DataStatus } from '../enumerations/data-status.enum';
 import { McsEntityBase } from '../mcs-entity.base';
 
 export class McsTask extends McsEntityBase {
@@ -18,18 +20,18 @@ export class McsTask extends McsEntityBase {
   public ectInSeconds: number;
 
   @JsonProperty({
-    type: McsTaskType,
-    serializer: McsTaskTypeSerialization,
-    deserializer: McsTaskTypeSerialization
+    type: TaskType,
+    serializer: TaskTypeSerialization,
+    deserializer: TaskTypeSerialization
   })
-  public type: McsTaskType;
+  public type: TaskType;
 
   @JsonProperty({
-    type: McsJobStatus,
-    serializer: McsJobStatusSerialization,
-    deserializer: McsJobStatusSerialization
+    type: JobStatus,
+    serializer: JobStatusSerialization,
+    deserializer: JobStatusSerialization
   })
-  public status: McsJobStatus;
+  public status: JobStatus;
 
   @JsonProperty({
     type: Date,
@@ -79,24 +81,24 @@ export class McsTask extends McsEntityBase {
    * Returns the task data status if in progress,
    * success or error based on the task status
    */
-  public get dataStatus(): McsDataStatus {
-    let dataStatus: McsDataStatus;
+  public get dataStatus(): DataStatus {
+    let dataStatus: DataStatus;
 
     switch (this.status) {
-      case McsJobStatus.Timedout:
-      case McsJobStatus.Failed:
-      case McsJobStatus.Cancelled:
-        dataStatus = McsDataStatus.Error;
+      case JobStatus.Timedout:
+      case JobStatus.Failed:
+      case JobStatus.Cancelled:
+        dataStatus = DataStatus.Error;
         break;
 
-      case McsJobStatus.Completed:
-        dataStatus = McsDataStatus.Success;
+      case JobStatus.Completed:
+        dataStatus = DataStatus.Success;
         break;
 
-      case McsJobStatus.Pending:
-      case McsJobStatus.Active:
+      case JobStatus.Pending:
+      case JobStatus.Active:
       default:
-        dataStatus = McsDataStatus.InProgress;
+        dataStatus = DataStatus.InProgress;
         break;
     }
     return dataStatus;

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsErrorHandlerService } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { McsHttpStatusCode } from '@app/models';
+import { HttpStatusCode } from '@app/models';
 import { ServerCreateService } from './server-create.service';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class ServerCreateGuard implements CanActivate {
       .pipe(
         map((resources) => {
           if (isNullOrEmpty(resources)) {
-            this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.Forbidden);
+            this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);
             return false;
           }
           return true;

@@ -1,18 +1,18 @@
 import { McsEnumSerializationBase } from '@app/core';
 import { CacheKey } from 'json-object-mapper';
 
-export enum McsUnitType {
+export enum UnitType {
   Kilobyte,
   Megabyte,
   Gigabyte,
   CPU
 }
 
-export const mcsUnitTypeText = {
-  [McsUnitType.Kilobyte]: 'KB',
-  [McsUnitType.Megabyte]: 'MB',
-  [McsUnitType.Gigabyte]: 'GB',
-  [McsUnitType.CPU]: 'vCPU'
+export const unitTypeText = {
+  [UnitType.Kilobyte]: 'KB',
+  [UnitType.Megabyte]: 'MB',
+  [UnitType.Gigabyte]: 'GB',
+  [UnitType.CPU]: 'vCPU'
 };
 
 /**
@@ -20,6 +20,6 @@ export const mcsUnitTypeText = {
  */
 @CacheKey('McsUnitTypeSerialization')
 export class McsUnitTypeSerialization
-  extends McsEnumSerializationBase<McsUnitType> {
-  constructor() { super(McsUnitType); }
+  extends McsEnumSerializationBase<UnitType> {
+  constructor() { super(UnitType); }
 }

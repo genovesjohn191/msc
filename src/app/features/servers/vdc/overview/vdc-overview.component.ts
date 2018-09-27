@@ -18,7 +18,7 @@ import {
   replacePlaceholder
 } from '@app/utilities';
 import {
-  McsRouteKey,
+  RouteKey,
   McsResource,
   McsResourceStorage
 } from '@app/models';
@@ -41,7 +41,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   public get routeKeyEnum(): any {
-    return McsRouteKey;
+    return RouteKey;
   }
 
   /**
@@ -99,9 +99,9 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Navigate details tab into given key route
    * @param keyRoute Keyroute where to navigate
    */
-  public navigateVdcDetailTo(keyRoute: McsRouteKey): void {
+  public navigateVdcDetailTo(keyRoute: RouteKey): void {
     this._router.navigate([
-      CoreRoutes.getNavigationPath(McsRouteKey.VdcDetail),
+      CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
       this.selectedVdc.id,
       CoreRoutes.getNavigationPath(keyRoute)
     ]);
@@ -147,7 +147,7 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
    * Redirects to create new server page
    */
   public createNewServer(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ServerCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ServerCreate)]);
   }
 
   /**

@@ -5,15 +5,17 @@ import {
   McsDateSerialization
 } from '@app/core';
 import {
-  McsTask,
-  McsDataStatus,
-  McsRouteKey,
-  McsJobType,
-  McsJobTypeSerialization,
-  McsJobStatus,
-  McsJobStatusSerialization
-} from '@app/models';
+  JobStatus,
+  JobStatusSerialization
+} from '../enumerations/job-status.enum';
+import {
+  JobType,
+  JobTypeSerialization,
+} from '../enumerations/job-type.enum';
+import { RouteKey } from '../enumerations/route-key.enum';
+import { DataStatus } from '../enumerations/data-status.enum';
 import { McsEntityBase } from '../mcs-entity.base';
+import { McsTask } from './mcs-task';
 
 export class McsJob extends McsEntityBase {
   public initiatorId: string;
@@ -30,18 +32,18 @@ export class McsJob extends McsEntityBase {
   public tasks: McsTask[];
 
   @JsonProperty({
-    type: McsJobType,
-    serializer: McsJobTypeSerialization,
-    deserializer: McsJobTypeSerialization
+    type: JobType,
+    serializer: JobTypeSerialization,
+    deserializer: JobTypeSerialization
   })
-  public type: McsJobType;
+  public type: JobType;
 
   @JsonProperty({
-    type: McsJobStatus,
-    serializer: McsJobStatusSerialization,
-    deserializer: McsJobStatusSerialization
+    type: JobStatus,
+    serializer: JobStatusSerialization,
+    deserializer: JobStatusSerialization
   })
-  public status: McsJobStatus;
+  public status: JobStatus;
 
   @JsonProperty({
     type: Date,
@@ -95,24 +97,24 @@ export class McsJob extends McsEntityBase {
    * Returns the job data status if in progress,
    * success or error based on the job status
    */
-  public get dataStatus(): McsDataStatus {
-    let dataStatus: McsDataStatus;
+  public get dataStatus(): DataStatus {
+    let dataStatus: DataStatus;
 
     switch (this.status) {
-      case McsJobStatus.Timedout:
-      case McsJobStatus.Failed:
-      case McsJobStatus.Cancelled:
-        dataStatus = McsDataStatus.Error;
+      case JobStatus.Timedout:
+      case JobStatus.Failed:
+      case JobStatus.Cancelled:
+        dataStatus = DataStatus.Error;
         break;
 
-      case McsJobStatus.Completed:
-        dataStatus = McsDataStatus.Success;
+      case JobStatus.Completed:
+        dataStatus = DataStatus.Success;
         break;
 
-      case McsJobStatus.Pending:
-      case McsJobStatus.Active:
+      case JobStatus.Pending:
+      case JobStatus.Active:
       default:
-        dataStatus = McsDataStatus.InProgress;
+        dataStatus = DataStatus.InProgress;
         break;
     }
     return dataStatus;
@@ -127,10 +129,10 @@ export class McsJob extends McsEntityBase {
   public get link(): string {
     let jobLink: string = '';
     switch (this.type) {
-      case McsJobType.CreateServer:
-      case McsJobType.CloneServer:
+      case JobType.CreateServer:
+      case JobType.CloneServer:
         jobLink = `
-          ${CoreRoutes.getNavigationPath(McsRouteKey.ServerCreateProvisioning)}/${this.id}
+          ${CoreRoutes.getNavigationPath(RouteKey.ServerCreateProvisioning)}/${this.id}
         `;
         break;
 

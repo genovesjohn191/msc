@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { McsTextContentProvider } from '@app/core';
-import { McsHttpStatusCode } from '@app/models';
+import { HttpStatusCode } from '@app/models';
 import {
   unsubscribeSubject,
   isNullOrEmpty
@@ -33,17 +33,17 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
   /**
    * Error code of the current http request
    */
-  public get errorCode(): McsHttpStatusCode { return this._errorCode; }
-  public set errorCode(value: McsHttpStatusCode) {
+  public get errorCode(): HttpStatusCode { return this._errorCode; }
+  public set errorCode(value: HttpStatusCode) {
     if (this._errorCode !== value) {
       this._errorCode = value;
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _errorCode: McsHttpStatusCode = McsHttpStatusCode.Success;
+  private _errorCode: HttpStatusCode = HttpStatusCode.Success;
 
   private _destroySubject = new Subject<void>();
-  public get httpStatusCodeEnum(): any { return McsHttpStatusCode; }
+  public get httpStatusCodeEnum(): any { return HttpStatusCode; }
 
   public constructor(
     private _locationService: Location,
@@ -80,7 +80,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         // We need to set manually the notFound error since there
         // are no parameter code in that case
         if (this.errorCode === 0) {
-          this.errorCode = McsHttpStatusCode.NotFound;
+          this.errorCode = HttpStatusCode.NotFound;
         }
         this._setTextContent();
       });
@@ -101,31 +101,31 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
    */
   private _setTextContent(): void {
     switch (this.errorCode) {
-      case McsHttpStatusCode.InternalServerError:
+      case HttpStatusCode.InternalServerError:
         this.textContent = this.textContentAll.serverError;
         break;
 
-      case McsHttpStatusCode.Unprocessable:
+      case HttpStatusCode.Unprocessable:
         this.textContent = this.textContentAll.unprocessable;
         break;
 
-      case McsHttpStatusCode.ServiceUnavailable:
+      case HttpStatusCode.ServiceUnavailable:
         this.textContent = this.textContentAll.serviceUnavailable;
         break;
 
-      case McsHttpStatusCode.Unauthorized:
+      case HttpStatusCode.Unauthorized:
         this.textContent = this.textContentAll.unauthorized;
         break;
 
-      case McsHttpStatusCode.Forbidden:
+      case HttpStatusCode.Forbidden:
         this.textContent = this.textContentAll.forbidden;
         break;
 
-      case McsHttpStatusCode.ReadOnlyMode:
+      case HttpStatusCode.ReadOnlyMode:
         this.textContent = this.textContentAll.readOnlyMode;
         break;
 
-      case McsHttpStatusCode.NotFound:
+      case HttpStatusCode.NotFound:
       default:
         this.textContent = this.textContentAll.notFound;
         break;

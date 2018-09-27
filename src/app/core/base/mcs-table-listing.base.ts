@@ -11,7 +11,7 @@ import {
 } from '@app/utilities';
 import {
   McsFilterInfo,
-  McsDeviceType
+  DeviceMode
 } from '@app/models';
 import {
   Search,
@@ -157,8 +157,8 @@ export abstract class McsTableListingBase<T> {
     this.browserService.deviceTypeStream
       .pipe(takeUntil(this._baseDestroySubject))
       .subscribe((deviceType) => {
-        this.isMobile = deviceType === McsDeviceType.MobileLandscape ||
-          deviceType === McsDeviceType.MobilePortrait;
+        this.isMobile = deviceType === DeviceMode.MobileLandscape ||
+          deviceType === DeviceMode.MobilePortrait;
       });
   }
 }

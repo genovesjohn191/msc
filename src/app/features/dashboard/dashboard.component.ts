@@ -12,7 +12,7 @@ import {
   CoreDefinition,
   CoreRoutes
 } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 
 @Component({
   selector: 'mcs-dashboard',
@@ -65,6 +65,6 @@ export class DashboardComponent implements OnInit {
    * Navigates to create ticket page
    */
   public gotoCreateTicket(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.TicketCreate)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.TicketCreate)]);
   }
 }

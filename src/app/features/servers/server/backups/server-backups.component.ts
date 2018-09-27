@@ -31,7 +31,7 @@ import {
 import { StdDateFormatPipe } from '@app/shared';
 import {
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsServerSnapshot,
   McsServerStorageDevice
 } from '@app/models';
@@ -321,13 +321,13 @@ export class ServerBackupsComponent extends ServerDetailsBase
     if (!this.serverIsActiveByJob(job)) { return; }
 
     switch (job.dataStatus) {
-      case McsDataStatus.InProgress:
+      case DataStatus.InProgress:
         this._onCreatingSnapshot(job);
         break;
 
-      case McsDataStatus.Success:
+      case DataStatus.Success:
         this.refreshServerResource();
-      case McsDataStatus.Error:
+      case DataStatus.Error:
       default:
         this._newSnapshot = undefined;
         break;
@@ -343,10 +343,10 @@ export class ServerBackupsComponent extends ServerDetailsBase
 
     // We need to set the processing flag manually here in order to cater
     // from moving one server to another
-    this._snapshotProcessing = job.dataStatus === McsDataStatus.InProgress;
+    this._snapshotProcessing = job.dataStatus === DataStatus.InProgress;
 
     // Update the server snapshot
-    if (job.dataStatus === McsDataStatus.Success) {
+    if (job.dataStatus === DataStatus.Success) {
       this.refreshServerResource();
     }
   }

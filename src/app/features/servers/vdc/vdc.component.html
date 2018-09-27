@@ -17,7 +17,7 @@
                 <mcs-option-group [selected]="isSelected(iterator.key)">
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
-                      <a (click)="onSelectVdcByName($event, iterator.key)">
+                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]">
                         {{ iterator.key?.resourceName }}
                       </a>
                     </ng-container>

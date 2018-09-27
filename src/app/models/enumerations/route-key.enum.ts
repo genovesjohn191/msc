@@ -1,4 +1,4 @@
-export enum McsRouteKey {
+export enum RouteKey {
   Dashboard = 1,
 
   Console,

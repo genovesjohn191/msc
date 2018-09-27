@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoreRoutes } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Components */
 import { HttpErrorPageComponent } from './http-error-page.component';
 
@@ -16,8 +16,8 @@ export const httpErrorRoutesComponents: any[] = [
  */
 export const httpErrorPageRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.HttpErrorPage),
+    path: CoreRoutes.getRoutePath(RouteKey.HttpErrorPage),
     component: HttpErrorPageComponent,
-    data: { routeId: McsRouteKey.HttpErrorPage }
+    data: { routeId: RouteKey.HttpErrorPage }
   }
 ];

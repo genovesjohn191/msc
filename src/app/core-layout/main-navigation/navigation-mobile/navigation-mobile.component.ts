@@ -42,7 +42,7 @@ import {
 } from '@app/utilities';
 import {
   McsCompany,
-  McsRouteKey,
+  RouteKey,
   McsProduct,
   McsProductCatalog
 } from '@app/models';
@@ -186,7 +186,7 @@ export class NavigationMobileComponent implements OnInit, OnDestroy {
    */
   public gotoProduct(_product: McsProduct) {
     if (isNullOrEmpty(_product)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.ProductDetail), _product.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.ProductDetail), _product.id]);
   }
 
   /**

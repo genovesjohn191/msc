@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoreRoutes } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Components */
 import { ToolsComponent } from './tools.component';
 
@@ -16,8 +16,8 @@ export const toolsRoutesComponents: any[] = [
  */
 export const toolsRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.OtherTools),
+    path: CoreRoutes.getRoutePath(RouteKey.OtherTools),
     component: ToolsComponent,
-    data: { routeId: McsRouteKey.OtherTools }
+    data: { routeId: RouteKey.OtherTools }
   }
 ];

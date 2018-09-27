@@ -12,9 +12,9 @@ import {
   ServerCommandSerialization
 } from '../enumerations/server-command.enum';
 import {
-  McsJobStatus,
-  McsJobStatusSerialization
-} from '../enumerations/mcs-job-status.enum';
+  JobStatus,
+  JobStatusSerialization
+} from '../enumerations/job-status.enum';
 
 export class McsServerClientObject {
   public serverId?: any;
@@ -44,11 +44,11 @@ export class McsServerClientObject {
   public serviceType?: ServiceType;
 
   @JsonProperty({
-    type: McsJobStatus,
-    serializer: McsJobStatusSerialization,
-    deserializer: McsJobStatusSerialization
+    type: JobStatus,
+    serializer: JobStatusSerialization,
+    deserializer: JobStatusSerialization
   })
-  public notificationStatus?: McsJobStatus;
+  public notificationStatus?: JobStatus;
 
   constructor() {
     this.serverId = undefined;

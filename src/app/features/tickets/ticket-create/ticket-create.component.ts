@@ -40,7 +40,7 @@ import {
   serviceTypeText,
   McsFileInfo,
   McsOption,
-  McsRouteKey,
+  RouteKey,
   McsFirewall,
   McsResource,
   McsServer,
@@ -202,7 +202,7 @@ export class TicketCreateComponent implements
    * Navigate to ticket listing
    */
   public gotoTickets(): void {
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Tickets)]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]);
   }
 
   /**
@@ -260,7 +260,7 @@ export class TicketCreateComponent implements
           return throwError(error);
         })
       )
-      .subscribe(() => this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.Tickets)]));
+      .subscribe(() => this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Tickets)]));
   }
 
   /**

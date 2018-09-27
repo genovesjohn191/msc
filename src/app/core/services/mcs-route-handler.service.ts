@@ -19,7 +19,7 @@ import {
   McsInitializer
 } from '@app/utilities';
 import {
-  McsHttpStatusCode,
+  HttpStatusCode,
   McsRouteInfo
 } from '@app/models';
 import { CoreRoutes } from '../core.routes';
@@ -157,7 +157,7 @@ export class McsRouteHandlerService implements McsInitializer {
    */
   private _navigateToForbiddenPage() {
     this._loggerService.traceInfo(`ROUTE ACCESS DENIED!`);
-    this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.Forbidden);
+    this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.Forbidden);
   }
 
   /**
@@ -165,6 +165,6 @@ export class McsRouteHandlerService implements McsInitializer {
    */
   private _navigateToNotFoundPage() {
     this._loggerService.traceInfo('FEATURE FLAG IS TURNED OFF!');
-    this._errorHandlerService.handleHttpRedirectionError(McsHttpStatusCode.NotFound);
+    this._errorHandlerService.handleHttpRedirectionError(HttpStatusCode.NotFound);
   }
 }

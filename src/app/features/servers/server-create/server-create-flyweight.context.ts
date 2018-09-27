@@ -24,7 +24,7 @@ import {
   OrderIdType,
   ServiceType,
   McsJob,
-  McsDataStatus,
+  DataStatus,
   McsOrder,
   McsOrderUpdate,
   McsOrderItemUpdate,
@@ -62,10 +62,10 @@ export class ServerCreateFlyweightContext {
   }
   private _orderChange: Subject<McsOrder>;
 
-  public get requestStatusChange(): Observable<McsDataStatus> {
+  public get requestStatusChange(): Observable<DataStatus> {
     return this._requestStatusChange.pipe(distinctUntilChanged());
   }
-  private _requestStatusChange: Subject<McsDataStatus>;
+  private _requestStatusChange: Subject<DataStatus>;
 
   constructor(
     private _ordersService: OrdersApiService,
@@ -73,7 +73,7 @@ export class ServerCreateFlyweightContext {
     private _errorHandlerService: McsErrorHandlerService
   ) {
     this._jobs = new Array();
-    this._requestStatusChange = new Subject<McsDataStatus>();
+    this._requestStatusChange = new Subject<DataStatus>();
   }
 
   /**
@@ -146,16 +146,16 @@ export class ServerCreateFlyweightContext {
     targetOrder.description = _updatedOrder.description;
     targetOrder.contractDuration = 2;
 
-    this._requestStatusChange.next(McsDataStatus.InProgress);
+    this._requestStatusChange.next(DataStatus.InProgress);
     this._ordersService.updateOrder(_updatedOrder.id, targetOrder)
       .pipe(
         catchError((error) => {
-          this._requestStatusChange.next(McsDataStatus.Error);
+          this._requestStatusChange.next(DataStatus.Error);
           return throwError(error);
         })
       )
       .subscribe((responseOrder) => {
-        this._requestStatusChange.next(McsDataStatus.Success);
+        this._requestStatusChange.next(DataStatus.Success);
         this._setOrderDetails(getSafeProperty(responseOrder, (obj) => obj.content));
       });
   }
@@ -192,16 +192,16 @@ export class ServerCreateFlyweightContext {
         .pipe(map((response) => getSafeProperty(response, (obj) => obj.content)));
     }
 
-    this._requestStatusChange.next(McsDataStatus.InProgress);
+    this._requestStatusChange.next(DataStatus.InProgress);
     return serverInstance.pipe(
       tap((response) => {
         response instanceof McsJob ?
           this.setJob(response) :
           this._setOrderDetails(response);
-        this._requestStatusChange.next(McsDataStatus.Success);
+        this._requestStatusChange.next(DataStatus.Success);
       }),
       catchError((error) => {
-        this._requestStatusChange.next(McsDataStatus.Error);
+        this._requestStatusChange.next(DataStatus.Error);
         this._errorHandlerService.handleHttpRedirectionError(error.status);
         return throwError(error);
       })

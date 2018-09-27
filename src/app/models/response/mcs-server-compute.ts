@@ -1,8 +1,8 @@
-import {
-  McsUnitType,
-  mcsUnitTypeText
-} from '../enumerations/mcs-unit-type.enum';
 import { isNullOrEmpty } from '@app/utilities';
+import {
+  UnitType,
+  unitTypeText
+} from '../enumerations/unit-type.enum';
 
 export class McsServerCompute {
   public cpuCount: number;
@@ -20,7 +20,7 @@ export class McsServerCompute {
    */
   public get cpuCountLabel(): string {
     return (!isNullOrEmpty(this.cpuCount) || !isNullOrEmpty(this.coreCount)) ?
-      `${this.cpuCount * this.coreCount} ${mcsUnitTypeText[McsUnitType.CPU]}` :
+      `${this.cpuCount * this.coreCount} ${unitTypeText[UnitType.CPU]}` :
       undefined;
   }
 
@@ -29,7 +29,7 @@ export class McsServerCompute {
    */
   public get memoryMBLabel(): string {
     return (!isNullOrEmpty(this.memoryMB)) ?
-      `${this.memoryMB} ${mcsUnitTypeText[McsUnitType.Megabyte]}` :
+      `${this.memoryMB} ${unitTypeText[UnitType.Megabyte]}` :
       undefined;
   }
 }

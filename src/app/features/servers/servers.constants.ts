@@ -3,7 +3,7 @@ import {
   McsNavigateAwayGuard,
   CoreRoutes
 } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Services */
 import { ServerService } from './server/';
 import { ServersServices } from './servers.service';
@@ -62,73 +62,73 @@ export const serversRoutesComponents: any[] = [
  */
 export const serversRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.Servers),
+    path: CoreRoutes.getRoutePath(RouteKey.Servers),
     component: ServersComponent,
-    data: { routeId: McsRouteKey.Servers }
+    data: { routeId: RouteKey.Servers }
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.ServerCreate),
+    path: CoreRoutes.getRoutePath(RouteKey.ServerCreate),
     component: ServerCreateComponent,
     canActivate: [ServerCreateGuard],
     canDeactivate: [McsNavigateAwayGuard],
-    data: { routeId: McsRouteKey.ServerCreate }
+    data: { routeId: RouteKey.ServerCreate }
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.ServerCreateProvisioning),
+    path: CoreRoutes.getRoutePath(RouteKey.ServerCreateProvisioning),
     component: ServerProvisioningComponent,
-    data: { routeId: McsRouteKey.ServerCreateProvisioning }
+    data: { routeId: RouteKey.ServerCreateProvisioning }
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetail),
+    path: CoreRoutes.getRoutePath(RouteKey.ServerDetail),
     component: ServerComponent,
-    data: { routeId: McsRouteKey.ServerDetail },
+    data: { routeId: RouteKey.ServerDetail },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailManagement),
+        redirectTo: CoreRoutes.getRoutePath(RouteKey.ServerDetailManagement),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailManagement),
+        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailManagement),
         component: ServerManagementComponent,
-        data: { routeId: McsRouteKey.ServerDetailManagement }
+        data: { routeId: RouteKey.ServerDetailManagement }
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailStorage),
+        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailStorage),
         component: ServerStorageComponent,
-        data: { routeId: McsRouteKey.ServerDetailStorage }
+        data: { routeId: RouteKey.ServerDetailStorage }
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailNics),
+        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailNics),
         component: ServerNicsComponent,
-        data: { routeId: McsRouteKey.ServerDetailNics }
+        data: { routeId: RouteKey.ServerDetailNics }
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.ServerDetailBackups),
+        path: CoreRoutes.getRoutePath(RouteKey.ServerDetailBackups),
         component: ServerBackupsComponent,
-        data: { routeId: McsRouteKey.ServerDetailBackups }
+        data: { routeId: RouteKey.ServerDetailBackups }
       }
     ]
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.VdcDetail),
+    path: CoreRoutes.getRoutePath(RouteKey.VdcDetail),
     component: VdcComponent,
-    data: { routeId: McsRouteKey.VdcDetail },
+    data: { routeId: RouteKey.VdcDetail },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.VdcDetailOverview),
+        redirectTo: CoreRoutes.getRoutePath(RouteKey.VdcDetailOverview),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.VdcDetailOverview),
+        path: CoreRoutes.getRoutePath(RouteKey.VdcDetailOverview),
         component: VdcOverviewComponent,
-        data: { routeId: McsRouteKey.VdcDetailOverview }
+        data: { routeId: RouteKey.VdcDetailOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.VdcDetailStorage),
+        path: CoreRoutes.getRoutePath(RouteKey.VdcDetailStorage),
         component: VdcStorageComponent,
-        data: { routeId: McsRouteKey.VdcDetailStorage }
+        data: { routeId: RouteKey.VdcDetailStorage }
       }
     ]
   }

@@ -21,7 +21,7 @@ import {
 } from '@app/utilities';
 import { TableComponent } from '@app/shared';
 import {
-  McsRouteKey,
+  RouteKey,
   McsFirewall
 } from '@app/models';
 import { FirewallsRepository } from '@app/services';
@@ -80,7 +80,7 @@ export class FirewallsComponent
    */
   public navigateToFirewall(firewall: McsFirewall): void {
     if (isNullOrEmpty(firewall)) { return; }
-    this._router.navigate([CoreRoutes.getNavigationPath(McsRouteKey.FirewallDetail), firewall.id]);
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.FirewallDetail), firewall.id]);
   }
 
   /**

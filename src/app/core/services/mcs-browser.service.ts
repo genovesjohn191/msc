@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
   McsSize,
-  McsDeviceType
+  DeviceMode
 } from '@app/models';
 import { CoreDefinition } from '../core.definition';
 
@@ -14,11 +14,11 @@ export class McsBrowserService {
    * This will notify all subscribers when the browser is resized
    * and provide the device type based on the current size of the window (browser)
    */
-  private _deviceTypeStream: BehaviorSubject<McsDeviceType>;
-  public get deviceTypeStream(): BehaviorSubject<McsDeviceType> {
+  private _deviceTypeStream: BehaviorSubject<DeviceMode>;
+  public get deviceTypeStream(): BehaviorSubject<DeviceMode> {
     return this._deviceTypeStream;
   }
-  public set deviceTypeStream(value: BehaviorSubject<McsDeviceType>) {
+  public set deviceTypeStream(value: BehaviorSubject<DeviceMode>) {
     this._deviceTypeStream = value;
   }
 
@@ -36,7 +36,7 @@ export class McsBrowserService {
   }
 
   constructor() {
-    this._deviceTypeStream = new BehaviorSubject<McsDeviceType>(McsDeviceType.Desktop);
+    this._deviceTypeStream = new BehaviorSubject<DeviceMode>(DeviceMode.Desktop);
     this._windowSizeStream = new BehaviorSubject<McsSize>(new McsSize());
     this.initialize();
   }
@@ -73,16 +73,16 @@ export class McsBrowserService {
 
     // Notify device type subscriber
     if (width >= CoreDefinition.DESKTOP_MIN_WIDTH) {
-      this._deviceTypeStream.next(McsDeviceType.Desktop);
+      this._deviceTypeStream.next(DeviceMode.Desktop);
 
     } else if (width >= CoreDefinition.TABLET_MIN_WIDTH) {
-      this._deviceTypeStream.next(McsDeviceType.Tablet);
+      this._deviceTypeStream.next(DeviceMode.Tablet);
 
     } else if (width >= CoreDefinition.MOBILE_LANDSCAPE_MIN_WIDTH) {
-      this._deviceTypeStream.next(McsDeviceType.MobileLandscape);
+      this._deviceTypeStream.next(DeviceMode.MobileLandscape);
 
     } else {
-      this._deviceTypeStream.next(McsDeviceType.MobilePortrait);
+      this._deviceTypeStream.next(DeviceMode.MobilePortrait);
 
     }
   }

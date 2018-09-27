@@ -12,7 +12,7 @@ import {
   Search
 } from '@app/shared';
 import {
-  McsDataStatus,
+  DataStatus,
   McsJob
 } from '@app/models';
 import { NotificationsRepository } from '@app/services';
@@ -21,14 +21,14 @@ export class NotificationsDataSource implements McsDataSource<McsJob> {
   /**
    * This will notify the subscribers of the datasource that the obtainment is InProgress
    */
-  public dataLoadingStream: Subject<McsDataStatus>;
+  public dataLoadingStream: Subject<DataStatus>;
 
   constructor(
     private _notificationsRepository: NotificationsRepository,
     private _paginator: Paginator,
     private _search: Search
   ) {
-    this.dataLoadingStream = new Subject<McsDataStatus>();
+    this.dataLoadingStream = new Subject<DataStatus>();
   }
 
   /**
@@ -51,7 +51,7 @@ export class NotificationsDataSource implements McsDataSource<McsJob> {
           // and we need to check it here since the component can be recreated during runtime
           let isSearching = !isNullOrEmpty(instance) && instance.searching;
           if (!isSearching) {
-            this.dataLoadingStream.next(McsDataStatus.InProgress);
+            this.dataLoadingStream.next(DataStatus.InProgress);
           }
 
           // Find all records based on settings provided in the input
@@ -72,7 +72,7 @@ export class NotificationsDataSource implements McsDataSource<McsJob> {
    * This will invoke when the data obtainment is completed
    * @param notifications Data to be provided when the datasource is connected
    */
-  public onCompletion(_status: McsDataStatus): void {
+  public onCompletion(_status: DataStatus): void {
     // Execute all data from completion
     this._search.showLoading(false);
     this._paginator.showLoading(false);

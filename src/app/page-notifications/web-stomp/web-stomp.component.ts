@@ -16,7 +16,7 @@ import {
   McsNotificationContextService
 } from '@app/core';
 import { isNullOrEmpty } from '@app/utilities';
-import { McsNetworkStatus } from '@app/models';
+import { NetworkStatus } from '@app/models';
 
 const DEFAULT_SUCCESS_SNACKBAR_DURATION = 5000;
 
@@ -75,7 +75,7 @@ export class WebStompComponent implements OnInit {
       .subscribe((connectionStatus) => {
         // Stomp is connected
         let stompIsConnected = !isNullOrEmpty(this.stompErrorStatusBarRef)
-          && (connectionStatus === McsNetworkStatus.Success)
+          && (connectionStatus === NetworkStatus.Success)
           && this._encounteredError;
         if (stompIsConnected) {
           this._hideStompErrorStatusBar();

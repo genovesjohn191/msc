@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoreRoutes } from '@app/core';
-import { McsRouteKey } from '@app/models';
+import { RouteKey } from '@app/models';
 /** Components */
 import { MediaComponent } from './media.component';
 import {
@@ -32,29 +32,29 @@ export const mediaRoutesComponents: any[] = [
  */
 export const mediaRoutes: Routes = [
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.Media),
+    path: CoreRoutes.getRoutePath(RouteKey.Media),
     component: MediaComponent,
-    data: { routeId: McsRouteKey.Media }
+    data: { routeId: RouteKey.Media }
   },
   {
-    path: CoreRoutes.getRoutePath(McsRouteKey.Medium),
+    path: CoreRoutes.getRoutePath(RouteKey.Medium),
     component: MediumComponent,
-    data: { routeId: McsRouteKey.Medium },
+    data: { routeId: RouteKey.Medium },
     children: [
       {
         path: '',
-        redirectTo: CoreRoutes.getRoutePath(McsRouteKey.MediumOverview),
+        redirectTo: CoreRoutes.getRoutePath(RouteKey.MediumOverview),
         pathMatch: 'full'
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.MediumOverview),
+        path: CoreRoutes.getRoutePath(RouteKey.MediumOverview),
         component: MediumOverviewComponent,
-        data: { routeId: McsRouteKey.MediumOverview }
+        data: { routeId: RouteKey.MediumOverview }
       },
       {
-        path: CoreRoutes.getRoutePath(McsRouteKey.MediumServers),
+        path: CoreRoutes.getRoutePath(RouteKey.MediumServers),
         component: MediumServersComponent,
-        data: { routeId: McsRouteKey.MediumServers }
+        data: { routeId: RouteKey.MediumServers }
       }
     ]
   }
