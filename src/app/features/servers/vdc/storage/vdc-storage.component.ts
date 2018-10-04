@@ -6,22 +6,13 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
-  Subscription,
-  throwError
-} from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import {
   CoreDefinition,
-  McsTextContentProvider,
-  McsDataStatusFactory
+  McsTextContentProvider
 } from '@app/core';
-import {
-  isNullOrEmpty,
-  unsubscribeSafely,
-  getSafeProperty
-} from '@app/utilities';
+import { isNullOrEmpty } from '@app/utilities';
 import { McsResourceStorage } from '@app/models';
 import { ResourcesRepository } from '@app/services';
+import { TableDataSource } from '@app/shared';
 import { VdcService } from '../vdc.service';
 import { VdcDetailsBase } from '../vdc-details.base';
 
@@ -36,9 +27,8 @@ import { VdcDetailsBase } from '../vdc-details.base';
 
 export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDestroy {
   public textContent: any;
-  public dataStatusFactory: McsDataStatusFactory<McsResourceStorage[]>;
-
-  public storagesSubscription: Subscription;
+  public storageDatasource: TableDataSource<McsResourceStorage>;
+  public storageColumns: string[];
 
   public get storageIconKey(): string {
     return CoreDefinition.ASSETS_SVG_STORAGE;
@@ -64,38 +54,43 @@ export class VdcStorageComponent extends VdcDetailsBase implements OnInit, OnDes
       _changeDetectorRef,
       _textContentProvider
     );
-    this.dataStatusFactory = new McsDataStatusFactory(this._changeDetectorRef);
+    this.storageColumns = new Array();
+    this.storageDatasource = new TableDataSource<McsResourceStorage>([]);
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers.vdc.storage;
     this.initialize();
-    this._getVdcStorage();
+    this._setDataColumns();
   }
 
   public ngOnDestroy() {
     this.dispose();
-    unsubscribeSafely(this.storagesSubscription);
   }
 
   /**
-   * Get the current vdc storage
+   * An abstract method that get notified when the vdc selection has been changed
    */
-  private _getVdcStorage(): void {
-    let hasResource = getSafeProperty(this.selectedVdc, (obj) => obj.id);
-    if (!hasResource) { return; }
+  protected vdcSelectionChange(): void {
+    this._initializeDataSource();
+  }
 
-    unsubscribeSafely(this.storagesSubscription);
-    this.dataStatusFactory.setInProgress();
-    this.storagesSubscription = this._resourcesRespository
-      .findResourceStorage(this.selectedVdc)
-      .pipe(
-        catchError((error) => {
-          // Handle common error status code
-          this.dataStatusFactory.setError();
-          return throwError(error);
-        })
-      )
-      .subscribe((response) => this.dataStatusFactory.setSuccessful(response));
+  /**
+   * Sets data column for the corresponding table
+   */
+  private _setDataColumns(): void {
+    this.storageColumns = Object.keys(this.textContent.columnHeaders);
+    if (isNullOrEmpty(this.storageColumns)) {
+      throw new Error('column definition for storage was not defined');
+    }
+  }
+
+  /**
+   * Initializes the data source of the nics table
+   */
+  private _initializeDataSource(): void {
+    this.storageDatasource = new TableDataSource(
+      this._resourcesRespository.findResourceStorage(this.selectedVdc)
+    );
   }
 }

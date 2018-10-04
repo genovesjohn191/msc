@@ -95,8 +95,9 @@
             </mcs-list-item>
             <mcs-list-item class="form-field-inline">
               <span>{{ textContent.storageProfiles.utilisation }}:</span>
-              <mcs-capacity-bar [(ngModel)]="storage.usedMB"
-                [max]="storage.limitMB" class="full-width"></mcs-capacity-bar>
+              <mcs-capacity-bar class="full-width"
+                [(ngModel)]="storage.usedMB"
+                [maxValue]="storage.limitMB"></mcs-capacity-bar>
             </mcs-list-item>
           </mcs-list>
 

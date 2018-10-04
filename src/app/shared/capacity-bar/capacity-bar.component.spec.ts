@@ -46,13 +46,13 @@ describe('CapacityBarComponent', () => {
     });
 
     it('should get the percentage based on the provided value and max', () => {
-      component.max = 100;
+      component.maxValue = 100;
       component.writeValue(75);
-      expect(component.percentage).toBe(`${(component.value / component.max) * 100}%`);
+      expect(component.percentage).toBe(`${(component.value / component.maxValue) * 100}%`);
     });
 
     it('should set isLow to true if value is greater than or equal to 85', () => {
-      component.max = 100;
+      component.maxValue = 100;
       component.writeValue(90);
       expect(component.isLow).toBeTruthy();
     });

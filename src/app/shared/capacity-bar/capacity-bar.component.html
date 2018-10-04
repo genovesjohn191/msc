@@ -1,4 +1,4 @@
-<div class="capacity-bar-wrapper" (blur)="onBlur()">
+<div class="capacity-bar-content" (blur)="onBlur()">
   <div class="capacity-bar" [ngClass]="{'low': isLow}" [ngStyle]="{width: percentage}"></div>
   <div [ngClass]="{'low': isLow}" class="capacity-bar-label">
     <span *ngIf="(value | mcsIsNotNullOrEmpty); else emptyLabel">
@@ -7,6 +7,6 @@
       <span [innerHTML]="value | mcsDataLabel"></span>
     </ng-template>
     <span> / </span>
-    <span>{{ max | mcsDataSize: 'MB' }}</span>
+    <span>{{ maxValue | mcsDataSize: 'MB' }}</span>
   </div>
 </div>

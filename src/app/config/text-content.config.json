@@ -155,9 +155,11 @@
       "storage": {
         "label": "Storage",
         "title": "Manage Storage",
-        "storageProfile": "Storage Profile",
-        "usage": "Usage",
-        "tier": "Tier",
+        "columnHeaders": {
+          "storageProfile": "Storage Profile",
+          "usage": "Usage",
+          "tier": "Tier"
+        },
         "iopsLabel": "Performance",
         "expandLink": "Expand",
         "newStorageProfile": "New Storage Profile",

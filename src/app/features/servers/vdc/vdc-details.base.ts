@@ -6,9 +6,9 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { McsTextContentProvider } from '@app/core';
 import {
-  isNullOrEmpty,
   unsubscribeSafely,
-  unsubscribeSubject
+  unsubscribeSubject,
+  isNullOrEmpty
 } from '@app/utilities';
 import { McsResource } from '@app/models';
 import { ResourcesRepository } from '@app/services';
@@ -43,7 +43,7 @@ export abstract class VdcDetailsBase {
     protected _changeDetectorRef: ChangeDetectorRef,
     protected _textContentProvider: McsTextContentProvider
   ) {
-    this.selectedVdc = new McsResource();
+    this._selectedVdc = new McsResource();
   }
 
   protected initialize(): void {
@@ -63,6 +63,12 @@ export abstract class VdcDetailsBase {
   }
 
   /**
+   * Contains all the methods you need to execute
+   * when the selected vdc changes
+   */
+  protected abstract vdcSelectionChange(): void;
+
+  /**
    * This will listen to selected vdc
    * and get its value to vdc variable
    */
@@ -71,7 +77,9 @@ export abstract class VdcDetailsBase {
       .pipe(takeUntil(this._destroySubject))
       .subscribe((response) => {
         if (isNullOrEmpty(response)) { return; }
-        this.selectedVdc = response;
+        this._selectedVdc = response;
+        this.vdcSelectionChange();
+        this._changeDetectorRef.markForCheck();
       });
   }
 

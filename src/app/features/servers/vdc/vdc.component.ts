@@ -31,9 +31,7 @@ import {
 } from '@app/core';
 import {
   isNullOrEmpty,
-  refreshView,
   unsubscribeSafely,
-  compareStrings,
   unsubscribeSubject
 } from '@app/utilities';
 import {
@@ -130,7 +128,7 @@ export class VdcComponent
   }
 
   public ngAfterViewInit() {
-    refreshView(() => {
+    Promise.resolve().then(() => {
       this.search.searchChangedStream.pipe(startWith(null), takeUntil(this._destroySubject))
         .subscribe(() => this.listStatusFactory.setInProgress());
       this._serversRepository.dataRecordsChanged.pipe(takeUntil(this._destroySubject))
@@ -165,15 +163,6 @@ export class VdcComponent
       CoreRoutes.getNavigationPath(RouteKey.VdcDetail),
       resource.resourceId
     ]);
-  }
-
-  /**
-   * Returns true if current group is selected
-   * @param platform Platform to be selected
-   */
-  public isSelected(platform: McsServerPlatform): boolean {
-    if (isNullOrEmpty(this.selectedPlatform)) { return false; }
-    return compareStrings(platform.resourceName, this.selectedPlatform.resourceName) === 0;
   }
 
   /**

@@ -2,6 +2,7 @@
 
 // Capacity Bar
 $capacity-bar-height: 17px;
+$capacity-bar-min-width: 100px;
 $capacity-bar-border-radius: 3px;
 $capacity-bar-wrapper-bg-color: $color-primary-02;
 $capacity-bar-bg-color-default: $color-primary-01;
@@ -9,6 +10,11 @@ $capacity-bar-bg-color-low: $color-red-00;
 $capacity-bar-label-color-low: $color-white;
 
 .capacity-bar-wrapper {
+  display: block;
+  min-width: $capacity-bar-min-width;
+}
+
+.capacity-bar-content {
   @include display-flex(row);
   position: relative;
   height: $capacity-bar-height;
@@ -34,6 +40,8 @@ $capacity-bar-label-color-low: $color-white;
     justify-content: center;
     @include set-items-interval($space-xsmall, horizontal);
     width: 100%;
+    position: absolute;
+
     &.low {
       color: $capacity-bar-label-color-low;
     }
