@@ -151,6 +151,13 @@ export class VdcOverviewComponent extends VdcDetailsBase implements OnInit, OnDe
   }
 
   /**
+   * An abstract method that get notified when the vdc selection has been changed
+   */
+  protected vdcSelectionChange(): void {
+    // Do the implementation here
+  }
+
+  /**
    * Computes the used memory percentage of the provided VDC storage
    * @param storage VDC Storage
    */

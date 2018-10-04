@@ -24,14 +24,17 @@ import { coerceNumber } from '@app/utilities';
       useExisting: forwardRef(() => CapacityBarComponent),
       multi: true
     }
-  ]
+  ],
+  host: {
+    'class': 'capacity-bar-wrapper'
+  }
 })
 
 export class CapacityBarComponent implements ControlValueAccessor {
   @Input()
-  public get max(): number { return this._max; }
-  public set max(value: number) { this._max = coerceNumber(value); }
-  private _max: number;
+  public get maxValue(): number { return this._maxValue; }
+  public set maxValue(value: number) { this._maxValue = coerceNumber(value); }
+  private _maxValue: number;
 
   /**
    * Returns the current value of the capacity bar
@@ -70,7 +73,7 @@ export class CapacityBarComponent implements ControlValueAccessor {
   }
 
   public constructor(private _changeDetectorRef: ChangeDetectorRef) {
-    this.max = 0;
+    this.maxValue = 0;
     this.value = 0;
   }
 
@@ -116,7 +119,7 @@ export class CapacityBarComponent implements ControlValueAccessor {
 
   private _getPercentage(): number {
     // Return the percentage of the current value based on the maximum value inputted
-    let percentage = 100 * this.value / this.max;
+    let percentage = 100 * this.value / this.maxValue;
     return Math.round(percentage);
   }
 

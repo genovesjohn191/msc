@@ -1,50 +1,56 @@
 <div class="container-wrapper">
   <h2 class="container-header">{{ textContent.title }}</h2>
-  <div class="block-items-large">
-    <!-- Storages Table -->
-    <mcs-data-status [dataStatusFactory]="dataStatusFactory">
-      <mcs-data-status-success mcsDataSuccess>
-        <table class="basic-table no-gutter">
-          <thead>
-            <tr>
-              <th>{{ textContent.storageProfile }}</th>
-              <th>{{ textContent.usage }}</th>
-              <th>{{ textContent.tier }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let storage of resourceStorages">
-              <td>
-                <div class="inline-items-xsmall">
-                  <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
-                  <span class="break-word-all">{{ storage.name }}</span>
-                </div>
-              </td>
-              <td>
-                <mcs-capacity-bar [(ngModel)]="storage.usedMB"
-                  [max]="storage.limitMB"></mcs-capacity-bar>
-              </td>
-              <td>
-                <span [innerHTML]="(iopsLabelPlaceholder |
-                  mcsTextPlaceholder: 'iops': storage.iops) |
-                  mcsDataLabel"></span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </mcs-data-status-success>
+  <!-- Resource Storage Table -->
+  <mcs-table [dataSource]="storageDatasource">
+    <!-- Storage Profile Column -->
+    <ng-container mcsColumnDef="storageProfile">
+      <mcs-header-cell *mcsHeaderCellDef>
+        {{ textContent.columnHeaders.storageProfile }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
+        <div class="form-field-inline">
+          <mcs-icon [key]="storageIconKey" size="small"></mcs-icon>
+          <span class="break-word-all">{{ row.name }}</span>
+        </div>
+      </mcs-data-cell>
+    </ng-container>
 
-      <mcs-data-status-in-progress mcsDataInProgress>
-        <span>{{ textContent.loadingContent }}</span>
-      </mcs-data-status-in-progress>
+    <!-- Usage Column -->
+    <ng-container mcsColumnDef="usage">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ textContent.columnHeaders.usage }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        <mcs-capacity-bar
+          [(ngModel)]="row.usedMB"
+          [maxValue]="row.limitMB"></mcs-capacity-bar>
+      </mcs-data-cell>
+    </ng-container>
 
-      <mcs-data-status-empty mcsDataEmpty>
-        <span>{{ textContent.noStorage }}</span>
-      </mcs-data-status-empty>
+    <!-- Tier Column -->
+    <ng-container mcsColumnDef="tier">
+      <mcs-header-cell *mcsHeaderCellDef class="hidden-small">
+        {{ textContent.columnHeaders.tier }}
+      </mcs-header-cell>
+      <mcs-data-cell *mcsDataCellDef="let row" class="hidden-small">
+        <span [innerHTML]="(iopsLabelPlaceholder |
+          mcsTextPlaceholder: 'iops': row.iops) |
+          mcsDataLabel"></span>
+      </mcs-data-cell>
+    </ng-container>
 
-      <mcs-data-status-error mcsDataError>
+    <!-- Data Status Integration -->
+    <ng-container mcsDataStatusDef>
+      <mcs-data-empty *mcsDataEmptyDef>
+        <span>{{ textContent.noStorage }} </span>
+      </mcs-data-empty>
+      <mcs-data-error *mcsDataErrorDef>
         <span>{{ textContent.errorGettingStorage }}</span>
-      </mcs-data-status-error>
-    </mcs-data-status>
-  </div>
+      </mcs-data-error>
+    </ng-container>
+
+    <!-- Header and Data row -->
+    <mcs-header-row *mcsHeaderRowDef="storageColumns"></mcs-header-row>
+    <mcs-data-row *mcsDataRowDef="let row; columns: storageColumns;"></mcs-data-row>
+  </mcs-table>
 </div>
