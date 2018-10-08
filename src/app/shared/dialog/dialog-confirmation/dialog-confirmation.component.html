@@ -11,7 +11,7 @@
           <ng-container *ngTemplateOutlet="dialogMessage"></ng-container>
         </ng-container>
         <ng-template #messageTemplate>
-          <span [innerHTML]="dialogMessage"></span>
+          <span [innerHTML]="dialogMessage | mcsNewLines"></span>
         </ng-template>
       </div>
     </div>

@@ -62,7 +62,9 @@ export class FormGroupDirective implements AfterContentInit {
     let hasDirty: boolean = false;
     this._formFields.map((formField) => {
       if (!hasDirty) {
-        hasDirty = formField.form.dirty && !formField.form.pristine;
+        hasDirty = formField.form.dirty
+          && !formField.form.pristine
+          && formField.form.touched;
       }
     });
     return hasDirty;

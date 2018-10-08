@@ -181,11 +181,11 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
   /**
    * Shows the error dialog
    */
-  public showErrorDialog(_error: any): void {
+  public showErrorDialog(): void {
     let dialogData = {
       type: 'error',
       title: this.textContent.stepErrorTitle,
-      message: `${this.textContent.stepErrorMessage} ${_error}`
+      message: `${this.textContent.stepErrorMessage}`
     } as DialogMessageData;
 
     this._dialogService.open(DialogMessageComponent, {

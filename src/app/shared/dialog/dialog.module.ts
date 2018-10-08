@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon/icon.module';
 import { DirectivesModule } from '../directives/directives.module';
+import { PipesModule } from '../pipes/pipes.module';
 import { ButtonModule } from '../button/button.module';
 import { DialogComponent } from './dialog.component';
 // Dialog Header
@@ -31,6 +32,7 @@ import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confir
     CommonModule,
     IconModule,
     DirectivesModule,
+    PipesModule,
     ButtonModule
   ],
   exports: [
@@ -40,6 +42,7 @@ import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confir
     DialogActionsComponent,
     IconModule,
     DirectivesModule,
+    PipesModule,
     ButtonModule
   ]
 })

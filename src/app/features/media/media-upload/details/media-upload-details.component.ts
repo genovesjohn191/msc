@@ -3,7 +3,8 @@ import {
   OnInit,
   OnDestroy,
   ChangeDetectorRef,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {
   Subject,
@@ -43,6 +44,7 @@ import {
   McsResourceCatalogItemCreate,
   CatalogItemType
 } from '@app/models';
+import { FormGroupDirective } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
 
 @Component({
@@ -65,6 +67,9 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
   public fcMediaDescription: FormControl;
 
   private _destroySubject = new Subject<void>();
+
+  @ViewChild(FormGroupDirective)
+  private _formGroup: FormGroupDirective;
 
   constructor(
     private _elementRef: ElementRef,
@@ -101,7 +106,7 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
    * Event that emits when navigating away from this component page
    */
   public safeToNavigateAway(): boolean {
-    return !getSafeProperty(this.fgMediaUpload, (obj) => obj.dirty);
+    return !this._formGroup.hasDirtyFormControls();
   }
 
   /**
@@ -139,7 +144,9 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
         })
-      ).subscribe(() => this.resources = this._resourcesRepository.dataRecords);
+      ).subscribe(() => {
+        this.resources = this._resourcesRepository.dataRecords;
+      });
   }
 
   /**
