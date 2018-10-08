@@ -4,6 +4,7 @@ $http-error-page-bg-color: $color-white;
 $http-error-page-color: $color-black;
 $http-error-page-header-color: $color-primary-01;
 $http-error-page-header-font-size: 100;
+$http-error-page-max-width: 500px;
 
 :host,
 .http-error-page-wrapper {
@@ -22,6 +23,7 @@ $http-error-page-header-font-size: 100;
 .http-error-page-content {
   @include display-flex(column);
   @include align-items(center);
+  max-width: $http-error-page-max-width;
 
   .http-error-page-header {
     @include font-size($http-error-page-header-font-size);

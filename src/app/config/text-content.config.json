@@ -683,7 +683,7 @@
   "media": {
     "header": "Media",
     "leftPanelHeader": "Media Filter",
-    "newMedia": "New Media",
+    "uploadMedia": "Upload Media",
     "loading": "Loading Medias.",
     "errorMessage": "Sorry, something’s not right. We weren’t able to retrieve the list of media.",
     "noMedias": "No media to display.",
@@ -734,6 +734,33 @@
         "errorGettingServers": "Sorry, something’s not right. We weren’t able to retrieve the list of servers to attach."
       }
     }
+  },
+  "mediaUpload": {
+    "header": "Upload Media",
+    "backToMedia": "Back to Media",
+    "mediaStepDetails": {
+      "label": "Media Details",
+      "selectResources": "Select a resource",
+      "selectResourcesHelp": "The VDC you would like to make this media available to.",
+      "mediaName": "Enter media name",
+      "mediaNameHelp": "A friendly name for your new media. If not supplied, we'll use the original filename from your media.",
+      "mediaUrl": "Enter media URL",
+      "mediaUrlHelp": "The publicly-accessible URL for us to download your media from.",
+      "mediaDescription": "Enter media description",
+      "mediaDescriptionHelp": "Enter a custom description for your media.",
+      "errors": {
+        "selectResourceRequired": "You must select a resource",
+        "mediaNameRequired": "Media name must be entered",
+        "mediaNameInvalid": "Media name can only contain letters, numbers, spaces or hyphens",
+        "mediaUrlRequired": "Media url must be entered",
+        "mediaUrlInvalid": "Invalid url format",
+        "mediaUrlNotExist": "Entered url does not exist"
+      }
+    },
+    "mediaStepGo": {
+      "label": "Go!"
+    },
+    "loadingResources": "Loading media resources."
   },
   "tickets": {
     "header": "Tickets",
@@ -981,7 +1008,7 @@
       "description": "There isn't anything located at the specified address.",
       "retry": "Please check the address and try again."
     },
-    "serverError": {
+    "internalServerError": {
       "header": "500",
       "summary": "Sorry, something’s not right",
       "description": "We're currently experiencing a server issue.",
@@ -1014,6 +1041,11 @@
       "summary": "Unfortunately an error has occurred",
       "description": "We are currently undergoing critical maintenance. Some actions may be temporarily unavailable.",
       "retry": "Please try again later."
+    },
+    "genericError": {
+      "summary": "The Portal has encountered an unknown error",
+      "description": "Our technical staff have been notified and are looking into the issue.",
+      "retry": "Please try again shortly."
     },
     "refresh": "Refresh the page",
     "home": "Go to home page"
@@ -1066,7 +1098,9 @@
       "next": "Next",
       "cancel": "Cancel",
       "completed": "Go",
-      "steps": "STEPS"
+      "steps": "STEPS",
+      "stepErrorTitle": "Wizard Error",
+      "stepErrorMessage": "The following error has occured. Please resolve the error and try again\r\n"
     },
     "paginator": {
       "nextPage": "More"
@@ -1099,6 +1133,11 @@
     },
     "dataStatus": {
       "errorMessage": "Currently unavailable"
+    },
+    "formField": {
+      "hints": {
+        "maxChar": "Max of {{value}} characters"
+      }
     }
   },
   "pageNotifications": {

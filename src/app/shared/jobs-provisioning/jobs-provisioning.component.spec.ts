@@ -5,7 +5,7 @@ import {
   discardPeriodicTasks
 } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ProvisioningNotificationsComponent } from './provisioning-notifications.component';
+import { JobsProvisioningComponent } from './jobs-provisioning.component';
 import { McsTextContentProvider } from '@app/core';
 import { getEnumString } from '@app/utilities';
 import {
@@ -15,11 +15,11 @@ import {
 } from '@app/models';
 import { CoreTestingModule } from '@app/core/testing';
 
-describe('ProvisioningNotificationsComponent', () => {
+describe('JobsProvisioningComponent', () => {
 
   /** Stub Services/Components */
   let fixture: any;
-  let component: ProvisioningNotificationsComponent;
+  let component: JobsProvisioningComponent;
 
   // Creation of notification based on id and status
   let createNotification = (notificationId: string, notificationStatus: JobStatus) => {
@@ -54,7 +54,7 @@ describe('ProvisioningNotificationsComponent', () => {
     /** Testbed Configuration */
     TestBed.configureTestingModule({
       declarations: [
-        ProvisioningNotificationsComponent
+        JobsProvisioningComponent
       ],
       imports: [
         RouterTestingModule,
@@ -66,7 +66,7 @@ describe('ProvisioningNotificationsComponent', () => {
     });
 
     /** Testbed Onverriding of Components */
-    TestBed.overrideComponent(ProvisioningNotificationsComponent, {
+    TestBed.overrideComponent(JobsProvisioningComponent, {
       set: {
         template: `
         <div> ProvisioningNotificationsComponent Template </div>
@@ -76,7 +76,7 @@ describe('ProvisioningNotificationsComponent', () => {
 
     /** Tesbed Component Compilation and Creation */
     TestBed.compileComponents().then(() => {
-      fixture = TestBed.createComponent(ProvisioningNotificationsComponent);
+      fixture = TestBed.createComponent(JobsProvisioningComponent);
       fixture.detectChanges();
 
       component = fixture.componentInstance;

@@ -1,0 +1,25 @@
+<mcs-dialog>
+  <mcs-dialog-header>
+    <h1 [innerHTML]="dialogTitle"></h1>
+  </mcs-dialog-header>
+
+  <mcs-dialog-content>
+    <div class="dialog-content-body">
+      <mcs-icon [key]="statusIconKey" class="dialog-content-icon"></mcs-icon>
+      <div class="dialog-content-message">
+        <ng-container *ngIf="isMessageTemplate; else messageTemplate">
+          <ng-container *ngTemplateOutlet="dialogMessage"></ng-container>
+        </ng-container>
+        <ng-template #messageTemplate>
+          <span [innerHTML]="dialogMessage"></span>
+        </ng-template>
+      </div>
+    </div>
+  </mcs-dialog-content>
+
+  <mcs-dialog-actions>
+    <button mcsButton id="ctaCloseDialog" arrow="right"
+      size="small" [color]="statusColor"
+      (click)="closeDialog()">OK</button>
+  </mcs-dialog-actions>
+</mcs-dialog>

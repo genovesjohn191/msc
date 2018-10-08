@@ -11,18 +11,21 @@ import { DialogContentComponent } from './dialog-content/dialog-content.componen
 // Dialog Actions
 import { DialogActionsComponent } from './dialog-actions/dialog-actions.component';
 // Entry Dialogs
-import { DialogWarningComponent } from './dialog-warning/dialog-warning.component';
+import { DialogMessageComponent } from './dialog-message/dialog-message.component';
+import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 
 @NgModule({
   entryComponents: [
-    DialogWarningComponent
+    DialogMessageComponent,
+    DialogConfirmationComponent
   ],
   declarations: [
     DialogComponent,
     DialogHeaderComponent,
     DialogContentComponent,
     DialogActionsComponent,
-    DialogWarningComponent
+    DialogMessageComponent,
+    DialogConfirmationComponent
   ],
   imports: [
     CommonModule,

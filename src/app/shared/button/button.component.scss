@@ -16,7 +16,7 @@ $button-white-bg-color: $color-white;
 $button-primary-bg-color: $color-primary-01;
 $button-success-bg-color: $color-green-00;
 $button-warning-bg-color: $color-yellow-00;
-$button-danger-bg-color: $color-red-00;
+$button-error-bg-color: $color-red-00;
 
 // Reset button settings mixin
 @mixin mcs-button-reset {
@@ -108,7 +108,8 @@ $button-danger-bg-color: $color-red-00;
     );
   }
 
-  &.primary {
+  &.primary,
+  &.info {
     @include mcs-button-raised-color-setting(
       $button-primary-bg-color,
       $color-white
@@ -129,9 +130,9 @@ $button-danger-bg-color: $color-red-00;
     );
   }
 
-  &.danger {
+  &.error {
     @include mcs-button-raised-color-setting(
-      $button-danger-bg-color,
+      $button-error-bg-color,
       $color-white
     );
   }
@@ -144,7 +145,7 @@ $button-danger-bg-color: $color-red-00;
     transition: none;
   }
 
-  &.white {
+  &.default {
     @include mcs-button-basic-color-setting($color-black);
   }
 
@@ -160,8 +161,8 @@ $button-danger-bg-color: $color-red-00;
     @include mcs-button-basic-color-setting($button-warning-bg-color);
   }
 
-  &.danger {
-    @include mcs-button-basic-color-setting($button-danger-bg-color);
+  &.error {
+    @include mcs-button-basic-color-setting($button-error-bg-color);
   }
 }
 

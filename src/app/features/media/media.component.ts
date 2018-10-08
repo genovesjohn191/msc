@@ -63,10 +63,17 @@ export class MediaComponent
   }
 
   /**
-   * This will navigate to new media page
+   * Returns the add icon key
    */
-  public onClickNewMediaButton() {
-    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.MediaCreate)]);
+  public get addIconKey(): string {
+    return CoreDefinition.ASSETS_FONT_PLUS;
+  }
+
+  /**
+   * Returns the routekey enum instance
+   */
+  public get routeKeyEnum(): any {
+    return RouteKey;
   }
 
   /**
@@ -76,6 +83,13 @@ export class MediaComponent
   public navigateToMedia(media: McsResourceMedia): void {
     if (isNullOrEmpty(media)) { return; }
     this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.Medium), media.id]);
+  }
+
+  /**
+   * Navigates to media upload
+   */
+  public navigateToMediaUpload(): void {
+    this._router.navigate([CoreRoutes.getNavigationPath(RouteKey.MediaUpload)]);
   }
 
   /**

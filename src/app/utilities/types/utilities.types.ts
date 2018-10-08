@@ -13,7 +13,10 @@ export type McsColorType = 'primary' | 'primary-01' | 'primary-02' | 'secondary'
 export type McsThemeType = 'none' | 'dark' | 'light' | 'black';
 
 // Status Type
-export type McsStatusType = 'success' | 'failed' | 'warning' | 'info';
+export type McsStatusType = 'success' | 'error' | 'warning' | 'info';
+
+// Status Color Type
+export type McsStatusColorType = 'default' | 'primary' | 'success' | 'error' | 'warning' | 'info';
 
 // Placement Type
 export type McsPlacementType = 'left' | 'right' | 'top' | 'bottom' | 'center';
@@ -29,3 +32,9 @@ export type McsDataSizeType = 'B' | 'KB' | 'MB' | 'GB' | 'TB';
 
 // Priority Type
 export type McsPriorityType = 'low' | 'medium' | 'high';
+
+// Form field error type
+export type McsFieldErrorType = 'required' | 'email' | 'url' | 'min' | 'max';
+
+// Form field hint type
+export type McsFieldHintType = 'maxChar' | 'minChar';

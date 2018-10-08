@@ -6,6 +6,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { CookieModule } from 'ngx-cookie';
 import { CoreConfig } from './core.config';
 import { coreProviders } from './core.constants';
 import { McsDialogContainerComponent } from './factory/dialog/mcs-dialog-container.component';
@@ -27,11 +29,16 @@ import { McsSnackBarRefDirective } from './factory/snack-bar/mcs-snack-bar-ref.d
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule,
+
+    CookieModule.forRoot(),
+    RouterModule.forRoot([])
   ],
   exports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
   entryComponents: [
     McsDialogContainerComponent,
@@ -40,6 +47,10 @@ import { McsSnackBarRefDirective } from './factory/snack-bar/mcs-snack-bar-ref.d
 })
 
 export class CoreModule {
+  /**
+   * Use this method in your root module to provide the CoreModule
+   * and it should only be derived once
+   */
   public static forRoot(config: () => CoreConfig): ModuleWithProviders {
     return {
       ngModule: CoreModule,

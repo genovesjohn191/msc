@@ -8,6 +8,11 @@ import {
 /** Components */
 import { MediaComponent } from './media.component';
 import {
+  MediaUploadComponent,
+  MediaUploadDetailsComponent,
+  MediaUploadProvisioningComponent
+} from './media-upload';
+import {
   MediumComponent,
   MediumOverviewComponent,
   MediumServersComponent
@@ -24,6 +29,9 @@ import {
   ],
   declarations: [
     MediaComponent,
+    MediaUploadComponent,
+    MediaUploadDetailsComponent,
+    MediaUploadProvisioningComponent,
     MediumComponent,
     MediumOverviewComponent,
     MediumServersComponent,

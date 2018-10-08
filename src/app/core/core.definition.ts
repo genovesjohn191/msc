@@ -136,6 +136,7 @@ export class CoreDefinition {
   public static ASSETS_SVG_DOWNLOAD = 'download';
   public static ASSETS_SVG_DOS_PROMPT_BLUE = 'dos-prompt-blue';
   public static ASSETS_SVG_DOS_PROMPT_GREY = 'dos-prompt-grey';
+  public static ASSETS_SVG_SUCCESS = 'success-svg';
 
   // Font Awesome Icons
   public static ASSETS_FONT_CREDIT_CARD = 'credit-card';
@@ -198,9 +199,12 @@ export class CoreDefinition {
   /** RegEx Patterns */
   public static REGEX_EMAIL_PATTERN = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   public static REGEX_IP_PATTERN = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$/;
+  public static REGEX_URL_PATTERN
+    = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
   public static REGEX_ALPHANUMERIC_PATTERN = /^[a-zA-Z0-9]+$/;
   public static REGEX_NUMERIC_PATTERN = /^-?\d*(\.\d+)?$/;
   public static REGEX_SERVER_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
+  public static REGEX_MEDIA_NAME_PATTERN = /^[a-zA-Z0-9\-]*$/;
   public static REGEX_UUID_PATTERN
     = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
   public static REGEX_SPACE_AND_DASH = /([\s-]+)/;

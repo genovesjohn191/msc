@@ -11,6 +11,7 @@ import { FormGroupDirective } from './form-group.directive';
 import {
   ErrorComponent,
   HintComponent,
+  HintMessageComponent,
   PrefixComponent,
   SuffixComponent
 } from './shared';
@@ -21,6 +22,7 @@ import {
     FormGroupDirective,
     ErrorComponent,
     HintComponent,
+    HintMessageComponent,
     PrefixComponent,
     SuffixComponent
   ],
@@ -35,6 +37,7 @@ import {
     FormGroupDirective,
     ErrorComponent,
     HintComponent,
+    HintMessageComponent,
     PrefixComponent,
     SuffixComponent,
     DirectivesModule,

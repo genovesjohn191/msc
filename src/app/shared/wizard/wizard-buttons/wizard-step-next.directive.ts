@@ -5,8 +5,13 @@ import {
   Inject
 } from '@angular/core';
 import {
-  Observable
+  Observable,
+  throwError
 } from 'rxjs';
+import {
+  catchError,
+  finalize
+} from 'rxjs/operators';
 import {
   isNullOrEmpty,
   McsDelegate
@@ -36,8 +41,25 @@ export class WizardStepNextDirective {
    * otherwise it will wait after the when is finished before proceeding
    */
   public next(): void {
-    isNullOrEmpty(this.when) ?
-      this._wizard.next() :
-      this.when().subscribe(() => this._wizard.next());
+    if (isNullOrEmpty(this.when)) {
+      this._wizard.next();
+      return;
+    }
+
+    // Set disable to the wizard while it is processing
+    // the observable, when an error occured during the process,
+    // the dialog box for error will be displayed and the wizard current step will remain
+    this._wizard.disableWizard();
+    this.when().pipe(
+      catchError((_error) => {
+        this._wizard.showErrorDialog(_error);
+        return throwError(_error);
+      }),
+      finalize(() => this._wizard.enableWizard())
+    ).subscribe((response) => {
+      if (isNullOrEmpty(response)) { return; }
+      this._wizard.enableWizard();
+      this._wizard.next();
+    });
   }
 }

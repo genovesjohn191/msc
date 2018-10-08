@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { McsRepositoryBase } from '@app/core';
+import { getSafeProperty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
   McsResource,
@@ -9,7 +10,9 @@ import {
   McsResourceStorage,
   McsResourceNetwork,
   McsResourceCatalogItem,
-  McsResourceVApp
+  McsResourceVApp,
+  McsResourceCatalogItemCreate,
+  McsJob
 } from '@app/models';
 import { ResourcesApiService } from '../api-services/resources-api.service';
 
@@ -103,6 +106,19 @@ export class ResourcesRepository extends McsRepositoryBase<McsResource> {
           return response.content;
         })
       );
+  }
+
+  /**
+   * Creates the resource catalog item on the provided resource id
+   * @param resourceId Resource ID where the catalog item will be created
+   * @param catalogItem Catalog item to be created
+   */
+  public createResourceCatalogItem(
+    resourceId: string,
+    catalogItem: McsResourceCatalogItemCreate
+  ): Observable<McsJob> {
+    return this._resourcesApiService.createCatalogItem(resourceId, catalogItem)
+      .pipe(map((response) => getSafeProperty(response, (obj) => obj.content)));
   }
 
   /**

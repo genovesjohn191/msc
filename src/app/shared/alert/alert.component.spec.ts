@@ -40,8 +40,8 @@ describe('AlertComponent', () => {
   }));
 
   describe('getAlertIconKey()', () => {
-    it('should return the close icon key definition in case of failed', () => {
-      component.type = 'failed';
+    it('should return the close icon key definition in case of error', () => {
+      component.type = 'error';
       expect(component.alertIconDetails.key).toBe(CoreDefinition.ASSETS_FONT_CLOSE_CIRCLE);
     });
 

@@ -16,8 +16,11 @@ import {
   McsResourceStorage,
   McsResourceNetwork,
   McsResourceCatalogItem,
-  McsResourceVApp
+  McsResourceVApp,
+  McsResourceCatalogItemCreate,
+  McsJob
 } from '@app/models';
+import { serializeObjectToJson } from '@app/utilities';
 
 @Injectable()
 export class ResourcesApiService {
@@ -229,6 +232,34 @@ export class ResourcesApiService {
           // Deserialize json reponse
           let apiResponse = McsApiSuccessResponse
             .deserializeResponse<McsResourceVApp[]>(McsResourceVApp, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Create the catalog item on the resource id provided
+   * @param resourceId Resource Id where the catalog item will be created
+   * @param createItemData Catalog item data to be used
+   */
+  public createCatalogItem(resourceId: string, createItemData: McsResourceCatalogItemCreate):
+    Observable<McsApiSuccessResponse<McsJob>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogitems`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJob>(McsJob, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

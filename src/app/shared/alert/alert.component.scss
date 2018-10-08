@@ -4,7 +4,7 @@
 $alert-border-radius: $border-radius-small;
 $alert-bg-opacity: 0.09;
 $alert-bg-color-success: $color-green-00;
-$alert-bg-color-failed: $color-red-00;
+$alert-bg-color-error: $color-red-00;
 $alert-bg-color-warning: $color-yellow-00;
 $alert-bg-color-info: $color-primary-01;
 
@@ -26,8 +26,8 @@ $alert-bg-color-info: $color-primary-01;
     background-color: rgba($alert-bg-color-success, $alert-bg-opacity);
   }
 
-  &.failed {
-    background-color: rgba($alert-bg-color-failed, $alert-bg-opacity);
+  &.error {
+    background-color: rgba($alert-bg-color-error, $alert-bg-opacity);
   }
 
   &.warning {

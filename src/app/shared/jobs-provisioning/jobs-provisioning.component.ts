@@ -41,16 +41,16 @@ import {
 } from '@app/models';
 
 @Component({
-  selector: 'mcs-provisioning-notifications',
-  templateUrl: './provisioning-notifications.component.html',
-  styleUrls: ['./provisioning-notifications.component.scss'],
+  selector: 'mcs-jobs-provisioning',
+  templateUrl: './jobs-provisioning.component.html',
+  styleUrls: ['./jobs-provisioning.component.scss'],
   animations: [
     animateFactory.fadeIn
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ProvisioningNotificationsComponent implements OnInit, DoCheck, OnDestroy {
+export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   public progressValue: number;
   public progressMax: number;
   public progressBarHidden: boolean;

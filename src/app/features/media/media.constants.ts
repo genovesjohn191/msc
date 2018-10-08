@@ -1,8 +1,15 @@
 import { Routes } from '@angular/router';
-import { CoreRoutes } from '@app/core';
+import {
+  CoreRoutes,
+  // McsNavigateAwayGuard
+} from '@app/core';
 import { RouteKey } from '@app/models';
 /** Components */
 import { MediaComponent } from './media.component';
+import {
+  MediaUploadService,
+  MediaUploadComponent
+} from './media-upload';
 import {
   MediumComponent,
   MediumOverviewComponent,
@@ -14,7 +21,8 @@ import { MediumService } from './medium/medium.service';
  * List of services for the main module
  */
 export const mediaProviders: any[] = [
-  MediumService
+  MediumService,
+  MediaUploadService
 ];
 
 /**
@@ -22,6 +30,7 @@ export const mediaProviders: any[] = [
  */
 export const mediaRoutesComponents: any[] = [
   MediaComponent,
+  MediaUploadComponent,
   MediumComponent,
   MediumOverviewComponent,
   MediumServersComponent
@@ -35,6 +44,12 @@ export const mediaRoutes: Routes = [
     path: CoreRoutes.getRoutePath(RouteKey.Media),
     component: MediaComponent,
     data: { routeId: RouteKey.Media }
+  },
+  {
+    path: CoreRoutes.getRoutePath(RouteKey.MediaUpload),
+    component: MediaUploadComponent,
+    // canDeactivate: [McsNavigateAwayGuard],
+    data: { routeId: RouteKey.MediaUpload }
   },
   {
     path: CoreRoutes.getRoutePath(RouteKey.Medium),
