@@ -71,8 +71,8 @@
                     mcsEventLabel="server-details-page">
                   {{ textContent.expandStorageLink }}
                 </a>
-                <a *ngIf="hasEditableDisk"
-                  [disabled]="!server.executable"
+                <a [disabled]="!server.executable"
+                  *ngIf="canDeleteDisk"
                   (click)="deleteDisk(row)"
                   mcsEventTracker="delete-disk"
                   mcsEventCategory="server"
