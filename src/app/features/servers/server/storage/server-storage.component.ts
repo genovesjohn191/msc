@@ -23,8 +23,7 @@ import {
   McsNotificationEventsService,
   McsDialogService,
   McsErrorHandlerService,
-  McsDataStatusFactory,
-  McsAccessControlService
+  McsDataStatusFactory
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -160,8 +159,7 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
     _textProvider: McsTextContentProvider,
     _errorHandlerService: McsErrorHandlerService,
     private _dialogService: McsDialogService,
-    private _notificationEvents: McsNotificationEventsService,
-    private _accessControlService: McsAccessControlService
+    private _notificationEvents: McsNotificationEventsService
   ) {
     super(
       _resourcesRepository,
@@ -227,13 +225,6 @@ export class ServerStorageComponent extends ServerDetailsBase implements OnInit,
   public get hasMoreThanOneDisk(): boolean {
     return getSafeProperty(this.server,
       (obj) => obj.storageDevices.length, 0) > 1;
-  }
-
-  /**
-   * Returns true when the server contains editable disks
-   */
-  public get hasEditableDisk(): boolean {
-    return this._accessControlService.hasPermission(['VmEdit']);
   }
 
   /**
