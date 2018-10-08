@@ -27,6 +27,7 @@ import {
 })
 
 export class HttpErrorPageComponent implements OnInit, OnDestroy {
+  public textHeader: string;
   public textContent: any;
   public textContentAll: any;
 
@@ -102,7 +103,7 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
   private _setTextContent(): void {
     switch (this.errorCode) {
       case HttpStatusCode.InternalServerError:
-        this.textContent = this.textContentAll.serverError;
+        this.textContent = this.textContentAll.internalServerError;
         break;
 
       case HttpStatusCode.Unprocessable:
@@ -126,8 +127,12 @@ export class HttpErrorPageComponent implements OnInit, OnDestroy {
         break;
 
       case HttpStatusCode.NotFound:
-      default:
         this.textContent = this.textContentAll.notFound;
+        break;
+
+      default:
+        this.textHeader = this.errorCode.toString();
+        this.textContent = this.textContentAll.genericError;
         break;
     }
   }

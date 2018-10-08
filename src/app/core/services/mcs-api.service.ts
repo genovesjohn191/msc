@@ -66,7 +66,7 @@ export class McsApiService {
         responseType: apiRequest.responseType,
         withCredentials: true
       })
-      .pipe(catchError((error) => this.handleServerError(error)));
+      .pipe(catchError((error) => this._handleServerError(error)));
   }
 
   /**
@@ -84,7 +84,7 @@ export class McsApiService {
         responseType: apiRequest.responseType,
         withCredentials: true
       })
-      .pipe(catchError((error) => this.handleServerError(error)));
+      .pipe(catchError((error) => this._handleServerError(error)));
   }
 
   /**
@@ -103,7 +103,7 @@ export class McsApiService {
         responseType: apiRequest.responseType,
         withCredentials: true
       })
-      .pipe(catchError((error) => this.handleServerError(error)));
+      .pipe(catchError((error) => this._handleServerError(error)));
   }
 
   /**
@@ -120,7 +120,7 @@ export class McsApiService {
         responseType: apiRequest.responseType,
         withCredentials: true
       })
-      .pipe(catchError((error) => this.handleServerError(error)));
+      .pipe(catchError((error) => this._handleServerError(error)));
   }
 
   /**
@@ -138,7 +138,7 @@ export class McsApiService {
         responseType: apiRequest.responseType,
         withCredentials: true
       })
-      .pipe(catchError((error) => this.handleServerError(error)));
+      .pipe(catchError((error) => this._handleServerError(error)));
   }
 
   /**
@@ -163,7 +163,7 @@ export class McsApiService {
    * Handle Error Exception
    * @param {any} error Error Response
    */
-  public handleServerError(error: HttpResponse<any> | any) {
+  private _handleServerError(error: HttpResponse<any> | any) {
     // Rethrow to notify outside subscribers that an error occured
     this._errorResponseStream.next(error);
     return throwError(error);

@@ -20,7 +20,7 @@ export enum RouteKey {
   Medium,
   MediumOverview,
   MediumServers,
-  MediaCreate,
+  MediaUpload,
 
   Firewalls,
   FirewallDetail,

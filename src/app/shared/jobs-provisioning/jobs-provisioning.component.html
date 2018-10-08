@@ -1,7 +1,7 @@
 <ng-container [ngSwitch]="hasJobs">
   <!-- When job received -->
   <ng-container *ngSwitchCase="true">
-    <div class="provisioning-notifications-container">
+    <div class="jobs-provisioning-container">
       <!-- Progress Information -->
       <div class="vertical-items-spacing-medium">
         <ng-content *ngIf="hasInProgressJob" select="[mcsProvisioningText]"></ng-content>
@@ -75,7 +75,7 @@
 
               <!-- Error -->
               <ng-container *ngSwitchCase="dataStatusEnum.Error">
-                <mcs-alert type="failed" [header]="textContent.deploymentFailed">
+                <mcs-alert type="error" [header]="textContent.deploymentFailed">
                   <span>{{ job.errorMessage }}</span>
                 </mcs-alert>
               </ng-container>

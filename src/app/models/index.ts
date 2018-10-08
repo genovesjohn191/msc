@@ -58,6 +58,7 @@ export * from './request/mcs-server-update';
 export * from './request/mcs-ticket-create';
 export * from './request/mcs-ticket-create-attachment';
 export * from './request/mcs-ticket-create-comment';
+export * from './request/mcs-resource-catalog-item-create';
 
 /** Response */
 export * from './response/mcs-identity';

@@ -131,13 +131,13 @@
     "requiredFeatureFlag": "EnableMediaCatalog",
     "documentTitle": "Media Servers - Macquarie Cloud Services"
   },
-  "mediaCreate": {
+  "mediaUpload": {
     "enumCategory": "Compute",
-    "enumKey": "MediaCreate",
-    "routePath": "compute/media/create",
-    "navigationPath": "compute/media/create",
+    "enumKey": "MediaUpload",
+    "routePath": "compute/media/upload",
+    "navigationPath": "compute/media/upload",
     "requiredFeatureFlag": "EnableMediaCatalog",
-    "documentTitle": "Create Media - Macquarie Cloud Services"
+    "documentTitle": "Upload Media - Macquarie Cloud Services"
   },
   "firewalls": {
     "enumCategory": "Network",

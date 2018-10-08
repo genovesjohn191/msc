@@ -53,7 +53,7 @@ export class AlertComponent {
     let iconColor: McsColorType;
 
     switch (this.type) {
-      case 'failed':
+      case 'error':
         iconKey = CoreDefinition.ASSETS_FONT_CLOSE_CIRCLE;
         iconColor = 'red';
         break;

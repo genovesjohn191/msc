@@ -4,7 +4,6 @@ export * from './server-manage-storage/server-manage-storage.component';
 export * from './server-manage-network/server-manage-network.component';
 export * from './server-manage-media/server-manage-media.component';
 export * from './server-manage-scale/server-manage-scale.component';
-export * from './provisioning-notifications/provisioning-notifications.component';
 /** Server Dialogs */
 export * from './server-dialogs/rename-server/rename-server.dialog';
 export * from './server-dialogs/reset-password/reset-password.dialog';

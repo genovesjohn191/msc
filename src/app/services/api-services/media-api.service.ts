@@ -4,11 +4,11 @@ import {
   finalize,
   map
 } from 'rxjs/operators';
-/** Services and Models */
 import {
   McsApiService,
   McsLoggerService
 } from '@app/core';
+import { HttpClient } from '@angular/common/http';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsApiSuccessResponse,
@@ -28,6 +28,7 @@ import { ServersApiService } from './servers-api.service';
 export class MediaApiService {
 
   constructor(
+    private _httpClient: HttpClient,
     private _mcsApiService: McsApiService,
     private _loggerService: McsLoggerService,
     private _serversService: ServersApiService
@@ -157,5 +158,18 @@ export class MediaApiService {
     mediaDetails: McsServerAttachMedia
   ): Observable<McsApiSuccessResponse<McsJob>> {
     return this._serversService.attachServerMedia(serverId, mediaDetails);
+  }
+
+  public checkUrlExist(url: string): Observable<boolean> {
+    return this._httpClient.head(url).pipe(
+      finalize(() => {
+        this._loggerService.traceEnd(`"${url}" request ended.`);
+      }),
+      map((response) => {
+        this._loggerService.traceStart(url);
+        this._loggerService.traceInfo(`converted response:`, response);
+        return !isNullOrEmpty(response);
+      })
+    );
   }
 }

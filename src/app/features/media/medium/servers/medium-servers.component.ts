@@ -27,8 +27,8 @@ import {
 } from '@app/utilities';
 import {
   TableDataSource,
-  DialogWarningComponent,
-  DialogWarningData
+  DialogConfirmationComponent,
+  DialogConfirmation
 } from '@app/shared';
 import {
   McsJob,
@@ -107,14 +107,15 @@ export class MediumServersComponent extends MediumDetailsBase implements OnInit,
   public showDetachDialog(attachedServer: McsResourceMediaServer): void {
     let dialogData = {
       data: attachedServer,
+      type: 'warning',
       title: this.textContent.detachDialog.title,
       message: replacePlaceholder(
         this.textContent.detachDialog.message,
         'server_name', attachedServer.name)
-    } as DialogWarningData<McsResourceMediaServer>;
+    } as DialogConfirmation<McsResourceMediaServer>;
 
     let detachDialogRef = this._dialogService
-      .open(DialogWarningComponent, {
+      .open(DialogConfirmationComponent, {
         data: dialogData,
         size: 'medium'
       });

@@ -31,6 +31,19 @@ $dialog-border-color: $border-color-light;
   @include display-flex(column);
   padding: $dialog-content-padding;
   overflow: auto;
+
+  .dialog-content-body {
+    @include display-flex(row);
+
+    .dialog-content-icon {
+      align-self: flex-start;
+      margin-top: $space-xsmall;
+    }
+
+    .dialog-content-message {
+      margin-left: $space-large;
+    }
+  }
 }
 
 .dialog-actions-wrapper {
@@ -41,4 +54,8 @@ $dialog-border-color: $border-color-light;
   justify-content: space-between;
   padding: $dialog-actions-padding;
   border-top: 1px solid $dialog-border-color;
+
+  > :only-child {
+    margin-left: auto;
+  }
 }

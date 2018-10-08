@@ -10,7 +10,8 @@ import {
 import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
-  coerceBoolean
+  coerceBoolean,
+  McsStatusColorType
 } from '@app/utilities';
 
 @Component({
@@ -36,13 +37,13 @@ export class ButtonComponent {
   public arrow: 'up' | 'right';
 
   @Input()
-  public get color(): string { return this._color; }
-  public set color(value: string) {
+  public get color(): McsStatusColorType { return this._color; }
+  public set color(value: McsStatusColorType) {
     this._color = value;
     this._setColor(this.color);
     this._changeDetectorRef.markForCheck();
   }
-  private _color: string = 'primary';
+  private _color: McsStatusColorType = 'primary';
 
   @Input()
   public get type(): any { return this._type; }

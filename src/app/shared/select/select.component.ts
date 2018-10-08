@@ -50,7 +50,8 @@ import {
   coerceBoolean,
   coerceNumber,
   animateFactory,
-  unsubscribeSubject
+  unsubscribeSubject,
+  getSafeProperty
 } from '@app/utilities';
 import { SelectItemComponent } from './select-item/select-item.component';
 
@@ -396,7 +397,7 @@ export class SelectComponent extends McsFormFieldControlBase<any>
    * Selects the element based on the provided value
    * @param value Value to be checked in the item options
    */
-  private _selectItemByValue(value: SelectItemComponent) {
+  private _selectItemByValue(value: any) {
     let selectedItem = this._items.find((item) => item.value === value);
     this._selectItem(selectedItem);
   }
@@ -449,7 +450,13 @@ export class SelectComponent extends McsFormFieldControlBase<any>
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
     Promise.resolve().then(() => {
-      this._selectItemByValue(this.ngControl ? this.ngControl.value : this._value);
+      let selectedValue = getSafeProperty(this.ngControl, (obj) => obj.value) || this._value;
+      let isFirstItemSelected = this.required &&
+        isNullOrEmpty(selectedValue) && !isNullOrEmpty(this._items);
+
+      isFirstItemSelected ?
+        this._selectItemByValue(getSafeProperty(this._items, (obj) => obj.first.value)) :
+        this._selectItemByValue(this.ngControl ? this.ngControl.value : this._value);
     });
   }
 

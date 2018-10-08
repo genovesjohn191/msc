@@ -1,15 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import {
   NgModule,
   ErrorHandler
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  Router,
-  RouterModule
-} from '@angular/router';
-import { CookieModule } from 'ngx-cookie';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -109,16 +104,15 @@ export function coreConfig(): CoreConfig {
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
     BrowserAnimationsModule,
-    CookieModule.forRoot(),
+
     CoreModule.forRoot(coreConfig),
-    ServicesModule,
+    ServicesModule.forRoot(),
+
     SharedModule,
     ConsolePageModule,
     DefaultPageModule,
     PageNotificationsModule,
-    RouterModule.forRoot([]),
   ],
   providers: [
     environment.ENV_PROVIDERS,

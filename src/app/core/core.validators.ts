@@ -2,10 +2,19 @@ import {
   AbstractControl,
   Validators,
   ValidatorFn,
-  ValidationErrors
+  ValidationErrors,
+  AsyncValidatorFn
 } from '@angular/forms';
-import { CoreDefinition } from './core.definition';
+import {
+  Observable,
+  of
+} from 'rxjs';
+import {
+  catchError,
+  map
+} from 'rxjs/operators';
 import { McsPropertyType } from '@app/utilities';
+import { CoreDefinition } from './core.definition';
 
 export class CoreValidators {
 
@@ -53,6 +62,14 @@ export class CoreValidators {
   }
 
   /**
+   * Validator that performs url values validation
+   */
+  public static url(control: AbstractControl): ValidationErrors | null {
+    return CoreDefinition.REGEX_URL_PATTERN.test(control.value) ?
+      null : { url: true };
+  }
+
+  /**
    * Validator that performs email validation
    *
    * `@Note` This will produce the following value when false
@@ -77,6 +94,27 @@ export class CoreValidators {
       patternData[patternName] = true;
 
       return !predicate(control.value) ? patternData : null;
+    };
+  }
+
+  /**
+   * Async Validator that performs custom validation
+   *
+   * `@Note` This will produce the following value when false
+   * { custom: { message: customMessage }}
+   */
+  public static customAsync(
+    predicate: (validation: any) => Observable<boolean>,
+    patternName: string
+  ): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      let patternData: McsPropertyType = {};
+      patternData[patternName] = true;
+
+      return predicate(control.value).pipe(
+        catchError((_error) => of(patternData)),
+        map((response) => response ? null : patternData)
+      );
     };
   }
 

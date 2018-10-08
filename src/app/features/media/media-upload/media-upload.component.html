@@ -1,0 +1,35 @@
+<mcs-page [header]="textContent.header" [disabled]="stepRequestInProgress">
+  <!-- Top Panel -->
+  <mcs-top-panel *mcsTopPanelDef>
+
+    <!-- Back to Servers -->
+    <mcs-top-panel-item *mcsTopPanelItemDef class="no-border">
+      <mcs-action-item class="right-align"
+        (click)="navigateToMedia()"
+        mcsEventTracker="back-to-media-listing"
+        mcsEventCategory="media"
+        mcsEventLabel="create-new-server-page">
+        <mcs-icon [key]="backIconKey" size="large"></mcs-icon>
+        <span>{{ textContent.backToMedia }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
+  </mcs-top-panel>
+
+  <!-- Content Panel -->
+  <mcs-content-panel *mcsContentPanelDef>
+
+    <mcs-wizard [header]="textContent.header">
+
+      <!-- Server Details Step-->
+      <mcs-wizard-step [stepTitle]="textContent.mediaStepDetails.label">
+        <mcs-media-upload-details></mcs-media-upload-details>
+      </mcs-wizard-step>
+
+      <!-- Go! Step  -->
+      <mcs-wizard-step [stepTitle]="textContent.mediaStepGo.label">
+        <mcs-media-upload-provisioning></mcs-media-upload-provisioning>
+      </mcs-wizard-step>
+    </mcs-wizard>
+
+  </mcs-content-panel>
+</mcs-page>

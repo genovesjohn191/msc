@@ -18,7 +18,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   CoreDefinition,
-  McsTextContentProvider
+  McsTextContentProvider,
+  McsDialogService
 } from '@app/core';
 import {
   isNullOrEmpty,
@@ -30,6 +31,10 @@ import { WizardTopPanelDefDirective } from './wizard-top-panel/wizard-top-panel-
 import {
   WizardTopPanelPlaceholderDirective
 } from './wizard-top-panel/wizard-top-panel-placeholder.directive';
+import {
+  DialogMessageData,
+  DialogMessageComponent
+} from '../dialog';
 
 @Component({
   selector: 'mcs-wizard',
@@ -38,7 +43,8 @@ import {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    'class': 'wizard-wrapper'
+    'class': 'wizard-wrapper',
+    '[class.disabled-element]': 'disabled'
   }
 })
 
@@ -81,7 +87,8 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
 
   public constructor(
     private _changeDetectorRef: ChangeDetectorRef,
-    private _textContentProvider: McsTextContentProvider
+    private _textContentProvider: McsTextContentProvider,
+    private _dialogService: McsDialogService
   ) {
     this.isCompleted = false;
     this.activeStep = new WizardStepComponent();
@@ -153,6 +160,38 @@ export class WizardComponent implements AfterContentInit, OnDestroy {
     let stepIsNotValid = !step.enabled || this.isCompleted;
     if (stepIsNotValid) { return; }
     this._setActiveStep(step);
+  }
+
+  /**
+   * Disables the wizard including all of its components
+   */
+  public disableWizard(): void {
+    this.disabled = true;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Enables the wizard including all of its components
+   */
+  public enableWizard(): void {
+    this.disabled = false;
+    this._changeDetectorRef.markForCheck();
+  }
+
+  /**
+   * Shows the error dialog
+   */
+  public showErrorDialog(_error: any): void {
+    let dialogData = {
+      type: 'error',
+      title: this.textContent.stepErrorTitle,
+      message: `${this.textContent.stepErrorMessage} ${_error}`
+    } as DialogMessageData;
+
+    this._dialogService.open(DialogMessageComponent, {
+      data: dialogData,
+      size: 'medium'
+    });
   }
 
   /**

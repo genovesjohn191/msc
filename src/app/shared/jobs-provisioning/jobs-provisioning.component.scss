@@ -1,17 +1,8 @@
-@import "../../../../../styles/shared/base";
+@import "../../../styles/shared/base";
 
-// Font attributes
-$provisioning-details-font-size: 18;
-$provisioning-details-font: $circular-pro-book;
-$provisioning-details-font-bold: $circular-pro-bold;
-// Colors
-$job-active-color: $color-grey-02;
-$job-failed-color: $color-red-00;
-$job-completed-color: $color-primary-01;
-// Space
 $job-server-link-left-offset: 25px;
 
-.provisioning-notifications-container {
+.jobs-provisioning-container {
   @include display-flex(column);
   @include set-items-interval($space-medium);
 

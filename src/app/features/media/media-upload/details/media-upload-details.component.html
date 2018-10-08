@@ -1,0 +1,115 @@
+<div class="limited-view">
+  <mcs-loader [subscriptions]="[resourcesSubscription]"
+    [loadingText]="textContent.loadingResources">
+
+    <div class="contextual-help-page-wrapper">
+      <form [formGroup]="fgMediaUpload">
+        <!-- Resource Select -->
+        <div class="field">
+          <mcs-form-field>
+            <mcs-select [formControl]="fcResources" required
+              (change)="onChangeResource($event)"
+              [placeholder]="textContent.selectResources"
+              [mcsContextualHelp]="textContent.selectResourcesHelp">
+              <mcs-select-group header="VDC">
+                <mcs-select-item *ngFor="let resource of resources" [value]="resource">
+                  {{ resource.name }}
+                </mcs-select-item>
+              </mcs-select-group>
+            </mcs-select>
+
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.selectResourceRequired }}
+            </mcs-error>
+          </mcs-form-field>
+        </div>
+
+        <!-- Media Name  -->
+        <div class="field">
+          <mcs-form-field>
+            <input mcsInput #mediaName mcsSetFocus required
+              [placeholder]="textContent.mediaName" maxlength="25"
+              [formControl]="fcMediaName"
+              [mcsContextualHelp]="textContent.mediaNameHelp">
+
+            <mcs-hint mcsHint align="start">
+              <mcs-hint-message [type]="maxChar"
+                [value]="mediaName.maxLength">
+              </mcs-hint-message>
+            </mcs-hint>
+            <mcs-hint mcsHint align="end">
+              {{ mediaName.value.length }} / {{ mediaName.maxLength }}
+            </mcs-hint>
+
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.mediaNameRequired }}
+            </mcs-error>
+            <mcs-error mcsError errorState="mediaNameInvalid">
+              {{ textContent.errors.mediaNameInvalid }}
+            </mcs-error>
+          </mcs-form-field>
+        </div>
+
+        <!-- Media URL  -->
+        <div class="field">
+          <mcs-form-field>
+            <input mcsInput #mediaUrl required
+              [placeholder]="textContent.mediaUrl" maxlength="300"
+              [formControl]="fcMediaUrl"
+              [mcsContextualHelp]="textContent.mediaUrlHelp">
+
+            <mcs-suffix *ngIf="mediaUrlStatusIconKey">
+              <mcs-icon [key]="mediaUrlStatusIconKey" size="small" ></mcs-icon>
+            </mcs-suffix>
+
+            <mcs-hint mcsHint align="start">
+              <mcs-hint-message [type]="maxChar"
+                [value]="mediaUrl.maxLength"></mcs-hint-message>
+            </mcs-hint>
+            <mcs-hint mcsHint align="end">
+              {{ mediaUrl.value.length }} / {{ mediaUrl.maxLength }}
+            </mcs-hint>
+
+            <mcs-error mcsError errorState="required">
+              {{ textContent.errors.mediaUrlRequired }}
+            </mcs-error>
+            <mcs-error mcsError errorState="url">
+              {{ textContent.errors.mediaUrlInvalid }}
+            </mcs-error>
+            <mcs-error mcsError errorState="emailNotExist">
+              {{ textContent.errors.mediaUrlNotExist }}
+            </mcs-error>
+          </mcs-form-field>
+        </div>
+
+        <!-- Media Description  -->
+        <div class="field">
+          <mcs-form-field>
+            <input mcsInput #mediaDescription
+              [placeholder]="textContent.mediaDescription" maxlength="1000"
+              [formControl]="fcMediaDescription"
+              [mcsContextualHelp]="textContent.mediaDescriptionHelp">
+
+            <mcs-hint mcsHint align="start">
+              <mcs-hint-message [type]="maxChar"
+                [value]="mediaDescription.maxLength"></mcs-hint-message>
+            </mcs-hint>
+            <mcs-hint mcsHint align="end">
+              {{ mediaDescription.value.length }} / {{ mediaDescription.maxLength }}
+            </mcs-hint>
+          </mcs-form-field>
+        </div>
+      </form>
+
+      <!-- Wizard Actions -->
+      <div class="action-items">
+        <button mcsButton size="small" arrow="right"
+          mcsWizardStepNext
+          [mcsWizardStepNextWhen]="uploadMediaFunc"
+          mcsEventTracker="step-1-next"
+          mcsEventCategory="media"
+          mcsEventLabel="upload-media-page">Next</button>
+      </div>
+    </div>
+  </mcs-loader>
+</div>

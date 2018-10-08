@@ -2,13 +2,13 @@
   <h2>{{ textContent.header }}</h2>
 
   <ng-container *ngIf="!errorResponse; else errorTemplate">
-    <mcs-provisioning-notifications [jobs]="jobs">
+    <mcs-jobs-provisioning [jobs]="jobs">
       <p mcsProvisioningText>{{ textContent.description }}</p>
-    </mcs-provisioning-notifications>
+    </mcs-jobs-provisioning>
   </ng-container>
 
   <ng-template #errorTemplate>
-    <mcs-alert type="failed" [header]="errorResponse?.error?.message">
+    <mcs-alert type="error" [header]="errorResponse?.error?.message">
       <span>{{ errorResponse?.message }}</span>
     </mcs-alert>
   </ng-template>
