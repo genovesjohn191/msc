@@ -52,7 +52,7 @@ export class WizardStepNextDirective {
     this._wizard.disableWizard();
     this.when().pipe(
       catchError((_error) => {
-        this._wizard.showErrorDialog(_error);
+        this._wizard.showErrorDialog();
         return throwError(_error);
       }),
       finalize(() => this._wizard.enableWizard())

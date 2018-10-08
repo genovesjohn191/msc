@@ -1100,7 +1100,7 @@
       "completed": "Go",
       "steps": "STEPS",
       "stepErrorTitle": "Wizard Error",
-      "stepErrorMessage": "The following error has occured. Please resolve the error and try again\r\n"
+      "stepErrorMessage": "Unexpected error occured. Please resolve the issue and try again."
     },
     "paginator": {
       "nextPage": "More"
