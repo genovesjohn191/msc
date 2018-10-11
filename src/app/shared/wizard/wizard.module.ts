@@ -5,7 +5,6 @@ import { IconModule } from '../icon/icon.module';
 import { ButtonModule } from '../button/button.module';
 import { TabGroupModule } from '../tab-group/tab-group.module';
 import { WizardComponent } from './wizard.component';
-import { WizardActionPlacementDirective } from './wizard-step/wizard-action-placement.directive';
 // Wizard step
 import { WizardStepComponent } from './wizard-step/wizard-step.component';
 // Wizard buttons
@@ -20,7 +19,6 @@ import {
 @NgModule({
   declarations: [
     WizardComponent,
-    WizardActionPlacementDirective,
     WizardStepComponent,
     WizardStepNextDirective,
     WizardStepPreviousDirective,
@@ -36,7 +34,6 @@ import {
   ],
   exports: [
     WizardComponent,
-    WizardActionPlacementDirective,
     WizardStepComponent,
     WizardStepNextDirective,
     WizardStepPreviousDirective,

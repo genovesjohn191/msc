@@ -8,12 +8,14 @@ import { SelectComponent } from './select.component';
 import { SelectGroupComponent } from './select-group/select-group.component';
 // Select Item
 import { SelectItemComponent } from './select-item/select-item.component';
+import { SelectItemLabelDirective } from './select-item/select-item-label.directive';
 
 @NgModule({
   declarations: [
     SelectComponent,
     SelectGroupComponent,
-    SelectItemComponent
+    SelectItemComponent,
+    SelectItemLabelDirective
   ],
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { SelectItemComponent } from './select-item/select-item.component';
     SelectComponent,
     SelectGroupComponent,
     SelectItemComponent,
+    SelectItemLabelDirective,
     CommonModule,
     IconModule,
     DirectivesModule,

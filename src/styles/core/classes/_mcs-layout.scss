@@ -75,6 +75,11 @@
   @include set-items-interval($space-medium);
 }
 
+// Items
+.item-margin {
+  margin-bottom: $space-medium;
+}
+
 // Bordered elements
 .bordered-container {
   border: 1px solid $border-color-light;

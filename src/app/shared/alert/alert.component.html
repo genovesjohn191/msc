@@ -1,11 +1,16 @@
-<!-- Alert Icon -->
-<div class="alert-icon">
-  <mcs-icon [key]="alertIconDetails.key" [color]="alertIconDetails.color"></mcs-icon>
+<div class="alert-content-wrapper">
+  <div class="alert-icon">
+    <mcs-icon [key]="alertIconDetails.key" [color]="alertIconDetails.iconColor"></mcs-icon>
+  </div>
+
+  <div class="alert-content">
+    <span>{{ header }}</span>
+    <span read-only>
+      <ng-content></ng-content>
+    </span>
+  </div>
 </div>
-<!-- Message Content -->
-<div class="alert-content">
-  <span>{{ header }}</span>
-  <span read-only>
-    <ng-content></ng-content>
-  </span>
+
+<div class="alert-actions">
+  <ng-content select="[mcsAlertAction]"></ng-content>
 </div>

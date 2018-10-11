@@ -7,7 +7,8 @@ import {
   ChangeDetectionStrategy,
   ViewChildren,
   QueryList,
-  ElementRef
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import {
@@ -16,12 +17,14 @@ import {
 } from '@angular/router';
 import {
   Subject,
-  Observable
+  Observable,
+  of
 } from 'rxjs';
 import {
   startWith,
   takeUntil,
-  merge
+  merge,
+  tap
 } from 'rxjs/operators';
 import {
   McsTextContentProvider,
@@ -30,12 +33,12 @@ import {
 import {
   unsubscribeSubject,
   isNullOrEmpty,
-  clearArrayRecord,
   McsSafeToNavigateAway
 } from '@app/utilities';
 import { McsResource } from '@app/models';
 import { ServerCreateDetailsBase } from './server-create-details.base';
 import { ServerCreateFlyweightContext } from '../server-create-flyweight.context';
+import { ComponentHandlerDirective } from '@app/shared';
 
 enum ServerCreateType {
   New = 1,
@@ -56,7 +59,7 @@ export class ServerCreateDetailsComponent implements
   public faCreationForms: FormArray;
   public selectedTabIndex: ServerCreateType = ServerCreateType.New;
   public serverDeploying: boolean;
-  public serverComponents: Array<ServerCreateDetailsBase<any>>;
+  public selectedResource$: Observable<McsResource>;
   public createServerFunc = this._createServer.bind(this);
 
   /**
@@ -68,6 +71,10 @@ export class ServerCreateDetailsComponent implements
 
   @ViewChildren('serverBase')
   private _createServerItems: QueryList<ServerCreateDetailsBase<any>>;
+
+  @ViewChild(ComponentHandlerDirective)
+  private _serverDetailsComponent: ComponentHandlerDirective;
+
   private _destroySubject = new Subject<void>();
 
   constructor(
@@ -79,7 +86,6 @@ export class ServerCreateDetailsComponent implements
     private _serverCreateFlyweightContext: ServerCreateFlyweightContext
   ) {
     this.faCreationForms = new FormArray([]);
-    this.serverComponents = new Array();
   }
 
   public ngOnInit() {
@@ -138,7 +144,7 @@ export class ServerCreateDetailsComponent implements
    * Create server based on server details
    */
   private _createServer(): Observable<any> {
-    if (!this._validateFormFields()) { return; }
+    if (!this._validateFormFields()) { return of(undefined); }
 
     if (isNullOrEmpty(this._createServerItems)) { return; }
     this.serverDeploying = true;
@@ -172,16 +178,20 @@ export class ServerCreateDetailsComponent implements
    * Listens to resource changes
    */
   private _listenToResourceChanges(): void {
-    this._serverCreateFlyweightContext.resourceChanges
-      .pipe(takeUntil(this._destroySubject))
-      .subscribe((updatedResource) => {
-        // Clear the record in order to get a new instance of the base component
-        clearArrayRecord(this.serverComponents);
-        this.resource = updatedResource;
-
-        this.serverComponents.push({} as ServerCreateDetailsBase<any>);
-        this._changeDetectorRef.markForCheck();
-      });
+    this.selectedResource$ = this._serverCreateFlyweightContext.resourceChanges
+      .pipe(
+        takeUntil(this._destroySubject),
+        tap((_response) => {
+          if (isNullOrEmpty(_response)) { return; }
+          this._resource = _response;
+          Promise.resolve().then(() => {
+            if (!isNullOrEmpty(this._serverDetailsComponent)) {
+              this._serverDetailsComponent.recreateComponent();
+            }
+          });
+          this._changeDetectorRef.markForCheck();
+        })
+      );
   }
 
   /**

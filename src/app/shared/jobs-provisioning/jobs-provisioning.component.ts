@@ -37,7 +37,8 @@ import {
   McsTask,
   TaskType,
   DataStatus,
-  RouteKey
+  RouteKey,
+  JobType
 } from '@app/models';
 
 @Component({
@@ -71,6 +72,8 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   private _jobsDiffer: IterableDiffer<McsJob>;
 
   // Subscription
+  private _excludedProgressJobTypes: JobType[];
+  private _hideProgressBar: boolean;
   private _timerSubscription: Subscription;
   private _destroySubject = new Subject<void>();
 
@@ -108,12 +111,14 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
   ) {
     this.progressValue = 0;
     this.progressMax = 0;
+    this._excludedProgressJobTypes = new Array();
     this._jobsDiffer = this._iterableDiffers.find([]).create(null);
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content
       .servers.shared.provisioningNotifications;
+    this._createExcludedProgressJobs();
     this._listenToCurrentUserJob();
   }
 
@@ -154,7 +159,7 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
    * Returns true when there is ongoing job
    */
   public get hasInProgressJob(): boolean {
-    return !this.allJobsCompleted && !this.hasErrorJobs;
+    return !this.allJobsCompleted && !this.hasErrorJobs && !this._hideProgressBar;
   }
 
   /**
@@ -237,6 +242,8 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
         this.progressValue += task.elapsedTimeInSeconds;
         this.progressMax += (task.ectInSeconds + task.elapsedTimeInSeconds);
       });
+      this._hideProgressBar = !!this._excludedProgressJobTypes
+        .find((jobType) => jobType === job.type);
     });
 
     // Calculate the 99% of the progreesbar maximum
@@ -306,5 +313,12 @@ export class JobsProvisioningComponent implements OnInit, DoCheck, OnDestroy {
     this.progressValue = 0;
     this.progressMax = 0;
     unsubscribeSafely(this._timerSubscription);
+  }
+
+  /**
+   * Creates all the jobs type table
+   */
+  private _createExcludedProgressJobs(): void {
+    this._excludedProgressJobTypes.push(JobType.CreateResourceCatalogItem);
   }
 }

@@ -37,7 +37,10 @@ export enum JobType {
 
   // Server Media Management
   AttachServerMedia = 100301,
-  DetachServerMedia = 100302
+  DetachServerMedia = 100302,
+
+  // Resource Media
+  CreateResourceCatalogItem = 100401
 }
 
 /**

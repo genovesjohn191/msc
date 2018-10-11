@@ -2,7 +2,9 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  Input
+  Input,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   FormGroup,
@@ -10,9 +12,11 @@ import {
 } from '@angular/forms';
 import {
   Subscription,
-  throwError
+  throwError,
+  Observable,
+  of
 } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import {
   McsErrorHandlerService,
   McsTextContentProvider,
@@ -52,7 +56,8 @@ const DEFAULT_SELF_MANAGE_STORAGE_MINIMUM = 30;
 
 @Component({
   selector: 'mcs-server-new',
-  templateUrl: 'server-new.component.html'
+  templateUrl: 'server-new.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ServerNewComponent
@@ -64,7 +69,7 @@ export class ServerNewComponent
 
   public textContent: any;
   public textHelpContent: any;
-  public operatingSystemsMap: Map<string, McsServerOperatingSystem[]>;
+  public operatingSystemsMap$: Observable<Map<string, McsServerOperatingSystem[]>>;
   public operatingSystemsSubscription: Subscription;
   public selectedStorage: McsResourceStorage;
   public customTemplates: McsResourceCatalogItem[];
@@ -83,25 +88,26 @@ export class ServerNewComponent
   public set resource(value: McsResource) {
     if (this._resource !== value) {
       this._resource = value;
+      this._getServersOs();
+      this._getCustomTemplates();
+      this._changeDetectorRef.markForCheck();
     }
   }
   private _resource: McsResource;
 
   constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
     private _textContentProvider: McsTextContentProvider,
     private _errorHandlerService: McsErrorHandlerService,
     private _serversOsRepository: ServersOsRepository
   ) {
     super();
-    this.operatingSystemsMap = new Map<string, McsServerOperatingSystem[]>();
   }
 
   public ngOnInit() {
     this.textContent = this._textContentProvider.content.servers.createServer.newServer;
     this.textHelpContent = this._textContentProvider.content.servers.createServer.contextualHelp;
     this._registerFormGroup();
-    this._getServersOs();
-    this._getCustomTemplates();
   }
 
   public ngOnDestroy() {
@@ -255,25 +261,24 @@ export class ServerNewComponent
    * Gets the servers operating systems from repository
    */
   private _getServersOs(): void {
-    this.operatingSystemsSubscription = this._serversOsRepository.findAllRecords()
+    this.operatingSystemsMap$ = this._serversOsRepository.findAllRecords()
       .pipe(
         catchError((error) => {
           // Handle common error status code
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
-        })
-      )
-      .subscribe((response: McsServerOperatingSystem[]) => {
-        this._filterOsGroup(response);
-      });
+        }),
+        switchMap((_response) => of(this._filterOsGroup(_response)))
+      );
   }
 
   /**
    * Filters the OS group and create the mapping
    * @param operatingSystems Operating systems to be grouped
    */
-  private _filterOsGroup(operatingSystems: McsServerOperatingSystem[]): void {
+  private _filterOsGroup(operatingSystems: McsServerOperatingSystem[]) {
     if (isNullOrEmpty(operatingSystems)) { return; }
+    let operatingSystemsMap: Map<string, McsServerOperatingSystem[]> = new Map();
 
     operatingSystems.forEach((operatingSystem) => {
       if (operatingSystem.serviceType !== this.serviceType) { return; }
@@ -282,11 +287,12 @@ export class ServerNewComponent
       if (isNullOrEmpty(keyString)) { return; }
       let groupedOs: McsServerOperatingSystem[];
 
-      let existingOs = this.operatingSystemsMap.get(keyString[0]);
+      let existingOs = operatingSystemsMap.get(keyString[0]);
       groupedOs = isNullOrEmpty(existingOs) ? new Array() : existingOs;
       groupedOs.push(operatingSystem);
-      this.operatingSystemsMap.set(keyString[0], groupedOs);
+      operatingSystemsMap.set(keyString[0], groupedOs);
     });
+    return operatingSystemsMap;
   }
 
   /**

@@ -454,9 +454,12 @@ export class SelectComponent extends McsFormFieldControlBase<any>
       let isFirstItemSelected = this.required &&
         isNullOrEmpty(selectedValue) && !isNullOrEmpty(this._items);
 
-      isFirstItemSelected ?
-        this._selectItemByValue(getSafeProperty(this._items, (obj) => obj.first.value)) :
+      if (isFirstItemSelected) {
+        let firstItem = this._items.find((item) => !item.hasSubgroup);
+        this._selectItem(firstItem);
+      } else {
         this._selectItemByValue(this.ngControl ? this.ngControl.value : this._value);
+      }
     });
   }
 

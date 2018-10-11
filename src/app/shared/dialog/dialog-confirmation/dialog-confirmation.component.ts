@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import {
   MCS_DIALOG_DATA,
-  McsDialogRef
+  McsDialogRef,
+  McsStatusSettingsBase
 } from '@app/core';
 import { McsStatusType } from '@app/utilities';
 import { DialogConfirmation } from './dialog-confirmation-data';
-import { DialogContentBase } from '../dialog-content.base';
 
 @Component({
   selector: 'mcs-dialog-confirmation',
@@ -24,7 +24,7 @@ import { DialogContentBase } from '../dialog-content.base';
   }
 })
 
-export class DialogConfirmationComponent extends DialogContentBase {
+export class DialogConfirmationComponent extends McsStatusSettingsBase {
 
   constructor(
     _changeDetectorRef: ChangeDetectorRef,
@@ -32,7 +32,7 @@ export class DialogConfirmationComponent extends DialogContentBase {
     @Inject(MCS_DIALOG_DATA) public dialogData: DialogConfirmation<any>
   ) {
     super(_changeDetectorRef);
-    this.initializeDialog();
+    this.initializeSettings();
   }
 
   /**
@@ -59,7 +59,7 @@ export class DialogConfirmationComponent extends DialogContentBase {
   /**
    * Returns the dialog type based on its status
    */
-  protected get dialogType(): McsStatusType {
+  protected get statusType(): McsStatusType {
     return this.dialogData.type || 'info';
   }
 

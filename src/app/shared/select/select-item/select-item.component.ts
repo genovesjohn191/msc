@@ -10,15 +10,18 @@ import {
   QueryList,
   ContentChildren,
   ElementRef,
-  ViewChild
+  ViewChild,
+  ContentChild
 } from '@angular/core';
 import { CoreDefinition } from '@app/core';
 import {
   isNullOrEmpty,
   animateFactory,
-  isElementVisible
+  isElementVisible,
+  getSafeProperty
 } from '@app/utilities';
 import { SelectGroupComponent } from '../select-group/select-group.component';
+import { SelectItemLabelDirective } from './select-item-label.directive';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -50,7 +53,10 @@ export class SelectItemComponent implements AfterContentInit {
   @Input()
   public value: any;
   public get viewValue(): string {
-    return (this._elementRef.nativeElement.textContent || '').trim();
+    return (
+      getSafeProperty(this.itemLabelTemplate, (obj) => obj.viewValue) ||
+      this._elementRef.nativeElement.innerText || ''
+    ).trim();
   }
 
   @Output()
@@ -58,6 +64,9 @@ export class SelectItemComponent implements AfterContentInit {
 
   @Output()
   public groupSelectionChanged = new EventEmitter<SelectItemComponent>();
+
+  @ContentChild(SelectItemLabelDirective)
+  public itemLabelTemplate: SelectItemLabelDirective;
 
   @ContentChildren(SelectGroupComponent)
   public groups: QueryList<SelectGroupComponent>;

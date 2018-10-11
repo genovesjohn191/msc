@@ -3,12 +3,16 @@ import {
   Input,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ElementRef,
+  Renderer2
 } from '@angular/core';
+import { AnimationEvent } from '@angular/animations';
 import { CoreDefinition } from '@app/core';
 import {
   McsStatusType,
-  McsColorType
+  McsColorType,
+  animateFactory
 } from '@app/utilities';
 
 @Component({
@@ -17,12 +21,20 @@ import {
   styleUrls: ['./alert.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  animations: [
+    animateFactory.fadeIn,
+    animateFactory.transformVertical
+  ],
   host: {
-    '[class]': 'hostClass'
+    '[class]': 'hostClass',
+    '[@transformVertical]': 'animationState',
+    '(@transformVertical.done)': 'animationDone($event)'
   }
 })
 
 export class AlertComponent {
+  public animationState = 'transform';
+
   @Input()
   public header: string;
 
@@ -43,34 +55,55 @@ export class AlertComponent {
     return `${this._type} alert-wrapper`;
   }
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) { }
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _elementRef: ElementRef,
+    private _renderer: Renderer2
+  ) { }
 
   /**
    * Returns the alert icon key and color based on status
    */
-  public get alertIconDetails(): { key, color } {
-    let iconKey: string;
-    let iconColor: McsColorType;
+  public get alertIconDetails(): { key, iconColor } {
+    let _iconKey: string;
+    let _iconColor: McsColorType;
 
     switch (this.type) {
       case 'error':
-        iconKey = CoreDefinition.ASSETS_FONT_CLOSE_CIRCLE;
-        iconColor = 'red';
+        _iconKey = CoreDefinition.ASSETS_FONT_CLOSE_CIRCLE;
+        _iconColor = 'red';
         break;
       case 'warning':
-        iconKey = CoreDefinition.ASSETS_FONT_WARNING;
-        iconColor = 'red';
+        _iconKey = CoreDefinition.ASSETS_FONT_WARNING;
+        _iconColor = 'red';
         break;
       case 'info':
-        iconKey = CoreDefinition.ASSETS_FONT_INFORMATION_CIRCLE;
-        iconColor = 'primary';
+        _iconKey = CoreDefinition.ASSETS_FONT_INFORMATION_CIRCLE;
+        _iconColor = 'primary';
         break;
       case 'success':
       default:
-        iconKey = CoreDefinition.ASSETS_FONT_CHECK_CIRCLE;
-        iconColor = 'green';
+        _iconKey = CoreDefinition.ASSETS_FONT_CHECK_CIRCLE;
+        _iconColor = 'green';
         break;
     }
-    return { key: iconKey, color: iconColor };
+    return { key: _iconKey, iconColor: _iconColor };
+  }
+
+  /**
+   * Hide the alert component
+   */
+  public hideAlert(): void {
+    this.animationState = 'void';
+  }
+
+  /**
+   * Event that emits when the animation was done
+   * @param event Event animation provider
+   */
+  public animationDone(event: AnimationEvent): void {
+    if (event.toState !== 'void') { return; }
+    let hostElement = this._elementRef.nativeElement as HTMLElement;
+    this._renderer.removeChild(hostElement.parentNode, hostElement);
   }
 }

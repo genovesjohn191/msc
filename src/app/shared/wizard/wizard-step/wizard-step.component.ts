@@ -2,13 +2,11 @@ import {
   Component,
   Input,
   ViewChild,
-  ContentChild,
   TemplateRef,
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { WizardActionPlacementDirective } from './wizard-action-placement.directive';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -36,9 +34,6 @@ export class WizardStepComponent {
 
   @ViewChild(TemplateRef)
   public templateRef: TemplateRef<any>;
-
-  @ContentChild(WizardActionPlacementDirective)
-  public actionPlacement: WizardActionPlacementDirective;
 
   public enabled: boolean;
   public isActive: boolean;

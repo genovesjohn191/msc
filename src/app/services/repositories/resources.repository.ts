@@ -122,6 +122,18 @@ export class ResourcesRepository extends McsRepositoryBase<McsResource> {
   }
 
   /**
+   * Validates the catalog items based on the inputted payload
+   * @param resourceId Resource Id where the catalog items will be validated
+   * @param createItemData Catalog item data to be used
+   */
+  public validateCatalogItems(
+    resourceId: string,
+    catalogItem: McsResourceCatalogItemCreate
+  ): Observable<McsApiSuccessResponse<any>> {
+    return this._resourcesApiService.validateCatalogItems(resourceId, catalogItem);
+  }
+
+  /**
    * This will be automatically called in the repoistory based class
    * to populate the data obtained
    */

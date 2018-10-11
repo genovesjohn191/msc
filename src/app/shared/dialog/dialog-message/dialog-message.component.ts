@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import {
   MCS_DIALOG_DATA,
-  McsDialogRef
+  McsDialogRef,
+  McsStatusSettingsBase
 } from '@app/core';
 import { McsStatusType } from '@app/utilities';
 import { DialogMessageData } from './dialog-message-data';
-import { DialogContentBase } from '../dialog-content.base';
 
 @Component({
   selector: 'mcs-dialog-message',
@@ -24,7 +24,7 @@ import { DialogContentBase } from '../dialog-content.base';
   }
 })
 
-export class DialogMessageComponent extends DialogContentBase  {
+export class DialogMessageComponent extends McsStatusSettingsBase  {
 
   constructor(
     _changeDetectorRef: ChangeDetectorRef,
@@ -32,7 +32,7 @@ export class DialogMessageComponent extends DialogContentBase  {
     @Inject(MCS_DIALOG_DATA) public dialogData: DialogMessageData
   ) {
     super(_changeDetectorRef);
-    this.initializeDialog();
+    this.initializeSettings();
   }
 
   /**
@@ -59,7 +59,7 @@ export class DialogMessageComponent extends DialogContentBase  {
   /**
    * Returns the dialog type based on its status
    */
-  protected get dialogType(): McsStatusType {
+  protected get statusType(): McsStatusType {
     return this.dialogData.type || 'info';
   }
 

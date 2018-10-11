@@ -195,7 +195,7 @@ export class ResourcesApiService {
   public getResourceCatalogItems(id: any):
     Observable<McsApiSuccessResponse<McsResourceCatalogItem[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${id}/catalogitems`;
+    mcsApiRequestParameter.endPoint = `/resources/${id}/catalog-items`;
 
     return this._mcsApiService.get(mcsApiRequestParameter)
       .pipe(
@@ -249,7 +249,36 @@ export class ResourcesApiService {
   public createCatalogItem(resourceId: string, createItemData: McsResourceCatalogItemCreate):
     Observable<McsApiSuccessResponse<McsJob>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
-    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalogitems`;
+    mcsApiRequestParameter.endPoint = `/resources/${resourceId}/catalog-items`;
+    mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
+
+    return this._mcsApiService.post(mcsApiRequestParameter)
+      .pipe(
+        finalize(() => {
+          this._loggerService.traceEnd(`"${mcsApiRequestParameter.endPoint}" request ended.`);
+        }),
+        map((response) => {
+          // Deserialize json reponse
+          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJob>(McsJob, response);
+
+          this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
+          this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);
+          this._loggerService.traceInfo(`converted response:`, apiResponse);
+          return apiResponse;
+        })
+      );
+  }
+
+  /**
+   * Validates the catalog items based on the inputted payload
+   * @param resourceId Resource Id where the catalog items will be validated
+   * @param createItemData Catalog item data to be used
+   */
+  public validateCatalogItems(resourceId: string, createItemData: McsResourceCatalogItemCreate):
+    Observable<McsApiSuccessResponse<any>> {
+    let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
+    mcsApiRequestParameter.endPoint =
+      `/resources/${resourceId}/catalogitems/payload-validation-requests`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
