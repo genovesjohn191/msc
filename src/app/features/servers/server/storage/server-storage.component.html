@@ -6,7 +6,7 @@
     <h2 class="container-header">{{ textContent.title }}</h2>
 
     <!-- Description -->
-    <ng-container *ngIf="hasEditableDisk;else noEditableDiskTemplate">
+    <ng-container *mcsAccessControl="['VmEdit']; else noEditableDiskTemplate">
       <p>{{ textContent.hasEditableDiskDescription }}</p>
     </ng-container>
     <ng-template #noEditableDiskTemplate>
