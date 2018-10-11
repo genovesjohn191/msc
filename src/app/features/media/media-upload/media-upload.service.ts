@@ -7,15 +7,14 @@ import {
   distinctUntilChanged,
   tap
 } from 'rxjs/operators';
-import {
-  ResourcesRepository,
-  MediaApiService
-} from '@app/services';
+import { ResourcesRepository } from '@app/services';
 import { isNullOrEmpty } from '@app/utilities';
 import {
   McsResource,
   McsResourceCatalogItemCreate,
-  McsJob
+  McsJob,
+  McsApiSuccessResponse,
+  CatalogItemType
 } from '@app/models';
 
 @Injectable()
@@ -37,20 +36,24 @@ export class MediaUploadService {
   }
   private _jobChanges: BehaviorSubject<McsJob>;
 
-  constructor(
-    private _resourcesRepository: ResourcesRepository,
-    private _mediaApiService: MediaApiService
-  ) {
+  constructor(private _resourcesRepository: ResourcesRepository) {
     this._jobChanges = new BehaviorSubject(undefined);
     this._selectedResourceChange = new BehaviorSubject(undefined);
   }
 
   /**
    * An observable method that returns true when the url exist
-   * @param url Url to be checked
+   * @param resourceId Resource ID where the items would be checked
+   * @param _url Url to validate
    */
-  public isUrlExist(url: string): Observable<boolean> {
-    return this._mediaApiService.checkUrlExist(url);
+  public validateUrl(resourceId: string, _url: string):
+    Observable<McsApiSuccessResponse<any>> {
+    let fieldDetails = {
+      name: 'url-name-dummy',
+      type: CatalogItemType.Media,
+      url: _url
+    } as McsResourceCatalogItemCreate;
+    return this._resourcesRepository.validateCatalogItems(resourceId, fieldDetails);
   }
 
   /**

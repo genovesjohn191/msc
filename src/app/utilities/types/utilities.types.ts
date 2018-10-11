@@ -2,7 +2,7 @@
 
 // Size Type
 export type McsSizeType = 'auto' | 'xxsmall' | 'xsmall' | 'small' |
-   'medium' | 'large' | 'xlarge' | 'xxlarge';
+  'medium' | 'large' | 'xlarge' | 'xxlarge';
 
 // Color Type
 export type McsColorType = 'primary' | 'primary-01' | 'primary-02' | 'secondary'
@@ -15,8 +15,12 @@ export type McsThemeType = 'none' | 'dark' | 'light' | 'black';
 // Status Type
 export type McsStatusType = 'success' | 'error' | 'warning' | 'info';
 
+// Action Type
+export type McsActionType = 'dismiss' | 'proceed';
+
 // Status Color Type
-export type McsStatusColorType = 'default' | 'primary' | 'success' | 'error' | 'warning' | 'info';
+export type McsStatusColorType = 'default' | 'primary' | 'success'
+  | 'error' | 'warning' | 'info';
 
 // Placement Type
 export type McsPlacementType = 'left' | 'right' | 'top' | 'bottom' | 'center';

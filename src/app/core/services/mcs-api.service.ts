@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import {
   HttpClient,
-  HttpResponse
+  HttpErrorResponse
 } from '@angular/common/http';
 import {
   Observable,
@@ -36,11 +36,11 @@ export class McsApiService {
    * Subscribe to this stream to get the
    * error response in case of unexpected error
    */
-  private _errorResponseStream: Subject<HttpResponse<any> | any>;
-  public get errorResponseStream(): Subject<HttpResponse<any> | any> {
+  private _errorResponseStream: Subject<HttpErrorResponse>;
+  public get errorResponseStream(): Subject<HttpErrorResponse> {
     return this._errorResponseStream;
   }
-  public set errorResponseStream(value: Subject<HttpResponse<any> | any>) {
+  public set errorResponseStream(value: Subject<HttpErrorResponse>) {
     this._errorResponseStream = value;
   }
 
@@ -160,13 +160,13 @@ export class McsApiService {
   }
 
   /**
-   * Handle Error Exception
-   * @param {any} error Error Response
+   * Handle server error
+   * @param httpError HTTP Error Response
    */
-  private _handleServerError(error: HttpResponse<any> | any) {
+  private _handleServerError(httpError: HttpErrorResponse | any) {
     // Rethrow to notify outside subscribers that an error occured
-    this._errorResponseStream.next(error);
-    return throwError(error);
+    this._errorResponseStream.next(httpError);
+    return throwError(httpError);
   }
 
   /**

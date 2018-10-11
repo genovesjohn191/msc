@@ -1,6 +1,5 @@
 import {
   Directive,
-  Input,
   forwardRef,
   Inject
 } from '@angular/core';
@@ -16,9 +15,6 @@ import { WizardComponent } from '../wizard.component';
 })
 
 export class WizardStepPreviousDirective {
-  @Input()
-  public type: any;
-
   constructor(@Inject(forwardRef(() => WizardComponent)) private _wizard) { }
 
   /**

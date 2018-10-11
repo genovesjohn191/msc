@@ -51,8 +51,8 @@
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
         <!-- Os Group -->
         <mcs-select-group [header]="textContent.headers.os">
-          <mcs-select-item *ngFor="let platform of (operatingSystemsMap | mcsMapIterable)">
-            {{ platform.key }}
+          <mcs-select-item *ngFor="let platform of (operatingSystemsMap$ | async) | mcsMapIterable">
+            <span mcsSelectItemLabel>{{ platform.key }}</span>
             <mcs-select-group sub-group>
               <mcs-select-item *ngFor="let os of platform.value" [value]="os">
                 {{ os.name }}

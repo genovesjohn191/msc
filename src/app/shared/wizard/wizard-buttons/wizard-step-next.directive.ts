@@ -4,14 +4,8 @@ import {
   forwardRef,
   Inject
 } from '@angular/core';
-import {
-  Observable,
-  throwError
-} from 'rxjs';
-import {
-  catchError,
-  finalize
-} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import {
   isNullOrEmpty,
   McsDelegate
@@ -28,13 +22,12 @@ import { WizardComponent } from '../wizard.component';
 })
 
 export class WizardStepNextDirective {
-  @Input()
-  public type: any;
-
   @Input('mcsWizardStepNextWhen')
   public when: McsDelegate<Observable<any>>;
 
-  constructor(@Inject(forwardRef(() => WizardComponent)) private _wizard) { }
+  constructor(
+    @Inject(forwardRef(() => WizardComponent)) private _wizard: WizardComponent
+  ) { }
 
   /**
    * Proceed to next step if when is not provided,
@@ -51,10 +44,6 @@ export class WizardStepNextDirective {
     // the dialog box for error will be displayed and the wizard current step will remain
     this._wizard.disableWizard();
     this.when().pipe(
-      catchError((_error) => {
-        this._wizard.showErrorDialog();
-        return throwError(_error);
-      }),
       finalize(() => this._wizard.enableWizard())
     ).subscribe((response) => {
       if (isNullOrEmpty(response)) { return; }

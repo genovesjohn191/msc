@@ -6,9 +6,16 @@ import {
   McsStatusColorType
 } from '@app/utilities';
 
-export abstract class DialogContentBase {
+export abstract class McsStatusSettingsBase {
 
+  /**
+   * Returns the color type based on the status
+   */
   public statusColor: McsStatusColorType = 'primary';
+
+  /**
+   * Returns the icon key based on the status
+   */
   public statusIconKey: string = CoreDefinition.ASSETS_SVG_INFO;
   private _statusMapTable: Map<McsStatusType, string>;
 
@@ -17,13 +24,13 @@ export abstract class DialogContentBase {
   /**
    * Initializes the dialog settings
    */
-  public initializeDialog(): void {
+  public initializeSettings(): void {
     this._createStatusMapTable();
-    this._setColorByType(this.dialogType);
-    this._setDialogIconByType(this.dialogType);
+    this._setColorByType(this.statusType);
+    this._setDialogIconByType(this.statusType);
   }
 
-  protected abstract get dialogType(): McsStatusType;
+  protected abstract get statusType(): McsStatusType;
 
   /**
    * Creates the status map table

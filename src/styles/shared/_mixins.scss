@@ -305,6 +305,16 @@
   align-items: $value;
 }
 
+// Flex Align-self
+// Usage:
+// .mcs-flex-self {
+//   @include align-self(center);
+// }
+@mixin align-self ($value) {
+  -webkit-align-self: $value;
+  align-self: $value;
+}
+
 // Textbox Highlight
 // Usage:
 // .mcs-textbox {

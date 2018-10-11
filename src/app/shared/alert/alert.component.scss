@@ -9,17 +9,38 @@ $alert-bg-color-warning: $color-yellow-00;
 $alert-bg-color-info: $color-primary-01;
 
 .alert-wrapper {
+  padding: $space-medium;
   @include display-flex(row);
   @include align-items(center);
-  padding: $space-medium;
   @include border-radius($alert-border-radius);
 
-  .alert-icon {
-    margin-right: $space-medium;
+  @include breakpoint(small) {
+    @include display-flex(column);
+    @include set-items-interval($space-small);
   }
 
-  .alert-content {
-    @include display-flex(column);
+  .alert-content-wrapper {
+    @include flex(1);
+    @include display-flex(row);
+    @include align-items(center);
+
+    .alert-icon {
+      @include flex(0);
+      margin-right: $space-medium;
+    }
+
+    .alert-content {
+      @include flex(1);
+      @include display-flex(column);
+    }
+  }
+
+  .alert-actions {
+    @include flex(0);
+    @include align-self(flex-end);
+    @include display-flex(row);
+    @include flex-wrap(nowrap);
+    text-transform: uppercase;
   }
 
   &.success {

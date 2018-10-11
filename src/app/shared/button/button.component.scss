@@ -24,7 +24,6 @@ $button-error-bg-color: $color-red-00;
   cursor: pointer;
   outline: none;
   border: none;
-  text-decoration: none !important;
   -webkit-tap-highlight-color: transparent;
   display: inline-block;
   white-space: nowrap;
@@ -34,9 +33,7 @@ $button-error-bg-color: $color-red-00;
 
 // Basic color settings mixin
 @mixin mcs-button-basic-color-setting($bg-color, $text-color: $bg-color) {
-  .button-text-wrapper {
-    color: $text-color;
-  }
+  color: $text-color;
   .button-focus-overlay {
     background-color: rgba($bg-color, 0.12);
   }
@@ -61,9 +58,11 @@ $button-error-bg-color: $color-red-00;
 
 .button-wrapper {
   @include mcs-button-reset();
+  @include display-inline-flex(row);
+  @include align-items(center);
+  justify-content: center;
   box-sizing: border-box;
   position: relative;
-  vertical-align: middle;
   background-color: $button-bg-color;
   font-family: $button-font-family;
   line-height: $button-default-size;
@@ -109,7 +108,8 @@ $button-error-bg-color: $color-red-00;
   }
 
   &.primary,
-  &.info {
+  &.info,
+  &.default {
     @include mcs-button-raised-color-setting(
       $button-primary-bg-color,
       $color-white
@@ -140,6 +140,7 @@ $button-error-bg-color: $color-red-00;
 
 .button-wrapper.basic {
   @include box-shadow(none);
+  background-color: transparent;
 
   .button-focus-overlay {
     transition: none;

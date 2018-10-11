@@ -740,6 +740,7 @@
     "backToMedia": "Back to Media",
     "mediaStepDetails": {
       "label": "Media Details",
+      "description": "Your media will be uploaded into the default Storage Policy for your organisation.",
       "selectResources": "Select a resource",
       "selectResourcesHelp": "The VDC you would like to make this media available to.",
       "mediaName": "Enter media name",
@@ -748,17 +749,19 @@
       "mediaUrlHelp": "The publicly-accessible URL for us to download your media from.",
       "mediaDescription": "Enter media description",
       "mediaDescriptionHelp": "Enter a custom description for your media.",
+      "mediaUploadDismissLabel": "DISMISS",
       "errors": {
         "selectResourceRequired": "You must select a resource",
         "mediaNameRequired": "Media name must be entered",
         "mediaNameInvalid": "Media name can only contain letters, numbers, spaces or hyphens",
         "mediaUrlRequired": "Media url must be entered",
         "mediaUrlInvalid": "Invalid url format",
-        "mediaUrlNotExist": "Entered url does not exist"
+        "mediaUploadError": "Unfortunately an error occurred and we couldn't upload your media at this time. Please try again."
       }
     },
     "mediaStepGo": {
-      "label": "Go!"
+      "label": "Go!",
+      "description": "Your media is uploading and will be available shortly. You can track progress from the notifications menu at the top of the portal."
     },
     "loadingResources": "Loading media resources."
   },

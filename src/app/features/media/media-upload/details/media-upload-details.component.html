@@ -1,18 +1,29 @@
 <div class="limited-view">
-  <mcs-loader [subscriptions]="[resourcesSubscription]"
+  <mcs-loader [subscriptions]="[loaderSubscription]"
     [loadingText]="textContent.loadingResources">
 
     <div class="contextual-help-page-wrapper">
+      <p>{{ textContent.description }}</p>
+
+      <div class="item-margin" *mcsComponentHandler>
+        <mcs-alert type="error">
+          {{ textContent.errors.mediaUploadError }}
+          <a mcsButton color="error" type="basic" mcsAlertAction="dismiss">
+            {{ textContent.mediaUploadDismissLabel }}
+          </a>
+        </mcs-alert>
+      </div>
+
       <form [formGroup]="fgMediaUpload" mcsFormGroup>
         <!-- Resource Select -->
-        <div class="field">
+        <div class="item-margin">
           <mcs-form-field>
             <mcs-select [formControl]="fcResources" required
               (change)="onChangeResource($event)"
               [placeholder]="textContent.selectResources"
               [mcsContextualHelp]="textContent.selectResourcesHelp">
               <mcs-select-group header="VDC">
-                <mcs-select-item *ngFor="let resource of resources" [value]="resource">
+                <mcs-select-item *ngFor="let resource of resources$ | async" [value]="resource">
                   {{ resource.name }}
                 </mcs-select-item>
               </mcs-select-group>
@@ -25,7 +36,7 @@
         </div>
 
         <!-- Media Name  -->
-        <div class="field">
+        <div class="item-margin">
           <mcs-form-field>
             <input mcsInput #mediaName mcsSetFocus required
               [placeholder]="textContent.mediaName" maxlength="25"
@@ -51,12 +62,13 @@
         </div>
 
         <!-- Media URL  -->
-        <div class="field">
+        <div class="item-margin">
           <mcs-form-field>
             <input mcsInput #mediaUrl required
               [placeholder]="textContent.mediaUrl" maxlength="300"
               [formControl]="fcMediaUrl"
-              [mcsContextualHelp]="textContent.mediaUrlHelp">
+              [mcsContextualHelp]="textContent.mediaUrlHelp"
+              (blur)="onBlurMediaUrl()">
 
             <mcs-suffix *ngIf="mediaUrlStatusIconKey">
               <mcs-icon [key]="mediaUrlStatusIconKey" size="small" ></mcs-icon>
@@ -77,13 +89,13 @@
               {{ textContent.errors.mediaUrlInvalid }}
             </mcs-error>
             <mcs-error mcsError errorState="emailNotExist">
-              {{ textContent.errors.mediaUrlNotExist }}
+              {{ urlErrorMessage }}
             </mcs-error>
           </mcs-form-field>
         </div>
 
         <!-- Media Description  -->
-        <div class="field">
+        <div class="item-margin">
           <mcs-form-field>
             <input mcsInput #mediaDescription
               [placeholder]="textContent.mediaDescription" maxlength="1000"

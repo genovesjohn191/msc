@@ -4,6 +4,7 @@ import {
   OnDestroy,
   ChangeDetectorRef,
   ElementRef,
+  AfterViewInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -15,9 +16,8 @@ import {
 } from 'rxjs';
 import {
   catchError,
-  debounceTime,
-  distinctUntilChanged,
-  switchMap
+  tap,
+  finalize
 } from 'rxjs/operators';
 import {
   FormGroup,
@@ -28,7 +28,8 @@ import {
   CoreValidators,
   CoreDefinition,
   McsErrorHandlerService,
-  McsFormGroupService
+  McsFormGroupService,
+  McsScrollDispatcherService
 } from '@app/core';
 import {
   unsubscribeSubject,
@@ -44,19 +45,25 @@ import {
   McsResourceCatalogItemCreate,
   CatalogItemType
 } from '@app/models';
-import { FormGroupDirective } from '@app/shared';
+import {
+  FormGroupDirective,
+  ComponentHandlerDirective
+} from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mcs-media-upload-details',
   templateUrl: 'media-upload-details.component.html'
 })
 
-export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnInit, OnDestroy {
+export class MediaUploadDetailsComponent
+  implements McsSafeToNavigateAway, OnInit, AfterViewInit, OnDestroy {
+
   public textContent: any;
-  public resourcesSubscription: Subscription;
-  public resources: McsResource[];
+  public resources$: Observable<McsResource[]>;
   public selectedResource: McsResource;
+  public urlErrorMessage: string;
   public uploadMediaFunc = this._uploadMedia.bind(this);
 
   // Form variables
@@ -66,10 +73,22 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
   public fcMediaUrl: FormControl;
   public fcMediaDescription: FormControl;
 
+  public loaderSubscription = new Subscription();
+
+  private _mediaUrlStatusIconKey: string;
+  public get mediaUrlStatusIconKey(): string { return this._mediaUrlStatusIconKey; }
+  public set mediaUrlStatusIconKey(value: string) {
+    this._mediaUrlStatusIconKey = value;
+    this._changeDetectorRef.markForCheck();
+  }
+
   private _destroySubject = new Subject<void>();
 
   @ViewChild(FormGroupDirective)
   private _formGroup: FormGroupDirective;
+
+  @ViewChild(ComponentHandlerDirective)
+  private _stepAlertMessage: ComponentHandlerDirective;
 
   constructor(
     private _elementRef: ElementRef,
@@ -78,7 +97,8 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
     private _formGroupService: McsFormGroupService,
     private _errorHandlerService: McsErrorHandlerService,
     private _resourcesRepository: ResourcesRepository,
-    private _mediaUploadService: MediaUploadService
+    private _mediaUploadService: MediaUploadService,
+    private _scrollElementService: McsScrollDispatcherService
   ) { }
 
   public ngOnInit() {
@@ -87,19 +107,17 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
     this._getResources();
   }
 
-  public ngOnDestroy() {
-    unsubscribeSafely(this.resourcesSubscription);
-    unsubscribeSubject(this._destroySubject);
+  public ngAfterViewInit() {
+    Promise.resolve().then(() => {
+      if (!isNullOrEmpty(this._stepAlertMessage)) {
+        this._stepAlertMessage.removeComponent();
+      }
+    });
   }
 
-  /**
-   * Returns the icon key to be displayed in the url
-   */
-  public get mediaUrlStatusIconKey(): string {
-    if (isNullOrEmpty(this.fcMediaUrl)) { return undefined; }
-    return this.fcMediaUrl.pending ?
-      CoreDefinition.ASSETS_GIF_LOADER_SPINNER :
-      this.fcMediaUrl.valid ? CoreDefinition.ASSETS_SVG_SUCCESS : undefined;
+  public ngOnDestroy() {
+    unsubscribeSafely(this.loaderSubscription);
+    unsubscribeSubject(this._destroySubject);
   }
 
   /**
@@ -118,6 +136,29 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
   }
 
   /**
+   * Event that emits when the media url textbox has lost focused
+   */
+  public onBlurMediaUrl(): void {
+    let mediaUrl = this.fcMediaUrl.value;
+
+    this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
+    this._mediaUploadService.validateUrl(this.selectedResource.id, mediaUrl)
+      .pipe(
+        catchError((_httpError: HttpErrorResponse) => {
+          if (isNullOrEmpty(_httpError)) { return throwError(_httpError); }
+          this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_ERROR;
+          this.fcMediaUrl.setErrors({ emailNotExist: true });
+
+          this.urlErrorMessage = getSafeProperty(_httpError, (obj) => obj.error.errors[0].message);
+          return throwError(_httpError);
+        })
+      )
+      .subscribe(() => {
+        this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_SUCCESS;
+      });
+  }
+
+  /**
    * Upload media based on form contents
    */
   private _uploadMedia(): Observable<McsJob> {
@@ -128,9 +169,20 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
     uploadMediaModel.description = this.fcMediaDescription.value;
     uploadMediaModel.type = CatalogItemType.Media;
 
+    this._stepAlertMessage.removeComponent();
     return this._mediaUploadService.uploadMedia(
       this.selectedResource.id,
       uploadMediaModel
+    ).pipe(
+      catchError((_error) => {
+        this._stepAlertMessage.createComponent();
+        this._scrollElementService.scrollToElement(this._stepAlertMessage.elementRef.nativeElement);
+        return throwError(_error);
+      }),
+      tap(() => {
+        this._stepAlertMessage.removeComponent();
+      }),
+      finalize(() => this._changeDetectorRef.markForCheck())
     );
   }
 
@@ -138,15 +190,14 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
    * Get all the resources from the repository
    */
   private _getResources(): void {
-    this.resourcesSubscription = this._resourcesRepository.findAllRecords()
+    this.resources$ = this._resourcesRepository.findAllRecords()
       .pipe(
         catchError((error) => {
           this._errorHandlerService.handleHttpRedirectionError(error.status);
           return throwError(error);
-        })
-      ).subscribe(() => {
-        this.resources = this._resourcesRepository.dataRecords;
-      });
+        }),
+        finalize(() => unsubscribeSafely(this.loaderSubscription))
+      );
   }
 
   /**
@@ -170,15 +221,9 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
       [
         CoreValidators.required,
         CoreValidators.url
-      ],
-      [
-        CoreValidators.customAsync(
-          this._validateMediaUrlExistence.bind(this),
-          'emailNotExist'
-        )
       ]
     );
-    this.fcMediaUrl.statusChanges.subscribe(() => this._changeDetectorRef.markForCheck());
+    this.fcMediaUrl.valueChanges.subscribe(() => this.mediaUrlStatusIconKey = undefined);
     this.fcMediaDescription = new FormControl('', []);
 
     // Register Form Groups using binding
@@ -188,18 +233,6 @@ export class MediaUploadDetailsComponent implements McsSafeToNavigateAway, OnIni
       fcMediaUrl: this.fcMediaUrl,
       fcMediaDescription: this.fcMediaDescription
     });
-  }
-
-  /**
-   * Validate the media url existence from API
-   * @param input Inputted url to be checked
-   */
-  private _validateMediaUrlExistence(input: any): Observable<boolean> {
-    return this.fcMediaUrl.valueChanges.pipe(
-      debounceTime(CoreDefinition.SEARCH_TIME),
-      distinctUntilChanged(),
-      switchMap(() => this._mediaUploadService.isUrlExist(input))
-    );
   }
 
   /**
