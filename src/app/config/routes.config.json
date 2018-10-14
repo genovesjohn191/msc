@@ -189,7 +189,7 @@
     "enumKey": "TicketCreate",
     "routePath": "tickets/create",
     "navigationPath": "tickets/create",
-    "requiredPermissions": ["TicketView"],
+    "requiredPermissions": ["TicketCreate"],
     "documentTitle": "Create Ticket - Macquarie Cloud Services"
   },
   "notifications": {
