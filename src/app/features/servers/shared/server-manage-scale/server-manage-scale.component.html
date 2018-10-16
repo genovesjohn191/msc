@@ -1,10 +1,10 @@
 <!-- Scale header and switcher -->
 <div class="space-between-inline-items">
   <div><ng-content select="[mcsManageScaleHeader]"></ng-content></div>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Custom"
+  <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
     (click)="onChangeInputManageType(inputManageTypeEnum.Slider)">
     {{ textContent.sliderSwitch }}</a>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Slider"
+  <a *ngIf="inputManageType === inputManageTypeEnum.Slider" mcsId
     (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
     {{ textContent.customSwitch }}</a>
 </div>
@@ -19,6 +19,7 @@
     </p>
 
     <mcs-slider [min]="0" [max]="(sliderTable?.length - 1)"
+      mcsId="slider-storage"
       [ngModel]="sliderValueIndex"
       (ngModelChange)="onSliderChanged($event)"></mcs-slider>
     <div class="inline-items centered">
@@ -35,7 +36,8 @@
 
     <form [formGroup]="fgServerScale" class="block-items-small">
       <mcs-form-field class="form-field-size-small">
-        <input mcsInput placeholder="Enter RAM" [formControl]="fcCustomMemory">
+        <input mcsInput placeholder="Enter RAM"
+          mcsId="input-ram" [formControl]="fcCustomMemory">
         <mcs-suffix mcsSuffix>{{ textContent.ramUnit }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">
@@ -62,7 +64,8 @@
       </mcs-form-field>
 
       <mcs-form-field class="form-field-size-small">
-        <input mcsInput placeholder="Enter CPU" [formControl]="fcCustomCpu">
+        <input mcsInput placeholder="Enter CPU"
+          mcsId="enter-cpu" [formControl]="fcCustomCpu">
         <mcs-suffix mcsSuffix>{{ textContent.cpuUnit }}</mcs-suffix>
 
         <mcs-hint mcsHint align="start">

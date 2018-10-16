@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProgressBarModule } from '../progress-bar/progress-bar.module';
 import { IconModule } from '../icon/icon.module';
 import { AlertModule } from '../alert/alert.module';
+import { DirectivesModule } from '../directives';
 import { JobsProvisioningComponent } from './jobs-provisioning.component';
 
 @NgModule({
@@ -15,7 +16,8 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     FormsModule,
     ProgressBarModule,
     IconModule,
-    AlertModule
+    AlertModule,
+    DirectivesModule
   ],
   exports: [
     CommonModule,
@@ -23,6 +25,7 @@ import { JobsProvisioningComponent } from './jobs-provisioning.component';
     ProgressBarModule,
     IconModule,
     AlertModule,
+    DirectivesModule,
     JobsProvisioningComponent
   ]
 })

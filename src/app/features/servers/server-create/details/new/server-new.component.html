@@ -4,6 +4,7 @@
     <mcs-form-field>
       <input mcsInput #serverNameInput mcsSetFocus required
         placeholder="Enter a server name" maxlength="15"
+        mcsId="server-name"
         [formControl]="fcServerName"
         [mcsContextualHelp]="textHelpContent.serverNameField">
 
@@ -27,6 +28,7 @@
   <div class="field">
     <mcs-form-field>
       <mcs-select [formControl]="fcVApp"
+        mcsId="select-vapp"
         [mcsContextualHelp]="textHelpContent.vAppField"
         [placeholder]="textContent.placeholder.vApp">
         <mcs-select-group [header]="textContent.headers.vApp">
@@ -47,6 +49,7 @@
   <div class="field">
     <mcs-form-field>
       <mcs-select [formControl]="fcImage" required
+        mcsId="select-image"
         [placeholder]="textContent.placeholder.image"
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
         <!-- Os Group -->

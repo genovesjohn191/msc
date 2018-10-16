@@ -7,9 +7,14 @@
     <div class="vspace-medium space-between-inline-items">
       <p [innerHTML]="textContent.snapshotDescription | mcsNewLines"></p>
       <div>
-        <button mcsButton size="small" arrow="right"
+        <button mcsButton
+          size="small" arrow="right"
           [disabled]="!enabledActions"
-          (click)="createSnapshot()">
+          (click)="createSnapshot()"
+          mcsId
+          mcsEventTracker="create-snapshot"
+          mcsEventCategory="server"
+          mcsEventLabel="server-details-page">
           {{ textContent.createSnapshot }}
         </button>
       </div>
@@ -30,10 +35,18 @@
                   <span read-only>{{ snapshot.sizeMB | mcsDataSize: 'MB' }}</span>
                 </div>
                 <div [disabled]="!enabledActions" class="inline-items-medium text-right">
-                  <a (click)="restoreSnapshot(snapshot)">
+                  <a (click)="restoreSnapshot(snapshot)"
+                    mcsId
+                    mcsEventTracker="restore-snapshot"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
                     {{ textContent.restoreSnapshot }}
                   </a>
-                  <a (click)="deleteSnapshot(snapshot)" class="space-left-small">
+                  <a (click)="deleteSnapshot(snapshot)" class="space-left-small"
+                    mcsId
+                    mcsEventTracker="delete-snapshot"
+                    mcsEventCategory="server"
+                    mcsEventLabel="server-details-page">
                     {{ textContent.deleteSnapshot }}
                   </a>
                 </div>
@@ -70,7 +83,11 @@
     <h2 class="container-header">{{ textContent.serverBackups }}</h2>
     <p>{{ textContent.serverBackupsDescription }}</p>
     <div>
-      <button mcsButton size="small" [disabled]="true">{{ textContent.requestRestore }}</button>
+      <button mcsButton size="small" [disabled]="true"
+        mcsId
+        mcsEventTracker="request-restore"
+        mcsEventCategory="server"
+        mcsEventLabel="server-details-page">{{ textContent.requestRestore }}</button>
     </div>
   </div>
 </mcs-loader>

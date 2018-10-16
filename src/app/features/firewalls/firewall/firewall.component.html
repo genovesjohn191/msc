@@ -4,7 +4,7 @@
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
-        <mcs-search #search id="firewall-listing-panel-search"></mcs-search>
+        <mcs-search #search mcsId="firewall-listing-panel-search"></mcs-search>
 
         <mcs-data-status [dataStatusFactory]="listStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
@@ -17,6 +17,7 @@
 
                   <ng-container *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)">
                     <a [mcsRouterLink]="[routeKeyEnum.FirewallDetail, firewall.id]"
+                      mcsId="select-firewall"
                       mcsEventTracker="select-firewall"
                       mcsEventCategory="firewall"
                       mcsEventLabel="firewall-list-panel">
@@ -43,6 +44,7 @@
 
                   <ng-container *ngFor="let firewall of (iterator.value | mcsSortArray: firewallsListSource?.firewallSortMethod)">
                     <a [mcsRouterLink]="[routeKeyEnum.FirewallDetail, firewall.id]"
+                      mcsId="select-firewall"
                       mcsEventTracker="select-firewall"
                       mcsEventCategory="firewall"
                       mcsEventLabel="firewall-list-panel">
@@ -50,7 +52,8 @@
                       <mcs-option [value]="firewall"
                         [selected]="selectedFirewall?.id === firewall.id">
                         <div class="inline-items-xsmall">
-                          <mcs-icon size="small" [key]="firewall?.connectionStatusIconKey"></mcs-icon>
+                          <mcs-icon size="small"
+                            [key]="firewall?.connectionStatusIconKey"></mcs-icon>
                           <span>{{ firewall.managementName }}</span>
                         </div>
                       </mcs-option>
@@ -99,7 +102,11 @@
             </mcs-icon>
             <ng-template #actionContent>
               <div class="cog-container">
-                <a [href]="selectedFirewall.url" target="_blank">View in Portal</a>
+                <a [href]="selectedFirewall.url" target="_blank"
+                  mcsId
+                  mcsEventTracker="view-in-portal"
+                  mcsEventCategory="firewall"
+                  mcsEventLabel="firewall-details-page">View in Portal</a>
               </div>
             </ng-template>
           </ng-template>

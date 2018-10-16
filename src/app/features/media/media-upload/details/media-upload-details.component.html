@@ -8,7 +8,11 @@
       <div class="item-margin" *mcsComponentHandler>
         <mcs-alert type="error">
           {{ textContent.errors.mediaUploadError }}
-          <a mcsButton color="error" type="basic" mcsAlertAction="dismiss">
+          <a mcsButton color="error" type="basic" mcsAlertAction="dismiss"
+            mcsId
+            mcsEventTracker="dissmiss-media-error"
+            mcsEventCategory="media"
+            mcsEventLabel="upload-media-page">
             {{ textContent.mediaUploadDismissLabel }}
           </a>
         </mcs-alert>
@@ -20,6 +24,7 @@
           <mcs-form-field>
             <mcs-select [formControl]="fcResources" required
               (change)="onChangeResource($event)"
+              mcsId="select-resource"
               [placeholder]="textContent.selectResources"
               [mcsContextualHelp]="textContent.selectResourcesHelp">
               <mcs-select-group header="VDC">
@@ -38,7 +43,7 @@
         <!-- Media Name  -->
         <div class="item-margin">
           <mcs-form-field>
-            <input mcsInput #mediaName mcsSetFocus required
+            <input mcsInput #mediaName mcsSetFocus required mcsId="input-media-name"
               [placeholder]="textContent.mediaName" maxlength="25"
               [formControl]="fcMediaName"
               [mcsContextualHelp]="textContent.mediaNameHelp">
@@ -64,7 +69,7 @@
         <!-- Media URL  -->
         <div class="item-margin">
           <mcs-form-field>
-            <input mcsInput #mediaUrl required
+            <input mcsInput #mediaUrl required mcsId="input-media-url"
               [placeholder]="textContent.mediaUrl" maxlength="300"
               [formControl]="fcMediaUrl"
               [mcsContextualHelp]="textContent.mediaUrlHelp"
@@ -97,7 +102,7 @@
         <!-- Media Description  -->
         <div class="item-margin">
           <mcs-form-field>
-            <input mcsInput #mediaDescription
+            <input mcsInput #mediaDescription mcsId="input-media-description"
               [placeholder]="textContent.mediaDescription" maxlength="1000"
               [formControl]="fcMediaDescription"
               [mcsContextualHelp]="textContent.mediaDescriptionHelp">
@@ -118,6 +123,7 @@
         <button mcsButton size="small" arrow="right"
           mcsWizardStepNext
           [mcsWizardStepNextWhen]="uploadMediaFunc"
+          mcsId="step-1-next"
           mcsEventTracker="step-1-next"
           mcsEventCategory="media"
           mcsEventLabel="upload-media-page">Next</button>

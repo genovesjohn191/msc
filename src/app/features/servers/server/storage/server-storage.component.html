@@ -66,6 +66,7 @@
               <div class="inline-items-small flex-nowrap">
                 <a [disabled]="!server.executable"
                     (click)="openExpandDiskWindow(row)"
+                    mcsId
                     mcsEventTracker="show-expand-disk"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
@@ -74,6 +75,7 @@
                 <a [disabled]="!server.executable"
                   *ngIf="canDeleteDisk"
                   (click)="deleteDisk(row)"
+                  mcsId
                   mcsEventTracker="delete-disk"
                   mcsEventCategory="server"
                   mcsEventLabel="server-details-page">
@@ -114,8 +116,10 @@
             </mcs-server-manage-storage>
 
             <div class="action-items">
-              <button mcsButton id="ctaAttachServerStorage" arrow="right" size="small"
-                [disabled]="!addDiskEnabled" (click)="addDisk()"
+              <button mcsButton arrow="right" size="small"
+                [disabled]="!addDiskEnabled"
+                (click)="addDisk()"
+                mcsId
                 mcsEventTracker="add-disk"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
@@ -163,14 +167,17 @@
 
           <div class="action-items">
             <a (click)="closeExpandDiskWindow()"
+              mcsId
               mcsEventTracker="expand-disk-close"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">
               {{ textContent.cancelButton }}
             </a>
 
-            <button mcsButton id="ctaUpdateServerStorage" arrow="right" size="small"
-              [disabled]="!manageStorage?.hasChanged" (click)="expandDisk()"
+            <button mcsButton arrow="right" size="small"
+              [disabled]="!manageStorage?.hasChanged"
+              (click)="expandDisk()"
+              mcsId
               mcsEventTracker="expand-disk"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">

@@ -7,8 +7,9 @@
       <mcs-top-panel-item *mcsTopPanelItemDef>
         <div class="listing-action-wrapper">
           <ng-container *mcsExclusiveForAccount="'default'">
-            <mcs-action-item id="ctaCreateNewTicket"
+            <mcs-action-item
               (click)="onClickNewTicket()"
+              mcsId
               mcsEventTracker="create-new-ticket"
               mcsEventCategory="ticket"
               mcsEventLabel="ticket-listing-page">
@@ -31,7 +32,7 @@
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
-      <mcs-search *ngIf="!isMobile" #search id="tickets-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="tickets-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -46,7 +47,7 @@
 
     <div class="listing-table-wrapper">
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search id="tickets-mobile-search"></mcs-search>
+      <mcs-search *ngIf="isMobile" #search mcsId="tickets-mobile-search"></mcs-search>
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
@@ -57,7 +58,11 @@
             {{ columnSettings.crispTicketNumber.text }}
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
-            <a (click)="navigateToTicket(row)">{{ row.crispTicketNumber }}</a>
+            <a (click)="navigateToTicket(row)"
+              mcsId="select-ticket"
+              mcsEventTracker="navigate-to-ticke"
+              mcsEventCategory="ticket"
+              mcsEventLabel="ticket-listing-page">{{ row.crispTicketNumber }}</a>
           </mcs-data-cell>
         </ng-container>
 
@@ -78,6 +83,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="word-wrap">
             <a (click)="navigateToTicket(row)"
+            mcsId="select-ticket"
             mcsEventTracker="navigate-to-ticket"
             mcsEventCategory="ticket"
             mcsEventLabel="ticket-listing-page">{{ row.shortDescription }}</a>
@@ -136,6 +142,7 @@
                 <!-- We need to hardcode this instead of putting in the text-config
                     since it is using link -->
                 Click <a (click)="onClickNewTicket()"
+                mcsId="create-new-ticket"
                 mcsEventTracker="create-new-ticket"
                 mcsEventCategory="ticket"
                 mcsEventLabel="empty-ticket-listing-option">here</a> to create new ticket.
@@ -146,6 +153,7 @@
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
               <a (click)="retryDatasource()"
+                mcsId
                 mcsEventTracker="retry-loading-ticket-list"
                 mcsEventCategory="ticket"
                 mcsEventLabel="ticket-listing-page">{{ textContent.retry }}</a>.
@@ -157,6 +165,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer" (click)="navigateToTicket(row)"
+          mcsId="ticket-row"
           mcsEventTracker="navigate-to-ticket"
           mcsEventCategory="ticket"
           mcsEventLabel="ticket-listing-page"></mcs-data-row>

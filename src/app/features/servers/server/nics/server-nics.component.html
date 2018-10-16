@@ -92,6 +92,7 @@
                 <span *ngIf="isEditNicEnabled(row)">
                   <a [disabled]="!server.executable"
                       (click)="openEditNicWindow(row)"
+                      mcsId
                       mcsEventTracker="edit-nic"
                       mcsEventCategory="server"
                       mcsEventLabel="server-details-page">
@@ -102,6 +103,7 @@
                   <a *ngIf="!row.isPrimary"
                     [disabled]="!server.executable"
                     (click)="deleteNic(row)"
+                    mcsId
                     mcsEventTracker="delete-nic"
                     mcsEventCategory="server"
                     mcsEventLabel="server-details-page">
@@ -149,10 +151,10 @@
 
             <div class="action-items">
               <button mcsButton
-                id="ctaAddServerNetwork"
                 arrow="right" size="small"
                 [disabled]="!inputIsValid"
                 (click)="addNic()"
+                mcsId
                 mcsEventTracker="add-nic"
                 mcsEventCategory="server"
                 mcsEventLabel="server-details-page">
@@ -190,15 +192,18 @@
 
           <div class="action-items">
             <a (click)="closeEditNicWindow()"
+              mcsId
               mcsEventTracker="update-nic-close"
               mcsEventCategory="server"
               mcsEventLabel="server-details-page">Cancel</a>
             <button *mcsAccessControl="['VmEdit']"
-              mcsButton id="ctaUpdateServerNetwork" arrow="right" size="small"
-              [disabled]="!manageNetwork?.hasChanged" (click)="updateNic()"
-                mcsEventTracker="update-nic"
-                mcsEventCategory="server"
-                mcsEventLabel="server-details-page">
+              mcsButton arrow="right" size="small"
+              [disabled]="!manageNetwork?.hasChanged"
+              (click)="updateNic()"
+              mcsId
+              mcsEventTracker="update-nic"
+              mcsEventCategory="server"
+              mcsEventLabel="server-details-page">
               {{ textContent.updateButton }}
             </button>
           </div>

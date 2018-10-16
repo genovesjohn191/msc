@@ -5,8 +5,9 @@
     <!-- Order Creation -->
     <ng-container *mcsAccessControl="['OrderEdit']">
       <mcs-top-panel-item *mcsTopPanelItemDef>
-        <mcs-action-item id="ctaCreateNewOrder"
+        <mcs-action-item
           (click)="onClickNewOrder()"
+          mcsId
           mcsEventTracker="create-new-order"
           mcsEventCategory="order"
           mcsEventLabel="order-listing-top-panel">
@@ -32,7 +33,7 @@
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
-      <mcs-search *ngIf="!isMobile" #search id="orders-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="orders-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -48,7 +49,7 @@
     <div class="listing-table-wrapper">
 
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search id="orders-mobile-search"></mcs-search>
+      <mcs-search *ngIf="isMobile" #search mcsId="orders-mobile-search"></mcs-search>
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
@@ -59,6 +60,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <a (click)="navigateToOrder(row)"
+              mcsId="select-order"
               mcsEventTracker="navigate-to-order"
               mcsEventCategory="order"
               mcsEventLabel="order-listing-page">
@@ -116,7 +118,11 @@
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="retry-orders"
+                mcsEventCategory="order"
+                mcsEventLabel="order-listing-page">{{ textContent.retry }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>
@@ -125,6 +131,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer" (click)="navigateToOrder(row)"
+          mcsId="order-row"
           mcsEventTracker="navigate-to-order"
           mcsEventCategory="order"
           mcsEventLabel="order-listing-page"></mcs-data-row>

@@ -19,6 +19,7 @@
         <mcs-icon [key]="caretRightIconKey" color="white"
           size="medium" class="navigation-mobile"></mcs-icon>
         <a [mcsRouterLink]="routeKeyEnum.Dashboard"
+          mcsId
           mcsEventTracker="navigate-to-dashboard"
           mcsEventCategory="navigation"
           mcsEventLabel="main-nav">
@@ -34,7 +35,7 @@
 
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [mcsRouterLink]="routeKeyEnum.Servers">
+      <a [mcsRouterLink]="routeKeyEnum.Servers" mcsId>
         {{ getCategoryLabel(routerCategoryEnum.Compute) }}
       </a>
     </div>
@@ -46,7 +47,7 @@
 
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
-      <a [mcsRouterLink]="routeKeyEnum.Firewalls">
+      <a [mcsRouterLink]="routeKeyEnum.Firewalls" mcsId>
         {{ getCategoryLabel(routerCategoryEnum.Network) }}
       </a>
     </div>
@@ -56,6 +57,7 @@
       <mcs-icon [key]="caretRightIconKey" color="white"
         size="medium" class="navigation-mobile"></mcs-icon>
       <a [mcsRouterLink]="routeKeyEnum.OtherTools"
+        mcsId
         mcsEventTracker="navigate-to-other-tools"
         mcsEventCategory="navigation"
         mcsEventLabel="main-nav">

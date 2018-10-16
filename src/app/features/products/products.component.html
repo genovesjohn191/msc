@@ -15,7 +15,7 @@
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
-        <mcs-search #search id="products-listing-panel-search"></mcs-search>
+        <mcs-search #search mcsId="products-listing-panel-search"></mcs-search>
 
         <mcs-data-status [dataStatusFactory]="listStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
@@ -27,6 +27,7 @@
 
                   <ng-container *ngFor="let product of category.products">
                     <a [mcsRouterLink]="[routeKeyEnum.ProductDetail, product.id]"
+                      mcsId="select-product"
                       mcsEventTracker="select-product"
                       mcsEventCategory="product"
                       mcsEventLabel="product-list-panel">

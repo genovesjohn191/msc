@@ -7,7 +7,7 @@
       <div class="listing-table-wrapper">
         <!-- Search -->
         <div class="inline-items-medium">
-          <mcs-search #search id="firewall-policy-search"></mcs-search>
+          <mcs-search #search mcsId="firewall-policy-search"></mcs-search>
           <mcs-icon [key]="columnFilterIconKey" size="large" class="hidden-small pointer"
             mcsPopover placement="bottom" orientation="left" theme="light"
             padding="narrow" [content]="filterSelector" mcsCursor="pointer">
@@ -181,6 +181,7 @@
             <mcs-data-cell *mcsDataCellDef="let row" class="details text-center hidden-small">
               <mcs-icon [key]="infoIconKey" size="medium"
                 (click)="showFirewallPolicyDetails(row)"
+                mcsId="select-policy"
                 mcsEventTracker="select-policy"
                 mcsEventCategory="firewall"
                 mcsEventLabel="firewall-details-page"
@@ -196,7 +197,11 @@
             <mcs-data-error *mcsDataErrorDef>
               <div class="data-error">
                 <span>{{ textContent.errorMessage }}</span>
-                <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+                <a (click)="retryDatasource()"
+                  mcsId
+                  mcsEventTracker="retry-policies"
+                  mcsEventCategory="firewall"
+                  mcsEventLabel="firewall-details-page">{{ textContent.retry }}</a>.
               </div>
             </mcs-data-error>
           </ng-container>

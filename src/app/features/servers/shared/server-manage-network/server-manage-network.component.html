@@ -4,7 +4,7 @@
 <!-- Network selection -->
 <div class="space-bottom-large">
   <mcs-form-field>
-    <mcs-select [(ngModel)]="selectedNetwork" placeholder="Select network">
+    <mcs-select [(ngModel)]="selectedNetwork" mcsId="select-network" placeholder="Select network">
       <mcs-select-group header="Networks">
         <mcs-select-item *ngFor="let network of networks" [value]="network">
           {{ network.name }}
@@ -17,10 +17,10 @@
 <!-- Network switcher -->
 <div class="space-between-inline-items">
   <h2 class="space-bottom-small auto-width">IP address</h2>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Custom"
+  <a *ngIf="inputManageType === inputManageTypeEnum.Custom" mcsId
     (click)="onChangeInputManageType(inputManageTypeEnum.Buttons)">
     {{ textContent.buttonSwitch }}</a>
-  <a *ngIf="inputManageType === inputManageTypeEnum.Buttons"
+  <a *ngIf="inputManageType === inputManageTypeEnum.Buttons" mcsId
     (click)="onChangeInputManageType(inputManageTypeEnum.Custom)">
     {{ textContent.customSwitch }}</a>
 </div>
@@ -50,7 +50,7 @@
       </span>
       <mcs-form-field class="form-field-size-medium">
         <input mcsInput placeholder="Enter IP Address" #customInput
-          [formControl]="fcCustomIpAddress">
+          mcsId="input-ipaddress" [formControl]="fcCustomIpAddress">
 
         <mcs-error mcsError errorState="required">
           {{ textContent.errors.ipAddressRequired }}

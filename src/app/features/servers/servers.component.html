@@ -6,8 +6,9 @@
     <ng-container *mcsAccessControl="['VmEdit']">
       <ng-container *ngIf="hasCreateResources">
         <mcs-top-panel-item *mcsTopPanelItemDef>
-          <mcs-action-item id="ctaCreateNewServer"
+          <mcs-action-item
             (click)="onClickNewServerButton()"
+            mcsId
             mcsEventTracker="create-new-server"
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
@@ -24,9 +25,9 @@
         <mcs-responsive-panel *mcsAccessControl="['VmPowerStateEdit']">
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
-            id="ctaStartSelectedServer"
             [disabled]="!executableAction('startable')"
             (click)="executeTopPanelAction(serverCommand.Start)"
+            mcsId
             mcsEventTracker="start"
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
@@ -36,9 +37,9 @@
 
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
-            id="ctaStopSelectedServer"
             [disabled]="!executableAction('stoppable')"
             (click)="executeTopPanelAction(serverCommand.Stop)"
+            mcsId
             mcsEventTracker="stop"
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
@@ -48,9 +49,9 @@
 
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
-            id="ctaRestartSelectedServer"
             [disabled]="!executableAction('restartable')"
             (click)="executeTopPanelAction(serverCommand.Restart)"
+            mcsId
             mcsEventTracker="restart"
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
@@ -60,9 +61,9 @@
 
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
-            id="ctaDeleteSelectedServer"
             [disabled]="!executableAction('deletable')"
             (click)="executeTopPanelAction(serverCommand.Delete)"
+            mcsId
             mcsEventTracker="delete"
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
@@ -72,9 +73,9 @@
 
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
-            id="ctaSuspendSelectedServer"
             [disabled]="!executableAction('suspendable')"
             (click)="executeTopPanelAction(serverCommand.Suspend)"
+            mcsId
             mcsEventTracker="suspend"
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
@@ -84,9 +85,9 @@
 
           <mcs-action-item mcsResponsivePanelItem
             class="hidden-small"
-            id="ctaResumeSelectedServer"
             [disabled]="!executableAction('resumable')"
             (click)="executeTopPanelAction(serverCommand.Resume)"
+            mcsId
             mcsEventTracker="resume"
             mcsEventCategory="server"
             mcsEventLabel="server-listing-top-panel">
@@ -108,7 +109,7 @@
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
-      <mcs-search *ngIf="!isMobile" #search id="virtual-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="virtual-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -125,7 +126,7 @@
     <div class="listing-table-wrapper">
 
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search id="virtual-mobile-search"></mcs-search>
+      <mcs-search *ngIf="isMobile" #search mcsId="virtual-mobile-search"></mcs-search>
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource" #serversTable>
@@ -168,6 +169,7 @@
                   [mcsTooltip]="row.processingText"></mcs-icon>
               </div>
               <a (click)="navigateToServer(row)"
+                mcsId
                 mcsEventTracker="navigate-to-server"
                 mcsEventCategory="server"
                 mcsEventLabel="server-listing-page">
@@ -307,6 +309,7 @@
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
               <a (click)="retryDatasource()"
+                mcsId
                 mcsEventTracker="retry-loading-server-list"
                 mcsEventCategory="server"
                 mcsEventLabel="server-listing-page">{{ textContent.retry }}</a>.
@@ -321,6 +324,7 @@
           [disabled]="serverDeleting(row)"
           [ngClass]="{'active-data-row': selection.isSelected(row)}"
           (click)="navigateToServer(row)"
+          mcsId="server-row"
           mcsEventTracker="navigate-to-server"
           mcsEventCategory="server"
           mcsEventLabel="server-listing-page"></mcs-data-row>

@@ -13,10 +13,9 @@
     </mcs-dialog-content>
 
     <mcs-dialog-actions>
-      <button mcsButton id="ctaCloseAttachment"
-        class="right-align"
-        arrow="right"
-        size="small" (click)="errorDialogRef?.close()">
+      <button mcsButton class="right-align" arrow="right"
+        size="small" (click)="errorDialogRef?.close()"
+        mcsId="ok-attachment">
         {{ textContent.ok }}
       </button>
     </mcs-dialog-actions>
@@ -38,8 +37,7 @@
     <span read-only>or</span>
 
     <!-- Selection zone -->
-    <button mcsButton id="ctaChooseFile"
-      size="small" (click)="chooFileElement.click()">
+    <button mcsButton size="small" (click)="chooFileElement.click()" mcsId="choose-attachment">
       <input #chooFileElement type="file" [accept]="allowedMimeType"
         ng2FileSelect [uploader]="fileUploader" (change)="onSelectFile()"/>
       {{ textContent.chooseFile }}

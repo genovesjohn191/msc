@@ -13,6 +13,7 @@
     <mcs-list-item *mcsAccessControl="['TicketView']">
       <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Tickets"
         (click)="notifySelectionChange('tickets')"
+        mcsId
         mcsEventTracker="navigate-to-tickets"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">
@@ -23,6 +24,7 @@
       <ng-container *mcsAccessControl="[]; feature: 'EnableOrdering'; else: macviewOrdersTemplate">
         <a mcsCursor="pointer" [mcsRouterLink]="routeKeyEnum.Orders"
           (click)="notifySelectionChange('orders')"
+          mcsId
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
@@ -33,6 +35,7 @@
       <ng-template #macviewOrdersTemplate>
         <a mcsCursor="pointer" [href]="macviewOrdersUrl" target="_blank"
           (click)="notifySelectionChange('orders')"
+          mcsId
           mcsEventTracker="navigate-to-orders"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
@@ -43,6 +46,7 @@
     <mcs-list-item>
       <a mcsCursor="pointer" [href]="macviewChangePasswordUrl" target="_blank"
         (click)="notifySelectionChange('change-password')"
+        mcsId
         mcsEventTracker="navigate-to-change-password"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">

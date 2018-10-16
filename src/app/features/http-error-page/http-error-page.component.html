@@ -37,14 +37,22 @@
 
 <!-- Home button -->
 <ng-template #homeButtonTemplate>
-  <a mcsButton id="ctaReturnHome" size="small" [mcsRouterLink]="['/']">
+  <a mcsButton size="small" [mcsRouterLink]="['/']"
+    mcsId
+    mcsEventTracker="navigate-to-home"
+    mcsEventCategory="error"
+    mcsEventLabel="http-error-page">
     {{ textContentAll.home }}
   </a>
 </ng-template>
 
 <!-- Refresh button -->
 <ng-template #refreshButtonTemplate>
-  <button mcsButton id="ctaRefreshPage" size="small" (click)="refreshPage()">
+  <button mcsButton size="small" (click)="refreshPage()"
+    mcsId
+    mcsEventTracker="refresh-page"
+    mcsEventCategory="error"
+    mcsEventLabel="http-error-page">
     {{ textContentAll.refresh }}
   </button>
 </ng-template>

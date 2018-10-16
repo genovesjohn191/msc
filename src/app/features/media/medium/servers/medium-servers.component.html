@@ -25,7 +25,12 @@
         <mcs-header-cell *mcsHeaderCellDef class="action-header-cell">
         </mcs-header-cell>
         <mcs-data-cell *mcsDataCellDef="let row">
-          <a (click)="showDetachDialog(row)" [disabled]="selectedMedium.isProcessing">
+          <a (click)="showDetachDialog(row)"
+            [disabled]="selectedMedium.isProcessing"
+            mcsId
+            mcsEventTracker="detach-action"
+            mcsEventCategory="media"
+            mcsEventLabel="media-details-page">
             {{ textContent.detachAction }}
           </a>
         </mcs-data-cell>
@@ -56,13 +61,13 @@
 
       <div class="action-items">
         <button mcsButton
-          id="ctaAttachServer"
           arrow="right" size="small"
           [disabled]="!manageServers?.valid"
           (click)="attachServer()"
+          mcsId
           mcsEventTracker="attach-server"
-          mcsEventCategory="server"
-          mcsEventLabel="media-servers-page">
+          mcsEventCategory="media"
+          mcsEventLabel="media-details-page">
           {{ textContent.attachAction }}
         </button>
       </div>

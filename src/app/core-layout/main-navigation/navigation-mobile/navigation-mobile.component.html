@@ -13,7 +13,11 @@
               <mcs-list [header]="category.name" itemsOffset="small"
                 *ngFor="let category of catalog.categories">
                 <mcs-list-item *ngFor="let product of category.products">
-                  <a (click)="gotoProduct(product)">{{ product.name }}</a>
+                  <a (click)="gotoProduct(product)"
+                    mcsId="select-product"
+                    mcsEventTracker="select-product"
+                    mcsEventCategory="navigation"
+                    mcsEventLabel="main-nav">{{ product.name }}</a>
                 </mcs-list-item>
               </mcs-list>
             </div>
@@ -60,7 +64,11 @@
     </ng-container>
 
     <ng-template #macquarieViewTemplate>
-      <a [href]="macviewUrl" target="_blank" class="inline-items-xsmall">
+      <a [href]="macviewUrl" target="_blank" class="inline-items-xsmall"
+        mcsId="macquarie-view"
+        mcsEventTracker="macquarie-view"
+        mcsEventCategory="navigation"
+        mcsEventLabel="main-nav">
         <mcs-icon [key]="arrowUpIconKey" size="large"></mcs-icon>
         <span>{{ textContent.macquarieView }}</span>
       </a>
@@ -84,7 +92,11 @@
     <!-- Logout Item -->
     <div class="navigation-item">
       <mcs-icon [key]="caretRightIconKey" color="white"></mcs-icon>
-      <a mcsCursor="pointer" (click)="logout($event)">{{ textContent.signOut }}</a>
+      <a mcsCursor="pointer" (click)="logout($event)"
+        mcsId
+        mcsEventTracker="sign-out"
+        mcsEventCategory="navigation"
+        mcsEventLabel="main-nav">{{ textContent.signOut }}</a>
     </div>
   </div>
 </mcs-sliding-panel>

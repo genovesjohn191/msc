@@ -3,9 +3,10 @@
   <mcs-top-panel *mcsTopPanelDef>
     <ng-container>
       <mcs-top-panel-item *mcsTopPanelItemDef>
-        <mcs-action-item id="ctaUploadMedia"
+        <mcs-action-item
           (click)="navigateToMediaUpload()"
-          mcsEventTracker="add-new-media"
+          mcsId
+          mcsEventTracker="upload-media"
           mcsEventCategory="media"
           mcsEventLabel="media-listing-top-panel">
           <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
@@ -29,7 +30,7 @@
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
-      <mcs-search *ngIf="!isMobile" #search id="media-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="media-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -45,7 +46,7 @@
     <div class="listing-table-wrapper">
 
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search id="media-mobile-search"></mcs-search>
+      <mcs-search *ngIf="isMobile" #search mcsId="media-mobile-search"></mcs-search>
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
@@ -56,6 +57,7 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row">
             <a (click)="navigateToMedia(row)"
+              mcsId="select-media"
               mcsEventTracker="navigate-to-media"
               mcsEventCategory="media"
               mcsEventLabel="media-listing-page">
@@ -119,7 +121,11 @@
           <mcs-data-error *mcsDataErrorDef>
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.retry }}</a>.
+              <a (click)="retryDatasource()"
+                mcsId
+                mcsEventTracker="retry-media"
+                mcsEventCategory="media"
+                mcsEventLabel="media-listing-page">{{ textContent.retry }}</a>.
             </div>
           </mcs-data-error>
         </ng-container>
@@ -128,6 +134,7 @@
         <mcs-header-row *mcsHeaderRowDef="dataColumns"></mcs-header-row>
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer" (click)="navigateToMedia(row)"
+          mcsId="select-media"
           mcsEventTracker="navigate-to-media"
           mcsEventCategory="media"
           mcsEventLabel="media-listing-page"></mcs-data-row>

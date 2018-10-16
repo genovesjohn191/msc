@@ -62,10 +62,12 @@
       <div class="product-catalog-widget-item">
         <div class="block-items-xsmall">
           <a [mcsRouterLink]="[routeKeyEnum.Servers]"
+            mcsId
             mcsEventTracker="select-vm-instance"
             mcsEventCategory="product"
             mcsEventLabel="product-list-panel">VDC VM Instance</a>
           <a [mcsRouterLink]="[routeKeyEnum.Firewalls]"
+            mcsId
             mcsEventTracker="select-firewalls"
             mcsEventCategory="product"
             mcsEventLabel="product-list-panel">Managed Firewalls</a>
@@ -82,6 +84,7 @@
         <div class="block-items-xsmall">
           <a *ngFor="let dependentProduct of selectedProduct.dependentProducts"
             [mcsRouterLink]="[routeKeyEnum.ProductDetail, dependentProduct.id]"
+            mcsId="product-dependency"
             mcsEventTracker="select-product-dependency"
             mcsEventCategory="product"
             mcsEventLabel="product-list-panel">

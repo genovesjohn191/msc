@@ -5,7 +5,7 @@
     <!-- listing panel -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
       <div class="listing-panel-wrapper">
-        <mcs-search #search id="vdc-listing-panel-search"></mcs-search>
+        <mcs-search #search mcsId="vdc-listing-panel-search"></mcs-search>
 
         <mcs-data-status [dataStatusFactory]="listStatusFactory">
           <mcs-data-status-success mcsDataSuccess>
@@ -18,7 +18,12 @@
                   [selected]="iterator.key?.resourceId === selectedPlatform?.resourceId">
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
-                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]" mcsStopPropagation>
+                      <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]"
+                        mcsStopPropagation
+                        mcsId="select-resource"
+                        mcsEventTracker="select-resource"
+                        mcsEventCategory="vdc"
+                        mcsEventLabel="server-list-panel">
                         {{ iterator.key?.resourceName }}
                       </a>
                     </ng-container>
@@ -30,8 +35,9 @@
                   <ng-container *ngFor="let server of (iterator.value | mcsSortArray: serverListSource?.serversSortMethod)">
                     <a [mcsRouterLink]="[routeKeyEnum.ServerDetail, server.id]"
                       [disabled]="serverDeleting(server)"
+                      mcsId="select-server"
                       mcsEventTracker="select-server"
-                      mcsEventCategory="server"
+                      mcsEventCategory="vdc"
                       mcsEventLabel="server-list-panel">
 
                       <mcs-option [value]="server"

@@ -18,7 +18,7 @@
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef [header]="textContent.tableSearch">
-      <mcs-search *ngIf="!isMobile" #search id="notifications-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="notifications-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -32,7 +32,7 @@
   <mcs-content-panel *mcsContentPanelDef>
     <div class="listing-table-wrapper">
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search id="notifications-mobile-search"></mcs-search>
+      <mcs-search *ngIf="isMobile" #search mcsId="notifications-mobile-search"></mcs-search>
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource">
@@ -96,6 +96,7 @@
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
               <a (click)="retryDatasource()"
+                mcsId
                 mcsEventTracker="retry-loading-notifications"
                 mcsEventCategory="notification"
                 mcsEventLabel="notification-listing-page">{{ textContent.retry }}</a>.
@@ -109,6 +110,7 @@
           mcsCursor="pointer"
           [mcsTriggerCursorIf]="row.hasLink"
           (click)="tryNavigateTo(row.link)"
+          mcsId="notification-row"
           mcsEventTracker="try-navigate-to-job-details"
           mcsEventCategory="notification"
           mcsEventLabel="notification-listing-page"></mcs-data-row>
