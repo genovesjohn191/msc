@@ -29,14 +29,21 @@
       <ng-container *mcsAccessControl="['VmEdit']">
         <mcs-list-item *ngIf="hasResources">
           <button mcsButton size="small"
-            id="ctaVdcNewServer"
-            (click)="createNewServer()">
+            (click)="createNewServer()"
+            mcsId
+            mcsEventTracker="new-server"
+            mcsEventCategory="vdc"
+            mcsEventLabel="vdc-details-page">
             {{ textContent.vcloud.newServer }}
           </button>
         </mcs-list-item>
       </ng-container>
       <mcs-list-item *ngIf="selectedVdc.portalUrl">
-        <a [href]="selectedVdc.portalUrl" target="_blank">{{ textContent.vcloud.viewVcloud}}</a>
+        <a [href]="selectedVdc.portalUrl" target="_blank"
+          mcsId
+          mcsEventTracker="view-in-vcloud"
+          mcsEventCategory="vdc"
+          mcsEventLabel="vdc-details-page">{{ textContent.vcloud.viewVcloud}}</a>
       </mcs-list-item>
     </mcs-list>
   </div>
@@ -67,7 +74,11 @@
     <h2 class="inline-items-small container-header">
       <mcs-icon *ngIf="hasLowStorage" [key]="warningIconKey"></mcs-icon>
       <span>{{ textContent.storageProfiles.title }}</span>
-      <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailStorage)">
+      <a (click)="navigateVdcDetailTo(routeKeyEnum.VdcDetailStorage)"
+        mcsId="navigate-to-storage"
+        mcsEventTracker="navigate-to-storage"
+        mcsEventCategory="vdc"
+        mcsEventLabel="vdc-details-page">
         {{ textContent.storageProfiles.manageLink }}
       </a>
     </h2>

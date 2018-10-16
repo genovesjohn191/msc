@@ -16,7 +16,7 @@
   <mcs-left-panel *mcsLeftPanelDef="textContent.leftPanelHeader">
     <!-- Search -->
     <mcs-left-panel-item *mcsLeftPanelItemDef>
-      <mcs-search *ngIf="!isMobile" #search id="firewalls-desktop-search"></mcs-search>
+      <mcs-search *ngIf="!isMobile" #search mcsId="firewalls-desktop-search"></mcs-search>
     </mcs-left-panel-item>
 
     <!-- Column Filter -->
@@ -32,7 +32,7 @@
 
     <div class="listing-table-wrapper">
       <!-- Search -->
-      <mcs-search *ngIf="isMobile" #search id="firewalls-mobile-search"></mcs-search>
+      <mcs-search *ngIf="isMobile" #search mcsId="firewalls-mobile-search"></mcs-search>
 
       <!-- Table -->
       <mcs-table [dataSource]="dataSource" #firewallsTable>
@@ -44,7 +44,11 @@
           <mcs-data-cell *mcsDataCellDef="let row">
             <div class="inline-items-small">
               <mcs-icon [key]="row.connectionStatusIconKey" size="small"></mcs-icon>
-              <a (click)="navigateToFirewall(row)">{{ row.managementName }}</a>
+              <a (click)="navigateToFirewall(row)"
+                mcsId="select-firewall"
+                mcsEventTracker="select-firewall"
+                mcsEventCategory="firewall"
+                mcsEventLabel="firewall-listing-page">{{ row.managementName }}</a>
             </div>
           </mcs-data-cell>
         </ng-container>
@@ -110,9 +114,9 @@
             </mcs-icon>
             <ng-template #actionContent>
               <div class="cog-container">
-                <a
-                  [href]="row.url"
+                <a [href]="row.url"
                   target="_blank"
+                  mcsId
                   mcsEventTracker="view-in-portal"
                   mcsEventCategory="firewall"
                   mcsEventLabel="firewall-listing-page">
@@ -132,6 +136,7 @@
             <div class="listing-status-wrapper">
               <span>{{ textContent.errorMessage }}</span>
               <a (click)="retryDatasource()"
+                mcsId
                 mcsEventTracker="retry-loading-firewall-list"
                 mcsEventCategory="firewall"
                 mcsEventLabel="firewall-listing-page">{{ textContent.retry }}</a>.
@@ -144,6 +149,7 @@
         <mcs-data-row *mcsDataRowDef="let row; columns: dataColumns;"
           mcsCursor="pointer"
           (click)="navigateToFirewall(row)"
+          mcsId="firewall-row"
           mcsEventTracker="navigate-to-firewall"
           mcsEventCategory="firewall"
           mcsEventLabel="firewall-listing-page"></mcs-data-row>

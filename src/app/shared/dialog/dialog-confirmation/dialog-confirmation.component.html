@@ -18,9 +18,12 @@
   </mcs-dialog-content>
 
   <mcs-dialog-actions>
-    <a id="ctaCancelDialog" (click)="closeDialog()">Cancel</a>
-    <button mcsButton id="ctaConfirmDialog" arrow="right"
+    <a (click)="closeDialog()"
+      mcsId="close-dialog">Cancel</a>
+
+    <button mcsButton arrow="right"
       size="small" [color]="statusColor"
-      (click)="confirmDialog()">Confirm</button>
+      (click)="confirmDialog()"
+      mcsId="confirm-dialog">Confirm</button>
   </mcs-dialog-actions>
 </mcs-dialog>

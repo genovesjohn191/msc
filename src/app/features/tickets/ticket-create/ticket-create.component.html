@@ -4,6 +4,7 @@
     <!-- Server Creation -->
     <mcs-top-panel-item *mcsTopPanelItemDef class="no-border">
       <mcs-action-item class="right-align" (click)="gotoTickets()"
+        mcsId
         mcsEventTracker="navigate-to-ticket-listing"
         mcsEventCategory="ticket"
         mcsEventLabel="create-new-ticket-page">
@@ -26,7 +27,7 @@
           <!-- Ticket Type -->
           <div class="field">
             <mcs-form-field>
-              <mcs-select id="type" [placeholder]="textContent.placeholders.type"
+              <mcs-select mcsId="select-type" [placeholder]="textContent.placeholders.type"
                 [formControl]="fcType" mcsSetFocus required
                 [mcsContextualHelp]="contextualContent.type">
                 <mcs-select-group header="Ticket Type">
@@ -47,6 +48,7 @@
           <div class="field">
             <mcs-form-field>
               <input mcsInput #referenceInput
+                mcsId="input-reference"
                 [placeholder]="textContent.placeholders.reference" maxlength="15"
                 [formControl]="fcReference"
                 [mcsContextualHelp]="contextualContent.reference">
@@ -64,6 +66,7 @@
           <div class="field">
             <mcs-form-field>
               <input mcsInput #summaryInput required
+                mcsId="input-summary"
                 [placeholder]="textContent.placeholders.summary" maxlength="80"
                 [formControl]="fcSummary"
                 [mcsContextualHelp]="contextualContent.summary">
@@ -84,6 +87,7 @@
           <div class="field">
             <mcs-form-field>
               <textarea mcsInput rows="3" #detailsInput required
+                mcsId="input-details"
                 [placeholder]="textContent.placeholders.details" maxlength="4000"
                 [formControl]="fcDetails"
                 [mcsContextualHelp]="contextualContent.details"></textarea>
@@ -110,6 +114,7 @@
                   <!-- Tags -->
                   <mcs-form-field class="full-width">
                     <mcs-tag-list [placeholder]="textContent.placeholders.services"
+                      mcsId="tag-services"
                       [formControl]="fcService">
 
                       <mcs-tag *ngFor="let subItem of selectService.selectionSubModel.selected"
@@ -125,9 +130,10 @@
                   </mcs-form-field>
 
                   <!-- Icon trigger -->
-                  <div mcsCursor="pointer" id="ctaSelectService"
+                  <div mcsCursor="pointer"
                     class="space-left-small space-top-small"
                     (click)="servicePanelOpen = !servicePanelOpen" #trigger
+                    mcsId="toggle-service-panel"
                     mcsEventTracker="toggle-service-panel"
                     mcsEventCategory="ticket"
                     mcsEventLabel="create-new-ticket-page">
@@ -171,13 +177,15 @@
         <!-- Ticket Action -->
         <div class="action-items">
           <a (click)="gotoTickets()"
+            mcsId
             mcsEventTracker="cancel-ticket-creation"
             mcsEventCategory="ticket"
             mcsEventLabel="create-new-ticket-page">{{ textContent.cancelActivity }}</a>
 
-          <button mcsButton id="ctaNewTicket"
+          <button mcsButton
             arrow="right"
             (click)="onLogTicket()"
+            mcsId
             mcsEventTracker="submit-new-ticket"
             mcsEventCategory="ticket"
             mcsEventLabel="create-new-ticket-page">

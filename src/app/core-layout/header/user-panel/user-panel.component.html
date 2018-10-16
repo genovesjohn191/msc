@@ -7,6 +7,7 @@
 
     <div class="logout-panel">
       <a mcsCursor="pointer" (click)="logout($event)"
+        mcsId
         mcsEventTracker="logout"
         mcsEventCategory="navigation"
         mcsEventLabel="user-panel">{{ textContent.signOut }}</a>
@@ -45,6 +46,7 @@
 
       <div class="notification-item text-center">
         <a (click)="viewNotificationsPage()"
+          mcsId="view-notifications"
           mcsEventTracker="view-notifications"
           mcsEventCategory="navigation"
           mcsEventLabel="user-panel">
@@ -76,6 +78,7 @@
   <div class="user-panel-item user-item inline-items-small">
     <a class="block-items" mcsCursor="pointer"
       (click)="clickUser()"
+      mcsId="user-dropdown-toggle"
       mcsEventTracker="user-dropdown-toggle"
       mcsEventCategory="navigation"
       mcsEventLabel="user-panel"

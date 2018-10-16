@@ -3,6 +3,7 @@
   mcsCursor="pointer"
   [mcsTriggerCursorIf]="notification.hasLink"
   (click)="onClickNotification()"
+  mcsId="navigate-to-notification"
   mcsEventTracker="navigate-to-notification"
   mcsEventCategory="notification"
   mcsEventLabel="notification-panel">
@@ -42,6 +43,7 @@
     <div class="notification-panel-close">
       <mcs-icon mcsCursor="pointer"
         (click)="removeNotification()"
+        mcsId="close-panel"
         mcsEventTracker="close-panel"
         mcsEventCategory="notification"
         mcsEventLabel="notification-panel"

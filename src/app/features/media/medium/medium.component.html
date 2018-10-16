@@ -32,9 +32,10 @@
                   <ng-container *ngFor="let medium of (iterator.value |
                     mcsSortArray: mediaListSource?.mediaSortMethod)">
                     <a [mcsRouterLink]="[routeKeyEnum.Media, medium.id]"
+                      mcsId="select-media"
                       mcsEventTracker="select-media"
                       mcsEventCategory="media"
-                      mcsEventLabel="media-list-panel">
+                      mcsEventLabel="media-details-page">
 
                       <mcs-option [value]="medium"
                         [selected]="selectedMedium?.id === medium.id">

@@ -5,6 +5,7 @@
     <!-- Back to Tickets -->
     <mcs-top-panel-item *mcsTopPanelItemDef>
       <mcs-action-item class="right-align" (click)="gotoTickets()"
+        mcsId
         mcsEventTracker="navigate-to-ticket-listing"
         mcsEventCategory="ticket"
         mcsEventLabel="ticket-details-page">
@@ -135,6 +136,7 @@
                   <mcs-file-download [fileType]="attachment.contentType"
                     [downloading]="isDownloading(attachment?.id)"
                     (download)="downloadAttachment(attachment)"
+                    mcsId="download-attachment"
                     mcsEventTracker="download-attachment"
                     mcsEventCategory="ticket"
                     mcsEventLabel="ticket-details-page">

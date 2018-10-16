@@ -66,8 +66,8 @@
                   <span>{{ textContent.deploymentCompleted }}</span>
                 </div>
                 <div class="space-top-medium">
-                  <button mcsButton id="ctaViewServer"
-                    arrow="right" size="small" (click)="onViewServerPage(job.tasks)">
+                  <button mcsButton arrow="right" size="small"
+                    (click)="onViewServerPage(job.tasks)" mcsId="view-job">
                     {{ getRedirectionLinkText(job.tasks) }}
                   </button>
                 </div>

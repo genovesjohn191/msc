@@ -22,7 +22,6 @@ import {
   encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'button-wrapper',
-    '[attr.id]': 'id',
     '[class.primary]': 'color === "primary"',
     '[class.raised]': 'type === "raised"',
     '[class.button-disabled]': 'disabled'
@@ -30,9 +29,6 @@ import {
 })
 
 export class ButtonComponent {
-  @Input()
-  public id: string;
-
   @Input()
   public arrow: 'up' | 'right';
 

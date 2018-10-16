@@ -32,7 +32,11 @@
           </mcs-header-cell>
           <mcs-data-cell *mcsDataCellDef="let row" class="top-align">
             <div *ngFor="let access of row.portalAccess" class="access-link-wrapper">
-              <a [href]="access.url" target="_blank">{{ access.name }}</a>
+              <a [href]="access.url" target="_blank"
+                mcsId="select-tool"
+                mcsEventTracker="navigate-to-othertools"
+                mcsEventCategory="tools"
+                mcsEventLabel="tools-listing-page">{{ access.name }}</a>
             </div>
           </mcs-data-cell>
         </ng-container>
@@ -45,7 +49,11 @@
           <mcs-data-error *mcsDataErrorDef>
             <div class="data-error">
               <span>{{ textContent.table.errorMessage }}</span>
-              <a (click)="retryDatasource()">{{ textContent.table.retry }}</a>
+              <a (click)="retryDatasource()"
+                mcsId="retry-datasource"
+                mcsEventTracker="retry-tools"
+                mcsEventCategory="tools"
+                mcsEventLabel="tools-listing-page">{{ textContent.table.retry }}</a>
             </div>
           </mcs-data-error>
         </ng-container>

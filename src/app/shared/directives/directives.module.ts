@@ -7,6 +7,7 @@ import { AnimateDirective } from './animation.directive';
 import { ScrollableDirective } from './scrollable.directive';
 import { StopPropagationDirective } from './stop-propagation.directive';
 import { SetFocusDirective } from './set-focus.directive';
+import { IdDirective } from './id.directive';
 
 import { DisabledDirective } from './overriden-directives/disabled.directive';
 import { HiddenDirective } from './overriden-directives/hidden.directive';
@@ -24,7 +25,8 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     AnimateDirective,
     ScrollableDirective,
     StopPropagationDirective,
-    SetFocusDirective
+    SetFocusDirective,
+    IdDirective
   ],
   exports: [
     ComponentHandlerDirective,
@@ -37,7 +39,8 @@ import { ReadOnlyDirective } from './overriden-directives/read-only.directive';
     AnimateDirective,
     ScrollableDirective,
     StopPropagationDirective,
-    SetFocusDirective
+    SetFocusDirective,
+    IdDirective
   ]
 })
 

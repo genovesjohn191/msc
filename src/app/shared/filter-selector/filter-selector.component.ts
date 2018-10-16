@@ -26,7 +26,6 @@ import {
   convertJsonToMapObject,
   convertMapToJsonObject,
   animateFactory,
-  convertSpacesToDash,
   unsubscribeSubject
 } from '@app/utilities';
 import { TableComponent } from '../table/table.component';
@@ -87,13 +86,6 @@ export class FilterSelectorComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     unsubscribeSubject(this._destroySubject);
-  }
-
-  /**
-   * Returns the generated id based on the label given
-   */
-  public generateIdByLabel(label: string): string {
-    return `${this.key}-${convertSpacesToDash(label)}`;
   }
 
   /**
