@@ -3,6 +3,7 @@ import {
   ElementRef,
   Input,
   AfterViewInit,
+  ChangeDetectorRef,
   OnChanges,
   SimpleChanges
 } from '@angular/core';
@@ -14,6 +15,7 @@ import Hashids from 'hashids';
 
 const DEFAULT_HASH_LENGTH = 8;
 const DEFAULT_ID_MAX_LENGTH = 25;
+const DEFAULT_TEXT_PREFIX = '@innertext';
 
 // Unique Id that generates during runtime
 let nextUniqueId = 0;
@@ -21,39 +23,40 @@ let nextUniqueId = 0;
 @Directive({
   selector: '[mcsId]',
   host: {
-    '[attr.id]': 'ctaId'
+    '[attr.id]': 'generatedId'
   }
 })
 
 export class IdDirective implements AfterViewInit, OnChanges {
 
   @Input('mcsId')
-  public ctaId: string;
+  public customId: string;
+  public generatedId: string;
 
   private _hashInstance = new Hashids('', DEFAULT_HASH_LENGTH);
 
-  constructor(private _elementRef: ElementRef) { }
+  constructor(
+    private _elementRef: ElementRef,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) { }
 
   public ngAfterViewInit() {
     Promise.resolve().then(() => {
-      this._setDefaultSettings();
+      this._generateUniqueId();
     });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     let customIdHasChanged = changes['customId'];
     if (isNullOrEmpty(customIdHasChanged)) { return; }
-    this.ctaId = this._generateIdByCustomInput();
+    this._generateUniqueId();
   }
 
   /**
    * Returns the host text content with converted to dash
    */
   public get hostTextContent(): string {
-    let textContent: string;
-    textContent = isNullOrEmpty(this.ctaId) ?
-      (this._elementRef.nativeElement.textContent || '').trim() :
-      this.ctaId;
+    let textContent = (this._elementRef.nativeElement.textContent || '').trim();
     let convertedString = convertSpacesToDash(textContent);
     return convertedString.substring(0,
       Math.min(convertedString.length, DEFAULT_ID_MAX_LENGTH)
@@ -65,7 +68,7 @@ export class IdDirective implements AfterViewInit, OnChanges {
    */
   private _generateIdByTextContent(): string {
     let uniqueEncodedId = this._hashInstance.encode(nextUniqueId++);
-    return `${uniqueEncodedId}[@innertext=${this.hostTextContent}]`;
+    return `${uniqueEncodedId}[${DEFAULT_TEXT_PREFIX}=${this.hostTextContent}]`;
   }
 
   /**
@@ -73,15 +76,16 @@ export class IdDirective implements AfterViewInit, OnChanges {
    */
   private _generateIdByCustomInput(): string {
     let uniqueEncodedId = this._hashInstance.encode(nextUniqueId++);
-    return `${uniqueEncodedId}[@innertext=${this.ctaId}]`;
+    return `${uniqueEncodedId}[${DEFAULT_TEXT_PREFIX}=${this.customId}]`;
   }
 
   /**
    * Sets the default settings based on criteria
    */
-  private _setDefaultSettings(): void {
-    this.ctaId = isNullOrEmpty(this.ctaId) ?
+  private _generateUniqueId(): void {
+    this.generatedId = isNullOrEmpty(this.customId) ?
       this._generateIdByTextContent() :
       this._generateIdByCustomInput();
+    this._changeDetectorRef.markForCheck();
   }
 }

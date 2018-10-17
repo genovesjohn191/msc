@@ -746,7 +746,7 @@
       "mediaName": "Enter media name",
       "mediaNameHelp": "A friendly name for your new media. If not supplied, we'll use the original filename from your media.",
       "mediaUrl": "Enter media URL",
-      "mediaUrlHelp": "The publicly-accessible URL for us to download your media from.",
+      "mediaUrlHelp": "The publicly-accessible URL for us to download your media from. For example, https://www.example.com/example.iso",
       "mediaDescription": "Enter media description",
       "mediaDescriptionHelp": "Enter a custom description for your media.",
       "mediaUploadDismissLabel": "DISMISS",

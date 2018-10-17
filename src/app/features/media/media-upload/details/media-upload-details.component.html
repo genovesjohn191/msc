@@ -3,8 +3,6 @@
     [loadingText]="textContent.loadingResources">
 
     <div class="contextual-help-page-wrapper">
-      <p>{{ textContent.description }}</p>
-
       <div class="item-margin" *mcsComponentHandler>
         <mcs-alert type="error">
           {{ textContent.errors.mediaUploadError }}
@@ -17,6 +15,8 @@
           </a>
         </mcs-alert>
       </div>
+
+      <p>{{ textContent.description }}</p>
 
       <form [formGroup]="fgMediaUpload" mcsFormGroup>
         <!-- Resource Select -->
@@ -79,7 +79,10 @@
               <mcs-icon [key]="mediaUrlStatusIconKey" size="small" ></mcs-icon>
             </mcs-suffix>
 
-            <mcs-hint mcsHint align="start">
+            <mcs-hint mcsHint align="start" *ngIf="urlInfoMessage">
+              <mcs-data-status-warning>{{ urlInfoMessage }}</mcs-data-status-warning>
+            </mcs-hint>
+            <mcs-hint mcsHint align="start" *ngIf="!urlInfoMessage">
               <mcs-hint-message type="maxChar"
                 [value]="mediaUrl.maxLength"></mcs-hint-message>
             </mcs-hint>
@@ -93,8 +96,8 @@
             <mcs-error mcsError errorState="url">
               {{ textContent.errors.mediaUrlInvalid }}
             </mcs-error>
-            <mcs-error mcsError errorState="emailNotExist">
-              {{ urlErrorMessage }}
+            <mcs-error mcsError errorState="urlValidationError">
+              {{ urlInfoMessage }}
             </mcs-error>
           </mcs-form-field>
         </div>

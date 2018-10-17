@@ -4,7 +4,7 @@ const helpers = require('../helpers');
 
 // Constant Definitions
 const EXPOSE_SASS_SOURCE_PATH = helpers.root('src/app');
-const EXPOSE_SASS_TARGET_PATH = helpers.root('dist/assets/css');
+const EXPOSE_SASS_TARGET_PATH = helpers.root('dist');
 
 // Target pages table to create styling
 const targetSassComponents = [

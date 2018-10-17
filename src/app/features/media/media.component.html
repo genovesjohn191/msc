@@ -1,19 +1,17 @@
 <mcs-page [header]="textContent.header">
   <!-- Top Panel -->
   <mcs-top-panel *mcsTopPanelDef>
-    <ng-container>
-      <mcs-top-panel-item *mcsTopPanelItemDef>
-        <mcs-action-item
-          (click)="navigateToMediaUpload()"
-          mcsId
-          mcsEventTracker="upload-media"
-          mcsEventCategory="media"
-          mcsEventLabel="media-listing-top-panel">
-          <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
-          <span>{{ textContent.uploadMedia }}</span>
-        </mcs-action-item>
-      </mcs-top-panel-item>
-    </ng-container>
+    <mcs-top-panel-item *mcsTopPanelItemDef>
+      <mcs-action-item
+        (click)="navigateToMediaUpload()"
+        mcsId
+        mcsEventTracker="upload-media"
+        mcsEventCategory="media"
+        mcsEventLabel="media-listing-top-panel">
+        <mcs-icon [key]="addIconKey" size="small"></mcs-icon>
+        <span>{{ textContent.uploadMedia }}</span>
+      </mcs-action-item>
+    </mcs-top-panel-item>
 
     <mcs-top-panel-item *mcsTopPanelItemDef [ngStyle]="{overflow: 'auto'}">
       <div class="listing-action-wrapper">

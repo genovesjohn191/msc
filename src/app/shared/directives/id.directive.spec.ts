@@ -65,7 +65,7 @@ describe('IdDirective', () => {
   describe('ngOnInit()', () => {
     it(`should set the id of the host element`, () => {
       let hostElement: HTMLElement = component.testElement.nativeElement;
-      expect(hostElement.id).toContain('custom-id');
+      expect(hostElement.id).toContain(`[@innertext=custom-id]`);
     });
   });
 });
