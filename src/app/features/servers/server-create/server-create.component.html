@@ -31,6 +31,7 @@
               <div class="contextual-help-page-wrapper">
                 <mcs-form-field class="space-bottom-medium">
                   <mcs-select placeholder="Select a VDC"
+                    mcsId="select-resource"
                     [(ngModel)]="selectedResource"
                     (change)="onChangeResource($event)"
                     [mcsContextualHelp]="textContent.vdcDropdownList.helpText">

@@ -16,7 +16,10 @@ import {
   Observable,
   of
 } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  switchMap
+} from 'rxjs/operators';
 import {
   McsErrorHandlerService,
   McsTextContentProvider,

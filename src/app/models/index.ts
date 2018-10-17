@@ -38,6 +38,7 @@ export * from './enumerations/comment-type';
 export * from './enumerations/ticket-priority';
 export * from './enumerations/ticket-status';
 export * from './enumerations/ticket-subtype';
+export * from './enumerations/status-code.enum';
 
 /** Request */
 export * from './request/mcs-order-create';
@@ -114,6 +115,7 @@ export * from './response/mcs-ticket-closure-information';
 export * from './response/mcs-ticket-comment';
 export * from './response/mcs-portal-access';
 export * from './response/mcs-portal';
+export * from './response/mcs-validation';
 
 /** Common */
 export * from './mcs-api-search-key';

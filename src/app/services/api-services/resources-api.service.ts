@@ -18,7 +18,8 @@ import {
   McsResourceCatalogItem,
   McsResourceVApp,
   McsResourceCatalogItemCreate,
-  McsJob
+  McsJob,
+  McsValidation
 } from '@app/models';
 import { serializeObjectToJson } from '@app/utilities';
 
@@ -275,10 +276,10 @@ export class ResourcesApiService {
    * @param createItemData Catalog item data to be used
    */
   public validateCatalogItems(resourceId: string, createItemData: McsResourceCatalogItemCreate):
-    Observable<McsApiSuccessResponse<any>> {
+    Observable<McsApiSuccessResponse<McsValidation[]>> {
     let mcsApiRequestParameter: McsApiRequestParameter = new McsApiRequestParameter();
     mcsApiRequestParameter.endPoint =
-      `/resources/${resourceId}/catalogitems/payload-validation-requests`;
+      `/resources/${resourceId}/catalog-items/payload-validation-requests`;
     mcsApiRequestParameter.recordData = serializeObjectToJson(createItemData);
 
     return this._mcsApiService.post(mcsApiRequestParameter)
@@ -288,7 +289,8 @@ export class ResourcesApiService {
         }),
         map((response) => {
           // Deserialize json reponse
-          let apiResponse = McsApiSuccessResponse.deserializeResponse<McsJob>(McsJob, response);
+          let apiResponse = McsApiSuccessResponse
+            .deserializeResponse<McsValidation[]>(McsValidation, response);
 
           this._loggerService.traceStart(mcsApiRequestParameter.endPoint);
           this._loggerService.traceInfo(`request:`, mcsApiRequestParameter);

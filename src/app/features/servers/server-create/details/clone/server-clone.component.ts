@@ -54,7 +54,6 @@ export class ServerCloneComponent
 
   public textContent: any;
   public textHelpContent: any;
-  public targetServerId: string;
   public servers: McsServer[];
   public serversSubscription: Subscription;
   public parameterSubscription: Subscription;
@@ -175,8 +174,7 @@ export class ServerCloneComponent
   private _getServerById(serverId: string): void {
     this.serverIsManuallyAssignedIp = false;
     this.ipAddressStatusFactory.setInProgress();
-    this._serversRepository
-      .findRecordById(serverId)
+    this._serversRepository.findRecordById(serverId)
       .pipe(
         catchError((error) => {
           this.ipAddressStatusFactory.setSuccessful();
@@ -199,18 +197,17 @@ export class ServerCloneComponent
     unsubscribeSafely(this.parameterSubscription);
     this.parameterSubscription = this._activatedRoute.queryParams
       .subscribe((params: ParamMap) => {
-        this.targetServerId = params['clone'];
-        this._setTargetServerById();
+        this._setTargetServerById(params['clone']);
       });
   }
 
   /**
    * This will set the target server based on ID provided by parameters
    */
-  private _setTargetServerById(): void {
-    let hasServers = !isNullOrEmpty(this.targetServerId) && !isNullOrEmpty(this.servers);
+  private _setTargetServerById(serverId: any): void {
+    let hasServers = !isNullOrEmpty(serverId) && !isNullOrEmpty(this.servers);
     if (!hasServers) { return; }
-    let server = this.servers.find((_server) => _server.id === this.targetServerId);
+    let server = this.servers.find((_server) => _server.id === serverId);
     refreshView(() => this.fcTargetServer.setValue(server));
   }
 

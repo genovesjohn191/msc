@@ -4,7 +4,7 @@
       <mcs-form-field>
         <input mcsInput #serverNameInput mcsSetFocus required
           placeholder="Enter a server name" maxlength="15"
-          mcsId="server-name"
+          mcsId="input-server-name"
           [formControl]="fcServerName"
           [mcsContextualHelp]="textHelpContent.serverNameField">
 
@@ -29,8 +29,8 @@
       <mcs-data-status [dataStatusFactory]="dataStatusFactory">
         <mcs-data-status-success mcsDataSuccess>
           <mcs-form-field>
-            <mcs-select [formControl]="fcTargetServer" required
-              mcsId="select-server"
+            <mcs-select mcsId="select-server" required
+              [formControl]="fcTargetServer"
               [(ngModel)]="selectedServer"
               [placeholder]="textContent.placeholder.server">
               <mcs-select-group header="Servers">

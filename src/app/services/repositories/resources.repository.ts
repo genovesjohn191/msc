@@ -12,7 +12,8 @@ import {
   McsResourceCatalogItem,
   McsResourceVApp,
   McsResourceCatalogItemCreate,
-  McsJob
+  McsJob,
+  McsValidation
 } from '@app/models';
 import { ResourcesApiService } from '../api-services/resources-api.service';
 
@@ -129,7 +130,7 @@ export class ResourcesRepository extends McsRepositoryBase<McsResource> {
   public validateCatalogItems(
     resourceId: string,
     catalogItem: McsResourceCatalogItemCreate
-  ): Observable<McsApiSuccessResponse<any>> {
+  ): Observable<McsApiSuccessResponse<McsValidation[]>> {
     return this._resourcesApiService.validateCatalogItems(resourceId, catalogItem);
   }
 

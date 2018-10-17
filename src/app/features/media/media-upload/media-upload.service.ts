@@ -10,11 +10,12 @@ import {
 import { ResourcesRepository } from '@app/services';
 import { isNullOrEmpty } from '@app/utilities';
 import {
+  CatalogItemType,
   McsResource,
   McsResourceCatalogItemCreate,
   McsJob,
   McsApiSuccessResponse,
-  CatalogItemType
+  McsValidation
 } from '@app/models';
 
 @Injectable()
@@ -47,9 +48,10 @@ export class MediaUploadService {
    * @param _url Url to validate
    */
   public validateUrl(resourceId: string, _url: string):
-    Observable<McsApiSuccessResponse<any>> {
+    Observable<McsApiSuccessResponse<McsValidation[]>> {
     let fieldDetails = {
-      name: 'url-name-dummy',
+      name: 'dummy-url-name',
+      catalogName: 'dummy-catalog-name',
       type: CatalogItemType.Media,
       url: _url
     } as McsResourceCatalogItemCreate;

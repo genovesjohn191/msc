@@ -8,6 +8,11 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  FormGroup,
+  FormControl
+} from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
   Subject,
   Subscription,
   throwError,
@@ -19,10 +24,6 @@ import {
   tap,
   finalize
 } from 'rxjs/operators';
-import {
-  FormGroup,
-  FormControl
-} from '@angular/forms';
 import {
   McsTextContentProvider,
   CoreValidators,
@@ -50,7 +51,6 @@ import {
   ComponentHandlerDirective
 } from '@app/shared';
 import { MediaUploadService } from '../media-upload.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'mcs-media-upload-details',
@@ -63,7 +63,7 @@ export class MediaUploadDetailsComponent
   public textContent: any;
   public resources$: Observable<McsResource[]>;
   public selectedResource: McsResource;
-  public urlErrorMessage: string;
+  public urlInfoMessage: string;
   public uploadMediaFunc = this._uploadMedia.bind(this);
 
   // Form variables
@@ -139,6 +139,7 @@ export class MediaUploadDetailsComponent
    * Event that emits when the media url textbox has lost focused
    */
   public onBlurMediaUrl(): void {
+    if (this.fcMediaUrl.hasError('url')) { return; }
     let mediaUrl = this.fcMediaUrl.value;
 
     this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_GIF_LOADER_ELLIPSIS;
@@ -147,14 +148,14 @@ export class MediaUploadDetailsComponent
         catchError((_httpError: HttpErrorResponse) => {
           if (isNullOrEmpty(_httpError)) { return throwError(_httpError); }
           this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_ERROR;
-          this.fcMediaUrl.setErrors({ emailNotExist: true });
-
-          this.urlErrorMessage = getSafeProperty(_httpError, (obj) => obj.error.errors[0].message);
+          this.urlInfoMessage = getSafeProperty(_httpError, (obj) => obj.error.errors[0].message);
+          this.fcMediaUrl.setErrors({ urlValidationError: true });
           return throwError(_httpError);
         })
       )
-      .subscribe(() => {
+      .subscribe((response) => {
         this.mediaUrlStatusIconKey = CoreDefinition.ASSETS_SVG_SUCCESS;
+        this.urlInfoMessage = getSafeProperty(response, (obj) => obj.content[0].message);
       });
   }
 
@@ -165,6 +166,7 @@ export class MediaUploadDetailsComponent
     if (!this._validateFormFields()) { return of(undefined); }
     let uploadMediaModel = new McsResourceCatalogItemCreate();
     uploadMediaModel.name = this.fcMediaName.value;
+    uploadMediaModel.catalogName = 'dummy-catalog-name';
     uploadMediaModel.url = this.fcMediaUrl.value;
     uploadMediaModel.description = this.fcMediaDescription.value;
     uploadMediaModel.type = CatalogItemType.Media;
@@ -223,7 +225,10 @@ export class MediaUploadDetailsComponent
         CoreValidators.url
       ]
     );
-    this.fcMediaUrl.valueChanges.subscribe(() => this.mediaUrlStatusIconKey = undefined);
+    this.fcMediaUrl.valueChanges.subscribe(() => {
+      this.mediaUrlStatusIconKey = undefined;
+      this.urlInfoMessage = undefined;
+    });
     this.fcMediaDescription = new FormControl('', []);
 
     // Register Form Groups using binding
