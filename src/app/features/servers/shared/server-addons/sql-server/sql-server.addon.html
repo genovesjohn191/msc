@@ -5,9 +5,9 @@
       (change)="onVersionChanged()"
       [placeholder]="textContent.version.placeholder"
       class="form-field-size-small">
-      <mcs-select-item *ngFor="let version of sqlServerVersions" [value]="version">
+      <mcs-option *ngFor="let version of sqlServerVersions" [value]="version">
         {{ version }}
-      </mcs-select-item>
+      </mcs-option>
     </mcs-select>
   </div>
 
@@ -18,9 +18,9 @@
       [placeholder]="textContent.edition.placeholder"
       class="form-field-size-small">
       <ng-container *ngFor="let edition of sqlServerEditions">
-        <mcs-select-item *ngIf="isOptionIncluded(edition)" [value]="edition">
+        <mcs-option *ngIf="isOptionIncluded(edition)" [value]="edition">
           {{ edition }}
-        </mcs-select-item>
+        </mcs-option>
       </ng-container>
     </mcs-select>
   </div>
@@ -31,11 +31,11 @@
       (change)="onArchitectureChanged()"
       [placeholder]="textContent.architecture.placeholder"
       class="form-field-size-small">
-      <mcs-select-item
+      <mcs-option
         *ngFor="let architecture of sqlServerArchitectures"
         [value]="architecture">
         {{ architecture }}
-      </mcs-select-item>
+      </mcs-option>
     </mcs-select>
   </div>
 </div>

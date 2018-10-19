@@ -4,8 +4,8 @@
     (change)="onServiceLevelChanged()"
     [placeholder]="textContent.placeholder"
     class="form-field-size-small">
-    <mcs-select-item *ngFor="let level of serviceLevels" [value]="level">
+    <mcs-option *ngFor="let level of serviceLevels" [value]="level">
       {{ level }}
-    </mcs-select-item>
+    </mcs-option>
   </mcs-select>
 </div>

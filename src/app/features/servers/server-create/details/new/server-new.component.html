@@ -31,12 +31,11 @@
         [formControl]="fcVApp"
         [mcsContextualHelp]="textHelpContent.vAppField"
         [placeholder]="textContent.placeholder.vApp">
-        <mcs-select-group [header]="textContent.headers.vApp">
-          <mcs-select-item>{{ textContent.createNewVApp }}</mcs-select-item>
-          <mcs-select-item *ngFor="let vApp of resource?.vApps" [value]="vApp">
-            {{ vApp.name }}
-          </mcs-select-item>
-        </mcs-select-group>
+
+        <mcs-option>{{ textContent.createNewVApp }}</mcs-option>
+        <mcs-option *ngFor="let vApp of resource?.vApps" [value]="vApp">
+          {{ vApp.name }}
+        </mcs-option>
       </mcs-select>
 
       <mcs-error mcsError errorState="required">
@@ -53,26 +52,30 @@
         [placeholder]="textContent.placeholder.image"
         [mcsContextualHelp]="textHelpContent.serverTemplateField">
         <!-- Os Group -->
-        <mcs-select-group [header]="textContent.headers.os">
-          <mcs-select-item *ngFor="let platform of (operatingSystemsMap$ | async) | mcsMapIterable">
-            <span mcsSelectItemLabel>{{ platform.key }}</span>
-            <mcs-select-group sub-group>
-              <mcs-select-item *ngFor="let os of platform.value" [value]="os">
-                {{ os.name }}
-              </mcs-select-item>
-            </mcs-select-group>
-          </mcs-select-item>
-        </mcs-select-group>
+        <mcs-option-group>
+          <ng-container *mcsOptionGroupHeader>
+            <span>{{ textContent.headers.os }}</span>
+          </ng-container>
+
+          <mcs-option-group [label]="platform.key"
+            *ngFor="let platform of (operatingSystemsMap$ | async) | mcsMapIterable">
+
+            <mcs-option *ngFor="let os of platform.value" [value]="os">
+              {{ os.name }}
+            </mcs-option>
+          </mcs-option-group>
+        </mcs-option-group>
 
         <!-- Template Group -->
-        <mcs-select-group *ngIf="customTemplates"
-          [header]="textContent.headers.templates">
-          <ng-container *ngFor="let template of customTemplates">
-            <mcs-select-item [value]="template">
-              {{ template.itemName }}
-            </mcs-select-item>
+        <mcs-option-group *ngIf="customTemplates">
+          <ng-container *mcsOptionGroupHeader>
+            <span>{{ textContent.headers.templates }}</span>
           </ng-container>
-        </mcs-select-group>
+
+          <mcs-option *ngFor="let template of customTemplates" [value]="template">
+            {{ template.itemName }}
+          </mcs-option>
+        </mcs-option-group>
       </mcs-select>
 
       <mcs-error mcsError errorState="required">

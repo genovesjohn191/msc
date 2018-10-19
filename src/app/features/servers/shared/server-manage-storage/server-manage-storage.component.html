@@ -15,11 +15,15 @@
     <mcs-select [formControl]="fcSelectStorages"
       mcsId="select-storage"
       placeholder="Select storage profile">
-      <mcs-select-group header="Storage Profiles">
-        <mcs-select-item *ngFor="let storage of storages" [value]="storage">
+
+      <mcs-option-group>
+        <ng-container *mcsOptionGroupHeader>
+          Storage Profiles
+        </ng-container>
+        <mcs-option *ngFor="let storage of storages" [value]="storage">
           {{ storage.name }}
-        </mcs-select-item>
-      </mcs-select-group>
+        </mcs-option>
+      </mcs-option-group>
     </mcs-select>
   </mcs-form-field>
 </ng-container>

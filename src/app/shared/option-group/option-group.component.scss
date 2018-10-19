@@ -7,7 +7,6 @@ $option-group-selected-color: $selected-bg-color;
 
 .option-group-wrapper {
   display: block;
-  cursor: pointer;
 
   &.option-group-selected:not(.option-group-expanded) {
     background-color: $option-group-selected-color;
@@ -22,6 +21,7 @@ $option-group-selected-color: $selected-bg-color;
   }
 
   .option-group-label {
+    cursor: pointer;
     @include display-flex(row);
     @include align-items(center);
     @include set-items-interval($space-small, horizontal);
@@ -39,6 +39,11 @@ $option-group-selected-color: $selected-bg-color;
   }
 
   .option-wrapper {
-    margin-left: $space-medium;
+    padding-left: 25px;
   }
+}
+
+.option-group-header {
+  display: block;
+  padding: $option-group-padding;
 }

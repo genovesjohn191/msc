@@ -4,8 +4,8 @@
     (change)="onGroupChanged()"
     [placeholder]="textContent.placeholder"
     class="form-field-size-small">
-    <mcs-select-item *ngFor="let group of protectionGroups" [value]="group">
+    <mcs-option *ngFor="let group of protectionGroups" [value]="group">
       {{ group }}
-    </mcs-select-item>
+    </mcs-option>
   </mcs-select>
 </div>

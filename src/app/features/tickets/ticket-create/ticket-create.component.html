@@ -30,12 +30,16 @@
               <mcs-select mcsId="select-type" [placeholder]="textContent.placeholders.type"
                 [formControl]="fcType" mcsSetFocus required
                 [mcsContextualHelp]="contextualContent.type">
-                <mcs-select-group header="Ticket Type">
-                  <mcs-select-item *ngFor="let ticketType of ticketTypeList"
+
+                <mcs-option-group>
+                  <ng-container *mcsOptionGroupHeader>
+                    {{ textContent.typeHeader }}
+                  </ng-container>
+                  <mcs-option *ngFor="let ticketType of ticketTypeList"
                     [value]="ticketType.value">
                     {{ ticketType.text }}
-                  </mcs-select-item>
-                </mcs-select-group>
+                  </mcs-option>
+                </mcs-option-group>
               </mcs-select>
 
               <mcs-error mcsError errorState="required">
@@ -147,7 +151,7 @@
                 </div>
 
                 <div [@expansionVertical]="servicePanelOpen ? 'expanded' : 'collapsed'">
-                  <mcs-select-tag #selectService class="padding-small"
+                    <mcs-select-tag #selectService class="padding-small"
                     (selectionChanged)="serviceItemSelectionChanged($event)">
                     <mcs-select-tag-main-item *ngFor="let service of services"
                       [header]="service.serviceName">

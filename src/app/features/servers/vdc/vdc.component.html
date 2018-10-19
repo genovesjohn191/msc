@@ -14,8 +14,7 @@
               <ng-container *ngFor="let iterator of (serversMap | mcsMapIterable) |
                 mcsSortArray: serverListSource?.sortResourceMethod">
 
-                <mcs-option-group
-                  [selected]="iterator.key?.resourceId === selectedPlatform?.resourceId">
+                <mcs-option-group [selected]="iterator.key?.resourceId === selectedPlatform?.resourceId">
                   <ng-container *mcsOptionGroupLabel>
                     <ng-container *ngIf="iterator.key?.resourceId">
                       <a [mcsRouterLink]="[routeKeyEnum.VdcDetail, iterator.key?.resourceId]"

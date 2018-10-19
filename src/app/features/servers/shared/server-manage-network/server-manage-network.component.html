@@ -5,11 +5,12 @@
 <div class="space-bottom-large">
   <mcs-form-field>
     <mcs-select [(ngModel)]="selectedNetwork" mcsId="select-network" placeholder="Select network">
-      <mcs-select-group header="Networks">
-        <mcs-select-item *ngFor="let network of networks" [value]="network">
-          {{ network.name }}
-        </mcs-select-item>
-      </mcs-select-group>
+    <mcs-option-group>
+      <ng-container *mcsOptionGroupHeader>Networks</ng-container>
+      <mcs-option *ngFor="let network of networks" [value]="network">
+        {{ network.name }}
+      </mcs-option>
+    </mcs-option-group>
     </mcs-select>
   </mcs-form-field>
 </div>

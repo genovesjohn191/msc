@@ -7,30 +7,30 @@
     <div class="form-field-block">
       <mcs-form-field>
         <mcs-select [(ngModel)]="selectedTerm">
-          <mcs-select-item [value]="0">Contract Term</mcs-select-item>
-          <mcs-select-item [value]="1">30 Days</mcs-select-item>
-          <mcs-select-item [value]="2">Per Existing Contract</mcs-select-item>
+          <mcs-option [value]="0">Contract Term</mcs-option>
+          <mcs-option [value]="1">30 Days</mcs-option>
+          <mcs-option [value]="2">Per Existing Contract</mcs-option>
         </mcs-select>
       </mcs-form-field>
 
       <mcs-form-field>
         <mcs-select [(ngModel)]="selectedEntity">
-          <mcs-select-item [value]="0">Billing Entity</mcs-select-item>
-          <mcs-select-item [value]="1">Macquarie Telecom Group</mcs-select-item>
+          <mcs-option [value]="0">Billing Entity</mcs-option>
+          <mcs-option [value]="1">Macquarie Telecom Group</mcs-option>
         </mcs-select>
       </mcs-form-field>
 
       <mcs-form-field>
         <mcs-select [(ngModel)]="selectedSite">
-          <mcs-select-item [value]="0">Billing Site</mcs-select-item>
-          <mcs-select-item [value]="1">Macquarie Telecom Group</mcs-select-item>
+          <mcs-option [value]="0">Billing Site</mcs-option>
+          <mcs-option [value]="1">Macquarie Telecom Group</mcs-option>
         </mcs-select>
       </mcs-form-field>
 
       <mcs-form-field>
         <mcs-select [(ngModel)]="selectedCost">
-          <mcs-select-item [value]="0">Billing Cost Centre</mcs-select-item>
-          <mcs-select-item [value]="1">Macquarie Telecom Group</mcs-select-item>
+          <mcs-option [value]="0">Billing Cost Centre</mcs-option>
+          <mcs-option [value]="1">Macquarie Telecom Group</mcs-option>
         </mcs-select>
       </mcs-form-field>
     </div>
@@ -107,8 +107,8 @@
         <mcs-note *ngSwitchCase="2">
           <mcs-form-field>
             <mcs-select [(ngModel)]="selectedServer">
-              <mcs-select-item [value]="0">New Dedicated Server(120033)</mcs-select-item>
-              <mcs-select-item [value]="1">EOFS Runout Sale(188837)</mcs-select-item>
+              <mcs-option [value]="0">New Dedicated Server(120033)</mcs-option>
+              <mcs-option [value]="1">EOFS Runout Sale(188837)</mcs-option>
             </mcs-select>
           </mcs-form-field>
         </mcs-note>

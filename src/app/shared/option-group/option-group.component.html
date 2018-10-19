@@ -1,18 +1,23 @@
 <!-- Option group label -->
-<div (click)="onClick($event)">
+<div (click)="onClick($event)" *ngIf="!headerTemplate">
   <div class="option-group-label" #groupLabelTemplate>
     <div class="option-group-icon" [@rotate45]="panelOpen ? 'rotate' : 'void'">
       <mcs-icon size="small" [key]="caretRightIconKey"></mcs-icon>
     </div>
 
-    <ng-container *ngIf="labelTemplate">
+    <ng-container *ngIf="labelTemplate; else labelContentTemplate">
       <ng-container *ngTemplateOutlet="labelTemplate?.templateRef"></ng-container>
     </ng-container>
-    <ng-container *ngIf="!labelTemplate">
+    <ng-template #labelContentTemplate>
       <span>{{ label }}</span>
-    </ng-container>
+    </ng-template>
   </div>
   <mcs-ripple mcsRipple [rippleTrigger]="groupLabelTemplate"></mcs-ripple>
+</div>
+
+<!-- Option group header mode -->
+<div *ngIf="headerTemplate" read-only class="option-group-header">
+  <ng-container *ngTemplateOutlet="headerTemplate?.templateRef"></ng-container>
 </div>
 
 <!-- Option group content -->

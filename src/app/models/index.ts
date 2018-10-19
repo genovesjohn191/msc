@@ -128,6 +128,7 @@ export * from './mcs-entity.base';
 export * from './mcs-list-panel-item';
 export * from './mcs-size';
 export * from './mcs-selection';
+export * from './mcs-selection-change';
 export * from './mcs-file-info';
 export * from './mcs-filter-info';
 export * from './mcs-comment';

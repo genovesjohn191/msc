@@ -33,11 +33,13 @@
               [formControl]="fcTargetServer"
               [(ngModel)]="selectedServer"
               [placeholder]="textContent.placeholder.server">
-              <mcs-select-group header="Servers">
-                <mcs-select-item *ngFor="let server of servers" [value]="server">
+
+              <mcs-option-group>
+                <ng-container *mcsOptionGroupHeader>Servers</ng-container>
+                <mcs-option *ngFor="let server of servers" [value]="server">
                   {{ server.name }}
-                </mcs-select-item>
-              </mcs-select-group>
+                </mcs-option>
+              </mcs-option-group>
             </mcs-select>
 
             <mcs-error mcsError errorState="required">

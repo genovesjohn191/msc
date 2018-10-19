@@ -34,9 +34,14 @@ let nextUniqueId = 0;
 
 export class OptionComponent {
   /**
-   * Event emitted when the option is selected or deselected
+   * Event that emits when the option had been selected
    */
   public selectionChange = new EventEmitter<OptionComponent>();
+
+  /**
+   * Event that emtis when the option has been activated
+   */
+  public activeChange = new EventEmitter<OptionComponent>();
 
   @Input()
   public id: string = `mcs-option-${nextUniqueId++}`;
@@ -65,6 +70,12 @@ export class OptionComponent {
    */
   private _active: boolean;
   public get active(): boolean { return this._active; }
+  public set active(value: boolean) {
+    if (value !== this._active) {
+      this._active = coerceBoolean(value);
+      this.activeChange.emit(this);
+    }
+  }
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -113,7 +124,7 @@ export class OptionComponent {
    * Sets the active state of the option
    */
   public setActiveState(): void {
-    this._active = true;
+    this.active = true;
     this._changeDetectorRef.markForCheck();
   }
 
@@ -121,7 +132,7 @@ export class OptionComponent {
    * Clears the active state of the option
    */
   public setInActiveState(): void {
-    this._active = false;
+    this.active = false;
     this._changeDetectorRef.markForCheck();
   }
 }

@@ -9,7 +9,8 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
   AfterContentInit,
-  OnDestroy
+  OnDestroy,
+  NgZone
 } from '@angular/core';
 import {
   Subject,
@@ -19,7 +20,9 @@ import {
 } from 'rxjs';
 import {
   takeUntil,
-  startWith
+  startWith,
+  take,
+  switchMap
 } from 'rxjs/operators';
 import { CoreDefinition } from '@app/core';
 import {
@@ -30,6 +33,7 @@ import {
 } from '@app/utilities';
 import { OptionComponent } from './option/option.component';
 import { OptionGroupLabelDirective } from './option-group-label.directive';
+import { OptionGroupHeaderDirective } from './option-group-header.directive';
 
 @Component({
   selector: 'mcs-option-group',
@@ -56,6 +60,9 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   @ContentChild(OptionGroupLabelDirective)
   public labelTemplate: OptionGroupLabelDirective;
 
+  @ContentChild(OptionGroupHeaderDirective)
+  public headerTemplate: OptionGroupHeaderDirective;
+
   @ContentChildren(OptionComponent, { descendants: true })
   private _options: QueryList<OptionComponent>;
 
@@ -67,10 +74,29 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   private _destroySubject = new Subject<void>();
 
   /**
-   * Combine streams of all the selected item child's change event
+   * Combine streams of all the selected item on options
    */
   private readonly _optionsSelectionChanges: Observable<OptionComponent> = defer(() => {
-    return merge(...this._options.map((option) => option.selectionChange));
+    if (!isNullOrEmpty(this._options)) {
+      return merge(...this._options.map((option) => option.selectionChange));
+    }
+    return this._ngZone.onStable.asObservable().pipe(
+      take(1),
+      switchMap(() => this._optionsSelectionChanges)
+    );
+  });
+
+  /**
+   * Combine streams of all the activated item on options
+   */
+  private readonly _optionsActiveChanges: Observable<OptionComponent> = defer(() => {
+    if (!isNullOrEmpty(this._options)) {
+      return merge(...this._options.map((option) => option.activeChange));
+    }
+    return this._ngZone.onStable.asObservable().pipe(
+      take(1),
+      switchMap(() => this._optionsActiveChanges)
+    );
   });
 
   /**
@@ -93,6 +119,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
   private _panelOpen: boolean;
 
   constructor(
+    private _ngZone: NgZone,
     private _changeDetectorRef: ChangeDetectorRef,
     private _elementRef: ElementRef
   ) { }
@@ -101,6 +128,10 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
     this._options.changes
       .pipe(startWith(null), takeUntil(this._destroySubject))
       .subscribe(() => this._listenToSelectionChange());
+
+    if (!isNullOrEmpty(this.headerTemplate)) {
+      this.openPanel();
+    }
   }
 
   public ngOnDestroy(): void {
@@ -118,6 +149,7 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    * Closes the currently opened panel
    */
   public closePanel(): void {
+    if (!isNullOrEmpty(this.headerTemplate)) { return; }
     this.panelOpen = false;
   }
 
@@ -158,12 +190,14 @@ export class OptionGroupComponent implements AfterContentInit, OnDestroy {
    */
   private _listenToSelectionChange(): void {
     let resetSubject = merge(this._options.changes, this._destroySubject);
+    let mergeChanges = merge(this._optionsSelectionChanges, this._optionsActiveChanges);
 
-    this._optionsSelectionChanges
-      .pipe(startWith(null), takeUntil(resetSubject))
-      .subscribe(() => {
-        let selectedOptions = this._options.filter((option) => option.selected);
-        isNullOrEmpty(selectedOptions) ? this.closePanel() : this.openPanel();
-      });
+    mergeChanges.pipe(
+      startWith(null),
+      takeUntil(resetSubject)
+    ).subscribe(() => {
+      let selectedOptions = this._options.filter((option) => option.selected || option.active);
+      isNullOrEmpty(selectedOptions) ? this.closePanel() : this.openPanel();
+    });
   }
 }
